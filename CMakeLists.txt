@@ -7,6 +7,16 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
+option(ENABLE_COVERAGE "Enable coverage flags" OFF)
+if(ENABLE_COVERAGE)
+    if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+        add_compile_options(-O0 -g --coverage)
+        add_link_options(--coverage)
+    else()
+        message(WARNING "Coverage flags not supported for this compiler")
+    endif()
+endif()
+
 # Find Qt6
 find_package(Qt6 REQUIRED COMPONENTS
     Core
@@ -41,6 +51,7 @@ target_link_libraries(remus-cli PRIVATE
     remus-core
     remus-metadata
     Qt6::Core
+    Qt6::Gui
 )
 
 # Enable testing

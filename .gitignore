@@ -9,6 +9,12 @@ moc_*
 qrc_*
 ui_*
 
+# Executables (test runners, CLI binaries at root level)
+/test_parser
+/remus-cli
+/remus-gui
+*.exe
+
 # Qt
 *.pro.user
 *.pro.user.*

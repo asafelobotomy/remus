@@ -58,7 +58,7 @@ QList<SearchResult> ScreenScraperProvider::searchByName(const QString &title,
     m_rateLimiter->waitIfNeeded();
 
     // Build API URL
-    QUrl url("https://www.screenscraper.fr/api2/jeuInfos.php");
+    QUrl url(QString(Constants::API::SCREENSCRAPER_BASE_URL) + Constants::API::SCREENSCRAPER_GETSEARCHRES_ENDPOINT);
     QUrlQuery query;
     
     query.addQueryItem("devid", m_devId);
@@ -122,7 +122,7 @@ GameMetadata ScreenScraperProvider::getByHash(const QString &hash, const QString
     m_rateLimiter->waitIfNeeded();
 
     // Build API URL
-    QUrl url("https://www.screenscraper.fr/api2/jeuInfos.php");
+    QUrl url(QString(Constants::API::SCREENSCRAPER_BASE_URL) + Constants::API::SCREENSCRAPER_GETSEARCHRES_ENDPOINT);
     QUrlQuery query;
     
     query.addQueryItem("devid", m_devId);
@@ -166,7 +166,7 @@ GameMetadata ScreenScraperProvider::getById(const QString &id)
     m_rateLimiter->waitIfNeeded();
 
     // Build API URL
-    QUrl url("https://www.screenscraper.fr/api2/jeuInfos.php");
+    QUrl url(QString(Constants::API::SCREENSCRAPER_BASE_URL) + Constants::API::SCREENSCRAPER_GETGAME_ENDPOINT);
     QUrlQuery query;
     
     query.addQueryItem("devid", m_devId);
@@ -200,7 +200,7 @@ ArtworkUrls ScreenScraperProvider::getArtwork(const QString &id)
 
     m_rateLimiter->waitIfNeeded();
 
-    QUrl url("https://www.screenscraper.fr/api2/jeuInfos.php");
+    QUrl url(QString(Constants::API::SCREENSCRAPER_BASE_URL) + Constants::API::SCREENSCRAPER_GETGAME_ENDPOINT);
     QUrlQuery query;
 
     query.addQueryItem("devid", m_devId);

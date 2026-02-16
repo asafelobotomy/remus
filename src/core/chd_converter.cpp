@@ -14,19 +14,17 @@ CHDConverter::CHDConverter(QObject *parent)
 
 bool CHDConverter::isChdmanAvailable() const
 {
-    QProcess process;
-    process.start(m_chdmanPath, QStringList() << "--help");
-    process.waitForFinished(5000);
-    return process.exitCode() == 0 || process.exitStatus() == QProcess::NormalExit;
+    auto result = const_cast<CHDConverter*>(this)
+                      ->runProcess(m_chdmanPath, QStringList() << "--help", 5000);
+    return result.started &&
+           (result.exitCode == 0 || result.exitStatus == QProcess::NormalExit);
 }
 
 QString CHDConverter::getChdmanVersion() const
 {
-    QProcess process;
-    process.start(m_chdmanPath, QStringList() << "--help");
-    process.waitForFinished(5000);
-    
-    QString output = QString::fromUtf8(process.readAllStandardOutput());
+    auto result = const_cast<CHDConverter*>(this)
+                      ->runProcess(m_chdmanPath, QStringList() << "--help", 5000);
+    QString output = result.stdOutput;
     
     // Parse version from output (typically first line)
     QStringList lines = output.split('\n');
@@ -129,20 +127,18 @@ CHDVerifyResult CHDConverter::verifyCHD(const QString &chdPath)
 {
     CHDVerifyResult result;
     result.path = chdPath;
-    
-    QProcess process;
-    process.start(m_chdmanPath, QStringList() << "verify" << "-i" << chdPath);
-    process.waitForFinished(300000);  // 5 minutes timeout for large files
-    
-    result.valid = (process.exitCode() == 0);
-    
-    QString output = QString::fromUtf8(process.readAllStandardOutput());
-    QString error = QString::fromUtf8(process.readAllStandardError());
-    
-    result.details = output;
-    
+
+    ProcessResult processResult = runProcess(m_chdmanPath,
+                                             QStringList() << "verify" << "-i" << chdPath,
+                                             300000);
+
+    result.valid = (processResult.exitCode == 0);
+    result.details = processResult.stdOutput;
+
     if (!result.valid) {
-        result.error = error.isEmpty() ? "Verification failed" : error;
+        result.error = processResult.stdError.isEmpty() ?
+                        "Verification failed" :
+                        processResult.stdError;
     }
     
     return result;
@@ -153,12 +149,12 @@ CHDInfo CHDConverter::getCHDInfo(const QString &chdPath)
     CHDInfo info;
     info.path = chdPath;
     info.physicalSize = getFileSize(chdPath);
-    
-    QProcess process;
-    process.start(m_chdmanPath, QStringList() << "info" << "-i" << chdPath);
-    process.waitForFinished(30000);
-    
-    QString output = QString::fromUtf8(process.readAllStandardOutput());
+
+    ProcessResult processResult = runProcess(m_chdmanPath,
+                                             QStringList() << "info" << "-i" << chdPath,
+                                             30000);
+
+    QString output = processResult.stdOutput;
     
     // Parse chdman info output
     QRegularExpression versionRe("CHD version:\\s+(\\d+)");
@@ -282,28 +278,20 @@ CHDConversionResult CHDConverter::runChdman(const QStringList &args,
     
     emit conversionStarted(inputPath, outputPath);
     
-    QProcess process;
-    m_process = &process;
-    
     qInfo() << "Running chdman:" << m_chdmanPath << args.join(" ");
     
-    process.start(m_chdmanPath, args);
-    
-    if (!process.waitForStarted(10000)) {
+    ProcessResult processResult = runProcessTracked(m_chdmanPath, args, 1800000);
+    if (!processResult.started) {
         result.success = false;
         result.error = "Failed to start chdman. Is it installed?";
         result.exitCode = -1;
         emit errorOccurred(result.error);
-        m_process = nullptr;
         return result;
     }
-    
-    // Wait for completion (up to 30 minutes for large files)
-    process.waitForFinished(1800000);
-    
-    result.exitCode = process.exitCode();
-    result.stdOutput = QString::fromUtf8(process.readAllStandardOutput());
-    result.stdError = QString::fromUtf8(process.readAllStandardError());
+
+    result.exitCode = processResult.exitCode;
+    result.stdOutput = processResult.stdOutput;
+    result.stdError = processResult.stdError;
     
     if (result.exitCode == 0 && QFile::exists(outputPath)) {
         result.success = true;
@@ -318,14 +306,60 @@ CHDConversionResult CHDConverter::runChdman(const QStringList &args,
         qInfo() << "Compression ratio:" << QString::number(result.compressionRatio * 100, 'f', 1) << "%";
     } else {
         result.success = false;
-        result.error = result.stdError.isEmpty() ? 
-                       QString("chdman exited with code %1").arg(result.exitCode) : 
+        result.error = result.stdError.isEmpty() ?
+                       QString("chdman exited with code %1").arg(result.exitCode) :
                        result.stdError;
         qWarning() << "CHD conversion failed:" << result.error;
     }
     
     emit conversionCompleted(result);
     
+    return result;
+}
+
+CHDConverter::ProcessResult CHDConverter::runProcess(const QString &program,
+                                                     const QStringList &args,
+                                                     int timeoutMs)
+{
+    ProcessResult result;
+    QProcess process;
+
+    process.start(program, args);
+    result.started = process.waitForStarted(timeoutMs);
+    if (!result.started) {
+        result.exitCode = -1;
+        return result;
+    }
+
+    result.finished = process.waitForFinished(timeoutMs);
+    result.exitCode = process.exitCode();
+    result.exitStatus = process.exitStatus();
+    result.stdOutput = QString::fromUtf8(process.readAllStandardOutput());
+    result.stdError = QString::fromUtf8(process.readAllStandardError());
+    return result;
+}
+
+CHDConverter::ProcessResult CHDConverter::runProcessTracked(const QString &program,
+                                                            const QStringList &args,
+                                                            int timeoutMs)
+{
+    ProcessResult result;
+    QProcess process;
+    m_process = &process;
+
+    process.start(program, args);
+    result.started = process.waitForStarted(10000);
+    if (!result.started) {
+        m_process = nullptr;
+        result.exitCode = -1;
+        return result;
+    }
+
+    result.finished = process.waitForFinished(timeoutMs);
+    result.exitCode = process.exitCode();
+    result.exitStatus = process.exitStatus();
+    result.stdOutput = QString::fromUtf8(process.readAllStandardOutput());
+    result.stdError = QString::fromUtf8(process.readAllStandardError());
     m_process = nullptr;
     return result;
 }

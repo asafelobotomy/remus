@@ -2,6 +2,14 @@
 #include <QCommandLineParser>
 #include <QDebug>
 #include <QDir>
+#include <QFile>
+#include <QDir>
+#include <QTextStream>
+#include <QJsonDocument>
+#include <QJsonArray>
+#include <QJsonObject>
+#include <QProcess>
+#include <memory>
 #include "../core/scanner.h"
 #include "../core/system_detector.h"
 #include "../core/hasher.h"
@@ -10,17 +18,23 @@
 #include "../core/template_engine.h"
 #include "../core/organize_engine.h"
 #include "../core/m3u_generator.h"
+#include "../core/verification_engine.h"
 #include "../metadata/screenscraper_provider.h"
 #include "../metadata/thegamesdb_provider.h"
 #include "../metadata/igdb_provider.h"
 #include "../metadata/hasheous_provider.h"
 #include "../metadata/provider_orchestrator.h"
 #include "../metadata/metadata_cache.h"
+#include "../metadata/artwork_downloader.h"
+#include "../metadata/local_database_provider.h"
 #include "../core/chd_converter.h"
 #include "../core/archive_extractor.h"
 #include "../core/space_calculator.h"
+#include "../core/header_detector.h"
+#include "../core/patch_engine.h"
 #include "../core/constants/constants.h"
 #include "../core/logging_categories.h"
+#include "terminal_image.h"
 
 #undef qDebug
 #undef qInfo
@@ -33,6 +47,99 @@
 
 using namespace Remus;
 using namespace Remus::Constants;
+
+static std::unique_ptr<ProviderOrchestrator> buildOrchestrator(const QCommandLineParser &parser)
+{
+    auto orchestrator = std::make_unique<ProviderOrchestrator>();
+
+    // Hasheous (hash-first)
+    auto hasheousProvider = new HasheousProvider();
+    const auto hasheousInfo = Providers::getProviderInfo(Providers::HASHEOUS);
+    const int hasheousPriority = hasheousInfo ? hasheousInfo->priority : 100;
+    orchestrator->addProvider(Providers::HASHEOUS, hasheousProvider, hasheousPriority);
+
+    // ScreenScraper (requires creds)
+    if (parser.isSet("ss-user") && parser.isSet("ss-pass")) {
+        auto ssProvider = new ScreenScraperProvider();
+        ssProvider->setCredentials(parser.value("ss-user"), parser.value("ss-pass"));
+        if (parser.isSet("ss-devid") && parser.isSet("ss-devpass")) {
+            ssProvider->setDeveloperCredentials(parser.value("ss-devid"), parser.value("ss-devpass"));
+        }
+        const auto ssInfo = Providers::getProviderInfo(Providers::SCREENSCRAPER);
+        const int ssPriority = ssInfo ? ssInfo->priority : 90;
+        orchestrator->addProvider(Providers::SCREENSCRAPER, ssProvider, ssPriority);
+    }
+
+    // TheGamesDB (name fallback)
+    auto tgdbProvider = new TheGamesDBProvider();
+    const auto tgdbInfo = Providers::getProviderInfo(Providers::THEGAMESDB);
+    const int tgdbPriority = tgdbInfo ? tgdbInfo->priority : 50;
+    orchestrator->addProvider(Providers::THEGAMESDB, tgdbProvider, tgdbPriority);
+
+    // IGDB (rich metadata)
+    auto igdbProvider = new IGDBProvider();
+    const auto igdbInfo = Providers::getProviderInfo(Providers::IGDB);
+    const int igdbPriority = igdbInfo ? igdbInfo->priority : 40;
+    orchestrator->addProvider(Providers::IGDB, igdbProvider, igdbPriority);
+
+    return orchestrator;
+}
+
+static QList<FileRecord> getHashedFiles(Database &db)
+{
+    QList<FileRecord> files = db.getAllFiles();
+    QList<FileRecord> filtered;
+    for (const FileRecord &f : files) {
+        if (f.hashCalculated && (!f.crc32.isEmpty() || !f.md5.isEmpty() || !f.sha1.isEmpty())) {
+            filtered.append(f);
+        }
+    }
+    return filtered;
+}
+
+static int persistMetadata(Database &db, const FileRecord &file, const GameMetadata &metadata)
+{
+    int systemId = db.getSystemId(metadata.system);
+    if (systemId == 0) {
+        systemId = file.systemId; // fallback to detected system
+    }
+
+    const QString genres = metadata.genres.join(", ");
+    const QString players = metadata.players > 0 ? QString::number(metadata.players) : QString();
+    int gameId = db.insertGame(metadata.title, systemId, metadata.region, metadata.publisher,
+                               metadata.developer, metadata.releaseDate, metadata.description,
+                               genres, players, metadata.rating);
+
+    if (gameId == 0) {
+        return 0;
+    }
+
+    const int confidence = metadata.matchScore > 0 ? static_cast<int>(metadata.matchScore * 100) : 0;
+    const QString method = metadata.matchMethod.isEmpty() ? QStringLiteral("auto") : metadata.matchMethod;
+    db.insertMatch(file.id, gameId, confidence, method);
+    return gameId;
+}
+
+static void printFileInfo(const FileRecord &file)
+{
+    qInfo() << "File ID:" << file.id;
+    qInfo() << "Library ID:" << file.libraryId;
+    qInfo() << "Path:" << file.currentPath;
+    qInfo() << "Original Path:" << file.originalPath;
+    qInfo() << "Filename:" << file.filename;
+    qInfo() << "Extension:" << file.extension;
+    qInfo() << "Size:" << file.fileSize;
+    qInfo() << "System ID:" << file.systemId;
+    qInfo() << "Hash calculated:" << file.hashCalculated;
+    if (file.hashCalculated) {
+        qInfo() << "CRC32:" << file.crc32;
+        qInfo() << "MD5:" << file.md5;
+        qInfo() << "SHA1:" << file.sha1;
+    }
+    qInfo() << "Primary:" << file.isPrimary;
+    qInfo() << "Parent ID:" << file.parentFileId;
+    qInfo() << "Processed:" << file.isProcessed << "Status:" << file.processingStatus;
+}
 
 void printBanner()
 {
@@ -60,7 +167,12 @@ int main(int argc, char *argv[])
     parser.addOption({{"s", "scan"}, "Scan a directory for ROMs", "path"});
     parser.addOption({{"d", "db"}, "Database file path", "database", Constants::DATABASE_FILENAME});
     parser.addOption(QCommandLineOption("hash", "Calculate hashes for scanned files"));
+    parser.addOption(QCommandLineOption("hash-all", "Calculate hashes for all files in database that lack hashes"));
     parser.addOption({{"l", "list"}, "List scanned files by system"});
+    parser.addOption(QCommandLineOption("stats", "Show library statistics"));
+    parser.addOption(QCommandLineOption("info", "Show detailed info for a file id", "fileId"));
+    parser.addOption(QCommandLineOption("header-info", "Inspect ROM header for a file", "file"));
+    parser.addOption(QCommandLineOption("show-art", "Display an image in terminal (path to image)", "image"));
     
     // Metadata options
     parser.addOption({{"m", "metadata"}, "Fetch metadata by file hash", "hash"});
@@ -79,13 +191,47 @@ int main(int argc, char *argv[])
     // M3 Matching options
     parser.addOption(QCommandLineOption("match", "Match scanned files with metadata (M3 intelligent matching)"));
     parser.addOption(QCommandLineOption("min-confidence", "Minimum confidence threshold for matches (0-100)", "confidence", "60"));
+    parser.addOption(QCommandLineOption("match-report", "Generate detailed matching report with confidence scores"));
+    parser.addOption(QCommandLineOption("report-file", "Output file for reports (default: stdout)", "file"));
+
+    // Verification options
+    parser.addOption(QCommandLineOption("verify", "Verify files against DAT file", "dat-file"));
+    parser.addOption(QCommandLineOption("verify-report", "Generate detailed verification report"));
+
+    // Cover art & artwork options
+    parser.addOption(QCommandLineOption("download-artwork", "Download cover art for matched games"));
+    parser.addOption(QCommandLineOption("artwork-dir", "Directory to store artwork (default: ~/.local/share/Remus/artwork/)", "directory"));
+    parser.addOption(QCommandLineOption("artwork-types", "Types of artwork to download (box|screen|manual|all - default: box)", "types", "box"));
+
+    // Checksum verification options
+    parser.addOption(QCommandLineOption("checksum-verify", "Verify specific file checksum", "file"));
+    parser.addOption(QCommandLineOption("expected-hash", "Expected hash for verification (crc32|md5|sha1)", "hash"));
+    parser.addOption(QCommandLineOption("hash-type", "Hash type to verify (crc32, md5, sha1 - default: crc32)", "type", "crc32"));
 
     // M4 Organize & Rename options
     parser.addOption(QCommandLineOption("organize", "Organize and rename files using template", "destination"));
-    parser.addOption(QCommandLineOption("template", "Naming template (default: No-Intro standard)", "template", Templates::DEFAULT_NO_INTRO));
+    parser.addOption(QCommandLineOption("template", "Naming template (default: No-Intro standard)", "template", Constants::Templates::DEFAULT_NO_INTRO));
     parser.addOption(QCommandLineOption("dry-run", "Preview changes without modifying files"));
     parser.addOption(QCommandLineOption("generate-m3u", "Generate M3U playlists for multi-disc games"));
     parser.addOption(QCommandLineOption("m3u-dir", "Directory for M3U playlists (default: same as game files)", "directory"));
+
+    // Patch options
+    parser.addOption(QCommandLineOption("patch-apply", "Apply patch to base file", "basefile"));
+    parser.addOption(QCommandLineOption("patch-patch", "Patch file to apply", "patchfile"));
+    parser.addOption(QCommandLineOption("patch-output", "Output file path (optional)", "output"));
+    parser.addOption(QCommandLineOption("patch-create", "Create patch from modified file", "modifiedfile"));
+    parser.addOption(QCommandLineOption("patch-original", "Original file for patch creation", "originalfile"));
+    parser.addOption(QCommandLineOption("patch-format", "Patch format (ips|bps|ups|xdelta|ppf)", "format", "bps"));
+    parser.addOption(QCommandLineOption("patch-info", "Detect patch format for file", "patchfile"));
+    parser.addOption(QCommandLineOption("patch-tools", "List patch tool availability"));
+
+    // Export options
+    parser.addOption(QCommandLineOption("export", "Export library (retroarch|emustation|launchbox|csv|json)", "format"));
+    parser.addOption(QCommandLineOption("export-path", "Export output path (file or directory)", "path"));
+    parser.addOption(QCommandLineOption("export-systems", "Comma-separated systems to include", "systems"));
+
+    // Processing pipeline
+    parser.addOption(QCommandLineOption("process", "Run scan→hash→match pipeline on directory", "path"));
 
     // M4.5 Conversion & Compression options
     parser.addOption(QCommandLineOption("convert-chd", "Convert disc image to CHD format", "path"));
@@ -120,9 +266,82 @@ int main(int argc, char *argv[])
         }
     }
 
-    // Handle scan command
-    if (parser.isSet("scan")) {
-        QString scanPath = parser.value("scan");
+    // Stats command
+    if (parser.isSet("stats")) {
+        QList<FileRecord> files = db.getAllFiles();
+        QMap<QString, int> counts = db.getFileCountBySystem();
+        int hashed = 0;
+        for (const FileRecord &f : files) {
+            if (f.hashCalculated) hashed++;
+        }
+        qInfo() << "=== Library Stats ===";
+        qInfo() << "Libraries:" << systemNames.size();
+        qInfo() << "Files:" << files.size();
+        qInfo() << "Hashed:" << hashed << "/" << files.size();
+        qInfo() << "By system:";
+        for (auto it = counts.constBegin(); it != counts.constEnd(); ++it) {
+            qInfo().noquote() << QString("  %1: %2").arg(it.key()).arg(it.value());
+        }
+    }
+
+    // Info command
+    if (parser.isSet("info")) {
+        bool ok = false;
+        int fileId = parser.value("info").toInt(&ok);
+        if (!ok) {
+            qCritical() << "Invalid file id";
+            return 1;
+        }
+        FileRecord file = db.getFileById(fileId);
+        if (file.id == 0) {
+            qCritical() << "File not found";
+            return 1;
+        }
+        qInfo() << "=== File Info ===";
+        printFileInfo(file);
+        auto match = db.getMatchForFile(fileId);
+        if (match.matchId != 0) {
+            qInfo() << "Match:" << match.gameTitle << "(" << match.confidence << "%)" << match.matchMethod;
+        }
+    }
+
+    // Header inspection
+    if (parser.isSet("header-info")) {
+        QString path = parser.value("header-info");
+        HeaderDetector hd;
+        HeaderInfo info = hd.detect(path);
+        if (!info.valid) {
+            qWarning() << "Header not detected or invalid";
+        } else {
+            qInfo() << "=== Header Info ===";
+            qInfo() << "Has header:" << info.hasHeader;
+            qInfo() << "Header size:" << info.headerSize;
+            qInfo() << "Type:" << info.headerType;
+            qInfo() << "System hint:" << info.systemHint;
+            if (!info.info.isEmpty()) {
+                qInfo() << "Info:" << info.info;
+            }
+        }
+    }
+
+    // Show artwork/image in terminal
+    if (parser.isSet("show-art")) {
+        QString imagePath = parser.value("show-art");
+        if (!TerminalImage::display(imagePath)) {
+            qCritical() << "Failed to display image:" << imagePath;
+        }
+    }
+
+    const bool processRequested = parser.isSet("process");
+    const bool scanRequested = parser.isSet("scan") || processRequested;
+    QString scanPath = parser.isSet("scan") ? parser.value("scan") : parser.value("process");
+
+    // Handle scan command (direct or via process pipeline)
+    if (scanRequested) {
+        if (scanPath.isEmpty()) {
+            qCritical() << "Scan path not provided";
+            return 1;
+        }
         qInfo() << "Scanning directory:" << scanPath;
         qInfo() << "";
 
@@ -181,8 +400,8 @@ int main(int argc, char *argv[])
         qInfo() << "  - Inserted:" << insertedCount << "files";
         qInfo() << "  - Skipped:" << skippedCount << "files";
 
-        // Calculate hashes if requested
-        if (parser.isSet("hash")) {
+        // Calculate hashes if requested or pipeline
+        if (parser.isSet("hash") || processRequested) {
             qInfo() << "";
             qInfo() << "Calculating hashes...";
 
@@ -231,6 +450,32 @@ int main(int argc, char *argv[])
 
         qInfo() << "─────────────────────────────────────";
         qInfo() << "Total:" << total << "files";
+    }
+
+    // Hash all existing files lacking hashes
+    if (parser.isSet("hash-all")) {
+        qInfo() << "";
+        qInfo() << "Hashing files without hashes...";
+        Hasher hasher;
+        QList<FileRecord> filesToHash = db.getFilesWithoutHashes();
+        int hashedCount = 0;
+
+        for (const FileRecord &file : filesToHash) {
+            int headerSize = Hasher::detectHeaderSize(file.currentPath, file.extension);
+            bool stripHeader = (headerSize > 0);
+
+            HashResult hashResult = hasher.calculateHashes(file.currentPath, stripHeader, headerSize);
+            if (hashResult.success) {
+                db.updateFileHashes(file.id, hashResult.crc32,
+                                    hashResult.md5, hashResult.sha1);
+                hashedCount++;
+                if (hashedCount % 10 == 0) {
+                    qInfo() << "  Hashed" << hashedCount << "of" << filesToHash.size() << "files...";
+                }
+            }
+        }
+
+        qInfo() << "Hashing complete:" << hashedCount << "files hashed";
     }
 
     // Handle metadata fetch command
@@ -348,97 +593,67 @@ int main(int argc, char *argv[])
     }
 
     // Handle M3 matching command
-    if (parser.isSet("match")) {
+    if (parser.isSet("match") || processRequested) {
         qInfo() << "";
         qInfo() << "=== Intelligent Metadata Matching (M3) ===";
         qInfo() << "";
-        
-        // Set up provider orchestrator
-        ProviderOrchestrator orchestrator;
-        
-        // Add Hasheous (highest priority for hash matching, no auth required)
-        auto hasheousProvider = new HasheousProvider();
-        const auto hasheousInfo = Providers::getProviderInfo(Providers::HASHEOUS);
-        const int hasheousPriority = hasheousInfo ? hasheousInfo->priority : 100;
-        orchestrator.addProvider(Providers::HASHEOUS, hasheousProvider, hasheousPriority);
-        
-        // Add ScreenScraper (if credentials provided)
-        if (parser.isSet("ss-user") && parser.isSet("ss-pass")) {
-            auto ssProvider = new ScreenScraperProvider();
-            ssProvider->setCredentials(parser.value("ss-user"), parser.value("ss-pass"));
-            if (parser.isSet("ss-devid") && parser.isSet("ss-devpass")) {
-                ssProvider->setDeveloperCredentials(parser.value("ss-devid"), parser.value("ss-devpass"));
-            }
-            const auto ssInfo = Providers::getProviderInfo(Providers::SCREENSCRAPER);
-            const int ssPriority = ssInfo ? ssInfo->priority : 90;
-            orchestrator.addProvider(Providers::SCREENSCRAPER, ssProvider, ssPriority);
-        }
-        
-        // Add TheGamesDB (name fallback)
-        auto tgdbProvider = new TheGamesDBProvider();
-        const auto tgdbInfo = Providers::getProviderInfo(Providers::THEGAMESDB);
-        const int tgdbPriority = tgdbInfo ? tgdbInfo->priority : 50;
-        orchestrator.addProvider(Providers::THEGAMESDB, tgdbProvider, tgdbPriority);
-        
-        // Add IGDB (richest metadata fallback)
-        auto igdbProvider = new IGDBProvider();
-        const auto igdbInfo = Providers::getProviderInfo(Providers::IGDB);
-        const int igdbPriority = igdbInfo ? igdbInfo->priority : 40;
-        orchestrator.addProvider(Providers::IGDB, igdbProvider, igdbPriority);
-        
-        // Connect orchestrator signals for progress tracking
-        QObject::connect(&orchestrator, &ProviderOrchestrator::tryingProvider,
+
+        auto orchestrator = buildOrchestrator(parser);
+
+        QObject::connect(orchestrator.get(), &ProviderOrchestrator::tryingProvider,
                         [](const QString &name, const QString &method) {
             qInfo() << "  [TRYING]" << name << "(" << method << ")";
         });
-        
-        QObject::connect(&orchestrator, &ProviderOrchestrator::providerSucceeded,
+
+        QObject::connect(orchestrator.get(), &ProviderOrchestrator::providerSucceeded,
                         [](const QString &name, const QString &method) {
             qInfo() << "  [SUCCESS]" << name << "matched via" << method;
         });
-        
-        QObject::connect(&orchestrator, &ProviderOrchestrator::providerFailed,
+
+        QObject::connect(orchestrator.get(), &ProviderOrchestrator::providerFailed,
                         [](const QString &name, const QString &error) {
             qInfo() << "  [FAILED]" << name << "-" << error;
         });
-        
-        // Get files without metadata from database
-        QList<FileRecord> files = db.getFilesWithoutHashes();
+
+        QList<FileRecord> files = getHashedFiles(db);
         int minConfidence = parser.value("min-confidence").toInt();
-        
+
         qInfo() << "Matching" << files.size() << "files with minimum confidence:" << minConfidence << "%";
         qInfo() << "Provider fallback order:";
-        QStringList providers = orchestrator.getEnabledProviders();
+        QStringList providers = orchestrator->getEnabledProviders();
         for (const QString &p : providers) {
-            QString hashSupport = orchestrator.providerSupportsHash(p) ? "✓ hash" : "✗ name only";
+            QString hashSupport = orchestrator->providerSupportsHash(p) ? "✓ hash" : "✗ name only";
             qInfo() << "  -" << p << "(" << hashSupport << ")";
         }
         qInfo() << "";
-        
-        // Match each file
-        MatchingEngine matcher;
+
         int matched = 0;
         int failed = 0;
-        
+
         for (const FileRecord &file : files) {
+            auto existing = db.getMatchForFile(file.id);
+            if (existing.matchId != 0) {
+                continue; // already matched
+            }
+
             qInfo() << "Matching:" << file.filename;
-            
-            // Try to get metadata with intelligent fallback
-            GameMetadata metadata = orchestrator.searchWithFallback(
-                file.crc32,  // Try hash first
+
+            GameMetadata metadata = orchestrator->searchWithFallback(
+                !file.crc32.isEmpty() ? file.crc32 : (!file.sha1.isEmpty() ? file.sha1 : file.md5),
                 file.filename,
-                "" // System would come from file.systemId lookup
+                ""
             );
-            
+
             if (!metadata.title.isEmpty()) {
-                // Use actual confidence from orchestrator
-                int confidence = static_cast<int>(metadata.matchScore * 100);
-                
+                int confidence = metadata.matchScore > 0 ? static_cast<int>(metadata.matchScore * 100) : 0;
+
                 if (confidence >= minConfidence) {
+                    int gameId = persistMetadata(db, file, metadata);
                     qInfo() << "  ✓ MATCHED:" << metadata.title << "(" << confidence << "% confidence)";
                     qInfo() << "    Provider:" << metadata.providerId;
                     qInfo() << "    Method:" << metadata.matchMethod;
                     qInfo() << "    System:" << metadata.system;
+                    qInfo() << "    Game ID:" << gameId;
                     matched++;
                 } else {
                     qInfo() << "  ⚠ Low confidence:" << confidence << "% (threshold:" << minConfidence << "%)";
@@ -448,14 +663,288 @@ int main(int argc, char *argv[])
                 qInfo() << "  ✗ No match found";
                 failed++;
             }
-            
+
             qInfo() << "";
         }
-        
+
         qInfo() << "=== Matching Complete ===";
         qInfo() << "Matched:" << matched;
         qInfo() << "Failed:" << failed;
-        qInfo() << "Success rate:" << QString::number((matched * 100.0) / (matched + failed), 'f', 1) + "%";
+        if (matched + failed > 0) {
+            qInfo() << "Success rate:" << QString::number((matched * 100.0) / (matched + failed), 'f', 1) + "%";
+        }
+    }
+
+    // Handle match report command
+    if (parser.isSet("match-report")) {
+        qInfo() << "";
+        qInfo() << "=== Matching Report with Confidence Scores ===";
+        qInfo() << "";
+
+        auto orchestrator = buildOrchestrator(parser);
+
+        QList<FileRecord> files = getHashedFiles(db);
+        int minConfidence = parser.value("min-confidence").toInt();
+
+        // Open report file if specified
+        QFile reportFile;
+        QTextStream outStream(stdout);
+        
+        if (parser.isSet("report-file")) {
+            reportFile.setFileName(parser.value("report-file"));
+            if (!reportFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
+                qCritical() << "Failed to open report file:" << parser.value("report-file");
+                return 1;
+            }
+            outStream.setDevice(&reportFile);
+        }
+
+        outStream << "\n=== Matching Confidence Report ===\n";
+        outStream << QString("Generated: %1\n").arg(QDateTime::currentDateTime().toString(Qt::ISODate));
+        outStream << QString("Total files: %1\n").arg(files.size());
+        outStream << QString("Minimum confidence threshold: %1%\n\n").arg(minConfidence);
+
+        // Table header
+        outStream << "┌────────────┬──────────────────────────────┬──────────┬──────────┬──────────────────────┐\n";
+        outStream << "│ ID         │ Filename                     │ Conf %   │ Method   │ Title                │\n";
+        outStream << "├────────────┼──────────────────────────────┼──────────┼──────────┼──────────────────────┤\n";
+
+        for (const FileRecord &file : files) {
+            GameMetadata metadata = orchestrator->searchWithFallback(
+                !file.crc32.isEmpty() ? file.crc32 : (!file.sha1.isEmpty() ? file.sha1 : file.md5),
+                file.filename,
+                ""
+            );
+
+            int confidence = metadata.matchScore > 0 ? static_cast<int>(metadata.matchScore * 100) : 0;
+            QString confidenceStr = QString::number(confidence);
+            QString method = metadata.matchMethod.isEmpty() ? "N/A" : metadata.matchMethod;
+            QString title = metadata.title.isEmpty() ? "No match" : metadata.title;
+
+            // Confidence color indicator
+            QString confidenceIndicator;
+            if (confidence >= 90) confidenceIndicator = "✓✓✓";
+            else if (confidence >= 70) confidenceIndicator = "✓✓";
+            else if (confidence >= 50) confidenceIndicator = "✓";
+            else confidenceIndicator = "✗";
+
+            outStream << QString("│ %1 │ %2 │ %3 %4 │ %5 │ %6 │\n")
+                .arg(QString::number(file.id).leftJustified(10))
+                .arg(file.filename.left(28).leftJustified(28))
+                .arg(confidenceStr.rightJustified(4))
+                .arg(confidenceIndicator.rightJustified(3))
+                .arg(method.leftJustified(8))
+                .arg(title.left(19).leftJustified(19));
+        }
+
+        outStream << "└────────────┴──────────────────────────────┴──────────┴──────────┴──────────────────────┘\n";
+        outStream << "\nLegend:\n";
+        outStream << "  ✓✓✓ = Excellent confidence (≥90%)\n";
+        outStream << "  ✓✓  = Good confidence (70-89%)\n";
+        outStream << "  ✓   = Fair confidence (50-69%)\n";
+        outStream << "  ✗   = Low confidence (<50%)\n";
+
+        if (parser.isSet("report-file")) {
+            reportFile.close();
+            qInfo() << "✓ Report saved to:" << parser.value("report-file");
+        }
+    }
+
+    // Handle checksum verify command
+    if (parser.isSet("checksum-verify")) {
+        QString filePath = parser.value("checksum-verify");
+        QString expectedHash = parser.value("expected-hash");
+        QString hashType = parser.value("hash-type").toLower();
+
+        qInfo() << "";
+        qInfo() << "=== Verify Checksum ===";
+        qInfo() << "File:" << filePath;
+        qInfo() << "Hash Type:" << hashType;
+        qInfo() << "Expected Hash:" << expectedHash;
+        qInfo() << "";
+
+        QFileInfo fileInfo(filePath);
+        if (!fileInfo.exists()) {
+            qCritical() << "✗ File not found:" << filePath;
+            return 1;
+        }
+
+        Hasher hasher;
+        QString calculatedHash;
+
+        if (hashType == "md5") {
+            HashResult result = hasher.calculateHashes(filePath, false, 0);
+            calculatedHash = result.md5.toLower();
+        } else if (hashType == "sha1") {
+            HashResult result = hasher.calculateHashes(filePath, false, 0);
+            calculatedHash = result.sha1.toLower();
+        } else {
+            HashResult result = hasher.calculateHashes(filePath, false, 0);
+            calculatedHash = result.crc32.toLower();
+        }
+
+        qInfo() << "Calculated Hash:" << calculatedHash;
+
+        if (calculatedHash.toLower() == expectedHash.toLower()) {
+            qInfo() << "";
+            qInfo() << "✓ HASH MATCH - File is valid!";
+            qInfo() << "  File Size:" << SpaceCalculator::formatBytes(fileInfo.size());
+        } else {
+            qWarning() << "";
+            qWarning() << "✗ HASH MISMATCH - File may be corrupted or modified!";
+            qWarning() << "  Expected: " << expectedHash;
+            qWarning() << "  Got:      " << calculatedHash;
+            return 1;
+        }
+    }
+
+    // Handle verify command (verify against DAT file)
+    if (parser.isSet("verify")) {
+        QString datFile = parser.value("verify");
+        bool generateReport = parser.isSet("verify-report");
+
+        qInfo() << "";
+        qInfo() << "=== Verify Files Against DAT ===";
+        qInfo() << "DAT File:" << datFile;
+        qInfo() << "";
+
+        QFileInfo datInfo(datFile);
+        if (!datInfo.exists()) {
+            qCritical() << "✗ DAT file not found:" << datFile;
+            return 1;
+        }
+
+        VerificationEngine verifier(&db);
+        
+        // Detect system from DAT filename or ask user
+        QString systemName = detector.detectSystem("", datFile);
+        if (systemName.isEmpty()) {
+            // Try extracting from filename
+            QString baseName = datInfo.completeBaseName();
+            systemName = baseName;  // Use basename as system name
+        }
+
+        if (verifier.importDat(datFile, systemName) <= 0) {
+            qCritical() << "✗ Failed to import DAT file";
+            return 1;
+        }
+
+        qInfo() << "✓ DAT file loaded successfully";
+        qInfo() << "  System:" << systemName;
+        qInfo() << "";
+
+        // Verify all files
+        QList<VerificationResult> results = verifier.verifyLibrary(systemName);
+        VerificationSummary summary = verifier.getLastSummary();
+
+        qInfo() << "=== Verification Results ===";
+        qInfo() << QString("Total files: %1").arg(summary.totalFiles);
+        qInfo() << QString("✓ Verified: %1").arg(summary.verified);
+        qInfo() << QString("⚠ Mismatched: %1").arg(summary.mismatched);
+        qInfo() << QString("✗ Not in DAT: %1").arg(summary.notInDat);
+        qInfo() << QString("? No hash: %1").arg(summary.noHash);
+        qInfo() << "";
+
+        // Show detailed results for non-verified files
+        if (!results.isEmpty()) {
+            qInfo() << "Detailed Results:";
+            qInfo() << "";
+
+            int detailedShown = 0;
+            for (const VerificationResult &result : results) {
+                if (result.status == VerificationStatus::Verified) {
+                    qInfo() << "✓" << result.filename << "- VERIFIED";
+                    qInfo() << "  Title:" << result.datDescription;
+                } else if (result.status == VerificationStatus::Mismatch) {
+                    qWarning() << "✗" << result.filename << "- HASH MISMATCH";
+                    qWarning() << "  Expected:" << result.datHash;
+                    qWarning() << "  Got:     " << result.fileHash;
+                } else if (result.status == VerificationStatus::NotInDat) {
+                    qInfo() << "?" << result.filename << "- NOT IN DAT";
+                } else if (result.status == VerificationStatus::HashMissing) {
+                    qInfo() << "?" << result.filename << "- NO HASH (calculate with --hash)";
+                }
+                
+                detailedShown++;
+                if (detailedShown >= 50) {
+                    qInfo() << "";
+                    qInfo() << "... and" << (results.size() - detailedShown) << "more results";
+                    break;
+                }
+            }
+        }
+
+        if (generateReport && parser.isSet("report-file")) {
+            QString reportPath = parser.value("report-file");
+            if (verifier.exportReport(results, reportPath, "csv")) {
+                qInfo() << "";
+                qInfo() << "✓ CSV report saved to:" << reportPath;
+            }
+        }
+    }
+
+    // Handle download artwork command
+    if (parser.isSet("download-artwork")) {
+        QString artworkDirStr = parser.value("artwork-dir");
+        QString artworkTypes = parser.value("artwork-types");
+
+        qInfo() << "";
+        qInfo() << "=== Download Artwork ===";
+        
+        if (artworkDirStr.isEmpty()) {
+            artworkDirStr = QDir::homePath() + "/.local/share/Remus/artwork/";
+        }
+        
+        qInfo() << "Artwork directory:" << artworkDirStr;
+        qInfo() << "Types to download:" << artworkTypes;
+        qInfo() << "";
+
+        QDir().mkpath(artworkDirStr);
+
+        ArtworkDownloader downloader;
+        downloader.setMaxConcurrent(4);
+
+        auto orchestrator = buildOrchestrator(parser);
+        int downloadedCount = 0;
+        int failedCount = 0;
+
+        QList<FileRecord> files = getHashedFiles(db);
+
+        for (const FileRecord &file : files) {
+            qInfo() << "Processing:" << file.filename;
+            GameMetadata metadata = orchestrator->searchWithFallback(
+                !file.crc32.isEmpty() ? file.crc32 : (!file.sha1.isEmpty() ? file.sha1 : file.md5),
+                file.filename,
+                ""
+            );
+
+            if (metadata.boxArtUrl.isEmpty()) {
+                qInfo() << "  ✗ No box art URL";
+                failedCount++;
+                continue;
+            }
+
+            QUrl url(metadata.boxArtUrl);
+            if (!url.isValid()) {
+                qInfo() << "  ✗ Invalid URL" << metadata.boxArtUrl;
+                failedCount++;
+                continue;
+            }
+
+            QString destPath = artworkDirStr + "/" + QFileInfo(file.filename).completeBaseName() + ".jpg";
+            if (downloader.download(url, destPath)) {
+                qInfo() << "  ✓ Saved" << destPath;
+                downloadedCount++;
+            } else {
+                qInfo() << "  ✗ Download failed" << url.toString();
+                failedCount++;
+            }
+        }
+
+        qInfo() << "";
+        qInfo() << "Artwork download complete:";
+        qInfo() << "  Downloaded:" << downloadedCount;
+        qInfo() << "  Failed:" << failedCount;
     }
 
     // Handle M4 organize command
@@ -498,30 +987,27 @@ int main(int argc, char *argv[])
                 qInfo() << "  [PREVIEW]" << opName << ":" << oldPath << "→" << newPath;
             });
 
-        // Get all matched files (requires matches in database)
-        // For now, just get all files as a simple implementation
+        QMap<int, Database::MatchResult> matches = db.getAllMatches();
         QList<FileRecord> files = db.getAllFiles();
-        
+
         if (files.isEmpty()) {
             qInfo() << "No files to organize";
         } else {
             qInfo() << "Processing" << files.size() << "files...";
             qInfo() << "";
 
-            // For a simple demo, we'll just preview the first few files
-            // Full implementation would require fetching metadata for each file
-            int processed = 0;
             for (const FileRecord &file : files) {
-                if (processed >= 10) break;  // Limit to 10 for demo
-                
-                // Create dummy metadata (in real use, fetch from database/matches)
+                if (!matches.contains(file.id)) {
+                    continue; // skip unmatched
+                }
+
+                const auto match = matches.value(file.id);
                 GameMetadata metadata;
-                metadata.title = "Example Game";
-                metadata.region = "USA";
-                metadata.system = "NES";
-                
-                OrganizeResult result = organizer.organizeFile(file.id, metadata, destination, FileOperation::Move);
-                processed++;
+                metadata.title = match.gameTitle;
+                metadata.region = match.region;
+                metadata.system = db.getSystemDisplayName(file.systemId);
+
+                organizer.organizeFile(file.id, metadata, destination, FileOperation::Move);
             }
 
             qInfo() << "";
@@ -808,6 +1294,213 @@ int main(int argc, char *argv[])
         ConversionSummary summary = calculator.scanDirectory(dirPath, true);
 
         qInfo().noquote() << calculator.formatSavingsReport(summary);
+    }
+
+    // Export command
+    if (parser.isSet("export")) {
+        const QString format = parser.value("export").toLower();
+        QString outputPath = parser.value("export-path");
+        const QString systemsArg = parser.value("export-systems");
+        const QStringList systemFilters = systemsArg.isEmpty() ? QStringList() : systemsArg.split(',', Qt::SkipEmptyParts);
+
+        if (outputPath.isEmpty()) {
+            if (format == "retroarch") outputPath = "remus.lpl";
+            else if (format == "emustation") outputPath = "gamelist.xml";
+            else if (format == "launchbox") outputPath = "launchbox-games.xml";
+            else if (format == "csv") outputPath = "remus-export.csv";
+            else outputPath = "remus-export.json";
+        }
+
+        QMap<int, Database::MatchResult> matches = db.getAllMatches();
+        QList<FileRecord> files = db.getAllFiles();
+
+        struct ExportRow {
+            FileRecord file;
+            Database::MatchResult match;
+        };
+
+        QList<ExportRow> rows;
+        for (const FileRecord &file : files) {
+            if (!matches.contains(file.id)) continue;
+            const auto match = matches.value(file.id);
+            QString systemName = db.getSystemDisplayName(file.systemId);
+            if (!systemFilters.isEmpty() && !systemFilters.contains(systemName)) continue;
+            rows.append({file, match});
+        }
+
+        if (rows.isEmpty()) {
+            qWarning() << "No matched files to export";
+        } else if (format == "retroarch") {
+            QFile f(outputPath);
+            if (!f.open(QIODevice::WriteOnly | QIODevice::Text)) {
+                qCritical() << "Failed to open" << outputPath;
+                return 1;
+            }
+            QTextStream out(&f);
+            for (const auto &row : rows) {
+                QString systemName = db.getSystemDisplayName(row.file.systemId);
+                out << row.file.currentPath << "\n";
+                out << (!row.match.gameTitle.isEmpty() ? row.match.gameTitle : row.file.filename) << "\n";
+                out << "DETECT\nDETECT\n";
+                out << (row.file.crc32.isEmpty() ? "00000000" : row.file.crc32) << "|crc\n";
+                out << systemName << ".lpl\n";
+            }
+            qInfo() << "✓ RetroArch playlist exported to" << outputPath;
+        } else if (format == "emustation") {
+            QFile f(outputPath);
+            if (!f.open(QIODevice::WriteOnly | QIODevice::Text)) {
+                qCritical() << "Failed to open" << outputPath;
+                return 1;
+            }
+            QTextStream out(&f);
+            out << "<gameList>\n";
+            for (const auto &row : rows) {
+                out << "  <game>\n";
+                out << "    <path>" << row.file.currentPath << "</path>\n";
+                out << "    <name>" << (!row.match.gameTitle.isEmpty() ? row.match.gameTitle : row.file.filename) << "</name>\n";
+                out << "    <desc>" << row.match.description << "</desc>\n";
+                out << "    <genre>" << row.match.genre << "</genre>\n";
+                out << "    <players>" << row.match.players << "</players>\n";
+                out << "    <region>" << row.match.region << "</region>\n";
+                out << "  </game>\n";
+            }
+            out << "</gameList>\n";
+            qInfo() << "✓ EmulationStation gamelist exported to" << outputPath;
+        } else if (format == "launchbox") {
+            QFile f(outputPath);
+            if (!f.open(QIODevice::WriteOnly | QIODevice::Text)) {
+                qCritical() << "Failed to open" << outputPath;
+                return 1;
+            }
+            QTextStream out(&f);
+            out << "<LaunchBox>\n";
+            for (const auto &row : rows) {
+                out << "  <Game>\n";
+                out << "    <Title>" << (!row.match.gameTitle.isEmpty() ? row.match.gameTitle : row.file.filename) << "</Title>\n";
+                out << "    <ApplicationPath>" << row.file.currentPath << "</ApplicationPath>\n";
+                out << "    <Region>" << row.match.region << "</Region>\n";
+                out << "    <Genre>" << row.match.genre << "</Genre>\n";
+                out << "  </Game>\n";
+            }
+            out << "</LaunchBox>\n";
+            qInfo() << "✓ LaunchBox XML exported to" << outputPath;
+        } else if (format == "csv") {
+            QFile f(outputPath);
+            if (!f.open(QIODevice::WriteOnly | QIODevice::Text)) {
+                qCritical() << "Failed to open" << outputPath;
+                return 1;
+            }
+            QTextStream out(&f);
+            out << "file_id,title,system,path,region,confidence\n";
+            for (const auto &row : rows) {
+                QString systemName = db.getSystemDisplayName(row.file.systemId);
+                QString title = row.match.gameTitle;
+                title.replace(',', ' ');
+                out << row.file.id << "," << title << "," << systemName
+                    << "," << row.file.currentPath << "," << row.match.region << "," << row.match.confidence << "\n";
+            }
+            qInfo() << "✓ CSV exported to" << outputPath;
+        } else {
+            QFile f(outputPath);
+            if (!f.open(QIODevice::WriteOnly | QIODevice::Text)) {
+                qCritical() << "Failed to open" << outputPath;
+                return 1;
+            }
+            QJsonArray arr;
+            for (const auto &row : rows) {
+                QJsonObject obj;
+                obj["fileId"] = row.file.id;
+                obj["title"] = row.match.gameTitle;
+                obj["system"] = db.getSystemDisplayName(row.file.systemId);
+                obj["path"] = row.file.currentPath;
+                obj["region"] = row.match.region;
+                obj["confidence"] = row.match.confidence;
+                arr.append(obj);
+            }
+            QJsonDocument doc(arr);
+            f.write(doc.toJson());
+            qInfo() << "✓ JSON exported to" << outputPath;
+        }
+    }
+
+    // Patch operations
+    if (parser.isSet("patch-tools")) {
+        PatchEngine pe;
+        auto tools = pe.checkToolAvailability();
+        qInfo() << "=== Patch Tool Availability ===";
+        for (auto it = tools.constBegin(); it != tools.constEnd(); ++it) {
+            qInfo() << it.key() << ":" << (it.value() ? "✓" : "✗");
+        }
+    }
+
+    if (parser.isSet("patch-info")) {
+        PatchEngine pe;
+        PatchInfo info = pe.detectFormat(parser.value("patch-info"));
+        if (info.valid) {
+            qInfo() << "Format:" << info.formatName;
+            qInfo() << "Size:" << info.size;
+            if (!info.sourceChecksum.isEmpty()) {
+                qInfo() << "Source CRC:" << info.sourceChecksum;
+                qInfo() << "Target CRC:" << info.targetChecksum;
+                qInfo() << "Patch CRC:" << info.patchChecksum;
+            }
+        } else {
+            qWarning() << "Could not detect patch format:" << info.error;
+        }
+    }
+
+    if (parser.isSet("patch-apply") && parser.isSet("patch-patch")) {
+        QString basePath = parser.value("patch-apply");
+        QString patchPath = parser.value("patch-patch");
+        QString outputPath = parser.value("patch-output");
+
+        PatchEngine pe;
+        PatchInfo info = pe.detectFormat(patchPath);
+        if (!info.valid) {
+            qCritical() << "Invalid patch file" << info.error;
+            return 1;
+        }
+
+        PatchResult result = pe.apply(basePath, info, outputPath);
+        if (result.success) {
+            qInfo() << "✓ Patch applied:" << result.outputPath;
+        } else {
+            qCritical() << "✗ Patch failed:" << result.error;
+            return 1;
+        }
+    }
+
+    if (parser.isSet("patch-create") && parser.isSet("patch-original")) {
+        QString modified = parser.value("patch-create");
+        QString original = parser.value("patch-original");
+        QString patchPath = parser.value("patch-patch");
+        QString fmtStr = parser.value("patch-format").toLower();
+
+        PatchFormat format = PatchFormat::BPS;
+        if (fmtStr == "ips") format = PatchFormat::IPS;
+        else if (fmtStr == "ups") format = PatchFormat::UPS;
+        else if (fmtStr == "xdelta") format = PatchFormat::XDelta3;
+        else if (fmtStr == "ppf") format = PatchFormat::PPF;
+
+        PatchEngine pe;
+        if (patchPath.isEmpty()) {
+            QFileInfo baseInfo(original);
+            QFileInfo modInfo(modified);
+            QString baseName = baseInfo.completeBaseName();
+            QString modName = modInfo.completeBaseName();
+            QString ext = (format == PatchFormat::IPS) ? "ips" :
+                          (format == PatchFormat::UPS) ? "ups" :
+                          (format == PatchFormat::XDelta3) ? "xdelta" :
+                          (format == PatchFormat::PPF) ? "ppf" : "bps";
+            patchPath = baseInfo.absolutePath() + "/" + baseName + "_to_" + modName + "." + ext;
+        }
+
+        if (pe.createPatch(original, modified, patchPath, format)) {
+            qInfo() << "✓ Patch created:" << patchPath;
+        } else {
+            qCritical() << "✗ Failed to create patch";
+            return 1;
+        }
     }
 
     qInfo() << "";

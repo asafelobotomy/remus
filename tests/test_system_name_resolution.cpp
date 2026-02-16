@@ -24,8 +24,8 @@ int main(int argc, char *argv[]) {
         INSERT INTO systems (name, display_name, manufacturer, extensions, preferred_hash)
         VALUES (?, ?, ?, ?, ?)
     )");
-    insert.addBindValue("NES");
-    insert.addBindValue("Nintendo Entertainment System");
+    insert.addBindValue("TEST_NES");
+    insert.addBindValue("Test Nintendo Entertainment System");
     insert.addBindValue("Nintendo");
     insert.addBindValue("['.nes', '.unf']");
     insert.addBindValue("CRC32");
@@ -53,13 +53,13 @@ int main(int argc, char *argv[]) {
     }
     
     // Verify correctness
-    if (systemName == "NES") {
+    if (systemName == "TEST_NES") {
         qDebug() << "\n✅ SUCCESS: System name resolution works correctly!";
-        qDebug() << "   - Inserted: NES (ID" << systemId << ")";
+        qDebug() << "   - Inserted: TEST_NES (ID" << systemId << ")";
         qDebug() << "   - Retrieved: " << systemName;
         return 0;
     } else {
-        qCritical() << "\n❌ FAILED: Expected 'NES', got '" << systemName << "'";
+        qCritical() << "\n❌ FAILED: Expected 'TEST_NES', got '" << systemName << "'";
         return 1;
     }
 }

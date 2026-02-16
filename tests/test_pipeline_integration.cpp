@@ -6,9 +6,9 @@
 #include <QCoreApplication>
 #include <QDebug>
 #include <QFile>
-#include <QSqlQuery>
-#include <QSqlDatabase>
-#include <QSqlError>
+#include <QFileInfo>
+#include <QTemporaryDir>
+#include "../src/core/database.h"
 #include "../src/metadata/local_database_provider.h"
 
 using namespace Remus;
@@ -21,44 +21,65 @@ int main(int argc, char *argv[])
     qInfo() << "║  Metadata Pipeline Integration Test                         ║";
     qInfo() << "╚══════════════════════════════════════════════════════════════╝\n";
     
-    // Step 1: Query ROM info directly using QSqlQuery
-    qInfo() << "Step 1: Opening database and querying ROM...";
-    
-    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE", "integration_test");
-    db.setDatabaseName("remus.db");
-    
-    if (!db.open()) {
-        qCritical() << "✗ Failed to open database:" << db.lastError().text();
+    // Step 1: Set up a temporary database with a known ROM entry
+    qInfo() << "Step 1: Creating temp database and ROM record...";
+
+    QTemporaryDir tempDir;
+    if (!tempDir.isValid()) {
+        qCritical() << "✗ Failed to create temp directory";
         return 1;
     }
-    
-    QSqlQuery query(db);
-    query.prepare("SELECT filename, file_size, crc32, md5, sha1 FROM files WHERE filename LIKE ? LIMIT 1");
-    query.addBindValue("%Sonic%");
-    
-    if (!query.exec() || !query.next()) {
-        qCritical() << "✗ No ROM found in database";
-        qInfo() << "Please run: ./build/remus-cli --scan ~/Documents/remus/tests/rom_tests/Sonic* --hash";
-        db.close();
+
+    QString dbPath = tempDir.path() + "/remus_test.db";
+    Database db;
+    if (!db.initialize(dbPath)) {
+        qCritical() << "✗ Failed to initialize temp database";
         return 1;
     }
-    
-    QString filename = query.value(0).toString();
-    qint64 fileSize = query.value(1).toLongLong();
-    QString crc32 = query.value(2).toString();
-    QString md5 = query.value(3).toString();
-    QString sha1 = query.value(4).toString();
-    
-    qInfo() << "✓ Found ROM:" << filename;
-    qInfo() << "  Size:" << fileSize << "bytes";
-    qInfo() << "  CRC32:" << crc32;
-    qInfo() << "  MD5:" << md5;
-    qInfo() << "  SHA1:" << sha1 << "\n";
+
+    int libraryId = db.insertLibrary(tempDir.path());
+    if (libraryId == 0) {
+        qCritical() << "✗ Failed to insert temp library";
+        return 1;
+    }
+
+    FileRecord record;
+    record.libraryId = libraryId;
+    record.originalPath = tempDir.path() + "/Sonic The Hedgehog (USA, Europe).md";
+    record.currentPath = record.originalPath;
+    record.filename = "Sonic The Hedgehog (USA, Europe).md";
+    record.extension = ".md";
+    record.fileSize = 524288;
+    record.systemId = db.getSystemId("Genesis");
+    record.crc32 = "f9394e97";
+    record.md5 = "";
+    record.sha1 = "";
+
+    int fileId = db.insertFile(record);
+    if (fileId == 0) {
+        qCritical() << "✗ Failed to insert ROM record";
+        return 1;
+    }
+
+    FileRecord file = db.getFileById(fileId);
+    if (file.id == 0) {
+        qCritical() << "✗ Failed to read ROM record";
+        return 1;
+    }
+
+    qInfo() << "✓ Created ROM record:" << file.filename;
+    qInfo() << "  Size:" << file.fileSize << "bytes";
+    qInfo() << "  CRC32:" << file.crc32 << "\n";
     
     // Step 3: Load DAT file
     qInfo() << "Step 3: Loading Genesis DAT file...";
     LocalDatabaseProvider provider;
     QString datPath = "/home/solon/Documents/remus/data/databases/Sega - Mega Drive - Genesis.dat";
+    QFileInfo datInfo(datPath);
+    if (!datInfo.exists()) {
+        qCritical() << "✗ DAT file not found:" << datPath;
+        return 1;
+    }
     int entries = provider.loadDatabase(datPath);
     
     if (entries == 0) {
@@ -73,11 +94,11 @@ int main(int argc, char *argv[])
     // Test 4a: Perfect match (all signals)
     qInfo() << "Test 4a: Perfect Match (All Signals)";
     ROMSignals perfectSignals;
-    perfectSignals.crc32 = crc32;
-    perfectSignals.md5 = md5;
-    perfectSignals.sha1 = sha1;
-    perfectSignals.filename = filename;
-    perfectSignals.fileSize = fileSize;
+    perfectSignals.crc32 = file.crc32;
+    perfectSignals.md5 = file.md5;
+    perfectSignals.sha1 = file.sha1;
+    perfectSignals.filename = file.filename;
+    perfectSignals.fileSize = file.fileSize;
     perfectSignals.serial = ""; // We could query this from metadata if available
     
     QList<MultiSignalMatch> matches = provider.matchROM(perfectSignals);
@@ -102,7 +123,7 @@ int main(int argc, char *argv[])
     // Test 4b: Hash-only matching
     qInfo() << "Test 4b: Hash-Only Match";
     ROMSignals hashOnlySignals;
-    hashOnlySignals.crc32 = crc32;
+    hashOnlySignals.crc32 = file.crc32;
     hashOnlySignals.filename = "WrongName.md";
     hashOnlySignals.fileSize = 999999;
     
@@ -119,8 +140,8 @@ int main(int argc, char *argv[])
     // Test 4c: Fallback matching (no hash)
     qInfo() << "Test 4c: Fallback Match (No Hash)";
     ROMSignals fallbackSignals;
-    fallbackSignals.filename = filename;
-    fallbackSignals.fileSize = fileSize;
+    fallbackSignals.filename = file.filename;
+    fallbackSignals.fileSize = file.fileSize;
     
     matches = provider.matchROM(fallbackSignals);
     
@@ -134,7 +155,7 @@ int main(int argc, char *argv[])
     
     // Step 5: Test legacy hash lookup (backwards compatibility)
     qInfo() << "Step 5: Testing legacy getByHash() method...";
-    GameMetadata metadata = provider.getByHash(crc32, "Genesis");
+    GameMetadata metadata = provider.getByHash(file.crc32, "Genesis");
     
     if (!metadata.title.isEmpty()) {
         qInfo() << "✓ Legacy method still works";
@@ -156,10 +177,6 @@ int main(int argc, char *argv[])
     qInfo() << "✓ System detection: Working";
     qInfo() << "";
     qInfo() << "Full metadata pipeline is operational!";
-    
-    // Cleanup
-    db.close();
-    QSqlDatabase::removeDatabase("integration_test");
     
     return 0;
 }

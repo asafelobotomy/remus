@@ -27,7 +27,7 @@ bool Database::initialize(const QString &dbPath)
     m_db.setDatabaseName(dbPath);
 
     if (!m_db.open()) {
-        logError("Failed to open database: " + m_db.lastError().text());
+        logError(Constants::Errors::Database::FAILED_TO_OPEN);
         return false;
     }
 
@@ -35,20 +35,21 @@ bool Database::initialize(const QString &dbPath)
 
     // Check if schema exists
     QSqlQuery query(m_db);
-    query.exec("SELECT name FROM sqlite_master WHERE type='table' AND name='systems'");
+    query.exec(QString("SELECT name FROM sqlite_master WHERE type='table' AND name='%1'")
+        .arg(Constants::DatabaseSchema::Tables::SYSTEMS));
     
     bool isNewDatabase = !query.next();
     
     if (isNewDatabase) {
         // Schema doesn't exist, create it
         if (!createSchema()) {
-            logError("Failed to create database schema");
+            logError(Constants::Errors::Database::FAILED_TO_CREATE_SCHEMA);
             return false;
         }
         
         // Populate default systems
         if (!populateDefaultSystems()) {
-            logError("Failed to populate default systems");
+            logError(Constants::Errors::Database::FAILED_TO_POPULATE_SYSTEMS);
             return false;
         }
     }
@@ -71,28 +72,33 @@ void Database::runMigrations()
     QSqlQuery query(m_db);
     
     // Check if is_processed column exists
-    query.exec("PRAGMA table_info(files)");
+    query.exec(QString("PRAGMA table_info(%1)").arg(Constants::DatabaseSchema::Tables::FILES));
     bool hasIsProcessed = false;
     bool hasProcessingStatus = false;
     while (query.next()) {
         QString columnName = query.value(1).toString();
-        if (columnName == "is_processed") hasIsProcessed = true;
-        if (columnName == "processing_status") hasProcessingStatus = true;
+        if (columnName == Constants::DatabaseSchema::Columns::Files::IS_PROCESSED) hasIsProcessed = true;
+        if (columnName == Constants::DatabaseSchema::Columns::Files::PROCESSING_STATUS) hasProcessingStatus = true;
     }
     
     // Add is_processed column if missing
     if (!hasIsProcessed) {
         qInfo() << "Migration: Adding is_processed column to files table";
-        if (!query.exec("ALTER TABLE files ADD COLUMN is_processed BOOLEAN DEFAULT 0")) {
-            logError("Migration failed (is_processed): " + query.lastError().text());
+        if (!query.exec(QString("ALTER TABLE %1 ADD COLUMN %2 BOOLEAN DEFAULT 0")
+            .arg(Constants::DatabaseSchema::Tables::FILES,
+                 Constants::DatabaseSchema::Columns::Files::IS_PROCESSED))) {
+            logError(Constants::Errors::Database::MIGRATION_FAILED);
         }
     }
     
     // Add processing_status column if missing
     if (!hasProcessingStatus) {
         qInfo() << "Migration: Adding processing_status column to files table";
-        if (!query.exec("ALTER TABLE files ADD COLUMN processing_status TEXT DEFAULT ''")) {
-            logError("Migration failed (processing_status): " + query.lastError().text());
+        if (!query.exec(QString("ALTER TABLE %1 ADD COLUMN %2 TEXT DEFAULT '%3'")
+            .arg(Constants::DatabaseSchema::Tables::FILES,
+                 Constants::DatabaseSchema::Columns::Files::PROCESSING_STATUS,
+                 Constants::Engines::ProcessingStatus::UNPROCESSED))) {
+            logError(Constants::Errors::Database::MIGRATION_FAILED);
         }
     }
 }
@@ -102,8 +108,8 @@ bool Database::createSchema()
     QSqlQuery query(m_db);
 
     // Enable foreign keys
-    if (!query.exec("PRAGMA foreign_keys = ON")) {
-        logError("Failed to enable foreign keys");
+    if (!query.exec(Constants::DatabaseSchema::PRAGMA_FOREIGN_KEYS)) {
+        logError(Constants::Errors::Database::FAILED_TO_CREATE_SCHEMA);
         return false;
     }
 

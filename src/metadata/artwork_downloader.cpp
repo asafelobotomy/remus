@@ -7,6 +7,7 @@
 #include <QEventLoop>
 #include <QTimer>
 #include <QDebug>
+#include "../core/constants/constants.h"
 
 namespace Remus {
 
@@ -67,7 +68,7 @@ QByteArray ArtworkDownloader::downloadToMemory(const QUrl &url)
     QEventLoop loop;
     QTimer timeout;
     timeout.setSingleShot(true);
-    timeout.setInterval(60000);  // 60 second timeout
+    timeout.setInterval(Constants::Network::ARTWORK_TIMEOUT_MS);
 
     connect(reply, &QNetworkReply::finished, &loop, &QEventLoop::quit);
     connect(&timeout, &QTimer::timeout, &loop, &QEventLoop::quit);
