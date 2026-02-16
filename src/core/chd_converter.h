@@ -205,6 +205,23 @@ signals:
      */
     void errorOccurred(const QString &error);
 
+protected:
+    struct ProcessResult {
+        bool started = false;
+        bool finished = false;
+        int exitCode = -1;
+        QProcess::ExitStatus exitStatus = QProcess::NormalExit;
+        QString stdOutput;
+        QString stdError;
+    };
+
+    virtual ProcessResult runProcess(const QString &program,
+                                     const QStringList &args,
+                                     int timeoutMs);
+    virtual ProcessResult runProcessTracked(const QString &program,
+                                            const QStringList &args,
+                                            int timeoutMs);
+
 private:
     /**
      * @brief Run chdman command and wait for completion

@@ -204,10 +204,10 @@ IGDBProvider::ApiResponse IGDBProvider::makeRequest(const QString &endpoint, con
 {
     ApiResponse response;
 
-    QUrl url("https://api.igdb.com/v4" + endpoint);
+    QUrl url(QString(Constants::API::IGDB_BASE_URL) + endpoint);
     QNetworkRequest request(url);
     
-    request.setRawHeader("Client-ID", m_clientId.toUtf8());
+    request.setRawHeader(Constants::API::IGDB_CLIENT_ID_HEADER, m_clientId.toUtf8());
     request.setRawHeader("Authorization", QString("Bearer %1").arg(m_accessToken).toUtf8());
     request.setHeader(QNetworkRequest::ContentTypeHeader, "text/plain");
 
@@ -216,7 +216,7 @@ IGDBProvider::ApiResponse IGDBProvider::makeRequest(const QString &endpoint, con
     QEventLoop loop;
     QTimer timeout;
     timeout.setSingleShot(true);
-    timeout.setInterval(30000);
+    timeout.setInterval(Constants::Network::IGDB_TIMEOUT_MS);
 
     connect(reply, &QNetworkReply::finished, &loop, &QEventLoop::quit);
     connect(&timeout, &QTimer::timeout, &loop, &QEventLoop::quit);
@@ -236,7 +236,7 @@ IGDBProvider::ApiResponse IGDBProvider::makeRequest(const QString &endpoint, con
         }
     } else {
         response.success = false;
-        response.error = "Request timeout";
+        response.error = Constants::Errors::MetadataProvider::REQUEST_TIMEOUT;
     }
 
     reply->deleteLater();

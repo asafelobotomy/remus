@@ -1,0 +1,9 @@
+-rootPath
+/home/solon/Documents/remus/src/ui
+-cmake-output
+-output-file
+/home/solon/Documents/remus/build-coverage/src/ui/.qt/qml_imports/remus-gui_build.cmake
+-importPath
+/home/solon/Documents/remus/build-coverage/src/ui
+-importPath
+/usr/lib/qt6/qml

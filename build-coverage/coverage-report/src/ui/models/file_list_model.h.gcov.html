@@ -1,0 +1,303 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - Remus Coverage - src/ui/models/file_list_model.h</title>
+  <link rel="stylesheet" type="text/css" href="../../../gcov.css">
+</head>
+
+<body>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="title">LCOV - code coverage report</td></tr>
+            <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+            <tr>
+              <td width="100%">
+                <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="10%" class="headerValue"><a href="../../../index.html" title="Click to go to top-level">top level</a> - <a href="index.html" title="Click to go to directory src/ui/models">src/ui/models</a> - file_list_model.h<span style="font-size: 80%;"> (source / <a href="file_list_model.h.func-c.html" title="Click to go to function table">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="5%"></td>
+            <td width="5%" class="headerCovTableHead">Coverage</td>
+            <td width="5%" class="headerCovTableHead" title="Covered + Uncovered code">Total</td>
+            <td width="5%" class="headerCovTableHead" title="Exercised code only">Hit</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">Remus Coverage</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntryLo">0.0&nbsp;%</td>
+            <td class="headerCovTableEntry">6</td>
+            <td class="headerCovTableEntry">0</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test Date:</td>
+            <td class="headerValue">2026-02-16 20:31:55</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntryLo">0.0&nbsp;%</td>
+            <td class="headerCovTableEntry">7</td>
+            <td class="headerCovTableEntry">0</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Legend:</td>
+            <td class="headerValueLeg">            Lines:&nbsp&nbsp&nbsp&nbsp
+            <span class="coverLegendCov">hit</span>
+            <span class="coverLegendNoCov">not hit</span>
+</td>
+            <td></td>
+          </tr>
+                  <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+          </table>
+
+          <table cellpadding=0 cellspacing=0 border=0>
+            <tr>
+              <td><br></td>
+            </tr>
+            <tr>
+              <td>
+<pre class="sourceHeading">            Line data    Source code</pre>
+<pre class="source">
+<span id="L1"><span class="lineNum">       1</span>              : #pragma once</span>
+<span id="L2"><span class="lineNum">       2</span>              : </span>
+<span id="L3"><span class="lineNum">       3</span>              : #include &lt;QAbstractListModel&gt;</span>
+<span id="L4"><span class="lineNum">       4</span>              : #include &lt;QList&gt;</span>
+<span id="L5"><span class="lineNum">       5</span>              : #include &lt;QSet&gt;</span>
+<span id="L6"><span class="lineNum">       6</span>              : #include &lt;QStringList&gt;</span>
+<span id="L7"><span class="lineNum">       7</span>              : #include &quot;../../core/database.h&quot;</span>
+<span id="L8"><span class="lineNum">       8</span>              : #include &quot;../../core/system_resolver.h&quot;</span>
+<span id="L9"><span class="lineNum">       9</span>              : </span>
+<span id="L10"><span class="lineNum">      10</span>              : namespace Remus {</span>
+<span id="L11"><span class="lineNum">      11</span>              : </span>
+<span id="L12"><span class="lineNum">      12</span>              : /**</span>
+<span id="L13"><span class="lineNum">      13</span>              :  * @brief Workflow states for the unified ROM processing pipeline</span>
+<span id="L14"><span class="lineNum">      14</span>              :  */</span>
+<span id="L15"><span class="lineNum">      15</span>              : enum class WorkflowState {</span>
+<span id="L16"><span class="lineNum">      16</span>              :     NotApplicable = 0,   ///&lt; State not relevant for this file type</span>
+<span id="L17"><span class="lineNum">      17</span>              :     NeedsAction,         ///&lt; Requires user/auto action</span>
+<span id="L18"><span class="lineNum">      18</span>              :     InProgress,          ///&lt; Currently being processed</span>
+<span id="L19"><span class="lineNum">      19</span>              :     Complete,            ///&lt; Successfully completed</span>
+<span id="L20"><span class="lineNum">      20</span>              :     Failed,              ///&lt; Action failed</span>
+<span id="L21"><span class="lineNum">      21</span>              :     Skipped              ///&lt; User skipped this step</span>
+<span id="L22"><span class="lineNum">      22</span>              : };</span>
+<span id="L23"><span class="lineNum">      23</span>              : </span>
+<span id="L24"><span class="lineNum">      24</span>              : /**</span>
+<span id="L25"><span class="lineNum">      25</span>              :  * @brief Match info from the matches table</span>
+<span id="L26"><span class="lineNum">      26</span>              :  */</span>
+<span id="L27"><span class="lineNum">      27</span>              : struct MatchInfo {</span>
+<span id="L28"><span class="lineNum">      28</span>              :     int gameId = 0;</span>
+<span id="L29"><span class="lineNum">      29</span>              :     int confidence = 0;           ///&lt; 0-100</span>
+<span id="L30"><span class="lineNum">      30</span>              :     QString matchMethod;          ///&lt; &quot;hash&quot;, &quot;filename&quot;, &quot;fuzzy&quot;, &quot;manual&quot;</span>
+<span id="L31"><span class="lineNum">      31</span>              :     QString matchedTitle;         ///&lt; Game title from games table</span>
+<span id="L32"><span class="lineNum">      32</span>              :     QString publisher;            ///&lt; Publisher name</span>
+<span id="L33"><span class="lineNum">      33</span>              :     QString developer;            ///&lt; Developer name</span>
+<span id="L34"><span class="lineNum">      34</span>              :     int year = 0;                 ///&lt; Release year</span>
+<span id="L35"><span class="lineNum">      35</span>              :     QString description;          ///&lt; Game description</span>
+<span id="L36"><span class="lineNum">      36</span>              :     QString genre;                ///&lt; Genres (comma separated)</span>
+<span id="L37"><span class="lineNum">      37</span>              :     QString players;              ///&lt; Player count</span>
+<span id="L38"><span class="lineNum">      38</span>              :     QString region;               ///&lt; Region</span>
+<span id="L39"><span class="lineNum">      39</span>              :     float rating = 0.0f;          ///&lt; Rating (0-10)</span>
+<span id="L40"><span class="lineNum">      40</span>              :     bool isConfirmed = false;     ///&lt; User confirmed</span>
+<span id="L41"><span class="lineNum">      41</span>              :     bool isRejected = false;      ///&lt; User rejected</span>
+<span id="L42"><span class="lineNum">      42</span>              : };</span>
+<span id="L43"><span class="lineNum">      43</span>              : </span>
+<span id="L44"><span class="lineNum">      44</span>              : /**</span>
+<span id="L45"><span class="lineNum">      45</span>              :  * @brief Represents a grouped entry (game) that may contain multiple files</span>
+<span id="L46"><span class="lineNum">      46</span>              :  */</span>
+<span id="L47"><span class="lineNum">      47</span>              : struct FileGroupEntry {</span>
+<span id="L48"><span class="lineNum">      48</span>              :     // === Basic file info ===</span>
+<span id="L49"><span class="lineNum">      49</span>              :     int primaryFileId = 0;           ///&lt; ID of the primary file (.cue, .gdi, etc.)</span>
+<span id="L50"><span class="lineNum">      50</span>              :     QString displayName;              ///&lt; Name to show (without extension)</span>
+<span id="L51"><span class="lineNum">      51</span>              :     QString currentPath;              ///&lt; Path to primary file</span>
+<span id="L52"><span class="lineNum">      52</span>              :     QStringList extensions;           ///&lt; All extensions in this group [&quot;.cue&quot;, &quot;.bin&quot;]</span>
+<span id="L53"><span class="lineNum">      53</span>              :     qint64 totalSize = 0;            ///&lt; Total size of all files</span>
+<span id="L54"><span class="lineNum">      54</span>              :     int systemId = 0;                ///&lt; System ID</span>
+<span id="L55"><span class="lineNum">      55</span>              :     QString systemName;              ///&lt; System display name</span>
+<span id="L56"><span class="lineNum">      56</span>              :     int fileCount = 1;               ///&lt; Number of files in this group</span>
+<span id="L57"><span class="lineNum">      57</span>              :     QString lastModified;            ///&lt; Last modified date</span>
+<span id="L58"><span class="lineNum">      58</span>              :     QList&lt;int&gt; allFileIds;           ///&lt; All file IDs in this group</span>
+<span id="L59"><span class="lineNum">      59</span>              :     </span>
+<span id="L60"><span class="lineNum">      60</span>              :     // === Processed status ===</span>
+<span id="L61"><span class="lineNum">      61</span>              :     bool isProcessed = false;        ///&lt; Has been fully processed</span>
+<span id="L62"><span class="lineNum">      62</span>              :     QString processingStatus;        ///&lt; Status: unprocessed, processing, processed, failed</span>
+<span id="L63"><span class="lineNum">      63</span>              :     </span>
+<span id="L64"><span class="lineNum">      64</span>              :     // === Workflow states ===</span>
+<span id="L65"><span class="lineNum">      65</span>              :     WorkflowState extractionState = WorkflowState::NotApplicable;</span>
+<span id="L66"><span class="lineNum">      66</span>              :     WorkflowState chdState = WorkflowState::NotApplicable;</span>
+<span id="L67"><span class="lineNum">      67</span>              :     WorkflowState hashState = WorkflowState::NeedsAction;</span>
+<span id="L68"><span class="lineNum">      68</span>              :     WorkflowState matchState = WorkflowState::NeedsAction;</span>
+<span id="L69"><span class="lineNum">      69</span>              :     </span>
+<span id="L70"><span class="lineNum">      70</span>              :     // === Source info ===</span>
+<span id="L71"><span class="lineNum">      71</span>              :     bool isInsideArchive = false;    ///&lt; File is still inside a compressed archive</span>
+<span id="L72"><span class="lineNum">      72</span>              :     QString archivePath;              ///&lt; Path to source archive if applicable</span>
+<span id="L73"><span class="lineNum">      73</span>              :     QString archiveExtension;         ///&lt; Archive extension (.zip, .7z, .rar)</span>
+<span id="L74"><span class="lineNum">      74</span>              :     bool isChdCandidate = false;     ///&lt; System supports CHD compression</span>
+<span id="L75"><span class="lineNum">      75</span>              :     bool isAlreadyChd = false;       ///&lt; Already in CHD format</span>
+<span id="L76"><span class="lineNum">      76</span>              :     </span>
+<span id="L77"><span class="lineNum">      77</span>              :     // === Hash info ===</span>
+<span id="L78"><span class="lineNum">      78</span>              :     bool hasHashes = false;          ///&lt; Has at least one hash calculated</span>
+<span id="L79"><span class="lineNum">      79</span>              :     QString crc32;</span>
+<span id="L80"><span class="lineNum">      80</span>              :     QString md5;</span>
+<span id="L81"><span class="lineNum">      81</span>              :     QString sha1;</span>
+<span id="L82"><span class="lineNum">      82</span>              :     </span>
+<span id="L83"><span class="lineNum">      83</span>              :     // === Match info ===</span>
+<span id="L84"><span class="lineNum">      84</span>              :     MatchInfo matchInfo;             ///&lt; Match details if matched</span>
+<span id="L85"><span class="lineNum">      85</span>              : };</span>
+<span id="L86"><span class="lineNum">      86</span>              : </span>
+<span id="L87"><span class="lineNum">      87</span>              : /**</span>
+<span id="L88"><span class="lineNum">      88</span>              :  * @brief Qt model exposing file library to QML</span>
+<span id="L89"><span class="lineNum">      89</span>              :  * </span>
+<span id="L90"><span class="lineNum">      90</span>              :  * Provides a list view of scanned ROM files with system grouping,</span>
+<span id="L91"><span class="lineNum">      91</span>              :  * filtering, and sorting capabilities. Multi-file games (e.g., .cue + .bin)</span>
+<span id="L92"><span class="lineNum">      92</span>              :  * are grouped and displayed as a single entry.</span>
+<span id="L93"><span class="lineNum">      93</span>              :  */</span>
+<span id="L94"><span class="lineNum">      94</span>              : class FileListModel : public QAbstractListModel {</span>
+<span id="L95"><span class="lineNum">      95</span>              :     Q_OBJECT</span>
+<span id="L96"><span class="lineNum">      96</span>              :     Q_PROPERTY(int count READ rowCount NOTIFY countChanged)</span>
+<span id="L97"><span class="lineNum">      97</span>              :     Q_PROPERTY(int unprocessedCount READ unprocessedCount NOTIFY countsChanged)</span>
+<span id="L98"><span class="lineNum">      98</span>              :     Q_PROPERTY(int processedCount READ processedCount NOTIFY countsChanged)</span>
+<span id="L99"><span class="lineNum">      99</span>              :     Q_PROPERTY(int selectedCount READ selectedCount NOTIFY selectionChanged)</span>
+<span id="L100"><span class="lineNum">     100</span>              :     Q_PROPERTY(QString systemFilter READ systemFilter WRITE setSystemFilter NOTIFY systemFilterChanged)</span>
+<span id="L101"><span class="lineNum">     101</span>              :     Q_PROPERTY(bool showMatchedOnly READ showMatchedOnly WRITE setShowMatchedOnly NOTIFY showMatchedOnlyChanged)</span>
+<span id="L102"><span class="lineNum">     102</span>              :     </span>
+<span id="L103"><span class="lineNum">     103</span>              : public:</span>
+<span id="L104"><span class="lineNum">     104</span>              :     enum FileRole {</span>
+<span id="L105"><span class="lineNum">     105</span>              :         IdRole = Qt::UserRole + 1,</span>
+<span id="L106"><span class="lineNum">     106</span>              :         FilenameRole,</span>
+<span id="L107"><span class="lineNum">     107</span>              :         PathRole,</span>
+<span id="L108"><span class="lineNum">     108</span>              :         ExtensionRole,       ///&lt; Primary extension</span>
+<span id="L109"><span class="lineNum">     109</span>              :         ExtensionsRole,      ///&lt; All extensions as comma-separated string</span>
+<span id="L110"><span class="lineNum">     110</span>              :         FileSizeRole,</span>
+<span id="L111"><span class="lineNum">     111</span>              :         SystemRole,          ///&lt; System ID (int)</span>
+<span id="L112"><span class="lineNum">     112</span>              :         SystemNameRole,      ///&lt; System display name (QString)</span>
+<span id="L113"><span class="lineNum">     113</span>              :         MatchedRole,</span>
+<span id="L114"><span class="lineNum">     114</span>              :         IsPrimaryRole,</span>
+<span id="L115"><span class="lineNum">     115</span>              :         LastModifiedRole,</span>
+<span id="L116"><span class="lineNum">     116</span>              :         Crc32Role,</span>
+<span id="L117"><span class="lineNum">     117</span>              :         Md5Role,</span>
+<span id="L118"><span class="lineNum">     118</span>              :         Sha1Role,</span>
+<span id="L119"><span class="lineNum">     119</span>              :         FileCountRole,       ///&lt; Number of files in this group</span>
+<span id="L120"><span class="lineNum">     120</span>              :         AllFileIdsRole,      ///&lt; All file IDs as comma-separated string</span>
+<span id="L121"><span class="lineNum">     121</span>              :         </span>
+<span id="L122"><span class="lineNum">     122</span>              :         // Workflow state roles</span>
+<span id="L123"><span class="lineNum">     123</span>              :         ExtractionStateRole, ///&lt; WorkflowState for extraction</span>
+<span id="L124"><span class="lineNum">     124</span>              :         ChdStateRole,        ///&lt; WorkflowState for CHD conversion</span>
+<span id="L125"><span class="lineNum">     125</span>              :         HashStateRole,       ///&lt; WorkflowState for hashing</span>
+<span id="L126"><span class="lineNum">     126</span>              :         MatchStateRole,      ///&lt; WorkflowState for matching</span>
+<span id="L127"><span class="lineNum">     127</span>              :         </span>
+<span id="L128"><span class="lineNum">     128</span>              :         // Source info roles</span>
+<span id="L129"><span class="lineNum">     129</span>              :         IsInsideArchiveRole, ///&lt; True if still in archive</span>
+<span id="L130"><span class="lineNum">     130</span>              :         ArchivePathRole,     ///&lt; Path to source archive</span>
+<span id="L131"><span class="lineNum">     131</span>              :         ArchiveExtensionRole, ///&lt; Archive extension (.zip, .7z, etc)</span>
+<span id="L132"><span class="lineNum">     132</span>              :         IsChdCandidateRole,  ///&lt; True if CHD conversion available</span>
+<span id="L133"><span class="lineNum">     133</span>              :         IsAlreadyChdRole,    ///&lt; True if already CHD</span>
+<span id="L134"><span class="lineNum">     134</span>              :         </span>
+<span id="L135"><span class="lineNum">     135</span>              :         // Match info roles</span>
+<span id="L136"><span class="lineNum">     136</span>              :         MatchConfidenceRole, ///&lt; 0-100 confidence</span>
+<span id="L137"><span class="lineNum">     137</span>              :         MatchMethodRole,     ///&lt; &quot;hash&quot;, &quot;filename&quot;, &quot;fuzzy&quot;, &quot;manual&quot;</span>
+<span id="L138"><span class="lineNum">     138</span>              :         MatchedTitleRole,    ///&lt; Matched game title</span>
+<span id="L139"><span class="lineNum">     139</span>              :         MatchPublisherRole,  ///&lt; Publisher name</span>
+<span id="L140"><span class="lineNum">     140</span>              :         MatchDeveloperRole,  ///&lt; Developer name</span>
+<span id="L141"><span class="lineNum">     141</span>              :         MatchYearRole,       ///&lt; Release year</span>
+<span id="L142"><span class="lineNum">     142</span>              :         MatchGenreRole,      ///&lt; Genre(s)</span>
+<span id="L143"><span class="lineNum">     143</span>              :         MatchRegionRole,     ///&lt; Region</span>
+<span id="L144"><span class="lineNum">     144</span>              :         MatchDescriptionRole,///&lt; Description</span>
+<span id="L145"><span class="lineNum">     145</span>              :         MatchRatingRole,     ///&lt; Rating 0-10</span>
+<span id="L146"><span class="lineNum">     146</span>              :         MatchPlayersRole,    ///&lt; Player count</span>
+<span id="L147"><span class="lineNum">     147</span>              :         MatchConfirmedRole,  ///&lt; User confirmed</span>
+<span id="L148"><span class="lineNum">     148</span>              :         MatchRejectedRole,   ///&lt; User rejected</span>
+<span id="L149"><span class="lineNum">     149</span>              :         </span>
+<span id="L150"><span class="lineNum">     150</span>              :         // Processed state roles</span>
+<span id="L151"><span class="lineNum">     151</span>              :         IsProcessedRole,     ///&lt; True if fully processed</span>
+<span id="L152"><span class="lineNum">     152</span>              :         IsSelectedRole,      ///&lt; True if selected (checkbox)</span>
+<span id="L153"><span class="lineNum">     153</span>              :         ProcessingStatusRole, ///&lt; Status string</span>
+<span id="L154"><span class="lineNum">     154</span>              :         </span>
+<span id="L155"><span class="lineNum">     155</span>              :         // Pipeline summary</span>
+<span id="L156"><span class="lineNum">     156</span>              :         PipelineProgressRole ///&lt; 0-100 overall progress</span>
+<span id="L157"><span class="lineNum">     157</span>              :     };</span>
+<span id="L158"><span class="lineNum">     158</span> <span class="tlaUNC">           0 :     Q_ENUM(FileRole)</span></span>
+<span id="L159"><span class="lineNum">     159</span>              :     </span>
+<span id="L160"><span class="lineNum">     160</span>              :     explicit FileListModel(Database *db = nullptr, QObject *parent = nullptr);</span>
+<span id="L161"><span class="lineNum">     161</span>              :     </span>
+<span id="L162"><span class="lineNum">     162</span>              :     // QAbstractListModel interface</span>
+<span id="L163"><span class="lineNum">     163</span>              :     int rowCount(const QModelIndex &amp;parent = QModelIndex()) const override;</span>
+<span id="L164"><span class="lineNum">     164</span>              :     QVariant data(const QModelIndex &amp;index, int role = Qt::DisplayRole) const override;</span>
+<span id="L165"><span class="lineNum">     165</span>              :     QHash&lt;int, QByteArray&gt; roleNames() const override;</span>
+<span id="L166"><span class="lineNum">     166</span>              :     </span>
+<span id="L167"><span class="lineNum">     167</span>              :     // Property getters/setters</span>
+<span id="L168"><span class="lineNum">     168</span> <span class="tlaUNC">           0 :     QString systemFilter() const { return m_systemFilter; }</span></span>
+<span id="L169"><span class="lineNum">     169</span>              :     void setSystemFilter(const QString &amp;filter);</span>
+<span id="L170"><span class="lineNum">     170</span>              :     </span>
+<span id="L171"><span class="lineNum">     171</span> <span class="tlaUNC">           0 :     bool showMatchedOnly() const { return m_showMatchedOnly; }</span></span>
+<span id="L172"><span class="lineNum">     172</span>              :     void setShowMatchedOnly(bool value);</span>
+<span id="L173"><span class="lineNum">     173</span>              :     </span>
+<span id="L174"><span class="lineNum">     174</span>              :     // Count getters</span>
+<span id="L175"><span class="lineNum">     175</span> <span class="tlaUNC">           0 :     int unprocessedCount() const { return m_unprocessedCount; }</span></span>
+<span id="L176"><span class="lineNum">     176</span> <span class="tlaUNC">           0 :     int processedCount() const { return m_processedCount; }</span></span>
+<span id="L177"><span class="lineNum">     177</span> <span class="tlaUNC">           0 :     int selectedCount() const { return m_selectedIds.size(); }</span></span>
+<span id="L178"><span class="lineNum">     178</span>              :     </span>
+<span id="L179"><span class="lineNum">     179</span>              :     // Database operations</span>
+<span id="L180"><span class="lineNum">     180</span>              :     Q_INVOKABLE void refresh();</span>
+<span id="L181"><span class="lineNum">     181</span>              :     Q_INVOKABLE void clear();</span>
+<span id="L182"><span class="lineNum">     182</span>              :     </span>
+<span id="L183"><span class="lineNum">     183</span>              :     // Selection operations</span>
+<span id="L184"><span class="lineNum">     184</span>              :     Q_INVOKABLE void setSelected(int fileId, bool selected);</span>
+<span id="L185"><span class="lineNum">     185</span>              :     Q_INVOKABLE void toggleSelected(int fileId);</span>
+<span id="L186"><span class="lineNum">     186</span>              :     Q_INVOKABLE void selectAllUnprocessed(bool selected);</span>
+<span id="L187"><span class="lineNum">     187</span>              :     Q_INVOKABLE void clearSelection();</span>
+<span id="L188"><span class="lineNum">     188</span>              :     Q_INVOKABLE QVariantList getSelectedUnprocessed() const;</span>
+<span id="L189"><span class="lineNum">     189</span>              :     Q_INVOKABLE bool isSelected(int fileId) const;</span>
+<span id="L190"><span class="lineNum">     190</span>              :     </span>
+<span id="L191"><span class="lineNum">     191</span>              :     void setDatabase(Database *db);</span>
+<span id="L192"><span class="lineNum">     192</span>              :     </span>
+<span id="L193"><span class="lineNum">     193</span>              : signals:</span>
+<span id="L194"><span class="lineNum">     194</span>              :     void countChanged();</span>
+<span id="L195"><span class="lineNum">     195</span>              :     void countsChanged();</span>
+<span id="L196"><span class="lineNum">     196</span>              :     void selectionChanged();</span>
+<span id="L197"><span class="lineNum">     197</span>              :     void systemFilterChanged();</span>
+<span id="L198"><span class="lineNum">     198</span>              :     void showMatchedOnlyChanged();</span>
+<span id="L199"><span class="lineNum">     199</span>              :     void errorOccurred(const QString &amp;error);</span>
+<span id="L200"><span class="lineNum">     200</span>              :     </span>
+<span id="L201"><span class="lineNum">     201</span>              : private:</span>
+<span id="L202"><span class="lineNum">     202</span>              :     void loadFiles();</span>
+<span id="L203"><span class="lineNum">     203</span>              :     void groupFiles(const QList&lt;FileRecord&gt; &amp;files, const QMap&lt;int, Database::MatchResult&gt; &amp;matches);</span>
+<span id="L204"><span class="lineNum">     204</span>              :     void updateCounts();</span>
+<span id="L205"><span class="lineNum">     205</span>              :     QString extractBaseName(const QString &amp;filename) const;</span>
+<span id="L206"><span class="lineNum">     206</span>              :     </span>
+<span id="L207"><span class="lineNum">     207</span>              :     Database *m_db = nullptr;</span>
+<span id="L208"><span class="lineNum">     208</span>              :     QList&lt;FileRecord&gt; m_files;           // Raw file records</span>
+<span id="L209"><span class="lineNum">     209</span>              :     QList&lt;FileGroupEntry&gt; m_groupedFiles; // Grouped entries for display</span>
+<span id="L210"><span class="lineNum">     210</span>              :     QString m_systemFilter;</span>
+<span id="L211"><span class="lineNum">     211</span>              :     bool m_showMatchedOnly = false;</span>
+<span id="L212"><span class="lineNum">     212</span>              :     </span>
+<span id="L213"><span class="lineNum">     213</span>              :     // Selection tracking</span>
+<span id="L214"><span class="lineNum">     214</span>              :     QSet&lt;int&gt; m_selectedIds;             // File IDs currently selected</span>
+<span id="L215"><span class="lineNum">     215</span>              :     int m_unprocessedCount = 0;          // Count of unprocessed files</span>
+<span id="L216"><span class="lineNum">     216</span>              :     int m_processedCount = 0;            // Count of processed files</span>
+<span id="L217"><span class="lineNum">     217</span>              : };</span>
+<span id="L218"><span class="lineNum">     218</span>              : </span>
+<span id="L219"><span class="lineNum">     219</span>              : } // namespace Remus</span>
+        </pre>
+              </td>
+            </tr>
+          </table>
+          <br>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+            <tr><td class="versionInfo">Generated by: <a href="https://github.com//linux-test-project/lcov" target="_parent">LCOV version 2.4-0</a></td></tr>
+          </table>
+          <br>
+
+</body>
+</html>

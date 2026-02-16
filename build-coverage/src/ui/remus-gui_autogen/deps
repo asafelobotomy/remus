@@ -1,0 +1,6 @@
+remus-gui_autogen/timestamp: \
+	/home/solon/Documents/remus/build-coverage/src/ui/.qt/qml_imports/remus-gui_conf.cmake \
+	/home/solon/Documents/remus/src/ui/CMakeLists.txt \
+	/home/solon/Documents/remus/src/ui/main.cpp \
+	/home/solon/Documents/remus/src/ui/resources.qrc \
+	/usr/bin/cmake

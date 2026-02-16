@@ -79,29 +79,29 @@ ArchiveInfo ArchiveExtractor::getArchiveInfo(const QString &path)
     info.format = detectFormat(path);
     info.compressedSize = QFileInfo(path).size();
     
-    QProcess process;
     QStringList args;
+    ProcessResult processResult;
     
     switch (info.format) {
         case ArchiveFormat::ZIP:
             if (isToolAvailable(m_unzipPath)) {
-                process.start(m_unzipPath, QStringList() << "-l" << path);
+                processResult = runProcess(m_unzipPath, QStringList() << "-l" << path, 30000);
             } else if (isToolAvailable(m_sevenZipPath)) {
-                process.start(m_sevenZipPath, QStringList() << "l" << path);
+                processResult = runProcess(m_sevenZipPath, QStringList() << "l" << path, 30000);
             }
             break;
             
         case ArchiveFormat::SevenZip:
             if (isToolAvailable(m_sevenZipPath)) {
-                process.start(m_sevenZipPath, QStringList() << "l" << path);
+                processResult = runProcess(m_sevenZipPath, QStringList() << "l" << path, 30000);
             }
             break;
             
         case ArchiveFormat::RAR:
             if (isToolAvailable(m_unrarPath)) {
-                process.start(m_unrarPath, QStringList() << "l" << path);
+                processResult = runProcess(m_unrarPath, QStringList() << "l" << path, 30000);
             } else if (isToolAvailable(m_sevenZipPath)) {
-                process.start(m_sevenZipPath, QStringList() << "l" << path);
+                processResult = runProcess(m_sevenZipPath, QStringList() << "l" << path, 30000);
             }
             break;
             
@@ -109,8 +109,7 @@ ArchiveInfo ArchiveExtractor::getArchiveInfo(const QString &path)
             break;
     }
     
-    process.waitForFinished(30000);
-    QString output = QString::fromUtf8(process.readAllStandardOutput());
+    QString output = processResult.stdOutput;
     
     // Parse output for file list (format-specific parsing)
     QStringList lines = output.split('\n');
@@ -294,28 +293,28 @@ ExtractionResult ArchiveExtractor::extractFile(const QString &archivePath,
     
     ArchiveFormat format = detectFormat(archivePath);
     
-    QProcess process;
     QStringList args;
+    ProcessResult processResult;
     
     switch (format) {
         case ArchiveFormat::ZIP:
             if (isToolAvailable(m_unzipPath)) {
                 args << archivePath << fileName << "-d" << outputDir;
-                process.start(m_unzipPath, args);
+                processResult = runProcess(m_unzipPath, args, 120000);
             }
             break;
             
         case ArchiveFormat::SevenZip:
             if (isToolAvailable(m_sevenZipPath)) {
                 args << "e" << archivePath << "-o" + outputDir << fileName << "-y";
-                process.start(m_sevenZipPath, args);
+                processResult = runProcess(m_sevenZipPath, args, 120000);
             }
             break;
             
         case ArchiveFormat::RAR:
             if (isToolAvailable(m_unrarPath)) {
                 args << "e" << archivePath << fileName << outputDir;
-                process.start(m_unrarPath, args);
+                processResult = runProcess(m_unrarPath, args, 120000);
             }
             break;
             
@@ -324,14 +323,13 @@ ExtractionResult ArchiveExtractor::extractFile(const QString &archivePath,
             return result;
     }
     
-    process.waitForFinished(120000);
-    result.success = (process.exitCode() == 0);
+    result.success = (processResult.exitCode == 0 && processResult.started);
     
     if (result.success) {
         result.filesExtracted = 1;
         result.extractedFiles.append(QDir(outputDir).filePath(QFileInfo(fileName).fileName()));
     } else {
-        result.error = QString::fromUtf8(process.readAllStandardError());
+        result.error = processResult.stdError;
     }
     
     return result;
@@ -385,45 +383,37 @@ ExtractionResult ArchiveExtractor::extractZip(const QString &archivePath, const 
     result.archivePath = archivePath;
     result.outputDir = outputDir;
     
-    QProcess process;
-    m_process = &process;
-    
     QStringList args;
+    ProcessResult processResult;
     
     // Prefer unzip, fall back to 7z
     if (isToolAvailable(m_unzipPath)) {
         args << "-o" << archivePath << "-d" << outputDir;
         qInfo() << "Extracting with unzip:" << archivePath;
-        process.start(m_unzipPath, args);
+        processResult = runProcessTracked(m_unzipPath, args, 600000);
     } else if (isToolAvailable(m_sevenZipPath)) {
         args << "x" << archivePath << "-o" + outputDir << "-y";
         qInfo() << "Extracting with 7z:" << archivePath;
-        process.start(m_sevenZipPath, args);
+        processResult = runProcessTracked(m_sevenZipPath, args, 600000);
     } else {
         result.error = "No ZIP extraction tool available (install unzip or 7z)";
-        m_process = nullptr;
         return result;
     }
-    
-    process.waitForFinished(600000);  // 10 minutes for large archives
-    
-    result.success = (process.exitCode() == 0);
+
+    result.success = (processResult.exitCode == 0 && processResult.started);
     
     if (result.success) {
         // Count and list extracted files
-        QDir dir(outputDir);
-        QStringList files = dir.entryList(QDir::Files | QDir::NoDotAndDotDot);
+        QStringList files = listFiles(outputDir);
         result.filesExtracted = files.count();
         for (const QString &file : files) {
-            result.extractedFiles.append(dir.absoluteFilePath(file));
+            result.extractedFiles.append(QDir(outputDir).absoluteFilePath(file));
         }
         qInfo() << "Extraction successful:" << result.filesExtracted << "items";
     } else {
-        result.error = QString::fromUtf8(process.readAllStandardError());
+        result.error = processResult.stdError;
         qWarning() << "Extraction failed:" << result.error;
     }
-    
-    m_process = nullptr;
     return result;
 }
 
@@ -438,31 +428,23 @@ ExtractionResult ArchiveExtractor::extract7z(const QString &archivePath, const Q
         return result;
     }
     
-    QProcess process;
-    m_process = &process;
-    
     QStringList args;
     args << "x" << archivePath << "-o" + outputDir << "-y";
     
     qInfo() << "Extracting with 7z:" << archivePath;
-    process.start(m_sevenZipPath, args);
-    process.waitForFinished(600000);
-    
-    result.success = (process.exitCode() == 0);
+    ProcessResult processResult = runProcessTracked(m_sevenZipPath, args, 600000);
+    result.success = (processResult.exitCode == 0 && processResult.started);
     
     if (result.success) {
         // Count and list extracted files
-        QDir dir(outputDir);
-        QStringList files = dir.entryList(QDir::Files | QDir::NoDotAndDotDot);
+        QStringList files = listFiles(outputDir);
         result.filesExtracted = files.count();
         for (const QString &file : files) {
-            result.extractedFiles.append(dir.absoluteFilePath(file));
+            result.extractedFiles.append(QDir(outputDir).absoluteFilePath(file));
         }
     } else {
-        result.error = QString::fromUtf8(process.readAllStandardError());
+        result.error = processResult.stdError;
     }
-    
-    m_process = nullptr;
     return result;
 }
 
@@ -472,42 +454,34 @@ ExtractionResult ArchiveExtractor::extractRar(const QString &archivePath, const 
     result.archivePath = archivePath;
     result.outputDir = outputDir;
     
-    QProcess process;
-    m_process = &process;
-    
     QStringList args;
+    ProcessResult processResult;
     
     if (isToolAvailable(m_unrarPath)) {
         args << "x" << "-y" << archivePath << outputDir + "/";
         qInfo() << "Extracting with unrar:" << archivePath;
-        process.start(m_unrarPath, args);
+        processResult = runProcessTracked(m_unrarPath, args, 600000);
     } else if (isToolAvailable(m_sevenZipPath)) {
         args << "x" << archivePath << "-o" + outputDir << "-y";
         qInfo() << "Extracting with 7z:" << archivePath;
-        process.start(m_sevenZipPath, args);
+        processResult = runProcessTracked(m_sevenZipPath, args, 600000);
     } else {
         result.error = "No RAR extraction tool available (install unrar or 7z)";
-        m_process = nullptr;
         return result;
     }
-    
-    process.waitForFinished(600000);
-    
-    result.success = (process.exitCode() == 0);
+
+    result.success = (processResult.exitCode == 0 && processResult.started);
     
     if (result.success) {
         // Count and list extracted files
-        QDir dir(outputDir);
-        QStringList files = dir.entryList(QDir::Files | QDir::NoDotAndDotDot);
+        QStringList files = listFiles(outputDir);
         result.filesExtracted = files.count();
         for (const QString &file : files) {
-            result.extractedFiles.append(dir.absoluteFilePath(file));
+            result.extractedFiles.append(QDir(outputDir).absoluteFilePath(file));
         }
     } else {
-        result.error = QString::fromUtf8(process.readAllStandardError());
+        result.error = processResult.stdError;
     }
-    
-    m_process = nullptr;
     return result;
 }
 
@@ -515,12 +489,9 @@ bool ArchiveExtractor::isToolAvailable(const QString &tool) const
 {
     if (tool.isEmpty()) return false;
     
-    QProcess process;
-    process.start(tool, QStringList() << "--version");
-    process.waitForFinished(3000);
-    
-    // Some tools return 0, some return 1 for --version
-    return process.exitStatus() == QProcess::NormalExit;
+    ProcessResult result = const_cast<ArchiveExtractor*>(this)
+                               ->runProcess(tool, QStringList() << "--version", 3000);
+    return result.exitStatus == QProcess::NormalExit;
 }
 
 QString ArchiveExtractor::findTool(const QStringList &candidates) const
@@ -531,6 +502,58 @@ QString ArchiveExtractor::findTool(const QStringList &candidates) const
         }
     }
     return QString();
+}
+
+ArchiveExtractor::ProcessResult ArchiveExtractor::runProcess(const QString &program,
+                                                             const QStringList &args,
+                                                             int timeoutMs)
+{
+    ProcessResult result;
+    QProcess process;
+    process.start(program, args);
+    result.started = process.waitForStarted(timeoutMs);
+    if (!result.started) {
+        result.exitCode = -1;
+        return result;
+    }
+
+    result.finished = process.waitForFinished(timeoutMs);
+    result.exitCode = process.exitCode();
+    result.exitStatus = process.exitStatus();
+    result.stdOutput = QString::fromUtf8(process.readAllStandardOutput());
+    result.stdError = QString::fromUtf8(process.readAllStandardError());
+    return result;
+}
+
+ArchiveExtractor::ProcessResult ArchiveExtractor::runProcessTracked(const QString &program,
+                                                                    const QStringList &args,
+                                                                    int timeoutMs)
+{
+    ProcessResult result;
+    QProcess process;
+    m_process = &process;
+
+    process.start(program, args);
+    result.started = process.waitForStarted(10000);
+    if (!result.started) {
+        m_process = nullptr;
+        result.exitCode = -1;
+        return result;
+    }
+
+    result.finished = process.waitForFinished(timeoutMs);
+    result.exitCode = process.exitCode();
+    result.exitStatus = process.exitStatus();
+    result.stdOutput = QString::fromUtf8(process.readAllStandardOutput());
+    result.stdError = QString::fromUtf8(process.readAllStandardError());
+    m_process = nullptr;
+    return result;
+}
+
+QStringList ArchiveExtractor::listFiles(const QString &dirPath) const
+{
+    QDir dir(dirPath);
+    return dir.entryList(QDir::Files | QDir::NoDotAndDotDot);
 }
 
 } // namespace Remus

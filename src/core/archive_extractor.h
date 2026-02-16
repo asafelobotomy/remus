@@ -4,8 +4,7 @@
 #include <QString>
 #include <QStringList>
 #include <QMap>
-
-class QProcess;
+#include <QProcess>
 
 namespace Remus {
 
@@ -143,7 +142,26 @@ signals:
     void batchProgress(int completed, int total);
     void errorOccurred(const QString &error);
 
+protected:
+    struct ProcessResult {
+        bool started = false;
+        bool finished = false;
+        int exitCode = -1;
+        QProcess::ExitStatus exitStatus = QProcess::NormalExit;
+        QString stdOutput;
+        QString stdError;
+    };
+
+    virtual ProcessResult runProcess(const QString &program,
+                                     const QStringList &args,
+                                     int timeoutMs);
+    virtual ProcessResult runProcessTracked(const QString &program,
+                                            const QStringList &args,
+                                            int timeoutMs);
+    virtual QStringList listFiles(const QString &dirPath) const;
+
 private:
+
     ExtractionResult extractZip(const QString &archivePath, const QString &outputDir);
     ExtractionResult extract7z(const QString &archivePath, const QString &outputDir);
     ExtractionResult extractRar(const QString &archivePath, const QString &outputDir);

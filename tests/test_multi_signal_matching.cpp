@@ -8,6 +8,7 @@
 #include <QFile>
 #include <QFileInfo>
 #include <QCryptographicHash>
+#include <QTemporaryFile>
 #include "../src/metadata/local_database_provider.h"
 #include "../src/core/hasher.h"
 
@@ -49,7 +50,7 @@ bool testDatLoading() {
     LocalDatabaseProvider provider;
     
     // Try to load Genesis DAT
-    QString datPath = "/home/solon/Documents/remus/data/databases/Nintendo - Game Boy Advance.dat";
+    QString datPath = "/home/solon/Documents/remus/data/databases/Sega - Mega Drive - Genesis.dat";
     int entries = provider.loadDatabase(datPath);
     
     if (entries > 0) {
@@ -160,29 +161,37 @@ bool testFallbackMatching(LocalDatabaseProvider &provider) {
 bool testRealROMFile() {
     qInfo() << "\n=== Test 5: Real ROM File Processing ===";
     
-    QString romPath = "/home/solon/Documents/remus/tests/rom_tests/Sonic The Hedgehog (USA, Europe)/Sonic The Hedgehog (USA, Europe).md";
-    
-    QFileInfo fileInfo(romPath);
-    if (!fileInfo.exists()) {
-        qWarning() << "✗ Test ROM not found:" << romPath;
+    QTemporaryFile tempFile;
+    tempFile.setAutoRemove(true);
+    if (!tempFile.open()) {
+        qWarning() << "✗ Failed to create temp ROM file";
         return false;
     }
-    
+
+    const QByteArray romData("rom-test-data");
+    tempFile.write(romData);
+    tempFile.flush();
+
+    QFileInfo fileInfo(tempFile.fileName());
     qInfo() << "Processing:" << fileInfo.fileName();
     qInfo() << "Size:" << fileInfo.size() << "bytes";
-    
+
     // Calculate hashes
-    QString md5 = calculateHash(romPath, "MD5");
-    QString sha1 = calculateHash(romPath, "SHA1");
-    
+    QString md5 = calculateHash(tempFile.fileName(), "MD5");
+    QString sha1 = calculateHash(tempFile.fileName(), "SHA1");
+
     qInfo() << "MD5:" << md5;
     qInfo() << "SHA1:" << sha1;
-    
-    if (!md5.isEmpty() && !sha1.isEmpty()) {
-        qInfo() << "✓ Successfully calculated hashes from real ROM file";
+
+    const QString expectedMd5 = "f51e29e35344589ef6eceb3b5041eefa";
+    const QString expectedSha1 = "03b13c10937543722ceb63ed792a1125640a9d23";
+
+    if (md5 == expectedMd5 && sha1 == expectedSha1) {
+        qInfo() << "✓ Successfully calculated hashes from temp ROM file";
         return true;
     }
-    
+
+    qWarning() << "✗ Hashes did not match expected values";
     return false;
 }
 

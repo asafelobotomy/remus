@@ -1,0 +1,54 @@
+                                    |Lines      |Functions |Branches  
+Filename                            |Rate    Num|Rate  Num|Rate   Num
+=====================================================================
+[/home/solon/Documents/remus/src/]
+core/archive_extractor.cpp          |47.0%   347|36.4%  22|29.4%  934
+core/archive_extractor.h            | 100%     1|50.0%   2|    -    0
+core/chd_converter.cpp              |51.7%   238|47.6%  21|25.8%  497
+core/chd_converter.h                | 100%     2|50.0%   2| 8.3%   24
+core/constants/hash_algorithms.h    | 0.0%     6| 0.0%   1| 0.0%    4
+core/constants/providers.h          |90.3%    31| 100%   6|66.7%   48
+core/constants/systems.h            | 100%    18| 100%   5|69.2%   26
+core/constants/templates.h          | 100%     2| 100%   1|    -    0
+core/dat_parser.cpp                 |92.0%   138| 100%   8|52.0%  406
+core/database.cpp                   |40.2%   520|41.7%  36|19.9% 1352
+core/database.h                     | 100%     1| 100%   1|    -    0
+core/hasher.cpp                     | 100%    75| 100%   8|57.8%  128
+core/header_detector.cpp            |75.7%   189|92.9%  14|40.4%  366
+core/logging_categories.cpp         |75.0%     4|75.0%   4|34.4%   32
+core/matching_engine.cpp            |76.7%    86|71.4%   7|48.2%  164
+core/matching_engine.h              | 0.0%     1| 0.0%   2|    -    0
+core/patch_engine.cpp               |35.1%   370|47.8%  23|18.9%  719
+core/scanner.cpp                    | 0.0%   240| 0.0%  15| 0.0%  651
+core/scanner.h                      | 100%     1| 100%   1|    -    0
+core/space_calculator.cpp           |86.3%   234|83.3%  12|46.4%  746
+core/space_calculator.h             | 100%     1|50.0%   2|    -    0
+core/system_detector.cpp            |56.2%    64|62.5%   8|20.1%  144
+core/system_resolver.cpp            | 100%   138| 100%   6|38.7%  654
+core/template_engine.cpp            |96.3%   108| 100%  11|55.1%  272
+metadata/artwork_downloader.cpp     | 0.0%    51| 0.0%   4| 0.0%  100
+metadata/clrmamepro_parser.cpp      |91.0%   144|83.3%   6|52.7%  328
+metadata/hasheous_provider.cpp      | 0.0%    87| 0.0%   8| 0.0%  328
+metadata/hasheous_provider.h        | 0.0%     3| 0.0%   4|    -    0
+metadata/igdb_provider.cpp          | 0.0%   185| 0.0%  11| 0.0%  540
+metadata/igdb_provider.h            | 0.0%     2| 0.0%   2|    -    0
+metadata/local_database_provider.cpp|48.5%   303|42.1%  19|26.7%  674
+metadata/local_database_provider.h  |50.0%     4|33.3%   3|    -    0
+metadata/metadata_cache.cpp         |96.3%   190| 100%   8|47.9%  862
+metadata/metadata_provider.cpp      |90.9%    33| 100%   4|45.7%   46
+metadata/metadata_provider.h        | 100%     1|50.0%   2|    -    0
+metadata/provider_orchestrator.cpp  |53.8%   171|69.2%  13|25.5%  600
+metadata/provider_orchestrator.h    | 100%     1|50.0%   2|    -    0
+metadata/rate_limiter.cpp           |80.6%    31|80.0%   5|44.1%   34
+metadata/screenscraper_provider.cpp | 0.0%   310| 0.0%  15| 0.0% 1110
+metadata/screenscraper_provider.h   | 0.0%     2| 0.0%   2|    -    0
+metadata/thegamesdb_provider.cpp    | 0.0%   176| 0.0%  10| 0.0%  578
+metadata/thegamesdb_provider.h      | 0.0%     2| 0.0%   2|    -    0
+ui/controllers/da...r_controller.cpp| 0.0%    83| 0.0%   7| 0.0%  158
+ui/controllers/se...s_controller.cpp|94.8%    58| 100%  10|50.7%  140
+ui/theme_constants.cpp              | 0.0%   116| 0.0%  28| 0.0%  182
+=====================================================================
+                              Total:|47.0%  4768|47.3% 383|24.8%  12k
+Message summary:
+  2 warning messages:
+    inconsistent: 2
