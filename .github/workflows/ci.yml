@@ -1,0 +1,66 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        build_type: [Debug, Release]
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            build-essential \
+            cmake \
+            qt6-base-dev \
+            qt6-base-dev-tools \
+            qt6-declarative-dev \
+            qt6-quickcontrols2-dev \
+            libqt6sql6-sqlite \
+            zlib1g-dev
+
+      - name: Configure
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+
+      - name: Build
+        run: cmake --build build --config ${{ matrix.build_type }} -j$(nproc)
+
+      - name: Run Tests
+        run: ctest --test-dir build --output-on-failure
+
+      - name: Upload CLI artifact
+        if: matrix.build_type == 'Release'
+        uses: actions/upload-artifact@v4
+        with:
+          name: remus-cli-linux-x64
+          path: build/remus-cli
+
+      - name: Upload GUI artifact
+        if: matrix.build_type == 'Release'
+        uses: actions/upload-artifact@v4
+        with:
+          name: remus-gui-linux-x64
+          path: build/src/ui/remus-gui
+
+  lint:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check formatting (clang-format)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang-format
+          find src -name '*.cpp' -o -name '*.h' | head -20 | xargs clang-format --dry-run --Werror || echo "Formatting issues found (non-blocking)"

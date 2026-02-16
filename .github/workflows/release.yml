@@ -1,0 +1,109 @@
+name: Release
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - '*.md'
+      - 'docs/**'
+      - '.github/*.md'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version tag (e.g., v0.7.0)'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  prepare-release:
+    runs-on: ubuntu-22.04
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      should_release: ${{ steps.check.outputs.should_release }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Get version from constants.h
+        id: version
+        run: |
+          if [[ -n "${{ github.event.inputs.version }}" ]]; then
+            VERSION="${{ github.event.inputs.version }}"
+          else
+            VERSION="v$(grep -E 'APP_VERSION' src/core/constants/constants.h | sed -E 's/.*"([0-9]+\.[0-9]+\.[0-9]+)".*/\1/')"
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "Detected version: $VERSION"
+
+      - name: Check if release needed
+        id: check
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          if git rev-parse "$VERSION" >/dev/null 2>&1; then
+            echo "Tag $VERSION already exists"
+            echo "should_release=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "should_release=true" >> "$GITHUB_OUTPUT"
+          fi
+
+  build-and-release:
+    needs: prepare-release
+    if: needs.prepare-release.outputs.should_release == 'true' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            build-essential \
+            cmake \
+            qt6-base-dev \
+            qt6-base-dev-tools \
+            qt6-declarative-dev \
+            qt6-quickcontrols2-dev \
+            libqt6sql6-sqlite \
+            libfuse2 \
+            zlib1g-dev \
+            curl
+
+      - name: Configure
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build
+        run: cmake --build build --config Release -j$(nproc)
+
+      - name: Test
+        run: ctest --test-dir build --output-on-failure
+
+      - name: Package AppImage
+        run: |
+          chmod +x scripts/package_appimage.sh
+          REPO_OWNER="${GITHUB_REPOSITORY%%/*}" \
+          REPO_NAME="${GITHUB_REPOSITORY##*/}" \
+          scripts/package_appimage.sh
+
+      - name: Create Git Tag
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag -a "${{ needs.prepare-release.outputs.version }}" -m "Release ${{ needs.prepare-release.outputs.version }}"
+          git push origin "${{ needs.prepare-release.outputs.version }}"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ needs.prepare-release.outputs.version }}
+          name: Remus ${{ needs.prepare-release.outputs.version }}
+          draft: false
+          prerelease: ${{ contains(needs.prepare-release.outputs.version, 'alpha') || contains(needs.prepare-release.outputs.version, 'beta') || contains(needs.prepare-release.outputs.version, 'rc') }}
+          generate_release_notes: true
+          files: |
+            dist/*.AppImage
+            dist/*.AppImage.zsync

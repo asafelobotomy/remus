@@ -1,0 +1,39 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qml/MainWindow.qml</file>
+        <file>qml/LibraryView.qml</file>
+        <file>qml/MatchReviewView.qml</file>
+        <file>qml/ConversionView.qml</file>
+        <file>qml/SettingsView.qml</file>
+        <file>qml/ArtworkView.qml</file>
+        <file>qml/ExportView.qml</file>
+        <file>qml/GameDetailsView.qml</file>
+        <file>qml/VerificationView.qml</file>
+        <file>qml/PatchView.qml</file>
+        <!-- Themed Components -->
+        <file>qml/components/qmldir</file>
+        <file>qml/components/ThemedButton.qml</file>
+        <file>qml/components/ThemedCheckBox.qml</file>
+        <file>qml/components/ThemedComboBox.qml</file>
+        <file>qml/components/ThemedEditableField.qml</file>
+        <file>qml/components/ThemedEditableTextArea.qml</file>
+        <file>qml/components/ThemedProgressBar.qml</file>
+        <file>qml/components/ThemedSlider.qml</file>
+        <file>qml/components/ThemedSpinBox.qml</file>
+        <file>qml/components/ThemedSwitch.qml</file>
+        <file>qml/components/ThemedTextArea.qml</file>
+        <file>qml/components/ThemedTextField.qml</file>
+        <!-- Workflow Components -->
+        <file>qml/components/PipelineStatusBar.qml</file>
+        <file>qml/components/WorkflowBadge.qml</file>
+        <file>qml/components/GameDetailPanel.qml</file>
+        <file>qml/components/SetupWizard.qml</file>
+        <!-- Simplified Library Components -->
+        <file>qml/components/SectionHeader.qml</file>
+        <file>qml/components/UnprocessedListItem.qml</file>
+        <file>qml/components/ProcessedListItem.qml</file>
+        <file>qml/components/MatchPreviewCard.qml</file>
+        <file>qml/components/UnprocessedSidebar.qml</file>
+        <file>qml/components/ProcessedSidebar.qml</file>
+    </qresource>
+</RCC>

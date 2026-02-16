@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Remus
+Comment=Retro ROM library manager
+Exec=remus-gui
+Icon=remus
+Terminal=false
+Categories=Game;Utility;
