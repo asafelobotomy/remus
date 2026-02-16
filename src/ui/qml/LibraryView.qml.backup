@@ -1,0 +1,447 @@
+import QtQuick 2.15
+import QtQuick.Controls 2.15
+import QtQuick.Layouts 1.15
+import QtQuick.Dialogs
+import "components"
+
+Page {
+    id: libraryPage
+    title: "Library"
+    background: Rectangle { color: theme.mainBg }
+    palette.window: theme.mainBg
+    palette.windowText: theme.textPrimary
+    palette.base: theme.mainBg
+    palette.text: theme.textPrimary
+    palette.button: theme.mainBg
+    palette.buttonText: theme.textPrimary
+    palette.highlight: theme.primary
+    palette.highlightedText: theme.textLight
+    palette.placeholderText: theme.textMuted
+    
+    // Aggregate stats for pipeline bar
+    property int totalGames: fileListModel.count
+    property int extractedCount: 0
+    property int hashedCount: 0
+    property int matchedCount: 0
+    property int needsChdCount: 0
+    
+    // Update stats when model changes
+    function updateStats() {
+        var extracted = 0, hashed = 0, matched = 0, needsChd = 0;
+        for (var i = 0; i < fileListModel.count; i++) {
+            var idx = fileListModel.index(i, 0);
+            // extractionState: 0=N/A, 3=Complete
+            var extState = fileListModel.data(idx, 272); // ExtractionStateRole
+            var hashState = fileListModel.data(idx, 274); // HashStateRole
+            var matchState = fileListModel.data(idx, 275); // MatchStateRole
+            var chdState = fileListModel.data(idx, 273); // ChdStateRole
+            
+            if (extState === 0 || extState === 3) extracted++;
+            if (hashState === 3) hashed++;
+            if (matchState === 3) matched++;
+            if (chdState === 1) needsChd++;  // NeedsAction
+        }
+        extractedCount = extracted;
+        hashedCount = hashed;
+        matchedCount = matched;
+        needsChdCount = needsChd;
+    }
+    
+    Connections {
+        target: fileListModel
+        function onCountChanged() { updateStats(); }
+    }
+    
+    Connections {
+        target: matchController
+        function onLibraryUpdated() { fileListModel.refresh(); updateStats(); }
+    }
+    
+    Connections {
+        target: libraryController
+        function onLibraryUpdated() { fileListModel.refresh(); updateStats(); }
+    }
+    
+    Connections {
+        target: conversionController
+        function onConversionCompleted() { fileListModel.refresh(); updateStats(); }
+    }
+    
+    Component.onCompleted: updateStats()
+    
+    header: ToolBar {
+        background: Rectangle { color: theme.cardBg }
+        RowLayout {
+            anchors.fill: parent
+            anchors.leftMargin: 10
+            anchors.rightMargin: 10
+            
+            Label {
+                text: "ROM Library"
+                font.pixelSize: 18
+                font.bold: true
+                color: theme.textPrimary
+            }
+            
+            Item { Layout.fillWidth: true }
+            
+            ThemedButton {
+                text: "Scan Directory"
+                icon.name: "folder-open"
+                isPrimary: true
+                onClicked: folderDialog.open()
+            }
+            
+            ThemedButton {
+                text: "Hash All"
+                icon.name: "checksum"
+                enabled: fileListModel.count > 0
+                onClicked: libraryController.hashFiles()
+            }
+            
+            ThemedButton {
+                text: "Match All"
+                icon.name: "search"
+                enabled: hashedCount > 0
+                onClicked: matchController.startMatching()
+            }
+            
+            ThemedButton {
+                text: "Refresh"
+                icon.name: "view-refresh"
+                onClicked: { fileListModel.refresh(); updateStats(); }
+            }
+        }
+    }
+    
+    ColumnLayout {
+        anchors.fill: parent
+        spacing: 0
+        
+        // Pipeline Status Bar
+        PipelineStatusBar {
+            Layout.fillWidth: true
+            totalGames: libraryPage.totalGames
+            extractedCount: libraryPage.extractedCount
+            hashedCount: libraryPage.hashedCount
+            matchedCount: libraryPage.matchedCount
+            needsChdCount: libraryPage.needsChdCount
+        }
+        
+        // Main content: List + Detail Panel
+        RowLayout {
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            spacing: 0
+            
+            // File list (left side)
+            Rectangle {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                Layout.minimumWidth: 400
+                color: theme.mainBg
+                
+                ColumnLayout {
+                    anchors.fill: parent
+                    spacing: 0
+                    
+                    // Filter bar
+                    Rectangle {
+                        Layout.fillWidth: true
+                        height: 50
+                        color: theme.cardBg
+                        
+                        RowLayout {
+                            anchors.fill: parent
+                            anchors.margins: 10
+                            
+                            Label {
+                                text: "Filter:"
+                                font.bold: true
+                                color: theme.textPrimary
+                            }
+                            
+                            ThemedComboBox {
+                                model: ["All Systems", "NES", "SNES", "PlayStation", "N64"]
+                                Layout.preferredWidth: 150
+                                onCurrentTextChanged: {
+                                    if (currentText === "All Systems") {
+                                        fileListModel.systemFilter = "";
+                                    } else {
+                                        fileListModel.systemFilter = currentText;
+                                    }
+                                    updateStats();
+                                }
+                            }
+                            
+                            ThemedCheckBox {
+                                text: "Matched only"
+                                onCheckedChanged: {
+                                    fileListModel.showMatchedOnly = checked;
+                                    updateStats();
+                                }
+                            }
+                            
+                            Item { Layout.fillWidth: true }
+                            
+                            Label {
+                                text: fileListModel.count + " games"
+                                color: theme.textSecondary
+                                font.bold: true
+                            }
+                        }
+                    }
+                    
+                    // List view
+                    ListView {
+                        id: fileListView
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
+                        model: fileListModel
+                        clip: true
+                        currentIndex: -1
+                        
+                        delegate: ItemDelegate {
+                            id: listDelegate
+                            width: fileListView.width
+                            height: 70
+                            
+                            required property int index
+                            required property var model
+                            
+                            RowLayout {
+                                anchors.fill: parent
+                                anchors.margins: 10
+                                spacing: 10
+                                
+                                // Extension badge with status color
+                                Rectangle {
+                                    width: Math.max(50, extensionLabel.implicitWidth + 12)
+                                    height: 50
+                                    radius: 6
+                                    color: model.matchState === 3 ? theme.success : 
+                                           model.hashState === 3 ? theme.info : theme.textMuted
+                                    
+                                    ColumnLayout {
+                                        anchors.centerIn: parent
+                                        spacing: 2
+                                        
+                                        Label {
+                                            id: extensionLabel
+                                            text: model.extensions ? model.extensions.toUpperCase() : 
+                                                  (model.extension ? model.extension.toUpperCase() : "")
+                                            color: theme.textLight
+                                            font.pixelSize: 9
+                                            font.bold: true
+                                            Layout.alignment: Qt.AlignHCenter
+                                        }
+                                        
+                                        // Progress indicator
+                                        Label {
+                                            text: model.pipelineProgress + "%"
+                                            color: theme.textLight
+                                            font.pixelSize: 8
+                                            font.bold: true
+                                            visible: model.pipelineProgress < 100
+                                            Layout.alignment: Qt.AlignHCenter
+                                        }
+                                    }
+                                }
+                                
+                                // Game info
+                                ColumnLayout {
+                                    Layout.fillWidth: true
+                                    spacing: 4
+                                    
+                                    RowLayout {
+                                        spacing: 8
+                                        
+                                        Label {
+                                            text: model.filename
+                                            font.bold: true
+                                            color: theme.textPrimary
+                                            elide: Text.ElideRight
+                                            Layout.fillWidth: true
+                                        }
+                                        
+                                        Label {
+                                            text: model.fileCount > 1 ? "(" + model.fileCount + " files)" : ""
+                                            color: theme.textMuted
+                                            font.pixelSize: 10
+                                            font.bold: true
+                                            visible: model.fileCount > 1
+                                        }
+                                    }
+                                    
+                                    // Status badges row
+                                    RowLayout {
+                                        spacing: 6
+                                        
+                                        WorkflowBadge {
+                                            workflowState: model.extractionState || 0
+                                            label: "Extract"
+                                        }
+                                        
+                                        WorkflowBadge {
+                                            workflowState: model.chdState || 0
+                                            label: "CHD"
+                                        }
+                                        
+                                        WorkflowBadge {
+                                            workflowState: model.hashState || 0
+                                            label: "Hash"
+                                        }
+                                        
+                                        WorkflowBadge {
+                                            workflowState: model.matchState || 0
+                                            label: "Match"
+                                        }
+                                        
+                                        // Match confidence if matched
+                                        Label {
+                                            text: model.matchConfidence > 0 ? model.matchConfidence + "%" : ""
+                                            font.pixelSize: 10
+                                            font.bold: true
+                                            color: model.matchConfidence >= 80 ? theme.success :
+                                                   model.matchConfidence >= 50 ? theme.warning : theme.danger
+                                            visible: model.matchConfidence > 0
+                                        }
+                                    }
+                                }
+                                
+                                // File size
+                                Label {
+                                    text: formatFileSize(model.fileSize)
+                                    color: theme.textSecondary
+                                    font.bold: true
+                                }
+                            }
+                            
+                            background: Rectangle {
+                                color: fileListView.currentIndex === listDelegate.index ? 
+                                       theme.primary + "30" : theme.cardBg
+                            }
+                            
+                            onClicked: fileListView.currentIndex = listDelegate.index
+                        }
+                        
+                        ScrollBar.vertical: ScrollBar {}
+                        
+                        // Update detail panel when selection changes
+                        onCurrentIndexChanged: {
+                            if (currentIndex >= 0) {
+                                var idx = model.index(currentIndex, 0);
+                                detailPanel.gameName = model.data(idx, 258) || "";
+                                detailPanel.filePath = model.data(idx, 259) || "";
+                                detailPanel.extensions = model.data(idx, 261) || "";
+                                detailPanel.fileCount = model.data(idx, 270) || 1;
+                                detailPanel.fileSize = model.data(idx, 262) || 0;
+                                detailPanel.systemId = model.data(idx, 263) || 0;
+                                
+                                detailPanel.extractionState = model.data(idx, 272) || 0;
+                                detailPanel.chdState = model.data(idx, 273) || 0;
+                                detailPanel.hashState = model.data(idx, 274) || 0;
+                                detailPanel.matchState = model.data(idx, 275) || 0;
+                                
+                                detailPanel.isInsideArchive = model.data(idx, 276) || false;
+                                detailPanel.archivePath = model.data(idx, 277) || "";
+                                detailPanel.isChdCandidate = model.data(idx, 278) || false;
+                                detailPanel.isAlreadyChd = model.data(idx, 279) || false;
+                                
+                                detailPanel.matchConfidence = model.data(idx, 280) || 0;
+                                detailPanel.matchMethod = model.data(idx, 281) || "";
+                                detailPanel.matchedTitle = model.data(idx, 282) || "";
+                                detailPanel.matchPublisher = model.data(idx, 283) || "";
+                                detailPanel.matchYear = model.data(idx, 284) || 0;
+                                detailPanel.matchConfirmed = model.data(idx, 285) || false;
+                                detailPanel.matchRejected = model.data(idx, 286) || false;
+                                
+                                detailPanel.primaryFileId = model.data(idx, 257) || 0;
+                                detailPanel.allFileIds = model.data(idx, 271) || "";
+                            } else {
+                                detailPanel.gameName = "";
+                            }
+                        }
+                    }
+                    
+                    // Empty state message
+                    Label {
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
+                        text: "No files found\n\nClick 'Scan Directory' to add ROMs"
+                        visible: fileListModel.count === 0
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                        color: theme.textMuted
+                        font.bold: true
+                        font.pixelSize: 14
+                    }
+                }
+            }
+            
+            // Separator
+            Rectangle {
+                Layout.fillHeight: true
+                width: 1
+                color: theme.border
+            }
+            
+            // Detail Panel (right side)
+            GameDetailPanel {
+                id: detailPanel
+                Layout.fillHeight: true
+                Layout.preferredWidth: 320
+                Layout.minimumWidth: 280
+                
+                // Connect action signals
+                onExtractRequested: (archivePath) => {
+                    console.log("Extract requested for:", archivePath);
+                    if (archivePath) {
+                        conversionController.extractArchive(archivePath);
+                    }
+                }
+                
+                onConvertToChdRequested: (fileId) => {
+                    console.log("Convert to CHD requested for file ID:", fileId);
+                    var filePath = libraryController.getFilePath(fileId);
+                    if (filePath) {
+                        conversionController.convertToCHD(filePath, "");
+                    }
+                }
+                
+                onHashRequested: (fileId) => {
+                    console.log("Hash requested for file ID:", fileId);
+                    libraryController.hashFile(fileId);
+                }
+                
+                onMatchRequested: (fileId) => {
+                    console.log("Match requested for file ID:", fileId);
+                    matchController.matchFile(fileId);
+                }
+                
+                onConfirmMatchRequested: (fileId) => {
+                    matchController.confirmMatch(fileId);
+                }
+                
+                onRejectMatchRequested: (fileId) => {
+                    matchController.rejectMatch(fileId);
+                }
+            }
+        }
+    }
+    
+    FolderDialog {
+        id: folderDialog
+        title: "Select ROM Directory"
+        onAccepted: {
+            libraryController.scanDirectory(selectedFolder.toString().replace("file://", ""))
+        }
+    }
+    
+    function formatFileSize(bytes) {
+        if (bytes < 1024) return bytes + " B";
+        if (bytes < 1048576) return (bytes / 1024).toFixed(1) + " KB";
+        if (bytes < 1073741824) return (bytes / 1048576).toFixed(1) + " MB";
+        return (bytes / 1073741824).toFixed(2) + " GB";
+    }
+}

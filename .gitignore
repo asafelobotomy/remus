@@ -1,0 +1,134 @@
+# Build artifacts
+build/
+*.o
+*.so
+*.a
+*.AppImage
+*.AppDir
+moc_*
+qrc_*
+ui_*
+
+# Qt
+*.pro.user
+*.pro.user.*
+.qmake.stash
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# CMake
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+
+# Database
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+
+# Cache
+cache/
+*.cache
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Credentials (never commit these!)
+credentials.json
+*.key
+*.pem
+
+# Test data
+test_roms/
+test_library/
+rom_tests/
+
+# Distribution/packaging
+dist/
+
+# ROM and game files (never commit ROMs)
+## Nintendo
+*.nes
+*.snes
+*.n64
+*.gbc
+*.gba
+*.gb
+*.32x
+*.smd
+*.md
+*.gen
+
+## Sega
+*.sms
+*.gg
+*.sg
+*.bin
+
+## Sony
+*.psx
+*.ps1
+*.ps2
+
+## Atari
+*.a26
+*.a78
+
+## Other systems
+*.wad
+*.rvz
+*.gdi
+*.rom
+*.z64
+
+## Disc-based formats
+*.iso
+*.cue
+*.img
+*.mdf
+*.gdf
+
+## Compressed ROMs
+*.zip
+*.7z
+*.rar
+*.tar.gz
+*.tar
+
+## Playlists & related
+*.m3u
+*.m3u8
+*.cdi
+
+# Save game files (never commit saves)
+## Standard save formats
+*.sav
+*.srm
+*.bat
+*.sbs
+*.state
+*.save
+*.mem
+*.eep
+
+## System-specific saves
+*.nds
+*.gbs
+*.sgm
+
+## BIOS files
+*.bin
+biosROM.*
+

@@ -1,0 +1,56 @@
+name: AppImage
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build-appimage:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            build-essential \
+            cmake \
+            qt6-base-dev \
+            qt6-base-dev-tools \
+            qt6-declarative-dev \
+            qt6-quickcontrols2-dev \
+            libqt6sql6-sqlite \
+            libfuse2 \
+            zlib1g-dev \
+            curl
+
+      - name: Configure
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build
+        run: cmake --build build --config Release -j
+
+      - name: Test
+        run: ctest --test-dir build --output-on-failure
+
+      - name: Package AppImage
+        run: |
+          chmod +x scripts/package_appimage.sh
+          REPO_OWNER="${GITHUB_REPOSITORY%%/*}" \
+          REPO_NAME="${GITHUB_REPOSITORY##*/}" \
+          scripts/package_appimage.sh
+
+      - name: Upload AppImage to Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/*.AppImage
+            dist/*.AppImage.zsync
