@@ -58,7 +58,12 @@ public:
      * @param system System identifier (e.g., "NES", "PlayStation")
      * @return GameMetadata from first successful provider
      */
-    GameMetadata searchWithFallback(const QString &hash, const QString &name, const QString &system);
+    GameMetadata searchWithFallback(const QString &hash,
+                                    const QString &name,
+                                    const QString &system,
+                                    const QString &crc32 = QString(),
+                                    const QString &md5 = QString(),
+                                    const QString &sha1 = QString());
     
     /**
      * @brief Get list of all search results from all providers
@@ -74,7 +79,11 @@ public:
      * @param system System identifier
      * @return GameMetadata from first successful hash match
      */
-    GameMetadata getByHashWithFallback(const QString &hash, const QString &system);
+    GameMetadata getByHashWithFallback(const QString &hash,
+                                       const QString &system,
+                                       const QString &crc32 = QString(),
+                                       const QString &md5 = QString(),
+                                       const QString &sha1 = QString());
     
     /**
      * @brief Get artwork with fallback

@@ -3,7 +3,9 @@
 #include <QDebug>
 #include <QDir>
 #include <QFile>
+#include <QFileInfo>
 #include <QDir>
+#include <QTemporaryDir>
 #include <QTextStream>
 #include <QJsonDocument>
 #include <QJsonArray>
@@ -35,6 +37,7 @@
 #include "../core/constants/constants.h"
 #include "../core/logging_categories.h"
 #include "terminal_image.h"
+#include "interactive_session.h"
 
 #undef qDebug
 #undef qInfo
@@ -47,6 +50,127 @@
 
 using namespace Remus;
 using namespace Remus::Constants;
+using namespace Remus::Cli;
+
+static bool hasFlag(const QStringList &args, const QString &flag)
+{
+    return args.contains(flag);
+}
+
+static bool hasAnyAction(const QStringList &args)
+{
+    const QStringList actionFlags = {
+        "--scan", "-s", "--hash", "--hash-all", "--list", "--stats", "--info",
+        "--header-info", "--show-art", "--metadata", "--search", "--match",
+        "--match-report", "--verify", "--verify-report", "--process", "--organize",
+        "--download-artwork", "--generate-m3u", "--convert-chd", "--chd-extract",
+        "--chd-verify", "--chd-info", "--extract-archive", "--space-report",
+        "--export", "--patch-apply", "--patch-create", "--patch-info",
+        "--patch-tools", "--checksum-verify"
+    };
+
+    for (const QString &arg : args) {
+        if (actionFlags.contains(arg)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+static bool isArchivePath(const QString &path)
+{
+    const QString lower = path.toLower();
+    return lower.endsWith(".zip") || lower.endsWith(".7z") || lower.endsWith(".rar") ||
+           lower.endsWith(".tar") || lower.endsWith(".tar.gz") || lower.endsWith(".tgz") ||
+           lower.endsWith(".tar.bz2") || lower.endsWith(".tbz2");
+}
+
+/**
+ * @brief Select the best hash for matching based on system's preferred algorithm
+ * @param file The file record with multiple hash values
+ * @return The preferred hash string (CRC32, MD5, or SHA1)
+ * 
+ * Disc-based systems (PlayStation, Saturn, etc.) prefer MD5/SHA1.
+ * Cartridge-based systems (NES, SNES, GBA, etc.) prefer CRC32.
+ */
+static QString selectBestHash(const FileRecord &file)
+{
+    // Get system info to determine preferred hash algorithm
+    if (Systems::SYSTEMS.contains(file.systemId)) {
+        const Systems::SystemDef &sysDef = Systems::SYSTEMS[file.systemId];
+        const QString preferred = sysDef.preferredHash.toLower();
+        
+        // Return the preferred hash if available
+        if (preferred == "md5" && !file.md5.isEmpty()) return file.md5;
+        if (preferred == "sha1" && !file.sha1.isEmpty()) return file.sha1;
+        if (preferred == "crc32" && !file.crc32.isEmpty()) return file.crc32;
+    }
+    
+    // Fallback: CRC32 → SHA1 → MD5 (original behavior)
+    if (!file.crc32.isEmpty()) return file.crc32;
+    if (!file.sha1.isEmpty()) return file.sha1;
+    if (!file.md5.isEmpty()) return file.md5;
+    
+    return QString();
+}
+
+static HashResult hashFileRecord(const FileRecord &file, Hasher &hasher)
+{
+    const QString archivePath = file.archivePath.isEmpty() ? file.currentPath : file.archivePath;
+    const bool treatAsArchive = file.isCompressed || isArchivePath(archivePath);
+
+    if (!treatAsArchive) {
+        int headerSize = Hasher::detectHeaderSize(file.currentPath, file.extension);
+        bool stripHeader = (headerSize > 0);
+        return hasher.calculateHashes(file.currentPath, stripHeader, headerSize);
+    }
+
+    HashResult result;
+    if (!QFileInfo::exists(archivePath)) {
+        result.error = "Archive file not found";
+        return result;
+    }
+
+    QTemporaryDir tempDir;
+    if (!tempDir.isValid()) {
+        result.error = "Failed to create temporary directory";
+        return result;
+    }
+
+    ArchiveExtractor extractor;
+    const QString internalPath = file.archiveInternalPath.isEmpty() ? file.filename : file.archiveInternalPath;
+    ExtractionResult extraction = extractor.extractFile(archivePath, internalPath, tempDir.path());
+    if (!extraction.success || extraction.extractedFiles.isEmpty()) {
+        // Fallback: extract entire archive and choose a file matching the extension
+        extraction = extractor.extract(archivePath, tempDir.path(), false);
+        if (!extraction.success || extraction.extractedFiles.isEmpty()) {
+            result.error = extraction.error.isEmpty()
+                ? QString("Failed to extract %1 from archive").arg(internalPath)
+                : extraction.error;
+            return result;
+        }
+
+        QString picked;
+        for (const QString &path : extraction.extractedFiles) {
+            if (path.endsWith(file.extension, Qt::CaseInsensitive)) {
+                picked = path;
+                break;
+            }
+        }
+        if (picked.isEmpty()) {
+            picked = extraction.extractedFiles.first();
+        }
+        const QString extractedPath = picked;
+        int headerSize = Hasher::detectHeaderSize(extractedPath, file.extension);
+        bool stripHeader = (headerSize > 0);
+        return hasher.calculateHashes(extractedPath, stripHeader, headerSize);
+    }
+
+    const QString extractedPath = extraction.extractedFiles.first();
+    int headerSize = Hasher::detectHeaderSize(extractedPath, file.extension);
+    bool stripHeader = (headerSize > 0);
+    return hasher.calculateHashes(extractedPath, stripHeader, headerSize);
+}
 
 static std::unique_ptr<ProviderOrchestrator> buildOrchestrator(const QCommandLineParser &parser)
 {
@@ -154,9 +278,24 @@ int main(int argc, char *argv[])
 {
     QCoreApplication app(argc, argv);
     QCoreApplication::setApplicationName("remus-cli");
+    QCoreApplication::setOrganizationName("Remus");
     QCoreApplication::setApplicationVersion(Constants::APP_VERSION);
 
     printBanner();
+
+    QStringList activeArgs = app.arguments();
+    const bool interactiveFlag = hasFlag(activeArgs, "--interactive");
+    const bool noInteractiveFlag = hasFlag(activeArgs, "--no-interactive");
+    const bool actionsProvided = hasAnyAction(activeArgs);
+
+    if (interactiveFlag || (!noInteractiveFlag && !actionsProvided)) {
+        InteractiveSession session;
+        InteractiveResult selection = session.run();
+        if (!selection.valid || selection.args.isEmpty()) {
+            return 0;
+        }
+        activeArgs = selection.args;
+    }
 
     QCommandLineParser parser;
     parser.setApplicationDescription("Remus CLI - Scan and catalog retro game ROMs");
@@ -214,6 +353,7 @@ int main(int argc, char *argv[])
     parser.addOption(QCommandLineOption("dry-run", "Preview changes without modifying files"));
     parser.addOption(QCommandLineOption("generate-m3u", "Generate M3U playlists for multi-disc games"));
     parser.addOption(QCommandLineOption("m3u-dir", "Directory for M3U playlists (default: same as game files)", "directory"));
+    parser.addOption(QCommandLineOption("dry-run-all", "Preview file outputs for all file-writing actions"));
 
     // Patch options
     parser.addOption(QCommandLineOption("patch-apply", "Apply patch to base file", "basefile"));
@@ -243,7 +383,11 @@ int main(int argc, char *argv[])
     parser.addOption(QCommandLineOption("space-report", "Show potential CHD conversion savings", "directory"));
     parser.addOption(QCommandLineOption("output-dir", "Output directory for conversions/extractions", "directory"));
 
-    parser.process(app);
+    // Interactive options
+    parser.addOption(QCommandLineOption("interactive", "Launch interactive TUI (default when no actions provided)"));
+    parser.addOption(QCommandLineOption("no-interactive", "Disable interactive TUI (script-friendly)"));
+
+    parser.process(activeArgs);
 
     // Initialize database
     QString dbPath = parser.value("db");
@@ -332,6 +476,7 @@ int main(int argc, char *argv[])
         }
     }
 
+    const bool dryRunAll = parser.isSet("dry-run-all");
     const bool processRequested = parser.isSet("process");
     const bool scanRequested = parser.isSet("scan") || processRequested;
     QString scanPath = parser.isSet("scan") ? parser.value("scan") : parser.value("process");
@@ -372,7 +517,10 @@ int main(int argc, char *argv[])
 
         for (const ScanResult &result : results) {
             // Detect system
-            QString systemName = detector.detectSystem(result.extension, result.path);
+            QString systemDetectPath = result.isCompressed && !result.archiveInternalPath.isEmpty()
+                ? result.archiveInternalPath
+                : result.path;
+            QString systemName = detector.detectSystem(result.extension, systemDetectPath);
             int systemId = systemName.isEmpty() ? 0 : db.getSystemId(systemName);
 
             // Create file record
@@ -383,6 +531,9 @@ int main(int argc, char *argv[])
             record.filename = result.filename;
             record.extension = result.extension;
             record.fileSize = result.fileSize;
+            record.isCompressed = result.isCompressed;
+            record.archivePath = result.archivePath;
+            record.archiveInternalPath = result.archiveInternalPath;
             record.systemId = systemId;
             record.isPrimary = result.isPrimary;
             record.lastModified = result.lastModified;
@@ -410,13 +561,8 @@ int main(int argc, char *argv[])
             int hashedCount = 0;
 
             for (const FileRecord &file : filesToHash) {
-                // Detect if header stripping needed
-                int headerSize = Hasher::detectHeaderSize(file.currentPath, file.extension);
-                bool stripHeader = (headerSize > 0);
-
-                // Calculate hashes
-                HashResult hashResult = hasher.calculateHashes(
-                    file.currentPath, stripHeader, headerSize);
+                // Calculate hashes (handles archives via extraction)
+                HashResult hashResult = hashFileRecord(file, hasher);
 
                 if (hashResult.success) {
                     db.updateFileHashes(file.id, hashResult.crc32, 
@@ -426,6 +572,8 @@ int main(int argc, char *argv[])
                     if (hashedCount % 10 == 0) {
                         qInfo() << "  Hashed" << hashedCount << "of" << filesToHash.size() << "files...";
                     }
+                } else {
+                    qWarning() << "  Hash failed for" << file.filename << ":" << hashResult.error;
                 }
             }
 
@@ -461,10 +609,7 @@ int main(int argc, char *argv[])
         int hashedCount = 0;
 
         for (const FileRecord &file : filesToHash) {
-            int headerSize = Hasher::detectHeaderSize(file.currentPath, file.extension);
-            bool stripHeader = (headerSize > 0);
-
-            HashResult hashResult = hasher.calculateHashes(file.currentPath, stripHeader, headerSize);
+            HashResult hashResult = hashFileRecord(file, hasher);
             if (hashResult.success) {
                 db.updateFileHashes(file.id, hashResult.crc32,
                                     hashResult.md5, hashResult.sha1);
@@ -472,6 +617,8 @@ int main(int argc, char *argv[])
                 if (hashedCount % 10 == 0) {
                     qInfo() << "  Hashed" << hashedCount << "of" << filesToHash.size() << "files...";
                 }
+            } else {
+                qWarning() << "  Hash failed for" << file.filename << ":" << hashResult.error;
             }
         }
 
@@ -639,9 +786,12 @@ int main(int argc, char *argv[])
             qInfo() << "Matching:" << file.filename;
 
             GameMetadata metadata = orchestrator->searchWithFallback(
-                !file.crc32.isEmpty() ? file.crc32 : (!file.sha1.isEmpty() ? file.sha1 : file.md5),
+                selectBestHash(file),
                 file.filename,
-                ""
+                "",
+                file.crc32,
+                file.md5,
+                file.sha1
             );
 
             if (!metadata.title.isEmpty()) {
@@ -711,9 +861,12 @@ int main(int argc, char *argv[])
 
         for (const FileRecord &file : files) {
             GameMetadata metadata = orchestrator->searchWithFallback(
-                !file.crc32.isEmpty() ? file.crc32 : (!file.sha1.isEmpty() ? file.sha1 : file.md5),
+                selectBestHash(file),
                 file.filename,
-                ""
+                "",
+                file.crc32,
+                file.md5,
+                file.sha1
             );
 
             int confidence = metadata.matchScore > 0 ? static_cast<int>(metadata.matchScore * 100) : 0;
@@ -913,9 +1066,12 @@ int main(int argc, char *argv[])
         for (const FileRecord &file : files) {
             qInfo() << "Processing:" << file.filename;
             GameMetadata metadata = orchestrator->searchWithFallback(
-                !file.crc32.isEmpty() ? file.crc32 : (!file.sha1.isEmpty() ? file.sha1 : file.md5),
+                selectBestHash(file),
                 file.filename,
-                ""
+                "",
+                file.crc32,
+                file.md5,
+                file.sha1
             );
 
             if (metadata.boxArtUrl.isEmpty()) {
@@ -932,6 +1088,12 @@ int main(int argc, char *argv[])
             }
 
             QString destPath = artworkDirStr + "/" + QFileInfo(file.filename).completeBaseName() + ".jpg";
+            if (dryRunAll) {
+                qInfo() << "  [DRY-RUN] would save" << destPath << "from" << url.toString();
+                downloadedCount++;
+                continue;
+            }
+
             if (downloader.download(url, destPath)) {
                 qInfo() << "  ✓ Saved" << destPath;
                 downloadedCount++;
@@ -951,7 +1113,7 @@ int main(int argc, char *argv[])
     if (parser.isSet("organize")) {
         QString destination = parser.value("organize");
         QString templateStr = parser.value("template");
-        bool dryRun = parser.isSet("dry-run");
+        bool dryRun = parser.isSet("dry-run") || dryRunAll;
 
         qInfo() << "";
         qInfo() << "=== Organize & Rename Files (M4) ===";
@@ -1019,33 +1181,37 @@ int main(int argc, char *argv[])
     if (parser.isSet("generate-m3u")) {
         QString m3uDir = parser.value("m3u-dir");
 
-        qInfo() << "";
-        qInfo() << "=== Generate M3U Playlists ===";
-        if (!m3uDir.isEmpty()) {
-            qInfo() << "Output directory:" << m3uDir;
+        if (dryRunAll) {
+            qInfo() << "[DRY-RUN] Skipping M3U generation";
         } else {
-            qInfo() << "Output: Same directory as game files";
+            qInfo() << "";
+            qInfo() << "=== Generate M3U Playlists ===";
+            if (!m3uDir.isEmpty()) {
+                qInfo() << "Output directory:" << m3uDir;
+            } else {
+                qInfo() << "Output: Same directory as game files";
+            }
+            qInfo() << "";
+
+            M3UGenerator generator(db);
+
+            // Connect signals
+            QObject::connect(&generator, &M3UGenerator::playlistGenerated,
+                [](const QString &path, int discCount) {
+                    qInfo() << "✓ Generated:" << path << "(" << discCount << "discs)";
+                });
+
+            QObject::connect(&generator, &M3UGenerator::errorOccurred,
+                [](const QString &error) {
+                    qWarning() << "✗ Error:" << error;
+                });
+
+            // Generate all M3U playlists
+            int count = generator.generateAll(QString(), m3uDir);
+
+            qInfo() << "";
+            qInfo() << "Generated" << count << "M3U playlists";
         }
-        qInfo() << "";
-
-        M3UGenerator generator(db);
-
-        // Connect signals
-        QObject::connect(&generator, &M3UGenerator::playlistGenerated,
-            [](const QString &path, int discCount) {
-                qInfo() << "✓ Generated:" << path << "(" << discCount << "discs)";
-            });
-
-        QObject::connect(&generator, &M3UGenerator::errorOccurred,
-            [](const QString &error) {
-                qWarning() << "✗ Error:" << error;
-            });
-
-        // Generate all M3U playlists
-        int count = generator.generateAll(QString(), m3uDir);
-
-        qInfo() << "";
-        qInfo() << "Generated" << count << "M3U playlists";
     }
 
     // Handle M4.5 CHD conversion command
@@ -1095,27 +1261,31 @@ int main(int argc, char *argv[])
         QString ext = info.suffix().toLower();
         CHDConversionResult result;
 
-        if (ext == "cue") {
-            result = converter.convertCueToCHD(inputPath, outputPath);
-        } else if (ext == "iso" || ext == "img") {
-            result = converter.convertIsoToCHD(inputPath, outputPath);
-        } else if (ext == "gdi") {
-            result = converter.convertGdiToCHD(inputPath, outputPath);
+        if (dryRunAll) {
+            qInfo() << "[DRY-RUN] Would convert" << inputPath << "to" << outputPath << "using" << codecStr;
         } else {
-            qCritical() << "✗ Unsupported format:" << ext;
-            qInfo() << "Supported formats: .cue, .iso, .img, .gdi";
-            return 1;
-        }
+            if (ext == "cue") {
+                result = converter.convertCueToCHD(inputPath, outputPath);
+            } else if (ext == "iso" || ext == "img") {
+                result = converter.convertIsoToCHD(inputPath, outputPath);
+            } else if (ext == "gdi") {
+                result = converter.convertGdiToCHD(inputPath, outputPath);
+            } else {
+                qCritical() << "✗ Unsupported format:" << ext;
+                qInfo() << "Supported formats: .cue, .iso, .img, .gdi";
+                return 1;
+            }
 
-        if (result.success) {
-            qInfo() << "✓ Conversion successful!";
-            qInfo() << "  Original size:" << SpaceCalculator::formatBytes(result.inputSize);
-            qInfo() << "  CHD size:" << SpaceCalculator::formatBytes(result.outputSize);
-            qInfo() << "  Saved:" << SpaceCalculator::formatBytes(result.inputSize - result.outputSize);
-            qInfo() << "  Compression:" << QString::number((1.0 - result.compressionRatio) * 100, 'f', 1) << "%";
-        } else {
-            qCritical() << "✗ Conversion failed:" << result.error;
-            return 1;
+            if (result.success) {
+                qInfo() << "✓ Conversion successful!";
+                qInfo() << "  Original size:" << SpaceCalculator::formatBytes(result.inputSize);
+                qInfo() << "  CHD size:" << SpaceCalculator::formatBytes(result.outputSize);
+                qInfo() << "  Saved:" << SpaceCalculator::formatBytes(result.inputSize - result.outputSize);
+                qInfo() << "  Compression:" << QString::number((1.0 - result.compressionRatio) * 100, 'f', 1) << "%";
+            } else {
+                qCritical() << "✗ Conversion failed:" << result.error;
+                return 1;
+            }
         }
     }
 
@@ -1146,14 +1316,18 @@ int main(int argc, char *argv[])
         qInfo() << "Output:" << outputPath;
         qInfo() << "";
 
-        CHDConversionResult result = converter.extractCHDToCue(chdPath, outputPath);
-
-        if (result.success) {
-            qInfo() << "✓ Extraction successful!";
-            qInfo() << "  Extracted to:" << outputPath;
+        if (dryRunAll) {
+            qInfo() << "[DRY-RUN] Would extract" << chdPath << "to" << outputPath;
         } else {
-            qCritical() << "✗ Extraction failed:" << result.error;
-            return 1;
+            CHDConversionResult result = converter.extractCHDToCue(chdPath, outputPath);
+
+            if (result.success) {
+                qInfo() << "✓ Extraction successful!";
+                qInfo() << "  Extracted to:" << outputPath;
+            } else {
+                qCritical() << "✗ Extraction failed:" << result.error;
+                return 1;
+            }
         }
     }
 
@@ -1257,17 +1431,21 @@ int main(int argc, char *argv[])
         qInfo() << "Output:" << outputDir;
         qInfo() << "";
 
-        ExtractionResult result = extractor.extract(archivePath, outputDir);
-
-        if (result.success) {
-            qInfo() << "✓ Extraction successful!";
-            qInfo() << "  Files extracted:" << result.filesExtracted;
-            for (const QString &path : result.extractedFiles) {
-                qInfo() << "    " << path;
-            }
+        if (dryRunAll) {
+            qInfo() << "[DRY-RUN] Would extract" << archivePath << "to" << outputDir;
         } else {
-            qCritical() << "✗ Extraction failed:" << result.error;
-            return 1;
+            ExtractionResult result = extractor.extract(archivePath, outputDir);
+
+            if (result.success) {
+                qInfo() << "✓ Extraction successful!";
+                qInfo() << "  Files extracted:" << result.filesExtracted;
+                for (const QString &path : result.extractedFiles) {
+                    qInfo() << "    " << path;
+                }
+            } else {
+                qCritical() << "✗ Extraction failed:" << result.error;
+                return 1;
+            }
         }
     }
 
@@ -1303,6 +1481,10 @@ int main(int argc, char *argv[])
         const QString systemsArg = parser.value("export-systems");
         const QStringList systemFilters = systemsArg.isEmpty() ? QStringList() : systemsArg.split(',', Qt::SkipEmptyParts);
 
+        if (dryRunAll) {
+            qInfo() << "[DRY-RUN] Export outputs will not be written";
+        }
+
         if (outputPath.isEmpty()) {
             if (format == "retroarch") outputPath = "remus.lpl";
             else if (format == "emustation") outputPath = "gamelist.xml";
@@ -1331,95 +1513,115 @@ int main(int argc, char *argv[])
         if (rows.isEmpty()) {
             qWarning() << "No matched files to export";
         } else if (format == "retroarch") {
-            QFile f(outputPath);
-            if (!f.open(QIODevice::WriteOnly | QIODevice::Text)) {
-                qCritical() << "Failed to open" << outputPath;
-                return 1;
+            if (dryRunAll) {
+                qInfo() << "[DRY-RUN] Would write RetroArch playlist to" << outputPath << "(" << rows.size() << " entries)";
+            } else {
+                QFile f(outputPath);
+                if (!f.open(QIODevice::WriteOnly | QIODevice::Text)) {
+                    qCritical() << "Failed to open" << outputPath;
+                    return 1;
+                }
+                QTextStream out(&f);
+                for (const auto &row : rows) {
+                    QString systemName = db.getSystemDisplayName(row.file.systemId);
+                    out << row.file.currentPath << "\n";
+                    out << (!row.match.gameTitle.isEmpty() ? row.match.gameTitle : row.file.filename) << "\n";
+                    out << "DETECT\nDETECT\n";
+                    out << (row.file.crc32.isEmpty() ? "00000000" : row.file.crc32) << "|crc\n";
+                    out << systemName << ".lpl\n";
+                }
+                qInfo() << "✓ RetroArch playlist exported to" << outputPath;
             }
-            QTextStream out(&f);
-            for (const auto &row : rows) {
-                QString systemName = db.getSystemDisplayName(row.file.systemId);
-                out << row.file.currentPath << "\n";
-                out << (!row.match.gameTitle.isEmpty() ? row.match.gameTitle : row.file.filename) << "\n";
-                out << "DETECT\nDETECT\n";
-                out << (row.file.crc32.isEmpty() ? "00000000" : row.file.crc32) << "|crc\n";
-                out << systemName << ".lpl\n";
-            }
-            qInfo() << "✓ RetroArch playlist exported to" << outputPath;
         } else if (format == "emustation") {
-            QFile f(outputPath);
-            if (!f.open(QIODevice::WriteOnly | QIODevice::Text)) {
-                qCritical() << "Failed to open" << outputPath;
-                return 1;
+            if (dryRunAll) {
+                qInfo() << "[DRY-RUN] Would write EmulationStation gamelist to" << outputPath << "(" << rows.size() << " entries)";
+            } else {
+                QFile f(outputPath);
+                if (!f.open(QIODevice::WriteOnly | QIODevice::Text)) {
+                    qCritical() << "Failed to open" << outputPath;
+                    return 1;
+                }
+                QTextStream out(&f);
+                out << "<gameList>\n";
+                for (const auto &row : rows) {
+                    out << "  <game>\n";
+                    out << "    <path>" << row.file.currentPath << "</path>\n";
+                    out << "    <name>" << (!row.match.gameTitle.isEmpty() ? row.match.gameTitle : row.file.filename) << "</name>\n";
+                    out << "    <desc>" << row.match.description << "</desc>\n";
+                    out << "    <genre>" << row.match.genre << "</genre>\n";
+                    out << "    <players>" << row.match.players << "</players>\n";
+                    out << "    <region>" << row.match.region << "</region>\n";
+                    out << "  </game>\n";
+                }
+                out << "</gameList>\n";
+                qInfo() << "✓ EmulationStation gamelist exported to" << outputPath;
             }
-            QTextStream out(&f);
-            out << "<gameList>\n";
-            for (const auto &row : rows) {
-                out << "  <game>\n";
-                out << "    <path>" << row.file.currentPath << "</path>\n";
-                out << "    <name>" << (!row.match.gameTitle.isEmpty() ? row.match.gameTitle : row.file.filename) << "</name>\n";
-                out << "    <desc>" << row.match.description << "</desc>\n";
-                out << "    <genre>" << row.match.genre << "</genre>\n";
-                out << "    <players>" << row.match.players << "</players>\n";
-                out << "    <region>" << row.match.region << "</region>\n";
-                out << "  </game>\n";
-            }
-            out << "</gameList>\n";
-            qInfo() << "✓ EmulationStation gamelist exported to" << outputPath;
         } else if (format == "launchbox") {
-            QFile f(outputPath);
-            if (!f.open(QIODevice::WriteOnly | QIODevice::Text)) {
-                qCritical() << "Failed to open" << outputPath;
-                return 1;
+            if (dryRunAll) {
+                qInfo() << "[DRY-RUN] Would write LaunchBox XML to" << outputPath << "(" << rows.size() << " entries)";
+            } else {
+                QFile f(outputPath);
+                if (!f.open(QIODevice::WriteOnly | QIODevice::Text)) {
+                    qCritical() << "Failed to open" << outputPath;
+                    return 1;
+                }
+                QTextStream out(&f);
+                out << "<LaunchBox>\n";
+                for (const auto &row : rows) {
+                    out << "  <Game>\n";
+                    out << "    <Title>" << (!row.match.gameTitle.isEmpty() ? row.match.gameTitle : row.file.filename) << "</Title>\n";
+                    out << "    <ApplicationPath>" << row.file.currentPath << "</ApplicationPath>\n";
+                    out << "    <Region>" << row.match.region << "</Region>\n";
+                    out << "    <Genre>" << row.match.genre << "</Genre>\n";
+                    out << "  </Game>\n";
+                }
+                out << "</LaunchBox>\n";
+                qInfo() << "✓ LaunchBox XML exported to" << outputPath;
             }
-            QTextStream out(&f);
-            out << "<LaunchBox>\n";
-            for (const auto &row : rows) {
-                out << "  <Game>\n";
-                out << "    <Title>" << (!row.match.gameTitle.isEmpty() ? row.match.gameTitle : row.file.filename) << "</Title>\n";
-                out << "    <ApplicationPath>" << row.file.currentPath << "</ApplicationPath>\n";
-                out << "    <Region>" << row.match.region << "</Region>\n";
-                out << "    <Genre>" << row.match.genre << "</Genre>\n";
-                out << "  </Game>\n";
-            }
-            out << "</LaunchBox>\n";
-            qInfo() << "✓ LaunchBox XML exported to" << outputPath;
         } else if (format == "csv") {
-            QFile f(outputPath);
-            if (!f.open(QIODevice::WriteOnly | QIODevice::Text)) {
-                qCritical() << "Failed to open" << outputPath;
-                return 1;
+            if (dryRunAll) {
+                qInfo() << "[DRY-RUN] Would write CSV to" << outputPath << "(" << rows.size() << " entries)";
+            } else {
+                QFile f(outputPath);
+                if (!f.open(QIODevice::WriteOnly | QIODevice::Text)) {
+                    qCritical() << "Failed to open" << outputPath;
+                    return 1;
+                }
+                QTextStream out(&f);
+                out << "file_id,title,system,path,region,confidence\n";
+                for (const auto &row : rows) {
+                    QString systemName = db.getSystemDisplayName(row.file.systemId);
+                    QString title = row.match.gameTitle;
+                    title.replace(',', ' ');
+                    out << row.file.id << "," << title << "," << systemName
+                        << "," << row.file.currentPath << "," << row.match.region << "," << row.match.confidence << "\n";
+                }
+                qInfo() << "✓ CSV exported to" << outputPath;
             }
-            QTextStream out(&f);
-            out << "file_id,title,system,path,region,confidence\n";
-            for (const auto &row : rows) {
-                QString systemName = db.getSystemDisplayName(row.file.systemId);
-                QString title = row.match.gameTitle;
-                title.replace(',', ' ');
-                out << row.file.id << "," << title << "," << systemName
-                    << "," << row.file.currentPath << "," << row.match.region << "," << row.match.confidence << "\n";
-            }
-            qInfo() << "✓ CSV exported to" << outputPath;
         } else {
-            QFile f(outputPath);
-            if (!f.open(QIODevice::WriteOnly | QIODevice::Text)) {
-                qCritical() << "Failed to open" << outputPath;
-                return 1;
+            if (dryRunAll) {
+                qInfo() << "[DRY-RUN] Would write JSON to" << outputPath << "(" << rows.size() << " entries)";
+            } else {
+                QFile f(outputPath);
+                if (!f.open(QIODevice::WriteOnly | QIODevice::Text)) {
+                    qCritical() << "Failed to open" << outputPath;
+                    return 1;
+                }
+                QJsonArray arr;
+                for (const auto &row : rows) {
+                    QJsonObject obj;
+                    obj["fileId"] = row.file.id;
+                    obj["title"] = row.match.gameTitle;
+                    obj["system"] = db.getSystemDisplayName(row.file.systemId);
+                    obj["path"] = row.file.currentPath;
+                    obj["region"] = row.match.region;
+                    obj["confidence"] = row.match.confidence;
+                    arr.append(obj);
+                }
+                QJsonDocument doc(arr);
+                f.write(doc.toJson());
+                qInfo() << "✓ JSON exported to" << outputPath;
             }
-            QJsonArray arr;
-            for (const auto &row : rows) {
-                QJsonObject obj;
-                obj["fileId"] = row.file.id;
-                obj["title"] = row.match.gameTitle;
-                obj["system"] = db.getSystemDisplayName(row.file.systemId);
-                obj["path"] = row.file.currentPath;
-                obj["region"] = row.match.region;
-                obj["confidence"] = row.match.confidence;
-                arr.append(obj);
-            }
-            QJsonDocument doc(arr);
-            f.write(doc.toJson());
-            qInfo() << "✓ JSON exported to" << outputPath;
         }
     }
 
@@ -1461,12 +1663,16 @@ int main(int argc, char *argv[])
             return 1;
         }
 
-        PatchResult result = pe.apply(basePath, info, outputPath);
-        if (result.success) {
-            qInfo() << "✓ Patch applied:" << result.outputPath;
+        if (dryRunAll) {
+            qInfo() << "[DRY-RUN] Would apply patch" << patchPath << "to" << basePath << "->" << outputPath;
         } else {
-            qCritical() << "✗ Patch failed:" << result.error;
-            return 1;
+            PatchResult result = pe.apply(basePath, info, outputPath);
+            if (result.success) {
+                qInfo() << "✓ Patch applied:" << result.outputPath;
+            } else {
+                qCritical() << "✗ Patch failed:" << result.error;
+                return 1;
+            }
         }
     }
 
@@ -1495,7 +1701,9 @@ int main(int argc, char *argv[])
             patchPath = baseInfo.absolutePath() + "/" + baseName + "_to_" + modName + "." + ext;
         }
 
-        if (pe.createPatch(original, modified, patchPath, format)) {
+        if (dryRunAll) {
+            qInfo() << "[DRY-RUN] Would create patch" << patchPath << "from" << original << "to" << modified;
+        } else if (pe.createPatch(original, modified, patchPath, format)) {
             qInfo() << "✓ Patch created:" << patchPath;
         } else {
             qCritical() << "✗ Failed to create patch";

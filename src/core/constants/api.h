@@ -17,16 +17,19 @@ namespace API {
 // ============================================================================
 
 /// Base URL for ScreenScraper API
-inline constexpr const char* SCREENSCRAPER_BASE_URL = "https://www.screenscraper.fr/api2";
+inline constexpr const char* SCREENSCRAPER_BASE_URL = "https://api.screenscraper.fr/api2";
 
 /// ScreenScraper platform endpoint (for system info)
 inline constexpr const char* SCREENSCRAPER_PLATFORM_ENDPOINT = "/platform.php";
 
-/// ScreenScraper game search endpoint (by hash)
-inline constexpr const char* SCREENSCRAPER_GETSEARCHRES_ENDPOINT = "/getsearchres.php";
+/// ScreenScraper ROM identification endpoint (hash-based lookup)
+inline constexpr const char* SCREENSCRAPER_JEUINFOS_ENDPOINT = "/jeuInfos.php";
 
-/// ScreenScraper game details endpoint
-inline constexpr const char* SCREENSCRAPER_GETGAME_ENDPOINT = "/getgame.php";
+/// ScreenScraper game name search endpoint
+inline constexpr const char* SCREENSCRAPER_JEURECHERCHE_ENDPOINT = "/jeuRecherche.php";
+
+/// ScreenScraper game details endpoint (by game ID)
+inline constexpr const char* SCREENSCRAPER_GETGAME_ENDPOINT = "/jeuInfos.php";
 
 /// ScreenScraper screenshot endpoint
 inline constexpr const char* SCREENSCRAPER_SCREENSHOT_ENDPOINT = "/media/screenshots";
@@ -86,13 +89,19 @@ inline constexpr const char* IGDB_CDN_BASE = "https://images.igdb.com/igdb/image
 // ============================================================================
 
 /// Base URL for Hasheous service
-inline constexpr const char* HASHEOUS_BASE_URL = "https://hasheous.com";
+inline constexpr const char* HASHEOUS_BASE_URL = "https://hasheous.org";
 
-/// Hasheous hash lookup endpoint
-inline constexpr const char* HASHEOUS_LOOKUP_ENDPOINT = "/api/v1/lookup";
+/// Hasheous hash lookup endpoint (POST with JSON body)
+inline constexpr const char* HASHEOUS_LOOKUP_ENDPOINT = "/api/v1/Lookup/ByHash";
 
-/// Hasheous batch lookup endpoint (POST)
-inline constexpr const char* HASHEOUS_BATCH_ENDPOINT = "/api/v1/batch";
+/// Hasheous IGDB metadata proxy endpoint (GET with game ID)
+inline constexpr const char* HASHEOUS_PROXY_IGDB_GAME = "/api/v1/MetadataProxy/IGDB/Game";
+
+/// Hasheous TheGamesDB metadata proxy endpoint
+inline constexpr const char* HASHEOUS_PROXY_TGDB_GAME = "/api/v1/MetadataProxy/TheGamesDB/Game";
+
+/// Hasheous health check endpoint
+inline constexpr const char* HASHEOUS_HEALTHCHECK_ENDPOINT = "/api/v1/HealthCheck";
 
 // ============================================================================
 // Known ROM Database Services

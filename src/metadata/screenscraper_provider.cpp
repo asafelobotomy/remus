@@ -57,8 +57,8 @@ QList<SearchResult> ScreenScraperProvider::searchByName(const QString &title,
 
     m_rateLimiter->waitIfNeeded();
 
-    // Build API URL
-    QUrl url(QString(Constants::API::SCREENSCRAPER_BASE_URL) + Constants::API::SCREENSCRAPER_GETSEARCHRES_ENDPOINT);
+    // Build API URL - jeuRecherche.php for name search
+    QUrl url(QString(Constants::API::SCREENSCRAPER_BASE_URL) + Constants::API::SCREENSCRAPER_JEURECHERCHE_ENDPOINT);
     QUrlQuery query;
     
     query.addQueryItem("devid", m_devId);
@@ -121,8 +121,8 @@ GameMetadata ScreenScraperProvider::getByHash(const QString &hash, const QString
 
     m_rateLimiter->waitIfNeeded();
 
-    // Build API URL
-    QUrl url(QString(Constants::API::SCREENSCRAPER_BASE_URL) + Constants::API::SCREENSCRAPER_GETSEARCHRES_ENDPOINT);
+    // Build API URL - jeuInfos.php for hash-based ROM identification
+    QUrl url(QString(Constants::API::SCREENSCRAPER_BASE_URL) + Constants::API::SCREENSCRAPER_JEUINFOS_ENDPOINT);
     QUrlQuery query;
     
     query.addQueryItem("devid", m_devId);
@@ -499,7 +499,7 @@ bool ScreenScraperProvider::isAvailable()
 
     m_rateLimiter->waitIfNeeded();
 
-    QUrl url("https://www.screenscraper.fr/api2/ssping.php");
+    QUrl url(QString(Constants::API::SCREENSCRAPER_BASE_URL) + "/ssuserInfos.php");
     QUrlQuery query;
     query.addQueryItem("devid", m_devId);
     query.addQueryItem("devpassword", m_devPassword);

@@ -1,4 +1,6 @@
 #include "provider_orchestrator.h"
+#include "filename_normalizer.h"
+#include "hasheous_provider.h"
 #include <QDebug>
 #include <algorithm>
 #include "../core/constants/constants.h"
@@ -116,7 +118,11 @@ QStringList ProviderOrchestrator::getEnabledProviders() const
     return getSortedProviders(false);
 }
 
-GameMetadata ProviderOrchestrator::getByHashWithFallback(const QString &hash, const QString &system)
+GameMetadata ProviderOrchestrator::getByHashWithFallback(const QString &hash,
+                                                         const QString &system,
+                                                         const QString &crc32,
+                                                         const QString &md5,
+                                                         const QString &sha1)
 {
     if (hash.isEmpty()) {
         qWarning() << "Cannot search by hash: hash is empty";
@@ -140,7 +146,19 @@ GameMetadata ProviderOrchestrator::getByHashWithFallback(const QString &hash, co
         qInfo() << "Trying" << providerName << "with hash:" << hash;
         
         try {
-            GameMetadata metadata = info.provider->getByHash(hash, system);
+            GameMetadata metadata;
+
+            if (providerName.compare(Constants::Providers::HASHEOUS, Qt::CaseInsensitive) == 0) {
+                // Prefer multi-hash path when available
+                auto *hasheous = qobject_cast<HasheousProvider *>(info.provider);
+                if (hasheous && (!crc32.isEmpty() || !md5.isEmpty() || !sha1.isEmpty())) {
+                    metadata = hasheous->getByHashes(crc32, md5, sha1, system);
+                } else {
+                    metadata = info.provider->getByHash(hash, system);
+                }
+            } else {
+                metadata = info.provider->getByHash(hash, system);
+            }
             
             if (!metadata.title.isEmpty()) {
                 qInfo() << "✓" << providerName << "found match:" << metadata.title;
@@ -210,7 +228,12 @@ QList<SearchResult> ProviderOrchestrator::searchAllProviders(const QString &name
     return allResults;
 }
 
-GameMetadata ProviderOrchestrator::searchWithFallback(const QString &hash, const QString &name, const QString &system)
+GameMetadata ProviderOrchestrator::searchWithFallback(const QString &hash,
+                                                      const QString &name,
+                                                      const QString &system,
+                                                      const QString &crc32,
+                                                      const QString &md5,
+                                                      const QString &sha1)
 {
     // Strategy:
     // 1. Try hash-based providers first (if hash provided)
@@ -218,7 +241,7 @@ GameMetadata ProviderOrchestrator::searchWithFallback(const QString &hash, const
     
     if (!hash.isEmpty()) {
         qInfo() << "Attempting hash-based search first for:" << name;
-        GameMetadata metadata = getByHashWithFallback(hash, system);
+        GameMetadata metadata = getByHashWithFallback(hash, system, crc32, md5, sha1);
         
         if (!metadata.title.isEmpty()) {
             metadata.matchScore = 1.0f;  // Hash match = 100% confidence
@@ -231,16 +254,20 @@ GameMetadata ProviderOrchestrator::searchWithFallback(const QString &hash, const
     
     // Try name-based search
     if (!name.isEmpty()) {
+        // Normalize filename: remove extension, region tags, brackets, etc.
+        QString normalizedName = Metadata::FilenameNormalizer::normalize(name);
+        qInfo() << "Normalized name for search:" << name << "->" << normalizedName;
+        
         QStringList providers = getSortedProviders(false);
         
         for (const QString &providerName : providers) {
             const ProviderInfo &info = m_providers[providerName];
             
             emit tryingProvider(providerName, MatchMethods::NAME);
-            qInfo() << "Trying" << providerName << "with name:" << name;
+            qInfo() << "Trying" << providerName << "with name:" << normalizedName;
             
             try {
-                QList<SearchResult> results = info.provider->searchByName(name, system, QString());
+                QList<SearchResult> results = info.provider->searchByName(normalizedName, system, QString());
                 
                 if (!results.isEmpty()) {
                     // Use the best match (first result)

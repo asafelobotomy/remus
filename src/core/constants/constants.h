@@ -48,7 +48,7 @@ namespace Constants {
  *   - 2: Added templates and settings constants (Phase 3)
  *   - 3: Added API, database schema, network, engines, and error constants
  */
-inline constexpr int CONSTANTS_VERSION = 3;
+inline constexpr int CONSTANTS_VERSION = 4;
 
 /**
  * @brief Application organization name for QSettings

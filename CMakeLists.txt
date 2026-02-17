@@ -17,6 +17,8 @@ if(ENABLE_COVERAGE)
     endif()
 endif()
 
+option(REMUS_BUILD_TUI "Build terminal UI (Notcurses-based)" OFF)
+
 # Find Qt6
 find_package(Qt6 REQUIRED COMPONENTS
     Core
@@ -39,20 +41,35 @@ add_subdirectory(src/core)
 # Metadata library
 add_subdirectory(src/metadata)
 
+# Services library (shared business logic)
+add_subdirectory(src/services)
+
 # UI library and GUI executable
 add_subdirectory(src/ui)
 
 # CLI executable
 add_executable(remus-cli
     src/cli/main.cpp
+    src/cli/interactive_session.cpp
 )
+
+find_package(Curses REQUIRED)
+target_include_directories(remus-cli PRIVATE ${CURSES_INCLUDE_DIR})
 
 target_link_libraries(remus-cli PRIVATE
     remus-core
     remus-metadata
+    remus-services
     Qt6::Core
     Qt6::Gui
+    ${CURSES_LIBRARIES}
 )
+
+if(REMUS_BUILD_TUI)
+    find_package(PkgConfig REQUIRED)
+    pkg_check_modules(NOTCURSES REQUIRED IMPORTED_TARGET notcurses>=3.0.0)
+    add_subdirectory(src/tui)
+endif()
 
 # Enable testing
 enable_testing()

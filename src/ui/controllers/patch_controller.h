@@ -9,10 +9,13 @@
 
 namespace Remus {
 
+class PatchService;
+
 /**
  * @brief Controller for ROM patching operations
  * 
  * Handles patch detection, application, and creation.
+ * Delegates to PatchService for business logic.
  * Exposed to QML as a context property.
  */
 class PatchController : public QObject {
@@ -24,6 +27,7 @@ class PatchController : public QObject {
     
 public:
     explicit PatchController(Database *db, QObject *parent = nullptr);
+    ~PatchController() override;
     
     bool isPatching() const { return m_patching; }
     int progress() const { return m_progress; }
@@ -68,14 +72,9 @@ signals:
     void createPatchCompleted(const QString &patchPath);
     void createPatchError(const QString &error);
     
-private slots:
-    void onPatchProgress(int percentage);
-    void onPatchComplete(const PatchResult &result);
-    void onPatchError(const QString &error);
-    
 private:
     Database *m_db;
-    PatchEngine *m_engine;
+    PatchService *m_patchService = nullptr;
     
     bool m_patching = false;
     int m_progress = 0;

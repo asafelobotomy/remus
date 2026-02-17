@@ -1,11 +1,11 @@
 #pragma once
 
 #include <QObject>
-#include "../../core/chd_converter.h"
-#include "../../core/archive_extractor.h"
 #include "../../core/database.h"
 
 namespace Remus {
+
+class ConversionService;
 
 class ConversionController : public QObject {
     Q_OBJECT
@@ -13,6 +13,7 @@ class ConversionController : public QObject {
     
 public:
     explicit ConversionController(Database *db = nullptr, QObject *parent = nullptr);
+    ~ConversionController() override;
     
     bool isConverting() const { return m_converting; }
     
@@ -28,8 +29,7 @@ signals:
     
 private:
     Database *m_db;
-    CHDConverter *m_chdConverter;
-    ArchiveExtractor *m_archiveExtractor;
+    ConversionService *m_conversionService = nullptr;
     bool m_converting = false;
 };
 

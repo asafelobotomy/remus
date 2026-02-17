@@ -2,25 +2,20 @@
 #include <QDebug>
 #include <QFileInfo>
 #include <QDir>
+#include "../../services/conversion_service.h"
 
 namespace Remus {
 
 ConversionController::ConversionController(Database *db, QObject *parent)
     : QObject(parent), m_db(db)
+    , m_conversionService(new ConversionService())
 {
-    m_chdConverter = new CHDConverter(this);
-    m_archiveExtractor = new ArchiveExtractor(this);
-    
-    // Connect CHD converter signals
-    connect(m_chdConverter, &CHDConverter::conversionProgress, this, [this](int percent, const QString &) {
-        emit conversionProgress(percent);
-    });
-    
-    connect(m_chdConverter, &CHDConverter::errorOccurred, this, [this](const QString &error) {
-        emit conversionError(error);
-        m_converting = false;
-        emit convertingChanged();
-    });
+}
+
+ConversionController::~ConversionController()
+{
+    m_conversionService->cancel();
+    delete m_conversionService;
 }
 
 void ConversionController::convertToCHD(const QString &path, const QString &codec)
@@ -48,24 +43,10 @@ void ConversionController::convertToCHD(const QString &path, const QString &code
     else if (codec == "flac") chdCodec = CHDCodec::FLAC;
     else if (codec == "huffman") chdCodec = CHDCodec::Huffman;
     
-    m_chdConverter->setCodec(chdCodec);
-    
-    CHDConversionResult result;
-    
-    // Determine file type and convert
-    QString extension = fileInfo.suffix().toLower();
-    if (extension == "cue") {
-        result = m_chdConverter->convertCueToCHD(path);
-    } else if (extension == "iso") {
-        result = m_chdConverter->convertIsoToCHD(path);
-    } else if (extension == "gdi") {
-        result = m_chdConverter->convertGdiToCHD(path);
-    } else {
-        emit conversionError("Unsupported file format: " + extension);
-        m_converting = false;
-        emit convertingChanged();
-        return;
-    }
+    CHDConversionResult result = m_conversionService->convertToCHD(path, chdCodec, {},
+        [this](int percent, const QString &) {
+            emit conversionProgress(percent);
+        });
     
     m_converting = false;
     emit convertingChanged();
@@ -102,7 +83,10 @@ void ConversionController::extractCHD(const QString &path)
     
     qDebug() << "Extracting CHD:" << path;
     
-    CHDConversionResult result = m_chdConverter->extractCHDToCue(path);
+    CHDConversionResult result = m_conversionService->extractCHD(path, {},
+        [this](int percent, const QString &) {
+            emit conversionProgress(percent);
+        });
     
     m_converting = false;
     emit convertingChanged();
@@ -129,7 +113,7 @@ void ConversionController::extractArchive(const QString &path)
         return;
     }
     
-    if (!m_archiveExtractor->canExtract(path)) {
+    if (!m_conversionService->canExtract(path)) {
         emit conversionError("Unsupported archive format or extraction tool not available");
         return;
     }
@@ -139,32 +123,19 @@ void ConversionController::extractArchive(const QString &path)
     
     qDebug() << "Extracting archive:" << path;
     
-    // Extract to same directory as archive
+    // Extract to same directory as archive, with DB update
     QString outputDir = fileInfo.absolutePath();
-    ExtractionResult result = m_archiveExtractor->extract(path, outputDir, true);
+    ExtractionResult result = m_conversionService->extractArchiveWithDbUpdate(
+        path, outputDir, m_db,
+        [this](int percent, const QString &) {
+            emit conversionProgress(percent);
+        });
     
     m_converting = false;
     emit convertingChanged();
     
     if (result.success) {
         qDebug() << "Archive extraction successful:" << result.filesExtracted << "files extracted";
-        
-        // Update database with extracted file paths
-        if (m_db) {
-            QList<FileRecord> files = m_db->getAllFiles();
-            for (const FileRecord &file : files) {
-                // Check if this file came from this archive
-                if (file.currentPath == path || file.originalPath.contains(path)) {
-                    QString extractedPath = outputDir + "/" + file.filename;
-                    QFileInfo extractedInfo(extractedPath);
-                    if (extractedInfo.exists()) {
-                        qDebug() << "Updating file path:" << file.filename << "to" << extractedPath;
-                        m_db->updateFilePath(file.id, extractedPath);
-                    }
-                }
-            }
-        }
-        
         emit conversionCompleted(outputDir);
     } else {
         qDebug() << "Archive extraction failed:" << result.error;
