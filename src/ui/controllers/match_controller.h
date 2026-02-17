@@ -6,6 +6,8 @@
 
 namespace Remus {
 
+class MatchService;
+
 class MatchController : public QObject {
     Q_OBJECT
     Q_PROPERTY(bool matching READ isMatching NOTIFY matchingChanged)
@@ -15,6 +17,7 @@ class MatchController : public QObject {
     
 public:
     explicit MatchController(Database *db, QObject *parent = nullptr);
+    ~MatchController() override;
     
     bool isMatching() const { return m_matching; }
     
@@ -34,12 +37,12 @@ signals:
     
 private:
     QString getSystemName(int systemId) const;
-    QString cleanFilename(const QString &filename) const;
     float calculateNameSimilarity(const QString &name1, const QString &name2) const;
     int levenshteinDistance(const QString &s1, const QString &s2) const;
     
     Database *m_db;
     ProviderOrchestrator *m_orchestrator;
+    MatchService *m_matchService = nullptr;
     bool m_matching = false;
 };
 

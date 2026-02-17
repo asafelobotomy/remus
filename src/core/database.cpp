@@ -75,10 +75,16 @@ void Database::runMigrations()
     query.exec(QString("PRAGMA table_info(%1)").arg(Constants::DatabaseSchema::Tables::FILES));
     bool hasIsProcessed = false;
     bool hasProcessingStatus = false;
+    bool hasIsCompressed = false;
+    bool hasArchivePath = false;
+    bool hasArchiveInternalPath = false;
     while (query.next()) {
         QString columnName = query.value(1).toString();
         if (columnName == Constants::DatabaseSchema::Columns::Files::IS_PROCESSED) hasIsProcessed = true;
         if (columnName == Constants::DatabaseSchema::Columns::Files::PROCESSING_STATUS) hasProcessingStatus = true;
+        if (columnName == Constants::DatabaseSchema::Columns::Files::IS_COMPRESSED) hasIsCompressed = true;
+        if (columnName == Constants::DatabaseSchema::Columns::Files::ARCHIVE_PATH) hasArchivePath = true;
+        if (columnName == Constants::DatabaseSchema::Columns::Files::ARCHIVE_INTERNAL_PATH) hasArchiveInternalPath = true;
     }
     
     // Add is_processed column if missing
@@ -98,6 +104,33 @@ void Database::runMigrations()
             .arg(Constants::DatabaseSchema::Tables::FILES,
                  Constants::DatabaseSchema::Columns::Files::PROCESSING_STATUS,
                  Constants::Engines::ProcessingStatus::UNPROCESSED))) {
+            logError(Constants::Errors::Database::MIGRATION_FAILED);
+        }
+    }
+
+    if (!hasIsCompressed) {
+        qInfo() << "Migration: Adding is_compressed column to files table";
+        if (!query.exec(QString("ALTER TABLE %1 ADD COLUMN %2 BOOLEAN DEFAULT 0")
+            .arg(Constants::DatabaseSchema::Tables::FILES,
+                 Constants::DatabaseSchema::Columns::Files::IS_COMPRESSED))) {
+            logError(Constants::Errors::Database::MIGRATION_FAILED);
+        }
+    }
+
+    if (!hasArchivePath) {
+        qInfo() << "Migration: Adding archive_path column to files table";
+        if (!query.exec(QString("ALTER TABLE %1 ADD COLUMN %2 TEXT")
+            .arg(Constants::DatabaseSchema::Tables::FILES,
+                 Constants::DatabaseSchema::Columns::Files::ARCHIVE_PATH))) {
+            logError(Constants::Errors::Database::MIGRATION_FAILED);
+        }
+    }
+
+    if (!hasArchiveInternalPath) {
+        qInfo() << "Migration: Adding archive_internal_path column to files table";
+        if (!query.exec(QString("ALTER TABLE %1 ADD COLUMN %2 TEXT")
+            .arg(Constants::DatabaseSchema::Tables::FILES,
+                 Constants::DatabaseSchema::Columns::Files::ARCHIVE_INTERNAL_PATH))) {
             logError(Constants::Errors::Database::MIGRATION_FAILED);
         }
     }
@@ -157,6 +190,9 @@ bool Database::createSchema()
             filename TEXT NOT NULL,
             extension TEXT NOT NULL,
             file_size INTEGER NOT NULL,
+            is_compressed BOOLEAN DEFAULT 0,
+            archive_path TEXT,
+            archive_internal_path TEXT,
             system_id INTEGER,
             crc32 TEXT,
             md5 TEXT,
@@ -427,8 +463,9 @@ int Database::insertFile(const FileRecord &record)
     query.prepare(R"(
         INSERT OR IGNORE INTO files 
         (library_id, original_path, current_path, filename, extension, 
-         file_size, system_id, is_primary, parent_file_id, last_modified)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+         file_size, is_compressed, archive_path, archive_internal_path, 
+         system_id, is_primary, parent_file_id, last_modified)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     )");
     query.addBindValue(record.libraryId);
     query.addBindValue(record.originalPath);
@@ -436,6 +473,9 @@ int Database::insertFile(const FileRecord &record)
     query.addBindValue(record.filename);
     query.addBindValue(record.extension);
     query.addBindValue(record.fileSize);
+    query.addBindValue(record.isCompressed);
+    query.addBindValue(record.archivePath.isEmpty() ? QVariant() : record.archivePath);
+    query.addBindValue(record.archiveInternalPath.isEmpty() ? QVariant() : record.archiveInternalPath);
     query.addBindValue(record.systemId > 0 ? record.systemId : QVariant());
     query.addBindValue(record.isPrimary);
     query.addBindValue(record.parentFileId > 0 ? record.parentFileId : QVariant());
@@ -477,8 +517,9 @@ QList<FileRecord> Database::getFilesWithoutHashes()
 
     QSqlQuery query(m_db);
     query.prepare(R"(
-        SELECT id, library_id, current_path, filename, extension, 
-               file_size, system_id, is_primary
+        SELECT id, library_id, current_path, filename, extension,
+               file_size, system_id, is_primary, is_compressed,
+               archive_path, archive_internal_path
         FROM files 
         WHERE hash_calculated = 0 AND is_primary = 1
     )");
@@ -498,6 +539,9 @@ QList<FileRecord> Database::getFilesWithoutHashes()
         record.fileSize = query.value(5).toLongLong();
         record.systemId = query.value(6).toInt();
         record.isPrimary = query.value(7).toBool();
+        record.isCompressed = query.value(8).toBool();
+        record.archivePath = query.value(9).toString();
+        record.archiveInternalPath = query.value(10).toString();
         files.append(record);
     }
 
@@ -533,7 +577,8 @@ FileRecord Database::getFileById(int fileId)
     QSqlQuery query(m_db);
     query.prepare(R"(
         SELECT id, library_id, original_path, current_path, filename, extension,
-               file_size, system_id, crc32, md5, sha1, hash_calculated, 
+               file_size, is_compressed, archive_path, archive_internal_path,
+               system_id, crc32, md5, sha1, hash_calculated, 
                is_primary, parent_file_id, is_processed, processing_status,
                last_modified, scanned_at
         FROM files 
@@ -549,17 +594,20 @@ FileRecord Database::getFileById(int fileId)
         record.filename = query.value(4).toString();
         record.extension = query.value(5).toString();
         record.fileSize = query.value(6).toLongLong();
-        record.systemId = query.value(7).toInt();
-        record.crc32 = query.value(8).toString();
-        record.md5 = query.value(9).toString();
-        record.sha1 = query.value(10).toString();
-        record.hashCalculated = query.value(11).toBool();
-        record.isPrimary = query.value(12).toBool();
-        record.parentFileId = query.value(13).toInt();
-        record.isProcessed = query.value(14).toBool();
-        record.processingStatus = query.value(15).toString();
-        record.lastModified = query.value(16).toDateTime();
-        record.scannedAt = query.value(17).toDateTime();
+        record.isCompressed = query.value(7).toBool();
+        record.archivePath = query.value(8).toString();
+        record.archiveInternalPath = query.value(9).toString();
+        record.systemId = query.value(10).toInt();
+        record.crc32 = query.value(11).toString();
+        record.md5 = query.value(12).toString();
+        record.sha1 = query.value(13).toString();
+        record.hashCalculated = query.value(14).toBool();
+        record.isPrimary = query.value(15).toBool();
+        record.parentFileId = query.value(16).toInt();
+        record.isProcessed = query.value(17).toBool();
+        record.processingStatus = query.value(18).toString();
+        record.lastModified = query.value(19).toDateTime();
+        record.scannedAt = query.value(20).toDateTime();
     }
     
     return record;

@@ -19,6 +19,7 @@ add_library(remus-ui STATIC
 target_link_libraries(remus-ui PUBLIC
     remus-core
     remus-metadata
+    remus-services
     Qt6::Core
     Qt6::Gui
     Qt6::Quick

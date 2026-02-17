@@ -86,6 +86,9 @@ namespace Columns {
         inline constexpr const char* FILENAME = "filename";
         inline constexpr const char* EXTENSION = "extension";
         inline constexpr const char* FILE_SIZE = "file_size";
+        inline constexpr const char* IS_COMPRESSED = "is_compressed";
+        inline constexpr const char* ARCHIVE_PATH = "archive_path";
+        inline constexpr const char* ARCHIVE_INTERNAL_PATH = "archive_internal_path";
         inline constexpr const char* SYSTEM_ID = "system_id";
         inline constexpr const char* CRC32 = "crc32";
         inline constexpr const char* MD5 = "md5";

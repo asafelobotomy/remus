@@ -29,6 +29,7 @@ struct GameMetadata {
     
     // URLs for artwork (can be populated by getArtwork or included directly)
     QString boxArtUrl;           // Box art URL
+    QStringList screenshotUrls;  // Additional screenshot URLs (gameplay, title, etc.)
     
     // External IDs for cross-referencing
     QMap<QString, QString> externalIds;  // e.g., {"igdb": "1234", "retroachievements": "5678"}

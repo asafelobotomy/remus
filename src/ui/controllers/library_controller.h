@@ -3,16 +3,17 @@
 #include <QObject>
 #include <QString>
 #include "../../core/database.h"
-#include "../../core/scanner.h"
-#include "../../core/hasher.h"
-#include "../../core/system_detector.h"
 
 namespace Remus {
+
+class LibraryService;
+class HashService;
 
 /**
  * @brief Controller for library management operations
  * 
  * Handles scanning, hashing, and library maintenance.
+ * Delegates to LibraryService and HashService for business logic.
  * Exposed to QML as a context property.
  */
 class LibraryController : public QObject {
@@ -25,6 +26,7 @@ class LibraryController : public QObject {
     
 public:
     explicit LibraryController(Database *db, QObject *parent = nullptr);
+    ~LibraryController() override;
     
     bool isScanning() const { return m_scanning; }
     bool isHashing() const { return m_hashing; }
@@ -65,16 +67,10 @@ signals:
     
     void libraryUpdated();
     
-private slots:
-    void onFileFound(const QString &path);
-    void onScanProgress(int processed, int total);
-    void onScanComplete();
-    
 private:
     Database *m_db;
-    Scanner *m_scanner = nullptr;
-    Hasher *m_hasher = nullptr;
-    SystemDetector m_systemDetector;
+    LibraryService *m_libraryService = nullptr;
+    HashService    *m_hashService    = nullptr;
     
     bool m_scanning = false;
     bool m_hashing = false;

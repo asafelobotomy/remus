@@ -1,5 +1,6 @@
 #include "processing_controller.h"
 #include "../../core/constants/systems.h"
+#include "../../metadata/filename_normalizer.h"
 #include <QDebug>
 #include <QFileInfo>
 #include <QDir>
@@ -527,14 +528,7 @@ void ProcessingController::stepMatch()
     
     // Fall back to name-based matching
     if (metadata.title.isEmpty()) {
-        QString cleanName = m_currentFilename;
-        // Remove extension
-        int dotPos = cleanName.lastIndexOf('.');
-        if (dotPos > 0) cleanName = cleanName.left(dotPos);
-        // Remove common suffixes
-        cleanName.remove(QRegularExpression("\\s*\\([^)]*\\)"));
-        cleanName.remove(QRegularExpression("\\s*\\[[^\\]]*\\]"));
-        cleanName = cleanName.trimmed();
+        QString cleanName = Metadata::FilenameNormalizer::normalize(m_currentFilename);
         
         if (!cleanName.isEmpty()) {
             metadata = m_orchestrator->searchWithFallback("", cleanName, systemName);

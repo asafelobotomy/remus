@@ -1,4 +1,6 @@
 #include "match_controller.h"
+#include "../../metadata/filename_normalizer.h"
+#include "../../services/match_service.h"
 #include <QDebug>
 #include <QRegularExpression>
 #include <QSqlQuery>
@@ -20,8 +22,14 @@ namespace Remus {
 MatchController::MatchController(Database *db, QObject *parent)
     : QObject(parent)
     , m_db(db)
+    , m_matchService(new MatchService())
 {
     m_orchestrator = new ProviderOrchestrator(this);
+}
+
+MatchController::~MatchController()
+{
+    delete m_matchService;
 }
 
 void MatchController::startMatching()
@@ -67,7 +75,7 @@ void MatchController::startMatching()
         }
         
         // Fall back to name-based matching
-        QString cleanName = cleanFilename(file.filename);
+        QString cleanName = Metadata::FilenameNormalizer::normalize(file.filename);
         QString systemName = getSystemName(file.systemId);
         
         if (!cleanName.isEmpty()) {
@@ -138,7 +146,7 @@ void MatchController::matchFile(int fileId)
     }
     
     // Fall back to name-based matching
-    QString cleanName = cleanFilename(file.filename);
+    QString cleanName = Metadata::FilenameNormalizer::normalize(file.filename);
     QString systemName = getSystemName(file.systemId);
     
     if (!cleanName.isEmpty()) {
@@ -169,7 +177,7 @@ void MatchController::matchFile(int fileId)
 
 void MatchController::confirmMatch(int fileId)
 {
-    if (m_db->confirmMatch(fileId)) {
+    if (m_matchService->confirmMatch(m_db, fileId)) {
         qDebug() << "Match confirmed for file:" << fileId;
         emit matchConfirmed(fileId);
         emit libraryUpdated();
@@ -180,7 +188,7 @@ void MatchController::confirmMatch(int fileId)
 
 void MatchController::rejectMatch(int fileId)
 {
-    if (m_db->rejectMatch(fileId)) {
+    if (m_matchService->rejectMatch(m_db, fileId)) {
         qDebug() << "Match rejected for file:" << fileId;
         emit matchRejected(fileId);
         emit libraryUpdated();
@@ -201,29 +209,6 @@ QString MatchController::getSystemName(int systemId) const
     
     qWarning() << "Failed to find system name for ID:" << systemId;
     return "Unknown";
-}
-
-QString MatchController::cleanFilename(const QString &filename) const
-{
-    // Remove extension
-    QString cleaned = filename;
-    int dotPos = cleaned.lastIndexOf('.');
-    if (dotPos != -1) {
-        cleaned = cleaned.left(dotPos);
-    }
-    
-    // Remove common tags and brackets
-    QRegularExpression tagRegex("[\\[\\(].*?[\\]\\)]");
-    cleaned.remove(tagRegex);
-    
-    // Replace underscores and dots with spaces
-    cleaned.replace('_', ' ');
-    cleaned.replace('.', ' ');
-    
-    // Remove extra whitespace
-    cleaned = cleaned.simplified();
-    
-    return cleaned;
 }
 
 float MatchController::calculateNameSimilarity(const QString &name1, const QString &name2) const

@@ -3,6 +3,7 @@ enable_testing()
 
 # Find Qt6 Test module
 find_package(Qt6 REQUIRED COMPONENTS Test)
+find_package(Curses REQUIRED)
 
 # Constants library tests
 add_executable(test_constants test_constants.cpp)
@@ -220,6 +221,27 @@ target_link_libraries(test_metadata_provider PRIVATE
 
 add_test(NAME MetadataProviderTest COMMAND test_metadata_provider)
 
+# Hasheous parsing tests
+add_executable(test_hasheous_parsing test_hasheous_parsing.cpp)
+target_link_libraries(test_hasheous_parsing PRIVATE
+    Qt6::Test
+    Qt6::Core
+    remus-metadata
+    remus-core
+)
+
+add_test(NAME HasheousParsingTest COMMAND test_hasheous_parsing)
+
+# Filename normalizer tests
+add_executable(test_filename_normalizer test_filename_normalizer.cpp)
+target_link_libraries(test_filename_normalizer PRIVATE
+    Qt6::Test
+    Qt6::Core
+    remus-metadata
+)
+
+add_test(NAME FilenameNormalizerTest COMMAND test_filename_normalizer)
+
 # Metadata cache tests
 add_executable(test_metadata_cache test_metadata_cache.cpp)
 target_link_libraries(test_metadata_cache PRIVATE
@@ -286,6 +308,31 @@ target_link_libraries(test_providers_minimal PRIVATE
 
 add_test(NAME ProvidersMinimalTest COMMAND test_providers_minimal)
 
+# CLI smoke tests
+add_executable(test_cli_smoke test_cli_smoke.cpp)
+target_link_libraries(test_cli_smoke PRIVATE
+    Qt6::Test
+    Qt6::Core
+    remus-core
+    remus-metadata
+)
+
+add_test(NAME CliSmokeTest COMMAND test_cli_smoke)
+
+# Session state persistence tests
+add_executable(test_session_state
+    test_session_state.cpp
+    ../src/cli/interactive_session.cpp
+)
+target_link_libraries(test_session_state PRIVATE
+    Qt6::Test
+    Qt6::Core
+    remus-core
+    ${CURSES_LIBRARIES}
+)
+
+add_test(NAME SessionStateTest COMMAND test_session_state)
+
 # Theme constants tests
 add_executable(test_theme_constants test_theme_constants.cpp)
 target_link_libraries(test_theme_constants PRIVATE
@@ -315,8 +362,8 @@ add_custom_target(run_tests
             test_multi_signal_matching test_pipeline_integration test_hasher test_header_detector
             test_system_resolver test_settings_controller test_library_controller test_chd_converter
             test_archive_extractor test_patch_engine test_space_calculator test_rate_limiter
-            test_metadata_provider test_metadata_cache test_provider_orchestrator
+            test_metadata_provider test_filename_normalizer test_metadata_cache test_provider_orchestrator
             test_hash_algorithms test_scanner test_artwork_downloader test_providers_minimal
-            test_theme_constants test_dat_manager_controller
+            test_theme_constants test_dat_manager_controller test_hasheous_parsing
     COMMENT "Running tests..."
 )

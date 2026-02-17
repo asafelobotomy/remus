@@ -10,6 +10,7 @@ add_library(remus-metadata STATIC
     metadata_cache.cpp
     rate_limiter.cpp
     artwork_downloader.cpp
+    filename_normalizer.cpp
 )
 
 target_link_libraries(remus-metadata PUBLIC

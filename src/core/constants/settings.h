@@ -15,6 +15,7 @@ inline constexpr const char* SCREENSCRAPER_DEVPASSWORD = "screenscraper/devpassw
 inline constexpr const char* THEGAMESDB_API_KEY = "thegamesdb/api_key";
 inline constexpr const char* IGDB_CLIENT_ID = "igdb/client_id";
 inline constexpr const char* IGDB_CLIENT_SECRET = "igdb/client_secret";
+inline constexpr const char* HASHEOUS_CLIENT_API_KEY = "hasheous/client_api_key";
 }
 
 namespace Metadata {

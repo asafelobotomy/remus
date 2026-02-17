@@ -2,27 +2,26 @@
 #include <QFileInfo>
 #include <QDir>
 #include <QDebug>
+#include "../../services/patch_service.h"
 
 namespace Remus {
 
 PatchController::PatchController(Database *db, QObject *parent)
     : QObject(parent)
     , m_db(db)
-    , m_engine(new PatchEngine(this))
+    , m_patchService(new PatchService())
 {
-    connect(m_engine, &PatchEngine::patchProgress,
-            this, &PatchController::onPatchProgress);
-    connect(m_engine, &PatchEngine::patchComplete,
-            this, &PatchController::onPatchComplete);
-    connect(m_engine, &PatchEngine::patchError,
-            this, &PatchController::onPatchError);
-    
     updateToolStatus();
+}
+
+PatchController::~PatchController()
+{
+    delete m_patchService;
 }
 
 void PatchController::updateToolStatus()
 {
-    auto tools = m_engine->checkToolAvailability();
+    auto tools = m_patchService->getToolStatus();
     m_toolStatus["flips"] = tools.value("flips", false);
     m_toolStatus["xdelta3"] = tools.value("xdelta3", false);
     m_toolStatus["ips_builtin"] = tools.value("ips_builtin", true);
@@ -38,7 +37,7 @@ void PatchController::updateToolStatus()
 
 QVariantMap PatchController::detectPatchFormat(const QString &patchPath)
 {
-    PatchInfo info = m_engine->detectFormat(patchPath);
+    PatchInfo info = m_patchService->detectFormat(patchPath);
     
     QVariantMap result;
     result["path"] = info.path;
@@ -50,29 +49,19 @@ QVariantMap PatchController::detectPatchFormat(const QString &patchPath)
     result["patchChecksum"] = info.patchChecksum;
     result["valid"] = info.valid;
     result["error"] = info.error;
-    result["supported"] = m_engine->isFormatSupported(info.format);
+    result["supported"] = m_patchService->isFormatSupported(info.format);
     
     return result;
 }
 
 bool PatchController::isFormatSupported(const QString &format)
 {
-    return m_engine->isFormatSupported(stringToFormat(format));
+    return m_patchService->isFormatSupported(stringToFormat(format));
 }
 
 QStringList PatchController::getSupportedFormats()
 {
-    QStringList formats;
-    formats << "IPS";  // Always supported
-    
-    if (m_toolStatus.value("flips").toBool()) {
-        formats << "BPS" << "UPS";
-    }
-    if (m_toolStatus.value("xdelta3").toBool()) {
-        formats << "XDelta3";
-    }
-    
-    return formats;
+    return m_patchService->getSupportedFormats();
 }
 
 bool PatchController::applyPatch(const QString &basePath, const QString &patchPath,
@@ -84,13 +73,13 @@ bool PatchController::applyPatch(const QString &basePath, const QString &patchPa
     }
 
     // Detect patch format
-    PatchInfo info = m_engine->detectFormat(patchPath);
+    PatchInfo info = m_patchService->detectFormat(patchPath);
     if (!info.valid) {
         emit patchError(QString("Invalid patch file: %1").arg(info.error));
         return false;
     }
 
-    if (!m_engine->isFormatSupported(info.format)) {
+    if (!m_patchService->isFormatSupported(info.format)) {
         emit patchError(QString("Patch format %1 is not supported. Please install required tools.")
                        .arg(info.formatName));
         return false;
@@ -105,7 +94,11 @@ bool PatchController::applyPatch(const QString &basePath, const QString &patchPa
     emit currentOperationChanged();
     emit patchStarted();
 
-    PatchResult result = m_engine->apply(basePath, info, outputPath);
+    PatchResult result = m_patchService->apply(basePath, info, outputPath,
+        [this](int percent) {
+            m_progress = percent;
+            emit progressChanged();
+        });
 
     m_patching = false;
     m_progress = 100;
@@ -140,7 +133,7 @@ bool PatchController::createPatch(const QString &originalPath, const QString &mo
     }
 
     PatchFormat fmt = stringToFormat(format);
-    if (!m_engine->isFormatSupported(fmt)) {
+    if (!m_patchService->isFormatSupported(fmt)) {
         emit createPatchError(QString("Format %1 is not supported for patch creation").arg(format));
         return false;
     }
@@ -153,7 +146,7 @@ bool PatchController::createPatch(const QString &originalPath, const QString &mo
     emit currentOperationChanged();
     emit createPatchStarted();
 
-    bool success = m_engine->createPatch(originalPath, modifiedPath, patchPath, fmt);
+    bool success = m_patchService->createPatch(originalPath, modifiedPath, patchPath, fmt);
 
     m_patching = false;
     m_progress = 100;
@@ -181,70 +174,29 @@ void PatchController::checkTools()
 
 void PatchController::setFlipsPath(const QString &path)
 {
-    m_engine->setFlipsPath(path);
+    m_patchService->setFlipsPath(path);
     updateToolStatus();
 }
 
 void PatchController::setXdeltaPath(const QString &path)
 {
-    m_engine->setXdelta3Path(path);
+    m_patchService->setXdelta3Path(path);
     updateToolStatus();
 }
 
 QString PatchController::getFlipsPath()
 {
-    return m_engine->getFlipsPath();
+    return m_patchService->getFlipsPath();
 }
 
 QString PatchController::getXdeltaPath()
 {
-    return m_engine->getXdelta3Path();
+    return m_patchService->getXdelta3Path();
 }
 
 QString PatchController::generateOutputPath(const QString &basePath, const QString &patchPath)
 {
-    QFileInfo baseInfo(basePath);
-    QFileInfo patchInfo(patchPath);
-
-    QString baseName = baseInfo.completeBaseName();
-    QString patchName = patchInfo.completeBaseName();
-    QString ext = baseInfo.suffix();
-
-    QString outputName = QString("%1 [%2].%3")
-        .arg(baseName)
-        .arg(patchName)
-        .arg(ext);
-
-    return baseInfo.dir().filePath(outputName);
-}
-
-void PatchController::onPatchProgress(int percentage)
-{
-    m_progress = percentage;
-    emit progressChanged();
-}
-
-void PatchController::onPatchComplete(const PatchResult &result)
-{
-    m_patching = false;
-    emit patchingChanged();
-    
-    if (result.success) {
-        m_currentOperation = "Complete";
-        emit currentOperationChanged();
-        emit patchCompleted(result.outputPath);
-    } else {
-        emit patchError(result.error);
-    }
-}
-
-void PatchController::onPatchError(const QString &error)
-{
-    m_patching = false;
-    m_currentOperation = "Failed";
-    emit patchingChanged();
-    emit currentOperationChanged();
-    emit patchError(error);
+    return PatchService::generateOutputPath(basePath, patchPath);
 }
 
 PatchFormat PatchController::stringToFormat(const QString &format)

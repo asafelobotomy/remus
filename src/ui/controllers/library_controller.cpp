@@ -1,7 +1,10 @@
 #include "library_controller.h"
 #include <QDebug>
 #include <QDir>
+#include <QFileInfo>
 #include "../../core/logging_categories.h"
+#include "../../services/library_service.h"
+#include "../../services/hash_service.h"
 
 #undef qDebug
 #undef qInfo
@@ -17,16 +20,15 @@ namespace Remus {
 LibraryController::LibraryController(Database *db, QObject *parent)
     : QObject(parent)
     , m_db(db)
+    , m_libraryService(new LibraryService())
+    , m_hashService(new HashService())
 {
-    m_scanner = new Scanner(this);
-    m_hasher = new Hasher(this);
-    
-    // Set up scanner extensions
-    m_scanner->setExtensions(m_systemDetector.getAllExtensions());
-    
-    // Connect scanner signals
-    connect(m_scanner, &Scanner::fileFound, this, &LibraryController::onFileFound);
-    connect(m_scanner, &Scanner::scanProgress, this, &LibraryController::onScanProgress);
+}
+
+LibraryController::~LibraryController()
+{
+    delete m_libraryService;
+    delete m_hashService;
 }
 
 void LibraryController::scanDirectory(const QString &path)
@@ -49,25 +51,29 @@ void LibraryController::scanDirectory(const QString &path)
     emit scanningChanged();
     emit scanStarted();
     
-    // Create or reuse library entry
-    if (m_currentLibraryId == 0) {
-        m_currentLibraryId = m_db->insertLibrary(path);
-    }
-
-    if (m_currentLibraryId == 0) {
-        m_scanning = false;
-        m_scanStatus = "Failed to create library entry";
-        emit scanningChanged();
-        emit scanStatusChanged();
-        emit scanError("Failed to create library entry");
-        return;
-    }
+    int libId = m_currentLibraryId;
     
-    // Start async scan
-    QMetaObject::invokeMethod(this, [this, path]() {
-        QList<ScanResult> results = m_scanner->scan(path);
+    // Start async scan via service
+    QMetaObject::invokeMethod(this, [this, path, libId]() {
+        int inserted = m_libraryService->scan(path, m_db,
+            // Progress callback — update UI properties
+            [this](int done, int total, const QString &p) {
+                if (!p.isEmpty()) {
+                    m_scanStatus = "Found: " + QFileInfo(p).fileName();
+                    emit scanStatusChanged();
+                }
+                if (total > 0) {
+                    m_scanProgress = done;
+                    m_scanTotal = total;
+                    emit scanProgressChanged();
+                    emit scanTotalChanged();
+                }
+            },
+            // Log callback
+            [](const QString &) {},
+            libId);
 
-        if (m_scanner->wasCancelled()) {
+        if (m_libraryService->wasCancelled()) {
             m_scanning = false;
             m_scanStatus = "Scan cancelled";
             emit scanningChanged();
@@ -75,28 +81,6 @@ void LibraryController::scanDirectory(const QString &path)
             emit scanError("Scan cancelled");
             m_currentLibraryId = 0;
             return;
-        }
-        
-        // Insert files into database
-        int inserted = 0;
-        for (const ScanResult &result : results) {
-            QString systemName = m_systemDetector.detectSystem(result.extension, result.path);
-            int systemId = systemName.isEmpty() ? 0 : m_db->getSystemId(systemName);
-            
-            FileRecord record;
-            record.libraryId = m_currentLibraryId;
-            record.originalPath = result.path;
-            record.currentPath = result.path;
-            record.filename = result.filename;
-            record.extension = result.extension;
-            record.fileSize = result.fileSize;
-            record.systemId = systemId;
-            record.isPrimary = result.isPrimary;
-            record.lastModified = result.lastModified;
-            
-            if (m_db->insertFile(record) > 0) {
-                inserted++;
-            }
         }
         
         m_scanning = false;
@@ -121,22 +105,10 @@ void LibraryController::hashFiles()
     emit hashingStarted();
     
     QMetaObject::invokeMethod(this, [this]() {
-        QList<FileRecord> files = m_db->getFilesWithoutHashes();
-        int total = files.count();
-        int hashed = 0;
-        
-        for (const FileRecord &file : files) {
-            int headerSize = Hasher::detectHeaderSize(file.currentPath, file.extension);
-            bool stripHeader = (headerSize > 0);
-            
-            HashResult result = m_hasher->calculateHashes(file.currentPath, stripHeader, headerSize);
-            
-            if (result.success) {
-                m_db->updateFileHashes(file.id, result.crc32, result.md5, result.sha1);
-                hashed++;
-                emit hashingProgress(hashed, total);
-            }
-        }
+        int hashed = m_hashService->hashAll(m_db,
+            [this](int done, int total, const QString &) {
+                emit hashingProgress(done, total);
+            });
         
         m_hashing = false;
         emit hashingChanged();
@@ -147,45 +119,35 @@ void LibraryController::hashFiles()
 
 void LibraryController::hashFile(int fileId)
 {
-    FileRecord file = m_db->getFileById(fileId);
-    if (file.id == 0) {
-        qWarning() << "File not found:" << fileId;
-        return;
-    }
-    
-    int headerSize = Hasher::detectHeaderSize(file.currentPath, file.extension);
-    bool stripHeader = (headerSize > 0);
-    
-    HashResult result = m_hasher->calculateHashes(file.currentPath, stripHeader, headerSize);
-    
-    if (result.success) {
-        m_db->updateFileHashes(file.id, result.crc32, result.md5, result.sha1);
-        qDebug() << "Hashed file:" << file.filename << "CRC32:" << result.crc32;
+    bool ok = m_hashService->hashFile(m_db, fileId);
+    if (ok) {
+        FileRecord file = m_db->getFileById(fileId);
+        qDebug() << "Hashed file:" << file.filename << "CRC32:" << file.crc32;
         emit libraryUpdated();
     } else {
-        qWarning() << "Failed to hash file:" << file.filename;
+        qWarning() << "Failed to hash file:" << fileId;
     }
 }
 
 QString LibraryController::getFilePath(int fileId)
 {
-    return m_db->getFilePath(fileId);
+    return m_libraryService->getFilePath(m_db, fileId);
 }
 
 void LibraryController::cancelScan()
 {
-    if (!m_scanning || !m_scanner) {
+    if (!m_scanning) {
         return;
     }
 
     m_scanStatus = "Cancelling scan...";
     emit scanStatusChanged();
-    m_scanner->requestCancel();
+    m_libraryService->cancelScan();
 }
 
 void LibraryController::removeLibrary(int libraryId)
 {
-    if (m_db->deleteLibrary(libraryId)) {
+    if (m_libraryService->removeLibrary(m_db, libraryId)) {
         emit libraryUpdated();
     } else {
         emit scanError("Failed to remove library");
@@ -216,52 +178,16 @@ void LibraryController::refreshLibrary(int libraryId)
 
 QVariantMap LibraryController::getLibraryStats()
 {
-    QVariantMap stats;
-    stats["totalFiles"] = m_db->getAllFiles().count();
-    stats["hashedFiles"] = 0; // Would need query
-    stats["matchedFiles"] = 0; // Would need query
-    return stats;
+    return m_libraryService->getStats(m_db);
 }
 
 QVariantList LibraryController::getSystems()
 {
-    QVariantList systems;
-    QMap<QString, int> counts = m_db->getFileCountBySystem();
-    
-    for (auto it = counts.constBegin(); it != counts.constEnd(); ++it) {
-        QVariantMap system;
-        system["name"] = it.key();
-        system["count"] = it.value();
-        systems.append(system);
-    }
-    
-    return systems;
-}
-
-void LibraryController::onFileFound(const QString &path)
-{
-    m_scanStatus = "Found: " + QFileInfo(path).fileName();
-    emit scanStatusChanged();
-}
-
-void LibraryController::onScanProgress(int processed, int total)
-{
-    m_scanProgress = processed;
-    m_scanTotal = total;
-    emit scanProgressChanged();
-    emit scanTotalChanged();
-}
-
-void LibraryController::onScanComplete()
-{
-    m_scanning = false;
-    emit scanningChanged();
+    return m_libraryService->getSystems(m_db);
 }
 
 void LibraryController::refreshList()
 {
-    // Simply emit the signal to refresh the list without any scanning
-    // The FileListModel is connected to this signal and will reload from database
     emit libraryUpdated();
 }
 

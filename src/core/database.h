@@ -21,6 +21,9 @@ struct FileRecord {
     QString filename;
     QString extension;
     qint64 fileSize = 0;
+    bool isCompressed = false;
+    QString archivePath;
+    QString archiveInternalPath;
     int systemId = 0;
     QString crc32;
     QString md5;
