@@ -597,7 +597,7 @@ void FileListModel::loadFiles()
     beginResetModel();
     
     // Load all files from database
-    m_files = m_db->getAllFiles();
+    m_files = m_db->getExistingFiles();
     
     // Load all matches for workflow state
     QMap<int, Database::MatchResult> matches = m_db->getAllMatches();

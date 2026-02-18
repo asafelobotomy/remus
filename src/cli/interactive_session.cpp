@@ -414,7 +414,7 @@ void showBrowser(const std::string &dbPath)
         return;
     }
 
-    QList<Remus::FileRecord> files = db.getAllFiles();
+    QList<Remus::FileRecord> files = db.getExistingFiles();
     QMap<int, Remus::Database::MatchResult> matches = db.getAllMatches();
 
     if (files.isEmpty()) {
@@ -674,7 +674,7 @@ void showStats(const std::string &dbPath)
         return;
     }
 
-    QList<Remus::FileRecord> files = db.getAllFiles();
+    QList<Remus::FileRecord> files = db.getExistingFiles();
     QMap<int, Remus::Database::MatchResult> matches = db.getAllMatches();
     QMap<QString, int> bySys = db.getFileCountBySystem();
 

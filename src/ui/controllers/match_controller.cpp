@@ -43,7 +43,7 @@ void MatchController::startMatching()
     emit matchingChanged();
     
     // Get all files without matches (or with low confidence matches)
-    QList<FileRecord> files = m_db->getAllFiles();
+    QList<FileRecord> files = m_db->getExistingFiles();
     int matchedCount = 0;
     int totalFiles = files.size();
     
