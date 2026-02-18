@@ -44,7 +44,7 @@ public:
     std::vector<std::pair<std::string, std::string>> keybindings() const override;
     void forceRefresh() override;
 
-private:
+    // ── Public query API (for tests) ───────────────────────
     // ── Data types ─────────────────────────────────────────
     struct FileEntry {
         int      fileId = 0;
@@ -64,7 +64,15 @@ private:
         std::string matchMethod;
     };
 
-    // ── UI state ───────────────────────────────────────────
+    int fileCount() const { return static_cast<int>(m_files.size()); }
+    const FileEntry& fileAt(int i) const { return m_files.at(static_cast<size_t>(i)); }
+    bool isPipelineRunning() const { return m_pipelineRunning.load(); }
+    static std::string confidenceIcon(int confidence);
+
+    // ── Actions (public for testability) ────────────────────
+    void loadFromDatabase();
+
+private:
     enum class Focus { PathInput, FileList, DetailPane };
     Focus               m_focus = Focus::PathInput;
 
@@ -83,16 +91,14 @@ private:
     TuiPipeline         m_pipeline;
     std::atomic<bool>   m_pipelineRunning{false};
 
-    // ── Actions ────────────────────────────────────────────
-    void startScan();
-    void loadFromDatabase();
-
     // ── Render helpers ─────────────────────────────────────
     void drawHeader(ncplane *plane, unsigned cols);
     void drawDetailPane(ncplane *plane, int startY, int height, int startX, unsigned width);
     void drawFooter(ncplane *plane, unsigned rows, unsigned cols);
 
+    // ── Actions (private) ─────────────────────────────
+    void startScan();
+
     // ── Helpers ────────────────────────────────────────────
-    static std::string confidenceIcon(int confidence);
     static void setConfidenceColor(ncplane *plane, int confidence);
 };

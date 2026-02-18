@@ -49,21 +49,26 @@ public:
     std::string name() const override { return "Patch"; }
     std::vector<std::pair<std::string, std::string>> keybindings() const override;
 
-private:
-    // ── Data types ─────────────────────────────────────────
+    // ── Public query API (for tests) ───────────────────────
     struct PatchEntry {
         std::string path;
         std::string filename;
-        std::string formatName;    // "IPS", "BPS", "UPS", "XDelta3", "PPF"
+        std::string formatName;
         int64_t     sizeBytes = 0;
-        std::string sourceCrc;     // expected source checksum
-        std::string targetCrc;     // expected target checksum
-        std::string status;        // "Ready", "Applied", "Error: ..."
+        std::string sourceCrc;
+        std::string targetCrc;
+        std::string status;
         bool        checked = true;
         bool        valid = true;
     };
 
-    // ── UI state ───────────────────────────────────────────
+    int patchCount() const { return static_cast<int>(m_patches.size()); }
+    const PatchEntry& patchAt(int i) const { return m_patches.at(static_cast<size_t>(i)); }
+    bool isRunning() const { return m_task.running(); }
+    bool createBackup() const { return m_createBackup; }
+    static std::string formatSize(int64_t bytes);
+
+private:
     enum class Focus { RomInput, PatchInput, PatchList, DetailPane };
     Focus        m_focus = Focus::RomInput;
     bool         m_createBackup = true;
@@ -98,6 +103,4 @@ private:
     void drawFooter(ncplane *plane, unsigned rows, unsigned cols);
     void drawToolStatus(ncplane *plane, int &y, int startX, int height);
 
-    // ── Helpers ────────────────────────────────────────────
-    static std::string formatSize(int64_t bytes);
 };

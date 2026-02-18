@@ -16,25 +16,29 @@ OptionsScreen::OptionsScreen(TuiApp &app)
 {
     // Define all settings fields
     m_fields = {
-        // Section: Metadata Providers
+        // Section: Metadata Providers (generated from ALL_PROVIDER_FIELDS)
         { "METADATA PROVIDERS", "", "", FieldType::Text, true },
-        { "ScreenScraper Username", Remus::Constants::Settings::Providers::SCREENSCRAPER_USERNAME, "", FieldType::Text, false },
-        { "ScreenScraper Password", Remus::Constants::Settings::Providers::SCREENSCRAPER_PASSWORD, "", FieldType::Password, false },
-        { "TheGamesDB API Key",     Remus::Constants::Settings::Providers::THEGAMESDB_API_KEY, "", FieldType::Text, false },
-        { "IGDB Client ID",         Remus::Constants::Settings::Providers::IGDB_CLIENT_ID, "", FieldType::Text, false },
-        { "IGDB Client Secret",     Remus::Constants::Settings::Providers::IGDB_CLIENT_SECRET, "", FieldType::Password, false },
-        { "Hasheous API Key",       Remus::Constants::Settings::Providers::HASHEOUS_CLIENT_API_KEY, "", FieldType::Text, false },
-
-        // Section: Organize
-        { "ORGANIZE", "", "", FieldType::Text, true },
-        { "Naming Template",        Remus::Constants::Settings::Organize::NAMING_TEMPLATE, "", FieldType::Text, false },
-        { "Organize by System",     Remus::Constants::Settings::Organize::BY_SYSTEM, "true", FieldType::Toggle, false },
-        { "Preserve Originals",     Remus::Constants::Settings::Organize::PRESERVE_ORIGINALS, "true", FieldType::Toggle, false },
-
-        // Section: Performance
-        { "PERFORMANCE", "", "", FieldType::Text, true },
-        { "Parallel Hashing",       Remus::Constants::Settings::Performance::PARALLEL_HASHING, "true", FieldType::Toggle, false },
     };
+
+    // Populate provider fields from the constants array
+    for (const auto &pf : Remus::Constants::ALL_PROVIDER_FIELDS) {
+        SettingField sf;
+        sf.label = pf.label;
+        sf.key = pf.key;
+        sf.type = pf.isPassword ? FieldType::Password : FieldType::Text;
+        sf.isSection = false;
+        m_fields.push_back(std::move(sf));
+    }
+
+    // Section: Organize
+    m_fields.push_back({ "ORGANIZE", "", "", FieldType::Text, true });
+    m_fields.push_back({ "Naming Template",    Remus::Constants::Settings::Organize::NAMING_TEMPLATE,    "", FieldType::Text,   false });
+    m_fields.push_back({ "Organize by System", Remus::Constants::Settings::Organize::BY_SYSTEM,          "true", FieldType::Toggle, false });
+    m_fields.push_back({ "Preserve Originals", Remus::Constants::Settings::Organize::PRESERVE_ORIGINALS, "true", FieldType::Toggle, false });
+
+    // Section: Performance
+    m_fields.push_back({ "PERFORMANCE", "", "", FieldType::Text, true });
+    m_fields.push_back({ "Parallel Hashing",   Remus::Constants::Settings::Performance::PARALLEL_HASHING, "true", FieldType::Toggle, false });
 
     // Start selection on first non-header field
     m_selected = 1;

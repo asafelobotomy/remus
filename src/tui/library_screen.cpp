@@ -450,7 +450,7 @@ void LibraryScreen::drawFooter(ncplane *plane, unsigned rows, unsigned cols)
 void LibraryScreen::loadFromDatabase()
 {
     auto &db = m_app.db();
-    auto allFiles = db.getAllFiles();
+    auto allFiles = db.getExistingFiles();
     auto allMatches = db.getAllMatches();
 
     // Build flat list of all entries (no filtering)

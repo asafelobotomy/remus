@@ -146,9 +146,13 @@ bool CompressorScreen::handleInput(struct notcurses *, const ncinput &ni, int ch
         return true;
     }
 
-    // 'm' toggles mode (compress/extract) when not processing
+    // 'm' cycles mode (Compress → Extract → Archive → Compress) when not processing
     if (ch == 'm' && !m_task.running()) {
-        m_mode = (m_mode == OpMode::Compress) ? OpMode::Extract : OpMode::Compress;
+        switch (m_mode) {
+        case OpMode::Compress: m_mode = OpMode::Extract; break;
+        case OpMode::Extract:  m_mode = OpMode::Archive; break;
+        case OpMode::Archive:  m_mode = OpMode::Compress; break;
+        }
         return true;
     }
 
@@ -366,11 +370,17 @@ void CompressorScreen::drawHeader(ncplane *plane, unsigned cols)
     // Mode indicator
     {
         uint64_t ch = 0;
-        const char *modeStr = (m_mode == OpMode::Compress) ? "[COMPRESS→CHD]" : "[EXTRACT CHD→BIN]";
-        if (m_mode == OpMode::Compress)
-            ncchannels_set_fg_rgb8(&ch, 0x00, 0xCC, 0x00);
-        else
-            ncchannels_set_fg_rgb8(&ch, 0xCC, 0xAA, 0x00);
+        const char *modeStr;
+        switch (m_mode) {
+        case OpMode::Compress: modeStr = "[COMPRESS\u2192CHD]"; break;
+        case OpMode::Extract:  modeStr = "[EXTRACT CHD\u2192BIN]"; break;
+        case OpMode::Archive:  modeStr = "[COMPRESS\u2192ARCHIVE]"; break;
+        }
+        switch (m_mode) {
+        case OpMode::Compress: ncchannels_set_fg_rgb8(&ch, 0x00, 0xCC, 0x00); break;
+        case OpMode::Extract:  ncchannels_set_fg_rgb8(&ch, 0xCC, 0xAA, 0x00); break;
+        case OpMode::Archive:  ncchannels_set_fg_rgb8(&ch, 0x00, 0xAA, 0xCC); break;
+        }
         ncplane_set_channels(plane, ch);
         ncplane_putstr_yx(plane, 0, 14, modeStr);
     }
@@ -524,10 +534,17 @@ void CompressorScreen::drawDetailPane(ncplane *plane, int startY, int height, in
         uint64_t ch = 0;
         ncchannels_set_fg_rgb8(&ch, 0x66, 0x66, 0x66);
         ncplane_set_channels(plane, ch);
-        if (m_mode == OpMode::Compress)
+        switch (m_mode) {
+        case OpMode::Compress:
             ncplane_putstr_yx(plane, y, startX + 2, "Mode: Convert disc images to CHD");
-        else
+            break;
+        case OpMode::Extract:
             ncplane_putstr_yx(plane, y, startX + 2, "Mode: Extract CHD back to BIN/CUE");
+            break;
+        case OpMode::Archive:
+            ncplane_putstr_yx(plane, y, startX + 2, "Mode: Compress files into ZIP/7z");
+            break;
+        }
     }
 }
 
@@ -581,11 +598,18 @@ void CompressorScreen::scanSource()
     QStringList extractExts = {"*.chd"};
     QStringList archiveExts = {"*.zip", "*.7z", "*.rar"};
 
+    // All file types to scan for in Archive mode
+    QStringList allExts = {"*.cue", "*.iso", "*.gdi", "*.chd", "*.zip", "*.7z", "*.rar",
+                           "*.bin", "*.img", "*.rom", "*.nes", "*.sfc", "*.smc",
+                           "*.gb", "*.gbc", "*.gba", "*.nds", "*.n64", "*.z64",
+                           "*.md", "*.gen", "*.sms", "*.gg"};
+
     QStringList filters;
-    if (m_mode == OpMode::Compress)
-        filters = compressExts + archiveExts;
-    else
-        filters = extractExts;
+    switch (m_mode) {
+    case OpMode::Compress: filters = compressExts + archiveExts; break;
+    case OpMode::Extract:  filters = extractExts; break;
+    case OpMode::Archive:  filters = allExts; break;
+    }
 
     auto addFile = [&](const QString &filePath) {
         QFileInfo fi(filePath);
@@ -635,7 +659,12 @@ void CompressorScreen::startProcessing()
     }
     if (checked == 0) return;
 
-    std::string label = (m_mode == OpMode::Compress) ? "converting" : "extracting";
+    std::string label;
+    switch (m_mode) {
+    case OpMode::Compress: label = "converting"; break;
+    case OpMode::Extract:  label = "extracting"; break;
+    case OpMode::Archive:  label = "compressing"; break;
+    }
     m_progressBar.set(0, checked, label);
 
     m_task.start([this]() { processFiles(); });
@@ -720,13 +749,36 @@ void CompressorScreen::processSingleFile(size_t idx, const std::string &outDir)
                 m_files[idx].status = "Error: " + result.error.toStdString();
             }
         }
-    } else {
+    } else if (m_mode == OpMode::Extract) {
         // Extract CHD → BIN/CUE via ConversionService
         auto result = m_conversionService->extractCHD(qPath, qOutDir);
         {
             std::lock_guard<std::mutex> lock(m_filesMutex);
             if (result.success) {
                 m_files[idx].status = "Done (extracted)";
+                if (m_deleteOriginals)
+                    QFile::remove(qPath);
+            } else {
+                m_files[idx].status = "Error: " + result.error.toStdString();
+            }
+        }
+    } else {
+        // Archive mode — compress files to ZIP/7z via ConversionService
+        // Determine output archive path
+        QFileInfo fi(qPath);
+        QString archiveName = fi.completeBaseName() + QStringLiteral(".zip");
+        QString archivePath = qOutDir.isEmpty()
+            ? fi.absolutePath() + QStringLiteral("/") + archiveName
+            : qOutDir + QStringLiteral("/") + archiveName;
+
+        auto result = m_conversionService->compressToArchive(
+            QStringList{qPath}, archivePath, Remus::ArchiveFormat::ZIP);
+        {
+            std::lock_guard<std::mutex> lock(m_filesMutex);
+            if (result.success) {
+                m_files[idx].status = "Done (" + formatSize(result.compressedSize) + ")";
+                if (result.originalSize > 0)
+                    m_files[idx].ratio = static_cast<double>(result.compressedSize) / static_cast<double>(result.originalSize);
                 if (m_deleteOriginals)
                     QFile::remove(qPath);
             } else {
@@ -746,7 +798,7 @@ std::vector<std::pair<std::string, std::string>> CompressorScreen::keybindings()
         {"Space", "Toggle file"},
         {"a",     "Toggle all"},
         {"s",     "Start processing"},
-        {"m",     "Toggle compress/extract"},
+        {"m",     "Cycle mode (CHD/Extract/Archive)"},
         {"d",     "Toggle delete originals"},
         {"Esc",   "Cancel / back"},
     };

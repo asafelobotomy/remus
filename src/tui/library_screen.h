@@ -40,8 +40,7 @@ public:
     std::vector<std::pair<std::string, std::string>> keybindings() const override;
     void forceRefresh() override;
 
-private:
-    // ── Data types ─────────────────────────────────────────
+    // ── Public query API (for tests and external consumers) ──
     enum class ConfirmationStatus { Pending, Confirmed, Rejected };
 
     struct FileEntry {
@@ -64,7 +63,25 @@ private:
         std::string path;
     };
 
-    // ── UI state ───────────────────────────────────────────
+    int entryCount() const { return static_cast<int>(m_entries.size()); }
+    int allEntryCount() const { return static_cast<int>(m_allEntries.size()); }
+    const FileEntry& entryAt(int i) const { return m_entries.at(static_cast<size_t>(i)); }
+    const FileEntry& allEntryAt(int i) const { return m_allEntries.at(static_cast<size_t>(i)); }
+    int fileCount() const { return m_totalFiles; }
+    int systemCount() const { return m_totalSystems; }
+    int matchedCount() const { return m_totalMatched; }
+    std::string filterText() const { return m_filterInput.value(); }
+
+    // ── Actions (public for testability) ────────────────────
+    void loadFromDatabase();
+    void applyFilter();
+    void confirmMatch();
+    void rejectMatch();
+    void setFilter(const std::string &f) { m_filterInput.setValue(f); }
+    void clearFilter() { m_filterInput.clear(); }
+    void setSelectedIndex(int i) { m_fileList.setSelected(i); }
+
+private:
     enum class Focus { FilterInput, FileList, DetailPane };
     Focus         m_focus = Focus::FileList;
 
@@ -83,12 +100,6 @@ private:
     std::vector<FileEntry> m_allEntries;    // full unfiltered dataset
     std::vector<FileEntry> m_entries;       // filtered (displayed)
     std::mutex             m_mutex;
-
-    // ── Actions ────────────────────────────────────────────
-    void loadFromDatabase();
-    void applyFilter();
-    void confirmMatch();
-    void rejectMatch();
 
     // ── Render helpers ─────────────────────────────────────
     void drawHeader(ncplane *plane, unsigned cols);

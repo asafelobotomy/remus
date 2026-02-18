@@ -530,7 +530,7 @@ void MatchScreen::startScan()
 void MatchScreen::loadFromDatabase()
 {
     auto &db = m_app.db();
-    auto allFiles = db.getAllFiles();
+    auto allFiles = db.getExistingFiles();
     auto allMatches = db.getAllMatches();
 
     std::vector<FileEntry> entries;
