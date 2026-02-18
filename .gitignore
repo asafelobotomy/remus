@@ -1,5 +1,6 @@
 # Build artifacts
 build/
+build-*/
 *.o
 *.so
 *.a
@@ -26,6 +27,9 @@ ui_*
 *.swp
 *.swo
 *~
+
+# Local Copilot workspace instruction artifact
+.github/copilot-instructions.md
 
 # CMake
 CMakeCache.txt
@@ -74,7 +78,6 @@ dist/
 *.gb
 *.32x
 *.smd
-*.md
 *.gen
 
 ## Sega
