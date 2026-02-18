@@ -15,6 +15,7 @@ add_library(remus-core STATIC
     m3u_generator.cpp
     chd_converter.cpp
     archive_extractor.cpp
+    archive_creator.cpp
     space_calculator.cpp
     dat_parser.cpp
     header_detector.cpp

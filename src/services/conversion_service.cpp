@@ -9,6 +9,7 @@ namespace Remus {
 ConversionService::ConversionService()
     : m_chdConverter(new CHDConverter())
     , m_archiveExtractor(new ArchiveExtractor())
+    , m_archiveCreator(new ArchiveCreator())
 {
 }
 
@@ -16,6 +17,7 @@ ConversionService::~ConversionService()
 {
     delete m_chdConverter;
     delete m_archiveExtractor;
+    delete m_archiveCreator;
 }
 
 // ── CHD Conversion ──────────────────────────────────────────
@@ -188,15 +190,63 @@ bool ConversionService::canExtract(const QString &path) const
     return m_archiveExtractor->canExtract(path);
 }
 
+// ── Archive Compression ────────────────────────────────────────
+
+CompressionResult ConversionService::compressToArchive(const QStringList &inputPaths,
+                                                        const QString &outputArchive,
+                                                        ArchiveFormat format,
+                                                        ProgressCallback progressCb)
+{
+    QMetaObject::Connection conn;
+    if (progressCb) {
+        conn = QObject::connect(m_archiveCreator, &ArchiveCreator::compressionProgress,
+            [&](int pct, const QString &info) { progressCb(pct, info); });
+    }
+
+    CompressionResult result = m_archiveCreator->compress(inputPaths, outputArchive, format);
+
+    if (conn) QObject::disconnect(conn);
+    return result;
+}
+
+QList<CompressionResult> ConversionService::batchCompressToArchive(
+    const QStringList &dirs,
+    const QString &outputDir,
+    ArchiveFormat format,
+    ProgressCallback progressCb)
+{
+    QMetaObject::Connection conn;
+    if (progressCb) {
+        conn = QObject::connect(m_archiveCreator, &ArchiveCreator::compressionProgress,
+            [&](int pct, const QString &info) { progressCb(pct, info); });
+    }
+
+    QList<CompressionResult> results = m_archiveCreator->batchCompress(dirs, outputDir, format);
+
+    if (conn) QObject::disconnect(conn);
+    return results;
+}
+
+bool ConversionService::canCompress(ArchiveFormat format) const
+{
+    return m_archiveCreator->canCompress(format);
+}
+
+QMap<ArchiveFormat, bool> ConversionService::getArchiveCompressionToolStatus() const
+{
+    return m_archiveCreator->getAvailableTools();
+}
+
 void ConversionService::cancel()
 {
     m_chdConverter->cancel();
     m_archiveExtractor->cancel();
+    m_archiveCreator->cancel();
 }
 
 bool ConversionService::isRunning() const
 {
-    return m_chdConverter->isRunning() || m_archiveExtractor->isRunning();
+    return m_chdConverter->isRunning() || m_archiveExtractor->isRunning() || m_archiveCreator->isRunning();
 }
 
 } // namespace Remus
