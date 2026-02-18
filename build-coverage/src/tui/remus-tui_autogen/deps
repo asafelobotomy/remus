@@ -1,0 +1,4 @@
+remus-tui_autogen/timestamp: \
+	/home/solon/Documents/remus/src/tui/CMakeLists.txt \
+	/home/solon/Documents/remus/src/tui/main.cpp \
+	/usr/bin/cmake

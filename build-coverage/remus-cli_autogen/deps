@@ -2,6 +2,8 @@ remus-cli_autogen/timestamp: \
 	/home/solon/Documents/remus/CMakeLists.txt \
 	/home/solon/Documents/remus/build-coverage/CMakeFiles/4.2.3/CMakeCXXCompiler.cmake \
 	/home/solon/Documents/remus/build-coverage/CMakeFiles/4.2.3/CMakeSystem.cmake \
+	/home/solon/Documents/remus/src/cli/interactive_session.cpp \
+	/home/solon/Documents/remus/src/cli/interactive_session.h \
 	/home/solon/Documents/remus/src/cli/main.cpp \
 	/usr/lib/cmake/Qt6/FindWrapAtomic.cmake \
 	/usr/lib/cmake/Qt6/FindWrapOpenGL.cmake \
@@ -813,9 +815,11 @@ remus-cli_autogen/timestamp: \
 	/usr/share/cmake/Modules/Compiler/CMakeCommonCompilerMacros.cmake \
 	/usr/share/cmake/Modules/Compiler/GNU-CXX.cmake \
 	/usr/share/cmake/Modules/Compiler/GNU.cmake \
+	/usr/share/cmake/Modules/FindCurses.cmake \
 	/usr/share/cmake/Modules/FindOpenGL.cmake \
 	/usr/share/cmake/Modules/FindPackageHandleStandardArgs.cmake \
 	/usr/share/cmake/Modules/FindPackageMessage.cmake \
+	/usr/share/cmake/Modules/FindPkgConfig.cmake \
 	/usr/share/cmake/Modules/FindThreads.cmake \
 	/usr/share/cmake/Modules/FindVulkan.cmake \
 	/usr/share/cmake/Modules/FindZLIB.cmake \

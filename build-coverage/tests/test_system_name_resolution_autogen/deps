@@ -55,4 +55,9 @@ test_system_name_resolution_autogen/timestamp: \
 	/usr/lib/cmake/Qt6Test/QtTestProperties.cmake \
 	/usr/share/cmake/Modules/CMakeFindDependencyMacro.cmake \
 	/usr/share/cmake/Modules/CheckCXXCompilerFlag.cmake \
+	/usr/share/cmake/Modules/CheckLibraryExists.cmake \
+	/usr/share/cmake/Modules/FindCurses.cmake \
+	/usr/share/cmake/Modules/FindPackageHandleStandardArgs.cmake \
+	/usr/share/cmake/Modules/FindPackageMessage.cmake \
+	/usr/share/cmake/Modules/FindPkgConfig.cmake \
 	/usr/bin/cmake

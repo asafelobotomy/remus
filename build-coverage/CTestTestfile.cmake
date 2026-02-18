@@ -6,5 +6,7 @@
 # testing this directory and lists subdirectories to be tested as well.
 subdirs("src/core")
 subdirs("src/metadata")
+subdirs("src/services")
 subdirs("src/ui")
+subdirs("src/tui")
 subdirs("tests")

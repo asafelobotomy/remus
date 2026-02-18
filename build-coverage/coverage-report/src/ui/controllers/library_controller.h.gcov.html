@@ -37,20 +37,12 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-02-16 20:31:55</td>
+            <td class="headerValue">2026-02-18 09:32:22</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryLo">0.0&nbsp;%</td>
             <td class="headerCovTableEntry">5</td>
             <td class="headerCovTableEntry">0</td>
-          </tr>
-          <tr>
-            <td class="headerItem">Legend:</td>
-            <td class="headerValueLeg">            Lines:&nbsp&nbsp&nbsp&nbsp
-            <span class="coverLegendCov">hit</span>
-            <span class="coverLegendNoCov">not hit</span>
-</td>
-            <td></td>
           </tr>
                   <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
                 </table>
@@ -73,88 +65,84 @@
 <span id="L3"><span class="lineNum">       3</span>              : #include &lt;QObject&gt;</span>
 <span id="L4"><span class="lineNum">       4</span>              : #include &lt;QString&gt;</span>
 <span id="L5"><span class="lineNum">       5</span>              : #include &quot;../../core/database.h&quot;</span>
-<span id="L6"><span class="lineNum">       6</span>              : #include &quot;../../core/scanner.h&quot;</span>
-<span id="L7"><span class="lineNum">       7</span>              : #include &quot;../../core/hasher.h&quot;</span>
-<span id="L8"><span class="lineNum">       8</span>              : #include &quot;../../core/system_detector.h&quot;</span>
-<span id="L9"><span class="lineNum">       9</span>              : </span>
-<span id="L10"><span class="lineNum">      10</span>              : namespace Remus {</span>
+<span id="L6"><span class="lineNum">       6</span>              : </span>
+<span id="L7"><span class="lineNum">       7</span>              : namespace Remus {</span>
+<span id="L8"><span class="lineNum">       8</span>              : </span>
+<span id="L9"><span class="lineNum">       9</span>              : class LibraryService;</span>
+<span id="L10"><span class="lineNum">      10</span>              : class HashService;</span>
 <span id="L11"><span class="lineNum">      11</span>              : </span>
 <span id="L12"><span class="lineNum">      12</span>              : /**</span>
 <span id="L13"><span class="lineNum">      13</span>              :  * @brief Controller for library management operations</span>
 <span id="L14"><span class="lineNum">      14</span>              :  * </span>
 <span id="L15"><span class="lineNum">      15</span>              :  * Handles scanning, hashing, and library maintenance.</span>
-<span id="L16"><span class="lineNum">      16</span>              :  * Exposed to QML as a context property.</span>
-<span id="L17"><span class="lineNum">      17</span>              :  */</span>
-<span id="L18"><span class="lineNum">      18</span>              : class LibraryController : public QObject {</span>
-<span id="L19"><span class="lineNum">      19</span>              :     Q_OBJECT</span>
-<span id="L20"><span class="lineNum">      20</span>              :     Q_PROPERTY(bool scanning READ isScanning NOTIFY scanningChanged)</span>
-<span id="L21"><span class="lineNum">      21</span>              :     Q_PROPERTY(int scanProgress READ scanProgress NOTIFY scanProgressChanged)</span>
-<span id="L22"><span class="lineNum">      22</span>              :     Q_PROPERTY(int scanTotal READ scanTotal NOTIFY scanTotalChanged)</span>
-<span id="L23"><span class="lineNum">      23</span>              :     Q_PROPERTY(QString scanStatus READ scanStatus NOTIFY scanStatusChanged)</span>
-<span id="L24"><span class="lineNum">      24</span>              :     Q_PROPERTY(bool hashing READ isHashing NOTIFY hashingChanged)</span>
-<span id="L25"><span class="lineNum">      25</span>              :     </span>
-<span id="L26"><span class="lineNum">      26</span>              : public:</span>
-<span id="L27"><span class="lineNum">      27</span>              :     explicit LibraryController(Database *db, QObject *parent = nullptr);</span>
-<span id="L28"><span class="lineNum">      28</span>              :     </span>
-<span id="L29"><span class="lineNum">      29</span> <span class="tlaUNC">           0 :     bool isScanning() const { return m_scanning; }</span></span>
-<span id="L30"><span class="lineNum">      30</span> <span class="tlaUNC">           0 :     bool isHashing() const { return m_hashing; }</span></span>
-<span id="L31"><span class="lineNum">      31</span> <span class="tlaUNC">           0 :     int scanProgress() const { return m_scanProgress; }</span></span>
-<span id="L32"><span class="lineNum">      32</span> <span class="tlaUNC">           0 :     int scanTotal() const { return m_scanTotal; }</span></span>
-<span id="L33"><span class="lineNum">      33</span> <span class="tlaUNC">           0 :     QString scanStatus() const { return m_scanStatus; }</span></span>
-<span id="L34"><span class="lineNum">      34</span>              :     </span>
-<span id="L35"><span class="lineNum">      35</span>              :     // Library operations</span>
-<span id="L36"><span class="lineNum">      36</span>              :     Q_INVOKABLE void scanDirectory(const QString &amp;path);</span>
-<span id="L37"><span class="lineNum">      37</span>              :     Q_INVOKABLE void hashFiles();</span>
-<span id="L38"><span class="lineNum">      38</span>              :     Q_INVOKABLE void hashFile(int fileId);</span>
-<span id="L39"><span class="lineNum">      39</span>              :     Q_INVOKABLE void cancelScan();</span>
-<span id="L40"><span class="lineNum">      40</span>              :     Q_INVOKABLE void removeLibrary(int libraryId);</span>
-<span id="L41"><span class="lineNum">      41</span>              :     Q_INVOKABLE void refreshLibrary(int libraryId);</span>
-<span id="L42"><span class="lineNum">      42</span>              :     Q_INVOKABLE void refreshList();  // Refresh the list without rescanning</span>
-<span id="L43"><span class="lineNum">      43</span>              :     </span>
-<span id="L44"><span class="lineNum">      44</span>              :     // File queries</span>
-<span id="L45"><span class="lineNum">      45</span>              :     Q_INVOKABLE QString getFilePath(int fileId);</span>
-<span id="L46"><span class="lineNum">      46</span>              :     </span>
-<span id="L47"><span class="lineNum">      47</span>              :     // Library queries</span>
-<span id="L48"><span class="lineNum">      48</span>              :     Q_INVOKABLE QVariantMap getLibraryStats();</span>
-<span id="L49"><span class="lineNum">      49</span>              :     Q_INVOKABLE QVariantList getSystems();</span>
-<span id="L50"><span class="lineNum">      50</span>              :     </span>
-<span id="L51"><span class="lineNum">      51</span>              : signals:</span>
-<span id="L52"><span class="lineNum">      52</span>              :     void scanningChanged();</span>
-<span id="L53"><span class="lineNum">      53</span>              :     void hashingChanged();</span>
-<span id="L54"><span class="lineNum">      54</span>              :     void scanProgressChanged();</span>
-<span id="L55"><span class="lineNum">      55</span>              :     void scanTotalChanged();</span>
-<span id="L56"><span class="lineNum">      56</span>              :     void scanStatusChanged();</span>
-<span id="L57"><span class="lineNum">      57</span>              :     </span>
-<span id="L58"><span class="lineNum">      58</span>              :     void scanStarted();</span>
-<span id="L59"><span class="lineNum">      59</span>              :     void scanCompleted(int filesFound);</span>
-<span id="L60"><span class="lineNum">      60</span>              :     void scanError(const QString &amp;error);</span>
-<span id="L61"><span class="lineNum">      61</span>              :     </span>
-<span id="L62"><span class="lineNum">      62</span>              :     void hashingStarted();</span>
-<span id="L63"><span class="lineNum">      63</span>              :     void hashingProgress(int current, int total);</span>
-<span id="L64"><span class="lineNum">      64</span>              :     void hashingCompleted(int filesHashed);</span>
-<span id="L65"><span class="lineNum">      65</span>              :     </span>
-<span id="L66"><span class="lineNum">      66</span>              :     void libraryUpdated();</span>
+<span id="L16"><span class="lineNum">      16</span>              :  * Delegates to LibraryService and HashService for business logic.</span>
+<span id="L17"><span class="lineNum">      17</span>              :  * Exposed to QML as a context property.</span>
+<span id="L18"><span class="lineNum">      18</span>              :  */</span>
+<span id="L19"><span class="lineNum">      19</span>              : class LibraryController : public QObject {</span>
+<span id="L20"><span class="lineNum">      20</span>              :     Q_OBJECT</span>
+<span id="L21"><span class="lineNum">      21</span>              :     Q_PROPERTY(bool scanning READ isScanning NOTIFY scanningChanged)</span>
+<span id="L22"><span class="lineNum">      22</span>              :     Q_PROPERTY(int scanProgress READ scanProgress NOTIFY scanProgressChanged)</span>
+<span id="L23"><span class="lineNum">      23</span>              :     Q_PROPERTY(int scanTotal READ scanTotal NOTIFY scanTotalChanged)</span>
+<span id="L24"><span class="lineNum">      24</span>              :     Q_PROPERTY(QString scanStatus READ scanStatus NOTIFY scanStatusChanged)</span>
+<span id="L25"><span class="lineNum">      25</span>              :     Q_PROPERTY(bool hashing READ isHashing NOTIFY hashingChanged)</span>
+<span id="L26"><span class="lineNum">      26</span>              :     </span>
+<span id="L27"><span class="lineNum">      27</span>              : public:</span>
+<span id="L28"><span class="lineNum">      28</span>              :     explicit LibraryController(Database *db, QObject *parent = nullptr);</span>
+<span id="L29"><span class="lineNum">      29</span> <span class="tlaUNC">           0 :     ~LibraryController() override;</span></span>
+<span id="L30"><span class="lineNum">      30</span> <span class="tlaUNC">           0 :     </span></span>
+<span id="L31"><span class="lineNum">      31</span> <span class="tlaUNC">           0 :     bool isScanning() const { return m_scanning; }</span></span>
+<span id="L32"><span class="lineNum">      32</span> <span class="tlaUNC">           0 :     bool isHashing() const { return m_hashing; }</span></span>
+<span id="L33"><span class="lineNum">      33</span> <span class="tlaUNC">           0 :     int scanProgress() const { return m_scanProgress; }</span></span>
+<span id="L34"><span class="lineNum">      34</span>              :     int scanTotal() const { return m_scanTotal; }</span>
+<span id="L35"><span class="lineNum">      35</span>              :     QString scanStatus() const { return m_scanStatus; }</span>
+<span id="L36"><span class="lineNum">      36</span>              :     </span>
+<span id="L37"><span class="lineNum">      37</span>              :     // Library operations</span>
+<span id="L38"><span class="lineNum">      38</span>              :     Q_INVOKABLE void scanDirectory(const QString &amp;path);</span>
+<span id="L39"><span class="lineNum">      39</span>              :     Q_INVOKABLE void hashFiles();</span>
+<span id="L40"><span class="lineNum">      40</span>              :     Q_INVOKABLE void hashFile(int fileId);</span>
+<span id="L41"><span class="lineNum">      41</span>              :     Q_INVOKABLE void cancelScan();</span>
+<span id="L42"><span class="lineNum">      42</span>              :     Q_INVOKABLE void removeLibrary(int libraryId);</span>
+<span id="L43"><span class="lineNum">      43</span>              :     Q_INVOKABLE void refreshLibrary(int libraryId);</span>
+<span id="L44"><span class="lineNum">      44</span>              :     Q_INVOKABLE void refreshList();  // Refresh the list without rescanning</span>
+<span id="L45"><span class="lineNum">      45</span>              :     </span>
+<span id="L46"><span class="lineNum">      46</span>              :     // File queries</span>
+<span id="L47"><span class="lineNum">      47</span>              :     Q_INVOKABLE QString getFilePath(int fileId);</span>
+<span id="L48"><span class="lineNum">      48</span>              :     </span>
+<span id="L49"><span class="lineNum">      49</span>              :     // Library queries</span>
+<span id="L50"><span class="lineNum">      50</span>              :     Q_INVOKABLE QVariantMap getLibraryStats();</span>
+<span id="L51"><span class="lineNum">      51</span>              :     Q_INVOKABLE QVariantList getSystems();</span>
+<span id="L52"><span class="lineNum">      52</span>              :     </span>
+<span id="L53"><span class="lineNum">      53</span>              : signals:</span>
+<span id="L54"><span class="lineNum">      54</span>              :     void scanningChanged();</span>
+<span id="L55"><span class="lineNum">      55</span>              :     void hashingChanged();</span>
+<span id="L56"><span class="lineNum">      56</span>              :     void scanProgressChanged();</span>
+<span id="L57"><span class="lineNum">      57</span>              :     void scanTotalChanged();</span>
+<span id="L58"><span class="lineNum">      58</span>              :     void scanStatusChanged();</span>
+<span id="L59"><span class="lineNum">      59</span>              :     </span>
+<span id="L60"><span class="lineNum">      60</span>              :     void scanStarted();</span>
+<span id="L61"><span class="lineNum">      61</span>              :     void scanCompleted(int filesFound);</span>
+<span id="L62"><span class="lineNum">      62</span>              :     void scanError(const QString &amp;error);</span>
+<span id="L63"><span class="lineNum">      63</span>              :     </span>
+<span id="L64"><span class="lineNum">      64</span>              :     void hashingStarted();</span>
+<span id="L65"><span class="lineNum">      65</span>              :     void hashingProgress(int current, int total);</span>
+<span id="L66"><span class="lineNum">      66</span>              :     void hashingCompleted(int filesHashed);</span>
 <span id="L67"><span class="lineNum">      67</span>              :     </span>
-<span id="L68"><span class="lineNum">      68</span>              : private slots:</span>
-<span id="L69"><span class="lineNum">      69</span>              :     void onFileFound(const QString &amp;path);</span>
-<span id="L70"><span class="lineNum">      70</span>              :     void onScanProgress(int processed, int total);</span>
-<span id="L71"><span class="lineNum">      71</span>              :     void onScanComplete();</span>
-<span id="L72"><span class="lineNum">      72</span>              :     </span>
-<span id="L73"><span class="lineNum">      73</span>              : private:</span>
-<span id="L74"><span class="lineNum">      74</span>              :     Database *m_db;</span>
-<span id="L75"><span class="lineNum">      75</span>              :     Scanner *m_scanner = nullptr;</span>
-<span id="L76"><span class="lineNum">      76</span>              :     Hasher *m_hasher = nullptr;</span>
-<span id="L77"><span class="lineNum">      77</span>              :     SystemDetector m_systemDetector;</span>
-<span id="L78"><span class="lineNum">      78</span>              :     </span>
-<span id="L79"><span class="lineNum">      79</span>              :     bool m_scanning = false;</span>
-<span id="L80"><span class="lineNum">      80</span>              :     bool m_hashing = false;</span>
-<span id="L81"><span class="lineNum">      81</span>              :     int m_scanProgress = 0;</span>
-<span id="L82"><span class="lineNum">      82</span>              :     int m_scanTotal = 0;</span>
-<span id="L83"><span class="lineNum">      83</span>              :     QString m_scanStatus;</span>
-<span id="L84"><span class="lineNum">      84</span>              :     int m_currentLibraryId = 0;</span>
-<span id="L85"><span class="lineNum">      85</span>              : };</span>
-<span id="L86"><span class="lineNum">      86</span>              : </span>
-<span id="L87"><span class="lineNum">      87</span>              : } // namespace Remus</span>
+<span id="L68"><span class="lineNum">      68</span>              :     void libraryUpdated();</span>
+<span id="L69"><span class="lineNum">      69</span>              :     </span>
+<span id="L70"><span class="lineNum">      70</span>              : private:</span>
+<span id="L71"><span class="lineNum">      71</span>              :     Database *m_db;</span>
+<span id="L72"><span class="lineNum">      72</span>              :     LibraryService *m_libraryService = nullptr;</span>
+<span id="L73"><span class="lineNum">      73</span>              :     HashService    *m_hashService    = nullptr;</span>
+<span id="L74"><span class="lineNum">      74</span>              :     </span>
+<span id="L75"><span class="lineNum">      75</span>              :     bool m_scanning = false;</span>
+<span id="L76"><span class="lineNum">      76</span>              :     bool m_hashing = false;</span>
+<span id="L77"><span class="lineNum">      77</span>              :     int m_scanProgress = 0;</span>
+<span id="L78"><span class="lineNum">      78</span>              :     int m_scanTotal = 0;</span>
+<span id="L79"><span class="lineNum">      79</span>              :     QString m_scanStatus;</span>
+<span id="L80"><span class="lineNum">      80</span>              :     int m_currentLibraryId = 0;</span>
+<span id="L81"><span class="lineNum">      81</span>              : };</span>
+<span id="L82"><span class="lineNum">      82</span>              : </span>
+<span id="L83"><span class="lineNum">      83</span>              : } // namespace Remus</span>
         </pre>
               </td>
             </tr>

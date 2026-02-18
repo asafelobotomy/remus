@@ -37,28 +37,12 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-02-16 20:31:55</td>
+            <td class="headerValue">2026-02-18 09:32:22</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryLo">25.0&nbsp;%</td>
             <td class="headerCovTableEntry">8</td>
             <td class="headerCovTableEntry">2</td>
-          </tr>
-          <tr>
-            <td class="headerItem">Legend:</td>
-            <td class="headerValueLeg">            Lines:&nbsp&nbsp&nbsp&nbsp
-            <span class="coverLegendCov">hit</span>
-            <span class="coverLegendNoCov">not hit</span>
-            <br>Branches:
-            <span class="coverLegendCov">+</span> taken
-            <span class="coverLegendNoCov">-</span> not taken
-            <span class="coverLegendNoCov">#</span> not executed
-</td>
-            <td></td>
-            <td class="headerItem">Branches:</td>
-            <td class="headerCovTableEntryLo">5.8&nbsp;%</td>
-            <td class="headerCovTableEntry">328</td>
-            <td class="headerCovTableEntry">19</td>
           </tr>
                   <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
                 </table>
@@ -74,240 +58,574 @@
             </tr>
             <tr>
               <td>
-<pre class="sourceHeading">             Branch data     Line data    Source code</pre>
+<pre class="sourceHeading">            Line data    Source code</pre>
 <pre class="source">
-<span id="L1"><span class="lineNum">       1</span>                 :             : #include &quot;hasheous_provider.h&quot;</span>
-<span id="L2"><span class="lineNum">       2</span>                 :             : #include &lt;QNetworkRequest&gt;</span>
-<span id="L3"><span class="lineNum">       3</span>                 :             : #include &lt;QNetworkReply&gt;</span>
-<span id="L4"><span class="lineNum">       4</span>                 :             : #include &lt;QUrlQuery&gt;</span>
-<span id="L5"><span class="lineNum">       5</span>                 :             : #include &lt;QJsonDocument&gt;</span>
-<span id="L6"><span class="lineNum">       6</span>                 :             : #include &lt;QJsonArray&gt;</span>
-<span id="L7"><span class="lineNum">       7</span>                 :             : #include &lt;QEventLoop&gt;</span>
-<span id="L8"><span class="lineNum">       8</span>                 :             : #include &lt;QDebug&gt;</span>
-<span id="L9"><span class="lineNum">       9</span>                 :             : #include &quot;../core/logging_categories.h&quot;</span>
-<span id="L10"><span class="lineNum">      10</span>                 :             : </span>
-<span id="L11"><span class="lineNum">      11</span>                 :             : #undef qDebug</span>
-<span id="L12"><span class="lineNum">      12</span>                 :             : #undef qInfo</span>
-<span id="L13"><span class="lineNum">      13</span>                 :             : #undef qWarning</span>
-<span id="L14"><span class="lineNum">      14</span>                 :             : #undef qCritical</span>
-<span id="L15"><span class="lineNum">      15</span>                 :             : #define qDebug() qCDebug(logMetadata)</span>
-<span id="L16"><span class="lineNum">      16</span>                 :             : #define qInfo() qCInfo(logMetadata)</span>
-<span id="L17"><span class="lineNum">      17</span>                 :             : #define qWarning() qCWarning(logMetadata)</span>
-<span id="L18"><span class="lineNum">      18</span>                 :             : #define qCritical() qCCritical(logMetadata)</span>
-<span id="L19"><span class="lineNum">      19</span>                 :             : </span>
-<span id="L20"><span class="lineNum">      20</span>                 :             : namespace Remus {</span>
-<span id="L21"><span class="lineNum">      21</span>                 :             : </span>
-<span id="L22"><span class="lineNum">      22</span>                 :<span class="tlaGNC">           2 : HasheousProvider::HasheousProvider(QObject *parent)</span></span>
-<span id="L23"><span class="lineNum">      23</span>                 :             :     : MetadataProvider(parent)</span>
-<span id="L24"><span class="lineNum">      24</span>   [<span class="tlaGBC" title="Branch 0 was taken 2 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaUNC" title="Branch 2 was not taken"> - </span><span class="tlaGBC" title="Branch 3 was taken 2 times"> + </span> :<span class="tlaGNC">           2 :     , m_network(new QNetworkAccessManager(this))</span></span>
-<span class="lineNum">        </span>          <span class="tlaUNC" title="Branch 4 was not taken"> - </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span>]
-<span id="L25"><span class="lineNum">      25</span>   [<span class="tlaGBC" title="Branch 0 was taken 2 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 2 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">           4 :     , m_rateLimiter(new RateLimiter(this))</span></span>
-<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 4 was taken 2 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span><span class="tlaUNC" title="Branch 6 was not taken"> - </span><span class="tlaGBC" title="Branch 7 was taken 2 times"> + </span><span class="tlaUNC" title="Branch 8 was not taken"> - </span> 
-<span class="lineNum">        </span>             <span class="tlaUNC" title="Branch 9 was not taken"> - </span>]
-<span id="L26"><span class="lineNum">      26</span>                 :             : {</span>
-<span id="L27"><span class="lineNum">      27</span>         [<span class="tlaGBC" title="Branch 0 was taken 2 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           2 :     m_rateLimiter-&gt;setInterval(1000); // 1 req/second (conservative)</span></span>
-<span id="L28"><span class="lineNum">      28</span>   [<span class="tlaGBC" title="Branch 0 was taken 2 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 2 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">           4 :     qInfo() &lt;&lt; &quot;Hasheous provider initialized (no auth required)&quot;;</span></span>
-<span class="lineNum">        </span>    <span class="tlaGBC" title="Branch 4 was taken 2 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span><span class="tlaGBC" title="Branch 6 was taken 2 times"> + </span><span class="tlaGBC" title="Branch 7 was taken 2 times"> + </span>]
-<span id="L29"><span class="lineNum">      29</span>                 :<span class="tlaGNC">           2 : }</span></span>
-<span id="L30"><span class="lineNum">      30</span>                 :             : </span>
-<span id="L31"><span class="lineNum">      31</span>                 :<span class="tlaUNC">           0 : QString HasheousProvider::detectHashType(const QString &amp;hash) const</span></span>
-<span id="L32"><span class="lineNum">      32</span>                 :             : {</span>
-<span id="L33"><span class="lineNum">      33</span>                 :             :     // Hasheous supports MD5 (32 chars) and SHA1 (40 chars)</span>
-<span id="L34"><span class="lineNum">      34</span>                 :             :     // Use HashAlgorithms utility for consistent hash detection</span>
-<span id="L35"><span class="lineNum">      35</span>                 :<span class="tlaUNC">           0 :     return Constants::HashAlgorithms::detectFromLength(hash.length());</span></span>
-<span id="L36"><span class="lineNum">      36</span>                 :             : }</span>
-<span id="L37"><span class="lineNum">      37</span>                 :             : </span>
-<span id="L38"><span class="lineNum">      38</span>                 :<span class="tlaUNC">           0 : QJsonObject HasheousProvider::makeRequest(const QString &amp;endpoint, const QUrlQuery &amp;params)</span></span>
-<span id="L39"><span class="lineNum">      39</span>                 :             : {</span>
-<span id="L40"><span class="lineNum">      40</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC">           0 :     m_rateLimiter-&gt;waitIfNeeded();</span></span>
-<span id="L41"><span class="lineNum">      41</span>                 :             :     </span>
-<span id="L42"><span class="lineNum">      42</span>   [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span><span class="tlaUNC" title="Branch 2 was not executed"> # </span><span class="tlaUNC" title="Branch 3 was not executed"> # </span> :<span class="tlaUNC">           0 :     QUrl url(QString(API_BASE) + endpoint);</span></span>
-<span class="lineNum">        </span>          <span class="tlaUNC" title="Branch 4 was not executed"> # </span><span class="tlaUNC" title="Branch 5 was not executed"> # </span>]
-<span id="L43"><span class="lineNum">      43</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC">           0 :     url.setQuery(params);</span></span>
-<span id="L44"><span class="lineNum">      44</span>                 :             :     </span>
-<span id="L45"><span class="lineNum">      45</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC">           0 :     QNetworkRequest request(url);</span></span>
-<span id="L46"><span class="lineNum">      46</span>   [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span><span class="tlaUNC" title="Branch 2 was not executed"> # </span><span class="tlaUNC" title="Branch 3 was not executed"> # </span>]:<span class="tlaUNC">           0 :     request.setHeader(QNetworkRequest::UserAgentHeader, &quot;Remus/1.0&quot;);</span></span>
-<span id="L47"><span class="lineNum">      47</span>                 :             :     </span>
-<span id="L48"><span class="lineNum">      48</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC">           0 :     QNetworkReply *reply = m_network-&gt;get(request);</span></span>
-<span id="L49"><span class="lineNum">      49</span>                 :             :     </span>
-<span id="L50"><span class="lineNum">      50</span>                 :             :     // Synchronous wait for response</span>
-<span id="L51"><span class="lineNum">      51</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC">           0 :     QEventLoop loop;</span></span>
-<span id="L52"><span class="lineNum">      52</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC">           0 :     connect(reply, &amp;QNetworkReply::finished, &amp;loop, &amp;QEventLoop::quit);</span></span>
-<span id="L53"><span class="lineNum">      53</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC">           0 :     loop.exec();</span></span>
-<span id="L54"><span class="lineNum">      54</span>                 :             :     </span>
-<span id="L55"><span class="lineNum">      55</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC">           0 :     QJsonObject result;</span></span>
-<span id="L56"><span class="lineNum">      56</span>                 :             :     </span>
-<span id="L57"><span class="lineNum">      57</span>   [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span><span class="tlaUNC" title="Branch 2 was not executed"> # </span><span class="tlaUNC" title="Branch 3 was not executed"> # </span>]:<span class="tlaUNC">           0 :     if (reply-&gt;error() == QNetworkReply::NoError) {</span></span>
-<span id="L58"><span class="lineNum">      58</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC">           0 :         QByteArray data = reply-&gt;readAll();</span></span>
-<span id="L59"><span class="lineNum">      59</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC">           0 :         QJsonDocument doc = QJsonDocument::fromJson(data);</span></span>
-<span id="L60"><span class="lineNum">      60</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC">           0 :         result = doc.object();</span></span>
-<span id="L61"><span class="lineNum">      61</span>                 :<span class="tlaUNC">           0 :     } else {</span></span>
-<span id="L62"><span class="lineNum">      62</span>   [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span><span class="tlaUNC" title="Branch 2 was not executed"> # </span><span class="tlaUNC" title="Branch 3 was not executed"> # </span> :<span class="tlaUNC">           0 :         qWarning() &lt;&lt; &quot;Hasheous API error:&quot; &lt;&lt; reply-&gt;errorString();</span></span>
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 4 was not executed"> # </span><span class="tlaUNC" title="Branch 5 was not executed"> # </span><span class="tlaUNC" title="Branch 6 was not executed"> # </span><span class="tlaUNC" title="Branch 7 was not executed"> # </span><span class="tlaUNC" title="Branch 8 was not executed"> # </span> 
-<span class="lineNum">        </span>       <span class="tlaUNC" title="Branch 9 was not executed"> # </span><span class="tlaUNC" title="Branch 10 was not executed"> # </span><span class="tlaUNC" title="Branch 11 was not executed"> # </span>]
-<span id="L63"><span class="lineNum">      63</span>   [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span><span class="tlaUNC" title="Branch 2 was not executed"> # </span><span class="tlaUNC" title="Branch 3 was not executed"> # </span> :<span class="tlaUNC">           0 :         emit errorOccurred(&quot;Hasheous API error: &quot; + reply-&gt;errorString());</span></span>
-<span class="lineNum">        </span>          <span class="tlaUNC" title="Branch 4 was not executed"> # </span><span class="tlaUNC" title="Branch 5 was not executed"> # </span>]
-<span id="L64"><span class="lineNum">      64</span>                 :             :     }</span>
-<span id="L65"><span class="lineNum">      65</span>                 :             :     </span>
-<span id="L66"><span class="lineNum">      66</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC">           0 :     reply-&gt;deleteLater();</span></span>
-<span id="L67"><span class="lineNum">      67</span>                 :<span class="tlaUNC">           0 :     return result;</span></span>
-<span id="L68"><span class="lineNum">      68</span>                 :<span class="tlaUNC">           0 : }</span></span>
-<span id="L69"><span class="lineNum">      69</span>                 :             : </span>
-<span id="L70"><span class="lineNum">      70</span>                 :<span class="tlaUNC">           0 : GameMetadata HasheousProvider::parseGameJson(const QJsonObject &amp;json) const</span></span>
-<span id="L71"><span class="lineNum">      71</span>                 :             : {</span>
-<span id="L72"><span class="lineNum">      72</span>                 :<span class="tlaUNC">           0 :     GameMetadata metadata;</span></span>
-<span id="L73"><span class="lineNum">      73</span>                 :             :     </span>
-<span id="L74"><span class="lineNum">      74</span>   [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span><span class="tlaUNC" title="Branch 2 was not executed"> # </span><span class="tlaUNC" title="Branch 3 was not executed"> # </span> :<span class="tlaUNC">           0 :     if (json.isEmpty() || !json.contains(&quot;data&quot;)) {</span></span>
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 4 was not executed"> # </span><span class="tlaUNC" title="Branch 5 was not executed"> # </span><span class="tlaUNC" title="Branch 6 was not executed"> # </span><span class="tlaUNC" title="Branch 7 was not executed"> # </span><span class="tlaUNC" title="Branch 8 was not executed"> # </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 9 was not executed"> # </span><span class="tlaUNC" title="Branch 10 was not executed"> # </span><span class="tlaUNC" title="Branch 11 was not executed"> # </span><span class="tlaUNC" title="Branch 12 was not executed"> # </span><span class="tlaUNC" title="Branch 13 was not executed"> # </span> 
-<span class="lineNum">        </span>          <span class="tlaUNC" title="Branch 14 was not executed"> # </span><span class="tlaUNC" title="Branch 15 was not executed"> # </span>]
-<span id="L75"><span class="lineNum">      75</span>                 :<span class="tlaUNC">           0 :         return metadata;</span></span>
-<span id="L76"><span class="lineNum">      76</span>                 :             :     }</span>
-<span id="L77"><span class="lineNum">      77</span>                 :             :     </span>
-<span id="L78"><span class="lineNum">      78</span>   [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span><span class="tlaUNC" title="Branch 2 was not executed"> # </span><span class="tlaUNC" title="Branch 3 was not executed"> # </span> :<span class="tlaUNC">           0 :     QJsonObject data = json[&quot;data&quot;].toObject();</span></span>
-<span class="lineNum">        </span>          <span class="tlaUNC" title="Branch 4 was not executed"> # </span><span class="tlaUNC" title="Branch 5 was not executed"> # </span>]
-<span id="L79"><span class="lineNum">      79</span>                 :             :     </span>
-<span id="L80"><span class="lineNum">      80</span>                 :             :     // Basic info (proxied from IGDB)</span>
-<span id="L81"><span class="lineNum">      81</span>   [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span><span class="tlaUNC" title="Branch 2 was not executed"> # </span><span class="tlaUNC" title="Branch 3 was not executed"> # </span> :<span class="tlaUNC">           0 :     metadata.title = data[&quot;name&quot;].toString();</span></span>
-<span class="lineNum">        </span>          <span class="tlaUNC" title="Branch 4 was not executed"> # </span><span class="tlaUNC" title="Branch 5 was not executed"> # </span>]
-<span id="L82"><span class="lineNum">      82</span>   [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span><span class="tlaUNC" title="Branch 2 was not executed"> # </span><span class="tlaUNC" title="Branch 3 was not executed"> # </span> :<span class="tlaUNC">           0 :     metadata.description = data[&quot;summary&quot;].toString();</span></span>
-<span class="lineNum">        </span>          <span class="tlaUNC" title="Branch 4 was not executed"> # </span><span class="tlaUNC" title="Branch 5 was not executed"> # </span>]
-<span id="L83"><span class="lineNum">      83</span>   [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span><span class="tlaUNC" title="Branch 2 was not executed"> # </span><span class="tlaUNC" title="Branch 3 was not executed"> # </span> :<span class="tlaUNC">           0 :     metadata.releaseDate = data[&quot;first_release_date&quot;].toString();</span></span>
-<span class="lineNum">        </span>          <span class="tlaUNC" title="Branch 4 was not executed"> # </span><span class="tlaUNC" title="Branch 5 was not executed"> # </span>]
-<span id="L84"><span class="lineNum">      84</span>                 :             :     </span>
-<span id="L85"><span class="lineNum">      85</span>                 :             :     // Genres (array)</span>
-<span id="L86"><span class="lineNum">      86</span>   [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span><span class="tlaUNC" title="Branch 2 was not executed"> # </span><span class="tlaUNC" title="Branch 3 was not executed"> # </span> :<span class="tlaUNC">           0 :     QJsonArray genresArray = data[&quot;genres&quot;].toArray();</span></span>
-<span class="lineNum">        </span>          <span class="tlaUNC" title="Branch 4 was not executed"> # </span><span class="tlaUNC" title="Branch 5 was not executed"> # </span>]
-<span id="L87"><span class="lineNum">      87</span>   [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span><span class="tlaUNC" title="Branch 2 was not executed"> # </span><span class="tlaUNC" title="Branch 3 was not executed"> # </span> :<span class="tlaUNC">           0 :     for (const QJsonValue &amp;genre : genresArray) {</span></span>
-<span class="lineNum">        </span>    <span class="tlaUNC" title="Branch 4 was not executed"> # </span><span class="tlaUNC" title="Branch 5 was not executed"> # </span><span class="tlaUNC" title="Branch 6 was not executed"> # </span><span class="tlaUNC" title="Branch 7 was not executed"> # </span>]
-<span id="L88"><span class="lineNum">      88</span>   [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span><span class="tlaUNC" title="Branch 2 was not executed"> # </span><span class="tlaUNC" title="Branch 3 was not executed"> # </span>]:<span class="tlaUNC">           0 :         metadata.genres.append(genre.toString());</span></span>
-<span id="L89"><span class="lineNum">      89</span>                 :<span class="tlaUNC">           0 :     }</span></span>
-<span id="L90"><span class="lineNum">      90</span>                 :             :     </span>
-<span id="L91"><span class="lineNum">      91</span>                 :             :     // Rating (IGDB uses 0-100 scale, convert to 0-10)</span>
-<span id="L92"><span class="lineNum">      92</span>   [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span><span class="tlaUNC" title="Branch 2 was not executed"> # </span><span class="tlaUNC" title="Branch 3 was not executed"> # </span> :<span class="tlaUNC">           0 :     if (data.contains(&quot;aggregated_rating&quot;)) {</span></span>
-<span class="lineNum">        </span>          <span class="tlaUNC" title="Branch 4 was not executed"> # </span><span class="tlaUNC" title="Branch 5 was not executed"> # </span>]
-<span id="L93"><span class="lineNum">      93</span>   [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span><span class="tlaUNC" title="Branch 2 was not executed"> # </span><span class="tlaUNC" title="Branch 3 was not executed"> # </span>]:<span class="tlaUNC">           0 :         metadata.rating = data[&quot;aggregated_rating&quot;].toDouble() / 10.0;</span></span>
-<span id="L94"><span class="lineNum">      94</span>                 :             :     }</span>
-<span id="L95"><span class="lineNum">      95</span>                 :             :     </span>
-<span id="L96"><span class="lineNum">      96</span>                 :             :     // Cover art URL</span>
-<span id="L97"><span class="lineNum">      97</span>   [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span><span class="tlaUNC" title="Branch 2 was not executed"> # </span><span class="tlaUNC" title="Branch 3 was not executed"> # </span> :<span class="tlaUNC">           0 :     if (data.contains(&quot;cover&quot;)) {</span></span>
-<span class="lineNum">        </span>          <span class="tlaUNC" title="Branch 4 was not executed"> # </span><span class="tlaUNC" title="Branch 5 was not executed"> # </span>]
-<span id="L98"><span class="lineNum">      98</span>   [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span><span class="tlaUNC" title="Branch 2 was not executed"> # </span><span class="tlaUNC" title="Branch 3 was not executed"> # </span> :<span class="tlaUNC">           0 :         QJsonObject cover = data[&quot;cover&quot;].toObject();</span></span>
-<span class="lineNum">        </span>          <span class="tlaUNC" title="Branch 4 was not executed"> # </span><span class="tlaUNC" title="Branch 5 was not executed"> # </span>]
-<span id="L99"><span class="lineNum">      99</span>   [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span><span class="tlaUNC" title="Branch 2 was not executed"> # </span><span class="tlaUNC" title="Branch 3 was not executed"> # </span> :<span class="tlaUNC">           0 :         QString coverUrl = cover[&quot;url&quot;].toString();</span></span>
-<span class="lineNum">        </span>          <span class="tlaUNC" title="Branch 4 was not executed"> # </span><span class="tlaUNC" title="Branch 5 was not executed"> # </span>]
-<span id="L100"><span class="lineNum">     100</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC">           0 :         if (!coverUrl.isEmpty()) {</span></span>
-<span id="L101"><span class="lineNum">     101</span>                 :             :             // Hasheous provides full IGDB image URLs</span>
-<span id="L102"><span class="lineNum">     102</span>                 :<span class="tlaUNC">           0 :             metadata.boxArtUrl = coverUrl;</span></span>
-<span id="L103"><span class="lineNum">     103</span>                 :             :         }</span>
-<span id="L104"><span class="lineNum">     104</span>                 :<span class="tlaUNC">           0 :     }</span></span>
-<span id="L105"><span class="lineNum">     105</span>                 :             :     </span>
-<span id="L106"><span class="lineNum">     106</span>                 :             :     // RetroAchievements ID (if available)</span>
-<span id="L107"><span class="lineNum">     107</span>   [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span><span class="tlaUNC" title="Branch 2 was not executed"> # </span><span class="tlaUNC" title="Branch 3 was not executed"> # </span> :<span class="tlaUNC">           0 :     if (data.contains(&quot;retroachievements_id&quot;)) {</span></span>
-<span class="lineNum">        </span>          <span class="tlaUNC" title="Branch 4 was not executed"> # </span><span class="tlaUNC" title="Branch 5 was not executed"> # </span>]
-<span id="L108"><span class="lineNum">     108</span>   [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span><span class="tlaUNC" title="Branch 2 was not executed"> # </span><span class="tlaUNC" title="Branch 3 was not executed"> # </span> :<span class="tlaUNC">           0 :         metadata.externalIds[&quot;retroachievements&quot;] = data[&quot;retroachievements_id&quot;].toString();</span></span>
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 4 was not executed"> # </span><span class="tlaUNC" title="Branch 5 was not executed"> # </span><span class="tlaUNC" title="Branch 6 was not executed"> # </span><span class="tlaUNC" title="Branch 7 was not executed"> # </span><span class="tlaUNC" title="Branch 8 was not executed"> # </span> 
-<span class="lineNum">        </span>             <span class="tlaUNC" title="Branch 9 was not executed"> # </span>]
-<span id="L109"><span class="lineNum">     109</span>                 :             :     }</span>
-<span id="L110"><span class="lineNum">     110</span>                 :             :     </span>
-<span id="L111"><span class="lineNum">     111</span>                 :             :     // IGDB ID</span>
-<span id="L112"><span class="lineNum">     112</span>   [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span><span class="tlaUNC" title="Branch 2 was not executed"> # </span><span class="tlaUNC" title="Branch 3 was not executed"> # </span> :<span class="tlaUNC">           0 :     if (data.contains(&quot;igdb_id&quot;)) {</span></span>
-<span class="lineNum">        </span>          <span class="tlaUNC" title="Branch 4 was not executed"> # </span><span class="tlaUNC" title="Branch 5 was not executed"> # </span>]
-<span id="L113"><span class="lineNum">     113</span>   [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span><span class="tlaUNC" title="Branch 2 was not executed"> # </span><span class="tlaUNC" title="Branch 3 was not executed"> # </span> :<span class="tlaUNC">           0 :         metadata.externalIds[&quot;igdb&quot;] = QString::number(data[&quot;igdb_id&quot;].toInt());</span></span>
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 4 was not executed"> # </span><span class="tlaUNC" title="Branch 5 was not executed"> # </span><span class="tlaUNC" title="Branch 6 was not executed"> # </span><span class="tlaUNC" title="Branch 7 was not executed"> # </span><span class="tlaUNC" title="Branch 8 was not executed"> # </span> 
-<span class="lineNum">        </span>             <span class="tlaUNC" title="Branch 9 was not executed"> # </span>]
-<span id="L114"><span class="lineNum">     114</span>                 :             :     }</span>
-<span id="L115"><span class="lineNum">     115</span>                 :             :     </span>
-<span id="L116"><span class="lineNum">     116</span>                 :<span class="tlaUNC">           0 :     return metadata;</span></span>
-<span id="L117"><span class="lineNum">     117</span>                 :<span class="tlaUNC">           0 : }</span></span>
-<span id="L118"><span class="lineNum">     118</span>                 :             : </span>
-<span id="L119"><span class="lineNum">     119</span>                 :<span class="tlaUNC">           0 : QList&lt;SearchResult&gt; HasheousProvider::searchByName(const QString &amp;title,</span></span>
-<span id="L120"><span class="lineNum">     120</span>                 :             :                                                                    const QString &amp;system,</span>
-<span id="L121"><span class="lineNum">     121</span>                 :             :                                                                    const QString &amp;region)</span>
-<span id="L122"><span class="lineNum">     122</span>                 :             : {</span>
-<span id="L123"><span class="lineNum">     123</span>                 :             :     Q_UNUSED(title);</span>
-<span id="L124"><span class="lineNum">     124</span>                 :             :     Q_UNUSED(system);</span>
-<span id="L125"><span class="lineNum">     125</span>                 :             :     Q_UNUSED(region);</span>
-<span id="L126"><span class="lineNum">     126</span>                 :             :     </span>
-<span id="L127"><span class="lineNum">     127</span>                 :             :     // Hasheous doesn't support name-based search</span>
-<span id="L128"><span class="lineNum">     128</span>   [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span><span class="tlaUNC" title="Branch 2 was not executed"> # </span><span class="tlaUNC" title="Branch 3 was not executed"> # </span> :<span class="tlaUNC">           0 :     qWarning() &lt;&lt; &quot;Hasheous does not support name-based search, use hash matching instead&quot;;</span></span>
-<span class="lineNum">        </span>    <span class="tlaUNC" title="Branch 4 was not executed"> # </span><span class="tlaUNC" title="Branch 5 was not executed"> # </span><span class="tlaUNC" title="Branch 6 was not executed"> # </span><span class="tlaUNC" title="Branch 7 was not executed"> # </span>]
-<span id="L129"><span class="lineNum">     129</span>   [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span><span class="tlaUNC" title="Branch 2 was not executed"> # </span><span class="tlaUNC" title="Branch 3 was not executed"> # </span>]:<span class="tlaUNC">           0 :     emit errorOccurred(&quot;Hasheous only supports hash-based matching&quot;);</span></span>
-<span id="L130"><span class="lineNum">     130</span>                 :             :     </span>
-<span id="L131"><span class="lineNum">     131</span>                 :<span class="tlaUNC">           0 :     return QList&lt;SearchResult&gt;();</span></span>
-<span id="L132"><span class="lineNum">     132</span>                 :             : }</span>
-<span id="L133"><span class="lineNum">     133</span>                 :             : </span>
-<span id="L134"><span class="lineNum">     134</span>                 :<span class="tlaUNC">           0 : GameMetadata HasheousProvider::getByHash(const QString &amp;hash, const QString &amp;system)</span></span>
-<span id="L135"><span class="lineNum">     135</span>                 :             : {</span>
-<span id="L136"><span class="lineNum">     136</span>                 :             :     Q_UNUSED(system); // Hasheous uses hash only, system is inferred</span>
-<span id="L137"><span class="lineNum">     137</span>                 :             :     </span>
-<span id="L138"><span class="lineNum">     138</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC">           0 :     QString hashType = detectHashType(hash);</span></span>
-<span id="L139"><span class="lineNum">     139</span>                 :             :     </span>
-<span id="L140"><span class="lineNum">     140</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC">           0 :     if (hashType.isEmpty()) {</span></span>
-<span id="L141"><span class="lineNum">     141</span>   [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span><span class="tlaUNC" title="Branch 2 was not executed"> # </span><span class="tlaUNC" title="Branch 3 was not executed"> # </span> :<span class="tlaUNC">           0 :         qWarning() &lt;&lt; &quot;Hasheous: Invalid hash length, expected MD5 (32) or SHA1 (40), got:&quot; &lt;&lt; hash.length();</span></span>
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 4 was not executed"> # </span><span class="tlaUNC" title="Branch 5 was not executed"> # </span><span class="tlaUNC" title="Branch 6 was not executed"> # </span><span class="tlaUNC" title="Branch 7 was not executed"> # </span><span class="tlaUNC" title="Branch 8 was not executed"> # </span> 
-<span class="lineNum">        </span>             <span class="tlaUNC" title="Branch 9 was not executed"> # </span>]
-<span id="L142"><span class="lineNum">     142</span>   [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span><span class="tlaUNC" title="Branch 2 was not executed"> # </span><span class="tlaUNC" title="Branch 3 was not executed"> # </span>]:<span class="tlaUNC">           0 :         emit errorOccurred(&quot;Invalid hash length for Hasheous&quot;);</span></span>
-<span id="L143"><span class="lineNum">     143</span>                 :<span class="tlaUNC">           0 :         return GameMetadata();</span></span>
-<span id="L144"><span class="lineNum">     144</span>                 :             :     }</span>
-<span id="L145"><span class="lineNum">     145</span>                 :             :     </span>
-<span id="L146"><span class="lineNum">     146</span>   [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span><span class="tlaUNC" title="Branch 2 was not executed"> # </span><span class="tlaUNC" title="Branch 3 was not executed"> # </span> :<span class="tlaUNC">           0 :     qInfo() &lt;&lt; &quot;Hasheous: Looking up hash&quot; &lt;&lt; hash &lt;&lt; &quot;(&quot; &lt;&lt; hashType &lt;&lt; &quot;)&quot;;</span></span>
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 4 was not executed"> # </span><span class="tlaUNC" title="Branch 5 was not executed"> # </span><span class="tlaUNC" title="Branch 6 was not executed"> # </span><span class="tlaUNC" title="Branch 7 was not executed"> # </span><span class="tlaUNC" title="Branch 8 was not executed"> # </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 9 was not executed"> # </span><span class="tlaUNC" title="Branch 10 was not executed"> # </span><span class="tlaUNC" title="Branch 11 was not executed"> # </span><span class="tlaUNC" title="Branch 12 was not executed"> # </span><span class="tlaUNC" title="Branch 13 was not executed"> # </span> 
-<span class="lineNum">        </span>          <span class="tlaUNC" title="Branch 14 was not executed"> # </span><span class="tlaUNC" title="Branch 15 was not executed"> # </span>]
-<span id="L147"><span class="lineNum">     147</span>                 :             :     </span>
-<span id="L148"><span class="lineNum">     148</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC">           0 :     QUrlQuery params;</span></span>
-<span id="L149"><span class="lineNum">     149</span>   [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span><span class="tlaUNC" title="Branch 2 was not executed"> # </span><span class="tlaUNC" title="Branch 3 was not executed"> # </span> :<span class="tlaUNC">           0 :     params.addQueryItem(&quot;hash&quot;, hash.toLower());</span></span>
-<span class="lineNum">        </span>          <span class="tlaUNC" title="Branch 4 was not executed"> # </span><span class="tlaUNC" title="Branch 5 was not executed"> # </span>]
-<span id="L150"><span class="lineNum">     150</span>   [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span><span class="tlaUNC" title="Branch 2 was not executed"> # </span><span class="tlaUNC" title="Branch 3 was not executed"> # </span>]:<span class="tlaUNC">           0 :     params.addQueryItem(&quot;hash_type&quot;, hashType);</span></span>
-<span id="L151"><span class="lineNum">     151</span>                 :             :     </span>
-<span id="L152"><span class="lineNum">     152</span>   [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span><span class="tlaUNC" title="Branch 2 was not executed"> # </span><span class="tlaUNC" title="Branch 3 was not executed"> # </span>]:<span class="tlaUNC">           0 :     QJsonObject response = makeRequest(&quot;/lookup&quot;, params);</span></span>
-<span id="L153"><span class="lineNum">     153</span>                 :             :     </span>
-<span id="L154"><span class="lineNum">     154</span>   [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span><span class="tlaUNC" title="Branch 2 was not executed"> # </span><span class="tlaUNC" title="Branch 3 was not executed"> # </span> :<span class="tlaUNC">           0 :     if (!response.isEmpty() &amp;&amp; response.contains(&quot;data&quot;)) {</span></span>
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 4 was not executed"> # </span><span class="tlaUNC" title="Branch 5 was not executed"> # </span><span class="tlaUNC" title="Branch 6 was not executed"> # </span><span class="tlaUNC" title="Branch 7 was not executed"> # </span><span class="tlaUNC" title="Branch 8 was not executed"> # </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 9 was not executed"> # </span><span class="tlaUNC" title="Branch 10 was not executed"> # </span><span class="tlaUNC" title="Branch 11 was not executed"> # </span><span class="tlaUNC" title="Branch 12 was not executed"> # </span><span class="tlaUNC" title="Branch 13 was not executed"> # </span> 
-<span class="lineNum">        </span>          <span class="tlaUNC" title="Branch 14 was not executed"> # </span><span class="tlaUNC" title="Branch 15 was not executed"> # </span>]
-<span id="L155"><span class="lineNum">     155</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC">           0 :         GameMetadata metadata = parseGameJson(response);</span></span>
-<span id="L156"><span class="lineNum">     156</span>                 :             :         </span>
-<span id="L157"><span class="lineNum">     157</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC">           0 :         if (!metadata.title.isEmpty()) {</span></span>
-<span id="L158"><span class="lineNum">     158</span>   [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span><span class="tlaUNC" title="Branch 2 was not executed"> # </span><span class="tlaUNC" title="Branch 3 was not executed"> # </span> :<span class="tlaUNC">           0 :             qInfo() &lt;&lt; &quot;Hasheous: Found match:&quot; &lt;&lt; metadata.title;</span></span>
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 4 was not executed"> # </span><span class="tlaUNC" title="Branch 5 was not executed"> # </span><span class="tlaUNC" title="Branch 6 was not executed"> # </span><span class="tlaUNC" title="Branch 7 was not executed"> # </span><span class="tlaUNC" title="Branch 8 was not executed"> # </span> 
-<span class="lineNum">        </span>             <span class="tlaUNC" title="Branch 9 was not executed"> # </span>]
-<span id="L159"><span class="lineNum">     159</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC">           0 :             emit metadataFetched(metadata);</span></span>
-<span id="L160"><span class="lineNum">     160</span>                 :<span class="tlaUNC">           0 :             return metadata;</span></span>
-<span id="L161"><span class="lineNum">     161</span>                 :             :         }</span>
-<span id="L162"><span class="lineNum">     162</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC">           0 :     }</span></span>
-<span id="L163"><span class="lineNum">     163</span>                 :             :     </span>
-<span id="L164"><span class="lineNum">     164</span>   [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span><span class="tlaUNC" title="Branch 2 was not executed"> # </span><span class="tlaUNC" title="Branch 3 was not executed"> # </span> :<span class="tlaUNC">           0 :     qInfo() &lt;&lt; &quot;Hasheous: No match found for hash:&quot; &lt;&lt; hash;</span></span>
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 4 was not executed"> # </span><span class="tlaUNC" title="Branch 5 was not executed"> # </span><span class="tlaUNC" title="Branch 6 was not executed"> # </span><span class="tlaUNC" title="Branch 7 was not executed"> # </span><span class="tlaUNC" title="Branch 8 was not executed"> # </span> 
-<span class="lineNum">        </span>             <span class="tlaUNC" title="Branch 9 was not executed"> # </span>]
-<span id="L165"><span class="lineNum">     165</span>                 :<span class="tlaUNC">           0 :     return GameMetadata();</span></span>
-<span id="L166"><span class="lineNum">     166</span>                 :<span class="tlaUNC">           0 : }</span></span>
-<span id="L167"><span class="lineNum">     167</span>                 :             : </span>
-<span id="L168"><span class="lineNum">     168</span>                 :<span class="tlaGNC">           2 : GameMetadata HasheousProvider::getById(const QString &amp;id)</span></span>
-<span id="L169"><span class="lineNum">     169</span>                 :             : {</span>
-<span id="L170"><span class="lineNum">     170</span>                 :             :     Q_UNUSED(id);</span>
-<span id="L171"><span class="lineNum">     171</span>                 :             :     </span>
-<span id="L172"><span class="lineNum">     172</span>                 :             :     // Hasheous doesn't support ID-based lookup (it uses hashes)</span>
-<span id="L173"><span class="lineNum">     173</span>   [<span class="tlaGBC" title="Branch 0 was taken 2 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 2 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">           4 :     qWarning() &lt;&lt; &quot;Hasheous does not support ID-based lookup&quot;;</span></span>
-<span class="lineNum">        </span>    <span class="tlaGBC" title="Branch 4 was taken 2 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span><span class="tlaGBC" title="Branch 6 was taken 2 times"> + </span><span class="tlaGBC" title="Branch 7 was taken 2 times"> + </span>]
-<span id="L174"><span class="lineNum">     174</span>   [<span class="tlaGBC" title="Branch 0 was taken 2 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 2 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">           2 :     emit errorOccurred(&quot;Hasheous only supports hash-based matching&quot;);</span></span>
-<span id="L175"><span class="lineNum">     175</span>                 :             :     </span>
-<span id="L176"><span class="lineNum">     176</span>                 :<span class="tlaGNC">           2 :     return GameMetadata();</span></span>
-<span id="L177"><span class="lineNum">     177</span>                 :             : }</span>
-<span id="L178"><span class="lineNum">     178</span>                 :             : </span>
-<span id="L179"><span class="lineNum">     179</span>                 :<span class="tlaUNC">           0 : ArtworkUrls HasheousProvider::getArtwork(const QString &amp;id)</span></span>
-<span id="L180"><span class="lineNum">     180</span>                 :             : {</span>
-<span id="L181"><span class="lineNum">     181</span>                 :             :     Q_UNUSED(id);</span>
-<span id="L182"><span class="lineNum">     182</span>                 :             :     </span>
-<span id="L183"><span class="lineNum">     183</span>                 :             :     // Artwork is included in the hash lookup response</span>
-<span id="L184"><span class="lineNum">     184</span>   [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span><span class="tlaUNC" title="Branch 2 was not executed"> # </span><span class="tlaUNC" title="Branch 3 was not executed"> # </span> :<span class="tlaUNC">           0 :     qWarning() &lt;&lt; &quot;Hasheous artwork is included in hash lookup, use getByHash() instead&quot;;</span></span>
-<span class="lineNum">        </span>    <span class="tlaUNC" title="Branch 4 was not executed"> # </span><span class="tlaUNC" title="Branch 5 was not executed"> # </span><span class="tlaUNC" title="Branch 6 was not executed"> # </span><span class="tlaUNC" title="Branch 7 was not executed"> # </span>]
-<span id="L185"><span class="lineNum">     185</span>                 :             :     </span>
-<span id="L186"><span class="lineNum">     186</span>                 :<span class="tlaUNC">           0 :     return ArtworkUrls();</span></span>
-<span id="L187"><span class="lineNum">     187</span>                 :             : }</span>
-<span id="L188"><span class="lineNum">     188</span>                 :             : </span>
-<span id="L189"><span class="lineNum">     189</span>                 :             : } // namespace Remus</span>
+<span id="L1"><span class="lineNum">       1</span>              : #include &quot;hasheous_provider.h&quot;</span>
+<span id="L2"><span class="lineNum">       2</span>              : #include &quot;../core/constants/providers.h&quot;</span>
+<span id="L3"><span class="lineNum">       3</span>              : #include &quot;../core/constants/settings.h&quot;</span>
+<span id="L4"><span class="lineNum">       4</span>              : #include &quot;../core/system_resolver.h&quot;</span>
+<span id="L5"><span class="lineNum">       5</span>              : #include &quot;../core/constants/systems.h&quot;</span>
+<span id="L6"><span class="lineNum">       6</span>              : #include &lt;QNetworkRequest&gt;</span>
+<span id="L7"><span class="lineNum">       7</span>              : #include &lt;QNetworkReply&gt;</span>
+<span id="L8"><span class="lineNum">       8</span>              : #include &lt;QUrlQuery&gt;</span>
+<span id="L9"><span class="lineNum">       9</span>              : #include &lt;QJsonDocument&gt;</span>
+<span id="L10"><span class="lineNum">      10</span>              : #include &lt;QJsonArray&gt;</span>
+<span id="L11"><span class="lineNum">      11</span>              : #include &lt;QEventLoop&gt;</span>
+<span id="L12"><span class="lineNum">      12</span>              : #include &lt;QDebug&gt;</span>
+<span id="L13"><span class="lineNum">      13</span>              : #include &lt;QSet&gt;</span>
+<span id="L14"><span class="lineNum">      14</span>              : #include &lt;QTimeZone&gt;</span>
+<span id="L15"><span class="lineNum">      15</span>              : #include &quot;../core/logging_categories.h&quot;</span>
+<span id="L16"><span class="lineNum">      16</span>              : </span>
+<span id="L17"><span class="lineNum">      17</span>              : #undef qDebug</span>
+<span id="L18"><span class="lineNum">      18</span>              : #undef qInfo</span>
+<span id="L19"><span class="lineNum">      19</span>              : #undef qWarning</span>
+<span id="L20"><span class="lineNum">      20</span>              : #undef qCritical</span>
+<span id="L21"><span class="lineNum">      21</span>              : #define qDebug() qCDebug(logMetadata)</span>
+<span id="L22"><span class="lineNum">      22</span> <span class="tlaGNC">           2 : #define qInfo() qCInfo(logMetadata)</span></span>
+<span id="L23"><span class="lineNum">      23</span>              : #define qWarning() qCWarning(logMetadata)</span>
+<span id="L24"><span class="lineNum">      24</span> <span class="tlaGNC">           2 : #define qCritical() qCCritical(logMetadata)</span></span>
+<span id="L25"><span class="lineNum">      25</span> <span class="tlaGNC">           4 : </span></span>
+<span id="L26"><span class="lineNum">      26</span>              : namespace Remus {</span>
+<span id="L27"><span class="lineNum">      27</span> <span class="tlaGNC">           2 : </span></span>
+<span id="L28"><span class="lineNum">      28</span> <span class="tlaGNC">           4 : namespace {</span></span>
+<span id="L29"><span class="lineNum">      29</span> <span class="tlaGNC">           2 : constexpr const char *DEFAULT_CLIENT_API_KEY = &quot;yFCtSh1zpMqwdOx27SB9huyyMPMGqLLXm2GlE71SNtvJk9-wnKEqBNhqiJ7PZcOD&quot;;</span></span>
+<span id="L30"><span class="lineNum">      30</span>              : }</span>
+<span id="L31"><span class="lineNum">      31</span> <span class="tlaUNC">           0 : </span></span>
+<span id="L32"><span class="lineNum">      32</span>              : HasheousProvider::HasheousProvider(QObject *parent)</span>
+<span id="L33"><span class="lineNum">      33</span>              :     : MetadataProvider(parent)</span>
+<span id="L34"><span class="lineNum">      34</span>              :     , m_network(new QNetworkAccessManager(this))</span>
+<span id="L35"><span class="lineNum">      35</span> <span class="tlaUNC">           0 :     , m_rateLimiter(new RateLimiter(this))</span></span>
+<span id="L36"><span class="lineNum">      36</span>              : {</span>
+<span id="L37"><span class="lineNum">      37</span>              :     QSettings settings;</span>
+<span id="L38"><span class="lineNum">      38</span> <span class="tlaUNC">           0 :     m_clientApiKey = settings.value(Constants::Settings::Providers::HASHEOUS_CLIENT_API_KEY,</span></span>
+<span id="L39"><span class="lineNum">      39</span>              :                                     QString::fromLatin1(DEFAULT_CLIENT_API_KEY)).toString();</span>
+<span id="L40"><span class="lineNum">      40</span> <span class="tlaUNC">           0 : </span></span>
+<span id="L41"><span class="lineNum">      41</span>              :     m_rateLimiter-&gt;setInterval(1000); // 1 req/second (conservative)</span>
+<span id="L42"><span class="lineNum">      42</span> <span class="tlaUNC">           0 :     qInfo() &lt;&lt; &quot;Hasheous provider initialized (no auth required)&quot;;</span></span>
+<span id="L43"><span class="lineNum">      43</span> <span class="tlaUNC">           0 : }</span></span>
+<span id="L44"><span class="lineNum">      44</span>              : </span>
+<span id="L45"><span class="lineNum">      45</span> <span class="tlaUNC">           0 : QString HasheousProvider::detectHashType(const QString &amp;hash) const</span></span>
+<span id="L46"><span class="lineNum">      46</span> <span class="tlaUNC">           0 : {</span></span>
+<span id="L47"><span class="lineNum">      47</span>              :     return Constants::HashAlgorithms::detectFromLength(hash.trimmed().length());</span>
+<span id="L48"><span class="lineNum">      48</span> <span class="tlaUNC">           0 : }</span></span>
+<span id="L49"><span class="lineNum">      49</span>              : </span>
+<span id="L50"><span class="lineNum">      50</span>              : QJsonObject HasheousProvider::makeRequest(const QString &amp;endpoint, const QUrlQuery &amp;params)</span>
+<span id="L51"><span class="lineNum">      51</span> <span class="tlaUNC">           0 : {</span></span>
+<span id="L52"><span class="lineNum">      52</span> <span class="tlaUNC">           0 :     m_rateLimiter-&gt;waitIfNeeded();</span></span>
+<span id="L53"><span class="lineNum">      53</span> <span class="tlaUNC">           0 :     </span></span>
+<span id="L54"><span class="lineNum">      54</span>              :     QUrl url(QString(API_BASE) + endpoint);</span>
+<span id="L55"><span class="lineNum">      55</span> <span class="tlaUNC">           0 :     url.setQuery(params);</span></span>
+<span id="L56"><span class="lineNum">      56</span>              :     </span>
+<span id="L57"><span class="lineNum">      57</span> <span class="tlaUNC">           0 :     QNetworkRequest request(url);</span></span>
+<span id="L58"><span class="lineNum">      58</span> <span class="tlaUNC">           0 :     request.setHeader(QNetworkRequest::UserAgentHeader, &quot;Remus/1.0&quot;);</span></span>
+<span id="L59"><span class="lineNum">      59</span> <span class="tlaUNC">           0 :     // MetadataProxy endpoints require a client API key</span></span>
+<span id="L60"><span class="lineNum">      60</span> <span class="tlaUNC">           0 :     if (!m_clientApiKey.isEmpty()) {</span></span>
+<span id="L61"><span class="lineNum">      61</span> <span class="tlaUNC">           0 :         request.setRawHeader(&quot;X-Client-API-Key&quot;, m_clientApiKey.toUtf8());</span></span>
+<span id="L62"><span class="lineNum">      62</span> <span class="tlaUNC">           0 :     }</span></span>
+<span id="L63"><span class="lineNum">      63</span> <span class="tlaUNC">           0 :     </span></span>
+<span id="L64"><span class="lineNum">      64</span>              :     QNetworkReply *reply = m_network-&gt;get(request);</span>
+<span id="L65"><span class="lineNum">      65</span>              :     </span>
+<span id="L66"><span class="lineNum">      66</span> <span class="tlaUNC">           0 :     // Synchronous wait for response</span></span>
+<span id="L67"><span class="lineNum">      67</span> <span class="tlaUNC">           0 :     QEventLoop loop;</span></span>
+<span id="L68"><span class="lineNum">      68</span> <span class="tlaUNC">           0 :     connect(reply, &amp;QNetworkReply::finished, &amp;loop, &amp;QEventLoop::quit);</span></span>
+<span id="L69"><span class="lineNum">      69</span>              :     loop.exec();</span>
+<span id="L70"><span class="lineNum">      70</span> <span class="tlaUNC">           0 :     </span></span>
+<span id="L71"><span class="lineNum">      71</span>              :     QJsonObject result;</span>
+<span id="L72"><span class="lineNum">      72</span> <span class="tlaUNC">           0 :     </span></span>
+<span id="L73"><span class="lineNum">      73</span>              :     if (reply-&gt;error() == QNetworkReply::NoError) {</span>
+<span id="L74"><span class="lineNum">      74</span> <span class="tlaUNC">           0 :         QByteArray data = reply-&gt;readAll();</span></span>
+<span id="L75"><span class="lineNum">      75</span> <span class="tlaUNC">           0 :         QJsonDocument doc = QJsonDocument::fromJson(data);</span></span>
+<span id="L76"><span class="lineNum">      76</span>              :         result = doc.object();</span>
+<span id="L77"><span class="lineNum">      77</span>              :     } else {</span>
+<span id="L78"><span class="lineNum">      78</span> <span class="tlaUNC">           0 :         int statusCode = reply-&gt;attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();</span></span>
+<span id="L79"><span class="lineNum">      79</span>              :         if (statusCode == 404) {</span>
+<span id="L80"><span class="lineNum">      80</span>              :             qDebug() &lt;&lt; &quot;Hasheous API 404 (expected miss):&quot; &lt;&lt; url.toString();</span>
+<span id="L81"><span class="lineNum">      81</span> <span class="tlaUNC">           0 :         } else {</span></span>
+<span id="L82"><span class="lineNum">      82</span> <span class="tlaUNC">           0 :             qWarning() &lt;&lt; &quot;Hasheous API error:&quot; &lt;&lt; reply-&gt;errorString()</span></span>
+<span id="L83"><span class="lineNum">      83</span> <span class="tlaUNC">           0 :                         &lt;&lt; &quot;Status:&quot; &lt;&lt; statusCode</span></span>
+<span id="L84"><span class="lineNum">      84</span>              :                         &lt;&lt; &quot;URL:&quot; &lt;&lt; url.toString();</span>
+<span id="L85"><span class="lineNum">      85</span>              :             emit errorOccurred(&quot;Hasheous API error: &quot; + reply-&gt;errorString());</span>
+<span id="L86"><span class="lineNum">      86</span> <span class="tlaUNC">           0 :         }</span></span>
+<span id="L87"><span class="lineNum">      87</span> <span class="tlaUNC">           0 :     }</span></span>
+<span id="L88"><span class="lineNum">      88</span> <span class="tlaUNC">           0 :     </span></span>
+<span id="L89"><span class="lineNum">      89</span> <span class="tlaUNC">           0 :     reply-&gt;deleteLater();</span></span>
+<span id="L90"><span class="lineNum">      90</span>              :     return result;</span>
+<span id="L91"><span class="lineNum">      91</span>              : }</span>
+<span id="L92"><span class="lineNum">      92</span> <span class="tlaUNC">           0 : </span></span>
+<span id="L93"><span class="lineNum">      93</span> <span class="tlaUNC">           0 : QJsonObject HasheousProvider::makePostRequest(const QString &amp;endpoint, const QJsonObject &amp;body, const QUrlQuery &amp;params)</span></span>
+<span id="L94"><span class="lineNum">      94</span>              : {</span>
+<span id="L95"><span class="lineNum">      95</span>              :     m_rateLimiter-&gt;waitIfNeeded();</span>
+<span id="L96"><span class="lineNum">      96</span>              :     </span>
+<span id="L97"><span class="lineNum">      97</span> <span class="tlaUNC">           0 :     QUrl url(QString(API_BASE) + endpoint);</span></span>
+<span id="L98"><span class="lineNum">      98</span> <span class="tlaUNC">           0 :     if (!params.isEmpty()) {</span></span>
+<span id="L99"><span class="lineNum">      99</span> <span class="tlaUNC">           0 :         url.setQuery(params);</span></span>
+<span id="L100"><span class="lineNum">     100</span> <span class="tlaUNC">           0 :     }</span></span>
+<span id="L101"><span class="lineNum">     101</span>              :     </span>
+<span id="L102"><span class="lineNum">     102</span> <span class="tlaUNC">           0 :     QNetworkRequest request(url);</span></span>
+<span id="L103"><span class="lineNum">     103</span>              :     request.setHeader(QNetworkRequest::UserAgentHeader, &quot;Remus/1.0&quot;);</span>
+<span id="L104"><span class="lineNum">     104</span> <span class="tlaUNC">           0 :     request.setHeader(QNetworkRequest::ContentTypeHeader, &quot;application/json&quot;);</span></span>
+<span id="L105"><span class="lineNum">     105</span>              :     </span>
+<span id="L106"><span class="lineNum">     106</span>              :     QByteArray postData = QJsonDocument(body).toJson(QJsonDocument::Compact);</span>
+<span id="L107"><span class="lineNum">     107</span> <span class="tlaUNC">           0 :     QNetworkReply *reply = m_network-&gt;post(request, postData);</span></span>
+<span id="L108"><span class="lineNum">     108</span> <span class="tlaUNC">           0 :     </span></span>
+<span id="L109"><span class="lineNum">     109</span>              :     // Synchronous wait for response</span>
+<span id="L110"><span class="lineNum">     110</span>              :     QEventLoop loop;</span>
+<span id="L111"><span class="lineNum">     111</span>              :     connect(reply, &amp;QNetworkReply::finished, &amp;loop, &amp;QEventLoop::quit);</span>
+<span id="L112"><span class="lineNum">     112</span> <span class="tlaUNC">           0 :     loop.exec();</span></span>
+<span id="L113"><span class="lineNum">     113</span> <span class="tlaUNC">           0 :     </span></span>
+<span id="L114"><span class="lineNum">     114</span>              :     QJsonObject result;</span>
+<span id="L115"><span class="lineNum">     115</span>              :     </span>
+<span id="L116"><span class="lineNum">     116</span> <span class="tlaUNC">           0 :     if (reply-&gt;error() == QNetworkReply::NoError) {</span></span>
+<span id="L117"><span class="lineNum">     117</span> <span class="tlaUNC">           0 :         QByteArray data = reply-&gt;readAll();</span></span>
+<span id="L118"><span class="lineNum">     118</span>              :         QJsonDocument doc = QJsonDocument::fromJson(data);</span>
+<span id="L119"><span class="lineNum">     119</span> <span class="tlaUNC">           0 :         if (doc.isObject()) {</span></span>
+<span id="L120"><span class="lineNum">     120</span>              :             result = doc.object();</span>
+<span id="L121"><span class="lineNum">     121</span>              :         }</span>
+<span id="L122"><span class="lineNum">     122</span>              :     } else {</span>
+<span id="L123"><span class="lineNum">     123</span>              :         int statusCode = reply-&gt;attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();</span>
+<span id="L124"><span class="lineNum">     124</span>              :         if (statusCode == 404) {</span>
+<span id="L125"><span class="lineNum">     125</span>              :             qDebug() &lt;&lt; &quot;Hasheous POST 404 (expected miss):&quot; &lt;&lt; url.toString();</span>
+<span id="L126"><span class="lineNum">     126</span>              :         } else {</span>
+<span id="L127"><span class="lineNum">     127</span>              :             qWarning() &lt;&lt; &quot;Hasheous POST error:&quot; &lt;&lt; reply-&gt;errorString()</span>
+<span id="L128"><span class="lineNum">     128</span> <span class="tlaUNC">           0 :                         &lt;&lt; &quot;Status:&quot; &lt;&lt; statusCode</span></span>
+<span id="L129"><span class="lineNum">     129</span> <span class="tlaUNC">           0 :                         &lt;&lt; &quot;URL:&quot; &lt;&lt; url.toString();</span></span>
+<span id="L130"><span class="lineNum">     130</span>              :             emit errorOccurred(&quot;Hasheous API error: &quot; + reply-&gt;errorString());</span>
+<span id="L131"><span class="lineNum">     131</span> <span class="tlaUNC">           0 :         }</span></span>
+<span id="L132"><span class="lineNum">     132</span>              :     }</span>
+<span id="L133"><span class="lineNum">     133</span>              :     </span>
+<span id="L134"><span class="lineNum">     134</span> <span class="tlaUNC">           0 :     reply-&gt;deleteLater();</span></span>
+<span id="L135"><span class="lineNum">     135</span>              :     return result;</span>
+<span id="L136"><span class="lineNum">     136</span>              : }</span>
+<span id="L137"><span class="lineNum">     137</span>              : </span>
+<span id="L138"><span class="lineNum">     138</span> <span class="tlaUNC">           0 : GameMetadata HasheousProvider::parseGameJson(const QJsonObject &amp;json) const</span></span>
+<span id="L139"><span class="lineNum">     139</span>              : {</span>
+<span id="L140"><span class="lineNum">     140</span> <span class="tlaUNC">           0 :     GameMetadata metadata;</span></span>
+<span id="L141"><span class="lineNum">     141</span> <span class="tlaUNC">           0 :     </span></span>
+<span id="L142"><span class="lineNum">     142</span> <span class="tlaUNC">           0 :     if (json.isEmpty()) {</span></span>
+<span id="L143"><span class="lineNum">     143</span> <span class="tlaUNC">           0 :         return metadata;</span></span>
+<span id="L144"><span class="lineNum">     144</span>              :     }</span>
+<span id="L145"><span class="lineNum">     145</span>              :     </span>
+<span id="L146"><span class="lineNum">     146</span> <span class="tlaUNC">           0 :     // Hasheous response has: id, name, metadata[], signatures[], attributes[]</span></span>
+<span id="L147"><span class="lineNum">     147</span>              :     metadata.title = json[&quot;name&quot;].toString();</span>
+<span id="L148"><span class="lineNum">     148</span> <span class="tlaUNC">           0 :     metadata.id = QString::number(json[&quot;id&quot;].toInt());</span></span>
+<span id="L149"><span class="lineNum">     149</span> <span class="tlaUNC">           0 :     </span></span>
+<span id="L150"><span class="lineNum">     150</span> <span class="tlaUNC">           0 :     // Extract external IDs from metadata array</span></span>
+<span id="L151"><span class="lineNum">     151</span>              :     QJsonArray metadataArray = json[&quot;metadata&quot;].toArray();</span>
+<span id="L152"><span class="lineNum">     152</span> <span class="tlaUNC">           0 :     int igdbId = 0;</span></span>
+<span id="L153"><span class="lineNum">     153</span>              :     for (const QJsonValue &amp;meta : metadataArray) {</span>
+<span id="L154"><span class="lineNum">     154</span> <span class="tlaUNC">           0 :         QJsonObject metaObj = meta.toObject();</span></span>
+<span id="L155"><span class="lineNum">     155</span> <span class="tlaUNC">           0 :         QString source = metaObj[&quot;source&quot;].toString();</span></span>
+<span id="L156"><span class="lineNum">     156</span>              :         QString immutableId = metaObj[&quot;immutableId&quot;].toString();</span>
+<span id="L157"><span class="lineNum">     157</span> <span class="tlaUNC">           0 :         </span></span>
+<span id="L158"><span class="lineNum">     158</span> <span class="tlaUNC">           0 :         if (source == &quot;IGDB&quot; &amp;&amp; !immutableId.isEmpty()) {</span></span>
+<span id="L159"><span class="lineNum">     159</span> <span class="tlaUNC">           0 :             igdbId = immutableId.toInt();</span></span>
+<span id="L160"><span class="lineNum">     160</span> <span class="tlaUNC">           0 :             metadata.externalIds[&quot;igdb&quot;] = immutableId;</span></span>
+<span id="L161"><span class="lineNum">     161</span>              :         } else if (source == &quot;TheGamesDB&quot; &amp;&amp; !immutableId.isEmpty()) {</span>
+<span id="L162"><span class="lineNum">     162</span> <span class="tlaUNC">           0 :             metadata.externalIds[&quot;thegamesdb&quot;] = immutableId;</span></span>
+<span id="L163"><span class="lineNum">     163</span>              :         } else if (source == &quot;RetroAchievements&quot; &amp;&amp; !immutableId.isEmpty()) {</span>
+<span id="L164"><span class="lineNum">     164</span> <span class="tlaUNC">           0 :             metadata.externalIds[&quot;retroachievements&quot;] = immutableId;</span></span>
+<span id="L165"><span class="lineNum">     165</span> <span class="tlaUNC">           0 :         }</span></span>
+<span id="L166"><span class="lineNum">     166</span> <span class="tlaUNC">           0 :     }</span></span>
+<span id="L167"><span class="lineNum">     167</span>              :     </span>
+<span id="L168"><span class="lineNum">     168</span> <span class="tlaGNC">           2 :     // Check DAT signatures (No-Intro, Redump, TOSEC, etc.)</span></span>
+<span id="L169"><span class="lineNum">     169</span>              :     QJsonArray signatures = json[&quot;signatures&quot;].toArray();</span>
+<span id="L170"><span class="lineNum">     170</span>              :     QStringList datSources;</span>
+<span id="L171"><span class="lineNum">     171</span>              :     for (const QJsonValue &amp;sig : signatures) {</span>
+<span id="L172"><span class="lineNum">     172</span>              :         datSources.append(sig.toString());</span>
+<span id="L173"><span class="lineNum">     173</span> <span class="tlaGNC">           4 :     }</span></span>
+<span id="L174"><span class="lineNum">     174</span> <span class="tlaGNC">           2 :     if (!datSources.isEmpty()) {</span></span>
+<span id="L175"><span class="lineNum">     175</span>              :         metadata.externalIds[&quot;dat_sources&quot;] = datSources.join(&quot;,&quot;);</span>
+<span id="L176"><span class="lineNum">     176</span> <span class="tlaGNC">           2 :     }</span></span>
+<span id="L177"><span class="lineNum">     177</span>              :     </span>
+<span id="L178"><span class="lineNum">     178</span>              :     // Extract artwork from attributes</span>
+<span id="L179"><span class="lineNum">     179</span> <span class="tlaUNC">           0 :     QJsonArray attributes = json[&quot;attributes&quot;].toArray();</span></span>
+<span id="L180"><span class="lineNum">     180</span>              :     for (const QJsonValue &amp;attr : attributes) {</span>
+<span id="L181"><span class="lineNum">     181</span>              :         QJsonObject attrObj = attr.toObject();</span>
+<span id="L182"><span class="lineNum">     182</span>              :         if (attrObj[&quot;attributeName&quot;].toString() == &quot;Logo&quot;) {</span>
+<span id="L183"><span class="lineNum">     183</span>              :             QString link = attrObj[&quot;link&quot;].toString();</span>
+<span id="L184"><span class="lineNum">     184</span> <span class="tlaUNC">           0 :             if (!link.isEmpty()) {</span></span>
+<span id="L185"><span class="lineNum">     185</span>              :                 metadata.boxArtUrl = &quot;https://hasheous.org&quot; + link;</span>
+<span id="L186"><span class="lineNum">     186</span> <span class="tlaUNC">           0 :             }</span></span>
+<span id="L187"><span class="lineNum">     187</span>              :             break;</span>
+<span id="L188"><span class="lineNum">     188</span>              :         }</span>
+<span id="L189"><span class="lineNum">     189</span>              :     }</span>
+<span id="L190"><span class="lineNum">     190</span>              :     </span>
+<span id="L191"><span class="lineNum">     191</span>              :     return metadata;</span>
+<span id="L192"><span class="lineNum">     192</span>              : }</span>
+<span id="L193"><span class="lineNum">     193</span>              : </span>
+<span id="L194"><span class="lineNum">     194</span>              : GameMetadata HasheousProvider::fetchIgdbMetadata(int igdbId)</span>
+<span id="L195"><span class="lineNum">     195</span>              : {</span>
+<span id="L196"><span class="lineNum">     196</span>              :     if (igdbId &lt;= 0) {</span>
+<span id="L197"><span class="lineNum">     197</span>              :         return GameMetadata();</span>
+<span id="L198"><span class="lineNum">     198</span>              :     }</span>
+<span id="L199"><span class="lineNum">     199</span>              :     </span>
+<span id="L200"><span class="lineNum">     200</span>              :     qInfo() &lt;&lt; &quot;Hasheous: Fetching IGDB metadata via MetadataProxy for ID:&quot; &lt;&lt; igdbId;</span>
+<span id="L201"><span class="lineNum">     201</span>              :     </span>
+<span id="L202"><span class="lineNum">     202</span>              :     // MetadataProxy uses query params: ?Id=&lt;igdbId&gt;&amp;expandColumns=...</span>
+<span id="L203"><span class="lineNum">     203</span>              :     QUrlQuery params;</span>
+<span id="L204"><span class="lineNum">     204</span>              :     params.addQueryItem(&quot;Id&quot;, QString::number(igdbId));</span>
+<span id="L205"><span class="lineNum">     205</span>              :     params.addQueryItem(&quot;expandColumns&quot;, &quot;age_ratings,alternative_names,collections,cover,dlcs,expanded_games,franchise,franchises,game_modes,genres,involved_companies,platforms,ports,remakes,screenshots,similar_games,videos&quot;);</span>
+<span id="L206"><span class="lineNum">     206</span>              :     </span>
+<span id="L207"><span class="lineNum">     207</span>              :     QJsonObject igdbGame = makeRequest(&quot;/MetadataProxy/IGDB/Game&quot;, params);</span>
+<span id="L208"><span class="lineNum">     208</span>              :     </span>
+<span id="L209"><span class="lineNum">     209</span>              :     if (igdbGame.isEmpty()) {</span>
+<span id="L210"><span class="lineNum">     210</span>              :         qWarning() &lt;&lt; &quot;Hasheous: MetadataProxy returned empty for IGDB ID:&quot; &lt;&lt; igdbId;</span>
+<span id="L211"><span class="lineNum">     211</span>              :         return GameMetadata();</span>
+<span id="L212"><span class="lineNum">     212</span>              :     }</span>
+<span id="L213"><span class="lineNum">     213</span>              :     </span>
+<span id="L214"><span class="lineNum">     214</span>              :     GameMetadata metadata;</span>
+<span id="L215"><span class="lineNum">     215</span>              :     metadata.title = igdbGame[&quot;name&quot;].toString();</span>
+<span id="L216"><span class="lineNum">     216</span>              :     metadata.description = igdbGame[&quot;summary&quot;].toString();</span>
+<span id="L217"><span class="lineNum">     217</span>              :     metadata.externalIds[&quot;igdb&quot;] = QString::number(igdbId);</span>
+<span id="L218"><span class="lineNum">     218</span>              :     </span>
+<span id="L219"><span class="lineNum">     219</span>              :     // Release date — MetadataProxy returns ISO 8601 string (e.g., &quot;1991-06-23T00:00:00+00:00&quot;)</span>
+<span id="L220"><span class="lineNum">     220</span>              :     if (igdbGame.contains(&quot;first_release_date&quot;)) {</span>
+<span id="L221"><span class="lineNum">     221</span>              :         QJsonValue dateVal = igdbGame[&quot;first_release_date&quot;];</span>
+<span id="L222"><span class="lineNum">     222</span>              :         if (dateVal.isString()) {</span>
+<span id="L223"><span class="lineNum">     223</span>              :             QDateTime dt = QDateTime::fromString(dateVal.toString(), Qt::ISODate);</span>
+<span id="L224"><span class="lineNum">     224</span>              :             if (dt.isValid()) {</span>
+<span id="L225"><span class="lineNum">     225</span>              :                 metadata.releaseDate = dt.toUTC().date().toString(&quot;yyyy-MM-dd&quot;);</span>
+<span id="L226"><span class="lineNum">     226</span>              :             }</span>
+<span id="L227"><span class="lineNum">     227</span>              :         } else if (dateVal.isDouble()) {</span>
+<span id="L228"><span class="lineNum">     228</span>              :             // Fallback: direct IGDB uses Unix timestamp</span>
+<span id="L229"><span class="lineNum">     229</span>              :             QDateTime dt = QDateTime::fromSecsSinceEpoch(dateVal.toInteger(), QTimeZone::UTC);</span>
+<span id="L230"><span class="lineNum">     230</span>              :             metadata.releaseDate = dt.toUTC().date().toString(&quot;yyyy-MM-dd&quot;);</span>
+<span id="L231"><span class="lineNum">     231</span>              :         }</span>
+<span id="L232"><span class="lineNum">     232</span>              :     }</span>
+<span id="L233"><span class="lineNum">     233</span>              :     </span>
+<span id="L234"><span class="lineNum">     234</span>              :     // Genres — MetadataProxy returns object keyed by ID: {&quot;8&quot;: {&quot;name&quot;: &quot;Platform&quot;}, ...}</span>
+<span id="L235"><span class="lineNum">     235</span>              :     QJsonValue genresVal = igdbGame[&quot;genres&quot;];</span>
+<span id="L236"><span class="lineNum">     236</span>              :     if (genresVal.isObject()) {</span>
+<span id="L237"><span class="lineNum">     237</span>              :         QJsonObject genresObj = genresVal.toObject();</span>
+<span id="L238"><span class="lineNum">     238</span>              :         for (auto it = genresObj.begin(); it != genresObj.end(); ++it) {</span>
+<span id="L239"><span class="lineNum">     239</span>              :             QString name = it.value().toObject()[&quot;name&quot;].toString();</span>
+<span id="L240"><span class="lineNum">     240</span>              :             if (!name.isEmpty()) {</span>
+<span id="L241"><span class="lineNum">     241</span>              :                 metadata.genres.append(name);</span>
+<span id="L242"><span class="lineNum">     242</span>              :             }</span>
+<span id="L243"><span class="lineNum">     243</span>              :         }</span>
+<span id="L244"><span class="lineNum">     244</span>              :     } else if (genresVal.isArray()) {</span>
+<span id="L245"><span class="lineNum">     245</span>              :         // Fallback for array format</span>
+<span id="L246"><span class="lineNum">     246</span>              :         QJsonArray genresArr = genresVal.toArray();</span>
+<span id="L247"><span class="lineNum">     247</span>              :         for (const QJsonValue &amp;genre : genresArr) {</span>
+<span id="L248"><span class="lineNum">     248</span>              :             QString name = genre.toObject()[&quot;name&quot;].toString();</span>
+<span id="L249"><span class="lineNum">     249</span>              :             if (!name.isEmpty()) {</span>
+<span id="L250"><span class="lineNum">     250</span>              :                 metadata.genres.append(name);</span>
+<span id="L251"><span class="lineNum">     251</span>              :             }</span>
+<span id="L252"><span class="lineNum">     252</span>              :         }</span>
+<span id="L253"><span class="lineNum">     253</span>              :     }</span>
+<span id="L254"><span class="lineNum">     254</span>              :     </span>
+<span id="L255"><span class="lineNum">     255</span>              :     // Rating (IGDB uses 0-100 scale, convert to 0-10)</span>
+<span id="L256"><span class="lineNum">     256</span>              :     if (igdbGame.contains(&quot;aggregated_rating&quot;)) {</span>
+<span id="L257"><span class="lineNum">     257</span>              :         metadata.rating = igdbGame[&quot;aggregated_rating&quot;].toDouble() / 10.0;</span>
+<span id="L258"><span class="lineNum">     258</span>              :     }</span>
+<span id="L259"><span class="lineNum">     259</span>              :     </span>
+<span id="L260"><span class="lineNum">     260</span>              :     // Cover art</span>
+<span id="L261"><span class="lineNum">     261</span>              :     if (igdbGame.contains(&quot;cover&quot;)) {</span>
+<span id="L262"><span class="lineNum">     262</span>              :         QJsonObject cover = igdbGame[&quot;cover&quot;].toObject();</span>
+<span id="L263"><span class="lineNum">     263</span>              :         QString coverUrl = cover[&quot;url&quot;].toString();</span>
+<span id="L264"><span class="lineNum">     264</span>              :         if (!coverUrl.isEmpty()) {</span>
+<span id="L265"><span class="lineNum">     265</span>              :             // Upgrade to high-res</span>
+<span id="L266"><span class="lineNum">     266</span>              :             coverUrl.replace(&quot;t_thumb&quot;, &quot;t_1080p&quot;);</span>
+<span id="L267"><span class="lineNum">     267</span>              :             if (coverUrl.startsWith(&quot;//&quot;)) {</span>
+<span id="L268"><span class="lineNum">     268</span>              :                 coverUrl = &quot;https:&quot; + coverUrl;</span>
+<span id="L269"><span class="lineNum">     269</span>              :             }</span>
+<span id="L270"><span class="lineNum">     270</span>              :             metadata.boxArtUrl = coverUrl;</span>
+<span id="L271"><span class="lineNum">     271</span>              :         }</span>
+<span id="L272"><span class="lineNum">     272</span>              :     }</span>
+<span id="L273"><span class="lineNum">     273</span>              : </span>
+<span id="L274"><span class="lineNum">     274</span>              :     // Screenshots (object keyed by ID, same pattern as genres)</span>
+<span id="L275"><span class="lineNum">     275</span>              :     auto normalizeShot = [](const QString &amp;url) {</span>
+<span id="L276"><span class="lineNum">     276</span>              :         QString u = url;</span>
+<span id="L277"><span class="lineNum">     277</span>              :         if (u.isEmpty()) return u;</span>
+<span id="L278"><span class="lineNum">     278</span>              :         u.replace(&quot;t_thumb&quot;, &quot;t_1080p&quot;);</span>
+<span id="L279"><span class="lineNum">     279</span>              :         if (u.startsWith(&quot;//&quot;)) {</span>
+<span id="L280"><span class="lineNum">     280</span>              :             u = &quot;https:&quot; + u;</span>
+<span id="L281"><span class="lineNum">     281</span>              :         }</span>
+<span id="L282"><span class="lineNum">     282</span>              :         return u;</span>
+<span id="L283"><span class="lineNum">     283</span>              :     };</span>
+<span id="L284"><span class="lineNum">     284</span>              : </span>
+<span id="L285"><span class="lineNum">     285</span>              :     QJsonValue screenshotsVal = igdbGame[&quot;screenshots&quot;];</span>
+<span id="L286"><span class="lineNum">     286</span>              :     if (screenshotsVal.isObject()) {</span>
+<span id="L287"><span class="lineNum">     287</span>              :         QJsonObject shotsObj = screenshotsVal.toObject();</span>
+<span id="L288"><span class="lineNum">     288</span>              :         for (auto it = shotsObj.begin(); it != shotsObj.end(); ++it) {</span>
+<span id="L289"><span class="lineNum">     289</span>              :             QString shotUrl = normalizeShot(it.value().toObject()[&quot;url&quot;].toString());</span>
+<span id="L290"><span class="lineNum">     290</span>              :             if (!shotUrl.isEmpty()) {</span>
+<span id="L291"><span class="lineNum">     291</span>              :                 metadata.screenshotUrls.append(shotUrl);</span>
+<span id="L292"><span class="lineNum">     292</span>              :             }</span>
+<span id="L293"><span class="lineNum">     293</span>              :         }</span>
+<span id="L294"><span class="lineNum">     294</span>              :     } else if (screenshotsVal.isArray()) {</span>
+<span id="L295"><span class="lineNum">     295</span>              :         QJsonArray shotsArr = screenshotsVal.toArray();</span>
+<span id="L296"><span class="lineNum">     296</span>              :         for (const QJsonValue &amp;shotVal : shotsArr) {</span>
+<span id="L297"><span class="lineNum">     297</span>              :             QString shotUrl = normalizeShot(shotVal.toObject()[&quot;url&quot;].toString());</span>
+<span id="L298"><span class="lineNum">     298</span>              :             if (!shotUrl.isEmpty()) {</span>
+<span id="L299"><span class="lineNum">     299</span>              :                 metadata.screenshotUrls.append(shotUrl);</span>
+<span id="L300"><span class="lineNum">     300</span>              :             }</span>
+<span id="L301"><span class="lineNum">     301</span>              :         }</span>
+<span id="L302"><span class="lineNum">     302</span>              :     }</span>
+<span id="L303"><span class="lineNum">     303</span>              :     </span>
+<span id="L304"><span class="lineNum">     304</span>              :     // Companies — MetadataProxy returns object keyed by ID, with company as integer</span>
+<span id="L305"><span class="lineNum">     305</span>              :     // The developer/publisher flags are always false in MetadataProxy responses (known bug),</span>
+<span id="L306"><span class="lineNum">     306</span>              :     // so we resolve each company and check its developed/published game ID lists instead.</span>
+<span id="L307"><span class="lineNum">     307</span>              :     QJsonValue companiesVal = igdbGame[&quot;involved_companies&quot;];</span>
+<span id="L308"><span class="lineNum">     308</span>              :     if (companiesVal.isObject() || companiesVal.isArray()) {</span>
+<span id="L309"><span class="lineNum">     309</span>              :         // Collect company IDs from either object or array format</span>
+<span id="L310"><span class="lineNum">     310</span>              :         QList&lt;int&gt; companyIds;</span>
+<span id="L311"><span class="lineNum">     311</span>              :         if (companiesVal.isObject()) {</span>
+<span id="L312"><span class="lineNum">     312</span>              :             QJsonObject companiesObj = companiesVal.toObject();</span>
+<span id="L313"><span class="lineNum">     313</span>              :             for (auto it = companiesObj.begin(); it != companiesObj.end(); ++it) {</span>
+<span id="L314"><span class="lineNum">     314</span>              :                 QJsonObject comp = it.value().toObject();</span>
+<span id="L315"><span class="lineNum">     315</span>              :                 // First check if flags actually work (future MetadataProxy fix)</span>
+<span id="L316"><span class="lineNum">     316</span>              :                 bool isDev = comp[&quot;developer&quot;].toBool();</span>
+<span id="L317"><span class="lineNum">     317</span>              :                 bool isPub = comp[&quot;publisher&quot;].toBool();</span>
+<span id="L318"><span class="lineNum">     318</span>              :                 QJsonValue companyVal = comp[&quot;company&quot;];</span>
+<span id="L319"><span class="lineNum">     319</span>              :                 </span>
+<span id="L320"><span class="lineNum">     320</span>              :                 if (isDev || isPub) {</span>
+<span id="L321"><span class="lineNum">     321</span>              :                     // Flags are set — resolve name directly</span>
+<span id="L322"><span class="lineNum">     322</span>              :                     QString companyName;</span>
+<span id="L323"><span class="lineNum">     323</span>              :                     if (companyVal.isObject()) {</span>
+<span id="L324"><span class="lineNum">     324</span>              :                         companyName = companyVal.toObject()[&quot;name&quot;].toString();</span>
+<span id="L325"><span class="lineNum">     325</span>              :                     } else if (companyVal.isDouble()) {</span>
+<span id="L326"><span class="lineNum">     326</span>              :                         int companyId = companyVal.toInt();</span>
+<span id="L327"><span class="lineNum">     327</span>              :                         if (m_companyCache.contains(companyId)) {</span>
+<span id="L328"><span class="lineNum">     328</span>              :                             companyName = m_companyCache.value(companyId);</span>
+<span id="L329"><span class="lineNum">     329</span>              :                         } else {</span>
+<span id="L330"><span class="lineNum">     330</span>              :                             QUrlQuery compParams;</span>
+<span id="L331"><span class="lineNum">     331</span>              :                             compParams.addQueryItem(&quot;Id&quot;, QString::number(companyId));</span>
+<span id="L332"><span class="lineNum">     332</span>              :                             QJsonObject compData = makeRequest(&quot;/MetadataProxy/IGDB/Company&quot;, compParams);</span>
+<span id="L333"><span class="lineNum">     333</span>              :                             companyName = compData[&quot;name&quot;].toString();</span>
+<span id="L334"><span class="lineNum">     334</span>              :                             if (!companyName.isEmpty()) {</span>
+<span id="L335"><span class="lineNum">     335</span>              :                                 m_companyCache.insert(companyId, companyName);</span>
+<span id="L336"><span class="lineNum">     336</span>              :                             }</span>
+<span id="L337"><span class="lineNum">     337</span>              :                         }</span>
+<span id="L338"><span class="lineNum">     338</span>              :                     }</span>
+<span id="L339"><span class="lineNum">     339</span>              :                     if (!companyName.isEmpty()) {</span>
+<span id="L340"><span class="lineNum">     340</span>              :                         if (isDev &amp;&amp; metadata.developer.isEmpty())</span>
+<span id="L341"><span class="lineNum">     341</span>              :                             metadata.developer = companyName;</span>
+<span id="L342"><span class="lineNum">     342</span>              :                         if (isPub &amp;&amp; metadata.publisher.isEmpty())</span>
+<span id="L343"><span class="lineNum">     343</span>              :                             metadata.publisher = companyName;</span>
+<span id="L344"><span class="lineNum">     344</span>              :                     }</span>
+<span id="L345"><span class="lineNum">     345</span>              :                 } else if (companyVal.isDouble()) {</span>
+<span id="L346"><span class="lineNum">     346</span>              :                     // Flags broken — collect ID for role lookup</span>
+<span id="L347"><span class="lineNum">     347</span>              :                     companyIds.append(companyVal.toInt());</span>
+<span id="L348"><span class="lineNum">     348</span>              :                 }</span>
+<span id="L349"><span class="lineNum">     349</span>              :             }</span>
+<span id="L350"><span class="lineNum">     350</span>              :         } else {</span>
+<span id="L351"><span class="lineNum">     351</span>              :             // Array format fallback</span>
+<span id="L352"><span class="lineNum">     352</span>              :             QJsonArray companiesArr = companiesVal.toArray();</span>
+<span id="L353"><span class="lineNum">     353</span>              :             for (const QJsonValue &amp;compVal : companiesArr) {</span>
+<span id="L354"><span class="lineNum">     354</span>              :                 QJsonObject comp = compVal.toObject();</span>
+<span id="L355"><span class="lineNum">     355</span>              :                 QJsonObject company = comp[&quot;company&quot;].toObject();</span>
+<span id="L356"><span class="lineNum">     356</span>              :                 QString companyName = company[&quot;name&quot;].toString();</span>
+<span id="L357"><span class="lineNum">     357</span>              :                 if (!companyName.isEmpty()) {</span>
+<span id="L358"><span class="lineNum">     358</span>              :                     if (comp[&quot;developer&quot;].toBool() &amp;&amp; metadata.developer.isEmpty())</span>
+<span id="L359"><span class="lineNum">     359</span>              :                         metadata.developer = companyName;</span>
+<span id="L360"><span class="lineNum">     360</span>              :                     if (comp[&quot;publisher&quot;].toBool() &amp;&amp; metadata.publisher.isEmpty())</span>
+<span id="L361"><span class="lineNum">     361</span>              :                         metadata.publisher = companyName;</span>
+<span id="L362"><span class="lineNum">     362</span>              :                 }</span>
+<span id="L363"><span class="lineNum">     363</span>              :             }</span>
+<span id="L364"><span class="lineNum">     364</span>              :         }</span>
+<span id="L365"><span class="lineNum">     365</span>              :         </span>
+<span id="L366"><span class="lineNum">     366</span>              :         // If flags were broken, resolve companies and determine roles from their game lists</span>
+<span id="L367"><span class="lineNum">     367</span>              :         int gameIdInt = igdbId;</span>
+<span id="L368"><span class="lineNum">     368</span>              :         for (int companyId : companyIds) {</span>
+<span id="L369"><span class="lineNum">     369</span>              :             if (!metadata.developer.isEmpty() &amp;&amp; !metadata.publisher.isEmpty())</span>
+<span id="L370"><span class="lineNum">     370</span>              :                 break; // Both roles filled</span>
+<span id="L371"><span class="lineNum">     371</span>              :             </span>
+<span id="L372"><span class="lineNum">     372</span>              :             QString companyName;</span>
+<span id="L373"><span class="lineNum">     373</span>              :             QJsonObject compData;</span>
+<span id="L374"><span class="lineNum">     374</span>              :             if (m_companyCache.contains(companyId)) {</span>
+<span id="L375"><span class="lineNum">     375</span>              :                 companyName = m_companyCache.value(companyId);</span>
+<span id="L376"><span class="lineNum">     376</span>              :                 QUrlQuery compParams;</span>
+<span id="L377"><span class="lineNum">     377</span>              :                 compParams.addQueryItem(&quot;Id&quot;, QString::number(companyId));</span>
+<span id="L378"><span class="lineNum">     378</span>              :                 compData = makeRequest(&quot;/MetadataProxy/IGDB/Company&quot;, compParams);</span>
+<span id="L379"><span class="lineNum">     379</span>              :             } else {</span>
+<span id="L380"><span class="lineNum">     380</span>              :                 QUrlQuery compParams;</span>
+<span id="L381"><span class="lineNum">     381</span>              :                 compParams.addQueryItem(&quot;Id&quot;, QString::number(companyId));</span>
+<span id="L382"><span class="lineNum">     382</span>              :                 compData = makeRequest(&quot;/MetadataProxy/IGDB/Company&quot;, compParams);</span>
+<span id="L383"><span class="lineNum">     383</span>              :                 companyName = compData[&quot;name&quot;].toString();</span>
+<span id="L384"><span class="lineNum">     384</span>              :                 if (!companyName.isEmpty()) {</span>
+<span id="L385"><span class="lineNum">     385</span>              :                     m_companyCache.insert(companyId, companyName);</span>
+<span id="L386"><span class="lineNum">     386</span>              :                 }</span>
+<span id="L387"><span class="lineNum">     387</span>              :             }</span>
+<span id="L388"><span class="lineNum">     388</span>              :             if (companyName.isEmpty())</span>
+<span id="L389"><span class="lineNum">     389</span>              :                 continue;</span>
+<span id="L390"><span class="lineNum">     390</span>              :             </span>
+<span id="L391"><span class="lineNum">     391</span>              :             // Check if this game ID appears in the company's developed/published lists</span>
+<span id="L392"><span class="lineNum">     392</span>              :             QJsonArray developed = compData[&quot;developed&quot;].toArray();</span>
+<span id="L393"><span class="lineNum">     393</span>              :             QJsonArray published = compData[&quot;published&quot;].toArray();</span>
+<span id="L394"><span class="lineNum">     394</span>              :             </span>
+<span id="L395"><span class="lineNum">     395</span>              :             bool isDev = false, isPub = false;</span>
+<span id="L396"><span class="lineNum">     396</span>              :             for (const QJsonValue &amp;gid : developed) {</span>
+<span id="L397"><span class="lineNum">     397</span>              :                 if (gid.toInt() == gameIdInt) { isDev = true; break; }</span>
+<span id="L398"><span class="lineNum">     398</span>              :             }</span>
+<span id="L399"><span class="lineNum">     399</span>              :             for (const QJsonValue &amp;gid : published) {</span>
+<span id="L400"><span class="lineNum">     400</span>              :                 if (gid.toInt() == gameIdInt) { isPub = true; break; }</span>
+<span id="L401"><span class="lineNum">     401</span>              :             }</span>
+<span id="L402"><span class="lineNum">     402</span>              :             </span>
+<span id="L403"><span class="lineNum">     403</span>              :             if (isDev &amp;&amp; metadata.developer.isEmpty()) {</span>
+<span id="L404"><span class="lineNum">     404</span>              :                 metadata.developer = companyName;</span>
+<span id="L405"><span class="lineNum">     405</span>              :                 qDebug() &lt;&lt; &quot;Hasheous: Developer resolved:&quot; &lt;&lt; companyName;</span>
+<span id="L406"><span class="lineNum">     406</span>              :             }</span>
+<span id="L407"><span class="lineNum">     407</span>              :             if (isPub &amp;&amp; metadata.publisher.isEmpty()) {</span>
+<span id="L408"><span class="lineNum">     408</span>              :                 metadata.publisher = companyName;</span>
+<span id="L409"><span class="lineNum">     409</span>              :                 qDebug() &lt;&lt; &quot;Hasheous: Publisher resolved:&quot; &lt;&lt; companyName;</span>
+<span id="L410"><span class="lineNum">     410</span>              :             }</span>
+<span id="L411"><span class="lineNum">     411</span>              :         }</span>
+<span id="L412"><span class="lineNum">     412</span>              :     }</span>
+<span id="L413"><span class="lineNum">     413</span>              : </span>
+<span id="L414"><span class="lineNum">     414</span>              :     // Platform → system mapping (IGDB platform slugs to Remus system IDs)</span>
+<span id="L415"><span class="lineNum">     415</span>              :     QSet&lt;QString&gt; platformSlugs;</span>
+<span id="L416"><span class="lineNum">     416</span>              :     QJsonValue platformsVal = igdbGame[&quot;platforms&quot;];</span>
+<span id="L417"><span class="lineNum">     417</span>              :     if (platformsVal.isObject()) {</span>
+<span id="L418"><span class="lineNum">     418</span>              :         QJsonObject plats = platformsVal.toObject();</span>
+<span id="L419"><span class="lineNum">     419</span>              :         for (auto it = plats.begin(); it != plats.end(); ++it) {</span>
+<span id="L420"><span class="lineNum">     420</span>              :             QString slug = it.value().toObject()[&quot;slug&quot;].toString().toLower();</span>
+<span id="L421"><span class="lineNum">     421</span>              :             if (!slug.isEmpty()) platformSlugs.insert(slug);</span>
+<span id="L422"><span class="lineNum">     422</span>              :         }</span>
+<span id="L423"><span class="lineNum">     423</span>              :     } else if (platformsVal.isArray()) {</span>
+<span id="L424"><span class="lineNum">     424</span>              :         QJsonArray plats = platformsVal.toArray();</span>
+<span id="L425"><span class="lineNum">     425</span>              :         for (const QJsonValue &amp;pv : plats) {</span>
+<span id="L426"><span class="lineNum">     426</span>              :             QString slug = pv.toObject()[&quot;slug&quot;].toString().toLower();</span>
+<span id="L427"><span class="lineNum">     427</span>              :             if (!slug.isEmpty()) platformSlugs.insert(slug);</span>
+<span id="L428"><span class="lineNum">     428</span>              :         }</span>
+<span id="L429"><span class="lineNum">     429</span>              :     }</span>
+<span id="L430"><span class="lineNum">     430</span>              : </span>
+<span id="L431"><span class="lineNum">     431</span>              :     if (!platformSlugs.isEmpty()) {</span>
+<span id="L432"><span class="lineNum">     432</span>              :         for (auto it = Constants::Systems::SYSTEMS.constBegin(); it != Constants::Systems::SYSTEMS.constEnd(); ++it) {</span>
+<span id="L433"><span class="lineNum">     433</span>              :             int systemId = it.key();</span>
+<span id="L434"><span class="lineNum">     434</span>              :             QString igdbSlug = SystemResolver::providerName(systemId, Constants::Providers::IGDB).toLower();</span>
+<span id="L435"><span class="lineNum">     435</span>              :             if (!igdbSlug.isEmpty() &amp;&amp; platformSlugs.contains(igdbSlug)) {</span>
+<span id="L436"><span class="lineNum">     436</span>              :                 metadata.system = SystemResolver::internalName(systemId);</span>
+<span id="L437"><span class="lineNum">     437</span>              :                 break;</span>
+<span id="L438"><span class="lineNum">     438</span>              :             }</span>
+<span id="L439"><span class="lineNum">     439</span>              :         }</span>
+<span id="L440"><span class="lineNum">     440</span>              :     }</span>
+<span id="L441"><span class="lineNum">     441</span>              :     </span>
+<span id="L442"><span class="lineNum">     442</span>              :     return metadata;</span>
+<span id="L443"><span class="lineNum">     443</span>              : }</span>
+<span id="L444"><span class="lineNum">     444</span>              : </span>
+<span id="L445"><span class="lineNum">     445</span>              : QList&lt;SearchResult&gt; HasheousProvider::searchByName(const QString &amp;title,</span>
+<span id="L446"><span class="lineNum">     446</span>              :                                                                    const QString &amp;system,</span>
+<span id="L447"><span class="lineNum">     447</span>              :                                                                    const QString &amp;region)</span>
+<span id="L448"><span class="lineNum">     448</span>              : {</span>
+<span id="L449"><span class="lineNum">     449</span>              :     Q_UNUSED(title);</span>
+<span id="L450"><span class="lineNum">     450</span>              :     Q_UNUSED(system);</span>
+<span id="L451"><span class="lineNum">     451</span>              :     Q_UNUSED(region);</span>
+<span id="L452"><span class="lineNum">     452</span>              :     </span>
+<span id="L453"><span class="lineNum">     453</span>              :     // Hasheous doesn't support name-based search</span>
+<span id="L454"><span class="lineNum">     454</span>              :     qWarning() &lt;&lt; &quot;Hasheous does not support name-based search, use hash matching instead&quot;;</span>
+<span id="L455"><span class="lineNum">     455</span>              :     emit errorOccurred(&quot;Hasheous only supports hash-based matching&quot;);</span>
+<span id="L456"><span class="lineNum">     456</span>              :     </span>
+<span id="L457"><span class="lineNum">     457</span>              :     return QList&lt;SearchResult&gt;();</span>
+<span id="L458"><span class="lineNum">     458</span>              : }</span>
+<span id="L459"><span class="lineNum">     459</span>              : </span>
+<span id="L460"><span class="lineNum">     460</span>              : GameMetadata HasheousProvider::getByHash(const QString &amp;hash, const QString &amp;system)</span>
+<span id="L461"><span class="lineNum">     461</span>              : {</span>
+<span id="L462"><span class="lineNum">     462</span>              :     Q_UNUSED(system); // Hasheous uses hash only, system is inferred</span>
+<span id="L463"><span class="lineNum">     463</span>              : </span>
+<span id="L464"><span class="lineNum">     464</span>              :     QString hashType = detectHashType(hash);</span>
+<span id="L465"><span class="lineNum">     465</span>              :     if (hashType.isEmpty()) {</span>
+<span id="L466"><span class="lineNum">     466</span>              :         qWarning() &lt;&lt; &quot;Hasheous: Invalid hash length, expected CRC32 (8), MD5 (32), or SHA1 (40), got:&quot; &lt;&lt; hash.length();</span>
+<span id="L467"><span class="lineNum">     467</span>              :         emit errorOccurred(&quot;Invalid hash length for Hasheous&quot;);</span>
+<span id="L468"><span class="lineNum">     468</span>              :         return GameMetadata();</span>
+<span id="L469"><span class="lineNum">     469</span>              :     }</span>
+<span id="L470"><span class="lineNum">     470</span>              : </span>
+<span id="L471"><span class="lineNum">     471</span>              :     // Delegate to multi-hash path (single hash populated)</span>
+<span id="L472"><span class="lineNum">     472</span>              :     QString crc32 = (hashType == &quot;crc32&quot;) ? hash : QString();</span>
+<span id="L473"><span class="lineNum">     473</span>              :     QString md5 = (hashType == &quot;md5&quot;) ? hash : QString();</span>
+<span id="L474"><span class="lineNum">     474</span>              :     QString sha1 = (hashType == &quot;sha1&quot;) ? hash : QString();</span>
+<span id="L475"><span class="lineNum">     475</span>              :     return getByHashes(crc32, md5, sha1, system);</span>
+<span id="L476"><span class="lineNum">     476</span>              : }</span>
+<span id="L477"><span class="lineNum">     477</span>              : </span>
+<span id="L478"><span class="lineNum">     478</span>              : GameMetadata HasheousProvider::getByHashes(const QString &amp;crc32,</span>
+<span id="L479"><span class="lineNum">     479</span>              :                                            const QString &amp;md5,</span>
+<span id="L480"><span class="lineNum">     480</span>              :                                            const QString &amp;sha1,</span>
+<span id="L481"><span class="lineNum">     481</span>              :                                            const QString &amp;system)</span>
+<span id="L482"><span class="lineNum">     482</span>              : {</span>
+<span id="L483"><span class="lineNum">     483</span>              :     Q_UNUSED(system);</span>
+<span id="L484"><span class="lineNum">     484</span>              : </span>
+<span id="L485"><span class="lineNum">     485</span>              :     if (crc32.isEmpty() &amp;&amp; md5.isEmpty() &amp;&amp; sha1.isEmpty()) {</span>
+<span id="L486"><span class="lineNum">     486</span>              :         qWarning() &lt;&lt; &quot;Hasheous: No hashes provided&quot;;</span>
+<span id="L487"><span class="lineNum">     487</span>              :         emit errorOccurred(&quot;No hashes provided for Hasheous&quot;);</span>
+<span id="L488"><span class="lineNum">     488</span>              :         return GameMetadata();</span>
+<span id="L489"><span class="lineNum">     489</span>              :     }</span>
+<span id="L490"><span class="lineNum">     490</span>              : </span>
+<span id="L491"><span class="lineNum">     491</span>              :     qInfo() &lt;&lt; &quot;Hasheous: Looking up hash set&quot;</span>
+<span id="L492"><span class="lineNum">     492</span>              :             &lt;&lt; &quot;crc32=&quot; &lt;&lt; (crc32.isEmpty() ? &quot;-&quot; : crc32)</span>
+<span id="L493"><span class="lineNum">     493</span>              :             &lt;&lt; &quot;md5=&quot; &lt;&lt; (md5.isEmpty() ? &quot;-&quot; : md5)</span>
+<span id="L494"><span class="lineNum">     494</span>              :             &lt;&lt; &quot;sha1=&quot; &lt;&lt; (sha1.isEmpty() ? &quot;-&quot; : sha1);</span>
+<span id="L495"><span class="lineNum">     495</span>              : </span>
+<span id="L496"><span class="lineNum">     496</span>              :     QJsonObject body;</span>
+<span id="L497"><span class="lineNum">     497</span>              :     if (!crc32.isEmpty()) body[&quot;crc&quot;] = crc32.toLower();</span>
+<span id="L498"><span class="lineNum">     498</span>              :     if (!md5.isEmpty()) body[&quot;mD5&quot;] = md5.toLower();</span>
+<span id="L499"><span class="lineNum">     499</span>              :     if (!sha1.isEmpty()) body[&quot;shA1&quot;] = sha1.toLower();</span>
+<span id="L500"><span class="lineNum">     500</span>              : </span>
+<span id="L501"><span class="lineNum">     501</span>              :     QUrlQuery params;</span>
+<span id="L502"><span class="lineNum">     502</span>              :     params.addQueryItem(&quot;returnAllSources&quot;, &quot;true&quot;);</span>
+<span id="L503"><span class="lineNum">     503</span>              :     params.addQueryItem(&quot;returnFields&quot;, &quot;Signatures,Metadata,Attributes&quot;);</span>
+<span id="L504"><span class="lineNum">     504</span>              : </span>
+<span id="L505"><span class="lineNum">     505</span>              :     QJsonObject response = makePostRequest(&quot;/Lookup/ByHash&quot;, body, params);</span>
+<span id="L506"><span class="lineNum">     506</span>              : </span>
+<span id="L507"><span class="lineNum">     507</span>              :     if (response.isEmpty()) {</span>
+<span id="L508"><span class="lineNum">     508</span>              :         qInfo() &lt;&lt; &quot;Hasheous: No match found for provided hashes&quot;;</span>
+<span id="L509"><span class="lineNum">     509</span>              :         return GameMetadata();</span>
+<span id="L510"><span class="lineNum">     510</span>              :     }</span>
+<span id="L511"><span class="lineNum">     511</span>              : </span>
+<span id="L512"><span class="lineNum">     512</span>              :     GameMetadata metadata = parseGameJson(response);</span>
+<span id="L513"><span class="lineNum">     513</span>              : </span>
+<span id="L514"><span class="lineNum">     514</span>              :     if (metadata.title.isEmpty()) {</span>
+<span id="L515"><span class="lineNum">     515</span>              :         qInfo() &lt;&lt; &quot;Hasheous: No match found for provided hashes&quot;;</span>
+<span id="L516"><span class="lineNum">     516</span>              :         return GameMetadata();</span>
+<span id="L517"><span class="lineNum">     517</span>              :     }</span>
+<span id="L518"><span class="lineNum">     518</span>              : </span>
+<span id="L519"><span class="lineNum">     519</span>              :     qInfo() &lt;&lt; &quot;Hasheous: Found match:&quot; &lt;&lt; metadata.title;</span>
+<span id="L520"><span class="lineNum">     520</span>              : </span>
+<span id="L521"><span class="lineNum">     521</span>              :     if (metadata.externalIds.contains(&quot;igdb&quot;)) {</span>
+<span id="L522"><span class="lineNum">     522</span>              :         int igdbId = metadata.externalIds[&quot;igdb&quot;].toInt();</span>
+<span id="L523"><span class="lineNum">     523</span>              :         if (igdbId &gt; 0) {</span>
+<span id="L524"><span class="lineNum">     524</span>              :             GameMetadata igdbMetadata = fetchIgdbMetadata(igdbId);</span>
+<span id="L525"><span class="lineNum">     525</span>              :             if (!igdbMetadata.title.isEmpty()) {</span>
+<span id="L526"><span class="lineNum">     526</span>              :                 QMap&lt;QString, QString&gt; savedIds = metadata.externalIds;</span>
+<span id="L527"><span class="lineNum">     527</span>              :                 QString savedBoxArt = metadata.boxArtUrl;</span>
+<span id="L528"><span class="lineNum">     528</span>              :                 metadata = igdbMetadata;</span>
+<span id="L529"><span class="lineNum">     529</span>              :                 for (auto it = savedIds.begin(); it != savedIds.end(); ++it) {</span>
+<span id="L530"><span class="lineNum">     530</span>              :                     metadata.externalIds[it.key()] = it.value();</span>
+<span id="L531"><span class="lineNum">     531</span>              :                 }</span>
+<span id="L532"><span class="lineNum">     532</span>              :                 if (metadata.boxArtUrl.isEmpty() &amp;&amp; !savedBoxArt.isEmpty()) {</span>
+<span id="L533"><span class="lineNum">     533</span>              :                     metadata.boxArtUrl = savedBoxArt;</span>
+<span id="L534"><span class="lineNum">     534</span>              :                 }</span>
+<span id="L535"><span class="lineNum">     535</span>              :             }</span>
+<span id="L536"><span class="lineNum">     536</span>              :         }</span>
+<span id="L537"><span class="lineNum">     537</span>              :     }</span>
+<span id="L538"><span class="lineNum">     538</span>              : </span>
+<span id="L539"><span class="lineNum">     539</span>              :     metadata.providerId = Constants::Providers::HASHEOUS;</span>
+<span id="L540"><span class="lineNum">     540</span>              :     metadata.fetchedAt = QDateTime::currentDateTime();</span>
+<span id="L541"><span class="lineNum">     541</span>              :     emit metadataFetched(metadata);</span>
+<span id="L542"><span class="lineNum">     542</span>              :     return metadata;</span>
+<span id="L543"><span class="lineNum">     543</span>              : }</span>
+<span id="L544"><span class="lineNum">     544</span>              : </span>
+<span id="L545"><span class="lineNum">     545</span>              : GameMetadata HasheousProvider::getById(const QString &amp;id)</span>
+<span id="L546"><span class="lineNum">     546</span>              : {</span>
+<span id="L547"><span class="lineNum">     547</span>              :     Q_UNUSED(id);</span>
+<span id="L548"><span class="lineNum">     548</span>              :     </span>
+<span id="L549"><span class="lineNum">     549</span>              :     // Hasheous doesn't support ID-based lookup (it uses hashes)</span>
+<span id="L550"><span class="lineNum">     550</span>              :     qWarning() &lt;&lt; &quot;Hasheous does not support ID-based lookup&quot;;</span>
+<span id="L551"><span class="lineNum">     551</span>              :     emit errorOccurred(&quot;Hasheous only supports hash-based matching&quot;);</span>
+<span id="L552"><span class="lineNum">     552</span>              :     </span>
+<span id="L553"><span class="lineNum">     553</span>              :     return GameMetadata();</span>
+<span id="L554"><span class="lineNum">     554</span>              : }</span>
+<span id="L555"><span class="lineNum">     555</span>              : </span>
+<span id="L556"><span class="lineNum">     556</span>              : ArtworkUrls HasheousProvider::getArtwork(const QString &amp;id)</span>
+<span id="L557"><span class="lineNum">     557</span>              : {</span>
+<span id="L558"><span class="lineNum">     558</span>              :     Q_UNUSED(id);</span>
+<span id="L559"><span class="lineNum">     559</span>              :     </span>
+<span id="L560"><span class="lineNum">     560</span>              :     // Artwork is included in the hash lookup response</span>
+<span id="L561"><span class="lineNum">     561</span>              :     qWarning() &lt;&lt; &quot;Hasheous artwork is included in hash lookup, use getByHash() instead&quot;;</span>
+<span id="L562"><span class="lineNum">     562</span>              :     </span>
+<span id="L563"><span class="lineNum">     563</span>              :     return ArtworkUrls();</span>
+<span id="L564"><span class="lineNum">     564</span>              : }</span>
+<span id="L565"><span class="lineNum">     565</span>              : </span>
+<span id="L566"><span class="lineNum">     566</span>              : } // namespace Remus</span>
         </pre>
               </td>
             </tr>

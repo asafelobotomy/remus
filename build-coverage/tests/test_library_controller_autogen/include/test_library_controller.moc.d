@@ -3,7 +3,6 @@
   /home/solon/Documents/remus/src/core/archive_extractor.h \
   /home/solon/Documents/remus/src/core/constants/systems.h \
   /home/solon/Documents/remus/src/core/database.h \
-  /home/solon/Documents/remus/src/core/hasher.h \
   /home/solon/Documents/remus/src/core/scanner.h \
   /home/solon/Documents/remus/src/core/system_detector.h \
   /home/solon/Documents/remus/src/core/system_resolver.h \
@@ -302,6 +301,7 @@
   /usr/include/qt6/QtCore/QMetaType \
   /usr/include/qt6/QtCore/QMutex \
   /usr/include/qt6/QtCore/QObject \
+  /usr/include/qt6/QtCore/QProcess \
   /usr/include/qt6/QtCore/QRect \
   /usr/include/qt6/QtCore/QSharedDataPointer \
   /usr/include/qt6/QtCore/QSize \

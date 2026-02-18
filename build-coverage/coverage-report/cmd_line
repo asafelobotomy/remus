@@ -1,1 +1,1 @@
-genhtml coverage.filtered.info --output-directory coverage-report --rc branch_coverage=1 --legend --title 'Remus Coverage' --ignore-errors inconsistent,corrupt
+genhtml coverage.filtered.info --output-directory coverage-report --title 'Remus Coverage' --ignore-errors range

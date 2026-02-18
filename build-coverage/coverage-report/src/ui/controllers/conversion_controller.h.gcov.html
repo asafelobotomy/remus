@@ -37,20 +37,12 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-02-16 20:31:55</td>
+            <td class="headerValue">2026-02-18 09:32:22</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryLo">0.0&nbsp;%</td>
             <td class="headerCovTableEntry">1</td>
             <td class="headerCovTableEntry">0</td>
-          </tr>
-          <tr>
-            <td class="headerItem">Legend:</td>
-            <td class="headerValueLeg">            Lines:&nbsp&nbsp&nbsp&nbsp
-            <span class="coverLegendCov">hit</span>
-            <span class="coverLegendNoCov">not hit</span>
-</td>
-            <td></td>
           </tr>
                   <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
                 </table>
@@ -71,11 +63,11 @@
 <span id="L1"><span class="lineNum">       1</span>              : #pragma once</span>
 <span id="L2"><span class="lineNum">       2</span>              : </span>
 <span id="L3"><span class="lineNum">       3</span>              : #include &lt;QObject&gt;</span>
-<span id="L4"><span class="lineNum">       4</span>              : #include &quot;../../core/chd_converter.h&quot;</span>
-<span id="L5"><span class="lineNum">       5</span>              : #include &quot;../../core/archive_extractor.h&quot;</span>
-<span id="L6"><span class="lineNum">       6</span>              : #include &quot;../../core/database.h&quot;</span>
+<span id="L4"><span class="lineNum">       4</span>              : #include &quot;../../core/database.h&quot;</span>
+<span id="L5"><span class="lineNum">       5</span>              : </span>
+<span id="L6"><span class="lineNum">       6</span>              : namespace Remus {</span>
 <span id="L7"><span class="lineNum">       7</span>              : </span>
-<span id="L8"><span class="lineNum">       8</span>              : namespace Remus {</span>
+<span id="L8"><span class="lineNum">       8</span>              : class ConversionService;</span>
 <span id="L9"><span class="lineNum">       9</span>              : </span>
 <span id="L10"><span class="lineNum">      10</span>              : class ConversionController : public QObject {</span>
 <span id="L11"><span class="lineNum">      11</span>              :     Q_OBJECT</span>
@@ -83,23 +75,23 @@
 <span id="L13"><span class="lineNum">      13</span>              :     </span>
 <span id="L14"><span class="lineNum">      14</span>              : public:</span>
 <span id="L15"><span class="lineNum">      15</span>              :     explicit ConversionController(Database *db = nullptr, QObject *parent = nullptr);</span>
-<span id="L16"><span class="lineNum">      16</span>              :     </span>
-<span id="L17"><span class="lineNum">      17</span> <span class="tlaUNC">           0 :     bool isConverting() const { return m_converting; }</span></span>
-<span id="L18"><span class="lineNum">      18</span>              :     </span>
-<span id="L19"><span class="lineNum">      19</span>              :     Q_INVOKABLE void convertToCHD(const QString &amp;path, const QString &amp;codec);</span>
-<span id="L20"><span class="lineNum">      20</span>              :     Q_INVOKABLE void extractCHD(const QString &amp;path);</span>
-<span id="L21"><span class="lineNum">      21</span>              :     Q_INVOKABLE void extractArchive(const QString &amp;path);</span>
-<span id="L22"><span class="lineNum">      22</span>              :     </span>
-<span id="L23"><span class="lineNum">      23</span>              : signals:</span>
-<span id="L24"><span class="lineNum">      24</span>              :     void convertingChanged();</span>
-<span id="L25"><span class="lineNum">      25</span>              :     void conversionProgress(int percent);</span>
-<span id="L26"><span class="lineNum">      26</span>              :     void conversionCompleted(const QString &amp;outputPath);</span>
-<span id="L27"><span class="lineNum">      27</span>              :     void conversionError(const QString &amp;error);</span>
-<span id="L28"><span class="lineNum">      28</span>              :     </span>
-<span id="L29"><span class="lineNum">      29</span>              : private:</span>
-<span id="L30"><span class="lineNum">      30</span>              :     Database *m_db;</span>
-<span id="L31"><span class="lineNum">      31</span>              :     CHDConverter *m_chdConverter;</span>
-<span id="L32"><span class="lineNum">      32</span>              :     ArchiveExtractor *m_archiveExtractor;</span>
+<span id="L16"><span class="lineNum">      16</span>              :     ~ConversionController() override;</span>
+<span id="L17"><span class="lineNum">      17</span> <span class="tlaUNC">           0 :     </span></span>
+<span id="L18"><span class="lineNum">      18</span>              :     bool isConverting() const { return m_converting; }</span>
+<span id="L19"><span class="lineNum">      19</span>              :     </span>
+<span id="L20"><span class="lineNum">      20</span>              :     Q_INVOKABLE void convertToCHD(const QString &amp;path, const QString &amp;codec);</span>
+<span id="L21"><span class="lineNum">      21</span>              :     Q_INVOKABLE void extractCHD(const QString &amp;path);</span>
+<span id="L22"><span class="lineNum">      22</span>              :     Q_INVOKABLE void extractArchive(const QString &amp;path);</span>
+<span id="L23"><span class="lineNum">      23</span>              :     </span>
+<span id="L24"><span class="lineNum">      24</span>              : signals:</span>
+<span id="L25"><span class="lineNum">      25</span>              :     void convertingChanged();</span>
+<span id="L26"><span class="lineNum">      26</span>              :     void conversionProgress(int percent);</span>
+<span id="L27"><span class="lineNum">      27</span>              :     void conversionCompleted(const QString &amp;outputPath);</span>
+<span id="L28"><span class="lineNum">      28</span>              :     void conversionError(const QString &amp;error);</span>
+<span id="L29"><span class="lineNum">      29</span>              :     </span>
+<span id="L30"><span class="lineNum">      30</span>              : private:</span>
+<span id="L31"><span class="lineNum">      31</span>              :     Database *m_db;</span>
+<span id="L32"><span class="lineNum">      32</span>              :     ConversionService *m_conversionService = nullptr;</span>
 <span id="L33"><span class="lineNum">      33</span>              :     bool m_converting = false;</span>
 <span id="L34"><span class="lineNum">      34</span>              : };</span>
 <span id="L35"><span class="lineNum">      35</span>              : </span>

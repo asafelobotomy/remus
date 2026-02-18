@@ -37,28 +37,12 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-02-16 20:31:55</td>
+            <td class="headerValue">2026-02-18 09:32:22</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
             <td class="headerCovTableEntry">8</td>
             <td class="headerCovTableEntry">8</td>
-          </tr>
-          <tr>
-            <td class="headerItem">Legend:</td>
-            <td class="headerValueLeg">            Lines:&nbsp&nbsp&nbsp&nbsp
-            <span class="coverLegendCov">hit</span>
-            <span class="coverLegendNoCov">not hit</span>
-            <br>Branches:
-            <span class="coverLegendCov">+</span> taken
-            <span class="coverLegendNoCov">-</span> not taken
-            <span class="coverLegendNoCov">#</span> not executed
-</td>
-            <td></td>
-            <td class="headerItem">Branches:</td>
-            <td class="headerCovTableEntryLo">52.0&nbsp;%</td>
-            <td class="headerCovTableEntry">406</td>
-            <td class="headerCovTableEntry">211</td>
           </tr>
                   <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
                 </table>
@@ -74,274 +58,237 @@
             </tr>
             <tr>
               <td>
-<pre class="sourceHeading">             Branch data     Line data    Source code</pre>
+<pre class="sourceHeading">            Line data    Source code</pre>
 <pre class="source">
-<span id="L1"><span class="lineNum">       1</span>                 :             : #include &quot;dat_parser.h&quot;</span>
-<span id="L2"><span class="lineNum">       2</span>                 :             : #include &lt;QFile&gt;</span>
-<span id="L3"><span class="lineNum">       3</span>                 :             : #include &lt;QXmlStreamReader&gt;</span>
-<span id="L4"><span class="lineNum">       4</span>                 :             : #include &lt;QDebug&gt;</span>
-<span id="L5"><span class="lineNum">       5</span>                 :             : #include &lt;QFileInfo&gt;</span>
-<span id="L6"><span class="lineNum">       6</span>                 :             : </span>
-<span id="L7"><span class="lineNum">       7</span>                 :             : namespace Remus {</span>
-<span id="L8"><span class="lineNum">       8</span>                 :             : </span>
-<span id="L9"><span class="lineNum">       9</span>                 :<span class="tlaGNC">          33 : DatParser::DatParser(QObject *parent)</span></span>
-<span id="L10"><span class="lineNum">      10</span>                 :<span class="tlaGNC">          33 :     : QObject(parent)</span></span>
-<span id="L11"><span class="lineNum">      11</span>                 :             : {</span>
-<span id="L12"><span class="lineNum">      12</span>                 :<span class="tlaGNC">          33 : }</span></span>
-<span id="L13"><span class="lineNum">      13</span>                 :             : </span>
-<span id="L14"><span class="lineNum">      14</span>                 :<span class="tlaGNC">           3 : DatParseResult DatParser::parse(const QString &amp;filePath)</span></span>
-<span id="L15"><span class="lineNum">      15</span>                 :             : {</span>
-<span id="L16"><span class="lineNum">      16</span>                 :<span class="tlaGNC">           3 :     DatParseResult result;</span></span>
-<span id="L17"><span class="lineNum">      17</span>                 :             :     </span>
-<span id="L18"><span class="lineNum">      18</span>         [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           3 :     QFile file(filePath);</span></span>
-<span id="L19"><span class="lineNum">      19</span>   [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaUNC" title="Branch 2 was not taken"> - </span><span class="tlaGBC" title="Branch 3 was taken 3 times"> + </span>]:<span class="tlaGNC">           3 :     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {</span></span>
-<span id="L20"><span class="lineNum">      20</span>   [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span><span class="tlaUNC" title="Branch 2 was not executed"> # </span><span class="tlaUNC" title="Branch 3 was not executed"> # </span>]:<span class="tlaUNC">           0 :         result.error = QString(&quot;Failed to open DAT file: %1&quot;).arg(filePath);</span></span>
-<span id="L21"><span class="lineNum">      21</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC">           0 :         emit parseError(result.error);</span></span>
-<span id="L22"><span class="lineNum">      22</span>                 :<span class="tlaUNC">           0 :         return result;</span></span>
-<span id="L23"><span class="lineNum">      23</span>                 :             :     }</span>
-<span id="L24"><span class="lineNum">      24</span>                 :             : </span>
-<span id="L25"><span class="lineNum">      25</span>   [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">           3 :     QString content = file.readAll();</span></span>
-<span id="L26"><span class="lineNum">      26</span>         [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           3 :     file.close();</span></span>
-<span id="L27"><span class="lineNum">      27</span>                 :             : </span>
-<span id="L28"><span class="lineNum">      28</span>         [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           3 :     return parseContent(content);</span></span>
-<span id="L29"><span class="lineNum">      29</span>                 :<span class="tlaGNC">           3 : }</span></span>
-<span id="L30"><span class="lineNum">      30</span>                 :             : </span>
-<span id="L31"><span class="lineNum">      31</span>                 :<span class="tlaGNC">          33 : DatParseResult DatParser::parseContent(const QString &amp;content)</span></span>
-<span id="L32"><span class="lineNum">      32</span>                 :             : {</span>
-<span id="L33"><span class="lineNum">      33</span>                 :<span class="tlaGNC">          33 :     DatParseResult result;</span></span>
-<span id="L34"><span class="lineNum">      34</span>         [<span class="tlaGBC" title="Branch 0 was taken 33 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          33 :     QXmlStreamReader xml(content);</span></span>
-<span id="L35"><span class="lineNum">      35</span>                 :             : </span>
-<span id="L36"><span class="lineNum">      36</span>                 :             :     // Skip to root element</span>
-<span id="L37"><span class="lineNum">      37</span>   [<span class="tlaGBC" title="Branch 0 was taken 99 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 96 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 3 times"> + </span> :<span class="tlaGNC">          99 :     while (!xml.atEnd() &amp;&amp; !xml.isStartElement()) {</span></span>
-<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 4 was taken 96 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span><span class="tlaGBC" title="Branch 6 was taken 66 times"> + </span><span class="tlaGBC" title="Branch 7 was taken 30 times"> + </span><span class="tlaGBC" title="Branch 8 was taken 66 times"> + </span> 
-<span class="lineNum">        </span>             <span class="tlaGBC" title="Branch 9 was taken 33 times"> + </span>]
-<span id="L38"><span class="lineNum">      38</span>         [<span class="tlaGBC" title="Branch 0 was taken 66 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          66 :         xml.readNext();</span></span>
-<span id="L39"><span class="lineNum">      39</span>                 :             :     }</span>
-<span id="L40"><span class="lineNum">      40</span>                 :             : </span>
-<span id="L41"><span class="lineNum">      41</span>   [<span class="tlaGBC" title="Branch 0 was taken 33 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 30 times"> + </span>]:<span class="tlaGNC">          33 :     if (xml.hasError()) {</span></span>
-<span id="L42"><span class="lineNum">      42</span>         [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           3 :         result.error = QString(&quot;XML parse error: %1 at line %2&quot;)</span></span>
-<span id="L43"><span class="lineNum">      43</span>   [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">           6 :             .arg(xml.errorString())</span></span>
-<span id="L44"><span class="lineNum">      44</span>   [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">           3 :             .arg(xml.lineNumber());</span></span>
-<span id="L45"><span class="lineNum">      45</span>         [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           3 :         emit parseError(result.error);</span></span>
-<span id="L46"><span class="lineNum">      46</span>                 :<span class="tlaGNC">           3 :         return result;</span></span>
-<span id="L47"><span class="lineNum">      47</span>                 :             :     }</span>
-<span id="L48"><span class="lineNum">      48</span>                 :             : </span>
-<span id="L49"><span class="lineNum">      49</span>                 :             :     // Expect &lt;datafile&gt; root element</span>
-<span id="L50"><span class="lineNum">      50</span>   [<span class="tlaGBC" title="Branch 0 was taken 30 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 30 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">          30 :     if (xml.name() != QString(&quot;datafile&quot;)) {</span></span>
-<span class="lineNum">        </span>          <span class="tlaUNC" title="Branch 4 was not taken"> - </span><span class="tlaGBC" title="Branch 5 was taken 30 times"> + </span>]
-<span id="L51"><span class="lineNum">      51</span>                 :             :         // Try to continue anyway - some DAT files have different root elements</span>
-<span id="L52"><span class="lineNum">      52</span>   [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span><span class="tlaUNC" title="Branch 2 was not executed"> # </span><span class="tlaUNC" title="Branch 3 was not executed"> # </span> :<span class="tlaUNC">           0 :         qWarning() &lt;&lt; &quot;Expected &lt;datafile&gt; root, found:&quot; &lt;&lt; xml.name();</span></span>
-<span class="lineNum">        </span>    <span class="tlaUNC" title="Branch 4 was not executed"> # </span><span class="tlaUNC" title="Branch 5 was not executed"> # </span><span class="tlaUNC" title="Branch 6 was not executed"> # </span><span class="tlaUNC" title="Branch 7 was not executed"> # </span>]
-<span id="L53"><span class="lineNum">      53</span>                 :             :     }</span>
-<span id="L54"><span class="lineNum">      54</span>                 :             : </span>
-<span id="L55"><span class="lineNum">      55</span>         [<span class="tlaGBC" title="Branch 0 was taken 30 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          30 :     xml.readNext();</span></span>
-<span id="L56"><span class="lineNum">      56</span>                 :             : </span>
-<span id="L57"><span class="lineNum">      57</span>   [<span class="tlaGBC" title="Branch 0 was taken 192 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 162 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 30 times"> + </span>]:<span class="tlaGNC">         192 :     while (!xml.atEnd()) {</span></span>
-<span id="L58"><span class="lineNum">      58</span>   [<span class="tlaGBC" title="Branch 0 was taken 162 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 54 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 108 times"> + </span>]:<span class="tlaGNC">         162 :         if (xml.isStartElement()) {</span></span>
-<span id="L59"><span class="lineNum">      59</span>   [<span class="tlaGBC" title="Branch 0 was taken 54 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 54 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">          54 :             if (xml.name() == QString(&quot;header&quot;)) {</span></span>
-<span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 27 times"> + </span><span class="tlaGBC" title="Branch 5 was taken 27 times"> + </span>]
-<span id="L60"><span class="lineNum">      60</span>   [<span class="tlaGBC" title="Branch 0 was taken 27 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaUNC" title="Branch 2 was not taken"> - </span><span class="tlaGBC" title="Branch 3 was taken 27 times"> + </span>]:<span class="tlaGNC">          27 :                 if (!parseHeader(xml, result.header)) {</span></span>
-<span id="L61"><span class="lineNum">      61</span>   [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span><span class="tlaUNC" title="Branch 2 was not executed"> # </span><span class="tlaUNC" title="Branch 3 was not executed"> # </span>]:<span class="tlaUNC">           0 :                     qWarning() &lt;&lt; &quot;Failed to parse header&quot;;</span></span>
-<span id="L62"><span class="lineNum">      62</span>                 :             :                 }</span>
-<span id="L63"><span class="lineNum">      63</span>   [<span class="tlaGBC" title="Branch 0 was taken 27 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 27 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">          27 :             } else if (xml.name() == QString(&quot;game&quot;) || xml.name() == QString(&quot;machine&quot;)) {</span></span>
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 4 was not taken"> - </span><span class="tlaGBC" title="Branch 5 was taken 27 times"> + </span><span class="tlaUNC" title="Branch 6 was not taken"> - </span><span class="tlaUNC" title="Branch 7 was not taken"> - </span><span class="tlaUNC" title="Branch 8 was not taken"> - </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 9 was not taken"> - </span><span class="tlaUNC" title="Branch 10 was not taken"> - </span><span class="tlaUNC" title="Branch 11 was not taken"> - </span><span class="tlaUNC" title="Branch 12 was not taken"> - </span><span class="tlaGBC" title="Branch 13 was taken 27 times"> + </span> 
-<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 14 was taken 27 times"> + </span><span class="tlaUNC" title="Branch 15 was not taken"> - </span><span class="tlaGBC" title="Branch 16 was taken 27 times"> + </span><span class="tlaUNC" title="Branch 17 was not taken"> - </span><span class="tlaUNC" title="Branch 18 was not taken"> - </span> 
-<span class="lineNum">        </span>       <span class="tlaUNC" title="Branch 19 was not taken"> - </span><span class="tlaUNC" title="Branch 20 was not taken"> - </span><span class="tlaUNC" title="Branch 21 was not taken"> - </span>]
-<span id="L64"><span class="lineNum">      64</span>   [<span class="tlaGBC" title="Branch 0 was taken 27 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaUNC" title="Branch 2 was not taken"> - </span><span class="tlaGBC" title="Branch 3 was taken 27 times"> + </span>]:<span class="tlaGNC">          27 :                 if (!parseGame(xml, result.entries)) {</span></span>
-<span id="L65"><span class="lineNum">      65</span>   [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span><span class="tlaUNC" title="Branch 2 was not executed"> # </span><span class="tlaUNC" title="Branch 3 was not executed"> # </span>]:<span class="tlaUNC">           0 :                     qWarning() &lt;&lt; &quot;Failed to parse game entry&quot;;</span></span>
-<span id="L66"><span class="lineNum">      66</span>                 :             :                 }</span>
-<span id="L67"><span class="lineNum">      67</span>         [<span class="tlaGBC" title="Branch 0 was taken 27 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          27 :                 emit parseProgress(result.entries.size(), 0);</span></span>
-<span id="L68"><span class="lineNum">      68</span>                 :             :             }</span>
-<span id="L69"><span class="lineNum">      69</span>                 :             :         }</span>
-<span id="L70"><span class="lineNum">      70</span>         [<span class="tlaGBC" title="Branch 0 was taken 162 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">         162 :         xml.readNext();</span></span>
-<span id="L71"><span class="lineNum">      71</span>                 :             :     }</span>
-<span id="L72"><span class="lineNum">      72</span>                 :             : </span>
-<span id="L73"><span class="lineNum">      73</span>   [<span class="tlaGBC" title="Branch 0 was taken 30 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 27 times"> + </span>]:<span class="tlaGNC">          30 :     if (xml.hasError()) {</span></span>
-<span id="L74"><span class="lineNum">      74</span>         [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           3 :         result.error = QString(&quot;XML parse error: %1 at line %2&quot;)</span></span>
-<span id="L75"><span class="lineNum">      75</span>   [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">           6 :             .arg(xml.errorString())</span></span>
-<span id="L76"><span class="lineNum">      76</span>   [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">           3 :             .arg(xml.lineNumber());</span></span>
-<span id="L77"><span class="lineNum">      77</span>         [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           3 :         emit parseError(result.error);</span></span>
-<span id="L78"><span class="lineNum">      78</span>                 :<span class="tlaGNC">           3 :         return result;</span></span>
-<span id="L79"><span class="lineNum">      79</span>                 :             :     }</span>
-<span id="L80"><span class="lineNum">      80</span>                 :             : </span>
-<span id="L81"><span class="lineNum">      81</span>                 :<span class="tlaGNC">          27 :     result.entryCount = result.entries.size();</span></span>
-<span id="L82"><span class="lineNum">      82</span>                 :<span class="tlaGNC">          27 :     result.success = true;</span></span>
-<span id="L83"><span class="lineNum">      83</span>                 :             : </span>
-<span id="L84"><span class="lineNum">      84</span>   [<span class="tlaGBC" title="Branch 0 was taken 27 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 27 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">          54 :     qInfo() &lt;&lt; &quot;Parsed DAT file:&quot; &lt;&lt; result.header.name </span></span>
-<span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 27 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span>]
-<span id="L85"><span class="lineNum">      85</span>   [<span class="tlaGBC" title="Branch 0 was taken 27 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 27 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">          27 :             &lt;&lt; &quot;with&quot; &lt;&lt; result.entryCount &lt;&lt; &quot;entries&quot;;</span></span>
-<span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 27 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span>]
-<span id="L86"><span class="lineNum">      86</span>                 :             : </span>
-<span id="L87"><span class="lineNum">      87</span>                 :<span class="tlaGNC">          27 :     return result;</span></span>
-<span id="L88"><span class="lineNum">      88</span>                 :<span class="tlaGNC">          33 : }</span></span>
-<span id="L89"><span class="lineNum">      89</span>                 :             : </span>
-<span id="L90"><span class="lineNum">      90</span>                 :<span class="tlaGNC">          27 : bool DatParser::parseHeader(QXmlStreamReader &amp;xml, DatHeader &amp;header)</span></span>
-<span id="L91"><span class="lineNum">      91</span>                 :             : {</span>
-<span id="L92"><span class="lineNum">      92</span>                 :<span class="tlaGNC">          27 :     xml.readNext();</span></span>
-<span id="L93"><span class="lineNum">      93</span>                 :             :     </span>
-<span id="L94"><span class="lineNum">      94</span>         [<span class="tlaGBC" title="Branch 0 was taken 132 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 3 times"> + </span>]:<span class="tlaGNC">         135 :     while (!xml.atEnd()) {</span></span>
-<span id="L95"><span class="lineNum">      95</span>   [<span class="tlaGBC" title="Branch 0 was taken 132 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 24 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 108 times"> + </span> :<span class="tlaGNC">         132 :         if (xml.isEndElement() &amp;&amp; xml.name() == QString(&quot;header&quot;)) {</span></span>
-<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 4 was taken 24 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span><span class="tlaGBC" title="Branch 6 was taken 24 times"> + </span><span class="tlaUNC" title="Branch 7 was not taken"> - </span><span class="tlaGBC" title="Branch 8 was taken 24 times"> + </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 9 was not taken"> - </span><span class="tlaGBC" title="Branch 10 was taken 24 times"> + </span><span class="tlaGBC" title="Branch 11 was taken 108 times"> + </span><span class="tlaGBC" title="Branch 12 was taken 24 times"> + </span><span class="tlaGBC" title="Branch 13 was taken 108 times"> + </span> 
-<span class="lineNum">        </span>          <span class="tlaUNC" title="Branch 14 was not taken"> - </span><span class="tlaUNC" title="Branch 15 was not taken"> - </span>]
-<span id="L96"><span class="lineNum">      96</span>                 :<span class="tlaGNC">          24 :             return true;</span></span>
-<span id="L97"><span class="lineNum">      97</span>                 :             :         }</span>
-<span id="L98"><span class="lineNum">      98</span>                 :             : </span>
-<span id="L99"><span class="lineNum">      99</span>         [<span class="tlaGBC" title="Branch 0 was taken 54 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 54 times"> + </span>]:<span class="tlaGNC">         108 :         if (xml.isStartElement()) {</span></span>
-<span id="L100"><span class="lineNum">     100</span>   [<span class="tlaGBC" title="Branch 0 was taken 54 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 54 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">          54 :             QString elementName = xml.name().toString();</span></span>
-<span id="L101"><span class="lineNum">     101</span>         [<span class="tlaGBC" title="Branch 0 was taken 54 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          54 :             QString text = xml.readElementText();</span></span>
-<span id="L102"><span class="lineNum">     102</span>                 :             : </span>
-<span id="L103"><span class="lineNum">     103</span>         [<span class="tlaGBC" title="Branch 0 was taken 27 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 27 times"> + </span>]:<span class="tlaGNC">          54 :             if (elementName == &quot;name&quot;) {</span></span>
-<span id="L104"><span class="lineNum">     104</span>                 :<span class="tlaGNC">          27 :                 header.name = text;</span></span>
-<span id="L105"><span class="lineNum">     105</span>         [<span class="tlaGBC" title="Branch 0 was taken 9 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 18 times"> + </span>]:<span class="tlaGNC">          27 :             } else if (elementName == &quot;description&quot;) {</span></span>
-<span id="L106"><span class="lineNum">     106</span>                 :<span class="tlaGNC">           9 :                 header.description = text;</span></span>
-<span id="L107"><span class="lineNum">     107</span>         [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 15 times"> + </span>]:<span class="tlaGNC">          18 :             } else if (elementName == &quot;version&quot;) {</span></span>
-<span id="L108"><span class="lineNum">     108</span>                 :<span class="tlaGNC">           3 :                 header.version = text;</span></span>
-<span id="L109"><span class="lineNum">     109</span>         [<span class="tlaGBC" title="Branch 0 was taken 9 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 6 times"> + </span>]:<span class="tlaGNC">          15 :             } else if (elementName == &quot;author&quot;) {</span></span>
-<span id="L110"><span class="lineNum">     110</span>                 :<span class="tlaGNC">           9 :                 header.author = text;</span></span>
-<span id="L111"><span class="lineNum">     111</span>         [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 3 times"> + </span>]:<span class="tlaGNC">           6 :             } else if (elementName == &quot;category&quot;) {</span></span>
-<span id="L112"><span class="lineNum">     112</span>                 :<span class="tlaGNC">           3 :                 header.category = text;</span></span>
-<span id="L113"><span class="lineNum">     113</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 3 times"> + </span>]:<span class="tlaGNC">           3 :             } else if (elementName == &quot;url&quot;) {</span></span>
-<span id="L114"><span class="lineNum">     114</span>                 :<span class="tlaUNC">           0 :                 header.url = text;</span></span>
-<span id="L115"><span class="lineNum">     115</span>         [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           3 :             } else if (elementName == &quot;date&quot;) {</span></span>
-<span id="L116"><span class="lineNum">     116</span>         [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           3 :                 header.date = QDateTime::fromString(text, Qt::ISODate);</span></span>
-<span id="L117"><span class="lineNum">     117</span>   [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaUNC" title="Branch 2 was not taken"> - </span><span class="tlaGBC" title="Branch 3 was taken 3 times"> + </span>]:<span class="tlaGNC">           3 :                 if (!header.date.isValid()) {</span></span>
-<span id="L118"><span class="lineNum">     118</span>                 :             :                     // Try alternative format: &quot;20240115&quot; or &quot;2024-01-15&quot;</span>
-<span id="L119"><span class="lineNum">     119</span>   [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span><span class="tlaUNC" title="Branch 2 was not executed"> # </span><span class="tlaUNC" title="Branch 3 was not executed"> # </span>]:<span class="tlaUNC">           0 :                     header.date = QDateTime::fromString(text, &quot;yyyyMMdd&quot;);</span></span>
-<span id="L120"><span class="lineNum">     120</span>                 :             :                 }</span>
-<span id="L121"><span class="lineNum">     121</span>                 :             :             }</span>
-<span id="L122"><span class="lineNum">     122</span>                 :<span class="tlaGNC">          54 :         }</span></span>
-<span id="L123"><span class="lineNum">     123</span>                 :<span class="tlaGNC">         108 :         xml.readNext();</span></span>
-<span id="L124"><span class="lineNum">     124</span>                 :             :     }</span>
-<span id="L125"><span class="lineNum">     125</span>                 :             : </span>
-<span id="L126"><span class="lineNum">     126</span>                 :<span class="tlaGNC">           3 :     return true;</span></span>
-<span id="L127"><span class="lineNum">     127</span>                 :             : }</span>
-<span id="L128"><span class="lineNum">     128</span>                 :             : </span>
-<span id="L129"><span class="lineNum">     129</span>                 :<span class="tlaGNC">          27 : bool DatParser::parseGame(QXmlStreamReader &amp;xml, QList&lt;DatRomEntry&gt; &amp;entries)</span></span>
-<span id="L130"><span class="lineNum">     130</span>                 :             : {</span>
-<span id="L131"><span class="lineNum">     131</span>                 :<span class="tlaGNC">          27 :     DatRomEntry baseEntry;</span></span>
-<span id="L132"><span class="lineNum">     132</span>                 :             :     </span>
-<span id="L133"><span class="lineNum">     133</span>                 :             :     // Get game name from attribute</span>
-<span id="L134"><span class="lineNum">     134</span>         [<span class="tlaGBC" title="Branch 0 was taken 27 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          27 :     QXmlStreamAttributes attrs = xml.attributes();</span></span>
-<span id="L135"><span class="lineNum">     135</span>         [<span class="tlaGBC" title="Branch 0 was taken 27 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          27 :     baseEntry.gameName = attrs.value(&quot;name&quot;).toString();</span></span>
-<span id="L136"><span class="lineNum">     136</span>                 :             : </span>
-<span id="L137"><span class="lineNum">     137</span>         [<span class="tlaGBC" title="Branch 0 was taken 27 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          27 :     xml.readNext();</span></span>
-<span id="L138"><span class="lineNum">     138</span>                 :             : </span>
-<span id="L139"><span class="lineNum">     139</span>   [<span class="tlaGBC" title="Branch 0 was taken 156 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 156 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">         156 :     while (!xml.atEnd()) {</span></span>
-<span id="L140"><span class="lineNum">     140</span>   [<span class="tlaGBC" title="Branch 0 was taken 156 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 57 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 99 times"> + </span> :<span class="tlaGNC">         243 :         if (xml.isEndElement() &amp;&amp; </span></span>
-<span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 30 times"> + </span><span class="tlaGBC" title="Branch 5 was taken 27 times"> + </span>]
-<span id="L141"><span class="lineNum">     141</span>   [<span class="tlaGBC" title="Branch 0 was taken 57 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 57 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">         243 :             (xml.name() == QString(&quot;game&quot;) || xml.name() == QString(&quot;machine&quot;))) {</span></span>
-<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 4 was taken 30 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span><span class="tlaGBC" title="Branch 6 was taken 30 times"> + </span><span class="tlaUNC" title="Branch 7 was not taken"> - </span><span class="tlaUNC" title="Branch 8 was not taken"> - </span> 
-<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 9 was taken 30 times"> + </span><span class="tlaGBC" title="Branch 10 was taken 30 times"> + </span><span class="tlaGBC" title="Branch 11 was taken 126 times"> + </span><span class="tlaGBC" title="Branch 12 was taken 57 times"> + </span><span class="tlaGBC" title="Branch 13 was taken 99 times"> + </span> 
-<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 14 was taken 27 times"> + </span><span class="tlaGBC" title="Branch 15 was taken 129 times"> + </span><span class="tlaUNC" title="Branch 16 was not taken"> - </span><span class="tlaUNC" title="Branch 17 was not taken"> - </span><span class="tlaUNC" title="Branch 18 was not taken"> - </span> 
-<span class="lineNum">        </span>             <span class="tlaUNC" title="Branch 19 was not taken"> - </span>]
-<span id="L142"><span class="lineNum">     142</span>                 :<span class="tlaGNC">          27 :             return true;</span></span>
-<span id="L143"><span class="lineNum">     143</span>                 :             :         }</span>
-<span id="L144"><span class="lineNum">     144</span>                 :             : </span>
-<span id="L145"><span class="lineNum">     145</span>   [<span class="tlaGBC" title="Branch 0 was taken 129 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 36 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 93 times"> + </span>]:<span class="tlaGNC">         129 :         if (xml.isStartElement()) {</span></span>
-<span id="L146"><span class="lineNum">     146</span>   [<span class="tlaGBC" title="Branch 0 was taken 36 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 36 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">          36 :             QString elementName = xml.name().toString();</span></span>
-<span id="L147"><span class="lineNum">     147</span>                 :             : </span>
-<span id="L148"><span class="lineNum">     148</span>         [<span class="tlaGBC" title="Branch 0 was taken 6 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 30 times"> + </span>]:<span class="tlaGNC">          36 :             if (elementName == &quot;description&quot;) {</span></span>
-<span id="L149"><span class="lineNum">     149</span>         [<span class="tlaGBC" title="Branch 0 was taken 6 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           6 :                 baseEntry.description = xml.readElementText();</span></span>
-<span id="L150"><span class="lineNum">     150</span>   [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 30 times"> + </span><span class="tlaUNC" title="Branch 2 was not taken"> - </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">          30 :             } else if (elementName == &quot;rom&quot; || elementName == &quot;disk&quot;) {</span></span>
-<span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 30 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span>]
-<span id="L151"><span class="lineNum">     151</span>                 :             :                 // Parse ROM/disk entry</span>
-<span id="L152"><span class="lineNum">     152</span>                 :<span class="tlaGNC">          30 :                 DatRomEntry romEntry = baseEntry;</span></span>
-<span id="L153"><span class="lineNum">     153</span>         [<span class="tlaGBC" title="Branch 0 was taken 30 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          30 :                 QXmlStreamAttributes romAttrs = xml.attributes();</span></span>
-<span id="L154"><span class="lineNum">     154</span>                 :             : </span>
-<span id="L155"><span class="lineNum">     155</span>         [<span class="tlaGBC" title="Branch 0 was taken 30 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          30 :                 romEntry.romName = romAttrs.value(&quot;name&quot;).toString();</span></span>
-<span id="L156"><span class="lineNum">     156</span>                 :             :                 </span>
-<span id="L157"><span class="lineNum">     157</span>         [<span class="tlaGBC" title="Branch 0 was taken 30 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          30 :                 QString sizeStr = romAttrs.value(&quot;size&quot;).toString();</span></span>
-<span id="L158"><span class="lineNum">     158</span>         [<span class="tlaGBC" title="Branch 0 was taken 27 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 3 times"> + </span>]:<span class="tlaGNC">          30 :                 if (!sizeStr.isEmpty()) {</span></span>
-<span id="L159"><span class="lineNum">     159</span>         [<span class="tlaGBC" title="Branch 0 was taken 27 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          27 :                     romEntry.size = sizeStr.toLongLong();</span></span>
-<span id="L160"><span class="lineNum">     160</span>                 :             :                 }</span>
-<span id="L161"><span class="lineNum">     161</span>                 :             : </span>
-<span id="L162"><span class="lineNum">     162</span>   [<span class="tlaGBC" title="Branch 0 was taken 30 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 30 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">          30 :                 romEntry.crc32 = normalizeHash(romAttrs.value(&quot;crc&quot;).toString());</span></span>
-<span id="L163"><span class="lineNum">     163</span>   [<span class="tlaGBC" title="Branch 0 was taken 30 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 30 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">          30 :                 romEntry.md5 = normalizeHash(romAttrs.value(&quot;md5&quot;).toString());</span></span>
-<span id="L164"><span class="lineNum">     164</span>   [<span class="tlaGBC" title="Branch 0 was taken 30 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 30 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">          30 :                 romEntry.sha1 = normalizeHash(romAttrs.value(&quot;sha1&quot;).toString());</span></span>
-<span id="L165"><span class="lineNum">     165</span>         [<span class="tlaGBC" title="Branch 0 was taken 30 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          30 :                 romEntry.status = romAttrs.value(&quot;status&quot;).toString();</span></span>
-<span id="L166"><span class="lineNum">     166</span>         [<span class="tlaGBC" title="Branch 0 was taken 30 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          30 :                 romEntry.serial = romAttrs.value(&quot;serial&quot;).toString();</span></span>
-<span id="L167"><span class="lineNum">     167</span>                 :             : </span>
-<span id="L168"><span class="lineNum">     168</span>         [<span class="tlaGBC" title="Branch 0 was taken 30 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          30 :                 entries.append(romEntry);</span></span>
-<span id="L169"><span class="lineNum">     169</span>                 :<span class="tlaGNC">          30 :             }</span></span>
-<span id="L170"><span class="lineNum">     170</span>                 :<span class="tlaGNC">          36 :         }</span></span>
-<span id="L171"><span class="lineNum">     171</span>         [<span class="tlaGBC" title="Branch 0 was taken 129 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">         129 :         xml.readNext();</span></span>
-<span id="L172"><span class="lineNum">     172</span>                 :             :     }</span>
-<span id="L173"><span class="lineNum">     173</span>                 :             : </span>
-<span id="L174"><span class="lineNum">     174</span>                 :<span class="tlaUNC">           0 :     return true;</span></span>
-<span id="L175"><span class="lineNum">     175</span>                 :<span class="tlaGNC">          27 : }</span></span>
-<span id="L176"><span class="lineNum">     176</span>                 :             : </span>
-<span id="L177"><span class="lineNum">     177</span>                 :<span class="tlaGNC">          90 : QString DatParser::normalizeHash(const QString &amp;hash)</span></span>
-<span id="L178"><span class="lineNum">     178</span>                 :             : {</span>
-<span id="L179"><span class="lineNum">     179</span>                 :             :     // Convert to lowercase and remove any whitespace</span>
-<span id="L180"><span class="lineNum">     180</span>   [<span class="tlaGBC" title="Branch 0 was taken 90 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 90 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">          90 :     return hash.toLower().trimmed();</span></span>
-<span id="L181"><span class="lineNum">     181</span>                 :             : }</span>
-<span id="L182"><span class="lineNum">     182</span>                 :             : </span>
-<span id="L183"><span class="lineNum">     183</span>                 :<span class="tlaGNC">          15 : QMap&lt;QString, DatRomEntry&gt; DatParser::indexByHash(</span></span>
-<span id="L184"><span class="lineNum">     184</span>                 :             :     const QList&lt;DatRomEntry&gt; &amp;entries, </span>
-<span id="L185"><span class="lineNum">     185</span>                 :             :     const QString &amp;hashType)</span>
-<span id="L186"><span class="lineNum">     186</span>                 :             : {</span>
-<span id="L187"><span class="lineNum">     187</span>                 :<span class="tlaGNC">          15 :     QMap&lt;QString, DatRomEntry&gt; index;</span></span>
-<span id="L188"><span class="lineNum">     188</span>                 :             : </span>
-<span id="L189"><span class="lineNum">     189</span>         [<span class="tlaGBC" title="Branch 0 was taken 18 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 15 times"> + </span>]:<span class="tlaGNC">          33 :     for (const DatRomEntry &amp;entry : entries) {</span></span>
-<span id="L190"><span class="lineNum">     190</span>                 :<span class="tlaGNC">          18 :         QString hash;</span></span>
-<span id="L191"><span class="lineNum">     191</span>                 :             :         </span>
-<span id="L192"><span class="lineNum">     192</span>   [<span class="tlaGBC" title="Branch 0 was taken 6 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 12 times"> + </span><span class="tlaUNC" title="Branch 2 was not taken"> - </span><span class="tlaGBC" title="Branch 3 was taken 6 times"> + </span> :<span class="tlaGNC">          18 :         if (hashType == &quot;crc32&quot; || hashType == &quot;crc&quot;) {</span></span>
-<span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 12 times"> + </span><span class="tlaGBC" title="Branch 5 was taken 6 times"> + </span>]
-<span id="L193"><span class="lineNum">     193</span>                 :<span class="tlaGNC">          12 :             hash = entry.crc32;</span></span>
-<span id="L194"><span class="lineNum">     194</span>         [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 3 times"> + </span>]:<span class="tlaGNC">           6 :         } else if (hashType == &quot;md5&quot;) {</span></span>
-<span id="L195"><span class="lineNum">     195</span>                 :<span class="tlaGNC">           3 :             hash = entry.md5;</span></span>
-<span id="L196"><span class="lineNum">     196</span>         [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           3 :         } else if (hashType == &quot;sha1&quot;) {</span></span>
-<span id="L197"><span class="lineNum">     197</span>                 :<span class="tlaGNC">           3 :             hash = entry.sha1;</span></span>
-<span id="L198"><span class="lineNum">     198</span>                 :             :         }</span>
-<span id="L199"><span class="lineNum">     199</span>                 :             : </span>
-<span id="L200"><span class="lineNum">     200</span>         [<span class="tlaGBC" title="Branch 0 was taken 18 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          18 :         if (!hash.isEmpty()) {</span></span>
-<span id="L201"><span class="lineNum">     201</span>         [<span class="tlaGBC" title="Branch 0 was taken 18 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          18 :             index.insert(hash, entry);</span></span>
-<span id="L202"><span class="lineNum">     202</span>                 :             :         }</span>
-<span id="L203"><span class="lineNum">     203</span>                 :<span class="tlaGNC">          18 :     }</span></span>
-<span id="L204"><span class="lineNum">     204</span>                 :             : </span>
-<span id="L205"><span class="lineNum">     205</span>                 :<span class="tlaGNC">          15 :     return index;</span></span>
-<span id="L206"><span class="lineNum">     206</span>                 :<span class="tlaUNC">           0 : }</span></span>
-<span id="L207"><span class="lineNum">     207</span>                 :             : </span>
-<span id="L208"><span class="lineNum">     208</span>                 :<span class="tlaGNC">          18 : QString DatParser::detectSource(const DatHeader &amp;header)</span></span>
-<span id="L209"><span class="lineNum">     209</span>                 :             : {</span>
-<span id="L210"><span class="lineNum">     210</span>         [<span class="tlaGBC" title="Branch 0 was taken 18 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          18 :     QString nameLower = header.name.toLower();</span></span>
-<span id="L211"><span class="lineNum">     211</span>         [<span class="tlaGBC" title="Branch 0 was taken 18 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          18 :     QString descLower = header.description.toLower();</span></span>
-<span id="L212"><span class="lineNum">     212</span>                 :             : </span>
-<span id="L213"><span class="lineNum">     213</span>   [<span class="tlaGBC" title="Branch 0 was taken 18 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 18 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">          18 :     if (descLower.contains(&quot;no-intro&quot;) || nameLower.contains(&quot;no-intro&quot;)) {</span></span>
-<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 4 was taken 12 times"> + </span><span class="tlaGBC" title="Branch 5 was taken 6 times"> + </span><span class="tlaGBC" title="Branch 6 was taken 12 times"> + </span><span class="tlaUNC" title="Branch 7 was not taken"> - </span><span class="tlaGBC" title="Branch 8 was taken 12 times"> + </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 9 was not taken"> - </span><span class="tlaUNC" title="Branch 10 was not taken"> - </span><span class="tlaGBC" title="Branch 11 was taken 12 times"> + </span><span class="tlaGBC" title="Branch 12 was taken 12 times"> + </span><span class="tlaGBC" title="Branch 13 was taken 6 times"> + </span> 
-<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 14 was taken 18 times"> + </span><span class="tlaUNC" title="Branch 15 was not taken"> - </span><span class="tlaGBC" title="Branch 16 was taken 6 times"> + </span><span class="tlaGBC" title="Branch 17 was taken 12 times"> + </span><span class="tlaUNC" title="Branch 18 was not taken"> - </span> 
-<span class="lineNum">        </span>       <span class="tlaUNC" title="Branch 19 was not taken"> - </span><span class="tlaUNC" title="Branch 20 was not taken"> - </span><span class="tlaUNC" title="Branch 21 was not taken"> - </span>]
-<span id="L214"><span class="lineNum">     214</span>         [<span class="tlaGBC" title="Branch 0 was taken 6 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           6 :         return &quot;no-intro&quot;;</span></span>
-<span id="L215"><span class="lineNum">     215</span>                 :             :     }</span>
-<span id="L216"><span class="lineNum">     216</span>   [<span class="tlaGBC" title="Branch 0 was taken 12 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 12 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">          12 :     if (descLower.contains(&quot;redump&quot;) || nameLower.contains(&quot;redump&quot;)) {</span></span>
-<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 4 was taken 6 times"> + </span><span class="tlaGBC" title="Branch 5 was taken 6 times"> + </span><span class="tlaGBC" title="Branch 6 was taken 6 times"> + </span><span class="tlaUNC" title="Branch 7 was not taken"> - </span><span class="tlaGBC" title="Branch 8 was taken 6 times"> + </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 9 was not taken"> - </span><span class="tlaUNC" title="Branch 10 was not taken"> - </span><span class="tlaGBC" title="Branch 11 was taken 6 times"> + </span><span class="tlaGBC" title="Branch 12 was taken 6 times"> + </span><span class="tlaGBC" title="Branch 13 was taken 6 times"> + </span> 
-<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 14 was taken 12 times"> + </span><span class="tlaUNC" title="Branch 15 was not taken"> - </span><span class="tlaGBC" title="Branch 16 was taken 6 times"> + </span><span class="tlaGBC" title="Branch 17 was taken 6 times"> + </span><span class="tlaUNC" title="Branch 18 was not taken"> - </span> 
-<span class="lineNum">        </span>       <span class="tlaUNC" title="Branch 19 was not taken"> - </span><span class="tlaUNC" title="Branch 20 was not taken"> - </span><span class="tlaUNC" title="Branch 21 was not taken"> - </span>]
-<span id="L217"><span class="lineNum">     217</span>         [<span class="tlaGBC" title="Branch 0 was taken 6 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           6 :         return &quot;redump&quot;;</span></span>
-<span id="L218"><span class="lineNum">     218</span>                 :             :     }</span>
-<span id="L219"><span class="lineNum">     219</span>   [<span class="tlaGBC" title="Branch 0 was taken 6 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 6 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">           6 :     if (descLower.contains(&quot;tosec&quot;) || nameLower.contains(&quot;tosec&quot;)) {</span></span>
-<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 4 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 5 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 6 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 7 was not taken"> - </span><span class="tlaGBC" title="Branch 8 was taken 3 times"> + </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 9 was not taken"> - </span><span class="tlaUNC" title="Branch 10 was not taken"> - </span><span class="tlaGBC" title="Branch 11 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 12 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 13 was taken 3 times"> + </span> 
-<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 14 was taken 6 times"> + </span><span class="tlaUNC" title="Branch 15 was not taken"> - </span><span class="tlaGBC" title="Branch 16 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 17 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 18 was not taken"> - </span> 
-<span class="lineNum">        </span>       <span class="tlaUNC" title="Branch 19 was not taken"> - </span><span class="tlaUNC" title="Branch 20 was not taken"> - </span><span class="tlaUNC" title="Branch 21 was not taken"> - </span>]
-<span id="L220"><span class="lineNum">     220</span>         [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           3 :         return &quot;tosec&quot;;</span></span>
-<span id="L221"><span class="lineNum">     221</span>                 :             :     }</span>
-<span id="L222"><span class="lineNum">     222</span>   [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">           3 :     if (descLower.contains(&quot;gametdb&quot;) || nameLower.contains(&quot;gametdb&quot;)) {</span></span>
-<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 4 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span><span class="tlaGBC" title="Branch 6 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 7 was not taken"> - </span><span class="tlaGBC" title="Branch 8 was taken 3 times"> + </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 9 was not taken"> - </span><span class="tlaUNC" title="Branch 10 was not taken"> - </span><span class="tlaGBC" title="Branch 11 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 12 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 13 was not taken"> - </span> 
-<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 14 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 15 was not taken"> - </span><span class="tlaUNC" title="Branch 16 was not taken"> - </span><span class="tlaGBC" title="Branch 17 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 18 was not taken"> - </span> 
-<span class="lineNum">        </span>       <span class="tlaUNC" title="Branch 19 was not taken"> - </span><span class="tlaUNC" title="Branch 20 was not taken"> - </span><span class="tlaUNC" title="Branch 21 was not taken"> - </span>]
-<span id="L223"><span class="lineNum">     223</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC">           0 :         return &quot;gametdb&quot;;</span></span>
-<span id="L224"><span class="lineNum">     224</span>                 :             :     }</span>
-<span id="L225"><span class="lineNum">     225</span>                 :             : </span>
-<span id="L226"><span class="lineNum">     226</span>         [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           3 :     return &quot;unknown&quot;;</span></span>
-<span id="L227"><span class="lineNum">     227</span>                 :<span class="tlaGNC">          18 : }</span></span>
-<span id="L228"><span class="lineNum">     228</span>                 :             : </span>
-<span id="L229"><span class="lineNum">     229</span>                 :             : } // namespace Remus</span>
+<span id="L1"><span class="lineNum">       1</span>              : #include &quot;dat_parser.h&quot;</span>
+<span id="L2"><span class="lineNum">       2</span>              : #include &lt;QFile&gt;</span>
+<span id="L3"><span class="lineNum">       3</span>              : #include &lt;QXmlStreamReader&gt;</span>
+<span id="L4"><span class="lineNum">       4</span>              : #include &lt;QDebug&gt;</span>
+<span id="L5"><span class="lineNum">       5</span>              : #include &lt;QFileInfo&gt;</span>
+<span id="L6"><span class="lineNum">       6</span>              : </span>
+<span id="L7"><span class="lineNum">       7</span>              : namespace Remus {</span>
+<span id="L8"><span class="lineNum">       8</span>              : </span>
+<span id="L9"><span class="lineNum">       9</span> <span class="tlaGNC">          33 : DatParser::DatParser(QObject *parent)</span></span>
+<span id="L10"><span class="lineNum">      10</span> <span class="tlaGNC">          33 :     : QObject(parent)</span></span>
+<span id="L11"><span class="lineNum">      11</span>              : {</span>
+<span id="L12"><span class="lineNum">      12</span> <span class="tlaGNC">          33 : }</span></span>
+<span id="L13"><span class="lineNum">      13</span>              : </span>
+<span id="L14"><span class="lineNum">      14</span> <span class="tlaGNC">           3 : DatParseResult DatParser::parse(const QString &amp;filePath)</span></span>
+<span id="L15"><span class="lineNum">      15</span>              : {</span>
+<span id="L16"><span class="lineNum">      16</span> <span class="tlaGNC">           3 :     DatParseResult result;</span></span>
+<span id="L17"><span class="lineNum">      17</span>              :     </span>
+<span id="L18"><span class="lineNum">      18</span> <span class="tlaGNC">           3 :     QFile file(filePath);</span></span>
+<span id="L19"><span class="lineNum">      19</span> <span class="tlaGNC">           3 :     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {</span></span>
+<span id="L20"><span class="lineNum">      20</span> <span class="tlaUNC">           0 :         result.error = QString(&quot;Failed to open DAT file: %1&quot;).arg(filePath);</span></span>
+<span id="L21"><span class="lineNum">      21</span> <span class="tlaUNC">           0 :         emit parseError(result.error);</span></span>
+<span id="L22"><span class="lineNum">      22</span> <span class="tlaUNC">           0 :         return result;</span></span>
+<span id="L23"><span class="lineNum">      23</span>              :     }</span>
+<span id="L24"><span class="lineNum">      24</span>              : </span>
+<span id="L25"><span class="lineNum">      25</span> <span class="tlaGNC">           3 :     QString content = file.readAll();</span></span>
+<span id="L26"><span class="lineNum">      26</span> <span class="tlaGNC">           3 :     file.close();</span></span>
+<span id="L27"><span class="lineNum">      27</span>              : </span>
+<span id="L28"><span class="lineNum">      28</span> <span class="tlaGNC">           3 :     return parseContent(content);</span></span>
+<span id="L29"><span class="lineNum">      29</span> <span class="tlaGNC">           3 : }</span></span>
+<span id="L30"><span class="lineNum">      30</span>              : </span>
+<span id="L31"><span class="lineNum">      31</span> <span class="tlaGNC">          33 : DatParseResult DatParser::parseContent(const QString &amp;content)</span></span>
+<span id="L32"><span class="lineNum">      32</span>              : {</span>
+<span id="L33"><span class="lineNum">      33</span> <span class="tlaGNC">          33 :     DatParseResult result;</span></span>
+<span id="L34"><span class="lineNum">      34</span> <span class="tlaGNC">          33 :     QXmlStreamReader xml(content);</span></span>
+<span id="L35"><span class="lineNum">      35</span>              : </span>
+<span id="L36"><span class="lineNum">      36</span>              :     // Skip to root element</span>
+<span id="L37"><span class="lineNum">      37</span> <span class="tlaGNC">          99 :     while (!xml.atEnd() &amp;&amp; !xml.isStartElement()) {</span></span>
+<span id="L38"><span class="lineNum">      38</span> <span class="tlaGNC">          66 :         xml.readNext();</span></span>
+<span id="L39"><span class="lineNum">      39</span>              :     }</span>
+<span id="L40"><span class="lineNum">      40</span>              : </span>
+<span id="L41"><span class="lineNum">      41</span> <span class="tlaGNC">          33 :     if (xml.hasError()) {</span></span>
+<span id="L42"><span class="lineNum">      42</span> <span class="tlaGNC">           3 :         result.error = QString(&quot;XML parse error: %1 at line %2&quot;)</span></span>
+<span id="L43"><span class="lineNum">      43</span> <span class="tlaGNC">           6 :             .arg(xml.errorString())</span></span>
+<span id="L44"><span class="lineNum">      44</span> <span class="tlaGNC">           3 :             .arg(xml.lineNumber());</span></span>
+<span id="L45"><span class="lineNum">      45</span> <span class="tlaGNC">           3 :         emit parseError(result.error);</span></span>
+<span id="L46"><span class="lineNum">      46</span> <span class="tlaGNC">           3 :         return result;</span></span>
+<span id="L47"><span class="lineNum">      47</span>              :     }</span>
+<span id="L48"><span class="lineNum">      48</span>              : </span>
+<span id="L49"><span class="lineNum">      49</span>              :     // Expect &lt;datafile&gt; root element</span>
+<span id="L50"><span class="lineNum">      50</span> <span class="tlaGNC">          30 :     if (xml.name() != QString(&quot;datafile&quot;)) {</span></span>
+<span id="L51"><span class="lineNum">      51</span>              :         // Try to continue anyway - some DAT files have different root elements</span>
+<span id="L52"><span class="lineNum">      52</span> <span class="tlaUNC">           0 :         qWarning() &lt;&lt; &quot;Expected &lt;datafile&gt; root, found:&quot; &lt;&lt; xml.name();</span></span>
+<span id="L53"><span class="lineNum">      53</span>              :     }</span>
+<span id="L54"><span class="lineNum">      54</span>              : </span>
+<span id="L55"><span class="lineNum">      55</span> <span class="tlaGNC">          30 :     xml.readNext();</span></span>
+<span id="L56"><span class="lineNum">      56</span>              : </span>
+<span id="L57"><span class="lineNum">      57</span> <span class="tlaGNC">         192 :     while (!xml.atEnd()) {</span></span>
+<span id="L58"><span class="lineNum">      58</span> <span class="tlaGNC">         162 :         if (xml.isStartElement()) {</span></span>
+<span id="L59"><span class="lineNum">      59</span> <span class="tlaGNC">          54 :             if (xml.name() == QString(&quot;header&quot;)) {</span></span>
+<span id="L60"><span class="lineNum">      60</span> <span class="tlaGNC">          27 :                 if (!parseHeader(xml, result.header)) {</span></span>
+<span id="L61"><span class="lineNum">      61</span> <span class="tlaUNC">           0 :                     qWarning() &lt;&lt; &quot;Failed to parse header&quot;;</span></span>
+<span id="L62"><span class="lineNum">      62</span>              :                 }</span>
+<span id="L63"><span class="lineNum">      63</span> <span class="tlaGNC">          27 :             } else if (xml.name() == QString(&quot;game&quot;) || xml.name() == QString(&quot;machine&quot;)) {</span></span>
+<span id="L64"><span class="lineNum">      64</span> <span class="tlaGNC">          27 :                 if (!parseGame(xml, result.entries)) {</span></span>
+<span id="L65"><span class="lineNum">      65</span> <span class="tlaUNC">           0 :                     qWarning() &lt;&lt; &quot;Failed to parse game entry&quot;;</span></span>
+<span id="L66"><span class="lineNum">      66</span>              :                 }</span>
+<span id="L67"><span class="lineNum">      67</span> <span class="tlaGNC">          27 :                 emit parseProgress(result.entries.size(), 0);</span></span>
+<span id="L68"><span class="lineNum">      68</span>              :             }</span>
+<span id="L69"><span class="lineNum">      69</span>              :         }</span>
+<span id="L70"><span class="lineNum">      70</span> <span class="tlaGNC">         162 :         xml.readNext();</span></span>
+<span id="L71"><span class="lineNum">      71</span>              :     }</span>
+<span id="L72"><span class="lineNum">      72</span>              : </span>
+<span id="L73"><span class="lineNum">      73</span> <span class="tlaGNC">          30 :     if (xml.hasError()) {</span></span>
+<span id="L74"><span class="lineNum">      74</span> <span class="tlaGNC">           3 :         result.error = QString(&quot;XML parse error: %1 at line %2&quot;)</span></span>
+<span id="L75"><span class="lineNum">      75</span> <span class="tlaGNC">           6 :             .arg(xml.errorString())</span></span>
+<span id="L76"><span class="lineNum">      76</span> <span class="tlaGNC">           3 :             .arg(xml.lineNumber());</span></span>
+<span id="L77"><span class="lineNum">      77</span> <span class="tlaGNC">           3 :         emit parseError(result.error);</span></span>
+<span id="L78"><span class="lineNum">      78</span> <span class="tlaGNC">           3 :         return result;</span></span>
+<span id="L79"><span class="lineNum">      79</span>              :     }</span>
+<span id="L80"><span class="lineNum">      80</span>              : </span>
+<span id="L81"><span class="lineNum">      81</span> <span class="tlaGNC">          27 :     result.entryCount = result.entries.size();</span></span>
+<span id="L82"><span class="lineNum">      82</span> <span class="tlaGNC">          27 :     result.success = true;</span></span>
+<span id="L83"><span class="lineNum">      83</span>              : </span>
+<span id="L84"><span class="lineNum">      84</span> <span class="tlaGNC">          54 :     qInfo() &lt;&lt; &quot;Parsed DAT file:&quot; &lt;&lt; result.header.name </span></span>
+<span id="L85"><span class="lineNum">      85</span> <span class="tlaGNC">          27 :             &lt;&lt; &quot;with&quot; &lt;&lt; result.entryCount &lt;&lt; &quot;entries&quot;;</span></span>
+<span id="L86"><span class="lineNum">      86</span>              : </span>
+<span id="L87"><span class="lineNum">      87</span> <span class="tlaGNC">          27 :     return result;</span></span>
+<span id="L88"><span class="lineNum">      88</span> <span class="tlaGNC">          33 : }</span></span>
+<span id="L89"><span class="lineNum">      89</span>              : </span>
+<span id="L90"><span class="lineNum">      90</span> <span class="tlaGNC">          27 : bool DatParser::parseHeader(QXmlStreamReader &amp;xml, DatHeader &amp;header)</span></span>
+<span id="L91"><span class="lineNum">      91</span>              : {</span>
+<span id="L92"><span class="lineNum">      92</span> <span class="tlaGNC">          27 :     xml.readNext();</span></span>
+<span id="L93"><span class="lineNum">      93</span>              :     </span>
+<span id="L94"><span class="lineNum">      94</span> <span class="tlaGNC">         135 :     while (!xml.atEnd()) {</span></span>
+<span id="L95"><span class="lineNum">      95</span> <span class="tlaGNC">         132 :         if (xml.isEndElement() &amp;&amp; xml.name() == QString(&quot;header&quot;)) {</span></span>
+<span id="L96"><span class="lineNum">      96</span> <span class="tlaGNC">          24 :             return true;</span></span>
+<span id="L97"><span class="lineNum">      97</span>              :         }</span>
+<span id="L98"><span class="lineNum">      98</span>              : </span>
+<span id="L99"><span class="lineNum">      99</span> <span class="tlaGNC">         108 :         if (xml.isStartElement()) {</span></span>
+<span id="L100"><span class="lineNum">     100</span> <span class="tlaGNC">          54 :             QString elementName = xml.name().toString();</span></span>
+<span id="L101"><span class="lineNum">     101</span> <span class="tlaGNC">          54 :             QString text = xml.readElementText();</span></span>
+<span id="L102"><span class="lineNum">     102</span>              : </span>
+<span id="L103"><span class="lineNum">     103</span> <span class="tlaGNC">          54 :             if (elementName == &quot;name&quot;) {</span></span>
+<span id="L104"><span class="lineNum">     104</span> <span class="tlaGNC">          27 :                 header.name = text;</span></span>
+<span id="L105"><span class="lineNum">     105</span> <span class="tlaGNC">          27 :             } else if (elementName == &quot;description&quot;) {</span></span>
+<span id="L106"><span class="lineNum">     106</span> <span class="tlaGNC">           9 :                 header.description = text;</span></span>
+<span id="L107"><span class="lineNum">     107</span> <span class="tlaGNC">          18 :             } else if (elementName == &quot;version&quot;) {</span></span>
+<span id="L108"><span class="lineNum">     108</span> <span class="tlaGNC">           3 :                 header.version = text;</span></span>
+<span id="L109"><span class="lineNum">     109</span> <span class="tlaGNC">          15 :             } else if (elementName == &quot;author&quot;) {</span></span>
+<span id="L110"><span class="lineNum">     110</span> <span class="tlaGNC">           9 :                 header.author = text;</span></span>
+<span id="L111"><span class="lineNum">     111</span> <span class="tlaGNC">           6 :             } else if (elementName == &quot;category&quot;) {</span></span>
+<span id="L112"><span class="lineNum">     112</span> <span class="tlaGNC">           3 :                 header.category = text;</span></span>
+<span id="L113"><span class="lineNum">     113</span> <span class="tlaGNC">           3 :             } else if (elementName == &quot;url&quot;) {</span></span>
+<span id="L114"><span class="lineNum">     114</span> <span class="tlaUNC">           0 :                 header.url = text;</span></span>
+<span id="L115"><span class="lineNum">     115</span> <span class="tlaGNC">           3 :             } else if (elementName == &quot;date&quot;) {</span></span>
+<span id="L116"><span class="lineNum">     116</span> <span class="tlaGNC">           3 :                 header.date = QDateTime::fromString(text, Qt::ISODate);</span></span>
+<span id="L117"><span class="lineNum">     117</span> <span class="tlaGNC">           3 :                 if (!header.date.isValid()) {</span></span>
+<span id="L118"><span class="lineNum">     118</span>              :                     // Try alternative format: &quot;20240115&quot; or &quot;2024-01-15&quot;</span>
+<span id="L119"><span class="lineNum">     119</span> <span class="tlaUNC">           0 :                     header.date = QDateTime::fromString(text, &quot;yyyyMMdd&quot;);</span></span>
+<span id="L120"><span class="lineNum">     120</span>              :                 }</span>
+<span id="L121"><span class="lineNum">     121</span>              :             }</span>
+<span id="L122"><span class="lineNum">     122</span> <span class="tlaGNC">          54 :         }</span></span>
+<span id="L123"><span class="lineNum">     123</span> <span class="tlaGNC">         108 :         xml.readNext();</span></span>
+<span id="L124"><span class="lineNum">     124</span>              :     }</span>
+<span id="L125"><span class="lineNum">     125</span>              : </span>
+<span id="L126"><span class="lineNum">     126</span> <span class="tlaGNC">           3 :     return true;</span></span>
+<span id="L127"><span class="lineNum">     127</span>              : }</span>
+<span id="L128"><span class="lineNum">     128</span>              : </span>
+<span id="L129"><span class="lineNum">     129</span> <span class="tlaGNC">          27 : bool DatParser::parseGame(QXmlStreamReader &amp;xml, QList&lt;DatRomEntry&gt; &amp;entries)</span></span>
+<span id="L130"><span class="lineNum">     130</span>              : {</span>
+<span id="L131"><span class="lineNum">     131</span> <span class="tlaGNC">          27 :     DatRomEntry baseEntry;</span></span>
+<span id="L132"><span class="lineNum">     132</span>              :     </span>
+<span id="L133"><span class="lineNum">     133</span>              :     // Get game name from attribute</span>
+<span id="L134"><span class="lineNum">     134</span> <span class="tlaGNC">          27 :     QXmlStreamAttributes attrs = xml.attributes();</span></span>
+<span id="L135"><span class="lineNum">     135</span> <span class="tlaGNC">          27 :     baseEntry.gameName = attrs.value(&quot;name&quot;).toString();</span></span>
+<span id="L136"><span class="lineNum">     136</span>              : </span>
+<span id="L137"><span class="lineNum">     137</span> <span class="tlaGNC">          27 :     xml.readNext();</span></span>
+<span id="L138"><span class="lineNum">     138</span>              : </span>
+<span id="L139"><span class="lineNum">     139</span> <span class="tlaGNC">         156 :     while (!xml.atEnd()) {</span></span>
+<span id="L140"><span class="lineNum">     140</span> <span class="tlaGNC">         243 :         if (xml.isEndElement() &amp;&amp; </span></span>
+<span id="L141"><span class="lineNum">     141</span> <span class="tlaGNC">         243 :             (xml.name() == QString(&quot;game&quot;) || xml.name() == QString(&quot;machine&quot;))) {</span></span>
+<span id="L142"><span class="lineNum">     142</span> <span class="tlaGNC">          27 :             return true;</span></span>
+<span id="L143"><span class="lineNum">     143</span>              :         }</span>
+<span id="L144"><span class="lineNum">     144</span>              : </span>
+<span id="L145"><span class="lineNum">     145</span> <span class="tlaGNC">         129 :         if (xml.isStartElement()) {</span></span>
+<span id="L146"><span class="lineNum">     146</span> <span class="tlaGNC">          36 :             QString elementName = xml.name().toString();</span></span>
+<span id="L147"><span class="lineNum">     147</span>              : </span>
+<span id="L148"><span class="lineNum">     148</span> <span class="tlaGNC">          36 :             if (elementName == &quot;description&quot;) {</span></span>
+<span id="L149"><span class="lineNum">     149</span> <span class="tlaGNC">           6 :                 baseEntry.description = xml.readElementText();</span></span>
+<span id="L150"><span class="lineNum">     150</span> <span class="tlaGNC">          30 :             } else if (elementName == &quot;rom&quot; || elementName == &quot;disk&quot;) {</span></span>
+<span id="L151"><span class="lineNum">     151</span>              :                 // Parse ROM/disk entry</span>
+<span id="L152"><span class="lineNum">     152</span> <span class="tlaGNC">          30 :                 DatRomEntry romEntry = baseEntry;</span></span>
+<span id="L153"><span class="lineNum">     153</span> <span class="tlaGNC">          30 :                 QXmlStreamAttributes romAttrs = xml.attributes();</span></span>
+<span id="L154"><span class="lineNum">     154</span>              : </span>
+<span id="L155"><span class="lineNum">     155</span> <span class="tlaGNC">          30 :                 romEntry.romName = romAttrs.value(&quot;name&quot;).toString();</span></span>
+<span id="L156"><span class="lineNum">     156</span>              :                 </span>
+<span id="L157"><span class="lineNum">     157</span> <span class="tlaGNC">          30 :                 QString sizeStr = romAttrs.value(&quot;size&quot;).toString();</span></span>
+<span id="L158"><span class="lineNum">     158</span> <span class="tlaGNC">          30 :                 if (!sizeStr.isEmpty()) {</span></span>
+<span id="L159"><span class="lineNum">     159</span> <span class="tlaGNC">          27 :                     romEntry.size = sizeStr.toLongLong();</span></span>
+<span id="L160"><span class="lineNum">     160</span>              :                 }</span>
+<span id="L161"><span class="lineNum">     161</span>              : </span>
+<span id="L162"><span class="lineNum">     162</span> <span class="tlaGNC">          30 :                 romEntry.crc32 = normalizeHash(romAttrs.value(&quot;crc&quot;).toString());</span></span>
+<span id="L163"><span class="lineNum">     163</span> <span class="tlaGNC">          30 :                 romEntry.md5 = normalizeHash(romAttrs.value(&quot;md5&quot;).toString());</span></span>
+<span id="L164"><span class="lineNum">     164</span> <span class="tlaGNC">          30 :                 romEntry.sha1 = normalizeHash(romAttrs.value(&quot;sha1&quot;).toString());</span></span>
+<span id="L165"><span class="lineNum">     165</span> <span class="tlaGNC">          30 :                 romEntry.status = romAttrs.value(&quot;status&quot;).toString();</span></span>
+<span id="L166"><span class="lineNum">     166</span> <span class="tlaGNC">          30 :                 romEntry.serial = romAttrs.value(&quot;serial&quot;).toString();</span></span>
+<span id="L167"><span class="lineNum">     167</span>              : </span>
+<span id="L168"><span class="lineNum">     168</span> <span class="tlaGNC">          30 :                 entries.append(romEntry);</span></span>
+<span id="L169"><span class="lineNum">     169</span> <span class="tlaGNC">          30 :             }</span></span>
+<span id="L170"><span class="lineNum">     170</span> <span class="tlaGNC">          36 :         }</span></span>
+<span id="L171"><span class="lineNum">     171</span> <span class="tlaGNC">         129 :         xml.readNext();</span></span>
+<span id="L172"><span class="lineNum">     172</span>              :     }</span>
+<span id="L173"><span class="lineNum">     173</span>              : </span>
+<span id="L174"><span class="lineNum">     174</span> <span class="tlaUNC">           0 :     return true;</span></span>
+<span id="L175"><span class="lineNum">     175</span> <span class="tlaGNC">          27 : }</span></span>
+<span id="L176"><span class="lineNum">     176</span>              : </span>
+<span id="L177"><span class="lineNum">     177</span> <span class="tlaGNC">          90 : QString DatParser::normalizeHash(const QString &amp;hash)</span></span>
+<span id="L178"><span class="lineNum">     178</span>              : {</span>
+<span id="L179"><span class="lineNum">     179</span>              :     // Convert to lowercase and remove any whitespace</span>
+<span id="L180"><span class="lineNum">     180</span> <span class="tlaGNC">          90 :     return hash.toLower().trimmed();</span></span>
+<span id="L181"><span class="lineNum">     181</span>              : }</span>
+<span id="L182"><span class="lineNum">     182</span>              : </span>
+<span id="L183"><span class="lineNum">     183</span> <span class="tlaGNC">          15 : QMap&lt;QString, DatRomEntry&gt; DatParser::indexByHash(</span></span>
+<span id="L184"><span class="lineNum">     184</span>              :     const QList&lt;DatRomEntry&gt; &amp;entries, </span>
+<span id="L185"><span class="lineNum">     185</span>              :     const QString &amp;hashType)</span>
+<span id="L186"><span class="lineNum">     186</span>              : {</span>
+<span id="L187"><span class="lineNum">     187</span> <span class="tlaGNC">          15 :     QMap&lt;QString, DatRomEntry&gt; index;</span></span>
+<span id="L188"><span class="lineNum">     188</span>              : </span>
+<span id="L189"><span class="lineNum">     189</span> <span class="tlaGNC">          33 :     for (const DatRomEntry &amp;entry : entries) {</span></span>
+<span id="L190"><span class="lineNum">     190</span> <span class="tlaGNC">          18 :         QString hash;</span></span>
+<span id="L191"><span class="lineNum">     191</span>              :         </span>
+<span id="L192"><span class="lineNum">     192</span> <span class="tlaGNC">          18 :         if (hashType == &quot;crc32&quot; || hashType == &quot;crc&quot;) {</span></span>
+<span id="L193"><span class="lineNum">     193</span> <span class="tlaGNC">          12 :             hash = entry.crc32;</span></span>
+<span id="L194"><span class="lineNum">     194</span> <span class="tlaGNC">           6 :         } else if (hashType == &quot;md5&quot;) {</span></span>
+<span id="L195"><span class="lineNum">     195</span> <span class="tlaGNC">           3 :             hash = entry.md5;</span></span>
+<span id="L196"><span class="lineNum">     196</span> <span class="tlaGNC">           3 :         } else if (hashType == &quot;sha1&quot;) {</span></span>
+<span id="L197"><span class="lineNum">     197</span> <span class="tlaGNC">           3 :             hash = entry.sha1;</span></span>
+<span id="L198"><span class="lineNum">     198</span>              :         }</span>
+<span id="L199"><span class="lineNum">     199</span>              : </span>
+<span id="L200"><span class="lineNum">     200</span> <span class="tlaGNC">          18 :         if (!hash.isEmpty()) {</span></span>
+<span id="L201"><span class="lineNum">     201</span> <span class="tlaGNC">          18 :             index.insert(hash, entry);</span></span>
+<span id="L202"><span class="lineNum">     202</span>              :         }</span>
+<span id="L203"><span class="lineNum">     203</span> <span class="tlaGNC">          18 :     }</span></span>
+<span id="L204"><span class="lineNum">     204</span>              : </span>
+<span id="L205"><span class="lineNum">     205</span> <span class="tlaGNC">          15 :     return index;</span></span>
+<span id="L206"><span class="lineNum">     206</span> <span class="tlaUNC">           0 : }</span></span>
+<span id="L207"><span class="lineNum">     207</span>              : </span>
+<span id="L208"><span class="lineNum">     208</span> <span class="tlaGNC">          18 : QString DatParser::detectSource(const DatHeader &amp;header)</span></span>
+<span id="L209"><span class="lineNum">     209</span>              : {</span>
+<span id="L210"><span class="lineNum">     210</span> <span class="tlaGNC">          18 :     QString nameLower = header.name.toLower();</span></span>
+<span id="L211"><span class="lineNum">     211</span> <span class="tlaGNC">          18 :     QString descLower = header.description.toLower();</span></span>
+<span id="L212"><span class="lineNum">     212</span>              : </span>
+<span id="L213"><span class="lineNum">     213</span> <span class="tlaGNC">          18 :     if (descLower.contains(&quot;no-intro&quot;) || nameLower.contains(&quot;no-intro&quot;)) {</span></span>
+<span id="L214"><span class="lineNum">     214</span> <span class="tlaGNC">           6 :         return &quot;no-intro&quot;;</span></span>
+<span id="L215"><span class="lineNum">     215</span>              :     }</span>
+<span id="L216"><span class="lineNum">     216</span> <span class="tlaGNC">          12 :     if (descLower.contains(&quot;redump&quot;) || nameLower.contains(&quot;redump&quot;)) {</span></span>
+<span id="L217"><span class="lineNum">     217</span> <span class="tlaGNC">           6 :         return &quot;redump&quot;;</span></span>
+<span id="L218"><span class="lineNum">     218</span>              :     }</span>
+<span id="L219"><span class="lineNum">     219</span> <span class="tlaGNC">           6 :     if (descLower.contains(&quot;tosec&quot;) || nameLower.contains(&quot;tosec&quot;)) {</span></span>
+<span id="L220"><span class="lineNum">     220</span> <span class="tlaGNC">           3 :         return &quot;tosec&quot;;</span></span>
+<span id="L221"><span class="lineNum">     221</span>              :     }</span>
+<span id="L222"><span class="lineNum">     222</span> <span class="tlaGNC">           3 :     if (descLower.contains(&quot;gametdb&quot;) || nameLower.contains(&quot;gametdb&quot;)) {</span></span>
+<span id="L223"><span class="lineNum">     223</span> <span class="tlaUNC">           0 :         return &quot;gametdb&quot;;</span></span>
+<span id="L224"><span class="lineNum">     224</span>              :     }</span>
+<span id="L225"><span class="lineNum">     225</span>              : </span>
+<span id="L226"><span class="lineNum">     226</span> <span class="tlaGNC">           3 :     return &quot;unknown&quot;;</span></span>
+<span id="L227"><span class="lineNum">     227</span> <span class="tlaGNC">          18 : }</span></span>
+<span id="L228"><span class="lineNum">     228</span>              : </span>
+<span id="L229"><span class="lineNum">     229</span>              : } // namespace Remus</span>
         </pre>
               </td>
             </tr>

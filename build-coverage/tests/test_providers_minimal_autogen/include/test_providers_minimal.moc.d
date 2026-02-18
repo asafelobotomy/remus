@@ -1,5 +1,6 @@
 /home/solon/Documents/remus/build-coverage/tests/test_providers_minimal_autogen/include/test_providers_minimal.moc: /home/solon/Documents/remus/tests/test_providers_minimal.cpp \
   /home/solon/Documents/remus/build-coverage/tests/test_providers_minimal_autogen/moc_predefs.h \
+  /home/solon/Documents/remus/src/core/constants/api.h \
   /home/solon/Documents/remus/src/core/constants/hash_algorithms.h \
   /home/solon/Documents/remus/src/core/constants/systems.h \
   /home/solon/Documents/remus/src/core/system_resolver.h \
@@ -304,12 +305,14 @@
   /usr/include/qt6/QtCore/QMutex \
   /usr/include/qt6/QtCore/QObject \
   /usr/include/qt6/QtCore/QRect \
+  /usr/include/qt6/QtCore/QSettings \
   /usr/include/qt6/QtCore/QSharedDataPointer \
   /usr/include/qt6/QtCore/QSize \
   /usr/include/qt6/QtCore/QSizeF \
   /usr/include/qt6/QtCore/QString \
   /usr/include/qt6/QtCore/QStringList \
   /usr/include/qt6/QtCore/QUrl \
+  /usr/include/qt6/QtCore/QUrlQuery \
   /usr/include/qt6/QtCore/QVariant \
   /usr/include/qt6/QtCore/QtCore \
   /usr/include/qt6/QtCore/QtCoreDepends \

@@ -1,5 +1,6 @@
 remus-metadata_autogen/timestamp: \
 	/home/solon/Documents/remus/build-coverage/src/metadata/remus-metadata_autogen/moc_predefs.h \
+	/home/solon/Documents/remus/src/core/constants/api.h \
 	/home/solon/Documents/remus/src/core/constants/hash_algorithms.h \
 	/home/solon/Documents/remus/src/core/constants/systems.h \
 	/home/solon/Documents/remus/src/core/system_resolver.h \
@@ -8,6 +9,8 @@ remus-metadata_autogen/timestamp: \
 	/home/solon/Documents/remus/src/metadata/artwork_downloader.h \
 	/home/solon/Documents/remus/src/metadata/clrmamepro_parser.cpp \
 	/home/solon/Documents/remus/src/metadata/clrmamepro_parser.h \
+	/home/solon/Documents/remus/src/metadata/filename_normalizer.cpp \
+	/home/solon/Documents/remus/src/metadata/filename_normalizer.h \
 	/home/solon/Documents/remus/src/metadata/hasheous_provider.cpp \
 	/home/solon/Documents/remus/src/metadata/hasheous_provider.h \
 	/home/solon/Documents/remus/src/metadata/igdb_provider.cpp \
@@ -300,10 +303,12 @@ remus-metadata_autogen/timestamp: \
 	/usr/include/qt6/QtCore/QMetaType \
 	/usr/include/qt6/QtCore/QMutex \
 	/usr/include/qt6/QtCore/QObject \
+	/usr/include/qt6/QtCore/QSettings \
 	/usr/include/qt6/QtCore/QSharedDataPointer \
 	/usr/include/qt6/QtCore/QString \
 	/usr/include/qt6/QtCore/QStringList \
 	/usr/include/qt6/QtCore/QUrl \
+	/usr/include/qt6/QtCore/QUrlQuery \
 	/usr/include/qt6/QtCore/QVariant \
 	/usr/include/qt6/QtCore/q17memory.h \
 	/usr/include/qt6/QtCore/q20functional.h \
@@ -400,6 +405,7 @@ remus-metadata_autogen/timestamp: \
 	/usr/include/qt6/QtCore/qscopedpointer.h \
 	/usr/include/qt6/QtCore/qscopeguard.h \
 	/usr/include/qt6/QtCore/qset.h \
+	/usr/include/qt6/QtCore/qsettings.h \
 	/usr/include/qt6/QtCore/qshareddata.h \
 	/usr/include/qt6/QtCore/qshareddata_impl.h \
 	/usr/include/qt6/QtCore/qsharedpointer.h \
@@ -444,6 +450,7 @@ remus-metadata_autogen/timestamp: \
 	/usr/include/qt6/QtCore/qtypeinfo.h \
 	/usr/include/qt6/QtCore/qtypes.h \
 	/usr/include/qt6/QtCore/qurl.h \
+	/usr/include/qt6/QtCore/qurlquery.h \
 	/usr/include/qt6/QtCore/qutf8stringview.h \
 	/usr/include/qt6/QtCore/quuid.h \
 	/usr/include/qt6/QtCore/qvariant.h \

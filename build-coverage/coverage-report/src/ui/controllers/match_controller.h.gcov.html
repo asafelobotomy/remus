@@ -37,20 +37,12 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-02-16 20:31:55</td>
+            <td class="headerValue">2026-02-18 09:32:22</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryLo">0.0&nbsp;%</td>
             <td class="headerCovTableEntry">1</td>
             <td class="headerCovTableEntry">0</td>
-          </tr>
-          <tr>
-            <td class="headerItem">Legend:</td>
-            <td class="headerValueLeg">            Lines:&nbsp&nbsp&nbsp&nbsp
-            <span class="coverLegendCov">hit</span>
-            <span class="coverLegendNoCov">not hit</span>
-</td>
-            <td></td>
           </tr>
                   <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
                 </table>
@@ -76,44 +68,47 @@
 <span id="L6"><span class="lineNum">       6</span>              : </span>
 <span id="L7"><span class="lineNum">       7</span>              : namespace Remus {</span>
 <span id="L8"><span class="lineNum">       8</span>              : </span>
-<span id="L9"><span class="lineNum">       9</span>              : class MatchController : public QObject {</span>
-<span id="L10"><span class="lineNum">      10</span>              :     Q_OBJECT</span>
-<span id="L11"><span class="lineNum">      11</span>              :     Q_PROPERTY(bool matching READ isMatching NOTIFY matchingChanged)</span>
-<span id="L12"><span class="lineNum">      12</span>              :     </span>
-<span id="L13"><span class="lineNum">      13</span>              :         // Friend class for testing private methods</span>
-<span id="L14"><span class="lineNum">      14</span>              :         friend class MatchControllerTestAccess;</span>
-<span id="L15"><span class="lineNum">      15</span>              :     </span>
-<span id="L16"><span class="lineNum">      16</span>              : public:</span>
-<span id="L17"><span class="lineNum">      17</span>              :     explicit MatchController(Database *db, QObject *parent = nullptr);</span>
-<span id="L18"><span class="lineNum">      18</span>              :     </span>
-<span id="L19"><span class="lineNum">      19</span> <span class="tlaUNC">           0 :     bool isMatching() const { return m_matching; }</span></span>
-<span id="L20"><span class="lineNum">      20</span>              :     </span>
-<span id="L21"><span class="lineNum">      21</span>              :     Q_INVOKABLE void startMatching();</span>
-<span id="L22"><span class="lineNum">      22</span>              :     Q_INVOKABLE void stopMatching();</span>
-<span id="L23"><span class="lineNum">      23</span>              :     Q_INVOKABLE void matchFile(int fileId);</span>
-<span id="L24"><span class="lineNum">      24</span>              :     Q_INVOKABLE void confirmMatch(int fileId);</span>
-<span id="L25"><span class="lineNum">      25</span>              :     Q_INVOKABLE void rejectMatch(int fileId);</span>
-<span id="L26"><span class="lineNum">      26</span>              :     </span>
-<span id="L27"><span class="lineNum">      27</span>              : signals:</span>
-<span id="L28"><span class="lineNum">      28</span>              :     void matchingChanged();</span>
-<span id="L29"><span class="lineNum">      29</span>              :     void matchFound(int fileId, const QString &amp;title, float confidence);</span>
-<span id="L30"><span class="lineNum">      30</span>              :     void matchingCompleted(int matched, int total);</span>
-<span id="L31"><span class="lineNum">      31</span>              :     void matchConfirmed(int fileId);</span>
-<span id="L32"><span class="lineNum">      32</span>              :     void matchRejected(int fileId);</span>
-<span id="L33"><span class="lineNum">      33</span>              :     void libraryUpdated();</span>
-<span id="L34"><span class="lineNum">      34</span>              :     </span>
-<span id="L35"><span class="lineNum">      35</span>              : private:</span>
-<span id="L36"><span class="lineNum">      36</span>              :     QString getSystemName(int systemId) const;</span>
-<span id="L37"><span class="lineNum">      37</span>              :     QString cleanFilename(const QString &amp;filename) const;</span>
-<span id="L38"><span class="lineNum">      38</span>              :     float calculateNameSimilarity(const QString &amp;name1, const QString &amp;name2) const;</span>
-<span id="L39"><span class="lineNum">      39</span>              :     int levenshteinDistance(const QString &amp;s1, const QString &amp;s2) const;</span>
-<span id="L40"><span class="lineNum">      40</span>              :     </span>
-<span id="L41"><span class="lineNum">      41</span>              :     Database *m_db;</span>
-<span id="L42"><span class="lineNum">      42</span>              :     ProviderOrchestrator *m_orchestrator;</span>
-<span id="L43"><span class="lineNum">      43</span>              :     bool m_matching = false;</span>
-<span id="L44"><span class="lineNum">      44</span>              : };</span>
-<span id="L45"><span class="lineNum">      45</span>              : </span>
-<span id="L46"><span class="lineNum">      46</span>              : } // namespace Remus</span>
+<span id="L9"><span class="lineNum">       9</span>              : class MatchService;</span>
+<span id="L10"><span class="lineNum">      10</span>              : </span>
+<span id="L11"><span class="lineNum">      11</span>              : class MatchController : public QObject {</span>
+<span id="L12"><span class="lineNum">      12</span>              :     Q_OBJECT</span>
+<span id="L13"><span class="lineNum">      13</span>              :     Q_PROPERTY(bool matching READ isMatching NOTIFY matchingChanged)</span>
+<span id="L14"><span class="lineNum">      14</span>              :     </span>
+<span id="L15"><span class="lineNum">      15</span>              :         // Friend class for testing private methods</span>
+<span id="L16"><span class="lineNum">      16</span>              :         friend class MatchControllerTestAccess;</span>
+<span id="L17"><span class="lineNum">      17</span>              :     </span>
+<span id="L18"><span class="lineNum">      18</span>              : public:</span>
+<span id="L19"><span class="lineNum">      19</span> <span class="tlaUNC">           0 :     explicit MatchController(Database *db, QObject *parent = nullptr);</span></span>
+<span id="L20"><span class="lineNum">      20</span>              :     ~MatchController() override;</span>
+<span id="L21"><span class="lineNum">      21</span>              :     </span>
+<span id="L22"><span class="lineNum">      22</span>              :     bool isMatching() const { return m_matching; }</span>
+<span id="L23"><span class="lineNum">      23</span>              :     </span>
+<span id="L24"><span class="lineNum">      24</span>              :     Q_INVOKABLE void startMatching();</span>
+<span id="L25"><span class="lineNum">      25</span>              :     Q_INVOKABLE void stopMatching();</span>
+<span id="L26"><span class="lineNum">      26</span>              :     Q_INVOKABLE void matchFile(int fileId);</span>
+<span id="L27"><span class="lineNum">      27</span>              :     Q_INVOKABLE void confirmMatch(int fileId);</span>
+<span id="L28"><span class="lineNum">      28</span>              :     Q_INVOKABLE void rejectMatch(int fileId);</span>
+<span id="L29"><span class="lineNum">      29</span>              :     </span>
+<span id="L30"><span class="lineNum">      30</span>              : signals:</span>
+<span id="L31"><span class="lineNum">      31</span>              :     void matchingChanged();</span>
+<span id="L32"><span class="lineNum">      32</span>              :     void matchFound(int fileId, const QString &amp;title, float confidence);</span>
+<span id="L33"><span class="lineNum">      33</span>              :     void matchingCompleted(int matched, int total);</span>
+<span id="L34"><span class="lineNum">      34</span>              :     void matchConfirmed(int fileId);</span>
+<span id="L35"><span class="lineNum">      35</span>              :     void matchRejected(int fileId);</span>
+<span id="L36"><span class="lineNum">      36</span>              :     void libraryUpdated();</span>
+<span id="L37"><span class="lineNum">      37</span>              :     </span>
+<span id="L38"><span class="lineNum">      38</span>              : private:</span>
+<span id="L39"><span class="lineNum">      39</span>              :     QString getSystemName(int systemId) const;</span>
+<span id="L40"><span class="lineNum">      40</span>              :     float calculateNameSimilarity(const QString &amp;name1, const QString &amp;name2) const;</span>
+<span id="L41"><span class="lineNum">      41</span>              :     int levenshteinDistance(const QString &amp;s1, const QString &amp;s2) const;</span>
+<span id="L42"><span class="lineNum">      42</span>              :     </span>
+<span id="L43"><span class="lineNum">      43</span>              :     Database *m_db;</span>
+<span id="L44"><span class="lineNum">      44</span>              :     ProviderOrchestrator *m_orchestrator;</span>
+<span id="L45"><span class="lineNum">      45</span>              :     MatchService *m_matchService = nullptr;</span>
+<span id="L46"><span class="lineNum">      46</span>              :     bool m_matching = false;</span>
+<span id="L47"><span class="lineNum">      47</span>              : };</span>
+<span id="L48"><span class="lineNum">      48</span>              : </span>
+<span id="L49"><span class="lineNum">      49</span>              : } // namespace Remus</span>
         </pre>
               </td>
             </tr>

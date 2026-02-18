@@ -1,0 +1,21 @@
+remus-tui-core_autogen/timestamp: \
+	/home/solon/Documents/remus/src/tui/CMakeLists.txt \
+	/home/solon/Documents/remus/src/tui/app.cpp \
+	/home/solon/Documents/remus/src/tui/app.h \
+	/home/solon/Documents/remus/src/tui/compressor_screen.cpp \
+	/home/solon/Documents/remus/src/tui/compressor_screen.h \
+	/home/solon/Documents/remus/src/tui/launch_screen.cpp \
+	/home/solon/Documents/remus/src/tui/launch_screen.h \
+	/home/solon/Documents/remus/src/tui/library_screen.cpp \
+	/home/solon/Documents/remus/src/tui/library_screen.h \
+	/home/solon/Documents/remus/src/tui/main_menu_screen.cpp \
+	/home/solon/Documents/remus/src/tui/main_menu_screen.h \
+	/home/solon/Documents/remus/src/tui/match_screen.cpp \
+	/home/solon/Documents/remus/src/tui/match_screen.h \
+	/home/solon/Documents/remus/src/tui/options_screen.cpp \
+	/home/solon/Documents/remus/src/tui/options_screen.h \
+	/home/solon/Documents/remus/src/tui/patch_screen.cpp \
+	/home/solon/Documents/remus/src/tui/patch_screen.h \
+	/home/solon/Documents/remus/src/tui/pipeline.cpp \
+	/home/solon/Documents/remus/src/tui/pipeline.h \
+	/usr/bin/cmake

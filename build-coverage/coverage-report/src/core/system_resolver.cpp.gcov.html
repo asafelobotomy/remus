@@ -37,28 +37,12 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-02-16 20:31:55</td>
+            <td class="headerValue">2026-02-18 09:32:22</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
             <td class="headerCovTableEntry">6</td>
             <td class="headerCovTableEntry">6</td>
-          </tr>
-          <tr>
-            <td class="headerItem">Legend:</td>
-            <td class="headerValueLeg">            Lines:&nbsp&nbsp&nbsp&nbsp
-            <span class="coverLegendCov">hit</span>
-            <span class="coverLegendNoCov">not hit</span>
-            <br>Branches:
-            <span class="coverLegendCov">+</span> taken
-            <span class="coverLegendNoCov">-</span> not taken
-            <span class="coverLegendNoCov">#</span> not executed
-</td>
-            <td></td>
-            <td class="headerItem">Branches:</td>
-            <td class="headerCovTableEntryLo">38.7&nbsp;%</td>
-            <td class="headerCovTableEntry">654</td>
-            <td class="headerCovTableEntry">253</td>
           </tr>
                   <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
                 </table>
@@ -74,445 +58,317 @@
             </tr>
             <tr>
               <td>
-<pre class="sourceHeading">             Branch data     Line data    Source code</pre>
+<pre class="sourceHeading">            Line data    Source code</pre>
 <pre class="source">
-<span id="L1"><span class="lineNum">       1</span>                 :             : #include &quot;system_resolver.h&quot;</span>
-<span id="L2"><span class="lineNum">       2</span>                 :             : #include &quot;constants/providers.h&quot;</span>
-<span id="L3"><span class="lineNum">       3</span>                 :             : </span>
-<span id="L4"><span class="lineNum">       4</span>                 :             : namespace Remus {</span>
-<span id="L5"><span class="lineNum">       5</span>                 :             : </span>
-<span id="L6"><span class="lineNum">       6</span>                 :             : using namespace Constants;</span>
-<span id="L7"><span class="lineNum">       7</span>                 :             : using namespace Constants::Providers;</span>
-<span id="L8"><span class="lineNum">       8</span>                 :             : </span>
-<span id="L9"><span class="lineNum">       9</span>                 :<span class="tlaGNC">           6 : QString SystemResolver::displayName(int systemId)</span></span>
-<span id="L10"><span class="lineNum">      10</span>                 :             : {</span>
-<span id="L11"><span class="lineNum">      11</span>                 :<span class="tlaGNC">           6 :     const Constants::Systems::SystemDef* system = Constants::Systems::getSystem(systemId);</span></span>
-<span id="L12"><span class="lineNum">      12</span>   [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 3 times"> + </span>]:<span class="tlaGNC">          15 :     return system ? system-&gt;displayName : QStringLiteral(&quot;Unknown&quot;);</span></span>
-<span id="L13"><span class="lineNum">      13</span>                 :             : }</span>
-<span id="L14"><span class="lineNum">      14</span>                 :             : </span>
-<span id="L15"><span class="lineNum">      15</span>                 :<span class="tlaGNC">           9 : QString SystemResolver::internalName(int systemId)</span></span>
-<span id="L16"><span class="lineNum">      16</span>                 :             : {</span>
-<span id="L17"><span class="lineNum">      17</span>                 :<span class="tlaGNC">           9 :     const Constants::Systems::SystemDef* system = Constants::Systems::getSystem(systemId);</span></span>
-<span id="L18"><span class="lineNum">      18</span>   [<span class="tlaGBC" title="Branch 0 was taken 6 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 6 times"> + </span>]:<span class="tlaGNC">          21 :     return system ? system-&gt;internalName : QStringLiteral(&quot;Unknown&quot;);</span></span>
-<span id="L19"><span class="lineNum">      19</span>                 :             : }</span>
-<span id="L20"><span class="lineNum">      20</span>                 :             : </span>
-<span id="L21"><span class="lineNum">      21</span>                 :<span class="tlaGNC">          15 : QString SystemResolver::providerName(int systemId, const QString &amp;providerId)</span></span>
-<span id="L22"><span class="lineNum">      22</span>                 :             : {</span>
-<span id="L23"><span class="lineNum">      23</span>   [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 12 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">          15 :     static QMap&lt;int, QMap&lt;QString, QString&gt;&gt; mappings = providerMappings();</span></span>
-<span class="lineNum">        </span>    <span class="tlaGBC" title="Branch 4 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span><span class="tlaUNC" title="Branch 6 was not taken"> - </span><span class="tlaUNC" title="Branch 7 was not taken"> - </span>]
-<span id="L24"><span class="lineNum">      24</span>                 :             :     </span>
-<span id="L25"><span class="lineNum">      25</span>                 :             :     // Check if we have a mapping for this system</span>
-<span id="L26"><span class="lineNum">      26</span>         [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 12 times"> + </span>]:<span class="tlaGNC">          15 :     if (!mappings.contains(systemId)) {</span></span>
-<span id="L27"><span class="lineNum">      27</span>                 :<span class="tlaGNC">           3 :         return QString();</span></span>
-<span id="L28"><span class="lineNum">      28</span>                 :             :     }</span>
-<span id="L29"><span class="lineNum">      29</span>                 :             :     </span>
-<span id="L30"><span class="lineNum">      30</span>                 :             :     // Check if we have a mapping for this provider</span>
-<span id="L31"><span class="lineNum">      31</span>                 :<span class="tlaGNC">          12 :     const QMap&lt;QString, QString&gt; &amp;providerMap = mappings[systemId];</span></span>
-<span id="L32"><span class="lineNum">      32</span>         [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 9 times"> + </span>]:<span class="tlaGNC">          12 :     if (!providerMap.contains(providerId)) {</span></span>
-<span id="L33"><span class="lineNum">      33</span>                 :             :         // Fallback: for providers like Hasheous, use internal name</span>
-<span id="L34"><span class="lineNum">      34</span>                 :<span class="tlaGNC">           3 :         return internalName(systemId);</span></span>
-<span id="L35"><span class="lineNum">      35</span>                 :             :     }</span>
-<span id="L36"><span class="lineNum">      36</span>                 :             :     </span>
-<span id="L37"><span class="lineNum">      37</span>                 :<span class="tlaGNC">           9 :     return providerMap[providerId];</span></span>
-<span id="L38"><span class="lineNum">      38</span>                 :             : }</span>
-<span id="L39"><span class="lineNum">      39</span>                 :             : </span>
-<span id="L40"><span class="lineNum">      40</span>                 :<span class="tlaGNC">           6 : int SystemResolver::systemIdByName(const QString &amp;internalName)</span></span>
-<span id="L41"><span class="lineNum">      41</span>                 :             : {</span>
-<span id="L42"><span class="lineNum">      42</span>                 :<span class="tlaGNC">           6 :     return Constants::Systems::getSystemIdByName(internalName);</span></span>
-<span id="L43"><span class="lineNum">      43</span>                 :             : }</span>
-<span id="L44"><span class="lineNum">      44</span>                 :             : </span>
-<span id="L45"><span class="lineNum">      45</span>                 :<span class="tlaGNC">           6 : bool SystemResolver::isValidSystem(int systemId)</span></span>
-<span id="L46"><span class="lineNum">      46</span>                 :             : {</span>
-<span id="L47"><span class="lineNum">      47</span>                 :<span class="tlaGNC">           6 :     return Constants::Systems::getSystem(systemId) != nullptr;</span></span>
-<span id="L48"><span class="lineNum">      48</span>                 :             : }</span>
-<span id="L49"><span class="lineNum">      49</span>                 :             : </span>
-<span id="L50"><span class="lineNum">      50</span>                 :<span class="tlaGNC">           3 : QMap&lt;int, QMap&lt;QString, QString&gt;&gt; SystemResolver::providerMappings()</span></span>
-<span id="L51"><span class="lineNum">      51</span>                 :             : {</span>
-<span id="L52"><span class="lineNum">      52</span>                 :             :     // Provider-specific platform IDs (lazy-initialized static)</span>
-<span id="L53"><span class="lineNum">      53</span>                 :             :     // This is the SINGLE SOURCE OF TRUTH for provider mappings</span>
-<span id="L54"><span class="lineNum">      54</span>                 :             :     </span>
-<span id="L55"><span class="lineNum">      55</span>                 :             :     using namespace Constants::Systems;</span>
-<span id="L56"><span class="lineNum">      56</span>                 :             :     </span>
-<span id="L57"><span class="lineNum">      57</span>                 :             :     return {</span>
-<span id="L58"><span class="lineNum">      58</span>                 :             :         // ====================================================================</span>
-<span id="L59"><span class="lineNum">      59</span>                 :             :         // Nintendo Systems</span>
-<span id="L60"><span class="lineNum">      60</span>                 :             :         // ====================================================================</span>
-<span id="L61"><span class="lineNum">      61</span>                 :             :         {ID_NES, {</span>
-<span id="L62"><span class="lineNum">      62</span>                 :<span class="tlaGNC">           6 :             {THEGAMESDB, QStringLiteral(&quot;7&quot;)},</span></span>
-<span id="L63"><span class="lineNum">      63</span>                 :<span class="tlaGNC">           6 :             {SCREENSCRAPER, QStringLiteral(&quot;3&quot;)},</span></span>
-<span id="L64"><span class="lineNum">      64</span>                 :<span class="tlaGNC">           6 :             {IGDB, QStringLiteral(&quot;nes&quot;)},</span></span>
-<span id="L65"><span class="lineNum">      65</span>                 :             :         }},</span>
-<span id="L66"><span class="lineNum">      66</span>                 :             :         </span>
-<span id="L67"><span class="lineNum">      67</span>                 :             :         {ID_SNES, {</span>
-<span id="L68"><span class="lineNum">      68</span>                 :<span class="tlaGNC">           6 :             {THEGAMESDB, QStringLiteral(&quot;6&quot;)},</span></span>
-<span id="L69"><span class="lineNum">      69</span>                 :<span class="tlaGNC">           6 :             {SCREENSCRAPER, QStringLiteral(&quot;4&quot;)},</span></span>
-<span id="L70"><span class="lineNum">      70</span>                 :<span class="tlaGNC">           6 :             {IGDB, QStringLiteral(&quot;snes&quot;)},</span></span>
-<span id="L71"><span class="lineNum">      71</span>                 :             :         }},</span>
-<span id="L72"><span class="lineNum">      72</span>                 :             :         </span>
-<span id="L73"><span class="lineNum">      73</span>                 :             :         {ID_N64, {</span>
-<span id="L74"><span class="lineNum">      74</span>                 :<span class="tlaGNC">           6 :             {THEGAMESDB, QStringLiteral(&quot;3&quot;)},</span></span>
-<span id="L75"><span class="lineNum">      75</span>                 :<span class="tlaGNC">           6 :             {SCREENSCRAPER, QStringLiteral(&quot;14&quot;)},</span></span>
-<span id="L76"><span class="lineNum">      76</span>                 :<span class="tlaGNC">           6 :             {IGDB, QStringLiteral(&quot;n64&quot;)},</span></span>
-<span id="L77"><span class="lineNum">      77</span>                 :             :         }},</span>
-<span id="L78"><span class="lineNum">      78</span>                 :             :         </span>
-<span id="L79"><span class="lineNum">      79</span>                 :             :         {ID_GAMECUBE, {</span>
-<span id="L80"><span class="lineNum">      80</span>                 :<span class="tlaGNC">           6 :             {THEGAMESDB, QStringLiteral(&quot;2&quot;)},</span></span>
-<span id="L81"><span class="lineNum">      81</span>                 :<span class="tlaGNC">           6 :             {SCREENSCRAPER, QStringLiteral(&quot;13&quot;)},</span></span>
-<span id="L82"><span class="lineNum">      82</span>                 :<span class="tlaGNC">           6 :             {IGDB, QStringLiteral(&quot;gamecube&quot;)},</span></span>
-<span id="L83"><span class="lineNum">      83</span>                 :             :         }},</span>
-<span id="L84"><span class="lineNum">      84</span>                 :             :         </span>
-<span id="L85"><span class="lineNum">      85</span>                 :             :         {ID_WII, {</span>
-<span id="L86"><span class="lineNum">      86</span>                 :<span class="tlaGNC">           6 :             {THEGAMESDB, QStringLiteral(&quot;9&quot;)},</span></span>
-<span id="L87"><span class="lineNum">      87</span>                 :<span class="tlaGNC">           6 :             {SCREENSCRAPER, QStringLiteral(&quot;16&quot;)},</span></span>
-<span id="L88"><span class="lineNum">      88</span>                 :<span class="tlaGNC">           6 :             {IGDB, QStringLiteral(&quot;wii&quot;)},</span></span>
-<span id="L89"><span class="lineNum">      89</span>                 :             :         }},</span>
-<span id="L90"><span class="lineNum">      90</span>                 :             :         </span>
-<span id="L91"><span class="lineNum">      91</span>                 :             :         {ID_GB, {</span>
-<span id="L92"><span class="lineNum">      92</span>                 :<span class="tlaGNC">           6 :             {THEGAMESDB, QStringLiteral(&quot;4&quot;)},</span></span>
-<span id="L93"><span class="lineNum">      93</span>                 :<span class="tlaGNC">           6 :             {SCREENSCRAPER, QStringLiteral(&quot;9&quot;)},</span></span>
-<span id="L94"><span class="lineNum">      94</span>                 :<span class="tlaGNC">           6 :             {IGDB, QStringLiteral(&quot;gameboy&quot;)},</span></span>
-<span id="L95"><span class="lineNum">      95</span>                 :             :         }},</span>
-<span id="L96"><span class="lineNum">      96</span>                 :             :         </span>
-<span id="L97"><span class="lineNum">      97</span>                 :             :         {ID_GBC, {</span>
-<span id="L98"><span class="lineNum">      98</span>                 :<span class="tlaGNC">           6 :             {THEGAMESDB, QStringLiteral(&quot;41&quot;)},</span></span>
-<span id="L99"><span class="lineNum">      99</span>                 :<span class="tlaGNC">           6 :             {SCREENSCRAPER, QStringLiteral(&quot;10&quot;)},</span></span>
-<span id="L100"><span class="lineNum">     100</span>                 :<span class="tlaGNC">           6 :             {IGDB, QStringLiteral(&quot;gbc&quot;)},</span></span>
-<span id="L101"><span class="lineNum">     101</span>                 :             :         }},</span>
-<span id="L102"><span class="lineNum">     102</span>                 :             :         </span>
-<span id="L103"><span class="lineNum">     103</span>                 :             :         {ID_GBA, {</span>
-<span id="L104"><span class="lineNum">     104</span>                 :<span class="tlaGNC">           6 :             {THEGAMESDB, QStringLiteral(&quot;5&quot;)},</span></span>
-<span id="L105"><span class="lineNum">     105</span>                 :<span class="tlaGNC">           6 :             {SCREENSCRAPER, QStringLiteral(&quot;12&quot;)},</span></span>
-<span id="L106"><span class="lineNum">     106</span>                 :<span class="tlaGNC">           6 :             {IGDB, QStringLiteral(&quot;gba&quot;)},</span></span>
-<span id="L107"><span class="lineNum">     107</span>                 :             :         }},</span>
-<span id="L108"><span class="lineNum">     108</span>                 :             :         </span>
-<span id="L109"><span class="lineNum">     109</span>                 :             :         {ID_NDS, {</span>
-<span id="L110"><span class="lineNum">     110</span>                 :<span class="tlaGNC">           6 :             {THEGAMESDB, QStringLiteral(&quot;8&quot;)},</span></span>
-<span id="L111"><span class="lineNum">     111</span>                 :<span class="tlaGNC">           6 :             {SCREENSCRAPER, QStringLiteral(&quot;15&quot;)},</span></span>
-<span id="L112"><span class="lineNum">     112</span>                 :<span class="tlaGNC">           6 :             {IGDB, QStringLiteral(&quot;nds&quot;)},</span></span>
-<span id="L113"><span class="lineNum">     113</span>                 :             :         }},</span>
-<span id="L114"><span class="lineNum">     114</span>                 :             :         </span>
-<span id="L115"><span class="lineNum">     115</span>                 :             :         {ID_3DS, {</span>
-<span id="L116"><span class="lineNum">     116</span>                 :<span class="tlaGNC">           6 :             {THEGAMESDB, QStringLiteral(&quot;4912&quot;)},</span></span>
-<span id="L117"><span class="lineNum">     117</span>                 :<span class="tlaGNC">           6 :             {SCREENSCRAPER, QStringLiteral(&quot;17&quot;)},</span></span>
-<span id="L118"><span class="lineNum">     118</span>                 :<span class="tlaGNC">           6 :             {IGDB, QStringLiteral(&quot;3ds&quot;)},</span></span>
-<span id="L119"><span class="lineNum">     119</span>                 :             :         }},</span>
-<span id="L120"><span class="lineNum">     120</span>                 :             :         </span>
-<span id="L121"><span class="lineNum">     121</span>                 :             :         {ID_SWITCH, {</span>
-<span id="L122"><span class="lineNum">     122</span>                 :<span class="tlaGNC">           6 :             {THEGAMESDB, QStringLiteral(&quot;4971&quot;)},</span></span>
-<span id="L123"><span class="lineNum">     123</span>                 :<span class="tlaGNC">           6 :             {SCREENSCRAPER, QStringLiteral(&quot;225&quot;)},</span></span>
-<span id="L124"><span class="lineNum">     124</span>                 :<span class="tlaGNC">           6 :             {IGDB, QStringLiteral(&quot;switch&quot;)},</span></span>
-<span id="L125"><span class="lineNum">     125</span>                 :             :         }},</span>
-<span id="L126"><span class="lineNum">     126</span>                 :             :         </span>
-<span id="L127"><span class="lineNum">     127</span>                 :             :         {ID_VIRTUAL_BOY, {</span>
-<span id="L128"><span class="lineNum">     128</span>                 :<span class="tlaGNC">           6 :             {THEGAMESDB, QStringLiteral(&quot;28&quot;)},</span></span>
-<span id="L129"><span class="lineNum">     129</span>                 :<span class="tlaGNC">           6 :             {SCREENSCRAPER, QStringLiteral(&quot;11&quot;)},</span></span>
-<span id="L130"><span class="lineNum">     130</span>                 :<span class="tlaGNC">           6 :             {IGDB, QStringLiteral(&quot;virtualboy&quot;)},</span></span>
-<span id="L131"><span class="lineNum">     131</span>                 :             :         }},</span>
-<span id="L132"><span class="lineNum">     132</span>                 :             :         </span>
-<span id="L133"><span class="lineNum">     133</span>                 :             :         // ====================================================================</span>
-<span id="L134"><span class="lineNum">     134</span>                 :             :         // Sega Systems</span>
-<span id="L135"><span class="lineNum">     135</span>                 :             :         // ====================================================================</span>
-<span id="L136"><span class="lineNum">     136</span>                 :             :         {ID_GENESIS, {</span>
-<span id="L137"><span class="lineNum">     137</span>                 :<span class="tlaGNC">           6 :             {THEGAMESDB, QStringLiteral(&quot;18&quot;)},</span></span>
-<span id="L138"><span class="lineNum">     138</span>                 :<span class="tlaGNC">           6 :             {SCREENSCRAPER, QStringLiteral(&quot;1&quot;)},</span></span>
-<span id="L139"><span class="lineNum">     139</span>                 :<span class="tlaGNC">           6 :             {IGDB, QStringLiteral(&quot;genesis&quot;)},</span></span>
-<span id="L140"><span class="lineNum">     140</span>                 :             :         }},</span>
-<span id="L141"><span class="lineNum">     141</span>                 :             :         </span>
-<span id="L142"><span class="lineNum">     142</span>                 :             :         {ID_MASTER_SYSTEM, {</span>
-<span id="L143"><span class="lineNum">     143</span>                 :<span class="tlaGNC">           6 :             {THEGAMESDB, QStringLiteral(&quot;35&quot;)},</span></span>
-<span id="L144"><span class="lineNum">     144</span>                 :<span class="tlaGNC">           6 :             {SCREENSCRAPER, QStringLiteral(&quot;2&quot;)},</span></span>
-<span id="L145"><span class="lineNum">     145</span>                 :<span class="tlaGNC">           6 :             {IGDB, QStringLiteral(&quot;sms&quot;)},</span></span>
-<span id="L146"><span class="lineNum">     146</span>                 :             :         }},</span>
-<span id="L147"><span class="lineNum">     147</span>                 :             :         </span>
-<span id="L148"><span class="lineNum">     148</span>                 :             :         {ID_GAME_GEAR, {</span>
-<span id="L149"><span class="lineNum">     149</span>                 :<span class="tlaGNC">           6 :             {THEGAMESDB, QStringLiteral(&quot;20&quot;)},</span></span>
-<span id="L150"><span class="lineNum">     150</span>                 :<span class="tlaGNC">           6 :             {SCREENSCRAPER, QStringLiteral(&quot;8&quot;)},</span></span>
-<span id="L151"><span class="lineNum">     151</span>                 :<span class="tlaGNC">           6 :             {IGDB, QStringLiteral(&quot;gamegear&quot;)},</span></span>
-<span id="L152"><span class="lineNum">     152</span>                 :             :         }},</span>
-<span id="L153"><span class="lineNum">     153</span>                 :             :         </span>
-<span id="L154"><span class="lineNum">     154</span>                 :             :         {ID_SATURN, {</span>
-<span id="L155"><span class="lineNum">     155</span>                 :<span class="tlaGNC">           6 :             {THEGAMESDB, QStringLiteral(&quot;17&quot;)},</span></span>
-<span id="L156"><span class="lineNum">     156</span>                 :<span class="tlaGNC">           6 :             {SCREENSCRAPER, QStringLiteral(&quot;22&quot;)},</span></span>
-<span id="L157"><span class="lineNum">     157</span>                 :<span class="tlaGNC">           6 :             {IGDB, QStringLiteral(&quot;saturn&quot;)},</span></span>
-<span id="L158"><span class="lineNum">     158</span>                 :             :         }},</span>
-<span id="L159"><span class="lineNum">     159</span>                 :             :         </span>
-<span id="L160"><span class="lineNum">     160</span>                 :             :         {ID_DREAMCAST, {</span>
-<span id="L161"><span class="lineNum">     161</span>                 :<span class="tlaGNC">           6 :             {THEGAMESDB, QStringLiteral(&quot;16&quot;)},</span></span>
-<span id="L162"><span class="lineNum">     162</span>                 :<span class="tlaGNC">           6 :             {SCREENSCRAPER, QStringLiteral(&quot;23&quot;)},</span></span>
-<span id="L163"><span class="lineNum">     163</span>                 :<span class="tlaGNC">           6 :             {IGDB, QStringLiteral(&quot;dreamcast&quot;)},</span></span>
-<span id="L164"><span class="lineNum">     164</span>                 :             :         }},</span>
-<span id="L165"><span class="lineNum">     165</span>                 :             :         </span>
-<span id="L166"><span class="lineNum">     166</span>                 :             :         {ID_SEGA_CD, {</span>
-<span id="L167"><span class="lineNum">     167</span>                 :<span class="tlaGNC">           6 :             {THEGAMESDB, QStringLiteral(&quot;21&quot;)},</span></span>
-<span id="L168"><span class="lineNum">     168</span>                 :<span class="tlaGNC">           6 :             {SCREENSCRAPER, QStringLiteral(&quot;20&quot;)},</span></span>
-<span id="L169"><span class="lineNum">     169</span>                 :<span class="tlaGNC">           6 :             {IGDB, QStringLiteral(&quot;segacd&quot;)},</span></span>
-<span id="L170"><span class="lineNum">     170</span>                 :             :         }},</span>
-<span id="L171"><span class="lineNum">     171</span>                 :             :         </span>
-<span id="L172"><span class="lineNum">     172</span>                 :             :         {ID_32X, {</span>
-<span id="L173"><span class="lineNum">     173</span>                 :<span class="tlaGNC">           6 :             {THEGAMESDB, QStringLiteral(&quot;33&quot;)},</span></span>
-<span id="L174"><span class="lineNum">     174</span>                 :<span class="tlaGNC">           6 :             {SCREENSCRAPER, QStringLiteral(&quot;19&quot;)},</span></span>
-<span id="L175"><span class="lineNum">     175</span>                 :<span class="tlaGNC">           6 :             {IGDB, QStringLiteral(&quot;sega32x&quot;)},</span></span>
-<span id="L176"><span class="lineNum">     176</span>                 :             :         }},</span>
-<span id="L177"><span class="lineNum">     177</span>                 :             :         </span>
-<span id="L178"><span class="lineNum">     178</span>                 :             :         // ====================================================================</span>
-<span id="L179"><span class="lineNum">     179</span>                 :             :         // Sony Systems</span>
-<span id="L180"><span class="lineNum">     180</span>                 :             :         // ====================================================================</span>
-<span id="L181"><span class="lineNum">     181</span>                 :             :         {ID_PSX, {</span>
-<span id="L182"><span class="lineNum">     182</span>                 :<span class="tlaGNC">           6 :             {THEGAMESDB, QStringLiteral(&quot;10&quot;)},</span></span>
-<span id="L183"><span class="lineNum">     183</span>                 :<span class="tlaGNC">           6 :             {SCREENSCRAPER, QStringLiteral(&quot;57&quot;)},</span></span>
-<span id="L184"><span class="lineNum">     184</span>                 :<span class="tlaGNC">           6 :             {IGDB, QStringLiteral(&quot;playstation&quot;)},</span></span>
-<span id="L185"><span class="lineNum">     185</span>                 :             :         }},</span>
-<span id="L186"><span class="lineNum">     186</span>                 :             :         </span>
-<span id="L187"><span class="lineNum">     187</span>                 :             :         {ID_PS2, {</span>
-<span id="L188"><span class="lineNum">     188</span>                 :<span class="tlaGNC">           6 :             {THEGAMESDB, QStringLiteral(&quot;11&quot;)},</span></span>
-<span id="L189"><span class="lineNum">     189</span>                 :<span class="tlaGNC">           6 :             {SCREENSCRAPER, QStringLiteral(&quot;58&quot;)},</span></span>
-<span id="L190"><span class="lineNum">     190</span>                 :<span class="tlaGNC">           6 :             {IGDB, QStringLiteral(&quot;ps2&quot;)},</span></span>
-<span id="L191"><span class="lineNum">     191</span>                 :             :         }},</span>
-<span id="L192"><span class="lineNum">     192</span>                 :             :         </span>
-<span id="L193"><span class="lineNum">     193</span>                 :             :         {ID_PSP, {</span>
-<span id="L194"><span class="lineNum">     194</span>                 :<span class="tlaGNC">           6 :             {THEGAMESDB, QStringLiteral(&quot;13&quot;)},</span></span>
-<span id="L195"><span class="lineNum">     195</span>                 :<span class="tlaGNC">           6 :             {SCREENSCRAPER, QStringLiteral(&quot;61&quot;)},</span></span>
-<span id="L196"><span class="lineNum">     196</span>                 :<span class="tlaGNC">           6 :             {IGDB, QStringLiteral(&quot;psp&quot;)},</span></span>
-<span id="L197"><span class="lineNum">     197</span>                 :             :         }},</span>
-<span id="L198"><span class="lineNum">     198</span>                 :             :         </span>
-<span id="L199"><span class="lineNum">     199</span>                 :             :         {ID_PSVITA, {</span>
-<span id="L200"><span class="lineNum">     200</span>                 :<span class="tlaGNC">           6 :             {THEGAMESDB, QStringLiteral(&quot;39&quot;)},</span></span>
-<span id="L201"><span class="lineNum">     201</span>                 :<span class="tlaGNC">           6 :             {SCREENSCRAPER, QStringLiteral(&quot;62&quot;)},</span></span>
-<span id="L202"><span class="lineNum">     202</span>                 :<span class="tlaGNC">           6 :             {IGDB, QStringLiteral(&quot;psvita&quot;)},</span></span>
-<span id="L203"><span class="lineNum">     203</span>                 :             :         }},</span>
-<span id="L204"><span class="lineNum">     204</span>                 :             :         </span>
-<span id="L205"><span class="lineNum">     205</span>                 :             :         // ====================================================================</span>
-<span id="L206"><span class="lineNum">     206</span>                 :             :         // Atari Systems</span>
-<span id="L207"><span class="lineNum">     207</span>                 :             :         // ====================================================================</span>
-<span id="L208"><span class="lineNum">     208</span>                 :             :         {ID_ATARI_2600, {</span>
-<span id="L209"><span class="lineNum">     209</span>                 :<span class="tlaGNC">           6 :             {THEGAMESDB, QStringLiteral(&quot;22&quot;)},</span></span>
-<span id="L210"><span class="lineNum">     210</span>                 :<span class="tlaGNC">           6 :             {SCREENSCRAPER, QStringLiteral(&quot;26&quot;)},</span></span>
-<span id="L211"><span class="lineNum">     211</span>                 :<span class="tlaGNC">           6 :             {IGDB, QStringLiteral(&quot;atari2600&quot;)},</span></span>
-<span id="L212"><span class="lineNum">     212</span>                 :             :         }},</span>
-<span id="L213"><span class="lineNum">     213</span>                 :             :         </span>
-<span id="L214"><span class="lineNum">     214</span>                 :             :         {ID_ATARI_7800, {</span>
-<span id="L215"><span class="lineNum">     215</span>                 :<span class="tlaGNC">           6 :             {THEGAMESDB, QStringLiteral(&quot;27&quot;)},</span></span>
-<span id="L216"><span class="lineNum">     216</span>                 :<span class="tlaGNC">           6 :             {SCREENSCRAPER, QStringLiteral(&quot;43&quot;)},</span></span>
-<span id="L217"><span class="lineNum">     217</span>                 :<span class="tlaGNC">           6 :             {IGDB, QStringLiteral(&quot;atari7800&quot;)},</span></span>
-<span id="L218"><span class="lineNum">     218</span>                 :             :         }},</span>
-<span id="L219"><span class="lineNum">     219</span>                 :             :         </span>
-<span id="L220"><span class="lineNum">     220</span>                 :             :         {ID_LYNX, {</span>
-<span id="L221"><span class="lineNum">     221</span>                 :<span class="tlaGNC">           6 :             {THEGAMESDB, QStringLiteral(&quot;28&quot;)},</span></span>
-<span id="L222"><span class="lineNum">     222</span>                 :<span class="tlaGNC">           6 :             {SCREENSCRAPER, QStringLiteral(&quot;28&quot;)},</span></span>
-<span id="L223"><span class="lineNum">     223</span>                 :<span class="tlaGNC">           6 :             {IGDB, QStringLiteral(&quot;lynx&quot;)},</span></span>
-<span id="L224"><span class="lineNum">     224</span>                 :             :         }},</span>
-<span id="L225"><span class="lineNum">     225</span>                 :             :         </span>
-<span id="L226"><span class="lineNum">     226</span>                 :             :         {ID_ATARI_JAGUAR, {</span>
-<span id="L227"><span class="lineNum">     227</span>                 :<span class="tlaGNC">           6 :             {THEGAMESDB, QStringLiteral(&quot;29&quot;)},</span></span>
-<span id="L228"><span class="lineNum">     228</span>                 :<span class="tlaGNC">           6 :             {SCREENSCRAPER, QStringLiteral(&quot;27&quot;)},</span></span>
-<span id="L229"><span class="lineNum">     229</span>                 :<span class="tlaGNC">           6 :             {IGDB, QStringLiteral(&quot;jaguar&quot;)},</span></span>
-<span id="L230"><span class="lineNum">     230</span>                 :             :         }},</span>
-<span id="L231"><span class="lineNum">     231</span>                 :             :         </span>
-<span id="L232"><span class="lineNum">     232</span>                 :             :         // ====================================================================</span>
-<span id="L233"><span class="lineNum">     233</span>                 :             :         // Other Systems</span>
-<span id="L234"><span class="lineNum">     234</span>                 :             :         // ====================================================================</span>
-<span id="L235"><span class="lineNum">     235</span>                 :             :         {ID_TURBOGRAFX16, {</span>
-<span id="L236"><span class="lineNum">     236</span>                 :<span class="tlaGNC">           6 :             {THEGAMESDB, QStringLiteral(&quot;34&quot;)},</span></span>
-<span id="L237"><span class="lineNum">     237</span>                 :<span class="tlaGNC">           6 :             {SCREENSCRAPER, QStringLiteral(&quot;31&quot;)},</span></span>
-<span id="L238"><span class="lineNum">     238</span>                 :<span class="tlaGNC">           6 :             {IGDB, QStringLiteral(&quot;turbografx16&quot;)},</span></span>
-<span id="L239"><span class="lineNum">     239</span>                 :             :         }},</span>
-<span id="L240"><span class="lineNum">     240</span>                 :             :         </span>
-<span id="L241"><span class="lineNum">     241</span>                 :             :         {ID_TURBOGRAFX_CD, {</span>
-<span id="L242"><span class="lineNum">     242</span>                 :<span class="tlaGNC">           6 :             {THEGAMESDB, QStringLiteral(&quot;34&quot;)},  // Same as TG-16</span></span>
-<span id="L243"><span class="lineNum">     243</span>                 :<span class="tlaGNC">           6 :             {SCREENSCRAPER, QStringLiteral(&quot;114&quot;)},</span></span>
-<span id="L244"><span class="lineNum">     244</span>                 :<span class="tlaGNC">           6 :             {IGDB, QStringLiteral(&quot;turbografxcd&quot;)},</span></span>
-<span id="L245"><span class="lineNum">     245</span>                 :             :         }},</span>
-<span id="L246"><span class="lineNum">     246</span>                 :             :         </span>
-<span id="L247"><span class="lineNum">     247</span>                 :             :         {ID_NEO_GEO, {</span>
-<span id="L248"><span class="lineNum">     248</span>                 :<span class="tlaGNC">           6 :             {THEGAMESDB, QStringLiteral(&quot;24&quot;)},</span></span>
-<span id="L249"><span class="lineNum">     249</span>                 :<span class="tlaGNC">           6 :             {SCREENSCRAPER, QStringLiteral(&quot;142&quot;)},</span></span>
-<span id="L250"><span class="lineNum">     250</span>                 :<span class="tlaGNC">           6 :             {IGDB, QStringLiteral(&quot;neogeo&quot;)},</span></span>
-<span id="L251"><span class="lineNum">     251</span>                 :             :         }},</span>
-<span id="L252"><span class="lineNum">     252</span>                 :             :         </span>
-<span id="L253"><span class="lineNum">     253</span>                 :             :         {ID_NGP, {</span>
-<span id="L254"><span class="lineNum">     254</span>                 :<span class="tlaGNC">           6 :             {THEGAMESDB, QStringLiteral(&quot;4922&quot;)},</span></span>
-<span id="L255"><span class="lineNum">     255</span>                 :<span class="tlaGNC">           6 :             {SCREENSCRAPER, QStringLiteral(&quot;25&quot;)},</span></span>
-<span id="L256"><span class="lineNum">     256</span>                 :<span class="tlaGNC">           6 :             {IGDB, QStringLiteral(&quot;ngp&quot;)},</span></span>
-<span id="L257"><span class="lineNum">     257</span>                 :             :         }},</span>
-<span id="L258"><span class="lineNum">     258</span>                 :             :         </span>
-<span id="L259"><span class="lineNum">     259</span>                 :             :         {ID_WONDERSWAN, {</span>
-<span id="L260"><span class="lineNum">     260</span>                 :<span class="tlaGNC">           6 :             {THEGAMESDB, QStringLiteral(&quot;45&quot;)},</span></span>
-<span id="L261"><span class="lineNum">     261</span>                 :<span class="tlaGNC">           6 :             {SCREENSCRAPER, QStringLiteral(&quot;45&quot;)},</span></span>
-<span id="L262"><span class="lineNum">     262</span>                 :<span class="tlaGNC">           6 :             {IGDB, QStringLiteral(&quot;wonderswan&quot;)},</span></span>
-<span id="L263"><span class="lineNum">     263</span>                 :             :         }},</span>
-<span id="L264"><span class="lineNum">     264</span>                 :             :         </span>
-<span id="L265"><span class="lineNum">     265</span>                 :             :         {ID_XBOX, {</span>
-<span id="L266"><span class="lineNum">     266</span>                 :<span class="tlaGNC">           6 :             {THEGAMESDB, QStringLiteral(&quot;14&quot;)},</span></span>
-<span id="L267"><span class="lineNum">     267</span>                 :<span class="tlaGNC">           6 :             {SCREENSCRAPER, QStringLiteral(&quot;32&quot;)},</span></span>
-<span id="L268"><span class="lineNum">     268</span>                 :<span class="tlaGNC">           6 :             {IGDB, QStringLiteral(&quot;xbox&quot;)},</span></span>
-<span id="L269"><span class="lineNum">     269</span>                 :             :         }},</span>
-<span id="L270"><span class="lineNum">     270</span>                 :             :         </span>
-<span id="L271"><span class="lineNum">     271</span>                 :             :         {ID_XBOX360, {</span>
-<span id="L272"><span class="lineNum">     272</span>                 :<span class="tlaGNC">           6 :             {THEGAMESDB, QStringLiteral(&quot;15&quot;)},</span></span>
-<span id="L273"><span class="lineNum">     273</span>                 :<span class="tlaGNC">           6 :             {SCREENSCRAPER, QStringLiteral(&quot;33&quot;)},</span></span>
-<span id="L274"><span class="lineNum">     274</span>                 :<span class="tlaGNC">           6 :             {IGDB, QStringLiteral(&quot;xbox360&quot;)},</span></span>
-<span id="L275"><span class="lineNum">     275</span>                 :             :         }},</span>
-<span id="L276"><span class="lineNum">     276</span>                 :             :         </span>
-<span id="L277"><span class="lineNum">     277</span>                 :             :         {ID_ARCADE, {</span>
-<span id="L278"><span class="lineNum">     278</span>                 :<span class="tlaGNC">           6 :             {THEGAMESDB, QStringLiteral(&quot;23&quot;)},</span></span>
-<span id="L279"><span class="lineNum">     279</span>                 :<span class="tlaGNC">           6 :             {SCREENSCRAPER, QStringLiteral(&quot;75&quot;)},</span></span>
-<span id="L280"><span class="lineNum">     280</span>                 :<span class="tlaGNC">           6 :             {IGDB, QStringLiteral(&quot;arcade&quot;)},</span></span>
-<span id="L281"><span class="lineNum">     281</span>                 :             :         }},</span>
-<span id="L282"><span class="lineNum">     282</span>                 :             :         </span>
-<span id="L283"><span class="lineNum">     283</span>                 :             :         {ID_C64, {</span>
-<span id="L284"><span class="lineNum">     284</span>                 :<span class="tlaGNC">           6 :             {THEGAMESDB, QStringLiteral(&quot;40&quot;)},</span></span>
-<span id="L285"><span class="lineNum">     285</span>                 :<span class="tlaGNC">           6 :             {SCREENSCRAPER, QStringLiteral(&quot;66&quot;)},</span></span>
-<span id="L286"><span class="lineNum">     286</span>                 :<span class="tlaGNC">           6 :             {IGDB, QStringLiteral(&quot;c64&quot;)},</span></span>
-<span id="L287"><span class="lineNum">     287</span>                 :             :         }},</span>
-<span id="L288"><span class="lineNum">     288</span>                 :             :         </span>
-<span id="L289"><span class="lineNum">     289</span>                 :             :         {ID_AMIGA, {</span>
-<span id="L290"><span class="lineNum">     290</span>                 :<span class="tlaGNC">           6 :             {THEGAMESDB, QStringLiteral(&quot;4911&quot;)},</span></span>
-<span id="L291"><span class="lineNum">     291</span>                 :<span class="tlaGNC">           6 :             {SCREENSCRAPER, QStringLiteral(&quot;64&quot;)},</span></span>
-<span id="L292"><span class="lineNum">     292</span>                 :<span class="tlaGNC">           6 :             {IGDB, QStringLiteral(&quot;amiga&quot;)},</span></span>
-<span id="L293"><span class="lineNum">     293</span>                 :             :         }},</span>
-<span id="L294"><span class="lineNum">     294</span>                 :             :         </span>
-<span id="L295"><span class="lineNum">     295</span>                 :             :         {ID_ZX_SPECTRUM, {</span>
-<span id="L296"><span class="lineNum">     296</span>                 :<span class="tlaGNC">           6 :             {THEGAMESDB, QStringLiteral(&quot;4913&quot;)},</span></span>
-<span id="L297"><span class="lineNum">     297</span>                 :<span class="tlaGNC">           6 :             {SCREENSCRAPER, QStringLiteral(&quot;76&quot;)},</span></span>
-<span id="L298"><span class="lineNum">     298</span>                 :<span class="tlaGNC">           6 :             {IGDB, QStringLiteral(&quot;zxspectrum&quot;)},</span></span>
-<span id="L299"><span class="lineNum">     299</span>                 :             :         }},</span>
-<span id="L300"><span class="lineNum">     300</span>                 :             :         </span>
-<span id="L301"><span class="lineNum">     301</span>                 :             :         {ID_SUPERGRAFX, {</span>
-<span id="L302"><span class="lineNum">     302</span>                 :<span class="tlaGNC">           6 :             {THEGAMESDB, QStringLiteral(&quot;34&quot;)},  // Same as TG-16</span></span>
-<span id="L303"><span class="lineNum">     303</span>                 :<span class="tlaGNC">           6 :             {SCREENSCRAPER, QStringLiteral(&quot;105&quot;)},</span></span>
-<span id="L304"><span class="lineNum">     304</span>                 :<span class="tlaGNC">           6 :             {IGDB, QStringLiteral(&quot;supergrafx&quot;)},</span></span>
-<span id="L305"><span class="lineNum">     305</span>                 :             :         }},</span>
-<span id="L306"><span class="lineNum">     306</span>   [<span class="tlaGBC" title="Branch 0 was taken 117 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 9 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 3 times"> + </span> :<span class="tlaGNC">         588 :     };</span></span>
-<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 4 was taken 9 times"> + </span><span class="tlaGBC" title="Branch 5 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 6 was taken 9 times"> + </span><span class="tlaGBC" title="Branch 7 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 8 was taken 9 times"> + </span> 
-<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 9 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 10 was taken 9 times"> + </span><span class="tlaGBC" title="Branch 11 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 12 was taken 9 times"> + </span><span class="tlaGBC" title="Branch 13 was taken 3 times"> + </span> 
-<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 14 was taken 9 times"> + </span><span class="tlaGBC" title="Branch 15 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 16 was taken 9 times"> + </span><span class="tlaGBC" title="Branch 17 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 18 was taken 9 times"> + </span> 
-<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 19 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 20 was taken 9 times"> + </span><span class="tlaGBC" title="Branch 21 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 22 was taken 9 times"> + </span><span class="tlaGBC" title="Branch 23 was taken 3 times"> + </span> 
-<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 24 was taken 9 times"> + </span><span class="tlaGBC" title="Branch 25 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 26 was taken 9 times"> + </span><span class="tlaGBC" title="Branch 27 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 28 was taken 9 times"> + </span> 
-<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 29 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 30 was taken 9 times"> + </span><span class="tlaGBC" title="Branch 31 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 32 was taken 9 times"> + </span><span class="tlaGBC" title="Branch 33 was taken 3 times"> + </span> 
-<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 34 was taken 9 times"> + </span><span class="tlaGBC" title="Branch 35 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 36 was taken 9 times"> + </span><span class="tlaGBC" title="Branch 37 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 38 was taken 9 times"> + </span> 
-<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 39 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 40 was taken 9 times"> + </span><span class="tlaGBC" title="Branch 41 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 42 was taken 9 times"> + </span><span class="tlaGBC" title="Branch 43 was taken 3 times"> + </span> 
-<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 44 was taken 9 times"> + </span><span class="tlaGBC" title="Branch 45 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 46 was taken 9 times"> + </span><span class="tlaGBC" title="Branch 47 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 48 was taken 9 times"> + </span> 
-<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 49 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 50 was taken 9 times"> + </span><span class="tlaGBC" title="Branch 51 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 52 was taken 9 times"> + </span><span class="tlaGBC" title="Branch 53 was taken 3 times"> + </span> 
-<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 54 was taken 9 times"> + </span><span class="tlaGBC" title="Branch 55 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 56 was taken 9 times"> + </span><span class="tlaGBC" title="Branch 57 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 58 was taken 9 times"> + </span> 
-<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 59 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 60 was taken 9 times"> + </span><span class="tlaGBC" title="Branch 61 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 62 was taken 9 times"> + </span><span class="tlaGBC" title="Branch 63 was taken 3 times"> + </span> 
-<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 64 was taken 9 times"> + </span><span class="tlaGBC" title="Branch 65 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 66 was taken 9 times"> + </span><span class="tlaGBC" title="Branch 67 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 68 was taken 9 times"> + </span> 
-<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 69 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 70 was taken 9 times"> + </span><span class="tlaGBC" title="Branch 71 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 72 was taken 9 times"> + </span><span class="tlaGBC" title="Branch 73 was taken 3 times"> + </span> 
-<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 74 was taken 9 times"> + </span><span class="tlaGBC" title="Branch 75 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 76 was taken 9 times"> + </span><span class="tlaGBC" title="Branch 77 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 78 was taken 9 times"> + </span> 
-<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 79 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 80 was not taken"> - </span><span class="tlaUNC" title="Branch 81 was not taken"> - </span><span class="tlaUNC" title="Branch 82 was not taken"> - </span><span class="tlaUNC" title="Branch 83 was not taken"> - </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 84 was not taken"> - </span><span class="tlaUNC" title="Branch 85 was not taken"> - </span><span class="tlaUNC" title="Branch 86 was not taken"> - </span><span class="tlaUNC" title="Branch 87 was not taken"> - </span><span class="tlaUNC" title="Branch 88 was not taken"> - </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 89 was not taken"> - </span><span class="tlaUNC" title="Branch 90 was not taken"> - </span><span class="tlaUNC" title="Branch 91 was not taken"> - </span><span class="tlaUNC" title="Branch 92 was not taken"> - </span><span class="tlaUNC" title="Branch 93 was not taken"> - </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 94 was not taken"> - </span><span class="tlaUNC" title="Branch 95 was not taken"> - </span><span class="tlaUNC" title="Branch 96 was not taken"> - </span><span class="tlaUNC" title="Branch 97 was not taken"> - </span><span class="tlaUNC" title="Branch 98 was not taken"> - </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 99 was not taken"> - </span><span class="tlaUNC" title="Branch 100 was not taken"> - </span><span class="tlaUNC" title="Branch 101 was not taken"> - </span><span class="tlaUNC" title="Branch 102 was not taken"> - </span><span class="tlaUNC" title="Branch 103 was not taken"> - </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 104 was not taken"> - </span><span class="tlaUNC" title="Branch 105 was not taken"> - </span><span class="tlaUNC" title="Branch 106 was not taken"> - </span><span class="tlaUNC" title="Branch 107 was not taken"> - </span><span class="tlaUNC" title="Branch 108 was not taken"> - </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 109 was not taken"> - </span><span class="tlaUNC" title="Branch 110 was not taken"> - </span><span class="tlaUNC" title="Branch 111 was not taken"> - </span><span class="tlaUNC" title="Branch 112 was not taken"> - </span><span class="tlaUNC" title="Branch 113 was not taken"> - </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 114 was not taken"> - </span><span class="tlaUNC" title="Branch 115 was not taken"> - </span><span class="tlaUNC" title="Branch 116 was not taken"> - </span><span class="tlaUNC" title="Branch 117 was not taken"> - </span><span class="tlaUNC" title="Branch 118 was not taken"> - </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 119 was not taken"> - </span><span class="tlaUNC" title="Branch 120 was not taken"> - </span><span class="tlaUNC" title="Branch 121 was not taken"> - </span><span class="tlaUNC" title="Branch 122 was not taken"> - </span><span class="tlaUNC" title="Branch 123 was not taken"> - </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 124 was not taken"> - </span><span class="tlaUNC" title="Branch 125 was not taken"> - </span><span class="tlaUNC" title="Branch 126 was not taken"> - </span><span class="tlaUNC" title="Branch 127 was not taken"> - </span><span class="tlaUNC" title="Branch 128 was not taken"> - </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 129 was not taken"> - </span><span class="tlaUNC" title="Branch 130 was not taken"> - </span><span class="tlaUNC" title="Branch 131 was not taken"> - </span><span class="tlaUNC" title="Branch 132 was not taken"> - </span><span class="tlaUNC" title="Branch 133 was not taken"> - </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 134 was not taken"> - </span><span class="tlaUNC" title="Branch 135 was not taken"> - </span><span class="tlaUNC" title="Branch 136 was not taken"> - </span><span class="tlaUNC" title="Branch 137 was not taken"> - </span><span class="tlaUNC" title="Branch 138 was not taken"> - </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 139 was not taken"> - </span><span class="tlaUNC" title="Branch 140 was not taken"> - </span><span class="tlaUNC" title="Branch 141 was not taken"> - </span><span class="tlaUNC" title="Branch 142 was not taken"> - </span><span class="tlaUNC" title="Branch 143 was not taken"> - </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 144 was not taken"> - </span><span class="tlaUNC" title="Branch 145 was not taken"> - </span><span class="tlaUNC" title="Branch 146 was not taken"> - </span><span class="tlaUNC" title="Branch 147 was not taken"> - </span><span class="tlaUNC" title="Branch 148 was not taken"> - </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 149 was not taken"> - </span><span class="tlaUNC" title="Branch 150 was not taken"> - </span><span class="tlaUNC" title="Branch 151 was not taken"> - </span><span class="tlaUNC" title="Branch 152 was not taken"> - </span><span class="tlaUNC" title="Branch 153 was not taken"> - </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 154 was not taken"> - </span><span class="tlaUNC" title="Branch 155 was not taken"> - </span><span class="tlaUNC" title="Branch 156 was not taken"> - </span><span class="tlaUNC" title="Branch 157 was not taken"> - </span><span class="tlaUNC" title="Branch 158 was not taken"> - </span> 
-<span class="lineNum">        </span>             <span class="tlaUNC" title="Branch 159 was not taken"> - </span>]
-<span id="L307"><span class="lineNum">     307</span>   [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">         354 : }</span></span>
-<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 4 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span><span class="tlaGBC" title="Branch 6 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 7 was not taken"> - </span><span class="tlaGBC" title="Branch 8 was taken 3 times"> + </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 9 was not taken"> - </span><span class="tlaGBC" title="Branch 10 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 11 was not taken"> - </span><span class="tlaGBC" title="Branch 12 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 13 was not taken"> - </span> 
-<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 14 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 15 was not taken"> - </span><span class="tlaGBC" title="Branch 16 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 17 was not taken"> - </span><span class="tlaGBC" title="Branch 18 was taken 3 times"> + </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 19 was not taken"> - </span><span class="tlaGBC" title="Branch 20 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 21 was not taken"> - </span><span class="tlaGBC" title="Branch 22 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 23 was not taken"> - </span> 
-<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 24 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 25 was not taken"> - </span><span class="tlaGBC" title="Branch 26 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 27 was not taken"> - </span><span class="tlaGBC" title="Branch 28 was taken 3 times"> + </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 29 was not taken"> - </span><span class="tlaGBC" title="Branch 30 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 31 was not taken"> - </span><span class="tlaGBC" title="Branch 32 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 33 was not taken"> - </span> 
-<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 34 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 35 was not taken"> - </span><span class="tlaGBC" title="Branch 36 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 37 was not taken"> - </span><span class="tlaGBC" title="Branch 38 was taken 3 times"> + </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 39 was not taken"> - </span><span class="tlaGBC" title="Branch 40 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 41 was not taken"> - </span><span class="tlaGBC" title="Branch 42 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 43 was not taken"> - </span> 
-<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 44 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 45 was not taken"> - </span><span class="tlaGBC" title="Branch 46 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 47 was not taken"> - </span><span class="tlaGBC" title="Branch 48 was taken 3 times"> + </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 49 was not taken"> - </span><span class="tlaGBC" title="Branch 50 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 51 was not taken"> - </span><span class="tlaGBC" title="Branch 52 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 53 was not taken"> - </span> 
-<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 54 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 55 was not taken"> - </span><span class="tlaGBC" title="Branch 56 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 57 was not taken"> - </span><span class="tlaGBC" title="Branch 58 was taken 3 times"> + </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 59 was not taken"> - </span><span class="tlaGBC" title="Branch 60 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 61 was not taken"> - </span><span class="tlaGBC" title="Branch 62 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 63 was not taken"> - </span> 
-<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 64 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 65 was not taken"> - </span><span class="tlaGBC" title="Branch 66 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 67 was not taken"> - </span><span class="tlaGBC" title="Branch 68 was taken 3 times"> + </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 69 was not taken"> - </span><span class="tlaGBC" title="Branch 70 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 71 was not taken"> - </span><span class="tlaGBC" title="Branch 72 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 73 was not taken"> - </span> 
-<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 74 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 75 was not taken"> - </span><span class="tlaGBC" title="Branch 76 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 77 was not taken"> - </span><span class="tlaGBC" title="Branch 78 was taken 3 times"> + </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 79 was not taken"> - </span><span class="tlaGBC" title="Branch 80 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 81 was not taken"> - </span><span class="tlaGBC" title="Branch 82 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 83 was not taken"> - </span> 
-<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 84 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 85 was not taken"> - </span><span class="tlaGBC" title="Branch 86 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 87 was not taken"> - </span><span class="tlaGBC" title="Branch 88 was taken 3 times"> + </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 89 was not taken"> - </span><span class="tlaGBC" title="Branch 90 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 91 was not taken"> - </span><span class="tlaGBC" title="Branch 92 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 93 was not taken"> - </span> 
-<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 94 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 95 was not taken"> - </span><span class="tlaGBC" title="Branch 96 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 97 was not taken"> - </span><span class="tlaGBC" title="Branch 98 was taken 3 times"> + </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 99 was not taken"> - </span><span class="tlaGBC" title="Branch 100 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 101 was not taken"> - </span><span class="tlaGBC" title="Branch 102 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 103 was not taken"> - </span> 
-<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 104 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 105 was not taken"> - </span><span class="tlaGBC" title="Branch 106 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 107 was not taken"> - </span><span class="tlaGBC" title="Branch 108 was taken 3 times"> + </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 109 was not taken"> - </span><span class="tlaGBC" title="Branch 110 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 111 was not taken"> - </span><span class="tlaGBC" title="Branch 112 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 113 was not taken"> - </span> 
-<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 114 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 115 was not taken"> - </span><span class="tlaGBC" title="Branch 116 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 117 was not taken"> - </span><span class="tlaGBC" title="Branch 118 was taken 3 times"> + </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 119 was not taken"> - </span><span class="tlaGBC" title="Branch 120 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 121 was not taken"> - </span><span class="tlaGBC" title="Branch 122 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 123 was not taken"> - </span> 
-<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 124 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 125 was not taken"> - </span><span class="tlaGBC" title="Branch 126 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 127 was not taken"> - </span><span class="tlaGBC" title="Branch 128 was taken 3 times"> + </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 129 was not taken"> - </span><span class="tlaGBC" title="Branch 130 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 131 was not taken"> - </span><span class="tlaGBC" title="Branch 132 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 133 was not taken"> - </span> 
-<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 134 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 135 was not taken"> - </span><span class="tlaGBC" title="Branch 136 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 137 was not taken"> - </span><span class="tlaGBC" title="Branch 138 was taken 3 times"> + </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 139 was not taken"> - </span><span class="tlaGBC" title="Branch 140 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 141 was not taken"> - </span><span class="tlaGBC" title="Branch 142 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 143 was not taken"> - </span> 
-<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 144 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 145 was not taken"> - </span><span class="tlaGBC" title="Branch 146 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 147 was not taken"> - </span><span class="tlaGBC" title="Branch 148 was taken 3 times"> + </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 149 was not taken"> - </span><span class="tlaGBC" title="Branch 150 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 151 was not taken"> - </span><span class="tlaGBC" title="Branch 152 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 153 was not taken"> - </span> 
-<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 154 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 155 was not taken"> - </span><span class="tlaGBC" title="Branch 156 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 157 was not taken"> - </span><span class="tlaGBC" title="Branch 158 was taken 3 times"> + </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 159 was not taken"> - </span><span class="tlaGBC" title="Branch 160 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 161 was not taken"> - </span><span class="tlaGBC" title="Branch 162 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 163 was not taken"> - </span> 
-<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 164 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 165 was not taken"> - </span><span class="tlaGBC" title="Branch 166 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 167 was not taken"> - </span><span class="tlaGBC" title="Branch 168 was taken 3 times"> + </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 169 was not taken"> - </span><span class="tlaGBC" title="Branch 170 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 171 was not taken"> - </span><span class="tlaGBC" title="Branch 172 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 173 was not taken"> - </span> 
-<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 174 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 175 was not taken"> - </span><span class="tlaGBC" title="Branch 176 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 177 was not taken"> - </span><span class="tlaGBC" title="Branch 178 was taken 3 times"> + </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 179 was not taken"> - </span><span class="tlaGBC" title="Branch 180 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 181 was not taken"> - </span><span class="tlaGBC" title="Branch 182 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 183 was not taken"> - </span> 
-<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 184 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 185 was not taken"> - </span><span class="tlaGBC" title="Branch 186 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 187 was not taken"> - </span><span class="tlaGBC" title="Branch 188 was taken 3 times"> + </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 189 was not taken"> - </span><span class="tlaGBC" title="Branch 190 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 191 was not taken"> - </span><span class="tlaGBC" title="Branch 192 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 193 was not taken"> - </span> 
-<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 194 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 195 was not taken"> - </span><span class="tlaGBC" title="Branch 196 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 197 was not taken"> - </span><span class="tlaGBC" title="Branch 198 was taken 3 times"> + </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 199 was not taken"> - </span><span class="tlaGBC" title="Branch 200 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 201 was not taken"> - </span><span class="tlaGBC" title="Branch 202 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 203 was not taken"> - </span> 
-<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 204 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 205 was not taken"> - </span><span class="tlaGBC" title="Branch 206 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 207 was not taken"> - </span><span class="tlaGBC" title="Branch 208 was taken 3 times"> + </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 209 was not taken"> - </span><span class="tlaGBC" title="Branch 210 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 211 was not taken"> - </span><span class="tlaGBC" title="Branch 212 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 213 was not taken"> - </span> 
-<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 214 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 215 was not taken"> - </span><span class="tlaGBC" title="Branch 216 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 217 was not taken"> - </span><span class="tlaGBC" title="Branch 218 was taken 3 times"> + </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 219 was not taken"> - </span><span class="tlaGBC" title="Branch 220 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 221 was not taken"> - </span><span class="tlaGBC" title="Branch 222 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 223 was not taken"> - </span> 
-<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 224 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 225 was not taken"> - </span><span class="tlaGBC" title="Branch 226 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 227 was not taken"> - </span><span class="tlaGBC" title="Branch 228 was taken 3 times"> + </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 229 was not taken"> - </span><span class="tlaGBC" title="Branch 230 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 231 was not taken"> - </span><span class="tlaGBC" title="Branch 232 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 233 was not taken"> - </span> 
-<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 234 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 235 was not taken"> - </span><span class="tlaGBC" title="Branch 236 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 237 was not taken"> - </span><span class="tlaGBC" title="Branch 238 was taken 3 times"> + </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 239 was not taken"> - </span><span class="tlaGBC" title="Branch 240 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 241 was not taken"> - </span><span class="tlaGBC" title="Branch 242 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 243 was not taken"> - </span> 
-<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 244 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 245 was not taken"> - </span><span class="tlaGBC" title="Branch 246 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 247 was not taken"> - </span><span class="tlaGBC" title="Branch 248 was taken 3 times"> + </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 249 was not taken"> - </span><span class="tlaGBC" title="Branch 250 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 251 was not taken"> - </span><span class="tlaGBC" title="Branch 252 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 253 was not taken"> - </span> 
-<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 254 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 255 was not taken"> - </span><span class="tlaGBC" title="Branch 256 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 257 was not taken"> - </span><span class="tlaGBC" title="Branch 258 was taken 3 times"> + </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 259 was not taken"> - </span><span class="tlaGBC" title="Branch 260 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 261 was not taken"> - </span><span class="tlaGBC" title="Branch 262 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 263 was not taken"> - </span> 
-<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 264 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 265 was not taken"> - </span><span class="tlaGBC" title="Branch 266 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 267 was not taken"> - </span><span class="tlaGBC" title="Branch 268 was taken 3 times"> + </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 269 was not taken"> - </span><span class="tlaGBC" title="Branch 270 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 271 was not taken"> - </span><span class="tlaGBC" title="Branch 272 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 273 was not taken"> - </span> 
-<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 274 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 275 was not taken"> - </span><span class="tlaGBC" title="Branch 276 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 277 was not taken"> - </span><span class="tlaGBC" title="Branch 278 was taken 3 times"> + </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 279 was not taken"> - </span><span class="tlaGBC" title="Branch 280 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 281 was not taken"> - </span><span class="tlaGBC" title="Branch 282 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 283 was not taken"> - </span> 
-<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 284 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 285 was not taken"> - </span><span class="tlaGBC" title="Branch 286 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 287 was not taken"> - </span><span class="tlaGBC" title="Branch 288 was taken 3 times"> + </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 289 was not taken"> - </span><span class="tlaGBC" title="Branch 290 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 291 was not taken"> - </span><span class="tlaGBC" title="Branch 292 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 293 was not taken"> - </span> 
-<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 294 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 295 was not taken"> - </span><span class="tlaGBC" title="Branch 296 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 297 was not taken"> - </span><span class="tlaGBC" title="Branch 298 was taken 3 times"> + </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 299 was not taken"> - </span><span class="tlaGBC" title="Branch 300 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 301 was not taken"> - </span><span class="tlaGBC" title="Branch 302 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 303 was not taken"> - </span> 
-<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 304 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 305 was not taken"> - </span><span class="tlaGBC" title="Branch 306 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 307 was not taken"> - </span><span class="tlaGBC" title="Branch 308 was taken 3 times"> + </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 309 was not taken"> - </span><span class="tlaGBC" title="Branch 310 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 311 was not taken"> - </span><span class="tlaGBC" title="Branch 312 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 313 was not taken"> - </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 314 was not taken"> - </span><span class="tlaUNC" title="Branch 315 was not taken"> - </span><span class="tlaUNC" title="Branch 316 was not taken"> - </span><span class="tlaUNC" title="Branch 317 was not taken"> - </span><span class="tlaUNC" title="Branch 318 was not taken"> - </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 319 was not taken"> - </span><span class="tlaUNC" title="Branch 320 was not taken"> - </span><span class="tlaUNC" title="Branch 321 was not taken"> - </span><span class="tlaUNC" title="Branch 322 was not taken"> - </span><span class="tlaUNC" title="Branch 323 was not taken"> - </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 324 was not taken"> - </span><span class="tlaUNC" title="Branch 325 was not taken"> - </span><span class="tlaUNC" title="Branch 326 was not taken"> - </span><span class="tlaUNC" title="Branch 327 was not taken"> - </span><span class="tlaUNC" title="Branch 328 was not taken"> - </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 329 was not taken"> - </span><span class="tlaUNC" title="Branch 330 was not taken"> - </span><span class="tlaUNC" title="Branch 331 was not taken"> - </span><span class="tlaUNC" title="Branch 332 was not taken"> - </span><span class="tlaUNC" title="Branch 333 was not taken"> - </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 334 was not taken"> - </span><span class="tlaUNC" title="Branch 335 was not taken"> - </span><span class="tlaUNC" title="Branch 336 was not taken"> - </span><span class="tlaUNC" title="Branch 337 was not taken"> - </span><span class="tlaUNC" title="Branch 338 was not taken"> - </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 339 was not taken"> - </span><span class="tlaUNC" title="Branch 340 was not taken"> - </span><span class="tlaUNC" title="Branch 341 was not taken"> - </span><span class="tlaUNC" title="Branch 342 was not taken"> - </span><span class="tlaUNC" title="Branch 343 was not taken"> - </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 344 was not taken"> - </span><span class="tlaUNC" title="Branch 345 was not taken"> - </span><span class="tlaUNC" title="Branch 346 was not taken"> - </span><span class="tlaUNC" title="Branch 347 was not taken"> - </span><span class="tlaUNC" title="Branch 348 was not taken"> - </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 349 was not taken"> - </span><span class="tlaUNC" title="Branch 350 was not taken"> - </span><span class="tlaUNC" title="Branch 351 was not taken"> - </span><span class="tlaUNC" title="Branch 352 was not taken"> - </span><span class="tlaUNC" title="Branch 353 was not taken"> - </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 354 was not taken"> - </span><span class="tlaUNC" title="Branch 355 was not taken"> - </span><span class="tlaUNC" title="Branch 356 was not taken"> - </span><span class="tlaUNC" title="Branch 357 was not taken"> - </span><span class="tlaUNC" title="Branch 358 was not taken"> - </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 359 was not taken"> - </span><span class="tlaUNC" title="Branch 360 was not taken"> - </span><span class="tlaUNC" title="Branch 361 was not taken"> - </span><span class="tlaUNC" title="Branch 362 was not taken"> - </span><span class="tlaUNC" title="Branch 363 was not taken"> - </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 364 was not taken"> - </span><span class="tlaUNC" title="Branch 365 was not taken"> - </span><span class="tlaUNC" title="Branch 366 was not taken"> - </span><span class="tlaUNC" title="Branch 367 was not taken"> - </span><span class="tlaUNC" title="Branch 368 was not taken"> - </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 369 was not taken"> - </span><span class="tlaUNC" title="Branch 370 was not taken"> - </span><span class="tlaUNC" title="Branch 371 was not taken"> - </span><span class="tlaUNC" title="Branch 372 was not taken"> - </span><span class="tlaUNC" title="Branch 373 was not taken"> - </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 374 was not taken"> - </span><span class="tlaUNC" title="Branch 375 was not taken"> - </span><span class="tlaUNC" title="Branch 376 was not taken"> - </span><span class="tlaUNC" title="Branch 377 was not taken"> - </span><span class="tlaUNC" title="Branch 378 was not taken"> - </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 379 was not taken"> - </span><span class="tlaUNC" title="Branch 380 was not taken"> - </span><span class="tlaUNC" title="Branch 381 was not taken"> - </span><span class="tlaUNC" title="Branch 382 was not taken"> - </span><span class="tlaUNC" title="Branch 383 was not taken"> - </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 384 was not taken"> - </span><span class="tlaUNC" title="Branch 385 was not taken"> - </span><span class="tlaUNC" title="Branch 386 was not taken"> - </span><span class="tlaUNC" title="Branch 387 was not taken"> - </span><span class="tlaUNC" title="Branch 388 was not taken"> - </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 389 was not taken"> - </span><span class="tlaUNC" title="Branch 390 was not taken"> - </span><span class="tlaUNC" title="Branch 391 was not taken"> - </span><span class="tlaUNC" title="Branch 392 was not taken"> - </span><span class="tlaUNC" title="Branch 393 was not taken"> - </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 394 was not taken"> - </span><span class="tlaUNC" title="Branch 395 was not taken"> - </span><span class="tlaUNC" title="Branch 396 was not taken"> - </span><span class="tlaUNC" title="Branch 397 was not taken"> - </span><span class="tlaUNC" title="Branch 398 was not taken"> - </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 399 was not taken"> - </span><span class="tlaUNC" title="Branch 400 was not taken"> - </span><span class="tlaUNC" title="Branch 401 was not taken"> - </span><span class="tlaUNC" title="Branch 402 was not taken"> - </span><span class="tlaUNC" title="Branch 403 was not taken"> - </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 404 was not taken"> - </span><span class="tlaUNC" title="Branch 405 was not taken"> - </span><span class="tlaUNC" title="Branch 406 was not taken"> - </span><span class="tlaUNC" title="Branch 407 was not taken"> - </span><span class="tlaUNC" title="Branch 408 was not taken"> - </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 409 was not taken"> - </span><span class="tlaUNC" title="Branch 410 was not taken"> - </span><span class="tlaUNC" title="Branch 411 was not taken"> - </span><span class="tlaUNC" title="Branch 412 was not taken"> - </span><span class="tlaUNC" title="Branch 413 was not taken"> - </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 414 was not taken"> - </span><span class="tlaUNC" title="Branch 415 was not taken"> - </span><span class="tlaUNC" title="Branch 416 was not taken"> - </span><span class="tlaUNC" title="Branch 417 was not taken"> - </span><span class="tlaUNC" title="Branch 418 was not taken"> - </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 419 was not taken"> - </span><span class="tlaUNC" title="Branch 420 was not taken"> - </span><span class="tlaUNC" title="Branch 421 was not taken"> - </span><span class="tlaUNC" title="Branch 422 was not taken"> - </span><span class="tlaUNC" title="Branch 423 was not taken"> - </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 424 was not taken"> - </span><span class="tlaUNC" title="Branch 425 was not taken"> - </span><span class="tlaUNC" title="Branch 426 was not taken"> - </span><span class="tlaUNC" title="Branch 427 was not taken"> - </span><span class="tlaUNC" title="Branch 428 was not taken"> - </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 429 was not taken"> - </span><span class="tlaUNC" title="Branch 430 was not taken"> - </span><span class="tlaUNC" title="Branch 431 was not taken"> - </span><span class="tlaUNC" title="Branch 432 was not taken"> - </span><span class="tlaUNC" title="Branch 433 was not taken"> - </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 434 was not taken"> - </span><span class="tlaUNC" title="Branch 435 was not taken"> - </span><span class="tlaUNC" title="Branch 436 was not taken"> - </span><span class="tlaUNC" title="Branch 437 was not taken"> - </span><span class="tlaUNC" title="Branch 438 was not taken"> - </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 439 was not taken"> - </span><span class="tlaUNC" title="Branch 440 was not taken"> - </span><span class="tlaUNC" title="Branch 441 was not taken"> - </span><span class="tlaUNC" title="Branch 442 was not taken"> - </span><span class="tlaUNC" title="Branch 443 was not taken"> - </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 444 was not taken"> - </span><span class="tlaUNC" title="Branch 445 was not taken"> - </span><span class="tlaUNC" title="Branch 446 was not taken"> - </span><span class="tlaUNC" title="Branch 447 was not taken"> - </span><span class="tlaUNC" title="Branch 448 was not taken"> - </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 449 was not taken"> - </span><span class="tlaUNC" title="Branch 450 was not taken"> - </span><span class="tlaUNC" title="Branch 451 was not taken"> - </span><span class="tlaUNC" title="Branch 452 was not taken"> - </span><span class="tlaUNC" title="Branch 453 was not taken"> - </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 454 was not taken"> - </span><span class="tlaUNC" title="Branch 455 was not taken"> - </span><span class="tlaUNC" title="Branch 456 was not taken"> - </span><span class="tlaUNC" title="Branch 457 was not taken"> - </span><span class="tlaUNC" title="Branch 458 was not taken"> - </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 459 was not taken"> - </span><span class="tlaUNC" title="Branch 460 was not taken"> - </span><span class="tlaUNC" title="Branch 461 was not taken"> - </span><span class="tlaUNC" title="Branch 462 was not taken"> - </span><span class="tlaUNC" title="Branch 463 was not taken"> - </span> 
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 464 was not taken"> - </span><span class="tlaUNC" title="Branch 465 was not taken"> - </span><span class="tlaUNC" title="Branch 466 was not taken"> - </span><span class="tlaUNC" title="Branch 467 was not taken"> - </span><span class="tlaUNC" title="Branch 468 was not taken"> - </span> 
-<span class="lineNum">        </span>    <span class="tlaUNC" title="Branch 469 was not taken"> - </span><span class="tlaUNC" title="Branch 470 was not taken"> - </span><span class="tlaUNC" title="Branch 471 was not taken"> - </span><span class="tlaUNC" title="Branch 472 was not taken"> - </span> 
-<span class="lineNum">        </span>             <span class="tlaUNC" title="Branch 473 was not taken"> - </span>]
-<span id="L308"><span class="lineNum">     308</span>                 :             : </span>
-<span id="L309"><span class="lineNum">     309</span>                 :             : } // namespace Remus</span>
+<span id="L1"><span class="lineNum">       1</span>              : #include &quot;system_resolver.h&quot;</span>
+<span id="L2"><span class="lineNum">       2</span>              : #include &quot;constants/providers.h&quot;</span>
+<span id="L3"><span class="lineNum">       3</span>              : </span>
+<span id="L4"><span class="lineNum">       4</span>              : namespace Remus {</span>
+<span id="L5"><span class="lineNum">       5</span>              : </span>
+<span id="L6"><span class="lineNum">       6</span>              : using namespace Constants;</span>
+<span id="L7"><span class="lineNum">       7</span>              : using namespace Constants::Providers;</span>
+<span id="L8"><span class="lineNum">       8</span>              : </span>
+<span id="L9"><span class="lineNum">       9</span> <span class="tlaGNC">           6 : QString SystemResolver::displayName(int systemId)</span></span>
+<span id="L10"><span class="lineNum">      10</span>              : {</span>
+<span id="L11"><span class="lineNum">      11</span> <span class="tlaGNC">           6 :     const Constants::Systems::SystemDef* system = Constants::Systems::getSystem(systemId);</span></span>
+<span id="L12"><span class="lineNum">      12</span> <span class="tlaGNC">          15 :     return system ? system-&gt;displayName : QStringLiteral(&quot;Unknown&quot;);</span></span>
+<span id="L13"><span class="lineNum">      13</span>              : }</span>
+<span id="L14"><span class="lineNum">      14</span>              : </span>
+<span id="L15"><span class="lineNum">      15</span> <span class="tlaGNC">           9 : QString SystemResolver::internalName(int systemId)</span></span>
+<span id="L16"><span class="lineNum">      16</span>              : {</span>
+<span id="L17"><span class="lineNum">      17</span> <span class="tlaGNC">           9 :     const Constants::Systems::SystemDef* system = Constants::Systems::getSystem(systemId);</span></span>
+<span id="L18"><span class="lineNum">      18</span> <span class="tlaGNC">          21 :     return system ? system-&gt;internalName : QStringLiteral(&quot;Unknown&quot;);</span></span>
+<span id="L19"><span class="lineNum">      19</span>              : }</span>
+<span id="L20"><span class="lineNum">      20</span>              : </span>
+<span id="L21"><span class="lineNum">      21</span> <span class="tlaGNC">          15 : QString SystemResolver::providerName(int systemId, const QString &amp;providerId)</span></span>
+<span id="L22"><span class="lineNum">      22</span>              : {</span>
+<span id="L23"><span class="lineNum">      23</span> <span class="tlaGNC">          15 :     static QMap&lt;int, QMap&lt;QString, QString&gt;&gt; mappings = providerMappings();</span></span>
+<span id="L24"><span class="lineNum">      24</span>              :     </span>
+<span id="L25"><span class="lineNum">      25</span>              :     // Check if we have a mapping for this system</span>
+<span id="L26"><span class="lineNum">      26</span> <span class="tlaGNC">          15 :     if (!mappings.contains(systemId)) {</span></span>
+<span id="L27"><span class="lineNum">      27</span> <span class="tlaGNC">           3 :         return QString();</span></span>
+<span id="L28"><span class="lineNum">      28</span>              :     }</span>
+<span id="L29"><span class="lineNum">      29</span>              :     </span>
+<span id="L30"><span class="lineNum">      30</span>              :     // Check if we have a mapping for this provider</span>
+<span id="L31"><span class="lineNum">      31</span> <span class="tlaGNC">          12 :     const QMap&lt;QString, QString&gt; &amp;providerMap = mappings[systemId];</span></span>
+<span id="L32"><span class="lineNum">      32</span> <span class="tlaGNC">          12 :     if (!providerMap.contains(providerId)) {</span></span>
+<span id="L33"><span class="lineNum">      33</span>              :         // Fallback: for providers like Hasheous, use internal name</span>
+<span id="L34"><span class="lineNum">      34</span> <span class="tlaGNC">           3 :         return internalName(systemId);</span></span>
+<span id="L35"><span class="lineNum">      35</span>              :     }</span>
+<span id="L36"><span class="lineNum">      36</span>              :     </span>
+<span id="L37"><span class="lineNum">      37</span> <span class="tlaGNC">           9 :     return providerMap[providerId];</span></span>
+<span id="L38"><span class="lineNum">      38</span>              : }</span>
+<span id="L39"><span class="lineNum">      39</span>              : </span>
+<span id="L40"><span class="lineNum">      40</span> <span class="tlaGNC">           6 : int SystemResolver::systemIdByName(const QString &amp;internalName)</span></span>
+<span id="L41"><span class="lineNum">      41</span>              : {</span>
+<span id="L42"><span class="lineNum">      42</span> <span class="tlaGNC">           6 :     return Constants::Systems::getSystemIdByName(internalName);</span></span>
+<span id="L43"><span class="lineNum">      43</span>              : }</span>
+<span id="L44"><span class="lineNum">      44</span>              : </span>
+<span id="L45"><span class="lineNum">      45</span> <span class="tlaGNC">           6 : bool SystemResolver::isValidSystem(int systemId)</span></span>
+<span id="L46"><span class="lineNum">      46</span>              : {</span>
+<span id="L47"><span class="lineNum">      47</span> <span class="tlaGNC">           6 :     return Constants::Systems::getSystem(systemId) != nullptr;</span></span>
+<span id="L48"><span class="lineNum">      48</span>              : }</span>
+<span id="L49"><span class="lineNum">      49</span>              : </span>
+<span id="L50"><span class="lineNum">      50</span> <span class="tlaGNC">           3 : QMap&lt;int, QMap&lt;QString, QString&gt;&gt; SystemResolver::providerMappings()</span></span>
+<span id="L51"><span class="lineNum">      51</span>              : {</span>
+<span id="L52"><span class="lineNum">      52</span>              :     // Provider-specific platform IDs (lazy-initialized static)</span>
+<span id="L53"><span class="lineNum">      53</span>              :     // This is the SINGLE SOURCE OF TRUTH for provider mappings</span>
+<span id="L54"><span class="lineNum">      54</span>              :     </span>
+<span id="L55"><span class="lineNum">      55</span>              :     using namespace Constants::Systems;</span>
+<span id="L56"><span class="lineNum">      56</span>              :     </span>
+<span id="L57"><span class="lineNum">      57</span>              :     return {</span>
+<span id="L58"><span class="lineNum">      58</span>              :         // ====================================================================</span>
+<span id="L59"><span class="lineNum">      59</span>              :         // Nintendo Systems</span>
+<span id="L60"><span class="lineNum">      60</span>              :         // ====================================================================</span>
+<span id="L61"><span class="lineNum">      61</span>              :         {ID_NES, {</span>
+<span id="L62"><span class="lineNum">      62</span> <span class="tlaGNC">           6 :             {THEGAMESDB, QStringLiteral(&quot;7&quot;)},</span></span>
+<span id="L63"><span class="lineNum">      63</span> <span class="tlaGNC">           6 :             {SCREENSCRAPER, QStringLiteral(&quot;3&quot;)},</span></span>
+<span id="L64"><span class="lineNum">      64</span> <span class="tlaGNC">           6 :             {IGDB, QStringLiteral(&quot;nes&quot;)},</span></span>
+<span id="L65"><span class="lineNum">      65</span>              :         }},</span>
+<span id="L66"><span class="lineNum">      66</span>              :         </span>
+<span id="L67"><span class="lineNum">      67</span>              :         {ID_SNES, {</span>
+<span id="L68"><span class="lineNum">      68</span> <span class="tlaGNC">           6 :             {THEGAMESDB, QStringLiteral(&quot;6&quot;)},</span></span>
+<span id="L69"><span class="lineNum">      69</span> <span class="tlaGNC">           6 :             {SCREENSCRAPER, QStringLiteral(&quot;4&quot;)},</span></span>
+<span id="L70"><span class="lineNum">      70</span> <span class="tlaGNC">           6 :             {IGDB, QStringLiteral(&quot;snes&quot;)},</span></span>
+<span id="L71"><span class="lineNum">      71</span>              :         }},</span>
+<span id="L72"><span class="lineNum">      72</span>              :         </span>
+<span id="L73"><span class="lineNum">      73</span>              :         {ID_N64, {</span>
+<span id="L74"><span class="lineNum">      74</span> <span class="tlaGNC">           6 :             {THEGAMESDB, QStringLiteral(&quot;3&quot;)},</span></span>
+<span id="L75"><span class="lineNum">      75</span> <span class="tlaGNC">           6 :             {SCREENSCRAPER, QStringLiteral(&quot;14&quot;)},</span></span>
+<span id="L76"><span class="lineNum">      76</span> <span class="tlaGNC">           6 :             {IGDB, QStringLiteral(&quot;n64&quot;)},</span></span>
+<span id="L77"><span class="lineNum">      77</span>              :         }},</span>
+<span id="L78"><span class="lineNum">      78</span>              :         </span>
+<span id="L79"><span class="lineNum">      79</span>              :         {ID_GAMECUBE, {</span>
+<span id="L80"><span class="lineNum">      80</span> <span class="tlaGNC">           6 :             {THEGAMESDB, QStringLiteral(&quot;2&quot;)},</span></span>
+<span id="L81"><span class="lineNum">      81</span> <span class="tlaGNC">           6 :             {SCREENSCRAPER, QStringLiteral(&quot;13&quot;)},</span></span>
+<span id="L82"><span class="lineNum">      82</span> <span class="tlaGNC">           6 :             {IGDB, QStringLiteral(&quot;gamecube&quot;)},</span></span>
+<span id="L83"><span class="lineNum">      83</span>              :         }},</span>
+<span id="L84"><span class="lineNum">      84</span>              :         </span>
+<span id="L85"><span class="lineNum">      85</span>              :         {ID_WII, {</span>
+<span id="L86"><span class="lineNum">      86</span> <span class="tlaGNC">           6 :             {THEGAMESDB, QStringLiteral(&quot;9&quot;)},</span></span>
+<span id="L87"><span class="lineNum">      87</span> <span class="tlaGNC">           6 :             {SCREENSCRAPER, QStringLiteral(&quot;16&quot;)},</span></span>
+<span id="L88"><span class="lineNum">      88</span> <span class="tlaGNC">           6 :             {IGDB, QStringLiteral(&quot;wii&quot;)},</span></span>
+<span id="L89"><span class="lineNum">      89</span>              :         }},</span>
+<span id="L90"><span class="lineNum">      90</span>              :         </span>
+<span id="L91"><span class="lineNum">      91</span>              :         {ID_GB, {</span>
+<span id="L92"><span class="lineNum">      92</span> <span class="tlaGNC">           6 :             {THEGAMESDB, QStringLiteral(&quot;4&quot;)},</span></span>
+<span id="L93"><span class="lineNum">      93</span> <span class="tlaGNC">           6 :             {SCREENSCRAPER, QStringLiteral(&quot;9&quot;)},</span></span>
+<span id="L94"><span class="lineNum">      94</span> <span class="tlaGNC">           6 :             {IGDB, QStringLiteral(&quot;gameboy&quot;)},</span></span>
+<span id="L95"><span class="lineNum">      95</span>              :         }},</span>
+<span id="L96"><span class="lineNum">      96</span>              :         </span>
+<span id="L97"><span class="lineNum">      97</span>              :         {ID_GBC, {</span>
+<span id="L98"><span class="lineNum">      98</span> <span class="tlaGNC">           6 :             {THEGAMESDB, QStringLiteral(&quot;41&quot;)},</span></span>
+<span id="L99"><span class="lineNum">      99</span> <span class="tlaGNC">           6 :             {SCREENSCRAPER, QStringLiteral(&quot;10&quot;)},</span></span>
+<span id="L100"><span class="lineNum">     100</span> <span class="tlaGNC">           6 :             {IGDB, QStringLiteral(&quot;gbc&quot;)},</span></span>
+<span id="L101"><span class="lineNum">     101</span>              :         }},</span>
+<span id="L102"><span class="lineNum">     102</span>              :         </span>
+<span id="L103"><span class="lineNum">     103</span>              :         {ID_GBA, {</span>
+<span id="L104"><span class="lineNum">     104</span> <span class="tlaGNC">           6 :             {THEGAMESDB, QStringLiteral(&quot;5&quot;)},</span></span>
+<span id="L105"><span class="lineNum">     105</span> <span class="tlaGNC">           6 :             {SCREENSCRAPER, QStringLiteral(&quot;12&quot;)},</span></span>
+<span id="L106"><span class="lineNum">     106</span> <span class="tlaGNC">           6 :             {IGDB, QStringLiteral(&quot;gba&quot;)},</span></span>
+<span id="L107"><span class="lineNum">     107</span>              :         }},</span>
+<span id="L108"><span class="lineNum">     108</span>              :         </span>
+<span id="L109"><span class="lineNum">     109</span>              :         {ID_NDS, {</span>
+<span id="L110"><span class="lineNum">     110</span> <span class="tlaGNC">           6 :             {THEGAMESDB, QStringLiteral(&quot;8&quot;)},</span></span>
+<span id="L111"><span class="lineNum">     111</span> <span class="tlaGNC">           6 :             {SCREENSCRAPER, QStringLiteral(&quot;15&quot;)},</span></span>
+<span id="L112"><span class="lineNum">     112</span> <span class="tlaGNC">           6 :             {IGDB, QStringLiteral(&quot;nds&quot;)},</span></span>
+<span id="L113"><span class="lineNum">     113</span>              :         }},</span>
+<span id="L114"><span class="lineNum">     114</span>              :         </span>
+<span id="L115"><span class="lineNum">     115</span>              :         {ID_3DS, {</span>
+<span id="L116"><span class="lineNum">     116</span> <span class="tlaGNC">           6 :             {THEGAMESDB, QStringLiteral(&quot;4912&quot;)},</span></span>
+<span id="L117"><span class="lineNum">     117</span> <span class="tlaGNC">           6 :             {SCREENSCRAPER, QStringLiteral(&quot;17&quot;)},</span></span>
+<span id="L118"><span class="lineNum">     118</span> <span class="tlaGNC">           6 :             {IGDB, QStringLiteral(&quot;3ds&quot;)},</span></span>
+<span id="L119"><span class="lineNum">     119</span>              :         }},</span>
+<span id="L120"><span class="lineNum">     120</span>              :         </span>
+<span id="L121"><span class="lineNum">     121</span>              :         {ID_SWITCH, {</span>
+<span id="L122"><span class="lineNum">     122</span> <span class="tlaGNC">           6 :             {THEGAMESDB, QStringLiteral(&quot;4971&quot;)},</span></span>
+<span id="L123"><span class="lineNum">     123</span> <span class="tlaGNC">           6 :             {SCREENSCRAPER, QStringLiteral(&quot;225&quot;)},</span></span>
+<span id="L124"><span class="lineNum">     124</span> <span class="tlaGNC">           6 :             {IGDB, QStringLiteral(&quot;switch&quot;)},</span></span>
+<span id="L125"><span class="lineNum">     125</span>              :         }},</span>
+<span id="L126"><span class="lineNum">     126</span>              :         </span>
+<span id="L127"><span class="lineNum">     127</span>              :         {ID_VIRTUAL_BOY, {</span>
+<span id="L128"><span class="lineNum">     128</span> <span class="tlaGNC">           6 :             {THEGAMESDB, QStringLiteral(&quot;28&quot;)},</span></span>
+<span id="L129"><span class="lineNum">     129</span> <span class="tlaGNC">           6 :             {SCREENSCRAPER, QStringLiteral(&quot;11&quot;)},</span></span>
+<span id="L130"><span class="lineNum">     130</span> <span class="tlaGNC">           6 :             {IGDB, QStringLiteral(&quot;virtualboy&quot;)},</span></span>
+<span id="L131"><span class="lineNum">     131</span>              :         }},</span>
+<span id="L132"><span class="lineNum">     132</span>              :         </span>
+<span id="L133"><span class="lineNum">     133</span>              :         // ====================================================================</span>
+<span id="L134"><span class="lineNum">     134</span>              :         // Sega Systems</span>
+<span id="L135"><span class="lineNum">     135</span>              :         // ====================================================================</span>
+<span id="L136"><span class="lineNum">     136</span>              :         {ID_GENESIS, {</span>
+<span id="L137"><span class="lineNum">     137</span> <span class="tlaGNC">           6 :             {THEGAMESDB, QStringLiteral(&quot;18&quot;)},</span></span>
+<span id="L138"><span class="lineNum">     138</span> <span class="tlaGNC">           6 :             {SCREENSCRAPER, QStringLiteral(&quot;1&quot;)},</span></span>
+<span id="L139"><span class="lineNum">     139</span> <span class="tlaGNC">           6 :             {IGDB, QStringLiteral(&quot;genesis&quot;)},</span></span>
+<span id="L140"><span class="lineNum">     140</span>              :         }},</span>
+<span id="L141"><span class="lineNum">     141</span>              :         </span>
+<span id="L142"><span class="lineNum">     142</span>              :         {ID_MASTER_SYSTEM, {</span>
+<span id="L143"><span class="lineNum">     143</span> <span class="tlaGNC">           6 :             {THEGAMESDB, QStringLiteral(&quot;35&quot;)},</span></span>
+<span id="L144"><span class="lineNum">     144</span> <span class="tlaGNC">           6 :             {SCREENSCRAPER, QStringLiteral(&quot;2&quot;)},</span></span>
+<span id="L145"><span class="lineNum">     145</span> <span class="tlaGNC">           6 :             {IGDB, QStringLiteral(&quot;sms&quot;)},</span></span>
+<span id="L146"><span class="lineNum">     146</span>              :         }},</span>
+<span id="L147"><span class="lineNum">     147</span>              :         </span>
+<span id="L148"><span class="lineNum">     148</span>              :         {ID_GAME_GEAR, {</span>
+<span id="L149"><span class="lineNum">     149</span> <span class="tlaGNC">           6 :             {THEGAMESDB, QStringLiteral(&quot;20&quot;)},</span></span>
+<span id="L150"><span class="lineNum">     150</span> <span class="tlaGNC">           6 :             {SCREENSCRAPER, QStringLiteral(&quot;8&quot;)},</span></span>
+<span id="L151"><span class="lineNum">     151</span> <span class="tlaGNC">           6 :             {IGDB, QStringLiteral(&quot;gamegear&quot;)},</span></span>
+<span id="L152"><span class="lineNum">     152</span>              :         }},</span>
+<span id="L153"><span class="lineNum">     153</span>              :         </span>
+<span id="L154"><span class="lineNum">     154</span>              :         {ID_SATURN, {</span>
+<span id="L155"><span class="lineNum">     155</span> <span class="tlaGNC">           6 :             {THEGAMESDB, QStringLiteral(&quot;17&quot;)},</span></span>
+<span id="L156"><span class="lineNum">     156</span> <span class="tlaGNC">           6 :             {SCREENSCRAPER, QStringLiteral(&quot;22&quot;)},</span></span>
+<span id="L157"><span class="lineNum">     157</span> <span class="tlaGNC">           6 :             {IGDB, QStringLiteral(&quot;saturn&quot;)},</span></span>
+<span id="L158"><span class="lineNum">     158</span>              :         }},</span>
+<span id="L159"><span class="lineNum">     159</span>              :         </span>
+<span id="L160"><span class="lineNum">     160</span>              :         {ID_DREAMCAST, {</span>
+<span id="L161"><span class="lineNum">     161</span> <span class="tlaGNC">           6 :             {THEGAMESDB, QStringLiteral(&quot;16&quot;)},</span></span>
+<span id="L162"><span class="lineNum">     162</span> <span class="tlaGNC">           6 :             {SCREENSCRAPER, QStringLiteral(&quot;23&quot;)},</span></span>
+<span id="L163"><span class="lineNum">     163</span> <span class="tlaGNC">           6 :             {IGDB, QStringLiteral(&quot;dreamcast&quot;)},</span></span>
+<span id="L164"><span class="lineNum">     164</span>              :         }},</span>
+<span id="L165"><span class="lineNum">     165</span>              :         </span>
+<span id="L166"><span class="lineNum">     166</span>              :         {ID_SEGA_CD, {</span>
+<span id="L167"><span class="lineNum">     167</span> <span class="tlaGNC">           6 :             {THEGAMESDB, QStringLiteral(&quot;21&quot;)},</span></span>
+<span id="L168"><span class="lineNum">     168</span> <span class="tlaGNC">           6 :             {SCREENSCRAPER, QStringLiteral(&quot;20&quot;)},</span></span>
+<span id="L169"><span class="lineNum">     169</span> <span class="tlaGNC">           6 :             {IGDB, QStringLiteral(&quot;segacd&quot;)},</span></span>
+<span id="L170"><span class="lineNum">     170</span>              :         }},</span>
+<span id="L171"><span class="lineNum">     171</span>              :         </span>
+<span id="L172"><span class="lineNum">     172</span>              :         {ID_32X, {</span>
+<span id="L173"><span class="lineNum">     173</span> <span class="tlaGNC">           6 :             {THEGAMESDB, QStringLiteral(&quot;33&quot;)},</span></span>
+<span id="L174"><span class="lineNum">     174</span> <span class="tlaGNC">           6 :             {SCREENSCRAPER, QStringLiteral(&quot;19&quot;)},</span></span>
+<span id="L175"><span class="lineNum">     175</span> <span class="tlaGNC">           6 :             {IGDB, QStringLiteral(&quot;sega32x&quot;)},</span></span>
+<span id="L176"><span class="lineNum">     176</span>              :         }},</span>
+<span id="L177"><span class="lineNum">     177</span>              :         </span>
+<span id="L178"><span class="lineNum">     178</span>              :         // ====================================================================</span>
+<span id="L179"><span class="lineNum">     179</span>              :         // Sony Systems</span>
+<span id="L180"><span class="lineNum">     180</span>              :         // ====================================================================</span>
+<span id="L181"><span class="lineNum">     181</span>              :         {ID_PSX, {</span>
+<span id="L182"><span class="lineNum">     182</span> <span class="tlaGNC">           6 :             {THEGAMESDB, QStringLiteral(&quot;10&quot;)},</span></span>
+<span id="L183"><span class="lineNum">     183</span> <span class="tlaGNC">           6 :             {SCREENSCRAPER, QStringLiteral(&quot;57&quot;)},</span></span>
+<span id="L184"><span class="lineNum">     184</span> <span class="tlaGNC">           6 :             {IGDB, QStringLiteral(&quot;playstation&quot;)},</span></span>
+<span id="L185"><span class="lineNum">     185</span>              :         }},</span>
+<span id="L186"><span class="lineNum">     186</span>              :         </span>
+<span id="L187"><span class="lineNum">     187</span>              :         {ID_PS2, {</span>
+<span id="L188"><span class="lineNum">     188</span> <span class="tlaGNC">           6 :             {THEGAMESDB, QStringLiteral(&quot;11&quot;)},</span></span>
+<span id="L189"><span class="lineNum">     189</span> <span class="tlaGNC">           6 :             {SCREENSCRAPER, QStringLiteral(&quot;58&quot;)},</span></span>
+<span id="L190"><span class="lineNum">     190</span> <span class="tlaGNC">           6 :             {IGDB, QStringLiteral(&quot;ps2&quot;)},</span></span>
+<span id="L191"><span class="lineNum">     191</span>              :         }},</span>
+<span id="L192"><span class="lineNum">     192</span>              :         </span>
+<span id="L193"><span class="lineNum">     193</span>              :         {ID_PSP, {</span>
+<span id="L194"><span class="lineNum">     194</span> <span class="tlaGNC">           6 :             {THEGAMESDB, QStringLiteral(&quot;13&quot;)},</span></span>
+<span id="L195"><span class="lineNum">     195</span> <span class="tlaGNC">           6 :             {SCREENSCRAPER, QStringLiteral(&quot;61&quot;)},</span></span>
+<span id="L196"><span class="lineNum">     196</span> <span class="tlaGNC">           6 :             {IGDB, QStringLiteral(&quot;psp&quot;)},</span></span>
+<span id="L197"><span class="lineNum">     197</span>              :         }},</span>
+<span id="L198"><span class="lineNum">     198</span>              :         </span>
+<span id="L199"><span class="lineNum">     199</span>              :         {ID_PSVITA, {</span>
+<span id="L200"><span class="lineNum">     200</span> <span class="tlaGNC">           6 :             {THEGAMESDB, QStringLiteral(&quot;39&quot;)},</span></span>
+<span id="L201"><span class="lineNum">     201</span> <span class="tlaGNC">           6 :             {SCREENSCRAPER, QStringLiteral(&quot;62&quot;)},</span></span>
+<span id="L202"><span class="lineNum">     202</span> <span class="tlaGNC">           6 :             {IGDB, QStringLiteral(&quot;psvita&quot;)},</span></span>
+<span id="L203"><span class="lineNum">     203</span>              :         }},</span>
+<span id="L204"><span class="lineNum">     204</span>              :         </span>
+<span id="L205"><span class="lineNum">     205</span>              :         // ====================================================================</span>
+<span id="L206"><span class="lineNum">     206</span>              :         // Atari Systems</span>
+<span id="L207"><span class="lineNum">     207</span>              :         // ====================================================================</span>
+<span id="L208"><span class="lineNum">     208</span>              :         {ID_ATARI_2600, {</span>
+<span id="L209"><span class="lineNum">     209</span> <span class="tlaGNC">           6 :             {THEGAMESDB, QStringLiteral(&quot;22&quot;)},</span></span>
+<span id="L210"><span class="lineNum">     210</span> <span class="tlaGNC">           6 :             {SCREENSCRAPER, QStringLiteral(&quot;26&quot;)},</span></span>
+<span id="L211"><span class="lineNum">     211</span> <span class="tlaGNC">           6 :             {IGDB, QStringLiteral(&quot;atari2600&quot;)},</span></span>
+<span id="L212"><span class="lineNum">     212</span>              :         }},</span>
+<span id="L213"><span class="lineNum">     213</span>              :         </span>
+<span id="L214"><span class="lineNum">     214</span>              :         {ID_ATARI_7800, {</span>
+<span id="L215"><span class="lineNum">     215</span> <span class="tlaGNC">           6 :             {THEGAMESDB, QStringLiteral(&quot;27&quot;)},</span></span>
+<span id="L216"><span class="lineNum">     216</span> <span class="tlaGNC">           6 :             {SCREENSCRAPER, QStringLiteral(&quot;43&quot;)},</span></span>
+<span id="L217"><span class="lineNum">     217</span> <span class="tlaGNC">           6 :             {IGDB, QStringLiteral(&quot;atari7800&quot;)},</span></span>
+<span id="L218"><span class="lineNum">     218</span>              :         }},</span>
+<span id="L219"><span class="lineNum">     219</span>              :         </span>
+<span id="L220"><span class="lineNum">     220</span>              :         {ID_LYNX, {</span>
+<span id="L221"><span class="lineNum">     221</span> <span class="tlaGNC">           6 :             {THEGAMESDB, QStringLiteral(&quot;28&quot;)},</span></span>
+<span id="L222"><span class="lineNum">     222</span> <span class="tlaGNC">           6 :             {SCREENSCRAPER, QStringLiteral(&quot;28&quot;)},</span></span>
+<span id="L223"><span class="lineNum">     223</span> <span class="tlaGNC">           6 :             {IGDB, QStringLiteral(&quot;lynx&quot;)},</span></span>
+<span id="L224"><span class="lineNum">     224</span>              :         }},</span>
+<span id="L225"><span class="lineNum">     225</span>              :         </span>
+<span id="L226"><span class="lineNum">     226</span>              :         {ID_ATARI_JAGUAR, {</span>
+<span id="L227"><span class="lineNum">     227</span> <span class="tlaGNC">           6 :             {THEGAMESDB, QStringLiteral(&quot;29&quot;)},</span></span>
+<span id="L228"><span class="lineNum">     228</span> <span class="tlaGNC">           6 :             {SCREENSCRAPER, QStringLiteral(&quot;27&quot;)},</span></span>
+<span id="L229"><span class="lineNum">     229</span> <span class="tlaGNC">           6 :             {IGDB, QStringLiteral(&quot;jaguar&quot;)},</span></span>
+<span id="L230"><span class="lineNum">     230</span>              :         }},</span>
+<span id="L231"><span class="lineNum">     231</span>              :         </span>
+<span id="L232"><span class="lineNum">     232</span>              :         // ====================================================================</span>
+<span id="L233"><span class="lineNum">     233</span>              :         // Other Systems</span>
+<span id="L234"><span class="lineNum">     234</span>              :         // ====================================================================</span>
+<span id="L235"><span class="lineNum">     235</span>              :         {ID_TURBOGRAFX16, {</span>
+<span id="L236"><span class="lineNum">     236</span> <span class="tlaGNC">           6 :             {THEGAMESDB, QStringLiteral(&quot;34&quot;)},</span></span>
+<span id="L237"><span class="lineNum">     237</span> <span class="tlaGNC">           6 :             {SCREENSCRAPER, QStringLiteral(&quot;31&quot;)},</span></span>
+<span id="L238"><span class="lineNum">     238</span> <span class="tlaGNC">           6 :             {IGDB, QStringLiteral(&quot;turbografx16&quot;)},</span></span>
+<span id="L239"><span class="lineNum">     239</span>              :         }},</span>
+<span id="L240"><span class="lineNum">     240</span>              :         </span>
+<span id="L241"><span class="lineNum">     241</span>              :         {ID_TURBOGRAFX_CD, {</span>
+<span id="L242"><span class="lineNum">     242</span> <span class="tlaGNC">           6 :             {THEGAMESDB, QStringLiteral(&quot;34&quot;)},  // Same as TG-16</span></span>
+<span id="L243"><span class="lineNum">     243</span> <span class="tlaGNC">           6 :             {SCREENSCRAPER, QStringLiteral(&quot;114&quot;)},</span></span>
+<span id="L244"><span class="lineNum">     244</span> <span class="tlaGNC">           6 :             {IGDB, QStringLiteral(&quot;turbografxcd&quot;)},</span></span>
+<span id="L245"><span class="lineNum">     245</span>              :         }},</span>
+<span id="L246"><span class="lineNum">     246</span>              :         </span>
+<span id="L247"><span class="lineNum">     247</span>              :         {ID_NEO_GEO, {</span>
+<span id="L248"><span class="lineNum">     248</span> <span class="tlaGNC">           6 :             {THEGAMESDB, QStringLiteral(&quot;24&quot;)},</span></span>
+<span id="L249"><span class="lineNum">     249</span> <span class="tlaGNC">           6 :             {SCREENSCRAPER, QStringLiteral(&quot;142&quot;)},</span></span>
+<span id="L250"><span class="lineNum">     250</span> <span class="tlaGNC">           6 :             {IGDB, QStringLiteral(&quot;neogeo&quot;)},</span></span>
+<span id="L251"><span class="lineNum">     251</span>              :         }},</span>
+<span id="L252"><span class="lineNum">     252</span>              :         </span>
+<span id="L253"><span class="lineNum">     253</span>              :         {ID_NGP, {</span>
+<span id="L254"><span class="lineNum">     254</span> <span class="tlaGNC">           6 :             {THEGAMESDB, QStringLiteral(&quot;4922&quot;)},</span></span>
+<span id="L255"><span class="lineNum">     255</span> <span class="tlaGNC">           6 :             {SCREENSCRAPER, QStringLiteral(&quot;25&quot;)},</span></span>
+<span id="L256"><span class="lineNum">     256</span> <span class="tlaGNC">           6 :             {IGDB, QStringLiteral(&quot;ngp&quot;)},</span></span>
+<span id="L257"><span class="lineNum">     257</span>              :         }},</span>
+<span id="L258"><span class="lineNum">     258</span>              :         </span>
+<span id="L259"><span class="lineNum">     259</span>              :         {ID_WONDERSWAN, {</span>
+<span id="L260"><span class="lineNum">     260</span> <span class="tlaGNC">           6 :             {THEGAMESDB, QStringLiteral(&quot;45&quot;)},</span></span>
+<span id="L261"><span class="lineNum">     261</span> <span class="tlaGNC">           6 :             {SCREENSCRAPER, QStringLiteral(&quot;45&quot;)},</span></span>
+<span id="L262"><span class="lineNum">     262</span> <span class="tlaGNC">           6 :             {IGDB, QStringLiteral(&quot;wonderswan&quot;)},</span></span>
+<span id="L263"><span class="lineNum">     263</span>              :         }},</span>
+<span id="L264"><span class="lineNum">     264</span>              :         </span>
+<span id="L265"><span class="lineNum">     265</span>              :         {ID_XBOX, {</span>
+<span id="L266"><span class="lineNum">     266</span> <span class="tlaGNC">           6 :             {THEGAMESDB, QStringLiteral(&quot;14&quot;)},</span></span>
+<span id="L267"><span class="lineNum">     267</span> <span class="tlaGNC">           6 :             {SCREENSCRAPER, QStringLiteral(&quot;32&quot;)},</span></span>
+<span id="L268"><span class="lineNum">     268</span> <span class="tlaGNC">           6 :             {IGDB, QStringLiteral(&quot;xbox&quot;)},</span></span>
+<span id="L269"><span class="lineNum">     269</span>              :         }},</span>
+<span id="L270"><span class="lineNum">     270</span>              :         </span>
+<span id="L271"><span class="lineNum">     271</span>              :         {ID_XBOX360, {</span>
+<span id="L272"><span class="lineNum">     272</span> <span class="tlaGNC">           6 :             {THEGAMESDB, QStringLiteral(&quot;15&quot;)},</span></span>
+<span id="L273"><span class="lineNum">     273</span> <span class="tlaGNC">           6 :             {SCREENSCRAPER, QStringLiteral(&quot;33&quot;)},</span></span>
+<span id="L274"><span class="lineNum">     274</span> <span class="tlaGNC">           6 :             {IGDB, QStringLiteral(&quot;xbox360&quot;)},</span></span>
+<span id="L275"><span class="lineNum">     275</span>              :         }},</span>
+<span id="L276"><span class="lineNum">     276</span>              :         </span>
+<span id="L277"><span class="lineNum">     277</span>              :         {ID_ARCADE, {</span>
+<span id="L278"><span class="lineNum">     278</span> <span class="tlaGNC">           6 :             {THEGAMESDB, QStringLiteral(&quot;23&quot;)},</span></span>
+<span id="L279"><span class="lineNum">     279</span> <span class="tlaGNC">           6 :             {SCREENSCRAPER, QStringLiteral(&quot;75&quot;)},</span></span>
+<span id="L280"><span class="lineNum">     280</span> <span class="tlaGNC">           6 :             {IGDB, QStringLiteral(&quot;arcade&quot;)},</span></span>
+<span id="L281"><span class="lineNum">     281</span>              :         }},</span>
+<span id="L282"><span class="lineNum">     282</span>              :         </span>
+<span id="L283"><span class="lineNum">     283</span>              :         {ID_C64, {</span>
+<span id="L284"><span class="lineNum">     284</span> <span class="tlaGNC">           6 :             {THEGAMESDB, QStringLiteral(&quot;40&quot;)},</span></span>
+<span id="L285"><span class="lineNum">     285</span> <span class="tlaGNC">           6 :             {SCREENSCRAPER, QStringLiteral(&quot;66&quot;)},</span></span>
+<span id="L286"><span class="lineNum">     286</span> <span class="tlaGNC">           6 :             {IGDB, QStringLiteral(&quot;c64&quot;)},</span></span>
+<span id="L287"><span class="lineNum">     287</span>              :         }},</span>
+<span id="L288"><span class="lineNum">     288</span>              :         </span>
+<span id="L289"><span class="lineNum">     289</span>              :         {ID_AMIGA, {</span>
+<span id="L290"><span class="lineNum">     290</span> <span class="tlaGNC">           6 :             {THEGAMESDB, QStringLiteral(&quot;4911&quot;)},</span></span>
+<span id="L291"><span class="lineNum">     291</span> <span class="tlaGNC">           6 :             {SCREENSCRAPER, QStringLiteral(&quot;64&quot;)},</span></span>
+<span id="L292"><span class="lineNum">     292</span> <span class="tlaGNC">           6 :             {IGDB, QStringLiteral(&quot;amiga&quot;)},</span></span>
+<span id="L293"><span class="lineNum">     293</span>              :         }},</span>
+<span id="L294"><span class="lineNum">     294</span>              :         </span>
+<span id="L295"><span class="lineNum">     295</span>              :         {ID_ZX_SPECTRUM, {</span>
+<span id="L296"><span class="lineNum">     296</span> <span class="tlaGNC">           6 :             {THEGAMESDB, QStringLiteral(&quot;4913&quot;)},</span></span>
+<span id="L297"><span class="lineNum">     297</span> <span class="tlaGNC">           6 :             {SCREENSCRAPER, QStringLiteral(&quot;76&quot;)},</span></span>
+<span id="L298"><span class="lineNum">     298</span> <span class="tlaGNC">           6 :             {IGDB, QStringLiteral(&quot;zxspectrum&quot;)},</span></span>
+<span id="L299"><span class="lineNum">     299</span>              :         }},</span>
+<span id="L300"><span class="lineNum">     300</span>              :         </span>
+<span id="L301"><span class="lineNum">     301</span>              :         {ID_SUPERGRAFX, {</span>
+<span id="L302"><span class="lineNum">     302</span> <span class="tlaGNC">           6 :             {THEGAMESDB, QStringLiteral(&quot;34&quot;)},  // Same as TG-16</span></span>
+<span id="L303"><span class="lineNum">     303</span> <span class="tlaGNC">           6 :             {SCREENSCRAPER, QStringLiteral(&quot;105&quot;)},</span></span>
+<span id="L304"><span class="lineNum">     304</span> <span class="tlaGNC">           6 :             {IGDB, QStringLiteral(&quot;supergrafx&quot;)},</span></span>
+<span id="L305"><span class="lineNum">     305</span>              :         }},</span>
+<span id="L306"><span class="lineNum">     306</span> <span class="tlaGNC">         588 :     };</span></span>
+<span id="L307"><span class="lineNum">     307</span> <span class="tlaGNC">         354 : }</span></span>
+<span id="L308"><span class="lineNum">     308</span>              : </span>
+<span id="L309"><span class="lineNum">     309</span>              : } // namespace Remus</span>
         </pre>
               </td>
             </tr>

@@ -37,25 +37,9 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-02-16 20:31:55</td>
+            <td class="headerValue">2026-02-18 09:32:22</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntryLo">0.0&nbsp;%</td>
-            <td class="headerCovTableEntry">4</td>
-            <td class="headerCovTableEntry">0</td>
-          </tr>
-          <tr>
-            <td class="headerItem">Legend:</td>
-            <td class="headerValueLeg">            Lines:&nbsp&nbsp&nbsp&nbsp
-            <span class="coverLegendCov">hit</span>
-            <span class="coverLegendNoCov">not hit</span>
-            <br>Branches:
-            <span class="coverLegendCov">+</span> taken
-            <span class="coverLegendNoCov">-</span> not taken
-            <span class="coverLegendNoCov">#</span> not executed
-</td>
-            <td></td>
-            <td class="headerItem">Branches:</td>
             <td class="headerCovTableEntryLo">0.0&nbsp;%</td>
             <td class="headerCovTableEntry">4</td>
             <td class="headerCovTableEntry">0</td>
@@ -74,98 +58,97 @@
             </tr>
             <tr>
               <td>
-<pre class="sourceHeading">             Branch data     Line data    Source code</pre>
+<pre class="sourceHeading">            Line data    Source code</pre>
 <pre class="source">
-<span id="L1"><span class="lineNum">       1</span>                 :             : #pragma once</span>
-<span id="L2"><span class="lineNum">       2</span>                 :             : </span>
-<span id="L3"><span class="lineNum">       3</span>                 :             : #include &lt;QObject&gt;</span>
-<span id="L4"><span class="lineNum">       4</span>                 :             : #include &lt;QString&gt;</span>
-<span id="L5"><span class="lineNum">       5</span>                 :             : #include &lt;QVariantList&gt;</span>
-<span id="L6"><span class="lineNum">       6</span>                 :             : #include &lt;QVariantMap&gt;</span>
-<span id="L7"><span class="lineNum">       7</span>                 :             : #include &quot;../../core/database.h&quot;</span>
-<span id="L8"><span class="lineNum">       8</span>                 :             : #include &quot;../../core/patch_engine.h&quot;</span>
-<span id="L9"><span class="lineNum">       9</span>                 :             : </span>
-<span id="L10"><span class="lineNum">      10</span>                 :             : namespace Remus {</span>
-<span id="L11"><span class="lineNum">      11</span>                 :             : </span>
-<span id="L12"><span class="lineNum">      12</span>                 :             : /**</span>
-<span id="L13"><span class="lineNum">      13</span>                 :             :  * @brief Controller for ROM patching operations</span>
-<span id="L14"><span class="lineNum">      14</span>                 :             :  * </span>
-<span id="L15"><span class="lineNum">      15</span>                 :             :  * Handles patch detection, application, and creation.</span>
-<span id="L16"><span class="lineNum">      16</span>                 :             :  * Exposed to QML as a context property.</span>
-<span id="L17"><span class="lineNum">      17</span>                 :             :  */</span>
-<span id="L18"><span class="lineNum">      18</span>                 :             : class PatchController : public QObject {</span>
-<span id="L19"><span class="lineNum">      19</span>                 :             :     Q_OBJECT</span>
-<span id="L20"><span class="lineNum">      20</span>                 :             :     Q_PROPERTY(bool patching READ isPatching NOTIFY patchingChanged)</span>
-<span id="L21"><span class="lineNum">      21</span>                 :             :     Q_PROPERTY(int progress READ progress NOTIFY progressChanged)</span>
-<span id="L22"><span class="lineNum">      22</span>                 :             :     Q_PROPERTY(QString currentOperation READ currentOperation NOTIFY currentOperationChanged)</span>
-<span id="L23"><span class="lineNum">      23</span>                 :             :     Q_PROPERTY(QVariantMap toolStatus READ toolStatus NOTIFY toolStatusChanged)</span>
-<span id="L24"><span class="lineNum">      24</span>                 :             :     </span>
-<span id="L25"><span class="lineNum">      25</span>                 :             : public:</span>
-<span id="L26"><span class="lineNum">      26</span>                 :             :     explicit PatchController(Database *db, QObject *parent = nullptr);</span>
-<span id="L27"><span class="lineNum">      27</span>                 :             :     </span>
-<span id="L28"><span class="lineNum">      28</span>                 :<span class="tlaUNC">           0 :     bool isPatching() const { return m_patching; }</span></span>
-<span id="L29"><span class="lineNum">      29</span>                 :<span class="tlaUNC">           0 :     int progress() const { return m_progress; }</span></span>
-<span id="L30"><span class="lineNum">      30</span>                 :<span class="tlaUNC">           0 :     QString currentOperation() const { return m_currentOperation; }</span></span>
-<span id="L31"><span class="lineNum">      31</span>                 :<span class="tlaUNC">           0 :     QVariantMap toolStatus() const { return m_toolStatus; }</span></span>
-<span id="L32"><span class="lineNum">      32</span>                 :             :     </span>
-<span id="L33"><span class="lineNum">      33</span>                 :             :     // Patch detection</span>
-<span id="L34"><span class="lineNum">      34</span>                 :             :     Q_INVOKABLE QVariantMap detectPatchFormat(const QString &amp;patchPath);</span>
-<span id="L35"><span class="lineNum">      35</span>                 :             :     Q_INVOKABLE bool isFormatSupported(const QString &amp;format);</span>
-<span id="L36"><span class="lineNum">      36</span>                 :             :     Q_INVOKABLE QStringList getSupportedFormats();</span>
-<span id="L37"><span class="lineNum">      37</span>                 :             :     </span>
-<span id="L38"><span class="lineNum">      38</span>                 :             :     // Patch application</span>
-<span id="L39"><span class="lineNum">      39</span>                 :             :     Q_INVOKABLE bool applyPatch(const QString &amp;basePath, const QString &amp;patchPath,</span>
-<span id="L40"><span class="lineNum">      40</span>                 :             :                                 const QString &amp;outputPath = QString());</span>
-<span id="L41"><span class="lineNum">      41</span>                 :             :     Q_INVOKABLE void cancelPatching();</span>
-<span id="L42"><span class="lineNum">      42</span>                 :             :     </span>
-<span id="L43"><span class="lineNum">      43</span>                 :             :     // Patch creation</span>
-<span id="L44"><span class="lineNum">      44</span>                 :             :     Q_INVOKABLE bool createPatch(const QString &amp;originalPath, const QString &amp;modifiedPath,</span>
-<span id="L45"><span class="lineNum">      45</span>   [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span><span class="tlaUNC" title="Branch 2 was not executed"> # </span><span class="tlaUNC" title="Branch 3 was not executed"> # </span>]:<span class="tlaUNC">           0 :                                   const QString &amp;patchPath, const QString &amp;format = &quot;bps&quot;);</span></span>
-<span id="L46"><span class="lineNum">      46</span>                 :             :     </span>
-<span id="L47"><span class="lineNum">      47</span>                 :             :     // Tool configuration</span>
-<span id="L48"><span class="lineNum">      48</span>                 :             :     Q_INVOKABLE void checkTools();</span>
-<span id="L49"><span class="lineNum">      49</span>                 :             :     Q_INVOKABLE void setFlipsPath(const QString &amp;path);</span>
-<span id="L50"><span class="lineNum">      50</span>                 :             :     Q_INVOKABLE void setXdeltaPath(const QString &amp;path);</span>
-<span id="L51"><span class="lineNum">      51</span>                 :             :     Q_INVOKABLE QString getFlipsPath();</span>
-<span id="L52"><span class="lineNum">      52</span>                 :             :     Q_INVOKABLE QString getXdeltaPath();</span>
-<span id="L53"><span class="lineNum">      53</span>                 :             :     </span>
-<span id="L54"><span class="lineNum">      54</span>                 :             :     // Utility</span>
-<span id="L55"><span class="lineNum">      55</span>                 :             :     Q_INVOKABLE QString generateOutputPath(const QString &amp;basePath, const QString &amp;patchPath);</span>
-<span id="L56"><span class="lineNum">      56</span>                 :             :     </span>
-<span id="L57"><span class="lineNum">      57</span>                 :             : signals:</span>
-<span id="L58"><span class="lineNum">      58</span>                 :             :     void patchingChanged();</span>
-<span id="L59"><span class="lineNum">      59</span>                 :             :     void progressChanged();</span>
-<span id="L60"><span class="lineNum">      60</span>                 :             :     void currentOperationChanged();</span>
-<span id="L61"><span class="lineNum">      61</span>                 :             :     void toolStatusChanged();</span>
-<span id="L62"><span class="lineNum">      62</span>                 :             :     </span>
-<span id="L63"><span class="lineNum">      63</span>                 :             :     void patchStarted();</span>
-<span id="L64"><span class="lineNum">      64</span>                 :             :     void patchCompleted(const QString &amp;outputPath);</span>
-<span id="L65"><span class="lineNum">      65</span>                 :             :     void patchError(const QString &amp;error);</span>
-<span id="L66"><span class="lineNum">      66</span>                 :             :     </span>
-<span id="L67"><span class="lineNum">      67</span>                 :             :     void createPatchStarted();</span>
-<span id="L68"><span class="lineNum">      68</span>                 :             :     void createPatchCompleted(const QString &amp;patchPath);</span>
-<span id="L69"><span class="lineNum">      69</span>                 :             :     void createPatchError(const QString &amp;error);</span>
-<span id="L70"><span class="lineNum">      70</span>                 :             :     </span>
-<span id="L71"><span class="lineNum">      71</span>                 :             : private slots:</span>
-<span id="L72"><span class="lineNum">      72</span>                 :             :     void onPatchProgress(int percentage);</span>
-<span id="L73"><span class="lineNum">      73</span>                 :             :     void onPatchComplete(const PatchResult &amp;result);</span>
-<span id="L74"><span class="lineNum">      74</span>                 :             :     void onPatchError(const QString &amp;error);</span>
-<span id="L75"><span class="lineNum">      75</span>                 :             :     </span>
-<span id="L76"><span class="lineNum">      76</span>                 :             : private:</span>
-<span id="L77"><span class="lineNum">      77</span>                 :             :     Database *m_db;</span>
-<span id="L78"><span class="lineNum">      78</span>                 :             :     PatchEngine *m_engine;</span>
-<span id="L79"><span class="lineNum">      79</span>                 :             :     </span>
-<span id="L80"><span class="lineNum">      80</span>                 :             :     bool m_patching = false;</span>
-<span id="L81"><span class="lineNum">      81</span>                 :             :     int m_progress = 0;</span>
-<span id="L82"><span class="lineNum">      82</span>                 :             :     QString m_currentOperation;</span>
-<span id="L83"><span class="lineNum">      83</span>                 :             :     QVariantMap m_toolStatus;</span>
-<span id="L84"><span class="lineNum">      84</span>                 :             :     bool m_cancelRequested = false;</span>
-<span id="L85"><span class="lineNum">      85</span>                 :             :     </span>
-<span id="L86"><span class="lineNum">      86</span>                 :             :     void updateToolStatus();</span>
-<span id="L87"><span class="lineNum">      87</span>                 :             :     PatchFormat stringToFormat(const QString &amp;format);</span>
-<span id="L88"><span class="lineNum">      88</span>                 :             : };</span>
-<span id="L89"><span class="lineNum">      89</span>                 :             : </span>
-<span id="L90"><span class="lineNum">      90</span>                 :             : } // namespace Remus</span>
+<span id="L1"><span class="lineNum">       1</span>              : #pragma once</span>
+<span id="L2"><span class="lineNum">       2</span>              : </span>
+<span id="L3"><span class="lineNum">       3</span>              : #include &lt;QObject&gt;</span>
+<span id="L4"><span class="lineNum">       4</span>              : #include &lt;QString&gt;</span>
+<span id="L5"><span class="lineNum">       5</span>              : #include &lt;QVariantList&gt;</span>
+<span id="L6"><span class="lineNum">       6</span>              : #include &lt;QVariantMap&gt;</span>
+<span id="L7"><span class="lineNum">       7</span>              : #include &quot;../../core/database.h&quot;</span>
+<span id="L8"><span class="lineNum">       8</span>              : #include &quot;../../core/patch_engine.h&quot;</span>
+<span id="L9"><span class="lineNum">       9</span>              : </span>
+<span id="L10"><span class="lineNum">      10</span>              : namespace Remus {</span>
+<span id="L11"><span class="lineNum">      11</span>              : </span>
+<span id="L12"><span class="lineNum">      12</span>              : class PatchService;</span>
+<span id="L13"><span class="lineNum">      13</span>              : </span>
+<span id="L14"><span class="lineNum">      14</span>              : /**</span>
+<span id="L15"><span class="lineNum">      15</span>              :  * @brief Controller for ROM patching operations</span>
+<span id="L16"><span class="lineNum">      16</span>              :  * </span>
+<span id="L17"><span class="lineNum">      17</span>              :  * Handles patch detection, application, and creation.</span>
+<span id="L18"><span class="lineNum">      18</span>              :  * Delegates to PatchService for business logic.</span>
+<span id="L19"><span class="lineNum">      19</span>              :  * Exposed to QML as a context property.</span>
+<span id="L20"><span class="lineNum">      20</span>              :  */</span>
+<span id="L21"><span class="lineNum">      21</span>              : class PatchController : public QObject {</span>
+<span id="L22"><span class="lineNum">      22</span>              :     Q_OBJECT</span>
+<span id="L23"><span class="lineNum">      23</span>              :     Q_PROPERTY(bool patching READ isPatching NOTIFY patchingChanged)</span>
+<span id="L24"><span class="lineNum">      24</span>              :     Q_PROPERTY(int progress READ progress NOTIFY progressChanged)</span>
+<span id="L25"><span class="lineNum">      25</span>              :     Q_PROPERTY(QString currentOperation READ currentOperation NOTIFY currentOperationChanged)</span>
+<span id="L26"><span class="lineNum">      26</span>              :     Q_PROPERTY(QVariantMap toolStatus READ toolStatus NOTIFY toolStatusChanged)</span>
+<span id="L27"><span class="lineNum">      27</span>              :     </span>
+<span id="L28"><span class="lineNum">      28</span> <span class="tlaUNC">           0 : public:</span></span>
+<span id="L29"><span class="lineNum">      29</span> <span class="tlaUNC">           0 :     explicit PatchController(Database *db, QObject *parent = nullptr);</span></span>
+<span id="L30"><span class="lineNum">      30</span> <span class="tlaUNC">           0 :     ~PatchController() override;</span></span>
+<span id="L31"><span class="lineNum">      31</span> <span class="tlaUNC">           0 :     </span></span>
+<span id="L32"><span class="lineNum">      32</span>              :     bool isPatching() const { return m_patching; }</span>
+<span id="L33"><span class="lineNum">      33</span>              :     int progress() const { return m_progress; }</span>
+<span id="L34"><span class="lineNum">      34</span>              :     QString currentOperation() const { return m_currentOperation; }</span>
+<span id="L35"><span class="lineNum">      35</span>              :     QVariantMap toolStatus() const { return m_toolStatus; }</span>
+<span id="L36"><span class="lineNum">      36</span>              :     </span>
+<span id="L37"><span class="lineNum">      37</span>              :     // Patch detection</span>
+<span id="L38"><span class="lineNum">      38</span>              :     Q_INVOKABLE QVariantMap detectPatchFormat(const QString &amp;patchPath);</span>
+<span id="L39"><span class="lineNum">      39</span>              :     Q_INVOKABLE bool isFormatSupported(const QString &amp;format);</span>
+<span id="L40"><span class="lineNum">      40</span>              :     Q_INVOKABLE QStringList getSupportedFormats();</span>
+<span id="L41"><span class="lineNum">      41</span>              :     </span>
+<span id="L42"><span class="lineNum">      42</span>              :     // Patch application</span>
+<span id="L43"><span class="lineNum">      43</span>              :     Q_INVOKABLE bool applyPatch(const QString &amp;basePath, const QString &amp;patchPath,</span>
+<span id="L44"><span class="lineNum">      44</span>              :                                 const QString &amp;outputPath = QString());</span>
+<span id="L45"><span class="lineNum">      45</span> <span class="tlaUNC">           0 :     Q_INVOKABLE void cancelPatching();</span></span>
+<span id="L46"><span class="lineNum">      46</span>              :     </span>
+<span id="L47"><span class="lineNum">      47</span>              :     // Patch creation</span>
+<span id="L48"><span class="lineNum">      48</span>              :     Q_INVOKABLE bool createPatch(const QString &amp;originalPath, const QString &amp;modifiedPath,</span>
+<span id="L49"><span class="lineNum">      49</span>              :                                   const QString &amp;patchPath, const QString &amp;format = &quot;bps&quot;);</span>
+<span id="L50"><span class="lineNum">      50</span>              :     </span>
+<span id="L51"><span class="lineNum">      51</span>              :     // Tool configuration</span>
+<span id="L52"><span class="lineNum">      52</span>              :     Q_INVOKABLE void checkTools();</span>
+<span id="L53"><span class="lineNum">      53</span>              :     Q_INVOKABLE void setFlipsPath(const QString &amp;path);</span>
+<span id="L54"><span class="lineNum">      54</span>              :     Q_INVOKABLE void setXdeltaPath(const QString &amp;path);</span>
+<span id="L55"><span class="lineNum">      55</span>              :     Q_INVOKABLE QString getFlipsPath();</span>
+<span id="L56"><span class="lineNum">      56</span>              :     Q_INVOKABLE QString getXdeltaPath();</span>
+<span id="L57"><span class="lineNum">      57</span>              :     </span>
+<span id="L58"><span class="lineNum">      58</span>              :     // Utility</span>
+<span id="L59"><span class="lineNum">      59</span>              :     Q_INVOKABLE QString generateOutputPath(const QString &amp;basePath, const QString &amp;patchPath);</span>
+<span id="L60"><span class="lineNum">      60</span>              :     </span>
+<span id="L61"><span class="lineNum">      61</span>              : signals:</span>
+<span id="L62"><span class="lineNum">      62</span>              :     void patchingChanged();</span>
+<span id="L63"><span class="lineNum">      63</span>              :     void progressChanged();</span>
+<span id="L64"><span class="lineNum">      64</span>              :     void currentOperationChanged();</span>
+<span id="L65"><span class="lineNum">      65</span>              :     void toolStatusChanged();</span>
+<span id="L66"><span class="lineNum">      66</span>              :     </span>
+<span id="L67"><span class="lineNum">      67</span>              :     void patchStarted();</span>
+<span id="L68"><span class="lineNum">      68</span>              :     void patchCompleted(const QString &amp;outputPath);</span>
+<span id="L69"><span class="lineNum">      69</span>              :     void patchError(const QString &amp;error);</span>
+<span id="L70"><span class="lineNum">      70</span>              :     </span>
+<span id="L71"><span class="lineNum">      71</span>              :     void createPatchStarted();</span>
+<span id="L72"><span class="lineNum">      72</span>              :     void createPatchCompleted(const QString &amp;patchPath);</span>
+<span id="L73"><span class="lineNum">      73</span>              :     void createPatchError(const QString &amp;error);</span>
+<span id="L74"><span class="lineNum">      74</span>              :     </span>
+<span id="L75"><span class="lineNum">      75</span>              : private:</span>
+<span id="L76"><span class="lineNum">      76</span>              :     Database *m_db;</span>
+<span id="L77"><span class="lineNum">      77</span>              :     PatchService *m_patchService = nullptr;</span>
+<span id="L78"><span class="lineNum">      78</span>              :     </span>
+<span id="L79"><span class="lineNum">      79</span>              :     bool m_patching = false;</span>
+<span id="L80"><span class="lineNum">      80</span>              :     int m_progress = 0;</span>
+<span id="L81"><span class="lineNum">      81</span>              :     QString m_currentOperation;</span>
+<span id="L82"><span class="lineNum">      82</span>              :     QVariantMap m_toolStatus;</span>
+<span id="L83"><span class="lineNum">      83</span>              :     bool m_cancelRequested = false;</span>
+<span id="L84"><span class="lineNum">      84</span>              :     </span>
+<span id="L85"><span class="lineNum">      85</span>              :     void updateToolStatus();</span>
+<span id="L86"><span class="lineNum">      86</span>              :     PatchFormat stringToFormat(const QString &amp;format);</span>
+<span id="L87"><span class="lineNum">      87</span>              : };</span>
+<span id="L88"><span class="lineNum">      88</span>              : </span>
+<span id="L89"><span class="lineNum">      89</span>              : } // namespace Remus</span>
         </pre>
               </td>
             </tr>

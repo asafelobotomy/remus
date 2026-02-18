@@ -3,7 +3,6 @@ test_library_controller_autogen/timestamp: \
 	/home/solon/Documents/remus/src/core/archive_extractor.h \
 	/home/solon/Documents/remus/src/core/constants/systems.h \
 	/home/solon/Documents/remus/src/core/database.h \
-	/home/solon/Documents/remus/src/core/hasher.h \
 	/home/solon/Documents/remus/src/core/scanner.h \
 	/home/solon/Documents/remus/src/core/system_detector.h \
 	/home/solon/Documents/remus/src/core/system_resolver.h \
@@ -304,6 +303,7 @@ test_library_controller_autogen/timestamp: \
 	/usr/include/qt6/QtCore/QMetaType \
 	/usr/include/qt6/QtCore/QMutex \
 	/usr/include/qt6/QtCore/QObject \
+	/usr/include/qt6/QtCore/QProcess \
 	/usr/include/qt6/QtCore/QRect \
 	/usr/include/qt6/QtCore/QSharedDataPointer \
 	/usr/include/qt6/QtCore/QSize \
@@ -873,4 +873,9 @@ test_library_controller_autogen/timestamp: \
 	/usr/lib/gcc/x86_64-pc-linux-gnu/15.2.1/include/xtestintrin.h \
 	/usr/share/cmake/Modules/CMakeFindDependencyMacro.cmake \
 	/usr/share/cmake/Modules/CheckCXXCompilerFlag.cmake \
+	/usr/share/cmake/Modules/CheckLibraryExists.cmake \
+	/usr/share/cmake/Modules/FindCurses.cmake \
+	/usr/share/cmake/Modules/FindPackageHandleStandardArgs.cmake \
+	/usr/share/cmake/Modules/FindPackageMessage.cmake \
+	/usr/share/cmake/Modules/FindPkgConfig.cmake \
 	/usr/bin/cmake

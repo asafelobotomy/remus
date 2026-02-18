@@ -1,0 +1,13 @@
+remus-services_autogen/timestamp: \
+	/home/solon/Documents/remus/src/services/CMakeLists.txt \
+	/home/solon/Documents/remus/src/services/conversion_service.cpp \
+	/home/solon/Documents/remus/src/services/conversion_service.h \
+	/home/solon/Documents/remus/src/services/hash_service.cpp \
+	/home/solon/Documents/remus/src/services/hash_service.h \
+	/home/solon/Documents/remus/src/services/library_service.cpp \
+	/home/solon/Documents/remus/src/services/library_service.h \
+	/home/solon/Documents/remus/src/services/match_service.cpp \
+	/home/solon/Documents/remus/src/services/match_service.h \
+	/home/solon/Documents/remus/src/services/patch_service.cpp \
+	/home/solon/Documents/remus/src/services/patch_service.h \
+	/usr/bin/cmake

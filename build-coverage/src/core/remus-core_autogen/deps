@@ -1,6 +1,8 @@
 remus-core_autogen/timestamp: \
 	/home/solon/Documents/remus/build-coverage/src/core/remus-core_autogen/moc_predefs.h \
 	/home/solon/Documents/remus/src/core/CMakeLists.txt \
+	/home/solon/Documents/remus/src/core/archive_creator.cpp \
+	/home/solon/Documents/remus/src/core/archive_creator.h \
 	/home/solon/Documents/remus/src/core/archive_extractor.cpp \
 	/home/solon/Documents/remus/src/core/archive_extractor.h \
 	/home/solon/Documents/remus/src/core/chd_converter.cpp \

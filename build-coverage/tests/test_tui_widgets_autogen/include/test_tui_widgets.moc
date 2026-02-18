@@ -1,0 +1,672 @@
+/****************************************************************************
+** Meta object code from reading C++ file 'test_tui_widgets.cpp'
+**
+** Created by: The Qt Meta Object Compiler version 69 (Qt 6.10.2)
+**
+** WARNING! All changes made in this file will be lost!
+*****************************************************************************/
+
+#include <QtCore/qmetatype.h>
+
+#include <QtCore/qtmochelpers.h>
+
+#include <memory>
+
+
+#include <QtCore/qxptype_traits.h>
+#if !defined(Q_MOC_OUTPUT_REVISION)
+#error "The header file 'test_tui_widgets.cpp' doesn't include <QObject>."
+#elif Q_MOC_OUTPUT_REVISION != 69
+#error "This file was generated using the moc from 6.10.2. It"
+#error "cannot be used with the include files from this version of Qt."
+#error "(The moc has changed too much.)"
+#endif
+
+#ifndef Q_CONSTINIT
+#define Q_CONSTINIT
+#endif
+
+QT_WARNING_PUSH
+QT_WARNING_DISABLE_DEPRECATED
+QT_WARNING_DISABLE_GCC("-Wuseless-cast")
+namespace {
+struct qt_meta_tag_ZN13TestTextInputE_t {};
+} // unnamed namespace
+
+template <> constexpr inline auto TestTextInput::qt_create_metaobjectdata<qt_meta_tag_ZN13TestTextInputE_t>()
+{
+    namespace QMC = QtMocConstants;
+    QtMocHelpers::StringRefStorage qt_stringData {
+        "TestTextInput",
+        "testInitialState",
+        "",
+        "testCharInsertion",
+        "testBackspace",
+        "testBackspaceOnEmpty",
+        "testNonPrintableIgnored",
+        "testSetValue",
+        "testClear",
+        "testIsSubmit",
+        "testMaskedMode",
+        "testLabelAndPlaceholder",
+        "testPrintableRange"
+    };
+
+    QtMocHelpers::UintData qt_methods {
+        // Slot 'testInitialState'
+        QtMocHelpers::SlotData<void()>(1, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'testCharInsertion'
+        QtMocHelpers::SlotData<void()>(3, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'testBackspace'
+        QtMocHelpers::SlotData<void()>(4, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'testBackspaceOnEmpty'
+        QtMocHelpers::SlotData<void()>(5, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'testNonPrintableIgnored'
+        QtMocHelpers::SlotData<void()>(6, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'testSetValue'
+        QtMocHelpers::SlotData<void()>(7, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'testClear'
+        QtMocHelpers::SlotData<void()>(8, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'testIsSubmit'
+        QtMocHelpers::SlotData<void()>(9, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'testMaskedMode'
+        QtMocHelpers::SlotData<void()>(10, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'testLabelAndPlaceholder'
+        QtMocHelpers::SlotData<void()>(11, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'testPrintableRange'
+        QtMocHelpers::SlotData<void()>(12, 2, QMC::AccessPrivate, QMetaType::Void),
+    };
+    QtMocHelpers::UintData qt_properties {
+    };
+    QtMocHelpers::UintData qt_enums {
+    };
+    return QtMocHelpers::metaObjectData<TestTextInput, qt_meta_tag_ZN13TestTextInputE_t>(QMC::MetaObjectFlag{}, qt_stringData,
+            qt_methods, qt_properties, qt_enums);
+}
+Q_CONSTINIT const QMetaObject TestTextInput::staticMetaObject = { {
+    QMetaObject::SuperData::link<QObject::staticMetaObject>(),
+    qt_staticMetaObjectStaticContent<qt_meta_tag_ZN13TestTextInputE_t>.stringdata,
+    qt_staticMetaObjectStaticContent<qt_meta_tag_ZN13TestTextInputE_t>.data,
+    qt_static_metacall,
+    nullptr,
+    qt_staticMetaObjectRelocatingContent<qt_meta_tag_ZN13TestTextInputE_t>.metaTypes,
+    nullptr
+} };
+
+void TestTextInput::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
+{
+    auto *_t = static_cast<TestTextInput *>(_o);
+    if (_c == QMetaObject::InvokeMetaMethod) {
+        switch (_id) {
+        case 0: _t->testInitialState(); break;
+        case 1: _t->testCharInsertion(); break;
+        case 2: _t->testBackspace(); break;
+        case 3: _t->testBackspaceOnEmpty(); break;
+        case 4: _t->testNonPrintableIgnored(); break;
+        case 5: _t->testSetValue(); break;
+        case 6: _t->testClear(); break;
+        case 7: _t->testIsSubmit(); break;
+        case 8: _t->testMaskedMode(); break;
+        case 9: _t->testLabelAndPlaceholder(); break;
+        case 10: _t->testPrintableRange(); break;
+        default: ;
+        }
+    }
+    (void)_a;
+}
+
+const QMetaObject *TestTextInput::metaObject() const
+{
+    return QObject::d_ptr->metaObject ? QObject::d_ptr->dynamicMetaObject() : &staticMetaObject;
+}
+
+void *TestTextInput::qt_metacast(const char *_clname)
+{
+    if (!_clname) return nullptr;
+    if (!strcmp(_clname, qt_staticMetaObjectStaticContent<qt_meta_tag_ZN13TestTextInputE_t>.strings))
+        return static_cast<void*>(this);
+    return QObject::qt_metacast(_clname);
+}
+
+int TestTextInput::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
+{
+    _id = QObject::qt_metacall(_c, _id, _a);
+    if (_id < 0)
+        return _id;
+    if (_c == QMetaObject::InvokeMetaMethod) {
+        if (_id < 11)
+            qt_static_metacall(this, _c, _id, _a);
+        _id -= 11;
+    }
+    if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
+        if (_id < 11)
+            *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
+        _id -= 11;
+    }
+    return _id;
+}
+namespace {
+struct qt_meta_tag_ZN18TestSelectableListE_t {};
+} // unnamed namespace
+
+template <> constexpr inline auto TestSelectableList::qt_create_metaobjectdata<qt_meta_tag_ZN18TestSelectableListE_t>()
+{
+    namespace QMC = QtMocConstants;
+    QtMocHelpers::StringRefStorage qt_stringData {
+        "TestSelectableList",
+        "testInitialState",
+        "",
+        "testSetCount",
+        "testNavigationDown",
+        "testNavigationUp",
+        "testBoundsClamping",
+        "testGoToFirstLast",
+        "testScrollOffset",
+        "testCheckboxToggle",
+        "testCheckboxDisabled",
+        "testSubmitAction",
+        "testEmptyList",
+        "testSetCountClampsSelection",
+        "testHandleClick",
+        "testRowsPerItem"
+    };
+
+    QtMocHelpers::UintData qt_methods {
+        // Slot 'testInitialState'
+        QtMocHelpers::SlotData<void()>(1, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'testSetCount'
+        QtMocHelpers::SlotData<void()>(3, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'testNavigationDown'
+        QtMocHelpers::SlotData<void()>(4, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'testNavigationUp'
+        QtMocHelpers::SlotData<void()>(5, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'testBoundsClamping'
+        QtMocHelpers::SlotData<void()>(6, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'testGoToFirstLast'
+        QtMocHelpers::SlotData<void()>(7, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'testScrollOffset'
+        QtMocHelpers::SlotData<void()>(8, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'testCheckboxToggle'
+        QtMocHelpers::SlotData<void()>(9, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'testCheckboxDisabled'
+        QtMocHelpers::SlotData<void()>(10, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'testSubmitAction'
+        QtMocHelpers::SlotData<void()>(11, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'testEmptyList'
+        QtMocHelpers::SlotData<void()>(12, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'testSetCountClampsSelection'
+        QtMocHelpers::SlotData<void()>(13, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'testHandleClick'
+        QtMocHelpers::SlotData<void()>(14, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'testRowsPerItem'
+        QtMocHelpers::SlotData<void()>(15, 2, QMC::AccessPrivate, QMetaType::Void),
+    };
+    QtMocHelpers::UintData qt_properties {
+    };
+    QtMocHelpers::UintData qt_enums {
+    };
+    return QtMocHelpers::metaObjectData<TestSelectableList, qt_meta_tag_ZN18TestSelectableListE_t>(QMC::MetaObjectFlag{}, qt_stringData,
+            qt_methods, qt_properties, qt_enums);
+}
+Q_CONSTINIT const QMetaObject TestSelectableList::staticMetaObject = { {
+    QMetaObject::SuperData::link<QObject::staticMetaObject>(),
+    qt_staticMetaObjectStaticContent<qt_meta_tag_ZN18TestSelectableListE_t>.stringdata,
+    qt_staticMetaObjectStaticContent<qt_meta_tag_ZN18TestSelectableListE_t>.data,
+    qt_static_metacall,
+    nullptr,
+    qt_staticMetaObjectRelocatingContent<qt_meta_tag_ZN18TestSelectableListE_t>.metaTypes,
+    nullptr
+} };
+
+void TestSelectableList::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
+{
+    auto *_t = static_cast<TestSelectableList *>(_o);
+    if (_c == QMetaObject::InvokeMetaMethod) {
+        switch (_id) {
+        case 0: _t->testInitialState(); break;
+        case 1: _t->testSetCount(); break;
+        case 2: _t->testNavigationDown(); break;
+        case 3: _t->testNavigationUp(); break;
+        case 4: _t->testBoundsClamping(); break;
+        case 5: _t->testGoToFirstLast(); break;
+        case 6: _t->testScrollOffset(); break;
+        case 7: _t->testCheckboxToggle(); break;
+        case 8: _t->testCheckboxDisabled(); break;
+        case 9: _t->testSubmitAction(); break;
+        case 10: _t->testEmptyList(); break;
+        case 11: _t->testSetCountClampsSelection(); break;
+        case 12: _t->testHandleClick(); break;
+        case 13: _t->testRowsPerItem(); break;
+        default: ;
+        }
+    }
+    (void)_a;
+}
+
+const QMetaObject *TestSelectableList::metaObject() const
+{
+    return QObject::d_ptr->metaObject ? QObject::d_ptr->dynamicMetaObject() : &staticMetaObject;
+}
+
+void *TestSelectableList::qt_metacast(const char *_clname)
+{
+    if (!_clname) return nullptr;
+    if (!strcmp(_clname, qt_staticMetaObjectStaticContent<qt_meta_tag_ZN18TestSelectableListE_t>.strings))
+        return static_cast<void*>(this);
+    return QObject::qt_metacast(_clname);
+}
+
+int TestSelectableList::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
+{
+    _id = QObject::qt_metacall(_c, _id, _a);
+    if (_id < 0)
+        return _id;
+    if (_c == QMetaObject::InvokeMetaMethod) {
+        if (_id < 14)
+            qt_static_metacall(this, _c, _id, _a);
+        _id -= 14;
+    }
+    if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
+        if (_id < 14)
+            *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
+        _id -= 14;
+    }
+    return _id;
+}
+namespace {
+struct qt_meta_tag_ZN15TestProgressBarE_t {};
+} // unnamed namespace
+
+template <> constexpr inline auto TestProgressBar::qt_create_metaobjectdata<qt_meta_tag_ZN15TestProgressBarE_t>()
+{
+    namespace QMC = QtMocConstants;
+    QtMocHelpers::StringRefStorage qt_stringData {
+        "TestProgressBar",
+        "testInitialState",
+        "",
+        "testSetProgress",
+        "testReset",
+        "testZeroPercent",
+        "testHundredPercent",
+        "testFiftyPercent",
+        "testZeroTotal"
+    };
+
+    QtMocHelpers::UintData qt_methods {
+        // Slot 'testInitialState'
+        QtMocHelpers::SlotData<void()>(1, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'testSetProgress'
+        QtMocHelpers::SlotData<void()>(3, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'testReset'
+        QtMocHelpers::SlotData<void()>(4, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'testZeroPercent'
+        QtMocHelpers::SlotData<void()>(5, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'testHundredPercent'
+        QtMocHelpers::SlotData<void()>(6, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'testFiftyPercent'
+        QtMocHelpers::SlotData<void()>(7, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'testZeroTotal'
+        QtMocHelpers::SlotData<void()>(8, 2, QMC::AccessPrivate, QMetaType::Void),
+    };
+    QtMocHelpers::UintData qt_properties {
+    };
+    QtMocHelpers::UintData qt_enums {
+    };
+    return QtMocHelpers::metaObjectData<TestProgressBar, qt_meta_tag_ZN15TestProgressBarE_t>(QMC::MetaObjectFlag{}, qt_stringData,
+            qt_methods, qt_properties, qt_enums);
+}
+Q_CONSTINIT const QMetaObject TestProgressBar::staticMetaObject = { {
+    QMetaObject::SuperData::link<QObject::staticMetaObject>(),
+    qt_staticMetaObjectStaticContent<qt_meta_tag_ZN15TestProgressBarE_t>.stringdata,
+    qt_staticMetaObjectStaticContent<qt_meta_tag_ZN15TestProgressBarE_t>.data,
+    qt_static_metacall,
+    nullptr,
+    qt_staticMetaObjectRelocatingContent<qt_meta_tag_ZN15TestProgressBarE_t>.metaTypes,
+    nullptr
+} };
+
+void TestProgressBar::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
+{
+    auto *_t = static_cast<TestProgressBar *>(_o);
+    if (_c == QMetaObject::InvokeMetaMethod) {
+        switch (_id) {
+        case 0: _t->testInitialState(); break;
+        case 1: _t->testSetProgress(); break;
+        case 2: _t->testReset(); break;
+        case 3: _t->testZeroPercent(); break;
+        case 4: _t->testHundredPercent(); break;
+        case 5: _t->testFiftyPercent(); break;
+        case 6: _t->testZeroTotal(); break;
+        default: ;
+        }
+    }
+    (void)_a;
+}
+
+const QMetaObject *TestProgressBar::metaObject() const
+{
+    return QObject::d_ptr->metaObject ? QObject::d_ptr->dynamicMetaObject() : &staticMetaObject;
+}
+
+void *TestProgressBar::qt_metacast(const char *_clname)
+{
+    if (!_clname) return nullptr;
+    if (!strcmp(_clname, qt_staticMetaObjectStaticContent<qt_meta_tag_ZN15TestProgressBarE_t>.strings))
+        return static_cast<void*>(this);
+    return QObject::qt_metacast(_clname);
+}
+
+int TestProgressBar::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
+{
+    _id = QObject::qt_metacall(_c, _id, _a);
+    if (_id < 0)
+        return _id;
+    if (_c == QMetaObject::InvokeMetaMethod) {
+        if (_id < 7)
+            qt_static_metacall(this, _c, _id, _a);
+        _id -= 7;
+    }
+    if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
+        if (_id < 7)
+            *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
+        _id -= 7;
+    }
+    return _id;
+}
+namespace {
+struct qt_meta_tag_ZN13TestSplitPaneE_t {};
+} // unnamed namespace
+
+template <> constexpr inline auto TestSplitPane::qt_create_metaobjectdata<qt_meta_tag_ZN13TestSplitPaneE_t>()
+{
+    namespace QMC = QtMocConstants;
+    QtMocHelpers::StringRefStorage qt_stringData {
+        "TestSplitPane",
+        "testDefaultLeftPercent",
+        "",
+        "testCustomLeftPercent",
+        "testBodyHeightCalculation",
+        "testMinimumBodyHeight",
+        "testMinimumLeftWidth",
+        "testProgressYPosition"
+    };
+
+    QtMocHelpers::UintData qt_methods {
+        // Slot 'testDefaultLeftPercent'
+        QtMocHelpers::SlotData<void()>(1, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'testCustomLeftPercent'
+        QtMocHelpers::SlotData<void()>(3, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'testBodyHeightCalculation'
+        QtMocHelpers::SlotData<void()>(4, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'testMinimumBodyHeight'
+        QtMocHelpers::SlotData<void()>(5, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'testMinimumLeftWidth'
+        QtMocHelpers::SlotData<void()>(6, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'testProgressYPosition'
+        QtMocHelpers::SlotData<void()>(7, 2, QMC::AccessPrivate, QMetaType::Void),
+    };
+    QtMocHelpers::UintData qt_properties {
+    };
+    QtMocHelpers::UintData qt_enums {
+    };
+    return QtMocHelpers::metaObjectData<TestSplitPane, qt_meta_tag_ZN13TestSplitPaneE_t>(QMC::MetaObjectFlag{}, qt_stringData,
+            qt_methods, qt_properties, qt_enums);
+}
+Q_CONSTINIT const QMetaObject TestSplitPane::staticMetaObject = { {
+    QMetaObject::SuperData::link<QObject::staticMetaObject>(),
+    qt_staticMetaObjectStaticContent<qt_meta_tag_ZN13TestSplitPaneE_t>.stringdata,
+    qt_staticMetaObjectStaticContent<qt_meta_tag_ZN13TestSplitPaneE_t>.data,
+    qt_static_metacall,
+    nullptr,
+    qt_staticMetaObjectRelocatingContent<qt_meta_tag_ZN13TestSplitPaneE_t>.metaTypes,
+    nullptr
+} };
+
+void TestSplitPane::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
+{
+    auto *_t = static_cast<TestSplitPane *>(_o);
+    if (_c == QMetaObject::InvokeMetaMethod) {
+        switch (_id) {
+        case 0: _t->testDefaultLeftPercent(); break;
+        case 1: _t->testCustomLeftPercent(); break;
+        case 2: _t->testBodyHeightCalculation(); break;
+        case 3: _t->testMinimumBodyHeight(); break;
+        case 4: _t->testMinimumLeftWidth(); break;
+        case 5: _t->testProgressYPosition(); break;
+        default: ;
+        }
+    }
+    (void)_a;
+}
+
+const QMetaObject *TestSplitPane::metaObject() const
+{
+    return QObject::d_ptr->metaObject ? QObject::d_ptr->dynamicMetaObject() : &staticMetaObject;
+}
+
+void *TestSplitPane::qt_metacast(const char *_clname)
+{
+    if (!_clname) return nullptr;
+    if (!strcmp(_clname, qt_staticMetaObjectStaticContent<qt_meta_tag_ZN13TestSplitPaneE_t>.strings))
+        return static_cast<void*>(this);
+    return QObject::qt_metacast(_clname);
+}
+
+int TestSplitPane::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
+{
+    _id = QObject::qt_metacall(_c, _id, _a);
+    if (_id < 0)
+        return _id;
+    if (_c == QMetaObject::InvokeMetaMethod) {
+        if (_id < 6)
+            qt_static_metacall(this, _c, _id, _a);
+        _id -= 6;
+    }
+    if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
+        if (_id < 6)
+            *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
+        _id -= 6;
+    }
+    return _id;
+}
+namespace {
+struct qt_meta_tag_ZN9TestToastE_t {};
+} // unnamed namespace
+
+template <> constexpr inline auto TestToast::qt_create_metaobjectdata<qt_meta_tag_ZN9TestToastE_t>()
+{
+    namespace QMC = QtMocConstants;
+    QtMocHelpers::StringRefStorage qt_stringData {
+        "TestToast",
+        "testInitialState",
+        "",
+        "testShowMakesVisible",
+        "testDismiss",
+        "testTickExpiresMessage",
+        "testTickNoChangeWhenNotVisible",
+        "testShowReplacesPrevious"
+    };
+
+    QtMocHelpers::UintData qt_methods {
+        // Slot 'testInitialState'
+        QtMocHelpers::SlotData<void()>(1, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'testShowMakesVisible'
+        QtMocHelpers::SlotData<void()>(3, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'testDismiss'
+        QtMocHelpers::SlotData<void()>(4, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'testTickExpiresMessage'
+        QtMocHelpers::SlotData<void()>(5, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'testTickNoChangeWhenNotVisible'
+        QtMocHelpers::SlotData<void()>(6, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'testShowReplacesPrevious'
+        QtMocHelpers::SlotData<void()>(7, 2, QMC::AccessPrivate, QMetaType::Void),
+    };
+    QtMocHelpers::UintData qt_properties {
+    };
+    QtMocHelpers::UintData qt_enums {
+    };
+    return QtMocHelpers::metaObjectData<TestToast, qt_meta_tag_ZN9TestToastE_t>(QMC::MetaObjectFlag{}, qt_stringData,
+            qt_methods, qt_properties, qt_enums);
+}
+Q_CONSTINIT const QMetaObject TestToast::staticMetaObject = { {
+    QMetaObject::SuperData::link<QObject::staticMetaObject>(),
+    qt_staticMetaObjectStaticContent<qt_meta_tag_ZN9TestToastE_t>.stringdata,
+    qt_staticMetaObjectStaticContent<qt_meta_tag_ZN9TestToastE_t>.data,
+    qt_static_metacall,
+    nullptr,
+    qt_staticMetaObjectRelocatingContent<qt_meta_tag_ZN9TestToastE_t>.metaTypes,
+    nullptr
+} };
+
+void TestToast::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
+{
+    auto *_t = static_cast<TestToast *>(_o);
+    if (_c == QMetaObject::InvokeMetaMethod) {
+        switch (_id) {
+        case 0: _t->testInitialState(); break;
+        case 1: _t->testShowMakesVisible(); break;
+        case 2: _t->testDismiss(); break;
+        case 3: _t->testTickExpiresMessage(); break;
+        case 4: _t->testTickNoChangeWhenNotVisible(); break;
+        case 5: _t->testShowReplacesPrevious(); break;
+        default: ;
+        }
+    }
+    (void)_a;
+}
+
+const QMetaObject *TestToast::metaObject() const
+{
+    return QObject::d_ptr->metaObject ? QObject::d_ptr->dynamicMetaObject() : &staticMetaObject;
+}
+
+void *TestToast::qt_metacast(const char *_clname)
+{
+    if (!_clname) return nullptr;
+    if (!strcmp(_clname, qt_staticMetaObjectStaticContent<qt_meta_tag_ZN9TestToastE_t>.strings))
+        return static_cast<void*>(this);
+    return QObject::qt_metacast(_clname);
+}
+
+int TestToast::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
+{
+    _id = QObject::qt_metacall(_c, _id, _a);
+    if (_id < 0)
+        return _id;
+    if (_c == QMetaObject::InvokeMetaMethod) {
+        if (_id < 6)
+            qt_static_metacall(this, _c, _id, _a);
+        _id -= 6;
+    }
+    if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
+        if (_id < 6)
+            *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
+        _id -= 6;
+    }
+    return _id;
+}
+namespace {
+struct qt_meta_tag_ZN15TestHelpOverlayE_t {};
+} // unnamed namespace
+
+template <> constexpr inline auto TestHelpOverlay::qt_create_metaobjectdata<qt_meta_tag_ZN15TestHelpOverlayE_t>()
+{
+    namespace QMC = QtMocConstants;
+    QtMocHelpers::StringRefStorage qt_stringData {
+        "TestHelpOverlay",
+        "testInitialState",
+        "",
+        "testShowMakesVisible",
+        "testDismiss",
+        "testHandleInputQuestionMark",
+        "testHandleInputEsc",
+        "testHandleInputQ",
+        "testHandleInputConsumesAll",
+        "testHandleInputWhenHidden"
+    };
+
+    QtMocHelpers::UintData qt_methods {
+        // Slot 'testInitialState'
+        QtMocHelpers::SlotData<void()>(1, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'testShowMakesVisible'
+        QtMocHelpers::SlotData<void()>(3, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'testDismiss'
+        QtMocHelpers::SlotData<void()>(4, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'testHandleInputQuestionMark'
+        QtMocHelpers::SlotData<void()>(5, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'testHandleInputEsc'
+        QtMocHelpers::SlotData<void()>(6, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'testHandleInputQ'
+        QtMocHelpers::SlotData<void()>(7, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'testHandleInputConsumesAll'
+        QtMocHelpers::SlotData<void()>(8, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'testHandleInputWhenHidden'
+        QtMocHelpers::SlotData<void()>(9, 2, QMC::AccessPrivate, QMetaType::Void),
+    };
+    QtMocHelpers::UintData qt_properties {
+    };
+    QtMocHelpers::UintData qt_enums {
+    };
+    return QtMocHelpers::metaObjectData<TestHelpOverlay, qt_meta_tag_ZN15TestHelpOverlayE_t>(QMC::MetaObjectFlag{}, qt_stringData,
+            qt_methods, qt_properties, qt_enums);
+}
+Q_CONSTINIT const QMetaObject TestHelpOverlay::staticMetaObject = { {
+    QMetaObject::SuperData::link<QObject::staticMetaObject>(),
+    qt_staticMetaObjectStaticContent<qt_meta_tag_ZN15TestHelpOverlayE_t>.stringdata,
+    qt_staticMetaObjectStaticContent<qt_meta_tag_ZN15TestHelpOverlayE_t>.data,
+    qt_static_metacall,
+    nullptr,
+    qt_staticMetaObjectRelocatingContent<qt_meta_tag_ZN15TestHelpOverlayE_t>.metaTypes,
+    nullptr
+} };
+
+void TestHelpOverlay::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
+{
+    auto *_t = static_cast<TestHelpOverlay *>(_o);
+    if (_c == QMetaObject::InvokeMetaMethod) {
+        switch (_id) {
+        case 0: _t->testInitialState(); break;
+        case 1: _t->testShowMakesVisible(); break;
+        case 2: _t->testDismiss(); break;
+        case 3: _t->testHandleInputQuestionMark(); break;
+        case 4: _t->testHandleInputEsc(); break;
+        case 5: _t->testHandleInputQ(); break;
+        case 6: _t->testHandleInputConsumesAll(); break;
+        case 7: _t->testHandleInputWhenHidden(); break;
+        default: ;
+        }
+    }
+    (void)_a;
+}
+
+const QMetaObject *TestHelpOverlay::metaObject() const
+{
+    return QObject::d_ptr->metaObject ? QObject::d_ptr->dynamicMetaObject() : &staticMetaObject;
+}
+
+void *TestHelpOverlay::qt_metacast(const char *_clname)
+{
+    if (!_clname) return nullptr;
+    if (!strcmp(_clname, qt_staticMetaObjectStaticContent<qt_meta_tag_ZN15TestHelpOverlayE_t>.strings))
+        return static_cast<void*>(this);
+    return QObject::qt_metacast(_clname);
+}
+
+int TestHelpOverlay::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
+{
+    _id = QObject::qt_metacall(_c, _id, _a);
+    if (_id < 0)
+        return _id;
+    if (_c == QMetaObject::InvokeMetaMethod) {
+        if (_id < 8)
+            qt_static_metacall(this, _c, _id, _a);
+        _id -= 8;
+    }
+    if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
+        if (_id < 8)
+            *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
+        _id -= 8;
+    }
+    return _id;
+}
+QT_WARNING_POP
