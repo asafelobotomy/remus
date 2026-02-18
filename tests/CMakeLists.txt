@@ -354,6 +354,137 @@ target_link_libraries(test_dat_manager_controller PRIVATE
 
 add_test(NAME DatManagerControllerTest COMMAND test_dat_manager_controller)
 
+# ── TUI Widget tests (Phase 6.2) ──────────────────────────────────
+if(TARGET remus-tui-core)
+    add_executable(test_tui_widgets test_tui_widgets.cpp)
+    target_link_libraries(test_tui_widgets PRIVATE
+        Qt6::Test
+        remus-tui-core
+    )
+    add_test(NAME TuiWidgetsTest COMMAND test_tui_widgets)
+
+    # TUI Library screen tests (Phase 6.3)
+    add_executable(test_library_screen test_library_screen.cpp)
+    target_link_libraries(test_library_screen PRIVATE
+        Qt6::Test
+        Qt6::Sql
+        remus-tui-core
+    )
+    add_test(NAME LibraryScreenTest COMMAND test_library_screen)
+
+    # TUI Pipeline tests (Phase 6.3)
+    add_executable(test_tui_pipeline test_tui_pipeline.cpp)
+    target_link_libraries(test_tui_pipeline PRIVATE
+        Qt6::Test
+        Qt6::Sql
+        remus-tui-core
+    )
+    add_test(NAME TuiPipelineTest COMMAND test_tui_pipeline)
+
+    # TUI Match screen tests (Commit 5)
+    add_executable(test_match_screen test_match_screen.cpp)
+    target_link_libraries(test_match_screen PRIVATE
+        Qt6::Test
+        Qt6::Sql
+        remus-tui-core
+    )
+    add_test(NAME MatchScreenTest COMMAND test_match_screen)
+
+    # TUI Compressor screen tests (Commit 5)
+    add_executable(test_compressor_screen test_compressor_screen.cpp)
+    target_link_libraries(test_compressor_screen PRIVATE
+        Qt6::Test
+        Qt6::Sql
+        remus-tui-core
+    )
+    add_test(NAME CompressorScreenTest COMMAND test_compressor_screen)
+
+    # TUI Patch screen tests (Commit 5)
+    add_executable(test_patch_screen test_patch_screen.cpp)
+    target_link_libraries(test_patch_screen PRIVATE
+        Qt6::Test
+        Qt6::Sql
+        remus-tui-core
+    )
+    add_test(NAME PatchScreenTest COMMAND test_patch_screen)
+
+    # TUI Options screen tests (Commit 5)
+    add_executable(test_options_screen test_options_screen.cpp)
+    target_link_libraries(test_options_screen PRIVATE
+        Qt6::Test
+        Qt6::Sql
+        remus-tui-core
+    )
+    add_test(NAME OptionsScreenTest COMMAND test_options_screen)
+
+    # TUI Tool hints tests (Commit 6)
+    add_executable(test_tool_hints test_tool_hints.cpp)
+    target_link_libraries(test_tool_hints PRIVATE
+        Qt6::Test
+        remus-tui-core
+    )
+    add_test(NAME ToolHintsTest COMMAND test_tool_hints)
+
+    # TUI Headless smoke tests (Commit 9)
+    add_executable(test_tui_smoke test_tui_smoke.cpp)
+    target_link_libraries(test_tui_smoke PRIVATE
+        Qt6::Test
+        Qt6::Sql
+        remus-tui-core
+    )
+    add_test(NAME TuiSmokeTest COMMAND test_tui_smoke)
+endif()
+
+# ── Service layer tests (Phase 6.4) ───────────────────────────────
+
+# Library service tests
+add_executable(test_library_service test_library_service.cpp)
+target_link_libraries(test_library_service PRIVATE
+    Qt6::Test
+    Qt6::Sql
+    remus-services
+    remus-core
+)
+add_test(NAME LibraryServiceTest COMMAND test_library_service)
+
+# Match service tests
+add_executable(test_match_service test_match_service.cpp)
+target_link_libraries(test_match_service PRIVATE
+    Qt6::Test
+    Qt6::Sql
+    remus-services
+    remus-core
+)
+add_test(NAME MatchServiceTest COMMAND test_match_service)
+
+# Conversion service tests
+add_executable(test_conversion_service test_conversion_service.cpp)
+target_link_libraries(test_conversion_service PRIVATE
+    Qt6::Test
+    remus-services
+    remus-core
+)
+add_test(NAME ConversionServiceTest COMMAND test_conversion_service)
+
+# Patch service tests
+add_executable(test_patch_service test_patch_service.cpp)
+target_link_libraries(test_patch_service PRIVATE
+    Qt6::Test
+    remus-services
+    remus-core
+)
+add_test(NAME PatchServiceTest COMMAND test_patch_service)
+
+# Hash service tests (Commit 7)
+add_executable(test_hash_service test_hash_service.cpp)
+target_link_libraries(test_hash_service PRIVATE
+    Qt6::Test
+    Qt6::Sql
+    remus-services
+    remus-core
+)
+add_test(NAME HashServiceTest COMMAND test_hash_service)
+
 # Display test target
 add_custom_target(run_tests
     COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure
@@ -365,5 +496,14 @@ add_custom_target(run_tests
             test_metadata_provider test_filename_normalizer test_metadata_cache test_provider_orchestrator
             test_hash_algorithms test_scanner test_artwork_downloader test_providers_minimal
             test_theme_constants test_dat_manager_controller test_hasheous_parsing
+            test_library_service test_match_service test_conversion_service test_patch_service
+            test_hash_service
     COMMENT "Running tests..."
 )
+
+# Conditionally add TUI tests to run_tests
+if(TARGET remus-tui-core)
+    add_dependencies(run_tests test_tui_widgets test_library_screen test_tui_pipeline
+                     test_match_screen test_compressor_screen test_patch_screen test_options_screen
+                     test_tool_hints test_tui_smoke)
+endif()
