@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QString>
+#include <array>
 #include "templates.h"
 
 namespace Remus {
@@ -46,5 +47,48 @@ inline const QString TEMPLATE_VARIABLE_HINT = Templates::VARIABLE_HINT;
 }
 
 } // Settings
+
+// ============================================================================
+// Provider Settings Keys — aggregate arrays
+// ============================================================================
+
+/**
+ * @brief All 8 provider settings keys in one array
+ */
+inline constexpr std::array<const char*, 8> ALL_PROVIDER_KEYS = {
+    Settings::Providers::SCREENSCRAPER_USERNAME,
+    Settings::Providers::SCREENSCRAPER_PASSWORD,
+    Settings::Providers::SCREENSCRAPER_DEVID,
+    Settings::Providers::SCREENSCRAPER_DEVPASSWORD,
+    Settings::Providers::THEGAMESDB_API_KEY,
+    Settings::Providers::IGDB_CLIENT_ID,
+    Settings::Providers::IGDB_CLIENT_SECRET,
+    Settings::Providers::HASHEOUS_CLIENT_API_KEY,
+};
+
+/**
+ * @brief Metadata for a provider settings field (for UI generation)
+ */
+struct ProviderSettingField {
+    const char* key;       ///< QSettings key
+    const char* label;     ///< User-facing label
+    bool        isPassword; ///< Mask display
+};
+
+/**
+ * @brief User-facing provider fields for settings screens
+ *
+ * Excludes developer-only keys (DEVID, DEVPASSWORD).
+ * UI code can iterate this instead of hardcoding each field.
+ */
+inline constexpr std::array<ProviderSettingField, 6> ALL_PROVIDER_FIELDS = {{
+    { Settings::Providers::SCREENSCRAPER_USERNAME,   "ScreenScraper Username", false },
+    { Settings::Providers::SCREENSCRAPER_PASSWORD,   "ScreenScraper Password", true  },
+    { Settings::Providers::THEGAMESDB_API_KEY,       "TheGamesDB API Key",     false },
+    { Settings::Providers::IGDB_CLIENT_ID,           "IGDB Client ID",         false },
+    { Settings::Providers::IGDB_CLIENT_SECRET,       "IGDB Client Secret",     true  },
+    { Settings::Providers::HASHEOUS_CLIENT_API_KEY,  "Hasheous API Key",       false },
+}};
+
 } // Constants
 } // Remus

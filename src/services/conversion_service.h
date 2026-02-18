@@ -9,6 +9,7 @@
 
 #include "../core/chd_converter.h"
 #include "../core/archive_extractor.h"
+#include "../core/archive_creator.h"
 
 namespace Remus {
 
@@ -130,6 +131,44 @@ public:
      */
     bool canExtract(const QString &path) const;
 
+    // ── Archive Compression ───────────────────────────────
+
+    /**
+     * @brief Compress files into an archive
+     * @param inputPaths   List of files to compress
+     * @param outputArchive  Output archive path
+     * @param format       Archive format (ZIP or SevenZip)
+     * @param progressCb   Progress callback
+     * @return Compression result
+     */
+    CompressionResult compressToArchive(const QStringList &inputPaths,
+                                        const QString &outputArchive,
+                                        ArchiveFormat format = ArchiveFormat::ZIP,
+                                        ProgressCallback progressCb = nullptr);
+
+    /**
+     * @brief Batch compress directories into individual archives
+     * @param dirs       Directories to compress
+     * @param outputDir  Output directory
+     * @param format     Archive format
+     * @param progressCb Progress callback
+     * @return List of compression results
+     */
+    QList<CompressionResult> batchCompressToArchive(const QStringList &dirs,
+                                                    const QString &outputDir,
+                                                    ArchiveFormat format = ArchiveFormat::ZIP,
+                                                    ProgressCallback progressCb = nullptr);
+
+    /**
+     * @brief Check if a specific archive format can be created
+     */
+    bool canCompress(ArchiveFormat format) const;
+
+    /**
+     * @brief Get available archive compression tools
+     */
+    QMap<ArchiveFormat, bool> getArchiveCompressionToolStatus() const;
+
     /**
      * @brief Cancel any running conversion/extraction
      */
@@ -150,9 +189,15 @@ public:
      */
     ArchiveExtractor *archiveExtractor() { return m_archiveExtractor; }
 
+    /**
+     * @brief Access underlying ArchiveCreator
+     */
+    ArchiveCreator *archiveCreator() { return m_archiveCreator; }
+
 private:
     CHDConverter     *m_chdConverter     = nullptr;
     ArchiveExtractor *m_archiveExtractor = nullptr;
+    ArchiveCreator   *m_archiveCreator   = nullptr;
 };
 
 } // namespace Remus
