@@ -211,7 +211,7 @@ static std::unique_ptr<ProviderOrchestrator> buildOrchestrator(const QCommandLin
 
 static QList<FileRecord> getHashedFiles(Database &db)
 {
-    QList<FileRecord> files = db.getAllFiles();
+    QList<FileRecord> files = db.getExistingFiles();
     QList<FileRecord> filtered;
     for (const FileRecord &f : files) {
         if (f.hashCalculated && (!f.crc32.isEmpty() || !f.md5.isEmpty() || !f.sha1.isEmpty())) {
@@ -412,7 +412,7 @@ int main(int argc, char *argv[])
 
     // Stats command
     if (parser.isSet("stats")) {
-        QList<FileRecord> files = db.getAllFiles();
+        QList<FileRecord> files = db.getExistingFiles();
         QMap<QString, int> counts = db.getFileCountBySystem();
         int hashed = 0;
         for (const FileRecord &f : files) {
@@ -1150,7 +1150,7 @@ int main(int argc, char *argv[])
             });
 
         QMap<int, Database::MatchResult> matches = db.getAllMatches();
-        QList<FileRecord> files = db.getAllFiles();
+        QList<FileRecord> files = db.getExistingFiles();
 
         if (files.isEmpty()) {
             qInfo() << "No files to organize";
@@ -1494,7 +1494,7 @@ int main(int argc, char *argv[])
         }
 
         QMap<int, Database::MatchResult> matches = db.getAllMatches();
-        QList<FileRecord> files = db.getAllFiles();
+        QList<FileRecord> files = db.getExistingFiles();
 
         struct ExportRow {
             FileRecord file;
