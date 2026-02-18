@@ -46,23 +46,30 @@ public:
     std::string name() const override { return "Compressor"; }
     std::vector<std::pair<std::string, std::string>> keybindings() const override;
 
-private:
-    // ── Data types ─────────────────────────────────────────
+    // ── Public query API (for tests) ───────────────────────
     enum class FileType { CUE, ISO, GDI, CHD, ZIP, SevenZ, RAR, Unknown };
+    enum class OpMode { Compress, Extract, Archive };
 
     struct FileEntry {
         std::string path;
         std::string filename;
         FileType    type = FileType::Unknown;
         int64_t     sizeBytes = 0;
-        std::string status;      // "Ready", "Converting...", "Done", "Error: ..."
+        std::string status;
         bool        checked = true;
-        double      ratio = 0.0; // compression ratio after conversion
+        double      ratio = 0.0;
     };
 
-    enum class OpMode { Compress, Extract };
+    int fileCount() const { return static_cast<int>(m_files.size()); }
+    const FileEntry& fileAt(int i) const { return m_files.at(static_cast<size_t>(i)); }
+    OpMode mode() const { return m_mode; }
+    bool isRunning() const { return m_task.running(); }
+    bool deleteOriginals() const { return m_deleteOriginals; }
+    static FileType detectFileType(const std::string &filename);
+    static std::string fileTypeString(FileType ft);
+    static std::string formatSize(int64_t bytes);
 
-    // ── UI state ───────────────────────────────────────────
+private:
     enum class Focus { SourceInput, OutputInput, FileList, DetailPane };
     Focus         m_focus = Focus::SourceInput;
     OpMode        m_mode = OpMode::Compress;
@@ -97,8 +104,4 @@ private:
     void drawDetailPane(ncplane *plane, int startY, int height, int startX, unsigned width);
     void drawFooter(ncplane *plane, unsigned rows, unsigned cols);
 
-    // ── Helpers ────────────────────────────────────────────
-    static FileType detectFileType(const std::string &filename);
-    static std::string fileTypeString(FileType ft);
-    static std::string formatSize(int64_t bytes);
 };

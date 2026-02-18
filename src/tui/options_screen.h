@@ -44,19 +44,24 @@ public:
     std::vector<std::pair<std::string, std::string>> keybindings() const override;
     void forceRefresh() override;
 
-private:
-    // ── Data types ─────────────────────────────────────────
+    // ── Public query API (for tests) ───────────────────────
     enum class FieldType { Text, Password, Toggle };
 
     struct SettingField {
         std::string label;
-        std::string key;          // QSettings key
+        std::string key;
         std::string value;
         FieldType   type = FieldType::Text;
-        bool        isSection = false;  // section header, not editable
+        bool        isSection = false;
     };
 
-    // ── UI state ───────────────────────────────────────────
+    int fieldCount() const { return static_cast<int>(m_fields.size()); }
+    const SettingField& fieldAt(int i) const { return m_fields.at(static_cast<size_t>(i)); }
+    bool isDirty() const { return m_dirty; }
+    bool isEditing() const { return m_editing; }
+    int selectedIndex() const { return m_selected; }
+
+private:
     std::vector<SettingField> m_fields;
     int  m_selected = 0;
     int  m_scroll = 0;
