@@ -19,6 +19,12 @@ endif()
 
 option(REMUS_BUILD_TUI "Build terminal UI (Notcurses-based)" OFF)
 
+# Avoid noisy Qt optional Vulkan header lookup when Vulkan headers are not installed.
+find_package(Vulkan QUIET)
+if(NOT Vulkan_FOUND)
+    set(CMAKE_DISABLE_FIND_PACKAGE_WrapVulkanHeaders TRUE)
+endif()
+
 # Find Qt6
 find_package(Qt6 REQUIRED COMPONENTS
     Core
