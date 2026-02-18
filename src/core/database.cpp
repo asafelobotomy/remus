@@ -6,6 +6,7 @@
 #include <QVariant>
 #include <QDebug>
 #include <QFileInfo>
+#include <QUuid>
 
 namespace Remus {
 
@@ -19,11 +20,14 @@ Database::~Database()
     close();
 }
 
-bool Database::initialize(const QString &dbPath)
+bool Database::initialize(const QString &dbPath, const QString &connectionName)
 {
     m_dbPath = dbPath;
+    m_connectionName = connectionName.isEmpty()
+        ? QStringLiteral("remus-") + QUuid::createUuid().toString(QUuid::Id128)
+        : connectionName;
 
-    m_db = QSqlDatabase::addDatabase("QSQLITE");
+    m_db = QSqlDatabase::addDatabase("QSQLITE", m_connectionName);
     m_db.setDatabaseName(dbPath);
 
     if (!m_db.open()) {
@@ -64,6 +68,10 @@ void Database::close()
 {
     if (m_db.isOpen()) {
         m_db.close();
+    }
+    if (!m_connectionName.isEmpty()) {
+        m_db = QSqlDatabase();
+        QSqlDatabase::removeDatabase(m_connectionName);
     }
 }
 
@@ -416,6 +424,15 @@ bool Database::deleteFilesForLibrary(int libraryId)
 
 int Database::insertSystem(const SystemInfo &system)
 {
+    if (system.name.isEmpty()) {
+        logError("Cannot insert system with empty name");
+        return 0;
+    }
+    if (system.extensions.isEmpty()) {
+        logError("Cannot insert system '" + system.name + "' with empty extensions list");
+        return 0;
+    }
+
     QSqlQuery query(m_db);
     query.prepare(R"(
         INSERT OR REPLACE INTO systems 
@@ -616,27 +633,45 @@ FileRecord Database::getFileById(int fileId)
 QList<FileRecord> Database::getAllFiles()
 {
     QList<FileRecord> files;
-    
+
     QSqlQuery query(m_db);
-    // Return all files - grouping is handled by FileListModel
     if (!query.exec("SELECT id FROM files")) {
         logError("Failed to get all files: " + query.lastError().text());
         return files;
     }
-    
+
     while (query.next()) {
         int fileId = query.value(0).toInt();
         FileRecord record = getFileById(fileId);
         if (record.id > 0) {
-            // Only include files whose currentPath actually exists on disk
-            // This filters out stale entries that point to deleted extracted folders
+            files.append(record);
+        }
+    }
+
+    return files;
+}
+
+QList<FileRecord> Database::getExistingFiles()
+{
+    QList<FileRecord> files;
+
+    QSqlQuery query(m_db);
+    if (!query.exec("SELECT id FROM files")) {
+        logError("Failed to get existing files: " + query.lastError().text());
+        return files;
+    }
+
+    while (query.next()) {
+        int fileId = query.value(0).toInt();
+        FileRecord record = getFileById(fileId);
+        if (record.id > 0) {
             QFileInfo pathInfo(record.currentPath);
             if (pathInfo.exists()) {
                 files.append(record);
             }
         }
     }
-    
+
     return files;
 }
 

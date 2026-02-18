@@ -55,9 +55,10 @@ public:
     /**
      * @brief Initialize database connection and create schema
      * @param dbPath Path to SQLite database file
+     * @param connectionName Optional unique connection name (default: auto-generated)
      * @return True if successful
      */
-    bool initialize(const QString &dbPath);
+    bool initialize(const QString &dbPath, const QString &connectionName = QString());
 
     /**
      * @brief Close database connection
@@ -169,10 +170,16 @@ public:
     FileRecord getFileById(int fileId);
 
     /**
-     * @brief Get all files from database
+     * @brief Get all files from database (includes stale entries with non-existent paths)
      * @return List of all file records
      */
     QList<FileRecord> getAllFiles();
+
+    /**
+     * @brief Get files whose currentPath exists on disk
+     * @return List of file records with valid paths only
+     */
+    QList<FileRecord> getExistingFiles();
 
     /**
      * @brief Get files by system name
@@ -319,6 +326,7 @@ private:
 
     QSqlDatabase m_db;
     QString m_dbPath;
+    QString m_connectionName;
 };
 
 } // namespace Remus

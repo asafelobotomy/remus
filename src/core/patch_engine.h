@@ -123,19 +123,22 @@ public:
 
     /**
      * @brief Set custom path for Flips
-     * @param path Path to flips binary
+     * @param path Path to flips binary (stored unconditionally;
+     *        validation happens at use-time via isFormatSupported())
      */
     void setFlipsPath(const QString &path);
 
     /**
      * @brief Set custom path for xdelta3
-     * @param path Path to xdelta3 binary
+     * @param path Path to xdelta3 binary (stored unconditionally;
+     *        validation happens at use-time via isFormatSupported())
      */
     void setXdelta3Path(const QString &path);
 
     /**
      * @brief Set custom path for PPF patcher
-     * @param path Path to applyppf/ppf3 binary
+     * @param path Path to applyppf/ppf3 binary (stored unconditionally;
+     *        validation happens at use-time via isFormatSupported())
      */
     void setPpfPath(const QString &path);
 
