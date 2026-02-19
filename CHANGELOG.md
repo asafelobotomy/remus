@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Copilot instructions scaffolded from [copilot-instructions-template](https://github.com/asafelobotomy/copilot-instructions-template) v1.0.3 on 2026-02-19.
+  Includes: `.github/copilot-instructions.md`, model-pinned agents (`.github/agents/`),
+  workspace identity files (`.copilot/workspace/`), `JOURNAL.md`, `BIBLIOGRAPHY.md`, `METRICS.md`.
+
 ### Planned
 - DAT import/removal UI with file picker
 - Auto-update checking for DAT files
