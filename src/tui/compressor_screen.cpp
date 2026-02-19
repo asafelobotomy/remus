@@ -3,6 +3,7 @@
 #include "tool_hints.h"
 
 #include "../services/conversion_service.h"
+#include "../core/m3u_generator.h"
 
 #include <QDir>
 #include <QFile>
@@ -151,7 +152,8 @@ bool CompressorScreen::handleInput(struct notcurses *, const ncinput &ni, int ch
         switch (m_mode) {
         case OpMode::Compress: m_mode = OpMode::Extract; break;
         case OpMode::Extract:  m_mode = OpMode::Archive; break;
-        case OpMode::Archive:  m_mode = OpMode::Compress; break;
+        case OpMode::Archive:  m_mode = OpMode::M3U;      break;
+        case OpMode::M3U:      m_mode = OpMode::Compress; break;
         }
         return true;
     }
@@ -375,11 +377,13 @@ void CompressorScreen::drawHeader(ncplane *plane, unsigned cols)
         case OpMode::Compress: modeStr = "[COMPRESS\u2192CHD]"; break;
         case OpMode::Extract:  modeStr = "[EXTRACT CHD\u2192BIN]"; break;
         case OpMode::Archive:  modeStr = "[COMPRESS\u2192ARCHIVE]"; break;
+        case OpMode::M3U:      modeStr = "[GENERATE M3U]"; break;
         }
         switch (m_mode) {
         case OpMode::Compress: ncchannels_set_fg_rgb8(&ch, 0x00, 0xCC, 0x00); break;
         case OpMode::Extract:  ncchannels_set_fg_rgb8(&ch, 0xCC, 0xAA, 0x00); break;
         case OpMode::Archive:  ncchannels_set_fg_rgb8(&ch, 0x00, 0xAA, 0xCC); break;
+        case OpMode::M3U:      ncchannels_set_fg_rgb8(&ch, 0xCC, 0x66, 0xFF); break;
         }
         ncplane_set_channels(plane, ch);
         ncplane_putstr_yx(plane, 0, 14, modeStr);
@@ -544,6 +548,9 @@ void CompressorScreen::drawDetailPane(ncplane *plane, int startY, int height, in
         case OpMode::Archive:
             ncplane_putstr_yx(plane, y, startX + 2, "Mode: Compress files into ZIP/7z");
             break;
+        case OpMode::M3U:
+            ncplane_putstr_yx(plane, y, startX + 2, "Mode: Generate M3U playlists for multi-disc games");
+            break;
         }
     }
 }
@@ -609,6 +616,7 @@ void CompressorScreen::scanSource()
     case OpMode::Compress: filters = compressExts + archiveExts; break;
     case OpMode::Extract:  filters = extractExts; break;
     case OpMode::Archive:  filters = allExts; break;
+    case OpMode::M3U:      filters = {"*.cue", "*.chd", "*.iso", "*.gdi"}; break;
     }
 
     auto addFile = [&](const QString &filePath) {
@@ -642,6 +650,13 @@ void CompressorScreen::scanSource()
         std::lock_guard<std::mutex> lock(m_filesMutex);
         m_files = std::move(found);
     }
+
+    // In M3U mode, group multi-disc files and convert to group entries
+    if (m_mode == OpMode::M3U) {
+        scanSourceForM3U();
+        return;
+    }
+
     m_fileList.setCount(static_cast<int>(m_files.size()));
     m_fileList.setSelected(m_files.empty() ? -1 : 0);
 }
@@ -664,10 +679,22 @@ void CompressorScreen::startProcessing()
     case OpMode::Compress: label = "converting"; break;
     case OpMode::Extract:  label = "extracting"; break;
     case OpMode::Archive:  label = "compressing"; break;
+    case OpMode::M3U:      label = "generating M3U"; break;
     }
     m_progressBar.set(0, checked, label);
 
-    m_task.start([this]() { processFiles(); });
+    m_task.start([this]() {
+        if (m_mode == OpMode::M3U) {
+            std::string outDir = m_outputInput.value();
+            if (!outDir.empty() && outDir[0] == '~') {
+                QString home = QDir::homePath();
+                outDir = home.toStdString() + outDir.substr(1);
+            }
+            processM3UFiles(outDir);
+        } else {
+            processFiles();
+        }
+    });
 }
 
 void CompressorScreen::processFiles()
@@ -706,7 +733,7 @@ void CompressorScreen::processFiles()
 
     m_app.post([this]() {
         m_progressBar.set(m_progressBar.done(), m_progressBar.total(), "done");
-        m_app.toast("Conversion complete", Toast::Level::Info, 3000);
+        m_app.toast("Conversion complete", Toast::Level::Success, 3000);
     });
 }
 
@@ -788,6 +815,144 @@ void CompressorScreen::processSingleFile(size_t idx, const std::string &outDir)
     }
 }
 
+// ════════════════════════════════════════════════════════════
+// M3U Generation
+// ════════════════════════════════════════════════════════════
+
+void CompressorScreen::scanSourceForM3U()
+{
+    // Group the scanned files by their base multi-disc title
+    using Remus::M3UGenerator;
+    std::map<std::string, std::vector<std::string>> groups; // baseTitle → sorted paths
+
+    {
+        std::lock_guard<std::mutex> lock(m_filesMutex);
+        for (const auto &f : m_files) {
+            QString qName = QString::fromStdString(f.filename);
+            if (!M3UGenerator::isMultiDisc(qName)) continue;
+            std::string base = M3UGenerator::extractBaseTitle(qName).toStdString();
+            groups[base].push_back(f.path);
+        }
+    }
+
+    // Sort disc paths within each group by disc number
+    for (auto &[title, paths] : groups) {
+        std::sort(paths.begin(), paths.end(), [](const std::string &a, const std::string &b) {
+            int da = M3UGenerator::extractDiscNumber(
+                QFileInfo(QString::fromStdString(a)).fileName());
+            int db = M3UGenerator::extractDiscNumber(
+                QFileInfo(QString::fromStdString(b)).fileName());
+            return da < db;
+        });
+    }
+
+    // Rebuild m_m3uGroups and create display entries
+    m_m3uGroups.clear();
+    std::vector<FileEntry> display;
+    for (const auto &[title, paths] : groups) {
+        M3UGroup g;
+        g.baseTitle = title;
+        g.discPaths = paths;
+        g.status    = "Ready";
+        m_m3uGroups.push_back(std::move(g));
+
+        FileEntry fe;
+        fe.filename = title + " (" + std::to_string(paths.size()) + " discs)";
+        fe.path     = paths.front(); // representative path
+        fe.type     = FileType::Unknown;
+        fe.sizeBytes = 0;
+        fe.status   = "Ready";
+        display.push_back(std::move(fe));
+    }
+
+    {
+        std::lock_guard<std::mutex> lock(m_filesMutex);
+        m_files = std::move(display);
+    }
+    m_fileList.setCount(static_cast<int>(m_files.size()));
+    m_fileList.setSelected(m_files.empty() ? -1 : 0);
+
+    if (m_m3uGroups.empty()) {
+        m_app.toast("No multi-disc games found", Toast::Level::Warning);
+    }
+}
+
+void CompressorScreen::processM3UFiles(const std::string &outDir)
+{
+    int done = 0;
+    int total = static_cast<int>(m_m3uGroups.size());
+
+    for (size_t i = 0; i < m_m3uGroups.size(); ++i) {
+        if (m_task.cancelled()) break;
+
+        // Check if this group is checked in the file list
+        bool checked;
+        {
+            std::lock_guard<std::mutex> lock(m_filesMutex);
+            if (i < m_files.size())
+                checked = m_files[i].checked;
+            else
+                checked = false;
+        }
+        if (!checked) continue;
+
+        const auto &group = m_m3uGroups[i];
+        {
+            std::lock_guard<std::mutex> lock(m_filesMutex);
+            if (i < m_files.size())
+                m_files[i].status = "Generating...";
+        }
+
+        // Determine output directory
+        QString qOutDir;
+        if (!outDir.empty()) {
+            qOutDir = QString::fromStdString(outDir);
+        } else if (!group.discPaths.empty()) {
+            qOutDir = QFileInfo(QString::fromStdString(group.discPaths[0])).absolutePath();
+        }
+        QDir().mkpath(qOutDir);
+
+        // Build disc path list as relative filenames
+        QStringList discPaths;
+        for (const auto &p : group.discPaths) {
+            discPaths.append(QFileInfo(QString::fromStdString(p)).fileName());
+        }
+
+        // Generate M3U file
+        QString m3uPath = qOutDir + "/" + QString::fromStdString(group.baseTitle) + ".m3u";
+        QFile m3uFile(m3uPath);
+        bool ok = false;
+        if (m3uFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
+            for (const QString &dp : discPaths) {
+                m3uFile.write(dp.toUtf8());
+                m3uFile.write("\n");
+            }
+            m3uFile.close();
+            ok = true;
+        }
+
+        {
+            std::lock_guard<std::mutex> lock(m_filesMutex);
+            if (i < m_files.size()) {
+                if (ok) {
+                    m_files[i].status = "Done (" + std::to_string(discPaths.size()) + " discs)";
+                } else {
+                    m_files[i].status = "Error: " + m3uFile.errorString().toStdString();
+                }
+            }
+        }
+        ++done;
+        m_progressBar.set(done, total, "generating M3U");
+    }
+
+    m_app.post([this, done]() {
+        char msg[128];
+        snprintf(msg, sizeof(msg), "Done — %d M3U playlist(s) generated", done);
+        m_progressBar.set(m_progressBar.done(), m_progressBar.total(), msg);
+        m_app.toast(std::string(msg), Toast::Level::Success, 3000);
+    });
+}
+
 std::vector<std::pair<std::string, std::string>> CompressorScreen::keybindings() const
 {
     return {
@@ -798,7 +963,7 @@ std::vector<std::pair<std::string, std::string>> CompressorScreen::keybindings()
         {"Space", "Toggle file"},
         {"a",     "Toggle all"},
         {"s",     "Start processing"},
-        {"m",     "Cycle mode (CHD/Extract/Archive)"},
+        {"m",     "Cycle mode (CHD/Extract/Archive/M3U)"},
         {"d",     "Toggle delete originals"},
         {"Esc",   "Cancel / back"},
     };

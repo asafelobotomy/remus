@@ -123,6 +123,7 @@ namespace Columns {
         inline constexpr const char* MATCH_METHOD = "match_method";
         inline constexpr const char* CONFIDENCE = "confidence";
         inline constexpr const char* PROVIDER = "provider";
+        inline constexpr const char* NAME_MATCH_SCORE = "name_match_score";
     }
     
     // Cache columns

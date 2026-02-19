@@ -46,6 +46,7 @@ public:
     struct FileEntry {
         int      fileId = 0;
         std::string filename;
+        std::string extensions;
         std::string system;
         std::string hash;
         std::string matchStatus;

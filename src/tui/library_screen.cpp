@@ -5,10 +5,77 @@
 #include "../services/match_service.h"
 
 #include <QFileInfo>
+#include <QRegularExpression>
 #include <cstring>
 #include <algorithm>
 #include <map>
 #include <set>
+
+using Remus::Database;
+using Remus::FileRecord;
+
+namespace {
+
+QString baseNameForGrouping(const QString &filename)
+{
+    QFileInfo fi(filename);
+    QString baseName = fi.completeBaseName();
+
+    static QRegularExpression trackPattern(
+        R"(\s*\(Track\s*\d+\)$)", QRegularExpression::CaseInsensitiveOption);
+    baseName.remove(trackPattern);
+
+    return baseName.trimmed();
+}
+
+QString groupKey(const FileRecord &file)
+{
+    QFileInfo info(file.originalPath);
+    return info.path() + "/" + baseNameForGrouping(file.filename);
+}
+
+void sortExtensions(QStringList &exts)
+{
+    QMap<QString, int> priority = {
+        {QStringLiteral(".cue"), 0}, {QStringLiteral(".gdi"), 1}, {QStringLiteral(".m3u"), 2},
+        {QStringLiteral(".iso"), 3}, {QStringLiteral(".chd"), 4},
+        {QStringLiteral(".bin"), 10}, {QStringLiteral(".img"), 11}, {QStringLiteral(".raw"), 12}
+    };
+
+    std::sort(exts.begin(), exts.end(), [&priority](const QString &a, const QString &b) {
+        const int pa = priority.value(a.toLower(), 5);
+        const int pb = priority.value(b.toLower(), 5);
+        if (pa != pb) return pa < pb;
+        return a < b;
+    });
+}
+
+bool preferPrimaryCandidate(const FileRecord &candidate, const FileRecord &current,
+                            const QMap<int, Database::MatchResult> &matches)
+{
+    const bool candidateHasMatch = matches.contains(candidate.id);
+    const bool currentHasMatch = matches.contains(current.id);
+    if (candidateHasMatch != currentHasMatch) {
+        return candidateHasMatch;
+    }
+
+    auto isPrimaryExtension = [](const QString &ext) {
+        const QString lower = ext.toLower();
+        return lower == QStringLiteral(".cue") || lower == QStringLiteral(".gdi") || lower == QStringLiteral(".m3u");
+    };
+
+    if (candidate.isPrimary != current.isPrimary) {
+        return candidate.isPrimary;
+    }
+
+    if (isPrimaryExtension(candidate.extension) && !isPrimaryExtension(current.extension)) {
+        return true;
+    }
+
+    return false;
+}
+
+} // namespace
 
 // ════════════════════════════════════════════════════════════
 // Construction / Lifecycle
@@ -366,6 +433,7 @@ void LibraryScreen::drawDetailPane(ncplane *plane, int startY, int height, int s
     }
 
     putField("System:    ", e.system, 0xAA, 0xAA, 0xFF);
+    putField("Files:     ", e.extensions.empty() ? "-" : e.extensions, 0xCC, 0xCC, 0xCC);
     putField("Developer: ", e.developer.empty() ? "-" : e.developer, 0xCC, 0xCC, 0xCC);
     putField("Publisher: ", e.publisher.empty() ? "-" : e.publisher, 0xCC, 0xCC, 0xCC);
     putField("Region:    ", e.region.empty() ? "-" : e.region, 0xCC, 0xCC, 0xCC);
@@ -453,34 +521,67 @@ void LibraryScreen::loadFromDatabase()
     auto allFiles = db.getExistingFiles();
     auto allMatches = db.getAllMatches();
 
-    // Build flat list of all entries (no filtering)
-    std::map<std::string, std::vector<FileEntry>> bySystem;
+    struct Group {
+        FileRecord primary;
+        bool hasPrimary = false;
+        QStringList extensions;
+    };
+
+    QMap<QString, Group> groups;
 
     for (const auto &fr : allFiles) {
+        const QString key = groupKey(fr);
+        Group &g = groups[key];
+
+        const QString ext = fr.extension.toLower();
+        if (!g.extensions.contains(ext)) {
+            g.extensions.append(ext);
+        }
+
+        if (!g.hasPrimary || preferPrimaryCandidate(fr, g.primary, allMatches)) {
+            g.primary = fr;
+            g.hasPrimary = true;
+        }
+    }
+
+    // Build flat list of grouped entries by system (no filtering)
+    std::map<std::string, std::vector<FileEntry>> bySystem;
+
+    for (auto it = groups.begin(); it != groups.end(); ++it) {
+        Group &g = it.value();
+        sortExtensions(g.extensions);
+
+        const FileRecord &fr = g.primary;
         std::string system = db.getSystemDisplayName(fr.systemId).toStdString();
         if (system.empty()) system = "Unknown";
 
         FileEntry e;
         e.fileId = fr.id;
-        e.filename = fr.filename.toStdString();
+        const std::string baseName = baseNameForGrouping(fr.filename).toStdString();
+        const std::string extDisplay = g.extensions.join(" ").toStdString();
+        if (g.extensions.size() > 1) {
+            e.filename = baseName + " [" + extDisplay + "]";
+        } else {
+            e.filename = fr.filename.toStdString();
+        }
+        e.extensions = extDisplay;
         e.hash = fr.crc32.toStdString();
         e.system = system;
         e.path = fr.currentPath.toStdString();
 
-        auto it = allMatches.find(fr.id);
-        if (it != allMatches.end()) {
-            e.confidence = static_cast<int>(it.value().confidence);
-            e.matchMethod = it.value().matchMethod.toStdString();
-            e.title = it.value().gameTitle.toStdString();
-            e.developer = it.value().developer.toStdString();
-            e.publisher = it.value().publisher.toStdString();
-            e.description = it.value().description.toStdString();
-            e.region = it.value().region.toStdString();
+        auto matchIt = allMatches.find(fr.id);
+        if (matchIt != allMatches.end()) {
+            e.confidence = static_cast<int>(matchIt.value().confidence);
+            e.matchMethod = matchIt.value().matchMethod.toStdString();
+            e.title = matchIt.value().gameTitle.toStdString();
+            e.developer = matchIt.value().developer.toStdString();
+            e.publisher = matchIt.value().publisher.toStdString();
+            e.description = matchIt.value().description.toStdString();
+            e.region = matchIt.value().region.toStdString();
 
-            // Confirmation status from database
-            if (it.value().isConfirmed)
+            if (matchIt.value().isConfirmed)
                 e.confirmStatus = ConfirmationStatus::Confirmed;
-            else if (it.value().isRejected)
+            else if (matchIt.value().isRejected)
                 e.confirmStatus = ConfirmationStatus::Rejected;
             else
                 e.confirmStatus = ConfirmationStatus::Pending;
@@ -602,7 +703,7 @@ void LibraryScreen::confirmMatch()
     }
     // Also update the displayed entry directly
     m_entries[sel].confirmStatus = ConfirmationStatus::Confirmed;
-    m_app.toast("Match confirmed", Toast::Level::Info, 1500);
+    m_app.toast("Match confirmed", Toast::Level::Success, 1500);
 }
 
 void LibraryScreen::rejectMatch()

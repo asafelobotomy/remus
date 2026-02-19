@@ -36,6 +36,11 @@ OptionsScreen::OptionsScreen(TuiApp &app)
     m_fields.push_back({ "Organize by System", Remus::Constants::Settings::Organize::BY_SYSTEM,          "true", FieldType::Toggle, false });
     m_fields.push_back({ "Preserve Originals", Remus::Constants::Settings::Organize::PRESERVE_ORIGINALS, "true", FieldType::Toggle, false });
 
+    // Section: Matching
+    m_fields.push_back({ "MATCHING", "", "", FieldType::Text, true });
+    m_fields.push_back({ "Organize Confidence Threshold (%)", Remus::Constants::Settings::Match::CONFIDENCE_THRESHOLD,
+                          Remus::Constants::Settings::Defaults::CONFIDENCE_THRESHOLD.toStdString(), FieldType::Text, false });
+
     // Section: Performance
     m_fields.push_back({ "PERFORMANCE", "", "", FieldType::Text, true });
     m_fields.push_back({ "Parallel Hashing",   Remus::Constants::Settings::Performance::PARALLEL_HASHING, "true", FieldType::Toggle, false });

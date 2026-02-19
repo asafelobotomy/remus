@@ -40,6 +40,9 @@ namespace Thresholds {
     
     /// Default minimum for filtering: Default filter threshold
     inline constexpr float DEFAULT_MINIMUM = 60.0f;
+    
+    /// Organize screen minimum: Default threshold for organize eligibility
+    inline constexpr float ORGANIZE_MINIMUM = 75.0f;
 }
 
 // ============================================================================

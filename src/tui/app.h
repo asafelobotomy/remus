@@ -60,7 +60,7 @@ public:
     unsigned cols() const { return m_cols; }
 
 private:
-    void drainPosted();
+    bool drainPosted(); ///< Returns true if any callbacks were processed.
     void updateDimensions();
 
     struct notcurses *m_nc = nullptr;
@@ -76,6 +76,11 @@ private:
 
     unsigned m_rows = 0;
     unsigned m_cols = 0;
+
+    // Set to true whenever the screen stack changes (push/pop/set).
+    // The main loop uses this to trigger a forced full refresh on the next
+    // render cycle, eliminating the double-render that was causing garbling.
+    bool m_screenChanged = false;
 
     // Global overlay widgets
     Toast m_toast;

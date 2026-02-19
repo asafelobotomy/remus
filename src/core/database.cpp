@@ -142,6 +142,25 @@ void Database::runMigrations()
             logError(Constants::Errors::Database::MIGRATION_FAILED);
         }
     }
+
+    // ── Matches table migrations ──────────────────────────────────────────
+    QSqlQuery matchesQuery(m_db);
+    matchesQuery.exec(QString("PRAGMA table_info(%1)")
+                      .arg(Constants::DatabaseSchema::Tables::MATCHES));
+    bool hasNameMatchScore = false;
+    while (matchesQuery.next()) {
+        if (matchesQuery.value(1).toString() ==
+            Constants::DatabaseSchema::Columns::Matches::NAME_MATCH_SCORE)
+            hasNameMatchScore = true;
+    }
+    if (!hasNameMatchScore) {
+        qInfo() << "Migration: Adding name_match_score column to matches table";
+        if (!matchesQuery.exec(QString("ALTER TABLE %1 ADD COLUMN %2 REAL DEFAULT 0")
+                               .arg(Constants::DatabaseSchema::Tables::MATCHES,
+                                    Constants::DatabaseSchema::Columns::Matches::NAME_MATCH_SCORE))) {
+            logError(Constants::Errors::Database::MIGRATION_FAILED);
+        }
+    }
 }
 
 bool Database::createSchema()
@@ -706,6 +725,30 @@ QList<FileRecord> Database::getFilesBySystem(const QString &systemName)
     return files;
 }
 
+QList<FileRecord> Database::getFilesByParent(int parentId)
+{
+    QList<FileRecord> files;
+    
+    QSqlQuery query(m_db);
+    query.prepare("SELECT id FROM files WHERE parent_file_id = ?");
+    query.addBindValue(parentId);
+    
+    if (!query.exec()) {
+        logError("Failed to get files by parent: " + query.lastError().text());
+        return files;
+    }
+    
+    while (query.next()) {
+        int fileId = query.value(0).toInt();
+        FileRecord record = getFileById(fileId);
+        if (record.id > 0) {
+            files.append(record);
+        }
+    }
+    
+    return files;
+}
+
 bool Database::updateFilePath(int fileId, const QString &newPath)
 {
     QSqlQuery query(m_db);
@@ -767,7 +810,7 @@ QMap<int, Database::MatchResult> Database::getAllMatches()
         SELECT m.id, m.file_id, m.game_id, m.match_method, m.confidence, 
                m.is_confirmed, m.is_rejected,
                g.title, g.publisher, g.release_date, g.developer, g.description,
-               g.genres, g.players, g.region, g.rating
+               g.genres, g.players, g.region, g.rating, m.name_match_score
         FROM matches m
         LEFT JOIN games g ON m.game_id = g.id
         INNER JOIN best_matches bm ON m.file_id = bm.file_id
@@ -814,6 +857,7 @@ QMap<int, Database::MatchResult> Database::getAllMatches()
         result.players = query.value(13).toString();
         result.region = query.value(14).toString();
         result.rating = query.value(15).toFloat();
+        result.nameMatchScore = query.value(16).toFloat();
         
         results[result.fileId] = result;
     }
@@ -831,7 +875,8 @@ Database::MatchResult Database::getMatchForFile(int fileId)
         SELECT m.id, m.file_id, m.game_id, m.match_method, m.confidence, 
                m.is_confirmed, m.is_rejected,
                g.title, g.publisher, g.developer, g.release_date,
-               g.description, g.genres, g.players, g.region, g.rating
+               g.description, g.genres, g.players, g.region, g.rating,
+               m.name_match_score
         FROM matches m
         LEFT JOIN games g ON m.game_id = g.id
         WHERE m.file_id = ?
@@ -867,6 +912,7 @@ Database::MatchResult Database::getMatchForFile(int fileId)
         result.players = query.value(13).toString();
         result.region = query.value(14).toString();
         result.rating = query.value(15).toFloat();
+        result.nameMatchScore = query.value(16).toFloat();
     }
     
     return result;
@@ -912,7 +958,52 @@ int Database::insertGame(const QString &title, int systemId, const QString &regi
     return query.lastInsertId().toInt();
 }
 
-bool Database::insertMatch(int fileId, int gameId, float confidence, const QString &matchMethod)
+bool Database::updateGame(int gameId,
+                          const QString &publisher, const QString &developer,
+                          const QString &releaseDate, const QString &description,
+                          const QString &genres, const QString &players,
+                          float rating)
+{
+    QStringList setClauses;
+    QVariantList values;
+
+    auto addIfSet = [&](const QString &col, const QString &val) {
+        if (!val.isEmpty()) {
+            setClauses << col + " = ?";
+            values << val;
+        }
+    };
+
+    addIfSet("publisher",    publisher);
+    addIfSet("developer",    developer);
+    addIfSet("release_date", releaseDate);
+    addIfSet("description",  description);
+    addIfSet("genres",       genres);
+    addIfSet("players",      players);
+
+    if (rating >= 0.0f) {
+        setClauses << "rating = ?";
+        values << static_cast<double>(rating);
+    }
+
+    if (setClauses.isEmpty()) return true; // nothing to update
+
+    setClauses << "updated_at = CURRENT_TIMESTAMP";
+
+    QSqlQuery query(m_db);
+    query.prepare("UPDATE games SET " + setClauses.join(", ") + " WHERE id = ?");
+    for (const auto &v : values) query.addBindValue(v);
+    query.addBindValue(gameId);
+
+    if (!query.exec()) {
+        logError("Failed to update game: " + query.lastError().text());
+        return false;
+    }
+    return true;
+}
+
+bool Database::insertMatch(int fileId, int gameId, float confidence, const QString &matchMethod,
+                           float nameMatchScore)
 {
     QSqlQuery query(m_db);
     
@@ -929,19 +1020,21 @@ bool Database::insertMatch(int fileId, int gameId, float confidence, const QStri
     if (query.next()) {
         // Update existing match
         int matchId = query.value(0).toInt();
-        query.prepare("UPDATE matches SET confidence = ?, match_method = ?, "
+        query.prepare("UPDATE matches SET confidence = ?, match_method = ?, name_match_score = ?, "
                       "matched_at = CURRENT_TIMESTAMP WHERE id = ?");
         query.addBindValue(confidence);
         query.addBindValue(matchMethod);
+        query.addBindValue(nameMatchScore);
         query.addBindValue(matchId);
     } else {
         // Insert new match
-        query.prepare("INSERT INTO matches (file_id, game_id, confidence, match_method, matched_at) "
-                      "VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)");
+        query.prepare("INSERT INTO matches (file_id, game_id, confidence, match_method, name_match_score, matched_at) "
+                      "VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP)");
         query.addBindValue(fileId);
         query.addBindValue(gameId);
         query.addBindValue(confidence);
         query.addBindValue(matchMethod);
+        query.addBindValue(nameMatchScore);
     }
     
     if (!query.exec()) {

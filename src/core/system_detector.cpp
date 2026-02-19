@@ -33,25 +33,21 @@ void SystemDetector::loadSystems(const QList<SystemInfo> &systems)
 
 QString SystemDetector::detectSystem(const QString &extension, const QString &path) const
 {
-    QString ext = extension.toLower();
-    
-    if (!m_extensionMap.contains(ext)) {
-        return QString();  // Unknown extension
+    const QString ext = extension.toLower();
+
+    QStringList candidates = getCandidatesForExtension(ext);
+    if (candidates.isEmpty()) {
+        return QString();
     }
 
-    QString systemName = m_extensionMap[ext];
-    
-    // Check for ambiguous extension (contains |)
-    if (systemName.contains('|')) {
-        QStringList candidates = systemName.split('|');
-        if (!path.isEmpty()) {
-            return detectFromPath(path, candidates);
+    if (candidates.size() > 1 && !path.isEmpty()) {
+        const QString byPath = detectFromPath(path, candidates);
+        if (!byPath.isEmpty()) {
+            return byPath;
         }
-        // Return first candidate if path not provided
-        return candidates.first();
     }
 
-    return systemName;
+    return candidates.first();
 }
 
 QString SystemDetector::detectFromPath(const QString &path, const QStringList &candidates) const
@@ -126,6 +122,34 @@ void SystemDetector::initializeDefaultSystems()
     // src/core/constants/systems.h instead of here.
     
     loadSystems(systems);
+}
+
+QStringList SystemDetector::getCandidatesForExtension(const QString &extension) const
+{
+    using namespace Constants::Systems;
+
+    QStringList candidates;
+
+    // 1) Use the curated extension → systems map to preserve intentional priority
+    auto extIt = EXTENSION_TO_SYSTEMS.find(extension);
+    if (extIt != EXTENSION_TO_SYSTEMS.end()) {
+        for (int systemId : extIt.value()) {
+            const auto defIt = SYSTEMS.find(systemId);
+            if (defIt != SYSTEMS.end()) {
+                const QString &name = defIt.value().internalName;
+                if (m_systems.contains(name) && !candidates.contains(name)) {
+                    candidates.append(name);
+                }
+            }
+        }
+    }
+
+    // 2) Fall back to the loaded system extension map (e.g., DB-provided systems)
+    if (candidates.isEmpty() && m_extensionMap.contains(extension)) {
+        candidates = m_extensionMap.value(extension).split('|', Qt::SkipEmptyParts);
+    }
+
+    return candidates;
 }
 
 } // namespace Remus

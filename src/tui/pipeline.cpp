@@ -67,6 +67,10 @@ void TuiPipeline::run(const std::string& libraryPath,
         },
         [&](const QString &msg) { if (logCb) logCb(msg.toStdString()); }
     );
+
+    if (logCb) {
+        logCb(QString("Scan found %1 file(s)").arg(inserted).toStdString());
+    }
     (void)inserted;
 
     if (m_task.cancelled()) return;
@@ -96,6 +100,10 @@ void TuiPipeline::run(const std::string& libraryPath,
         [&](const QString &msg) { if (logCb) logCb(msg.toStdString()); },
         &m_task.cancelledFlag()
     );
+
+    if (logCb && stats.hashMatches + stats.nameMatches == 0) {
+        logCb("No matches were found");
+    }
 
     if (logCb) logCb("Pipeline done");
     if (progressCb) {

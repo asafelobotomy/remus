@@ -48,7 +48,7 @@ public:
 
     // ── Public query API (for tests) ───────────────────────
     enum class FileType { CUE, ISO, GDI, CHD, ZIP, SevenZ, RAR, Unknown };
-    enum class OpMode { Compress, Extract, Archive };
+    enum class OpMode { Compress, Extract, Archive, M3U };
 
     struct FileEntry {
         std::string path;
@@ -92,7 +92,15 @@ private:
 
     // ── Core engines ───────────────────────────────────────
     Remus::ConversionService *m_conversionService = nullptr;
-
+    // ── M3U state ──────────────────────────────────────
+    struct M3UGroup {
+        std::string baseTitle;
+        std::vector<std::string> discPaths; // sorted by disc#
+        std::string status;                 // "Ready" / "Done" / "Error: ..."
+    };
+    std::vector<M3UGroup> m_m3uGroups;
+    void scanSourceForM3U();
+    void processM3UFiles(const std::string &outDir);
     // ── Actions ────────────────────────────────────────────
     void scanSource();
     void startProcessing();

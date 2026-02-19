@@ -631,7 +631,7 @@ void PatchScreen::applyPatches()
 
     m_app.post([this]() {
         m_progressBar.set(m_progressBar.done(), m_progressBar.total(), "done");
-        m_app.toast("Patching complete", Toast::Level::Info, 3000);
+        m_app.toast("Patching complete", Toast::Level::Success, 3000);
     });
 }
 

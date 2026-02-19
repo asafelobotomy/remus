@@ -1,6 +1,7 @@
 #include "main_menu_screen.h"
 #include "app.h"
 #include "match_screen.h"
+#include "organize_screen.h"
 #include "library_screen.h"
 #include "compressor_screen.h"
 #include "patch_screen.h"
@@ -14,10 +15,11 @@ MainMenuScreen::MainMenuScreen(TuiApp &app)
 {
     m_items = {
         { "MATCH",      true  },  // 0 — red/bold
-        { "LIBRARY",    false },  // 1
-        { "COMPRESSOR", false },  // 2
-        { "PATCH",      true  },  // 3 — red/bold
-        { "OPTIONS",    false },  // 4
+        { "ORGANIZE",   false },  // 1
+        { "LIBRARY",    false },  // 2
+        { "COMPRESSOR", false },  // 3
+        { "PATCH",      true  },  // 4 — red/bold
+        { "OPTIONS",    false },  // 5
     };
 }
 
@@ -45,8 +47,8 @@ bool MainMenuScreen::handleInput(struct notcurses *, const ncinput &, int ch)
         return true;
     }
 
-    // Number keys 1-5
-    if (ch >= '1' && ch <= '5') {
+    // Number keys 1-6
+    if (ch >= '1' && ch <= '6') {
         m_selected = ch - '1';
         activateSelected();
         return true;
@@ -63,16 +65,19 @@ void MainMenuScreen::activateSelected()
     case 0: // MATCH
         m_app.pushScreen(std::make_unique<MatchScreen>(m_app));
         break;
-    case 1: // LIBRARY
+    case 1: // ORGANIZE
+        m_app.pushScreen(std::make_unique<OrganizeScreen>(m_app));
+        break;
+    case 2: // LIBRARY
         m_app.pushScreen(std::make_unique<LibraryScreen>(m_app));
         break;
-    case 2: // COMPRESSOR
+    case 3: // COMPRESSOR
         m_app.pushScreen(std::make_unique<CompressorScreen>(m_app));
         break;
-    case 3: // PATCH
+    case 4: // PATCH
         m_app.pushScreen(std::make_unique<PatchScreen>(m_app));
         break;
-    case 4: // OPTIONS
+    case 5: // OPTIONS
         m_app.pushScreen(std::make_unique<OptionsScreen>(m_app));
         break;
     }
