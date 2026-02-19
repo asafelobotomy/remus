@@ -14,7 +14,7 @@
  */
 class Toast {
 public:
-    enum class Level { Info, Warning, Error };
+    enum class Level { Info, Warning, Error, Success };
 
     Toast() = default;
 
@@ -63,6 +63,10 @@ public:
         case Level::Error:
             ncchannels_set_fg_rgb8(&ch, 0xFF, 0xFF, 0xFF);
             ncchannels_set_bg_rgb8(&ch, 0x66, 0x00, 0x00);
+            break;
+        case Level::Success:
+            ncchannels_set_fg_rgb8(&ch, 0xFF, 0xFF, 0xFF);
+            ncchannels_set_bg_rgb8(&ch, 0x00, 0x55, 0x00);
             break;
         }
         ncplane_set_channels(plane, ch);

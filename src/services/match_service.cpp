@@ -52,7 +52,7 @@ MatchService::MatchStats MatchService::matchAll(Database *db,
         if (match.confidence > 0) {
             int gameId = db->insertGame(match.title, fr.systemId, match.region);
             if (gameId > 0) {
-                db->insertMatch(fr.id, gameId, match.confidence, match.matchMethod);
+                db->insertMatch(fr.id, gameId, match.confidence, match.matchMethod, match.nameMatchScore);
             }
         }
 
@@ -85,7 +85,7 @@ Match MatchService::matchFile(Database *db, int fileId)
     if (match.confidence > 0) {
         int gameId = db->insertGame(match.title, fr.systemId, match.region);
         if (gameId > 0) {
-            db->insertMatch(fr.id, gameId, match.confidence, match.matchMethod);
+            db->insertMatch(fr.id, gameId, match.confidence, match.matchMethod, match.nameMatchScore);
         }
     }
     return match;

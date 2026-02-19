@@ -212,6 +212,11 @@ if(TARGET remus-tui-core)
         LIBS Qt6::Test Qt6::Sql remus-tui-core
     )
 
+    add_remus_test(test_organize_screen OrganizeScreenTest
+        SOURCES test_organize_screen.cpp
+        LIBS Qt6::Test Qt6::Sql remus-tui-core
+    )
+
     add_remus_test(test_compressor_screen CompressorScreenTest
         SOURCES test_compressor_screen.cpp
         LIBS Qt6::Test Qt6::Sql remus-tui-core

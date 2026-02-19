@@ -189,6 +189,13 @@ public:
     QList<FileRecord> getFilesBySystem(const QString &systemName);
 
     /**
+     * @brief Get child files linked to a parent file (e.g. .bin tracks for a .cue)
+     * @param parentId Parent file ID
+     * @return List of child file records
+     */
+    QList<FileRecord> getFilesByParent(int parentId);
+
+    /**
      * @brief Update file's current path (for organize/rename)
      * @param fileId File ID
      * @param newPath New current path
@@ -224,6 +231,7 @@ public:
         QString players;
         QString region;
         float rating = 0.0f;
+        float nameMatchScore = 0.0f; ///< Fuzzy name-match score (0.0–1.0) from MatchingEngine
     };
     
     /**
@@ -258,6 +266,27 @@ public:
                    const QString &releaseDate = QString(), const QString &description = QString(),
                    const QString &genres = QString(), const QString &players = QString(),
                    float rating = 0.0f);
+
+    /**
+     * @brief Update an existing game record with enriched metadata.
+     * @param gameId Game ID to update
+     * @param publisher Publisher (empty → keep existing)
+     * @param developer Developer (empty → keep existing)
+     * @param releaseDate Release date (empty → keep existing)
+     * @param description Description (empty → keep existing)
+     * @param genres Genre string (empty → keep existing)
+     * @param players Player count (empty → keep existing)
+     * @param rating Rating 0-10 (negative → keep existing)
+     * @return True if updated successfully
+     */
+    bool updateGame(int gameId,
+                    const QString &publisher = QString(),
+                    const QString &developer = QString(),
+                    const QString &releaseDate = QString(),
+                    const QString &description = QString(),
+                    const QString &genres = QString(),
+                    const QString &players = QString(),
+                    float rating = -1.0f);
     
     /**
      * @brief Insert or update a metadata match
@@ -267,7 +296,8 @@ public:
      * @param matchMethod Match method (hash/exact/fuzzy/user_confirmed)
      * @return True if successful
      */
-    bool insertMatch(int fileId, int gameId, float confidence, const QString &matchMethod);
+    bool insertMatch(int fileId, int gameId, float confidence, const QString &matchMethod,
+                     float nameMatchScore = 0.0f);
     
     /**
      * @brief Confirm a match (user verification)

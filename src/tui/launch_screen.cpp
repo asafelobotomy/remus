@@ -41,7 +41,10 @@ bool LaunchScreen::tick()
 
     if (elapsed >= 1500 && !m_done) {
         m_done = true;
+        // NOTE: setScreen() destroys this LaunchScreen (via m_screens.clear()).
+        // Return immediately after — do NOT touch any member after this call.
         m_app.setScreen(std::make_unique<MainMenuScreen>(m_app));
+        return false;
     }
     return true; // always redraw during splash
 }

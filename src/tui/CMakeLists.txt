@@ -5,6 +5,8 @@ add_library(remus-tui-core STATIC
     launch_screen.cpp
     main_menu_screen.cpp
     match_screen.cpp
+    manual_match_overlay.cpp
+    organize_screen.cpp
     compressor_screen.cpp
     patch_screen.cpp
     library_screen.cpp

@@ -85,10 +85,14 @@ int TuiApp::run()
             updateDimensions();
             if (!m_screens.empty())
                 m_screens.back()->onResize(m_nc);
+            m_screenChanged = true; // force full repaint after resize
         }
 
-        // Drain any posted callbacks (from background threads)
-        drainPosted();
+        // Drain any posted callbacks (from background threads).
+        // If any callbacks ran they may have mutated screen state — flag a
+        // redraw so the new state is visible within one 50 ms poll cycle
+        // rather than waiting up to 200 ms for the next periodic tick.
+        bool postedRan = drainPosted();
 
         // Dispatch input to active screen
         if (ch > 0 && ch != NCKEY_RESIZE && !m_screens.empty()) {
@@ -129,16 +133,39 @@ int TuiApp::run()
             nextTick = now + tickInterval;
         }
 
-        // Render
-        if (ch > 0 || needRedraw) {
-            ncplane *std = notcurses_stdplane(m_nc);
-            ncplane_erase(std);
+        // ── Render ────────────────────────────────────────────
+        // Consolidate ALL rendering here — navigation methods (pushScreen,
+        // popScreen, setScreen) no longer render inline; they set m_screenChanged
+        // instead.  This eliminates the double-render-per-transition that was
+        // confusing notcurses's damage tracker and producing garbled frames.
+        if (ch > 0 || needRedraw || m_screenChanged || postedRan) {
+            ncplane *stdp = notcurses_stdplane(m_nc);
+
+            // Reset pen state completely before each render so that no style
+            // or colour bleeds in from the previous screen's last draw call.
+            ncplane_set_styles(stdp, NCSTYLE_NONE);
+            ncplane_set_channels(stdp, 0);
+
+            ncplane_erase(stdp);
+
             if (!m_screens.empty())
                 m_screens.back()->render(m_nc);
+
             // Render overlays on top
-            m_toast.render(std, m_rows - 2, m_cols);
-            m_helpOverlay.render(std, m_rows, m_cols);
-            notcurses_render(m_nc);
+            m_toast.render(stdp, m_rows - 2, m_cols);
+            m_helpOverlay.render(stdp, m_rows, m_cols);
+
+            if (m_screenChanged) {
+                // After a screen transition the internal notcurses damage table
+                // may hold stale state from the old screen.  notcurses_render
+                // only sends a cell diff, so call it first to update the damage
+                // table, then notcurses_refresh to force a full terminal repaint.
+                notcurses_render(m_nc);
+                notcurses_refresh(m_nc, nullptr, nullptr);
+                m_screenChanged = false;
+            } else {
+                notcurses_render(m_nc);
+            }
         }
     }
 
@@ -159,13 +186,11 @@ void TuiApp::pushScreen(std::unique_ptr<Screen> screen)
     m_screens.push_back(std::move(screen));
     m_screens.back()->onEnter();
 
-    // Force initial render
-    if (m_nc) {
-        ncplane *std = notcurses_stdplane(m_nc);
-        ncplane_erase(std);
-        m_screens.back()->render(m_nc);
-        notcurses_render(m_nc);
-    }
+    // Signal the main loop to do a clean render + full refresh on its next
+    // iteration.  We do NOT render inline here: doing so would produce a
+    // double render (this render + the loop's render) which confuses
+    // notcurses's damage tracker and causes garbled transitions.
+    m_screenChanged = true;
 }
 
 void TuiApp::popScreen()
@@ -176,12 +201,9 @@ void TuiApp::popScreen()
     m_screens.pop_back();
     if (!m_screens.empty()) {
         m_screens.back()->onEnter();
-        if (m_nc) {
-            ncplane *std = notcurses_stdplane(m_nc);
-            ncplane_erase(std);
-            m_screens.back()->render(m_nc);
-            notcurses_render(m_nc);
-        }
+        // Signal the main loop to render + full-refresh rather than rendering
+        // inline here (prevents the double-render / garbling issue).
+        m_screenChanged = true;
     }
 }
 
@@ -202,7 +224,7 @@ void TuiApp::post(std::function<void()> fn)
     m_posted.push_back(std::move(fn));
 }
 
-void TuiApp::drainPosted()
+bool TuiApp::drainPosted()
 {
     std::vector<std::function<void()>> local;
     {
@@ -211,6 +233,7 @@ void TuiApp::drainPosted()
     }
     for (auto &fn : local)
         fn();
+    return !local.empty();
 }
 
 // ────────────────────────────────────────────────────────────

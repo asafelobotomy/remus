@@ -31,6 +31,10 @@ inline constexpr const char* BY_SYSTEM = "organize/by_system";
 inline constexpr const char* PRESERVE_ORIGINALS = "organize/preserve_originals";
 }
 
+namespace Match {
+inline constexpr const char* CONFIDENCE_THRESHOLD = "match/confidence_threshold";
+}
+
 namespace Performance {
 inline constexpr const char* HASH_ALGORITHM = "performance/hash_algorithm";
 inline constexpr const char* PARALLEL_HASHING = "performance/parallel_hashing";
@@ -43,6 +47,7 @@ inline const QString HASH_ALGORITHM = QStringLiteral("Auto (System Default)");
 inline const QString ORGANIZE_BY_SYSTEM = QStringLiteral("true");
 inline const QString PRESERVE_ORIGINALS = QStringLiteral("false");
 inline const QString PARALLEL_HASHING = QStringLiteral("true");
+inline const QString CONFIDENCE_THRESHOLD = QStringLiteral("75");
 inline const QString TEMPLATE_VARIABLE_HINT = Templates::VARIABLE_HINT;
 }
 
