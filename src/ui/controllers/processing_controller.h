@@ -3,6 +3,7 @@
 #include <QObject>
 #include <QString>
 #include <QStringList>
+#include <QUrl>
 #include <QVariantList>
 #include <QTimer>
 #include "../../core/database.h"
@@ -63,6 +64,9 @@ class ProcessingController : public QObject {
     Q_PROPERTY(bool convertToChd READ convertToChd WRITE setConvertToChd NOTIFY optionsChanged)
     Q_PROPERTY(bool downloadArtwork READ downloadArtwork WRITE setDownloadArtwork NOTIFY optionsChanged)
     Q_PROPERTY(bool fetchMetadata READ fetchMetadata WRITE setFetchMetadata NOTIFY optionsChanged)
+
+    // Artwork storage path (set by parent before starting pipeline)
+    Q_PROPERTY(QString artworkBasePath READ artworkBasePath WRITE setArtworkBasePath NOTIFY artworkBasePathChanged)
     
 public:
     explicit ProcessingController(Database *db, 
@@ -91,6 +95,9 @@ public:
     void setDownloadArtwork(bool enabled);
     bool fetchMetadata() const { return m_fetchMetadata; }
     void setFetchMetadata(bool enabled);
+
+    QString artworkBasePath() const { return m_artworkBasePath; }
+    void setArtworkBasePath(const QString &path);
     
     // Control methods
     Q_INVOKABLE void startProcessing(const QVariantList &fileIds);
@@ -125,18 +132,22 @@ signals:
     
     // Real-time processing results (for sidebar updates)
     void hashCalculated(int fileId, const QString &crc32, const QString &md5, const QString &sha1);
-    void matchFound(int fileId, const QString &gameTitle, const QString &publisher, 
+    void matchFound(int fileId, const QString &gameTitle, const QString &publisher,
                     int releaseYear, int confidence, const QString &matchMethod);
     void metadataUpdated(int fileId, const QString &description, const QString &coverArtUrl,
                         const QString &systemLogoUrl, const QString &screenshotUrl,
                         const QString &titleScreenUrl, float rating, const QString &ratingSource);
-    
+    void artworkDownloaded(int fileId, int gameId, const QString &localPath);
+
     // Error signals
     void processingError(int fileId, const QString &step, const QString &error);
-    
+
     // Refresh signal (for models)
     void libraryUpdated();
-    
+
+    // Option change notification
+    void artworkBasePathChanged();
+
 private slots:
     void processNextFile();
     void onStepComplete(bool success, const QString &error);
@@ -202,7 +213,12 @@ private:
     bool m_convertToChd = false;
     bool m_downloadArtwork = true;
     bool m_fetchMetadata = true;
-    
+
+    // Artwork step state — populated during stepMatch, consumed in stepArtwork
+    QString m_artworkBasePath;
+    QUrl    m_pendingArtworkUrl;
+    int     m_pendingArtworkGameId = -1;
+
     // Timer for async step completion
     QTimer *m_stepTimer;
 };

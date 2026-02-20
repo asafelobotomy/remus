@@ -49,7 +49,6 @@ private:
 
     ApiResponse makeRequest(const QUrl &url);
     GameMetadata parseGameJson(const QJsonObject &game);
-    QString mapSystemToTheGamesDB(const QString &system);
 
     QNetworkAccessManager *m_networkManager;
     RateLimiter *m_rateLimiter;

@@ -29,4 +29,31 @@ Architectural decisions and context are recorded here in ADR style.
 
 **Result**: Build: 125/125 targets ✅ · Tests: 38/38 passing ✅ · Type errors: 0 ✅ · LOC (src): 43,683 total.
 
+---
+
+## 2026-02-20 — Full review remediation (all 6 issues resolved)
+
+**Context**: Following the 2026-02-19 health review, all six flagged issues were addressed in a single session.
+
+**Changes**:
+1. **[W7] test_clrmamepro_parser.cpp** — Rewrote from a hardcoded debug script into a proper Qt Test class (`ClrMameProParserTest`) with 10 test methods using `QTemporaryFile` fixtures. Registered in `tests/CMakeLists.txt`. Test count increased from 38 → 39.
+2. **[W1] mapSystemToTheGamesDB()** — Removed dead deprecated method from `thegamesdb_provider.h` and `thegamesdb_provider.cpp` (was marked DEPRECATED, no callers).
+3. **[W7] Raw new/delete in main.cpp** — Replaced two raw `new MetadataProvider` / `delete` patterns in `--metadata` and `--search` CLI handlers with `std::unique_ptr<MetadataProvider>` + `std::make_unique`.
+4. **[W1] stepArtwork() placeholder** — Implemented the download step in `processing_controller.cpp`: `stepMatch()` now captures `m_pendingArtworkUrl` and `m_pendingArtworkGameId`; `stepArtwork()` performs the actual download via `ArtworkDownloader`, emits `artworkDownloaded` signal. Added `artworkBasePath` property + `artworkBasePathChanged` signal.
+5. **[W7] LibraryView TODO stubs** — Implemented all 6 stubs: remove, match-select, edit-metadata, rematch, screenshot-click, and cover-art lookup. Added `Database::removeFile()` and `LibraryController::removeFile()` Q_INVOKABLE (DB-only deletion, no file-system side effects).
+6. **[W6/W4] LOC decomposition of src/cli/main.cpp** — Decomposed 1711-line monolith into 9 focused translation units, each ≤ 400 lines:
+   - `cli_helpers.h/cpp` — selectBestHash, hashFileRecord, buildOrchestrator, getHashedFiles, persistMetadata, printFileInfo
+   - `cli_logging.h` — internal logging macro redirect
+   - `cli_commands.h` — CliContext struct + all handler declarations
+   - `cli_commands_info.cpp` — stats, info, header-info, show-art, scan, list, hash-all
+   - `cli_commands_metadata.cpp` — metadata, search
+   - `cli_commands_match.cpp` — match, match-report
+   - `cli_commands_verify.cpp` — checksum-verify, verify
+   - `cli_commands_organize.cpp` — artwork, organize, m3u
+   - `cli_commands_chd.cpp` — convert-chd, chd-extract, chd-verify, chd-info, extract-archive, space-report
+   - `cli_commands_export.cpp` — export, patch operations
+   - `main.cpp` reduced to **206 lines** (parser setup + dispatch table)
+
+**Result**: Build: 0 errors ✅ · Tests: 39/39 passing ✅ · Type errors: 0 ✅ · LOC (src): 43,851 total · main.cpp: 1711 → 206 lines.
+
 [session] Full health review complete — see findings in report above.

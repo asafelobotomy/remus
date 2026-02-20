@@ -117,6 +117,14 @@ void ProcessingController::setFetchMetadata(bool enabled)
     }
 }
 
+void ProcessingController::setArtworkBasePath(const QString &path)
+{
+    if (m_artworkBasePath != path) {
+        m_artworkBasePath = path;
+        emit artworkBasePathChanged();
+    }
+}
+
 void ProcessingController::startProcessing(const QVariantList &fileIds)
 {
     if (m_processing) {
@@ -565,24 +573,35 @@ void ProcessingController::stepMatch()
             // Create match record
             m_db->insertMatch(m_currentFileId, gameId, confidence, matchMethod);
             qDebug() << "Match stored: gameId=" << gameId << "confidence=" << confidence;
-            
+
             // Emit signal for real-time sidebar update
-            emit matchFound(m_currentFileId, metadata.title, metadata.publisher, 
+            emit matchFound(m_currentFileId, metadata.title, metadata.publisher,
                            releaseYear, confidence, matchMethod);
-            
-            // Fetch and emit artwork/metadata details
-            // Get artwork URLs from provider
+
+            // Fetch artwork URLs from provider and cache for the artwork pipeline step
             ArtworkUrls artwork;
             if (!metadata.providerId.isEmpty() && !metadata.id.isEmpty()) {
                 try {
                     artwork = m_orchestrator->getArtworkWithFallback(metadata.id, systemName, metadata.providerId);
                 } catch (...) {
-                    qDebug() << "Failed to fetch artwork";
+                    qDebug() << "Failed to fetch artwork URLs";
                 }
             }
-            
+
+            // Store for stepArtwork — prefer boxFront, fall back to screenshot
+            if (!artwork.boxFront.isEmpty()) {
+                m_pendingArtworkUrl    = artwork.boxFront;
+                m_pendingArtworkGameId = gameId;
+            } else if (!artwork.screenshot.isEmpty()) {
+                m_pendingArtworkUrl    = artwork.screenshot;
+                m_pendingArtworkGameId = gameId;
+            } else {
+                m_pendingArtworkUrl    = QUrl();
+                m_pendingArtworkGameId = -1;
+            }
+
             // Emit detailed metadata for sidebar display
-            emit metadataUpdated(m_currentFileId, 
+            emit metadataUpdated(m_currentFileId,
                                 metadata.description,
                                 artwork.boxFront.toString(),
                                 artwork.systemLogo.toString(),
@@ -609,20 +628,55 @@ void ProcessingController::stepMetadata()
 void ProcessingController::stepArtwork()
 {
     qDebug() << "Downloading artwork:" << m_currentFilename;
-    
-    // Get match for this file
-    Database::MatchResult match = m_db->getMatchForFile(m_currentFileId);
-    if (match.matchId <= 0 || match.gameTitle.isEmpty()) {
-        qDebug() << "No game match, skipping artwork";
+
+    // Skip if no valid match was found during the match step
+    if (m_pendingArtworkGameId <= 0 || m_pendingArtworkUrl.isEmpty()) {
+        qDebug() << "No artwork URL available for:" << m_currentFilename << "— skipping";
         onStepComplete(true, QString());
         return;
     }
-    
-    // Artwork download requires orchestrator integration
-    // For now, this is a placeholder - artwork is handled by ArtworkController
-    // TODO: Integrate with ProviderOrchestrator to get artwork URLs
-    qDebug() << "Artwork step placeholder for:" << match.gameTitle;
-    
+
+    // Skip if the caller has not configured an output path
+    if (m_artworkBasePath.isEmpty()) {
+        qDebug() << "artworkBasePath not set — skipping artwork download";
+        onStepComplete(true, QString());
+        return;
+    }
+
+    // Build destination: <artworkBasePath>/<gameId>/boxfront.<ext>
+    const QString destDir = m_artworkBasePath + "/" + QString::number(m_pendingArtworkGameId);
+    if (!QDir().mkpath(destDir)) {
+        qWarning() << "Failed to create artwork directory:" << destDir;
+        onStepComplete(true, QString());  // Non-fatal — continue pipeline
+        return;
+    }
+
+    const QString urlPath = m_pendingArtworkUrl.path();
+    QString ext = QFileInfo(urlPath).suffix();
+    if (ext.isEmpty()) ext = "jpg";
+
+    const QString destPath = destDir + "/boxfront." + ext;
+
+    // Avoid redundant downloads
+    if (QFile::exists(destPath)) {
+        qDebug() << "Artwork already cached:" << destPath;
+        emit artworkDownloaded(m_currentFileId, m_pendingArtworkGameId, destPath);
+        onStepComplete(true, QString());
+        return;
+    }
+
+    if (m_artworkDownloader->download(m_pendingArtworkUrl, destPath)) {
+        qDebug() << "Artwork downloaded:" << destPath;
+        emit artworkDownloaded(m_currentFileId, m_pendingArtworkGameId, destPath);
+    } else {
+        qWarning() << "Artwork download failed for gameId" << m_pendingArtworkGameId
+                   << "URL:" << m_pendingArtworkUrl.toString();
+    }
+
+    // Reset pending state for next file
+    m_pendingArtworkUrl    = QUrl();
+    m_pendingArtworkGameId = -1;
+
     onStepComplete(true, QString());
 }
 

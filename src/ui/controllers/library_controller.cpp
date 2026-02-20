@@ -191,4 +191,19 @@ void LibraryController::refreshList()
     emit libraryUpdated();
 }
 
+void LibraryController::removeFile(int fileId)
+{
+    if (fileId <= 0) {
+        qWarning() << "removeFile: invalid fileId" << fileId;
+        return;
+    }
+
+    if (m_db->removeFile(fileId)) {
+        qDebug() << "Removed file record" << fileId;
+        emit libraryUpdated();
+    } else {
+        qWarning() << "Failed to remove file record" << fileId;
+    }
+}
+
 } // namespace Remus

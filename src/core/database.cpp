@@ -441,6 +441,30 @@ bool Database::deleteFilesForLibrary(int libraryId)
     return true;
 }
 
+bool Database::removeFile(int fileId)
+{
+    // Remove associated match record first to keep referential integrity
+    QSqlQuery matchQuery(m_db);
+    matchQuery.prepare("DELETE FROM matches WHERE file_id = ?");
+    matchQuery.addBindValue(fileId);
+    if (!matchQuery.exec()) {
+        logError("Failed to delete match for file " + QString::number(fileId) + ": "
+                 + matchQuery.lastError().text());
+        // Continue — the file record removal is more important
+    }
+
+    QSqlQuery fileQuery(m_db);
+    fileQuery.prepare("DELETE FROM files WHERE id = ?");
+    fileQuery.addBindValue(fileId);
+    if (!fileQuery.exec()) {
+        logError("Failed to remove file record " + QString::number(fileId) + ": "
+                 + fileQuery.lastError().text());
+        return false;
+    }
+
+    return fileQuery.numRowsAffected() > 0;
+}
+
 int Database::insertSystem(const SystemInfo &system)
 {
     if (system.name.isEmpty()) {

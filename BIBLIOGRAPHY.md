@@ -28,7 +28,18 @@ Every file in the project is catalogued here. Update this file whenever a file i
 
 | File | Purpose | LOC |
 |------|---------|-----|
-| `src/cli/main.cpp` | CLI entry point | — |
+| `src/cli/main.cpp` | CLI entry point + parser setup (decomposed to 206 LOC) | 206 |
+| `src/cli/cli_commands.h` | CliContext struct + all handler function declarations | — |
+| `src/cli/cli_helpers.h` | Shared helper function declarations | — |
+| `src/cli/cli_helpers.cpp` | selectBestHash, hashFileRecord, buildOrchestrator, getHashedFiles, persistMetadata, printFileInfo | 174 |
+| `src/cli/cli_logging.h` | Internal header — redirects Qt logging macros to logCli category | — |
+| `src/cli/cli_commands_info.cpp` | stats, info, header-info, show-art, scan, list, hash-all handlers | 211 |
+| `src/cli/cli_commands_metadata.cpp` | metadata, search handlers | 105 |
+| `src/cli/cli_commands_match.cpp` | match (pipeline), match-report handlers | 162 |
+| `src/cli/cli_commands_verify.cpp` | checksum-verify, verify handlers | 128 |
+| `src/cli/cli_commands_organize.cpp` | download-artwork, organize, generate-m3u handlers | 168 |
+| `src/cli/cli_commands_chd.cpp` | convert-chd, chd-extract, chd-verify, chd-info, extract-archive, space-report handlers | 242 |
+| `src/cli/cli_commands_export.cpp` | export, patch-tools, patch-info, patch-apply, patch-create handlers | 243 |
 | `src/cli/interactive_session.cpp` | Interactive CLI session handler | — |
 | `src/cli/interactive_session.h` | Interactive session interface | — |
 | `src/cli/terminal_image.h` | Terminal image rendering helper | — |

@@ -135,6 +135,11 @@ add_remus_test(test_hasheous_parsing HasheousParsingTest
     LIBS Qt6::Test Qt6::Core remus-metadata remus-core
 )
 
+add_remus_test(test_clrmamepro_parser ClrMameProParserTest
+    SOURCES test_clrmamepro_parser.cpp
+    LIBS Qt6::Test Qt6::Core remus-metadata
+)
+
 add_remus_test(test_filename_normalizer FilenameNormalizerTest
     SOURCES test_filename_normalizer.cpp
     LIBS Qt6::Test Qt6::Core remus-metadata

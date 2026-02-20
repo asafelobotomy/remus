@@ -627,12 +627,15 @@ Page {
                         libraryController.hashFile(fid)
                     }
                     onRemoveRequested: (fid) => {
-                        console.log("Remove file:", fid)
-                        // TODO: Implement remove
+                        libraryController.removeFile(fid)
+                        fileListModel.refresh()
+                        selectedFileId = -1
                     }
                     onMatchSelected: (matchData) => {
-                        console.log("Match selected:", JSON.stringify(matchData))
-                        // TODO: Apply match
+                        // Trigger a fresh match attempt for the file.
+                        // In a future iteration this should apply matchData.gameId directly.
+                        matchController.matchFile(fid)
+                        fileListModel.refresh()
                     }
                 }
                 
@@ -662,20 +665,22 @@ Page {
                     crc32: sidebarData.hashCRC32
                     
                     onEditMetadataRequested: (fid) => {
-                        console.log("Edit metadata:", fid)
-                        // TODO: Open metadata editor
+                        const matchInfo = metadataEditor.getMatchInfo(fid)
+                        if (matchInfo && matchInfo.gameId > 0) {
+                            StackView.view.push(Qt.resolvedUrl("GameDetailsView.qml"),
+                                                { gameId: matchInfo.gameId })
+                        }
                     }
                     onRematchRequested: (fid) => {
-                        console.log("Rematch file:", fid)
-                        // TODO: Rematch
+                        matchController.matchFile(fid)
+                        fileListModel.refresh()
                     }
                     onOpenFolderRequested: (path) => {
                         console.log("Open folder:", path)
                         Qt.openUrlExternally("file://" + path)
                     }
                     onScreenshotClicked: (path) => {
-                        console.log("Screenshot clicked:", path)
-                        // TODO: Open screenshot viewer
+                        Qt.openUrlExternally("file://" + path)
                     }
                 }
             }
@@ -734,7 +739,8 @@ Page {
                 sidebarData.matchRegion = fileListModel.data(idx, FileListModel.MatchRegionRole) || "";
                 sidebarData.matchDescription = fileListModel.data(idx, FileListModel.MatchDescriptionRole) || "";
                 sidebarData.matchRating = fileListModel.data(idx, FileListModel.MatchRatingRole) ||0;
-                sidebarData.coverArtPath = "";  // TODO: Add CoverArtPathRole to model
+                sidebarData.coverArtPath = artworkController.getArtworkPath(
+                    fileListModel.data(idx, FileListModel.IdRole) || 0, "boxart");
                 sidebarData.hashCRC32 = fileListModel.data(idx, FileListModel.Crc32Role) || "";
                 sidebarData.hashMD5 = fileListModel.data(idx, FileListModel.Md5Role) || "";
                 sidebarData.hashSHA1 = fileListModel.data(idx, FileListModel.Sha1Role) || "";

@@ -42,6 +42,12 @@ public:
     Q_INVOKABLE void removeLibrary(int libraryId);
     Q_INVOKABLE void refreshLibrary(int libraryId);
     Q_INVOKABLE void refreshList();  // Refresh the list without rescanning
+
+    /**
+     * @brief Remove a single file record from the library database.
+     * Does NOT delete the file from disk — only removes the DB entry and match.
+     */
+    Q_INVOKABLE void removeFile(int fileId);
     
     // File queries
     Q_INVOKABLE QString getFilePath(int fileId);
