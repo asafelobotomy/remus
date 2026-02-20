@@ -23,3 +23,14 @@ target_link_libraries(remus-metadata PUBLIC
 target_include_directories(remus-metadata PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}
 )
+
+if(REMUS_ENABLE_PCH)
+    target_precompile_headers(remus-metadata PRIVATE
+        <QString>
+        <QStringList>
+        <QList>
+        <QMap>
+        <QVariant>
+        <QFileInfo>
+    )
+endif()

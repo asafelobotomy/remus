@@ -88,8 +88,12 @@ OrganizeResult OrganizeEngine::organizeFile(int fileId,
             newPath = resolveCollision(newPath, m_collisionStrategy);
             result.newPath = newPath;
             qInfo() << "Collision detected, renamed to:" << newPath;
+        } else {
+            // Overwrite: remove the existing file so QFile::copy/rename can proceed.
+            if (!QFile::remove(newPath)) {
+                qWarning() << "Overwrite: failed to remove existing file:" << newPath;
+            }
         }
-        // Overwrite strategy falls through
     }
 
     // Dry-run mode: preview only

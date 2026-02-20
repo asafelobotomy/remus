@@ -44,6 +44,21 @@ cd build
 cmake ..
 ```
 
+#### Optional build acceleration flags
+```bash
+# Enable compiler cache (default ON when ccache is installed)
+cmake -DREMUS_ENABLE_CCACHE=ON ..
+
+# Enable precompiled headers (default ON)
+cmake -DREMUS_ENABLE_PCH=ON ..
+
+# Enable unity/jumbo compilation units (default OFF)
+cmake -DREMUS_ENABLE_UNITY_BUILD=ON ..
+
+# Optional: build with C++20 instead of C++17
+cmake -DREMUS_ENABLE_CXX20=ON ..
+```
+
 If Qt 6 is not found automatically, specify the path:
 ```bash
 cmake -DCMAKE_PREFIX_PATH=/usr/lib/qt6 ..

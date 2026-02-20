@@ -136,12 +136,13 @@ QVariantList ExportController::getAvailableSystems()
     
     QSqlQuery query(m_db->database());
     query.exec(R"(
-        SELECT DISTINCT g.system, COUNT(DISTINCT g.id) as game_count
+        SELECT DISTINCT s.name AS system, COUNT(DISTINCT g.id) as game_count
         FROM games g
+        JOIN systems s ON g.system_id = s.id
         JOIN matches m ON g.id = m.game_id
         WHERE m.confidence >= 60
-        GROUP BY g.system
-        ORDER BY g.system
+        GROUP BY s.name
+        ORDER BY s.name
     )");
     
     while (query.next()) {
@@ -603,10 +604,13 @@ bool ExportController::exportToCSV(const QString &outputPath,
     emit exportStarted("CSV");
     
     QString sql = R"(
-        SELECT g.title, g.system, g.region, g.year, g.publisher, g.developer,
-               g.genre, f.filename, f.filepath, f.crc32, f.md5, f.sha1,
-               m.confidence, m.match_type
+        SELECT g.title, s.name AS system, g.region, g.release_date AS year,
+               g.publisher, g.developer,
+               g.genres AS genre, f.filename, f.current_path AS filepath,
+               f.crc32, f.md5, f.sha1,
+               m.confidence, m.match_method AS match_type
         FROM games g
+        JOIN systems s ON g.system_id = s.id
         JOIN matches m ON g.id = m.game_id
         JOIN files f ON m.file_id = f.id
         WHERE m.confidence >= 60
@@ -617,10 +621,10 @@ bool ExportController::exportToCSV(const QString &outputPath,
         for (int i = 0; i < systems.size(); ++i) {
             placeholders.append("?");
         }
-        sql += " AND g.system IN (" + placeholders.join(",") + ")";
+        sql += " AND s.name IN (" + placeholders.join(",") + ")";
     }
     
-    sql += " ORDER BY g.system, g.title";
+    sql += " ORDER BY s.name, g.title";
     
     QSqlQuery query(m_db->database());
     query.prepare(sql);

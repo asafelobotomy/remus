@@ -13,5 +13,17 @@ target_include_directories(remus-services PUBLIC
 target_link_libraries(remus-services PUBLIC
     remus-core
     Qt6::Core
+    Qt6::Concurrent
     Qt6::Sql
 )
+
+if(REMUS_ENABLE_PCH)
+    target_precompile_headers(remus-services PRIVATE
+        <QString>
+        <QStringList>
+        <QList>
+        <QMap>
+        <QVariant>
+        <QFileInfo>
+    )
+endif()

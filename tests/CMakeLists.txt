@@ -274,7 +274,49 @@ add_remus_test(test_hash_service HashServiceTest
     LIBS Qt6::Test Qt6::Sql remus-services remus-core
 )
 
-# Display test target
+# ── New coverage tests (2026-02-20) ───────────────────────────────────────
+
+add_remus_test(test_database DatabaseTest
+    SOURCES test_database.cpp
+    LIBS Qt6::Test Qt6::Core Qt6::Sql remus-core
+)
+
+add_remus_test(test_verification_engine VerificationEngineTest
+    SOURCES test_verification_engine.cpp
+    LIBS Qt6::Test Qt6::Core Qt6::Sql remus-core
+)
+
+add_remus_test(test_organize_engine OrganizeEngineTest
+    SOURCES test_organize_engine.cpp
+    LIBS Qt6::Test Qt6::Core Qt6::Sql remus-core remus-metadata
+)
+
+add_remus_test(test_archive_creator ArchiveCreatorTest
+    SOURCES test_archive_creator.cpp
+    LIBS Qt6::Test Qt6::Core remus-core
+)
+
+add_remus_test(test_m3u_generator M3UGeneratorTest
+    SOURCES test_m3u_generator.cpp
+    LIBS Qt6::Test Qt6::Core Qt6::Sql remus-core
+)
+
+add_remus_test(test_cli_helpers CliHelpersTest
+    SOURCES test_cli_helpers.cpp ../src/cli/cli_helpers.cpp
+    LIBS Qt6::Test Qt6::Core Qt6::Sql Qt6::Network remus-core remus-metadata remus-constants
+)
+
+add_remus_test(test_processing_controller ProcessingControllerTest
+    SOURCES test_processing_controller.cpp
+    LIBS Qt6::Test Qt6::Core Qt6::Sql Qt6::Network remus-ui remus-core remus-metadata
+)
+
+add_remus_test(test_export_controller ExportControllerTest
+    SOURCES test_export_controller.cpp
+    LIBS Qt6::Test Qt6::Core Qt6::Sql Qt6::Network remus-ui remus-core
+)
+
+
 add_custom_target(run_tests
     COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure
     DEPENDS ${REMUS_TEST_TARGETS}

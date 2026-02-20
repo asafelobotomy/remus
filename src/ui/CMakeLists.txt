@@ -29,6 +29,17 @@ target_include_directories(remus-ui PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
+if(REMUS_ENABLE_PCH)
+    target_precompile_headers(remus-ui PRIVATE
+        <QString>
+        <QStringList>
+        <QList>
+        <QMap>
+        <QVariant>
+        <QFileInfo>
+    )
+endif()
+
 # GUI executable
 qt_add_executable(remus-gui
     main.cpp

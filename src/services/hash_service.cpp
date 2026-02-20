@@ -5,9 +5,24 @@
 #include "../core/archive_extractor.h"
 
 #include <QFileInfo>
+#include <QThread>
+#include <QThreadPool>
 #include <QTemporaryDir>
+#include <QtConcurrent/QtConcurrentMap>
 
 namespace Remus {
+
+namespace {
+
+struct HashTaskResult {
+    int fileId = 0;
+    QString filename;
+    QString currentPath;
+    HashResult result;
+    bool skipped = false;
+};
+
+} // namespace
 
 HashService::HashService()
     : m_hasher(new Hasher())
@@ -28,21 +43,65 @@ int HashService::hashAll(Database *db,
 
     QList<FileRecord> files = db->getFilesWithoutHashes();
     const int total = files.size();
+    if (progressCb) progressCb(0, total, QString());
+
+    if (total == 0) {
+        if (logCb) logCb(QString("Hashing complete: 0/0"));
+        return 0;
+    }
+
+    if (cancelled && cancelled->load()) {
+        if (logCb) logCb(QString("Hashing cancelled: 0/%1").arg(total));
+        return 0;
+    }
+
+    const int idealThreads = QThread::idealThreadCount();
+    const int maxThreads = qMax(1, qMin(idealThreads > 0 ? idealThreads : 1, 8));
+
+    QThreadPool *pool = QThreadPool::globalInstance();
+    const int originalMaxThreads = pool->maxThreadCount();
+    pool->setMaxThreadCount(maxThreads);
+
+    QList<HashTaskResult> taskResults = QtConcurrent::blockingMapped(files,
+        [cancelled](const FileRecord &file) {
+            HashTaskResult task;
+            task.fileId = file.id;
+            task.filename = file.filename;
+            task.currentPath = file.currentPath;
+
+            if (cancelled && cancelled->load()) {
+                task.skipped = true;
+                return task;
+            }
+
+            HashService worker;
+            task.result = worker.hashRecord(file);
+            return task;
+        });
+
+    pool->setMaxThreadCount(originalMaxThreads);
+
     int hashed = 0;
+    int done = 0;
+    for (const HashTaskResult &task : taskResults) {
+        if (task.skipped) {
+            done++;
+            if (progressCb) progressCb(done, total, task.currentPath);
+            continue;
+        }
 
-    for (int i = 0; i < total; ++i) {
-        if (cancelled && cancelled->load()) break;
-
-        const FileRecord &file = files[i];
-        if (progressCb) progressCb(i, total, file.currentPath);
-
-        HashResult result = hashRecord(file);
-        if (result.success) {
-            db->updateFileHashes(file.id, result.crc32, result.md5, result.sha1);
+        if (task.result.success) {
+            db->updateFileHashes(task.fileId,
+                                 task.result.crc32,
+                                 task.result.md5,
+                                 task.result.sha1);
             hashed++;
         } else if (logCb) {
-            logCb(QString("Hash failed for %1: %2").arg(file.filename, result.error));
+            logCb(QString("Hash failed for %1: %2").arg(task.filename, task.result.error));
         }
+
+        done++;
+        if (progressCb) progressCb(done, total, task.currentPath);
     }
 
     if (progressCb) progressCb(total, total, {});
