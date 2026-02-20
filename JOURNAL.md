@@ -57,3 +57,68 @@ Architectural decisions and context are recorded here in ADR style.
 **Result**: Build: 0 errors ✅ · Tests: 39/39 passing ✅ · Type errors: 0 ✅ · LOC (src): 43,851 total · main.cpp: 1711 → 206 lines.
 
 [session] Full health review complete — see findings in report above.
+
+---
+
+## 2026-02-20 — Coverage gap analysis + 8 new test suites
+
+**Context**: User requested README housekeeping then test coverage review. Analysis identified 8 source files with zero test coverage. All 8 were created and fixed in one session.
+
+**README changes**: Fixed badge URL (`user/remus` → `asafelobotomy/remus`), version (`0.9.0` → `0.10.1`), C++ standard (`C++17/20` → `C++17`), added TUI entry in Tech Stack, updated Quick Start to mention CLI/GUI/TUI.
+
+**New test suites** (all registered in `tests/CMakeLists.txt`):
+1. `test_database.cpp` — 14 tests for the 1190-line `Database` CRUD layer (previously zero coverage).
+2. `test_verification_engine.cpp` — 9 tests for DAT import, hash-based ROM verification, and missing-game reporting.
+3. `test_organize_engine.cpp` — 10 tests for file move/copy/dry-run/collision handling and undo.
+4. `test_archive_creator.cpp` — 5 tests for ZIP compression via fake `runProcess` override.
+5. `test_m3u_generator.cpp` — 9 tests for multi-disc detection and M3U playlist generation.
+6. `test_cli_helpers.cpp` — 8 tests for `selectBestHash`, `getHashedFiles`, `persistMetadata`, `hashFileRecord`, `printFileInfo` (source compiled directly).
+7. `test_processing_controller.cpp` — 9 tests for state machine, signal dispatch, stats, and full pipeline integration.
+8. `test_export_controller.cpp` — 10 tests for JSON, CSV, RetroArch, EmulationStation, LaunchBox export; `getAvailableSystems`.
+
+**Source bugs uncovered and fixed** (tests exposed real issues):
+- **[W7] `organize_engine.cpp`** — `CollisionStrategy::Overwrite` + `FileOperation::Copy` silently failed because `QFile::copy()` refuses to overwrite an existing destination. Added `QFile::remove(newPath)` in the Overwrite collision branch before executing the copy.
+- **[W7] `export_controller.cpp` `getAvailableSystems()`** — SQL used non-existent column `g.system`; games table uses `system_id` FK. Fixed to `JOIN systems s ON g.system_id = s.id` with `s.name AS system`.
+- **[W7] `export_controller.cpp` `exportToCSV()`** — SQL used four non-existent columns: `g.system` → `s.name`, `g.year` → `g.release_date`, `g.genre` → `g.genres`, `f.filepath` → `f.current_path`, `m.match_type` → `m.match_method`. Fixed all column names and added the `systems` JOIN. (`exportToJSON` had the same wrong columns but silently ignored the query failure — left to a future cleanup pass.)
+
+**Key findings during test writing**:
+- `Database::insertFile()` does NOT persist `hash_calculated` — must call `updateFileHashes()` separately.
+- `Database::getExistingFiles()` filters by `QFileInfo::exists()` — tests using phantom paths need real temp files.
+- Qt AUTOMOC confuses raw string literals with embedded `"` — use concatenated escaped strings in test fixture data.
+- MOC is confused by complex inline method bodies inside `private:` class sections — move helpers to file-scope `static` functions.
+
+**Result**: Build: 0 errors ✅ · Tests: 47/47 passing ✅ · Type errors: 0 ✅ · LOC (src): 43,859 total.
+
+---
+
+## 2026-02-20 — Build stack optimization + hashing parallelization
+
+**Context**: User requested implementation of the recommended stack/build improvements without a language/runtime rewrite.
+
+**Changes implemented**:
+1. **Build toggles in root CMake** (`CMakeLists.txt`):
+   - `REMUS_ENABLE_CCACHE` (default ON): auto-detects `ccache` and sets `CMAKE_CXX_COMPILER_LAUNCHER`.
+   - `REMUS_ENABLE_UNITY_BUILD` (default OFF): enables CMake unity/jumbo builds.
+   - `REMUS_ENABLE_PCH` (default ON): enables precompiled headers for key targets.
+   - `REMUS_ENABLE_CXX20` (default OFF): optional C++20 build mode while keeping C++17 default.
+2. **Qt Concurrent integration**:
+   - Added `Concurrent` to `find_package(Qt6 REQUIRED COMPONENTS ...)`.
+   - Linked `Qt6::Concurrent` in `src/services/CMakeLists.txt`.
+3. **PCH rollout**:
+   - Added `target_precompile_headers(...)` behind `REMUS_ENABLE_PCH` for `remus-core`, `remus-metadata`, `remus-services`, `remus-ui`, and `remus-cli`.
+4. **Hash pipeline performance** (`src/services/hash_service.cpp`):
+   - Replaced sequential `hashAll()` loop with `QtConcurrent::blockingMapped` worker fan-out.
+   - Bounded concurrency using global threadpool (`min(idealThreadCount, 8)`).
+   - Preserved DB writes in a single sequential pass after hashing tasks complete.
+   - Preserved cancellation checks, progress callbacks, and log callbacks.
+
+**Docs updated**:
+- `docs/setup/BUILD.md`: optional build acceleration flags and C++20 toggle.
+- `README.md`: requirements now mention optional C++20 mode.
+
+**Validation**:
+- Build: successful ✅
+- Focused test: `HashServiceTest` ✅
+- Full suite: **47/47 passing** ✅
+- Type errors: 0 ✅
+- LOC (src): 43,918

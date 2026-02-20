@@ -1,8 +1,8 @@
 # Remus - Retro Game Library Manager
 
-[![CI](https://github.com/user/remus/actions/workflows/ci.yml/badge.svg)](https://github.com/user/remus/actions/workflows/ci.yml)
-[![AppImage](https://github.com/user/remus/actions/workflows/appimage.yml/badge.svg)](https://github.com/user/remus/actions/workflows/appimage.yml)
-[![Version](https://img.shields.io/badge/version-0.9.0-blue.svg)](CHANGELOG.md)
+[![CI](https://github.com/asafelobotomy/remus/actions/workflows/ci.yml/badge.svg)](https://github.com/asafelobotomy/remus/actions/workflows/ci.yml)
+[![AppImage](https://github.com/asafelobotomy/remus/actions/workflows/appimage.yml/badge.svg)](https://github.com/asafelobotomy/remus/actions/workflows/appimage.yml)
+[![Version](https://img.shields.io/badge/version-0.10.1-blue.svg)](CHANGELOG.md)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
 A desktop application for scanning, organizing, and managing retro game ROM libraries with automatic metadata fetching and smart file organization.
@@ -40,7 +40,7 @@ A desktop application for scanning, organizing, and managing retro game ROM libr
 
 ## Project Status
 
-**Current Version:** 0.9.0  
+**Current Version:** 0.10.1  
 **Milestone:** M10.1 - Offline + Optional Online Metadata ✅ **COMPLETE**
 
 | Milestone | Description | Status |
@@ -82,7 +82,7 @@ A desktop application for scanning, organizing, and managing retro game ROM libr
 
 ## Quick Start
 
-**Both CLI and GUI are fully functional!** See [docs/setup/BUILD.md](docs/setup/BUILD.md) for complete build instructions and usage examples.
+**CLI, GUI, and TUI are all fully functional!** See [docs/setup/BUILD.md](docs/setup/BUILD.md) for complete build instructions and usage examples.
 
 ```bash
 # Build
@@ -115,12 +115,13 @@ make -j$(nproc)
 ./remus-cli --organize ~/roms/psx --template "{title} ({region}) (Disc {disc}){ext}"
 ```
 
-**Requirements:** Qt 6, CMake 3.16+, C++17 compiler, zlib, libarchive
+**Requirements:** Qt 6, CMake 3.16+, C++17 compiler (optional C++20 mode supported), zlib, libarchive
 
 ## Tech Stack
 
 - **UI:** Qt 6 (QML + QtQuick Controls)
-- **Core:** C++17/20
+- **TUI:** Qt 6 (terminal UI — `remus-tui`)
+- **Core:** C++17
 - **Database:** SQLite
 - **Networking:** QtNetwork
 - **Packaging:** AppImage (go-appimage/appimagetool)
@@ -136,8 +137,8 @@ mkdir build && cd build
 cmake ..
 make -j$(nproc)
 ./src/ui/remus-gui  # GUI application
-# or
 ./remus-cli --help  # CLI application
+./remus-tui         # Terminal UI
 ```
 
 ## Contributing

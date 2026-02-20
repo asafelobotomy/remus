@@ -36,3 +36,14 @@ target_link_libraries(remus-core PUBLIC
 target_include_directories(remus-core PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}
 )
+
+if(REMUS_ENABLE_PCH)
+    target_precompile_headers(remus-core PRIVATE
+        <QString>
+        <QStringList>
+        <QList>
+        <QMap>
+        <QVariant>
+        <QFileInfo>
+    )
+endif()
