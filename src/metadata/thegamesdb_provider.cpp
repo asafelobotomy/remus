@@ -290,13 +290,7 @@ GameMetadata TheGamesDBProvider::parseGameJson(const QJsonObject &game)
     return metadata;
 }
 
-QString TheGamesDBProvider::mapSystemToTheGamesDB(const QString &system)
-{
-    // DEPRECATED: Use SystemResolver::providerName() instead
-    // Kept for backward compatibility
-    int systemId = SystemResolver::systemIdByName(system);
-    return SystemResolver::providerName(systemId, Constants::Providers::THEGAMESDB);
-}
+
 
 bool TheGamesDBProvider::isAvailable()
 {

@@ -57,6 +57,14 @@ add_subdirectory(src/ui)
 add_executable(remus-cli
     src/cli/main.cpp
     src/cli/interactive_session.cpp
+    src/cli/cli_helpers.cpp
+    src/cli/cli_commands_info.cpp
+    src/cli/cli_commands_metadata.cpp
+    src/cli/cli_commands_match.cpp
+    src/cli/cli_commands_verify.cpp
+    src/cli/cli_commands_organize.cpp
+    src/cli/cli_commands_chd.cpp
+    src/cli/cli_commands_export.cpp
 )
 
 find_package(Curses REQUIRED)

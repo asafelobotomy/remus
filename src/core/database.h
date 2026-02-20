@@ -112,6 +112,13 @@ public:
     bool deleteFilesForLibrary(int libraryId);
 
     /**
+     * @brief Remove a single file record and its associated match/game data
+     * @param fileId File ID to remove
+     * @return True if the record was deleted
+     */
+    bool removeFile(int fileId);
+
+    /**
      * @brief Insert system info
      * @param system System information
      * @return System ID
