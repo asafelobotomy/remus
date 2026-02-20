@@ -59,6 +59,26 @@ cmake -DREMUS_ENABLE_UNITY_BUILD=ON ..
 cmake -DREMUS_ENABLE_CXX20=ON ..
 ```
 
+#### Recommended build profiles (benchmark-backed)
+
+**Profile A — Fast clean builds (CI/rebuild-heavy sessions)**
+```bash
+cmake -DREMUS_ENABLE_CCACHE=OFF \
+  -DREMUS_ENABLE_PCH=ON \
+  -DREMUS_ENABLE_UNITY_BUILD=ON \
+  ..
+```
+Use when repeatedly doing full clean builds; this profile gave the best clean-build speed in local benchmarks.
+
+**Profile B — Fast iterative rebuilds across fresh build directories**
+```bash
+cmake -DREMUS_ENABLE_CCACHE=ON \
+  -DREMUS_ENABLE_PCH=OFF \
+  -DREMUS_ENABLE_UNITY_BUILD=OFF \
+  ..
+```
+Use when you create multiple build directories and recompile similar code. In this environment, `ccache` produced significant warm-build gains with PCH disabled.
+
 If Qt 6 is not found automatically, specify the path:
 ```bash
 cmake -DCMAKE_PREFIX_PATH=/usr/lib/qt6 ..
