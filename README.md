@@ -115,7 +115,36 @@ make -j$(nproc)
 ./remus-cli --organize ~/roms/psx --template "{title} ({region}) (Disc {disc}){ext}"
 ```
 
+### TUI Setup & Run
+
+The terminal UI is optional and requires notcurses at build time.
+
+```bash
+# Arch
+sudo pacman -S notcurses
+
+# Debian/Ubuntu
+sudo apt install libnotcurses-dev
+
+# Fedora
+sudo dnf install notcurses-devel
+
+# Configure with TUI enabled
+mkdir -p build && cd build
+cmake -DREMUS_BUILD_TUI=ON ..
+make -j$(nproc)
+
+# Run the terminal UI
+./src/tui/remus-tui
+```
+
+If you configure without `-DREMUS_BUILD_TUI=ON`, the `remus-tui` target is not built.
+
 **Requirements:** Qt 6, CMake 3.16+, C++17 compiler (optional C++20 mode supported), zlib, libarchive
+
+**Build performance tip:** See [docs/setup/BUILD.md](docs/setup/BUILD.md) for benchmark-backed build profiles:
+- **Fast clean rebuilds:** `PCH=ON` + `UNITY=ON`
+- **Fast iterative rebuilds across fresh build dirs:** `CCACHE=ON` + `PCH=OFF`
 
 ## Tech Stack
 
@@ -138,7 +167,8 @@ cmake ..
 make -j$(nproc)
 ./src/ui/remus-gui  # GUI application
 ./remus-cli --help  # CLI application
-./remus-tui         # Terminal UI
+# Optional TUI (requires -DREMUS_BUILD_TUI=ON at configure time)
+./src/tui/remus-tui
 ```
 
 ## Contributing
