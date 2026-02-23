@@ -29,8 +29,7 @@ ScreenScraperProvider::ScreenScraperProvider(QObject *parent)
     , m_networkManager(new QNetworkAccessManager(this))
     , m_rateLimiter(new RateLimiter(this))
 {
-    // Default rate limit: 1 request per 2 seconds
-    m_rateLimiter->setInterval(REQUEST_DELAY_MS);
+    m_rateLimiter->setInterval(Constants::Network::SCREENSCRAPER_RATE_LIMIT_MS);
 }
 
 void ScreenScraperProvider::setCredentials(const QString &username, const QString &password)
@@ -229,14 +228,14 @@ ScreenScraperProvider::ApiResponse ScreenScraperProvider::makeRequest(const QUrl
     ApiResponse response;
 
     QNetworkRequest request(url);
-    request.setHeader(QNetworkRequest::UserAgentHeader, "Remus/0.1.0");
+    request.setHeader(QNetworkRequest::UserAgentHeader, Constants::API::USER_AGENT);
 
     QNetworkReply *reply = m_networkManager->get(request);
     
     QEventLoop loop;
     QTimer timeout;
     timeout.setSingleShot(true);
-    timeout.setInterval(30000);  // 30 second timeout
+    timeout.setInterval(Constants::Network::SCREENSCRAPER_TIMEOUT_MS);
 
     connect(reply, &QNetworkReply::finished, &loop, &QEventLoop::quit);
     connect(&timeout, &QTimer::timeout, &loop, &QEventLoop::quit);

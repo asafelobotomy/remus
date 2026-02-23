@@ -2,6 +2,7 @@
 #include "launch_screen.h"
 
 #include "../core/database.h"
+#include "../core/constants/constants.h"
 
 #include <QCoreApplication>
 #include <QStandardPaths>
@@ -31,7 +32,7 @@ TuiApp::TuiApp()
         vf.close();
     }
     if (m_version.empty())
-        m_version = "0.10.1";
+        m_version = Remus::Constants::APP_VERSION;
 }
 
 TuiApp::~TuiApp()

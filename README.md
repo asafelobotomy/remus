@@ -134,8 +134,12 @@ mkdir -p build && cd build
 cmake -DREMUS_BUILD_TUI=ON ..
 make -j$(nproc)
 
-# Run the terminal UI
+# Run the terminal UI (from inside build/)
 ./src/tui/remus-tui
+
+# Or from repo root
+cd ..
+./build/src/tui/remus-tui
 ```
 
 If you configure without `-DREMUS_BUILD_TUI=ON`, the `remus-tui` target is not built.

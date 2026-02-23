@@ -22,7 +22,7 @@ int handleArtworkCommand(CliContext &ctx)
     qInfo() << "=== Download Artwork ===";
 
     if (artworkDirStr.isEmpty())
-        artworkDirStr = QDir::homePath() + "/.local/share/Remus/artwork/";
+        artworkDirStr = QDir::homePath() + "/.local/share/Remus/" + Constants::Settings::Files::ARTWORK_SUBDIR + "/";
 
     qInfo() << "Artwork directory:" << artworkDirStr;
     qInfo() << "Types to download:" << artworkTypes;

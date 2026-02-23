@@ -877,7 +877,7 @@ InteractiveResult InteractiveSession::run()
     InteractiveResult result;
     SessionState state = loadState();
 
-    std::string dbPath = Constants::DATABASE_FILENAME;
+    std::string dbPath = Constants::DatabaseSchema::DATABASE_FILENAME;
 
     const std::vector<MenuItem> mainMenu = {
         {"Pipeline: scan \xE2\x86\x92 hash \xE2\x86\x92 match \xE2\x86\x92 organize",

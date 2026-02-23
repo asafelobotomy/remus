@@ -89,7 +89,7 @@ This header-only library provides all application-wide constants in a single, ty
 
 ### constants.h
 - **Main Include**: Includes all module headers
-- **Version Tracking**: Constants library version number (currently v3)
+- **Version Tracking**: Constants library version number (currently v5)
 - **App Metadata**: Application version, milestone tracking
 
 ## Usage Examples
@@ -187,7 +187,7 @@ using namespace Remus::Constants;
 
 // Connect to ScreenScraper API
 QUrl apiUrl(QString(API::SCREENSCRAPER_BASE_URL) + 
-            QString(API::SCREENSCRAPER_GETSEARCHRES_ENDPOINT));
+            QString(API::SCREENSCRAPER_JEURECHERCHE_ENDPOINT));
 
 // Apply timeouts per provider
 int timeout = Network::SCREENSCRAPER_TIMEOUT_MS;  // 20 seconds

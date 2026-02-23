@@ -6,6 +6,7 @@
 #include <QTextStream>
 #include <QDebug>
 #include "logging_categories.h"
+#include "constants/settings.h"
 
 #undef qDebug
 #undef qInfo
@@ -147,7 +148,7 @@ bool Scanner::isInExcludedDirectory(const QString &dirPath) const
     // Walk up the directory tree looking for .remusdir
     QDir checkDir(absPath);
     while (!checkDir.isRoot()) {
-        QString markerPath = checkDir.absolutePath() + "/.remusdir";
+        QString markerPath = checkDir.absolutePath() + "/" + Constants::Settings::Files::MARKER_SKIP_SCAN;
         if (QFile::exists(markerPath)) {
             excludedDirs.insert(absPath);  // Cache this path as excluded
             return true;

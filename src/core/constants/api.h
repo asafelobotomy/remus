@@ -10,6 +10,20 @@
 
 namespace Remus {
 namespace Constants {
+
+/**
+ * @brief Application version string
+ *
+ * Single source of truth for the version number.
+ * Format: MAJOR.MINOR.PATCH — updated per milestone completions.
+ */
+inline constexpr const char* APP_VERSION = "0.10.1";
+
+/**
+ * @brief Milestone tracking
+ */
+inline constexpr const char* CURRENT_MILESTONE = "M10";
+
 namespace API {
 
 // ============================================================================
@@ -28,7 +42,8 @@ inline constexpr const char* SCREENSCRAPER_JEUINFOS_ENDPOINT = "/jeuInfos.php";
 /// ScreenScraper game name search endpoint
 inline constexpr const char* SCREENSCRAPER_JEURECHERCHE_ENDPOINT = "/jeuRecherche.php";
 
-/// ScreenScraper game details endpoint (by game ID)
+/// ScreenScraper game details endpoint — same base as JEUINFOS
+/// (both use jeuInfos.php; differs only in query params: gameid vs hash)
 inline constexpr const char* SCREENSCRAPER_GETGAME_ENDPOINT = "/jeuInfos.php";
 
 /// ScreenScraper screenshot endpoint
@@ -56,10 +71,13 @@ inline constexpr const char* THEGAMESDB_GAMES_ENDPOINT = "/Games/ByGameName";
 /// TheGamesDB platforms endpoint (system info)
 inline constexpr const char* THEGAMESDB_PLATFORMS_ENDPOINT = "/Platforms";
 
-/// TheGamesDB game details endpoint
-inline constexpr const char* THEGAMESDB_GAMEINFO_ENDPOINT = "/Games";
+/// TheGamesDB game details endpoint (by ID)
+inline constexpr const char* THEGAMESDB_GAMEINFO_ENDPOINT = "/Games/ByGameID";
 
-/// TheGamesDB image endpoint (artwork base)
+/// TheGamesDB images endpoint (game artwork)
+inline constexpr const char* THEGAMESDB_IMAGES_ENDPOINT = "/Games/Images";
+
+/// TheGamesDB image CDN base URL (artwork base)
 inline constexpr const char* THEGAMESDB_IMAGES_BASE = "https://cdn.thegamesdb.net/images";
 
 // ============================================================================
@@ -84,6 +102,22 @@ inline constexpr const char* IGDB_SCREENSHOTS_ENDPOINT = "/screenshots";
 /// IGDB image CDN base URL
 inline constexpr const char* IGDB_CDN_BASE = "https://images.igdb.com/igdb/image/upload";
 
+/// IGDB Twitch OAuth2 token endpoint
+inline constexpr const char* IGDB_AUTH_URL = "https://id.twitch.tv/oauth2/token";
+
+// IGDB image size tokens (used in CDN URL construction)
+/// Thumbnail image size token (~90px)
+inline constexpr const char* IGDB_IMG_THUMB = "t_thumb";
+/// 1080p high-resolution image size token
+inline constexpr const char* IGDB_IMG_1080P = "t_1080p";
+/// Cover big image size token (~264px wide)
+inline constexpr const char* IGDB_IMG_COVER_BIG = "t_cover_big";
+/// Screenshot big image size token (~889px wide)
+inline constexpr const char* IGDB_IMG_SCREENSHOT_BIG = "t_screenshot_big";
+
+/// IGDB rating divisor: IGDB stores ratings on a 0–100 scale; divide by this to get 0–10
+inline constexpr double IGDB_RATING_SCALE = 10.0;
+
 // ============================================================================
 // Hasheous API (Free hash matching)
 // ============================================================================
@@ -99,6 +133,9 @@ inline constexpr const char* HASHEOUS_PROXY_IGDB_GAME = "/api/v1/MetadataProxy/I
 
 /// Hasheous TheGamesDB metadata proxy endpoint
 inline constexpr const char* HASHEOUS_PROXY_TGDB_GAME = "/api/v1/MetadataProxy/TheGamesDB/Game";
+
+/// Hasheous IGDB company metadata proxy endpoint
+inline constexpr const char* HASHEOUS_PROXY_IGDB_COMPANY = "/api/v1/MetadataProxy/IGDB/Company";
 
 /// Hasheous health check endpoint
 inline constexpr const char* HASHEOUS_HEALTHCHECK_ENDPOINT = "/api/v1/HealthCheck";
@@ -117,8 +154,8 @@ inline constexpr const char* REDUMP_DAT_BASE = "https://redump.org/datfiles";
 // API Query Parameters
 // ============================================================================
 
-/// HTTP User-Agent string for API requests
-inline const QString USER_AGENT = QStringLiteral("Remus/0.10.1 (ROM Library Manager)");
+/// HTTP User-Agent string for API requests (derived from Constants::APP_VERSION)
+inline const QString USER_AGENT = QString("Remus/%1 (ROM Library Manager)").arg(APP_VERSION);
 
 /// IGDB API Client User-Agent header name
 inline constexpr const char* IGDB_CLIENT_ID_HEADER = "Client-ID";

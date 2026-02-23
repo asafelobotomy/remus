@@ -122,3 +122,25 @@ Architectural decisions and context are recorded here in ADR style.
 - Full suite: **47/47 passing** ✅
 - Type errors: 0 ✅
 - LOC (src): 43,918
+
+---
+
+## 2026-02-21 — Constants audit round 2 (hardcoded paths, duplicate definitions, missing namespaces)
+
+**Context**: Second structured audit of the codebase for hardcoded values that should use the constants library. User approved all 10 findings for immediate fix.
+
+**Changes implemented** (19 files, 0 new files):
+1. **`settings.h`**: Added `namespace Files { MARKER_PROCESSED, MARKER_SKIP_SCAN, ARTWORK_SUBDIR }` — replaces `.remusmd`, `.remusdir`, and `artwork` string literals scattered across 5 implementation files.
+2. **`api.h`**: Added `IGDB_AUTH_URL`, `IGDB_IMG_THUMB`, `IGDB_IMG_1080P`, `IGDB_IMG_COVER_BIG`, `IGDB_IMG_SCREENSHOT_BIG`, and `IGDB_RATING_SCALE` — eliminates inline string tokens and magic divisor `/ 10.0` duplicated across two provider files.
+3. **`providers.h`**: Added `namespace ExternalId { IGDB, THEGAMESDB, RETROACHIEVEMENTS, DAT_SOURCES }` — replaces map key strings in `hasheous_provider.cpp`.
+4. **`constants.h`**: Removed duplicate `DATABASE_FILENAME = "remus.db"` (canonical definition lives in `database_schema.h`). Updated 3 callers (`ui/main.cpp`, `cli/main.cpp`, `cli/interactive_session.cpp`) to use `Constants::DatabaseSchema::DATABASE_FILENAME`.
+5. **Provider headers** (`screenscraper_provider.h`, `thegamesdb_provider.h`, `igdb_provider.h`): Added `providers.h` includes; `name()` methods now return `Constants::Providers::DISPLAY_*` instead of string literals.
+6. **`igdb_provider.h`**: Removed local `REQUEST_DELAY_MS = 250` (duplicating `Constants::Network::IGDB_RATE_LIMIT_MS`).
+7. **`igdb_provider.cpp`**: Used `IGDB_RATE_LIMIT_MS`, `IGDB_AUTH_URL`, image token constants, and `IGDB_RATING_SCALE`. Added `QTimer` timeout guard to `authenticate()` (previously a bare `QEventLoop` with no timeout). W2 (Waiting).
+8. **`hasheous_provider.cpp`**: Added `api.h` include; used `ExternalId::*` constants, IGDB image tokens, and `IGDB_RATING_SCALE`.
+9. **File marker consumers** (`scanner.cpp`, `processing_controller.cpp`, `file_list_model.cpp`): Added `settings.h` includes; replaced `.remusmd` / `.remusdir` string literals with `Constants::Settings::Files::MARKER_PROCESSED` / `MARKER_SKIP_SCAN`.
+10. **Artwork path consumers** (`artwork_controller.cpp`, `cli_commands_organize.cpp`): Replaced `"/artwork"` literal with `Settings::Files::ARTWORK_SUBDIR`.
+11. **`export_controller.cpp`**: Added `providers.h` include; replaced `provider.contains("screenscraper")` with `Constants::Providers::SCREENSCRAPER`.
+12. **`dat_parser.cpp`**: Added file-local `namespace DatXml { DATAFILE, HEADER, GAME, MACHINE }` using `QLatin1StringView`; replaced 7 `QString("...")` XML element literals throughout the parser. W6 (scattered literals).
+
+**Validation**: Build: 0 errors ✅ · Tests: **57/57 passing** ✅ · LOC (src): 44,020 (+69 from new constants).
