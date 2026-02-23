@@ -71,7 +71,7 @@ int main(int argc, char *argv[])
 
     // Core options
     parser.addOption({{"s", "scan"}, "Scan a directory for ROMs", "path"});
-    parser.addOption({{"d", "db"}, "Database file path", "database", Constants::DATABASE_FILENAME});
+    parser.addOption({{"d", "db"}, "Database file path", "database", Constants::DatabaseSchema::DATABASE_FILENAME});
     parser.addOption(QCommandLineOption("hash", "Calculate hashes for scanned files"));
     parser.addOption(QCommandLineOption("hash-all", "Calculate hashes for all files in database that lack hashes"));
     parser.addOption({{"l", "list"}, "List scanned files by system"});

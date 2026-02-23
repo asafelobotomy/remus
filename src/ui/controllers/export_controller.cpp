@@ -1,6 +1,7 @@
 #include "export_controller.h"
 #include "../../core/system_resolver.h"
 #include "../../core/constants/systems.h"
+#include "../../core/constants/providers.h"
 
 #include <QDir>
 #include <QFile>
@@ -113,7 +114,7 @@ static QUrl getArtworkUrlForGame(QSqlDatabase &db, int gameId)
             game = root;
         }
 
-        if (provider.contains("screenscraper")) {
+        if (provider.contains(Constants::Providers::SCREENSCRAPER)) {
             QUrl url = extractScreenScraperBoxArt(game);
             if (url.isValid()) {
                 return url;

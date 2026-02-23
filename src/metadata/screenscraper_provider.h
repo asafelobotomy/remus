@@ -4,6 +4,7 @@
 #include "metadata_provider.h"
 #include "rate_limiter.h"
 #include "../core/constants/hash_algorithms.h"
+#include "../core/constants/providers.h"
 #include <QNetworkAccessManager>
 
 namespace Remus {
@@ -22,7 +23,7 @@ class ScreenScraperProvider : public MetadataProvider {
 public:
     explicit ScreenScraperProvider(QObject *parent = nullptr);
 
-    QString name() const override { return "ScreenScraper"; }
+    QString name() const override { return Constants::Providers::DISPLAY_SCREENSCRAPER; }
     bool requiresAuth() const override { return true; }
 
     void setCredentials(const QString &username, const QString &password) override;
@@ -65,7 +66,6 @@ private:
     QString m_softwareName = "Remus";
     
     static constexpr int MAX_REQUESTS_PER_DAY = 10000;  // Unregistered: 10k/day
-    static constexpr int REQUEST_DELAY_MS = 2000;       // 2 seconds between requests
 };
 
 } // namespace Remus

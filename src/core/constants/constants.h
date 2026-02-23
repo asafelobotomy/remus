@@ -48,7 +48,7 @@ namespace Constants {
  *   - 2: Added templates and settings constants (Phase 3)
  *   - 3: Added API, database schema, network, engines, and error constants
  */
-inline constexpr int CONSTANTS_VERSION = 4;
+inline constexpr int CONSTANTS_VERSION = 5;
 
 /**
  * @brief Application organization name for QSettings
@@ -60,23 +60,8 @@ inline constexpr const char* SETTINGS_ORGANIZATION = "Remus";
  */
 inline constexpr const char* SETTINGS_APPLICATION = "Remus";
 
-/**
- * @brief Default database filename
- */
-inline constexpr const char* DATABASE_FILENAME = "remus.db";
-
-/**
- * @brief Application version string
- * 
- * Format: MAJOR.MINOR.PATCH
- * Updated per milestone completions
- */
-inline constexpr const char* APP_VERSION = "0.9.0";  // M9 Complete
-
-/**
- * @brief Milestone tracking
- */
-inline constexpr const char* CURRENT_MILESTONE = "M9";
+// APP_VERSION and CURRENT_MILESTONE are defined in api.h
+// (single source of truth for version, also used by API::USER_AGENT)
 
 } // Constants
 } // Remus

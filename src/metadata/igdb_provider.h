@@ -3,6 +3,7 @@
 
 #include "metadata_provider.h"
 #include "rate_limiter.h"
+#include "../core/constants/providers.h"
 #include <QNetworkAccessManager>
 
 namespace Remus {
@@ -21,7 +22,7 @@ class IGDBProvider : public MetadataProvider {
 public:
     explicit IGDBProvider(QObject *parent = nullptr);
 
-    QString name() const override { return "IGDB"; }
+    QString name() const override { return Constants::Providers::DISPLAY_IGDB; }
     bool requiresAuth() const override { return true; }
 
     void setCredentials(const QString &clientId, const QString &clientSecret) override;
@@ -54,8 +55,6 @@ private:
     QString m_clientSecret;
     QString m_accessToken;
     QDateTime m_tokenExpiry;
-    
-    static constexpr int REQUEST_DELAY_MS = 250;  // 4 requests per second max
 };
 
 } // namespace Remus

@@ -6,6 +6,16 @@
 
 namespace Remus {
 
+// ---------------------------------------------------------------------------
+// XML element name constants — ClrMamePro / No-Intro DAT format
+// ---------------------------------------------------------------------------
+namespace DatXml {
+constexpr QLatin1StringView DATAFILE = QLatin1StringView("datafile");
+constexpr QLatin1StringView HEADER   = QLatin1StringView("header");
+constexpr QLatin1StringView GAME     = QLatin1StringView("game");
+constexpr QLatin1StringView MACHINE  = QLatin1StringView("machine");
+} // namespace DatXml
+
 DatParser::DatParser(QObject *parent)
     : QObject(parent)
 {
@@ -47,7 +57,7 @@ DatParseResult DatParser::parseContent(const QString &content)
     }
 
     // Expect <datafile> root element
-    if (xml.name() != QString("datafile")) {
+    if (xml.name() != DatXml::DATAFILE) {
         // Try to continue anyway - some DAT files have different root elements
         qWarning() << "Expected <datafile> root, found:" << xml.name();
     }
@@ -56,11 +66,11 @@ DatParseResult DatParser::parseContent(const QString &content)
 
     while (!xml.atEnd()) {
         if (xml.isStartElement()) {
-            if (xml.name() == QString("header")) {
+            if (xml.name() == DatXml::HEADER) {
                 if (!parseHeader(xml, result.header)) {
                     qWarning() << "Failed to parse header";
                 }
-            } else if (xml.name() == QString("game") || xml.name() == QString("machine")) {
+            } else if (xml.name() == DatXml::GAME || xml.name() == DatXml::MACHINE) {
                 if (!parseGame(xml, result.entries)) {
                     qWarning() << "Failed to parse game entry";
                 }
@@ -92,7 +102,7 @@ bool DatParser::parseHeader(QXmlStreamReader &xml, DatHeader &header)
     xml.readNext();
     
     while (!xml.atEnd()) {
-        if (xml.isEndElement() && xml.name() == QString("header")) {
+        if (xml.isEndElement() && xml.name() == DatXml::HEADER) {
             return true;
         }
 
@@ -138,7 +148,7 @@ bool DatParser::parseGame(QXmlStreamReader &xml, QList<DatRomEntry> &entries)
 
     while (!xml.atEnd()) {
         if (xml.isEndElement() && 
-            (xml.name() == QString("game") || xml.name() == QString("machine"))) {
+            (xml.name() == DatXml::GAME || xml.name() == DatXml::MACHINE)) {
             return true;
         }
 

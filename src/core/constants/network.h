@@ -45,19 +45,19 @@ inline constexpr int CONNECT_TIMEOUT_MS = 3000;
 // ============================================================================
 
 /// ScreenScraper minimum interval between requests (milliseconds)
-/// Documentation recommends 200ms minimum
-inline constexpr int SCREENSCRAPER_RATE_LIMIT_MS = 250;
+/// API docs say 200ms minimum; 2 seconds avoids real-world throttling
+inline constexpr int SCREENSCRAPER_RATE_LIMIT_MS = 2000;
 
 /// IGDB minimum interval between requests (milliseconds)
 /// API allows 4 requests/second = 250ms minimum
 inline constexpr int IGDB_RATE_LIMIT_MS = 250;
 
 /// TheGamesDB minimum interval between requests (milliseconds)
-inline constexpr int THEGAMESDB_RATE_LIMIT_MS = 100;
+inline constexpr int THEGAMESDB_RATE_LIMIT_MS = 1000;
 
 /// Hasheous minimum interval between requests (milliseconds)
-/// Fast service, low rate limit needed
-inline constexpr int HASHEOUS_RATE_LIMIT_MS = 50;
+/// Conservative despite fast service
+inline constexpr int HASHEOUS_RATE_LIMIT_MS = 1000;
 
 /// Default rate limit for generic requests (milliseconds)
 inline constexpr int DEFAULT_RATE_LIMIT_MS = 1000;

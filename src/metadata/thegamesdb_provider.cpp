@@ -17,7 +17,7 @@ TheGamesDBProvider::TheGamesDBProvider(QObject *parent)
     , m_networkManager(new QNetworkAccessManager(this))
     , m_rateLimiter(new RateLimiter(this))
 {
-    m_rateLimiter->setInterval(REQUEST_DELAY_MS);
+    m_rateLimiter->setInterval(Constants::Network::THEGAMESDB_RATE_LIMIT_MS);
 }
 
 void TheGamesDBProvider::setApiKey(const QString &apiKey)
@@ -34,7 +34,7 @@ QList<SearchResult> TheGamesDBProvider::searchByName(const QString &title,
     m_rateLimiter->waitIfNeeded();
 
     // Build API URL
-    QUrl url("https://api.thegamesdb.net/v1/Games/ByGameName");
+    QUrl url(QString(Constants::API::THEGAMESDB_BASE_URL) + Constants::API::THEGAMESDB_GAMES_ENDPOINT);
     QUrlQuery query;
     
     if (!m_apiKey.isEmpty()) {
@@ -117,7 +117,7 @@ GameMetadata TheGamesDBProvider::getById(const QString &id)
     m_rateLimiter->waitIfNeeded();
 
     // Build API URL
-    QUrl url(QString("https://api.thegamesdb.net/v1/Games/ByGameID"));
+    QUrl url(QString(Constants::API::THEGAMESDB_BASE_URL) + Constants::API::THEGAMESDB_GAMEINFO_ENDPOINT);
     QUrlQuery query;
     
     if (!m_apiKey.isEmpty()) {
@@ -156,7 +156,7 @@ ArtworkUrls TheGamesDBProvider::getArtwork(const QString &id)
     // Artwork requires separate API call to Images endpoint
     m_rateLimiter->waitIfNeeded();
 
-    QUrl url("https://api.thegamesdb.net/v1/Games/Images");
+    QUrl url(QString(Constants::API::THEGAMESDB_BASE_URL) + Constants::API::THEGAMESDB_IMAGES_ENDPOINT);
     QUrlQuery query;
     
     if (!m_apiKey.isEmpty()) {
@@ -219,14 +219,14 @@ TheGamesDBProvider::ApiResponse TheGamesDBProvider::makeRequest(const QUrl &url)
     ApiResponse response;
 
     QNetworkRequest request(url);
-    request.setHeader(QNetworkRequest::UserAgentHeader, "Remus/0.1.0");
+    request.setHeader(QNetworkRequest::UserAgentHeader, Constants::API::USER_AGENT);
 
     QNetworkReply *reply = m_networkManager->get(request);
     
     QEventLoop loop;
     QTimer timeout;
     timeout.setSingleShot(true);
-    timeout.setInterval(30000);
+    timeout.setInterval(Constants::Network::THEGAMESDB_TIMEOUT_MS);
 
     connect(reply, &QNetworkReply::finished, &loop, &QEventLoop::quit);
     connect(&timeout, &QTimer::timeout, &loop, &QEventLoop::quit);

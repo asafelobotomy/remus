@@ -6,6 +6,7 @@
 #include <QDir>
 #include <QRegularExpression>
 #include "../../core/constants/systems.h"
+#include "../../core/constants/settings.h"
 
 namespace Remus {
 
@@ -414,7 +415,7 @@ void FileListModel::groupFiles(const QList<FileRecord> &files, const QMap<int, D
             // Check for .remusmd marker file in directory (source of truth for processed state)
             // Marker file existence determines processing status, not database flag
             // This handles cases where user manually deletes extracted folders
-            QString markerPath = pathInfo.path() + "/.remusmd";
+            QString markerPath = pathInfo.path() + "/" + Constants::Settings::Files::MARKER_PROCESSED;
             entry.isProcessed = QFile::exists(markerPath);
             
             groups[groupKey] = entry;

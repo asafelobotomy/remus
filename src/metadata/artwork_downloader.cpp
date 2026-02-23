@@ -53,7 +53,7 @@ bool ArtworkDownloader::download(const QUrl &url, const QString &destPath)
 QByteArray ArtworkDownloader::downloadToMemory(const QUrl &url)
 {
     QNetworkRequest request(url);
-    request.setHeader(QNetworkRequest::UserAgentHeader, "Remus/0.1.0");
+    request.setHeader(QNetworkRequest::UserAgentHeader, Constants::API::USER_AGENT);
     request.setAttribute(QNetworkRequest::RedirectPolicyAttribute, 
                          QNetworkRequest::NoLessSafeRedirectPolicy);
 

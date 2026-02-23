@@ -1,4 +1,5 @@
 #include "metadata_provider.h"
+#include "../core/constants/constants.h"
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QNetworkRequest>
@@ -23,14 +24,14 @@ QByteArray MetadataProvider::downloadImage(const QUrl &url)
 {
     QNetworkAccessManager manager;
     QNetworkRequest request(url);
-    request.setHeader(QNetworkRequest::UserAgentHeader, "Remus/0.1.0");
+    request.setHeader(QNetworkRequest::UserAgentHeader, Constants::API::USER_AGENT);
 
     QNetworkReply *reply = manager.get(request);
     
     QEventLoop loop;
     QTimer timeout;
     timeout.setSingleShot(true);
-    timeout.setInterval(30000);  // 30 second timeout
+    timeout.setInterval(Constants::Network::METADATA_TIMEOUT_MS);
 
     connect(reply, &QNetworkReply::finished, &loop, &QEventLoop::quit);
     connect(&timeout, &QTimer::timeout, &loop, &QEventLoop::quit);

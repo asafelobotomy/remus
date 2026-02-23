@@ -13,6 +13,7 @@
 #include "../../core/logging_categories.h"
 #include "../../core/constants/match_methods.h"
 #include "../../core/constants/hash_algorithms.h"
+#include "../../core/constants/settings.h"
 
 #undef qDebug
 #undef qInfo
@@ -792,7 +793,7 @@ void ProcessingController::createMarkerFile(int fileId)
         return;
     }
     
-    QString markerPath = m_extractedDir + "/.remusmd";
+    QString markerPath = m_extractedDir + "/" + Constants::Settings::Files::MARKER_PROCESSED;
     
     // Only create if it doesn't exist
     if (QFile::exists(markerPath)) {
@@ -814,7 +815,7 @@ void ProcessingController::createMarkerFile(int fileId)
 
 bool ProcessingController::hasMarkerFile(const QString &directoryPath)
 {
-    QString markerPath = directoryPath + "/.remusmd";
+    QString markerPath = directoryPath + "/" + Constants::Settings::Files::MARKER_PROCESSED;
     return QFile::exists(markerPath);
 }
 
@@ -834,8 +835,8 @@ void ProcessingController::moveArchiveToOriginals(const QString &archivePath)
         return;
     }
     
-    // Create .remusdir marker file so scanner will skip this folder
-    QString markerPath = originalsDir + "/.remusdir";
+    // Create marker file so scanner will skip this folder
+    QString markerPath = originalsDir + "/" + Constants::Settings::Files::MARKER_SKIP_SCAN;
     if (!QFile::exists(markerPath)) {
         QFile markerFile(markerPath);
         if (markerFile.open(QIODevice::WriteOnly | QIODevice::Text)) {

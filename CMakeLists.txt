@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(Remus VERSION 0.1.0 LANGUAGES CXX)
+project(Remus VERSION 0.10.1 LANGUAGES CXX)
 
 option(REMUS_ENABLE_CXX20 "Build with C++20 instead of C++17" OFF)
 if(REMUS_ENABLE_CXX20)

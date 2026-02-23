@@ -4,6 +4,7 @@
 #include "metadata_provider.h"
 #include "rate_limiter.h"
 #include "../core/system_resolver.h"
+#include "../core/constants/providers.h"
 #include <QNetworkAccessManager>
 
 namespace Remus {
@@ -22,7 +23,7 @@ class TheGamesDBProvider : public MetadataProvider {
 public:
     explicit TheGamesDBProvider(QObject *parent = nullptr);
 
-    QString name() const override { return "TheGamesDB"; }
+    QString name() const override { return Constants::Providers::DISPLAY_THEGAMESDB; }
     bool requiresAuth() const override { return false; }
 
     QList<SearchResult> searchByName(const QString &title,
@@ -53,8 +54,6 @@ private:
     QNetworkAccessManager *m_networkManager;
     RateLimiter *m_rateLimiter;
     QString m_apiKey;
-    
-    static constexpr int REQUEST_DELAY_MS = 1000;  // 1 second between requests
 };
 
 } // namespace Remus

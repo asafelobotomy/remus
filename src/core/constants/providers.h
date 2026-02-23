@@ -43,6 +43,24 @@ inline const QString DISPLAY_THEGAMESDB = QStringLiteral("TheGamesDB");
 inline const QString DISPLAY_IGDB = QStringLiteral("IGDB");
 
 // ============================================================================
+// External ID keys (used as keys in GameMetadata::externalIds QMap)
+// ============================================================================
+
+namespace ExternalId {
+/// Key for IGDB game IDs in the externalIds map
+inline constexpr const char* IGDB = "igdb";
+
+/// Key for TheGamesDB game IDs in the externalIds map
+inline constexpr const char* THEGAMESDB = "thegamesdb";
+
+/// Key for RetroAchievements game IDs in the externalIds map
+inline constexpr const char* RETROACHIEVEMENTS = "retroachievements";
+
+/// Key for DAT-file source list (comma-joined names) in the externalIds map
+inline constexpr const char* DAT_SOURCES = "dat_sources";
+} // ExternalId
+
+// ============================================================================
 // Provider Metadata
 // ============================================================================
 

@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
     
     // Initialize database
     Database db;
-    QString dbPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/" + Constants::DATABASE_FILENAME;
+    QString dbPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/" + Constants::DatabaseSchema::DATABASE_FILENAME;
     if (!db.initialize(dbPath)) {
         qCritical() << "Failed to initialize database at:" << dbPath;
         return 1;

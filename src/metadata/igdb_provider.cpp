@@ -19,7 +19,7 @@ IGDBProvider::IGDBProvider(QObject *parent)
     , m_networkManager(new QNetworkAccessManager(this))
     , m_rateLimiter(new RateLimiter(this))
 {
-    m_rateLimiter->setInterval(REQUEST_DELAY_MS);
+    m_rateLimiter->setInterval(Constants::Network::IGDB_RATE_LIMIT_MS);
 }
 
 void IGDBProvider::setCredentials(const QString &clientId, const QString &clientSecret)
@@ -37,7 +37,7 @@ bool IGDBProvider::authenticate()
     }
 
     // Request new access token from Twitch
-    QUrl url("https://id.twitch.tv/oauth2/token");
+    QUrl url(Constants::API::IGDB_AUTH_URL);
     QUrlQuery query;
     query.addQueryItem("client_id", m_clientId);
     query.addQueryItem("client_secret", m_clientSecret);
@@ -49,8 +49,20 @@ bool IGDBProvider::authenticate()
     QNetworkReply *reply = m_networkManager->post(request, query.toString().toUtf8());
     
     QEventLoop loop;
+    QTimer timeout;
+    timeout.setSingleShot(true);
+    timeout.setInterval(Constants::Network::IGDB_TIMEOUT_MS);
     connect(reply, &QNetworkReply::finished, &loop, &QEventLoop::quit);
+    connect(&timeout, &QTimer::timeout, &loop, &QEventLoop::quit);
+    timeout.start();
     loop.exec();
+
+    if (!timeout.isActive()) {
+        qWarning() << "IGDB: authentication request timed out";
+        reply->deleteLater();
+        return false;
+    }
+    timeout.stop();
 
     if (reply->error() == QNetworkReply::NoError) {
         QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
@@ -183,7 +195,7 @@ ArtworkUrls IGDBProvider::getArtwork(const QString &id)
         if (game.contains("cover")) {
             QString coverUrl = game["cover"].toObject()["url"].toString();
             if (!coverUrl.isEmpty()) {
-                artwork.boxFront = QUrl("https:" + coverUrl.replace("t_thumb", "t_cover_big"));
+                artwork.boxFront = QUrl("https:" + coverUrl.replace(Constants::API::IGDB_IMG_THUMB, Constants::API::IGDB_IMG_COVER_BIG));
             }
         }
         
@@ -192,7 +204,7 @@ ArtworkUrls IGDBProvider::getArtwork(const QString &id)
             QJsonArray screenshots = game["screenshots"].toArray();
             if (!screenshots.isEmpty()) {
                 QString screenshotUrl = screenshots[0].toObject()["url"].toString();
-                artwork.screenshot = QUrl("https:" + screenshotUrl.replace("t_thumb", "t_screenshot_big"));
+                artwork.screenshot = QUrl("https:" + screenshotUrl.replace(Constants::API::IGDB_IMG_THUMB, Constants::API::IGDB_IMG_SCREENSHOT_BIG));
             }
         }
     }
@@ -287,7 +299,7 @@ GameMetadata IGDBProvider::parseGameJson(const QJsonObject &game)
     
     // Rating
     if (game.contains("aggregated_rating")) {
-        metadata.rating = game["aggregated_rating"].toDouble() / 10.0;  // Convert to 0-10 scale
+        metadata.rating = game["aggregated_rating"].toDouble() / Constants::API::IGDB_RATING_SCALE;  // Convert to 0-10 scale
     }
 
     return metadata;

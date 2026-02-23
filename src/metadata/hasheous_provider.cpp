@@ -1,6 +1,7 @@
 #include "hasheous_provider.h"
 #include "../core/constants/providers.h"
 #include "../core/constants/settings.h"
+#include "../core/constants/api.h"
 #include "../core/system_resolver.h"
 #include "../core/constants/systems.h"
 #include <QNetworkRequest>
@@ -9,10 +10,12 @@
 #include <QJsonDocument>
 #include <QJsonArray>
 #include <QEventLoop>
+#include <QTimer>
 #include <QDebug>
 #include <QSet>
 #include <QTimeZone>
 #include "../core/logging_categories.h"
+#include "../core/constants/network.h"
 
 #undef qDebug
 #undef qInfo
@@ -38,7 +41,7 @@ HasheousProvider::HasheousProvider(QObject *parent)
     m_clientApiKey = settings.value(Constants::Settings::Providers::HASHEOUS_CLIENT_API_KEY,
                                     QString::fromLatin1(DEFAULT_CLIENT_API_KEY)).toString();
 
-    m_rateLimiter->setInterval(1000); // 1 req/second (conservative)
+    m_rateLimiter->setInterval(Constants::Network::HASHEOUS_RATE_LIMIT_MS);
     qInfo() << "Hasheous provider initialized (no auth required)";
 }
 
@@ -51,11 +54,11 @@ QJsonObject HasheousProvider::makeRequest(const QString &endpoint, const QUrlQue
 {
     m_rateLimiter->waitIfNeeded();
     
-    QUrl url(QString(API_BASE) + endpoint);
+    QUrl url(QString(Constants::API::HASHEOUS_BASE_URL) + endpoint);
     url.setQuery(params);
     
     QNetworkRequest request(url);
-    request.setHeader(QNetworkRequest::UserAgentHeader, "Remus/1.0");
+    request.setHeader(QNetworkRequest::UserAgentHeader, Constants::API::USER_AGENT);
     // MetadataProxy endpoints require a client API key
     if (!m_clientApiKey.isEmpty()) {
         request.setRawHeader("X-Client-API-Key", m_clientApiKey.toUtf8());
@@ -63,12 +66,24 @@ QJsonObject HasheousProvider::makeRequest(const QString &endpoint, const QUrlQue
     
     QNetworkReply *reply = m_network->get(request);
     
-    // Synchronous wait for response
     QEventLoop loop;
+    QTimer timeout;
+    timeout.setSingleShot(true);
+    timeout.setInterval(Constants::Network::HASHEOUS_TIMEOUT_MS);
     connect(reply, &QNetworkReply::finished, &loop, &QEventLoop::quit);
+    connect(&timeout, &QTimer::timeout, &loop, &QEventLoop::quit);
+    timeout.start();
     loop.exec();
     
     QJsonObject result;
+    
+    if (!timeout.isActive()) {
+        qWarning() << "Hasheous GET timeout:" << url.toString();
+        emit errorOccurred("Hasheous request timeout");
+        reply->deleteLater();
+        return result;
+    }
+    timeout.stop();
     
     if (reply->error() == QNetworkReply::NoError) {
         QByteArray data = reply->readAll();
@@ -94,24 +109,36 @@ QJsonObject HasheousProvider::makePostRequest(const QString &endpoint, const QJs
 {
     m_rateLimiter->waitIfNeeded();
     
-    QUrl url(QString(API_BASE) + endpoint);
+    QUrl url(QString(Constants::API::HASHEOUS_BASE_URL) + endpoint);
     if (!params.isEmpty()) {
         url.setQuery(params);
     }
     
     QNetworkRequest request(url);
-    request.setHeader(QNetworkRequest::UserAgentHeader, "Remus/1.0");
+    request.setHeader(QNetworkRequest::UserAgentHeader, Constants::API::USER_AGENT);
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
     
     QByteArray postData = QJsonDocument(body).toJson(QJsonDocument::Compact);
     QNetworkReply *reply = m_network->post(request, postData);
     
-    // Synchronous wait for response
     QEventLoop loop;
+    QTimer timeout;
+    timeout.setSingleShot(true);
+    timeout.setInterval(Constants::Network::HASHEOUS_TIMEOUT_MS);
     connect(reply, &QNetworkReply::finished, &loop, &QEventLoop::quit);
+    connect(&timeout, &QTimer::timeout, &loop, &QEventLoop::quit);
+    timeout.start();
     loop.exec();
     
     QJsonObject result;
+    
+    if (!timeout.isActive()) {
+        qWarning() << "Hasheous POST timeout:" << url.toString();
+        emit errorOccurred("Hasheous request timeout");
+        reply->deleteLater();
+        return result;
+    }
+    timeout.stop();
     
     if (reply->error() == QNetworkReply::NoError) {
         QByteArray data = reply->readAll();
@@ -157,11 +184,11 @@ GameMetadata HasheousProvider::parseGameJson(const QJsonObject &json) const
         
         if (source == "IGDB" && !immutableId.isEmpty()) {
             igdbId = immutableId.toInt();
-            metadata.externalIds["igdb"] = immutableId;
+            metadata.externalIds[Constants::Providers::ExternalId::IGDB] = immutableId;
         } else if (source == "TheGamesDB" && !immutableId.isEmpty()) {
-            metadata.externalIds["thegamesdb"] = immutableId;
+            metadata.externalIds[Constants::Providers::ExternalId::THEGAMESDB] = immutableId;
         } else if (source == "RetroAchievements" && !immutableId.isEmpty()) {
-            metadata.externalIds["retroachievements"] = immutableId;
+            metadata.externalIds[Constants::Providers::ExternalId::RETROACHIEVEMENTS] = immutableId;
         }
     }
     
@@ -172,7 +199,7 @@ GameMetadata HasheousProvider::parseGameJson(const QJsonObject &json) const
         datSources.append(sig.toString());
     }
     if (!datSources.isEmpty()) {
-        metadata.externalIds["dat_sources"] = datSources.join(",");
+        metadata.externalIds[Constants::Providers::ExternalId::DAT_SOURCES] = datSources.join(",");
     }
     
     // Extract artwork from attributes
@@ -204,7 +231,7 @@ GameMetadata HasheousProvider::fetchIgdbMetadata(int igdbId)
     params.addQueryItem("Id", QString::number(igdbId));
     params.addQueryItem("expandColumns", "age_ratings,alternative_names,collections,cover,dlcs,expanded_games,franchise,franchises,game_modes,genres,involved_companies,platforms,ports,remakes,screenshots,similar_games,videos");
     
-    QJsonObject igdbGame = makeRequest("/MetadataProxy/IGDB/Game", params);
+    QJsonObject igdbGame = makeRequest(Constants::API::HASHEOUS_PROXY_IGDB_GAME, params);
     
     if (igdbGame.isEmpty()) {
         qWarning() << "Hasheous: MetadataProxy returned empty for IGDB ID:" << igdbId;
@@ -214,7 +241,7 @@ GameMetadata HasheousProvider::fetchIgdbMetadata(int igdbId)
     GameMetadata metadata;
     metadata.title = igdbGame["name"].toString();
     metadata.description = igdbGame["summary"].toString();
-    metadata.externalIds["igdb"] = QString::number(igdbId);
+    metadata.externalIds[Constants::Providers::ExternalId::IGDB] = QString::number(igdbId);
     
     // Release date — MetadataProxy returns ISO 8601 string (e.g., "1991-06-23T00:00:00+00:00")
     if (igdbGame.contains("first_release_date")) {
@@ -254,7 +281,7 @@ GameMetadata HasheousProvider::fetchIgdbMetadata(int igdbId)
     
     // Rating (IGDB uses 0-100 scale, convert to 0-10)
     if (igdbGame.contains("aggregated_rating")) {
-        metadata.rating = igdbGame["aggregated_rating"].toDouble() / 10.0;
+        metadata.rating = igdbGame["aggregated_rating"].toDouble() / Constants::API::IGDB_RATING_SCALE;
     }
     
     // Cover art
@@ -263,7 +290,7 @@ GameMetadata HasheousProvider::fetchIgdbMetadata(int igdbId)
         QString coverUrl = cover["url"].toString();
         if (!coverUrl.isEmpty()) {
             // Upgrade to high-res
-            coverUrl.replace("t_thumb", "t_1080p");
+            coverUrl.replace(Constants::API::IGDB_IMG_THUMB, Constants::API::IGDB_IMG_1080P);
             if (coverUrl.startsWith("//")) {
                 coverUrl = "https:" + coverUrl;
             }
@@ -275,7 +302,7 @@ GameMetadata HasheousProvider::fetchIgdbMetadata(int igdbId)
     auto normalizeShot = [](const QString &url) {
         QString u = url;
         if (u.isEmpty()) return u;
-        u.replace("t_thumb", "t_1080p");
+        u.replace(Constants::API::IGDB_IMG_THUMB, Constants::API::IGDB_IMG_1080P);
         if (u.startsWith("//")) {
             u = "https:" + u;
         }
@@ -329,7 +356,7 @@ GameMetadata HasheousProvider::fetchIgdbMetadata(int igdbId)
                         } else {
                             QUrlQuery compParams;
                             compParams.addQueryItem("Id", QString::number(companyId));
-                            QJsonObject compData = makeRequest("/MetadataProxy/IGDB/Company", compParams);
+                            QJsonObject compData = makeRequest(Constants::API::HASHEOUS_PROXY_IGDB_COMPANY, compParams);
                             companyName = compData["name"].toString();
                             if (!companyName.isEmpty()) {
                                 m_companyCache.insert(companyId, companyName);
@@ -375,11 +402,11 @@ GameMetadata HasheousProvider::fetchIgdbMetadata(int igdbId)
                 companyName = m_companyCache.value(companyId);
                 QUrlQuery compParams;
                 compParams.addQueryItem("Id", QString::number(companyId));
-                compData = makeRequest("/MetadataProxy/IGDB/Company", compParams);
+                compData = makeRequest(Constants::API::HASHEOUS_PROXY_IGDB_COMPANY, compParams);
             } else {
                 QUrlQuery compParams;
                 compParams.addQueryItem("Id", QString::number(companyId));
-                compData = makeRequest("/MetadataProxy/IGDB/Company", compParams);
+                compData = makeRequest(Constants::API::HASHEOUS_PROXY_IGDB_COMPANY, compParams);
                 companyName = compData["name"].toString();
                 if (!companyName.isEmpty()) {
                     m_companyCache.insert(companyId, companyName);
@@ -502,7 +529,7 @@ GameMetadata HasheousProvider::getByHashes(const QString &crc32,
     params.addQueryItem("returnAllSources", "true");
     params.addQueryItem("returnFields", "Signatures,Metadata,Attributes");
 
-    QJsonObject response = makePostRequest("/Lookup/ByHash", body, params);
+    QJsonObject response = makePostRequest(Constants::API::HASHEOUS_LOOKUP_ENDPOINT, body, params);
 
     if (response.isEmpty()) {
         qInfo() << "Hasheous: No match found for provided hashes";

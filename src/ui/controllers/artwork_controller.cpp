@@ -12,6 +12,7 @@
 #include <QJsonObject>
 #include <QRegularExpression>
 #include "../../core/logging_categories.h"
+#include "../../core/constants/settings.h"
 
 #undef qDebug
 #undef qInfo
@@ -34,7 +35,7 @@ ArtworkController::ArtworkController(Database *db,
 {
     // Default artwork path
     QString dataPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
-    m_artworkBasePath = dataPath + "/artwork";
+    m_artworkBasePath = dataPath + "/" + Constants::Settings::Files::ARTWORK_SUBDIR;
     
     // Ensure base directory exists
     QDir().mkpath(m_artworkBasePath);

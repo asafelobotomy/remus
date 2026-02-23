@@ -99,6 +99,29 @@ Expected output:
 remus-cli 0.1.0
 ```
 
+### 6. Optional: Build and run TUI
+
+The terminal UI is not built by default.
+
+```bash
+# Enable TUI target at configure time
+cmake -DREMUS_BUILD_TUI=ON ..
+
+# Build TUI
+make -j$(nproc)
+
+# Run from inside build/
+./src/tui/remus-tui
+```
+
+Or run from the repository root:
+
+```bash
+./build/src/tui/remus-tui
+```
+
+If `REMUS_BUILD_TUI` is OFF, `remus-tui` is not generated.
+
 ## Running the CLI
 
 ### Scanning Commands

@@ -4,6 +4,7 @@
 #include "rate_limiter.h"
 #include "../core/constants/hash_algorithms.h"
 #include "../core/constants/api.h"
+#include "../core/constants/providers.h"
 #include <QNetworkAccessManager>
 #include <QJsonObject>
 #include <QUrlQuery>
@@ -36,7 +37,7 @@ public:
     ~HasheousProvider() override = default;
 
     // MetadataProvider interface
-    QString name() const override { return "Hasheous"; }
+    QString name() const override { return Constants::Providers::DISPLAY_HASHEOUS; }
     bool requiresAuth() const override { return false; }
     
     QList<SearchResult> searchByName(const QString &title, 
@@ -56,9 +57,6 @@ protected:
     QString m_clientApiKey;
     QMap<int, QString> m_companyCache;
 
-    // API base
-    static constexpr const char* API_BASE = "https://hasheous.org/api/v1";
-    
     /**
      * @brief Detect hash type from hash string length
      * @param hash The hash string

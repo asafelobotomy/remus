@@ -51,6 +51,17 @@ inline const QString CONFIDENCE_THRESHOLD = QStringLiteral("75");
 inline const QString TEMPLATE_VARIABLE_HINT = Templates::VARIABLE_HINT;
 }
 
+namespace Files {
+/// Marker file placed inside an extracted/organised directory to signal it has been processed
+inline constexpr const char* MARKER_PROCESSED = ".remusmd";
+
+/// Marker file placed in a directory to instruct the scanner to skip it
+inline constexpr const char* MARKER_SKIP_SCAN = ".remusdir";
+
+/// Subdirectory name (relative to the app data path) where downloaded artwork is stored
+inline constexpr const char* ARTWORK_SUBDIR = "artwork";
+}
+
 } // Settings
 
 // ============================================================================
