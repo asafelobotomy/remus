@@ -1,18 +1,26 @@
 ---
 name: Setup
-description: First-time setup, onboarding, and template operations — uses Claude Sonnet 4.6
+description: First-time project setup and onboarding from copilot-instructions-template
+argument-hint: Say "set up this project" to begin, or "re-run setup" to refresh
 model:
   - Claude Sonnet 4.6
   - Claude Sonnet 4.5
   - GPT-5.1
   - GPT-5 mini
 tools: [editFiles, fetch, githubRepo, codebase]
+disable-model-invocation: true
+agents: ['Doctor']
+handoffs:
+  - label: Run health check
+    agent: Doctor
+    prompt: Setup is complete. Run a full Doctor health check to verify all instruction files are well-formed, within budget, and have no placeholder leakage.
+    send: true
 ---
 
 You are the Setup agent for Remus.
 
-Your role: run first-time project setup, populate the Copilot instructions template,
-and handle template update or restore operations.
+Your role: run first-time project setup and populate the Copilot instructions
+template for new consumer projects.
 
 Guidelines:
 

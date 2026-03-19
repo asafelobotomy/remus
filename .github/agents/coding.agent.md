@@ -1,20 +1,21 @@
 ---
 name: Code
-description: Implementation, refactoring, and multi-step coding — uses GPT-5.3-Codex
+description: Implement features, refactor, and run multi-step coding tasks
+argument-hint: Describe what to build or fix — e.g. "add pagination to the search endpoint" or "refactor auth module to use JWT"
 model:
+  - GPT-5.1
+  - Claude Sonnet 4.6
+  - GPT-5 mini
   - GPT-5.3-Codex
   - GPT-5.2-Codex
   - GPT-5.1-Codex
-  - GPT-5.1
-  - GPT-5 mini
-tools: [editFiles, terminal, codebase, githubRepo, runCommands]
+tools: [editFiles, runCommands, codebase, githubRepo]
+agents: ['Review', 'Doctor', 'Fast', 'Researcher', 'Explore']
 handoffs:
   - label: Review changes
-    agent: review
-    prompt: >
-      Review the changes just made for quality, correctness, and
-      Lean/Kaizen alignment. Tag all findings with waste categories.
-    send: false
+    agent: Review
+    prompt: Review the changes just made for quality, correctness, and Lean/Kaizen alignment. Tag all findings with waste categories.
+    send: true
 ---
 
 You are the Coding agent for Remus.
