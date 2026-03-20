@@ -12,6 +12,7 @@ add_library(remus-core STATIC
     matching_engine.cpp
     template_engine.cpp
     organize_engine.cpp
+    rom_bundler.cpp
     m3u_generator.cpp
     chd_converter.cpp
     archive_extractor.cpp

@@ -1,8 +1,11 @@
 #include "cli_commands.h"
 #include "cli_helpers.h"
 #include <QDir>
+#include <QFile>
+#include <QFileInfo>
 #include <QUrl>
 #include "../core/organize_engine.h"
+#include "../core/rom_bundler.h"
 #include "../core/m3u_generator.h"
 #include "../core/constants/constants.h"
 #include "../metadata/artwork_downloader.h"
@@ -37,9 +40,10 @@ int handleArtworkCommand(CliContext &ctx)
     int downloadedCount = 0, failedCount = 0;
 
     for (const FileRecord &file : getHashedFiles(ctx.db)) {
-        qInfo() << "Processing:" << file.filename;
+        const QString displayName = getMatchingDisplayName(file);
+        qInfo() << "Processing:" << displayName;
         GameMetadata metadata = orchestrator->searchWithFallback(
-            selectBestHash(file), file.filename, "",
+            selectBestHash(file), displayName, "",
             file.crc32, file.md5, file.sha1);
 
         if (metadata.boxArtUrl.isEmpty()) {
@@ -73,6 +77,94 @@ int handleArtworkCommand(CliContext &ctx)
     qInfo() << "  Downloaded:" << downloadedCount;
     qInfo() << "  Failed:"     << failedCount;
     return 0;
+}
+
+int handleBundleCommand(CliContext &ctx)
+{
+    if (!ctx.parser.isSet("bundle")) return 0;
+
+    const QString destination  = ctx.parser.value("bundle");
+    const QString formatStr    = ctx.parser.value("bundle-format");
+    const QString artworkDir   = ctx.parser.value("bundle-art-dir");
+    const bool    dryRun       = ctx.parser.isSet("dry-run") || ctx.dryRunAll;
+
+    const ArchiveFormat fmt = (formatStr == "7z") ? ArchiveFormat::SevenZip
+                                                  : ArchiveFormat::ZIP;
+
+    qInfo() << "";
+    qInfo() << "=== Bundle Matched ROMs ===";
+    qInfo() << "Destination:" << destination;
+    qInfo() << "Format:"      << formatStr;
+    qInfo() << "Mode:"        << (dryRun ? "DRY RUN (preview only)" : "EXECUTE");
+    qInfo() << "";
+
+    RomBundler bundler(ctx.db);
+    QObject::connect(&bundler, &RomBundler::progressMessage,
+        [](const QString &msg) { qInfo() << " " << msg; });
+
+    QMap<int, Database::MatchResult> matches = ctx.db.getAllMatches();
+    QList<FileRecord> files = ctx.db.getExistingFiles();
+
+    if (files.isEmpty()) {
+        qInfo() << "No files to bundle";
+        return 0;
+    }
+
+    int bundled = 0, skipped = 0, failed = 0;
+
+    for (const FileRecord &file : files) {
+        if (!matches.contains(file.id)) continue;
+
+        const Database::MatchResult &match = matches.value(file.id);
+        if (match.isRejected) continue;
+
+        // Resolve artwork path for this specific file
+        QString artworkPath;
+        if (!artworkDir.isEmpty()) {
+            const QString candidate = artworkDir + "/" +
+                QFileInfo(file.filename).completeBaseName() + ".jpg";
+            if (QFile::exists(candidate))
+                artworkPath = candidate;
+        }
+
+        const RomBundler::BundleConfig config{
+            /*includeBoxArt*/ true,
+            /*dryRun*/        dryRun,
+            /*outputFormat*/  fmt,
+            /*artworkPath*/   artworkPath
+        };
+
+        // Build GameMetadata from the DB match (providers already queried at match time)
+        GameMetadata metadata;
+        metadata.title       = match.gameTitle;
+        metadata.publisher   = match.publisher;
+        metadata.developer   = match.developer;
+        metadata.description = match.description;
+        metadata.rating      = match.rating;
+        metadata.matchMethod = match.matchMethod;
+        metadata.matchScore  = match.confidence;
+
+        qInfo() << "Bundling:" << file.filename;
+
+        RomBundler::BundleResult result = bundler.bundle(file, match, metadata, destination, config);
+
+        if (result.skippedAlreadyBundled) {
+            qInfo() << "  \u21b7 Skipped (already bundled)";
+            skipped++;
+        } else if (result.success) {
+            bundled++;
+        } else {
+            qWarning() << "  \u2717 Failed:" << result.error;
+            failed++;
+        }
+    }
+
+    qInfo() << "";
+    qInfo() << "Bundle" << (dryRun ? "preview" : "complete") << ":";
+    qInfo() << "  Bundled:" << bundled;
+    qInfo() << "  Skipped:" << skipped;
+    qInfo() << "  Failed:"  << failed;
+    return (failed > 0 && bundled == 0) ? 1 : 0;
 }
 
 int handleOrganizeCommand(CliContext &ctx)

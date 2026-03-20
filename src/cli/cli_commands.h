@@ -42,9 +42,10 @@ int handleMatchReportCommand(CliContext &ctx);
 int handleChecksumVerifyCommand(CliContext &ctx);
 int handleVerifyCommand(CliContext &ctx);
 
-// ── Organise & artwork ────────────────────────────────────────────────────────
-// --download-artwork, --organize, --generate-m3u
+// ── Organise, bundle & artwork ────────────────────────────────────────────────
+// --download-artwork, --bundle, --organize, --generate-m3u
 int handleArtworkCommand(CliContext &ctx);
+int handleBundleCommand(CliContext &ctx);
 int handleOrganizeCommand(CliContext &ctx);
 int handleGenerateM3uCommand(CliContext &ctx);
 

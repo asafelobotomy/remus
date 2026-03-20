@@ -20,9 +20,11 @@ static bool hasFlag(const QStringList &args, const QString &flag)
 static bool hasAnyAction(const QStringList &args)
 {
     const QStringList actionFlags = {
+        "--help", "-h", "--version",
         "--scan", "-s", "--hash", "--hash-all", "--list", "--stats", "--info",
         "--header-info", "--show-art", "--metadata", "--search", "--match",
         "--match-report", "--verify", "--verify-report", "--process", "--organize",
+        "--bundle",
         "--download-artwork", "--generate-m3u", "--convert-chd", "--chd-extract",
         "--chd-verify", "--chd-info", "--extract-archive", "--space-report",
         "--export", "--patch-apply", "--patch-create", "--patch-info",
@@ -120,6 +122,11 @@ int main(int argc, char *argv[])
     parser.addOption(QCommandLineOption("m3u-dir",     "Directory for M3U playlists (default: same as game files)", "directory"));
     parser.addOption(QCommandLineOption("dry-run-all", "Preview file outputs for all file-writing actions"));
 
+    // Bundle options
+    parser.addOption(QCommandLineOption("bundle",        "Download metadata+art and repack matched ROMs into self-contained archives", "destination"));
+    parser.addOption(QCommandLineOption("bundle-format", "Output archive format for bundles (zip|7z, default: zip)", "format", "zip"));
+    parser.addOption(QCommandLineOption("bundle-art-dir","Pre-downloaded artwork directory (skips fresh downloads)", "directory"));
+
     // Patch options
     parser.addOption(QCommandLineOption("patch-apply",    "Apply patch to base file",          "basefile"));
     parser.addOption(QCommandLineOption("patch-patch",    "Patch file to apply",               "patchfile"));
@@ -163,10 +170,6 @@ int main(int argc, char *argv[])
     }
 
     SystemDetector detector;
-    for (const QString &name : Systems::getSystemInternalNames()) {
-        SystemInfo info = detector.getSystemInfo(name);
-        if (!info.name.isEmpty()) db.insertSystem(info);
-    }
 
     // -- Build shared context --------------------------------------------------
 
@@ -189,6 +192,7 @@ int main(int argc, char *argv[])
     if (int rc = handleChecksumVerifyCommand(ctx)) return rc;
     if (int rc = handleVerifyCommand(ctx))         return rc;
     if (int rc = handleArtworkCommand(ctx))        return rc;
+    if (int rc = handleBundleCommand(ctx))         return rc;
     if (int rc = handleOrganizeCommand(ctx))       return rc;
     if (int rc = handleGenerateM3uCommand(ctx))    return rc;
     if (int rc = handleConvertChdCommand(ctx))     return rc;
