@@ -380,7 +380,7 @@ void ProcessingController::completeCurrentFile(bool success, const QString &erro
         m_successCount++;
         qDebug() << "File processed successfully:" << m_currentFilename;
         
-        // Create .remusmd marker file in the extracted directory
+        // Create .remus.md marker file in the extracted directory
         createMarkerFile(m_currentFileId);
         
         // Move original archive to Originals folder

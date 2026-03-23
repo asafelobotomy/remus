@@ -5,6 +5,7 @@
 
 #include <QCoreApplication>
 #include <QDebug>
+#include <QDir>
 #include <QFile>
 #include <QFileInfo>
 #include <QTemporaryDir>
@@ -12,6 +13,31 @@
 #include "../src/metadata/local_database_provider.h"
 
 using namespace Remus;
+
+static QString findGenesisDatPath()
+{
+    const QString appDir = QCoreApplication::applicationDirPath();
+    const QString cwd = QDir::currentPath();
+    const QString fileName = "Sega - Mega Drive - Genesis.dat";
+    const QStringList candidateDirs = {
+        appDir + "/data/databases",
+        appDir + "/../data/databases",
+        appDir + "/../../data/databases",
+        appDir + "/../../../data/databases",
+        cwd + "/data/databases",
+        cwd + "/../data/databases",
+        cwd + "/../../data/databases"
+    };
+
+    for (const QString &dirPath : candidateDirs) {
+        const QString candidate = QDir(dirPath).filePath(fileName);
+        if (QFileInfo::exists(candidate)) {
+            return QDir::cleanPath(candidate);
+        }
+    }
+
+    return QString();
+}
 
 int main(int argc, char *argv[])
 {
@@ -74,7 +100,7 @@ int main(int argc, char *argv[])
     // Step 3: Load DAT file
     qInfo() << "Step 3: Loading Genesis DAT file...";
     LocalDatabaseProvider provider;
-    QString datPath = "/home/solon/Documents/remus/data/databases/Sega - Mega Drive - Genesis.dat";
+    const QString datPath = findGenesisDatPath();
     QFileInfo datInfo(datPath);
     if (!datInfo.exists()) {
         qCritical() << "✗ DAT file not found:" << datPath;

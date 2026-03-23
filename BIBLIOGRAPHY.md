@@ -21,6 +21,7 @@ Every file in the project is catalogued here. Update this file whenever a file i
 | `JOURNAL.md` | ADR-style development journal | — |
 | `BIBLIOGRAPHY.md` | This file — complete file map | — |
 | `METRICS.md` | Kaizen baseline snapshot table | — |
+| `.vscode/mcp.json` | VS Code MCP server configuration (filesystem, git) | — |
 
 ## Project source files (baseline: 2026-02-19)
 
@@ -217,3 +218,7 @@ Every file in the project is catalogued here. Update this file whenever a file i
 | `CHANGELOG.md` | Keep-a-Changelog version history | — |
 | `scripts/package_appimage.sh` | AppImage packaging script | — |
 | `assets/remus.desktop` | Linux desktop entry | — |
+| `roms/README.md` | Canonical repository-local ROM input folder marker | — |
+| `test_output/README.md` | Tracked policy for processed-ROM test output | — |
+| `test_output/attention.log` | Tracked follow-up log for test-output review items | — |
+| `docs/guides/TEST-DATA-POLICY.md` | Canonical policy for `roms/` and `test_output/` usage | — |

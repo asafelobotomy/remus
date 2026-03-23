@@ -314,19 +314,24 @@ sudMetadata Providers
 
 ## Testing
 
+Use the canonical repository-local test paths described in [../guides/TEST-DATA-POLICY.md](../guides/TEST-DATA-POLICY.md).
+
 To test with sample ROMs:
 ```bash
-# Create test directory
-mkdir -p test_roms/NES
-cd test_roms/NES
+# Create local ROM input directory
+mkdir -p roms/NES
+cd roms/NES
 
 # Add some ROM files (you must provide your own)
 # ...
 
 # Scan test directory
 cd ../../build
-./remus-cli --scan ../test_roms/NES --hash --db test.db
+./remus-cli --scan ../roms/NES --hash --db test.db
 ./remus-cli --list --db test.db
+
+# Keep any follow-up notes in a tracked log
+printf '%s\n' '[open] describe the failing case here' >> ../test_output/attention.log
 ```
 
 ## Next Steps (M2-M7)

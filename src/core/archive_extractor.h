@@ -31,6 +31,7 @@ struct ArchiveInfo {
     qint64 uncompressedSize = 0;   // Total extracted size
     int fileCount = 0;             // Number of files in archive
     QStringList contents;          // List of contained files
+    QMap<QString, qint64> entrySizes; // Uncompressed size per archive entry
 };
 
 /**

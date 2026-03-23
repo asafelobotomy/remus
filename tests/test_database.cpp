@@ -1,6 +1,8 @@
 #include <QtTest/QtTest>
 #include <QTemporaryDir>
+#include <QSqlQuery>
 #include "../src/core/database.h"
+#include "../src/core/constants/constants.h"
 
 using namespace Remus;
 
@@ -11,6 +13,8 @@ class DatabaseTest : public QObject
 private slots:
     void testInitializeInMemory();
     void testInsertAndGetFile();
+    void testSystemIdsRemainStableAcrossReopen();
+    void testInitializeRepairsDanglingSystemIds();
     void testUpdateFileHashes();
     void testRemoveFile();
     void testInsertAndGetMatch();
@@ -68,6 +72,119 @@ void DatabaseTest::testInsertAndGetFile()
     QCOMPARE(got.id, fileId);
     QCOMPARE(got.filename, QStringLiteral("mario.nes"));
     QCOMPARE(got.systemId, sysId);
+}
+
+void DatabaseTest::testSystemIdsRemainStableAcrossReopen()
+{
+    QTemporaryDir dir;
+    QVERIFY(dir.isValid());
+
+    const QString dbPath = dir.filePath("stable_systems.db");
+
+    int fileId = 0;
+    int genesisId = 0;
+
+    {
+        Database db;
+        QVERIFY(db.initialize(dbPath));
+
+        genesisId = db.getSystemId("Genesis");
+        QCOMPARE(genesisId, 10);
+
+        const int libId = db.insertLibrary("/roms", "Test");
+        QVERIFY(libId > 0);
+
+        FileRecord fr = makeRecord(libId, genesisId, "sonic.md");
+        fileId = db.insertFile(fr);
+        QVERIFY(fileId > 0);
+    }
+
+    {
+        Database db;
+        QVERIFY(db.initialize(dbPath));
+
+        SystemDetector detector;
+        for (const QString &name : Remus::Constants::Systems::getSystemInternalNames()) {
+            const SystemInfo info = detector.getSystemInfo(name);
+            if (!info.name.isEmpty()) {
+                const int insertedId = db.insertSystem(info);
+                QVERIFY(insertedId > 0);
+            }
+        }
+
+        QCOMPARE(db.getSystemId("Genesis"), genesisId);
+
+        const FileRecord got = db.getFileById(fileId);
+        QCOMPARE(got.systemId, genesisId);
+
+        const QMap<QString, int> counts = db.getFileCountBySystem();
+        QCOMPARE(counts.value("Genesis"), 1);
+        QCOMPARE(db.getSystemDisplayName(genesisId), QStringLiteral("Sega Genesis / Mega Drive"));
+    }
+}
+
+void DatabaseTest::testInitializeRepairsDanglingSystemIds()
+{
+    QTemporaryDir dir;
+    QVERIFY(dir.isValid());
+
+    const QString dbPath = dir.filePath("repair_systems.db");
+    int fileId = 0;
+
+    {
+        Database db;
+        QVERIFY(db.initialize(dbPath));
+
+        const int genesisId = db.getSystemId("Genesis");
+        QCOMPARE(genesisId, 10);
+
+        const int libId = db.insertLibrary("/roms", "Test");
+        QVERIFY(libId > 0);
+
+        FileRecord fr = makeRecord(libId, genesisId, "sonic.md");
+        fileId = db.insertFile(fr);
+        QVERIFY(fileId > 0);
+
+        QSqlQuery renameCanonical(db.database());
+        renameCanonical.prepare("UPDATE systems SET name = ? WHERE id = ?");
+        renameCanonical.addBindValue(QStringLiteral("Genesis__legacy_10"));
+        renameCanonical.addBindValue(10);
+        QVERIFY(renameCanonical.exec());
+
+        QSqlQuery insertLegacy(db.database());
+        insertLegacy.prepare(R"(
+            INSERT INTO systems
+            (id, name, display_name, manufacturer, generation, extensions, preferred_hash)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+        )");
+        insertLegacy.addBindValue(49);
+        insertLegacy.addBindValue(QStringLiteral("Genesis"));
+        insertLegacy.addBindValue(QStringLiteral("Sega Genesis / Mega Drive"));
+        insertLegacy.addBindValue(QStringLiteral("Sega"));
+        insertLegacy.addBindValue(4);
+        insertLegacy.addBindValue(QStringLiteral(".md,.gen,.smd,.bin,.32x,.68k"));
+        insertLegacy.addBindValue(QStringLiteral("CRC32"));
+        QVERIFY(insertLegacy.exec());
+
+        QSqlQuery corruptFile(db.database());
+        corruptFile.prepare("UPDATE files SET system_id = ? WHERE id = ?");
+        corruptFile.addBindValue(49);
+        corruptFile.addBindValue(fileId);
+        QVERIFY(corruptFile.exec());
+    }
+
+    {
+        Database db;
+        QVERIFY(db.initialize(dbPath));
+
+        QCOMPARE(db.getSystemId("Genesis"), 10);
+
+        const FileRecord repaired = db.getFileById(fileId);
+        QCOMPARE(repaired.systemId, 10);
+
+        const QMap<QString, int> counts = db.getFileCountBySystem();
+        QCOMPARE(counts.value("Genesis"), 1);
+    }
 }
 
 void DatabaseTest::testUpdateFileHashes()

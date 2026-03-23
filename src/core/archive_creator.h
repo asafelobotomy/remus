@@ -68,6 +68,17 @@ public:
                                ArchiveFormat format = ArchiveFormat::ZIP);
 
     /**
+     * @brief Compress all files under a directory while preserving relative paths.
+     * @param rootDir       Directory whose contents should be archived
+     * @param outputArchive Path for the output archive
+     * @param format        Archive format (ZIP or SevenZip)
+     * @return Compression result
+     */
+    CompressionResult compressDirectoryContents(const QString &rootDir,
+                                               const QString &outputArchive,
+                                               ArchiveFormat format = ArchiveFormat::ZIP);
+
+    /**
      * @brief Batch compress directories into individual archives
      * @param dirs       List of directories to compress (each becomes one archive)
      * @param outputDir  Output directory for archives
@@ -107,6 +118,10 @@ protected:
     virtual ProcessResult runProcess(const QString &program,
                                      const QStringList &args,
                                      int timeoutMs = 600000);
+    virtual ProcessResult runProcessInDirectory(const QString &program,
+                                                const QStringList &args,
+                                                const QString &workingDirectory,
+                                                int timeoutMs = 600000);
 
 private:
     // ── Tool paths ─────────────────────────────────────────
@@ -124,8 +139,13 @@ private:
 
     CompressionResult compressZip(const QStringList &inputPaths, const QString &outputArchive);
     CompressionResult compress7z(const QStringList &inputPaths, const QString &outputArchive);
+    CompressionResult compressRelativePaths(const QStringList &relativePaths,
+                                            const QString &rootDir,
+                                            const QString &outputArchive,
+                                            ArchiveFormat format);
 
     qint64 calculateTotalSize(const QStringList &paths) const;
+    QStringList collectRelativeFilePaths(const QString &rootDir) const;
 };
 
 } // namespace Remus

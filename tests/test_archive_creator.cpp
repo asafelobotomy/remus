@@ -16,19 +16,40 @@ public:
     bool started   = true;
     QString stdOut;
     QString stdErr;
+    QStringList lastArgs;
+    QString lastWorkingDirectory;
 
 protected:
     ProcessResult runProcess(const QString &, const QStringList &args, int) override
+    {
+        lastArgs = args;
+        lastWorkingDirectory.clear();
+        return makeResult(args);
+    }
+
+    ProcessResult runProcessInDirectory(const QString &,
+                                        const QStringList &args,
+                                        const QString &workingDirectory,
+                                        int) override
+    {
+        lastArgs = args;
+        lastWorkingDirectory = workingDirectory;
+        return makeResult(args);
+    }
+
+private:
+    ProcessResult makeResult(const QStringList &args)
     {
         ProcessResult r;
         r.exitCode = exitCode;
         r.stdOut   = stdOut;
         r.stdErr   = stdErr;
-        // Simulate the tool creating the output archive so compress()'s
-        // post-process file-existence check passes.  For both zip and 7z the
-        // output path is always args[1]: zip -j <output> <inputs…>
-        if (exitCode == 0 && args.size() >= 2) {
-            QFile f(args[1]);
+        int outputIndex = 0;
+        if (!args.isEmpty() && (args.first() == "-j" || args.first() == "-r" || args.first() == "a")) {
+            outputIndex = 1;
+        }
+        if (exitCode == 0 && args.size() > outputIndex) {
+            QFile f(args[outputIndex]);
             f.open(QIODevice::WriteOnly);
             f.write("PK\x05\x06" + QByteArray(18, '\0')); // minimal ZIP end-of-central-dir
         }
@@ -47,6 +68,7 @@ private slots:
     void testCompressFailureReturnsError();
     void testBatchCompressResultCount();
     void testCanCompressQueryWithFakePaths();
+    void testCompressDirectoryContentsPreservesRelativePaths();
     void testRoundTripZip();
 };
 
@@ -129,6 +151,33 @@ void ArchiveCreatorTest::testCanCompressQueryWithFakePaths()
     (void)creator.canCompress(ArchiveFormat::ZIP);
     (void)creator.canCompress(ArchiveFormat::SevenZip);
     QVERIFY(true);  // Guard — test that no crash occurs
+}
+
+void ArchiveCreatorTest::testCompressDirectoryContentsPreservesRelativePaths()
+{
+    QTemporaryDir dir;
+    QVERIFY(dir.isValid());
+
+    const QString rootDir = dir.path() + "/bundle";
+    QVERIFY(QDir().mkpath(rootDir + "/artwork"));
+
+    { QFile f(rootDir + "/game.nes"); QVERIFY(f.open(QIODevice::WriteOnly)); f.write("ROM"); }
+    { QFile f(rootDir + "/.remus.md"); QVERIFY(f.open(QIODevice::WriteOnly)); f.write("marker"); }
+    { QFile f(rootDir + "/artwork/boxfront.jpg"); QVERIFY(f.open(QIODevice::WriteOnly)); f.write("art"); }
+
+    FakeArchiveCreator creator;
+    creator.setZipPath("/bin/sh");
+
+    CompressionResult result = creator.compressDirectoryContents(rootDir,
+                                                                 dir.path() + "/bundle.zip",
+                                                                 ArchiveFormat::ZIP);
+
+    QVERIFY(result.success);
+    QCOMPARE(creator.lastWorkingDirectory, rootDir);
+    QVERIFY(creator.lastArgs.contains("game.nes"));
+    QVERIFY(creator.lastArgs.contains(".remus.md"));
+    QVERIFY(creator.lastArgs.contains("artwork/boxfront.jpg"));
+    QVERIFY(!creator.lastArgs.contains(rootDir + "/artwork/boxfront.jpg"));
 }
 
 void ArchiveCreatorTest::testRoundTripZip()

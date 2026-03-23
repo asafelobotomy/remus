@@ -412,7 +412,7 @@ void FileListModel::groupFiles(const QList<FileRecord> &files, const QMap<int, D
             entry.lastModified = file.lastModified.toString(Qt::ISODate);
             entry.processingStatus = file.processingStatus;
             
-            // Check for .remusmd marker file in directory (source of truth for processed state)
+            // Check for .remus.md marker file in directory (source of truth for processed state)
             // Marker file existence determines processing status, not database flag
             // This handles cases where user manually deletes extracted folders
             QString markerPath = pathInfo.path() + "/" + Constants::Settings::Files::MARKER_PROCESSED;

@@ -49,10 +49,12 @@ int handleMatchCommand(CliContext &ctx)
     for (const FileRecord &file : files) {
         if (ctx.db.getMatchForFile(file.id).matchId != 0) continue;
 
-        qInfo() << "Matching:" << file.filename;
+        const QString displayName = getMatchingDisplayName(file);
+
+        qInfo() << "Matching:" << displayName;
 
         GameMetadata metadata = orchestrator->searchWithFallback(
-            selectBestHash(file), file.filename, "",
+            selectBestHash(file), displayName, "",
             file.crc32, file.md5, file.sha1);
 
         if (!metadata.title.isEmpty()) {
@@ -123,8 +125,10 @@ int handleMatchReportCommand(CliContext &ctx)
     outStream << "├────────────┼──────────────────────────────┼──────────┼──────────┼──────────────────────┤\n";
 
     for (const FileRecord &file : files) {
+        const QString displayName = getMatchingDisplayName(file);
+
         GameMetadata metadata = orchestrator->searchWithFallback(
-            selectBestHash(file), file.filename, "",
+            selectBestHash(file), displayName, "",
             file.crc32, file.md5, file.sha1);
 
         const int confidence = metadata.matchScore > 0
@@ -140,7 +144,7 @@ int handleMatchReportCommand(CliContext &ctx)
 
         outStream << QString("│ %1 │ %2 │ %3 %4 │ %5 │ %6 │\n")
             .arg(QString::number(file.id).leftJustified(10))
-            .arg(file.filename.left(28).leftJustified(28))
+            .arg(displayName.left(28).leftJustified(28))
             .arg(QString::number(confidence).rightJustified(4))
             .arg(indicator.rightJustified(3))
             .arg(method.leftJustified(8))

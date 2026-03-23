@@ -8,6 +8,7 @@ This directory contains architectural design documents, implementation reviews, 
 
 - **[ARCHITECTURE-REVIEW.md](ARCHITECTURE-REVIEW.md)** - Constants library architecture analysis and design decisions (M6)
 - **[CONSTANTS-IMPLEMENTATION.md](CONSTANTS-IMPLEMENTATION.md)** - Implementation plan and specification for the constants library
+- **[FULL-PIPELINE-DIAGRAM.md](FULL-PIPELINE-DIAGRAM.md)** - End-to-end Mermaid flowchart for the CLI scan, hash, match, and organize pipeline
 
 ### Executive Summary
 

@@ -29,7 +29,10 @@
 namespace Remus {
 
 namespace {
-constexpr const char *DEFAULT_CLIENT_API_KEY = "yFCtSh1zpMqwdOx27SB9huyyMPMGqLLXm2GlE71SNtvJk9-wnKEqBNhqiJ7PZcOD";
+bool isMetadataProxyEndpoint(const QString &path)
+{
+    return path.contains("/MetadataProxy/", Qt::CaseInsensitive);
+}
 }
 
 HasheousProvider::HasheousProvider(QObject *parent)
@@ -38,11 +41,12 @@ HasheousProvider::HasheousProvider(QObject *parent)
     , m_rateLimiter(new RateLimiter(this))
 {
     QSettings settings;
-    m_clientApiKey = settings.value(Constants::Settings::Providers::HASHEOUS_CLIENT_API_KEY,
-                                    QString::fromLatin1(DEFAULT_CLIENT_API_KEY)).toString();
+    m_clientApiKey = settings.value(Constants::Settings::Providers::HASHEOUS_CLIENT_API_KEY)
+                         .toString().trimmed();
 
     m_rateLimiter->setInterval(Constants::Network::HASHEOUS_RATE_LIMIT_MS);
-    qInfo() << "Hasheous provider initialized (no auth required)";
+    qInfo() << "Hasheous provider initialized (hash lookup enabled; MetadataProxy"
+            << (metadataProxyEnabled() ? "enabled" : "disabled") << ")";
 }
 
 QString HasheousProvider::detectHashType(const QString &hash) const
@@ -53,14 +57,18 @@ QString HasheousProvider::detectHashType(const QString &hash) const
 QJsonObject HasheousProvider::makeRequest(const QString &endpoint, const QUrlQuery &params)
 {
     m_rateLimiter->waitIfNeeded();
+
+    if (isMetadataProxyEndpoint(endpoint) && !metadataProxyEnabled()) {
+        qDebug() << "Hasheous: Skipping MetadataProxy request without configured authorization:" << endpoint;
+        return QJsonObject();
+    }
     
     QUrl url(QString(Constants::API::HASHEOUS_BASE_URL) + endpoint);
     url.setQuery(params);
     
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::UserAgentHeader, Constants::API::USER_AGENT);
-    // MetadataProxy endpoints require a client API key
-    if (!m_clientApiKey.isEmpty()) {
+    if (isMetadataProxyEndpoint(endpoint) && !m_clientApiKey.isEmpty()) {
         request.setRawHeader("X-Client-API-Key", m_clientApiKey.toUtf8());
     }
     
@@ -91,8 +99,15 @@ QJsonObject HasheousProvider::makeRequest(const QString &endpoint, const QUrlQue
         result = doc.object();
     } else {
         int statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+        const bool metadataProxyRequest = isMetadataProxyEndpoint(url.path());
         if (statusCode == 404) {
             qDebug() << "Hasheous API 404 (expected miss):" << url.toString();
+        } else if (metadataProxyRequest && (statusCode == 401 || statusCode == 403)) {
+            if (!m_metadataProxyDisabled) {
+                qInfo() << "Hasheous: MetadataProxy disabled after authorization failure"
+                        << "Status:" << statusCode;
+            }
+            m_metadataProxyDisabled = true;
         } else {
             qWarning() << "Hasheous API error:" << reply->errorString()
                         << "Status:" << statusCode
@@ -103,6 +118,11 @@ QJsonObject HasheousProvider::makeRequest(const QString &endpoint, const QUrlQue
     
     reply->deleteLater();
     return result;
+}
+
+bool HasheousProvider::metadataProxyEnabled() const
+{
+    return !m_clientApiKey.isEmpty() && !m_metadataProxyDisabled;
 }
 
 QJsonObject HasheousProvider::makePostRequest(const QString &endpoint, const QJsonObject &body, const QUrlQuery &params)
@@ -221,6 +241,11 @@ GameMetadata HasheousProvider::parseGameJson(const QJsonObject &json) const
 GameMetadata HasheousProvider::fetchIgdbMetadata(int igdbId)
 {
     if (igdbId <= 0) {
+        return GameMetadata();
+    }
+
+    if (!metadataProxyEnabled()) {
+        qDebug() << "Hasheous: MetadataProxy enrichment skipped for IGDB ID:" << igdbId;
         return GameMetadata();
     }
     
@@ -545,7 +570,7 @@ GameMetadata HasheousProvider::getByHashes(const QString &crc32,
 
     qInfo() << "Hasheous: Found match:" << metadata.title;
 
-    if (metadata.externalIds.contains("igdb")) {
+    if (metadata.externalIds.contains("igdb") && metadataProxyEnabled()) {
         int igdbId = metadata.externalIds["igdb"].toInt();
         if (igdbId > 0) {
             GameMetadata igdbMetadata = fetchIgdbMetadata(igdbId);

@@ -134,6 +134,25 @@ QList<FileRecord> getHashedFiles(Database &db)
     return filtered;
 }
 
+QString getMatchingDisplayName(const FileRecord &file)
+{
+    if (file.isCompressed) {
+        const QString containerBase = QFileInfo(file.currentPath).completeBaseName();
+        if (!containerBase.isEmpty()) {
+            return containerBase;
+        }
+
+        const QString entryBase = QFileInfo(file.archiveInternalPath.isEmpty() ? file.filename
+                                                                                : file.archiveInternalPath).completeBaseName();
+        if (!entryBase.isEmpty()) {
+            return entryBase;
+        }
+    }
+
+    const QString baseName = QFileInfo(file.filename).completeBaseName();
+    return baseName.isEmpty() ? file.filename : baseName;
+}
+
 int persistMetadata(Database &db, const FileRecord &file, const GameMetadata &metadata)
 {
     int systemId = db.getSystemId(metadata.system);
@@ -156,10 +175,19 @@ void printFileInfo(const FileRecord &file)
 {
     qInfo() << "File ID:" << file.id;
     qInfo() << "Library ID:" << file.libraryId;
-    qInfo() << "Path:" << file.currentPath;
+    if (file.isCompressed) {
+        qInfo() << "Container Path:" << file.currentPath;
+        qInfo() << "Archive Path:" << (file.archivePath.isEmpty() ? file.currentPath : file.archivePath);
+        qInfo() << "Archive Entry:" << (file.archiveInternalPath.isEmpty() ? file.filename : file.archiveInternalPath);
+        qInfo() << "Container Filename:" << QFileInfo(file.currentPath).fileName();
+        qInfo() << "Entry Filename:" << file.filename;
+        qInfo() << "Entry Extension:" << file.extension;
+    } else {
+        qInfo() << "Path:" << file.currentPath;
+        qInfo() << "Filename:" << file.filename;
+        qInfo() << "Extension:" << file.extension;
+    }
     qInfo() << "Original Path:" << file.originalPath;
-    qInfo() << "Filename:" << file.filename;
-    qInfo() << "Extension:" << file.extension;
     qInfo() << "Size:" << file.fileSize;
     qInfo() << "System ID:" << file.systemId;
     qInfo() << "Hash calculated:" << file.hashCalculated;

@@ -28,9 +28,6 @@ ui_*
 *.swo
 *~
 
-# Local Copilot workspace instruction artifact
-.github/copilot-instructions.md
-
 # CMake
 CMakeCache.txt
 CMakeFiles/
@@ -50,6 +47,7 @@ cache/
 
 # Logs
 *.log
+!test_output/*.log
 
 # OS
 .DS_Store
@@ -65,20 +63,32 @@ test_roms/
 test_library/
 rom_tests/
 
+# Canonical local ROM storage (keep ROM payloads out of git)
+/roms/**
+!/roms/
+!/roms/README.md
+
 # Distribution/packaging
 dist/
 
 # ROM and game files (never commit ROMs)
 ## Nintendo
 *.nes
+*.sfc
+*.smc
 *.snes
 *.n64
+*.v64
 *.gbc
 *.gba
 *.gb
+*.nds
+*.3ds
+*.cia
 *.32x
 *.smd
 *.gen
+*.gcm
 
 ## Sega
 *.sms
@@ -90,6 +100,9 @@ dist/
 *.psx
 *.ps1
 *.ps2
+*.pbp
+*.cso
+*.chd
 
 ## Atari
 *.a26
@@ -101,11 +114,15 @@ dist/
 *.gdi
 *.rom
 *.z64
+*.wbfs
 
 ## Disc-based formats
 *.iso
 *.cue
 *.img
+*.ccd
+*.sub
+*.mds
 *.mdf
 *.gdf
 
@@ -114,6 +131,9 @@ dist/
 *.7z
 *.rar
 *.tar.gz
+*.tgz
+*.tar.bz2
+*.tbz2
 *.tar
 
 ## Playlists & related

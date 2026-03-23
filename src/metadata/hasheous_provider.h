@@ -56,6 +56,7 @@ protected:
     RateLimiter *m_rateLimiter;
     QString m_clientApiKey;
     QMap<int, QString> m_companyCache;
+    bool m_metadataProxyDisabled = false;
 
     /**
      * @brief Detect hash type from hash string length
@@ -87,6 +88,14 @@ protected:
      * @return JSON response object
      */
     virtual QJsonObject makePostRequest(const QString &endpoint, const QJsonObject &body, const QUrlQuery &params = QUrlQuery());
+
+    /**
+     * @brief Whether MetadataProxy enrichment is currently available.
+     *
+     * MetadataProxy requires an explicit client API key and may be disabled at
+     * runtime if the server returns an authorization failure.
+     */
+    virtual bool metadataProxyEnabled() const;
     
     /**
      * @brief Fetch full IGDB metadata via Hasheous MetadataProxy

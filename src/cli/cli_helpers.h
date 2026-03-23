@@ -31,6 +31,10 @@ std::unique_ptr<ProviderOrchestrator> buildOrchestrator(const QCommandLineParser
 // Return only files that have at least one computed hash value.
 QList<FileRecord> getHashedFiles(Database &db);
 
+// Return the best user-facing name for matching/search. For archive-backed
+// records this prefers the container name over the inner entry extension.
+QString getMatchingDisplayName(const FileRecord &file);
+
 // Insert a matched game into the database and record the match confidence/method.
 // Returns the newly-inserted gameId, or 0 on failure.
 int persistMetadata(Database &db, const FileRecord &file, const GameMetadata &metadata);

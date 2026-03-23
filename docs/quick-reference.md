@@ -175,6 +175,28 @@ Final Fantasy VII (USA) (Disc 3).chd
 ./discs/Final Fantasy VII (USA) (Disc 3).chd
 ```
 
+## Bundle Commands
+
+### Create ZIP Bundles
+```bash
+./remus-cli --bundle ~/roms/bundles --bundle-format zip
+```
+
+### Create 7z Bundles
+```bash
+./remus-cli --bundle ~/roms/bundles --bundle-format 7z
+```
+
+### Reuse Cached Artwork
+```bash
+./remus-cli --bundle ~/roms/bundles --bundle-art-dir ~/roms/art-cache
+```
+
+### Bundle Contents
+- Original ROM or extracted game files
+- `.remus.md` processed marker for bundle detection
+- `artwork/boxfront.jpg` when box art is available
+
 ## CHD Conversion Commands
 
 ### Convert CUE/BIN to CHD

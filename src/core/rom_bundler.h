@@ -6,6 +6,7 @@
 #include "database.h"
 #include "archive_extractor.h"
 #include "archive_creator.h"
+#include "chd_converter.h"
 #include "../metadata/metadata_provider.h"
 
 namespace Remus {
@@ -36,6 +37,9 @@ public:
         /// Path to an already-downloaded box-art file (handled by caller before bundling).
         /// If empty and includeBoxArt is true, the step is silently skipped.
         QString      artworkPath;
+        /// When true, supported disc-image inputs (.cue/.iso/.img/.gdi) are
+        /// converted to a CHD before packaging the final bundle archive.
+        bool         convertDiscsToChd = false;
     };
 
     /**

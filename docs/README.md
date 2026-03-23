@@ -15,6 +15,7 @@ Documentation index for Remus.
 - [verification-and-patching.md](verification-and-patching.md) - DAT verification and ROM patching
 - [naming-standards.md](naming-standards.md) - Naming conventions
 - [chd-conversion.md](chd-conversion.md) - CHD conversion workflow
+- [guides/TEST-DATA-POLICY.md](guides/TEST-DATA-POLICY.md) - Canonical `roms/` and `test_output/` policy
 
 ## Technical Reference
 

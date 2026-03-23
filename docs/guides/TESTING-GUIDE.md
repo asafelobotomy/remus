@@ -1,5 +1,7 @@
 # Remus GUI Testing Guide - Metadata Matching
 
+Use the canonical repository-local paths from [TEST-DATA-POLICY.md](TEST-DATA-POLICY.md): keep source ROMs under `roms/` and keep processed test runs under `test_output/` with no more than 5 active cases.
+
 ## Current Status
 ✅ **GUI is running** (PID: check with `ps aux | grep remus-gui`)
 ✅ **LocalDatabaseProvider is active** and found a match for Sonic ROM
@@ -42,7 +44,7 @@ To test the complete pipeline from scratch:
 #### Step 2: Scan ROMs
 1. Go to **Library** section
 2. Click "Scan Directory"
-3. Browse to: `/home/solon/Documents/remus/tests/rom_tests/Sonic The Hedgehog (USA, Europe)/`
+3. Browse to your repository-local ROM folder, for example: `/home/solon/Documents/git/remus/roms/genesis/`
 4. Click "Start Scan"
 
 **Expected Results**:
@@ -61,7 +63,7 @@ To test the complete pipeline from scratch:
 
 #### Step 4: Match Metadata
 1. Click "Match Metadata" button
-2. **Watch the console logs** (in `/tmp/remus-test-session.log`)
+2. **Watch the console logs** and copy any follow-up items into `test_output/attention.log`
 
 **Expected Log Output**:
 ```
@@ -105,7 +107,7 @@ To see different confidence levels in action:
 
 ### Real-Time Logs
 ```bash
-tail -f /tmp/remus-test-session.log | grep -E "(LocalDatabase|Multi-signal|confidence)"
+tail -f /tmp/remus-test-session.log | tee -a test_output/attention.log | grep -E "(LocalDatabase|Multi-signal|confidence)"
 ```
 
 ### Database Query (After Matching)
@@ -146,7 +148,7 @@ sqlite3 ~/.local/share/Remus/Remus/remus.db \
 **Check**:
 1. DAT file loaded? (Settings → DAT Management)
 2. Hash format correct? (lowercase, no spaces)
-3. Check logs: `grep "LocalDatabase" /tmp/remus-test-session.log`
+3. Check logs: `grep "LocalDatabase" test_output/attention.log`
 
 ### Issue: Low confidence score
 **Expected**: Different scenarios yield different scores:
@@ -184,11 +186,11 @@ cd /home/solon/Documents/remus
 If you want to test more games:
 
 ```bash
-# Nintendo ROMs (requires NES/SNES DAT files)
-/home/solon/Documents/remus/tests/rom_tests/Originals/
+# Put additional local ROMs under roms/
+/home/solon/Documents/git/remus/roms/
 
-# PlayStation ROMs (requires PS1 DAT file)
-/home/solon/Documents/remus/tests/rom_tests/Silent Hill (USA).7z
+# Keep processed case notes and follow-up items under test_output/
+/home/solon/Documents/git/remus/test_output/
 ```
 
 ---

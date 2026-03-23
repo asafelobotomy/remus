@@ -367,4 +367,31 @@ All files restored to original locations.
 Metadata preserved in database.
 
 Note: Downloaded artwork has been kept in cache.
+
+## Example 9: Self-Contained Bundle Output
+
+### Command
+```bash
+./remus-cli --match --min-confidence 80
+./remus-cli --bundle /home/user/bundles --bundle-format 7z
 ```
+
+### Resulting Archive Layout
+```
+/home/user/bundles/
+  Super Mario Bros. (USA).7z
+```
+
+### Contents of Super Mario Bros. (USA).7z
+```
+Super Mario Bros. (USA).nes
+.remus.md
+/artwork/
+  boxfront.jpg
+```
+
+### Notes
+- `.remus.md` marks the archive as already processed, so later bundle checks can skip it safely.
+- Remus refreshes metadata before bundling and downloads box art unless `--bundle-art-dir` already contains a matching image.
+- The archive preserves relative paths, so artwork stays under `artwork/` inside both ZIP and 7z bundles.
+

@@ -18,6 +18,8 @@ private slots:
     void testSelectBestHashPrefersHasheous();
     void testSelectBestHashEmptyWhenNoHashes();
     void testGetHashedFilesOnlyReturnsHashedRows();
+    void testGetMatchingDisplayNameForRegularFile();
+    void testGetMatchingDisplayNameForArchiveFile();
     void testPersistMetadataInsertsGame();
     void testPersistMetadataDuplicateGame();
     void testHashFileRecordRealFile();
@@ -138,6 +140,25 @@ void CliHelpersTest::testGetHashedFilesOnlyReturnsHashedRows()
     QList<FileRecord> hashed = getHashedFiles(db);
     QCOMPARE(hashed.size(), 1);
     QCOMPARE(hashed.first().id, hashedId);
+}
+
+void CliHelpersTest::testGetMatchingDisplayNameForRegularFile()
+{
+    FileRecord fr;
+    fr.filename = "Sonic The Hedgehog (USA, Europe).md";
+
+    QCOMPARE(getMatchingDisplayName(fr), QStringLiteral("Sonic The Hedgehog (USA, Europe)"));
+}
+
+void CliHelpersTest::testGetMatchingDisplayNameForArchiveFile()
+{
+    FileRecord fr;
+    fr.isCompressed = true;
+    fr.currentPath = "/roms/Sonic The Hedgehog (USA, Europe).zip";
+    fr.filename = "Sonic The Hedgehog (USA, Europe).md";
+    fr.archiveInternalPath = "Sonic The Hedgehog (USA, Europe).md";
+
+    QCOMPARE(getMatchingDisplayName(fr), QStringLiteral("Sonic The Hedgehog (USA, Europe)"));
 }
 
 void CliHelpersTest::testPersistMetadataInsertsGame()

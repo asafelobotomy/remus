@@ -123,9 +123,10 @@ int main(int argc, char *argv[])
     parser.addOption(QCommandLineOption("dry-run-all", "Preview file outputs for all file-writing actions"));
 
     // Bundle options
-    parser.addOption(QCommandLineOption("bundle",        "Download metadata+art and repack matched ROMs into self-contained archives", "destination"));
+    parser.addOption(QCommandLineOption("bundle",        "Fetch metadata, download box art, and repack matched ROMs into self-contained archives", "destination"));
     parser.addOption(QCommandLineOption("bundle-format", "Output archive format for bundles (zip|7z, default: zip)", "format", "zip"));
-    parser.addOption(QCommandLineOption("bundle-art-dir","Pre-downloaded artwork directory (skips fresh downloads)", "directory"));
+    parser.addOption(QCommandLineOption("bundle-art-dir","Optional pre-downloaded artwork directory (avoids re-downloading box art)", "directory"));
+    parser.addOption(QCommandLineOption("bundle-disc-format", "Disc media packaging inside bundles (original|chd, default: original)", "format", "original"));
 
     // Patch options
     parser.addOption(QCommandLineOption("patch-apply",    "Apply patch to base file",          "basefile"));

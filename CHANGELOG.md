@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- Copilot instructions recreated from template v4.0.0 (file was missing from disk).
+  All 13 sections restored. §10 values recovered from BOOTSTRAP.md, JOURNAL.md, and workspace identity files.
+  Backup at: `.github/archive/pre-update-2026-03-20-v4.0.0/`
+
 ### Added
 - Copilot instructions scaffolded from [copilot-instructions-template](https://github.com/asafelobotomy/copilot-instructions-template) v1.0.3 on 2026-02-19.
   Includes: `.github/copilot-instructions.md`, model-pinned agents (`.github/agents/`),

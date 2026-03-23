@@ -3,6 +3,7 @@
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
+#include <QTemporaryDir>
 #include <QUrl>
 #include "../core/organize_engine.h"
 #include "../core/rom_bundler.h"
@@ -86,19 +87,30 @@ int handleBundleCommand(CliContext &ctx)
     const QString destination  = ctx.parser.value("bundle");
     const QString formatStr    = ctx.parser.value("bundle-format");
     const QString artworkDir   = ctx.parser.value("bundle-art-dir");
+    const QString discFormat   = ctx.parser.value("bundle-disc-format").toLower();
     const bool    dryRun       = ctx.parser.isSet("dry-run") || ctx.dryRunAll;
 
     const ArchiveFormat fmt = (formatStr == "7z") ? ArchiveFormat::SevenZip
                                                   : ArchiveFormat::ZIP;
+    if (discFormat != "original" && discFormat != "chd") {
+        qCritical() << "✗ Unsupported bundle disc format:" << discFormat;
+        qInfo() << "Supported values: original, chd";
+        return 1;
+    }
 
     qInfo() << "";
     qInfo() << "=== Bundle Matched ROMs ===";
     qInfo() << "Destination:" << destination;
     qInfo() << "Format:"      << formatStr;
+    qInfo() << "Disc Media:"  << discFormat;
     qInfo() << "Mode:"        << (dryRun ? "DRY RUN (preview only)" : "EXECUTE");
     qInfo() << "";
 
     RomBundler bundler(ctx.db);
+    auto orchestrator = buildOrchestrator(ctx.parser);
+    ArtworkDownloader downloader;
+    QTemporaryDir tempArtworkDir;
+
     QObject::connect(&bundler, &RomBundler::progressMessage,
         [](const QString &msg) { qInfo() << " " << msg; });
 
@@ -118,6 +130,21 @@ int handleBundleCommand(CliContext &ctx)
         const Database::MatchResult &match = matches.value(file.id);
         if (match.isRejected) continue;
 
+        const QString displayName = getMatchingDisplayName(file);
+        GameMetadata metadata = orchestrator->searchWithFallback(
+            selectBestHash(file), displayName, QString(),
+            file.crc32, file.md5, file.sha1);
+
+        if (metadata.title.isEmpty()) {
+            metadata.title       = match.gameTitle;
+            metadata.publisher   = match.publisher;
+            metadata.developer   = match.developer;
+            metadata.description = match.description;
+            metadata.rating      = match.rating;
+            metadata.matchMethod = match.matchMethod;
+            metadata.matchScore  = match.confidence;
+        }
+
         // Resolve artwork path for this specific file
         QString artworkPath;
         if (!artworkDir.isEmpty()) {
@@ -127,22 +154,33 @@ int handleBundleCommand(CliContext &ctx)
                 artworkPath = candidate;
         }
 
+        if (artworkPath.isEmpty() && !metadata.boxArtUrl.isEmpty()) {
+            const QUrl boxArtUrl(metadata.boxArtUrl);
+            if (boxArtUrl.isValid()) {
+                const QString ext = QFileInfo(boxArtUrl.path()).suffix().isEmpty()
+                    ? QStringLiteral("jpg")
+                    : QFileInfo(boxArtUrl.path()).suffix().toLower();
+                const QString destPath = tempArtworkDir.path() + "/" +
+                    QString::number(file.id) + "." + ext;
+
+                if (dryRun) {
+                    qInfo() << "  [DRY-RUN] Would download box art from:" << boxArtUrl;
+                } else if (downloader.download(boxArtUrl, destPath)) {
+                    artworkPath = destPath;
+                    qInfo() << "  ✓ Downloaded box art:" << destPath;
+                } else {
+                    qWarning() << "  ⚠ Failed to download box art from:" << boxArtUrl;
+                }
+            }
+        }
+
         const RomBundler::BundleConfig config{
             /*includeBoxArt*/ true,
             /*dryRun*/        dryRun,
             /*outputFormat*/  fmt,
-            /*artworkPath*/   artworkPath
+            /*artworkPath*/   artworkPath,
+            /*convertDiscsToChd*/ discFormat == QStringLiteral("chd")
         };
-
-        // Build GameMetadata from the DB match (providers already queried at match time)
-        GameMetadata metadata;
-        metadata.title       = match.gameTitle;
-        metadata.publisher   = match.publisher;
-        metadata.developer   = match.developer;
-        metadata.description = match.description;
-        metadata.rating      = match.rating;
-        metadata.matchMethod = match.matchMethod;
-        metadata.matchScore  = match.confidence;
 
         qInfo() << "Bundling:" << file.filename;
 

@@ -154,34 +154,49 @@ CHDInfo CHDConverter::getCHDInfo(const QString &chdPath)
                                              QStringList() << "info" << "-i" << chdPath,
                                              30000);
 
-    QString output = processResult.stdOutput;
-    
-    // Parse chdman info output
-    QRegularExpression versionRe("CHD version:\\s+(\\d+)");
-    QRegularExpression logicalRe("Logical size:\\s+(\\d+)");
-    QRegularExpression sha1Re("SHA1:\\s+([a-fA-F0-9]+)");
-    QRegularExpression compressionRe("Compression:\\s+(\\S+)");
-    
-    QRegularExpressionMatch match;
-    
-    match = versionRe.match(output);
+    if (!processResult.started || processResult.exitCode != 0) {
+        return info;
+    }
+
+    const QString output = processResult.stdOutput;
+
+    auto parseInt64 = [](QString value) {
+        value.remove(',');
+        return value.toLongLong();
+    };
+
+    // Parse chdman info output. Recent chdman versions use labels such as
+    // "File Version" and "CHD size" rather than the older "CHD version"
+    // and "Physical size" wording.
+    const QRegularExpression versionRe(R"((?:CHD version|File Version):\s*(\d+))");
+    const QRegularExpression logicalRe(R"(Logical size:\s*([\d,]+))");
+    const QRegularExpression physicalRe(R"((?:CHD size|Physical size):\s*([\d,]+))");
+    const QRegularExpression sha1Re(R"(^SHA1:\s*([a-fA-F0-9]+))", QRegularExpression::MultilineOption);
+    const QRegularExpression compressionRe(R"(^Compression:\s*(.+)$)", QRegularExpression::MultilineOption);
+
+    QRegularExpressionMatch match = versionRe.match(output);
     if (match.hasMatch()) {
         info.version = match.captured(1).toInt();
     }
-    
+
     match = logicalRe.match(output);
     if (match.hasMatch()) {
-        info.logicalSize = match.captured(1).toLongLong();
+        info.logicalSize = parseInt64(match.captured(1));
     }
-    
+
+    match = physicalRe.match(output);
+    if (match.hasMatch()) {
+        info.physicalSize = parseInt64(match.captured(1));
+    }
+
     match = sha1Re.match(output);
     if (match.hasMatch()) {
         info.sha1 = match.captured(1);
     }
-    
+
     match = compressionRe.match(output);
     if (match.hasMatch()) {
-        info.compression = match.captured(1);
+        info.compression = match.captured(1).trimmed();
     }
     
     return info;

@@ -32,8 +32,17 @@ private:
     {
         const QString path = dir.path() + "/" + filename;
         QFile f(path);
-        Q_ASSERT(f.open(QIODevice::WriteOnly));
-        f.write("FAKE ROM DATA");
+        if (!f.open(QIODevice::WriteOnly)) {
+            qWarning() << "Failed to create ROM test file:" << path;
+            return 0;
+        }
+
+        if (f.write("FAKE ROM DATA") != 13) {
+            qWarning() << "Failed to write ROM test file:" << path;
+            return 0;
+        }
+
+        f.close();
 
         int libId = db.insertLibrary(dir.path(), "Test");
         int sysId = db.getSystemId("NES");
@@ -70,6 +79,7 @@ void OrganizeEngineTest::testDryRunProducesNoFilesystemChange()
     Database db;
     QVERIFY(db.initialize(":memory:"));
     int fileId = makeRomFile(srcDir, db);
+    QVERIFY(fileId > 0);
     const QString originalPath = srcDir.path() + "/mario.nes";
     QVERIFY(QFile::exists(originalPath));
 
@@ -92,6 +102,7 @@ void OrganizeEngineTest::testMoveFile()
     Database db;
     QVERIFY(db.initialize(":memory:"));
     int fileId = makeRomFile(srcDir, db);
+    QVERIFY(fileId > 0);
     const QString originalPath = srcDir.path() + "/mario.nes";
 
     OrganizeEngine engine(db);
@@ -114,6 +125,7 @@ void OrganizeEngineTest::testCopyFile()
     Database db;
     QVERIFY(db.initialize(":memory:"));
     int fileId = makeRomFile(srcDir, db);
+    QVERIFY(fileId > 0);
     const QString originalPath = srcDir.path() + "/mario.nes";
 
     OrganizeEngine engine(db);
@@ -141,6 +153,7 @@ void OrganizeEngineTest::testCollisionSkip()
     Database db;
     QVERIFY(db.initialize(":memory:"));
     int fileId = makeRomFile(srcDir, db);
+    QVERIFY(fileId > 0);
 
     OrganizeEngine engine(db);
     engine.setTemplate("{title}{ext}");
@@ -181,6 +194,7 @@ void OrganizeEngineTest::testCollisionOverwrite()
     Database db;
     QVERIFY(db.initialize(":memory:"));
     int fileId = makeRomFile(srcDir, db);
+    QVERIFY(fileId > 0);
 
     OrganizeEngine engine(db);
     engine.setTemplate("{title}{ext}");
@@ -204,6 +218,7 @@ void OrganizeEngineTest::testUndoOperation()
     Database db;
     QVERIFY(db.initialize(":memory:"));
     int fileId = makeRomFile(srcDir, db);
+    QVERIFY(fileId > 0);
     const QString originalPath = srcDir.path() + "/mario.nes";
 
     OrganizeEngine engine(db);

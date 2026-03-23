@@ -43,8 +43,17 @@ static QString writeDat(const QTemporaryDir &dir)
 {
     const QString path = dir.path() + "/test.dat";
     QFile f(path);
-    Q_ASSERT(f.open(QIODevice::WriteOnly | QIODevice::Text));
-    f.write(k_datXml);
+    if (!f.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        qWarning() << "Failed to open DAT file for writing:" << path;
+        return QString();
+    }
+
+    if (f.write(k_datXml) != qstrlen(k_datXml)) {
+        qWarning() << "Failed to write DAT contents to:" << path;
+        return QString();
+    }
+
+    f.close();
     return path;
 }
 
@@ -107,7 +116,9 @@ void VerificationEngineTest::testImportDat()
     QVERIFY(db.initialize(":memory:"));
 
     VerificationEngine engine(&db);
-    int count = engine.importDat(writeDat(dir), "NES");
+    const QString datPath = writeDat(dir);
+    QVERIFY(!datPath.isEmpty());
+    int count = engine.importDat(datPath, "NES");
     QCOMPARE(count, 2);  // Two game entries in the DAT
 }
 
@@ -123,7 +134,9 @@ void VerificationEngineTest::testVerifyMatchingHash()
                              "ea343f4e445a9050d4b4fbac2c77d0693b1d0922");
 
     VerificationEngine engine(&db);
-    engine.importDat(writeDat(dir), "NES");
+    const QString datPath = writeDat(dir);
+    QVERIFY(!datPath.isEmpty());
+    engine.importDat(datPath, "NES");
 
     VerificationResult result = engine.verifyFile(fileId);
     QCOMPARE(result.fileId, fileId);
@@ -140,7 +153,9 @@ void VerificationEngineTest::testVerifyMismatch()
     int fileId = populateDb(db, "ffffffff");  // Wrong CRC
 
     VerificationEngine engine(&db);
-    engine.importDat(writeDat(dir), "NES");
+    const QString datPath = writeDat(dir);
+    QVERIFY(!datPath.isEmpty());
+    engine.importDat(datPath, "NES");
 
     VerificationResult result = engine.verifyFile(fileId);
     QCOMPARE(result.status, VerificationStatus::NotInDat);
@@ -172,7 +187,9 @@ void VerificationEngineTest::testVerifyNotInDat()
     db.updateFileHashes(fileId, "cafebabe", QString(), QString());
 
     VerificationEngine engine(&db);
-    engine.importDat(writeDat(dir), "NES");
+    const QString datPath = writeDat(dir);
+    QVERIFY(!datPath.isEmpty());
+    engine.importDat(datPath, "NES");
 
     VerificationResult result = engine.verifyFile(fileId);
     QCOMPARE(result.status, VerificationStatus::NotInDat);
@@ -189,7 +206,9 @@ void VerificationEngineTest::testVerifyHashMissing()
     int fileId = populateDb(db, QString(), QString(), QString(), false);
 
     VerificationEngine engine(&db);
-    engine.importDat(writeDat(dir), "NES");
+    const QString datPath = writeDat(dir);
+    QVERIFY(!datPath.isEmpty());
+    engine.importDat(datPath, "NES");
 
     VerificationResult result = engine.verifyFile(fileId);
     QCOMPARE(result.status, VerificationStatus::HashMissing);
@@ -208,7 +227,9 @@ void VerificationEngineTest::testVerifySummary()
                "ea343f4e445a9050d4b4fbac2c77d0693b1d0922");
 
     VerificationEngine engine(&db);
-    engine.importDat(writeDat(dir), "NES");
+    const QString datPath = writeDat(dir);
+    QVERIFY(!datPath.isEmpty());
+    engine.importDat(datPath, "NES");
     engine.verifyLibrary("NES");
 
     VerificationSummary summary = engine.getLastSummary();
@@ -228,7 +249,9 @@ void VerificationEngineTest::testHasDat()
     VerificationEngine engine(&db);
     QVERIFY(!engine.hasDat("NES"));
 
-    engine.importDat(writeDat(dir), "NES");
+    const QString datPath = writeDat(dir);
+    QVERIFY(!datPath.isEmpty());
+    engine.importDat(datPath, "NES");
     QVERIFY(engine.hasDat("NES"));
     QVERIFY(!engine.hasDat("SNES"));
 }
@@ -242,7 +265,9 @@ void VerificationEngineTest::testRemoveDat()
     QVERIFY(db.initialize(":memory:"));
 
     VerificationEngine engine(&db);
-    engine.importDat(writeDat(dir), "NES");
+    const QString datPath = writeDat(dir);
+    QVERIFY(!datPath.isEmpty());
+    engine.importDat(datPath, "NES");
     QVERIFY(engine.hasDat("NES"));
 
     QVERIFY(engine.removeDat("NES"));
@@ -262,7 +287,9 @@ void VerificationEngineTest::testGetMissingGames()
                "ea343f4e445a9050d4b4fbac2c77d0693b1d0922");
 
     VerificationEngine engine(&db);
-    engine.importDat(writeDat(dir), "NES");
+    const QString datPath = writeDat(dir);
+    QVERIFY(!datPath.isEmpty());
+    engine.importDat(datPath, "NES");
 
     QList<DatRomEntry> missing = engine.getMissingGames("NES");
     QCOMPARE(missing.size(), 1);

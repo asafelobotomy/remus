@@ -5,6 +5,7 @@
 
 #include <QCoreApplication>
 #include <QDebug>
+#include <QDir>
 #include <QFile>
 #include <QFileInfo>
 #include <QCryptographicHash>
@@ -13,6 +14,31 @@
 #include "../src/core/hasher.h"
 
 using namespace Remus;
+
+static QString findGenesisDatPath()
+{
+    const QString appDir = QCoreApplication::applicationDirPath();
+    const QString cwd = QDir::currentPath();
+    const QString fileName = "Sega - Mega Drive - Genesis.dat";
+    const QStringList candidateDirs = {
+        appDir + "/data/databases",
+        appDir + "/../data/databases",
+        appDir + "/../../data/databases",
+        appDir + "/../../../data/databases",
+        cwd + "/data/databases",
+        cwd + "/../data/databases",
+        cwd + "/../../data/databases"
+    };
+
+    for (const QString &dirPath : candidateDirs) {
+        const QString candidate = QDir(dirPath).filePath(fileName);
+        if (QFileInfo::exists(candidate)) {
+            return QDir::cleanPath(candidate);
+        }
+    }
+
+    return QString();
+}
 
 /**
  * @brief Calculate file hash
@@ -50,7 +76,11 @@ bool testDatLoading() {
     LocalDatabaseProvider provider;
     
     // Try to load Genesis DAT
-    QString datPath = "/home/solon/Documents/remus/data/databases/Sega - Mega Drive - Genesis.dat";
+    const QString datPath = findGenesisDatPath();
+    if (datPath.isEmpty()) {
+        qWarning() << "✗ Failed to resolve Genesis DAT path";
+        return false;
+    }
     int entries = provider.loadDatabase(datPath);
     
     if (entries > 0) {
@@ -270,7 +300,12 @@ int main(int argc, char *argv[])
     
     // Create provider for remaining tests
     LocalDatabaseProvider provider;
-    QString datPath = "/home/solon/Documents/remus/data/databases/Sega - Mega Drive - Genesis.dat";
+    const QString datPath = findGenesisDatPath();
+    if (datPath.isEmpty()) {
+        qCritical() << "\n✗ Cannot continue: Genesis DAT path could not be resolved";
+        return 1;
+    }
+
     int entries = provider.loadDatabase(datPath);
     
     if (entries == 0) {

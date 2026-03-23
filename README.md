@@ -69,6 +69,7 @@ A desktop application for scanning, organizing, and managing retro game ROM libr
 - **[Project Roadmap](docs/plan.md)** - Development milestones
 - **[Examples & Workflows](docs/examples.md)** - Practical usage examples
 - **[Metadata Providers Guide](docs/metadata-providers.md)** - Provider comparison and setup
+- **[Test Data Policy](docs/guides/TEST-DATA-POLICY.md)** - Canonical `roms/` and `test_output/` locations
 
 ### Technical Reference
 - **[Database Schema](docs/data-model.md)** - SQLite tables and relationships
@@ -84,6 +85,13 @@ A desktop application for scanning, organizing, and managing retro game ROM libr
 
 **CLI, GUI, and TUI are all fully functional!** See [docs/setup/BUILD.md](docs/setup/BUILD.md) for complete build instructions and usage examples.
 
+Repository-local path policy:
+
+- Put local ROM inputs under `roms/`.
+- Use `test_output/` for small processed-ROM test runs and tracked review notes.
+- Keep `test_output/` to 5 active cases or fewer.
+- Record anything that needs follow-up in `test_output/attention.log`.
+
 ```bash
 # Build
 mkdir build && cd build
@@ -91,7 +99,7 @@ cmake ..
 make -j$(nproc)
 
 # Scan and hash ROMs
-./remus-cli --scan ~/roms/NES --hash
+./remus-cli --scan ../roms/NES --hash
 
 # Match with intelligent fallback (M3)
 ./remus-cli --match --min-confidence 70
@@ -113,6 +121,12 @@ make -j$(nproc)
 
 # Use custom Redump template
 ./remus-cli --organize ~/roms/psx --template "{title} ({region}) (Disc {disc}){ext}"
+
+# Build self-contained bundles with metadata, box art, and a .remus.md marker
+./remus-cli --bundle ~/roms/bundles --bundle-format zip
+
+# Reuse previously-downloaded artwork instead of downloading it again
+./remus-cli --bundle ~/roms/bundles --bundle-art-dir ~/roms/art-cache
 ```
 
 ### TUI Setup & Run

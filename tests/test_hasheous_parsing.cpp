@@ -18,6 +18,10 @@ public:
     }
 
 protected:
+    bool metadataProxyEnabled() const override {
+        return true;
+    }
+
     QJsonObject makeRequest(const QString &endpoint, const QUrlQuery &params) override {
         if (endpoint.contains("/MetadataProxy/IGDB/Game")) {
             return m_gameFixture;
@@ -42,6 +46,7 @@ class HasheousParsingTest : public QObject {
 private slots:
     void parseIsoDateGenresCompaniesScreenshotsSystem();
     void parseTimestampAndArrayGenres();
+    void getByHashesKeepsHashMatchWhenMetadataProxyDisabled();
 };
 
 void HasheousParsingTest::parseIsoDateGenresCompaniesScreenshotsSystem()
@@ -111,6 +116,55 @@ void HasheousParsingTest::parseTimestampAndArrayGenres()
 
     QCOMPARE(md.releaseDate, QString("1991-06-23"));
     QCOMPARE(md.genres, QStringList({"Adventure", "Puzzle"}));
+}
+
+namespace {
+class HashLookupHasheousProvider : public HasheousProvider {
+public:
+    int fetchCalls = 0;
+
+protected:
+    bool metadataProxyEnabled() const override {
+        return false;
+    }
+
+    QJsonObject makePostRequest(const QString &, const QJsonObject &, const QUrlQuery &) override {
+        QJsonObject metadataEntry;
+        metadataEntry["source"] = "IGDB";
+        metadataEntry["immutableId"] = "3192";
+
+        QJsonArray metadataArray;
+        metadataArray.append(metadataEntry);
+
+        return QJsonObject{
+            {"id", 1},
+            {"name", "Sonic the Hedgehog"},
+            {"metadata", metadataArray},
+            {"signatures", QJsonArray()},
+            {"attributes", QJsonArray()}
+        };
+    }
+
+    GameMetadata fetchIgdbMetadata(int igdbId) override {
+        Q_UNUSED(igdbId);
+        fetchCalls++;
+        return GameMetadata();
+    }
+};
+}
+
+void HasheousParsingTest::getByHashesKeepsHashMatchWhenMetadataProxyDisabled()
+{
+    HashLookupHasheousProvider provider;
+
+    GameMetadata md = provider.getByHashes("f9394e97",
+                                           "1bc674be034e43c96b86487ac69d9293",
+                                           "6ddb7de1e17e7f6cdb88927bd906352030daa194",
+                                           "Genesis");
+
+    QCOMPARE(md.title, QString("Sonic the Hedgehog"));
+    QCOMPARE(md.providerId, QStringLiteral("hasheous"));
+    QCOMPARE(provider.fetchCalls, 0);
 }
 
 QTEST_MAIN(HasheousParsingTest)

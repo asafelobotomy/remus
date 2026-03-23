@@ -141,9 +141,12 @@ ArchiveInfo ArchiveExtractor::getArchiveInfo(const QString &path)
                 QRegularExpressionMatch match = re.match(line);
                 
                 if (match.hasMatch()) {
+                    const qint64 size = match.captured(1).toLongLong();
                     QString filename = match.captured(3).trimmed();
                     if (!filename.isEmpty() && filename != "1 file") {
                         info.contents.append(filename);
+                        info.entrySizes.insert(filename, size);
+                        info.uncompressedSize += size;
                         info.fileCount++;
                     }
                 }
@@ -159,7 +162,6 @@ ArchiveInfo ArchiveExtractor::getArchiveInfo(const QString &path)
         //                     .....    616494480    252257573  Silent Hill (USA).bin
         // OR:
         // 2026-02-05 18:40  .....       812000       400000  file.nes
-        bool inFileList = false;
         for (const QString &line : lines) {
             // Skip header lines and separators
             if (line.contains("Date") || line.contains("Time") || 
@@ -169,32 +171,34 @@ ArchiveInfo ArchiveExtractor::getArchiveInfo(const QString &path)
                 line.trimmed().isEmpty()) {
                 continue;
             }
-            
-            // Look for attribute pattern (..... or D....) which indicates a file line
-            // This handles both lines with and without dates
-            if (line.contains(QRegularExpression("\\.[\\.\\.]+\\s+"))) {
-                // Parse: [Date Time] Attr Size [Compressed] Name
-                // The filename is the last field after the size numbers
-                // Use regex to capture: optional date, attr, size(s), then name
-                QRegularExpression re("(?:\\d{4}-\\d{2}-\\d{2}\\s+\\d{2}:\\d{2})?\\s*([.DA]+)\\s+(\\d+)\\s+(?:\\d+\\s+)?(.+)");
-                QRegularExpressionMatch match = re.match(line.trimmed());
-                
-                if (match.hasMatch()) {
-                    QString filename = match.captured(3).trimmed();
-                    if (!filename.isEmpty()) {
-                        info.contents.append(filename);
-                        info.fileCount++;
-                    }
-                } else {
-                    // Fallback: split by whitespace and take the last non-empty field
-                    QStringList parts = line.trimmed().split(QRegularExpression("\\s+"));
-                    if (parts.size() >= 3) {
-                        QString filename = parts.last();
-                        if (!filename.isEmpty() && !filename.contains(QRegularExpression("^\\d+$"))) {
-                            info.contents.append(filename);
-                            info.fileCount++;
-                        }
-                    }
+
+            const QString trimmed = line.trimmed();
+
+            // Parse: [Date Time] Attr Size [Compressed] Name
+            // Real 7z output uses attrs such as ....A and D...., so match the
+            // full attribute column directly instead of pre-filtering on dots.
+            QRegularExpression re(R"(^(?:\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}\s+)?([A-Z.]{5})\s+(\d+)\s+(?:\d+\s+)?(.+)$)");
+            QRegularExpressionMatch match = re.match(trimmed);
+
+            if (match.hasMatch()) {
+                const qint64 size = match.captured(2).toLongLong();
+                QString filename = match.captured(3).trimmed();
+                if (!filename.isEmpty()) {
+                    info.contents.append(filename);
+                    info.entrySizes.insert(filename, size);
+                    info.uncompressedSize += size;
+                    info.fileCount++;
+                }
+                continue;
+            }
+
+            // Fallback: split by whitespace and take the last non-empty field.
+            QStringList parts = trimmed.split(QRegularExpression(R"(\s+)"));
+            if (parts.size() >= 3) {
+                QString filename = parts.last();
+                if (!filename.isEmpty() && !filename.contains(QRegularExpression(R"(^\d+$)"))) {
+                    info.contents.append(filename);
+                    info.fileCount++;
                 }
             }
         }
@@ -214,11 +218,15 @@ ArchiveInfo ArchiveExtractor::getArchiveInfo(const QString &path)
             QString trimmed = line.trimmed();
             if (!trimmed.isEmpty()) {
                 // Look for pattern: filename + spaces + size
-                QStringList parts = trimmed.split(QRegularExpression("\\s+"));
-                if (parts.size() >= 2 && parts[1].toInt() > 0) {
-                    QString filename = parts[0];
+                QRegularExpression re("^(.+?)\\s+(\\d+)\\s+\\d+\\s+\\d+%.*$");
+                QRegularExpressionMatch match = re.match(trimmed);
+                if (match.hasMatch()) {
+                    const QString filename = match.captured(1).trimmed();
+                    const qint64 size = match.captured(2).toLongLong();
                     if (!filename.isEmpty()) {
                         info.contents.append(filename);
+                        info.entrySizes.insert(filename, size);
+                        info.uncompressedSize += size;
                         info.fileCount++;
                     }
                 }

@@ -197,7 +197,7 @@ void Scanner::processArchive(const QString &archivePath, QList<ScanResult> &resu
         result.path = archivePath;  // Archive path is the main file
         result.filename = QFileInfo(internalPath).fileName();
         result.extension = extension;
-        result.fileSize = 0;  // We don't know individual file size in archive
+        result.fileSize = archiveInfo.entrySizes.value(internalPath, 0);
         result.lastModified = QFileInfo(archivePath).lastModified();
         result.isCompressed = true;
         result.archivePath = archivePath;
