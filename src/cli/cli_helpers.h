@@ -8,6 +8,7 @@
 #include <QString>
 #include "../core/database.h"
 #include "../core/hasher.h"
+#include "../core/match_utils.h"
 #include "../core/constants/constants.h"
 #include "../metadata/metadata_provider.h"
 #include "../metadata/provider_orchestrator.h"
@@ -34,6 +35,9 @@ QList<FileRecord> getHashedFiles(Database &db);
 // Return the best user-facing name for matching/search. For archive-backed
 // records this prefers the container name over the inner entry extension.
 QString getMatchingDisplayName(const FileRecord &file);
+
+// Return the best system name to pass into metadata providers for this file.
+QString getMatchingSystemName(const FileRecord &file);
 
 // Insert a matched game into the database and record the match confidence/method.
 // Returns the newly-inserted gameId, or 0 on failure.

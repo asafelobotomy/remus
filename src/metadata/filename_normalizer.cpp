@@ -13,10 +13,14 @@ QString FilenameNormalizer::normalize(const QString &filename)
     QString cleaned = filename;
 
     // Step 1: Remove file extension
-    // Find the last dot and remove everything after it
+    // Only strip a trailing file extension, not dotted version tags in display names.
     int dotPos = cleaned.lastIndexOf('.');
     if (dotPos != -1) {
-        cleaned = cleaned.left(dotPos);
+        const QString suffix = cleaned.mid(dotPos + 1);
+        static const QRegularExpression extensionRegex("^[A-Za-z0-9]{1,5}$");
+        if (extensionRegex.match(suffix).hasMatch()) {
+            cleaned = cleaned.left(dotPos);
+        }
     }
 
     // Step 2: Remove tags in parentheses (regions, languages, etc.)

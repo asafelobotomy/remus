@@ -76,6 +76,14 @@ private slots:
             QString("Super Mario World")
         );
     }
+
+    void testDisplayNameWithoutExtensionPreservesVersionDots()
+    {
+        QCOMPARE(
+            FilenameNormalizer::normalize("Dragon Quest III (English v2.0)[Addendum]"),
+            QString("Dragon Quest III")
+        );
+    }
 };
 
 QTEST_MAIN(TestFilenameNormalizer)

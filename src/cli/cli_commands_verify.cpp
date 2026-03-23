@@ -126,3 +126,78 @@ int handleVerifyCommand(CliContext &ctx)
     }
     return 0;
 }
+
+int handlePatchDatCommand(CliContext &ctx)
+{
+    const bool listRequested = ctx.parser.isSet("patch-dat-list");
+    const bool importRequested = ctx.parser.isSet("patch-dat-import");
+    const bool removeRequested = ctx.parser.isSet("patch-dat-remove");
+
+    if (!listRequested && !importRequested && !removeRequested) return 0;
+
+    VerificationEngine verifier(&ctx.db);
+
+    if (listRequested) {
+        const auto patchDats = verifier.getImportedPatchDats();
+        qInfo() << "";
+        qInfo() << "=== Imported Patch Catalogs ===";
+
+        if (patchDats.isEmpty()) {
+            qInfo() << "No patch catalogs imported.";
+            return 0;
+        }
+
+        for (auto it = patchDats.cbegin(); it != patchDats.cend(); ++it) {
+            qInfo() << it.key() << "-" << it.value().name
+                    << "(" << it.value().version << ")";
+            if (!it.value().description.isEmpty()) {
+                qInfo() << "  " << it.value().description;
+            }
+        }
+        return 0;
+    }
+
+    if (importRequested) {
+        const QString datFile = ctx.parser.value("patch-dat-import");
+        QFileInfo datInfo(datFile);
+        if (!datInfo.exists()) {
+            qCritical() << "✗ Patch DAT file not found:" << datFile;
+            return 1;
+        }
+
+        QString systemName = ctx.parser.value("patch-dat-system");
+        if (systemName.isEmpty()) {
+            systemName = ctx.detector.detectSystem(QString(), datFile);
+        }
+        if (systemName.isEmpty()) {
+            systemName = datInfo.completeBaseName();
+        }
+
+        const int count = verifier.importPatchDat(datFile, systemName);
+        if (count <= 0) {
+            qCritical() << "✗ Failed to import patch DAT file";
+            return 1;
+        }
+
+        qInfo() << "";
+        qInfo() << "=== Patch Catalog Imported ===";
+        qInfo() << "System:" << systemName;
+        qInfo() << "Entries:" << count;
+        qInfo() << "File:" << datFile;
+        return 0;
+    }
+
+    const QString systemName = ctx.parser.value("patch-dat-remove");
+    if (systemName.isEmpty()) {
+        qCritical() << "✗ --patch-dat-remove requires a system name";
+        return 1;
+    }
+
+    if (!verifier.removePatchDat(systemName)) {
+        qCritical() << "✗ Failed to remove patch DAT for system:" << systemName;
+        return 1;
+    }
+
+    qInfo() << "Removed patch DAT for" << systemName;
+    return 0;
+}

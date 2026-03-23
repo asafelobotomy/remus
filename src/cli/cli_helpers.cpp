@@ -1,7 +1,9 @@
 #include "cli_helpers.h"
 #include <QFileInfo>
+#include <QSettings>
 #include <QTemporaryDir>
 #include "../core/archive_extractor.h"
+#include "../core/system_resolver.h"
 #include "../metadata/screenscraper_provider.h"
 #include "../metadata/thegamesdb_provider.h"
 #include "../metadata/igdb_provider.h"
@@ -11,6 +13,28 @@
 using namespace Remus;
 using namespace Remus::Constants;
 
+namespace {
+
+QSettings remusSettings()
+{
+    return QSettings(QString::fromLatin1(Constants::SETTINGS_ORGANIZATION),
+                     QString::fromLatin1(Constants::SETTINGS_APPLICATION));
+}
+
+QString parserOrSetting(const QCommandLineParser &parser,
+                        const QString &optionName,
+                        const char *settingKey)
+{
+    if (parser.isSet(optionName)) {
+        return parser.value(optionName).trimmed();
+    }
+
+    QSettings settings = remusSettings();
+    return settings.value(QString::fromLatin1(settingKey)).toString().trimmed();
+}
+
+}
+
 /**
  * @brief Select the best hash for matching based on system's preferred algorithm.
  *
@@ -19,20 +43,7 @@ using namespace Remus::Constants;
  */
 QString selectBestHash(const FileRecord &file)
 {
-    if (Systems::SYSTEMS.contains(file.systemId)) {
-        const Systems::SystemDef &sysDef = Systems::SYSTEMS[file.systemId];
-        const QString preferred = sysDef.preferredHash.toLower();
-
-        if (preferred == "md5" && !file.md5.isEmpty()) return file.md5;
-        if (preferred == "sha1" && !file.sha1.isEmpty()) return file.sha1;
-        if (preferred == "crc32" && !file.crc32.isEmpty()) return file.crc32;
-    }
-
-    // Fallback: CRC32 → SHA1 → MD5
-    if (!file.crc32.isEmpty()) return file.crc32;
-    if (!file.sha1.isEmpty()) return file.sha1;
-    if (!file.md5.isEmpty()) return file.md5;
-    return QString();
+    return selectBestMatchHash(file);
 }
 
 static bool isArchivePath(const QString &path)
@@ -111,14 +122,30 @@ std::unique_ptr<ProviderOrchestrator> buildOrchestrator(const QCommandLineParser
     }
 
     auto tgdbProvider = new TheGamesDBProvider();
+    const QString tgdbApiKey = parserOrSetting(parser,
+                                               QStringLiteral("tgdb-api-key"),
+                                               Settings::Providers::THEGAMESDB_API_KEY);
+    if (!tgdbApiKey.isEmpty()) {
+        tgdbProvider->setApiKey(tgdbApiKey);
+    }
     const auto tgdbInfo = Providers::getProviderInfo(Providers::THEGAMESDB);
     orchestrator->addProvider(Providers::THEGAMESDB, tgdbProvider,
                               tgdbInfo ? tgdbInfo->priority : 50);
 
-    auto igdbProvider = new IGDBProvider();
-    const auto igdbInfo = Providers::getProviderInfo(Providers::IGDB);
-    orchestrator->addProvider(Providers::IGDB, igdbProvider,
-                              igdbInfo ? igdbInfo->priority : 40);
+    const QString igdbClientId = parserOrSetting(parser,
+                                                 QStringLiteral("igdb-client-id"),
+                                                 Settings::Providers::IGDB_CLIENT_ID);
+    const QString igdbClientSecret = parserOrSetting(parser,
+                                                     QStringLiteral("igdb-client-secret"),
+                                                     Settings::Providers::IGDB_CLIENT_SECRET);
+
+    if (!igdbClientId.isEmpty() && !igdbClientSecret.isEmpty()) {
+        auto igdbProvider = new IGDBProvider();
+        igdbProvider->setCredentials(igdbClientId, igdbClientSecret);
+        const auto igdbInfo = Providers::getProviderInfo(Providers::IGDB);
+        orchestrator->addProvider(Providers::IGDB, igdbProvider,
+                                  igdbInfo ? igdbInfo->priority : 40);
+    }
 
     return orchestrator;
 }
@@ -136,21 +163,17 @@ QList<FileRecord> getHashedFiles(Database &db)
 
 QString getMatchingDisplayName(const FileRecord &file)
 {
-    if (file.isCompressed) {
-        const QString containerBase = QFileInfo(file.currentPath).completeBaseName();
-        if (!containerBase.isEmpty()) {
-            return containerBase;
-        }
+    return Remus::deriveMatchingDisplayName(file);
+}
 
-        const QString entryBase = QFileInfo(file.archiveInternalPath.isEmpty() ? file.filename
-                                                                                : file.archiveInternalPath).completeBaseName();
-        if (!entryBase.isEmpty()) {
-            return entryBase;
-        }
+QString getMatchingSystemName(const FileRecord &file)
+{
+    if (file.systemId <= 0) {
+        return QString();
     }
 
-    const QString baseName = QFileInfo(file.filename).completeBaseName();
-    return baseName.isEmpty() ? file.filename : baseName;
+    const QString systemName = SystemResolver::internalName(file.systemId);
+    return systemName == QStringLiteral("Unknown") ? QString() : systemName;
 }
 
 int persistMetadata(Database &db, const FileRecord &file, const GameMetadata &metadata)
@@ -198,5 +221,8 @@ void printFileInfo(const FileRecord &file)
     }
     qInfo() << "Primary:" << file.isPrimary;
     qInfo() << "Parent ID:" << file.parentFileId;
+    qInfo() << "File Type:" << file.fileType;
+    qInfo() << "Patched:" << file.isPatched;
+    qInfo() << "Patch Name:" << file.patchName;
     qInfo() << "Processed:" << file.isProcessed << "Status:" << file.processingStatus;
 }

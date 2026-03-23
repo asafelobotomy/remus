@@ -50,11 +50,12 @@ int handleMatchCommand(CliContext &ctx)
         if (ctx.db.getMatchForFile(file.id).matchId != 0) continue;
 
         const QString displayName = getMatchingDisplayName(file);
+        const QString systemName = getMatchingSystemName(file);
 
         qInfo() << "Matching:" << displayName;
 
         GameMetadata metadata = orchestrator->searchWithFallback(
-            selectBestHash(file), displayName, "",
+            selectBestHash(file), displayName, systemName,
             file.crc32, file.md5, file.sha1);
 
         if (!metadata.title.isEmpty()) {
@@ -126,9 +127,10 @@ int handleMatchReportCommand(CliContext &ctx)
 
     for (const FileRecord &file : files) {
         const QString displayName = getMatchingDisplayName(file);
+        const QString systemName = getMatchingSystemName(file);
 
         GameMetadata metadata = orchestrator->searchWithFallback(
-            selectBestHash(file), displayName, "",
+            selectBestHash(file), displayName, systemName,
             file.crc32, file.md5, file.sha1);
 
         const int confidence = metadata.matchScore > 0

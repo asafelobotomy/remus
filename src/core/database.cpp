@@ -1,4 +1,5 @@
 #include "database.h"
+#include "patched_rom_parser.h"
 #include "system_detector.h"
 #include "constants/constants.h"
 #include <QSqlQuery>
@@ -86,6 +87,10 @@ void Database::runMigrations()
     bool hasIsCompressed = false;
     bool hasArchivePath = false;
     bool hasArchiveInternalPath = false;
+    bool hasBaseTitle = false;
+    bool hasFileType = false;
+    bool hasIsPatched = false;
+    bool hasPatchName = false;
     while (query.next()) {
         QString columnName = query.value(1).toString();
         if (columnName == Constants::DatabaseSchema::Columns::Files::IS_PROCESSED) hasIsProcessed = true;
@@ -93,6 +98,10 @@ void Database::runMigrations()
         if (columnName == Constants::DatabaseSchema::Columns::Files::IS_COMPRESSED) hasIsCompressed = true;
         if (columnName == Constants::DatabaseSchema::Columns::Files::ARCHIVE_PATH) hasArchivePath = true;
         if (columnName == Constants::DatabaseSchema::Columns::Files::ARCHIVE_INTERNAL_PATH) hasArchiveInternalPath = true;
+        if (columnName == Constants::DatabaseSchema::Columns::Files::BASE_TITLE) hasBaseTitle = true;
+        if (columnName == Constants::DatabaseSchema::Columns::Files::FILE_TYPE) hasFileType = true;
+        if (columnName == Constants::DatabaseSchema::Columns::Files::IS_PATCHED) hasIsPatched = true;
+        if (columnName == Constants::DatabaseSchema::Columns::Files::PATCH_NAME) hasPatchName = true;
     }
     
     // Add is_processed column if missing
@@ -142,6 +151,71 @@ void Database::runMigrations()
             logError(Constants::Errors::Database::MIGRATION_FAILED);
         }
     }
+
+    if (!hasBaseTitle) {
+        qInfo() << "Migration: Adding base_title column to files table";
+        if (!query.exec(QString("ALTER TABLE %1 ADD COLUMN %2 TEXT")
+            .arg(Constants::DatabaseSchema::Tables::FILES,
+                 Constants::DatabaseSchema::Columns::Files::BASE_TITLE))) {
+            logError(Constants::Errors::Database::MIGRATION_FAILED);
+        }
+    }
+
+    if (!hasFileType) {
+        qInfo() << "Migration: Adding file_type column to files table";
+        if (!query.exec(QString("ALTER TABLE %1 ADD COLUMN %2 TEXT DEFAULT 'official'")
+            .arg(Constants::DatabaseSchema::Tables::FILES,
+                 Constants::DatabaseSchema::Columns::Files::FILE_TYPE))) {
+            logError(Constants::Errors::Database::MIGRATION_FAILED);
+        }
+    }
+
+    if (!hasIsPatched) {
+        qInfo() << "Migration: Adding is_patched column to files table";
+        if (!query.exec(QString("ALTER TABLE %1 ADD COLUMN %2 BOOLEAN DEFAULT 0")
+            .arg(Constants::DatabaseSchema::Tables::FILES,
+                 Constants::DatabaseSchema::Columns::Files::IS_PATCHED))) {
+            logError(Constants::Errors::Database::MIGRATION_FAILED);
+        }
+    }
+
+    if (!hasPatchName) {
+        qInfo() << "Migration: Adding patch_name column to files table";
+        if (!query.exec(QString("ALTER TABLE %1 ADD COLUMN %2 TEXT")
+            .arg(Constants::DatabaseSchema::Tables::FILES,
+                 Constants::DatabaseSchema::Columns::Files::PATCH_NAME))) {
+            logError(Constants::Errors::Database::MIGRATION_FAILED);
+        }
+    }
+
+    query.exec(QString(R"(
+        CREATE TABLE IF NOT EXISTS %1 (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            base_path TEXT NOT NULL,
+            output_path TEXT NOT NULL,
+            patch_path TEXT NOT NULL,
+            patch_format TEXT,
+            base_title TEXT,
+            patch_name TEXT,
+            file_type TEXT DEFAULT 'hack',
+            source_checksum TEXT,
+            target_checksum TEXT,
+            patch_checksum TEXT,
+            base_crc32 TEXT,
+            base_md5 TEXT,
+            base_sha1 TEXT,
+            output_crc32 TEXT,
+            output_md5 TEXT,
+            output_sha1 TEXT,
+            applied_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    )").arg(Constants::DatabaseSchema::Tables::APPLIED_PATCHES));
+    query.exec(QString("CREATE INDEX IF NOT EXISTS idx_applied_patches_output_sha1 ON %1(output_sha1)")
+               .arg(Constants::DatabaseSchema::Tables::APPLIED_PATCHES));
+    query.exec(QString("CREATE INDEX IF NOT EXISTS idx_applied_patches_output_md5 ON %1(output_md5)")
+               .arg(Constants::DatabaseSchema::Tables::APPLIED_PATCHES));
+    query.exec(QString("CREATE INDEX IF NOT EXISTS idx_applied_patches_output_crc32 ON %1(output_crc32)")
+               .arg(Constants::DatabaseSchema::Tables::APPLIED_PATCHES));
 
     SystemDetector detector;
 
@@ -345,6 +419,10 @@ bool Database::createSchema()
             hash_calculated BOOLEAN DEFAULT 0,
             is_primary BOOLEAN DEFAULT 1,
             parent_file_id INTEGER,
+            base_title TEXT,
+            file_type TEXT DEFAULT 'official',
+            is_patched BOOLEAN DEFAULT 0,
+            patch_name TEXT,
             is_processed BOOLEAN DEFAULT 0,
             processing_status TEXT DEFAULT 'unprocessed',
             last_modified TIMESTAMP,
@@ -362,6 +440,10 @@ bool Database::createSchema()
     // Migration: Add is_processed column if not exists (for existing databases)
     query.exec("ALTER TABLE files ADD COLUMN is_processed BOOLEAN DEFAULT 0");
     query.exec("ALTER TABLE files ADD COLUMN processing_status TEXT DEFAULT 'unprocessed'");
+    query.exec("ALTER TABLE files ADD COLUMN base_title TEXT");
+    query.exec("ALTER TABLE files ADD COLUMN file_type TEXT DEFAULT 'official'");
+    query.exec("ALTER TABLE files ADD COLUMN is_patched BOOLEAN DEFAULT 0");
+    query.exec("ALTER TABLE files ADD COLUMN patch_name TEXT");
     
     // Create index for processed status
     query.exec("CREATE INDEX IF NOT EXISTS idx_files_processed ON files(is_processed)");
@@ -371,6 +453,38 @@ bool Database::createSchema()
     query.exec("CREATE INDEX IF NOT EXISTS idx_files_system_id ON files(system_id)");
     query.exec("CREATE INDEX IF NOT EXISTS idx_files_hashes ON files(crc32, md5, sha1)");
     query.exec("CREATE UNIQUE INDEX IF NOT EXISTS idx_files_original_path ON files(original_path, filename)");
+
+    // Create cache table for metadata
+    QString createAppliedPatches = R"(
+        CREATE TABLE IF NOT EXISTS applied_patches (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            base_path TEXT NOT NULL,
+            output_path TEXT NOT NULL,
+            patch_path TEXT NOT NULL,
+            patch_format TEXT,
+            base_title TEXT,
+            patch_name TEXT,
+            file_type TEXT DEFAULT 'hack',
+            source_checksum TEXT,
+            target_checksum TEXT,
+            patch_checksum TEXT,
+            base_crc32 TEXT,
+            base_md5 TEXT,
+            base_sha1 TEXT,
+            output_crc32 TEXT,
+            output_md5 TEXT,
+            output_sha1 TEXT,
+            applied_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    )";
+    if (!query.exec(createAppliedPatches)) {
+        logError("Failed to create applied_patches table: " + query.lastError().text());
+        return false;
+    }
+
+    query.exec("CREATE INDEX IF NOT EXISTS idx_applied_patches_output_sha1 ON applied_patches(output_sha1)");
+    query.exec("CREATE INDEX IF NOT EXISTS idx_applied_patches_output_md5 ON applied_patches(output_md5)");
+    query.exec("CREATE INDEX IF NOT EXISTS idx_applied_patches_output_crc32 ON applied_patches(output_crc32)");
 
     // Create cache table for metadata
     QString createCache = R"(
@@ -643,14 +757,26 @@ QString Database::getSystemDisplayName(int systemId)
 
 int Database::insertFile(const FileRecord &record)
 {
+    const QString classificationName = !record.archiveInternalPath.isEmpty()
+        ? record.archiveInternalPath
+        : record.filename;
+    const PatchedRomInfo patchedInfo = PatchedRomParser::parse(classificationName);
+    const bool hasExplicitClassification = record.fileType != QStringLiteral("official") ||
+        record.isPatched || !record.patchName.isEmpty();
+    const QString baseTitle = record.baseTitle.isEmpty() ? patchedInfo.baseTitle : record.baseTitle;
+    const QString fileType = hasExplicitClassification ? record.fileType : patchedInfo.fileType;
+    const bool isPatched = record.isPatched || patchedInfo.isPatched;
+    const QString patchName = record.patchName.isEmpty() ? patchedInfo.patchName : record.patchName;
+
     QSqlQuery query(m_db);
     // Use INSERT OR IGNORE to avoid duplicates based on original_path + filename
     query.prepare(R"(
         INSERT OR IGNORE INTO files 
         (library_id, original_path, current_path, filename, extension, 
          file_size, is_compressed, archive_path, archive_internal_path, 
-         system_id, is_primary, parent_file_id, last_modified)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+         system_id, is_primary, parent_file_id, base_title, file_type, is_patched,
+         patch_name, last_modified)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     )");
     query.addBindValue(record.libraryId);
     query.addBindValue(record.originalPath);
@@ -664,6 +790,10 @@ int Database::insertFile(const FileRecord &record)
     query.addBindValue(record.systemId > 0 ? record.systemId : QVariant());
     query.addBindValue(record.isPrimary);
     query.addBindValue(record.parentFileId > 0 ? record.parentFileId : QVariant());
+    query.addBindValue(baseTitle.isEmpty() ? QVariant() : baseTitle);
+    query.addBindValue(fileType);
+    query.addBindValue(isPatched);
+    query.addBindValue(patchName.isEmpty() ? QVariant() : patchName);
     query.addBindValue(record.lastModified);
 
     if (!query.exec()) {
@@ -678,14 +808,32 @@ bool Database::updateFileHashes(int fileId, const QString &crc32,
                                  const QString &md5, const QString &sha1)
 {
     QSqlQuery query(m_db);
-    query.prepare(R"(
+    const AppliedPatchRecord lineage = findAppliedPatchByOutputHashes(crc32, md5, sha1);
+    const bool hasLineage = lineage.id > 0;
+
+    QString updateStatement = R"(
         UPDATE files 
         SET crc32 = ?, md5 = ?, sha1 = ?, hash_calculated = 1
-        WHERE id = ?
-    )");
+    )";
+    if (hasLineage) {
+        updateStatement += R"(,
+        base_title = COALESCE(?, base_title),
+        file_type = COALESCE(?, file_type),
+        is_patched = 1,
+        patch_name = COALESCE(?, patch_name)
+    )";
+    }
+    updateStatement += " WHERE id = ?";
+
+    query.prepare(updateStatement);
     query.addBindValue(crc32);
     query.addBindValue(md5);
     query.addBindValue(sha1);
+    if (hasLineage) {
+        query.addBindValue(lineage.baseTitle.isEmpty() ? QVariant() : lineage.baseTitle);
+        query.addBindValue(lineage.fileType.isEmpty() ? QVariant() : lineage.fileType);
+        query.addBindValue(lineage.patchName.isEmpty() ? QVariant() : lineage.patchName);
+    }
     query.addBindValue(fileId);
 
     if (!query.exec()) {
@@ -703,8 +851,9 @@ QList<FileRecord> Database::getFilesWithoutHashes()
     QSqlQuery query(m_db);
     query.prepare(R"(
         SELECT id, library_id, current_path, filename, extension,
-               file_size, system_id, is_primary, is_compressed,
-               archive_path, archive_internal_path
+             file_size, system_id, is_primary, is_compressed,
+             archive_path, archive_internal_path, base_title, file_type,
+             is_patched, patch_name
         FROM files 
         WHERE hash_calculated = 0 AND is_primary = 1
     )");
@@ -727,6 +876,10 @@ QList<FileRecord> Database::getFilesWithoutHashes()
         record.isCompressed = query.value(8).toBool();
         record.archivePath = query.value(9).toString();
         record.archiveInternalPath = query.value(10).toString();
+        record.baseTitle = query.value(11).toString();
+        record.fileType = query.value(12).toString();
+        record.isPatched = query.value(13).toBool();
+        record.patchName = query.value(14).toString();
         files.append(record);
     }
 
@@ -764,8 +917,9 @@ FileRecord Database::getFileById(int fileId)
         SELECT id, library_id, original_path, current_path, filename, extension,
                file_size, is_compressed, archive_path, archive_internal_path,
                system_id, crc32, md5, sha1, hash_calculated, 
-               is_primary, parent_file_id, is_processed, processing_status,
-               last_modified, scanned_at
+               is_primary, parent_file_id, base_title, file_type, is_patched,
+             patch_name, is_processed, processing_status,
+             last_modified, scanned_at
         FROM files 
         WHERE id = ?
     )");
@@ -789,10 +943,14 @@ FileRecord Database::getFileById(int fileId)
         record.hashCalculated = query.value(14).toBool();
         record.isPrimary = query.value(15).toBool();
         record.parentFileId = query.value(16).toInt();
-        record.isProcessed = query.value(17).toBool();
-        record.processingStatus = query.value(18).toString();
-        record.lastModified = query.value(19).toDateTime();
-        record.scannedAt = query.value(20).toDateTime();
+        record.baseTitle = query.value(17).toString();
+        record.fileType = query.value(18).toString();
+        record.isPatched = query.value(19).toBool();
+        record.patchName = query.value(20).toString();
+        record.isProcessed = query.value(21).toBool();
+        record.processingStatus = query.value(22).toString();
+        record.lastModified = query.value(23).toDateTime();
+        record.scannedAt = query.value(24).toDateTime();
     }
     
     return record;
@@ -1305,6 +1463,114 @@ QList<FileRecord> Database::getUnprocessedFiles()
     
     return files;
 }
+
+    bool Database::insertAppliedPatch(const AppliedPatchRecord &record)
+    {
+        QSqlQuery query(m_db);
+        query.prepare(R"(
+            INSERT INTO applied_patches (
+                base_path, output_path, patch_path, patch_format,
+                base_title, patch_name, file_type,
+                source_checksum, target_checksum, patch_checksum,
+                base_crc32, base_md5, base_sha1,
+                output_crc32, output_md5, output_sha1
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        )");
+        query.addBindValue(record.basePath);
+        query.addBindValue(record.outputPath);
+        query.addBindValue(record.patchPath);
+        query.addBindValue(record.patchFormat.isEmpty() ? QVariant() : record.patchFormat);
+        query.addBindValue(record.baseTitle.isEmpty() ? QVariant() : record.baseTitle);
+        query.addBindValue(record.patchName.isEmpty() ? QVariant() : record.patchName);
+        query.addBindValue(record.fileType.isEmpty() ? QVariant(QStringLiteral("hack")) : record.fileType);
+        query.addBindValue(record.sourceChecksum.isEmpty() ? QVariant() : record.sourceChecksum);
+        query.addBindValue(record.targetChecksum.isEmpty() ? QVariant() : record.targetChecksum);
+        query.addBindValue(record.patchChecksum.isEmpty() ? QVariant() : record.patchChecksum);
+        query.addBindValue(record.baseCrc32.isEmpty() ? QVariant() : record.baseCrc32);
+        query.addBindValue(record.baseMd5.isEmpty() ? QVariant() : record.baseMd5);
+        query.addBindValue(record.baseSha1.isEmpty() ? QVariant() : record.baseSha1);
+        query.addBindValue(record.outputCrc32.isEmpty() ? QVariant() : record.outputCrc32);
+        query.addBindValue(record.outputMd5.isEmpty() ? QVariant() : record.outputMd5);
+        query.addBindValue(record.outputSha1.isEmpty() ? QVariant() : record.outputSha1);
+
+        if (!query.exec()) {
+            logError("Failed to insert applied patch: " + query.lastError().text());
+            return false;
+        }
+
+        return true;
+    }
+
+    Database::AppliedPatchRecord Database::findAppliedPatchByOutputHashes(
+        const QString &crc32, const QString &md5, const QString &sha1)
+    {
+        AppliedPatchRecord record;
+        QStringList conditions;
+        QVariantList values;
+
+        if (!sha1.isEmpty()) {
+            conditions << "output_sha1 = ?";
+            values << sha1;
+        }
+        if (!md5.isEmpty()) {
+            conditions << "output_md5 = ?";
+            values << md5;
+        }
+        if (!crc32.isEmpty()) {
+            conditions << "output_crc32 = ?";
+            values << crc32;
+        }
+
+        if (conditions.isEmpty()) {
+            return record;
+        }
+
+        QSqlQuery query(m_db);
+        query.prepare(QString(R"(
+            SELECT id, base_path, output_path, patch_path, patch_format,
+                   base_title, patch_name, file_type,
+                   source_checksum, target_checksum, patch_checksum,
+                   base_crc32, base_md5, base_sha1,
+                   output_crc32, output_md5, output_sha1
+            FROM applied_patches
+            WHERE %1
+            ORDER BY applied_at DESC
+            LIMIT 1
+        )").arg(conditions.join(" OR ")));
+
+        for (const QVariant &value : values) {
+            query.addBindValue(value);
+        }
+
+        if (!query.exec()) {
+            logError("Failed to query applied patch lineage: " + query.lastError().text());
+            return record;
+        }
+
+        if (!query.next()) {
+            return record;
+        }
+
+        record.id = query.value(0).toInt();
+        record.basePath = query.value(1).toString();
+        record.outputPath = query.value(2).toString();
+        record.patchPath = query.value(3).toString();
+        record.patchFormat = query.value(4).toString();
+        record.baseTitle = query.value(5).toString();
+        record.patchName = query.value(6).toString();
+        record.fileType = query.value(7).toString();
+        record.sourceChecksum = query.value(8).toString();
+        record.targetChecksum = query.value(9).toString();
+        record.patchChecksum = query.value(10).toString();
+        record.baseCrc32 = query.value(11).toString();
+        record.baseMd5 = query.value(12).toString();
+        record.baseSha1 = query.value(13).toString();
+        record.outputCrc32 = query.value(14).toString();
+        record.outputMd5 = query.value(15).toString();
+        record.outputSha1 = query.value(16).toString();
+        return record;
+    }
 
 void Database::logError(const QString &message)
 {

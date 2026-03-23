@@ -6,7 +6,9 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include "../core/database.h"
+#include "../core/hasher.h"
 #include "../core/patch_engine.h"
+#include "../core/patched_rom_parser.h"
 #include "cli_logging.h"
 
 // ── Export ────────────────────────────────────────────────────────────────────
@@ -15,6 +17,55 @@ struct ExportRow {
     FileRecord           file;
     Database::MatchResult match;
 };
+
+static bool persistAppliedPatchLineage(Database &db,
+                                       const QString &basePath,
+                                       const QString &patchPath,
+                                       const QString &outputPath,
+                                       const PatchInfo &patchInfo)
+{
+    Hasher hasher;
+    const HashResult baseHashes = hasher.calculateHashes(basePath);
+    const HashResult outputHashes = hasher.calculateHashes(outputPath);
+    if (!baseHashes.success || !outputHashes.success) {
+        return false;
+    }
+
+    const PatchedRomInfo outputInfo = PatchedRomParser::parse(QFileInfo(outputPath).completeBaseName());
+    const PatchedRomInfo patchInfoFromName = PatchedRomParser::parse(QFileInfo(patchPath).completeBaseName());
+    const QString baseTitle = !outputInfo.baseTitle.isEmpty()
+        ? outputInfo.baseTitle
+        : QFileInfo(basePath).completeBaseName();
+    const QString patchName = !outputInfo.patchName.isEmpty()
+        ? outputInfo.patchName
+        : (!patchInfoFromName.patchName.isEmpty()
+            ? patchInfoFromName.patchName
+            : QFileInfo(patchPath).completeBaseName());
+    const QString fileType = outputInfo.fileType != QStringLiteral("official")
+        ? outputInfo.fileType
+        : (patchInfoFromName.fileType != QStringLiteral("official")
+            ? patchInfoFromName.fileType
+            : QStringLiteral("hack"));
+
+    Database::AppliedPatchRecord record;
+    record.basePath = basePath;
+    record.outputPath = outputPath;
+    record.patchPath = patchPath;
+    record.patchFormat = patchInfo.formatName;
+    record.baseTitle = baseTitle;
+    record.patchName = patchName;
+    record.fileType = fileType;
+    record.sourceChecksum = patchInfo.sourceChecksum;
+    record.targetChecksum = patchInfo.targetChecksum;
+    record.patchChecksum = patchInfo.patchChecksum;
+    record.baseCrc32 = baseHashes.crc32;
+    record.baseMd5 = baseHashes.md5;
+    record.baseSha1 = baseHashes.sha1;
+    record.outputCrc32 = outputHashes.crc32;
+    record.outputMd5 = outputHashes.md5;
+    record.outputSha1 = outputHashes.sha1;
+    return db.insertAppliedPatch(record);
+}
 
 static QList<ExportRow> buildExportRows(CliContext &ctx, const QString &systemsArg)
 {
@@ -201,7 +252,12 @@ int handlePatchCommands(CliContext &ctx)
             qInfo() << "[DRY-RUN] Would apply patch" << patchPath << "to" << basePath << "->" << outputPath;
         } else {
             PatchResult result = pe.apply(basePath, info, outputPath);
-            if (result.success) qInfo() << "✓ Patch applied:" << result.outputPath;
+            if (result.success) {
+                if (!persistAppliedPatchLineage(ctx.db, basePath, patchPath, result.outputPath, info)) {
+                    qWarning() << "Failed to persist applied patch lineage for" << result.outputPath;
+                }
+                qInfo() << "✓ Patch applied:" << result.outputPath;
+            }
             else { qCritical() << "✗ Patch failed:" << result.error; return 1; }
         }
     }

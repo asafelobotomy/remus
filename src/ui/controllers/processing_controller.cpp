@@ -1,5 +1,6 @@
 #include "processing_controller.h"
 #include "../../core/constants/systems.h"
+#include "../../core/match_utils.h"
 #include "../../metadata/filename_normalizer.h"
 #include <QDebug>
 #include <QFileInfo>
@@ -520,24 +521,21 @@ void ProcessingController::stepMatch()
     // Try hash-based matching with all available hashes
     // Prefer MD5/SHA1 (widely supported by metadata providers like Hasheous)
     // Then try CRC32 (supported by some No-Intro databases)
-    QStringList hashesToTry;
-    if (!file.md5.isEmpty()) hashesToTry.append(file.md5);
-    if (!file.sha1.isEmpty()) hashesToTry.append(file.sha1);
-    if (!file.crc32.isEmpty()) hashesToTry.append(file.crc32);
-    
-    for (const QString &hash : hashesToTry) {
-        metadata = m_orchestrator->getByHashWithFallback(hash, systemName);
+    const QString preferredHash = selectBestMatchHash(file);
+
+    if (!preferredHash.isEmpty()) {
+        metadata = m_orchestrator->getByHashWithFallback(
+            preferredHash, systemName, file.crc32, file.md5, file.sha1);
         if (!metadata.title.isEmpty()) {
             matchMethod = MatchMethods::HASH;
             confidence = 100;
-            qDebug() << "Hash match found:" << metadata.title << "(using" << hash.left(8) << "...)";
-            break;
+            qDebug() << "Hash match found:" << metadata.title << "(using" << preferredHash.left(8) << "...)";
         }
     }
     
     // Fall back to name-based matching
     if (metadata.title.isEmpty()) {
-        QString cleanName = Metadata::FilenameNormalizer::normalize(m_currentFilename);
+        const QString cleanName = deriveMatchingDisplayName(file);
         
         if (!cleanName.isEmpty()) {
             metadata = m_orchestrator->searchWithFallback("", cleanName, systemName);

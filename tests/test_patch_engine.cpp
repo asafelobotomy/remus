@@ -11,6 +11,7 @@ class PatchEngineTest : public QObject
 
 private slots:
     void testFormatDetection();
+    void testDetectUpsChecksums();
     void testApplyInvalidPatch();
     void testApplyIpsBuiltin();
     void testApplyMissingBase();
@@ -40,6 +41,42 @@ void PatchEngineTest::testApplyInvalidPatch()
     PatchResult result = engine.apply("/no/base", info, "");
     QVERIFY(!result.success);
     QVERIFY(result.error.contains("Invalid patch"));
+}
+
+void PatchEngineTest::testDetectUpsChecksums()
+{
+    QTemporaryDir dir;
+    QVERIFY(dir.isValid());
+
+    const QString patchPath = dir.path() + "/patch.ups";
+    QByteArray patch;
+    patch.append("UPS1");
+    patch.append(QByteArray(8, '\x00'));
+    patch.append(char(0x78));
+    patch.append(char(0x56));
+    patch.append(char(0x34));
+    patch.append(char(0x12));
+    patch.append(char(0xF0));
+    patch.append(char(0xDE));
+    patch.append(char(0xBC));
+    patch.append(char(0x9A));
+    patch.append(char(0xEF));
+    patch.append(char(0xCD));
+    patch.append(char(0xAB));
+    patch.append(char(0x90));
+
+    QFile patchFile(patchPath);
+    QVERIFY(patchFile.open(QIODevice::WriteOnly));
+    patchFile.write(patch);
+    patchFile.close();
+
+    PatchEngine engine;
+    PatchInfo info = engine.detectFormat(patchPath);
+    QVERIFY(info.valid);
+    QCOMPARE(info.format, PatchFormat::UPS);
+    QCOMPARE(info.sourceChecksum, QStringLiteral("12345678"));
+    QCOMPARE(info.targetChecksum, QStringLiteral("9abcdef0"));
+    QCOMPARE(info.patchChecksum, QStringLiteral("90abcdef"));
 }
 
 void PatchEngineTest::testApplyIpsBuiltin()

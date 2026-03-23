@@ -85,10 +85,24 @@ public:
     int importDat(const QString &datFilePath, const QString &systemName);
 
     /**
+     * @brief Import a DAT-style patch catalog into the database
+     * @param datFilePath Path to .dat or .xml file
+     * @param systemName System this patch catalog applies to
+     * @return Number of entries imported, or -1 on error
+     */
+    int importPatchDat(const QString &datFilePath, const QString &systemName);
+
+    /**
      * @brief Get list of imported DAT files
      * @return Map of system name to DAT info
      */
     QMap<QString, DatHeader> getImportedDats();
+
+    /**
+     * @brief Get list of imported patch DAT files
+     * @return Map of system name to DAT info
+     */
+    QMap<QString, DatHeader> getImportedPatchDats();
 
     /**
      * @brief Remove an imported DAT file
@@ -96,6 +110,13 @@ public:
      * @return True if successful
      */
     bool removeDat(const QString &systemName);
+
+    /**
+     * @brief Remove an imported patch DAT file
+     * @param systemName System to remove patch DAT for
+     * @return True if successful
+     */
+    bool removePatchDat(const QString &systemName);
 
     /**
      * @brief Verify all files in library
@@ -149,6 +170,13 @@ public:
      */
     bool hasDat(const QString &systemName);
 
+    /**
+     * @brief Check if system has imported patch DAT
+     * @param systemName System name
+     * @return True if patch DAT exists for system
+     */
+    bool hasPatchDat(const QString &systemName);
+
 signals:
     void verificationProgress(int current, int total, const QString &currentFile);
     void datImportProgress(int current, int total);
@@ -162,12 +190,22 @@ private:
     // In-memory cache of loaded DAT entries (indexed by hash)
     QMap<QString, QMap<QString, DatRomEntry>> m_datCache;  // system -> (hash -> entry)
     QMap<QString, QString> m_datHashTypes;                  // system -> preferred hash type
+    QMap<QString, QMap<QString, DatRomEntry>> m_patchDatCache;  // system -> (hash -> entry)
     
     bool createVerificationSchema();
     void loadDatCache(const QString &systemName);
+    void loadPatchDatCache(const QString &systemName);
     QString getPreferredHashType(const QString &systemName);
     VerificationStatus compareHashes(const FileRecord &file, DatRomEntry &matchedEntry,
                                      QString &matchedHash, const QString &hashType);
+    bool findPatchCatalogMatch(const QString &systemName,
+                               const QString &crc32,
+                               const QString &md5,
+                               const QString &sha1,
+                               DatRomEntry &matchedEntry,
+                               QString &matchedHash,
+                               QString &matchedHashType);
+    void promotePatchMetadata(int fileId, const DatRomEntry &entry);
 };
 
 } // namespace Remus

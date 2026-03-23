@@ -84,6 +84,10 @@ private:
     bool isValidExtension(const QString &extension) const;
     bool isArchiveExtension(const QString &extension) const;
     bool isInExcludedDirectory(const QString &dirPath) const;
+    bool shouldScanFile(const QFileInfo &fileInfo) const;
+    bool shouldScanArchiveEntry(const QString &internalPath) const;
+    bool isLikelyMarkdownDocument(const QString &path) const;
+    bool isLikelyTextFile(const QString &path) const;
     ScanResult createScanResult(const QFileInfo &fileInfo);
     void processArchive(const QString &archivePath, QList<ScanResult> &results);
     void detectMultiFileSets(QList<ScanResult> &results);

@@ -37,6 +37,25 @@ static const char *k_datXml =
     "    </game>\n"
     "</datafile>\n";
 
+static const char *k_patchDatXml =
+    "<?xml version=\"1.0\"?>\n"
+    "<datafile>\n"
+    "    <header>\n"
+    "        <name>NES Patch Catalog (Test)</name>\n"
+    "        <description>Known patched ROM outputs</description>\n"
+    "        <version>20260102</version>\n"
+    "        <author>test</author>\n"
+    "    </header>\n"
+    "    <game name=\"Dragon Quest III (English v2.0)[Addendum]\" base_title=\"Dragon Quest III\" patch_name=\"English v2.0 Addendum\" file_type=\"translation\">\n"
+    "        <description>Verified translated build</description>\n"
+    "        <rom name=\"Dragon Quest III (English v2.0)[Addendum].nes\"\n"
+    "             size=\"40960\"\n"
+    "             crc=\"1a2b3c4d\"\n"
+    "             md5=\"11111111111111111111111111111111\"\n"
+    "             sha1=\"2222222222222222222222222222222222222222\"/>\n"
+    "    </game>\n"
+    "</datafile>\n";
+
 // ── File-scope helpers (kept outside the class body for MOC compatibility) ──
 
 static QString writeDat(const QTemporaryDir &dir)
@@ -50,6 +69,24 @@ static QString writeDat(const QTemporaryDir &dir)
 
     if (f.write(k_datXml) != qstrlen(k_datXml)) {
         qWarning() << "Failed to write DAT contents to:" << path;
+        return QString();
+    }
+
+    f.close();
+    return path;
+}
+
+static QString writePatchDat(const QTemporaryDir &dir)
+{
+    const QString path = dir.path() + "/patch-test.dat";
+    QFile f(path);
+    if (!f.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        qWarning() << "Failed to open patch DAT file for writing:" << path;
+        return QString();
+    }
+
+    if (f.write(k_patchDatXml) != qstrlen(k_patchDatXml)) {
+        qWarning() << "Failed to write patch DAT contents to:" << path;
         return QString();
     }
 
@@ -95,14 +132,18 @@ class VerificationEngineTest : public QObject
 
 private slots:
     void testImportDat();
+    void testImportPatchDat();
     void testVerifyMatchingHash();
     void testVerifyMismatch();
     void testVerifyNotInDat();
     void testVerifyHashMissing();
     void testVerifySummary();
     void testHasDat();
+    void testHasPatchDat();
     void testRemoveDat();
+    void testRemovePatchDat();
     void testGetMissingGames();
+    void testVerifyPatchedHashPromotesMetadata();
 };
 
 // ── Test implementations ───────────────────────────────────────────────────
@@ -141,6 +182,21 @@ void VerificationEngineTest::testVerifyMatchingHash()
     VerificationResult result = engine.verifyFile(fileId);
     QCOMPARE(result.fileId, fileId);
     QCOMPARE(result.status, VerificationStatus::Verified);
+}
+
+void VerificationEngineTest::testImportPatchDat()
+{
+    QTemporaryDir dir;
+    QVERIFY(dir.isValid());
+
+    Database db;
+    QVERIFY(db.initialize(":memory:"));
+
+    VerificationEngine engine(&db);
+    const QString datPath = writePatchDat(dir);
+    QVERIFY(!datPath.isEmpty());
+    const int count = engine.importPatchDat(datPath, "NES");
+    QCOMPARE(count, 1);
 }
 
 void VerificationEngineTest::testVerifyMismatch()
@@ -256,6 +312,24 @@ void VerificationEngineTest::testHasDat()
     QVERIFY(!engine.hasDat("SNES"));
 }
 
+void VerificationEngineTest::testHasPatchDat()
+{
+    QTemporaryDir dir;
+    QVERIFY(dir.isValid());
+
+    Database db;
+    QVERIFY(db.initialize(":memory:"));
+
+    VerificationEngine engine(&db);
+    QVERIFY(!engine.hasPatchDat("NES"));
+
+    const QString datPath = writePatchDat(dir);
+    QVERIFY(!datPath.isEmpty());
+    engine.importPatchDat(datPath, "NES");
+    QVERIFY(engine.hasPatchDat("NES"));
+    QVERIFY(!engine.hasPatchDat("SNES"));
+}
+
 void VerificationEngineTest::testRemoveDat()
 {
     QTemporaryDir dir;
@@ -272,6 +346,24 @@ void VerificationEngineTest::testRemoveDat()
 
     QVERIFY(engine.removeDat("NES"));
     QVERIFY(!engine.hasDat("NES"));
+}
+
+void VerificationEngineTest::testRemovePatchDat()
+{
+    QTemporaryDir dir;
+    QVERIFY(dir.isValid());
+
+    Database db;
+    QVERIFY(db.initialize(":memory:"));
+
+    VerificationEngine engine(&db);
+    const QString datPath = writePatchDat(dir);
+    QVERIFY(!datPath.isEmpty());
+    engine.importPatchDat(datPath, "NES");
+    QVERIFY(engine.hasPatchDat("NES"));
+
+    QVERIFY(engine.removePatchDat("NES"));
+    QVERIFY(!engine.hasPatchDat("NES"));
 }
 
 void VerificationEngineTest::testGetMissingGames()
@@ -294,6 +386,49 @@ void VerificationEngineTest::testGetMissingGames()
     QList<DatRomEntry> missing = engine.getMissingGames("NES");
     QCOMPARE(missing.size(), 1);
     QCOMPARE(missing.first().gameName, QStringLiteral("Donkey Kong"));
+}
+
+void VerificationEngineTest::testVerifyPatchedHashPromotesMetadata()
+{
+    QTemporaryDir dir;
+    QVERIFY(dir.isValid());
+
+    Database db;
+    QVERIFY(db.initialize(":memory:"));
+
+    const int libId = db.insertLibrary("/roms", "Test");
+    const int sysId = db.getSystemId("NES");
+
+    FileRecord fr;
+    fr.libraryId = libId;
+    fr.filename = "Dragon Quest III (English v2.0)[Addendum].nes";
+    fr.originalPath = "/roms/Dragon Quest III (English v2.0)[Addendum].nes";
+    fr.currentPath = fr.originalPath;
+    fr.extension = ".nes";
+    fr.systemId = sysId;
+    fr.fileSize = 40960;
+    fr.crc32 = "1a2b3c4d";
+    fr.md5 = "11111111111111111111111111111111";
+    fr.sha1 = "2222222222222222222222222222222222222222";
+    fr.hashCalculated = true;
+    const int fileId = db.insertFile(fr);
+    QVERIFY(fileId > 0);
+    QVERIFY(db.updateFileHashes(fileId, fr.crc32, fr.md5, fr.sha1));
+
+    VerificationEngine engine(&db);
+    const QString datPath = writePatchDat(dir);
+    QVERIFY(!datPath.isEmpty());
+    QCOMPARE(engine.importPatchDat(datPath, "NES"), 1);
+
+    const VerificationResult result = engine.verifyFile(fileId);
+    QCOMPARE(result.status, VerificationStatus::Verified);
+    QVERIFY(result.notes.contains("patch catalog"));
+
+    const FileRecord updated = db.getFileById(fileId);
+    QCOMPARE(updated.baseTitle, QStringLiteral("Dragon Quest III"));
+    QCOMPARE(updated.fileType, QStringLiteral("translation"));
+    QVERIFY(updated.isPatched);
+    QCOMPARE(updated.patchName, QStringLiteral("English v2.0 Addendum"));
 }
 
 QTEST_MAIN(VerificationEngineTest)

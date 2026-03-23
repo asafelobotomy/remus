@@ -21,6 +21,7 @@ private slots:
     void testParseValidDat();
     void testParseMultiRomGame();
     void testParseWithAllHashes();
+    void testParsePatchCatalogMetadata();
     void testParseNoIntroFormat();
     void testParseRedumpFormat();
 
@@ -135,6 +136,28 @@ void DatParserTest::testParseWithAllHashes() {
     QCOMPARE(result.entries[0].crc32, QString("aaaaaaaa"));
     QCOMPARE(result.entries[0].md5, QString("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"));
     QCOMPARE(result.entries[0].sha1, QString("cccccccccccccccccccccccccccccccccccccccc"));
+}
+
+void DatParserTest::testParsePatchCatalogMetadata() {
+    QString xmlContent =
+        "<?xml version=\"1.0\"?>\n"
+        "<datafile>\n"
+        "    <header><name>Patch Catalog</name></header>\n"
+        "    <game name=\"Dragon Quest III (English v2.0)\" base_title=\"Dragon Quest III\" patch_name=\"English v2.0\" file_type=\"translation\">\n"
+        "        <description>Verified translation patch output</description>\n"
+        "        <rom name=\"Dragon Quest III (English v2.0).sfc\" size=\"3145728\" crc=\"1234abcd\" md5=\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\" sha1=\"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"/>\n"
+        "    </game>\n"
+        "</datafile>";
+
+    DatParser parser;
+    DatParseResult result = parser.parseContent(xmlContent);
+
+    QVERIFY(result.success);
+    QCOMPARE(result.entries.size(), 1);
+    const DatRomEntry &entry = result.entries.first();
+    QCOMPARE(entry.baseTitle, QStringLiteral("Dragon Quest III"));
+    QCOMPARE(entry.patchName, QStringLiteral("English v2.0"));
+    QCOMPARE(entry.fileType, QStringLiteral("translation"));
 }
 
 void DatParserTest::testParseNoIntroFormat() {

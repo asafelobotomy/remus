@@ -5,15 +5,19 @@
 
 namespace Remus {
 
-DatManagerController::DatManagerController(LocalDatabaseProvider *provider, QObject *parent)
+DatManagerController::DatManagerController(LocalDatabaseProvider *provider, Database *database, QObject *parent)
     : QObject(parent)
     , m_provider(provider)
+    , m_database(database)
+    , m_verificationEngine(database ? new VerificationEngine(database, this) : nullptr)
 {
     // Connect to provider signals
-    connect(m_provider, &LocalDatabaseProvider::databaseLoaded,
-            this, &DatManagerController::onDatabaseLoaded);
-    connect(m_provider, &LocalDatabaseProvider::updateAvailable,
-            this, &DatManagerController::updateAvailable);
+    if (m_provider) {
+        connect(m_provider, &LocalDatabaseProvider::databaseLoaded,
+                this, &DatManagerController::onDatabaseLoaded);
+        connect(m_provider, &LocalDatabaseProvider::updateAvailable,
+                this, &DatManagerController::updateAvailable);
+    }
 }
 
 QVariantList DatManagerController::loadedDats() const
@@ -37,6 +41,28 @@ QVariantList DatManagerController::loadedDats() const
         result.append(datMap);
     }
     
+    return result;
+}
+
+QVariantList DatManagerController::loadedPatchDats() const
+{
+    QVariantList result;
+
+    if (!m_verificationEngine) {
+        return result;
+    }
+
+    const auto patchDats = m_verificationEngine->getImportedPatchDats();
+    for (auto it = patchDats.cbegin(); it != patchDats.cend(); ++it) {
+        QVariantMap datMap;
+        datMap["system"] = it.key();
+        datMap["name"] = it.value().name;
+        datMap["version"] = it.value().version;
+        datMap["description"] = it.value().description;
+        datMap["source"] = it.value().category;
+        result.append(datMap);
+    }
+
     return result;
 }
 
@@ -92,6 +118,52 @@ bool DatManagerController::reloadDat(const QString &filePath)
         emit error("Failed to reload DAT file");
         return false;
     }
+}
+
+bool DatManagerController::loadPatchDat(const QString &filePath, const QString &systemName)
+{
+    if (!m_verificationEngine) {
+        emit error("Verification engine not available");
+        return false;
+    }
+
+    QFileInfo fileInfo(filePath);
+    if (!fileInfo.exists()) {
+        emit error("Patch DAT file not found: " + filePath);
+        return false;
+    }
+
+    const QString resolvedSystemName = systemName.isEmpty() ? fileInfo.completeBaseName() : systemName;
+    const int loaded = m_verificationEngine->importPatchDat(filePath, resolvedSystemName);
+    if (loaded <= 0) {
+        emit error("Failed to load patch DAT file: " + filePath);
+        return false;
+    }
+
+    emit patchDatLoaded(resolvedSystemName, loaded);
+    emit patchDatsChanged();
+    return true;
+}
+
+bool DatManagerController::removePatchDat(const QString &systemName)
+{
+    if (!m_verificationEngine) {
+        emit error("Verification engine not available");
+        return false;
+    }
+
+    if (!m_verificationEngine->removePatchDat(systemName)) {
+        emit error("Failed to remove patch DAT: " + systemName);
+        return false;
+    }
+
+    emit patchDatsChanged();
+    return true;
+}
+
+bool DatManagerController::hasPatchDat(const QString &systemName) const
+{
+    return m_verificationEngine && m_verificationEngine->hasPatchDat(systemName);
 }
 
 QVariantMap DatManagerController::getUpdateInfo(const QString &filePath) const

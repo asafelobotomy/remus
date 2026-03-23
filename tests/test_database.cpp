@@ -28,6 +28,9 @@ private slots:
     void testGetFilesWithoutHashes();
     void testGetUnprocessedFiles();
     void testUpdateFilePath();
+    void testInsertAndGetPatchedFileMetadata();
+    void testInsertAndFindAppliedPatch();
+    void testUpdateFileHashesPromotesPatchedMetadata();
 };
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
@@ -417,6 +420,92 @@ void DatabaseTest::testUpdateFilePath()
 
     FileRecord got = db.getFileById(fileId);
     QCOMPARE(got.currentPath, newPath);
+}
+
+void DatabaseTest::testInsertAndGetPatchedFileMetadata()
+{
+    Database db;
+    QVERIFY(db.initialize(":memory:"));
+
+    const int libId = db.insertLibrary("/roms", "Test");
+    const int sysId = db.getSystemId("SNES");
+
+    FileRecord fr = makeRecord(libId, sysId, "Dragon Quest III (English v2.0)[Addendum].sfc");
+    const int fileId = db.insertFile(fr);
+    QVERIFY(fileId > 0);
+
+    const FileRecord got = db.getFileById(fileId);
+    QCOMPARE(got.baseTitle, QStringLiteral("Dragon Quest III"));
+    QCOMPARE(got.fileType, QStringLiteral("translation"));
+    QVERIFY(got.isPatched);
+    QCOMPARE(got.patchName, QStringLiteral("English v2.0 Addendum"));
+}
+
+void DatabaseTest::testInsertAndFindAppliedPatch()
+{
+    Database db;
+    QVERIFY(db.initialize(":memory:"));
+
+    Database::AppliedPatchRecord record;
+    record.basePath = "/roms/base.sfc";
+    record.outputPath = "/roms/base [English v2.0].sfc";
+    record.patchPath = "/patches/english_v2.bps";
+    record.patchFormat = "BPS";
+    record.baseTitle = "Base Game";
+    record.patchName = "English v2.0";
+    record.fileType = "translation";
+    record.sourceChecksum = "11111111";
+    record.targetChecksum = "22222222";
+    record.patchChecksum = "33333333";
+    record.baseCrc32 = "AAAA1111";
+    record.baseMd5 = "base-md5";
+    record.baseSha1 = "base-sha1";
+    record.outputCrc32 = "BBBB2222";
+    record.outputMd5 = "output-md5";
+    record.outputSha1 = "output-sha1";
+
+    QVERIFY(db.insertAppliedPatch(record));
+
+    const Database::AppliedPatchRecord found =
+        db.findAppliedPatchByOutputHashes("BBBB2222", "output-md5", "output-sha1");
+    QVERIFY(found.id > 0);
+    QCOMPARE(found.baseTitle, QStringLiteral("Base Game"));
+    QCOMPARE(found.patchName, QStringLiteral("English v2.0"));
+    QCOMPARE(found.fileType, QStringLiteral("translation"));
+}
+
+void DatabaseTest::testUpdateFileHashesPromotesPatchedMetadata()
+{
+    Database db;
+    QVERIFY(db.initialize(":memory:"));
+
+    const int libId = db.insertLibrary("/roms", "Test");
+    const int sysId = db.getSystemId("SNES");
+
+    FileRecord fr = makeRecord(libId, sysId, "Dragon Quest III.sfc");
+    const int fileId = db.insertFile(fr);
+    QVERIFY(fileId > 0);
+
+    Database::AppliedPatchRecord record;
+    record.basePath = "/roms/Dragon Quest III.sfc";
+    record.outputPath = "/roms/Dragon Quest III [English v2.0].sfc";
+    record.patchPath = "/patches/dq3-english.bps";
+    record.patchFormat = "BPS";
+    record.baseTitle = "Dragon Quest III";
+    record.patchName = "English v2.0";
+    record.fileType = "translation";
+    record.outputCrc32 = "CCCC3333";
+    record.outputMd5 = "patched-md5";
+    record.outputSha1 = "patched-sha1";
+    QVERIFY(db.insertAppliedPatch(record));
+
+    QVERIFY(db.updateFileHashes(fileId, "CCCC3333", "patched-md5", "patched-sha1"));
+
+    const FileRecord got = db.getFileById(fileId);
+    QCOMPARE(got.baseTitle, QStringLiteral("Dragon Quest III"));
+    QCOMPARE(got.fileType, QStringLiteral("translation"));
+    QVERIFY(got.isPatched);
+    QCOMPARE(got.patchName, QStringLiteral("English v2.0"));
 }
 
 QTEST_MAIN(DatabaseTest)

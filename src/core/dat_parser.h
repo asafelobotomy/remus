@@ -36,6 +36,9 @@ struct DatRomEntry {
     QString sha1;           // SHA1 hash (lowercase hex)
     QString status;         // "verified", "good", "bad", etc.
     QString serial;         // Game serial number (if available)
+    QString baseTitle;      // Base title for patched ROM catalogs
+    QString patchName;      // Patch/transformation name for patched ROM catalogs
+    QString fileType;       // official, translation, hack, prototype, etc.
 };
 
 /**

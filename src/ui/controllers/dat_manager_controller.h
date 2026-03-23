@@ -3,6 +3,8 @@
 
 #include <QObject>
 #include <QVariantList>
+#include "../../core/database.h"
+#include "../../core/verification_engine.h"
 #include "../../metadata/local_database_provider.h"
 
 namespace Remus {
@@ -14,15 +16,17 @@ class DatManagerController : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QVariantList loadedDats READ loadedDats NOTIFY datsChanged)
+    Q_PROPERTY(QVariantList loadedPatchDats READ loadedPatchDats NOTIFY patchDatsChanged)
     
 public:
-    explicit DatManagerController(LocalDatabaseProvider *provider, QObject *parent = nullptr);
+    explicit DatManagerController(LocalDatabaseProvider *provider, Database *database = nullptr, QObject *parent = nullptr);
     
     /**
      * @brief Get list of loaded DAT files as QVariantMap list
      * @return List of DAT metadata (name, version, entryCount, filePath)
      */
     QVariantList loadedDats() const;
+    QVariantList loadedPatchDats() const;
     
     /**
      * @brief Load a DAT file from path
@@ -44,6 +48,9 @@ public:
      * @return True if reloaded successfully
      */
     Q_INVOKABLE bool reloadDat(const QString &filePath);
+    Q_INVOKABLE bool loadPatchDat(const QString &filePath, const QString &systemName = QString());
+    Q_INVOKABLE bool removePatchDat(const QString &systemName);
+    Q_INVOKABLE bool hasPatchDat(const QString &systemName) const;
     
     /**
      * @brief Get update information for a DAT
@@ -54,7 +61,9 @@ public:
     
 signals:
     void datsChanged();
+    void patchDatsChanged();
     void datLoaded(const QString &systemName, int entryCount);
+    void patchDatLoaded(const QString &systemName, int entryCount);
     void updateAvailable(const QString &systemName, const QString &currentVersion, const QString &newVersion);
     void error(const QString &message);
     
@@ -63,6 +72,8 @@ private slots:
     
 private:
     LocalDatabaseProvider *m_provider;
+    Database *m_database;
+    VerificationEngine *m_verificationEngine;
 };
 
 } // namespace Remus

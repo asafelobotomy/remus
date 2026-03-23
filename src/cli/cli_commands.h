@@ -38,9 +38,10 @@ int handleMatchCommand(CliContext &ctx);
 int handleMatchReportCommand(CliContext &ctx);
 
 // ── Verification ──────────────────────────────────────────────────────────────
-// --checksum-verify, --verify
+// --checksum-verify, --verify, --patch-dat-*
 int handleChecksumVerifyCommand(CliContext &ctx);
 int handleVerifyCommand(CliContext &ctx);
+int handlePatchDatCommand(CliContext &ctx);
 
 // ── Organise, bundle & artwork ────────────────────────────────────────────────
 // --download-artwork, --bundle, --organize, --generate-m3u

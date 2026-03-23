@@ -3,7 +3,9 @@ enable_testing()
 
 # Find Qt6 Test module
 find_package(Qt6 REQUIRED COMPONENTS Test)
-find_package(Curses REQUIRED)
+if(REMUS_BUILD_INTERACTIVE_CLI)
+    find_package(Curses REQUIRED)
+endif()
 
 # Helper to reduce repetitive test target boilerplate.
 set(REMUS_TEST_TARGETS)
@@ -90,15 +92,22 @@ add_remus_test(test_system_resolver SystemResolverTest
     LIBS Qt6::Test Qt6::Core remus-core remus-constants
 )
 
-add_remus_test(test_settings_controller SettingsControllerTest
-    SOURCES test_settings_controller.cpp
-    LIBS Qt6::Test Qt6::Core remus-ui
+add_remus_test(test_patched_rom_parser PatchedRomParserTest
+    SOURCES test_patched_rom_parser.cpp
+    LIBS Qt6::Test Qt6::Core remus-core
 )
 
-add_remus_test(test_library_controller LibraryControllerTest
-    SOURCES test_library_controller.cpp
-    LIBS Qt6::Test Qt6::Core Qt6::Sql remus-ui remus-core
-)
+if(TARGET remus-ui)
+    add_remus_test(test_settings_controller SettingsControllerTest
+        SOURCES test_settings_controller.cpp
+        LIBS Qt6::Test Qt6::Core remus-ui
+    )
+
+    add_remus_test(test_library_controller LibraryControllerTest
+        SOURCES test_library_controller.cpp
+        LIBS Qt6::Test Qt6::Core Qt6::Sql remus-ui remus-core
+    )
+endif()
 
 add_remus_test(test_chd_converter ChdConverterTest
     SOURCES test_chd_converter.cpp
@@ -180,20 +189,24 @@ add_remus_test(test_cli_smoke CliSmokeTest
     LIBS Qt6::Test Qt6::Core remus-core remus-metadata
 )
 
-add_remus_test(test_session_state SessionStateTest
-    SOURCES test_session_state.cpp ../src/cli/interactive_session.cpp
-    LIBS Qt6::Test Qt6::Core remus-core ${CURSES_LIBRARIES}
-)
+if(REMUS_BUILD_INTERACTIVE_CLI)
+    add_remus_test(test_session_state SessionStateTest
+        SOURCES test_session_state.cpp ../src/cli/interactive_session.cpp
+        LIBS Qt6::Test Qt6::Core remus-core ${CURSES_LIBRARIES}
+    )
+endif()
 
-add_remus_test(test_theme_constants ThemeConstantsTest
-    SOURCES test_theme_constants.cpp
-    LIBS Qt6::Test Qt6::Core Qt6::Gui remus-ui
-)
+if(TARGET remus-ui)
+    add_remus_test(test_theme_constants ThemeConstantsTest
+        SOURCES test_theme_constants.cpp
+        LIBS Qt6::Test Qt6::Core Qt6::Gui remus-ui
+    )
 
-add_remus_test(test_dat_manager_controller DatManagerControllerTest
-    SOURCES test_dat_manager_controller.cpp
-    LIBS Qt6::Test Qt6::Core remus-ui
-)
+    add_remus_test(test_dat_manager_controller DatManagerControllerTest
+        SOURCES test_dat_manager_controller.cpp
+        LIBS Qt6::Test Qt6::Core remus-ui
+    )
+endif()
 
 # ── TUI Widget tests (Phase 6.2+) ─────────────────────────────────
 if(TARGET remus-tui-core)
@@ -311,15 +324,17 @@ add_remus_test(test_cli_helpers CliHelpersTest
     LIBS Qt6::Test Qt6::Core Qt6::Sql Qt6::Network remus-core remus-metadata remus-constants
 )
 
-add_remus_test(test_processing_controller ProcessingControllerTest
-    SOURCES test_processing_controller.cpp
-    LIBS Qt6::Test Qt6::Core Qt6::Sql Qt6::Network remus-ui remus-core remus-metadata
-)
+if(TARGET remus-ui)
+    add_remus_test(test_processing_controller ProcessingControllerTest
+        SOURCES test_processing_controller.cpp
+        LIBS Qt6::Test Qt6::Core Qt6::Sql Qt6::Network remus-ui remus-core remus-metadata
+    )
 
-add_remus_test(test_export_controller ExportControllerTest
-    SOURCES test_export_controller.cpp
-    LIBS Qt6::Test Qt6::Core Qt6::Sql Qt6::Network remus-ui remus-core
-)
+    add_remus_test(test_export_controller ExportControllerTest
+        SOURCES test_export_controller.cpp
+        LIBS Qt6::Test Qt6::Core Qt6::Sql Qt6::Network remus-ui remus-core
+    )
+endif()
 
 
 add_custom_target(run_tests

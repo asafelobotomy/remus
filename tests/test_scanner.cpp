@@ -14,6 +14,7 @@ private slots:
     void missingDirectoryEmitsError();
     void cancelStopsScan();
     void multiFileLinking();
+    void markdownDocumentsAreSkippedButGenesisRomFilesRemain();
 };
 
 static QString writeFile(const QString &path, const QByteArray &data = QByteArray("data"))
@@ -105,6 +106,27 @@ void ScannerTest::multiFileLinking()
         }
     }
     QCOMPARE(linkedTracks, 2);
+}
+
+void ScannerTest::markdownDocumentsAreSkippedButGenesisRomFilesRemain()
+{
+    QTemporaryDir dir;
+    QVERIFY(dir.isValid());
+
+    const QString readmePath = dir.filePath("README.md");
+    QVERIFY(!writeFile(readmePath, QByteArray("# ROM folder\nThis is documentation.\n")).isEmpty());
+
+    const QString romPath = dir.filePath("Sonic The Hedgehog (USA, Europe).md");
+    const QByteArray romData = QByteArray::fromHex("00010203FF80AA55");
+    QVERIFY(!writeFile(romPath, romData).isEmpty());
+
+    Scanner scanner;
+    scanner.setExtensions({".md"});
+    scanner.setArchiveScanning(false);
+
+    QList<ScanResult> results = scanner.scan(dir.path());
+    QCOMPARE(results.size(), 1);
+    QCOMPARE(results.first().filename, QString("Sonic The Hedgehog (USA, Europe).md"));
 }
 
 QTEST_MAIN(ScannerTest)

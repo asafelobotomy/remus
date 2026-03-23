@@ -14,6 +14,7 @@ constexpr QLatin1StringView DATAFILE = QLatin1StringView("datafile");
 constexpr QLatin1StringView HEADER   = QLatin1StringView("header");
 constexpr QLatin1StringView GAME     = QLatin1StringView("game");
 constexpr QLatin1StringView MACHINE  = QLatin1StringView("machine");
+constexpr QLatin1StringView PATCH    = QLatin1StringView("patch");
 } // namespace DatXml
 
 DatParser::DatParser(QObject *parent)
@@ -143,6 +144,12 @@ bool DatParser::parseGame(QXmlStreamReader &xml, QList<DatRomEntry> &entries)
     // Get game name from attribute
     QXmlStreamAttributes attrs = xml.attributes();
     baseEntry.gameName = attrs.value("name").toString();
+    baseEntry.baseTitle = attrs.value("base_title").toString();
+    if (baseEntry.baseTitle.isEmpty()) {
+        baseEntry.baseTitle = attrs.value("cloneof").toString();
+    }
+    baseEntry.patchName = attrs.value("patch_name").toString();
+    baseEntry.fileType = attrs.value("file_type").toString();
 
     xml.readNext();
 
@@ -157,6 +164,27 @@ bool DatParser::parseGame(QXmlStreamReader &xml, QList<DatRomEntry> &entries)
 
             if (elementName == "description") {
                 baseEntry.description = xml.readElementText();
+            } else if (xml.name() == DatXml::PATCH) {
+                const QXmlStreamAttributes patchAttrs = xml.attributes();
+                if (baseEntry.baseTitle.isEmpty()) {
+                    baseEntry.baseTitle = patchAttrs.value("base_title").toString();
+                }
+                if (baseEntry.baseTitle.isEmpty()) {
+                    baseEntry.baseTitle = patchAttrs.value("base").toString();
+                }
+                if (baseEntry.patchName.isEmpty()) {
+                    baseEntry.patchName = patchAttrs.value("patch_name").toString();
+                }
+                if (baseEntry.patchName.isEmpty()) {
+                    baseEntry.patchName = patchAttrs.value("name").toString();
+                }
+                if (baseEntry.fileType.isEmpty()) {
+                    baseEntry.fileType = patchAttrs.value("file_type").toString();
+                }
+                if (baseEntry.fileType.isEmpty()) {
+                    baseEntry.fileType = patchAttrs.value("type").toString();
+                }
+                xml.skipCurrentElement();
             } else if (elementName == "rom" || elementName == "disk") {
                 // Parse ROM/disk entry
                 DatRomEntry romEntry = baseEntry;
@@ -174,6 +202,24 @@ bool DatParser::parseGame(QXmlStreamReader &xml, QList<DatRomEntry> &entries)
                 romEntry.sha1 = normalizeHash(romAttrs.value("sha1").toString());
                 romEntry.status = romAttrs.value("status").toString();
                 romEntry.serial = romAttrs.value("serial").toString();
+                if (romEntry.baseTitle.isEmpty()) {
+                    romEntry.baseTitle = romAttrs.value("base_title").toString();
+                }
+                if (romEntry.baseTitle.isEmpty()) {
+                    romEntry.baseTitle = romAttrs.value("base").toString();
+                }
+                if (romEntry.patchName.isEmpty()) {
+                    romEntry.patchName = romAttrs.value("patch_name").toString();
+                }
+                if (romEntry.patchName.isEmpty()) {
+                    romEntry.patchName = romAttrs.value("patch").toString();
+                }
+                if (romEntry.fileType.isEmpty()) {
+                    romEntry.fileType = romAttrs.value("file_type").toString();
+                }
+                if (romEntry.fileType.isEmpty()) {
+                    romEntry.fileType = romAttrs.value("type").toString();
+                }
 
                 entries.append(romEntry);
             }

@@ -5,11 +5,12 @@
 #include "cli_commands.h"
 #include "cli_helpers.h"
 #include "../core/constants/constants.h"
+#ifdef REMUS_BUILD_INTERACTIVE_CLI
 #include "interactive_session.h"
+#endif
 #include "cli_logging.h"
 
 using namespace Remus;
-using namespace Remus::Cli;
 using namespace Remus::Constants;
 
 static bool hasFlag(const QStringList &args, const QString &flag)
@@ -28,7 +29,8 @@ static bool hasAnyAction(const QStringList &args)
         "--download-artwork", "--generate-m3u", "--convert-chd", "--chd-extract",
         "--chd-verify", "--chd-info", "--extract-archive", "--space-report",
         "--export", "--patch-apply", "--patch-create", "--patch-info",
-        "--patch-tools", "--checksum-verify"
+        "--patch-tools", "--checksum-verify", "--patch-dat-import",
+        "--patch-dat-list", "--patch-dat-remove"
     };
     for (const QString &arg : args) {
         if (actionFlags.contains(arg)) return true;
@@ -59,12 +61,19 @@ int main(int argc, char *argv[])
     const bool noInteractiveFlag = hasFlag(activeArgs, "--no-interactive");
     const bool actionsProvided   = hasAnyAction(activeArgs);
 
+#ifdef REMUS_BUILD_INTERACTIVE_CLI
     if (interactiveFlag || (!noInteractiveFlag && !actionsProvided)) {
         InteractiveSession session;
         InteractiveResult selection = session.run();
         if (!selection.valid || selection.args.isEmpty()) return 0;
         activeArgs = selection.args;
     }
+#else
+    if (interactiveFlag) {
+        qCritical() << "Interactive mode is not available in this CLI-only build.";
+        return 1;
+    }
+#endif
 
     QCommandLineParser parser;
     parser.setApplicationDescription("Remus CLI - Scan and catalog retro game ROMs");
@@ -89,10 +98,13 @@ int main(int argc, char *argv[])
     const QString providerHelp = QString("Metadata provider (%1, %2, %3, auto)")
         .arg(Providers::SCREENSCRAPER).arg(Providers::THEGAMESDB).arg(Providers::IGDB);
     parser.addOption(QCommandLineOption("provider", providerHelp, "provider", "auto"));
+    parser.addOption(QCommandLineOption("tgdb-api-key", "TheGamesDB API key", "apiKey"));
     parser.addOption(QCommandLineOption("ss-user",    "ScreenScraper username",      "username"));
     parser.addOption(QCommandLineOption("ss-pass",    "ScreenScraper password",      "password"));
     parser.addOption(QCommandLineOption("ss-devid",   "ScreenScraper dev ID",        "devid"));
     parser.addOption(QCommandLineOption("ss-devpass", "ScreenScraper dev password",  "devpassword"));
+    parser.addOption(QCommandLineOption("igdb-client-id", "IGDB client ID", "clientId"));
+    parser.addOption(QCommandLineOption("igdb-client-secret", "IGDB client secret", "clientSecret"));
 
     // M3 Matching options
     parser.addOption(QCommandLineOption("match", "Match scanned files with metadata (M3 intelligent matching)"));
@@ -103,6 +115,10 @@ int main(int argc, char *argv[])
     // Verification options
     parser.addOption(QCommandLineOption("verify",        "Verify files against DAT file",          "dat-file"));
     parser.addOption(QCommandLineOption("verify-report", "Generate detailed verification report"));
+    parser.addOption(QCommandLineOption("patch-dat-import", "Import DAT-style patch catalog", "dat-file"));
+    parser.addOption(QCommandLineOption("patch-dat-system", "System name for imported patch catalog", "system"));
+    parser.addOption(QCommandLineOption("patch-dat-list", "List imported patch catalogs"));
+    parser.addOption(QCommandLineOption("patch-dat-remove", "Remove imported patch catalog for system", "system"));
 
     // Artwork options
     parser.addOption(QCommandLineOption("download-artwork", "Download cover art for matched games"));
@@ -157,10 +173,16 @@ int main(int argc, char *argv[])
     parser.addOption(QCommandLineOption("output-dir",      "Output directory for conversions/extractions",         "directory"));
 
     // Interactive options
-    parser.addOption(QCommandLineOption("interactive",    "Launch interactive TUI (default when no actions provided)"));
-    parser.addOption(QCommandLineOption("no-interactive", "Disable interactive TUI (script-friendly)"));
+    parser.addOption(QCommandLineOption("interactive",    "Launch interactive TUI when supported by this build"));
+    parser.addOption(QCommandLineOption("no-interactive", "Disable interactive TUI (script-friendly; accepted as a no-op in CLI-only builds)"));
 
     parser.process(activeArgs);
+
+#ifndef REMUS_BUILD_INTERACTIVE_CLI
+    if (!actionsProvided) {
+        parser.showHelp(0);
+    }
+#endif
 
     // -- Database & system initialisation ---------------------------------------
 
@@ -192,6 +214,7 @@ int main(int argc, char *argv[])
     if (int rc = handleMatchReportCommand(ctx))    return rc;
     if (int rc = handleChecksumVerifyCommand(ctx)) return rc;
     if (int rc = handleVerifyCommand(ctx))         return rc;
+    if (int rc = handlePatchDatCommand(ctx))       return rc;
     if (int rc = handleArtworkCommand(ctx))        return rc;
     if (int rc = handleBundleCommand(ctx))         return rc;
     if (int rc = handleOrganizeCommand(ctx))       return rc;

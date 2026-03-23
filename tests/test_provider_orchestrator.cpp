@@ -14,7 +14,8 @@ public:
     QString name() const override { return m_id; }
     bool requiresAuth() const override { return false; }
 
-    QList<SearchResult> searchByName(const QString &, const QString &, const QString &) override {
+    QList<SearchResult> searchByName(const QString &name, const QString &, const QString &) override {
+        m_lastSearchName = name;
         return m_searchResults;
     }
 
@@ -26,6 +27,7 @@ public:
     GameMetadata m_idMetadata;
     QList<SearchResult> m_searchResults;
     ArtworkUrls m_artwork;
+    QString m_lastSearchName;
 
 private:
     QString m_id;
@@ -37,6 +39,7 @@ class ProviderOrchestratorTest : public QObject {
 private slots:
     void hashProviderPriority();
     void fallsBackToNameSearch();
+    void normalizesVersionedNamesBeforeNameSearch();
     void artworkFallback();
 };
 
@@ -91,6 +94,35 @@ void ProviderOrchestratorTest::fallsBackToNameSearch()
     QCOMPARE(found.title, QString("Full Metadata"));
     QVERIFY(found.matchScore > 0.0f);
     QCOMPARE(found.matchMethod, Constants::MatchMethods::FUZZY);
+}
+
+void ProviderOrchestratorTest::normalizesVersionedNamesBeforeNameSearch()
+{
+    ProviderOrchestrator orchestrator;
+
+    auto *nameProvider = new StubProvider("igdb");
+    SearchResult result;
+    result.id = "dq3";
+    result.title = "Dragon Quest III";
+    result.matchScore = 0.99f;
+    nameProvider->m_searchResults = {result};
+
+    GameMetadata metadata;
+    metadata.id = "dq3";
+    metadata.title = "Dragon Quest III";
+    nameProvider->m_idMetadata = metadata;
+
+    orchestrator.addProvider("igdb", nameProvider, 40);
+
+    GameMetadata found = orchestrator.searchWithFallback(
+        "",
+        "Dragon Quest III (English v2.0)[Addendum]",
+        "SNES"
+    );
+
+    QCOMPARE(nameProvider->m_lastSearchName, QString("Dragon Quest III"));
+    QCOMPARE(found.title, QString("Dragon Quest III"));
+    QCOMPARE(found.matchMethod, Constants::MatchMethods::NAME);
 }
 
 void ProviderOrchestratorTest::artworkFallback()

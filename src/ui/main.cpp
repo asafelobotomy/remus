@@ -91,7 +91,7 @@ int main(int argc, char *argv[])
     qDebug() << "Initialized LocalDatabase provider (priority: 110)";
     
     // Create DAT manager controller for UI
-    DatManagerController datManagerController(localDbProvider);
+    DatManagerController datManagerController(localDbProvider, &db);
     
     // Add Hasheous provider (high priority, FREE, no auth required)
     auto hasheousProvider = new HasheousProvider();

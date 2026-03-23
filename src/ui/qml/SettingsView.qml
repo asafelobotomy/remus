@@ -323,6 +323,90 @@ Page {
                         Layout.fillWidth: true
                         wrapMode: Text.WordWrap
                     }
+
+                    Rectangle {
+                        Layout.fillWidth: true
+                        height: 1
+                        color: theme.border
+                    }
+
+                    Label {
+                        text: "Patch Verification Catalogs"
+                        font.bold: true
+                        color: theme.textPrimary
+                    }
+
+                    Label {
+                        text: "Imported patch catalogs are used to verify known translated or patched outputs and promote base-title and patch metadata back into the library."
+                        color: theme.textSecondary
+                        font.pixelSize: 11
+                        wrapMode: Text.WordWrap
+                        Layout.fillWidth: true
+                    }
+
+                    Repeater {
+                        model: datManager.loadedPatchDats
+
+                        delegate: Rectangle {
+                            Layout.fillWidth: true
+                            height: 76
+                            color: theme.surface
+                            border.color: theme.border
+                            border.width: 1
+                            radius: 4
+
+                            ColumnLayout {
+                                anchors.fill: parent
+                                anchors.margins: 12
+                                spacing: 4
+
+                                RowLayout {
+                                    Layout.fillWidth: true
+                                    spacing: 10
+
+                                    Label {
+                                        text: modelData.system
+                                        font.bold: true
+                                        font.pixelSize: 13
+                                        color: theme.textPrimary
+                                        Layout.fillWidth: true
+                                    }
+
+                                    Label {
+                                        text: modelData.version
+                                        font.pixelSize: 11
+                                        color: theme.accent
+                                    }
+                                }
+
+                                Label {
+                                    text: modelData.name
+                                    font.pixelSize: 10
+                                    color: theme.textSecondary
+                                    Layout.fillWidth: true
+                                    elide: Text.ElideRight
+                                }
+
+                                Label {
+                                    text: modelData.description
+                                    font.pixelSize: 9
+                                    color: theme.textTertiary
+                                    elide: Text.ElideRight
+                                    Layout.fillWidth: true
+                                }
+                            }
+                        }
+                    }
+
+                    Label {
+                        visible: datManager.loadedPatchDats.length === 0
+                        text: "No patch verification catalogs imported yet. Use the CLI patch catalog commands to add DAT-style patch catalogs."
+                        color: theme.textSecondary
+                        font.pixelSize: 11
+                        font.italic: true
+                        Layout.fillWidth: true
+                        wrapMode: Text.WordWrap
+                    }
                 }
             }
             

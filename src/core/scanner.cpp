@@ -5,6 +5,7 @@
 #include <QMap>
 #include <QTextStream>
 #include <QDebug>
+#include <QSet>
 #include "logging_categories.h"
 #include "constants/settings.h"
 
@@ -18,6 +19,19 @@
 #define qCritical() qCCritical(logCore)
 
 namespace Remus {
+
+namespace {
+
+const QSet<QString> kMarkdownDocumentNames = {
+    "readme.md",
+    "changelog.md",
+    "contributing.md",
+    "copying.md",
+    "license.md",
+    "todo.md"
+};
+
+}
 
 Scanner::Scanner(QObject *parent)
     : QObject(parent)
@@ -96,7 +110,7 @@ void Scanner::scanDirectory(const QString &dirPath, QList<ScanResult> &results)
                 emit fileFound(path);
             }
             // Check if it's a regular ROM file
-            else if (isValidExtension(extension)) {
+            else if (shouldScanFile(fileInfo)) {
                 ScanResult result = createScanResult(fileInfo);
                 results.append(result);
                 
@@ -117,6 +131,26 @@ bool Scanner::isValidExtension(const QString &extension) const
         return true;  // No filter, accept all
     }
     return m_extensions.contains(extension, Qt::CaseInsensitive);
+}
+
+bool Scanner::shouldScanFile(const QFileInfo &fileInfo) const
+{
+    const QString extension = "." + fileInfo.suffix().toLower();
+    if (!isValidExtension(extension)) {
+        return false;
+    }
+
+    return !isLikelyMarkdownDocument(fileInfo.absoluteFilePath());
+}
+
+bool Scanner::shouldScanArchiveEntry(const QString &internalPath) const
+{
+    const QString extension = "." + QFileInfo(internalPath).suffix().toLower();
+    if (!isValidExtension(extension)) {
+        return false;
+    }
+
+    return !isLikelyMarkdownDocument(internalPath);
 }
 
 bool Scanner::isArchiveExtension(const QString &extension) const
@@ -162,6 +196,56 @@ bool Scanner::isInExcludedDirectory(const QString &dirPath) const
     return false;
 }
 
+bool Scanner::isLikelyMarkdownDocument(const QString &path) const
+{
+    const QFileInfo fileInfo(path);
+    if (fileInfo.suffix().compare("md", Qt::CaseInsensitive) != 0) {
+        return false;
+    }
+
+    const QString normalizedPath = QDir::fromNativeSeparators(path).toLower();
+    if (kMarkdownDocumentNames.contains(fileInfo.fileName().toLower())) {
+        return true;
+    }
+
+    if (normalizedPath.contains("/docs/") || normalizedPath.contains("/documentation/")) {
+        return true;
+    }
+
+    if (fileInfo.exists()) {
+        return isLikelyTextFile(fileInfo.absoluteFilePath());
+    }
+
+    return false;
+}
+
+bool Scanner::isLikelyTextFile(const QString &path) const
+{
+    QFile file(path);
+    if (!file.open(QIODevice::ReadOnly)) {
+        return false;
+    }
+
+    const QByteArray sample = file.read(1024);
+    if (sample.isEmpty()) {
+        return true;
+    }
+
+    if (sample.contains('\0')) {
+        return false;
+    }
+
+    int printableBytes = 0;
+    for (char byte : sample) {
+        const unsigned char ch = static_cast<unsigned char>(byte);
+        if (ch == '\n' || ch == '\r' || ch == '\t' || (ch >= 32 && ch <= 126)) {
+            printableBytes++;
+        }
+    }
+
+    return (static_cast<double>(printableBytes) / sample.size()) >= 0.9;
+}
+
 void Scanner::processArchive(const QString &archivePath, QList<ScanResult> &results)
 {
     ArchiveInfo archiveInfo = m_archiveExtractor.getArchiveInfo(archivePath);
@@ -186,10 +270,10 @@ void Scanner::processArchive(const QString &archivePath, QList<ScanResult> &resu
 
     // Process each file in the archive
     for (const QString &internalPath : archiveInfo.contents) {
-        QString extension = "." + QFileInfo(internalPath).suffix().toLower();
-        
-        // Skip if it's not a ROM file we care about
-        if (!isValidExtension(extension)) {
+        const QString extension = "." + QFileInfo(internalPath).suffix().toLower();
+
+        // Skip if it's not a ROM file we care about.
+        if (!shouldScanArchiveEntry(internalPath)) {
             continue;
         }
 

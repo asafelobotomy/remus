@@ -17,9 +17,14 @@ private slots:
     void testSelectBestHashCrc32Only();
     void testSelectBestHashPrefersHasheous();
     void testSelectBestHashEmptyWhenNoHashes();
+    void testGetMatchingSystemNameReturnsInternalName();
+    void testGetMatchingSystemNameHandlesUnknownSystem();
     void testGetHashedFilesOnlyReturnsHashedRows();
     void testGetMatchingDisplayNameForRegularFile();
     void testGetMatchingDisplayNameForArchiveFile();
+    void testGetMatchingDisplayNameForPatchedFile();
+    void testGetMatchingDisplayNameForPatchedArchive();
+    void testBuildOrchestratorSkipsIgdbWithoutCredentials();
     void testPersistMetadataInsertsGame();
     void testPersistMetadataDuplicateGame();
     void testHashFileRecordRealFile();
@@ -96,6 +101,22 @@ void CliHelpersTest::testSelectBestHashEmptyWhenNoHashes()
     QVERIFY(hash.isEmpty());
 }
 
+void CliHelpersTest::testGetMatchingSystemNameReturnsInternalName()
+{
+    FileRecord fr;
+    fr.systemId = 2;
+
+    QCOMPARE(getMatchingSystemName(fr), QStringLiteral("SNES"));
+}
+
+void CliHelpersTest::testGetMatchingSystemNameHandlesUnknownSystem()
+{
+    FileRecord fr;
+    fr.systemId = -1;
+
+    QVERIFY(getMatchingSystemName(fr).isEmpty());
+}
+
 void CliHelpersTest::testGetHashedFilesOnlyReturnsHashedRows()
 {
     // getExistingFiles() checks QFileInfo::exists(), so files must be on disk.
@@ -159,6 +180,42 @@ void CliHelpersTest::testGetMatchingDisplayNameForArchiveFile()
     fr.archiveInternalPath = "Sonic The Hedgehog (USA, Europe).md";
 
     QCOMPARE(getMatchingDisplayName(fr), QStringLiteral("Sonic The Hedgehog (USA, Europe)"));
+}
+
+void CliHelpersTest::testGetMatchingDisplayNameForPatchedFile()
+{
+    FileRecord fr;
+    fr.filename = "Dragon Quest III (English v2.0)[Addendum].sfc";
+
+    QCOMPARE(getMatchingDisplayName(fr), QStringLiteral("Dragon Quest III"));
+}
+
+void CliHelpersTest::testGetMatchingDisplayNameForPatchedArchive()
+{
+    FileRecord fr;
+    fr.isCompressed = true;
+    fr.currentPath = "/roms/Dragon Quest III (English v2.0)[Addendum].zip";
+    fr.filename = "Dragon Quest III (English v2.0)[Addendum].sfc";
+    fr.archiveInternalPath = "Dragon Quest III (English v2.0)[Addendum].sfc";
+
+    QCOMPARE(getMatchingDisplayName(fr), QStringLiteral("Dragon Quest III"));
+}
+
+void CliHelpersTest::testBuildOrchestratorSkipsIgdbWithoutCredentials()
+{
+    QCommandLineParser parser;
+    parser.addOption(QCommandLineOption("ss-user", "", "username"));
+    parser.addOption(QCommandLineOption("ss-pass", "", "password"));
+    parser.addOption(QCommandLineOption("igdb-client-id", "", "clientId"));
+    parser.addOption(QCommandLineOption("igdb-client-secret", "", "clientSecret"));
+    parser.process(QStringList{QStringLiteral("test")});
+
+    auto orchestrator = buildOrchestrator(parser);
+
+    const QStringList providers = orchestrator->getEnabledProviders();
+    QVERIFY(providers.contains(QStringLiteral("hasheous")));
+    QVERIFY(providers.contains(QStringLiteral("thegamesdb")));
+    QVERIFY(!providers.contains(QStringLiteral("igdb")));
 }
 
 void CliHelpersTest::testPersistMetadataInsertsGame()

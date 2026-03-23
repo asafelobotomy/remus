@@ -46,6 +46,9 @@ namespace Tables {
     
     /// Matches table name (file-to-game mappings)
     inline constexpr const char* MATCHES = "matches";
+
+    /// Applied patches table name (local patch lineage catalog)
+    inline constexpr const char* APPLIED_PATCHES = "applied_patches";
     
     /// Cache table name (metadata cache)
     inline constexpr const char* CACHE = "cache";
@@ -96,6 +99,10 @@ namespace Columns {
         inline constexpr const char* HASH_CALCULATED = "hash_calculated";
         inline constexpr const char* IS_PRIMARY = "is_primary";
         inline constexpr const char* PARENT_FILE_ID = "parent_file_id";
+        inline constexpr const char* BASE_TITLE = "base_title";
+        inline constexpr const char* FILE_TYPE = "file_type";
+        inline constexpr const char* IS_PATCHED = "is_patched";
+        inline constexpr const char* PATCH_NAME = "patch_name";
         inline constexpr const char* IS_PROCESSED = "is_processed";
         inline constexpr const char* PROCESSING_STATUS = "processing_status";
         inline constexpr const char* LAST_MODIFIED = "last_modified";
@@ -124,6 +131,27 @@ namespace Columns {
         inline constexpr const char* CONFIDENCE = "confidence";
         inline constexpr const char* PROVIDER = "provider";
         inline constexpr const char* NAME_MATCH_SCORE = "name_match_score";
+    }
+
+    // Applied patches columns
+    namespace AppliedPatches {
+        inline constexpr const char* BASE_PATH = "base_path";
+        inline constexpr const char* OUTPUT_PATH = "output_path";
+        inline constexpr const char* PATCH_PATH = "patch_path";
+        inline constexpr const char* PATCH_FORMAT = "patch_format";
+        inline constexpr const char* BASE_TITLE = "base_title";
+        inline constexpr const char* PATCH_NAME = "patch_name";
+        inline constexpr const char* FILE_TYPE = "file_type";
+        inline constexpr const char* SOURCE_CHECKSUM = "source_checksum";
+        inline constexpr const char* TARGET_CHECKSUM = "target_checksum";
+        inline constexpr const char* PATCH_CHECKSUM = "patch_checksum";
+        inline constexpr const char* BASE_CRC32 = "base_crc32";
+        inline constexpr const char* BASE_MD5 = "base_md5";
+        inline constexpr const char* BASE_SHA1 = "base_sha1";
+        inline constexpr const char* OUTPUT_CRC32 = "output_crc32";
+        inline constexpr const char* OUTPUT_MD5 = "output_md5";
+        inline constexpr const char* OUTPUT_SHA1 = "output_sha1";
+        inline constexpr const char* APPLIED_AT = "applied_at";
     }
     
     // Cache columns

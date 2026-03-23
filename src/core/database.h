@@ -31,6 +31,10 @@ struct FileRecord {
     bool hashCalculated = false;
     bool isPrimary = true;
     int parentFileId = 0;
+    QString baseTitle;
+    QString fileType = QStringLiteral("official");
+    bool isPatched = false;
+    QString patchName;
     bool isProcessed = false;
     QString processingStatus = "unprocessed";
     QDateTime lastModified;
@@ -44,6 +48,27 @@ class Database : public QObject {
     Q_OBJECT
 
 public:
+    struct AppliedPatchRecord {
+        int id = 0;
+        QString basePath;
+        QString outputPath;
+        QString patchPath;
+        QString patchFormat;
+        QString baseTitle;
+        QString patchName;
+        QString fileType = QStringLiteral("hack");
+        QString sourceChecksum;
+        QString targetChecksum;
+        QString patchChecksum;
+        QString baseCrc32;
+        QString baseMd5;
+        QString baseSha1;
+        QString outputCrc32;
+        QString outputMd5;
+        QString outputSha1;
+        QDateTime appliedAt;
+    };
+
     explicit Database(QObject *parent = nullptr);
     ~Database();
 
@@ -353,6 +378,24 @@ public:
      * @return List of unprocessed file records
      */
     QList<FileRecord> getUnprocessedFiles();
+
+    /**
+     * @brief Insert a local applied-patch lineage record
+     * @param record Patch lineage details
+     * @return True if successful
+     */
+    bool insertAppliedPatch(const AppliedPatchRecord &record);
+
+    /**
+     * @brief Look up a previously applied patch by output hashes
+     * @param crc32 Output CRC32
+     * @param md5 Output MD5
+     * @param sha1 Output SHA1
+     * @return Matching lineage record, or id=0 if not found
+     */
+    AppliedPatchRecord findAppliedPatchByOutputHashes(const QString &crc32,
+                                                      const QString &md5,
+                                                      const QString &sha1);
 
 signals:
     void databaseError(const QString &error);

@@ -7,6 +7,8 @@ target_include_directories(remus-constants INTERFACE
 add_library(remus-core STATIC
     scanner.cpp
     system_detector.cpp
+    patched_rom_parser.cpp
+    match_utils.cpp
     hasher.cpp
     database.cpp
     matching_engine.cpp

@@ -1,5 +1,6 @@
 #include "cli_commands.h"
 #include <memory>
+#include <QSettings>
 #include "../metadata/metadata_provider.h"
 #include "../metadata/screenscraper_provider.h"
 #include "../metadata/thegamesdb_provider.h"
@@ -9,6 +10,28 @@
 
 using namespace Remus;
 using namespace Remus::Constants;
+
+namespace {
+
+QSettings remusSettings()
+{
+    return QSettings(QString::fromLatin1(Constants::SETTINGS_ORGANIZATION),
+                     QString::fromLatin1(Constants::SETTINGS_APPLICATION));
+}
+
+QString parserOrSetting(const QCommandLineParser &parser,
+                        const QString &optionName,
+                        const char *settingKey)
+{
+    if (parser.isSet(optionName)) {
+        return parser.value(optionName).trimmed();
+    }
+
+    QSettings settings = remusSettings();
+    return settings.value(QString::fromLatin1(settingKey)).toString().trimmed();
+}
+
+}
 
 /// Build a single provider from parser credentials.
 /// Returns nullptr when providerName is "auto" or unrecognised.
@@ -24,8 +47,29 @@ static std::unique_ptr<MetadataProvider> buildSingleProvider(const QCommandLineP
             p->setDeveloperCredentials(parser.value("ss-devid"), parser.value("ss-devpass"));
         return p;
     }
-    if (providerName == Providers::THEGAMESDB) return std::make_unique<TheGamesDBProvider>();
-    if (providerName == Providers::IGDB)       return std::make_unique<IGDBProvider>();
+    if (providerName == Providers::THEGAMESDB) {
+        auto p = std::make_unique<TheGamesDBProvider>();
+        const QString tgdbApiKey = parserOrSetting(parser,
+                                                   QStringLiteral("tgdb-api-key"),
+                                                   Settings::Providers::THEGAMESDB_API_KEY);
+        if (!tgdbApiKey.isEmpty()) {
+            p->setApiKey(tgdbApiKey);
+        }
+        return p;
+    }
+    if (providerName == Providers::IGDB) {
+        auto p = std::make_unique<IGDBProvider>();
+        const QString clientId = parserOrSetting(parser,
+                                                 QStringLiteral("igdb-client-id"),
+                                                 Settings::Providers::IGDB_CLIENT_ID);
+        const QString clientSecret = parserOrSetting(parser,
+                                                     QStringLiteral("igdb-client-secret"),
+                                                     Settings::Providers::IGDB_CLIENT_SECRET);
+        if (!clientId.isEmpty() && !clientSecret.isEmpty()) {
+            p->setCredentials(clientId, clientSecret);
+        }
+        return p;
+    }
     return nullptr;
 }
 

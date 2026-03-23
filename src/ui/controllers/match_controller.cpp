@@ -1,4 +1,5 @@
 #include "match_controller.h"
+#include "../../core/match_utils.h"
 #include "../../metadata/filename_normalizer.h"
 #include "../../services/match_service.h"
 #include <QDebug>
@@ -59,12 +60,12 @@ void MatchController::startMatching()
         // In real implementation, check matches table first
         
         // Try hash-based matching first (highest confidence)
-        QString hash = !file.crc32.isEmpty() ? file.crc32 : 
-                       !file.md5.isEmpty() ? file.md5 : file.sha1;
+        const QString hash = selectBestMatchHash(file);
         
         if (!hash.isEmpty()) {
             QString systemName = getSystemName(file.systemId);
-            GameMetadata metadata = m_orchestrator->getByHashWithFallback(hash, systemName);
+            GameMetadata metadata = m_orchestrator->getByHashWithFallback(
+                hash, systemName, file.crc32, file.md5, file.sha1);
             
             if (!metadata.title.isEmpty()) {
                 qDebug() << "Hash match found for" << file.filename << "->" << metadata.title;
@@ -75,7 +76,7 @@ void MatchController::startMatching()
         }
         
         // Fall back to name-based matching
-        QString cleanName = Metadata::FilenameNormalizer::normalize(file.filename);
+        const QString cleanName = deriveMatchingDisplayName(file);
         QString systemName = getSystemName(file.systemId);
         
         if (!cleanName.isEmpty()) {
@@ -117,12 +118,12 @@ void MatchController::matchFile(int fileId)
     qDebug() << "Matching single file:" << file.filename;
     
     // Try hash-based matching first (highest confidence)
-    QString hash = !file.crc32.isEmpty() ? file.crc32 : 
-                   !file.md5.isEmpty() ? file.md5 : file.sha1;
+    const QString hash = selectBestMatchHash(file);
     
     if (!hash.isEmpty()) {
         QString systemName = getSystemName(file.systemId);
-        GameMetadata metadata = m_orchestrator->getByHashWithFallback(hash, systemName);
+        GameMetadata metadata = m_orchestrator->getByHashWithFallback(
+            hash, systemName, file.crc32, file.md5, file.sha1);
         
         if (!metadata.title.isEmpty()) {
             qDebug() << "Hash match found for" << file.filename << "->" << metadata.title;
@@ -146,7 +147,7 @@ void MatchController::matchFile(int fileId)
     }
     
     // Fall back to name-based matching
-    QString cleanName = Metadata::FilenameNormalizer::normalize(file.filename);
+    const QString cleanName = deriveMatchingDisplayName(file);
     QString systemName = getSystemName(file.systemId);
     
     if (!cleanName.isEmpty()) {

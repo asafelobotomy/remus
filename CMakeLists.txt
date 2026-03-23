@@ -40,7 +40,13 @@ if(ENABLE_COVERAGE)
     endif()
 endif()
 
+option(REMUS_BUILD_GUI "Build Qt GUI application and UI library" OFF)
 option(REMUS_BUILD_TUI "Build terminal UI (Notcurses-based)" OFF)
+option(REMUS_BUILD_INTERACTIVE_CLI "Build ncurses-backed interactive CLI session" OFF)
+
+if(REMUS_BUILD_INTERACTIVE_CLI)
+    set(REMUS_BUILD_TUI ON CACHE BOOL "Build terminal UI (Notcurses-based)" FORCE)
+endif()
 
 # Avoid noisy Qt optional Vulkan header lookup when Vulkan headers are not installed.
 find_package(Vulkan QUIET)
@@ -49,15 +55,19 @@ if(NOT Vulkan_FOUND)
 endif()
 
 # Find Qt6
-find_package(Qt6 REQUIRED COMPONENTS
+set(REMUS_QT_COMPONENTS
     Core
     Sql
     Network
     Concurrent
     Gui
-    Quick
-    Qml
 )
+
+if(REMUS_BUILD_GUI)
+    list(APPEND REMUS_QT_COMPONENTS Quick Qml)
+endif()
+
+find_package(Qt6 REQUIRED COMPONENTS ${REMUS_QT_COMPONENTS})
 
 # Find zlib for CRC32 hashing
 find_package(ZLIB REQUIRED)
@@ -75,12 +85,13 @@ add_subdirectory(src/metadata)
 add_subdirectory(src/services)
 
 # UI library and GUI executable
-add_subdirectory(src/ui)
+if(REMUS_BUILD_GUI)
+    add_subdirectory(src/ui)
+endif()
 
 # CLI executable
-add_executable(remus-cli
+set(REMUS_CLI_SOURCES
     src/cli/main.cpp
-    src/cli/interactive_session.cpp
     src/cli/cli_helpers.cpp
     src/cli/cli_commands_info.cpp
     src/cli/cli_commands_metadata.cpp
@@ -91,8 +102,16 @@ add_executable(remus-cli
     src/cli/cli_commands_export.cpp
 )
 
-find_package(Curses REQUIRED)
-target_include_directories(remus-cli PRIVATE ${CURSES_INCLUDE_DIR})
+if(REMUS_BUILD_INTERACTIVE_CLI)
+    list(APPEND REMUS_CLI_SOURCES src/cli/interactive_session.cpp)
+endif()
+
+add_executable(remus-cli ${REMUS_CLI_SOURCES})
+
+if(REMUS_BUILD_INTERACTIVE_CLI)
+    find_package(Curses REQUIRED)
+    target_include_directories(remus-cli PRIVATE ${CURSES_INCLUDE_DIR})
+endif()
 
 target_link_libraries(remus-cli PRIVATE
     remus-core
@@ -100,8 +119,12 @@ target_link_libraries(remus-cli PRIVATE
     remus-services
     Qt6::Core
     Qt6::Gui
-    ${CURSES_LIBRARIES}
 )
+
+if(REMUS_BUILD_INTERACTIVE_CLI)
+    target_link_libraries(remus-cli PRIVATE ${CURSES_LIBRARIES})
+    target_compile_definitions(remus-cli PRIVATE REMUS_BUILD_INTERACTIVE_CLI=1)
+endif()
 
 if(REMUS_ENABLE_PCH)
     target_precompile_headers(remus-cli PRIVATE

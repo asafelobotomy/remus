@@ -2,9 +2,64 @@
 #include <QFileInfo>
 #include <QDir>
 #include <QDebug>
+#include "../../core/hasher.h"
+#include "../../core/patched_rom_parser.h"
 #include "../../services/patch_service.h"
 
 namespace Remus {
+
+static bool persistAppliedPatchLineage(Database *db,
+                                       const QString &basePath,
+                                       const QString &patchPath,
+                                       const QString &outputPath,
+                                       const PatchInfo &patchInfo)
+{
+    if (db == nullptr) {
+        return false;
+    }
+
+    Hasher hasher;
+    const HashResult baseHashes = hasher.calculateHashes(basePath);
+    const HashResult outputHashes = hasher.calculateHashes(outputPath);
+    if (!baseHashes.success || !outputHashes.success) {
+        return false;
+    }
+
+    const PatchedRomInfo outputInfo = PatchedRomParser::parse(QFileInfo(outputPath).completeBaseName());
+    const PatchedRomInfo patchInfoFromName = PatchedRomParser::parse(QFileInfo(patchPath).completeBaseName());
+    const QString baseTitle = !outputInfo.baseTitle.isEmpty()
+        ? outputInfo.baseTitle
+        : QFileInfo(basePath).completeBaseName();
+    const QString patchName = !outputInfo.patchName.isEmpty()
+        ? outputInfo.patchName
+        : (!patchInfoFromName.patchName.isEmpty()
+            ? patchInfoFromName.patchName
+            : QFileInfo(patchPath).completeBaseName());
+    const QString fileType = outputInfo.fileType != QStringLiteral("official")
+        ? outputInfo.fileType
+        : (patchInfoFromName.fileType != QStringLiteral("official")
+            ? patchInfoFromName.fileType
+            : QStringLiteral("hack"));
+
+    Database::AppliedPatchRecord record;
+    record.basePath = basePath;
+    record.outputPath = outputPath;
+    record.patchPath = patchPath;
+    record.patchFormat = patchInfo.formatName;
+    record.baseTitle = baseTitle;
+    record.patchName = patchName;
+    record.fileType = fileType;
+    record.sourceChecksum = patchInfo.sourceChecksum;
+    record.targetChecksum = patchInfo.targetChecksum;
+    record.patchChecksum = patchInfo.patchChecksum;
+    record.baseCrc32 = baseHashes.crc32;
+    record.baseMd5 = baseHashes.md5;
+    record.baseSha1 = baseHashes.sha1;
+    record.outputCrc32 = outputHashes.crc32;
+    record.outputMd5 = outputHashes.md5;
+    record.outputSha1 = outputHashes.sha1;
+    return db->insertAppliedPatch(record);
+}
 
 PatchController::PatchController(Database *db, QObject *parent)
     : QObject(parent)
@@ -106,6 +161,9 @@ bool PatchController::applyPatch(const QString &basePath, const QString &patchPa
     emit progressChanged();
 
     if (result.success) {
+        if (!persistAppliedPatchLineage(m_db, basePath, patchPath, result.outputPath, info)) {
+            qWarning() << "Failed to persist applied patch lineage for" << result.outputPath;
+        }
         m_currentOperation = "Patch applied successfully";
         emit currentOperationChanged();
         emit patchCompleted(result.outputPath);

@@ -1,6 +1,7 @@
 #include "verification_engine.h"
 #include "header_detector.h"
 #include "hasher.h"
+#include "patched_rom_parser.h"
 #include "constants/systems.h"
 #include <QSqlQuery>
 #include <QSqlError>
@@ -97,6 +98,53 @@ bool VerificationEngine::createVerificationSchema()
     query.exec("CREATE INDEX IF NOT EXISTS idx_verification_results_file ON verification_results(file_id)");
     query.exec("CREATE INDEX IF NOT EXISTS idx_verification_results_status ON verification_results(status)");
 
+    QString createPatchDats = R"(
+        CREATE TABLE IF NOT EXISTS patch_verification_dats (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            system_name TEXT NOT NULL,
+            dat_name TEXT NOT NULL,
+            dat_version TEXT,
+            dat_source TEXT,
+            dat_description TEXT,
+            entry_count INTEGER DEFAULT 0,
+            imported_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            UNIQUE(system_name)
+        )
+    )";
+    if (!query.exec(createPatchDats)) {
+        qWarning() << "Failed to create patch_verification_dats table:" << query.lastError().text();
+        return false;
+    }
+
+    QString createPatchEntries = R"(
+        CREATE TABLE IF NOT EXISTS patch_dat_entries (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            dat_id INTEGER NOT NULL,
+            game_name TEXT NOT NULL,
+            rom_name TEXT NOT NULL,
+            rom_size INTEGER,
+            crc32 TEXT,
+            md5 TEXT,
+            sha1 TEXT,
+            description TEXT,
+            status TEXT,
+            base_title TEXT,
+            patch_name TEXT,
+            file_type TEXT,
+            FOREIGN KEY (dat_id) REFERENCES patch_verification_dats(id) ON DELETE CASCADE
+        )
+    )";
+    if (!query.exec(createPatchEntries)) {
+        qWarning() << "Failed to create patch_dat_entries table:" << query.lastError().text();
+        return false;
+    }
+
+    query.exec("CREATE INDEX IF NOT EXISTS idx_patch_dat_entries_crc32 ON patch_dat_entries(crc32)");
+    query.exec("CREATE INDEX IF NOT EXISTS idx_patch_dat_entries_md5 ON patch_dat_entries(md5)");
+    query.exec("CREATE INDEX IF NOT EXISTS idx_patch_dat_entries_sha1 ON patch_dat_entries(sha1)");
+    query.exec("CREATE INDEX IF NOT EXISTS idx_patch_dat_entries_dat_id ON patch_dat_entries(dat_id)");
+    query.exec("CREATE INDEX IF NOT EXISTS idx_patch_verification_dats_system ON patch_verification_dats(system_name)");
+
     return true;
 }
 
@@ -178,6 +226,82 @@ int VerificationEngine::importDat(const QString &datFilePath, const QString &sys
     return imported;
 }
 
+int VerificationEngine::importPatchDat(const QString &datFilePath, const QString &systemName)
+{
+    DatParser parser;
+    DatParseResult parseResult = parser.parse(datFilePath);
+
+    if (!parseResult.success) {
+        emit error(QString("Failed to parse patch DAT file: %1").arg(parseResult.error));
+        return -1;
+    }
+
+    QSqlQuery query(m_database->database());
+
+    query.prepare("DELETE FROM patch_verification_dats WHERE system_name = ?");
+    query.addBindValue(systemName);
+    query.exec();
+
+    const QString source = DatParser::detectSource(parseResult.header);
+    query.prepare(R"(
+        INSERT INTO patch_verification_dats
+        (system_name, dat_name, dat_version, dat_source, dat_description, entry_count)
+        VALUES (?, ?, ?, ?, ?, ?)
+    )");
+    query.addBindValue(systemName);
+    query.addBindValue(parseResult.header.name);
+    query.addBindValue(parseResult.header.version);
+    query.addBindValue(source);
+    query.addBindValue(parseResult.header.description);
+    query.addBindValue(parseResult.entryCount);
+
+    if (!query.exec()) {
+        emit error(QString("Failed to insert patch DAT: %1").arg(query.lastError().text()));
+        return -1;
+    }
+
+    const int datId = query.lastInsertId().toInt();
+    m_database->database().transaction();
+
+    int imported = 0;
+    for (const DatRomEntry &entry : parseResult.entries) {
+        query.prepare(R"(
+            INSERT INTO patch_dat_entries
+            (dat_id, game_name, rom_name, rom_size, crc32, md5, sha1,
+             description, status, base_title, patch_name, file_type)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        )");
+        query.addBindValue(datId);
+        query.addBindValue(entry.gameName);
+        query.addBindValue(entry.romName);
+        query.addBindValue(entry.size);
+        query.addBindValue(entry.crc32);
+        query.addBindValue(entry.md5);
+        query.addBindValue(entry.sha1);
+        query.addBindValue(entry.description);
+        query.addBindValue(entry.status);
+        query.addBindValue(entry.baseTitle);
+        query.addBindValue(entry.patchName);
+        query.addBindValue(entry.fileType);
+
+        if (query.exec()) {
+            imported++;
+        }
+
+        if (imported % 100 == 0) {
+            emit datImportProgress(imported, parseResult.entryCount);
+        }
+    }
+
+    m_database->database().commit();
+    m_patchDatCache.remove(systemName);
+
+    qInfo() << "Imported" << imported << "entries from patch DAT:" << parseResult.header.name;
+    emit datImportProgress(imported, parseResult.entryCount);
+
+    return imported;
+}
+
 QMap<QString, DatHeader> VerificationEngine::getImportedDats()
 {
     QMap<QString, DatHeader> dats;
@@ -198,6 +322,26 @@ QMap<QString, DatHeader> VerificationEngine::getImportedDats()
     return dats;
 }
 
+QMap<QString, DatHeader> VerificationEngine::getImportedPatchDats()
+{
+    QMap<QString, DatHeader> dats;
+    QSqlQuery query(m_database->database());
+
+    query.exec("SELECT system_name, dat_name, dat_version, dat_source, dat_description FROM patch_verification_dats");
+
+    while (query.next()) {
+        DatHeader header;
+        const QString systemName = query.value(0).toString();
+        header.name = query.value(1).toString();
+        header.version = query.value(2).toString();
+        header.category = query.value(3).toString();
+        header.description = query.value(4).toString();
+        dats.insert(systemName, header);
+    }
+
+    return dats;
+}
+
 bool VerificationEngine::removeDat(const QString &systemName)
 {
     QSqlQuery query(m_database->database());
@@ -211,12 +355,37 @@ bool VerificationEngine::removeDat(const QString &systemName)
     return false;
 }
 
+bool VerificationEngine::removePatchDat(const QString &systemName)
+{
+    QSqlQuery query(m_database->database());
+    query.prepare("DELETE FROM patch_verification_dats WHERE system_name = ?");
+    query.addBindValue(systemName);
+
+    if (query.exec()) {
+        m_patchDatCache.remove(systemName);
+        return true;
+    }
+    return false;
+}
+
 bool VerificationEngine::hasDat(const QString &systemName)
 {
     QSqlQuery query(m_database->database());
     query.prepare("SELECT COUNT(*) FROM verification_dats WHERE system_name = ?");
     query.addBindValue(systemName);
     
+    if (query.exec() && query.next()) {
+        return query.value(0).toInt() > 0;
+    }
+    return false;
+}
+
+bool VerificationEngine::hasPatchDat(const QString &systemName)
+{
+    QSqlQuery query(m_database->database());
+    query.prepare("SELECT COUNT(*) FROM patch_verification_dats WHERE system_name = ?");
+    query.addBindValue(systemName);
+
     if (query.exec() && query.next()) {
         return query.value(0).toInt() > 0;
     }
@@ -276,6 +445,57 @@ void VerificationEngine::loadDatCache(const QString &systemName)
     m_datHashTypes.insert(systemName, hashType);
 
     qDebug() << "Loaded" << entries.size() << "DAT entries for" << systemName;
+}
+
+void VerificationEngine::loadPatchDatCache(const QString &systemName)
+{
+    if (m_patchDatCache.contains(systemName)) {
+        return;
+    }
+
+    QSqlQuery query(m_database->database());
+    query.prepare(R"(
+        SELECT e.game_name, e.rom_name, e.rom_size, e.crc32, e.md5, e.sha1,
+               e.description, e.status, e.base_title, e.patch_name, e.file_type
+        FROM patch_dat_entries e
+        JOIN patch_verification_dats d ON e.dat_id = d.id
+        WHERE d.system_name = ?
+    )");
+    query.addBindValue(systemName);
+
+    if (!query.exec()) {
+        qWarning() << "Failed to load patch DAT cache:" << query.lastError().text();
+        return;
+    }
+
+    QMap<QString, DatRomEntry> entries;
+    while (query.next()) {
+        DatRomEntry entry;
+        entry.gameName = query.value(0).toString();
+        entry.romName = query.value(1).toString();
+        entry.size = query.value(2).toLongLong();
+        entry.crc32 = query.value(3).toString();
+        entry.md5 = query.value(4).toString();
+        entry.sha1 = query.value(5).toString();
+        entry.description = query.value(6).toString();
+        entry.status = query.value(7).toString();
+        entry.baseTitle = query.value(8).toString();
+        entry.patchName = query.value(9).toString();
+        entry.fileType = query.value(10).toString();
+
+        if (!entry.sha1.isEmpty()) {
+            entries.insert(entry.sha1.toLower(), entry);
+        }
+        if (!entry.md5.isEmpty()) {
+            entries.insert(entry.md5.toLower(), entry);
+        }
+        if (!entry.crc32.isEmpty()) {
+            entries.insert(entry.crc32.toLower(), entry);
+        }
+    }
+
+    m_patchDatCache.insert(systemName, entries);
+    qDebug() << "Loaded" << entries.size() << "patch DAT entries for" << systemName;
 }
 
 QString VerificationEngine::getPreferredHashType(const QString &systemName)
@@ -361,63 +581,25 @@ QList<VerificationResult> VerificationEngine::verifyLibrary(const QString &syste
         current++;
         emit verificationProgress(current, files.size(), fd.filename);
 
-        // Ensure DAT is loaded for this system
-        if (!fd.system.isEmpty() && hasDat(fd.system)) {
-            loadDatCache(fd.system);
-        }
-
-        VerificationResult result;
-        result.fileId = fd.id;
-        result.filePath = fd.path;
-        result.filename = fd.filename;
-        result.system = fd.system;
-
-        // Check if hash exists
-        if (!fd.hashCalculated) {
-            result.status = VerificationStatus::HashMissing;
-            result.notes = "Hash not calculated";
-            m_lastSummary.noHash++;
-            results.append(result);
-            continue;
-        }
-
-        // Check if we have a DAT for this system
-        if (fd.system.isEmpty() || !m_datCache.contains(fd.system)) {
-            result.status = VerificationStatus::NotInDat;
-            result.notes = "No DAT file for system";
-            m_lastSummary.notInDat++;
-            results.append(result);
-            continue;
-        }
-
-        // Get preferred hash type and look up
-        QString hashType = m_datHashTypes.value(fd.system, "crc32");
-        QString fileHash;
-        if (hashType == "sha1") {
-            fileHash = fd.sha1.toLower();
-        } else if (hashType == "md5") {
-            fileHash = fd.md5.toLower();
-        } else {
-            fileHash = fd.crc32.toLower();
-        }
-
-        result.hashType = hashType;
-        result.fileHash = fileHash;
-
-        // Look up in DAT
-        const auto &datEntries = m_datCache.value(fd.system);
-        if (datEntries.contains(fileHash)) {
-            const DatRomEntry &entry = datEntries.value(fileHash);
-            result.status = VerificationStatus::Verified;
-            result.datName = entry.gameName;
-            result.datRomName = entry.romName;
-            result.datDescription = entry.description;
-            result.datHash = fileHash;
+        VerificationResult result = verifyFile(fd.id);
+        switch (result.status) {
+        case VerificationStatus::Verified:
             m_lastSummary.verified++;
-        } else {
-            result.status = VerificationStatus::NotInDat;
-            result.notes = "Hash not found in DAT";
+            break;
+        case VerificationStatus::HashMissing:
+            m_lastSummary.noHash++;
+            break;
+        case VerificationStatus::Corrupt:
+            m_lastSummary.corrupt++;
+            break;
+        case VerificationStatus::Mismatch:
+            m_lastSummary.mismatched++;
+            break;
+        case VerificationStatus::NotInDat:
             m_lastSummary.notInDat++;
+            break;
+        default:
+            break;
         }
 
         results.append(result);
@@ -482,40 +664,142 @@ VerificationResult VerificationEngine::verifyFile(int fileId)
         return result;
     }
 
-    if (!hasDat(result.system)) {
+    const bool hasOfficialDat = hasDat(result.system);
+    const bool hasPatchCatalog = hasPatchDat(result.system);
+    if (!hasOfficialDat && !hasPatchCatalog) {
         result.status = VerificationStatus::NotInDat;
-        result.notes = "No DAT file for " + result.system;
+        result.notes = "No verification catalog for " + result.system;
         return result;
     }
 
-    loadDatCache(result.system);
+    if (hasOfficialDat) {
+        loadDatCache(result.system);
 
-    QString hashType = m_datHashTypes.value(result.system, "crc32");
-    QString fileHash;
-    if (hashType == "sha1") {
-        fileHash = sha1.toLower();
-    } else if (hashType == "md5") {
-        fileHash = md5.toLower();
-    } else {
-        fileHash = crc32.toLower();
+        QString hashType = m_datHashTypes.value(result.system, "crc32");
+        QString fileHash;
+        if (hashType == "sha1") {
+            fileHash = sha1.toLower();
+        } else if (hashType == "md5") {
+            fileHash = md5.toLower();
+        } else {
+            fileHash = crc32.toLower();
+        }
+
+        result.hashType = hashType;
+        result.fileHash = fileHash;
+
+        const auto &datEntries = m_datCache.value(result.system);
+        if (datEntries.contains(fileHash)) {
+            const DatRomEntry &entry = datEntries.value(fileHash);
+            result.status = VerificationStatus::Verified;
+            result.datName = entry.gameName;
+            result.datRomName = entry.romName;
+            result.datDescription = entry.description;
+            result.datHash = fileHash;
+            result.notes = "Verified against official DAT";
+            return result;
+        }
     }
 
-    result.hashType = hashType;
-    result.fileHash = fileHash;
-
-    const auto &datEntries = m_datCache.value(result.system);
-    if (datEntries.contains(fileHash)) {
-        const DatRomEntry &entry = datEntries.value(fileHash);
+    DatRomEntry patchEntry;
+    QString matchedHash;
+    QString matchedHashType;
+    if (hasPatchCatalog && findPatchCatalogMatch(result.system, crc32, md5, sha1,
+                                                 patchEntry, matchedHash, matchedHashType)) {
         result.status = VerificationStatus::Verified;
-        result.datName = entry.gameName;
-        result.datRomName = entry.romName;
-        result.datDescription = entry.description;
-        result.datHash = fileHash;
+        result.datName = patchEntry.gameName;
+        result.datRomName = patchEntry.romName;
+        result.datDescription = patchEntry.description;
+        result.hashType = matchedHashType;
+        result.fileHash = matchedHash;
+        result.datHash = matchedHash;
+        result.notes = patchEntry.patchName.isEmpty()
+            ? QStringLiteral("Verified against patch catalog")
+            : QStringLiteral("Verified against patch catalog: %1").arg(patchEntry.patchName);
+        promotePatchMetadata(fileId, patchEntry);
     } else {
         result.status = VerificationStatus::NotInDat;
+        result.notes = "Hash not found in verification catalogs";
     }
 
     return result;
+}
+
+bool VerificationEngine::findPatchCatalogMatch(const QString &systemName,
+                                               const QString &crc32,
+                                               const QString &md5,
+                                               const QString &sha1,
+                                               DatRomEntry &matchedEntry,
+                                               QString &matchedHash,
+                                               QString &matchedHashType)
+{
+    if (!hasPatchDat(systemName)) {
+        return false;
+    }
+
+    loadPatchDatCache(systemName);
+    const auto &patchEntries = m_patchDatCache.value(systemName);
+
+    struct CandidateHash {
+        QString type;
+        QString value;
+    };
+    const QList<CandidateHash> candidates = {
+        {QStringLiteral("sha1"), sha1.toLower()},
+        {QStringLiteral("md5"), md5.toLower()},
+        {QStringLiteral("crc32"), crc32.toLower()}
+    };
+
+    for (const CandidateHash &candidate : candidates) {
+        if (!candidate.value.isEmpty() && patchEntries.contains(candidate.value)) {
+            matchedEntry = patchEntries.value(candidate.value);
+            matchedHash = candidate.value;
+            matchedHashType = candidate.type;
+            return true;
+        }
+    }
+
+    return false;
+}
+
+void VerificationEngine::promotePatchMetadata(int fileId, const DatRomEntry &entry)
+{
+    DatRomEntry metadataEntry = entry;
+    if (metadataEntry.baseTitle.isEmpty() || metadataEntry.patchName.isEmpty() || metadataEntry.fileType.isEmpty()) {
+        const PatchedRomInfo parsed = PatchedRomParser::parse(metadataEntry.gameName);
+        if (metadataEntry.baseTitle.isEmpty()) {
+            metadataEntry.baseTitle = parsed.baseTitle;
+        }
+        if (metadataEntry.patchName.isEmpty()) {
+            metadataEntry.patchName = parsed.patchName;
+        }
+        if (metadataEntry.fileType.isEmpty() || metadataEntry.fileType == QStringLiteral("official")) {
+            metadataEntry.fileType = parsed.fileType;
+        }
+    }
+
+    const bool markPatched = !metadataEntry.patchName.isEmpty() ||
+        metadataEntry.fileType == QStringLiteral("translation") ||
+        metadataEntry.fileType == QStringLiteral("hack");
+
+    QSqlQuery query(m_database->database());
+    query.prepare(R"(
+        UPDATE files
+        SET base_title = COALESCE(NULLIF(?, ''), base_title),
+            file_type = COALESCE(NULLIF(?, ''), file_type),
+            is_patched = CASE WHEN ? THEN 1 ELSE is_patched END,
+            patch_name = COALESCE(NULLIF(?, ''), patch_name)
+        WHERE id = ?
+    )");
+    query.addBindValue(metadataEntry.baseTitle);
+    query.addBindValue(metadataEntry.fileType);
+    query.addBindValue(markPatched);
+    query.addBindValue(metadataEntry.patchName);
+    query.addBindValue(fileId);
+
+    if (!query.exec()) {
+        qWarning() << "Failed to promote patch metadata:" << query.lastError().text();
+    }
 }
 
 QList<DatRomEntry> VerificationEngine::getMissingGames(const QString &systemName)

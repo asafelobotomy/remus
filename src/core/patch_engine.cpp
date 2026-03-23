@@ -226,6 +226,23 @@ PatchInfo PatchEngine::detectFormat(const QString &patchPath)
         info.format = PatchFormat::UPS;
         info.formatName = "UPS";
         info.valid = true;
+
+        QFile upsFile(patchPath);
+        if (upsFile.open(QIODevice::ReadOnly) && upsFile.size() >= 12) {
+            upsFile.seek(upsFile.size() - 12);
+            QByteArray footer = upsFile.read(12);
+            upsFile.close();
+
+            quint32 sourceCrc = readLe32(footer, 0);
+            quint32 targetCrc = readLe32(footer, 4);
+            quint32 patchCrc = readLe32(footer, 8);
+
+            info.sourceChecksum = formatChecksum(sourceCrc);
+            info.targetChecksum = formatChecksum(targetCrc);
+            info.patchChecksum = formatChecksum(patchCrc);
+        } else {
+            info.error = "Failed to parse UPS checksums";
+        }
     } else if (header.size() >= 4 && 
                static_cast<unsigned char>(header[0]) == 0xD6 &&
                static_cast<unsigned char>(header[1]) == 0xC3 &&
