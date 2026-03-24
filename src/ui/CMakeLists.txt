@@ -10,9 +10,12 @@ add_library(remus-ui STATIC
     controllers/artwork_controller.cpp
     controllers/metadata_editor_controller.cpp
     controllers/export_controller.cpp
+    controllers/export_format_retroarch.cpp
+    controllers/export_format_gamelist.cpp
     controllers/verification_controller.cpp
     controllers/patch_controller.cpp
     controllers/processing_controller.cpp
+    controllers/processing_steps.cpp
     theme_constants.cpp
 )
 

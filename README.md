@@ -1,11 +1,12 @@
 # Remus - Retro Game Library Manager
 
 [![CI](https://github.com/asafelobotomy/remus/actions/workflows/ci.yml/badge.svg)](https://github.com/asafelobotomy/remus/actions/workflows/ci.yml)
-[![AppImage](https://github.com/asafelobotomy/remus/actions/workflows/appimage.yml/badge.svg)](https://github.com/asafelobotomy/remus/actions/workflows/appimage.yml)
 [![Version](https://img.shields.io/badge/version-0.10.1-blue.svg)](CHANGELOG.md)
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+![License](https://img.shields.io/badge/license-MIT-green.svg)
 
-A desktop application for scanning, organizing, and managing retro game ROM libraries with automatic metadata fetching and smart file organization.
+A command-line application for scanning, organizing, and managing retro game ROM libraries with automatic metadata fetching and smart file organization.
+
+The project is CLI-first. GUI and TUI code remain in the repository as archived frontends while active delivery work focuses on the command-line workflow.
 
 ## Features
 
@@ -28,8 +29,6 @@ A desktop application for scanning, organizing, and managing retro game ROM libr
 - 💿 M3U playlist auto-generation for multi-disc games
 - 💾 CHD compression (30-60% space savings)
 - 📦 Archive extraction (ZIP, 7z, RAR)
-- 🖥️ Qt 6 GUI with Library, Match Review, Conversion, Settings views
-- 📦 AppImage packaging with auto-update support
 - ⚡ Centralized constants library (type-safe, 150+ constants)
 - 🎨 Artwork management with local caching
 - ✏️ Metadata editing and user override
@@ -83,7 +82,7 @@ A desktop application for scanning, organizing, and managing retro game ROM libr
 
 ## Quick Start
 
-**CLI, GUI, and TUI are all fully functional!** See [docs/setup/BUILD.md](docs/setup/BUILD.md) for complete build instructions and usage examples.
+**CLI-first build is the default path.** See [docs/setup/BUILD.md](docs/setup/BUILD.md) for the supported build and release flow.
 
 Repository-local path policy:
 
@@ -127,38 +126,20 @@ make -j$(nproc)
 
 # Reuse previously-downloaded artwork instead of downloading it again
 ./remus-cli --bundle ~/roms/bundles --bundle-art-dir ~/roms/art-cache
+
+# Browse mod catalogs without a frontend
+./remus-cli --mod-catalog tests/fixtures/test_mod_catalog.json --mod-systems
+./remus-cli --mod-catalog tests/fixtures/test_mod_catalog.json --mod-author "Test"
+./remus-cli --mod-catalog tests/fixtures/test_mod_catalog.json --mod-type translation --mod-min-rating 3.5
+./remus-cli --mod-catalog tests/fixtures/test_mod_catalog.json --mod-format ips --mod-min-downloads 800
+./remus-cli --mod-catalog tests/fixtures/test_mod_catalog.json --mod-source-url example --json
+./remus-cli --mod-catalog tests/fixtures/test_mod_catalog.json --mod-system "Super Nintendo" --mod-sort downloads
+
+# Require exact ROM matches instead of system-level fallback
+./remus-cli --mod-catalog tests/fixtures/test_mod_catalog.json --mod-list 42 --mod-no-system-fallback
 ```
 
-### TUI Setup & Run
-
-The terminal UI is optional and requires notcurses at build time.
-
-```bash
-# Arch
-sudo pacman -S notcurses
-
-# Debian/Ubuntu
-sudo apt install libnotcurses-dev
-
-# Fedora
-sudo dnf install notcurses-devel
-
-# Configure with TUI enabled
-mkdir -p build && cd build
-cmake -DREMUS_BUILD_TUI=ON ..
-make -j$(nproc)
-
-# Run the terminal UI (from inside build/)
-./src/tui/remus-tui
-
-# Or from repo root
-cd ..
-./build/src/tui/remus-tui
-```
-
-If you configure without `-DREMUS_BUILD_TUI=ON`, the `remus-tui` target is not built.
-
-**Requirements:** Qt 6, CMake 3.16+, C++17 compiler (optional C++20 mode supported), zlib, libarchive
+**Requirements:** Qt 6 base development files, CMake 3.16+, C++17 compiler (optional C++20 mode supported), zlib, libarchive
 
 **Build performance tip:** See [docs/setup/BUILD.md](docs/setup/BUILD.md) for benchmark-backed build profiles:
 - **Fast clean rebuilds:** `PCH=ON` + `UNITY=ON`
@@ -166,12 +147,11 @@ If you configure without `-DREMUS_BUILD_TUI=ON`, the `remus-tui` target is not b
 
 ## Tech Stack
 
-- **UI:** Qt 6 (QML + QtQuick Controls)
-- **TUI:** Qt 6 (terminal UI — `remus-tui`)
+- **Interface:** CLI (`remus-cli`)
 - **Core:** C++17
 - **Database:** SQLite
 - **Networking:** QtNetwork
-- **Packaging:** AppImage (go-appimage/appimagetool)
+- **Packaging:** tar.gz release archives
 - **CI/CD:** GitHub Actions
 
 ## Building from Source
@@ -180,14 +160,12 @@ See **[docs/setup/BUILD.md](docs/setup/BUILD.md)** for detailed build instructio
 
 Quick build:
 ```bash
-mkdir build && cd build
-cmake ..
-make -j$(nproc)
-./src/ui/remus-gui  # GUI application
-./remus-cli --help  # CLI application
-# Optional TUI (requires -DREMUS_BUILD_TUI=ON at configure time)
-./src/tui/remus-tui
+cmake -S . -B build
+cmake --build build -j$(nproc)
+./build/remus-cli --help
 ```
+
+GUI and TUI sources remain in the repository as archived frontends. They are not part of the default build, CI, or release packaging while CLI delivery is the priority. See [docs/archive/FRONTEND-STATUS.md](docs/archive/FRONTEND-STATUS.md).
 
 ## Contributing
 
@@ -202,7 +180,7 @@ For major changes, please open an issue first to discuss the proposed changes.
 
 ## License
 
-MIT License - See LICENSE file for details
+MIT License.
 
 ## Acknowledgments
 

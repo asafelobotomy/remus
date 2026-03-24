@@ -9,7 +9,9 @@ Build instructions, dependencies, and environment setup for Remus.
 ## Quick Build
 
 ```bash
-cd build && cmake .. && make -j$(nproc)
+cmake -S . -B build
+cmake --build build -j$(nproc)
+./build/remus-cli --help
 ```
 
 For detailed instructions, see [BUILD.md](BUILD.md).

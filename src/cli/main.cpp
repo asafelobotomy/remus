@@ -1,7 +1,10 @@
 #include <QCoreApplication>
 #include <QCommandLineParser>
 #include <QDebug>
+#include <QMessageLogContext>
+#include <QSet>
 #include <QStringList>
+#include <QTextStream>
 #include "cli_commands.h"
 #include "cli_helpers.h"
 #include "../core/constants/constants.h"
@@ -18,22 +21,31 @@ static bool hasFlag(const QStringList &args, const QString &flag)
     return args.contains(flag);
 }
 
-static bool hasAnyAction(const QStringList &args)
+static QString normalizeOptionToken(const QString &arg)
 {
-    const QStringList actionFlags = {
-        "--help", "-h", "--version",
-        "--scan", "-s", "--hash", "--hash-all", "--list", "--stats", "--info",
-        "--header-info", "--show-art", "--metadata", "--search", "--match",
-        "--match-report", "--verify", "--verify-report", "--process", "--organize",
-        "--bundle",
-        "--download-artwork", "--generate-m3u", "--convert-chd", "--chd-extract",
-        "--chd-verify", "--chd-info", "--extract-archive", "--space-report",
-        "--export", "--patch-apply", "--patch-create", "--patch-info",
-        "--patch-tools", "--checksum-verify", "--patch-dat-import",
-        "--patch-dat-list", "--patch-dat-remove"
-    };
+    if (!arg.startsWith('-')) {
+        return {};
+    }
+
+    int start = 0;
+    while (start < arg.size() && arg.at(start) == '-') {
+        ++start;
+    }
+
+    if (start >= arg.size()) {
+        return {};
+    }
+
+    return arg.mid(start).section('=', 0, 0);
+}
+
+static bool hasAnyAction(const QStringList &args, const QSet<QString> &actionOptions)
+{
     for (const QString &arg : args) {
-        if (actionFlags.contains(arg)) return true;
+        const QString token = normalizeOptionToken(arg);
+        if (!token.isEmpty() && actionOptions.contains(token)) {
+            return true;
+        }
     }
     return false;
 }
@@ -47,6 +59,24 @@ static void printBanner()
     qInfo() << "";
 }
 
+static void machineReadableMessageHandler(QtMsgType type,
+                                          const QMessageLogContext &context,
+                                          const QString &msg)
+{
+    Q_UNUSED(context);
+
+    if (type == QtDebugMsg || type == QtInfoMsg) {
+        return;
+    }
+
+    QTextStream stream(stderr);
+    stream << msg << Qt::endl;
+
+    if (type == QtFatalMsg) {
+        abort();
+    }
+}
+
 int main(int argc, char *argv[])
 {
     QCoreApplication app(argc, argv);
@@ -54,12 +84,146 @@ int main(int argc, char *argv[])
     QCoreApplication::setOrganizationName("Remus");
     QCoreApplication::setApplicationVersion(Constants::APP_VERSION);
 
-    printBanner();
+    QCommandLineParser parser;
+    parser.setApplicationDescription("Remus CLI - Scan and catalog retro game ROMs");
+    parser.addHelpOption();
+    parser.addVersionOption();
+
+    QSet<QString> actionOptions = {
+        QStringLiteral("help"),
+        QStringLiteral("h"),
+        QStringLiteral("version")
+    };
+
+    const auto addOption = [&](const QCommandLineOption &option) {
+        parser.addOption(option);
+    };
+    const auto addActionOption = [&](const QCommandLineOption &option) {
+        parser.addOption(option);
+        for (const auto &name : option.names()) {
+            actionOptions.insert(name);
+        }
+    };
+
+    addActionOption({{"s", "scan"}, "Scan a directory for ROMs", "path"});
+    addOption({{"d", "db"}, "Database file path", "database", Constants::DatabaseSchema::DATABASE_FILENAME});
+    addActionOption(QCommandLineOption("hash", "Calculate hashes for scanned files"));
+    addActionOption(QCommandLineOption("hash-all", "Calculate hashes for all files in database that lack hashes"));
+    addActionOption({{"l", "list"}, "List scanned files by system"});
+    addActionOption(QCommandLineOption("stats", "Show library statistics"));
+    addActionOption(QCommandLineOption("info", "Show detailed info for a file id", "fileId"));
+    addActionOption(QCommandLineOption("header-info", "Inspect ROM header for a file", "file"));
+    addActionOption(QCommandLineOption("show-art", "Display an image in terminal (path to image)", "image"));
+
+    addActionOption({{"m", "metadata"}, "Fetch metadata by file hash", "hash"});
+    addActionOption(QCommandLineOption("search", "Search for game by name", "title"));
+    addOption(QCommandLineOption("system", "Specify system for search", "system"));
+    const QString providerHelp = QString("Metadata provider (%1, %2, %3, auto)")
+        .arg(Providers::SCREENSCRAPER).arg(Providers::THEGAMESDB).arg(Providers::IGDB);
+    addOption(QCommandLineOption("provider", providerHelp, "provider", "auto"));
+    addOption(QCommandLineOption("tgdb-api-key", "TheGamesDB API key", "apiKey"));
+    addOption(QCommandLineOption("ss-user",    "ScreenScraper username",      "username"));
+    addOption(QCommandLineOption("ss-pass",    "ScreenScraper password",      "password"));
+    addOption(QCommandLineOption("ss-devid",   "ScreenScraper dev ID",        "devid"));
+    addOption(QCommandLineOption("ss-devpass", "ScreenScraper dev password",  "devpassword"));
+    addOption(QCommandLineOption("igdb-client-id", "IGDB client ID", "clientId"));
+    addOption(QCommandLineOption("igdb-client-secret", "IGDB client secret", "clientSecret"));
+
+    addActionOption(QCommandLineOption("match", "Match scanned files with metadata (M3 intelligent matching)"));
+    addOption(QCommandLineOption("min-confidence", "Minimum confidence threshold for matches (0-100)", "confidence", "60"));
+    addActionOption(QCommandLineOption("match-report", "Generate detailed matching report with confidence scores"));
+    addOption(QCommandLineOption("report-file", "Output file for reports (default: stdout)", "file"));
+
+    addActionOption(QCommandLineOption("verify",        "Verify files against DAT file",          "dat-file"));
+    addActionOption(QCommandLineOption("verify-report", "Generate detailed verification report"));
+    addActionOption(QCommandLineOption("patch-dat-import", "Import DAT-style patch catalog", "dat-file"));
+    addOption(QCommandLineOption("patch-dat-system", "System name for imported patch catalog", "system"));
+    addActionOption(QCommandLineOption("patch-dat-list", "List imported patch catalogs"));
+    addActionOption(QCommandLineOption("patch-dat-remove", "Remove imported patch catalog for system", "system"));
+
+    addActionOption(QCommandLineOption("download-artwork", "Download cover art for matched games"));
+    addOption(QCommandLineOption("artwork-dir",   "Directory to store artwork (default: ~/.local/share/Remus/artwork/)", "directory"));
+    addOption(QCommandLineOption("artwork-types", "Types of artwork to download (box|screen|manual|all - default: box)", "types", "box"));
+
+    addActionOption(QCommandLineOption("checksum-verify", "Verify specific file checksum", "file"));
+    addOption(QCommandLineOption("expected-hash",   "Expected hash for verification (crc32|md5|sha1)", "hash"));
+    addOption(QCommandLineOption("hash-type",       "Hash type to verify (crc32, md5, sha1 - default: crc32)", "type", "crc32"));
+
+    addActionOption(QCommandLineOption("organize",    "Organize and rename files using template", "destination"));
+    addOption(QCommandLineOption("template",    "Naming template (default: No-Intro standard)", "template", Constants::Templates::DEFAULT_NO_INTRO));
+    addOption(QCommandLineOption("dry-run",     "Preview changes without modifying files"));
+    addActionOption(QCommandLineOption("generate-m3u","Generate M3U playlists for multi-disc games"));
+    addOption(QCommandLineOption("m3u-dir",     "Directory for M3U playlists (default: same as game files)", "directory"));
+    addOption(QCommandLineOption("dry-run-all", "Preview file outputs for all file-writing actions"));
+
+    addActionOption(QCommandLineOption("bundle",        "Fetch metadata, download box art, and repack matched ROMs into self-contained archives", "destination"));
+    addOption(QCommandLineOption("bundle-format", "Output archive format for bundles (zip|7z, default: zip)", "format", "zip"));
+    addOption(QCommandLineOption("bundle-art-dir","Optional pre-downloaded artwork directory (avoids re-downloading box art)", "directory"));
+    addOption(QCommandLineOption("bundle-disc-format", "Disc media packaging inside bundles (original|chd, default: original)", "format", "original"));
+
+    addActionOption(QCommandLineOption("patch-apply",    "Apply patch to base file",          "basefile"));
+    addOption(QCommandLineOption("patch-patch",    "Patch file to apply",               "patchfile"));
+    addOption(QCommandLineOption("patch-output",   "Output file path (optional)",       "output"));
+    addActionOption(QCommandLineOption("patch-create",   "Create patch from modified file",   "modifiedfile"));
+    addOption(QCommandLineOption("patch-original", "Original file for patch creation",  "originalfile"));
+    addOption(QCommandLineOption("patch-format",   "Patch format (ips|bps|ups|xdelta|ppf)", "format", "bps"));
+    addActionOption(QCommandLineOption("patch-info",     "Detect patch format for file",      "patchfile"));
+    addActionOption(QCommandLineOption("patch-tools",    "List patch tool availability"));
+
+    addOption(QCommandLineOption("mod-catalog",    "Load mod catalog from JSON file",    "path"));
+    addOption(QCommandLineOption("mod-catalog-url","Load mod catalog from URL (cached)", "url"));
+    addOption(QCommandLineOption("mod-catalog-refresh", "Force re-download of cached catalog"));
+    addActionOption(QCommandLineOption("mod-list",       "List available mods for a file ID",  "fileId"));
+    addActionOption(QCommandLineOption("mod-show",       "Show detailed information for a catalog mod", "modId"));
+    addActionOption(QCommandLineOption("mod-system",     "List available mods for a system name", "system"));
+    addActionOption(QCommandLineOption("mod-systems",    "List systems present in the loaded mod catalog"));
+    addActionOption(QCommandLineOption("mod-author",     "List catalog mods whose author matches this text", "author"));
+    addActionOption(QCommandLineOption("mod-type",       "List catalog mods of a specific type", "type"));
+    addActionOption(QCommandLineOption("mod-format",     "List catalog mods with a specific patch format", "format"));
+    addActionOption(QCommandLineOption("mod-source-url", "List catalog mods whose source URL matches this text", "text"));
+    addActionOption(QCommandLineOption("mod-sort",       "Sort discovery results by title, author, system, type, format, rating, or downloads", "field"));
+    addActionOption(QCommandLineOption("mod-min-rating", "List catalog mods with rating >= value", "rating"));
+    addActionOption(QCommandLineOption("mod-min-downloads", "List catalog mods with downloads >= value", "count"));
+    addOption(QCommandLineOption({"json", "mod-json"}, "Emit machine-readable JSON when supported by the selected command"));
+    addOption(QCommandLineOption("mod-no-system-fallback", "Do not fall back to system-level catalog matches for --mod-list"));
+    addActionOption(QCommandLineOption("mod-install",    "Install a mod by catalog ID",        "modId"));
+    addOption(QCommandLineOption("mod-file",       "Base file ID to apply the mod to",   "fileId"));
+    addOption(QCommandLineOption("mod-output",     "Output directory for patched ROM",   "directory"));
+    addOption(QCommandLineOption("mod-no-bundle",  "Skip bundling the patched ROM"));
+    addActionOption(QCommandLineOption("mod-installed",  "List installed mods"));
+    addActionOption(QCommandLineOption("mod-uninstall",  "Remove an installed mod by ID",      "installId"));
+
+    addActionOption(QCommandLineOption("export",         "Export library (retroarch|emustation|launchbox|csv|json)", "format"));
+    addOption(QCommandLineOption("export-path",    "Export output path (file or directory)", "path"));
+    addOption(QCommandLineOption("export-systems", "Comma-separated systems to include",     "systems"));
+
+    addActionOption(QCommandLineOption("process", "Run scan->hash->match pipeline on directory", "path"));
+
+    addActionOption(QCommandLineOption("convert-chd",     "Convert disc image to CHD format",                    "path"));
+    addOption(QCommandLineOption("chd-codec",       "CHD compression codec (lzma, zlib, flac, huff, auto)", "codec", "auto"));
+    addActionOption(QCommandLineOption("chd-extract",     "Extract CHD back to BIN/CUE",                         "chdfile"));
+    addActionOption(QCommandLineOption("chd-verify",      "Verify CHD file integrity",                           "chdfile"));
+    addActionOption(QCommandLineOption("chd-info",        "Show CHD file information",                           "chdfile"));
+    addActionOption(QCommandLineOption("extract-archive", "Extract archive (ZIP/7z/RAR)",                        "path"));
+    addActionOption(QCommandLineOption("space-report",    "Show potential CHD conversion savings",               "directory"));
+    addOption(QCommandLineOption("output-dir",      "Output directory for conversions/extractions",         "directory"));
+
+    addOption(QCommandLineOption("interactive",    "Launch archived interactive TUI when supported by this build"));
+    addOption(QCommandLineOption("no-interactive", "Disable archived interactive TUI (script-friendly; accepted as a no-op in CLI-only builds)"));
 
     QStringList activeArgs = app.arguments();
     const bool interactiveFlag   = hasFlag(activeArgs, "--interactive");
     const bool noInteractiveFlag = hasFlag(activeArgs, "--no-interactive");
-    const bool actionsProvided   = hasAnyAction(activeArgs);
+    const bool jsonRequested     = hasFlag(activeArgs, "--json") || hasFlag(activeArgs, "--mod-json");
+    const bool actionsProvided   = hasAnyAction(activeArgs, actionOptions);
+
+    if (jsonRequested) {
+        qInstallMessageHandler(machineReadableMessageHandler);
+    }
+
+    if (!jsonRequested) {
+        printBanner();
+    }
 
 #ifdef REMUS_BUILD_INTERACTIVE_CLI
     if (interactiveFlag || (!noInteractiveFlag && !actionsProvided)) {
@@ -75,107 +239,6 @@ int main(int argc, char *argv[])
     }
 #endif
 
-    QCommandLineParser parser;
-    parser.setApplicationDescription("Remus CLI - Scan and catalog retro game ROMs");
-    parser.addHelpOption();
-    parser.addVersionOption();
-
-    // Core options
-    parser.addOption({{"s", "scan"}, "Scan a directory for ROMs", "path"});
-    parser.addOption({{"d", "db"}, "Database file path", "database", Constants::DatabaseSchema::DATABASE_FILENAME});
-    parser.addOption(QCommandLineOption("hash", "Calculate hashes for scanned files"));
-    parser.addOption(QCommandLineOption("hash-all", "Calculate hashes for all files in database that lack hashes"));
-    parser.addOption({{"l", "list"}, "List scanned files by system"});
-    parser.addOption(QCommandLineOption("stats", "Show library statistics"));
-    parser.addOption(QCommandLineOption("info", "Show detailed info for a file id", "fileId"));
-    parser.addOption(QCommandLineOption("header-info", "Inspect ROM header for a file", "file"));
-    parser.addOption(QCommandLineOption("show-art", "Display an image in terminal (path to image)", "image"));
-
-    // Metadata options
-    parser.addOption({{"m", "metadata"}, "Fetch metadata by file hash", "hash"});
-    parser.addOption(QCommandLineOption("search", "Search for game by name", "title"));
-    parser.addOption(QCommandLineOption("system", "Specify system for search", "system"));
-    const QString providerHelp = QString("Metadata provider (%1, %2, %3, auto)")
-        .arg(Providers::SCREENSCRAPER).arg(Providers::THEGAMESDB).arg(Providers::IGDB);
-    parser.addOption(QCommandLineOption("provider", providerHelp, "provider", "auto"));
-    parser.addOption(QCommandLineOption("tgdb-api-key", "TheGamesDB API key", "apiKey"));
-    parser.addOption(QCommandLineOption("ss-user",    "ScreenScraper username",      "username"));
-    parser.addOption(QCommandLineOption("ss-pass",    "ScreenScraper password",      "password"));
-    parser.addOption(QCommandLineOption("ss-devid",   "ScreenScraper dev ID",        "devid"));
-    parser.addOption(QCommandLineOption("ss-devpass", "ScreenScraper dev password",  "devpassword"));
-    parser.addOption(QCommandLineOption("igdb-client-id", "IGDB client ID", "clientId"));
-    parser.addOption(QCommandLineOption("igdb-client-secret", "IGDB client secret", "clientSecret"));
-
-    // M3 Matching options
-    parser.addOption(QCommandLineOption("match", "Match scanned files with metadata (M3 intelligent matching)"));
-    parser.addOption(QCommandLineOption("min-confidence", "Minimum confidence threshold for matches (0-100)", "confidence", "60"));
-    parser.addOption(QCommandLineOption("match-report", "Generate detailed matching report with confidence scores"));
-    parser.addOption(QCommandLineOption("report-file", "Output file for reports (default: stdout)", "file"));
-
-    // Verification options
-    parser.addOption(QCommandLineOption("verify",        "Verify files against DAT file",          "dat-file"));
-    parser.addOption(QCommandLineOption("verify-report", "Generate detailed verification report"));
-    parser.addOption(QCommandLineOption("patch-dat-import", "Import DAT-style patch catalog", "dat-file"));
-    parser.addOption(QCommandLineOption("patch-dat-system", "System name for imported patch catalog", "system"));
-    parser.addOption(QCommandLineOption("patch-dat-list", "List imported patch catalogs"));
-    parser.addOption(QCommandLineOption("patch-dat-remove", "Remove imported patch catalog for system", "system"));
-
-    // Artwork options
-    parser.addOption(QCommandLineOption("download-artwork", "Download cover art for matched games"));
-    parser.addOption(QCommandLineOption("artwork-dir",   "Directory to store artwork (default: ~/.local/share/Remus/artwork/)", "directory"));
-    parser.addOption(QCommandLineOption("artwork-types", "Types of artwork to download (box|screen|manual|all - default: box)", "types", "box"));
-
-    // Checksum verification
-    parser.addOption(QCommandLineOption("checksum-verify", "Verify specific file checksum", "file"));
-    parser.addOption(QCommandLineOption("expected-hash",   "Expected hash for verification (crc32|md5|sha1)", "hash"));
-    parser.addOption(QCommandLineOption("hash-type",       "Hash type to verify (crc32, md5, sha1 - default: crc32)", "type", "crc32"));
-
-    // M4 Organise & Rename options
-    parser.addOption(QCommandLineOption("organize",    "Organize and rename files using template", "destination"));
-    parser.addOption(QCommandLineOption("template",    "Naming template (default: No-Intro standard)", "template", Constants::Templates::DEFAULT_NO_INTRO));
-    parser.addOption(QCommandLineOption("dry-run",     "Preview changes without modifying files"));
-    parser.addOption(QCommandLineOption("generate-m3u","Generate M3U playlists for multi-disc games"));
-    parser.addOption(QCommandLineOption("m3u-dir",     "Directory for M3U playlists (default: same as game files)", "directory"));
-    parser.addOption(QCommandLineOption("dry-run-all", "Preview file outputs for all file-writing actions"));
-
-    // Bundle options
-    parser.addOption(QCommandLineOption("bundle",        "Fetch metadata, download box art, and repack matched ROMs into self-contained archives", "destination"));
-    parser.addOption(QCommandLineOption("bundle-format", "Output archive format for bundles (zip|7z, default: zip)", "format", "zip"));
-    parser.addOption(QCommandLineOption("bundle-art-dir","Optional pre-downloaded artwork directory (avoids re-downloading box art)", "directory"));
-    parser.addOption(QCommandLineOption("bundle-disc-format", "Disc media packaging inside bundles (original|chd, default: original)", "format", "original"));
-
-    // Patch options
-    parser.addOption(QCommandLineOption("patch-apply",    "Apply patch to base file",          "basefile"));
-    parser.addOption(QCommandLineOption("patch-patch",    "Patch file to apply",               "patchfile"));
-    parser.addOption(QCommandLineOption("patch-output",   "Output file path (optional)",       "output"));
-    parser.addOption(QCommandLineOption("patch-create",   "Create patch from modified file",   "modifiedfile"));
-    parser.addOption(QCommandLineOption("patch-original", "Original file for patch creation",  "originalfile"));
-    parser.addOption(QCommandLineOption("patch-format",   "Patch format (ips|bps|ups|xdelta|ppf)", "format", "bps"));
-    parser.addOption(QCommandLineOption("patch-info",     "Detect patch format for file",      "patchfile"));
-    parser.addOption(QCommandLineOption("patch-tools",    "List patch tool availability"));
-
-    // Export options
-    parser.addOption(QCommandLineOption("export",         "Export library (retroarch|emustation|launchbox|csv|json)", "format"));
-    parser.addOption(QCommandLineOption("export-path",    "Export output path (file or directory)", "path"));
-    parser.addOption(QCommandLineOption("export-systems", "Comma-separated systems to include",     "systems"));
-
-    // Processing pipeline
-    parser.addOption(QCommandLineOption("process", "Run scan->hash->match pipeline on directory", "path"));
-
-    // M4.5 Conversion & Compression options
-    parser.addOption(QCommandLineOption("convert-chd",     "Convert disc image to CHD format",                    "path"));
-    parser.addOption(QCommandLineOption("chd-codec",       "CHD compression codec (lzma, zlib, flac, huff, auto)", "codec", "auto"));
-    parser.addOption(QCommandLineOption("chd-extract",     "Extract CHD back to BIN/CUE",                         "chdfile"));
-    parser.addOption(QCommandLineOption("chd-verify",      "Verify CHD file integrity",                           "chdfile"));
-    parser.addOption(QCommandLineOption("chd-info",        "Show CHD file information",                           "chdfile"));
-    parser.addOption(QCommandLineOption("extract-archive", "Extract archive (ZIP/7z/RAR)",                        "path"));
-    parser.addOption(QCommandLineOption("space-report",    "Show potential CHD conversion savings",               "directory"));
-    parser.addOption(QCommandLineOption("output-dir",      "Output directory for conversions/extractions",         "directory"));
-
-    // Interactive options
-    parser.addOption(QCommandLineOption("interactive",    "Launch interactive TUI when supported by this build"));
-    parser.addOption(QCommandLineOption("no-interactive", "Disable interactive TUI (script-friendly; accepted as a no-op in CLI-only builds)"));
-
     parser.process(activeArgs);
 
 #ifndef REMUS_BUILD_INTERACTIVE_CLI
@@ -183,8 +246,6 @@ int main(int argc, char *argv[])
         parser.showHelp(0);
     }
 #endif
-
-    // -- Database & system initialisation ---------------------------------------
 
     Database db;
     if (!db.initialize(parser.value("db"))) {
@@ -194,13 +255,9 @@ int main(int argc, char *argv[])
 
     SystemDetector detector;
 
-    // -- Build shared context --------------------------------------------------
-
     CliContext ctx{parser, db, detector,
                    /*dryRunAll*/        parser.isSet("dry-run-all"),
                    /*processRequested*/ parser.isSet("process")};
-
-    // -- Dispatch commands -----------------------------------------------------
 
     if (int rc = handleStatsCommand(ctx))          return rc;
     if (int rc = handleInfoCommand(ctx))           return rc;
@@ -227,8 +284,11 @@ int main(int argc, char *argv[])
     if (int rc = handleSpaceReportCommand(ctx))    return rc;
     if (int rc = handleExportCommand(ctx))         return rc;
     if (int rc = handlePatchCommands(ctx))         return rc;
+    if (int rc = handleModCommands(ctx))           return rc;
 
-    qInfo() << "";
-    qInfo() << "Done!";
+    if (!jsonRequested) {
+        qInfo() << "";
+        qInfo() << "Done!";
+    }
     return 0;
 }

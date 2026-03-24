@@ -188,6 +188,9 @@ add_remus_test(test_cli_smoke CliSmokeTest
     SOURCES test_cli_smoke.cpp
     LIBS Qt6::Test Qt6::Core remus-core remus-metadata
 )
+target_compile_definitions(test_cli_smoke PRIVATE
+    REMUS_SOURCE_DIR="${CMAKE_SOURCE_DIR}"
+)
 
 if(REMUS_BUILD_INTERACTIVE_CLI)
     add_remus_test(test_session_state SessionStateTest
@@ -287,6 +290,14 @@ add_remus_test(test_hash_service HashServiceTest
     LIBS Qt6::Test Qt6::Sql remus-services remus-core
 )
 
+add_remus_test(test_mod_workflow ModWorkflowTest
+    SOURCES test_mod_workflow.cpp
+    LIBS Qt6::Test Qt6::Core Qt6::Network Qt6::Sql remus-services remus-core
+)
+target_compile_definitions(test_mod_workflow PRIVATE
+    REMUS_SOURCE_DIR="${CMAKE_SOURCE_DIR}"
+)
+
 # ── New coverage tests (2026-02-20) ───────────────────────────────────────
 
 add_remus_test(test_database DatabaseTest
@@ -322,6 +333,11 @@ add_remus_test(test_rom_bundler RomBundlerTest
 add_remus_test(test_cli_helpers CliHelpersTest
     SOURCES test_cli_helpers.cpp ../src/cli/cli_helpers.cpp
     LIBS Qt6::Test Qt6::Core Qt6::Sql Qt6::Network remus-core remus-metadata remus-constants
+)
+
+add_remus_test(test_cli_mod_support CliModSupportTest
+    SOURCES test_cli_mod_support.cpp ../src/cli/cli_mod_support.cpp
+    LIBS Qt6::Test Qt6::Core Qt6::Network remus-services remus-core
 )
 
 if(TARGET remus-ui)

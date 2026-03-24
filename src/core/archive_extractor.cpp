@@ -1,5 +1,4 @@
 #include "archive_extractor.h"
-#include <QProcess>
 #include <QFileInfo>
 #include <QDir>
 #include <QDebug>
@@ -8,7 +7,7 @@
 namespace Remus {
 
 ArchiveExtractor::ArchiveExtractor(QObject *parent)
-    : QObject(parent)
+    : ExternalToolRunner(parent)
 {
     // Find default tool paths
     m_unzipPath = findTool({"unzip"});
@@ -368,23 +367,6 @@ QList<ExtractionResult> ArchiveExtractor::batchExtract(const QStringList &archiv
     return results;
 }
 
-void ArchiveExtractor::cancel()
-{
-    m_cancelled = true;
-    if (m_process && m_process->state() == QProcess::Running) {
-        m_process->terminate();
-        m_process->waitForFinished(3000);
-        if (m_process->state() == QProcess::Running) {
-            m_process->kill();
-        }
-    }
-}
-
-bool ArchiveExtractor::isRunning() const
-{
-    return m_process && m_process->state() == QProcess::Running;
-}
-
 ExtractionResult ArchiveExtractor::extractZip(const QString &archivePath, const QString &outputDir)
 {
     ExtractionResult result;
@@ -510,52 +492,6 @@ QString ArchiveExtractor::findTool(const QStringList &candidates) const
         }
     }
     return QString();
-}
-
-ArchiveExtractor::ProcessResult ArchiveExtractor::runProcess(const QString &program,
-                                                             const QStringList &args,
-                                                             int timeoutMs)
-{
-    ProcessResult result;
-    QProcess process;
-    process.start(program, args);
-    result.started = process.waitForStarted(timeoutMs);
-    if (!result.started) {
-        result.exitCode = -1;
-        return result;
-    }
-
-    result.finished = process.waitForFinished(timeoutMs);
-    result.exitCode = process.exitCode();
-    result.exitStatus = process.exitStatus();
-    result.stdOutput = QString::fromUtf8(process.readAllStandardOutput());
-    result.stdError = QString::fromUtf8(process.readAllStandardError());
-    return result;
-}
-
-ArchiveExtractor::ProcessResult ArchiveExtractor::runProcessTracked(const QString &program,
-                                                                    const QStringList &args,
-                                                                    int timeoutMs)
-{
-    ProcessResult result;
-    QProcess process;
-    m_process = &process;
-
-    process.start(program, args);
-    result.started = process.waitForStarted(10000);
-    if (!result.started) {
-        m_process = nullptr;
-        result.exitCode = -1;
-        return result;
-    }
-
-    result.finished = process.waitForFinished(timeoutMs);
-    result.exitCode = process.exitCode();
-    result.exitStatus = process.exitStatus();
-    result.stdOutput = QString::fromUtf8(process.readAllStandardOutput());
-    result.stdError = QString::fromUtf8(process.readAllStandardError());
-    m_process = nullptr;
-    return result;
 }
 
 QStringList ArchiveExtractor::listFiles(const QString &dirPath) const

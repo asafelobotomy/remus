@@ -7,7 +7,7 @@
 namespace Remus {
 
 CHDConverter::CHDConverter(QObject *parent)
-    : QObject(parent)
+    : ExternalToolRunner(parent)
     , m_chdmanPath("chdman")  // Use PATH by default
 {
 }
@@ -251,19 +251,8 @@ QList<CHDConversionResult> CHDConverter::batchConvert(const QStringList &inputPa
 
 void CHDConverter::cancel()
 {
-    m_cancelled = true;
-    if (m_process && m_process->state() == QProcess::Running) {
-        m_process->terminate();
-        m_process->waitForFinished(3000);
-        if (m_process->state() == QProcess::Running) {
-            m_process->kill();
-        }
-    }
-}
-
-bool CHDConverter::isRunning() const
-{
-    return m_process && m_process->state() == QProcess::Running;
+    ExternalToolRunner::cancel();
+    emit conversionCancelled();
 }
 
 CHDConversionResult CHDConverter::runChdman(const QStringList &args,
@@ -329,53 +318,6 @@ CHDConversionResult CHDConverter::runChdman(const QStringList &args,
     
     emit conversionCompleted(result);
     
-    return result;
-}
-
-CHDConverter::ProcessResult CHDConverter::runProcess(const QString &program,
-                                                     const QStringList &args,
-                                                     int timeoutMs)
-{
-    ProcessResult result;
-    QProcess process;
-
-    process.start(program, args);
-    result.started = process.waitForStarted(timeoutMs);
-    if (!result.started) {
-        result.exitCode = -1;
-        return result;
-    }
-
-    result.finished = process.waitForFinished(timeoutMs);
-    result.exitCode = process.exitCode();
-    result.exitStatus = process.exitStatus();
-    result.stdOutput = QString::fromUtf8(process.readAllStandardOutput());
-    result.stdError = QString::fromUtf8(process.readAllStandardError());
-    return result;
-}
-
-CHDConverter::ProcessResult CHDConverter::runProcessTracked(const QString &program,
-                                                            const QStringList &args,
-                                                            int timeoutMs)
-{
-    ProcessResult result;
-    QProcess process;
-    m_process = &process;
-
-    process.start(program, args);
-    result.started = process.waitForStarted(10000);
-    if (!result.started) {
-        m_process = nullptr;
-        result.exitCode = -1;
-        return result;
-    }
-
-    result.finished = process.waitForFinished(timeoutMs);
-    result.exitCode = process.exitCode();
-    result.exitStatus = process.exitStatus();
-    result.stdOutput = QString::fromUtf8(process.readAllStandardOutput());
-    result.stdError = QString::fromUtf8(process.readAllStandardError());
-    m_process = nullptr;
     return result;
 }
 

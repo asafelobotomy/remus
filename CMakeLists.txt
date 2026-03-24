@@ -40,9 +40,9 @@ if(ENABLE_COVERAGE)
     endif()
 endif()
 
-option(REMUS_BUILD_GUI "Build Qt GUI application and UI library" OFF)
-option(REMUS_BUILD_TUI "Build terminal UI (Notcurses-based)" OFF)
-option(REMUS_BUILD_INTERACTIVE_CLI "Build ncurses-backed interactive CLI session" OFF)
+option(REMUS_BUILD_GUI "Build archived Qt GUI application and UI library" OFF)
+option(REMUS_BUILD_TUI "Build archived terminal UI (Notcurses-based)" OFF)
+option(REMUS_BUILD_INTERACTIVE_CLI "Build archived ncurses-backed interactive CLI session" OFF)
 
 if(REMUS_BUILD_INTERACTIVE_CLI)
     set(REMUS_BUILD_TUI ON CACHE BOOL "Build terminal UI (Notcurses-based)" FORCE)
@@ -84,7 +84,7 @@ add_subdirectory(src/metadata)
 # Services library (shared business logic)
 add_subdirectory(src/services)
 
-# UI library and GUI executable
+# Archived frontend: Qt GUI
 if(REMUS_BUILD_GUI)
     add_subdirectory(src/ui)
 endif()
@@ -93,6 +93,7 @@ endif()
 set(REMUS_CLI_SOURCES
     src/cli/main.cpp
     src/cli/cli_helpers.cpp
+    src/cli/cli_mod_support.cpp
     src/cli/cli_commands_info.cpp
     src/cli/cli_commands_metadata.cpp
     src/cli/cli_commands_match.cpp
@@ -100,6 +101,7 @@ set(REMUS_CLI_SOURCES
     src/cli/cli_commands_organize.cpp
     src/cli/cli_commands_chd.cpp
     src/cli/cli_commands_export.cpp
+    src/cli/cli_commands_mods.cpp
 )
 
 if(REMUS_BUILD_INTERACTIVE_CLI)

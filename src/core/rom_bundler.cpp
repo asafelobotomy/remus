@@ -396,6 +396,114 @@ RomBundler::BundleResult RomBundler::bundle(const FileRecord            &file,
     return result;
 }
 
+// ─── bundleStaged ─────────────────────────────────────────────────────────────
+
+RomBundler::BundleResult RomBundler::bundleStaged(
+    const FileRecord              &patchedFile,
+    const Database::MatchResult   &baseMatch,
+    const GameMetadata            &metadata,
+    const QString                 &destinationDir,
+    const BundleConfig            &config)
+{
+    BundleResult result;
+
+    // ── 1. Resolve ROM file path ──────────────────────────────────────────────
+    const QString sourcePath = patchedFile.currentPath;
+    if (sourcePath.isEmpty() || !QFile::exists(sourcePath)) {
+        result.error = "Patched ROM not found: " + sourcePath;
+        return result;
+    }
+
+    QDir destDir(destinationDir);
+    if (!config.dryRun && !destDir.exists() && !destDir.mkpath(".")) {
+        result.error = "Cannot create destination directory: " + destinationDir;
+        return result;
+    }
+
+    const QString tempRoot = config.dryRun ? QDir::tempPath() : destDir.absolutePath();
+    const QString tempBase = tempRoot + "/.remus_bundle_"
+                           + QString::number(QDateTime::currentMSecsSinceEpoch());
+    QDir tempDir(tempBase);
+    if (!tempDir.mkpath(".")) {
+        result.error = "Cannot create temp directory: " + tempBase;
+        return result;
+    }
+
+    auto cleanup = [&]() { tempDir.removeRecursively(); };
+
+    // Copy the patched ROM into the temp directory
+    const QString destRom = tempBase + "/" + QFileInfo(patchedFile.filename).fileName();
+    if (!QFile::copy(sourcePath, destRom)) {
+        result.error = "Failed to copy patched ROM to temp dir";
+        cleanup();
+        return result;
+    }
+
+    // ── 2. Write .remus.md marker ─────────────────────────────────────────────
+    const QString markerPath = tempBase + "/" + MARKER_FILENAME;
+    {
+        QFile markerFile(markerPath);
+        if (!markerFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
+            result.error = "Cannot write marker file";
+            cleanup();
+            return result;
+        }
+        QTextStream out(&markerFile);
+        out << generateMarkerContent(patchedFile, baseMatch, metadata);
+    }
+
+    // ── 3. Include box art (optional) ─────────────────────────────────────────
+    QStringList archiveEntries = {
+        QDir(tempBase).relativeFilePath(destRom),
+        QString::fromLatin1(MARKER_FILENAME)
+    };
+
+    if (config.includeBoxArt && !config.artworkPath.isEmpty()
+        && QFile::exists(config.artworkPath)) {
+        const QString artDestDir = tempBase + "/" + ARTWORK_SUBDIR;
+        QDir().mkpath(artDestDir);
+        const QString artDest = artDestDir + "/" + BOXART_FILENAME;
+        if (QFile::copy(config.artworkPath, artDest)) {
+            archiveEntries << QString::fromLatin1(ARTWORK_SUBDIR) + "/" + BOXART_FILENAME;
+        }
+    }
+
+    // ── 4. Determine output archive path ──────────────────────────────────────
+    const QString ext = (config.outputFormat == ArchiveFormat::SevenZip) ? ".7z" : ".zip";
+    const QString baseName = QFileInfo(patchedFile.filename).completeBaseName();
+    const QString outputArchive = destDir.absoluteFilePath(baseName + ext);
+
+    // ── 5. Dry-run short-circuit ──────────────────────────────────────────────
+    if (config.dryRun) {
+        qInfo() << "  [DRY-RUN] Would create bundle:" << outputArchive;
+        result.success = true;
+        result.outputPath = outputArchive;
+        cleanup();
+        return result;
+    }
+
+    // ── 6. Pack into output archive ───────────────────────────────────────────
+    CompressionResult cr = m_creator.compressDirectoryContents(
+        tempBase, outputArchive, config.outputFormat);
+    cleanup();
+
+    if (!cr.success) {
+        result.error = "Compression failed: " + cr.error;
+        return result;
+    }
+
+    // ── 7. Mark the patched file as processed (NOT the base) ──────────────────
+    m_db.markFileProcessed(patchedFile.id, "bundled");
+    m_db.updateFilePath(patchedFile.id, outputArchive);
+
+    result.success    = true;
+    result.outputPath = outputArchive;
+    qInfo() << "  ✓ Bundle created (staged):" << outputArchive;
+
+    emit progressMessage(QString("Bundled (staged): %1").arg(outputArchive));
+    return result;
+}
+
 // ─── private helpers ──────────────────────────────────────────────────────────
 
 QString RomBundler::generateMarkerContent(const FileRecord            &file,

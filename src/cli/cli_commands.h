@@ -67,3 +67,9 @@ int handleExportCommand(CliContext &ctx);
 // ── Patch ─────────────────────────────────────────────────────────────────────
 // --patch-tools, --patch-info, --patch-apply, --patch-create
 int handlePatchCommands(CliContext &ctx);
+
+// ── Mod Workflow ──────────────────────────────────────────────────────────────
+// --mod-catalog, --mod-list, --mod-show, --mod-system, --mod-systems,
+// --mod-author, --mod-type, --mod-min-rating,
+// --mod-install, --mod-installed, --mod-uninstall
+int handleModCommands(CliContext &ctx);

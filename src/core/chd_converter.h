@@ -1,9 +1,8 @@
 #pragma once
 
-#include <QObject>
+#include "external_tool_runner.h"
 #include <QString>
 #include <QStringList>
-#include <QProcess>
 
 namespace Remus {
 
@@ -70,7 +69,7 @@ struct CHDInfo {
  * - macOS: `brew install mame`
  * - Windows: Download from MAME releases
  */
-class CHDConverter : public QObject {
+class CHDConverter : public ExternalToolRunner {
     Q_OBJECT
 
 public:
@@ -165,14 +164,9 @@ public:
                                              const QString &outputDir = QString());
 
     /**
-     * @brief Cancel current conversion
+     * @brief Cancel current conversion (also emits conversionCancelled)
      */
     void cancel();
-
-    /**
-     * @brief Check if conversion is in progress
-     */
-    bool isRunning() const;
 
 signals:
     /**
@@ -205,23 +199,6 @@ signals:
      */
     void errorOccurred(const QString &error);
 
-protected:
-    struct ProcessResult {
-        bool started = false;
-        bool finished = false;
-        int exitCode = -1;
-        QProcess::ExitStatus exitStatus = QProcess::NormalExit;
-        QString stdOutput;
-        QString stdError;
-    };
-
-    virtual ProcessResult runProcess(const QString &program,
-                                     const QStringList &args,
-                                     int timeoutMs);
-    virtual ProcessResult runProcessTracked(const QString &program,
-                                            const QStringList &args,
-                                            int timeoutMs);
-
 private:
     /**
      * @brief Run chdman command and wait for completion
@@ -248,8 +225,6 @@ private:
     QString m_chdmanPath;
     int m_numProcessors = 0;
     CHDCodec m_codec = CHDCodec::Auto;
-    QProcess *m_process = nullptr;
-    bool m_cancelled = false;
 };
 
 } // namespace Remus

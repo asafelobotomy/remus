@@ -196,8 +196,6 @@ private:
     void loadDatCache(const QString &systemName);
     void loadPatchDatCache(const QString &systemName);
     QString getPreferredHashType(const QString &systemName);
-    VerificationStatus compareHashes(const FileRecord &file, DatRomEntry &matchedEntry,
-                                     QString &matchedHash, const QString &hashType);
     bool findPatchCatalogMatch(const QString &systemName,
                                const QString &crc32,
                                const QString &md5,

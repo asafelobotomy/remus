@@ -25,13 +25,11 @@ jobs:
             cmake \
             qt6-base-dev \
             qt6-base-dev-tools \
-            qt6-declarative-dev \
-            qt6-quickcontrols2-dev \
             libqt6sql6-sqlite \
             zlib1g-dev
 
       - name: Configure
-        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -DREMUS_BUILD_GUI=OFF -DREMUS_BUILD_TUI=OFF -DREMUS_BUILD_INTERACTIVE_CLI=OFF
 
       - name: Build
         run: cmake --build build --config ${{ matrix.build_type }} -j$(nproc)
@@ -45,13 +43,6 @@ jobs:
         with:
           name: remus-cli-linux-x64
           path: build/remus-cli
-
-      - name: Upload GUI artifact
-        if: matrix.build_type == 'Release'
-        uses: actions/upload-artifact@v4
-        with:
-          name: remus-gui-linux-x64
-          path: build/src/ui/remus-gui
 
   lint:
     runs-on: ubuntu-22.04

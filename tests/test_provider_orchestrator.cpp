@@ -41,6 +41,13 @@ private slots:
     void fallsBackToNameSearch();
     void normalizesVersionedNamesBeforeNameSearch();
     void artworkFallback();
+
+    // Phase 0 characterization tests — safety net for Phase 5
+    void testRemoveProvider();
+    void testGetEnabledProviders();
+    void testSetProviderEnabled();
+    void testAllProvidersFailed();
+    void testSearchAllProviders();
 };
 
 void ProviderOrchestratorTest::hashProviderPriority()
@@ -141,6 +148,92 @@ void ProviderOrchestratorTest::artworkFallback()
 
     ArtworkUrls loaded = orchestrator.getArtworkWithFallback("id-1", "NES", QString());
     QCOMPARE(loaded.boxFront, artwork.boxFront);
+}
+
+// ── Phase 0 characterization tests ─────────────────────────────────────────
+
+void ProviderOrchestratorTest::testRemoveProvider()
+{
+    ProviderOrchestrator orchestrator;
+
+    auto *provider = new StubProvider("screenscraper");
+    orchestrator.addProvider("screenscraper", provider, 90);
+    QVERIFY(orchestrator.getEnabledProviders().contains("screenscraper"));
+
+    orchestrator.removeProvider("screenscraper");
+    QVERIFY(!orchestrator.getEnabledProviders().contains("screenscraper"));
+}
+
+void ProviderOrchestratorTest::testGetEnabledProviders()
+{
+    ProviderOrchestrator orchestrator;
+
+    QVERIFY(orchestrator.getEnabledProviders().isEmpty());
+
+    orchestrator.addProvider("a", new StubProvider("a"), 10);
+    orchestrator.addProvider("b", new StubProvider("b"), 20);
+    orchestrator.addProvider("c", new StubProvider("c"), 5);
+
+    QStringList enabled = orchestrator.getEnabledProviders();
+    QCOMPARE(enabled.size(), 3);
+    QVERIFY(enabled.contains("a"));
+    QVERIFY(enabled.contains("b"));
+    QVERIFY(enabled.contains("c"));
+}
+
+void ProviderOrchestratorTest::testSetProviderEnabled()
+{
+    ProviderOrchestrator orchestrator;
+
+    auto *provider = new StubProvider("igdb");
+    orchestrator.addProvider("igdb", provider, 40);
+    QVERIFY(orchestrator.getEnabledProviders().contains("igdb"));
+
+    orchestrator.setProviderEnabled("igdb", false);
+    QVERIFY(!orchestrator.getEnabledProviders().contains("igdb"));
+
+    orchestrator.setProviderEnabled("igdb", true);
+    QVERIFY(orchestrator.getEnabledProviders().contains("igdb"));
+}
+
+void ProviderOrchestratorTest::testAllProvidersFailed()
+{
+    ProviderOrchestrator orchestrator;
+
+    // Add providers that return empty results (will fail)
+    orchestrator.addProvider("empty1", new StubProvider("empty1"), 10);
+    orchestrator.addProvider("empty2", new StubProvider("empty2"), 5);
+
+    QSignalSpy failedSpy(&orchestrator, &ProviderOrchestrator::allProvidersFailed);
+
+    GameMetadata result = orchestrator.searchWithFallback("badhash", "Unknown Game", "NES");
+    QVERIFY(result.title.isEmpty());
+    QVERIFY(failedSpy.count() >= 1);
+}
+
+void ProviderOrchestratorTest::testSearchAllProviders()
+{
+    ProviderOrchestrator orchestrator;
+
+    auto *p1 = new StubProvider("provider1");
+    SearchResult r1;
+    r1.id = "1";
+    r1.title = "Result A";
+    r1.matchScore = 0.9f;
+    p1->m_searchResults = {r1};
+
+    auto *p2 = new StubProvider("provider2");
+    SearchResult r2;
+    r2.id = "2";
+    r2.title = "Result B";
+    r2.matchScore = 0.7f;
+    p2->m_searchResults = {r2};
+
+    orchestrator.addProvider("provider1", p1, 10);
+    orchestrator.addProvider("provider2", p2, 5);
+
+    QList<SearchResult> all = orchestrator.searchAllProviders("Test Game", "NES");
+    QCOMPARE(all.size(), 2);
 }
 
 QTEST_MAIN(ProviderOrchestratorTest)

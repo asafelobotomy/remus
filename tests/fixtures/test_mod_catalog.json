@@ -1,0 +1,69 @@
+{
+  "catalog_version": 1,
+  "updated_at": "2026-03-23T00:00:00Z",
+  "mods": [
+    {
+      "id": "test-mod-alpha",
+      "title": "Test Mod Alpha",
+      "author": "Test Author",
+      "version": "1.0",
+      "description": "A test mod for unit testing.",
+      "type": "hack",
+      "system": "Super Nintendo",
+      "format": "ips",
+      "patch_url": "file:///tmp/test-patch.ips",
+      "patch_sha1": "",
+      "patch_size": 1024,
+      "base_rom_hashes": {
+        "crc32": "AABBCCDD",
+        "md5": "0123456789abcdef0123456789abcdef",
+        "sha1": "da39a3ee5e6b4b0d3255bfef95601890afd80709"
+      },
+      "source_url": "https://example.com/mods/alpha",
+      "rating": 4.5,
+      "downloads": 1000
+    },
+    {
+      "id": "test-mod-beta",
+      "title": "Test Mod Beta",
+      "author": "Beta Author",
+      "version": "2.1",
+      "description": "Another test mod.",
+      "type": "translation",
+      "system": "Super Nintendo",
+      "format": "bps",
+      "patch_url": "file:///tmp/test-patch.bps",
+      "patch_sha1": "deadbeef01234567890123456789012345678901",
+      "patch_size": 2048,
+      "base_rom_hashes": {
+        "crc32": "11223344",
+        "md5": "aabbccddeeff00112233445566778899",
+        "sha1": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "source_url": "https://example.com/mods/beta",
+      "rating": 3.8,
+      "downloads": 500
+    },
+    {
+      "id": "test-mod-gamma",
+      "title": "Test Mod Gamma",
+      "author": "Gamma Author",
+      "version": "0.5",
+      "description": "A Genesis mod.",
+      "type": "improvement",
+      "system": "Sega Genesis",
+      "format": "ips",
+      "patch_url": "file:///tmp/test-patch-gamma.ips",
+      "patch_sha1": "",
+      "patch_size": 512,
+      "base_rom_hashes": {
+        "crc32": "AABBCCDD",
+        "md5": "fedcba9876543210fedcba9876543210",
+        "sha1": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      },
+      "source_url": "",
+      "rating": 0,
+      "downloads": 0
+    }
+  ]
+}

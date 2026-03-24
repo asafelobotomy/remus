@@ -87,6 +87,18 @@ public:
                         const QString                 &destinationDir,
                         const BundleConfig            &config);
 
+    /**
+     * @brief Bundle a staged file (e.g. a freshly patched ROM) into an archive.
+     *
+     * Unlike bundle(), this does NOT mutate the passed-in FileRecord in the DB.
+     * Instead, it marks the patched file's own record as processed.
+     */
+    BundleResult bundleStaged(const FileRecord              &patchedFile,
+                              const Database::MatchResult   &baseMatch,
+                              const GameMetadata            &metadata,
+                              const QString                 &destinationDir,
+                              const BundleConfig            &config);
+
 signals:
     void progressMessage(const QString &msg);
 

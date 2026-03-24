@@ -31,6 +31,20 @@ private slots:
     void testInsertAndGetPatchedFileMetadata();
     void testInsertAndFindAppliedPatch();
     void testUpdateFileHashesPromotesPatchedMetadata();
+
+    // Phase 0 characterization tests — safety net for Phase 1 Database split
+    void testDeleteFilesForLibrary();
+    void testGetAllFilesIncludesStaleEntries();
+    void testGetExistingFilesOnlyReturnsValidPaths();
+    void testGetFilePath();
+    void testUpdateFileOriginalPath();
+    void testGetFilesByParent();
+    void testGetAllMatches();
+    void testInsertAndGetModInstallation();
+    void testRemoveModInstallation();
+    void testUpsertAndGetCatalogCache();
+    void testDeleteLibraryCascadesFiles();
+    void testInsertMatchWithNameMatchScore();
 };
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
@@ -506,6 +520,272 @@ void DatabaseTest::testUpdateFileHashesPromotesPatchedMetadata()
     QCOMPARE(got.fileType, QStringLiteral("translation"));
     QVERIFY(got.isPatched);
     QCOMPARE(got.patchName, QStringLiteral("English v2.0"));
+}
+
+// ── Phase 0 characterization tests ─────────────────────────────────────────
+
+void DatabaseTest::testDeleteFilesForLibrary()
+{
+    Database db;
+    QVERIFY(db.initialize(":memory:"));
+
+    int libId = db.insertLibrary("/roms", "Test");
+    int sysId = db.getSystemId("NES");
+
+    db.insertFile(makeRecord(libId, sysId, "mario.nes"));
+    db.insertFile(makeRecord(libId, sysId, "zelda.nes"));
+    QCOMPARE(db.getFilesBySystem("NES").size(), 2);
+
+    QVERIFY(db.deleteFilesForLibrary(libId));
+    QCOMPARE(db.getFilesBySystem("NES").size(), 0);
+
+    // Library record itself should still exist
+    QVERIFY(!db.getLibraryPath(libId).isEmpty());
+}
+
+void DatabaseTest::testGetAllFilesIncludesStaleEntries()
+{
+    Database db;
+    QVERIFY(db.initialize(":memory:"));
+
+    int libId = db.insertLibrary("/roms", "Test");
+    int sysId = db.getSystemId("NES");
+
+    // Insert a file whose path doesn't exist on disk
+    db.insertFile(makeRecord(libId, sysId, "nonexistent.nes"));
+
+    QList<FileRecord> all = db.getAllFiles();
+    QVERIFY(!all.isEmpty());
+}
+
+void DatabaseTest::testGetExistingFilesOnlyReturnsValidPaths()
+{
+    Database db;
+    QVERIFY(db.initialize(":memory:"));
+
+    int libId = db.insertLibrary("/roms", "Test");
+    int sysId = db.getSystemId("NES");
+
+    // Insert a file whose path does not exist on disk
+    db.insertFile(makeRecord(libId, sysId, "nonexistent.nes"));
+
+    QList<FileRecord> existing = db.getExistingFiles();
+    // Path /roms/nonexistent.nes doesn't exist, so should be filtered out
+    QCOMPARE(existing.size(), 0);
+}
+
+void DatabaseTest::testGetFilePath()
+{
+    Database db;
+    QVERIFY(db.initialize(":memory:"));
+
+    int libId  = db.insertLibrary("/roms", "Test");
+    int sysId  = db.getSystemId("NES");
+    int fileId = db.insertFile(makeRecord(libId, sysId, "mario.nes"));
+
+    QString path = db.getFilePath(fileId);
+    QCOMPARE(path, QStringLiteral("/roms/mario.nes"));
+
+    // Non-existent file ID returns empty
+    QVERIFY(db.getFilePath(99999).isEmpty());
+}
+
+void DatabaseTest::testUpdateFileOriginalPath()
+{
+    Database db;
+    QVERIFY(db.initialize(":memory:"));
+
+    int libId  = db.insertLibrary("/roms", "Test");
+    int sysId  = db.getSystemId("NES");
+    int fileId = db.insertFile(makeRecord(libId, sysId, "mario.nes"));
+
+    const QString newOrigPath = "/extracted/mario.nes";
+    QVERIFY(db.updateFileOriginalPath(fileId, newOrigPath));
+
+    FileRecord got = db.getFileById(fileId);
+    QCOMPARE(got.originalPath, newOrigPath);
+}
+
+void DatabaseTest::testGetFilesByParent()
+{
+    Database db;
+    QVERIFY(db.initialize(":memory:"));
+
+    int libId = db.insertLibrary("/roms", "Test");
+    int sysId = db.getSystemId("PlayStation");
+
+    // Insert a parent CUE file
+    FileRecord cue = makeRecord(libId, sysId, "game.cue");
+    cue.isPrimary = true;
+    int parentId = db.insertFile(cue);
+    QVERIFY(parentId > 0);
+
+    // Insert child BIN files
+    FileRecord bin1 = makeRecord(libId, sysId, "game (Track 1).bin");
+    bin1.isPrimary = false;
+    bin1.parentFileId = parentId;
+    int child1 = db.insertFile(bin1);
+    QVERIFY(child1 > 0);
+
+    FileRecord bin2 = makeRecord(libId, sysId, "game (Track 2).bin");
+    bin2.isPrimary = false;
+    bin2.parentFileId = parentId;
+    int child2 = db.insertFile(bin2);
+    QVERIFY(child2 > 0);
+
+    QList<FileRecord> children = db.getFilesByParent(parentId);
+    QCOMPARE(children.size(), 2);
+}
+
+void DatabaseTest::testGetAllMatches()
+{
+    Database db;
+    QVERIFY(db.initialize(":memory:"));
+
+    int libId  = db.insertLibrary("/roms", "Test");
+    int sysId  = db.getSystemId("NES");
+
+    int fid1 = db.insertFile(makeRecord(libId, sysId, "mario.nes"));
+    int fid2 = db.insertFile(makeRecord(libId, sysId, "zelda.nes"));
+
+    int gid1 = db.insertGame("Super Mario Bros.", sysId);
+    int gid2 = db.insertGame("Legend of Zelda", sysId);
+
+    db.insertMatch(fid1, gid1, 100.0f, "hash");
+    db.insertMatch(fid2, gid2, 85.0f, "fuzzy");
+
+    QMap<int, Database::MatchResult> matches = db.getAllMatches();
+    QCOMPARE(matches.size(), 2);
+    QVERIFY(matches.contains(fid1));
+    QVERIFY(matches.contains(fid2));
+    QCOMPARE(matches[fid1].gameTitle, QStringLiteral("Super Mario Bros."));
+    QCOMPARE(matches[fid2].matchMethod, QStringLiteral("fuzzy"));
+}
+
+void DatabaseTest::testInsertAndGetModInstallation()
+{
+    Database db;
+    QVERIFY(db.initialize(":memory:"));
+
+    int libId  = db.insertLibrary("/roms", "Test");
+    int sysId  = db.getSystemId("NES");
+    int baseId = db.insertFile(makeRecord(libId, sysId, "base.nes"));
+    int patchedId = db.insertFile(makeRecord(libId, sysId, "patched.nes"));
+
+    Database::ModInstallationRecord mod;
+    mod.baseFileId     = baseId;
+    mod.patchedFileId  = patchedId;
+    mod.catalogModId   = "mod-123";
+    mod.modTitle       = "Translation Patch";
+    mod.modAuthor      = "translator";
+    mod.modVersion     = "1.0";
+    mod.modType        = "translation";
+    mod.patchFormat    = "BPS";
+    int modId = db.insertModInstallation(mod);
+    QVERIFY(modId > 0);
+
+    QList<Database::ModInstallationRecord> mods = db.getModInstallations(baseId);
+    QCOMPARE(mods.size(), 1);
+    QCOMPARE(mods.first().modTitle, QStringLiteral("Translation Patch"));
+    QCOMPARE(mods.first().catalogModId, QStringLiteral("mod-123"));
+}
+
+void DatabaseTest::testRemoveModInstallation()
+{
+    Database db;
+    QVERIFY(db.initialize(":memory:"));
+
+    int libId  = db.insertLibrary("/roms", "Test");
+    int sysId  = db.getSystemId("NES");
+    int baseId = db.insertFile(makeRecord(libId, sysId, "base.nes"));
+    int patchedId = db.insertFile(makeRecord(libId, sysId, "patched.nes"));
+
+    Database::ModInstallationRecord mod;
+    mod.baseFileId    = baseId;
+    mod.patchedFileId = patchedId;
+    mod.catalogModId  = "mod-456";
+    mod.modTitle      = "Hack";
+    int modId = db.insertModInstallation(mod);
+    QVERIFY(modId > 0);
+
+    QVERIFY(db.removeModInstallation(modId));
+    QCOMPARE(db.getModInstallations(baseId).size(), 0);
+}
+
+void DatabaseTest::testUpsertAndGetCatalogCache()
+{
+    Database db;
+    QVERIFY(db.initialize(":memory:"));
+
+    Database::ModCatalogCacheRecord cache;
+    cache.sourceUrl = "https://example.com/catalog.json";
+    cache.etag      = "abc123";
+    cache.modCount  = 42;
+    int cacheId = db.upsertCatalogCache(cache);
+    QVERIFY(cacheId > 0);
+
+    Database::ModCatalogCacheRecord got = db.getCatalogCache("https://example.com/catalog.json");
+    QVERIFY(got.id > 0);
+    QCOMPARE(got.etag, QStringLiteral("abc123"));
+    QCOMPARE(got.modCount, 42);
+
+    // Upsert with same URL updates the record
+    cache.etag     = "def456";
+    cache.modCount = 50;
+    int updatedId = db.upsertCatalogCache(cache);
+    QVERIFY(updatedId > 0);
+
+    Database::ModCatalogCacheRecord updated = db.getCatalogCache("https://example.com/catalog.json");
+    QCOMPARE(updated.etag, QStringLiteral("def456"));
+    QCOMPARE(updated.modCount, 50);
+
+    // Non-existent URL returns empty record
+    Database::ModCatalogCacheRecord missing = db.getCatalogCache("https://nonexistent.example.com");
+    QCOMPARE(missing.id, 0);
+}
+
+void DatabaseTest::testDeleteLibraryCascadesFiles()
+{
+    Database db;
+    QVERIFY(db.initialize(":memory:"));
+
+    int libId = db.insertLibrary("/roms/cascade", "Cascade Test");
+    int sysId = db.getSystemId("NES");
+
+    int fid1 = db.insertFile(makeRecord(libId, sysId, "mario.nes"));
+    int fid2 = db.insertFile(makeRecord(libId, sysId, "zelda.nes"));
+    QVERIFY(fid1 > 0);
+    QVERIFY(fid2 > 0);
+
+    // Verify files exist
+    QCOMPARE(db.getFilesBySystem("NES").size(), 2);
+
+    // Delete library — files should also be removed
+    QVERIFY(db.deleteLibrary(libId));
+
+    // Library path gone
+    QVERIFY(db.getLibraryPath(libId).isEmpty());
+
+    // Files should be gone too
+    QCOMPARE(db.getFileById(fid1).id, 0);
+    QCOMPARE(db.getFileById(fid2).id, 0);
+}
+
+void DatabaseTest::testInsertMatchWithNameMatchScore()
+{
+    Database db;
+    QVERIFY(db.initialize(":memory:"));
+
+    int libId  = db.insertLibrary("/roms", "Test");
+    int sysId  = db.getSystemId("NES");
+    int fileId = db.insertFile(makeRecord(libId, sysId, "mario.nes"));
+    int gameId = db.insertGame("Super Mario Bros.", sysId);
+
+    QVERIFY(db.insertMatch(fileId, gameId, 85.0f, "fuzzy", 0.92f));
+
+    Database::MatchResult m = db.getMatchForFile(fileId);
+    QCOMPARE(m.matchMethod, QStringLiteral("fuzzy"));
+    QVERIFY(m.nameMatchScore >= 0.91f && m.nameMatchScore <= 0.93f);
 }
 
 QTEST_MAIN(DatabaseTest)

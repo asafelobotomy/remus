@@ -11,18 +11,23 @@ add_library(remus-core STATIC
     match_utils.cpp
     hasher.cpp
     database.cpp
+    database_files.cpp
+    database_games.cpp
+    database_patches.cpp
     matching_engine.cpp
     template_engine.cpp
     organize_engine.cpp
     rom_bundler.cpp
     m3u_generator.cpp
     chd_converter.cpp
+    external_tool_runner.cpp
     archive_extractor.cpp
     archive_creator.cpp
     space_calculator.cpp
     dat_parser.cpp
     header_detector.cpp
     verification_engine.cpp
+    verification_storage.cpp
     patch_engine.cpp
     logging_categories.cpp
     system_resolver.cpp

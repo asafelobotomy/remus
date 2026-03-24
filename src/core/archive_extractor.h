@@ -1,10 +1,9 @@
 #pragma once
 
-#include <QObject>
+#include "external_tool_runner.h"
 #include <QString>
 #include <QStringList>
 #include <QMap>
-#include <QProcess>
 
 namespace Remus {
 
@@ -57,7 +56,7 @@ struct ExtractionResult {
  * 
  * Automatically detects format from file extension.
  */
-class ArchiveExtractor : public QObject {
+class ArchiveExtractor : public ExternalToolRunner {
     Q_OBJECT
 
 public:
@@ -126,15 +125,7 @@ public:
                                           const QString &outputDir = QString(),
                                           bool createSubfolders = true);
 
-    /**
-     * @brief Cancel current extraction
-     */
-    void cancel();
 
-    /**
-     * @brief Check if extraction is running
-     */
-    bool isRunning() const;
 
 signals:
     void extractionStarted(const QString &archivePath, const QString &outputDir);
@@ -144,21 +135,6 @@ signals:
     void errorOccurred(const QString &error);
 
 protected:
-    struct ProcessResult {
-        bool started = false;
-        bool finished = false;
-        int exitCode = -1;
-        QProcess::ExitStatus exitStatus = QProcess::NormalExit;
-        QString stdOutput;
-        QString stdError;
-    };
-
-    virtual ProcessResult runProcess(const QString &program,
-                                     const QStringList &args,
-                                     int timeoutMs);
-    virtual ProcessResult runProcessTracked(const QString &program,
-                                            const QStringList &args,
-                                            int timeoutMs);
     virtual QStringList listFiles(const QString &dirPath) const;
 
 private:
@@ -174,8 +150,6 @@ private:
     QString m_sevenZipPath;
     QString m_unrarPath;
     
-    bool m_cancelled = false;
-    ::QProcess *m_process = nullptr;
 };
 
 } // namespace Remus

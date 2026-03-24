@@ -4,7 +4,7 @@
 
 ### Required Dependencies
 - **CMake** >= 3.16
-- **Qt 6** (Core, Sql, Network modules)
+- **Qt 6 base development files** (Core, Gui, Sql, Network, Concurrent)
 - **C++17** compatible compiler (GCC 7+, Clang 5+, MSVC 2017+)
 - **zlib** (for CRC32 calculation)
 
@@ -13,7 +13,7 @@
 #### Ubuntu/Debian
 ```bash
 sudo apt update
-sudo apt install build-essential cmake qt6-base-dev libqt6sql6-sqlite zlib1g-dev
+sudo apt install build-essential cmake qt6-base-dev qt6-base-dev-tools libqt6sql6-sqlite zlib1g-dev
 ```
 
 #### Fedora
@@ -41,8 +41,10 @@ cd build
 
 ### 3. Configure with CMake
 ```bash
-cmake ..
+cmake -S .. -B .
 ```
+
+The default configure builds the CLI only. GUI and TUI targets stay out of the default build, CI, and release path until the CLI delivery track is stable.
 
 #### Optional build acceleration flags
 ```bash
@@ -86,7 +88,7 @@ cmake -DCMAKE_PREFIX_PATH=/usr/lib/qt6 ..
 
 ### 4. Build
 ```bash
-make -j$(nproc)
+cmake --build . -j$(nproc)
 ```
 
 ### 5. Verify build
@@ -99,28 +101,15 @@ Expected output:
 remus-cli 0.1.0
 ```
 
-### 6. Optional: Build and run TUI
+### 6. Package a CLI release archive
 
-The terminal UI is not built by default.
-
-```bash
-# Enable TUI target at configure time
-cmake -DREMUS_BUILD_TUI=ON ..
-
-# Build TUI
-make -j$(nproc)
-
-# Run from inside build/
-./src/tui/remus-tui
-```
-
-Or run from the repository root:
+Create a distributable CLI archive from the current build:
 
 ```bash
-./build/src/tui/remus-tui
+./scripts/package_cli_archive.sh
 ```
 
-If `REMUS_BUILD_TUI` is OFF, `remus-tui` is not generated.
+The script writes a versioned tarball and SHA256 file to `dist/`.
 
 ## Running the CLI
 
@@ -303,14 +292,11 @@ sudMetadata Providers
 - **Registration**: Requires Twitch developer account
 - **Features**: Comprehensive, modern database
 
-## Next Steps (M4-M8)
+## Delivery Focus
 
-- **M4**: Organize and rename engine with No-Intro/Redump compliance
-- **M4.5**: CHD conversion and compression
-- **M5**: Qt GUI with library view and batch operations
-- **M6**: AppImage packaging and distribution
-- **M7**: Polishing and optimization
-- **M8**: Verification and patching (DAT files, romhacking.net integration)
+- Ship and verify the CLI by default.
+- Keep GUI and TUI code out of the default build and release path.
+- Use simple release archives until the CLI workflow is stable.
 
 ## Testing
 
@@ -334,15 +320,11 @@ cd ../../build
 printf '%s\n' '[open] describe the failing case here' >> ../test_output/attention.log
 ```
 
-## Next Steps (M2-M7)
+## Release Outputs
 
-- **M2**: Metadata fetching from ScreenScraper, TheGamesDB, IGDB
-- **M3**: Matching pipeline with confidence scoring
-- **M4**: Organize and rename engine
-- **M4.5**: CHD conversion
-- **M5**: Qt GUI
-- **M6**: AppImage packaging
-- **M7**: Polishing
+- `build/remus-cli` for local development
+- `dist/remus-cli-<version>-linux-x64.tar.gz` for release packaging
+- `dist/remus-cli-<version>-linux-x64.tar.gz.sha256` for checksum verification
 
 ## Contributing
 

@@ -4,6 +4,8 @@ add_library(remus-services STATIC
     match_service.cpp
     conversion_service.cpp
     patch_service.cpp
+    mod_catalog_provider.cpp
+    mod_workflow_service.cpp
 )
 
 target_include_directories(remus-services PUBLIC
@@ -14,6 +16,7 @@ target_link_libraries(remus-services PUBLIC
     remus-core
     Qt6::Core
     Qt6::Concurrent
+    Qt6::Network
     Qt6::Sql
 )
 

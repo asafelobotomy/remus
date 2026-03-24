@@ -69,6 +69,30 @@ public:
         QDateTime appliedAt;
     };
 
+    struct ModInstallationRecord {
+        int id = 0;
+        int baseFileId = 0;
+        int patchedFileId = 0;
+        QString catalogModId;
+        QString modTitle;
+        QString modAuthor;
+        QString modVersion;
+        QString modType = QStringLiteral("hack");
+        QString patchFormat;
+        QString patchUrl;
+        QString patchSha1;
+        QString sourceUrl;
+        QDateTime installedAt;
+    };
+
+    struct ModCatalogCacheRecord {
+        int id = 0;
+        QString sourceUrl;
+        QString etag;
+        QDateTime fetchedAt;
+        int modCount = 0;
+    };
+
     explicit Database(QObject *parent = nullptr);
     ~Database();
 
@@ -396,6 +420,41 @@ public:
     AppliedPatchRecord findAppliedPatchByOutputHashes(const QString &crc32,
                                                       const QString &md5,
                                                       const QString &sha1);
+
+    /**
+     * @brief Insert a mod installation record
+     * @param record Mod installation details
+     * @return Inserted row ID, or -1 on failure
+     */
+    int insertModInstallation(const ModInstallationRecord &record);
+
+    /**
+     * @brief Get mod installations for a base file
+     * @param baseFileId File ID of the original (unpatched) ROM
+     * @return List of mod installation records
+     */
+    QList<ModInstallationRecord> getModInstallations(int baseFileId);
+
+    /**
+     * @brief Remove a mod installation record
+     * @param id mod_installations row ID
+     * @return True if deleted
+     */
+    bool removeModInstallation(int id);
+
+    /**
+     * @brief Upsert a catalog cache record (insert or update by source_url)
+     * @param record Catalog cache details
+     * @return Inserted/updated row ID, or -1 on failure
+     */
+    int upsertCatalogCache(const ModCatalogCacheRecord &record);
+
+    /**
+     * @brief Get catalog cache record by source URL
+     * @param sourceUrl URL of the catalog
+     * @return Cache record (id=0 if not found)
+     */
+    ModCatalogCacheRecord getCatalogCache(const QString &sourceUrl);
 
 signals:
     void databaseError(const QString &error);
