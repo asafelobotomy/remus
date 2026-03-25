@@ -1,4 +1,5 @@
 #include "processing_controller.h"
+#include "../../core/constants/engines.h"
 #include "../../core/constants/systems.h"
 #include <QDebug>
 #include <QMetaObject>
@@ -365,7 +366,7 @@ void ProcessingController::completeCurrentFile(bool success, const QString &erro
 {
     if (success) {
         // Mark file as processed in database
-        m_db->markFileProcessed(m_currentFileId, "processed");
+        m_db->markFileProcessed(m_currentFileId, Constants::Engines::ProcessingStatus::PROCESSED);
         m_successCount++;
         qDebug() << "File processed successfully:" << m_currentFilename;
         
@@ -377,7 +378,7 @@ void ProcessingController::completeCurrentFile(bool success, const QString &erro
             moveArchiveToOriginals(m_currentFilePath);
         }
     } else {
-        m_db->markFileProcessed(m_currentFileId, "failed");
+        m_db->markFileProcessed(m_currentFileId, Constants::Engines::ProcessingStatus::FAILED);
         m_failCount++;
         qWarning() << "File processing failed:" << m_currentFilename << "-" << error;
         emit processingError(m_currentFileId, currentStep(), error);

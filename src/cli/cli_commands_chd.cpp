@@ -3,6 +3,7 @@
 #include <QFileInfo>
 #include "../core/chd_converter.h"
 #include "../core/archive_extractor.h"
+#include "../core/constants/files.h"
 #include "../core/space_calculator.h"
 #include "cli_logging.h"
 
@@ -46,14 +47,18 @@ int handleConvertChdCommand(CliContext &ctx)
         return 0;
     }
 
-    const QString ext = info.suffix().toLower();
+    const QString ext = QStringLiteral(".") + info.suffix().toLower();
     CHDConversionResult result;
-    if      (ext == "cue")             result = converter.convertCueToCHD(inputPath, outputPath);
-    else if (ext == "iso" || ext == "img") result = converter.convertIsoToCHD(inputPath, outputPath);
-    else if (ext == "gdi")             result = converter.convertGdiToCHD(inputPath, outputPath);
+    if      (ext == Constants::Files::CUE)             result = converter.convertCueToCHD(inputPath, outputPath);
+    else if (ext == Constants::Files::ISO || ext == Constants::Files::IMG) result = converter.convertIsoToCHD(inputPath, outputPath);
+    else if (ext == Constants::Files::GDI)             result = converter.convertGdiToCHD(inputPath, outputPath);
     else {
         qCritical() << "✗ Unsupported format:" << ext;
-        qInfo() << "Supported formats: .cue, .iso, .img, .gdi";
+        qInfo() << "Supported formats:"
+                << Constants::Files::CUE << ","
+                << Constants::Files::ISO << ","
+                << Constants::Files::IMG << ","
+                << Constants::Files::GDI;
         return 1;
     }
 
@@ -87,8 +92,8 @@ int handleChdExtractCommand(CliContext &ctx)
 
     QFileInfo info(chdPath);
     QString outputPath;
-    if (outputDir.isEmpty()) outputPath = info.absolutePath() + "/" + info.completeBaseName() + ".cue";
-    else { QDir().mkpath(outputDir); outputPath = outputDir + "/" + info.completeBaseName() + ".cue"; }
+    if (outputDir.isEmpty()) outputPath = info.absolutePath() + "/" + info.completeBaseName() + Constants::Files::CUE;
+    else { QDir().mkpath(outputDir); outputPath = outputDir + "/" + info.completeBaseName() + Constants::Files::CUE; }
 
     qInfo() << "Output:" << outputPath;
     qInfo() << "";

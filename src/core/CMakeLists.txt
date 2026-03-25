@@ -13,10 +13,13 @@ add_library(remus-core STATIC
     database.cpp
     database_files.cpp
     database_games.cpp
+    database_migrations.cpp
     database_patches.cpp
+    database_schema.cpp
     matching_engine.cpp
     template_engine.cpp
     organize_engine.cpp
+    organize_engine_undo.cpp
     rom_bundler.cpp
     m3u_generator.cpp
     chd_converter.cpp
@@ -27,8 +30,10 @@ add_library(remus-core STATIC
     dat_parser.cpp
     header_detector.cpp
     verification_engine.cpp
+    verification_engine_report.cpp
     verification_storage.cpp
     patch_engine.cpp
+    patch_engine_apply.cpp
     logging_categories.cpp
     system_resolver.cpp
 )

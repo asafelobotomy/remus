@@ -1,5 +1,7 @@
 #include "export_controller.h"
 #include "../../core/system_resolver.h"
+#include "../../core/constants/confidence.h"
+#include "../../core/constants/exports.h"
 #include "../../core/constants/systems.h"
 
 #include <QDir>
@@ -26,46 +28,10 @@ namespace Remus {
 
 QString ExportController::getRetroArchSystemName(const QString &system) const
 {
-    // Map system IDs to RetroArch playlist names (using libretro naming conventions)
-    using namespace Constants::Systems;
-    static const QHash<int, QString> mapping = {
-        {ID_NES, "Nintendo - Nintendo Entertainment System"},
-        {ID_SNES, "Nintendo - Super Nintendo Entertainment System"},
-        {ID_N64, "Nintendo - Nintendo 64"},
-        {ID_GB, "Nintendo - Game Boy"},
-        {ID_GBC, "Nintendo - Game Boy Color"},
-        {ID_GBA, "Nintendo - Game Boy Advance"},
-        {ID_NDS, "Nintendo - Nintendo DS"},
-        {ID_GAMECUBE, "Nintendo - GameCube"},
-        {ID_WII, "Nintendo - Wii"},
-        {ID_GENESIS, "Sega - Mega Drive - Genesis"},
-        {ID_MASTER_SYSTEM, "Sega - Master System - Mark III"},
-        {ID_GAME_GEAR, "Sega - Game Gear"},
-        {ID_SATURN, "Sega - Saturn"},
-        {ID_DREAMCAST, "Sega - Dreamcast"},
-        {ID_SEGA_CD, "Sega - Mega-CD - Sega CD"},
-        {ID_32X, "Sega - 32X"},
-        {ID_PSX, "Sony - PlayStation"},
-        {ID_PS2, "Sony - PlayStation 2"},
-        {ID_PSP, "Sony - PlayStation Portable"},
-        {ID_PSVITA, "Sony - PlayStation Vita"},
-        {ID_TURBOGRAFX16, "NEC - PC Engine - TurboGrafx 16"},
-        {ID_TURBOGRAFX_CD, "NEC - PC Engine CD - TurboGrafx-CD"},
-        {ID_NEO_GEO, "SNK - Neo Geo"},
-        {ID_NGP, "SNK - Neo Geo Pocket"},
-        {ID_ARCADE, "MAME"},
-        {ID_ATARI_2600, "Atari - 2600"},
-        {ID_ATARI_7800, "Atari - 7800"},
-        {ID_LYNX, "Atari - Lynx"},
-        {ID_ATARI_JAGUAR, "Atari - Jaguar"},
-        {ID_WONDERSWAN, "Bandai - WonderSwan"},
-        {ID_VIRTUAL_BOY, "Nintendo - Virtual Boy"}
-    };
-    
-    // Convert system name to ID, then lookup RetroArch name
     int systemId = SystemResolver::systemIdByName(system);
-    if (systemId > 0 && mapping.contains(systemId)) {
-        return mapping.value(systemId);
+    const QString mappedName = Constants::Exports::retroArchPlaylistNameForSystemId(systemId);
+    if (!mappedName.isEmpty()) {
+        return mappedName;
     }
     
     // Fallback: return the input system name
@@ -87,7 +53,7 @@ int ExportController::exportToRetroArch(const QString &outputDir,
     m_exporting = true;
     m_cancelRequested = false;
     emit exportingChanged();
-    emit exportStarted("RetroArch");
+    emit exportStarted(Constants::Exports::DisplayNames::RETROARCH);
     
     QDir dir(outputDir);
     if (!dir.exists()) {
@@ -127,7 +93,7 @@ int ExportController::exportToRetroArch(const QString &outputDir,
     m_lastExportPath = outputDir;
     emit exportingChanged();
     emit lastExportPathChanged();
-    emit exportCompleted("RetroArch", playlistsCreated, outputDir);
+    emit exportCompleted(Constants::Exports::DisplayNames::RETROARCH, playlistsCreated, outputDir);
     
     return playlistsCreated;
 }
@@ -137,11 +103,11 @@ QString ExportController::createRetroArchPlaylist(const QString &system,
                                                     bool includeUnmatched)
 {
     QString playlistName = getRetroArchSystemName(system);
-    QString filename = sanitizePlaylistName(playlistName) + ".lpl";
+    QString filename = sanitizePlaylistName(playlistName) + Constants::Exports::Files::PLAYLIST_EXTENSION;
     QString outputPath = outputDir + "/" + filename;
     
     // Query games for this system
-    int minConfidence = includeUnmatched ? 0 : 60;
+    int minConfidence = includeUnmatched ? 0 : static_cast<int>(Constants::Confidence::Thresholds::MEDIUM);
     
     QSqlQuery query(m_db->database());
     query.prepare(R"(
@@ -166,15 +132,15 @@ QString ExportController::createRetroArchPlaylist(const QString &system,
         QJsonObject item;
         item["path"] = query.value("filepath").toString();
         item["label"] = query.value("title").toString();
-        item["core_path"] = "DETECT";
-        item["core_name"] = "DETECT";
+        item["core_path"] = Constants::Exports::RetroArch::CORE_DETECT;
+        item["core_name"] = Constants::Exports::RetroArch::CORE_DETECT;
         
         QString crc = query.value("crc32").toString();
         if (!crc.isEmpty()) {
             item["crc32"] = crc.toUpper() + "|crc";
         }
         
-        item["db_name"] = playlistName + ".lpl";
+        item["db_name"] = playlistName + Constants::Exports::Files::PLAYLIST_EXTENSION;
         
         items.append(item);
     }
@@ -185,7 +151,7 @@ QString ExportController::createRetroArchPlaylist(const QString &system,
     
     // Build playlist JSON
     QJsonObject playlist;
-    playlist["version"] = "1.5";
+    playlist["version"] = Constants::Exports::RetroArch::PLAYLIST_VERSION;
     playlist["default_core_path"] = "";
     playlist["default_core_name"] = "";
     playlist["label_display_mode"] = 0;
@@ -212,16 +178,7 @@ QString ExportController::getRetroArchThumbnailPath(const QString &playlistName,
                                                       const QString &gameTitle,
                                                       const QString &type)
 {
-    QString typePath;
-    if (type == "boxart" || type == "cover") {
-        typePath = "Named_Boxarts";
-    } else if (type == "screenshot" || type == "snap") {
-        typePath = "Named_Snaps";
-    } else if (type == "title" || type == "titlescreen") {
-        typePath = "Named_Titles";
-    } else {
-        typePath = "Named_Boxarts";
-    }
+    const QString typePath = Constants::Exports::retroArchThumbnailDirectory(type);
     
     // Sanitize game title for filename
     QString sanitizedTitle = gameTitle;

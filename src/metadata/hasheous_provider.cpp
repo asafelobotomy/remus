@@ -2,15 +2,13 @@
 #include "../core/constants/providers.h"
 #include "../core/constants/settings.h"
 #include "../core/constants/api.h"
+#include "../core/constants/errors.h"
 #include "../core/system_resolver.h"
 #include "../core/constants/systems.h"
 #include <QNetworkRequest>
-#include <QNetworkReply>
 #include <QUrlQuery>
 #include <QJsonDocument>
 #include <QJsonArray>
-#include <QEventLoop>
-#include <QTimer>
 #include <QDebug>
 #include <QSet>
 #include <QTimeZone>
@@ -36,15 +34,12 @@ bool isMetadataProxyEndpoint(const QString &path)
 }
 
 HasheousProvider::HasheousProvider(QObject *parent)
-    : MetadataProvider(parent)
-    , m_network(new QNetworkAccessManager(this))
-    , m_rateLimiter(new RateLimiter(this))
+    : HttpMetadataProvider(Constants::Network::HASHEOUS_RATE_LIMIT_MS, parent)
 {
     QSettings settings;
     m_clientApiKey = settings.value(Constants::Settings::Providers::HASHEOUS_CLIENT_API_KEY)
                          .toString().trimmed();
 
-    m_rateLimiter->setInterval(Constants::Network::HASHEOUS_RATE_LIMIT_MS);
     qInfo() << "Hasheous provider initialized (hash lookup enabled; MetadataProxy"
             << (metadataProxyEnabled() ? "enabled" : "disabled") << ")";
 }
@@ -72,52 +67,35 @@ QJsonObject HasheousProvider::makeRequest(const QString &endpoint, const QUrlQue
         request.setRawHeader("X-Client-API-Key", m_clientApiKey.toUtf8());
     }
     
-    QNetworkReply *reply = m_network->get(request);
+    QNetworkReply *reply = m_networkManager->get(request);
+    ApiResponse apiResp = waitForReply(reply, Constants::Network::HASHEOUS_TIMEOUT_MS);
     
-    QEventLoop loop;
-    QTimer timeout;
-    timeout.setSingleShot(true);
-    timeout.setInterval(Constants::Network::HASHEOUS_TIMEOUT_MS);
-    connect(reply, &QNetworkReply::finished, &loop, &QEventLoop::quit);
-    connect(&timeout, &QTimer::timeout, &loop, &QEventLoop::quit);
-    timeout.start();
-    loop.exec();
-    
-    QJsonObject result;
-    
-    if (!timeout.isActive()) {
-        qWarning() << "Hasheous GET timeout:" << url.toString();
-        emit errorOccurred("Hasheous request timeout");
-        reply->deleteLater();
-        return result;
-    }
-    timeout.stop();
-    
-    if (reply->error() == QNetworkReply::NoError) {
-        QByteArray data = reply->readAll();
-        QJsonDocument doc = QJsonDocument::fromJson(data);
-        result = doc.object();
-    } else {
-        int statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
-        const bool metadataProxyRequest = isMetadataProxyEndpoint(url.path());
-        if (statusCode == 404) {
-            qDebug() << "Hasheous API 404 (expected miss):" << url.toString();
-        } else if (metadataProxyRequest && (statusCode == 401 || statusCode == 403)) {
-            if (!m_metadataProxyDisabled) {
-                qInfo() << "Hasheous: MetadataProxy disabled after authorization failure"
-                        << "Status:" << statusCode;
-            }
-            m_metadataProxyDisabled = true;
+    if (!apiResp.success) {
+        if (apiResp.error == Constants::Errors::MetadataProvider::REQUEST_TIMEOUT) {
+            qWarning() << "Hasheous GET timeout:" << url.toString();
+            emit errorOccurred("Hasheous request timeout");
         } else {
-            qWarning() << "Hasheous API error:" << reply->errorString()
-                        << "Status:" << statusCode
-                        << "URL:" << url.toString();
-            emit errorOccurred("Hasheous API error: " + reply->errorString());
+            const bool metadataProxyRequest = isMetadataProxyEndpoint(url.path());
+            if (apiResp.httpStatusCode == Constants::Network::HTTP_NOT_FOUND) {
+                qDebug() << "Hasheous API 404 (expected miss):" << url.toString();
+            } else if (metadataProxyRequest && (apiResp.httpStatusCode == Constants::Network::HTTP_UNAUTHORIZED || apiResp.httpStatusCode == Constants::Network::HTTP_FORBIDDEN)) {
+                if (!m_metadataProxyDisabled) {
+                    qInfo() << "Hasheous: MetadataProxy disabled after authorization failure"
+                            << "Status:" << apiResp.httpStatusCode;
+                }
+                m_metadataProxyDisabled = true;
+            } else {
+                qWarning() << "Hasheous API error:" << apiResp.error
+                            << "Status:" << apiResp.httpStatusCode
+                            << "URL:" << url.toString();
+                emit errorOccurred("Hasheous API error: " + apiResp.error);
+            }
         }
+        return QJsonObject();
     }
     
-    reply->deleteLater();
-    return result;
+    QJsonDocument doc = QJsonDocument::fromJson(apiResp.data);
+    return doc.object();
 }
 
 bool HasheousProvider::metadataProxyEnabled() const
@@ -139,47 +117,29 @@ QJsonObject HasheousProvider::makePostRequest(const QString &endpoint, const QJs
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
     
     QByteArray postData = QJsonDocument(body).toJson(QJsonDocument::Compact);
-    QNetworkReply *reply = m_network->post(request, postData);
+    QNetworkReply *reply = m_networkManager->post(request, postData);
+    ApiResponse apiResp = waitForReply(reply, Constants::Network::HASHEOUS_TIMEOUT_MS);
     
-    QEventLoop loop;
-    QTimer timeout;
-    timeout.setSingleShot(true);
-    timeout.setInterval(Constants::Network::HASHEOUS_TIMEOUT_MS);
-    connect(reply, &QNetworkReply::finished, &loop, &QEventLoop::quit);
-    connect(&timeout, &QTimer::timeout, &loop, &QEventLoop::quit);
-    timeout.start();
-    loop.exec();
-    
-    QJsonObject result;
-    
-    if (!timeout.isActive()) {
-        qWarning() << "Hasheous POST timeout:" << url.toString();
-        emit errorOccurred("Hasheous request timeout");
-        reply->deleteLater();
-        return result;
-    }
-    timeout.stop();
-    
-    if (reply->error() == QNetworkReply::NoError) {
-        QByteArray data = reply->readAll();
-        QJsonDocument doc = QJsonDocument::fromJson(data);
-        if (doc.isObject()) {
-            result = doc.object();
-        }
-    } else {
-        int statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
-        if (statusCode == 404) {
+    if (!apiResp.success) {
+        if (apiResp.error == Constants::Errors::MetadataProvider::REQUEST_TIMEOUT) {
+            qWarning() << "Hasheous POST timeout:" << url.toString();
+            emit errorOccurred("Hasheous request timeout");
+        } else if (apiResp.httpStatusCode == Constants::Network::HTTP_NOT_FOUND) {
             qDebug() << "Hasheous POST 404 (expected miss):" << url.toString();
         } else {
-            qWarning() << "Hasheous POST error:" << reply->errorString()
-                        << "Status:" << statusCode
+            qWarning() << "Hasheous POST error:" << apiResp.error
+                        << "Status:" << apiResp.httpStatusCode
                         << "URL:" << url.toString();
-            emit errorOccurred("Hasheous API error: " + reply->errorString());
+            emit errorOccurred("Hasheous API error: " + apiResp.error);
         }
+        return QJsonObject();
     }
     
-    reply->deleteLater();
-    return result;
+    QJsonDocument doc = QJsonDocument::fromJson(apiResp.data);
+    if (doc.isObject()) {
+        return doc.object();
+    }
+    return QJsonObject();
 }
 
 GameMetadata HasheousProvider::parseGameJson(const QJsonObject &json) const

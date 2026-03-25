@@ -1,4 +1,5 @@
 #include "m3u_generator.h"
+#include "constants/files.h"
 #include <QFile>
 #include <QFileInfo>
 #include <QDir>
@@ -124,12 +125,12 @@ int M3UGenerator::generateAll(const QString &systemName, const QString &outputDi
         // Determine output path
         QString m3uPath;
         if (!outputDir.isEmpty()) {
-            m3uPath = QDir(outputDir).filePath(baseTitle + ".m3u");
+            m3uPath = QDir(outputDir).filePath(baseTitle + Constants::Files::M3U);
         } else {
             // Use same directory as first disc
             if (!discPaths.isEmpty()) {
                 QFileInfo firstDisc(discPaths.first());
-                m3uPath = firstDisc.absoluteDir().filePath(baseTitle + ".m3u");
+                m3uPath = firstDisc.absoluteDir().filePath(baseTitle + Constants::Files::M3U);
             }
         }
 

@@ -1,5 +1,6 @@
 #include "database.h"
 #include "patched_rom_parser.h"
+#include "constants/file_types.h"
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QVariant>
@@ -38,7 +39,7 @@ int Database::insertFile(const FileRecord &record)
         ? record.archiveInternalPath
         : record.filename;
     const PatchedRomInfo patchedInfo = PatchedRomParser::parse(classificationName);
-    const bool hasExplicitClassification = record.fileType != QStringLiteral("official") ||
+    const bool hasExplicitClassification = !Constants::FileTypes::isOfficial(record.fileType) ||
         record.isPatched || !record.patchName.isEmpty();
     const QString baseTitle = record.baseTitle.isEmpty() ? patchedInfo.baseTitle : record.baseTitle;
     const QString fileType = hasExplicitClassification ? record.fileType : patchedInfo.fileType;

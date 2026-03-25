@@ -128,6 +128,9 @@ inline constexpr int HTTP_UNAUTHORIZED = 401;
 /// HTTP status code: Forbidden (don't retry, skip provider)
 inline constexpr int HTTP_FORBIDDEN = 403;
 
+/// HTTP status code: Too Many Requests (back off and retry later)
+inline constexpr int HTTP_TOO_MANY_REQUESTS = 429;
+
 /// HTTP status code: Not Found (don't retry)
 inline constexpr int HTTP_NOT_FOUND = 404;
 

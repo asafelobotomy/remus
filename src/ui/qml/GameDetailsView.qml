@@ -314,12 +314,7 @@ Page {
 
                         Label {
                             text: "Confidence: " + (gameData.confidence || 0) + "%"
-                            color: {
-                                var c = gameData.confidence || 0
-                                if (c >= 90) return theme.success
-                                if (c >= 60) return theme.warning
-                                return theme.danger
-                            }
+                            color: theme.confidenceColor(gameData.confidence || 0)
                         }
                     }
 

@@ -26,6 +26,8 @@
 #include "settings.h"
 #include "ui_theme.h"
 #include "confidence.h"
+#include "file_types.h"
+#include "files.h"
 #include "hash_algorithms.h"
 #include "match_methods.h"
 #include "api.h"
@@ -33,6 +35,8 @@
 #include "network.h"
 #include "engines.h"
 #include "errors.h"
+#include "exports.h"
+#include "cli.h"
 
 namespace Remus {
 namespace Constants {
@@ -48,7 +52,7 @@ namespace Constants {
  *   - 2: Added templates and settings constants (Phase 3)
  *   - 3: Added API, database schema, network, engines, and error constants
  */
-inline constexpr int CONSTANTS_VERSION = 5;
+inline constexpr int CONSTANTS_VERSION = 6;
 
 /**
  * @brief Application organization name for QSettings

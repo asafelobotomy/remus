@@ -208,7 +208,7 @@ private:
                                    const QString &outputPath);
 
     /**
-     * @brief Get default output path (replace extension with .chd)
+        * @brief Get default output path using the requested target extension
      */
     QString getDefaultOutputPath(const QString &inputPath, const QString &targetExt = "chd");
 

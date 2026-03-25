@@ -40,7 +40,7 @@ struct GameMetadata {
     
     // Match quality (set when matched via orchestrator)
     float matchScore = 0.0f;     // 0.0 to 1.0 (1.0 = perfect hash match)
-    QString matchMethod;         // "hash", "name-exact", "name-fuzzy"
+    QString matchMethod;         // Canonicalized via Constants::MatchMethods
 };
 
 /**

@@ -1,10 +1,8 @@
 #ifndef REMUS_IGDB_PROVIDER_H
 #define REMUS_IGDB_PROVIDER_H
 
-#include "metadata_provider.h"
-#include "rate_limiter.h"
+#include "http_metadata_provider.h"
 #include "../core/constants/providers.h"
-#include <QNetworkAccessManager>
 
 namespace Remus {
 
@@ -16,7 +14,7 @@ namespace Remus {
  * 
  * API Docs: https://api-docs.igdb.com/
  */
-class IGDBProvider : public MetadataProvider {
+class IGDBProvider : public HttpMetadataProvider {
     Q_OBJECT
 
 public:
@@ -38,19 +36,11 @@ public:
     bool isAvailable() override;
 
 private:
-    struct ApiResponse {
-        bool success = false;
-        QString error;
-        QByteArray data;
-    };
-
     bool authenticate();
     ApiResponse makeRequest(const QString &endpoint, const QString &body);
     GameMetadata parseGameJson(const QJsonObject &game);
     QString mapSystemToIGDB(const QString &system);
 
-    QNetworkAccessManager *m_networkManager;
-    RateLimiter *m_rateLimiter;
     QString m_clientId;
     QString m_clientSecret;
     QString m_accessToken;

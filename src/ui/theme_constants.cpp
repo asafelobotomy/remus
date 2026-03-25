@@ -5,6 +5,19 @@
 
 namespace Remus {
 
+namespace {
+
+QString lightVariantFor(const char *darkColor)
+{
+    if (darkColor == Constants::UI::Colors::SUCCESS) return QString::fromLatin1(Constants::UI::Colors::SUCCESS_LIGHT);
+    if (darkColor == Constants::UI::Colors::WARNING) return QString::fromLatin1(Constants::UI::Colors::WARNING_LIGHT);
+    if (darkColor == Constants::UI::Colors::DANGER) return QString::fromLatin1(Constants::UI::Colors::DANGER_LIGHT);
+    if (darkColor == Constants::UI::Colors::INFO) return QString::fromLatin1(Constants::UI::Colors::INFO_LIGHT);
+    return QString::fromLatin1(darkColor);
+}
+
+}
+
 ThemeConstants::ThemeConstants(QObject *parent)
     : QObject(parent)
 {
@@ -93,6 +106,20 @@ QString ThemeConstants::info() const {
     return m_darkMode
         ? QString::fromLatin1(Constants::UI::Colors::INFO)
         : QString::fromLatin1(Constants::UI::Colors::INFO_LIGHT);
+}
+
+int ThemeConstants::confidenceHigh() const {
+    return static_cast<int>(Constants::Confidence::Thresholds::HIGH);
+}
+
+int ThemeConstants::confidenceMedium() const {
+    return static_cast<int>(Constants::Confidence::Thresholds::MEDIUM);
+}
+
+QString ThemeConstants::confidenceColor(int confidence) const {
+    const char *darkColor = Constants::UI::getConfidenceColor(static_cast<float>(confidence));
+    return m_darkMode ? QString::fromLatin1(darkColor)
+                      : lightVariantFor(darkColor);
 }
 
 QString ThemeConstants::textPrimary() const {

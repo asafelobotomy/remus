@@ -2,6 +2,8 @@
 
 #include <QStringList>
 
+#include "../core/constants/constants.h"
+
 namespace Remus::Cli {
 
 struct SessionState {
@@ -14,7 +16,7 @@ struct SessionState {
 
     QString lastChdInput;
     QString lastChdOutputDir;
-    QString lastChdCodec = "auto";
+    QString lastChdCodec = QString::fromLatin1(Constants::Cli::Defaults::CHD_CODEC);
 
     QString lastArchivePath;
     QString lastArchiveOut;
@@ -24,9 +26,9 @@ struct SessionState {
     QString lastPatchOutput;
     QString lastPatchOriginal;
     QString lastPatchModified;
-    QString lastPatchFormat = "bps";
+    QString lastPatchFormat = QString::fromLatin1(Constants::Cli::Defaults::PATCH_FORMAT);
 
-    QString lastExportFormat = "csv";
+    QString lastExportFormat = Constants::Cli::Defaults::EXPORT_FORMAT;
     QString lastExportPath;
     QString lastExportSystems;
     bool lastExportDryRun = true;

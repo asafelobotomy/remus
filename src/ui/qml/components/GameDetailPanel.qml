@@ -164,13 +164,13 @@ Rectangle {
         Rectangle {
             Layout.fillWidth: true
             height: matchColumn.implicitHeight + 20
-            color: matchConfidence >= 80 ? theme.success + "20" : 
-                   matchConfidence >= 50 ? theme.warning + "20" : theme.danger + "20"
+             color: matchConfidence >= theme.confidenceHigh ? theme.success + "20" : 
+                 matchConfidence >= theme.confidenceMedium ? theme.warning + "20" : theme.danger + "20"
             radius: 8
             visible: hasSelection && matchedTitle !== ""
             border.width: 1
-            border.color: matchConfidence >= 80 ? theme.success : 
-                          matchConfidence >= 50 ? theme.warning : theme.danger
+             border.color: matchConfidence >= theme.confidenceHigh ? theme.success : 
+                     matchConfidence >= theme.confidenceMedium ? theme.warning : theme.danger
             
             ColumnLayout {
                 id: matchColumn
@@ -194,8 +194,8 @@ Rectangle {
                         text: matchConfidence + "%"
                         font.bold: true
                         font.pixelSize: 14
-                        color: matchConfidence >= 80 ? theme.success : 
-                               matchConfidence >= 50 ? theme.warning : theme.danger
+                        color: matchConfidence >= theme.confidenceHigh ? theme.success : 
+                               matchConfidence >= theme.confidenceMedium ? theme.warning : theme.danger
                     }
                 }
                 

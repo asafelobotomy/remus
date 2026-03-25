@@ -550,8 +550,8 @@ void showBrowser(const std::string &dbPath)
             // Match confidence
             if (item.matchConfidence >= 0) {
                 int cp = CP_GOOD;
-                if (item.matchConfidence < 60) cp = CP_BAD;
-                else if (item.matchConfidence < 90) cp = CP_WARN;
+                if (item.matchConfidence < static_cast<int>(Constants::Confidence::Thresholds::MEDIUM)) cp = CP_BAD;
+                else if (item.matchConfidence < static_cast<int>(Constants::Confidence::Thresholds::HIGH)) cp = CP_WARN;
 
                 char mbuf[8];
                 snprintf(mbuf, sizeof(mbuf), "%d%%", item.matchConfidence);
@@ -812,7 +812,7 @@ SessionState InteractiveSession::loadState()
     state.lastDryRun = settings.value("dryRun", false).toBool();
     state.lastChdInput = settings.value("chdInput").toString();
     state.lastChdOutputDir = settings.value("chdOutputDir").toString();
-    state.lastChdCodec = settings.value("chdCodec", "auto").toString();
+    state.lastChdCodec = settings.value("chdCodec", QString::fromLatin1(Constants::Cli::Defaults::CHD_CODEC)).toString();
     state.lastArchivePath = settings.value("archivePath").toString();
     state.lastArchiveOut = settings.value("archiveOut").toString();
     state.lastPatchBase = settings.value("patchBase").toString();
@@ -820,8 +820,8 @@ SessionState InteractiveSession::loadState()
     state.lastPatchOutput = settings.value("patchOutput").toString();
     state.lastPatchOriginal = settings.value("patchOriginal").toString();
     state.lastPatchModified = settings.value("patchModified").toString();
-    state.lastPatchFormat = settings.value("patchFormat", "bps").toString();
-    state.lastExportFormat = settings.value("exportFormat", "csv").toString();
+    state.lastPatchFormat = settings.value("patchFormat", QString::fromLatin1(Constants::Cli::Defaults::PATCH_FORMAT)).toString();
+    state.lastExportFormat = settings.value("exportFormat", Constants::Cli::Defaults::EXPORT_FORMAT).toString();
     state.lastExportPath = settings.value("exportPath").toString();
     state.lastExportSystems = settings.value("exportSystems").toString();
     state.lastExportDryRun = settings.value("exportDryRun", true).toBool();
@@ -914,12 +914,12 @@ InteractiveResult InteractiveSession::run()
             }
             bool dryRun = promptYesNo("Dry run (preview only, no file changes)?", state.lastDryRun);
 
-            result.args << "remus-cli";
+            result.args << Constants::Cli::APPLICATION_NAME;
             result.args << "--scan" << QString::fromStdString(scanPath);
             if (doHash) result.args << "--hash";
             if (doMatch) result.args << "--match";
             if (doOrganize) result.args << "--organize" << QString::fromStdString(organizeDest);
-            if (dryRun) result.args << "--dry-run-all";
+            if (dryRun) result.args << "--" + Constants::Cli::Options::DRY_RUN_ALL;
             result.valid = confirmArgs(result.args);
             if (result.valid) {
                 state.lastScanPath = QString::fromStdString(scanPath);
@@ -946,10 +946,10 @@ InteractiveResult InteractiveSession::run()
             std::string tpl = promptText("Naming template (blank = default)", state.lastTemplate.toStdString());
             bool dryRun = promptYesNo("Dry run?", true);
 
-            result.args << "remus-cli";
+            result.args << Constants::Cli::APPLICATION_NAME;
             result.args << "--organize" << QString::fromStdString(dest);
             if (!tpl.empty()) result.args << "--template" << QString::fromStdString(tpl);
-            if (dryRun) result.args << "--dry-run-all";
+            if (dryRun) result.args << "--" + Constants::Cli::Options::DRY_RUN_ALL;
             result.valid = confirmArgs(result.args);
             if (result.valid) {
                 state.lastOrganizeDest = QString::fromStdString(dest);
@@ -962,7 +962,13 @@ InteractiveResult InteractiveSession::run()
             break;
         }
         case 4: { // Export
-            const std::vector<std::string> formats = {"retroarch", "emustation", "launchbox", "csv", "json"};
+            const std::vector<std::string> formats = {
+                Constants::Exports::Formats::RETROARCH.toStdString(),
+                Constants::Exports::Formats::EMUSTATION.toStdString(),
+                Constants::Exports::Formats::LAUNCHBOX.toStdString(),
+                Constants::Exports::Formats::CSV.toStdString(),
+                Constants::Exports::Formats::JSON.toStdString()
+            };
             int fmtIndex = 0;
             for (size_t i = 0; i < formats.size(); ++i)
                 if (state.lastExportFormat.toStdString() == formats[i]) fmtIndex = static_cast<int>(i);
@@ -971,11 +977,11 @@ InteractiveResult InteractiveSession::run()
             std::string systems = promptText("Systems (comma-separated, blank = all)", state.lastExportSystems.toStdString());
             bool dryRun = promptYesNo("Dry run?", state.lastExportDryRun);
 
-            result.args << "remus-cli";
-            result.args << "--export" << QString::fromStdString(formats[fmtChoice]);
-            if (!exportPath.empty()) result.args << "--export-path" << QString::fromStdString(exportPath);
-            if (!systems.empty()) result.args << "--export-systems" << QString::fromStdString(systems);
-            if (dryRun) result.args << "--dry-run-all";
+            result.args << Constants::Cli::APPLICATION_NAME;
+            result.args << "--" + Constants::Cli::Options::EXPORT << QString::fromStdString(formats[fmtChoice]);
+            if (!exportPath.empty()) result.args << "--" + Constants::Cli::Options::EXPORT_PATH << QString::fromStdString(exportPath);
+            if (!systems.empty()) result.args << "--" + Constants::Cli::Options::EXPORT_SYSTEMS << QString::fromStdString(systems);
+            if (dryRun) result.args << "--" + Constants::Cli::Options::DRY_RUN_ALL;
             result.valid = confirmArgs(result.args);
             if (result.valid) {
                 state.lastExportFormat = QString::fromStdString(formats[fmtChoice]);
@@ -996,11 +1002,11 @@ InteractiveResult InteractiveSession::run()
             const std::vector<std::string> codecs = {"auto", "lzma", "zlib", "flac", "huff"};
             bool dryRun = promptYesNo("Dry run?", true);
 
-            result.args << "remus-cli";
+            result.args << Constants::Cli::APPLICATION_NAME;
             result.args << "--convert-chd" << QString::fromStdString(input);
             result.args << "--chd-codec" << QString::fromStdString(codecs[codecChoice]);
             if (!outputDir.empty()) result.args << "--output-dir" << QString::fromStdString(outputDir);
-            if (dryRun) result.args << "--dry-run-all";
+            if (dryRun) result.args << "--" + Constants::Cli::Options::DRY_RUN_ALL;
             result.valid = confirmArgs(result.args);
             if (result.valid) {
                 state.lastChdInput = QString::fromStdString(input);
@@ -1019,10 +1025,10 @@ InteractiveResult InteractiveSession::run()
             std::string outDir = promptText("Output directory (blank = alongside)");
             bool dryRun = promptYesNo("Dry run?", true);
 
-            result.args << "remus-cli";
+            result.args << Constants::Cli::APPLICATION_NAME;
             result.args << "--chd-extract" << QString::fromStdString(chd);
             if (!outDir.empty()) result.args << "--output-dir" << QString::fromStdString(outDir);
-            if (dryRun) result.args << "--dry-run-all";
+            if (dryRun) result.args << "--" + Constants::Cli::Options::DRY_RUN_ALL;
             result.valid = confirmArgs(result.args);
             if (result.valid) {
                 state.lastChdInput = QString::fromStdString(chd);
@@ -1040,10 +1046,10 @@ InteractiveResult InteractiveSession::run()
             std::string outDir = promptText("Output directory (blank = alongside)");
             bool dryRun = promptYesNo("Dry run?", true);
 
-            result.args << "remus-cli";
+            result.args << Constants::Cli::APPLICATION_NAME;
             result.args << "--extract-archive" << QString::fromStdString(archive);
             if (!outDir.empty()) result.args << "--output-dir" << QString::fromStdString(outDir);
-            if (dryRun) result.args << "--dry-run-all";
+            if (dryRun) result.args << "--" + Constants::Cli::Options::DRY_RUN_ALL;
             result.valid = confirmArgs(result.args);
             if (result.valid) {
                 state.lastArchivePath = QString::fromStdString(archive);
@@ -1063,11 +1069,11 @@ InteractiveResult InteractiveSession::run()
             std::string output = promptText("Output file (blank = auto)");
             bool dryRun = promptYesNo("Dry run?", true);
 
-            result.args << "remus-cli";
+            result.args << Constants::Cli::APPLICATION_NAME;
             result.args << "--patch-apply" << QString::fromStdString(base);
             result.args << "--patch-patch" << QString::fromStdString(patch);
             if (!output.empty()) result.args << "--patch-output" << QString::fromStdString(output);
-            if (dryRun) result.args << "--dry-run-all";
+            if (dryRun) result.args << "--" + Constants::Cli::Options::DRY_RUN_ALL;
             result.valid = confirmArgs(result.args);
             if (result.valid) {
                 state.lastPatchBase = QString::fromStdString(base);
@@ -1090,12 +1096,12 @@ InteractiveResult InteractiveSession::run()
             const std::vector<std::string> formats = {"bps", "ips", "ups", "xdelta", "ppf"};
             bool dryRun = promptYesNo("Dry run?", true);
 
-            result.args << "remus-cli";
+            result.args << Constants::Cli::APPLICATION_NAME;
             result.args << "--patch-create" << QString::fromStdString(modified);
             result.args << "--patch-original" << QString::fromStdString(original);
             result.args << "--patch-format" << QString::fromStdString(formats[fmtChoice]);
             if (!output.empty()) result.args << "--patch-patch" << QString::fromStdString(output);
-            if (dryRun) result.args << "--dry-run-all";
+            if (dryRun) result.args << "--" + Constants::Cli::Options::DRY_RUN_ALL;
             result.valid = confirmArgs(result.args);
             if (result.valid) {
                 state.lastPatchOriginal = QString::fromStdString(original);

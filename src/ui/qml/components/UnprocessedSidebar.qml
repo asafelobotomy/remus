@@ -361,12 +361,7 @@ ScrollView {
                             width: 40
                             height: 16
                             radius: 3
-                            color: {
-                                var conf = root.currentMatch ? root.currentMatch.confidence : 0
-                                if (conf >= 90) return theme.success
-                                if (conf >= 70) return theme.warning
-                                return theme.danger
-                            }
+                            color: theme.confidenceColor(root.currentMatch ? root.currentMatch.confidence : 0)
                             
                             Label {
                                 anchors.centerIn: parent

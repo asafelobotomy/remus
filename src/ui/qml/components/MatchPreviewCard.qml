@@ -70,8 +70,8 @@ Rectangle {
             width: 40
             height: 20
             radius: 4
-            color: root.confidence >= 80 ? theme.success :
-                   root.confidence >= 50 ? theme.warning : theme.textMuted
+             color: root.confidence >= theme.confidenceHigh ? theme.success :
+                 root.confidence >= theme.confidenceMedium ? theme.warning : theme.textMuted
             
             Label {
                 anchors.centerIn: parent

@@ -8,6 +8,7 @@
 #include <QDebug>
 #include <QRegularExpression>
 
+#include "constants/constants.h"
 #include "logging_categories.h"
 
 #undef qDebug
@@ -358,7 +359,7 @@ RomBundler::BundleResult RomBundler::bundle(const FileRecord            &file,
     }
 
     // ── 6. Determine output archive path ─────────────────────────────────────
-    const QString ext = (config.outputFormat == ArchiveFormat::SevenZip) ? ".7z" : ".zip";
+    const QString ext = (config.outputFormat == ArchiveFormat::SevenZip) ? Constants::Files::SEVEN_Z : Constants::Files::ZIP;
     const QString baseName = QFileInfo(file.filename).completeBaseName();
 
     const QString outputArchive = destDir.absoluteFilePath(baseName + ext);
@@ -384,7 +385,7 @@ RomBundler::BundleResult RomBundler::bundle(const FileRecord            &file,
     }
 
     // ── 9. Mark processed in database ────────────────────────────────────────
-    m_db.markFileProcessed(file.id, "bundled");
+    m_db.markFileProcessed(file.id, Constants::Engines::ProcessingStatus::BUNDLED);
     m_db.updateFilePath(file.id, outputArchive);
 
     result.success    = true;
@@ -469,7 +470,7 @@ RomBundler::BundleResult RomBundler::bundleStaged(
     }
 
     // ── 4. Determine output archive path ──────────────────────────────────────
-    const QString ext = (config.outputFormat == ArchiveFormat::SevenZip) ? ".7z" : ".zip";
+    const QString ext = (config.outputFormat == ArchiveFormat::SevenZip) ? Constants::Files::SEVEN_Z : Constants::Files::ZIP;
     const QString baseName = QFileInfo(patchedFile.filename).completeBaseName();
     const QString outputArchive = destDir.absoluteFilePath(baseName + ext);
 
@@ -493,7 +494,7 @@ RomBundler::BundleResult RomBundler::bundleStaged(
     }
 
     // ── 7. Mark the patched file as processed (NOT the base) ──────────────────
-    m_db.markFileProcessed(patchedFile.id, "bundled");
+    m_db.markFileProcessed(patchedFile.id, Constants::Engines::ProcessingStatus::BUNDLED);
     m_db.updateFilePath(patchedFile.id, outputArchive);
 
     result.success    = true;

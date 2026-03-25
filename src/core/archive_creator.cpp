@@ -1,5 +1,7 @@
 #include "archive_creator.h"
 
+#include "constants/files.h"
+
 #include <QDir>
 #include <QDirIterator>
 #include <QFileInfo>
@@ -177,7 +179,7 @@ QList<CompressionResult> ArchiveCreator::batchCompress(const QStringList &dirs,
     // Ensure output dir exists
     QDir().mkpath(outputDir);
 
-    QString ext = (format == ArchiveFormat::SevenZip) ? QStringLiteral(".7z") : QStringLiteral(".zip");
+    QString ext = (format == ArchiveFormat::SevenZip) ? Constants::Files::SEVEN_Z : Constants::Files::ZIP;
 
     int total = dirs.size();
     for (int i = 0; i < total; ++i) {

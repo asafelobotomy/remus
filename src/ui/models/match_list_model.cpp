@@ -138,8 +138,9 @@ void MatchListModel::confirmMatch(int index)
         }
         
         // Now store the match with 100% confidence (user confirmed)
-        bool success = m_db->insertMatch(match.fileId, gameId, 
-            Confidence::Thresholds::USER_CONFIRMED, "user_confirmed");
+        bool success = m_db->insertMatch(match.fileId, gameId,
+            Confidence::Thresholds::USER_CONFIRMED,
+            QString::fromLatin1(Constants::MatchMethods::MANUAL));
         
         if (success) {
             qDebug() << "Match confirmed for file" << match.fileId << "-> game" << gameId;

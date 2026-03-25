@@ -32,6 +32,14 @@ private slots:
     void testTemplateDefaults();
     void testTemplateVariables();
     void testSettingsDefaults();
+
+    // Expanded constants coverage
+    void testFileTypeHelpers();
+    void testFileExtensionHelpers();
+    void testExportMappings();
+    void testCliDefaults();
+    void testMatchMethodNormalization();
+    void testFileGlobPatterns();
 };
 
 // ============================================================================
@@ -256,6 +264,63 @@ void ConstantsTest::testSettingsDefaults() {
     QCOMPARE(QString(Settings::Organize::NAMING_TEMPLATE), QStringLiteral("organize/naming_template"));
     QCOMPARE(QString(Settings::Providers::SCREENSCRAPER_USERNAME), QStringLiteral("screenscraper/username"));
     QCOMPARE(Settings::Defaults::PROVIDER_PRIORITY, QStringLiteral("ScreenScraper (Primary)"));
+}
+
+void ConstantsTest::testFileTypeHelpers() {
+    QCOMPARE(FileTypes::OFFICIAL, QStringLiteral("official"));
+    QCOMPARE(FileTypes::HACK, QStringLiteral("hack"));
+    QVERIFY(FileTypes::isOfficial(QString()));
+    QVERIFY(FileTypes::isOfficial(FileTypes::OFFICIAL));
+    QVERIFY(!FileTypes::isOfficial(FileTypes::TRANSLATION));
+    QVERIFY(FileTypes::isPatchedVariant(FileTypes::HACK));
+    QCOMPARE(FileTypes::normalize(QStringLiteral(" Translation ")), FileTypes::TRANSLATION);
+}
+
+void ConstantsTest::testFileExtensionHelpers() {
+    QVERIFY(Files::isArchiveExtension(Files::ZIP));
+    QVERIFY(Files::isArchiveExtension(QStringLiteral(".TAR.GZ")));
+    QVERIFY(Files::isChdSourceExtension(Files::CUE));
+    QVERIFY(Files::isPrimaryDiscExtension(Files::M3U));
+    QVERIFY(!Files::isPrimaryDiscExtension(Files::BIN));
+    QCOMPARE(Files::displayPriority(Files::CUE), 0);
+    QCOMPARE(Files::displayPriority(Files::BIN), 10);
+    QCOMPARE(Files::CCD, QStringLiteral(".ccd"));
+    QCOMPARE(Files::MDS, QStringLiteral(".mds"));
+}
+
+void ConstantsTest::testExportMappings() {
+    QCOMPARE(Exports::Formats::CSV, QStringLiteral("csv"));
+    QCOMPARE(Exports::Files::ES_GAMELIST, QStringLiteral("gamelist.xml"));
+    QCOMPARE(Exports::retroArchPlaylistNameForSystemId(Systems::ID_NES),
+             QStringLiteral("Nintendo - Nintendo Entertainment System"));
+    QCOMPARE(Exports::launchBoxPlatformNameForSystemId(Systems::ID_PSX),
+             QStringLiteral("Sony PlayStation"));
+    QCOMPARE(Exports::retroArchThumbnailDirectory(QStringLiteral("snap")),
+             Exports::RetroArch::SNAPS_DIR);
+}
+
+void ConstantsTest::testCliDefaults() {
+    QCOMPARE(QString::fromLatin1(Cli::APPLICATION_NAME), QStringLiteral("remus-cli"));
+    QCOMPARE(Cli::Options::JSON, QStringLiteral("json"));
+    QCOMPARE(Cli::Defaults::EXPORT_FORMAT, Exports::Formats::CSV);
+    QCOMPARE(QString::fromLatin1(Cli::Defaults::PATCH_FORMAT), QStringLiteral("bps"));
+}
+
+void ConstantsTest::testFileGlobPatterns() {
+    QCOMPARE(Files::globPatternsFor(QStringList{Files::CUE, Files::CHD}),
+             QStringList({QStringLiteral("*.cue"), QStringLiteral("*.chd")}));
+    QVERIFY(Files::COMPRESSIBLE_DISC_EXTENSIONS.contains(Files::ISO));
+    QVERIFY(Files::SPACE_SCAN_EXTENSIONS.contains(Files::BIN));
+    QVERIFY(Files::M3U_SOURCE_EXTENSIONS.contains(Files::CHD));
+}
+
+void ConstantsTest::testMatchMethodNormalization() {
+    QCOMPARE(MatchMethods::canonicalize(QStringLiteral("exact")), QString::fromLatin1(MatchMethods::NAME));
+    QCOMPARE(MatchMethods::canonicalize(QString::fromLatin1(MatchMethods::EXACT_NAME)), QString::fromLatin1(MatchMethods::NAME));
+    QCOMPARE(MatchMethods::canonicalize(QString::fromLatin1(MatchMethods::NAME_FUZZY)), QString::fromLatin1(MatchMethods::FUZZY));
+    QCOMPARE(MatchMethods::canonicalize(QString::fromLatin1(MatchMethods::USER_CONFIRMED)), QString::fromLatin1(MatchMethods::MANUAL));
+    QVERIFY(MatchMethods::isHashBased(QString::fromLatin1(MatchMethods::HASH_PENDING)));
+    QVERIFY(MatchMethods::isNameBased(QStringLiteral("exact")));
 }
 
 QTEST_MAIN(ConstantsTest)

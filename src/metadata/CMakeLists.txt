@@ -1,5 +1,6 @@
 add_library(remus-metadata STATIC
     metadata_provider.cpp
+    http_metadata_provider.cpp
     screenscraper_provider.cpp
     thegamesdb_provider.cpp
     igdb_provider.cpp

@@ -69,33 +69,33 @@ void MatchingEngineTest::testConfidenceHashMatch() {
 }
 
 void MatchingEngineTest::testConfidenceExactNameMatch() {
-    int confidence = MatchingEngine::calculateConfidence("exact_name", 1.0f);
+    int confidence = MatchingEngine::calculateConfidence(MatchMethods::EXACT_NAME, 1.0f);
     QCOMPARE(confidence, static_cast<int>(ConfidenceLevel::High));
     QCOMPARE(confidence, 90);
 }
 
 void MatchingEngineTest::testConfidenceFuzzyMatchHigh() {
     // 85% similarity should be Medium confidence (70%)
-    int confidence = MatchingEngine::calculateConfidence("fuzzy_name", 0.85f);
+    int confidence = MatchingEngine::calculateConfidence(MatchMethods::FUZZY_NAME, 0.85f);
     QCOMPARE(confidence, static_cast<int>(ConfidenceLevel::Medium));
     QCOMPARE(confidence, 70);
 }
 
 void MatchingEngineTest::testConfidenceFuzzyMatchMedium() {
     // 70% similarity should be Low confidence (50%)
-    int confidence = MatchingEngine::calculateConfidence("fuzzy_name", 0.70f);
+    int confidence = MatchingEngine::calculateConfidence(MatchMethods::FUZZY_NAME, 0.70f);
     QCOMPARE(confidence, static_cast<int>(ConfidenceLevel::Low));
     QCOMPARE(confidence, 50);
 }
 
 void MatchingEngineTest::testConfidenceFuzzyMatchLow() {
     // 50% similarity is below Low threshold, should return 40
-    int confidence = MatchingEngine::calculateConfidence("fuzzy_name", 0.50f);
+    int confidence = MatchingEngine::calculateConfidence(MatchMethods::FUZZY_NAME, 0.50f);
     QCOMPARE(confidence, 40);
 }
 
 void MatchingEngineTest::testConfidenceManualMatch() {
-    int confidence = MatchingEngine::calculateConfidence(MatchMethods::HASH, 0.0f);
+    int confidence = MatchingEngine::calculateConfidence(MatchMethods::MANUAL, 0.0f);
     QCOMPARE(confidence, static_cast<int>(ConfidenceLevel::Perfect));
     QCOMPARE(confidence, 100);
 }

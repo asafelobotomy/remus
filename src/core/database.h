@@ -4,6 +4,8 @@
 #include <QObject>
 #include <QSqlDatabase>
 #include <QString>
+#include "constants/engines.h"
+#include "constants/file_types.h"
 #include "scanner.h"
 #include "system_detector.h"
 #include "system_resolver.h"
@@ -32,11 +34,11 @@ struct FileRecord {
     bool isPrimary = true;
     int parentFileId = 0;
     QString baseTitle;
-    QString fileType = QStringLiteral("official");
+    QString fileType = Constants::FileTypes::OFFICIAL;
     bool isPatched = false;
     QString patchName;
     bool isProcessed = false;
-    QString processingStatus = "unprocessed";
+    QString processingStatus = Constants::Engines::ProcessingStatus::UNPROCESSED;
     QDateTime lastModified;
     QDateTime scannedAt;
 };
@@ -56,7 +58,7 @@ public:
         QString patchFormat;
         QString baseTitle;
         QString patchName;
-        QString fileType = QStringLiteral("hack");
+        QString fileType = Constants::FileTypes::HACK;
         QString sourceChecksum;
         QString targetChecksum;
         QString patchChecksum;
@@ -77,7 +79,7 @@ public:
         QString modTitle;
         QString modAuthor;
         QString modVersion;
-        QString modType = QStringLiteral("hack");
+        QString modType = Constants::FileTypes::HACK;
         QString patchFormat;
         QString patchUrl;
         QString patchSha1;
@@ -349,7 +351,7 @@ public:
      * @param fileId File ID
      * @param gameId Game ID (metadata source ID)
      * @param confidence Match confidence (0-100)
-     * @param matchMethod Match method (hash/exact/fuzzy/user_confirmed)
+    * @param matchMethod Match method (hash/name/fuzzy/manual)
      * @return True if successful
      */
     bool insertMatch(int fileId, int gameId, float confidence, const QString &matchMethod,
@@ -382,7 +384,7 @@ public:
      * @param status Processing status ("processed", "failed", etc.)
      * @return True if successful
      */
-    bool markFileProcessed(int fileId, const QString &status = "processed");
+    bool markFileProcessed(int fileId, const QString &status = Constants::Engines::ProcessingStatus::PROCESSED);
     
     /**
      * @brief Mark a file as unprocessed

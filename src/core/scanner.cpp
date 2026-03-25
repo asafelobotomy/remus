@@ -7,6 +7,7 @@
 #include <QDebug>
 #include <QSet>
 #include "logging_categories.h"
+#include "constants/files.h"
 #include "constants/settings.h"
 
 #undef qDebug
@@ -155,10 +156,7 @@ bool Scanner::shouldScanArchiveEntry(const QString &internalPath) const
 
 bool Scanner::isArchiveExtension(const QString &extension) const
 {
-    static const QStringList archiveExtensions = {
-        ".zip", ".7z", ".rar", ".tar", ".tar.gz", ".tgz", ".tar.bz2", ".tbz2"
-    };
-    return archiveExtensions.contains(extension, Qt::CaseInsensitive);
+    return Constants::Files::isArchiveExtension(extension);
 }
 
 bool Scanner::isInExcludedDirectory(const QString &dirPath) const
@@ -321,7 +319,7 @@ void Scanner::linkBinToCue(QList<ScanResult> &results)
     QMap<QString, int> cueFiles;  // baseName -> index in results
     
     for (int i = 0; i < results.size(); ++i) {
-        if (results[i].extension == ".cue") {
+        if (results[i].extension == Constants::Files::CUE) {
             QString baseName = QFileInfo(results[i].path).completeBaseName();
             cueFiles[baseName] = i;
         }
@@ -329,7 +327,7 @@ void Scanner::linkBinToCue(QList<ScanResult> &results)
 
     // Link .bin files to their .cue parents
     for (int i = 0; i < results.size(); ++i) {
-        if (results[i].extension == ".bin" || results[i].extension == ".img") {
+        if (results[i].extension == Constants::Files::BIN || results[i].extension == Constants::Files::IMG) {
             QString baseName = QFileInfo(results[i].path).completeBaseName();
             
             // Check if matching .cue exists
@@ -405,7 +403,7 @@ void Scanner::linkGdiToTracks(QList<ScanResult> &results)
     }
 
     for (int i = 0; i < results.size(); ++i) {
-        if (results[i].extension != ".gdi") {
+        if (results[i].extension != Constants::Files::GDI) {
             continue;
         }
 
@@ -431,7 +429,7 @@ void Scanner::linkCcdToImage(QList<ScanResult> &results)
 {
     QMap<QString, int> ccdFiles;
     for (int i = 0; i < results.size(); ++i) {
-        if (results[i].extension == ".ccd") {
+        if (results[i].extension == Constants::Files::CCD) {
             QString key = QFileInfo(results[i].path).absolutePath() + "/" +
                           QFileInfo(results[i].path).completeBaseName();
             ccdFiles[key] = i;
@@ -439,7 +437,7 @@ void Scanner::linkCcdToImage(QList<ScanResult> &results)
     }
 
     for (int i = 0; i < results.size(); ++i) {
-        if (results[i].extension == ".img" || results[i].extension == ".sub") {
+        if (results[i].extension == Constants::Files::IMG || results[i].extension == Constants::Files::SUB) {
             QString key = QFileInfo(results[i].path).absolutePath() + "/" +
                           QFileInfo(results[i].path).completeBaseName();
             if (ccdFiles.contains(key)) {
@@ -455,7 +453,7 @@ void Scanner::linkMdsToMdf(QList<ScanResult> &results)
 {
     QMap<QString, int> mdsFiles;
     for (int i = 0; i < results.size(); ++i) {
-        if (results[i].extension == ".mds") {
+        if (results[i].extension == Constants::Files::MDS) {
             QString key = QFileInfo(results[i].path).absolutePath() + "/" +
                           QFileInfo(results[i].path).completeBaseName();
             mdsFiles[key] = i;
@@ -463,7 +461,7 @@ void Scanner::linkMdsToMdf(QList<ScanResult> &results)
     }
 
     for (int i = 0; i < results.size(); ++i) {
-        if (results[i].extension == ".mdf") {
+        if (results[i].extension == Constants::Files::MDF) {
             QString key = QFileInfo(results[i].path).absolutePath() + "/" +
                           QFileInfo(results[i].path).completeBaseName();
             if (mdsFiles.contains(key)) {

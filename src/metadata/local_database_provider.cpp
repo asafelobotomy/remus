@@ -1,4 +1,5 @@
 #include "local_database_provider.h"
+#include "../core/constants/match_methods.h"
 #include <QDir>
 #include <QFileInfo>
 #include <QRegularExpression>
@@ -291,7 +292,7 @@ GameMetadata LocalDatabaseProvider::datEntryToMetadata(const ClrMameProEntry &en
     
     // Match score and method
     metadata.matchScore = 1.0f; // Hash match is 100% confidence
-    metadata.matchMethod = "hash";
+    metadata.matchMethod = QString::fromLatin1(Remus::Constants::MatchMethods::HASH);
     
     return metadata;
 }

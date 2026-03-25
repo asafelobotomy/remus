@@ -1,5 +1,6 @@
 #include "match_service.h"
 
+#include "../core/constants/match_methods.h"
 #include "../core/matching_engine.h"
 #include "../core/database.h"
 
@@ -40,9 +41,11 @@ MatchService::MatchStats MatchService::matchAll(Database *db,
         Match match = m_engine->matchFile(fr.currentPath, hash,
                                           info.completeBaseName(), systemName);
 
-        if (match.matchMethod == "hash") {
+        const QString canonicalMethod = Constants::MatchMethods::canonicalize(match.matchMethod);
+
+        if (Constants::MatchMethods::isHashBased(canonicalMethod)) {
             stats.hashMatches++;
-        } else if (match.matchMethod.contains("name")) {
+        } else if (Constants::MatchMethods::isNameBased(canonicalMethod)) {
             stats.nameMatches++;
         } else {
             stats.noMatch++;
@@ -52,7 +55,7 @@ MatchService::MatchStats MatchService::matchAll(Database *db,
         if (match.confidence > 0) {
             int gameId = db->insertGame(match.title, fr.systemId, match.region);
             if (gameId > 0) {
-                db->insertMatch(fr.id, gameId, match.confidence, match.matchMethod, match.nameMatchScore);
+                db->insertMatch(fr.id, gameId, match.confidence, canonicalMethod, match.nameMatchScore);
             }
         }
 
@@ -85,7 +88,11 @@ Match MatchService::matchFile(Database *db, int fileId)
     if (match.confidence > 0) {
         int gameId = db->insertGame(match.title, fr.systemId, match.region);
         if (gameId > 0) {
-            db->insertMatch(fr.id, gameId, match.confidence, match.matchMethod, match.nameMatchScore);
+            db->insertMatch(fr.id,
+                            gameId,
+                            match.confidence,
+                            Constants::MatchMethods::canonicalize(match.matchMethod),
+                            match.nameMatchScore);
         }
     }
     return match;

@@ -9,6 +9,7 @@
 #include <QTextStream>
 #include <QDebug>
 #include <QDateTime>
+#include "../../core/constants/constants.h"
 #include "../../core/logging_categories.h"
 
 #undef qDebug
@@ -31,17 +32,18 @@ ExportController::ExportController(Database *db, QObject *parent)
 QVariantList ExportController::getAvailableSystems()
 {
     QVariantList result;
+    const int minimumConfidence = static_cast<int>(Constants::Confidence::Thresholds::MEDIUM);
     
     QSqlQuery query(m_db->database());
-    query.exec(R"(
+    query.exec(QString(R"(
         SELECT DISTINCT s.name AS system, COUNT(DISTINCT g.id) as game_count
         FROM games g
         JOIN systems s ON g.system_id = s.id
         JOIN matches m ON g.id = m.game_id
-        WHERE m.confidence >= 60
+        WHERE m.confidence >= %1
         GROUP BY s.name
         ORDER BY s.name
-    )");
+    )").arg(minimumConfidence));
     
     while (query.next()) {
         QVariantMap system;
@@ -56,15 +58,16 @@ QVariantList ExportController::getAvailableSystems()
 QVariantMap ExportController::getExportPreview(const QStringList &systems)
 {
     QVariantMap result;
+    const int minimumConfidence = static_cast<int>(Constants::Confidence::Thresholds::MEDIUM);
     
-    QString sql = R"(
+    QString sql = QString(R"(
         SELECT g.system, COUNT(DISTINCT g.id) as game_count,
                COUNT(DISTINCT f.id) as file_count
         FROM games g
         JOIN matches m ON g.id = m.game_id
         JOIN files f ON m.file_id = f.id
-        WHERE m.confidence >= 60
-    )";
+        WHERE m.confidence >= %1
+    )").arg(minimumConfidence);
     
     if (!systems.isEmpty()) {
         QStringList placeholders;
@@ -112,9 +115,10 @@ bool ExportController::exportToCSV(const QString &outputPath,
 {
     m_exporting = true;
     emit exportingChanged();
-    emit exportStarted("CSV");
+    emit exportStarted(Constants::Exports::DisplayNames::CSV);
+    const int minimumConfidence = static_cast<int>(Constants::Confidence::Thresholds::MEDIUM);
     
-    QString sql = R"(
+    QString sql = QString(R"(
         SELECT g.title, s.name AS system, g.region, g.release_date AS year,
                g.publisher, g.developer,
                g.genres AS genre, f.filename, f.current_path AS filepath,
@@ -124,8 +128,8 @@ bool ExportController::exportToCSV(const QString &outputPath,
         JOIN systems s ON g.system_id = s.id
         JOIN matches m ON g.id = m.game_id
         JOIN files f ON m.file_id = f.id
-        WHERE m.confidence >= 60
-    )";
+        WHERE m.confidence >= %1
+    )").arg(minimumConfidence);
     
     if (!systems.isEmpty()) {
         QStringList placeholders;
@@ -147,7 +151,7 @@ bool ExportController::exportToCSV(const QString &outputPath,
     if (!query.exec()) {
         m_exporting = false;
         emit exportingChanged();
-        emit exportFailed("CSV", query.lastError().text());
+        emit exportFailed(Constants::Exports::DisplayNames::CSV, query.lastError().text());
         return false;
     }
     
@@ -155,7 +159,7 @@ bool ExportController::exportToCSV(const QString &outputPath,
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
         m_exporting = false;
         emit exportingChanged();
-        emit exportFailed("CSV", "Failed to create file: " + outputPath);
+        emit exportFailed(Constants::Exports::DisplayNames::CSV, "Failed to create file: " + outputPath);
         return false;
     }
     
@@ -186,7 +190,7 @@ bool ExportController::exportToCSV(const QString &outputPath,
     m_lastExportPath = outputPath;
     emit exportingChanged();
     emit lastExportPathChanged();
-    emit exportCompleted("CSV", rowCount, outputPath);
+    emit exportCompleted(Constants::Exports::DisplayNames::CSV, rowCount, outputPath);
     
     return true;
 }
@@ -196,18 +200,19 @@ bool ExportController::exportToJSON(const QString &outputPath,
 {
     m_exporting = true;
     emit exportingChanged();
-    emit exportStarted("JSON");
+    emit exportStarted(Constants::Exports::DisplayNames::JSON);
+    const int minimumConfidence = static_cast<int>(Constants::Confidence::Thresholds::MEDIUM);
     
     QSqlQuery query(m_db->database());
-    query.exec(R"(
+    query.exec(QString(R"(
         SELECT g.id, g.title, g.system, g.region, g.year, g.publisher, 
                g.developer, g.genre, g.description, g.players
         FROM games g
         JOIN matches m ON g.id = m.game_id
-        WHERE m.confidence >= 60
+        WHERE m.confidence >= %1
         GROUP BY g.id
         ORDER BY g.system, g.title
-    )");
+    )").arg(minimumConfidence));
     
     QJsonArray games;
     
@@ -281,7 +286,7 @@ bool ExportController::exportToJSON(const QString &outputPath,
     
     // Build final document
     QJsonObject root;
-    root["version"] = "1.0";
+    root["version"] = QStringLiteral("1.0");
     root["exportDate"] = QDateTime::currentDateTime().toString(Qt::ISODate);
     root["gameCount"] = games.size();
     root["games"] = games;
@@ -291,7 +296,7 @@ bool ExportController::exportToJSON(const QString &outputPath,
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
         m_exporting = false;
         emit exportingChanged();
-        emit exportFailed("JSON", "Failed to create file: " + outputPath);
+        emit exportFailed(Constants::Exports::DisplayNames::JSON, "Failed to create file: " + outputPath);
         return false;
     }
     
@@ -303,7 +308,7 @@ bool ExportController::exportToJSON(const QString &outputPath,
     m_lastExportPath = outputPath;
     emit exportingChanged();
     emit lastExportPathChanged();
-    emit exportCompleted("JSON", games.size(), outputPath);
+    emit exportCompleted(Constants::Exports::DisplayNames::JSON, games.size(), outputPath);
     
     return true;
 }

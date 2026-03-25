@@ -2,6 +2,7 @@
 #include <QFileInfo>
 #include <QDir>
 #include <QDebug>
+#include "../../core/constants/constants.h"
 #include "../../core/hasher.h"
 #include "../../core/patched_rom_parser.h"
 #include "../../services/patch_service.h"
@@ -35,11 +36,11 @@ static bool persistAppliedPatchLineage(Database *db,
         : (!patchInfoFromName.patchName.isEmpty()
             ? patchInfoFromName.patchName
             : QFileInfo(patchPath).completeBaseName());
-    const QString fileType = outputInfo.fileType != QStringLiteral("official")
+    const QString fileType = !Constants::FileTypes::isOfficial(outputInfo.fileType)
         ? outputInfo.fileType
-        : (patchInfoFromName.fileType != QStringLiteral("official")
+        : (!Constants::FileTypes::isOfficial(patchInfoFromName.fileType)
             ? patchInfoFromName.fileType
-            : QStringLiteral("hack"));
+            : Constants::FileTypes::HACK);
 
     Database::AppliedPatchRecord record;
     record.basePath = basePath;

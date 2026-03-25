@@ -3,6 +3,7 @@
 #include <QSettings>
 #include <QTemporaryDir>
 #include "../core/archive_extractor.h"
+#include "../core/constants/files.h"
 #include "../core/system_resolver.h"
 #include "../metadata/screenscraper_provider.h"
 #include "../metadata/thegamesdb_provider.h"
@@ -49,9 +50,12 @@ QString selectBestHash(const FileRecord &file)
 static bool isArchivePath(const QString &path)
 {
     const QString lower = path.toLower();
-    return lower.endsWith(".zip") || lower.endsWith(".7z") || lower.endsWith(".rar") ||
-           lower.endsWith(".tar") || lower.endsWith(".tar.gz") || lower.endsWith(".tgz") ||
-           lower.endsWith(".tar.bz2") || lower.endsWith(".tbz2");
+    for (const QString &extension : Files::ARCHIVE_EXTENSIONS) {
+        if (lower.endsWith(extension)) {
+            return true;
+        }
+    }
+    return false;
 }
 
 HashResult hashFileRecord(const FileRecord &file, Hasher &hasher)

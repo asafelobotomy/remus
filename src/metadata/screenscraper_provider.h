@@ -1,11 +1,9 @@
 #ifndef REMUS_SCREENSCRAPER_PROVIDER_H
 #define REMUS_SCREENSCRAPER_PROVIDER_H
 
-#include "metadata_provider.h"
-#include "rate_limiter.h"
+#include "http_metadata_provider.h"
 #include "../core/constants/hash_algorithms.h"
 #include "../core/constants/providers.h"
-#include <QNetworkAccessManager>
 
 namespace Remus {
 
@@ -17,7 +15,7 @@ namespace Remus {
  * 
  * API Docs: https://www.screenscraper.fr/webapi.php
  */
-class ScreenScraperProvider : public MetadataProvider {
+class ScreenScraperProvider : public HttpMetadataProvider {
     Q_OBJECT
 
 public:
@@ -45,12 +43,6 @@ public:
     bool isAvailable() override;
 
 private:
-    struct ApiResponse {
-        bool success = false;
-        QString error;
-        QByteArray data;
-    };
-
     ApiResponse makeRequest(const QUrl &url);
     GameMetadata parseGameJson(const QByteArray &json);
     ArtworkUrls parseArtworkJson(const QByteArray &json) const;
@@ -59,8 +51,6 @@ private:
     QString mapSystemToScreenScraper(const QString &system);
     QString detectHashType(const QString &hash);
 
-    QNetworkAccessManager *m_networkManager;
-    RateLimiter *m_rateLimiter;
     QString m_devId;
     QString m_devPassword;
     QString m_softwareName = "Remus";

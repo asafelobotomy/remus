@@ -11,6 +11,7 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QRegularExpression>
+#include "../../core/constants/confidence.h"
 #include "../../core/logging_categories.h"
 #include "../../core/constants/settings.h"
 
@@ -205,13 +206,14 @@ void ArtworkController::downloadAllArtwork(const QString &systemFilter, bool ove
 {
     // Get all matched games
     QSqlQuery query(m_db->database());
+    const int minimumConfidence = static_cast<int>(Constants::Confidence::Thresholds::MEDIUM);
     
-    QString sql = R"(
+    QString sql = QString(R"(
         SELECT DISTINCT g.id 
         FROM games g
         JOIN matches m ON g.id = m.game_id
-        WHERE m.confidence >= 60
-    )";
+        WHERE m.confidence >= %1
+    )").arg(minimumConfidence);
     
     if (!systemFilter.isEmpty()) {
         sql += " AND g.system = ?";
@@ -298,12 +300,14 @@ QVariantMap ArtworkController::getArtworkStats()
     
     // Count total matched games
     QSqlQuery query(m_db->database());
-    query.exec("SELECT COUNT(DISTINCT game_id) FROM matches WHERE confidence >= 60");
+    query.exec(QString("SELECT COUNT(DISTINCT game_id) FROM matches WHERE confidence >= %1")
+        .arg(static_cast<int>(Constants::Confidence::Thresholds::MEDIUM)));
     int totalGames = query.next() ? query.value(0).toInt() : 0;
     
     // Count games with local boxart
     int withArtwork = 0;
-    query.exec("SELECT DISTINCT g.id FROM games g JOIN matches m ON g.id = m.game_id WHERE m.confidence >= 60");
+    query.exec(QString("SELECT DISTINCT g.id FROM games g JOIN matches m ON g.id = m.game_id WHERE m.confidence >= %1")
+        .arg(static_cast<int>(Constants::Confidence::Thresholds::MEDIUM)));
     while (query.next()) {
         int gameId = query.value(0).toInt();
         if (hasLocalArtwork(gameId, "boxart")) {
@@ -338,15 +342,16 @@ QVariantMap ArtworkController::getArtworkStats()
 QVariantList ArtworkController::getGamesMissingArtwork(const QString &type, int limit)
 {
     QVariantList result;
+    const int minimumConfidence = static_cast<int>(Constants::Confidence::Thresholds::MEDIUM);
     
     QSqlQuery query(m_db->database());
-    query.prepare(R"(
+    query.prepare(QString(R"(
         SELECT g.id, g.title, g.system
         FROM games g
         JOIN matches m ON g.id = m.game_id
-        WHERE m.confidence >= 60
+        WHERE m.confidence >= %1
         LIMIT ?
-    )");
+    )").arg(minimumConfidence));
     query.addBindValue(limit * 2);  // Fetch extra since we filter
     
     if (query.exec()) {

@@ -3,6 +3,7 @@
 #include "../core/hasher.h"
 #include "../core/database.h"
 #include "../core/archive_extractor.h"
+#include "../core/constants/files.h"
 
 #include <QFileInfo>
 #include <QThread>
@@ -129,9 +130,12 @@ HashResult HashService::hashRecord(const FileRecord &file)
     // Detect whether this file is inside an archive
     auto isArchivePath = [](const QString &path) {
         const QString lower = path.toLower();
-        return lower.endsWith(".zip")  || lower.endsWith(".7z")  || lower.endsWith(".rar") ||
-               lower.endsWith(".tar")  || lower.endsWith(".tar.gz") || lower.endsWith(".tgz") ||
-               lower.endsWith(".tar.bz2") || lower.endsWith(".tbz2");
+        for (const QString &extension : Constants::Files::ARCHIVE_EXTENSIONS) {
+            if (lower.endsWith(extension)) {
+                return true;
+            }
+        }
+        return false;
     };
 
     const QString archivePath = file.archivePath.isEmpty() ? file.currentPath : file.archivePath;

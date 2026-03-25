@@ -80,8 +80,8 @@ static void machineReadableMessageHandler(QtMsgType type,
 int main(int argc, char *argv[])
 {
     QCoreApplication app(argc, argv);
-    QCoreApplication::setApplicationName("remus-cli");
-    QCoreApplication::setOrganizationName("Remus");
+    QCoreApplication::setApplicationName(Constants::Cli::APPLICATION_NAME);
+    QCoreApplication::setOrganizationName(Constants::SETTINGS_ORGANIZATION);
     QCoreApplication::setApplicationVersion(Constants::APP_VERSION);
 
     QCommandLineParser parser;
@@ -120,7 +120,7 @@ int main(int argc, char *argv[])
     addOption(QCommandLineOption("system", "Specify system for search", "system"));
     const QString providerHelp = QString("Metadata provider (%1, %2, %3, auto)")
         .arg(Providers::SCREENSCRAPER).arg(Providers::THEGAMESDB).arg(Providers::IGDB);
-    addOption(QCommandLineOption("provider", providerHelp, "provider", "auto"));
+    addOption(QCommandLineOption(Constants::Cli::Options::PROVIDER, providerHelp, "provider", Constants::Cli::Defaults::PROVIDER));
     addOption(QCommandLineOption("tgdb-api-key", "TheGamesDB API key", "apiKey"));
     addOption(QCommandLineOption("ss-user",    "ScreenScraper username",      "username"));
     addOption(QCommandLineOption("ss-pass",    "ScreenScraper password",      "password"));
@@ -130,7 +130,7 @@ int main(int argc, char *argv[])
     addOption(QCommandLineOption("igdb-client-secret", "IGDB client secret", "clientSecret"));
 
     addActionOption(QCommandLineOption("match", "Match scanned files with metadata (M3 intelligent matching)"));
-    addOption(QCommandLineOption("min-confidence", "Minimum confidence threshold for matches (0-100)", "confidence", "60"));
+    addOption(QCommandLineOption(Constants::Cli::Options::MIN_CONFIDENCE, "Minimum confidence threshold for matches (0-100)", "confidence", QString::number(static_cast<int>(Constants::Confidence::Thresholds::DEFAULT_MINIMUM))));
     addActionOption(QCommandLineOption("match-report", "Generate detailed matching report with confidence scores"));
     addOption(QCommandLineOption("report-file", "Output file for reports (default: stdout)", "file"));
 
@@ -157,9 +157,9 @@ int main(int argc, char *argv[])
     addOption(QCommandLineOption("dry-run-all", "Preview file outputs for all file-writing actions"));
 
     addActionOption(QCommandLineOption("bundle",        "Fetch metadata, download box art, and repack matched ROMs into self-contained archives", "destination"));
-    addOption(QCommandLineOption("bundle-format", "Output archive format for bundles (zip|7z, default: zip)", "format", "zip"));
+    addOption(QCommandLineOption("bundle-format", "Output archive format for bundles (zip|7z, default: zip)", "format", Constants::Cli::Defaults::BUNDLE_FORMAT));
     addOption(QCommandLineOption("bundle-art-dir","Optional pre-downloaded artwork directory (avoids re-downloading box art)", "directory"));
-    addOption(QCommandLineOption("bundle-disc-format", "Disc media packaging inside bundles (original|chd, default: original)", "format", "original"));
+    addOption(QCommandLineOption("bundle-disc-format", "Disc media packaging inside bundles (original|chd, default: original)", "format", Constants::Cli::Defaults::BUNDLE_DISC_FORMAT));
 
     addActionOption(QCommandLineOption("patch-apply",    "Apply patch to base file",          "basefile"));
     addOption(QCommandLineOption("patch-patch",    "Patch file to apply",               "patchfile"));
@@ -184,7 +184,7 @@ int main(int argc, char *argv[])
     addActionOption(QCommandLineOption("mod-sort",       "Sort discovery results by title, author, system, type, format, rating, or downloads", "field"));
     addActionOption(QCommandLineOption("mod-min-rating", "List catalog mods with rating >= value", "rating"));
     addActionOption(QCommandLineOption("mod-min-downloads", "List catalog mods with downloads >= value", "count"));
-    addOption(QCommandLineOption({"json", "mod-json"}, "Emit machine-readable JSON when supported by the selected command"));
+    addOption(QCommandLineOption({Constants::Cli::Options::JSON, Constants::Cli::Options::MOD_JSON}, "Emit machine-readable JSON when supported by the selected command"));
     addOption(QCommandLineOption("mod-no-system-fallback", "Do not fall back to system-level catalog matches for --mod-list"));
     addActionOption(QCommandLineOption("mod-install",    "Install a mod by catalog ID",        "modId"));
     addOption(QCommandLineOption("mod-file",       "Base file ID to apply the mod to",   "fileId"));
@@ -193,9 +193,9 @@ int main(int argc, char *argv[])
     addActionOption(QCommandLineOption("mod-installed",  "List installed mods"));
     addActionOption(QCommandLineOption("mod-uninstall",  "Remove an installed mod by ID",      "installId"));
 
-    addActionOption(QCommandLineOption("export",         "Export library (retroarch|emustation|launchbox|csv|json)", "format"));
-    addOption(QCommandLineOption("export-path",    "Export output path (file or directory)", "path"));
-    addOption(QCommandLineOption("export-systems", "Comma-separated systems to include",     "systems"));
+    addActionOption(QCommandLineOption(Constants::Cli::Options::EXPORT, "Export library (retroarch|emustation|launchbox|csv|json)", "format"));
+    addOption(QCommandLineOption(Constants::Cli::Options::EXPORT_PATH, "Export output path (file or directory)", "path"));
+    addOption(QCommandLineOption(Constants::Cli::Options::EXPORT_SYSTEMS, "Comma-separated systems to include", "systems"));
 
     addActionOption(QCommandLineOption("process", "Run scan->hash->match pipeline on directory", "path"));
 
@@ -208,13 +208,13 @@ int main(int argc, char *argv[])
     addActionOption(QCommandLineOption("space-report",    "Show potential CHD conversion savings",               "directory"));
     addOption(QCommandLineOption("output-dir",      "Output directory for conversions/extractions",         "directory"));
 
-    addOption(QCommandLineOption("interactive",    "Launch archived interactive TUI when supported by this build"));
-    addOption(QCommandLineOption("no-interactive", "Disable archived interactive TUI (script-friendly; accepted as a no-op in CLI-only builds)"));
+    addOption(QCommandLineOption(Constants::Cli::Options::INTERACTIVE, "Launch archived interactive TUI when supported by this build"));
+    addOption(QCommandLineOption(Constants::Cli::Options::NO_INTERACTIVE, "Disable archived interactive TUI (script-friendly; accepted as a no-op in CLI-only builds)"));
 
     QStringList activeArgs = app.arguments();
-    const bool interactiveFlag   = hasFlag(activeArgs, "--interactive");
-    const bool noInteractiveFlag = hasFlag(activeArgs, "--no-interactive");
-    const bool jsonRequested     = hasFlag(activeArgs, "--json") || hasFlag(activeArgs, "--mod-json");
+    const bool interactiveFlag = hasFlag(activeArgs, "--" + Constants::Cli::Options::INTERACTIVE);
+    const bool noInteractiveFlag = hasFlag(activeArgs, "--" + Constants::Cli::Options::NO_INTERACTIVE);
+    const bool jsonRequested = hasFlag(activeArgs, "--" + Constants::Cli::Options::JSON) || hasFlag(activeArgs, "--" + Constants::Cli::Options::MOD_JSON);
     const bool actionsProvided   = hasAnyAction(activeArgs, actionOptions);
 
     if (jsonRequested) {
@@ -256,7 +256,7 @@ int main(int argc, char *argv[])
     SystemDetector detector;
 
     CliContext ctx{parser, db, detector,
-                   /*dryRunAll*/        parser.isSet("dry-run-all"),
+                   /*dryRunAll*/        parser.isSet(Constants::Cli::Options::DRY_RUN_ALL),
                    /*processRequested*/ parser.isSet("process")};
 
     if (int rc = handleStatsCommand(ctx))          return rc;

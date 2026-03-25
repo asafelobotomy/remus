@@ -1,4 +1,5 @@
 #include "database.h"
+#include "constants/file_types.h"
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QVariant>
@@ -26,7 +27,7 @@ namespace Remus {
         query.addBindValue(record.patchFormat.isEmpty() ? QVariant() : record.patchFormat);
         query.addBindValue(record.baseTitle.isEmpty() ? QVariant() : record.baseTitle);
         query.addBindValue(record.patchName.isEmpty() ? QVariant() : record.patchName);
-        query.addBindValue(record.fileType.isEmpty() ? QVariant(QStringLiteral("hack")) : record.fileType);
+        query.addBindValue(record.fileType.isEmpty() ? QVariant(Constants::FileTypes::HACK) : record.fileType);
         query.addBindValue(record.sourceChecksum.isEmpty() ? QVariant() : record.sourceChecksum);
         query.addBindValue(record.targetChecksum.isEmpty() ? QVariant() : record.targetChecksum);
         query.addBindValue(record.patchChecksum.isEmpty() ? QVariant() : record.patchChecksum);

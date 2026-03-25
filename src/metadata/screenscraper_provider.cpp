@@ -2,13 +2,10 @@
 #include "../core/system_resolver.h"
 #include "../core/constants/providers.h"
 #include <QNetworkRequest>
-#include <QNetworkReply>
 #include <QUrlQuery>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
-#include <QEventLoop>
-#include <QTimer>
 #include <QDebug>
 #include "../core/constants/constants.h"
 #include "../core/logging_categories.h"
@@ -25,11 +22,8 @@
 namespace Remus {
 
 ScreenScraperProvider::ScreenScraperProvider(QObject *parent)
-    : MetadataProvider(parent)
-    , m_networkManager(new QNetworkAccessManager(this))
-    , m_rateLimiter(new RateLimiter(this))
+    : HttpMetadataProvider(Constants::Network::SCREENSCRAPER_RATE_LIMIT_MS, parent)
 {
-    m_rateLimiter->setInterval(Constants::Network::SCREENSCRAPER_RATE_LIMIT_MS);
 }
 
 void ScreenScraperProvider::setCredentials(const QString &username, const QString &password)
@@ -225,45 +219,16 @@ ArtworkUrls ScreenScraperProvider::getArtwork(const QString &id)
 
 ScreenScraperProvider::ApiResponse ScreenScraperProvider::makeRequest(const QUrl &url)
 {
-    ApiResponse response;
-
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::UserAgentHeader, Constants::API::USER_AGENT);
 
     QNetworkReply *reply = m_networkManager->get(request);
-    
-    QEventLoop loop;
-    QTimer timeout;
-    timeout.setSingleShot(true);
-    timeout.setInterval(Constants::Network::SCREENSCRAPER_TIMEOUT_MS);
+    ApiResponse response = waitForReply(reply, Constants::Network::SCREENSCRAPER_TIMEOUT_MS);
 
-    connect(reply, &QNetworkReply::finished, &loop, &QEventLoop::quit);
-    connect(&timeout, &QTimer::timeout, &loop, &QEventLoop::quit);
-
-    timeout.start();
-    loop.exec();
-
-    if (timeout.isActive()) {
-        timeout.stop();
-        
-        if (reply->error() == QNetworkReply::NoError) {
-            response.success = true;
-            response.data = reply->readAll();
-        } else {
-            response.success = false;
-            response.error = reply->errorString();
-            
-            // Check for rate limiting
-            if (reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() == 429) {
-                emit rateLimitReached();
-            }
-        }
-    } else {
-        response.success = false;
-        response.error = "Request timeout";
+    if (!response.success && response.httpStatusCode == Constants::Network::HTTP_TOO_MANY_REQUESTS) {
+        emit rateLimitReached();
     }
 
-    reply->deleteLater();
     return response;
 }
 

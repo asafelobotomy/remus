@@ -27,6 +27,9 @@ namespace ProcessingStatus {
     
     /// File has been successfully processed
     inline const QString PROCESSED = QStringLiteral("processed");
+
+    /// File has been bundled into a self-contained archive
+    inline const QString BUNDLED = QStringLiteral("bundled");
     
     /// File processing failed
     inline const QString FAILED = QStringLiteral("failed");

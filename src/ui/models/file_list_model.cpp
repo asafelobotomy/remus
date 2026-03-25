@@ -5,22 +5,13 @@
 #include <QMap>
 #include <QDir>
 #include <QRegularExpression>
+#include "../../core/constants/files.h"
 #include "../../core/constants/systems.h"
 #include "../../core/constants/settings.h"
 
 namespace Remus {
 
 using namespace Remus::Constants::Systems;
-
-// Archive file extensions
-static const QStringList ARCHIVE_EXTENSIONS = {
-    ".zip", ".7z", ".rar", ".gz", ".tar", ".bz2", ".xz"
-};
-
-// CHD-compatible extensions (disc images)
-static const QStringList CHD_SOURCE_EXTENSIONS = {
-    ".cue", ".gdi", ".iso", ".bin", ".img", ".mdf", ".cdi", ".nrg"
-};
 
 FileListModel::FileListModel(Database *db, QObject *parent)
     : QAbstractListModel(parent)
@@ -463,7 +454,7 @@ void FileListModel::groupFiles(const QList<FileRecord> &files, const QMap<int, D
         }
         
         // Check if CHD candidate (has source disc extension)
-        for (const QString &discExt : CHD_SOURCE_EXTENSIONS) {
+        for (const QString &discExt : Constants::Files::CHD_SOURCE_EXTENSIONS) {
             if (ext == discExt.toLower()) {
                 entry.isChdCandidate = true;
                 break;
@@ -473,7 +464,7 @@ void FileListModel::groupFiles(const QList<FileRecord> &files, const QMap<int, D
         // Use primary file (.cue, .gdi, .m3u) as the main entry if found
         // BUT: Only update primaryFileId if this file has a match OR the current primary has no match
         // This ensures we don't lose match info when grouping duplicate files
-        if (file.isPrimary || ext == ".cue" || ext == ".gdi" || ext == ".m3u") {
+        if (file.isPrimary || Constants::Files::isPrimaryDiscExtension(ext)) {
             bool currentPrimaryHasMatch = matches.contains(entry.primaryFileId);
             bool thisFileHasMatch = matches.contains(file.id);
             
@@ -513,8 +504,9 @@ void FileListModel::groupFiles(const QList<FileRecord> &files, const QMap<int, D
     auto sortExtensions = [](QStringList &exts) {
         // Priority order for display
         QMap<QString, int> priority = {
-            {".cue", 0}, {".gdi", 1}, {".m3u", 2}, {".iso", 3}, {".chd", 4},
-            {".bin", 10}, {".img", 11}, {".raw", 12}  // Data files lower priority
+            {Constants::Files::CUE, 0}, {Constants::Files::GDI, 1}, {Constants::Files::M3U, 2},
+            {Constants::Files::ISO, 3}, {Constants::Files::CHD, 4}, {Constants::Files::BIN, 10},
+            {Constants::Files::IMG, 11}, {Constants::Files::RAW, 12}
         };
         
         std::sort(exts.begin(), exts.end(), [&priority](const QString &a, const QString &b) {

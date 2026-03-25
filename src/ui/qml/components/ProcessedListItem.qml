@@ -107,8 +107,8 @@ ItemDelegate {
             width: 24
             height: 24
             radius: 12
-            color: root.matchConfidence >= 80 ? theme.success :
-                   root.matchConfidence >= 50 ? theme.warning : theme.info
+             color: root.matchConfidence >= theme.confidenceHigh ? theme.success :
+                 root.matchConfidence >= theme.confidenceMedium ? theme.warning : theme.info
             visible: root.matchConfidence > 0
             
             Label {

@@ -149,8 +149,7 @@ ConversionSummary SpaceCalculator::scanDirectory(const QString &dirPath, bool re
 {
     ConversionSummary summary;
     
-    QStringList filters;
-    filters << "*.cue" << "*.iso" << "*.gdi" << "*.bin" << "*.chd";
+    const QStringList filters = Constants::Files::globPatternsFor(Constants::Files::SPACE_SCAN_EXTENSIONS);
     
     QDirIterator::IteratorFlags flags = recursive ? 
         QDirIterator::Subdirectories : QDirIterator::NoIteratorFlags;
@@ -170,13 +169,13 @@ ConversionSummary SpaceCalculator::scanDirectory(const QString &dirPath, bool re
         emit scanProgress(++scanned, path);
         
         // Skip standalone BIN files if their CUE was already processed
-        if (ext == "bin") {
+        if (ext == Constants::Files::BIN.mid(1)) {
             QString basePath = info.absolutePath() + "/" + info.completeBaseName();
             if (processedBases.contains(basePath)) {
                 continue;
             }
             // Check if a CUE exists for this BIN
-            QString cuePath = basePath + ".cue";
+            QString cuePath = basePath + Constants::Files::CUE;
             if (QFile::exists(cuePath)) {
                 continue;  // Will be counted with CUE
             }
@@ -201,7 +200,7 @@ ConversionSummary SpaceCalculator::scanDirectory(const QString &dirPath, bool re
         }
         
         // Mark as processed
-        if (ext == "cue" || ext == "gdi") {
+        if (ext == Constants::Files::CUE.mid(1) || ext == Constants::Files::GDI.mid(1)) {
             processedBases.insert(info.absolutePath() + "/" + info.completeBaseName());
         }
     }
@@ -219,12 +218,15 @@ ConversionSummary SpaceCalculator::scanDirectory(const QString &dirPath, bool re
 bool SpaceCalculator::isConvertible(const QString &path)
 {
     QString ext = QFileInfo(path).suffix().toLower();
-    return ext == "cue" || ext == "iso" || ext == "gdi" || ext == "img";
+    return ext == Constants::Files::CUE.mid(1) ||
+           ext == Constants::Files::ISO.mid(1) ||
+           ext == Constants::Files::GDI.mid(1) ||
+           ext == Constants::Files::IMG.mid(1);
 }
 
 bool SpaceCalculator::isCHD(const QString &path)
 {
-    return QFileInfo(path).suffix().toLower() == "chd";
+    return QFileInfo(path).suffix().toLower() == Constants::Files::CHD.mid(1);
 }
 
 double SpaceCalculator::getTypicalRatio(const QString &system)

@@ -25,6 +25,9 @@ class ThemeConstants : public QObject {
     Q_PROPERTY(QString danger READ danger NOTIFY themeModeChanged)
     Q_PROPERTY(QString info READ info NOTIFY themeModeChanged)
 
+    Q_PROPERTY(int confidenceHigh READ confidenceHigh CONSTANT)
+    Q_PROPERTY(int confidenceMedium READ confidenceMedium CONSTANT)
+
     Q_PROPERTY(QString textPrimary READ textPrimary NOTIFY themeModeChanged)
     Q_PROPERTY(QString textSecondary READ textSecondary NOTIFY themeModeChanged)
     Q_PROPERTY(QString textMuted READ textMuted NOTIFY themeModeChanged)
@@ -65,6 +68,11 @@ public:
     QString warning() const;
     QString danger() const;
     QString info() const;
+
+    int confidenceHigh() const;
+    int confidenceMedium() const;
+
+    Q_INVOKABLE QString confidenceColor(int confidence) const;
 
     QString textPrimary() const;
     QString textSecondary() const;

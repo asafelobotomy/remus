@@ -21,7 +21,7 @@ struct Match {
     
     // Confidence scoring (0-100%)
     int confidence = 0;
-    QString matchMethod;         // "hash", "exact_name", "fuzzy_name", "manual"
+    QString matchMethod;         // Canonicalized via Constants::MatchMethods
     
     // Match details
     QString matchedHash;         // Hash that matched (if hash-based)
@@ -80,7 +80,7 @@ public:
     
     /**
      * @brief Calculate confidence score based on matching method
-     * @param method "hash", "exact_name", "fuzzy_name", "manual"
+    * @param method Match method string, normalized via Constants::MatchMethods
      * @param nameMatchScore For fuzzy matches, the similarity score (0.0-1.0)
      * @return Confidence percentage (0-100)
      */

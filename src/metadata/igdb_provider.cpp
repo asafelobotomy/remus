@@ -2,24 +2,18 @@
 #include "../core/system_resolver.h"
 #include "../core/constants/providers.h"
 #include <QNetworkRequest>
-#include <QNetworkReply>
 #include <QUrlQuery>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
-#include <QEventLoop>
-#include <QTimer>
 #include <QDebug>
 #include "../core/constants/constants.h"
 
 namespace Remus {
 
 IGDBProvider::IGDBProvider(QObject *parent)
-    : MetadataProvider(parent)
-    , m_networkManager(new QNetworkAccessManager(this))
-    , m_rateLimiter(new RateLimiter(this))
+    : HttpMetadataProvider(Constants::Network::IGDB_RATE_LIMIT_MS, parent)
 {
-    m_rateLimiter->setInterval(Constants::Network::IGDB_RATE_LIMIT_MS);
 }
 
 void IGDBProvider::setCredentials(const QString &clientId, const QString &clientSecret)
@@ -47,37 +41,21 @@ bool IGDBProvider::authenticate()
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
 
     QNetworkReply *reply = m_networkManager->post(request, query.toString().toUtf8());
-    
-    QEventLoop loop;
-    QTimer timeout;
-    timeout.setSingleShot(true);
-    timeout.setInterval(Constants::Network::IGDB_TIMEOUT_MS);
-    connect(reply, &QNetworkReply::finished, &loop, &QEventLoop::quit);
-    connect(&timeout, &QTimer::timeout, &loop, &QEventLoop::quit);
-    timeout.start();
-    loop.exec();
+    ApiResponse response = waitForReply(reply, Constants::Network::IGDB_TIMEOUT_MS);
 
-    if (!timeout.isActive()) {
-        qWarning() << "IGDB: authentication request timed out";
-        reply->deleteLater();
+    if (!response.success) {
+        qWarning() << "IGDB: authentication request failed:" << response.error;
         return false;
     }
-    timeout.stop();
 
-    if (reply->error() == QNetworkReply::NoError) {
-        QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
-        QJsonObject obj = doc.object();
-        
-        m_accessToken = obj["access_token"].toString();
-        int expiresIn = obj["expires_in"].toInt();
-        m_tokenExpiry = QDateTime::currentDateTime().addSecs(expiresIn);
-        
-        reply->deleteLater();
-        return true;
-    }
+    QJsonDocument doc = QJsonDocument::fromJson(response.data);
+    QJsonObject obj = doc.object();
 
-    reply->deleteLater();
-    return false;
+    m_accessToken = obj["access_token"].toString();
+    int expiresIn = obj["expires_in"].toInt();
+    m_tokenExpiry = QDateTime::currentDateTime().addSecs(expiresIn);
+
+    return true;
 }
 
 QList<SearchResult> IGDBProvider::searchByName(const QString &title,
@@ -214,45 +192,15 @@ ArtworkUrls IGDBProvider::getArtwork(const QString &id)
 
 IGDBProvider::ApiResponse IGDBProvider::makeRequest(const QString &endpoint, const QString &body)
 {
-    ApiResponse response;
-
     QUrl url(QString(Constants::API::IGDB_BASE_URL) + endpoint);
     QNetworkRequest request(url);
-    
+
     request.setRawHeader(Constants::API::IGDB_CLIENT_ID_HEADER, m_clientId.toUtf8());
     request.setRawHeader("Authorization", QString("Bearer %1").arg(m_accessToken).toUtf8());
     request.setHeader(QNetworkRequest::ContentTypeHeader, "text/plain");
 
     QNetworkReply *reply = m_networkManager->post(request, body.toUtf8());
-    
-    QEventLoop loop;
-    QTimer timeout;
-    timeout.setSingleShot(true);
-    timeout.setInterval(Constants::Network::IGDB_TIMEOUT_MS);
-
-    connect(reply, &QNetworkReply::finished, &loop, &QEventLoop::quit);
-    connect(&timeout, &QTimer::timeout, &loop, &QEventLoop::quit);
-
-    timeout.start();
-    loop.exec();
-
-    if (timeout.isActive()) {
-        timeout.stop();
-        
-        if (reply->error() == QNetworkReply::NoError) {
-            response.success = true;
-            response.data = reply->readAll();
-        } else {
-            response.success = false;
-            response.error = reply->errorString();
-        }
-    } else {
-        response.success = false;
-        response.error = Constants::Errors::MetadataProvider::REQUEST_TIMEOUT;
-    }
-
-    reply->deleteLater();
-    return response;
+    return waitForReply(reply, Constants::Network::IGDB_TIMEOUT_MS);
 }
 
 GameMetadata IGDBProvider::parseGameJson(const QJsonObject &game)

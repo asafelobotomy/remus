@@ -2,13 +2,15 @@
 
 #include <QString>
 
+#include "constants/file_types.h"
+
 namespace Remus {
 
 struct PatchedRomInfo {
     QString rawName;
     QString baseTitle;
     QString patchName;
-    QString fileType = QStringLiteral("official");
+    QString fileType = Constants::FileTypes::OFFICIAL;
     bool isPatched = false;
 };
 

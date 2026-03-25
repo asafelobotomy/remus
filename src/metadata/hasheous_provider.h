@@ -1,11 +1,9 @@
 #pragma once
 
-#include "metadata_provider.h"
-#include "rate_limiter.h"
+#include "http_metadata_provider.h"
 #include "../core/constants/hash_algorithms.h"
 #include "../core/constants/api.h"
 #include "../core/constants/providers.h"
-#include <QNetworkAccessManager>
 #include <QJsonObject>
 #include <QUrlQuery>
 #include <QMap>
@@ -29,7 +27,7 @@ namespace Remus {
  * API: https://hasheous.org/api/v1/
  * Swagger: https://hasheous.org/swagger/index.html
  */
-class HasheousProvider : public MetadataProvider {
+class HasheousProvider : public HttpMetadataProvider {
     Q_OBJECT
 
 public:
@@ -52,8 +50,6 @@ public:
     ArtworkUrls getArtwork(const QString &id) override;
 
 protected:
-    QNetworkAccessManager *m_network;
-    RateLimiter *m_rateLimiter;
     QString m_clientApiKey;
     QMap<int, QString> m_companyCache;
     bool m_metadataProxyDisabled = false;

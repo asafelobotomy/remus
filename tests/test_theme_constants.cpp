@@ -9,6 +9,7 @@ class ThemeConstantsTest : public QObject {
 
 private slots:
     void togglesAndPersists();
+    void exposesConfidenceHelpers();
 };
 
 void ThemeConstantsTest::togglesAndPersists()
@@ -28,6 +29,17 @@ void ThemeConstantsTest::togglesAndPersists()
     QString prevPrimary = theme.primary();
     theme.toggleTheme();
     QVERIFY(prevPrimary != theme.primary());
+}
+
+void ThemeConstantsTest::exposesConfidenceHelpers()
+{
+    ThemeConstants theme;
+
+    QCOMPARE(theme.confidenceHigh(), 90);
+    QCOMPARE(theme.confidenceMedium(), 60);
+    QCOMPARE(theme.confidenceColor(95), theme.success());
+    QCOMPARE(theme.confidenceColor(70), theme.warning());
+    QCOMPARE(theme.confidenceColor(10), theme.danger());
 }
 
 QTEST_MAIN(ThemeConstantsTest)

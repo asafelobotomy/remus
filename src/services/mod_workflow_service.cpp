@@ -138,7 +138,7 @@ ModInstallResult ModWorkflowService::install(const FileRecord  &baseFile,
     patchedRecord.isPrimary      = false;
     patchedRecord.parentFileId   = baseFile.id;
     patchedRecord.baseTitle      = baseName;
-    patchedRecord.fileType       = mod.type.isEmpty() ? QStringLiteral("hack") : mod.type;
+    patchedRecord.fileType       = mod.type.isEmpty() ? Constants::FileTypes::HACK : mod.type;
     patchedRecord.isPatched      = true;
     patchedRecord.patchName      = mod.title;
 
@@ -158,7 +158,7 @@ ModInstallResult ModWorkflowService::install(const FileRecord  &baseFile,
     modRec.modTitle      = mod.title;
     modRec.modAuthor     = mod.author;
     modRec.modVersion    = mod.version;
-    modRec.modType       = mod.type.isEmpty() ? QStringLiteral("hack") : mod.type;
+    modRec.modType       = mod.type.isEmpty() ? Constants::FileTypes::HACK : mod.type;
     modRec.patchFormat   = mod.format;
     modRec.patchUrl      = mod.patchUrl;
     modRec.patchSha1     = mod.patchSha1;

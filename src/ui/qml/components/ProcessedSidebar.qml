@@ -242,8 +242,8 @@ ScrollView {
                             width: confidenceLabel.implicitWidth + 8
                             height: 16
                             radius: 3
-                            color: root.matchConfidence >= 80 ? theme.success :
-                                   root.matchConfidence >= 50 ? theme.warning : theme.textMuted
+                            color: root.matchConfidence >= theme.confidenceHigh ? theme.success :
+                                root.matchConfidence >= theme.confidenceMedium ? theme.warning : theme.textMuted
                             
                             Label {
                                 id: confidenceLabel

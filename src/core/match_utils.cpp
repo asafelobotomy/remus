@@ -32,7 +32,7 @@ QString deriveMatchingDisplayName(const FileRecord &file)
 
     const auto usePatchedBaseTitle = [](const QString &name) {
         const PatchedRomInfo info = PatchedRomParser::parse(name);
-        const bool derivedPatchedVariant = info.isPatched || info.fileType != QStringLiteral("official");
+        const bool derivedPatchedVariant = info.isPatched || Constants::FileTypes::isPatchedVariant(info.fileType);
         return derivedPatchedVariant && !info.baseTitle.isEmpty() ? info.baseTitle : QString();
     };
 

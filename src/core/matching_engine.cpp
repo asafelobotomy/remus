@@ -1,4 +1,6 @@
 #include "matching_engine.h"
+#include "constants/confidence.h"
+#include "constants/match_methods.h"
 #include <QFileInfo>
 #include <QDebug>
 #include <QRegularExpression>
@@ -27,7 +29,7 @@ Match MatchingEngine::matchFile(const QString &filePath, const QString &hash,
         // Hash match would be implemented by ProviderOrchestrator
         // For now, we mark the method and store the hash
         match.matchedHash = hash;
-        match.matchMethod = "hash_pending";
+        match.matchMethod = QString::fromLatin1(Constants::MatchMethods::HASH_PENDING);
         match.confidence = 0; // Will be set to 100 if hash matches
     }
     
@@ -48,11 +50,14 @@ Match MatchingEngine::matchFile(const QString &filePath, const QString &hash,
 
 int MatchingEngine::calculateConfidence(const QString &method, float nameMatchScore)
 {
-    if (method == "hash" || method == "manual") {
+    const QString canonicalMethod = Constants::MatchMethods::canonicalize(method);
+
+    if (canonicalMethod == Constants::MatchMethods::HASH ||
+        canonicalMethod == Constants::MatchMethods::MANUAL) {
         return static_cast<int>(ConfidenceLevel::Perfect);
-    } else if (method == "exact_name") {
+    } else if (canonicalMethod == Constants::MatchMethods::NAME) {
         return static_cast<int>(ConfidenceLevel::High);
-    } else if (method == "fuzzy_name") {
+    } else if (canonicalMethod == Constants::MatchMethods::FUZZY) {
         // Scale fuzzy matches based on similarity score
         if (nameMatchScore >= 0.8f) {
             return static_cast<int>(ConfidenceLevel::Medium);

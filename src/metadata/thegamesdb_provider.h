@@ -1,11 +1,9 @@
 #ifndef REMUS_THEGAMESDB_PROVIDER_H
 #define REMUS_THEGAMESDB_PROVIDER_H
 
-#include "metadata_provider.h"
-#include "rate_limiter.h"
+#include "http_metadata_provider.h"
 #include "../core/system_resolver.h"
 #include "../core/constants/providers.h"
-#include <QNetworkAccessManager>
 
 namespace Remus {
 
@@ -17,7 +15,7 @@ namespace Remus {
  * 
  * API Docs: https://api.thegamesdb.net/
  */
-class TheGamesDBProvider : public MetadataProvider {
+class TheGamesDBProvider : public HttpMetadataProvider {
     Q_OBJECT
 
 public:
@@ -42,17 +40,9 @@ public:
     bool isAvailable() override;
 
 private:
-    struct ApiResponse {
-        bool success = false;
-        QString error;
-        QByteArray data;
-    };
-
     ApiResponse makeRequest(const QUrl &url);
     GameMetadata parseGameJson(const QJsonObject &game);
 
-    QNetworkAccessManager *m_networkManager;
-    RateLimiter *m_rateLimiter;
     QString m_apiKey;
 };
 

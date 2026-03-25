@@ -1,23 +1,17 @@
 #include "thegamesdb_provider.h"
 #include <QNetworkRequest>
-#include <QNetworkReply>
 #include <QUrlQuery>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
-#include <QEventLoop>
-#include <QTimer>
 #include <QDebug>
 #include "../core/constants/constants.h"
 
 namespace Remus {
 
 TheGamesDBProvider::TheGamesDBProvider(QObject *parent)
-    : MetadataProvider(parent)
-    , m_networkManager(new QNetworkAccessManager(this))
-    , m_rateLimiter(new RateLimiter(this))
+    : HttpMetadataProvider(Constants::Network::THEGAMESDB_RATE_LIMIT_MS, parent)
 {
-    m_rateLimiter->setInterval(Constants::Network::THEGAMESDB_RATE_LIMIT_MS);
 }
 
 void TheGamesDBProvider::setApiKey(const QString &apiKey)
@@ -216,41 +210,11 @@ ArtworkUrls TheGamesDBProvider::getArtwork(const QString &id)
 
 TheGamesDBProvider::ApiResponse TheGamesDBProvider::makeRequest(const QUrl &url)
 {
-    ApiResponse response;
-
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::UserAgentHeader, Constants::API::USER_AGENT);
 
     QNetworkReply *reply = m_networkManager->get(request);
-    
-    QEventLoop loop;
-    QTimer timeout;
-    timeout.setSingleShot(true);
-    timeout.setInterval(Constants::Network::THEGAMESDB_TIMEOUT_MS);
-
-    connect(reply, &QNetworkReply::finished, &loop, &QEventLoop::quit);
-    connect(&timeout, &QTimer::timeout, &loop, &QEventLoop::quit);
-
-    timeout.start();
-    loop.exec();
-
-    if (timeout.isActive()) {
-        timeout.stop();
-        
-        if (reply->error() == QNetworkReply::NoError) {
-            response.success = true;
-            response.data = reply->readAll();
-        } else {
-            response.success = false;
-            response.error = reply->errorString();
-        }
-    } else {
-        response.success = false;
-        response.error = "Request timeout";
-    }
-
-    reply->deleteLater();
-    return response;
+    return waitForReply(reply, Constants::Network::THEGAMESDB_TIMEOUT_MS);
 }
 
 GameMetadata TheGamesDBProvider::parseGameJson(const QJsonObject &game)

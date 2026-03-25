@@ -222,7 +222,7 @@ bool ModCatalogProvider::loadFromJson(const QByteArray &data)
         entry.author      = obj.value(QStringLiteral("author")).toString();
         entry.version     = obj.value(QStringLiteral("version")).toString();
         entry.description = obj.value(QStringLiteral("description")).toString();
-        entry.type        = obj.value(QStringLiteral("type")).toString(QStringLiteral("hack"));
+        entry.type        = obj.value(QStringLiteral("type")).toString(Constants::FileTypes::HACK);
         entry.system      = obj.value(QStringLiteral("system")).toString();
         entry.format      = obj.value(QStringLiteral("format")).toString();
         entry.patchUrl    = obj.value(QStringLiteral("patch_url")).toString();

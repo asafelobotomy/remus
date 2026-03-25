@@ -81,6 +81,22 @@ This header-only library provides all application-wide constants in a single, ty
 - **Match Confidence Levels**: Thresholds for display (high/medium/low)
 - **Color Coding**: Green/yellow/red confidence visualization
 
+### file_types.h _(NEW)_
+- **Canonical file classifications**: official, hack, translation, improvement, homebrew, prototype
+- **Shared helpers**: detect official vs derived variants without repeating string comparisons
+
+### files.h _(NEW)_
+- **Shared file extensions**: archive, CHD source, and primary disc playlist extensions
+- **Helper predicates**: archive and disc-extension checks for scanners, hashing, and UI grouping
+
+### exports.h _(NEW)_
+- **Export identifiers**: shared format IDs, display labels, and default filenames
+- **Frontend mappings**: RetroArch playlist names, LaunchBox platform names, thumbnail directories
+
+### cli.h _(NEW)_
+- **CLI option names**: shared option tokens for JSON, export, interactive, and confidence-related flags
+- **CLI defaults**: common default strings for provider, export format, patch format, and bundle settings
+
 ### hash_algorithms.h
 - **Hash Algorithm Metadata**: Algorithm names, output lengths, system assignments
 
@@ -89,8 +105,15 @@ This header-only library provides all application-wide constants in a single, ty
 
 ### constants.h
 - **Main Include**: Includes all module headers
-- **Version Tracking**: Constants library version number (currently v5)
+- **Version Tracking**: Constants library version number (currently v6)
 - **App Metadata**: Application version, milestone tracking
+
+## Adoption Rules
+
+- Add a constant when the value is shared across subsystems or represents domain vocabulary.
+- Keep provider-local JSON keys and one-off UI role names close to their owning code.
+- Prefer focused modules such as file, export, or CLI constants over expanding `constants.h` with unrelated literals.
+- Reuse existing constants before creating new ones.
 
 ## Usage Examples
 

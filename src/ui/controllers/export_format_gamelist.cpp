@@ -1,5 +1,7 @@
 #include "export_controller.h"
 #include "../../core/system_resolver.h"
+#include "../../core/constants/confidence.h"
+#include "../../core/constants/exports.h"
 #include "../../core/constants/systems.h"
 #include "../../core/constants/providers.h"
 
@@ -140,7 +142,7 @@ int ExportController::exportToEmulationStation(const QString &romsDir,
     m_exporting = true;
     m_cancelRequested = false;
     emit exportingChanged();
-    emit exportStarted("EmulationStation");
+    emit exportStarted(Constants::Exports::DisplayNames::EMULATION_STATION);
     
     // Get all systems
     QStringList systems;
@@ -172,7 +174,7 @@ int ExportController::exportToEmulationStation(const QString &romsDir,
     m_lastExportPath = romsDir;
     emit exportingChanged();
     emit lastExportPathChanged();
-    emit exportCompleted("EmulationStation", gamelistsCreated, romsDir);
+    emit exportCompleted(Constants::Exports::DisplayNames::EMULATION_STATION, gamelistsCreated, romsDir);
     
     return gamelistsCreated;
 }
@@ -184,7 +186,7 @@ bool ExportController::createESGamelist(const QString &system,
     // ES-DE uses lowercase system folder names
     QString systemFolder = system.toLower();
     QString systemDir = romsDir + "/" + systemFolder;
-    QString gamelistPath = systemDir + "/gamelist.xml";
+    QString gamelistPath = systemDir + "/" + Constants::Exports::Files::ES_GAMELIST;
 
     ArtworkDownloader downloader;
     QString mediaDir = systemDir + "/media/boxart";
@@ -200,10 +202,11 @@ bool ExportController::createESGamelist(const QString &system,
         FROM games g
         JOIN matches m ON g.id = m.game_id
         JOIN files f ON m.file_id = f.id
-        WHERE g.system = ? AND m.confidence >= 60
+        WHERE g.system = ? AND m.confidence >= ?
         ORDER BY g.title
     )");
     query.addBindValue(system);
+    query.addBindValue(static_cast<int>(Constants::Confidence::Thresholds::MEDIUM));
     
     if (!query.exec()) {
         return false;
@@ -310,7 +313,7 @@ int ExportController::exportToLaunchBox(const QString &outputDir,
     m_exporting = true;
     m_cancelRequested = false;
     emit exportingChanged();
-    emit exportStarted("LaunchBox");
+    emit exportStarted(Constants::Exports::DisplayNames::LAUNCHBOX);
     
     QDir dir(outputDir);
     if (!dir.exists()) {
@@ -347,7 +350,7 @@ int ExportController::exportToLaunchBox(const QString &outputDir,
     m_lastExportPath = outputDir;
     emit exportingChanged();
     emit lastExportPathChanged();
-    emit exportCompleted("LaunchBox", platformsCreated, outputDir);
+    emit exportCompleted(Constants::Exports::DisplayNames::LAUNCHBOX, platformsCreated, outputDir);
     
     return platformsCreated;
 }
@@ -373,10 +376,11 @@ bool ExportController::createLaunchBoxPlatformXML(const QString &system,
         FROM games g
         JOIN matches m ON g.id = m.game_id
         JOIN files f ON m.file_id = f.id
-        WHERE g.system = ? AND m.confidence >= 60
+        WHERE g.system = ? AND m.confidence >= ?
         ORDER BY g.title
     )");
     query.addBindValue(system);
+    query.addBindValue(static_cast<int>(Constants::Confidence::Thresholds::MEDIUM));
     
     if (!query.exec()) {
         return false;
@@ -472,45 +476,10 @@ bool ExportController::createLaunchBoxPlatformXML(const QString &system,
 
 QString ExportController::getLaunchBoxPlatformName(const QString &system) const
 {
-    // Map system IDs to LaunchBox platform names
-    using namespace Constants::Systems;
-    static const QHash<int, QString> platformMap {
-        {ID_NES, "Nintendo Entertainment System"},
-        {ID_SNES, "Super Nintendo Entertainment System"},
-        {ID_N64, "Nintendo 64"},
-        {ID_GB, "Nintendo Game Boy"},
-        {ID_GBC, "Nintendo Game Boy Color"},
-        {ID_GBA, "Nintendo Game Boy Advance"},
-        {ID_NDS, "Nintendo DS"},
-        {ID_GAMECUBE, "Nintendo GameCube"},
-        {ID_WII, "Nintendo Wii"},
-        {ID_GENESIS, "Sega Genesis"},
-        {ID_MASTER_SYSTEM, "Sega Master System"},
-        {ID_GAME_GEAR, "Sega Game Gear"},
-        {ID_SATURN, "Sega Saturn"},
-        {ID_DREAMCAST, "Sega Dreamcast"},
-        {ID_SEGA_CD, "Sega CD"},
-        {ID_32X, "Sega 32X"},
-        {ID_PSX, "Sony PlayStation"},
-        {ID_PS2, "Sony PlayStation 2"},
-        {ID_PSP, "Sony PSP"},
-        {ID_PSVITA, "Sony PlayStation Vita"},
-        {ID_TURBOGRAFX16, "TurboGrafx-16"},
-        {ID_TURBOGRAFX_CD, "TurboGrafx-CD"},
-        {ID_NEO_GEO, "SNK Neo Geo"},
-        {ID_NGP, "SNK Neo Geo Pocket"},
-        {ID_ARCADE, "Arcade"},
-        {ID_ATARI_2600, "Atari 2600"},
-        {ID_ATARI_7800, "Atari 7800"},
-        {ID_LYNX, "Atari Lynx"},
-        {ID_ATARI_JAGUAR, "Atari Jaguar"},
-        {ID_WONDERSWAN, "Bandai WonderSwan"}
-    };
-    
-    // Convert system name to ID, then lookup LaunchBox name
     int systemId = SystemResolver::systemIdByName(system);
-    if (systemId > 0 && platformMap.contains(systemId)) {
-        return platformMap.value(systemId);
+    const QString mappedName = Constants::Exports::launchBoxPlatformNameForSystemId(systemId);
+    if (!mappedName.isEmpty()) {
+        return mappedName;
     }
     
     // Fallback: return the input system name

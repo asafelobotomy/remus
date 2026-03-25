@@ -1,4 +1,6 @@
 #include "match_controller.h"
+#include "../../core/constants/confidence.h"
+#include "../../core/constants/match_methods.h"
 #include "../../core/match_utils.h"
 #include "../../metadata/filename_normalizer.h"
 #include "../../services/match_service.h"
@@ -167,7 +169,12 @@ void MatchController::matchFile(int fileId)
                                           metadata.publisher, metadata.developer, metadata.releaseDate,
                                           metadata.description, genresStr, playersStr, metadata.rating);
             if (gameId > 0) {
-                m_db->insertMatch(file.id, gameId, confidence, confidence >= 90 ? "exact" : "fuzzy");
+                m_db->insertMatch(file.id,
+                                  gameId,
+                                  confidence,
+                                  confidence >= Constants::Confidence::Thresholds::EXACT_NAME
+                                      ? QString::fromLatin1(Constants::MatchMethods::NAME)
+                                      : QString::fromLatin1(Constants::MatchMethods::FUZZY));
             }
             
             emit matchFound(file.id, metadata.title, confidence);

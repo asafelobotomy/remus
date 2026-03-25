@@ -1,10 +1,20 @@
 #include "chd_converter.h"
+#include "constants/files.h"
 #include <QFileInfo>
 #include <QDir>
 #include <QDebug>
 #include <QRegularExpression>
 
 namespace Remus {
+
+namespace {
+
+QString extensionSuffix(const QString &extension)
+{
+    return extension.startsWith('.') ? extension.mid(1) : extension;
+}
+
+}
 
 CHDConverter::CHDConverter(QObject *parent)
     : ExternalToolRunner(parent)
@@ -220,7 +230,7 @@ QList<CHDConversionResult> CHDConverter::batchConvert(const QStringList &inputPa
         QString outputPath;
         if (!outputDir.isEmpty()) {
             QFileInfo inputInfo(inputPath);
-            outputPath = QDir(outputDir).filePath(inputInfo.completeBaseName() + ".chd");
+            outputPath = QDir(outputDir).filePath(inputInfo.completeBaseName() + Constants::Files::CHD);
         }
         
         QFileInfo info(inputPath);
@@ -265,14 +275,15 @@ CHDConversionResult CHDConverter::runChdman(const QStringList &args,
     result.inputSize = getFileSize(inputPath);
     
     // For BIN/CUE, add BIN file sizes too
-    if (inputPath.endsWith(".cue", Qt::CaseInsensitive)) {
+    if (inputPath.endsWith(Constants::Files::CUE, Qt::CaseInsensitive)) {
         QFileInfo cueInfo(inputPath);
         QDir dir = cueInfo.absoluteDir();
         QString baseName = cueInfo.completeBaseName();
         
-        // Look for matching .bin files
+        // Look for matching BIN track files referenced by the cue sheet.
         QStringList binFilters;
-        binFilters << baseName + ".bin" << baseName + " (Track*).bin";
+        binFilters << baseName + Constants::Files::BIN
+                   << baseName + QStringLiteral(" (Track*)") + Constants::Files::BIN;
         QFileInfoList binFiles = dir.entryInfoList(binFilters, QDir::Files);
         
         for (const QFileInfo &binInfo : binFiles) {
@@ -324,7 +335,7 @@ CHDConversionResult CHDConverter::runChdman(const QStringList &args,
 QString CHDConverter::getDefaultOutputPath(const QString &inputPath, const QString &targetExt)
 {
     QFileInfo info(inputPath);
-    return info.absoluteDir().filePath(info.completeBaseName() + "." + targetExt);
+    return info.absoluteDir().filePath(info.completeBaseName() + QStringLiteral(".") + extensionSuffix(targetExt));
 }
 
 QString CHDConverter::getCodecString() const

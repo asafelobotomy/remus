@@ -2,6 +2,8 @@
 
 #include <algorithm>
 
+#include "../core/constants/constants.h"
+
 namespace {
 
 bool useDescendingSort(const QString &sortBy)
@@ -21,7 +23,7 @@ bool parseModQueryOptions(const QCommandLineParser &parser,
     options.formatFilter = parser.isSet("mod-format") ? parser.value("mod-format").trimmed() : QString();
     options.sourceUrlFilter = parser.isSet("mod-source-url") ? parser.value("mod-source-url").trimmed() : QString();
     options.sortBy = parser.isSet("mod-sort") ? parser.value("mod-sort").trimmed().toLower() : QString();
-    options.jsonOutput = parser.isSet("json") || parser.isSet("mod-json");
+    options.jsonOutput = parser.isSet(Remus::Constants::Cli::Options::JSON) || parser.isSet(Remus::Constants::Cli::Options::MOD_JSON);
     options.allowSystemFallback = !parser.isSet("mod-no-system-fallback");
 
     if (parser.isSet("mod-system") && options.systemFilter.isEmpty()) {

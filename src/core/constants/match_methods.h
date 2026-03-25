@@ -27,12 +27,33 @@ public:
     
     /// Name-based match (medium-high confidence)
     static constexpr const char* NAME = "name";
+
+    /// Legacy exact-name alias still present in some persisted rows
+    static constexpr const char* EXACT = "exact";
+
+    /// Legacy exact-name alias emitted by older matching paths
+    static constexpr const char* EXACT_NAME = "exact_name";
     
     /// Fuzzy/similarity match (medium-low confidence)
     static constexpr const char* FUZZY = "fuzzy";
+
+    /// Legacy fuzzy alias emitted by older matching paths
+    static constexpr const char* FUZZY_NAME = "fuzzy_name";
+
+    /// Legacy exact-name alias emitted by older matching paths
+    static constexpr const char* NAME_EXACT = "name-exact";
+
+    /// Legacy fuzzy alias emitted by older matching paths
+    static constexpr const char* NAME_FUZZY = "name-fuzzy";
     
     /// User manually assigned (perfect confidence)
     static constexpr const char* MANUAL = "manual";
+
+    /// User-confirmed alias used by some UI flows
+    static constexpr const char* USER_CONFIRMED = "user_confirmed";
+
+    /// Placeholder used before a hash match is fully resolved
+    static constexpr const char* HASH_PENDING = "hash_pending";
     
     /// No match found yet
     static constexpr const char* NONE = "none";
@@ -89,10 +110,11 @@ public:
      *   displayName("name") → "Name Match"
      */
     static QString displayName(const QString &method) {
-        if (method == HASH) return HASH_DISPLAY;
-        if (method == NAME) return NAME_DISPLAY;
-        if (method == FUZZY) return FUZZY_DISPLAY;
-        if (method == MANUAL) return MANUAL_DISPLAY;
+        const QString normalized = canonicalize(method);
+        if (normalized == HASH) return HASH_DISPLAY;
+        if (normalized == NAME) return NAME_DISPLAY;
+        if (normalized == FUZZY) return FUZZY_DISPLAY;
+        if (normalized == MANUAL) return MANUAL_DISPLAY;
         return NONE_DISPLAY;
     }
     
@@ -106,11 +128,39 @@ public:
      *   shortName("fuzzy") → "Fuzzy"
      */
     static QString shortName(const QString &method) {
-        if (method == HASH) return HASH_SHORT;
-        if (method == NAME) return NAME_SHORT;
-        if (method == FUZZY) return FUZZY_SHORT;
-        if (method == MANUAL) return MANUAL_SHORT;
+        const QString normalized = canonicalize(method);
+        if (normalized == HASH) return HASH_SHORT;
+        if (normalized == NAME) return NAME_SHORT;
+        if (normalized == FUZZY) return FUZZY_SHORT;
+        if (normalized == MANUAL) return MANUAL_SHORT;
         return NONE_SHORT;
+    }
+
+    /**
+     * @brief Normalize legacy or variant method identifiers to shared values.
+     */
+    static QString canonicalize(const QString &method) {
+        const QString normalized = method.trimmed().toLower();
+
+        if (normalized == HASH || normalized == HASH_PENDING) return QString::fromLatin1(HASH);
+        if (normalized == NAME || normalized == EXACT || normalized == EXACT_NAME || normalized == NAME_EXACT) {
+            return QString::fromLatin1(NAME);
+        }
+        if (normalized == FUZZY || normalized == FUZZY_NAME || normalized == NAME_FUZZY) {
+            return QString::fromLatin1(FUZZY);
+        }
+        if (normalized == MANUAL || normalized == USER_CONFIRMED) return QString::fromLatin1(MANUAL);
+
+        return normalized;
+    }
+
+    static bool isHashBased(const QString &method) {
+        return canonicalize(method) == HASH;
+    }
+
+    static bool isNameBased(const QString &method) {
+        const QString normalized = canonicalize(method);
+        return normalized == NAME || normalized == FUZZY;
     }
     
     /**
@@ -119,8 +169,9 @@ public:
      * @return True if valid method identifier
      */
     static bool isValid(const QString &method) {
-        return method == HASH || method == NAME || 
-               method == FUZZY || method == MANUAL || method == NONE;
+         const QString normalized = canonicalize(method);
+         return normalized == HASH || normalized == NAME || 
+             normalized == FUZZY || normalized == MANUAL || normalized == NONE;
     }
     
     /**
@@ -144,9 +195,10 @@ public:
      * - NONE: 0 (no match)
      */
     static int typicalConfidence(const QString &method) {
-        if (method == HASH || method == MANUAL) return 100;
-        if (method == NAME) return 90;
-        if (method == FUZZY) return 70;
+        const QString normalized = canonicalize(method);
+        if (normalized == HASH || normalized == MANUAL) return 100;
+        if (normalized == NAME) return 90;
+        if (normalized == FUZZY) return 70;
         return 0;
     }
     
@@ -156,16 +208,17 @@ public:
      * @return Human-readable description
      */
     static QString description(const QString &method) {
-        if (method == HASH) {
+        const QString normalized = canonicalize(method);
+        if (normalized == HASH) {
             return "Matched by file hash against metadata database";
         }
-        if (method == NAME) {
+        if (normalized == NAME) {
             return "Matched by exact filename against metadata database";
         }
-        if (method == FUZZY) {
+        if (normalized == FUZZY) {
             return "Matched by similar filename using fuzzy search";
         }
-        if (method == MANUAL) {
+        if (normalized == MANUAL) {
             return "Manually assigned by user";
         }
         return "No metadata match found";

@@ -3,6 +3,7 @@
 #include "tool_hints.h"
 
 #include "../services/conversion_service.h"
+#include "../core/constants/files.h"
 #include "../core/m3u_generator.h"
 
 #include <QDir>
@@ -52,13 +53,13 @@ CompressorScreen::FileType CompressorScreen::detectFileType(const std::string &f
 
     if (lower.size() >= 4) {
         std::string ext = lower.substr(lower.rfind('.') != std::string::npos ? lower.rfind('.') : 0);
-        if (ext == ".cue") return FileType::CUE;
-        if (ext == ".iso") return FileType::ISO;
-        if (ext == ".gdi") return FileType::GDI;
-        if (ext == ".chd") return FileType::CHD;
-        if (ext == ".zip") return FileType::ZIP;
-        if (ext == ".7z")  return FileType::SevenZ;
-        if (ext == ".rar") return FileType::RAR;
+        if (ext == Remus::Constants::Files::CUE.toStdString()) return FileType::CUE;
+        if (ext == Remus::Constants::Files::ISO.toStdString()) return FileType::ISO;
+        if (ext == Remus::Constants::Files::GDI.toStdString()) return FileType::GDI;
+        if (ext == Remus::Constants::Files::CHD.toStdString()) return FileType::CHD;
+        if (ext == Remus::Constants::Files::ZIP.toStdString()) return FileType::ZIP;
+        if (ext == Remus::Constants::Files::SEVEN_Z.toStdString())  return FileType::SevenZ;
+        if (ext == Remus::Constants::Files::RAR.toStdString()) return FileType::RAR;
     }
     return FileType::Unknown;
 }
@@ -601,13 +602,17 @@ void CompressorScreen::scanSource()
     std::vector<FileEntry> found;
 
     // Supported extensions for compress mode
-    QStringList compressExts = {"*.cue", "*.iso", "*.gdi"};
-    QStringList extractExts = {"*.chd"};
-    QStringList archiveExts = {"*.zip", "*.7z", "*.rar"};
+    const QStringList compressExts = Remus::Constants::Files::globPatternsFor(Remus::Constants::Files::COMPRESSIBLE_DISC_EXTENSIONS);
+    const QStringList extractExts = Remus::Constants::Files::globPatternsFor(Remus::Constants::Files::EXTRACTABLE_DISC_EXTENSIONS);
+    const QStringList archiveExts = Remus::Constants::Files::globPatternsFor(Remus::Constants::Files::ARCHIVE_OPERATION_EXTENSIONS);
 
     // All file types to scan for in Archive mode
-    QStringList allExts = {"*.cue", "*.iso", "*.gdi", "*.chd", "*.zip", "*.7z", "*.rar",
-                           "*.bin", "*.img", "*.rom", "*.nes", "*.sfc", "*.smc",
+    QStringList allExts = Remus::Constants::Files::globPatternsFor(
+                              Remus::Constants::Files::COMPRESSIBLE_DISC_EXTENSIONS +
+                              Remus::Constants::Files::EXTRACTABLE_DISC_EXTENSIONS +
+                              Remus::Constants::Files::ARCHIVE_OPERATION_EXTENSIONS +
+                              QStringList{Remus::Constants::Files::BIN, Remus::Constants::Files::IMG}) +
+                           QStringList{"*.rom", "*.nes", "*.sfc", "*.smc",
                            "*.gb", "*.gbc", "*.gba", "*.nds", "*.n64", "*.z64",
                            "*.md", "*.gen", "*.sms", "*.gg"};
 
@@ -616,7 +621,7 @@ void CompressorScreen::scanSource()
     case OpMode::Compress: filters = compressExts + archiveExts; break;
     case OpMode::Extract:  filters = extractExts; break;
     case OpMode::Archive:  filters = allExts; break;
-    case OpMode::M3U:      filters = {"*.cue", "*.chd", "*.iso", "*.gdi"}; break;
+    case OpMode::M3U:      filters = Remus::Constants::Files::globPatternsFor(Remus::Constants::Files::M3U_SOURCE_EXTENSIONS); break;
     }
 
     auto addFile = [&](const QString &filePath) {
@@ -793,7 +798,7 @@ void CompressorScreen::processSingleFile(size_t idx, const std::string &outDir)
         // Archive mode — compress files to ZIP/7z via ConversionService
         // Determine output archive path
         QFileInfo fi(qPath);
-        QString archiveName = fi.completeBaseName() + QStringLiteral(".zip");
+        QString archiveName = fi.completeBaseName() + Remus::Constants::Files::ZIP;
         QString archivePath = qOutDir.isEmpty()
             ? fi.absolutePath() + QStringLiteral("/") + archiveName
             : qOutDir + QStringLiteral("/") + archiveName;
@@ -919,7 +924,7 @@ void CompressorScreen::processM3UFiles(const std::string &outDir)
         }
 
         // Generate M3U file
-        QString m3uPath = qOutDir + "/" + QString::fromStdString(group.baseTitle) + ".m3u";
+        QString m3uPath = qOutDir + "/" + QString::fromStdString(group.baseTitle) + Remus::Constants::Files::M3U;
         QFile m3uFile(m3uPath);
         bool ok = false;
         if (m3uFile.open(QIODevice::WriteOnly | QIODevice::Text)) {

@@ -5,6 +5,7 @@
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include "../core/constants/constants.h"
 #include "../core/database.h"
 #include "../core/hasher.h"
 #include "../core/patch_engine.h"
@@ -41,11 +42,11 @@ static bool persistAppliedPatchLineage(Database &db,
         : (!patchInfoFromName.patchName.isEmpty()
             ? patchInfoFromName.patchName
             : QFileInfo(patchPath).completeBaseName());
-    const QString fileType = outputInfo.fileType != QStringLiteral("official")
+    const QString fileType = !Constants::FileTypes::isOfficial(outputInfo.fileType)
         ? outputInfo.fileType
-        : (patchInfoFromName.fileType != QStringLiteral("official")
+        : (!Constants::FileTypes::isOfficial(patchInfoFromName.fileType)
             ? patchInfoFromName.fileType
-            : QStringLiteral("hack"));
+            : Constants::FileTypes::HACK);
 
     Database::AppliedPatchRecord record;
     record.basePath = basePath;
@@ -96,11 +97,11 @@ int handleExportCommand(CliContext &ctx)
     if (ctx.dryRunAll) qInfo() << "[DRY-RUN] Export outputs will not be written";
 
     if (outputPath.isEmpty()) {
-        if      (format == "retroarch")  outputPath = "remus.lpl";
-        else if (format == "emustation") outputPath = "gamelist.xml";
-        else if (format == "launchbox")  outputPath = "launchbox-games.xml";
-        else if (format == "csv")        outputPath = "remus-export.csv";
-        else                             outputPath = "remus-export.json";
+        if      (format == Constants::Exports::Formats::RETROARCH)  outputPath = Constants::Exports::Files::DEFAULT_RETROARCH_EXPORT;
+        else if (format == Constants::Exports::Formats::EMUSTATION) outputPath = Constants::Exports::Files::ES_GAMELIST;
+        else if (format == Constants::Exports::Formats::LAUNCHBOX)  outputPath = Constants::Exports::Files::DEFAULT_LAUNCHBOX_EXPORT;
+        else if (format == Constants::Exports::Formats::CSV)        outputPath = Constants::Exports::Files::DEFAULT_CSV_EXPORT;
+        else                                                        outputPath = Constants::Exports::Files::DEFAULT_JSON_EXPORT;
     }
 
     const QList<ExportRow> rows = buildExportRows(ctx, systemsArg);
@@ -114,7 +115,7 @@ int handleExportCommand(CliContext &ctx)
         return true;
     };
 
-    if (format == "retroarch") {
+    if (format == Constants::Exports::Formats::RETROARCH) {
         if (ctx.dryRunAll) {
             qInfo() << "[DRY-RUN] Would write RetroArch playlist to" << outputPath << "(" << rows.size() << "entries)";
             return 0;
@@ -126,11 +127,11 @@ int handleExportCommand(CliContext &ctx)
             out << (!row.match.gameTitle.isEmpty() ? row.match.gameTitle : row.file.filename) << "\n";
             out << "DETECT\nDETECT\n";
             out << (row.file.crc32.isEmpty() ? "00000000" : row.file.crc32) << "|crc\n";
-            out << ctx.db.getSystemDisplayName(row.file.systemId) << ".lpl\n";
+            out << ctx.db.getSystemDisplayName(row.file.systemId) << Constants::Exports::Files::PLAYLIST_EXTENSION << "\n";
         }
         qInfo() << "✓ RetroArch playlist exported to" << outputPath;
 
-    } else if (format == "emustation") {
+    } else if (format == Constants::Exports::Formats::EMUSTATION) {
         if (ctx.dryRunAll) {
             qInfo() << "[DRY-RUN] Would write EmulationStation gamelist to" << outputPath << "(" << rows.size() << "entries)";
             return 0;
@@ -151,7 +152,7 @@ int handleExportCommand(CliContext &ctx)
         out << "</gameList>\n";
         qInfo() << "✓ EmulationStation gamelist exported to" << outputPath;
 
-    } else if (format == "launchbox") {
+    } else if (format == Constants::Exports::Formats::LAUNCHBOX) {
         if (ctx.dryRunAll) {
             qInfo() << "[DRY-RUN] Would write LaunchBox XML to" << outputPath << "(" << rows.size() << "entries)";
             return 0;
@@ -170,7 +171,7 @@ int handleExportCommand(CliContext &ctx)
         out << "</LaunchBox>\n";
         qInfo() << "✓ LaunchBox XML exported to" << outputPath;
 
-    } else if (format == "csv") {
+    } else if (format == Constants::Exports::Formats::CSV) {
         if (ctx.dryRunAll) {
             qInfo() << "[DRY-RUN] Would write CSV to" << outputPath << "(" << rows.size() << "entries)";
             return 0;

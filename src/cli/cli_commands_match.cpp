@@ -34,7 +34,7 @@ int handleMatchCommand(CliContext &ctx)
     });
 
     QList<FileRecord> files = getHashedFiles(ctx.db);
-    int minConfidence = ctx.parser.value("min-confidence").toInt();
+    int minConfidence = ctx.parser.value(Cli::Options::MIN_CONFIDENCE).toInt();
 
     qInfo() << "Matching" << files.size() << "files with minimum confidence:" << minConfidence << "%";
     qInfo() << "Provider fallback order:";
@@ -102,7 +102,7 @@ int handleMatchReportCommand(CliContext &ctx)
 
     auto orchestrator  = buildOrchestrator(ctx.parser);
     QList<FileRecord> files = getHashedFiles(ctx.db);
-    int minConfidence  = ctx.parser.value("min-confidence").toInt();
+    int minConfidence  = ctx.parser.value(Cli::Options::MIN_CONFIDENCE).toInt();
 
     QFile reportFile;
     QTextStream outStream(stdout);

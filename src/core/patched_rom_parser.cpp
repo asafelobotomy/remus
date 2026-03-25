@@ -4,6 +4,8 @@
 #include <QRegularExpression>
 #include <QStringList>
 
+#include "constants/file_types.h"
+
 namespace Remus {
 
 namespace {
@@ -138,19 +140,19 @@ PatchedRomInfo PatchedRomParser::parse(const QString &nameOrPath)
         }
 
         if (looksPrototypeTag(tag)) {
-            info.fileType = QStringLiteral("prototype");
+            info.fileType = Constants::FileTypes::PROTOTYPE;
             info.baseTitle.remove(fullTag);
             continue;
         }
 
         if (looksHomebrewTag(tag)) {
-            info.fileType = QStringLiteral("homebrew");
+            info.fileType = Constants::FileTypes::HOMEBREW;
             info.baseTitle.remove(fullTag);
             continue;
         }
 
         if (looksTranslationTag(tag)) {
-            info.fileType = QStringLiteral("translation");
+            info.fileType = Constants::FileTypes::TRANSLATION;
             info.isPatched = true;
             patchLabels.append(tag);
             info.baseTitle.remove(fullTag);
@@ -158,8 +160,8 @@ PatchedRomInfo PatchedRomParser::parse(const QString &nameOrPath)
         }
 
         if (looksHackTag(tag, bracketed)) {
-            if (info.fileType == QStringLiteral("official")) {
-                info.fileType = QStringLiteral("hack");
+            if (Constants::FileTypes::isOfficial(info.fileType)) {
+                info.fileType = Constants::FileTypes::HACK;
             }
             info.isPatched = true;
             patchLabels.append(tag);
