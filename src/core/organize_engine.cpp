@@ -26,6 +26,7 @@ OrganizeEngine::OrganizeEngine(Database &db, QObject *parent)
     , m_template(TemplateEngine::getNoIntroTemplate())
     , m_collisionStrategy(CollisionStrategy::Rename)
     , m_dryRun(false)
+    , m_folderNaming(Constants::FolderNaming::Scheme::None)
 {
 }
 
@@ -49,6 +50,12 @@ void OrganizeEngine::setDryRun(bool enabled)
 {
     m_dryRun = enabled;
     qInfo() << "Dry-run mode:" << (enabled ? "ENABLED" : "DISABLED");
+}
+
+void OrganizeEngine::setFolderNaming(Constants::FolderNaming::Scheme scheme)
+{
+    m_folderNaming = scheme;
+    qInfo() << "Folder naming scheme:" << Constants::FolderNaming::schemeDisplayName(scheme);
 }
 
 OrganizeResult OrganizeEngine::organizeFile(int fileId,
@@ -292,10 +299,17 @@ QString OrganizeEngine::generateDestinationPath(const FileRecord &fileRecord,
     // Apply template
     QString filename = m_templateEngine->applyTemplate(m_template, metadata, variables);
 
-    // Combine with destination directory
-    QString fullPath = QDir(destinationDir).filePath(filename);
+    // Build destination: optionally add system subfolder
+    QDir destDir(destinationDir);
+    if (m_folderNaming != Constants::FolderNaming::Scheme::None) {
+        QString systemFolder = Constants::FolderNaming::folderNameForSystemId(
+            fileRecord.systemId, m_folderNaming);
+        if (!systemFolder.isEmpty()) {
+            destDir = QDir(destDir.filePath(systemFolder));
+        }
+    }
 
-    return fullPath;
+    return destDir.filePath(filename);
 }
 
 } // namespace Remus

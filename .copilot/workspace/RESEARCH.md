@@ -24,6 +24,27 @@
 | https://emulation.gametechwiki.com/index.php/File_hashes | Overview of hash databases for emulation verification; multi-track disc guide | 2026-03-23 | hashing, reference, verification |
 | https://github.com/Alcaro/Flips | Flips — BPS/IPS patch tool (GPL); BPS format specification links | 2026-03-23 | patching, bps, ips, flips |
 
+## Frontend ROM Folder Naming Conventions (2026-05-24)
+
+| URL | Summary | Date | Tags |
+|-----|---------|------|------|
+| https://emudeck.github.io/cheat-sheet/ | EmuDeck official cheat sheet — complete ROM folder names, emulators, extensions, and BIOS for every supported platform | 2026-05-24 | emudeck, folder-names, roms, reference |
+| https://gitlab.com/es-de/emulationstation-de/-/raw/master/resources/systems/linux/es_systems.xml | ES-DE es_systems.xml — authoritative `<name>` tags = folder names for every supported system | 2026-05-24 | es-de, emulationstation, folder-names, xml |
+| https://wiki.batocera.org/systems | Batocera system list wiki — folder names for all supported platforms | 2026-05-24 | batocera, folder-names, wiki |
+| https://raw.githubusercontent.com/rommapp/romm/master/backend/handler/metadata/base_handler.py | RomM base_handler.py — defines `UniversalPlatformSlug` StrEnum; enum values ARE the folder names RomM expects | 2026-05-24 | romm, folder-names, python, source |
+| https://raw.githubusercontent.com/rommapp/romm/master/backend/handler/metadata/igdb_handler.py | RomM igdb_handler.py — `IGDB_PLATFORM_LIST` dict mapping UPS → IGDB IDs/slugs/categories | 2026-05-24 | romm, igdb, platforms, python, source |
+| https://docs.romm.app/latest/Platforms-and-Players/Supported-Platforms/ | RomM official supported platforms list — platform display name to folder-name mapping (authoritative human-readable list) | 2026-05-24 | romm, folder-names, docs, reference |
+| https://docs.romm.app/latest/Getting-Started/Folder-Structure/ | RomM folder structure docs — Structure A vs B, naming conventions, tag support | 2026-05-24 | romm, folder-structure, docs |
+| https://raw.githubusercontent.com/RetroPie/RetroPie-Setup/master/scriptmodules/libretrocores/lr-genesis-plus-gx.sh | RetroPie lr-genesis-plus-gx — confirms: megadrive, mastersystem, gamegear, sg-1000 (hyphen), segacd | 2026-05-24 | retropie, folder-names, source |
+| https://raw.githubusercontent.com/RetroPie/RetroPie-Setup/master/scriptmodules/libretrocores/lr-fbneo.sh | RetroPie lr-fbneo — confirms: arcade, neogeo, fba, pcengine, coleco (not colecovision), ngp, ngpc, zxspectrum | 2026-05-24 | retropie, folder-names, source |
+| https://raw.githubusercontent.com/RetroPie/RetroPie-Setup/master/scriptmodules/libretrocores/lr-virtualjaguar.sh | RetroPie lr-virtualjaguar — confirms: atarijaguar (with atari prefix) | 2026-05-24 | retropie, folder-names, source |
+| https://raw.githubusercontent.com/RetroPie/RetroPie-Setup/master/scriptmodules/libretrocores/lr-beetle-lynx.sh | RetroPie lr-beetle-lynx — confirms: atarilynx (with atari prefix) | 2026-05-24 | retropie, folder-names, source |
+| https://raw.githubusercontent.com/RetroPie/RetroPie-Setup/master/scriptmodules/libretrocores/lr-beetle-wswan.sh | RetroPie lr-beetle-wswan — confirms: wonderswan, wonderswancolor | 2026-05-24 | retropie, folder-names, source |
+| https://raw.githubusercontent.com/RetroPie/RetroPie-Setup/master/scriptmodules/libretrocores/lr-flycast.sh | RetroPie lr-flycast — confirms: dreamcast (not dc) | 2026-05-24 | retropie, folder-names, source |
+| https://raw.githubusercontent.com/RetroPie/RetroPie-Setup/master/scriptmodules/libretrocores/lr-opera.sh | RetroPie lr-opera — confirms: 3do | 2026-05-24 | retropie, folder-names, source |
+| https://raw.githubusercontent.com/RetroPie/RetroPie-Setup/master/scriptmodules/libretrocores/lr-bluemsx.sh | RetroPie lr-bluemsx — confirms: coleco (abbreviated, not colecovision) | 2026-05-24 | retropie, folder-names, source |
+| https://gamesdb.launchbox-app.com/ | LaunchBox Games Database — Platform display names (not folder names; LaunchBox is folder-agnostic) | 2026-05-24 | launchbox, platform-names, reference |
+
 ## Retro Game Metadata Sources Research (2026-03-26)
 
 | URL | Summary | Date | Tags |

@@ -9,6 +9,7 @@
 #include "../core/rom_bundler.h"
 #include "../core/m3u_generator.h"
 #include "../core/constants/constants.h"
+#include "../core/constants/folder_naming.h"
 #include "../metadata/artwork_downloader.h"
 #include "cli_logging.h"
 
@@ -211,12 +212,15 @@ int handleOrganizeCommand(CliContext &ctx)
 
     const QString destination = ctx.parser.value("organize");
     const QString templateStr = ctx.parser.value("template");
+    const QString folderNamingStr = ctx.parser.value("folder-naming");
     const bool dryRun = ctx.parser.isSet("dry-run") || ctx.dryRunAll;
+    const auto folderNaming = Constants::FolderNaming::schemeFromString(folderNamingStr);
 
     qInfo() << "";
     qInfo() << "=== Organize & Rename Files (M4) ===";
     qInfo() << "Destination:" << destination;
     qInfo() << "Template:"    << templateStr;
+    qInfo() << "Folder naming:" << Constants::FolderNaming::schemeDisplayName(folderNaming);
     qInfo() << "Mode:"        << (dryRun ? "DRY RUN (preview only)" : "EXECUTE");
     qInfo() << "";
 
@@ -224,6 +228,7 @@ int handleOrganizeCommand(CliContext &ctx)
     organizer.setTemplate(templateStr);
     organizer.setDryRun(dryRun);
     organizer.setCollisionStrategy(CollisionStrategy::Rename);
+    organizer.setFolderNaming(folderNaming);
 
     QObject::connect(&organizer, &OrganizeEngine::operationStarted,
         [](int fileId, const QString &oldPath, const QString &newPath) {

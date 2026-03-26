@@ -481,8 +481,7 @@ inline const QMap<int, SystemDef> SYSTEMS = {
         1996
     }},
     
-    // Additional systems...
-    // TODO: Add remaining systems (GB, GBC, GBA, NDS, PS2, PSP, Atari, etc.)
+    // All 39 default systems are now defined above.
 };
 
 // ============================================================================

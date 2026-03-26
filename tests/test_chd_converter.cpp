@@ -39,10 +39,12 @@ protected:
             if (outputIndex >= 0 && outputIndex + 1 < args.size()) {
                 const QString outputPath = args.at(outputIndex + 1);
                 QFileInfo info(outputPath);
-                Q_ASSERT(QDir().mkpath(info.absolutePath()));
+                if (!QDir().mkpath(info.absolutePath()))
+                    qFatal("FakeChdConverter: cannot mkpath %s", qPrintable(info.absolutePath()));
                 QFile outputFile(outputPath);
                 if (outputFile.open(QIODevice::WriteOnly)) {
-                    Q_ASSERT(writeAll(outputFile, QByteArrayLiteral("output")));
+                    if (!writeAll(outputFile, QByteArrayLiteral("output")))
+                        qFatal("FakeChdConverter: write failed");
                 }
             }
         }

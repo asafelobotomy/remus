@@ -50,7 +50,7 @@ private:
         fr.extension = ext;
         fr.systemId = sysId;
         int id = db.insertFile(fr);
-        Q_ASSERT(id > 0);
+        if (id <= 0) qFatal("insertTestFile: insertFile returned %d", id);
         return id;
     }
 

@@ -11,17 +11,14 @@ QList<MultiSignalMatch> LocalDatabaseProvider::matchROM(const ROMSignals &input)
     QMutexLocker locker(&m_mutex);
     QList<MultiSignalMatch> matches;
 
-    qDebug() << "LocalDatabaseProvider: Multi-signal matching for" << input.filename;
-    qDebug() << "  CRC32:" << input.crc32 << "MD5:" << input.md5 << "SHA1:" << input.sha1;
-    qDebug() << "  Size:" << input.fileSize << "Serial:" << input.serial;
-
     QList<ClrMameProEntry> hashCandidates;
+    QString matchedVia;
 
     if (!input.crc32.isEmpty()) {
         const QString normalizedCrc = normalizeHash(input.crc32);
         if (m_crc32Index.contains(normalizedCrc)) {
             hashCandidates.append(m_crc32Index.value(normalizedCrc));
-            qDebug() << "  Hash match (CRC32):" << m_crc32Index.value(normalizedCrc).gameName;
+            matchedVia = QStringLiteral("CRC32");
         }
     }
 
@@ -29,7 +26,7 @@ QList<MultiSignalMatch> LocalDatabaseProvider::matchROM(const ROMSignals &input)
         const QString normalizedMd5 = normalizeHash(input.md5);
         if (m_md5Index.contains(normalizedMd5)) {
             hashCandidates.append(m_md5Index.value(normalizedMd5));
-            qDebug() << "  Hash match (MD5):" << m_md5Index.value(normalizedMd5).gameName;
+            matchedVia = QStringLiteral("MD5");
         }
     }
 
@@ -37,7 +34,7 @@ QList<MultiSignalMatch> LocalDatabaseProvider::matchROM(const ROMSignals &input)
         const QString normalizedSha1 = normalizeHash(input.sha1);
         if (m_sha1Index.contains(normalizedSha1)) {
             hashCandidates.append(m_sha1Index.value(normalizedSha1));
-            qDebug() << "  Hash match (SHA1):" << m_sha1Index.value(normalizedSha1).gameName;
+            matchedVia = QStringLiteral("SHA1");
         }
     }
 
@@ -85,7 +82,6 @@ QList<MultiSignalMatch> LocalDatabaseProvider::matchROM(const ROMSignals &input)
     }
 
     if (matches.isEmpty()) {
-        qDebug() << "  No hash match, trying filename + size matching...";
 
         const QString signalBase = QFileInfo(input.filename).completeBaseName().toLower();
         QSet<QString> seenEntries;
@@ -120,7 +116,7 @@ QList<MultiSignalMatch> LocalDatabaseProvider::matchROM(const ROMSignals &input)
                 }
 
                 matches.append(match);
-                qDebug() << "  Filename+size match:" << entry.gameName << "score:" << match.confidenceScore;
+                matchedVia = QStringLiteral("filename+size");
                 break;
             }
         }
@@ -130,11 +126,10 @@ QList<MultiSignalMatch> LocalDatabaseProvider::matchROM(const ROMSignals &input)
         return a.confidenceScore > b.confidenceScore;
     });
 
-    qDebug() << "LocalDatabaseProvider: Found" << matches.size() << "multi-signal matches";
     if (!matches.isEmpty()) {
-        qDebug() << "  Best match:" << matches.first().entry.gameName
-                 << "confidence:" << matches.first().confidencePercent() << "%"
-                 << "signals:" << matches.first().matchSignalCount;
+        qDebug() << "LocalDB:" << input.filename << "→" << matches.first().entry.gameName
+                 << "via" << matchedVia
+                 << "(" << matches.first().confidencePercent() << "%)";
     }
 
     return matches;

@@ -135,7 +135,7 @@ int handleModCommands(CliContext &ctx)
 
         qInfo() << "=== Catalog Systems ===";
         for (auto it = counts.cbegin(); it != counts.cend(); ++it) {
-            qInfo().noquote() << QString("%-24s %1 mods").arg(it.key(), -24).arg(it.value());
+            qInfo().noquote() << QString("%1 %2 mods").arg(it.key(), -24).arg(it.value());
         }
         return 0;
     }

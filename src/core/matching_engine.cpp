@@ -24,26 +24,17 @@ Match MatchingEngine::matchFile(const QString &filePath, const QString &hash,
     // Step 1: Try hash-based matching (highest confidence)
     if (!hash.isEmpty()) {
         emit tryingHashMatch();
-        qInfo() << "Attempting hash match for:" << fileName << "(" << hash << ")";
-        
-        // Hash match would be implemented by ProviderOrchestrator
-        // For now, we mark the method and store the hash
         match.matchedHash = hash;
         match.matchMethod = QString::fromLatin1(Constants::MatchMethods::HASH_PENDING);
         match.confidence = 0; // Will be set to 100 if hash matches
     }
     
     // Step 2: Extract and normalize filename
-    QString normalizedName = normalizeFileName(fileName);
     QString gameTitle = extractGameTitle(fileName);
     
-    qInfo() << "Normalized name:" << normalizedName;
-    qInfo() << "Extracted title:" << gameTitle;
+    qDebug() << "Match:" << fileName << (hash.isEmpty() ? "(no hash)" : hash) << "→" << gameTitle;
     
     match.matchedName = gameTitle;
-    
-    // Confidence will be calculated based on provider response
-    // This is a placeholder structure that would be filled by the orchestrator
     
     return match;
 }

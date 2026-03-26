@@ -151,6 +151,7 @@ int main(int argc, char *argv[])
 
     addActionOption(QCommandLineOption("organize",    "Organize and rename files using template", "destination"));
     addOption(QCommandLineOption("template",    "Naming template (default: No-Intro standard)", "template", Constants::Templates::DEFAULT_NO_INTRO));
+    addOption(QCommandLineOption("folder-naming", "Sort into system subfolders (none|default|batocera|retropie|emudeck|romm)", "scheme", "none"));
     addOption(QCommandLineOption("dry-run",     "Preview changes without modifying files"));
     addActionOption(QCommandLineOption("generate-m3u","Generate M3U playlists for multi-disc games"));
     addOption(QCommandLineOption("m3u-dir",     "Directory for M3U playlists (default: same as game files)", "directory"));

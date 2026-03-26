@@ -1,6 +1,6 @@
 # Metadata Source Improvements Plan
 
-> Date: 2026-03-26 | Status: Draft | Research: [retro-game-metadata-sources-2026-03-26.md](../../.github/research/retro-game-metadata-sources-2026-03-26.md)
+> Date: 2026-03-26 | Status: Mostly Implemented | Research: [retro-game-metadata-sources-2026-03-26.md](../../.github/research/retro-game-metadata-sources-2026-03-26.md)
 
 ## Goal
 

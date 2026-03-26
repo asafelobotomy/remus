@@ -57,10 +57,12 @@ private:
         }
         if (exitCode == 0 && args.size() > outputIndex) {
             QFile f(args[outputIndex]);
-            Q_ASSERT(f.open(QIODevice::WriteOnly));
+            if (!f.open(QIODevice::WriteOnly))
+                qFatal("FakeArchiveCreator: cannot create %s", qPrintable(args[outputIndex]));
             QByteArray payload("PK\x05\x06", 4);
             payload.append(QByteArray(18, '\0'));
-            Q_ASSERT(writeAll(f, payload)); // minimal ZIP end-of-central-dir
+            if (!writeAll(f, payload))
+                qFatal("FakeArchiveCreator: write failed");
         }
         return r;
     }

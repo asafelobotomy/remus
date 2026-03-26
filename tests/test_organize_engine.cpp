@@ -4,6 +4,7 @@
 #include <QFileInfo>
 #include "../src/core/organize_engine.h"
 #include "../src/core/database.h"
+#include "../src/core/constants/folder_naming.h"
 #include "../src/metadata/metadata_provider.h"
 
 using namespace Remus;
@@ -23,6 +24,10 @@ private slots:
     void testWouldCollide();
     void testResolveCollisionSkip();
     void testResolveCollisionRename();
+    void testFolderNamingNoneIsFlat();
+    void testFolderNamingDefaultCreatesSubfolder();
+    void testFolderNamingBatoceraGenesis();
+    void testFolderNamingSchemeFromString();
 
 private:
     // Write a small ROM file into dir and register it in db.
@@ -288,6 +293,117 @@ void OrganizeEngineTest::testResolveCollisionRename()
     QVERIFY(resolved != path);
     QVERIFY(resolved.endsWith(".nes"));
     QVERIFY(resolved.contains("game"));
+}
+
+void OrganizeEngineTest::testFolderNamingNoneIsFlat()
+{
+    QTemporaryDir srcDir, dstDir;
+    QVERIFY(srcDir.isValid() && dstDir.isValid());
+
+    Database db;
+    QVERIFY(db.initialize(":memory:"));
+    int fileId = makeRomFile(srcDir, db);
+    QVERIFY(fileId > 0);
+
+    OrganizeEngine engine(db);
+    engine.setTemplate("{title}{ext}");
+    engine.setDryRun(false);
+    engine.setFolderNaming(Constants::FolderNaming::Scheme::None);
+
+    OrganizeResult result = engine.organizeFile(fileId, makeMetadata(),
+                                                dstDir.path(), FileOperation::Copy);
+    QVERIFY(result.success);
+    // Flat: file lands directly in dstDir, no subfolder
+    QFileInfo info(result.newPath);
+    QCOMPARE(info.absolutePath(), QDir(dstDir.path()).absolutePath());
+}
+
+void OrganizeEngineTest::testFolderNamingDefaultCreatesSubfolder()
+{
+    QTemporaryDir srcDir, dstDir;
+    QVERIFY(srcDir.isValid() && dstDir.isValid());
+
+    Database db;
+    QVERIFY(db.initialize(":memory:"));
+    int fileId = makeRomFile(srcDir, db);
+    QVERIFY(fileId > 0);
+
+    OrganizeEngine engine(db);
+    engine.setTemplate("{title}{ext}");
+    engine.setDryRun(false);
+    engine.setFolderNaming(Constants::FolderNaming::Scheme::Default);
+
+    OrganizeResult result = engine.organizeFile(fileId, makeMetadata(),
+                                                dstDir.path(), FileOperation::Copy);
+    QVERIFY(result.success);
+    // Default (ES-DE) for NES = "nes" subfolder
+    QFileInfo info(result.newPath);
+    QCOMPARE(info.absolutePath(), QDir(dstDir.path()).filePath("nes"));
+    QVERIFY(QFile::exists(result.newPath));
+}
+
+void OrganizeEngineTest::testFolderNamingBatoceraGenesis()
+{
+    QTemporaryDir srcDir, dstDir;
+    QVERIFY(srcDir.isValid() && dstDir.isValid());
+
+    Database db;
+    QVERIFY(db.initialize(":memory:"));
+
+    // Create a Genesis ROM file
+    const QString path = srcDir.path() + "/sonic.md";
+    QFile f(path);
+    QVERIFY(f.open(QIODevice::WriteOnly));
+    QVERIFY(f.write("FAKE ROM DATA") == 13);
+    f.close();
+
+    int libId = db.insertLibrary(srcDir.path(), "Test");
+    int sysId = db.getSystemId("Genesis");
+    QVERIFY(sysId > 0);
+
+    FileRecord fr;
+    fr.libraryId    = libId;
+    fr.filename     = "sonic.md";
+    fr.originalPath = path;
+    fr.currentPath  = path;
+    fr.extension    = ".md";
+    fr.systemId     = sysId;
+    fr.fileSize     = 13;
+    int fileId = db.insertFile(fr);
+    QVERIFY(fileId > 0);
+
+    GameMetadata meta;
+    meta.title  = "Sonic the Hedgehog";
+    meta.system = "Genesis";
+    meta.region = "USA";
+
+    OrganizeEngine engine(db);
+    engine.setTemplate("{title}{ext}");
+    engine.setDryRun(false);
+    engine.setFolderNaming(Constants::FolderNaming::Scheme::Batocera);
+
+    OrganizeResult result = engine.organizeFile(fileId, meta,
+                                                dstDir.path(), FileOperation::Copy);
+    QVERIFY(result.success);
+    // Batocera uses "megadrive" for Genesis
+    QFileInfo info(result.newPath);
+    QCOMPARE(info.absolutePath(), QDir(dstDir.path()).filePath("megadrive"));
+}
+
+void OrganizeEngineTest::testFolderNamingSchemeFromString()
+{
+    using Constants::FolderNaming::Scheme;
+    using Constants::FolderNaming::schemeFromString;
+
+    QCOMPARE(schemeFromString("none"), Scheme::None);
+    QCOMPARE(schemeFromString("default"), Scheme::Default);
+    QCOMPARE(schemeFromString("Default"), Scheme::Default);
+    QCOMPARE(schemeFromString("es-de"), Scheme::Default);
+    QCOMPARE(schemeFromString("batocera"), Scheme::Batocera);
+    QCOMPARE(schemeFromString("retropie"), Scheme::RetroPie);
+    QCOMPARE(schemeFromString("emudeck"), Scheme::EmuDeck);
+    QCOMPARE(schemeFromString("romm"), Scheme::RomM);
+    QCOMPARE(schemeFromString("unknown"), Scheme::None);
 }
 
 QTEST_MAIN(OrganizeEngineTest)

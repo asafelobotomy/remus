@@ -20,11 +20,11 @@ private:
     std::pair<int, int> populateFixture(Database &db)
     {
         int libId = db.insertLibrary("/tmp/roms");
-        Q_ASSERT(libId > 0);
+        if (libId <= 0) qFatal("populateFixture: insertLibrary returned %d", libId);
 
         // Use pre-populated default system
         int sysId = db.getSystemId("NES");
-        Q_ASSERT(sysId > 0);
+        if (sysId <= 0) qFatal("populateFixture: getSystemId returned %d", sysId);
 
         FileRecord fr;
         fr.libraryId = libId;
@@ -36,12 +36,12 @@ private:
         fr.crc32 = "AABB1122";
         fr.hashCalculated = true;
         int fileId = db.insertFile(fr);
-        Q_ASSERT(fileId > 0);
+        if (fileId <= 0) qFatal("populateFixture: insertFile returned %d", fileId);
 
         int gameId = db.insertGame("Test Game", sysId, "USA",
                                    "Pub", "Dev", "1990-01-01",
                                    "Desc", "Action", "1", 7.5f);
-        Q_ASSERT(gameId > 0);
+        if (gameId <= 0) qFatal("populateFixture: insertGame returned %d", gameId);
 
         db.insertMatch(fileId, gameId, 90.0f, "hash");
         return {fileId, gameId};

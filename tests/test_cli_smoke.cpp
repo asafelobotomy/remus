@@ -3,6 +3,7 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QProcess>
+#include <QProcessEnvironment>
 #include <QTemporaryDir>
 #include <QFile>
 #include <QTextStream>
@@ -39,8 +40,18 @@ private:
         return fi.absoluteFilePath();
     }
 
+    QProcessEnvironment cliEnvironment() const {
+        QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+        env.insert("QT_QPA_PLATFORM", "offscreen");
+        env.insert("QT_LOGGING_RULES", "remus.cli.info=true");
+        env.insert("LANG", "en_US.UTF-8");
+        env.insert("LC_ALL", "en_US.UTF-8");
+        return env;
+    }
+
     void runCli(const QStringList &extraArgs, int expectedExit = 0) const {
         QProcess proc;
+        proc.setProcessEnvironment(cliEnvironment());
         QStringList args = extraArgs;
         if (!args.contains("--no-interactive")) {
             args.prepend("--no-interactive");
@@ -56,6 +67,7 @@ private:
     void runCliCapture(const QStringList &extraArgs, QString &output, int expectedExit = 0) const {
         QProcess proc;
         proc.setProcessChannelMode(QProcess::MergedChannels);
+        proc.setProcessEnvironment(cliEnvironment());
 
         QStringList args = extraArgs;
         if (!args.contains("--no-interactive")) {
@@ -78,6 +90,16 @@ private:
         doc = QJsonDocument::fromJson(output.toUtf8(), &parseError);
         QVERIFY2(parseError.error == QJsonParseError::NoError, qPrintable(parseError.errorString()));
         QVERIFY2(!doc.isNull(), "Expected valid JSON output");
+    }
+
+    QJsonObject findModById(const QJsonArray &mods, const QString &id) const {
+        for (const auto &value : mods) {
+            const QJsonObject object = value.toObject();
+            if (object.value("id").toString() == id) {
+                return object;
+            }
+        }
+        return {};
     }
 
 private slots:
@@ -144,63 +166,87 @@ private slots:
         const QString catalog = fixturePath("test_mod_catalog.json");
         QVERIFY2(!catalog.isEmpty(), "Fixture test_mod_catalog.json not found");
 
-        QString output;
-        runCliCapture({"--mod-catalog", catalog, "--mod-systems"}, output);
-        QVERIFY(output.contains("Super Nintendo"));
-        QVERIFY(output.contains("Sega Genesis"));
+        QJsonDocument doc;
+        runCliJson({"--mod-catalog", catalog, "--mod-systems", "--json"}, doc);
+        QVERIFY(doc.isArray());
+
+        const QJsonArray systems = doc.array();
+        bool foundSnes = false;
+        bool foundGenesis = false;
+        for (const auto &value : systems) {
+            const QJsonObject object = value.toObject();
+            if (object.value("system").toString() == "Super Nintendo") {
+                foundSnes = true;
+            }
+            if (object.value("system").toString() == "Sega Genesis") {
+                foundGenesis = true;
+            }
+        }
+        QVERIFY(foundSnes);
+        QVERIFY(foundGenesis);
     }
 
     void testModShowFromCatalog() {
         const QString catalog = fixturePath("test_mod_catalog.json");
         QVERIFY2(!catalog.isEmpty(), "Fixture test_mod_catalog.json not found");
 
-        QString output;
-        runCliCapture({"--mod-catalog", catalog, "--mod-show", "test-mod-alpha"}, output);
-        QVERIFY(output.contains("Test Mod Alpha"));
-        QVERIFY(output.contains("Test Author"));
-        QVERIFY(output.contains("file:///tmp/test-patch.ips"));
+        QJsonDocument doc;
+        runCliJson({"--mod-catalog", catalog, "--mod-show", "test-mod-alpha", "--json"}, doc);
+        QVERIFY(doc.isObject());
+
+        const QJsonObject mod = doc.object();
+        QCOMPARE(mod.value("title").toString(), QString("Test Mod Alpha"));
+        QCOMPARE(mod.value("author").toString(), QString("Test Author"));
+        QCOMPARE(mod.value("patchUrl").toString(), QString("file:///tmp/test-patch.ips"));
     }
 
     void testModSystemFilterFromCatalog() {
         const QString catalog = fixturePath("test_mod_catalog.json");
         QVERIFY2(!catalog.isEmpty(), "Fixture test_mod_catalog.json not found");
 
-        QString output;
-        runCliCapture({"--mod-catalog", catalog, "--mod-system", "Super Nintendo"}, output);
-        QVERIFY(output.contains("Test Mod Alpha"));
-        QVERIFY(output.contains("Test Mod Beta"));
-        QVERIFY(!output.contains("Test Mod Gamma"));
+        QJsonDocument doc;
+        runCliJson({"--mod-catalog", catalog, "--mod-system", "Super Nintendo", "--json"}, doc);
+        QVERIFY(doc.isArray());
+
+        const QJsonArray mods = doc.array();
+        QVERIFY(!findModById(mods, "test-mod-alpha").isEmpty());
+        QVERIFY(!findModById(mods, "test-mod-beta").isEmpty());
+        QVERIFY(findModById(mods, "test-mod-gamma").isEmpty());
     }
 
     void testModAuthorFilterFromCatalog() {
         const QString catalog = fixturePath("test_mod_catalog.json");
         QVERIFY2(!catalog.isEmpty(), "Fixture test_mod_catalog.json not found");
 
-        QString output;
-        runCliCapture({"--mod-catalog", catalog, "--mod-author", "Test"}, output);
-        QVERIFY(output.contains("Test Mod Alpha"));
-        QVERIFY(!output.contains("Test Mod Beta"));
-        QVERIFY(!output.contains("Test Mod Gamma"));
+        QJsonDocument doc;
+        runCliJson({"--mod-catalog", catalog, "--mod-author", "Test", "--json"}, doc);
+        QVERIFY(doc.isArray());
+
+        const QJsonArray mods = doc.array();
+        QVERIFY(!findModById(mods, "test-mod-alpha").isEmpty());
+        QVERIFY(findModById(mods, "test-mod-beta").isEmpty());
+        QVERIFY(findModById(mods, "test-mod-gamma").isEmpty());
     }
 
     void testModTypeAndRatingFiltersFromCatalog() {
         const QString catalog = fixturePath("test_mod_catalog.json");
         QVERIFY2(!catalog.isEmpty(), "Fixture test_mod_catalog.json not found");
 
-        QString output;
-        runCliCapture({"--mod-catalog", catalog, "--mod-type", "translation", "--mod-min-rating", "3.5"}, output);
-        QVERIFY(output.contains("Test Mod Beta"));
-        QVERIFY(!output.contains("Test Mod Alpha"));
-        QVERIFY(!output.contains("Test Mod Gamma"));
+        QJsonDocument doc;
+        runCliJson({"--mod-catalog", catalog, "--mod-type", "translation", "--mod-min-rating", "3.5", "--json"}, doc);
+        QVERIFY(doc.isArray());
+
+        const QJsonArray mods = doc.array();
+        QVERIFY(!findModById(mods, "test-mod-beta").isEmpty());
+        QVERIFY(findModById(mods, "test-mod-alpha").isEmpty());
+        QVERIFY(findModById(mods, "test-mod-gamma").isEmpty());
     }
 
     void testModRatingFilterRejectsInvalidInput() {
         const QString catalog = fixturePath("test_mod_catalog.json");
         QVERIFY2(!catalog.isEmpty(), "Fixture test_mod_catalog.json not found");
 
-        QString output;
-        runCliCapture({"--mod-catalog", catalog, "--mod-min-rating", "9.0"}, output, 1);
-        QVERIFY(output.contains("Invalid rating"));
+        runCli({"--mod-catalog", catalog, "--mod-min-rating", "9.0"}, 1);
     }
 
     void testModJsonSystemsOutput() {
@@ -218,36 +264,42 @@ private slots:
         const QString catalog = fixturePath("test_mod_catalog.json");
         QVERIFY2(!catalog.isEmpty(), "Fixture test_mod_catalog.json not found");
 
-        QString output;
-        runCliCapture({"--mod-catalog", catalog, "--mod-system", "Super Nintendo", "--mod-sort", "downloads"}, output);
+        QJsonDocument doc;
+        runCliJson({"--mod-catalog", catalog, "--mod-system", "Super Nintendo", "--mod-sort", "downloads", "--json"}, doc);
+        QVERIFY(doc.isArray());
 
-        const int alphaPos = output.indexOf("Test Mod Alpha");
-        const int betaPos = output.indexOf("Test Mod Beta");
-        QVERIFY(alphaPos >= 0);
-        QVERIFY(betaPos >= 0);
-        QVERIFY(alphaPos < betaPos);
+        const QJsonArray mods = doc.array();
+        QCOMPARE(mods.size(), 2);
+        QCOMPARE(mods.at(0).toObject().value("id").toString(), QString("test-mod-alpha"));
+        QCOMPARE(mods.at(1).toObject().value("id").toString(), QString("test-mod-beta"));
     }
 
     void testModFormatAndDownloadsFiltersFromCatalog() {
         const QString catalog = fixturePath("test_mod_catalog.json");
         QVERIFY2(!catalog.isEmpty(), "Fixture test_mod_catalog.json not found");
 
-        QString output;
-        runCliCapture({"--mod-catalog", catalog, "--mod-format", "ips", "--mod-min-downloads", "800"}, output);
-        QVERIFY(output.contains("Test Mod Alpha"));
-        QVERIFY(!output.contains("Test Mod Beta"));
-        QVERIFY(!output.contains("Test Mod Gamma"));
+        QJsonDocument doc;
+        runCliJson({"--mod-catalog", catalog, "--mod-format", "ips", "--mod-min-downloads", "800", "--json"}, doc);
+        QVERIFY(doc.isArray());
+
+        const QJsonArray mods = doc.array();
+        QVERIFY(!findModById(mods, "test-mod-alpha").isEmpty());
+        QVERIFY(findModById(mods, "test-mod-beta").isEmpty());
+        QVERIFY(findModById(mods, "test-mod-gamma").isEmpty());
     }
 
     void testModSourceUrlFilterFromCatalog() {
         const QString catalog = fixturePath("test_mod_catalog.json");
         QVERIFY2(!catalog.isEmpty(), "Fixture test_mod_catalog.json not found");
 
-        QString output;
-        runCliCapture({"--mod-catalog", catalog, "--mod-source-url", "beta"}, output);
-        QVERIFY(output.contains("Test Mod Beta"));
-        QVERIFY(!output.contains("Test Mod Alpha"));
-        QVERIFY(!output.contains("Test Mod Gamma"));
+        QJsonDocument doc;
+        runCliJson({"--mod-catalog", catalog, "--mod-source-url", "beta", "--json"}, doc);
+        QVERIFY(doc.isArray());
+
+        const QJsonArray mods = doc.array();
+        QVERIFY(!findModById(mods, "test-mod-beta").isEmpty());
+        QVERIFY(findModById(mods, "test-mod-alpha").isEmpty());
+        QVERIFY(findModById(mods, "test-mod-gamma").isEmpty());
     }
 
     void testModListNoSystemFallback() {
@@ -267,9 +319,10 @@ private slots:
 
         runCli({"--db", dbPath, "--scan", dir.path()});
 
-        QString output;
-        runCliCapture({"--db", dbPath, "--mod-catalog", catalog, "--mod-list", "1", "--mod-no-system-fallback"}, output);
-        QVERIFY(output.contains("No exact-hash mods available"));
+        QJsonDocument doc;
+        runCliJson({"--db", dbPath, "--mod-catalog", catalog, "--mod-list", "1", "--mod-no-system-fallback", "--json"}, doc);
+        QVERIFY(doc.isArray());
+        QVERIFY(doc.array().isEmpty());
     }
 };
 

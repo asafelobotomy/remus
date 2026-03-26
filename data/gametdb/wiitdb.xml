@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <datafile xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="wiitdb.xsd">
-	<WiiTDB version="20260326200324" filter="EN_wiiware_gamecube" games="10153"/>
+	<WiiTDB version="20260326234317" filter="EN_wiiware_gamecube" games="10153"/>
 	<!--
  GameTDB: Wii, Database started by Lustar in 2009 (https://www.gametdb.com)
  Never modify this file manually, it will get overwritten when you update. You can add games and fixes on the website.
@@ -340583,10 +340583,8 @@ This Channel was created in order to repair save data that, under certain gamepl
 		<publisher>Nintendo</publisher>
 		<date year="2012" month="11" day="17"/>
 		<genre>software</genre>
-		<rating type="PEGI" value="7">
-			<descriptor>online</descriptor>
-		</rating>
-		<wi-fi players="1">
+		<rating type="PEGI" value="7"/>
+		<wi-fi players="0">
 			<feature>online</feature>
 		</wi-fi>
 		<input players="1">
@@ -340693,7 +340691,7 @@ This Channel was created in order to repair save data that, under certain gamepl
 		<date year="2012" month="11" day="17"/>
 		<genre>software</genre>
 		<rating type="PEGI" value="7"/>
-		<wi-fi players="1">
+		<wi-fi players="0">
 			<feature>online</feature>
 		</wi-fi>
 		<input players="1">

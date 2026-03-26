@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <datafile xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="ps3tdb.xsd">
-	<PS3TDB version="20260326195501" filter="EN" games="10766"/>
+	<PS3TDB version="20260326233906" filter="EN" games="10766"/>
 	<!--
  GameTDB: PS3, Database started in 2012 (https://www.gametdb.com)
  Never modify this file manually, it will get overwritten when you update. You can add games and fixes on the website.

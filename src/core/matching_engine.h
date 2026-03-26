@@ -125,11 +125,6 @@ signals:
     void tryingHashMatch();
     
     /**
-     * @brief Emitted when name matching attempt begins
-     */
-    void tryingNameMatch();
-    
-    /**
      * @brief Emitted when matching completes
      * @param match Result with confidence score
      */

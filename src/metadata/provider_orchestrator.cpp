@@ -152,13 +152,10 @@ GameMetadata ProviderOrchestrator::getByHashWithFallback(const QString &hash,
         return GameMetadata();
     }
     
-    qInfo() << "Trying hash-based providers:" << hashProviders;
-    
     for (const QString &providerName : hashProviders) {
         const ProviderInfo &info = m_providers[providerName];
         
         emit tryingProvider(providerName, MatchMethods::HASH);
-        qInfo() << "Trying" << providerName << "with hash:" << hash;
         
         try {
             GameMetadata metadata;
@@ -176,23 +173,22 @@ GameMetadata ProviderOrchestrator::getByHashWithFallback(const QString &hash,
             }
             
             if (!metadata.title.isEmpty()) {
-                qInfo() << "✓" << providerName << "found match:" << metadata.title;
+                qInfo() << "Hash match:" << metadata.title << "via" << providerName;
                 emit providerSucceeded(providerName, MatchMethods::HASH);
                 if (m_cache) {
                     m_cache->store(metadata, hash, system);
                 }
                 return metadata;
             } else {
-                qInfo() << "✗" << providerName << "returned no results";
                 emit providerFailed(providerName, "No results");
             }
         } catch (const std::exception &e) {
-            qWarning() << "✗" << providerName << "error:" << e.what();
+            qWarning() << providerName << "error:" << e.what();
             emit providerFailed(providerName, e.what());
         }
     }
     
-    qWarning() << "All hash providers failed for hash:" << hash;
+    qDebug() << "No hash match from" << hashProviders.size() << "providers for:" << hash;
     emit allProvidersFailed();
     return GameMetadata();
 }
@@ -207,19 +203,16 @@ QList<SearchResult> ProviderOrchestrator::searchAllProviders(const QString &name
     QStringList providers = getSortedProviders(false);
     QList<SearchResult> allResults;
     
-    qInfo() << "Searching all providers for:" << name << "(" << system << ")";
-    
     for (const QString &providerName : providers) {
         const ProviderInfo &info = m_providers[providerName];
         
         emit tryingProvider(providerName, MatchMethods::NAME);
-        qInfo() << "Searching" << providerName << "for:" << name;
         
         try {
             QList<SearchResult> results = info.provider->searchByName(name, system);
             
             if (!results.isEmpty()) {
-                qInfo() << "✓" << providerName << "found" << results.size() << "results";
+                qDebug() << providerName << "found" << results.size() << "results for:" << name;
                 
                 // Tag results with provider name
                 for (SearchResult &result : results) {
@@ -229,17 +222,16 @@ QList<SearchResult> ProviderOrchestrator::searchAllProviders(const QString &name
                 allResults.append(results);
                 emit providerSucceeded(providerName, MatchMethods::NAME);
             } else {
-                qInfo() << "✗" << providerName << "returned no results";
                 emit providerFailed(providerName, "No results");
             }
         } catch (const std::exception &e) {
-            qWarning() << "✗" << providerName << "error:" << e.what();
+            qWarning() << providerName << "search error:" << e.what();
             emit providerFailed(providerName, e.what());
         }
     }
     
     if (allResults.isEmpty()) {
-        qWarning() << "All providers failed to find:" << name;
+        qDebug() << "No name matches from" << providers.size() << "providers for:" << name;
         emit allProvidersFailed();
     }
     

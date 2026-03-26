@@ -6,6 +6,7 @@
 #include <QList>
 #include "template_engine.h"
 #include "database.h"
+#include "constants/folder_naming.h"
 #include "../metadata/metadata_provider.h"
 
 namespace Remus {
@@ -78,6 +79,12 @@ public:
     void setDryRun(bool enabled);
 
     /**
+     * @brief Set folder naming scheme for system-based subdirectories
+     * @param scheme Naming scheme (None = flat output, Default = ES-DE, etc.)
+     */
+    void setFolderNaming(Constants::FolderNaming::Scheme scheme);
+
+    /**
      * @brief Organize a single file
      * @param fileId File ID from database
      * @param metadata Game metadata for naming
@@ -144,6 +151,7 @@ private:
     QString m_template;
     CollisionStrategy m_collisionStrategy;
     bool m_dryRun;
+    Constants::FolderNaming::Scheme m_folderNaming;
 
     /**
      * @brief Execute file operation (move, copy, rename)

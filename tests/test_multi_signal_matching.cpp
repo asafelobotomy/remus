@@ -5,40 +5,16 @@
 
 #include <QCoreApplication>
 #include <QDebug>
-#include <QDir>
 #include <QFile>
 #include <QFileInfo>
 #include <QCryptographicHash>
+#include <QTemporaryDir>
 #include <QTemporaryFile>
 #include "../src/metadata/local_database_provider.h"
 #include "../src/core/hasher.h"
+#include "test_local_database_provider_fixture.h"
 
 using namespace Remus;
-
-static QString findGenesisDatPath()
-{
-    const QString appDir = QCoreApplication::applicationDirPath();
-    const QString cwd = QDir::currentPath();
-    const QString fileName = "Sega - Mega Drive - Genesis.dat";
-    const QStringList candidateDirs = {
-        appDir + "/data/databases",
-        appDir + "/../data/databases",
-        appDir + "/../../data/databases",
-        appDir + "/../../../data/databases",
-        cwd + "/data/databases",
-        cwd + "/../data/databases",
-        cwd + "/../../data/databases"
-    };
-
-    for (const QString &dirPath : candidateDirs) {
-        const QString candidate = QDir(dirPath).filePath(fileName);
-        if (QFileInfo::exists(candidate)) {
-            return QDir::cleanPath(candidate);
-        }
-    }
-
-    return QString();
-}
 
 /**
  * @brief Calculate file hash
@@ -72,17 +48,23 @@ QString calculateHash(const QString &filePath, const QString &algorithm) {
  */
 bool testDatLoading() {
     qInfo() << "\n=== Test 1: DAT Loading ===";
-    
+
     LocalDatabaseProvider provider;
-    
-    // Try to load Genesis DAT
-    const QString datPath = findGenesisDatPath();
-    if (datPath.isEmpty()) {
-        qWarning() << "✗ Failed to resolve Genesis DAT path";
+
+    QTemporaryDir tempDir;
+    if (!tempDir.isValid()) {
+        qWarning() << "✗ Failed to create temp directory for DAT fixture";
         return false;
     }
+
+    const QString datPath = TestFixtures::writeGenesisDat(tempDir);
+    if (datPath.isEmpty()) {
+        qWarning() << "✗ Failed to create Genesis DAT fixture";
+        return false;
+    }
+
     int entries = provider.loadDatabase(datPath);
-    
+
     if (entries > 0) {
         qInfo() << "✓ DAT loaded successfully:" << entries << "entries";
         return true;
@@ -290,14 +272,14 @@ bool testConfidenceScoring(LocalDatabaseProvider &provider) {
 int main(int argc, char *argv[])
 {
     QCoreApplication app(argc, argv);
-    
+
     qInfo() << "╔════════════════════════════════════════════════════════════╗";
     qInfo() << "║  Multi-Signal ROM Matching Test Suite                     ║";
     qInfo() << "╚════════════════════════════════════════════════════════════╝";
-    
+
     int passed = 0;
     int total = 0;
-    
+
     // Test 1: DAT Loading
     total++;
     if (testDatLoading()) {
@@ -306,9 +288,15 @@ int main(int argc, char *argv[])
     
     // Create provider for remaining tests
     LocalDatabaseProvider provider;
-    const QString datPath = findGenesisDatPath();
+        QTemporaryDir tempDir;
+        if (!tempDir.isValid()) {
+            qCritical() << "\n✗ Cannot continue: temp directory could not be created";
+            return 1;
+        }
+
+        const QString datPath = TestFixtures::writeGenesisDat(tempDir);
     if (datPath.isEmpty()) {
-        qCritical() << "\n✗ Cannot continue: Genesis DAT path could not be resolved";
+            qCritical() << "\n✗ Cannot continue: Genesis DAT fixture could not be created";
         return 1;
     }
 
@@ -316,12 +304,12 @@ int main(int argc, char *argv[])
     
     if (entries == 0) {
         qCritical() << "\n✗ Cannot continue: Genesis DAT not loaded";
-        qInfo() << "\nPlease ensure DAT file exists at:" << datPath;
+        qInfo() << "\nFixture path:" << datPath;
         return 1;
     }
-    
+
     qInfo() << "\nGenesis DAT loaded:" << entries << "entries";
-    
+
     // Test 2: Hash-Only Matching
     total++;
     if (testHashMatching(provider)) {
