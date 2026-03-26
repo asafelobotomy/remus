@@ -10,7 +10,6 @@ endif()
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
-set(CMAKE_AUTOUIC ON)
 
 option(REMUS_ENABLE_CCACHE "Use ccache as compiler launcher when available" ON)
 if(REMUS_ENABLE_CCACHE)

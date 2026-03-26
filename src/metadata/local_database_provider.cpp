@@ -48,6 +48,13 @@ int LocalDatabaseProvider::loadDatabases(const QString &directory)
     return totalLoaded;
 }
 
+int LocalDatabaseProvider::loadMetadata(const QString &metadataDir)
+{
+    int loaded = m_metadataParser.loadAll(metadataDir);
+    qDebug() << "LocalDatabaseProvider: Enrichment metadata loaded for" << loaded << "unique CRCs";
+    return loaded;
+}
+
 int LocalDatabaseProvider::loadDatabase(const QString &filePath)
 {
     QFileInfo fileInfo(filePath);
@@ -205,10 +212,92 @@ GameMetadata LocalDatabaseProvider::getById(const QString &id)
 
 ArtworkUrls LocalDatabaseProvider::getArtwork(const QString &id)
 {
-    // Local DAT files don't contain artwork URLs
-    // This would require a separate artwork database or online provider
-    Q_UNUSED(id);
-    return ArtworkUrls();
+    QMutexLocker locker(&m_mutex);
+    QString normalized = normalizeHash(id);
+
+    // Find the entry and system name via CRC32 lookup
+    if (!m_crc32Index.contains(normalized) || !m_hashToSystem.contains(normalized)) {
+        return ArtworkUrls();
+    }
+
+    const ClrMameProEntry &entry = m_crc32Index[normalized];
+    const QString &systemName = m_hashToSystem[normalized];
+
+    ArtworkUrls artwork;
+    QStringList boxCandidates = generateThumbnailCandidates(systemName, entry.gameName, QStringLiteral("Named_Boxarts"));
+    QStringList snapCandidates = generateThumbnailCandidates(systemName, entry.gameName, QStringLiteral("Named_Snaps"));
+    QStringList titleCandidates = generateThumbnailCandidates(systemName, entry.gameName, QStringLiteral("Named_Titles"));
+    if (!boxCandidates.isEmpty()) { artwork.boxFront = QUrl(boxCandidates.first()); }
+    if (!snapCandidates.isEmpty()) { artwork.screenshot = QUrl(snapCandidates.first()); }
+    if (!titleCandidates.isEmpty()) { artwork.titleScreen = QUrl(titleCandidates.first()); }
+    return artwork;
+}
+
+QString LocalDatabaseProvider::sanitizeThumbnailName(const QString &gameName)
+{
+    // Per libretro convention: &*/:\<>?\| are replaced with _
+    QString sanitized = gameName;
+    static const QString invalidChars = QStringLiteral("&*/:\\<>?|\"");
+    for (QChar ch : invalidChars) {
+        sanitized.replace(ch, QLatin1Char('_'));
+    }
+    return sanitized;
+}
+
+QString LocalDatabaseProvider::stripLanguageTags(const QString &gameName)
+{
+    // Matches parenthetical groups that contain only ISO 639-1 language codes
+    // e.g. (En), (En,Ja), (En,Fr,De,Es,It), (Ja)
+    // Pattern: ( OptWS  Code  {, Code}*  OptWS )
+    static const QRegularExpression langTagRe(
+        QStringLiteral("\\s*\\(\\s*(?:[A-Z][a-z])(?:,\\s*[A-Z][a-z])*\\s*\\)"));
+
+    QString result = gameName;
+    result.remove(langTagRe);
+    return result.trimmed();
+}
+
+QStringList LocalDatabaseProvider::generateThumbnailCandidates(const QString &systemName,
+                                                                const QString &gameName,
+                                                                const QString &type)
+{
+    QStringList candidates;
+    QSet<QString> seen;
+
+    auto addCandidate = [&](const QString &name) {
+        QString url = buildThumbnailUrl(systemName, name, type);
+        if (!seen.contains(url)) {
+            seen.insert(url);
+            candidates.append(url);
+        }
+    };
+
+    // 1. Exact DAT name (most specific)
+    addCandidate(gameName);
+
+    // 2. Language tags stripped — CDN often omits (En), (En,Ja) etc.
+    QString stripped = stripLanguageTags(gameName);
+    if (stripped != gameName) {
+        addCandidate(stripped);
+    }
+
+    return candidates;
+}
+
+QString LocalDatabaseProvider::buildThumbnailUrl(const QString &systemName,
+                                                  const QString &gameName,
+                                                  const QString &type)
+{
+    // URL: https://thumbnails.libretro.com/{System}/{Type}/{SanitizedName}.png
+    // Path components are percent-encoded (spaces → %20, etc.)
+    QString sanitized = sanitizeThumbnailName(gameName);
+    QString path = systemName + QLatin1Char('/') + type + QLatin1Char('/') + sanitized + QStringLiteral(".png");
+
+    QUrl url;
+    url.setScheme(QStringLiteral("https"));
+    url.setHost(QStringLiteral("thumbnails.libretro.com"));
+    url.setPath(QLatin1Char('/') + path, QUrl::DecodedMode);
+    return url.toString(QUrl::FullyEncoded);
 }
 
 void LocalDatabaseProvider::indexEntries(const QList<ClrMameProEntry> &entries, const QString &systemName)
@@ -222,6 +311,7 @@ void LocalDatabaseProvider::indexEntries(const QList<ClrMameProEntry> &entries, 
         if (!entry.crc32.isEmpty()) {
             QString normalized = normalizeHash(entry.crc32);
             m_crc32Index[normalized] = entry;
+            m_hashToSystem[normalized] = systemName;
             crc32Count++;
         }
         
@@ -294,6 +384,59 @@ GameMetadata LocalDatabaseProvider::datEntryToMetadata(const ClrMameProEntry &en
     metadata.matchScore = 1.0f; // Hash match is 100% confidence
     metadata.matchMethod = QString::fromLatin1(Remus::Constants::MatchMethods::HASH);
     
+    // Enrich with libretro metadat (genre, developer, publisher, players, year)
+    if (!entry.crc32.isEmpty() && m_metadataParser.contains(entry.crc32)) {
+        LibretroMetadata enrichment = m_metadataParser.lookup(entry.crc32);
+        if (!enrichment.genre.isEmpty()) {
+            metadata.genres = QStringList{enrichment.genre};
+        }
+        if (!enrichment.developer.isEmpty()) {
+            metadata.developer = enrichment.developer;
+        }
+        if (!enrichment.publisher.isEmpty()) {
+            metadata.publisher = enrichment.publisher;
+        }
+        if (enrichment.maxUsers > 0) {
+            metadata.players = enrichment.maxUsers;
+        }
+        if (enrichment.releaseYear > 0) {
+            metadata.releaseDate = QString::number(enrichment.releaseYear);
+        }
+    }
+
+    // Construct libretro-thumbnails artwork URLs with fallback candidates
+    if (!entry.crc32.isEmpty()) {
+        QString normalized = normalizeHash(entry.crc32);
+        if (m_hashToSystem.contains(normalized)) {
+            const QString &systemName = m_hashToSystem[normalized];
+            metadata.system = systemName;
+
+            // Box art: primary candidate first, then fallbacks
+            QStringList boxCandidates = generateThumbnailCandidates(
+                systemName, entry.gameName, QStringLiteral("Named_Boxarts"));
+            if (!boxCandidates.isEmpty()) {
+                metadata.boxArtUrl = boxCandidates.first();
+            }
+
+            // Screenshots: snap + title primary candidates, then all fallbacks
+            QStringList snapCandidates = generateThumbnailCandidates(
+                systemName, entry.gameName, QStringLiteral("Named_Snaps"));
+            QStringList titleCandidates = generateThumbnailCandidates(
+                systemName, entry.gameName, QStringLiteral("Named_Titles"));
+            if (!snapCandidates.isEmpty()) {
+                metadata.screenshotUrls.append(snapCandidates.first());
+            }
+            if (!titleCandidates.isEmpty()) {
+                metadata.screenshotUrls.append(titleCandidates.first());
+            }
+
+            // Append fallback box art candidates (index 1+)
+            for (int i = 1; i < boxCandidates.size(); ++i) {
+                metadata.screenshotUrls.append(boxCandidates.at(i));
+            }
+        }
+    }
+
     return metadata;
 }
 

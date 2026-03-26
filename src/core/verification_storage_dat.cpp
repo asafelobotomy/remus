@@ -10,7 +10,11 @@ int VerificationEngine::importDat(const QString &datFilePath, const QString &sys
 {
     DatParser parser;
     const DatParseResult parseResult = parser.parse(datFilePath);
+    return importDat(parseResult, systemName);
+}
 
+int VerificationEngine::importDat(const DatParseResult &parseResult, const QString &systemName)
+{
     if (!parseResult.success) {
         emit error(QString("Failed to parse DAT file: %1").arg(parseResult.error));
         return -1;

@@ -52,9 +52,11 @@ void ConstantsTest::testProviderRegistry() {
     QVERIFY(Providers::PROVIDER_REGISTRY.contains(Providers::SCREENSCRAPER));
     QVERIFY(Providers::PROVIDER_REGISTRY.contains(Providers::THEGAMESDB));
     QVERIFY(Providers::PROVIDER_REGISTRY.contains(Providers::IGDB));
+    QVERIFY(Providers::PROVIDER_REGISTRY.contains(Providers::LOCAL_DATABASE));
+    QVERIFY(Providers::PROVIDER_REGISTRY.contains(Providers::GAMETDB));
     
     // Verify registry size
-    QCOMPARE(Providers::PROVIDER_REGISTRY.size(), 4);
+    QCOMPARE(Providers::PROVIDER_REGISTRY.size(), 6);
 }
 
 void ConstantsTest::testProviderLookup() {
@@ -87,9 +89,11 @@ void ConstantsTest::testProviderPriority() {
     auto providers = Providers::getProvidersByPriority();
     
     // Verify order (highest priority first)
-    QVERIFY(providers.size() >= 4);
-    QCOMPARE(providers[0], QString(Providers::HASHEOUS));  // Priority 100
-    QCOMPARE(providers[1], QString(Providers::SCREENSCRAPER));  // Priority 90
+    QVERIFY(providers.size() >= 6);
+    QCOMPARE(providers[0], QString(Providers::LOCAL_DATABASE));  // Priority 110
+    QCOMPARE(providers[1], QString(Providers::HASHEOUS));  // Priority 100
+    QCOMPARE(providers[2], QString(Providers::SCREENSCRAPER));  // Priority 90
+    QCOMPARE(providers[3], QString(Providers::GAMETDB));  // Priority 60
     
     // Verify priorities are descending
     for (int i = 0; i < providers.size() - 1; ++i) {
@@ -104,6 +108,8 @@ void ConstantsTest::testProviderCapabilities() {
     auto hashProviders = Providers::getHashSupportingProviders();
     QVERIFY(hashProviders.contains(Providers::HASHEOUS));
     QVERIFY(hashProviders.contains(Providers::SCREENSCRAPER));
+    QVERIFY(hashProviders.contains(Providers::LOCAL_DATABASE));
+    QVERIFY(hashProviders.contains(Providers::GAMETDB));
     QVERIFY(!hashProviders.contains(Providers::IGDB));  // IGDB doesn't support hash
     
     // Test name-supporting providers
@@ -111,6 +117,8 @@ void ConstantsTest::testProviderCapabilities() {
     QVERIFY(nameProviders.contains(Providers::SCREENSCRAPER));
     QVERIFY(nameProviders.contains(Providers::THEGAMESDB));
     QVERIFY(nameProviders.contains(Providers::IGDB));
+    QVERIFY(nameProviders.contains(Providers::LOCAL_DATABASE));
+    QVERIFY(nameProviders.contains(Providers::GAMETDB));
     QVERIFY(!nameProviders.contains(Providers::HASHEOUS));  // Hasheous is hash-only
 }
 

@@ -45,5 +45,20 @@ QString FilenameNormalizer::normalize(const QString &filename)
     return cleaned;
 }
 
+QString FilenameNormalizer::extractRegion(const QString &filename)
+{
+    if (filename.isEmpty()) return {};
+
+    // Match parenthesized groups containing known region tokens
+    static const QRegularExpression regionRegex(
+        "\\(([^)]*\\b(?:USA|Europe|Japan|World|France|Germany|Spain|Italy"
+        "|Korea|China|Australia|Brazil|Canada|Netherlands|Sweden|Asia"
+        "|En|Fr|De|Es|It|Ja|Ko|Zh)\\b[^)]*)\\)",
+        QRegularExpression::CaseInsensitiveOption);
+
+    const QRegularExpressionMatch m = regionRegex.match(filename);
+    return m.hasMatch() ? m.captured(1).trimmed() : QString();
+}
+
 } // namespace Metadata
 } // namespace Remus

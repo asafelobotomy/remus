@@ -1,9 +1,60 @@
 #include "cli_commands.h"
 #include <QFileInfo>
+#include <QFile>
 #include "../core/hasher.h"
 #include "../core/verification_engine.h"
 #include "../core/space_calculator.h"
+#include "../core/dat_parser.h"
+#include "../metadata/clrmamepro_parser.h"
 #include "cli_logging.h"
+
+using namespace Remus;
+
+namespace {
+
+/// Detect whether file content is clrmamepro format (not XML).
+bool isClrMameProFormat(const QString &filePath)
+{
+    QFile file(filePath);
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) return false;
+    const QString head = file.read(256).trimmed();
+    file.close();
+    return head.startsWith(QLatin1String("clrmamepro")) ||
+           (head.startsWith(QLatin1String("game")) && !head.startsWith(QLatin1Char('<')));
+}
+
+/// Convert clrmamepro entries to DatParseResult understood by VerificationEngine.
+DatParseResult parseClrMameProAsDat(const QString &filePath)
+{
+    DatParseResult result;
+
+    QMap<QString, QString> hdr = ClrMameProParser::parseHeader(filePath);
+    result.header.name        = hdr.value(QStringLiteral("name"));
+    result.header.description = hdr.value(QStringLiteral("description"));
+    result.header.version     = hdr.value(QStringLiteral("version"));
+
+    const QList<ClrMameProEntry> entries = ClrMameProParser::parse(filePath);
+    for (const ClrMameProEntry &ce : entries) {
+        DatRomEntry entry;
+        entry.gameName    = ce.gameName;
+        entry.description = ce.description;
+        entry.romName     = ce.romName;
+        entry.size        = ce.size;
+        entry.crc32       = ce.crc32.toLower();
+        entry.md5         = ce.md5.toLower();
+        entry.sha1        = ce.sha1.toLower();
+        entry.serial      = ce.serial;
+        result.entries.append(entry);
+    }
+
+    result.entryCount = result.entries.size();
+    result.success    = result.entryCount > 0;
+    if (!result.success)
+        result.error = QStringLiteral("No entries found in clrmamepro DAT file");
+    return result;
+}
+
+} // anonymous namespace
 
 int handleChecksumVerifyCommand(CliContext &ctx)
 {
@@ -72,7 +123,15 @@ int handleVerifyCommand(CliContext &ctx)
     QString systemName = ctx.detector.detectSystem("", datFile);
     if (systemName.isEmpty()) systemName = datInfo.completeBaseName();
 
-    if (verifier.importDat(datFile, systemName) <= 0) {
+    int importCount = 0;
+    if (isClrMameProFormat(datFile)) {
+        DatParseResult parsed = parseClrMameProAsDat(datFile);
+        importCount = verifier.importDat(parsed, systemName);
+    } else {
+        importCount = verifier.importDat(datFile, systemName);
+    }
+
+    if (importCount <= 0) {
         qCritical() << "✗ Failed to import DAT file";
         return 1;
     }

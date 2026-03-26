@@ -85,6 +85,14 @@ public:
     int importDat(const QString &datFilePath, const QString &systemName);
 
     /**
+     * @brief Import pre-parsed DAT entries into the database
+     * @param parseResult Already-parsed DAT data
+     * @param systemName System this DAT applies to
+     * @return Number of entries imported, or -1 on error
+     */
+    int importDat(const DatParseResult &parseResult, const QString &systemName);
+
+    /**
      * @brief Import a DAT-style patch catalog into the database
      * @param datFilePath Path to .dat or .xml file
      * @param systemName System this patch catalog applies to

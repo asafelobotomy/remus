@@ -130,6 +130,7 @@ int main(int argc, char *argv[])
     addOption(QCommandLineOption(Constants::Cli::Options::MIN_CONFIDENCE, "Minimum confidence threshold for matches (0-100)", "confidence", QString::number(static_cast<int>(Constants::Confidence::Thresholds::DEFAULT_MINIMUM))));
     addActionOption(QCommandLineOption("match-report", "Generate detailed matching report with confidence scores"));
     addOption(QCommandLineOption("report-file", "Output file for reports (default: stdout)", "file"));
+    addActionOption(QCommandLineOption("enrich", "Enrich matched games with metadata from providers (fills empty description, genre, players)"));
 
     addActionOption(QCommandLineOption("verify",        "Verify files against DAT file",          "dat-file"));
     addActionOption(QCommandLineOption("verify-report", "Generate detailed verification report"));
@@ -142,7 +143,7 @@ int main(int argc, char *argv[])
     addOption(QCommandLineOption("artwork-dir",   "Directory to store artwork (default: ~/.local/share/Remus/artwork/)", "directory"));
     addOption(QCommandLineOption("artwork-types", "Types of artwork to download (box|screen|manual|all - default: box)", "types", "box"));
 
-    addActionOption(QCommandLineOption("checksum-verify", "Verify specific file checksum", "file"));
+    addActionOption(QCommandLineOption("checksum-verify", "Verify specific file checksum (hashes the file as-is; for archives, hashes the container)", "file"));
     addOption(QCommandLineOption("expected-hash",   "Expected hash for verification (crc32|md5|sha1)", "hash"));
     addOption(QCommandLineOption("hash-type",       "Hash type to verify (crc32, md5, sha1 - default: crc32)", "type", "crc32"));
 
@@ -245,6 +246,7 @@ int main(int argc, char *argv[])
     if (int rc = handleHashAllCommand(ctx))        return rc;
     if (int rc = handleMetadataCommand(ctx))       return rc;
     if (int rc = handleSearchCommand(ctx))         return rc;
+    if (int rc = handleEnrichCommand(ctx))         return rc;
     if (int rc = handleMatchCommand(ctx))          return rc;
     if (int rc = handleMatchReportCommand(ctx))    return rc;
     if (int rc = handleChecksumVerifyCommand(ctx)) return rc;

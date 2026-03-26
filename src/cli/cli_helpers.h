@@ -29,6 +29,15 @@ HashResult hashFileRecord(const FileRecord &file, Hasher &hasher);
 // when --ss-user / --ss-pass are both set.
 std::unique_ptr<ProviderOrchestrator> buildOrchestrator(const QCommandLineParser &parser);
 
+// Discover the data/databases/ directory relative to cwd or app location.
+QString findDatabaseDir();
+
+// Discover the data/metadata/ directory relative to cwd or app location.
+QString findMetadataDir();
+
+// Discover the data/gametdb/ directory relative to cwd or app location.
+QString findGameTDBDir();
+
 // Return only files that have at least one computed hash value.
 QList<FileRecord> getHashedFiles(Database &db);
 

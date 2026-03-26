@@ -32,6 +32,17 @@ public:
      */
     static QString normalize(const QString &filename);
 
+    /**
+     * @brief Extract region from a ROM filename
+     *
+     * Looks for common region tags in parentheses such as (USA), (Europe),
+     * (Japan), (USA, Europe), etc. Returns the first match found.
+     *
+     * @param filename The original ROM filename
+     * @return Region string (e.g. "USA", "Europe"), or empty if none found
+     */
+    static QString extractRegion(const QString &filename);
+
 private:
     FilenameNormalizer() = delete; // Static utility class
 };

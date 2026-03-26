@@ -26,6 +26,12 @@ inline constexpr const char* THEGAMESDB = "thegamesdb";
 /// Metadata provider: IGDB (requires API key)
 inline constexpr const char* IGDB = "igdb";
 
+/// Metadata provider: Local DAT database (offline, no auth)
+inline constexpr const char* LOCAL_DATABASE = "localdatabase";
+
+/// Metadata provider: GameTDB (offline, no auth, Nintendo/PS3)
+inline constexpr const char* GAMETDB = "gametdb";
+
 // ============================================================================
 // Provider Display Names (User-facing)
 // ============================================================================
@@ -41,6 +47,12 @@ inline const QString DISPLAY_THEGAMESDB = QStringLiteral("TheGamesDB");
 
 /// Human-readable name for IGDB
 inline const QString DISPLAY_IGDB = QStringLiteral("IGDB");
+
+/// Human-readable name for Local Database
+inline const QString DISPLAY_LOCAL_DATABASE = QStringLiteral("Local Database");
+
+/// Human-readable name for GameTDB
+inline const QString DISPLAY_GAMETDB = QStringLiteral("GameTDB");
 
 // ============================================================================
 // External ID keys (used as keys in GameMetadata::externalIds QMap)
@@ -58,6 +70,9 @@ inline constexpr const char* RETROACHIEVEMENTS = "retroachievements";
 
 /// Key for DAT-file source list (comma-joined names) in the externalIds map
 inline constexpr const char* DAT_SOURCES = "dat_sources";
+
+/// Key for GameTDB game IDs in the externalIds map
+inline constexpr const char* GAMETDB = "gametdb";
 } // ExternalId
 
 // ============================================================================
@@ -88,6 +103,19 @@ struct ProviderInfo {
  * 3. Fuzzy matches as last resort
  */
 inline const QMap<QString, ProviderInfo> PROVIDER_REGISTRY = {
+    // Priority 110: Local DAT database (offline, instant)
+    {LOCAL_DATABASE, {
+        LOCAL_DATABASE,
+        DISPLAY_LOCAL_DATABASE,
+        QStringLiteral("Offline ROM identification via local DAT files (no auth required)"),
+        true,   // Hash matching
+        true,   // Name search (substring)
+        false,  // No auth required
+        QStringLiteral(""),
+        110,    // Highest priority (instant local match)
+        true    // Free service
+    }},
+    
     // Priority 100: Hash-first provider (best for hash-based matching)
     {HASHEOUS, {
         HASHEOUS,
@@ -112,6 +140,19 @@ inline const QMap<QString, ProviderInfo> PROVIDER_REGISTRY = {
         QStringLiteral("https://www.screenscraper.fr"),
         90,     // Fallback after hash-only
         true    // Free service available
+    }},
+    
+    // Priority 60: GameTDB (Nintendo/PS3, offline XML databases)
+    {GAMETDB, {
+        GAMETDB,
+        DISPLAY_GAMETDB,
+        QStringLiteral("Nintendo and PS3 metadata from GameTDB XML databases (no auth required)"),
+        true,   // Hash matching (via ROM CRC/MD5/SHA1)
+        true,   // Name search
+        false,  // No auth required
+        QStringLiteral("https://www.gametdb.com"),
+        60,     // Above TheGamesDB, below ScreenScraper
+        true    // Free service
     }},
     
     // Priority 50: Fallback provider

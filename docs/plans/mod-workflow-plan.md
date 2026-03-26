@@ -356,73 +356,18 @@ This tracks when each catalog source was last fetched, enabling smart refresh.
 
 ---
 
-## Phase 4 — GUI and TUI Integration
+## ~~Phase 4 — GUI and TUI Integration~~ *(Archived)*
 
-**Goal**: Expose mod browsing and installation in the GUI (QML) and TUI.
-**Dependencies**: Phases 1-3.
-**Estimated LOC**: ~350 new.
-
-### 4.1 New Controller: `ModController`
-
-**File**: `src/ui/controllers/mod_controller.h` / `.cpp`
-
-QML-exposed controller wrapping `ModCatalogProvider` and `ModWorkflowService`:
-
-```cpp
-class ModController : public QObject {
-    Q_OBJECT
-    Q_PROPERTY(QVariantList availableMods READ availableMods NOTIFY modsChanged)
-    Q_PROPERTY(QVariantList installedMods READ installedMods NOTIFY modsChanged)
-    Q_PROPERTY(bool loading READ isLoading NOTIFY loadingChanged)
-
-public:
-    Q_INVOKABLE void loadCatalog(const QString &pathOrUrl);
-    Q_INVOKABLE void refreshMods(int fileId);
-    Q_INVOKABLE void installMod(int fileId, const QString &modId, const QString &outputDir);
-    Q_INVOKABLE void uninstallMod(int installationId);
-
-signals:
-    void modsChanged();
-    void loadingChanged();
-    void installProgress(const QString &stage, int percent);
-    void installComplete(bool success, const QString &message);
-};
-```
-
-### 4.2 QML View: `ModBrowserView.qml`
-
-A panel accessible from the matched game detail view:
-
-- **Mod list**: title, author, type badge, rating stars, download count
-- **Install button**: triggers download → patch → bundle pipeline with progress
-- **Installed tab**: lists installed mods with uninstall option
-- **Base ROM indicator**: shows which verified ROM the mod targets
-
-### 4.3 TUI: `ModScreen`
-
-**File**: `src/tui/mod_screen.cpp`
-
-Table-based mod browser using the existing TUI framework:
-
-```
-╔══════════════════════════════════════════════════════════════╗
-║ Mods for: Dragon Quest III (Japan)                [4 found] ║
-╠══════════════════════════════════════════════════════════════╣
-║ ▶ [1] Dragon Quest III English Translation v2.0             ║
-║       Type: Translation | BPS | ⭐ 4.9 | 50K downloads      ║
-║   [2] Dragon Quest III Balance Remaster                     ║
-║       Type: Hack | IPS | ⭐ 3.8 | 12K downloads             ║
-╠══════════════════════════════════════════════════════════════╣
-║ [i] Install  [d] Details  [q] Back                          ║
-╚══════════════════════════════════════════════════════════════╝
-```
+> **Status**: This phase is **not applicable** — the project is now CLI-only.
+> GUI/TUI code has been archived to `archive/gui-tui/`.
+> Mod browsing and installation are exposed via CLI commands in Phases 1–3.
 
 ---
 
 ## Phase 5 — Community Catalog + romhacking.net Scraping
 
 **Goal**: Build a catalog automatically from romhacking.net metadata.
-**Dependencies**: Phases 1-3. Independent of Phase 4.
+**Dependencies**: Phases 1-3.
 **Estimated LOC**: ~300 new.
 **Note**: This phase carries the most risk due to scraping fragility.
 
@@ -503,14 +448,13 @@ Phase 2 ─── Remote catalog fetch + cache
 Phase 3 ─── Patch download + SHA1 verification
   │           └── Tests: download integrity, progress reporting
   │
-  ├── Phase 4 ─── GUI (QML) + TUI integration
-  │                 └── Manual testing: browse, install, uninstall
+  ├── Phase 4 ─── (archived — CLI-only, see archive/gui-tui/)
   │
   └── Phase 5 ─── romhacking.net scraper + community catalog
                     └── Tests: scraper output, rate limiting, catalog generation
 ```
 
-Phase 4 and 5 are independent of each other and can proceed in parallel.
+Phase 4 is archived. Phase 5 depends only on Phases 1-3.
 
 ---
 

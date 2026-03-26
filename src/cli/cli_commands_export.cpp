@@ -10,6 +10,7 @@
 #include "../core/hasher.h"
 #include "../core/patch_engine.h"
 #include "../core/patched_rom_parser.h"
+#include "../metadata/filename_normalizer.h"
 #include "cli_logging.h"
 
 // ── Export ────────────────────────────────────────────────────────────────────
@@ -81,7 +82,11 @@ static QList<ExportRow> buildExportRows(CliContext &ctx, const QString &systemsA
         if (!matches.contains(file.id)) continue;
         const QString systemName = ctx.db.getSystemDisplayName(file.systemId);
         if (!systemFilters.isEmpty() && !systemFilters.contains(systemName)) continue;
-        rows.append({file, matches.value(file.id)});
+        ExportRow row{file, matches.value(file.id)};
+        if (row.match.region.isEmpty()) {
+            row.match.region = Remus::Metadata::FilenameNormalizer::extractRegion(file.filename);
+        }
+        rows.append(row);
     }
     return rows;
 }
@@ -96,12 +101,18 @@ int handleExportCommand(CliContext &ctx)
 
     if (ctx.dryRunAll) qInfo() << "[DRY-RUN] Export outputs will not be written";
 
+    auto defaultFilename = [&]() -> QString {
+        if      (format == Constants::Exports::Formats::RETROARCH)  return Constants::Exports::Files::DEFAULT_RETROARCH_EXPORT;
+        else if (format == Constants::Exports::Formats::EMUSTATION) return Constants::Exports::Files::ES_GAMELIST;
+        else if (format == Constants::Exports::Formats::LAUNCHBOX)  return Constants::Exports::Files::DEFAULT_LAUNCHBOX_EXPORT;
+        else if (format == Constants::Exports::Formats::CSV)        return Constants::Exports::Files::DEFAULT_CSV_EXPORT;
+        else                                                        return Constants::Exports::Files::DEFAULT_JSON_EXPORT;
+    };
+
     if (outputPath.isEmpty()) {
-        if      (format == Constants::Exports::Formats::RETROARCH)  outputPath = Constants::Exports::Files::DEFAULT_RETROARCH_EXPORT;
-        else if (format == Constants::Exports::Formats::EMUSTATION) outputPath = Constants::Exports::Files::ES_GAMELIST;
-        else if (format == Constants::Exports::Formats::LAUNCHBOX)  outputPath = Constants::Exports::Files::DEFAULT_LAUNCHBOX_EXPORT;
-        else if (format == Constants::Exports::Formats::CSV)        outputPath = Constants::Exports::Files::DEFAULT_CSV_EXPORT;
-        else                                                        outputPath = Constants::Exports::Files::DEFAULT_JSON_EXPORT;
+        outputPath = defaultFilename();
+    } else if (QFileInfo(outputPath).isDir()) {
+        outputPath = outputPath + "/" + defaultFilename();
     }
 
     const QList<ExportRow> rows = buildExportRows(ctx, systemsArg);

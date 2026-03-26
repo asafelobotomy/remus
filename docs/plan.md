@@ -4,7 +4,7 @@
 Build a desktop app that scans retro game libraries, fetches metadata, matches files, and safely renames/moves/organizes ROMs and disc images. First-class Linux support via AppImage.
 
 ## Recommended Tech Stack
-- UI: Qt 6 (QML + QtQuick Controls)
+- UI: CLI (Qt 6 Console) — *GUI/TUI archived, see `archive/gui-tui/`*
 - Core: C++17/20
 - DB: SQLite
 - Networking: QtNetwork (HTTP, caching)

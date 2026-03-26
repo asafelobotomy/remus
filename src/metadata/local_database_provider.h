@@ -3,6 +3,7 @@
 
 #include "metadata_provider.h"
 #include "clrmamepro_parser.h"
+#include "libretro_metadata_parser.h"
 #include <QMap>
 #include <QHash>
 #include <QMutex>
@@ -88,6 +89,13 @@ public:
      * @return Number of entries loaded
      */
     int loadDatabases(const QString &directory);
+
+    /**
+     * @brief Load enrichment metadata from libretro metadat DATs
+     * @param metadataDir Path to directory containing genre/, developer/, etc.
+     * @return Number of unique CRCs with metadata
+     */
+    int loadMetadata(const QString &metadataDir);
     
     /**
      * @brief Load a single DAT file
@@ -148,7 +156,40 @@ public:
     
     QString providerName() const { return "LocalDatabase"; }
     int priority() const { return 110; } // Highest priority
-    
+
+    /**
+     * @brief Sanitize game name for libretro thumbnail filename
+     * Replaces invalid characters with underscore per libretro convention
+     */
+    static QString sanitizeThumbnailName(const QString &gameName);
+
+    /**
+     * @brief Strip parenthetical language tags from a game name
+     * Removes groups like (En), (En,Ja), (En,Fr,De,Es,It) etc.
+     * CDN thumbnails often omit these tags from filenames.
+     */
+    static QString stripLanguageTags(const QString &gameName);
+
+    /**
+     * @brief Generate candidate thumbnail URLs in priority order
+     *
+     * Returns the exact-name URL first, then progressively stripped
+     * variants (no language tags, etc.) for fallback matching.
+     */
+    static QStringList generateThumbnailCandidates(const QString &systemName,
+                                                    const QString &gameName,
+                                                    const QString &type);
+
+    /**
+     * @brief Build a libretro-thumbnails CDN URL
+     * @param systemName libretro system name (e.g. "Sega - Mega Drive - Genesis")
+     * @param gameName Canonical game name from DAT
+     * @param type "Named_Boxarts", "Named_Snaps", or "Named_Titles"
+     */
+    static QString buildThumbnailUrl(const QString &systemName,
+                                     const QString &gameName,
+                                     const QString &type);
+
 signals:
     void databaseLoaded(const QString &systemName, int entryCount);
     void loadingProgress(int current, int total);
@@ -175,7 +216,7 @@ private:
      * @return Normalized hash
      */
     QString normalizeHash(const QString &hash) const;
-    
+
     // Hash indexes for O(1) lookup
     QHash<QString, ClrMameProEntry> m_crc32Index;   // CRC32 -> ClrMameProEntry
     QHash<QString, ClrMameProEntry> m_md5Index;     // MD5 -> ClrMameProEntry
@@ -187,6 +228,12 @@ private:
     // DAT metadata tracking
     QMap<QString, DatMetadata> m_datMetadata;  // System name -> DAT metadata
     
+    // Hash -> system name for thumbnail URL construction
+    QHash<QString, QString> m_hashToSystem;  // normalized CRC32 -> system name
+
+    // Enrichment metadata (genre, developer, publisher, etc.)
+    LibretroMetadataParser m_metadataParser;
+
     // Thread safety
     mutable QMutex m_mutex;
     

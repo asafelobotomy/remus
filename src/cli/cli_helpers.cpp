@@ -1,14 +1,19 @@
 #include "cli_helpers.h"
+#include <QCoreApplication>
+#include <QDir>
 #include <QFileInfo>
 #include <QSettings>
 #include <QTemporaryDir>
 #include "../core/archive_extractor.h"
 #include "../core/constants/files.h"
 #include "../core/system_resolver.h"
+#include "../metadata/filename_normalizer.h"
+#include "../metadata/local_database_provider.h"
 #include "../metadata/screenscraper_provider.h"
 #include "../metadata/thegamesdb_provider.h"
 #include "../metadata/igdb_provider.h"
 #include "../metadata/hasheous_provider.h"
+#include "../metadata/gametdb_provider.h"
 #include "cli_logging.h"
 
 using namespace Remus;
@@ -106,9 +111,91 @@ HashResult hashFileRecord(const FileRecord &file, Hasher &hasher)
     return hasher.calculateHashes(extractedPath, headerSize > 0, headerSize);
 }
 
+QString findDatabaseDir()
+{
+    const QString appDir = QCoreApplication::applicationDirPath();
+    const QString cwd = QDir::currentPath();
+    const QStringList candidates = {
+        cwd + "/data/databases",
+        appDir + "/data/databases",
+        appDir + "/../data/databases",
+        appDir + "/../../data/databases",
+        appDir + "/../../../data/databases",
+        cwd + "/../data/databases",
+        cwd + "/../../data/databases"
+    };
+    for (const QString &dir : candidates) {
+        if (QDir(dir).exists()) {
+            return QDir::cleanPath(dir);
+        }
+    }
+    return QString();
+}
+
+QString findMetadataDir()
+{
+    const QString appDir = QCoreApplication::applicationDirPath();
+    const QString cwd = QDir::currentPath();
+    const QStringList candidates = {
+        cwd + "/data/metadata",
+        appDir + "/data/metadata",
+        appDir + "/../data/metadata",
+        appDir + "/../../data/metadata",
+        appDir + "/../../../data/metadata",
+        cwd + "/../data/metadata",
+        cwd + "/../../data/metadata"
+    };
+    for (const QString &dir : candidates) {
+        if (QDir(dir).exists()) {
+            return QDir::cleanPath(dir);
+        }
+    }
+    return QString();
+}
+
+QString findGameTDBDir()
+{
+    const QString appDir = QCoreApplication::applicationDirPath();
+    const QString cwd = QDir::currentPath();
+    const QStringList candidates = {
+        cwd + "/data/gametdb",
+        appDir + "/data/gametdb",
+        appDir + "/../data/gametdb",
+        appDir + "/../../data/gametdb",
+        appDir + "/../../../data/gametdb",
+        cwd + "/../data/gametdb",
+        cwd + "/../../data/gametdb"
+    };
+    for (const QString &dir : candidates) {
+        if (QDir(dir).exists()) {
+            return QDir::cleanPath(dir);
+        }
+    }
+    return QString();
+}
+
 std::unique_ptr<ProviderOrchestrator> buildOrchestrator(const QCommandLineParser &parser)
 {
     auto orchestrator = std::make_unique<ProviderOrchestrator>();
+
+    // Local DAT database — offline, no auth, highest priority
+    const QString dbDir = findDatabaseDir();
+    if (!dbDir.isEmpty()) {
+        auto localDbProvider = new LocalDatabaseProvider();
+        int loaded = localDbProvider->loadDatabases(dbDir);
+        if (loaded > 0) {
+            // Load enrichment metadata (genre, developer, publisher, etc.)
+            const QString metaDir = findMetadataDir();
+            if (!metaDir.isEmpty()) {
+                localDbProvider->loadMetadata(metaDir);
+            }
+            const auto localInfo = Providers::getProviderInfo(Providers::LOCAL_DATABASE);
+            orchestrator->addProvider(Providers::LOCAL_DATABASE, localDbProvider,
+                                      localInfo ? localInfo->priority : 110);
+        } else {
+            delete localDbProvider;
+        }
+    }
 
     auto hasheousProvider = new HasheousProvider();
     const auto hasheousInfo = Providers::getProviderInfo(Providers::HASHEOUS);
@@ -123,6 +210,20 @@ std::unique_ptr<ProviderOrchestrator> buildOrchestrator(const QCommandLineParser
         const auto ssInfo = Providers::getProviderInfo(Providers::SCREENSCRAPER);
         orchestrator->addProvider(Providers::SCREENSCRAPER, ssProvider,
                                   ssInfo ? ssInfo->priority : 90);
+    }
+
+    // GameTDB — offline XML databases for Nintendo/PS3, no auth
+    const QString gametdbDir = findGameTDBDir();
+    if (!gametdbDir.isEmpty()) {
+        auto gametdbProvider = new GameTDBProvider();
+        int gametdbLoaded = gametdbProvider->loadDatabases(gametdbDir);
+        if (gametdbLoaded > 0) {
+            const auto gametdbInfo = Providers::getProviderInfo(Providers::GAMETDB);
+            orchestrator->addProvider(Providers::GAMETDB, gametdbProvider,
+                                      gametdbInfo ? gametdbInfo->priority : 60);
+        } else {
+            delete gametdbProvider;
+        }
     }
 
     auto tgdbProvider = new TheGamesDBProvider();
@@ -185,9 +286,12 @@ int persistMetadata(Database &db, const FileRecord &file, const GameMetadata &me
     int systemId = db.getSystemId(metadata.system);
     if (systemId == 0) systemId = file.systemId;
 
+    const QString region = metadata.region.isEmpty()
+        ? Metadata::FilenameNormalizer::extractRegion(file.filename)
+        : metadata.region;
     const QString genres = metadata.genres.join(", ");
     const QString players = metadata.players > 0 ? QString::number(metadata.players) : QString();
-    int gameId = db.insertGame(metadata.title, systemId, metadata.region, metadata.publisher,
+    int gameId = db.insertGame(metadata.title, systemId, region, metadata.publisher,
                                metadata.developer, metadata.releaseDate, metadata.description,
                                genres, players, metadata.rating);
     if (gameId == 0) return 0;

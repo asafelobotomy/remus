@@ -2,6 +2,10 @@
 #include "cli_helpers.h"
 #include <QDir>
 #include <QMap>
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QTextStream>
 #include "../core/scanner.h"
 #include "../core/hasher.h"
 #include "../core/header_detector.h"
@@ -23,6 +27,21 @@ int handleStatsCommand(CliContext &ctx)
         if (f.hashCalculated) hashed++;
     }
     const int systemCount = Systems::getSystemInternalNames().size();
+
+    if (ctx.parser.isSet("json")) {
+        QJsonObject obj;
+        obj[QStringLiteral("libraries")] = systemCount;
+        obj[QStringLiteral("files")] = files.size();
+        obj[QStringLiteral("hashed")] = hashed;
+        QJsonObject bySystem;
+        for (auto it = counts.constBegin(); it != counts.constEnd(); ++it)
+            bySystem[it.key()] = it.value();
+        obj[QStringLiteral("bySystem")] = bySystem;
+        QTextStream out(stdout);
+        out << QString::fromUtf8(QJsonDocument(obj).toJson(QJsonDocument::Indented)).trimmed() << Qt::endl;
+        return 0;
+    }
+
     qInfo() << "=== Library Stats ===";
     qInfo() << "Libraries:" << systemCount;
     qInfo() << "Files:" << files.size();
@@ -61,7 +80,8 @@ int handleInspectCommands(CliContext &ctx)
         HeaderDetector hd;
         HeaderInfo info = hd.detect(path);
         if (!info.valid) {
-            qWarning() << "Header not detected or invalid";
+            qWarning() << "No copier header detected.";
+            qWarning() << "Supported formats: iNES, NES 2.0, SMC/SWC, Lynx, FDS, A78";
         } else {
             qInfo() << "=== Header Info ===";
             qInfo() << "Has header:" << info.hasHeader;
@@ -170,15 +190,32 @@ int handleListCommand(CliContext &ctx)
 {
     if (!ctx.parser.isSet("list")) return 0;
 
+    QMap<QString, int> counts = ctx.db.getFileCountBySystem();
+    int total = 0;
+    for (auto it = counts.constBegin(); it != counts.constEnd(); ++it)
+        total += it.value();
+
+    if (ctx.parser.isSet("json")) {
+        QJsonArray arr;
+        for (auto it = counts.constBegin(); it != counts.constEnd(); ++it) {
+            QJsonObject obj;
+            obj[QStringLiteral("system")] = it.key();
+            obj[QStringLiteral("files")] = it.value();
+            arr.append(obj);
+        }
+        QJsonObject root;
+        root[QStringLiteral("systems")] = arr;
+        root[QStringLiteral("total")] = total;
+        QTextStream out(stdout);
+        out << QString::fromUtf8(QJsonDocument(root).toJson(QJsonDocument::Indented)).trimmed() << Qt::endl;
+        return 0;
+    }
+
     qInfo() << "";
     qInfo() << "Files by system:";
     qInfo() << "─────────────────────────────────────";
-
-    QMap<QString, int> counts = ctx.db.getFileCountBySystem();
-    int total = 0;
     for (auto it = counts.constBegin(); it != counts.constEnd(); ++it) {
         qInfo().noquote() << QString("%1: %2 files").arg(it.key()).arg(it.value());
-        total += it.value();
     }
     qInfo() << "─────────────────────────────────────";
     qInfo() << "Total:" << total << "files";

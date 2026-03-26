@@ -28,9 +28,10 @@ int handleListCommand(CliContext &ctx);
 int handleHashAllCommand(CliContext &ctx);
 
 // ── Metadata ──────────────────────────────────────────────────────────────────
-// --metadata, --search
+// --metadata, --search, --enrich
 int handleMetadataCommand(CliContext &ctx);
 int handleSearchCommand(CliContext &ctx);
+int handleEnrichCommand(CliContext &ctx);
 
 // ── Matching ──────────────────────────────────────────────────────────────────
 // --match (+ pipeline), --match-report

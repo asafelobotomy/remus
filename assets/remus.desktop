@@ -2,7 +2,7 @@
 Type=Application
 Name=Remus
 Comment=Retro ROM library manager
-Exec=remus-gui
+Exec=remus-cli
 Icon=remus
-Terminal=false
+Terminal=true
 Categories=Game;Utility;

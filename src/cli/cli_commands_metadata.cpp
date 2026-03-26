@@ -1,10 +1,15 @@
 #include "cli_commands.h"
+#include "cli_helpers.h"
 #include <memory>
 #include <QSettings>
 #include "../metadata/metadata_provider.h"
+#include "../metadata/provider_orchestrator.h"
 #include "../metadata/screenscraper_provider.h"
 #include "../metadata/thegamesdb_provider.h"
 #include "../metadata/igdb_provider.h"
+#include "../metadata/hasheous_provider.h"
+#include "../metadata/local_database_provider.h"
+#include "../metadata/gametdb_provider.h"
 #include "../core/constants/constants.h"
 #include "cli_logging.h"
 
@@ -70,6 +75,28 @@ static std::unique_ptr<MetadataProvider> buildSingleProvider(const QCommandLineP
         }
         return p;
     }
+    if (providerName == Providers::HASHEOUS) {
+        return std::make_unique<HasheousProvider>();
+    }
+    if (providerName == Providers::LOCAL_DATABASE) {
+        auto p = std::make_unique<LocalDatabaseProvider>();
+        const QString dbDir = findDatabaseDir();
+        if (!dbDir.isEmpty()) {
+            p->loadDatabases(dbDir);
+            const QString metaDir = findMetadataDir();
+            if (!metaDir.isEmpty())
+                p->loadMetadata(metaDir);
+        }
+        return p;
+    }
+    if (providerName == Providers::GAMETDB) {
+        auto p = std::make_unique<GameTDBProvider>();
+        const QString gametdbDir = findGameTDBDir();
+        if (!gametdbDir.isEmpty()) {
+            p->loadDatabases(gametdbDir);
+        }
+        return p;
+    }
     return nullptr;
 }
 
@@ -104,6 +131,21 @@ int handleMetadataCommand(CliContext &ctx)
         qInfo() << "Players:"      << metadata.players;
         qInfo() << "Rating:"       << metadata.rating << "/ 10";
         qInfo() << "";
+        if (!metadata.boxArtUrl.isEmpty()) {
+            qInfo() << "Box Art:"   << metadata.boxArtUrl;
+        }
+        for (const QString &url : metadata.screenshotUrls) {
+            if (url.contains(QStringLiteral("Named_Snaps"))) {
+                qInfo() << "Screenshot:" << url;
+            } else if (url.contains(QStringLiteral("Named_Titles"))) {
+                qInfo() << "Title Screen:" << url;
+            } else if (url.contains(QStringLiteral("Named_Boxarts"))) {
+                qInfo() << "Box Art (alt):" << url;
+            } else {
+                qInfo() << "Artwork:" << url;
+            }
+        }
+        qInfo() << "";
         qInfo() << "Description:";
         qInfo().noquote() << metadata.description;
     } else {
@@ -132,6 +174,14 @@ int handleSearchCommand(CliContext &ctx)
     QList<SearchResult> results = provider->searchByName(title, system);
     if (results.isEmpty()) {
         qInfo() << "No results found for:" << title;
+        const QString provName = ctx.parser.value("provider");
+        if (provName == Providers::THEGAMESDB) {
+            const QString key = parserOrSetting(ctx.parser,
+                                                QStringLiteral("tgdb-api-key"),
+                                                Settings::Providers::THEGAMESDB_API_KEY);
+            if (key.isEmpty())
+                qInfo() << "Hint: No API key configured for TheGamesDB. Set with --tgdb-api-key or in settings.";
+        }
         return 0;
     }
 
@@ -145,5 +195,95 @@ int handleSearchCommand(CliContext &ctx)
         qInfo() << "   Provider ID:" << r.id;
         qInfo() << "";
     }
+    return 0;
+}
+
+int handleEnrichCommand(CliContext &ctx)
+{
+    if (!ctx.parser.isSet("enrich")) return 0;
+
+    qInfo() << "";
+    qInfo() << "=== Metadata Enrichment ===";
+    qInfo() << "";
+
+    auto orchestrator = buildOrchestrator(ctx.parser);
+    QMap<int, Database::MatchResult> matches = ctx.db.getAllMatches();
+    QList<FileRecord> files = ctx.db.getExistingFiles();
+
+    // Build fileId→FileRecord lookup
+    QMap<int, FileRecord> fileMap;
+    for (const FileRecord &f : files)
+        fileMap[f.id] = f;
+
+    // Find games with sparse metadata
+    struct EnrichCandidate {
+        int gameId;
+        int fileId;
+        QString title;
+        QString system;
+    };
+    QList<EnrichCandidate> candidates;
+    QSet<int> seenGames;
+
+    for (auto it = matches.constBegin(); it != matches.constEnd(); ++it) {
+        const Database::MatchResult &m = it.value();
+        if (seenGames.contains(m.gameId)) continue;
+        seenGames.insert(m.gameId);
+
+        const bool sparse = m.description.isEmpty() && m.genre.isEmpty() && m.players.isEmpty();
+        if (!sparse) continue;
+
+        const QString system = fileMap.contains(m.fileId)
+            ? ctx.db.getSystemDisplayName(fileMap[m.fileId].systemId)
+            : QString();
+        candidates.append({m.gameId, m.fileId, m.gameTitle, system});
+    }
+
+    if (candidates.isEmpty()) {
+        qInfo() << "All matched games already have metadata — nothing to enrich.";
+        return 0;
+    }
+
+    qInfo() << "Found" << candidates.size() << "game(s) with sparse metadata";
+    qInfo() << "";
+
+    int enriched = 0, failed = 0;
+
+    for (const auto &c : candidates) {
+        qInfo() << "Enriching:" << c.title << "(" << c.system << ")";
+
+        GameMetadata metadata = orchestrator->searchWithFallback(
+            QString(), c.title, c.system);
+
+        if (metadata.title.isEmpty()) {
+            qInfo() << "  ✗ No metadata found";
+            failed++;
+            continue;
+        }
+
+        const QString genres = metadata.genres.join(", ");
+        const QString players = metadata.players > 0 ? QString::number(metadata.players) : QString();
+
+        bool updated = ctx.db.updateGame(c.gameId,
+                                         metadata.publisher,
+                                         metadata.developer,
+                                         metadata.releaseDate,
+                                         metadata.description,
+                                         genres,
+                                         players,
+                                         metadata.rating);
+        if (updated) {
+            qInfo() << "  ✓ Enriched from" << metadata.providerId;
+            enriched++;
+        } else {
+            qInfo() << "  ✗ Failed to update database";
+            failed++;
+        }
+    }
+
+    qInfo() << "";
+    qInfo() << "=== Enrichment Complete ===";
+    qInfo() << "Enriched:" << enriched;
+    qInfo() << "Failed:"   << failed;
     return 0;
 }
