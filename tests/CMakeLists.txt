@@ -204,7 +204,7 @@ add_remus_test(test_hash_service HashServiceTest
 )
 
 add_remus_test(test_mod_workflow ModWorkflowTest
-    SOURCES test_mod_workflow.cpp
+    SOURCES test_mod_workflow.cpp test_mod_workflow_download.cpp test_mod_workflow_fixture.h
     LIBS Qt6::Test Qt6::Core Qt6::Network Qt6::Sql remus-services remus-core
 )
 target_compile_definitions(test_mod_workflow PRIVATE
@@ -214,12 +214,12 @@ target_compile_definitions(test_mod_workflow PRIVATE
 # ── New coverage tests (2026-02-20) ───────────────────────────────────────
 
 add_remus_test(test_database DatabaseTest
-    SOURCES test_database.cpp
+    SOURCES test_database.cpp test_database_files.cpp test_database_relations.cpp test_database_fixture.h
     LIBS Qt6::Test Qt6::Core Qt6::Sql remus-core
 )
 
 add_remus_test(test_verification_engine VerificationEngineTest
-    SOURCES test_verification_engine.cpp
+    SOURCES test_verification_engine.cpp test_verification_engine_reports.cpp test_verification_engine_fixture.h
     LIBS Qt6::Test Qt6::Core Qt6::Sql remus-core
 )
 
@@ -239,7 +239,7 @@ add_remus_test(test_m3u_generator M3UGeneratorTest
 )
 
 add_remus_test(test_rom_bundler RomBundlerTest
-    SOURCES test_rom_bundler.cpp
+    SOURCES test_rom_bundler.cpp test_rom_bundler_disc.cpp test_rom_bundler_fixture.h
     LIBS Qt6::Test Qt6::Core Qt6::Sql remus-core
 )
 
