@@ -9,11 +9,14 @@
 #include "../core/system_resolver.h"
 #include "../metadata/filename_normalizer.h"
 #include "../metadata/local_database_provider.h"
+#include "../metadata/metadata_cache.h"
 #include "../metadata/screenscraper_provider.h"
 #include "../metadata/thegamesdb_provider.h"
 #include "../metadata/igdb_provider.h"
 #include "../metadata/hasheous_provider.h"
 #include "../metadata/gametdb_provider.h"
+#include "../metadata/retroachievements_provider.h"
+#include "../metadata/wikidata_provider.h"
 #include "cli_logging.h"
 
 using namespace Remus;
@@ -174,9 +177,16 @@ QString findGameTDBDir()
     return QString();
 }
 
-std::unique_ptr<ProviderOrchestrator> buildOrchestrator(const QCommandLineParser &parser)
+std::unique_ptr<ProviderOrchestrator> buildOrchestrator(const QCommandLineParser &parser,
+                                                         Database *db)
 {
     auto orchestrator = std::make_unique<ProviderOrchestrator>();
+
+    // Wire metadata cache if a database is available
+    if (db) {
+        auto *cache = new MetadataCache(db->database(), orchestrator.get());
+        orchestrator->setCache(cache);
+    }
 
     // Local DAT database — offline, no auth, highest priority
     const QString dbDir = findDatabaseDir();
@@ -251,6 +261,27 @@ std::unique_ptr<ProviderOrchestrator> buildOrchestrator(const QCommandLineParser
         orchestrator->addProvider(Providers::IGDB, igdbProvider,
                                   igdbInfo ? igdbInfo->priority : 40);
     }
+
+    // RetroAchievements — hash-based, free API key required
+    const QString raUsername = parserOrSetting(parser,
+                                              QStringLiteral("ra-user"),
+                                              Settings::Providers::RETROACHIEVEMENTS_USERNAME);
+    const QString raApiKey = parserOrSetting(parser,
+                                            QStringLiteral("ra-api-key"),
+                                            Settings::Providers::RETROACHIEVEMENTS_API_KEY);
+    if (!raUsername.isEmpty() && !raApiKey.isEmpty()) {
+        auto raProvider = new RetroAchievementsProvider();
+        raProvider->setCredentials(raUsername, raApiKey);
+        const auto raInfo = Providers::getProviderInfo(Providers::RETROACHIEVEMENTS);
+        orchestrator->addProvider(Providers::RETROACHIEVEMENTS, raProvider,
+                                  raInfo ? raInfo->priority : 45);
+    }
+
+    // Wikidata — SPARQL, no auth, CC0 licensed, lowest priority
+    auto wikidataProvider = new WikidataProvider();
+    const auto wdInfo = Providers::getProviderInfo(Providers::WIKIDATA);
+    orchestrator->addProvider(Providers::WIKIDATA, wikidataProvider,
+                              wdInfo ? wdInfo->priority : 30);
 
     return orchestrator;
 }

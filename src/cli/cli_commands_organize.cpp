@@ -37,7 +37,7 @@ int handleArtworkCommand(CliContext &ctx)
     ArtworkDownloader downloader;
     downloader.setMaxConcurrent(4);
 
-    auto orchestrator = buildOrchestrator(ctx.parser);
+    auto orchestrator = buildOrchestrator(ctx.parser, &ctx.db);
     int downloadedCount = 0, failedCount = 0;
 
     for (const FileRecord &file : getHashedFiles(ctx.db)) {
@@ -107,7 +107,7 @@ int handleBundleCommand(CliContext &ctx)
     qInfo() << "";
 
     RomBundler bundler(ctx.db);
-    auto orchestrator = buildOrchestrator(ctx.parser);
+    auto orchestrator = buildOrchestrator(ctx.parser, &ctx.db);
     ArtworkDownloader downloader;
     QTemporaryDir tempArtworkDir;
 

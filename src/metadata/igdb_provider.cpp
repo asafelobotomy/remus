@@ -127,7 +127,8 @@ GameMetadata IGDBProvider::getById(const QString &id)
 
     QString body = QString("fields name,summary,genres.name,first_release_date,"
                            "involved_companies.company.name,involved_companies.developer,"
-                           "involved_companies.publisher,aggregated_rating; where id = %1;")
+                           "involved_companies.publisher,aggregated_rating,"
+                           "multiplayer_modes.offlinemax; where id = %1;")
                        .arg(id);
 
     ApiResponse response = makeRequest("/games", body);
@@ -248,6 +249,19 @@ GameMetadata IGDBProvider::parseGameJson(const QJsonObject &game)
     // Rating
     if (game.contains("aggregated_rating")) {
         metadata.rating = game["aggregated_rating"].toDouble() / Constants::API::IGDB_RATING_SCALE;  // Convert to 0-10 scale
+    }
+
+    // Players from multiplayer_modes.offlinemax
+    if (game.contains("multiplayer_modes")) {
+        QJsonArray modes = game["multiplayer_modes"].toArray();
+        int maxPlayers = 1;
+        for (const QJsonValue &modeVal : modes) {
+            int offline = modeVal.toObject()["offlinemax"].toInt();
+            if (offline > maxPlayers) {
+                maxPlayers = offline;
+            }
+        }
+        metadata.players = maxPlayers;
     }
 
     return metadata;

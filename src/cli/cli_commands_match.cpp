@@ -18,7 +18,7 @@ int handleMatchCommand(CliContext &ctx)
     qInfo() << "=== Intelligent Metadata Matching (M3) ===";
     qInfo() << "";
 
-    auto orchestrator = buildOrchestrator(ctx.parser);
+    auto orchestrator = buildOrchestrator(ctx.parser, &ctx.db);
 
     QObject::connect(orchestrator.get(), &ProviderOrchestrator::tryingProvider,
                      [](const QString &name, const QString &method) {
@@ -100,7 +100,7 @@ int handleMatchReportCommand(CliContext &ctx)
     qInfo() << "=== Matching Report with Confidence Scores ===";
     qInfo() << "";
 
-    auto orchestrator  = buildOrchestrator(ctx.parser);
+    auto orchestrator  = buildOrchestrator(ctx.parser, &ctx.db);
     QList<FileRecord> files = getHashedFiles(ctx.db);
     int minConfidence  = ctx.parser.value(Cli::Options::MIN_CONFIDENCE).toInt();
 

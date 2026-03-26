@@ -11,6 +11,8 @@ add_library(remus-metadata STATIC
     local_database_provider.cpp
     local_database_provider_match.cpp
     gametdb_provider.cpp
+    retroachievements_provider.cpp
+    wikidata_provider.cpp
     libretro_metadata_parser.cpp
     provider_orchestrator.cpp
     metadata_cache.cpp

@@ -1,6 +1,10 @@
 #include <QtTest>
 #include <QSignalSpy>
+#include <QSqlDatabase>
+#include <QSqlQuery>
+#include <QSqlError>
 #include "metadata/provider_orchestrator.h"
+#include "metadata/metadata_cache.h"
 #include "core/constants/match_methods.h"
 
 using namespace Remus;
@@ -33,6 +37,22 @@ private:
     QString m_id;
 };
 
+static QSqlDatabase createTestCacheDb()
+{
+    const QString connectionName = QStringLiteral("orch-cache-%1")
+        .arg(QDateTime::currentMSecsSinceEpoch());
+    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE", connectionName);
+    db.setDatabaseName(":memory:");
+    if (!db.open()) {
+        qFatal("Failed to open test cache db");
+    }
+    QSqlQuery query(db);
+    query.exec("CREATE TABLE cache (cache_key TEXT PRIMARY KEY, "
+                "cache_value BLOB, expiry TEXT, "
+                "created_at TEXT DEFAULT CURRENT_TIMESTAMP)");
+    return db;
+}
+
 class ProviderOrchestratorTest : public QObject {
     Q_OBJECT
 
@@ -48,6 +68,11 @@ private slots:
     void testSetProviderEnabled();
     void testAllProvidersFailed();
     void testSearchAllProviders();
+
+    // Cache integration tests
+    void cacheHitSkipsProviders();
+    void cacheMissStoresResult();
+    void artworkCacheHitSkipsProviders();
 };
 
 void ProviderOrchestratorTest::hashProviderPriority()
@@ -234,6 +259,76 @@ void ProviderOrchestratorTest::testSearchAllProviders()
 
     QList<SearchResult> all = orchestrator.searchAllProviders("Test Game", "NES");
     QCOMPARE(all.size(), 2);
+}
+
+// ── Cache integration tests ────────────────────────────────────────────────
+
+void ProviderOrchestratorTest::cacheHitSkipsProviders()
+{
+    QSqlDatabase db = createTestCacheDb();
+    MetadataCache cache(db);
+    ProviderOrchestrator orchestrator;
+    orchestrator.setCache(&cache);
+
+    // Pre-populate cache
+    GameMetadata cached;
+    cached.id = "99";
+    cached.title = "Cached Game";
+    cached.providerId = "screenscraper";
+    cache.store(cached, "abc123", "NES");
+
+    // Provider should NOT be called — hash provider returns non-empty but
+    // the cache should short-circuit before it's tried.
+    auto *hashProvider = new StubProvider("screenscraper");
+    hashProvider->m_hashMetadata.title = "API Result";
+    orchestrator.addProvider("screenscraper", hashProvider, 90);
+
+    GameMetadata result = orchestrator.getByHashWithFallback("abc123", "NES");
+    QCOMPARE(result.title, QString("Cached Game"));
+}
+
+void ProviderOrchestratorTest::cacheMissStoresResult()
+{
+    QSqlDatabase db = createTestCacheDb();
+    MetadataCache cache(db);
+    ProviderOrchestrator orchestrator;
+    orchestrator.setCache(&cache);
+
+    auto *hashProvider = new StubProvider("screenscraper");
+    hashProvider->m_hashMetadata.title = "Fresh Result";
+    hashProvider->m_hashMetadata.id = "77";
+    hashProvider->m_hashMetadata.providerId = "screenscraper";
+    orchestrator.addProvider("screenscraper", hashProvider, 90);
+
+    // First call — cache miss, provider supplies the result
+    GameMetadata result = orchestrator.getByHashWithFallback("def456", "SNES");
+    QCOMPARE(result.title, QString("Fresh Result"));
+
+    // Verify it was stored in cache
+    GameMetadata fromCache = cache.getByHash("def456", "SNES");
+    QCOMPARE(fromCache.title, QString("Fresh Result"));
+}
+
+void ProviderOrchestratorTest::artworkCacheHitSkipsProviders()
+{
+    QSqlDatabase db = createTestCacheDb();
+    MetadataCache cache(db);
+    ProviderOrchestrator orchestrator;
+    orchestrator.setCache(&cache);
+
+    // Pre-populate artwork cache
+    ArtworkUrls cachedArt;
+    cachedArt.boxFront = QUrl("http://example/cached-front.png");
+    cache.storeArtwork("art-1", cachedArt);
+
+    auto *provider = new StubProvider("igdb");
+    ArtworkUrls apiArt;
+    apiArt.boxFront = QUrl("http://example/api-front.png");
+    provider->m_artwork = apiArt;
+    orchestrator.addProvider("igdb", provider, 40);
+
+    ArtworkUrls result = orchestrator.getArtworkWithFallback("art-1", "NES", QString());
+    QCOMPARE(result.boxFront, QUrl("http://example/cached-front.png"));
 }
 
 QTEST_MAIN(ProviderOrchestratorTest)

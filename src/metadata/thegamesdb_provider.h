@@ -42,8 +42,12 @@ public:
 private:
     ApiResponse makeRequest(const QUrl &url);
     GameMetadata parseGameJson(const QJsonObject &game);
+    void loadRequestCount();
+    void incrementRequestCount();
 
     QString m_apiKey;
+    int m_monthlyRequestCount = 0;
+    QString m_currentMonth;
 };
 
 } // namespace Remus

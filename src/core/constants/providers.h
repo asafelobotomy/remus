@@ -32,6 +32,12 @@ inline constexpr const char* LOCAL_DATABASE = "localdatabase";
 /// Metadata provider: GameTDB (offline, no auth, Nintendo/PS3)
 inline constexpr const char* GAMETDB = "gametdb";
 
+/// Metadata provider: RetroAchievements (hash-based, requires free API key)
+inline constexpr const char* RETROACHIEVEMENTS = "retroachievements";
+
+/// Metadata provider: Wikidata (SPARQL, no auth, CC0)
+inline constexpr const char* WIKIDATA = "wikidata";
+
 // ============================================================================
 // Provider Display Names (User-facing)
 // ============================================================================
@@ -54,6 +60,12 @@ inline const QString DISPLAY_LOCAL_DATABASE = QStringLiteral("Local Database");
 /// Human-readable name for GameTDB
 inline const QString DISPLAY_GAMETDB = QStringLiteral("GameTDB");
 
+/// Human-readable name for RetroAchievements
+inline const QString DISPLAY_RETROACHIEVEMENTS = QStringLiteral("RetroAchievements");
+
+/// Human-readable name for Wikidata
+inline const QString DISPLAY_WIKIDATA = QStringLiteral("Wikidata");
+
 // ============================================================================
 // External ID keys (used as keys in GameMetadata::externalIds QMap)
 // ============================================================================
@@ -73,6 +85,9 @@ inline constexpr const char* DAT_SOURCES = "dat_sources";
 
 /// Key for GameTDB game IDs in the externalIds map
 inline constexpr const char* GAMETDB = "gametdb";
+
+/// Key for Wikidata entity IDs in the externalIds map
+inline constexpr const char* WIKIDATA = "wikidata";
 } // ExternalId
 
 // ============================================================================
@@ -168,6 +183,19 @@ inline const QMap<QString, ProviderInfo> PROVIDER_REGISTRY = {
         true    // Free service
     }},
     
+    // Priority 45: RetroAchievements (hash-based, free API key)
+    {RETROACHIEVEMENTS, {
+        RETROACHIEVEMENTS,
+        DISPLAY_RETROACHIEVEMENTS,
+        QStringLiteral("Hash-based game identification via RetroAchievements (requires free API key)"),
+        true,   // Hash matching (MD5)
+        false,  // No name search
+        true,   // Requires API key
+        QStringLiteral("https://retroachievements.org/controlpanel.php"),
+        45,     // Between IGDB and TheGamesDB
+        true    // Free service
+    }},
+    
     // Priority 40: Commercial provider
     {IGDB, {
         IGDB,
@@ -179,6 +207,19 @@ inline const QMap<QString, ProviderInfo> PROVIDER_REGISTRY = {
         QStringLiteral("https://api.igdb.com"),
         40,     // Last fallback
         false   // Requires subscription
+    }},
+    
+    // Priority 30: Wikidata SPARQL (no auth, CC0, supplementary)
+    {WIKIDATA, {
+        WIKIDATA,
+        DISPLAY_WIKIDATA,
+        QStringLiteral("Wikidata SPARQL endpoint for game metadata (no auth, CC0 licensed)"),
+        false,  // No hash matching
+        true,   // Name search
+        false,  // No auth required
+        QStringLiteral(""),
+        30,     // Lowest priority (supplementary)
+        true    // Free service
     }},
 };
 

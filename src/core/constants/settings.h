@@ -17,6 +17,8 @@ inline constexpr const char* THEGAMESDB_API_KEY = "thegamesdb/api_key";
 inline constexpr const char* IGDB_CLIENT_ID = "igdb/client_id";
 inline constexpr const char* IGDB_CLIENT_SECRET = "igdb/client_secret";
 inline constexpr const char* HASHEOUS_CLIENT_API_KEY = "hasheous/client_api_key";
+inline constexpr const char* RETROACHIEVEMENTS_USERNAME = "retroachievements/username";
+inline constexpr const char* RETROACHIEVEMENTS_API_KEY = "retroachievements/api_key";
 }
 
 namespace Metadata {

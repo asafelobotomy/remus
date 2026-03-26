@@ -125,6 +125,8 @@ int main(int argc, char *argv[])
     addOption(QCommandLineOption("ss-devpass", "ScreenScraper dev password",  "devpassword"));
     addOption(QCommandLineOption("igdb-client-id", "IGDB client ID", "clientId"));
     addOption(QCommandLineOption("igdb-client-secret", "IGDB client secret", "clientSecret"));
+    addOption(QCommandLineOption("ra-user",    "RetroAchievements username",  "username"));
+    addOption(QCommandLineOption("ra-api-key", "RetroAchievements web API key", "apiKey"));
 
     addActionOption(QCommandLineOption("match", "Match scanned files with metadata (M3 intelligent matching)"));
     addOption(QCommandLineOption(Constants::Cli::Options::MIN_CONFIDENCE, "Minimum confidence threshold for matches (0-100)", "confidence", QString::number(static_cast<int>(Constants::Confidence::Thresholds::DEFAULT_MINIMUM))));

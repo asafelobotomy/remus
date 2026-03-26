@@ -7,6 +7,8 @@
 
 namespace Remus {
 
+class MetadataCache;
+
 /**
  * @brief Metadata provider orchestrator with intelligent fallback
  * 
@@ -25,6 +27,12 @@ class ProviderOrchestrator : public QObject {
 public:
     explicit ProviderOrchestrator(QObject *parent = nullptr);
     ~ProviderOrchestrator() override = default;
+
+    /**
+     * @brief Set the metadata cache for result caching
+     * @param cache Cache instance (not owned by orchestrator)
+     */
+    void setCache(MetadataCache *cache);
 
     /**
      * @brief Add a provider to the orchestrator
@@ -143,6 +151,7 @@ private:
     };
     
     QMap<QString, ProviderInfo> m_providers;
+    MetadataCache *m_cache = nullptr;
     
     /**
      * @brief Get providers sorted by priority (highest first)

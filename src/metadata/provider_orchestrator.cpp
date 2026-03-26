@@ -1,6 +1,7 @@
 #include "provider_orchestrator.h"
 #include "filename_normalizer.h"
 #include "hasheous_provider.h"
+#include "metadata_cache.h"
 #include <QDebug>
 #include <algorithm>
 #include "../core/constants/constants.h"
@@ -23,6 +24,11 @@ using namespace Constants;
 ProviderOrchestrator::ProviderOrchestrator(QObject *parent)
     : QObject(parent)
 {
+}
+
+void ProviderOrchestrator::setCache(MetadataCache *cache)
+{
+    m_cache = cache;
 }
 
 void ProviderOrchestrator::addProvider(const QString &name, MetadataProvider *provider, int priority)
@@ -128,6 +134,15 @@ GameMetadata ProviderOrchestrator::getByHashWithFallback(const QString &hash,
         qWarning() << "Cannot search by hash: hash is empty";
         return GameMetadata();
     }
+
+    // Check cache first
+    if (m_cache) {
+        GameMetadata cached = m_cache->getByHash(hash, system);
+        if (!cached.title.isEmpty()) {
+            qInfo() << "Cache hit for hash:" << hash << "-" << cached.title;
+            return cached;
+        }
+    }
     
     QStringList hashProviders = getSortedProviders(true);
     
@@ -163,6 +178,9 @@ GameMetadata ProviderOrchestrator::getByHashWithFallback(const QString &hash,
             if (!metadata.title.isEmpty()) {
                 qInfo() << "✓" << providerName << "found match:" << metadata.title;
                 emit providerSucceeded(providerName, MatchMethods::HASH);
+                if (m_cache) {
+                    m_cache->store(metadata, hash, system);
+                }
                 return metadata;
             } else {
                 qInfo() << "✗" << providerName << "returned no results";
@@ -282,6 +300,9 @@ GameMetadata ProviderOrchestrator::searchWithFallback(const QString &hash,
                         metadata.matchScore = best.matchScore;
                         metadata.matchMethod = (best.matchScore >= 0.95f) ? MatchMethods::NAME : MatchMethods::FUZZY;
                         emit providerSucceeded(providerName, MatchMethods::NAME);
+                        if (m_cache && !hash.isEmpty()) {
+                            m_cache->store(metadata, hash, system);
+                        }
                         return metadata;
                     }
                 }
@@ -303,13 +324,26 @@ GameMetadata ProviderOrchestrator::searchWithFallback(const QString &hash,
 
 ArtworkUrls ProviderOrchestrator::getArtworkWithFallback(const QString &id, const QString &system, const QString &providerName)
 {
+    // Check cache first
+    if (m_cache) {
+        ArtworkUrls cached = m_cache->getArtwork(id);
+        if (!cached.boxFront.isEmpty()) {
+            qInfo() << "Cache hit for artwork ID:" << id;
+            return cached;
+        }
+    }
+
     // If provider specified, try that first
     if (!providerName.isEmpty() && m_providers.contains(providerName)) {
         const ProviderInfo &info = m_providers[providerName];
         
         if (info.enabled) {
             qInfo() << "Fetching artwork from preferred provider:" << providerName;
-            return info.provider->getArtwork(id);
+            ArtworkUrls artwork = info.provider->getArtwork(id);
+            if (!artwork.boxFront.isEmpty() && m_cache) {
+                m_cache->storeArtwork(id, artwork);
+            }
+            return artwork;
         }
     }
     
@@ -324,6 +358,9 @@ ArtworkUrls ProviderOrchestrator::getArtworkWithFallback(const QString &id, cons
         
         if (!artwork.boxFront.isEmpty()) {
             qInfo() << "✓ Got artwork from:" << name;
+            if (m_cache) {
+                m_cache->storeArtwork(id, artwork);
+            }
             return artwork;
         }
     }

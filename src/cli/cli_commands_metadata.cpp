@@ -10,6 +10,8 @@
 #include "../metadata/hasheous_provider.h"
 #include "../metadata/local_database_provider.h"
 #include "../metadata/gametdb_provider.h"
+#include "../metadata/retroachievements_provider.h"
+#include "../metadata/wikidata_provider.h"
 #include "../core/constants/constants.h"
 #include "cli_logging.h"
 
@@ -96,6 +98,21 @@ static std::unique_ptr<MetadataProvider> buildSingleProvider(const QCommandLineP
             p->loadDatabases(gametdbDir);
         }
         return p;
+    }
+    if (providerName == Providers::RETROACHIEVEMENTS) {
+        auto p = std::make_unique<RetroAchievementsProvider>();
+        const QString raUser = parserOrSetting(parser,
+                                               QStringLiteral("ra-user"),
+                                               Settings::Providers::RETROACHIEVEMENTS_USERNAME);
+        const QString raKey = parserOrSetting(parser,
+                                              QStringLiteral("ra-api-key"),
+                                              Settings::Providers::RETROACHIEVEMENTS_API_KEY);
+        if (!raUser.isEmpty() && !raKey.isEmpty())
+            p->setCredentials(raUser, raKey);
+        return p;
+    }
+    if (providerName == Providers::WIKIDATA) {
+        return std::make_unique<WikidataProvider>();
     }
     return nullptr;
 }
@@ -206,7 +223,7 @@ int handleEnrichCommand(CliContext &ctx)
     qInfo() << "=== Metadata Enrichment ===";
     qInfo() << "";
 
-    auto orchestrator = buildOrchestrator(ctx.parser);
+    auto orchestrator = buildOrchestrator(ctx.parser, &ctx.db);
     QMap<int, Database::MatchResult> matches = ctx.db.getAllMatches();
     QList<FileRecord> files = ctx.db.getExistingFiles();
 

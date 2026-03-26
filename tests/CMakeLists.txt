@@ -184,6 +184,16 @@ add_remus_test(test_providers_minimal ProvidersMinimalTest
     LIBS Qt6::Test Qt6::Core remus-metadata remus-core
 )
 
+add_remus_test(test_wikidata_provider WikidataProviderTest
+    SOURCES test_wikidata_provider.cpp
+    LIBS Qt6::Test Qt6::Core Qt6::Network remus-metadata remus-core
+)
+
+add_remus_test(test_retroachievements_provider RetroAchievementsProviderTest
+    SOURCES test_retroachievements_provider.cpp
+    LIBS Qt6::Test Qt6::Core Qt6::Network remus-metadata remus-core
+)
+
 add_remus_test(test_cli_smoke CliSmokeTest
     SOURCES test_cli_smoke.cpp
     LIBS Qt6::Test Qt6::Core remus-core remus-metadata

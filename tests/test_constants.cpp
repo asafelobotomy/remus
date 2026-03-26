@@ -54,9 +54,11 @@ void ConstantsTest::testProviderRegistry() {
     QVERIFY(Providers::PROVIDER_REGISTRY.contains(Providers::IGDB));
     QVERIFY(Providers::PROVIDER_REGISTRY.contains(Providers::LOCAL_DATABASE));
     QVERIFY(Providers::PROVIDER_REGISTRY.contains(Providers::GAMETDB));
+    QVERIFY(Providers::PROVIDER_REGISTRY.contains(Providers::RETROACHIEVEMENTS));
+    QVERIFY(Providers::PROVIDER_REGISTRY.contains(Providers::WIKIDATA));
     
     // Verify registry size
-    QCOMPARE(Providers::PROVIDER_REGISTRY.size(), 6);
+    QCOMPARE(Providers::PROVIDER_REGISTRY.size(), 8);
 }
 
 void ConstantsTest::testProviderLookup() {
@@ -89,11 +91,15 @@ void ConstantsTest::testProviderPriority() {
     auto providers = Providers::getProvidersByPriority();
     
     // Verify order (highest priority first)
-    QVERIFY(providers.size() >= 6);
+    QVERIFY(providers.size() >= 8);
     QCOMPARE(providers[0], QString(Providers::LOCAL_DATABASE));  // Priority 110
     QCOMPARE(providers[1], QString(Providers::HASHEOUS));  // Priority 100
     QCOMPARE(providers[2], QString(Providers::SCREENSCRAPER));  // Priority 90
     QCOMPARE(providers[3], QString(Providers::GAMETDB));  // Priority 60
+    QCOMPARE(providers[4], QString(Providers::THEGAMESDB));  // Priority 50
+    QCOMPARE(providers[5], QString(Providers::RETROACHIEVEMENTS));  // Priority 45
+    QCOMPARE(providers[6], QString(Providers::IGDB));  // Priority 40
+    QCOMPARE(providers[7], QString(Providers::WIKIDATA));  // Priority 30
     
     // Verify priorities are descending
     for (int i = 0; i < providers.size() - 1; ++i) {
@@ -110,7 +116,9 @@ void ConstantsTest::testProviderCapabilities() {
     QVERIFY(hashProviders.contains(Providers::SCREENSCRAPER));
     QVERIFY(hashProviders.contains(Providers::LOCAL_DATABASE));
     QVERIFY(hashProviders.contains(Providers::GAMETDB));
+    QVERIFY(hashProviders.contains(Providers::RETROACHIEVEMENTS));
     QVERIFY(!hashProviders.contains(Providers::IGDB));  // IGDB doesn't support hash
+    QVERIFY(!hashProviders.contains(Providers::WIKIDATA));  // Wikidata is name-only
     
     // Test name-supporting providers
     auto nameProviders = Providers::getNameSupportingProviders();
@@ -119,7 +127,9 @@ void ConstantsTest::testProviderCapabilities() {
     QVERIFY(nameProviders.contains(Providers::IGDB));
     QVERIFY(nameProviders.contains(Providers::LOCAL_DATABASE));
     QVERIFY(nameProviders.contains(Providers::GAMETDB));
+    QVERIFY(nameProviders.contains(Providers::WIKIDATA));
     QVERIFY(!nameProviders.contains(Providers::HASHEOUS));  // Hasheous is hash-only
+    QVERIFY(!nameProviders.contains(Providers::RETROACHIEVEMENTS));  // RA is hash-only
 }
 
 // ============================================================================

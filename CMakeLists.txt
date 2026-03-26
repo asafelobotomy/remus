@@ -46,6 +46,16 @@ if(NOT Vulkan_FOUND)
     set(CMAKE_DISABLE_FIND_PACKAGE_WrapVulkanHeaders TRUE)
 endif()
 
+# Workaround: qt6-svg 6.11 ships cmake files that reference a function
+# not present in qt6-base 6.10.x. Define a stub so plugin discovery
+# does not abort.  Remove once qt6-base ≥ 6.11 is installed.
+if(NOT COMMAND _qt_internal_should_include_targets)
+    function(_qt_internal_should_include_targets)
+        cmake_parse_arguments(arg "" "OUT_VAR_SHOULD_SKIP" "TARGETS;NAMESPACE;PROJECT_NAME" ${ARGN})
+        set(${arg_OUT_VAR_SHOULD_SKIP} FALSE PARENT_SCOPE)
+    endfunction()
+endif()
+
 # Find Qt6
 find_package(Qt6 REQUIRED COMPONENTS Core Sql Network Concurrent Gui)
 

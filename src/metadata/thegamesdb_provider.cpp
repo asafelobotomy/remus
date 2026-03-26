@@ -5,6 +5,8 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QDebug>
+#include <QSettings>
+#include <QDate>
 #include "../core/constants/constants.h"
 
 namespace Remus {
@@ -12,6 +14,7 @@ namespace Remus {
 TheGamesDBProvider::TheGamesDBProvider(QObject *parent)
     : HttpMetadataProvider(Constants::Network::THEGAMESDB_RATE_LIMIT_MS, parent)
 {
+    loadRequestCount();
 }
 
 void TheGamesDBProvider::setApiKey(const QString &apiKey)
@@ -210,6 +213,8 @@ ArtworkUrls TheGamesDBProvider::getArtwork(const QString &id)
 
 TheGamesDBProvider::ApiResponse TheGamesDBProvider::makeRequest(const QUrl &url)
 {
+    incrementRequestCount();
+
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::UserAgentHeader, Constants::API::USER_AGENT);
 
@@ -260,6 +265,39 @@ bool TheGamesDBProvider::isAvailable()
 {
     // TheGamesDB is generally available without auth
     return true;
+}
+
+void TheGamesDBProvider::loadRequestCount()
+{
+    m_currentMonth = QDate::currentDate().toString(QStringLiteral("yyyy-MM"));
+    QSettings settings;
+    m_monthlyRequestCount = settings.value(
+        QStringLiteral("tgdb/requests/%1").arg(m_currentMonth), 0).toInt();
+    qDebug() << "TheGamesDB: Loaded request count for" << m_currentMonth
+             << ":" << m_monthlyRequestCount << "/ 3000";
+}
+
+void TheGamesDBProvider::incrementRequestCount()
+{
+    QString month = QDate::currentDate().toString(QStringLiteral("yyyy-MM"));
+    if (month != m_currentMonth) {
+        m_currentMonth = month;
+        m_monthlyRequestCount = 0;
+    }
+
+    ++m_monthlyRequestCount;
+
+    QSettings settings;
+    settings.setValue(QStringLiteral("tgdb/requests/%1").arg(m_currentMonth),
+                     m_monthlyRequestCount);
+
+    if (m_monthlyRequestCount == 2700) {
+        qWarning() << "TheGamesDB: 90% of monthly request limit reached ("
+                    << m_monthlyRequestCount << "/ 3000)";
+    } else if (m_monthlyRequestCount == 2950) {
+        qCritical() << "TheGamesDB: Approaching monthly request limit ("
+                     << m_monthlyRequestCount << "/ 3000)";
+    }
 }
 
 } // namespace Remus

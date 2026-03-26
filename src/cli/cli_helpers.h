@@ -27,7 +27,10 @@ HashResult hashFileRecord(const FileRecord &file, Hasher &hasher);
 // Construct a ProviderOrchestrator configured from parser credentials.
 // Adds Hasheous, TheGamesDB, and IGDB unconditionally; ScreenScraper only
 // when --ss-user / --ss-pass are both set.
-std::unique_ptr<ProviderOrchestrator> buildOrchestrator(const QCommandLineParser &parser);
+// When a database reference is provided, creates a MetadataCache and
+// attaches it to the orchestrator.
+std::unique_ptr<ProviderOrchestrator> buildOrchestrator(const QCommandLineParser &parser,
+                                                         Database *db = nullptr);
 
 // Discover the data/databases/ directory relative to cwd or app location.
 QString findDatabaseDir();
