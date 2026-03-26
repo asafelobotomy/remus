@@ -132,8 +132,16 @@ void CliHelpersTest::testGetHashedFilesOnlyReturnsHashedRows()
     // Create actual files on disk
     const QString hashedPath   = tmpDir.path() + "/mario.nes";
     const QString unhashedPath = tmpDir.path() + "/zelda.nes";
-    { QFile f(hashedPath);   f.open(QIODevice::WriteOnly); f.write("ROM1"); }
-    { QFile f(unhashedPath); f.open(QIODevice::WriteOnly); f.write("ROM2"); }
+    {
+        QFile f(hashedPath);
+        QVERIFY(f.open(QIODevice::WriteOnly));
+        QVERIFY(f.write("ROM1") == 4);
+    }
+    {
+        QFile f(unhashedPath);
+        QVERIFY(f.open(QIODevice::WriteOnly));
+        QVERIFY(f.write("ROM2") == 4);
+    }
 
     // Insert hashed file with real path
     FileRecord frHashed;
@@ -272,7 +280,11 @@ void CliHelpersTest::testHashFileRecordRealFile()
     QVERIFY(dir.isValid());
 
     const QString path = dir.path() + "/game.nes";
-    { QFile f(path); f.open(QIODevice::WriteOnly); f.write(QByteArray(1024, 0xAB)); }
+    {
+        QFile f(path);
+        QVERIFY(f.open(QIODevice::WriteOnly));
+        QVERIFY(f.write(QByteArray(1024, char(0xAB))) == 1024);
+    }
 
     Database db;
     QVERIFY(db.initialize(":memory:"));

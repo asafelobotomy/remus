@@ -6,7 +6,6 @@
 #include <QStringList>
 #include <QUrl>
 #include <QDateTime>
-#include <QPixmap>
 
 namespace Remus {
 

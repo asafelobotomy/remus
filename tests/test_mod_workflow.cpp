@@ -14,6 +14,18 @@
 
 using namespace Remus;
 
+namespace {
+bool writeAll(QFile &file, const QByteArray &data)
+{
+    return file.write(data) == data.size();
+}
+
+bool removeIfExists(const QString &path)
+{
+    return !QFile::exists(path) || QFile::remove(path);
+}
+}
+
 class ModWorkflowTest : public QObject
 {
     Q_OBJECT
@@ -58,7 +70,7 @@ private slots:
         const QString badFile = dir.path() + "/bad.json";
         QFile f(badFile);
         QVERIFY(f.open(QIODevice::WriteOnly));
-        f.write("{ not valid json!!!");
+        QVERIFY(writeAll(f, QByteArrayLiteral("{ not valid json!!!")));
         f.close();
 
         ModCatalogProvider provider;
@@ -235,7 +247,7 @@ private slots:
         const QString patchPath = dir.path() + "/bad_patch.ips";
         QFile pf(patchPath);
         QVERIFY(pf.open(QIODevice::WriteOnly));
-        pf.write("PATCH dummy data");
+        QVERIFY(writeAll(pf, QByteArrayLiteral("PATCH dummy data")));
         pf.close();
 
         Database db;
@@ -254,7 +266,7 @@ private slots:
         // Create an actual base file
         QFile bf(baseFile.currentPath);
         QVERIFY(bf.open(QIODevice::WriteOnly));
-        bf.write("base rom data");
+        QVERIFY(writeAll(bf, QByteArrayLiteral("base rom data")));
         bf.close();
 
         baseFile.id = db.insertFile(baseFile);
@@ -297,7 +309,7 @@ private slots:
         baseFile.fileSize    = 1024;
         QFile bf(baseFile.currentPath);
         QVERIFY(bf.open(QIODevice::WriteOnly));
-        bf.write("base rom data");
+        QVERIFY(writeAll(bf, QByteArrayLiteral("base rom data")));
         bf.close();
         baseFile.id = db.insertFile(baseFile);
 
@@ -343,7 +355,7 @@ private slots:
         QVERIFY(QFile::exists(cacheFile));
 
         // Clean up cache
-        QFile::remove(cacheFile);
+        QVERIFY(removeIfExists(cacheFile));
     }
 
     void loadFromUrl_usesCacheWhenFresh()
@@ -357,7 +369,7 @@ private slots:
         // Pre-populate cache manually
         const QUrl url(QStringLiteral("https://example.com/catalog_cache_test.json"));
         const QString cacheFile = ModCatalogProvider::cacheFileForUrl(url);
-        QDir().mkpath(ModCatalogProvider::cacheDir());
+        QVERIFY(QDir().mkpath(ModCatalogProvider::cacheDir()));
 
         QVERIFY(QFile::copy(path, cacheFile));
 
@@ -371,7 +383,7 @@ private slots:
         QVERIFY(provider.loadFromUrl(url, false));
         QCOMPARE(provider.allMods().size(), 3);
 
-        QFile::remove(cacheFile);
+        QVERIFY(removeIfExists(cacheFile));
     }
 
     void loadFromUrl_networkErrorFallsBackToCache()
@@ -385,7 +397,7 @@ private slots:
         // Pre-populate stale cache (exists, but we force refresh to trigger network)
         const QUrl url(QStringLiteral("https://unreachable.invalid/catalog.json"));
         const QString cacheFile = ModCatalogProvider::cacheFileForUrl(url);
-        QDir().mkpath(ModCatalogProvider::cacheDir());
+        QVERIFY(QDir().mkpath(ModCatalogProvider::cacheDir()));
         QVERIFY(QFile::copy(path, cacheFile));
 
         // Force refresh — network will fail, should fall back to cache
@@ -393,7 +405,7 @@ private slots:
         QVERIFY(provider.loadFromUrl(url, true));
         QCOMPARE(provider.allMods().size(), 3);
 
-        QFile::remove(cacheFile);
+        QVERIFY(removeIfExists(cacheFile));
     }
 
     void loadFromUrl_networkErrorNoCache()
@@ -401,7 +413,7 @@ private slots:
         // No cache and unreachable URL — should fail
         const QUrl url(QStringLiteral("https://unreachable.invalid/no_cache.json"));
         const QString cacheFile = ModCatalogProvider::cacheFileForUrl(url);
-        QFile::remove(cacheFile); // ensure no cache
+        QVERIFY(removeIfExists(cacheFile)); // ensure no cache
 
         ModCatalogProvider provider;
         QVERIFY(!provider.loadFromUrl(url, true));
@@ -491,8 +503,8 @@ private slots:
         const QString patchPath = dir.path() + "/patch.ips";
         QFile pf(patchPath);
         QVERIFY(pf.open(QIODevice::WriteOnly));
-        pf.write("PATCH");
-        pf.write("EOF");
+        QVERIFY(writeAll(pf, QByteArrayLiteral("PATCH")));
+        QVERIFY(writeAll(pf, QByteArrayLiteral("EOF")));
         pf.close();
 
         Database db;
@@ -509,7 +521,8 @@ private slots:
         baseFile.fileSize     = 1024;
         QFile bf(baseFile.currentPath);
         QVERIFY(bf.open(QIODevice::WriteOnly));
-        bf.write(QByteArray(1024, '\0'));
+        const QByteArray baseRom(1024, '\0');
+        QVERIFY(writeAll(bf, baseRom));
         bf.close();
         baseFile.id = db.insertFile(baseFile);
 
@@ -583,7 +596,7 @@ private slots:
         const QString filePath = dir.path() + "/testfile.bin";
         QFile f(filePath);
         QVERIFY(f.open(QIODevice::WriteOnly));
-        f.write(content);
+        QVERIFY(writeAll(f, content));
         f.close();
 
         // Compute expected SHA1
@@ -606,7 +619,7 @@ private slots:
         baseFile.fileSize     = 1024;
         QFile bf(baseFile.currentPath);
         QVERIFY(bf.open(QIODevice::WriteOnly));
-        bf.write("base rom data");
+        QVERIFY(writeAll(bf, QByteArrayLiteral("base rom data")));
         bf.close();
         baseFile.id = db.insertFile(baseFile);
 
@@ -645,7 +658,7 @@ private slots:
         baseFile.fileSize     = 1024;
         QFile bf(baseFile.currentPath);
         QVERIFY(bf.open(QIODevice::WriteOnly));
-        bf.write("base rom data");
+        QVERIFY(writeAll(bf, QByteArrayLiteral("base rom data")));
         bf.close();
         baseFile.id = db.insertFile(baseFile);
 
@@ -675,8 +688,8 @@ private slots:
         const QString patchPath = dir.path() + "/patch.ips";
         QFile pf(patchPath);
         QVERIFY(pf.open(QIODevice::WriteOnly));
-        pf.write("PATCH");  // IPS header
-        pf.write("EOF");    // IPS end marker
+        QVERIFY(writeAll(pf, QByteArrayLiteral("PATCH")));  // IPS header
+        QVERIFY(writeAll(pf, QByteArrayLiteral("EOF")));    // IPS end marker
         pf.close();
 
         Database db;
@@ -693,7 +706,8 @@ private slots:
         baseFile.fileSize     = 1024;
         QFile bf(baseFile.currentPath);
         QVERIFY(bf.open(QIODevice::WriteOnly));
-        bf.write(QByteArray(1024, '\0'));  // 1KB base ROM
+        const QByteArray baseRom(1024, '\0');
+        QVERIFY(writeAll(bf, baseRom));  // 1KB base ROM
         bf.close();
         baseFile.id = db.insertFile(baseFile);
 

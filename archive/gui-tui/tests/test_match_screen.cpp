@@ -25,10 +25,19 @@ private:
     /// Returns file IDs: [NES matched, NES unmatched, SNES hashed-unmatched].
     QVector<int> populateTestData(TuiApp &app, const QString &romDir)
     {
-        QDir().mkpath(romDir);
-        QFile(romDir + "/Mario.nes").open(QIODevice::WriteOnly);
-        QFile(romDir + "/Zelda.nes").open(QIODevice::WriteOnly);
-        QFile(romDir + "/FZero.sfc").open(QIODevice::WriteOnly);
+        QVERIFY(QDir().mkpath(romDir));
+        {
+            QFile mario(romDir + "/Mario.nes");
+            if (!mario.open(QIODevice::WriteOnly)) return {};
+        }
+        {
+            QFile zelda(romDir + "/Zelda.nes");
+            if (!zelda.open(QIODevice::WriteOnly)) return {};
+        }
+        {
+            QFile fzero(romDir + "/FZero.sfc");
+            if (!fzero.open(QIODevice::WriteOnly)) return {};
+        }
 
         Database &db = app.db();
         int libId = db.insertLibrary(romDir, "Test Library");

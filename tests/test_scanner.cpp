@@ -23,7 +23,9 @@ static QString writeFile(const QString &path, const QByteArray &data = QByteArra
     if (!f.open(QIODevice::WriteOnly)) {
         return QString();
     }
-    f.write(data);
+    if (f.write(data) != data.size()) {
+        return QString();
+    }
     f.close();
     return path;
 }
@@ -73,10 +75,8 @@ void ScannerTest::multiFileLinking()
     const QString gdiPath = dir.filePath("disc.gdi");
     QFile gdi(gdiPath);
     QVERIFY(gdi.open(QIODevice::WriteOnly | QIODevice::Text));
-    QTextStream out(&gdi);
-    out << "2" << '\n';
-    out << "1 0 4 2352 track01.bin" << '\n';
-    out << "2 0 4 2352 track02.bin" << '\n';
+    const QByteArray gdiContents = QByteArrayLiteral("2\n1 0 4 2352 track01.bin\n2 0 4 2352 track02.bin\n");
+    QVERIFY(gdi.write(gdiContents) == gdiContents.size());
     gdi.close();
     QVERIFY(!writeFile(dir.filePath("track01.bin")).isEmpty());
     QVERIFY(!writeFile(dir.filePath("track02.bin")).isEmpty());

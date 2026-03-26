@@ -1,19 +1,28 @@
-# Constants library (header-only)
-add_library(remus-constants INTERFACE)
-target_include_directories(remus-constants INTERFACE
+# Constants library
+add_library(remus-constants STATIC
+    systems.cpp
+)
+target_include_directories(remus-constants PUBLIC
+    ${CMAKE_SOURCE_DIR}/src
     ${CMAKE_CURRENT_SOURCE_DIR}
+)
+target_link_libraries(remus-constants PUBLIC
+    Qt6::Core
 )
 
 add_library(remus-core STATIC
     scanner.cpp
+    scanner_multifile.cpp
     system_detector.cpp
     patched_rom_parser.cpp
     match_utils.cpp
     hasher.cpp
     database.cpp
     database_files.cpp
+    database_file_state.cpp
     database_games.cpp
     database_migrations.cpp
+    database_migrations_systems.cpp
     database_patches.cpp
     database_schema.cpp
     matching_engine.cpp
@@ -21,17 +30,21 @@ add_library(remus-core STATIC
     organize_engine.cpp
     organize_engine_undo.cpp
     rom_bundler.cpp
+    rom_bundler_staged.cpp
     m3u_generator.cpp
     chd_converter.cpp
     external_tool_runner.cpp
     archive_extractor.cpp
+    archive_extractor_info.cpp
     archive_creator.cpp
+    archive_creator_compress.cpp
     space_calculator.cpp
     dat_parser.cpp
     header_detector.cpp
     verification_engine.cpp
     verification_engine_report.cpp
     verification_storage.cpp
+    verification_storage_dat.cpp
     patch_engine.cpp
     patch_engine_apply.cpp
     logging_categories.cpp
@@ -47,6 +60,7 @@ target_link_libraries(remus-core PUBLIC
 )
 
 target_include_directories(remus-core PUBLIC
+    ${CMAKE_SOURCE_DIR}/src
     ${CMAKE_CURRENT_SOURCE_DIR}
 )
 

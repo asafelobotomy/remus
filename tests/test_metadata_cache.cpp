@@ -1,4 +1,5 @@
 #include <QtTest>
+#include <QDateTime>
 #include <QSqlDatabase>
 #include <QSqlQuery>
 #include <QSqlError>
@@ -19,10 +20,14 @@ static QSqlDatabase createDatabase()
     const QString connectionName = QStringLiteral("cache-test-%1").arg(QDateTime::currentMSecsSinceEpoch());
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE", connectionName);
     db.setDatabaseName(":memory:");
-    db.open();
+    if (!db.open()) {
+        qFatal("Failed to open cache test database: %s", qPrintable(db.lastError().text()));
+    }
 
     QSqlQuery query(db);
-    query.exec("CREATE TABLE cache (cache_key TEXT PRIMARY KEY, cache_value BLOB, expiry TEXT, created_at TEXT DEFAULT CURRENT_TIMESTAMP)");
+    if (!query.exec("CREATE TABLE cache (cache_key TEXT PRIMARY KEY, cache_value BLOB, expiry TEXT, created_at TEXT DEFAULT CURRENT_TIMESTAMP)")) {
+        qFatal("Failed to create cache test schema: %s", qPrintable(query.lastError().text()));
+    }
     return db;
 }
 

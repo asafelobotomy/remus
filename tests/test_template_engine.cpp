@@ -3,16 +3,6 @@
 
 using namespace Remus;
 
-/**
- * @brief Unit tests for TemplateEngine
- * 
- * Tests template processing including:
- * - Variable substitution
- * - Article movement in titles
- * - Disc number extraction
- * - Empty group cleanup
- * - Template validation
- */
 class TemplateEngineTest : public QObject {
     Q_OBJECT
 
@@ -64,10 +54,6 @@ private slots:
     void testApplyRedumpTemplate();
     void testApplyCustomTemplate();
 };
-
-// ============================================================================
-// Variable Substitution Tests
-// ============================================================================
 
 void TemplateEngineTest::testSubstitutionBasic() {
     TemplateEngine engine;
@@ -141,10 +127,6 @@ void TemplateEngineTest::testSubstitutionEmptyValue() {
     QVERIFY(result.contains("USA"));
 }
 
-// ============================================================================
-// Article Movement Tests
-// ============================================================================
-
 void TemplateEngineTest::testMoveArticleThe() {
     QString result = TemplateEngine::moveArticleToEnd("The Legend of Zelda");
     QCOMPARE(result, QString("Legend of Zelda, The"));
@@ -178,10 +160,6 @@ void TemplateEngineTest::testMoveArticleNotAtStart() {
     QString result = TemplateEngine::moveArticleToEnd("Legend of The Dragons");
     QCOMPARE(result, QString("Legend of The Dragons")); // "The" not at start
 }
-
-// ============================================================================
-// Disc Number Extraction Tests
-// ============================================================================
 
 void TemplateEngineTest::testExtractDiscNumberBasic() {
     int disc = TemplateEngine::extractDiscNumber("Final Fantasy VII (USA) (Disc 1).bin");
@@ -217,10 +195,6 @@ void TemplateEngineTest::testExtractDiscNumberMultiple() {
     QCOMPARE(disc, 2);
 }
 
-// ============================================================================
-// Title Normalization Tests
-// ============================================================================
-
 void TemplateEngineTest::testNormalizeTitleBasic() {
     QString result = TemplateEngine::normalizeTitle("Super Mario Bros");
     QCOMPARE(result, QString("Super Mario Bros"));
@@ -240,10 +214,6 @@ void TemplateEngineTest::testNormalizeTitleEmpty() {
     QString result = TemplateEngine::normalizeTitle("");
     QCOMPARE(result, QString(""));
 }
-
-// ============================================================================
-// Empty Group Cleanup Tests (tested indirectly through applyTemplate)
-// ============================================================================
 
 void TemplateEngineTest::testCleanupEmptyParens() {
     TemplateEngine engine;
@@ -315,10 +285,6 @@ void TemplateEngineTest::testCleanupMixed() {
     QVERIFY(!result.contains("  "));
 }
 
-// ============================================================================
-// Template Validation Tests
-// ============================================================================
-
 void TemplateEngineTest::testValidateTemplateValid() {
     TemplateEngine engine;
     bool valid = engine.validateTemplate("{title} ({region}){ext}");
@@ -345,10 +311,6 @@ void TemplateEngineTest::testValidateTemplateNoVariables() {
     bool valid = engine.validateTemplate("static_name.rom");
     QVERIFY(valid);
 }
-
-// ============================================================================
-// Full Template Application Tests
-// ============================================================================
 
 void TemplateEngineTest::testApplyNoIntroTemplate() {
     TemplateEngine engine;

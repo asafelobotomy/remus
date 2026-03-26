@@ -14,6 +14,13 @@
 
 using namespace Remus;
 
+namespace {
+bool writeAll(QFile &file, const QByteArray &data)
+{
+    return file.write(data) == data.size();
+}
+}
+
 class RomBundlerTest : public QObject
 {
     Q_OBJECT
@@ -58,7 +65,8 @@ private:
     {
         QFile f(path);
         if (!f.open(QIODevice::WriteOnly)) return false;
-        f.write(data);
+        if (!writeAll(f, data)) return false;
+        f.close();
         return true;
     }
 
@@ -73,10 +81,13 @@ private:
             return false;
         }
 
-        QTextStream out(&cueFile);
-        out << "FILE \"" << QFileInfo(binPath).fileName() << "\" BINARY\n";
-        out << "  TRACK 01 MODE1/2352\n";
-        out << "    INDEX 01 00:00:00\n";
+        const QByteArray cueContents = QStringLiteral("FILE \"%1\" BINARY\n  TRACK 01 MODE1/2352\n    INDEX 01 00:00:00\n")
+            .arg(QFileInfo(binPath).fileName())
+            .toUtf8();
+        if (!writeAll(cueFile, cueContents)) {
+            return false;
+        }
+        cueFile.close();
         return true;
     }
 
@@ -518,10 +529,8 @@ private slots:
         const QString cuePath = tmp.filePath("disc.cue");
         QFile cueFile(cuePath);
         QVERIFY(cueFile.open(QIODevice::WriteOnly | QIODevice::Text));
-        QTextStream out(&cueFile);
-        out << "FILE \"missing.bin\" BINARY\n";
-        out << "  TRACK 01 MODE1/2352\n";
-        out << "    INDEX 01 00:00:00\n";
+        const QByteArray cueContents = QByteArrayLiteral("FILE \"missing.bin\" BINARY\n  TRACK 01 MODE1/2352\n    INDEX 01 00:00:00\n");
+        QVERIFY(writeAll(cueFile, cueContents));
         cueFile.close();
 
         Database db;

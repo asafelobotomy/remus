@@ -7,7 +7,7 @@ model:
   - Claude Sonnet 4.5
   - GPT-5.1
   - GPT-5 mini
-tools: [editFiles, fetch, githubRepo, codebase]
+tools: [editFiles, fetch, githubRepo, codebase, agent]
 disable-model-invocation: true
 agents: ['Doctor']
 handoffs:

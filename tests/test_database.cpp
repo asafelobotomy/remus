@@ -1,6 +1,8 @@
 #include <QtTest/QtTest>
 #include <QTemporaryDir>
+#include <QSqlError>
 #include <QSqlQuery>
+#include <QUuid>
 #include "../src/core/database.h"
 #include "../src/core/constants/constants.h"
 
@@ -15,6 +17,7 @@ private slots:
     void testInsertAndGetFile();
     void testSystemIdsRemainStableAcrossReopen();
     void testInitializeRepairsDanglingSystemIds();
+    void testInitializeRollsBackFailedMigrations();
     void testUpdateFileHashes();
     void testRemoveFile();
     void testInsertAndGetMatch();
@@ -60,6 +63,115 @@ static FileRecord makeRecord(int libId, int sysId, const QString &name)
     fr.systemId      = sysId;
     fr.fileSize      = 1024;
     return fr;
+}
+
+static bool execSql(QSqlQuery &query, const QString &sql)
+{
+    if (!query.exec(sql)) {
+        qWarning() << "SQL failed:" << sql << query.lastError().text();
+        return false;
+    }
+
+    return true;
+}
+
+static bool createLegacyDatabaseWithBrokenAppliedPatches(const QString &dbPath)
+{
+    const QString connectionName =
+        QStringLiteral("legacy-schema-") + QUuid::createUuid().toString(QUuid::Id128);
+    bool ok = false;
+
+    {
+        QSqlDatabase db = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), connectionName);
+        db.setDatabaseName(dbPath);
+        if (!db.open()) {
+            return false;
+        }
+
+        QSqlQuery query(db);
+        ok =
+            execSql(query, QStringLiteral(R"(
+                CREATE TABLE systems (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    name TEXT NOT NULL UNIQUE,
+                    display_name TEXT NOT NULL,
+                    manufacturer TEXT,
+                    generation INTEGER,
+                    extensions TEXT NOT NULL,
+                    preferred_hash TEXT NOT NULL,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                )
+            )")) &&
+            execSql(query, QStringLiteral(R"(
+                CREATE TABLE files (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    library_id INTEGER NOT NULL,
+                    original_path TEXT NOT NULL,
+                    current_path TEXT NOT NULL,
+                    filename TEXT NOT NULL,
+                    extension TEXT NOT NULL,
+                    file_size INTEGER NOT NULL,
+                    system_id INTEGER,
+                    crc32 TEXT,
+                    md5 TEXT,
+                    sha1 TEXT,
+                    hash_calculated BOOLEAN DEFAULT 0,
+                    is_primary BOOLEAN DEFAULT 1,
+                    parent_file_id INTEGER,
+                    last_modified TIMESTAMP,
+                    scanned_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                )
+            )")) &&
+            execSql(query, QStringLiteral(R"(
+                CREATE TABLE matches (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    file_id INTEGER NOT NULL,
+                    game_id INTEGER NOT NULL,
+                    match_method TEXT NOT NULL,
+                    confidence REAL NOT NULL,
+                    is_confirmed BOOLEAN DEFAULT 0,
+                    is_rejected BOOLEAN DEFAULT 0,
+                    matched_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    UNIQUE(file_id, game_id)
+                )
+            )")) &&
+            execSql(query, QStringLiteral("CREATE VIEW applied_patches AS SELECT 1 AS id"));
+
+        db.close();
+    }
+
+    QSqlDatabase::removeDatabase(connectionName);
+    return ok;
+}
+
+static bool tableHasColumn(const QString &dbPath, const QString &tableName, const QString &columnName)
+{
+    const QString connectionName =
+        QStringLiteral("inspect-schema-") + QUuid::createUuid().toString(QUuid::Id128);
+    bool found = false;
+
+    {
+        QSqlDatabase db = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), connectionName);
+        db.setDatabaseName(dbPath);
+        if (!db.open()) {
+            return false;
+        }
+
+        QSqlQuery query(db);
+        if (query.exec(QStringLiteral("PRAGMA table_info(%1)").arg(tableName))) {
+            while (query.next()) {
+                if (query.value(1).toString() == columnName) {
+                    found = true;
+                    break;
+                }
+            }
+        }
+
+        db.close();
+    }
+
+    QSqlDatabase::removeDatabase(connectionName);
+    return found;
 }
 
 // ── Tests ─────────────────────────────────────────────────────────────────────
@@ -202,6 +314,28 @@ void DatabaseTest::testInitializeRepairsDanglingSystemIds()
         const QMap<QString, int> counts = db.getFileCountBySystem();
         QCOMPARE(counts.value("Genesis"), 1);
     }
+}
+
+void DatabaseTest::testInitializeRollsBackFailedMigrations()
+{
+    QTemporaryDir dir;
+    QVERIFY(dir.isValid());
+
+    const QString dbPath = dir.filePath("broken_migration.db");
+    QVERIFY(createLegacyDatabaseWithBrokenAppliedPatches(dbPath));
+    QVERIFY(!tableHasColumn(dbPath,
+                            QStringLiteral("files"),
+                            QString::fromLatin1(Constants::DatabaseSchema::Columns::Files::IS_PROCESSED)));
+
+    Database db;
+    QVERIFY(!db.initialize(dbPath));
+
+    QVERIFY(!tableHasColumn(dbPath,
+                            QStringLiteral("files"),
+                            QString::fromLatin1(Constants::DatabaseSchema::Columns::Files::IS_PROCESSED)));
+    QVERIFY(!tableHasColumn(dbPath,
+                            QStringLiteral("files"),
+                            QString::fromLatin1(Constants::DatabaseSchema::Columns::Files::PROCESSING_STATUS)));
 }
 
 void DatabaseTest::testUpdateFileHashes()

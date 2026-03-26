@@ -3,192 +3,12 @@
 
 #include <QFileInfo>
 #include <QJsonArray>
-#include <QJsonDocument>
-#include <QJsonObject>
 #include <QMap>
-#include <QTextStream>
-#include <QUrl>
 
 #include "../services/mod_catalog_provider.h"
 #include "../services/mod_workflow_service.h"
 #include "../services/patch_service.h"
 #include "cli_logging.h"
-
-namespace {
-
-void printJsonArray(const QJsonArray &array)
-{
-    QTextStream stream(stdout);
-    stream << QString::fromUtf8(QJsonDocument(array).toJson(QJsonDocument::Indented)).trimmed() << Qt::endl;
-}
-
-void printJsonObject(const QJsonObject &object)
-{
-    QTextStream stream(stdout);
-    stream << QString::fromUtf8(QJsonDocument(object).toJson(QJsonDocument::Indented)).trimmed() << Qt::endl;
-}
-
-QJsonObject toJson(const ListedMod &row)
-{
-    const auto &mod = row.mod;
-
-    QJsonObject object;
-    object["id"] = mod.id;
-    object["title"] = mod.title;
-    object["author"] = mod.author;
-    object["version"] = mod.version;
-    object["description"] = mod.description;
-    object["type"] = mod.type;
-    object["system"] = mod.system;
-    object["format"] = mod.format;
-    object["patchUrl"] = mod.patchUrl;
-    object["patchSha1"] = mod.patchSha1;
-    object["patchSize"] = static_cast<qint64>(mod.patchSize);
-    object["baseCrc32"] = mod.baseCrc32;
-    object["baseMd5"] = mod.baseMd5;
-    object["baseSha1"] = mod.baseSha1;
-    object["sourceUrl"] = mod.sourceUrl;
-    object["rating"] = mod.rating;
-    object["downloads"] = mod.downloads;
-    if (!row.matchScope.isEmpty()) {
-        object["matchScope"] = row.matchScope;
-    }
-    return object;
-}
-
-QJsonObject toJson(const Database::ModInstallationRecord &record, const QString &baseFilename)
-{
-    QJsonObject object;
-    object["id"] = record.id;
-    object["baseFileId"] = record.baseFileId;
-    object["patchedFileId"] = record.patchedFileId;
-    object["catalogModId"] = record.catalogModId;
-    object["modTitle"] = record.modTitle;
-    object["modAuthor"] = record.modAuthor;
-    object["modVersion"] = record.modVersion;
-    object["modType"] = record.modType;
-    object["patchFormat"] = record.patchFormat;
-    object["patchUrl"] = record.patchUrl;
-    object["patchSha1"] = record.patchSha1;
-    object["sourceUrl"] = record.sourceUrl;
-    object["installedAt"] = record.installedAt.toString(Qt::ISODate);
-    object["baseFilename"] = baseFilename;
-    return object;
-}
-
-QJsonObject toJson(const QString &system, int count)
-{
-    QJsonObject object;
-    object["system"] = system;
-    object["count"] = count;
-    return object;
-}
-
-void printModList(const QList<ListedMod> &mods)
-{
-    bool showMatchScope = false;
-    for (const auto &row : mods) {
-        if (!row.matchScope.isEmpty()) {
-            showMatchScope = true;
-            break;
-        }
-    }
-
-    if (showMatchScope) {
-        qInfo().noquote() << QString("%1  %2  %3  %4  %5  %6")
-            .arg("Scope", -8)
-            .arg("ID", -20)
-            .arg("Title", -40)
-            .arg("Type", -14)
-            .arg("Format", -8)
-            .arg("Rating");
-    } else {
-        qInfo().noquote() << QString("%1  %2  %3  %4  %5")
-            .arg("ID", -20)
-            .arg("Title", -40)
-            .arg("Type", -14)
-            .arg("Format", -8)
-            .arg("Rating");
-    }
-
-    for (const auto &row : mods) {
-        const auto &mod = row.mod;
-        if (showMatchScope) {
-            qInfo().noquote() << QString("%1  %2  %3  %4  %5  %6")
-                .arg(row.matchScope.left(8), -8)
-                .arg(mod.id.left(20), -20)
-                .arg(mod.title.left(40), -40)
-                .arg(mod.type.left(14), -14)
-                .arg(mod.format.left(8), -8)
-                .arg(QString::number(mod.rating, 'f', 1));
-        } else {
-            qInfo().noquote() << QString("%1  %2  %3  %4  %5")
-                .arg(mod.id.left(20), -20)
-                .arg(mod.title.left(40), -40)
-                .arg(mod.type.left(14), -14)
-                .arg(mod.format.left(8), -8)
-                .arg(QString::number(mod.rating, 'f', 1));
-        }
-    }
-}
-
-void printModDetails(const ModEntry &mod)
-{
-    qInfo().noquote() << QString("ID:          %1").arg(mod.id);
-    qInfo().noquote() << QString("Title:       %1").arg(mod.title);
-    qInfo().noquote() << QString("Author:      %1").arg(mod.author);
-    qInfo().noquote() << QString("Version:     %1").arg(mod.version);
-    qInfo().noquote() << QString("Type:        %1").arg(mod.type);
-    qInfo().noquote() << QString("System:      %1").arg(mod.system);
-    qInfo().noquote() << QString("Format:      %1").arg(mod.format);
-    qInfo().noquote() << QString("Patch URL:   %1").arg(mod.patchUrl);
-    qInfo().noquote() << QString("Patch SHA1:  %1").arg(mod.patchSha1.isEmpty() ? "(none)" : mod.patchSha1);
-    qInfo().noquote() << QString("Downloads:   %1").arg(mod.downloads);
-    qInfo().noquote() << QString("Rating:      %1").arg(QString::number(mod.rating, 'f', 1));
-    qInfo().noquote() << QString("Source URL:  %1").arg(mod.sourceUrl.isEmpty() ? "(none)" : mod.sourceUrl);
-    if (!mod.description.isEmpty()) {
-        qInfo().noquote() << QString("Description: %1").arg(mod.description);
-    }
-}
-
-bool loadCatalog(CliContext &ctx, ModCatalogProvider &catalog, QString &error)
-{
-    const bool hasCatalog = ctx.parser.isSet("mod-catalog");
-    const bool hasCatalogUrl = ctx.parser.isSet("mod-catalog-url");
-
-    if (!hasCatalog && !hasCatalogUrl) {
-        error = QStringLiteral("Mod commands require --mod-catalog <path> or --mod-catalog-url <url>");
-        return false;
-    }
-
-    if (hasCatalog) {
-        if (!catalog.loadFromFile(ctx.parser.value("mod-catalog"))) {
-            error = QStringLiteral("Failed to load mod catalog: %1").arg(catalog.lastError());
-            return false;
-        }
-        return true;
-    }
-
-    const QUrl url(ctx.parser.value("mod-catalog-url"));
-    if (!url.isValid() || url.scheme().isEmpty()) {
-        error = QStringLiteral("Invalid URL for --mod-catalog-url");
-        return false;
-    }
-
-    const bool forceRefresh = ctx.parser.isSet("mod-catalog-refresh");
-    if (!catalog.loadFromUrl(url, forceRefresh)) {
-        error = QStringLiteral("Failed to load mod catalog: %1").arg(catalog.lastError());
-        return false;
-    }
-
-    Database::ModCatalogCacheRecord cacheRec;
-    cacheRec.sourceUrl = url.toString();
-    cacheRec.modCount = catalog.allMods().size();
-    ctx.db.upsertCatalogCache(cacheRec);
-    return true;
-}
-
-} // namespace
 
 int handleModCommands(CliContext &ctx)
 {
@@ -221,7 +41,7 @@ int handleModCommands(CliContext &ctx)
             const auto installs = ctx.db.getModInstallations(file.id);
             for (const auto &inst : installs) {
                 if (wantsJson) {
-                    results.append(toJson(inst, file.filename));
+                    results.append(installedModToJson(inst, file.filename));
                     found = true;
                     continue;
                 }
@@ -275,7 +95,7 @@ int handleModCommands(CliContext &ctx)
 
     ModCatalogProvider catalog;
     QString error;
-    if (!loadCatalog(ctx, catalog, error)) {
+    if (!loadModCatalog(ctx, catalog, error)) {
         qCritical().noquote() << error;
         return 1;
     }
@@ -290,7 +110,7 @@ int handleModCommands(CliContext &ctx)
         if (queryOptions.jsonOutput) {
             QJsonArray array;
             for (const auto &row : rows) {
-                array.append(toJson(row));
+                array.append(listedModToJson(row));
             }
             printJsonArray(array);
         } else {
@@ -307,7 +127,7 @@ int handleModCommands(CliContext &ctx)
         if (queryOptions.jsonOutput) {
             QJsonArray array;
             for (auto it = counts.cbegin(); it != counts.cend(); ++it) {
-                array.append(toJson(it.key(), it.value()));
+                array.append(systemCountToJson(it.key(), it.value()));
             }
             printJsonArray(array);
             return 0;
@@ -329,7 +149,7 @@ int handleModCommands(CliContext &ctx)
         }
 
         if (queryOptions.jsonOutput) {
-            printJsonObject(toJson({*modOpt, {}}));
+            printJsonObject(listedModToJson({*modOpt, {}}));
         } else {
             qInfo() << "=== Mod Details ===";
             printModDetails(*modOpt);

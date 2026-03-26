@@ -22,7 +22,7 @@ void ArtworkDownloaderTest::downloadsLocalFile()
     const QString source = dir.filePath("source.bin");
     QFile src(source);
     QVERIFY(src.open(QIODevice::WriteOnly));
-    src.write("artwork-bytes");
+    QVERIFY(src.write("artwork-bytes") == 13);
     src.close();
 
     const QString dest = dir.filePath("dest.bin");

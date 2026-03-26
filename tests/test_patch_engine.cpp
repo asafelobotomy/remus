@@ -67,7 +67,7 @@ void PatchEngineTest::testDetectUpsChecksums()
 
     QFile patchFile(patchPath);
     QVERIFY(patchFile.open(QIODevice::WriteOnly));
-    patchFile.write(patch);
+    QVERIFY(patchFile.write(patch) == patch.size());
     patchFile.close();
 
     PatchEngine engine;
@@ -89,7 +89,7 @@ void PatchEngineTest::testApplyIpsBuiltin()
 
     QFile baseFile(basePath);
     QVERIFY(baseFile.open(QIODevice::WriteOnly));
-    baseFile.write(QByteArray(4, '\x00'));
+    QVERIFY(baseFile.write(QByteArray(4, '\x00')) == 4);
     baseFile.close();
 
     // IPS patch: PATCH + offset 0x000001 + size 0x0001 + byte 0x7F + EOF
@@ -105,7 +105,7 @@ void PatchEngineTest::testApplyIpsBuiltin()
 
     QFile patchFile(patchPath);
     QVERIFY(patchFile.open(QIODevice::WriteOnly));
-    patchFile.write(patch);
+    QVERIFY(patchFile.write(patch) == patch.size());
     patchFile.close();
 
     PatchEngine engine;

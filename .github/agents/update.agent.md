@@ -6,7 +6,7 @@ model:
   - Claude Sonnet 4.6
   - Claude Sonnet 4.5
   - GPT-5.1
-tools: [fetch, editFiles, codebase, runCommands]
+tools: [fetch, editFiles, codebase, runCommands, agent]
 disable-model-invocation: true
 agents: ['Doctor']
 handoffs:

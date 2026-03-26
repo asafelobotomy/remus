@@ -31,11 +31,23 @@ private:
      */
     QVector<int> populateTestData(TuiApp &app, const QString &romDir)
     {
-        QDir().mkpath(romDir);
-        { QFile f(romDir + "/Mario.nes");   f.open(QIODevice::WriteOnly); }
-        { QFile f(romDir + "/Zelda.sfc");   f.open(QIODevice::WriteOnly); }
-        { QFile f(romDir + "/Unknown.nes"); f.open(QIODevice::WriteOnly); }
-        { QFile f(romDir + "/Rejected.sfc"); f.open(QIODevice::WriteOnly); }
+        QVERIFY(QDir().mkpath(romDir));
+        {
+            QFile f(romDir + "/Mario.nes");
+            if (!f.open(QIODevice::WriteOnly)) return {};
+        }
+        {
+            QFile f(romDir + "/Zelda.sfc");
+            if (!f.open(QIODevice::WriteOnly)) return {};
+        }
+        {
+            QFile f(romDir + "/Unknown.nes");
+            if (!f.open(QIODevice::WriteOnly)) return {};
+        }
+        {
+            QFile f(romDir + "/Rejected.sfc");
+            if (!f.open(QIODevice::WriteOnly)) return {};
+        }
 
         Database &db = app.db();
         int libId  = db.insertLibrary(romDir, "Test Library");
@@ -232,11 +244,19 @@ private slots:
         TuiApp app;
         QVERIFY(app.db().initialize(tmp.path() + "/org.db"));
         QString romDir = tmp.path() + "/roms";
-        QDir().mkpath(romDir);
+        QVERIFY(QDir().mkpath(romDir));
 
         // Create primary CUE + linked BIN
-        { QFile f(romDir + "/Game.cue"); f.open(QIODevice::WriteOnly); f.write("FILE Game.bin\n"); }
-        { QFile f(romDir + "/Game.bin"); f.open(QIODevice::WriteOnly); f.write("data"); }
+        {
+            QFile f(romDir + "/Game.cue");
+            QVERIFY(f.open(QIODevice::WriteOnly));
+            QVERIFY(f.write("FILE Game.bin\n") == 14);
+        }
+        {
+            QFile f(romDir + "/Game.bin");
+            QVERIFY(f.open(QIODevice::WriteOnly));
+            QVERIFY(f.write("data") == 4);
+        }
 
         Database &db = app.db();
         int libId  = db.insertLibrary(romDir, "Test Library");

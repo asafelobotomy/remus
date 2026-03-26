@@ -58,7 +58,10 @@ bool Database::initialize(const QString &dbPath, const QString &connectionName)
     }
     
     // Run migrations for new columns
-    runMigrations();
+    if (!runMigrations()) {
+        close();
+        return false;
+    }
 
     return true;
 }

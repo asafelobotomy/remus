@@ -148,7 +148,11 @@ void OrganizeEngineTest::testCollisionSkip()
 
     // Pre-create blocking file at destination
     const QString dst = dstDir.path() + "/Super Mario Bros..nes";
-    { QFile f(dst); f.open(QIODevice::WriteOnly); f.write("existing"); }
+    {
+        QFile f(dst);
+        QVERIFY(f.open(QIODevice::WriteOnly));
+        QVERIFY(f.write("existing") == 8);
+    }
 
     Database db;
     QVERIFY(db.initialize(":memory:"));
@@ -174,7 +178,11 @@ void OrganizeEngineTest::testCollisionRename()
     QVERIFY(dstDir.isValid());
 
     const QString path = dstDir.path() + "/Super Mario Bros..nes";
-    { QFile f(path); f.open(QIODevice::WriteOnly); f.write("existing"); }
+    {
+        QFile f(path);
+        QVERIFY(f.open(QIODevice::WriteOnly));
+        QVERIFY(f.write("existing") == 8);
+    }
 
     QString resolved = OrganizeEngine::resolveCollision(path, CollisionStrategy::Rename);
     // Must differ from the original
@@ -189,7 +197,11 @@ void OrganizeEngineTest::testCollisionOverwrite()
     QVERIFY(srcDir.isValid() && dstDir.isValid());
 
     const QString dst = dstDir.path() + "/Super Mario Bros..nes";
-    { QFile f(dst); f.open(QIODevice::WriteOnly); f.write("old content"); }
+    {
+        QFile f(dst);
+        QVERIFY(f.open(QIODevice::WriteOnly));
+        QVERIFY(f.write("old content") == 11);
+    }
 
     Database db;
     QVERIFY(db.initialize(":memory:"));
@@ -243,7 +255,11 @@ void OrganizeEngineTest::testWouldCollide()
     const QString path = dir.path() + "/existing.nes";
     QVERIFY(!OrganizeEngine::wouldCollide(path));
 
-    { QFile f(path); f.open(QIODevice::WriteOnly); f.write("x"); }
+    {
+        QFile f(path);
+        QVERIFY(f.open(QIODevice::WriteOnly));
+        QVERIFY(f.write("x") == 1);
+    }
     QVERIFY(OrganizeEngine::wouldCollide(path));
 }
 
@@ -263,7 +279,10 @@ void OrganizeEngineTest::testResolveCollisionRename()
     QVERIFY(dir.isValid());
     // Create the base file so collision is detected
     const QString path = dir.path() + "/game.nes";
-    { QFile f(path); f.open(QIODevice::WriteOnly); }
+    {
+        QFile f(path);
+        QVERIFY(f.open(QIODevice::WriteOnly));
+    }
 
     QString resolved = OrganizeEngine::resolveCollision(path, CollisionStrategy::Rename);
     QVERIFY(resolved != path);

@@ -1,37 +1,25 @@
 # Frontend Status
 
-Remus is currently developed as a CLI-first product.
+Remus is developed as a CLI-only product. GUI and TUI code has been physically archived.
 
-## Treat GUI and TUI as archived
+## Archived code
 
-The Qt GUI in `src/ui/` and the notcurses TUI in `src/tui/` remain in the repository for reference and possible future extraction.
+As of 2026-03-26, the Qt GUI (`src/ui/`), Notcurses TUI (`src/tui/`), and ncurses
+interactive CLI session have been moved to `archive/gui-tui/`. The corresponding test
+files are in `archive/gui-tui/tests/`.
 
-They are archived for day-to-day development:
-
-- They are off by default in CMake.
-- They are not part of the default build flow.
-- They are not part of default CI coverage.
-- New feature work should land in the CLI unless there is an explicit decision to revive a frontend.
+The CMake options `REMUS_BUILD_GUI`, `REMUS_BUILD_TUI`, and `REMUS_BUILD_INTERACTIVE_CLI`
+have been removed from the build. To restore them, move the archived code back and
+re-add the CMake option blocks (preserved in git history).
 
 ## Build policy
 
-Use the CLI-only build as the supported path:
+The CLI-only build is the only supported path:
 
 ```bash
-cmake -S . -B build \
-  -DREMUS_BUILD_GUI=OFF \
-  -DREMUS_BUILD_TUI=OFF \
-  -DREMUS_BUILD_INTERACTIVE_CLI=OFF
+cmake -S . -B build
 cmake --build build -j$(nproc)
 ```
-
-The archived frontend flags still exist for exploratory work:
-
-- `REMUS_BUILD_GUI`
-- `REMUS_BUILD_TUI`
-- `REMUS_BUILD_INTERACTIVE_CLI`
-
-Treat those builds as opt-in and unsupported for the main delivery cycle.
 
 ## Improve the CLI instead
 

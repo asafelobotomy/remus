@@ -152,7 +152,7 @@ void ArchiveExtractorTest::testExtractZip()
     const QString archivePath = dir.path() + "/test.zip";
     QFile archive(archivePath);
     QVERIFY(archive.open(QIODevice::WriteOnly));
-    archive.write("zip");
+    QVERIFY(archive.write("zip") == 3);
     archive.close();
 
     ExtractionResult result = extractor.extract(archivePath, dir.path(), false);
@@ -177,7 +177,7 @@ void ArchiveExtractorTest::testExtract7zCreatesSubfolderAndTracksFiles()
     const QString archivePath = dir.path() + "/bundle.7z";
     QFile archive(archivePath);
     QVERIFY(archive.open(QIODevice::WriteOnly));
-    archive.write("7z");
+    QVERIFY(archive.write("7z") == 2);
     archive.close();
 
     ExtractionResult result = extractor.extract(archivePath, dir.path(), true);
@@ -205,7 +205,7 @@ void ArchiveExtractorTest::testExtractRarFallsBackToSevenZip()
     const QString archivePath = dir.path() + "/test.rar";
     QFile archive(archivePath);
     QVERIFY(archive.open(QIODevice::WriteOnly));
-    archive.write("rar");
+    QVERIFY(archive.write("rar") == 3);
     archive.close();
 
     ExtractionResult result = extractor.extract(archivePath, dir.path(), false);
@@ -228,7 +228,7 @@ void ArchiveExtractorTest::testExtractFileZipReturnsBasenameInOutputDir()
     const QString archivePath = dir.path() + "/test.zip";
     QFile archive(archivePath);
     QVERIFY(archive.open(QIODevice::WriteOnly));
-    archive.write("zip");
+    QVERIFY(archive.write("zip") == 3);
     archive.close();
 
     ExtractionResult result = extractor.extractFile(archivePath, "nested/file.bin", dir.path());
@@ -255,7 +255,7 @@ void ArchiveExtractorTest::testBatchExtractCanBeCancelledAfterFirstItem()
     for (const QString &archivePath : {firstArchive, secondArchive}) {
         QFile archive(archivePath);
         QVERIFY(archive.open(QIODevice::WriteOnly));
-        archive.write("zip");
+        QVERIFY(archive.write("zip") == 3);
         archive.close();
     }
 
@@ -279,7 +279,7 @@ void ArchiveExtractorTest::testExtractUnsupported()
     const QString archivePath = dir.path() + "/test.unknown";
     QFile archive(archivePath);
     QVERIFY(archive.open(QIODevice::WriteOnly));
-    archive.write("data");
+    QVERIFY(archive.write("data") == 4);
     archive.close();
 
     ExtractionResult result = extractor.extract(archivePath, dir.path(), false);

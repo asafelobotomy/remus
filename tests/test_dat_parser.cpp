@@ -4,20 +4,10 @@
 
 using namespace Remus;
 
-/**
- * @brief Unit tests for DatParser
- * 
- * Tests DAT file parsing with:
- * - Valid Logiqx XML format
- * - Malformed XML handling
- * - Missing required fields
- * - Hash indexing and lookup
- */
 class DatParserTest : public QObject {
     Q_OBJECT
 
 private slots:
-    // Valid DAT parsing tests
     void testParseValidDat();
     void testParseMultiRomGame();
     void testParseWithAllHashes();
@@ -25,7 +15,6 @@ private slots:
     void testParseNoIntroFormat();
     void testParseRedumpFormat();
 
-    // Malformed DAT handling tests
     void testParseMalformedXml();
     void testParseEmptyFile();
     void testParseMissingHeader();
@@ -33,23 +22,17 @@ private slots:
     void testParseMissingRomName();
     void testParseInvalidHashFormat();
 
-    // Hash indexing tests
     void testIndexByCrc32();
     void testIndexByMd5();
     void testIndexBySha1();
     void testIndexEmptyList();
     void testIndexDuplicateHashes();
 
-    // Source detection tests
     void testDetectSourceNoIntro();
     void testDetectSourceRedump();
     void testDetectSourceTosec();
     void testDetectSourceUnknown();
 };
-
-// ============================================================================
-// Valid DAT Parsing Tests
-// ============================================================================
 
 void DatParserTest::testParseValidDat() {
     QString xmlContent = 
@@ -72,7 +55,8 @@ void DatParserTest::testParseValidDat() {
 
     QTemporaryFile tempFile;
     QVERIFY(tempFile.open());
-    tempFile.write(xmlContent.toUtf8());
+    const QByteArray xmlData = xmlContent.toUtf8();
+    QVERIFY(tempFile.write(xmlData) == xmlData.size());
     tempFile.close();
 
     DatParser parser;
@@ -204,10 +188,6 @@ void DatParserTest::testParseRedumpFormat() {
     QCOMPARE(source, QString("redump"));
 }
 
-// ============================================================================
-// Malformed DAT Handling Tests
-// ============================================================================
-
 void DatParserTest::testParseMalformedXml() {
     QString xmlContent = 
         "<?xml version=\"1.0\"?>\n"
@@ -227,10 +207,8 @@ void DatParserTest::testParseMalformedXml() {
 }
 
 void DatParserTest::testParseEmptyFile() {
-    QString xmlContent = "";
-
     DatParser parser;
-    DatParseResult result = parser.parseContent(xmlContent);
+    DatParseResult result = parser.parseContent(QString());
 
     QVERIFY(!result.success);
     QVERIFY(!result.error.isEmpty());
@@ -248,8 +226,7 @@ void DatParserTest::testParseMissingHeader() {
     DatParser parser;
     DatParseResult result = parser.parseContent(xmlContent);
 
-    // Should succeed but with empty header
-    QVERIFY(result.success || !result.success); // Parser implementation dependent
+    QVERIFY(result.success || !result.success);
     if (result.success) {
         QCOMPARE(result.entries.size(), 1);
     }
@@ -268,7 +245,6 @@ void DatParserTest::testParseMissingGameName() {
     DatParser parser;
     DatParseResult result = parser.parseContent(xmlContent);
 
-    // Should handle gracefully
     if (result.success) {
         if (result.entries.size() > 0) {
             QVERIFY(result.entries[0].gameName.isEmpty());
@@ -289,7 +265,6 @@ void DatParserTest::testParseMissingRomName() {
     DatParser parser;
     DatParseResult result = parser.parseContent(xmlContent);
 
-    // Parser should handle missing ROM name
     if (result.success && result.entries.size() > 0) {
         QVERIFY(result.entries[0].romName.isEmpty());
     }
@@ -308,20 +283,13 @@ void DatParserTest::testParseInvalidHashFormat() {
     DatParser parser;
     DatParseResult result = parser.parseContent(xmlContent);
 
-    // Should parse but hash might be invalid
     if (result.success && result.entries.size() > 0) {
-        // Hash should be stored as-is or normalized
         QVERIFY(!result.entries[0].crc32.isEmpty());
     }
 }
 
-// ============================================================================
-// Hash Indexing Tests
-// ============================================================================
-
 void DatParserTest::testIndexByCrc32() {
     QList<DatRomEntry> entries;
-    
     DatRomEntry entry1;
     entry1.romName = "game1.rom";
     entry1.crc32 = "12345678";
@@ -343,7 +311,6 @@ void DatParserTest::testIndexByCrc32() {
 
 void DatParserTest::testIndexByMd5() {
     QList<DatRomEntry> entries;
-    
     DatRomEntry entry;
     entry.romName = "test.rom";
     entry.md5 = "d41d8cd98f00b204e9800998ecf8427e";
@@ -357,7 +324,6 @@ void DatParserTest::testIndexByMd5() {
 
 void DatParserTest::testIndexBySha1() {
     QList<DatRomEntry> entries;
-    
     DatRomEntry entry;
     entry.romName = "test.rom";
     entry.sha1 = "da39a3ee5e6b4b0d3255bfef95601890afd80709";
@@ -379,7 +345,6 @@ void DatParserTest::testIndexEmptyList() {
 
 void DatParserTest::testIndexDuplicateHashes() {
     QList<DatRomEntry> entries;
-    
     DatRomEntry entry1;
     entry1.romName = "game1.rom";
     entry1.crc32 = "12345678";
@@ -392,14 +357,9 @@ void DatParserTest::testIndexDuplicateHashes() {
 
     QMap<QString, DatRomEntry> index = DatParser::indexByHash(entries, "crc32");
 
-    // Last entry wins in case of duplicates
     QCOMPARE(index.size(), 1);
     QVERIFY(index.contains("12345678"));
 }
-
-// ============================================================================
-// Source Detection Tests
-// ============================================================================
 
 void DatParserTest::testDetectSourceNoIntro() {
     DatHeader header;

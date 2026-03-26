@@ -28,9 +28,9 @@ private slots:
         QString patchPath = tmp.path() + "/test.ips";
         QFile f(patchPath);
         QVERIFY(f.open(QIODevice::WriteOnly));
-        f.write("PATCH");           // IPS magic
-        f.write(QByteArray(10, '\x00')); // dummy payload
-        f.write("EOF");             // IPS footer
+        QVERIFY(f.write("PATCH") == 5);           // IPS magic
+        QVERIFY(f.write(QByteArray(10, '\x00')) == 10); // dummy payload
+        QVERIFY(f.write("EOF") == 3);             // IPS footer
         f.close();
 
         PatchService svc;
@@ -46,7 +46,7 @@ private slots:
         QString path = tmp.path() + "/random.bin";
         QFile f(path);
         QVERIFY(f.open(QIODevice::WriteOnly));
-        f.write("hello world this is not a patch");
+        QVERIFY(f.write("hello world this is not a patch") == 31);
         f.close();
 
         PatchService svc;

@@ -25,12 +25,15 @@ private:
     /// Write known bytes to a file and return the path.
     QString writeTestFile(const QString &dir, const QString &name, const QByteArray &data)
     {
-        QDir().mkpath(dir);
+        if (!QDir().mkpath(dir)) {
+            return {};
+        }
         QString path = dir + "/" + name;
         QFile f(path);
         if (!f.open(QIODevice::WriteOnly))
             return {};
-        f.write(data);
+        if (f.write(data) != data.size())
+            return {};
         f.close();
         return path;
     }

@@ -1,8 +1,11 @@
 #pragma once
 
 #include <QCommandLineParser>
+#include <QJsonArray>
+#include <QJsonObject>
 #include <QString>
 
+#include "../core/database.h"
 #include "../services/mod_catalog_provider.h"
 
 struct ListedMod {
@@ -37,3 +40,22 @@ QList<ListedMod> sortListedMods(const QList<ListedMod> &mods,
                                 const ModQueryOptions  &options);
 
 QString describeActiveFilters(const ModQueryOptions &options);
+
+QJsonObject listedModToJson(const ListedMod &row);
+
+QJsonObject installedModToJson(const Remus::Database::ModInstallationRecord &record,
+                              const QString                                &baseFilename);
+
+QJsonObject systemCountToJson(const QString &system, int count);
+
+void printJsonArray(const QJsonArray &array);
+
+void printJsonObject(const QJsonObject &object);
+
+void printModList(const QList<ListedMod> &mods);
+
+void printModDetails(const Remus::ModEntry &mod);
+
+bool loadModCatalog(struct CliContext &ctx,
+                    Remus::ModCatalogProvider &catalog,
+                    QString                   &error);

@@ -6,7 +6,7 @@ model:
   - Claude Sonnet 4.6
   - Claude Opus 4.6
   - Claude Opus 4.5
-tools: [codebase, runCommands]
+tools: [codebase, runCommands, agent]
 agents: ['Code', 'Update', 'Researcher', 'Explore']
 handoffs:
   - label: Apply fixes

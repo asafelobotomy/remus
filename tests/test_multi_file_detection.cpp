@@ -5,15 +5,6 @@
 
 using namespace Remus;
 
-/**
- * @brief Unit tests for multi-file set detection
- * 
- * Tests Scanner's ability to detect and link:
- * - .cue/.bin file pairs
- * - .gdi track file sets
- * - .ccd/.img/.sub file sets
- * - .mds/.mdf file pairs
- */
 class MultiFileDetectionTest : public QObject {
     Q_OBJECT
 
@@ -21,29 +12,24 @@ private slots:
     void initTestCase();
     void cleanupTestCase();
     void init();  // Cleanup before each test
-    void cleanup(); // Cleanup after each test
+    void cleanup();
 
-    // CUE/BIN tests
     void testLinkCueBinPair();
     void testLinkCueMultipleBins();
     void testLinkCueBinMismatch();
     void testLinkCueImgFile();
 
-    // GDI tests
     void testLinkGdiTracks();
     void testLinkGdiMissingTracks();
     void testLinkGdiEmptyFile();
 
-    // CCD tests
     void testLinkCcdImgPair();
     void testLinkCcdWithSub();
     void testLinkCcdMismatch();
 
-    // MDS tests
     void testLinkMdsMdfPair();
     void testLinkMdsMdfMismatch();
 
-    // Edge cases
     void testMultipleFormatsInSameDir();
     void testNestedDirectories();
     void testNoPrimaryFiles();
@@ -75,21 +61,17 @@ void MultiFileDetectionTest::init() {
 }
 
 void MultiFileDetectionTest::cleanup() {
-    // Optional: could add per-test cleanup here if needed
 }
 
 void MultiFileDetectionTest::createFile(const QString &relativePath, const QString &content) {
     QString fullPath = tempDir->filePath(relativePath);
     QFileInfo info(fullPath);
-    QDir().mkpath(info.absolutePath());
+    QVERIFY(QDir().mkpath(info.absolutePath()));
     
     QFile file(fullPath);
     QVERIFY(file.open(QIODevice::WriteOnly));
-    if (!content.isEmpty()) {
-        file.write(content.toUtf8());
-    } else {
-        file.write("dummy content");
-    }
+    const QByteArray data = content.isEmpty() ? QByteArrayLiteral("dummy content") : content.toUtf8();
+    QVERIFY(file.write(data) == data.size());
     file.close();
 }
 
@@ -106,10 +88,6 @@ QList<ScanResult> MultiFileDetectionTest::scanTestDirectory() {
     scanner.setMultiFileDetection(true);
     return scanner.scan(tempDir->path());
 }
-
-// ============================================================================
-// CUE/BIN Tests
-// ============================================================================
 
 void MultiFileDetectionTest::testLinkCueBinPair() {
     createFile("game.cue");
@@ -190,10 +168,6 @@ void MultiFileDetectionTest::testLinkCueImgFile() {
     QVERIFY(!imgFile->isPrimary); // Should be linked
 }
 
-// ============================================================================
-// GDI Tests
-// ============================================================================
-
 void MultiFileDetectionTest::testLinkGdiTracks() {
     QStringList tracks = {"track01.bin", "track02.raw", "track03.bin"};
     
@@ -252,10 +226,6 @@ void MultiFileDetectionTest::testLinkGdiEmptyFile() {
     QVERIFY(results[0].isPrimary);
 }
 
-// ============================================================================
-// CCD Tests
-// ============================================================================
-
 void MultiFileDetectionTest::testLinkCcdImgPair() {
     createFile("game.ccd");
     createFile("game.img");
@@ -310,10 +280,6 @@ void MultiFileDetectionTest::testLinkCcdMismatch() {
     QCOMPARE(primaryCount, 2); // No link, both primary
 }
 
-// ============================================================================
-// MDS Tests
-// ============================================================================
-
 void MultiFileDetectionTest::testLinkMdsMdfPair() {
     createFile("game.mds");
     createFile("game.mdf");
@@ -350,10 +316,6 @@ void MultiFileDetectionTest::testLinkMdsMdfMismatch() {
     
     QCOMPARE(primaryCount, 2); // No link
 }
-
-// ============================================================================
-// Edge Case Tests
-// ============================================================================
 
 void MultiFileDetectionTest::testMultipleFormatsInSameDir() {
     // Mix of different formats

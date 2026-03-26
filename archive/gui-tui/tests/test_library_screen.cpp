@@ -27,10 +27,19 @@ private:
     QVector<int> populateTestData(TuiApp &app, const QString &romDir)
     {
         // Create stub ROM files so the screen's getExistingFiles() path-exists check passes
-        QDir().mkpath(romDir);
-        QFile(romDir + "/Mario.nes").open(QIODevice::WriteOnly);
-        QFile(romDir + "/Zelda.nes").open(QIODevice::WriteOnly);
-        QFile(romDir + "/DonkeyKong.sfc").open(QIODevice::WriteOnly);
+        QVERIFY(QDir().mkpath(romDir));
+        {
+            QFile mario(romDir + "/Mario.nes");
+            if (!mario.open(QIODevice::WriteOnly)) return {};
+        }
+        {
+            QFile zelda(romDir + "/Zelda.nes");
+            if (!zelda.open(QIODevice::WriteOnly)) return {};
+        }
+        {
+            QFile donkeyKong(romDir + "/DonkeyKong.sfc");
+            if (!donkeyKong.open(QIODevice::WriteOnly)) return {};
+        }
 
         Database &db = app.db();
 

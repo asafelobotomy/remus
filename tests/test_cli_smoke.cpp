@@ -105,7 +105,7 @@ private slots:
         QString archive = dir.filePath("dummy.zip");
         QFile f(archive);
         QVERIFY(f.open(QIODevice::WriteOnly));
-        f.write("PK\x03\x04"); // minimal signature
+        QVERIFY(f.write("PK\x03\x04") == 4); // minimal signature
         f.close();
         runCli({"--extract-archive", archive, "--dry-run-all"});
     }
@@ -118,7 +118,7 @@ private slots:
         QString cue = dir.filePath("sample.cue");
         QFile f(cue);
         QVERIFY(f.open(QIODevice::WriteOnly));
-        f.write("REM dummy cue\n");
+        QVERIFY(f.write("REM dummy cue\n") == 14);
         f.close();
         runCli({"--convert-chd", cue, "--dry-run-all"});
     }
@@ -262,7 +262,7 @@ private slots:
 
         QFile rom(romPath);
         QVERIFY(rom.open(QIODevice::WriteOnly));
-        rom.write(QByteArray(1024, '\0'));
+        QVERIFY(rom.write(QByteArray(1024, '\0')) == 1024);
         rom.close();
 
         runCli({"--db", dbPath, "--scan", dir.path()});

@@ -5,6 +5,13 @@
 
 using namespace Remus;
 
+namespace {
+bool writeAll(QFile &file, const QByteArray &data)
+{
+    return file.write(data) == data.size();
+}
+}
+
 class FakeChdConverter : public CHDConverter
 {
 public:
@@ -32,10 +39,10 @@ protected:
             if (outputIndex >= 0 && outputIndex + 1 < args.size()) {
                 const QString outputPath = args.at(outputIndex + 1);
                 QFileInfo info(outputPath);
-                QDir().mkpath(info.absolutePath());
+                Q_ASSERT(QDir().mkpath(info.absolutePath()));
                 QFile outputFile(outputPath);
                 if (outputFile.open(QIODevice::WriteOnly)) {
-                    outputFile.write("output");
+                    Q_ASSERT(writeAll(outputFile, QByteArrayLiteral("output")));
                 }
             }
         }
@@ -131,7 +138,7 @@ void ChdConverterTest::testGetCHDInfoSupportsLegacyLabelsAndFailureDefaults()
     const QString chdPath = dir.path() + "/legacy.chd";
     QFile inputFile(chdPath);
     QVERIFY(inputFile.open(QIODevice::WriteOnly));
-    inputFile.write("legacy-data");
+    QVERIFY(writeAll(inputFile, QByteArrayLiteral("legacy-data")));
     inputFile.close();
 
     FakeChdConverter converter;
@@ -171,7 +178,7 @@ void ChdConverterTest::testConvertIso()
 
     QFile inputFile(inputPath);
     QVERIFY(inputFile.open(QIODevice::WriteOnly));
-    inputFile.write("data");
+    QVERIFY(writeAll(inputFile, QByteArrayLiteral("data")));
     inputFile.close();
 
     QFile outputFile(outputPath);
@@ -185,7 +192,7 @@ void ChdConverterTest::testConvertIso()
     CHDConversionResult ok = converter.convertIsoToCHD(inputPath, outputPath);
     QVERIFY(ok.success);
 
-    QFile::remove(outputPath);
+    QVERIFY(QFile::remove(outputPath));
     converter.nextTracked.exitCode = 1;
     CHDConversionResult bad = converter.convertIsoToCHD(inputPath, outputPath);
     QVERIFY(!bad.success);
@@ -204,17 +211,17 @@ void ChdConverterTest::testConvertCueAndGdiIncludeConfiguredArguments()
 
     QFile cueFile(cuePath);
     QVERIFY(cueFile.open(QIODevice::WriteOnly | QIODevice::Text));
-    cueFile.write("FILE \"disc.bin\" BINARY\n");
+    QVERIFY(writeAll(cueFile, QByteArrayLiteral("FILE \"disc.bin\" BINARY\n")));
     cueFile.close();
 
     QFile binFile(binPath);
     QVERIFY(binFile.open(QIODevice::WriteOnly));
-    binFile.write("bin-data");
+    QVERIFY(writeAll(binFile, QByteArrayLiteral("bin-data")));
     binFile.close();
 
     QFile gdiFile(gdiPath);
     QVERIFY(gdiFile.open(QIODevice::WriteOnly | QIODevice::Text));
-    gdiFile.write("1\n1 0 4 2352 track01.bin 0\n");
+    QVERIFY(writeAll(gdiFile, QByteArrayLiteral("1\n1 0 4 2352 track01.bin 0\n")));
     gdiFile.close();
 
     FakeChdConverter converter;
@@ -251,7 +258,7 @@ void ChdConverterTest::testExtractChdUsesDefaultCueOutputPath()
     const QString chdPath = dir.path() + "/disc.chd";
     QFile chdFile(chdPath);
     QVERIFY(chdFile.open(QIODevice::WriteOnly));
-    chdFile.write("chd-data");
+    QVERIFY(writeAll(chdFile, QByteArrayLiteral("chd-data")));
     chdFile.close();
 
     FakeChdConverter converter;
@@ -279,22 +286,22 @@ void ChdConverterTest::testBatchConvertSupportedFormatsUsesOutputDirectory()
 
     QFile cueFile(cuePath);
     QVERIFY(cueFile.open(QIODevice::WriteOnly | QIODevice::Text));
-    cueFile.write("FILE \"batch.bin\" BINARY\n");
+    QVERIFY(writeAll(cueFile, QByteArrayLiteral("FILE \"batch.bin\" BINARY\n")));
     cueFile.close();
 
     QFile cueBinFile(dir.path() + "/batch.bin");
     QVERIFY(cueBinFile.open(QIODevice::WriteOnly));
-    cueBinFile.write("bin");
+    QVERIFY(writeAll(cueBinFile, QByteArrayLiteral("bin")));
     cueBinFile.close();
 
     QFile isoFile(isoPath);
     QVERIFY(isoFile.open(QIODevice::WriteOnly));
-    isoFile.write("iso");
+    QVERIFY(writeAll(isoFile, QByteArrayLiteral("iso")));
     isoFile.close();
 
     QFile gdiFile(gdiPath);
     QVERIFY(gdiFile.open(QIODevice::WriteOnly | QIODevice::Text));
-    gdiFile.write("1\n1 0 4 2352 track01.bin 0\n");
+    QVERIFY(writeAll(gdiFile, QByteArrayLiteral("1\n1 0 4 2352 track01.bin 0\n")));
     gdiFile.close();
 
     FakeChdConverter converter;

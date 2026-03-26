@@ -26,18 +26,18 @@ private:
 
         QFile f1(dir + "/TestRom.nes");
         QVERIFY(f1.open(QIODevice::WriteOnly));
-        f1.write(nesHeader);
+        QVERIFY(f1.write(nesHeader) == nesHeader.size());
         f1.close();
 
         QFile f2(dir + "/Another.nes");
         QVERIFY(f2.open(QIODevice::WriteOnly));
-        f2.write(nesHeader);
+        QVERIFY(f2.write(nesHeader) == nesHeader.size());
         f2.close();
 
         // Non-ROM file should be ignored
         QFile txt(dir + "/readme.txt");
         QVERIFY(txt.open(QIODevice::WriteOnly));
-        txt.write("this is not a rom");
+        QVERIFY(txt.write("this is not a rom") == 17);
         txt.close();
     }
 

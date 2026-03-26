@@ -7,6 +7,13 @@
 
 using namespace Remus;
 
+namespace {
+bool writeAll(QFile &file, const QByteArray &data)
+{
+    return file.write(data) == data.size();
+}
+}
+
 // ── Fake subclass that intercepts runProcess ──────────────────────────────
 
 class FakeArchiveCreator : public ArchiveCreator
@@ -50,8 +57,10 @@ private:
         }
         if (exitCode == 0 && args.size() > outputIndex) {
             QFile f(args[outputIndex]);
-            f.open(QIODevice::WriteOnly);
-            f.write("PK\x05\x06" + QByteArray(18, '\0')); // minimal ZIP end-of-central-dir
+            Q_ASSERT(f.open(QIODevice::WriteOnly));
+            QByteArray payload("PK\x05\x06", 4);
+            payload.append(QByteArray(18, '\0'));
+            Q_ASSERT(writeAll(f, payload)); // minimal ZIP end-of-central-dir
         }
         return r;
     }
@@ -81,7 +90,11 @@ void ArchiveCreatorTest::testCompressSuccessReturnsOutputPath()
 
     // Create a dummy input file so calculateTotalSize doesn't fail
     const QString inputFile = dir.path() + "/rom.nes";
-    { QFile f(inputFile); f.open(QIODevice::WriteOnly); f.write("FAKE ROM"); }
+    {
+        QFile f(inputFile);
+        QVERIFY(f.open(QIODevice::WriteOnly));
+        QVERIFY(writeAll(f, QByteArrayLiteral("FAKE ROM")));
+    }
     const QString outputZip = dir.path() + "/rom.zip";
 
     FakeArchiveCreator creator;
@@ -103,7 +116,11 @@ void ArchiveCreatorTest::testCompressFailureReturnsError()
     QVERIFY(dir.isValid());
 
     const QString inputFile = dir.path() + "/rom.nes";
-    { QFile f(inputFile); f.open(QIODevice::WriteOnly); f.write("FAKE ROM"); }
+    {
+        QFile f(inputFile);
+        QVERIFY(f.open(QIODevice::WriteOnly));
+        QVERIFY(writeAll(f, QByteArrayLiteral("FAKE ROM")));
+    }
 
     FakeArchiveCreator creator;
     creator.exitCode = 1;  // Non-zero → failure
@@ -125,10 +142,10 @@ void ArchiveCreatorTest::testBatchCompressResultCount()
     // Create two subdirectories to compress individually
     const QStringList dirs = {dir.path() + "/a", dir.path() + "/b"};
     for (const QString &d : dirs) {
-        QDir().mkpath(d);
+        QVERIFY(QDir().mkpath(d));
         QFile f(d + "/rom.nes");
-        f.open(QIODevice::WriteOnly);
-        f.write("DATA");
+        QVERIFY(f.open(QIODevice::WriteOnly));
+        QVERIFY(writeAll(f, QByteArrayLiteral("DATA")));
     }
 
     FakeArchiveCreator creator;
@@ -161,9 +178,21 @@ void ArchiveCreatorTest::testCompressDirectoryContentsPreservesRelativePaths()
     const QString rootDir = dir.path() + "/bundle";
     QVERIFY(QDir().mkpath(rootDir + "/artwork"));
 
-    { QFile f(rootDir + "/game.nes"); QVERIFY(f.open(QIODevice::WriteOnly)); f.write("ROM"); }
-    { QFile f(rootDir + "/.remus.md"); QVERIFY(f.open(QIODevice::WriteOnly)); f.write("marker"); }
-    { QFile f(rootDir + "/artwork/boxfront.jpg"); QVERIFY(f.open(QIODevice::WriteOnly)); f.write("art"); }
+    {
+        QFile f(rootDir + "/game.nes");
+        QVERIFY(f.open(QIODevice::WriteOnly));
+        QVERIFY(writeAll(f, QByteArrayLiteral("ROM")));
+    }
+    {
+        QFile f(rootDir + "/.remus.md");
+        QVERIFY(f.open(QIODevice::WriteOnly));
+        QVERIFY(writeAll(f, QByteArrayLiteral("marker")));
+    }
+    {
+        QFile f(rootDir + "/artwork/boxfront.jpg");
+        QVERIFY(f.open(QIODevice::WriteOnly));
+        QVERIFY(writeAll(f, QByteArrayLiteral("art")));
+    }
 
     FakeArchiveCreator creator;
     creator.setZipPath("/bin/sh");
@@ -199,7 +228,11 @@ void ArchiveCreatorTest::testRoundTripZip()
     // Write a small file
     const QByteArray payload = "Round-trip ROM payload";
     const QString srcFile    = srcDir.path() + "/game.nes";
-    { QFile f(srcFile); f.open(QIODevice::WriteOnly); f.write(payload); }
+    {
+        QFile f(srcFile);
+        QVERIFY(f.open(QIODevice::WriteOnly));
+        QVERIFY(writeAll(f, payload));
+    }
 
     // Compress
     const QString zipPath = srcDir.path() + "/game.zip";

@@ -436,7 +436,7 @@ void FileListModel::groupFiles(const QList<FileRecord> &files, const QMap<int, D
         }
         
         // Check if file is inside an archive (original path contains archive extension)
-        for (const QString &archiveExt : ARCHIVE_EXTENSIONS) {
+        for (const QString &archiveExt : Constants::Files::ARCHIVE_EXTENSIONS) {
             if (file.originalPath.contains(archiveExt, Qt::CaseInsensitive)) {
                 entry.isInsideArchive = true;
                 // Extract archive path (everything up to and including the archive extension)
@@ -528,7 +528,7 @@ void FileListModel::groupFiles(const QList<FileRecord> &files, const QMap<int, D
         if (entry.isInsideArchive) {
             // Check if current_path still points to an archive or to extracted file
             bool stillInArchive = false;
-            for (const QString &archiveExt : ARCHIVE_EXTENSIONS) {
+            for (const QString &archiveExt : Constants::Files::ARCHIVE_EXTENSIONS) {
                 if (entry.currentPath.endsWith(archiveExt, Qt::CaseInsensitive)) {
                     stillInArchive = true;
                     break;

@@ -6,7 +6,7 @@ model:
   - Claude Sonnet 4.6
   - Claude Sonnet 4.5
   - GPT-5 mini
-tools: [fetch, webSearch, codebase, search, editFiles]
+tools: [fetch, codebase, search, editFiles, agent]
 agents: ['Code', 'Doctor']
 handoffs:
   - label: Implement findings

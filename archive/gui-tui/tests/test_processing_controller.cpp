@@ -40,7 +40,15 @@ private:
                             const QString &name = "game.nes")
     {
         const QString path = dir.path() + "/" + name;
-        { QFile f(path); f.open(QIODevice::WriteOnly); f.write(QByteArray(16, 0xAA)); }
+        {
+            QFile f(path);
+            if (!f.open(QIODevice::WriteOnly)) {
+                return 0;
+            }
+            if (f.write(QByteArray(16, 0xAA)) != 16) {
+                return 0;
+            }
+        }
 
         int libId = db.insertLibrary(dir.path(), "Lib");
         int sysId = db.getSystemId("NES");

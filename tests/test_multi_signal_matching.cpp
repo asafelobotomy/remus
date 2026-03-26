@@ -199,8 +199,14 @@ bool testRealROMFile() {
     }
 
     const QByteArray romData("rom-test-data");
-    tempFile.write(romData);
-    tempFile.flush();
+    if (tempFile.write(romData) != romData.size()) {
+        qWarning() << "✗ Failed to write temp ROM file";
+        return false;
+    }
+    if (!tempFile.flush()) {
+        qWarning() << "✗ Failed to flush temp ROM file";
+        return false;
+    }
 
     QFileInfo fileInfo(tempFile.fileName());
     qInfo() << "Processing:" << fileInfo.fileName();

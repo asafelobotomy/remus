@@ -23,7 +23,8 @@ private:
     QString writeTempDat(QTemporaryFile &tmp, const QString &content)
     {
         if (!tmp.open()) return {};
-        tmp.write(content.toUtf8());
+        const QByteArray data = content.toUtf8();
+        if (tmp.write(data) != data.size()) return {};
         tmp.close();
         return tmp.fileName();
     }

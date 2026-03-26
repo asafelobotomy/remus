@@ -8,9 +8,6 @@
 #include "cli_commands.h"
 #include "cli_helpers.h"
 #include "../core/constants/constants.h"
-#ifdef REMUS_BUILD_INTERACTIVE_CLI
-#include "interactive_session.h"
-#endif
 #include "cli_logging.h"
 
 using namespace Remus;
@@ -208,12 +205,9 @@ int main(int argc, char *argv[])
     addActionOption(QCommandLineOption("space-report",    "Show potential CHD conversion savings",               "directory"));
     addOption(QCommandLineOption("output-dir",      "Output directory for conversions/extractions",         "directory"));
 
-    addOption(QCommandLineOption(Constants::Cli::Options::INTERACTIVE, "Launch archived interactive TUI when supported by this build"));
-    addOption(QCommandLineOption(Constants::Cli::Options::NO_INTERACTIVE, "Disable archived interactive TUI (script-friendly; accepted as a no-op in CLI-only builds)"));
+    addOption(QCommandLineOption(Constants::Cli::Options::NO_INTERACTIVE, "Accepted for backwards compatibility (this is a CLI-only build)"));
 
     QStringList activeArgs = app.arguments();
-    const bool interactiveFlag = hasFlag(activeArgs, "--" + Constants::Cli::Options::INTERACTIVE);
-    const bool noInteractiveFlag = hasFlag(activeArgs, "--" + Constants::Cli::Options::NO_INTERACTIVE);
     const bool jsonRequested = hasFlag(activeArgs, "--" + Constants::Cli::Options::JSON) || hasFlag(activeArgs, "--" + Constants::Cli::Options::MOD_JSON);
     const bool actionsProvided   = hasAnyAction(activeArgs, actionOptions);
 
@@ -225,27 +219,11 @@ int main(int argc, char *argv[])
         printBanner();
     }
 
-#ifdef REMUS_BUILD_INTERACTIVE_CLI
-    if (interactiveFlag || (!noInteractiveFlag && !actionsProvided)) {
-        InteractiveSession session;
-        InteractiveResult selection = session.run();
-        if (!selection.valid || selection.args.isEmpty()) return 0;
-        activeArgs = selection.args;
-    }
-#else
-    if (interactiveFlag) {
-        qCritical() << "Interactive mode is not available in this CLI-only build.";
-        return 1;
-    }
-#endif
-
     parser.process(activeArgs);
 
-#ifndef REMUS_BUILD_INTERACTIVE_CLI
     if (!actionsProvided) {
         parser.showHelp(0);
     }
-#endif
 
     Database db;
     if (!db.initialize(parser.value("db"))) {

@@ -32,13 +32,13 @@ private:
 
         QFile nes(dir + "/TestGame.nes");
         QVERIFY(nes.open(QIODevice::WriteOnly));
-        nes.write(nesHeader);
+        QVERIFY(nes.write(nesHeader) == nesHeader.size());
         nes.close();
 
         // A second ROM to verify bulk processing
         QFile nes2(dir + "/AnotherGame.nes");
         QVERIFY(nes2.open(QIODevice::WriteOnly));
-        nes2.write(nesHeader);
+        QVERIFY(nes2.write(nesHeader) == nesHeader.size());
         nes2.close();
     }
 

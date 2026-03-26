@@ -25,7 +25,9 @@ static qint64 writeFileWithSize(const QString &path, int bytes)
         return 0;
     }
     QByteArray payload(bytes, 'A');
-    file.write(payload);
+    if (file.write(payload) != payload.size()) {
+        return 0;
+    }
     file.close();
     return file.size();
 }
@@ -68,10 +70,8 @@ void SpaceCalculatorTest::gdiSumsTrackSizes()
 
     QFile gdiFile(gdiPath);
     QVERIFY(gdiFile.open(QIODevice::WriteOnly | QIODevice::Text));
-    QTextStream out(&gdiFile);
-    out << "2" << '\n';
-    out << "1 0 4 2352 track01.bin" << '\n';
-    out << "2 0 4 2352 track02.bin" << '\n';
+    const QByteArray gdiContents = QByteArrayLiteral("2\n1 0 4 2352 track01.bin\n2 0 4 2352 track02.bin\n");
+    QVERIFY(gdiFile.write(gdiContents) == gdiContents.size());
     gdiFile.close();
 
     SpaceCalculator calc;

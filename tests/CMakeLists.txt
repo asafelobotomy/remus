@@ -3,9 +3,6 @@ enable_testing()
 
 # Find Qt6 Test module
 find_package(Qt6 REQUIRED COMPONENTS Test)
-if(REMUS_BUILD_INTERACTIVE_CLI)
-    find_package(Curses REQUIRED)
-endif()
 
 # Helper to reduce repetitive test target boilerplate.
 set(REMUS_TEST_TARGETS)
@@ -97,18 +94,6 @@ add_remus_test(test_patched_rom_parser PatchedRomParserTest
     LIBS Qt6::Test Qt6::Core remus-core
 )
 
-if(TARGET remus-ui)
-    add_remus_test(test_settings_controller SettingsControllerTest
-        SOURCES test_settings_controller.cpp
-        LIBS Qt6::Test Qt6::Core remus-ui
-    )
-
-    add_remus_test(test_library_controller LibraryControllerTest
-        SOURCES test_library_controller.cpp
-        LIBS Qt6::Test Qt6::Core Qt6::Sql remus-ui remus-core
-    )
-endif()
-
 add_remus_test(test_chd_converter ChdConverterTest
     SOURCES test_chd_converter.cpp
     LIBS Qt6::Test Qt6::Core remus-core
@@ -192,78 +177,6 @@ target_compile_definitions(test_cli_smoke PRIVATE
     REMUS_SOURCE_DIR="${CMAKE_SOURCE_DIR}"
 )
 
-if(REMUS_BUILD_INTERACTIVE_CLI)
-    add_remus_test(test_session_state SessionStateTest
-        SOURCES test_session_state.cpp ../src/cli/interactive_session.cpp
-        LIBS Qt6::Test Qt6::Core remus-core ${CURSES_LIBRARIES}
-    )
-endif()
-
-if(TARGET remus-ui)
-    add_remus_test(test_theme_constants ThemeConstantsTest
-        SOURCES test_theme_constants.cpp
-        LIBS Qt6::Test Qt6::Core Qt6::Gui remus-ui
-    )
-
-    add_remus_test(test_dat_manager_controller DatManagerControllerTest
-        SOURCES test_dat_manager_controller.cpp
-        LIBS Qt6::Test Qt6::Core remus-ui
-    )
-endif()
-
-# ── TUI Widget tests (Phase 6.2+) ─────────────────────────────────
-if(TARGET remus-tui-core)
-    add_remus_test(test_tui_widgets TuiWidgetsTest
-        SOURCES test_tui_widgets.cpp
-        LIBS Qt6::Test remus-tui-core
-    )
-
-    add_remus_test(test_library_screen LibraryScreenTest
-        SOURCES test_library_screen.cpp
-        LIBS Qt6::Test Qt6::Sql remus-tui-core
-    )
-
-    add_remus_test(test_tui_pipeline TuiPipelineTest
-        SOURCES test_tui_pipeline.cpp
-        LIBS Qt6::Test Qt6::Sql remus-tui-core
-    )
-
-    add_remus_test(test_match_screen MatchScreenTest
-        SOURCES test_match_screen.cpp
-        LIBS Qt6::Test Qt6::Sql remus-tui-core
-    )
-
-    add_remus_test(test_organize_screen OrganizeScreenTest
-        SOURCES test_organize_screen.cpp
-        LIBS Qt6::Test Qt6::Sql remus-tui-core
-    )
-
-    add_remus_test(test_compressor_screen CompressorScreenTest
-        SOURCES test_compressor_screen.cpp
-        LIBS Qt6::Test Qt6::Sql remus-tui-core
-    )
-
-    add_remus_test(test_patch_screen PatchScreenTest
-        SOURCES test_patch_screen.cpp
-        LIBS Qt6::Test Qt6::Sql remus-tui-core
-    )
-
-    add_remus_test(test_options_screen OptionsScreenTest
-        SOURCES test_options_screen.cpp
-        LIBS Qt6::Test Qt6::Sql remus-tui-core
-    )
-
-    add_remus_test(test_tool_hints ToolHintsTest
-        SOURCES test_tool_hints.cpp
-        LIBS Qt6::Test remus-tui-core
-    )
-
-    add_remus_test(test_tui_smoke TuiSmokeTest
-        SOURCES test_tui_smoke.cpp
-        LIBS Qt6::Test Qt6::Sql remus-tui-core
-    )
-endif()
-
 # ── Service layer tests (Phase 6.4) ───────────────────────────────
 add_remus_test(test_library_service LibraryServiceTest
     SOURCES test_library_service.cpp
@@ -339,18 +252,6 @@ add_remus_test(test_cli_mod_support CliModSupportTest
     SOURCES test_cli_mod_support.cpp ../src/cli/cli_mod_support.cpp
     LIBS Qt6::Test Qt6::Core Qt6::Network remus-services remus-core
 )
-
-if(TARGET remus-ui)
-    add_remus_test(test_processing_controller ProcessingControllerTest
-        SOURCES test_processing_controller.cpp
-        LIBS Qt6::Test Qt6::Core Qt6::Sql Qt6::Network remus-ui remus-core remus-metadata
-    )
-
-    add_remus_test(test_export_controller ExportControllerTest
-        SOURCES test_export_controller.cpp
-        LIBS Qt6::Test Qt6::Core Qt6::Sql Qt6::Network remus-ui remus-core
-    )
-endif()
 
 
 add_custom_target(run_tests
