@@ -21,7 +21,7 @@ Every file in the project is catalogued here. Update this file whenever a file i
 | `JOURNAL.md` | ADR-style development journal | — |
 | `BIBLIOGRAPHY.md` | This file — complete file map | — |
 | `METRICS.md` | Kaizen baseline snapshot table | — |
-| `.vscode/mcp.json` | VS Code MCP server configuration (filesystem, git) | — |
+| `.vscode/mcp.json` | VS Code MCP server configuration (filesystem, git) | 16 |
 
 ## Project source files (baseline: 2026-02-19)
 
