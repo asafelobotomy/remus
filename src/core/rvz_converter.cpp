@@ -62,7 +62,7 @@ ConversionResult RVZConverter::convertIsoToRVZ(const QString &isoPath,
     QString compression = getCompressionString();
     if (!compression.isEmpty()) {
         args << ("--compression=" + compression);
-        args << ("--compression-level=" + QString::number(m_compressionLevel));
+        args << ("--compression_level=" + QString::number(m_compressionLevel));
     }
 
     return runToolConversion(m_dolphinToolPath, args, "dolphin-tool", isoPath, output);
