@@ -14,6 +14,18 @@ namespace Providers {
 // Provider Identifiers (Internal use)
 // ============================================================================
 
+// Provider priority values (higher = tried first)
+namespace Priority {
+    inline constexpr int LOCAL_DATABASE     = 110;
+    inline constexpr int HASHEOUS           = 100;
+    inline constexpr int SCREENSCRAPER      = 90;
+    inline constexpr int GAMETDB            = 60;
+    inline constexpr int THEGAMESDB         = 50;
+    inline constexpr int RETROACHIEVEMENTS  = 45;
+    inline constexpr int IGDB               = 40;
+    inline constexpr int WIKIDATA           = 30;
+}
+
 /// Metadata provider: Hasheous (free, hash-only)
 inline constexpr const char* HASHEOUS = "hasheous";
 
@@ -127,7 +139,7 @@ inline const QMap<QString, ProviderInfo> PROVIDER_REGISTRY = {
         true,   // Name search (substring)
         false,  // No auth required
         QStringLiteral(""),
-        110,    // Highest priority (instant local match)
+        Priority::LOCAL_DATABASE,
         true    // Free service
     }},
     
@@ -140,7 +152,7 @@ inline const QMap<QString, ProviderInfo> PROVIDER_REGISTRY = {
         false,  // No name search (hash only)
         false,  // No auth required
         QStringLiteral(""),
-        100,    // Highest priority (hash matching preferred)
+        Priority::HASHEOUS,
         true    // Free service
     }},
     
@@ -153,7 +165,7 @@ inline const QMap<QString, ProviderInfo> PROVIDER_REGISTRY = {
         true,   // Name search
         true,   // Requires authentication
         QStringLiteral("https://www.screenscraper.fr"),
-        90,     // Fallback after hash-only
+        Priority::SCREENSCRAPER,
         true    // Free service available
     }},
     
@@ -166,7 +178,7 @@ inline const QMap<QString, ProviderInfo> PROVIDER_REGISTRY = {
         true,   // Name search
         false,  // No auth required
         QStringLiteral("https://www.gametdb.com"),
-        60,     // Above TheGamesDB, below ScreenScraper
+        Priority::GAMETDB,
         true    // Free service
     }},
     
@@ -179,7 +191,7 @@ inline const QMap<QString, ProviderInfo> PROVIDER_REGISTRY = {
         true,   // Name search
         false,  // No auth required
         QStringLiteral("https://thegamesdb.net"),
-        50,     // Medium fallback
+        Priority::THEGAMESDB,
         true    // Free service
     }},
     
@@ -192,7 +204,7 @@ inline const QMap<QString, ProviderInfo> PROVIDER_REGISTRY = {
         false,  // No name search
         true,   // Requires API key
         QStringLiteral("https://retroachievements.org/controlpanel.php"),
-        45,     // Between IGDB and TheGamesDB
+        Priority::RETROACHIEVEMENTS,
         true    // Free service
     }},
     
@@ -205,7 +217,7 @@ inline const QMap<QString, ProviderInfo> PROVIDER_REGISTRY = {
         true,   // Name search only
         true,   // Requires API key
         QStringLiteral("https://api.igdb.com"),
-        40,     // Last fallback
+        Priority::IGDB,
         false   // Requires subscription
     }},
     
@@ -218,7 +230,7 @@ inline const QMap<QString, ProviderInfo> PROVIDER_REGISTRY = {
         true,   // Name search
         false,  // No auth required
         QStringLiteral(""),
-        30,     // Lowest priority (supplementary)
+        Priority::WIKIDATA,
         true    // Free service
     }},
 };

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QString>
+#include <QtTypes>
 
 namespace Remus {
 namespace Constants {
@@ -43,6 +44,45 @@ namespace Thresholds {
     
     /// Organize screen minimum: Default threshold for organize eligibility
     inline constexpr float ORGANIZE_MINIMUM = 75.0f;
+
+    /// Very low: below fuzzy minimum
+    inline constexpr float VERY_LOW = 40.0f;
+}
+
+// ============================================================================
+// Fuzzy Matching Similarity Thresholds (0.0 – 1.0)
+// ============================================================================
+
+namespace FuzzyThresholds {
+    /// Minimum similarity for medium confidence
+    inline constexpr float MEDIUM_SIMILARITY = 0.8f;
+
+    /// Minimum similarity for low confidence
+    inline constexpr float LOW_SIMILARITY = 0.6f;
+}
+
+// ============================================================================
+// Multi-Signal Scoring (used by LocalDatabaseProvider match)
+// ============================================================================
+
+namespace MultiSignal {
+    /// Base score for a hash match (CRC32/MD5/SHA1)
+    inline constexpr int HASH_BASE = 100;
+
+    /// Bonus when filename matches exactly
+    inline constexpr int FILENAME_BONUS = 50;
+
+    /// Bonus when file size is within tolerance
+    inline constexpr int SIZE_BONUS = 30;
+
+    /// Bonus when serial number matches
+    inline constexpr int SERIAL_BONUS = 20;
+
+    /// Base score for a filename+size fallback match (no hash)
+    inline constexpr int FILENAME_SIZE_BASE = 80;
+
+    /// Maximum byte difference for size-match signal
+    inline constexpr qint64 SIZE_TOLERANCE = 1024;
 }
 
 // ============================================================================

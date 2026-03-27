@@ -1,5 +1,6 @@
 #include "local_database_provider.h"
 
+#include "../core/constants/confidence.h"
 #include <QDebug>
 #include <QFileInfo>
 #include <QSet>
@@ -10,6 +11,8 @@ QList<MultiSignalMatch> LocalDatabaseProvider::matchROM(const ROMSignals &input)
 {
     QMutexLocker locker(&m_mutex);
     QList<MultiSignalMatch> matches;
+
+    using namespace Constants::Confidence;
 
     QList<ClrMameProEntry> hashCandidates;
     QString matchedVia;
@@ -43,7 +46,7 @@ QList<MultiSignalMatch> LocalDatabaseProvider::matchROM(const ROMSignals &input)
             MultiSignalMatch match;
             match.entry = entry;
             match.hashMatch = true;
-            match.confidenceScore = 100;
+            match.confidenceScore = MultiSignal::HASH_BASE;
             match.matchSignalCount = 1;
 
             if (!input.crc32.isEmpty() && normalizeHash(input.crc32) == normalizeHash(entry.crc32)) {
@@ -58,21 +61,21 @@ QList<MultiSignalMatch> LocalDatabaseProvider::matchROM(const ROMSignals &input)
             const QString entryBase = QFileInfo(entry.romName).completeBaseName().toLower();
             if (signalBase == entryBase) {
                 match.filenameMatch = true;
-                match.confidenceScore += 50;
+                match.confidenceScore += MultiSignal::FILENAME_BONUS;
                 match.matchSignalCount++;
             }
 
             const qint64 sizeDiff = qAbs(input.fileSize - entry.size);
-            if (sizeDiff <= 1024) {
+            if (sizeDiff <= MultiSignal::SIZE_TOLERANCE) {
                 match.sizeMatch = true;
-                match.confidenceScore += 30;
+                match.confidenceScore += MultiSignal::SIZE_BONUS;
                 match.matchSignalCount++;
             }
 
             if (!input.serial.isEmpty() && !entry.serial.isEmpty()) {
                 if (input.serial.compare(entry.serial, Qt::CaseInsensitive) == 0) {
                     match.serialMatch = true;
-                    match.confidenceScore += 20;
+                    match.confidenceScore += MultiSignal::SERIAL_BONUS;
                     match.matchSignalCount++;
                 }
             }
@@ -82,7 +85,6 @@ QList<MultiSignalMatch> LocalDatabaseProvider::matchROM(const ROMSignals &input)
     }
 
     if (matches.isEmpty()) {
-
         const QString signalBase = QFileInfo(input.filename).completeBaseName().toLower();
         QSet<QString> seenEntries;
 
@@ -97,20 +99,20 @@ QList<MultiSignalMatch> LocalDatabaseProvider::matchROM(const ROMSignals &input)
             const QString entryBase = QFileInfo(entry.romName).completeBaseName().toLower();
             const bool filenameExact = (signalBase == entryBase);
             const qint64 sizeDiff = qAbs(input.fileSize - entry.size);
-            const bool sizeMatch = (sizeDiff <= 1024);
+            const bool sizeMatch = (sizeDiff <= MultiSignal::SIZE_TOLERANCE);
 
             if (filenameExact && sizeMatch) {
                 MultiSignalMatch match;
                 match.entry = entry;
                 match.filenameMatch = true;
                 match.sizeMatch = true;
-                match.confidenceScore = 80;
+                match.confidenceScore = MultiSignal::FILENAME_SIZE_BASE;
                 match.matchSignalCount = 2;
 
                 if (!input.serial.isEmpty() && !entry.serial.isEmpty()) {
                     if (input.serial.compare(entry.serial, Qt::CaseInsensitive) == 0) {
                         match.serialMatch = true;
-                        match.confidenceScore += 20;
+                        match.confidenceScore += MultiSignal::SERIAL_BONUS;
                         match.matchSignalCount++;
                     }
                 }

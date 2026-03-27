@@ -4,6 +4,7 @@
 #include "metadata_provider.h"
 #include "clrmamepro_parser.h"
 #include "libretro_metadata_parser.h"
+#include "../core/constants/providers.h"
 #include <QMap>
 #include <QHash>
 #include <QMutex>
@@ -155,7 +156,7 @@ public:
     bool requiresAuth() const override { return false; }
     
     QString providerName() const { return "LocalDatabase"; }
-    int priority() const { return 110; } // Highest priority
+    int priority() const { return Constants::Providers::Priority::LOCAL_DATABASE; }
 
     /**
      * @brief Sanitize game name for libretro thumbnail filename

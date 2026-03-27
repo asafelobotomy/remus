@@ -2,6 +2,7 @@
 #define GAMETDB_PROVIDER_H
 
 #include "metadata_provider.h"
+#include "../core/constants/providers.h"
 #include <QMap>
 #include <QHash>
 #include <QMutex>
@@ -80,7 +81,7 @@ public:
     bool requiresAuth() const override { return false; }
 
     QString providerName() const { return QStringLiteral("GameTDB"); }
-    int priority() const { return 60; }
+    int priority() const { return Constants::Providers::Priority::GAMETDB; }
 
     /**
      * @brief Map a GameTDB type string to the CDN platform code

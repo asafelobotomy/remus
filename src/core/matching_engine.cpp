@@ -50,12 +50,12 @@ int MatchingEngine::calculateConfidence(const QString &method, float nameMatchSc
         return static_cast<int>(ConfidenceLevel::High);
     } else if (canonicalMethod == Constants::MatchMethods::FUZZY) {
         // Scale fuzzy matches based on similarity score
-        if (nameMatchScore >= 0.8f) {
+        if (nameMatchScore >= Constants::Confidence::FuzzyThresholds::MEDIUM_SIMILARITY) {
             return static_cast<int>(ConfidenceLevel::Medium);
-        } else if (nameMatchScore >= 0.6f) {
+        } else if (nameMatchScore >= Constants::Confidence::FuzzyThresholds::LOW_SIMILARITY) {
             return static_cast<int>(ConfidenceLevel::Low);
         } else {
-            return 40; // Very low confidence
+            return static_cast<int>(Constants::Confidence::Thresholds::VERY_LOW);
         }
     }
     
