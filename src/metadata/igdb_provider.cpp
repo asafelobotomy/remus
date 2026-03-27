@@ -48,7 +48,13 @@ bool IGDBProvider::authenticate()
         return false;
     }
 
-    QJsonDocument doc = QJsonDocument::fromJson(response.data);
+    QJsonParseError parseError;
+    QJsonDocument doc = QJsonDocument::fromJson(response.data, &parseError);
+    if (parseError.error != QJsonParseError::NoError) {
+        qWarning() << "IGDB auth JSON parse error:" << parseError.errorString();
+        return false;
+    }
+
     QJsonObject obj = doc.object();
 
     m_accessToken = obj["access_token"].toString();
@@ -82,7 +88,14 @@ QList<SearchResult> IGDBProvider::searchByName(const QString &title,
     }
 
     // Parse JSON array
-    QJsonDocument doc = QJsonDocument::fromJson(response.data);
+    QJsonParseError parseError;
+    QJsonDocument doc = QJsonDocument::fromJson(response.data, &parseError);
+    if (parseError.error != QJsonParseError::NoError) {
+        qWarning() << "IGDB search JSON parse error:" << parseError.errorString();
+        emit errorOccurred("IGDB JSON parse error: " + parseError.errorString());
+        return results;
+    }
+
     QJsonArray games = doc.array();
     
     for (const QJsonValue &gameVal : games) {
@@ -137,7 +150,14 @@ GameMetadata IGDBProvider::getById(const QString &id)
         return metadata;
     }
 
-    QJsonDocument doc = QJsonDocument::fromJson(response.data);
+    QJsonParseError parseError;
+    QJsonDocument doc = QJsonDocument::fromJson(response.data, &parseError);
+    if (parseError.error != QJsonParseError::NoError) {
+        qWarning() << "IGDB game JSON parse error:" << parseError.errorString();
+        emit errorOccurred("IGDB JSON parse error: " + parseError.errorString());
+        return metadata;
+    }
+
     QJsonArray games = doc.array();
     
     if (!games.isEmpty()) {
@@ -164,7 +184,13 @@ ArtworkUrls IGDBProvider::getArtwork(const QString &id)
         return artwork;
     }
 
-    QJsonDocument doc = QJsonDocument::fromJson(response.data);
+    QJsonParseError parseError;
+    QJsonDocument doc = QJsonDocument::fromJson(response.data, &parseError);
+    if (parseError.error != QJsonParseError::NoError) {
+        qWarning() << "IGDB artwork JSON parse error:" << parseError.errorString();
+        return artwork;
+    }
+
     QJsonArray games = doc.array();
     
     if (!games.isEmpty()) {

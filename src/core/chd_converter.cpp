@@ -7,18 +7,9 @@
 
 namespace Remus {
 
-namespace {
-
-QString extensionSuffix(const QString &extension)
-{
-    return extension.startsWith('.') ? extension.mid(1) : extension;
-}
-
-}
-
 CHDConverter::CHDConverter(QObject *parent)
-    : ExternalToolRunner(parent)
-    , m_chdmanPath("chdman")  // Use PATH by default
+    : DiscConverter(parent)
+    , m_chdmanPath("chdman")
 {
 }
 
@@ -60,82 +51,54 @@ void CHDConverter::setCodec(CHDCodec codec)
     m_codec = codec;
 }
 
-CHDConversionResult CHDConverter::convertCueToCHD(const QString &cuePath,
-                                                   const QString &outputPath)
+QStringList CHDConverter::buildCreateCdArgs(const QString &inputPath, const QString &outputPath)
 {
-    QString output = outputPath.isEmpty() ? getDefaultOutputPath(cuePath) : outputPath;
-    
     QStringList args;
-    args << "createcd" << "-i" << cuePath << "-o" << output;
-    
-    // Add compression codec if specified
+    args << "createcd" << "-i" << inputPath << "-o" << outputPath;
+
     QString codec = getCodecString();
     if (!codec.isEmpty()) {
         args << "-c" << codec;
     }
-    
-    // Add processor count if specified
     if (m_numProcessors > 0) {
         args << "-np" << QString::number(m_numProcessors);
     }
-    
-    return runChdman(args, cuePath, output);
+    return args;
 }
 
-CHDConversionResult CHDConverter::convertIsoToCHD(const QString &isoPath,
-                                                   const QString &outputPath)
+ConversionResult CHDConverter::convertCueToCHD(const QString &cuePath,
+                                                const QString &outputPath)
 {
-    QString output = outputPath.isEmpty() ? getDefaultOutputPath(isoPath) : outputPath;
-    
-    QStringList args;
-    args << "createcd" << "-i" << isoPath << "-o" << output;
-    
-    QString codec = getCodecString();
-    if (!codec.isEmpty()) {
-        args << "-c" << codec;
-    }
-    
-    if (m_numProcessors > 0) {
-        args << "-np" << QString::number(m_numProcessors);
-    }
-    
-    return runChdman(args, isoPath, output);
+    QString output = outputPath.isEmpty() ? getDefaultOutputPath(cuePath, "chd") : outputPath;
+    return runChdman(buildCreateCdArgs(cuePath, output), cuePath, output);
 }
 
-CHDConversionResult CHDConverter::convertGdiToCHD(const QString &gdiPath,
-                                                   const QString &outputPath)
+ConversionResult CHDConverter::convertIsoToCHD(const QString &isoPath,
+                                                const QString &outputPath)
 {
-    QString output = outputPath.isEmpty() ? getDefaultOutputPath(gdiPath) : outputPath;
-    
-    QStringList args;
-    args << "createcd" << "-i" << gdiPath << "-o" << output;
-    
-    QString codec = getCodecString();
-    if (!codec.isEmpty()) {
-        args << "-c" << codec;
-    }
-    
-    if (m_numProcessors > 0) {
-        args << "-np" << QString::number(m_numProcessors);
-    }
-    
-    return runChdman(args, gdiPath, output);
+    QString output = outputPath.isEmpty() ? getDefaultOutputPath(isoPath, "chd") : outputPath;
+    return runChdman(buildCreateCdArgs(isoPath, output), isoPath, output);
 }
 
-CHDConversionResult CHDConverter::extractCHDToCue(const QString &chdPath,
-                                                   const QString &outputPath)
+ConversionResult CHDConverter::convertGdiToCHD(const QString &gdiPath,
+                                                const QString &outputPath)
+{
+    QString output = outputPath.isEmpty() ? getDefaultOutputPath(gdiPath, "chd") : outputPath;
+    return runChdman(buildCreateCdArgs(gdiPath, output), gdiPath, output);
+}
+
+ConversionResult CHDConverter::extractCHDToCue(const QString &chdPath,
+                                                const QString &outputPath)
 {
     QString output = outputPath.isEmpty() ? getDefaultOutputPath(chdPath, "cue") : outputPath;
-    
     QStringList args;
     args << "extractcd" << "-i" << chdPath << "-o" << output;
-    
-    return runChdman(args, chdPath, output);
+    return runToolConversion(m_chdmanPath, args, "chdman", chdPath, output);
 }
 
-CHDVerifyResult CHDConverter::verifyCHD(const QString &chdPath)
+VerifyResult CHDConverter::verifyCHD(const QString &chdPath)
 {
-    CHDVerifyResult result;
+    VerifyResult result;
     result.path = chdPath;
 
     ProcessResult processResult = runProcess(m_chdmanPath,
@@ -212,10 +175,10 @@ CHDInfo CHDConverter::getCHDInfo(const QString &chdPath)
     return info;
 }
 
-QList<CHDConversionResult> CHDConverter::batchConvert(const QStringList &inputPaths,
-                                                       const QString &outputDir)
+QList<ConversionResult> CHDConverter::batchConvert(const QStringList &inputPaths,
+                                                    const QString &outputDir)
 {
-    QList<CHDConversionResult> results;
+    QList<ConversionResult> results;
     m_cancelled = false;
     
     int total = inputPaths.size();
@@ -236,8 +199,7 @@ QList<CHDConversionResult> CHDConverter::batchConvert(const QStringList &inputPa
         QFileInfo info(inputPath);
         QString ext = info.suffix().toLower();
         
-        CHDConversionResult result;
-        
+        ConversionResult result;
         if (ext == "cue") {
             result = convertCueToCHD(inputPath, outputPath);
         } else if (ext == "iso") {
@@ -259,83 +221,27 @@ QList<CHDConversionResult> CHDConverter::batchConvert(const QStringList &inputPa
     return results;
 }
 
-void CHDConverter::cancel()
+ConversionResult CHDConverter::runChdman(const QStringList &args,
+                                          const QString &inputPath,
+                                          const QString &outputPath)
 {
-    ExternalToolRunner::cancel();
-    emit conversionCancelled();
-}
+    qint64 inputSize = getFileSize(inputPath);
 
-CHDConversionResult CHDConverter::runChdman(const QStringList &args,
-                                             const QString &inputPath,
-                                             const QString &outputPath)
-{
-    CHDConversionResult result;
-    result.inputPath = inputPath;
-    result.outputPath = outputPath;
-    result.inputSize = getFileSize(inputPath);
-    
-    // For BIN/CUE, add BIN file sizes too
+    // For BIN/CUE, add BIN file sizes
     if (inputPath.endsWith(Constants::Files::CUE, Qt::CaseInsensitive)) {
         QFileInfo cueInfo(inputPath);
         QDir dir = cueInfo.absoluteDir();
         QString baseName = cueInfo.completeBaseName();
-        
-        // Look for matching BIN track files referenced by the cue sheet.
+
         QStringList binFilters;
         binFilters << baseName + Constants::Files::BIN
                    << baseName + QStringLiteral(" (Track*)") + Constants::Files::BIN;
-        QFileInfoList binFiles = dir.entryInfoList(binFilters, QDir::Files);
-        
-        for (const QFileInfo &binInfo : binFiles) {
-            result.inputSize += binInfo.size();
+        for (const QFileInfo &binInfo : dir.entryInfoList(binFilters, QDir::Files)) {
+            inputSize += binInfo.size();
         }
     }
-    
-    emit conversionStarted(inputPath, outputPath);
-    
-    qInfo() << "Running chdman:" << m_chdmanPath << args.join(" ");
-    
-    ProcessResult processResult = runProcessTracked(m_chdmanPath, args, 1800000);
-    if (!processResult.started) {
-        result.success = false;
-        result.error = "Failed to start chdman. Is it installed?";
-        result.exitCode = -1;
-        emit errorOccurred(result.error);
-        return result;
-    }
 
-    result.exitCode = processResult.exitCode;
-    result.stdOutput = processResult.stdOutput;
-    result.stdError = processResult.stdError;
-    
-    if (result.exitCode == 0 && QFile::exists(outputPath)) {
-        result.success = true;
-        result.outputSize = getFileSize(outputPath);
-        
-        if (result.inputSize > 0) {
-            result.compressionRatio = static_cast<double>(result.outputSize) / 
-                                       static_cast<double>(result.inputSize);
-        }
-        
-        qInfo() << "CHD conversion successful:" << inputPath << "->" << outputPath;
-        qInfo() << "Compression ratio:" << QString::number(result.compressionRatio * 100, 'f', 1) << "%";
-    } else {
-        result.success = false;
-        result.error = result.stdError.isEmpty() ?
-                       QString("chdman exited with code %1").arg(result.exitCode) :
-                       result.stdError;
-        qWarning() << "CHD conversion failed:" << result.error;
-    }
-    
-    emit conversionCompleted(result);
-    
-    return result;
-}
-
-QString CHDConverter::getDefaultOutputPath(const QString &inputPath, const QString &targetExt)
-{
-    QFileInfo info(inputPath);
-    return info.absoluteDir().filePath(info.completeBaseName() + QStringLiteral(".") + extensionSuffix(targetExt));
+    return runToolConversion(m_chdmanPath, args, "chdman", inputPath, outputPath, inputSize);
 }
 
 QString CHDConverter::getCodecString() const
@@ -348,12 +254,6 @@ QString CHDConverter::getCodecString() const
         case CHDCodec::Auto:
         default:                 return QString();
     }
-}
-
-qint64 CHDConverter::getFileSize(const QString &path) const
-{
-    QFileInfo info(path);
-    return info.exists() ? info.size() : 0;
 }
 
 } // namespace Remus

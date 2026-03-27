@@ -1,4 +1,5 @@
 #include "cli_commands.h"
+#include "cli_helpers.h"
 #include <QDir>
 #include <QFileInfo>
 #include "../core/chd_converter.h"
@@ -34,9 +35,7 @@ int handleConvertChdCommand(CliContext &ctx)
     converter.setCodec(codec);
 
     QFileInfo info(inputPath);
-    QString outputPath;
-    if (outputDir.isEmpty()) outputPath = info.absolutePath() + "/" + info.completeBaseName() + ".chd";
-    else { QDir().mkpath(outputDir); outputPath = outputDir + "/" + info.completeBaseName() + ".chd"; }
+    QString outputPath = buildOutputPath(inputPath, outputDir, "chd");
 
     qInfo() << "Output:" << outputPath;
     qInfo() << "Codec:"  << codecStr;
@@ -48,7 +47,7 @@ int handleConvertChdCommand(CliContext &ctx)
     }
 
     const QString ext = QStringLiteral(".") + info.suffix().toLower();
-    CHDConversionResult result;
+    ConversionResult result;
     if      (ext == Constants::Files::CUE)             result = converter.convertCueToCHD(inputPath, outputPath);
     else if (ext == Constants::Files::ISO || ext == Constants::Files::IMG) result = converter.convertIsoToCHD(inputPath, outputPath);
     else if (ext == Constants::Files::GDI)             result = converter.convertGdiToCHD(inputPath, outputPath);
@@ -62,17 +61,7 @@ int handleConvertChdCommand(CliContext &ctx)
         return 1;
     }
 
-    if (result.success) {
-        qInfo() << "✓ Conversion successful!";
-        qInfo() << "  Original size:" << SpaceCalculator::formatBytes(result.inputSize);
-        qInfo() << "  CHD size:"      << SpaceCalculator::formatBytes(result.outputSize);
-        qInfo() << "  Saved:"         << SpaceCalculator::formatBytes(result.inputSize - result.outputSize);
-        qInfo() << "  Compression:"
-                << QString::number((1.0 - result.compressionRatio) * 100, 'f', 1) << "%";
-    } else {
-        qCritical() << "✗ Conversion failed:" << result.error;
-        return 1;
-    }
+    if (!printConversionResult(result, "CHD")) return 1;
     return 0;
 }
 
@@ -91,9 +80,7 @@ int handleChdExtractCommand(CliContext &ctx)
     if (!converter.isChdmanAvailable()) { qCritical() << "✗ chdman not found"; return 1; }
 
     QFileInfo info(chdPath);
-    QString outputPath;
-    if (outputDir.isEmpty()) outputPath = info.absolutePath() + "/" + info.completeBaseName() + Constants::Files::CUE;
-    else { QDir().mkpath(outputDir); outputPath = outputDir + "/" + info.completeBaseName() + Constants::Files::CUE; }
+    QString outputPath = buildOutputPath(chdPath, outputDir, "cue");
 
     qInfo() << "Output:" << outputPath;
     qInfo() << "";
@@ -103,7 +90,7 @@ int handleChdExtractCommand(CliContext &ctx)
         return 0;
     }
 
-    CHDConversionResult result = converter.extractCHDToCue(chdPath, outputPath);
+    ConversionResult result = converter.extractCHDToCue(chdPath, outputPath);
     if (result.success) {
         qInfo() << "✓ Extraction successful!";
         qInfo() << "  Extracted to:" << outputPath;
@@ -127,7 +114,7 @@ int handleChdVerifyCommand(CliContext &ctx)
     CHDConverter converter;
     if (!converter.isChdmanAvailable()) { qCritical() << "✗ chdman not found"; return 1; }
 
-    CHDVerifyResult result = converter.verifyCHD(chdPath);
+    VerifyResult result = converter.verifyCHD(chdPath);
     if (result.valid) {
         qInfo() << "✓ CHD is valid!";
         qInfo() << "  " << result.details;

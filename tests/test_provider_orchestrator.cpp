@@ -59,6 +59,7 @@ class ProviderOrchestratorTest : public QObject {
 private slots:
     void hashProviderPriority();
     void fallsBackToNameSearch();
+    void detailFetchFailureEmitsSpecificProviderError();
     void normalizesVersionedNamesBeforeNameSearch();
     void artworkFallback();
 
@@ -126,6 +127,45 @@ void ProviderOrchestratorTest::fallsBackToNameSearch()
     QCOMPARE(found.title, QString("Full Metadata"));
     QVERIFY(found.matchScore > 0.0f);
     QCOMPARE(found.matchMethod, Constants::MatchMethods::FUZZY);
+}
+
+void ProviderOrchestratorTest::detailFetchFailureEmitsSpecificProviderError()
+{
+    ProviderOrchestrator orchestrator;
+
+    auto *first = new StubProvider("igdb");
+    SearchResult failedDetailResult;
+    failedDetailResult.id = "42";
+    failedDetailResult.title = "Name Hit";
+    failedDetailResult.matchScore = 0.8f;
+    first->m_searchResults = {failedDetailResult};
+
+    auto *second = new StubProvider("thegamesdb");
+    SearchResult successResult;
+    successResult.id = "84";
+    successResult.title = "Backup Hit";
+    successResult.matchScore = 0.75f;
+    second->m_searchResults = {successResult};
+
+    GameMetadata metadata;
+    metadata.id = "84";
+    metadata.title = "Backup Metadata";
+    second->m_idMetadata = metadata;
+
+    orchestrator.addProvider("igdb", first, 40);
+    orchestrator.addProvider("thegamesdb", second, 30);
+
+    QSignalSpy failedSpy(&orchestrator, &ProviderOrchestrator::providerFailed);
+
+    GameMetadata found = orchestrator.searchWithFallback("", "Some Game", "NES");
+
+    QCOMPARE(found.title, QString("Backup Metadata"));
+    QCOMPARE(failedSpy.count(), 1);
+
+    const QList<QVariant> firstFailure = failedSpy.at(0);
+    QCOMPARE(firstFailure.at(0).toString(), QString("igdb"));
+    QVERIFY(firstFailure.at(1).toString().contains(QStringLiteral("Detail fetch failed after search hit")));
+    QVERIFY(firstFailure.at(1).toString().contains(QStringLiteral("Name Hit")));
 }
 
 void ProviderOrchestratorTest::normalizesVersionedNamesBeforeNameSearch()

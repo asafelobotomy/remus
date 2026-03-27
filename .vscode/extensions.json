@@ -1,0 +1,19 @@
+{
+  "recommendations": [
+    "ms-vscode.cpptools",
+    "ms-vscode.cmake-tools",
+    "ms-vscode.cpp-devtools",
+    "twxs.cmake",
+    "github.copilot-chat",
+    "ms-vscode.vscode-websearchforcopilot",
+    "github.vscode-github-actions",
+    "github.vscode-pull-request-github",
+    "eamodio.gitlens",
+    "davidanson.vscode-markdownlint",
+    "timonwong.shellcheck"
+  ],
+  "unwantedRecommendations": [
+    "ms-vscode.cpptools-extension-pack",
+    "ms-vscode.cpptools-themes"
+  ]
+}

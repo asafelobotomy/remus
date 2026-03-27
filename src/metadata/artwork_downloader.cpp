@@ -80,13 +80,15 @@ QByteArray ArtworkDownloader::downloadToMemory(const QUrl &url)
 
     if (timeout.isActive()) {
         timeout.stop();
-        
+
         if (reply->error() == QNetworkReply::NoError) {
             data = reply->readAll();
         } else {
             emit downloadFailed(url, reply->errorString());
         }
     } else {
+        // Ensure the in-flight request is aborted on timeout
+        reply->abort();
         emit downloadFailed(url, "Download timeout");
     }
 

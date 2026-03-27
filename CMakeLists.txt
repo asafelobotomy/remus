@@ -82,6 +82,7 @@ set(REMUS_CLI_SOURCES
     src/cli/cli_commands_verify.cpp
     src/cli/cli_commands_organize.cpp
     src/cli/cli_commands_chd.cpp
+    src/cli/cli_commands_convert.cpp
     src/cli/cli_commands_export.cpp
     src/cli/cli_commands_mods.cpp
 )

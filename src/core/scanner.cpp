@@ -50,6 +50,8 @@ QList<ScanResult> Scanner::scan(const QString &libraryPath)
     m_filesProcessed = 0;
     m_cancelRequested = false;
     m_cancelled = false;
+    m_excludedDirs.clear();
+    m_checkedDirs.clear();
 
     QDir dir(libraryPath);
     if (!dir.exists()) {
@@ -163,17 +165,13 @@ bool Scanner::isInExcludedDirectory(const QString &dirPath) const
 {
     // Check if this directory or any parent contains .remusdir marker
     QDir dir(dirPath);
-    
-    // Cache to avoid repeated filesystem checks
-    static QSet<QString> excludedDirs;
-    static QSet<QString> checkedDirs;
-    
+
     // Quick check if we already know this path is excluded
     QString absPath = dir.absolutePath();
-    if (excludedDirs.contains(absPath)) {
+    if (m_excludedDirs.contains(absPath)) {
         return true;
     }
-    if (checkedDirs.contains(absPath)) {
+    if (m_checkedDirs.contains(absPath)) {
         return false;
     }
     
@@ -182,15 +180,15 @@ bool Scanner::isInExcludedDirectory(const QString &dirPath) const
     while (!checkDir.isRoot()) {
         QString markerPath = checkDir.absolutePath() + "/" + Constants::Settings::Files::MARKER_SKIP_SCAN;
         if (QFile::exists(markerPath)) {
-            excludedDirs.insert(absPath);  // Cache this path as excluded
+            m_excludedDirs.insert(absPath);  // Cache this path as excluded
             return true;
         }
         if (!checkDir.cdUp()) {
             break;
         }
     }
-    
-    checkedDirs.insert(absPath);  // Cache as not excluded
+
+    m_checkedDirs.insert(absPath);  // Cache as not excluded
     return false;
 }
 

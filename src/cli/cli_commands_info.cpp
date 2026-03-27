@@ -26,7 +26,7 @@ int handleStatsCommand(CliContext &ctx)
     for (const FileRecord &f : files) {
         if (f.hashCalculated) hashed++;
     }
-    const int systemCount = Systems::getSystemInternalNames().size();
+    const int systemCount = counts.size();  // Actual populated systems, not total definitions
 
     if (ctx.parser.isSet("json")) {
         QJsonObject obj;

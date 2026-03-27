@@ -207,6 +207,12 @@ int main(int argc, char *argv[])
     addActionOption(QCommandLineOption("chd-info",        "Show CHD file information",                           "chdfile"));
     addActionOption(QCommandLineOption("extract-archive", "Extract archive (ZIP/7z/RAR)",                        "path"));
     addActionOption(QCommandLineOption("space-report",    "Show potential CHD conversion savings",               "directory"));
+    addActionOption(QCommandLineOption("convert-rvz",     "Convert GameCube/Wii ISO to RVZ format",              "path"));
+    addOption(QCommandLineOption("rvz-compression", "RVZ compression (zstd, bzip2, lzma, lzma2, none, auto)", "compression", "auto"));
+    addActionOption(QCommandLineOption("rvz-extract",     "Extract RVZ back to ISO",                             "rvzfile"));
+    addActionOption(QCommandLineOption("rvz-verify",      "Verify RVZ file integrity",                           "rvzfile"));
+    addActionOption(QCommandLineOption("convert-cso",     "Convert PSP ISO to CSO format",                       "path"));
+    addActionOption(QCommandLineOption("cso-extract",     "Extract CSO back to ISO",                             "csofile"));
     addOption(QCommandLineOption("output-dir",      "Output directory for conversions/extractions",         "directory"));
 
     addOption(QCommandLineOption(Constants::Cli::Options::NO_INTERACTIVE, "Accepted for backwards compatibility (this is a CLI-only build)"));
@@ -264,8 +270,11 @@ int main(int argc, char *argv[])
     if (int rc = handleChdVerifyCommand(ctx))      return rc;
     if (int rc = handleChdInfoCommand(ctx))        return rc;
     if (int rc = handleExtractArchiveCommand(ctx)) return rc;
-    if (int rc = handleSpaceReportCommand(ctx))    return rc;
-    if (int rc = handleExportCommand(ctx))         return rc;
+    if (int rc = handleSpaceReportCommand(ctx))    return rc;    if (int rc = handleConvertRvzCommand(ctx))      return rc;
+    if (int rc = handleRvzExtractCommand(ctx))      return rc;
+    if (int rc = handleRvzVerifyCommand(ctx))       return rc;
+    if (int rc = handleConvertCsoCommand(ctx))      return rc;
+    if (int rc = handleCsoExtractCommand(ctx))      return rc;    if (int rc = handleExportCommand(ctx))         return rc;
     if (int rc = handlePatchCommands(ctx))         return rc;
     if (int rc = handleModCommands(ctx))           return rc;
 

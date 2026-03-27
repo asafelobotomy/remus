@@ -116,16 +116,32 @@ QString WikidataProvider::buildSearchQuery(const QString &title, const QString &
     // Base: find items that are instances of video game (Q7889) or subclasses
     QString filter;
     if (!system.isEmpty()) {
-        // Add platform filter if system provided
+        // Build flexible platform filter: split "Sega Genesis / Mega Drive" into
+        // multiple CONTAINS alternatives so we match Wikidata's naming conventions.
         QString escapedSystem = system;
         escapedSystem.replace(QLatin1Char('\\'), QStringLiteral("\\\\"));
         escapedSystem.replace(QLatin1Char('"'), QStringLiteral("\\\""));
+
+        QStringList variants;
+        const QStringList parts = system.split(QStringLiteral(" / "));
+        for (const QString &part : parts) {
+            QString escaped = part.trimmed();
+            escaped.replace(QLatin1Char('\\'), QStringLiteral("\\\\"));
+            escaped.replace(QLatin1Char('"'), QStringLiteral("\\\""));
+            if (!escaped.isEmpty())
+                variants.append(QStringLiteral("CONTAINS(LCASE(?platLabel), LCASE(\"%1\"))").arg(escaped));
+        }
+        // If no "/" was found, use the original as the sole variant
+        if (variants.isEmpty())
+            variants.append(QStringLiteral("CONTAINS(LCASE(?platLabel), LCASE(\"%1\"))").arg(escapedSystem));
+
+        const QString orFilter = variants.join(QStringLiteral(" || "));
         filter = QStringLiteral(
             "  ?item wdt:P400 ?platform .\n"
             "  ?platform rdfs:label ?platLabel .\n"
             "  FILTER(LANG(?platLabel) = \"en\")\n"
-            "  FILTER(CONTAINS(LCASE(?platLabel), LCASE(\"%1\")))\n"
-        ).arg(escapedSystem);
+            "  FILTER(%1)\n"
+        ).arg(orFilter);
     }
 
     return QStringLiteral(

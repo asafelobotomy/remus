@@ -58,6 +58,27 @@
 | https://www.mobygames.com/api/ | MobyGames REST API v1; requires paid API key (hobbyist tier available); 720 req/hr; titles/descriptions/genres/art; comprehensive retro coverage | 2026-03-26 | mobygames, api, metadata, artwork |
 | https://api.thegamesdb.net/ | TheGamesDB Swagger; GPLv3; free API key; 3000 req/month/IP; titles/genres/players/publishers/boxart; good retro coverage | 2026-03-26 | thegamesdb, api, metadata, artwork |
 | https://api-docs.igdb.com/ | IGDB REST API v4; free Twitch OAuth required; 4 req/sec; full game metadata, multiplayer modes (players), covers; Apicalypse query language | 2026-03-26 | igdb, api, metadata, artwork, twitch |
+
+## ROM Compression & Conversion Formats Research (2026-05-25)
+
+| URL | Summary | Date | Tags |
+|-----|---------|------|------|
+| https://docs.mamedev.org/tools/chdman.html | chdman official docs — createcd/createdvd/createdvd/extractcd commands; codec options (cdlz, cdzl, cdfl, cdzs); Linux ✅ | 2026-05-25 | chdman, chd, compression, disc, tool |
+| https://github.com/unknownbrackets/maxcso | maxcso — fast ISO→CSO/ZSO/DAX converter for PSP + PS2; supports cso1, cso2, zso, dax formats; Linux ✅ (needs liblz4-dev, libdeflate-dev, libuv1-dev) | 2026-05-25 | maxcso, cso, zso, psp, ps2, tool |
+| https://github.com/Exzap/ZArchive | ZArchive — Cemu's Wii U archive tool; WUA format = lossless, combines game+update+DLC; Linux ✅ | 2026-05-25 | zarchive, wua, wii-u, cemu, tool |
+| https://docs.libretro.com/library/beetle_psx_hw/ | Beetle PSX HW — PS1 core; confirmed extensions: .cue .toc .m3u .ccd .exe .pbp .chd | 2026-05-25 | ps1, beetle, chd, libretro |
+| https://docs.libretro.com/library/lrps2/ | LRPS2 (libretro PCSX2) — PS2 core; extensions: .elf .iso .ciso .chd .cso .bin .mdf .nrg .dump .gz .img .m3u; x86_64 only | 2026-05-25 | ps2, lrps2, pcsx2, chd, cso, libretro |
+| https://docs.libretro.com/library/beetle_saturn/ | Beetle Saturn — Saturn core; confirmed CHD support; extensions: .cue .toc .m3u .ccd .chd | 2026-05-25 | saturn, beetle, chd, libretro |
+| https://docs.libretro.com/library/flycast/ | Flycast — Dreamcast core; confirmed CHD + GDI support; extensions: .cdi .gdi .chd .cue .bin .elf .zip .7z .lst .dat .m3u | 2026-05-25 | dreamcast, flycast, chd, libretro |
+| https://docs.libretro.com/library/genesis_plus_gx/ | Genesis Plus GX — Sega CD core; CHD confirmed with chdman examples; ISO+MP3 NOT supported | 2026-05-25 | sega-cd, genesis, chd, libretro |
+| https://docs.libretro.com/library/picodrive/ | PicoDrive — Sega CD/32X core; CHD confirmed; extensions include .chd; no chdman example in docs | 2026-05-25 | sega-cd, 32x, picodrive, chd, libretro |
+| https://docs.libretro.com/library/beetle_pce_fast/ | Beetle PCE FAST — TurboGrafx-CD core; CHD confirmed; extensions: .pce .cue .ccd .iso .img .bin .chd | 2026-05-25 | turbografx, pce, chd, libretro |
+| https://docs.libretro.com/library/opera/ | Opera — 3DO core; CHD confirmed; extensions: .iso .bin .chd .cue | 2026-05-25 | 3do, opera, chd, libretro |
+| https://docs.libretro.com/library/ppsspp/ | PPSSPP RetroArch core — official extension list does NOT include .chd; only .elf .iso .cso .prx .pbp | 2026-05-25 | psp, ppsspp, cso, libretro |
+| https://docs.libretro.com/library/dolphin/ | Dolphin libretro — GameCube/Wii; extensions: .elf .iso .gcm .dol .tgc .wbfs .ciso .gcz .wad .rvz; RVZ confirmed | 2026-05-25 | gamecube, wii, dolphin, rvz, gcz, libretro |
+| https://docs.libretro.com/library/citra/ | Citra — 3DS core; extensions: .3ds .3dsx .elf .axf .cci .cxi .app; requires AES keys; no compressed format equivalent | 2026-05-25 | 3ds, citra, libretro |
+| https://xemu.app/docs/disc-images/ | xemu Original Xbox — uses XISO format (.iso ext); redump ISOs must be repacked with xdvdfs; no compression available | 2026-05-25 | xbox, xemu, xiso, xdvdfs |
+| https://github.com/cemu-project/Cemu | Cemu — Wii U emulator; WUA introduced v1.27.0b (Apr 2022); Linux support since v2.0 (Aug 2022); available on Flathub | 2026-05-25 | cemu, wii-u, wua, linux |
 | https://www.screenscraper.fr/ | ScreenScraper CC-BY-NC-SA 4.0; free registration; 20k req/day; hash-based + filename; full metadata + artwork (covers/screenshots/wheel/marquee/video) | 2026-03-26 | screenscraper, api, metadata, artwork, hash |
 | https://www.gametdb.com/ | GameTDB free XML database downloads + art packs; covers Wii/GC/WiiU/3DS/DS/Switch/PS3; game ID-based; no signup for downloads | 2026-03-26 | gametdb, xml, artwork, nintendo, free |
 | https://art.gametdb.com | GameTDB artwork CDN; URL: art.gametdb.com/{platform}/{type}/{region}/{id}.{ext}; free, no auth; .png for Wii/GC, .jpg for Switch/PS3/3DS | 2026-03-26 | gametdb, artwork, cdn |

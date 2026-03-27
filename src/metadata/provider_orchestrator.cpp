@@ -268,6 +268,10 @@ GameMetadata ProviderOrchestrator::searchWithFallback(const QString &hash,
         QString normalizedName = Metadata::FilenameNormalizer::normalize(name);
         qInfo() << "Normalized name for search:" << name << "->" << normalizedName;
         
+        if (normalizedName.isEmpty()) {
+            qWarning() << "Normalized name is empty — skipping name-based search to avoid false positives";
+        } else {
+
         QStringList providers = getSortedProviders(false);
         
         for (const QString &providerName : providers) {
@@ -282,12 +286,12 @@ GameMetadata ProviderOrchestrator::searchWithFallback(const QString &hash,
                 if (!results.isEmpty()) {
                     // Use the best match (first result)
                     const SearchResult &best = results.first();
-                    qInfo() << "✓" << providerName << "found match:" << best.title 
+                    qInfo() << "✓" << providerName << "found match:" << best.title
                             << "(score:" << best.matchScore << ")";
-                    
+
                     // Fetch full metadata
                     GameMetadata metadata = info.provider->getById(best.id);
-                    
+
                     if (!metadata.title.isEmpty()) {
                         metadata.matchScore = best.matchScore;
                         metadata.matchMethod = (best.matchScore >= 0.95f) ? MatchMethods::NAME : MatchMethods::FUZZY;
@@ -297,8 +301,14 @@ GameMetadata ProviderOrchestrator::searchWithFallback(const QString &hash,
                         }
                         return metadata;
                     }
+
+                    const QString detailError = QStringLiteral("Detail fetch failed after search hit: %1 (%2)")
+                                                    .arg(best.title, best.id);
+                    qWarning() << "✗" << providerName << detailError;
+                    emit providerFailed(providerName, detailError);
+                    continue;
                 }
-                
+
                 qInfo() << "✗" << providerName << "returned no results";
                 emit providerFailed(providerName, "No results");
                 
@@ -307,6 +317,7 @@ GameMetadata ProviderOrchestrator::searchWithFallback(const QString &hash,
                 emit providerFailed(providerName, e.what());
             }
         }
+        } // end normalizedName not empty
     }
     
     qWarning() << "All providers failed for:" << name;

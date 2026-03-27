@@ -94,7 +94,13 @@ QJsonObject HasheousProvider::makeRequest(const QString &endpoint, const QUrlQue
         return QJsonObject();
     }
     
-    QJsonDocument doc = QJsonDocument::fromJson(apiResp.data);
+    QJsonParseError parseError;
+    QJsonDocument doc = QJsonDocument::fromJson(apiResp.data, &parseError);
+    if (parseError.error != QJsonParseError::NoError) {
+        qWarning() << "Hasheous JSON parse error:" << parseError.errorString();
+        emit errorOccurred("Hasheous JSON parse error: " + parseError.errorString());
+        return QJsonObject();
+    }
     return doc.object();
 }
 
@@ -135,7 +141,14 @@ QJsonObject HasheousProvider::makePostRequest(const QString &endpoint, const QJs
         return QJsonObject();
     }
     
-    QJsonDocument doc = QJsonDocument::fromJson(apiResp.data);
+    QJsonParseError parseError;
+    QJsonDocument doc = QJsonDocument::fromJson(apiResp.data, &parseError);
+    if (parseError.error != QJsonParseError::NoError) {
+        qWarning() << "Hasheous JSON parse error (POST):" << parseError.errorString();
+        emit errorOccurred("Hasheous JSON parse error: " + parseError.errorString());
+        return QJsonObject();
+    }
+
     if (doc.isObject()) {
         return doc.object();
     }
@@ -234,6 +247,11 @@ GameMetadata HasheousProvider::getByHashes(const QString &crc32,
                 }
             }
         }
+    } else if (metadata.externalIds.contains("igdb") && !metadataProxyEnabled()) {
+        qInfo() << "Hasheous: IGDB enrichment available (ID:"
+                << metadata.externalIds["igdb"]
+                << ") but MetadataProxy is disabled."
+                << "Set hasheous_client_api_key in settings for richer metadata.";
     }
 
     metadata.providerId = Constants::Providers::HASHEOUS;

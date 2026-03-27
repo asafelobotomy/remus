@@ -27,7 +27,7 @@ QByteArray MetadataProvider::downloadImage(const QUrl &url)
     request.setHeader(QNetworkRequest::UserAgentHeader, Constants::API::USER_AGENT);
 
     QNetworkReply *reply = manager.get(request);
-    
+
     QEventLoop loop;
     QTimer timeout;
     timeout.setSingleShot(true);
@@ -46,6 +46,9 @@ QByteArray MetadataProvider::downloadImage(const QUrl &url)
             reply->deleteLater();
             return data;
         }
+    } else {
+        // Abort timed-out requests so they don't continue in the background
+        reply->abort();
     }
 
     reply->deleteLater();

@@ -79,6 +79,8 @@ bool ModCatalogProvider::loadFromUrl(const QUrl &url, bool forceRefresh)
     loop.exec();
 
     if (!timeout.isActive()) {
+        // Abort the in-flight request on timeout before falling back to cache
+        reply->abort();
         reply->deleteLater();
         // Timeout — fall back to stale cache if available
         if (cacheInfo.exists()) {

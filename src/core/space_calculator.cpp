@@ -105,6 +105,21 @@ ConversionStats SpaceCalculator::estimateConversion(const QString &path)
         stats.convertedSize = info.size();
         stats.compressionRatio = 1.0;  // Already compressed
         return stats;
+    } else if (ext == "rvz") {
+        stats.format = "RVZ";
+        stats.originalSize = info.size();
+        stats.convertedSize = info.size();
+        stats.compressionRatio = 1.0;  // Already compressed
+        return stats;
+    } else if (ext == "cso") {
+        stats.format = "CSO";
+        stats.originalSize = info.size();
+        stats.convertedSize = info.size();
+        stats.compressionRatio = 1.0;  // Already compressed
+        return stats;
+    } else if (ext == "gcm") {
+        stats.format = "GCM";
+        stats.originalSize = info.size();
     } else {
         stats.format = ext.toUpper();
         stats.originalSize = info.size();
@@ -161,6 +176,13 @@ ConversionSummary SpaceCalculator::scanDirectory(const QString &dirPath, bool re
     
     int scanned = 0;
     
+    auto isAlreadyCompressed = [](const QString &p) {
+        QString e = QFileInfo(p).suffix().toLower();
+        return e == Constants::Files::CHD.mid(1) ||
+               e == Constants::Files::RVZ.mid(1) ||
+               e == Constants::Files::CSO.mid(1);
+    };
+    
     while (it.hasNext()) {
         QString path = it.next();
         QFileInfo info(path);
@@ -190,7 +212,7 @@ ConversionSummary SpaceCalculator::scanDirectory(const QString &dirPath, bool re
         summary.sizeByFormat[stats.format] += stats.originalSize;
         summary.countByFormat[stats.format]++;
         
-        if (isCHD(path)) {
+        if (isAlreadyCompressed(path)) {
             summary.convertedFiles++;
             summary.totalConvertedSize += stats.convertedSize;
         } else if (isConvertible(path)) {
@@ -221,7 +243,8 @@ bool SpaceCalculator::isConvertible(const QString &path)
     return ext == Constants::Files::CUE.mid(1) ||
            ext == Constants::Files::ISO.mid(1) ||
            ext == Constants::Files::GDI.mid(1) ||
-           ext == Constants::Files::IMG.mid(1);
+           ext == Constants::Files::IMG.mid(1) ||
+           ext == Constants::Files::GCM.mid(1);
 }
 
 bool SpaceCalculator::isCHD(const QString &path)

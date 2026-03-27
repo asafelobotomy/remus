@@ -8,6 +8,8 @@
 #include <QMap>
 
 #include "../core/chd_converter.h"
+#include "../core/rvz_converter.h"
+#include "../core/cso_converter.h"
 #include "../core/archive_extractor.h"
 #include "../core/archive_creator.h"
 
@@ -39,7 +41,7 @@ public:
      * @param progressCb Progress callback (percent, info)
      * @return Conversion result
      */
-    CHDConversionResult convertToCHD(const QString &path,
+    ConversionResult convertToCHD(const QString &path,
                                      CHDCodec codec = CHDCodec::Auto,
                                      const QString &outputPath = {},
                                      ProgressCallback progressCb = nullptr);
@@ -51,7 +53,7 @@ public:
      * @param progressCb Progress callback
      * @return Conversion result
      */
-    CHDConversionResult extractCHD(const QString &chdPath,
+    ConversionResult extractCHD(const QString &chdPath,
                                    const QString &outputPath = {},
                                    ProgressCallback progressCb = nullptr);
 
@@ -63,7 +65,7 @@ public:
      * @param progressCb  Per-file progress (percent, file)
      * @return List of conversion results
      */
-    QList<CHDConversionResult> batchConvertToCHD(const QStringList &inputPaths,
+    QList<ConversionResult> batchConvertToCHD(const QStringList &inputPaths,
                                                  const QString &outputDir,
                                                  CHDCodec codec = CHDCodec::Auto,
                                                  ProgressCallback progressCb = nullptr);
@@ -71,12 +73,44 @@ public:
     /**
      * @brief Verify a CHD file
      */
-    CHDVerifyResult verifyCHD(const QString &chdPath);
+    VerifyResult verifyCHD(const QString &chdPath);
 
     /**
      * @brief Get information about a CHD file
      */
     CHDInfo getCHDInfo(const QString &chdPath);
+
+    // ── RVZ Conversion ────────────────────────────────────
+
+    ConversionResult convertToRVZ(const QString &path,
+                                     RVZCompression compression = RVZCompression::Auto,
+                                     const QString &outputPath = {},
+                                     ProgressCallback progressCb = nullptr);
+
+    ConversionResult extractRVZ(const QString &rvzPath,
+                                   const QString &outputPath = {},
+                                   ProgressCallback progressCb = nullptr);
+
+    QList<ConversionResult> batchConvertToRVZ(const QStringList &inputPaths,
+                                                 const QString &outputDir,
+                                                 RVZCompression compression = RVZCompression::Auto,
+                                                 ProgressCallback progressCb = nullptr);
+
+    VerifyResult verifyRVZ(const QString &rvzPath);
+
+    // ── CSO Conversion ────────────────────────────────────
+
+    ConversionResult convertToCSO(const QString &path,
+                                     const QString &outputPath = {},
+                                     ProgressCallback progressCb = nullptr);
+
+    ConversionResult extractCSO(const QString &csoPath,
+                                   const QString &outputPath = {},
+                                   ProgressCallback progressCb = nullptr);
+
+    QList<ConversionResult> batchConvertToCSO(const QStringList &inputPaths,
+                                                 const QString &outputDir,
+                                                 ProgressCallback progressCb = nullptr);
 
     // ── Archive Extraction ────────────────────────────────
 
@@ -120,6 +154,14 @@ public:
      * @brief Set custom chdman path
      */
     void setChdmanPath(const QString &path);
+
+    bool isDolphinToolAvailable() const;
+    QString getDolphinToolVersion() const;
+    void setDolphinToolPath(const QString &path);
+
+    bool isMaxcsoAvailable() const;
+    QString getMaxcsoVersion() const;
+    void setMaxcsoPath(const QString &path);
 
     /**
      * @brief Get available archive extraction tools
@@ -194,8 +236,13 @@ public:
      */
     ArchiveCreator *archiveCreator() { return m_archiveCreator; }
 
+    RVZConverter *rvzConverter() { return m_rvzConverter; }
+    CSOConverter *csoConverter() { return m_csoConverter; }
+
 private:
     CHDConverter     *m_chdConverter     = nullptr;
+    RVZConverter     *m_rvzConverter     = nullptr;
+    CSOConverter     *m_csoConverter     = nullptr;
     ArchiveExtractor *m_archiveExtractor = nullptr;
     ArchiveCreator   *m_archiveCreator   = nullptr;
 };

@@ -58,7 +58,14 @@ QList<SearchResult> TheGamesDBProvider::searchByName(const QString &title,
     }
 
     // Parse JSON response
-    QJsonDocument doc = QJsonDocument::fromJson(response.data);
+    QJsonParseError parseError;
+    QJsonDocument doc = QJsonDocument::fromJson(response.data, &parseError);
+    if (parseError.error != QJsonParseError::NoError) {
+        qWarning() << "TheGamesDB JSON parse error (search):" << parseError.errorString();
+        emit errorOccurred("TheGamesDB JSON parse error: " + parseError.errorString());
+        return results;
+    }
+
     QJsonObject root = doc.object();
     
     if (root.contains("data") && root["data"].isObject()) {
@@ -131,7 +138,14 @@ GameMetadata TheGamesDBProvider::getById(const QString &id)
     }
 
     // Parse JSON
-    QJsonDocument doc = QJsonDocument::fromJson(response.data);
+    QJsonParseError parseError;
+    QJsonDocument doc = QJsonDocument::fromJson(response.data, &parseError);
+    if (parseError.error != QJsonParseError::NoError) {
+        qWarning() << "TheGamesDB JSON parse error (getById):" << parseError.errorString();
+        emit errorOccurred("TheGamesDB JSON parse error: " + parseError.errorString());
+        return metadata;
+    }
+
     QJsonObject root = doc.object();
     
     if (root.contains("data") && root["data"].isObject()) {
@@ -169,7 +183,13 @@ ArtworkUrls TheGamesDBProvider::getArtwork(const QString &id)
     }
 
     // Parse image URLs
-    QJsonDocument doc = QJsonDocument::fromJson(response.data);
+    QJsonParseError parseError;
+    QJsonDocument doc = QJsonDocument::fromJson(response.data, &parseError);
+    if (parseError.error != QJsonParseError::NoError) {
+        qWarning() << "TheGamesDB JSON parse error (artwork):" << parseError.errorString();
+        return artwork;
+    }
+
     QJsonObject root = doc.object();
     
     if (root.contains("data") && root["data"].isObject()) {

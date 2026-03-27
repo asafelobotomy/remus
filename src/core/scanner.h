@@ -5,6 +5,7 @@
 #include <QString>
 #include <QStringList>
 #include <QFileInfo>
+#include <QSet>
 #include <functional>
 #include "archive_extractor.h"
 
@@ -102,6 +103,8 @@ private:
     int m_filesProcessed = 0;
     bool m_cancelRequested = false;
     bool m_cancelled = false;
+    mutable QSet<QString> m_excludedDirs;
+    mutable QSet<QString> m_checkedDirs;
     ArchiveExtractor m_archiveExtractor;
 };
 

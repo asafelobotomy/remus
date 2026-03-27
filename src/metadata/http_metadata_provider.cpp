@@ -48,6 +48,8 @@ HttpMetadataProvider::waitForReply(QNetworkReply *reply, int timeoutMs)
             response.error = reply->errorString();
         }
     } else {
+        // Timed out: abort the request so it doesn't continue in the background
+        reply->abort();
         response.success = false;
         response.error = Constants::Errors::MetadataProvider::REQUEST_TIMEOUT;
     }

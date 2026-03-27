@@ -89,13 +89,13 @@ void ChdConverterTest::testVerifyCHD()
     converter.nextProcess.exitCode = 0;
     converter.nextProcess.stdOutput = "verified";
 
-    CHDVerifyResult ok = converter.verifyCHD("/tmp/test.chd");
+    VerifyResult ok = converter.verifyCHD("/tmp/test.chd");
     QVERIFY(ok.valid);
     QCOMPARE(ok.details, QStringLiteral("verified"));
 
     converter.nextProcess.exitCode = 1;
     converter.nextProcess.stdError = "bad";
-    CHDVerifyResult bad = converter.verifyCHD("/tmp/test.chd");
+    VerifyResult bad = converter.verifyCHD("/tmp/test.chd");
     QVERIFY(!bad.valid);
     QCOMPARE(bad.error, QStringLiteral("bad"));
 }
@@ -106,7 +106,7 @@ void ChdConverterTest::testVerifyCHDUsesGenericErrorWhenStderrMissing()
     converter.nextProcess.started = true;
     converter.nextProcess.exitCode = 2;
 
-    CHDVerifyResult result = converter.verifyCHD("/tmp/test.chd");
+    VerifyResult result = converter.verifyCHD("/tmp/test.chd");
     QVERIFY(!result.valid);
     QCOMPARE(result.error, QStringLiteral("Verification failed"));
 }
@@ -191,12 +191,12 @@ void ChdConverterTest::testConvertIso()
     converter.nextTracked.started = true;
     converter.nextTracked.exitCode = 0;
 
-    CHDConversionResult ok = converter.convertIsoToCHD(inputPath, outputPath);
+    ConversionResult ok = converter.convertIsoToCHD(inputPath, outputPath);
     QVERIFY(ok.success);
 
     QVERIFY(QFile::remove(outputPath));
     converter.nextTracked.exitCode = 1;
-    CHDConversionResult bad = converter.convertIsoToCHD(inputPath, outputPath);
+    ConversionResult bad = converter.convertIsoToCHD(inputPath, outputPath);
     QVERIFY(!bad.success);
 }
 
@@ -233,7 +233,7 @@ void ChdConverterTest::testConvertCueAndGdiIncludeConfiguredArguments()
     converter.setCodec(CHDCodec::FLAC);
     converter.setNumProcessors(4);
 
-    CHDConversionResult cueResult = converter.convertCueToCHD(cuePath, cueOutputPath);
+    ConversionResult cueResult = converter.convertCueToCHD(cuePath, cueOutputPath);
     QVERIFY(cueResult.success);
     QCOMPARE(converter.lastProgram, QStringLiteral("chdman"));
     QCOMPARE(converter.lastArgs.value(0), QStringLiteral("createcd"));
@@ -245,7 +245,7 @@ void ChdConverterTest::testConvertCueAndGdiIncludeConfiguredArguments()
     QVERIFY(converter.lastArgs.contains(QStringLiteral("4")));
     QCOMPARE(cueResult.inputSize, QFileInfo(cuePath).size() + QFileInfo(binPath).size());
 
-    CHDConversionResult gdiResult = converter.convertGdiToCHD(gdiPath, gdiOutputPath);
+    ConversionResult gdiResult = converter.convertGdiToCHD(gdiPath, gdiOutputPath);
     QVERIFY(gdiResult.success);
     QCOMPARE(converter.lastArgs.value(0), QStringLiteral("createcd"));
     QCOMPARE(converter.lastArgs.value(2), gdiPath);
@@ -268,7 +268,7 @@ void ChdConverterTest::testExtractChdUsesDefaultCueOutputPath()
     converter.nextTracked.exitCode = 0;
     converter.autoCreateTrackedOutput = true;
 
-    CHDConversionResult result = converter.extractCHDToCue(chdPath);
+    ConversionResult result = converter.extractCHDToCue(chdPath);
     QVERIFY(result.success);
     QCOMPARE(result.outputPath, dir.path() + "/disc.cue");
     QCOMPARE(converter.lastArgs.value(0), QStringLiteral("extractcd"));
@@ -311,7 +311,7 @@ void ChdConverterTest::testBatchConvertSupportedFormatsUsesOutputDirectory()
     converter.nextTracked.exitCode = 0;
     converter.autoCreateTrackedOutput = true;
 
-    const QList<CHDConversionResult> results = converter.batchConvert({cuePath, isoPath, gdiPath}, outputDir);
+    const QList<ConversionResult> results = converter.batchConvert({cuePath, isoPath, gdiPath}, outputDir);
     QCOMPARE(results.size(), 3);
     QVERIFY(results.at(0).success);
     QVERIFY(results.at(1).success);
@@ -326,7 +326,7 @@ void ChdConverterTest::testBatchConvertUnsupported()
     FakeChdConverter converter;
     QStringList inputs = {"/tmp/file.txt"};
 
-    QList<CHDConversionResult> results = converter.batchConvert(inputs);
+    QList<ConversionResult> results = converter.batchConvert(inputs);
     QCOMPARE(results.size(), 1);
     QVERIFY(!results.first().success);
     QVERIFY(results.first().error.contains("Unsupported format"));

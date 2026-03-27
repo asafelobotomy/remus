@@ -309,6 +309,8 @@ QString ModWorkflowService::downloadPatch(const QUrl &url,
     loop.exec();
 
     if (!timeout.isActive()) {
+        // Abort timed-out patch downloads so they don't continue in the background
+        reply->abort();
         reply->deleteLater();
         error = "Patch download timed out: " + url.toString();
         return {};

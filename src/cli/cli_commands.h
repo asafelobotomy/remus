@@ -61,6 +61,15 @@ int handleChdInfoCommand(CliContext &ctx);
 int handleExtractArchiveCommand(CliContext &ctx);
 int handleSpaceReportCommand(CliContext &ctx);
 
+// ── RVZ / CSO conversion ──────────────────────────────────────────────────────
+// --convert-rvz, --rvz-extract, --rvz-verify,
+// --convert-cso, --cso-extract
+int handleConvertRvzCommand(CliContext &ctx);
+int handleRvzExtractCommand(CliContext &ctx);
+int handleRvzVerifyCommand(CliContext &ctx);
+int handleConvertCsoCommand(CliContext &ctx);
+int handleCsoExtractCommand(CliContext &ctx);
+
 // ── Export ────────────────────────────────────────────────────────────────────
 // --export
 int handleExportCommand(CliContext &ctx);

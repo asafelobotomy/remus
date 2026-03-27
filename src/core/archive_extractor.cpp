@@ -1,6 +1,7 @@
 #include "archive_extractor.h"
 #include <QFileInfo>
 #include <QDir>
+#include <QDirIterator>
 #include <QDebug>
 #include <QRegularExpression>
 
@@ -168,8 +169,16 @@ ExtractionResult ArchiveExtractor::extractFile(const QString &archivePath,
     result.success = (processResult.exitCode == 0 && processResult.started);
     
     if (result.success) {
-        result.filesExtracted = 1;
-        result.extractedFiles.append(QDir(outputDir).filePath(QFileInfo(fileName).fileName()));
+        const QString expectedPath = QDir(outputDir).filePath(QFileInfo(fileName).fileName());
+        if (QFileInfo::exists(expectedPath)) {
+            result.filesExtracted = 1;
+            result.extractedFiles.append(expectedPath);
+        } else {
+            // 7z may exit 0 but extract nothing when the filename doesn't match;
+            // mark as failed so the caller can fall back to full extraction.
+            result.success = false;
+            result.error = QStringLiteral("Extracted file not found at expected path: ") + expectedPath;
+        }
     } else {
         result.error = processResult.stdError;
     }
@@ -228,12 +237,8 @@ ExtractionResult ArchiveExtractor::extractZip(const QString &archivePath, const 
     result.success = (processResult.exitCode == 0 && processResult.started);
     
     if (result.success) {
-        // Count and list extracted files
-        QStringList files = listFiles(outputDir);
-        result.filesExtracted = files.count();
-        for (const QString &file : files) {
-            result.extractedFiles.append(QDir(outputDir).absoluteFilePath(file));
-        }
+        result.extractedFiles = listFiles(outputDir);
+        result.filesExtracted = result.extractedFiles.count();
         qInfo() << "Extraction successful:" << result.filesExtracted << "items";
     } else {
         result.error = processResult.stdError;
@@ -261,12 +266,8 @@ ExtractionResult ArchiveExtractor::extract7z(const QString &archivePath, const Q
     result.success = (processResult.exitCode == 0 && processResult.started);
     
     if (result.success) {
-        // Count and list extracted files
-        QStringList files = listFiles(outputDir);
-        result.filesExtracted = files.count();
-        for (const QString &file : files) {
-            result.extractedFiles.append(QDir(outputDir).absoluteFilePath(file));
-        }
+        result.extractedFiles = listFiles(outputDir);
+        result.filesExtracted = result.extractedFiles.count();
     } else {
         result.error = processResult.stdError;
     }
@@ -298,12 +299,8 @@ ExtractionResult ArchiveExtractor::extractRar(const QString &archivePath, const 
     result.success = (processResult.exitCode == 0 && processResult.started);
     
     if (result.success) {
-        // Count and list extracted files
-        QStringList files = listFiles(outputDir);
-        result.filesExtracted = files.count();
-        for (const QString &file : files) {
-            result.extractedFiles.append(QDir(outputDir).absoluteFilePath(file));
-        }
+        result.extractedFiles = listFiles(outputDir);
+        result.filesExtracted = result.extractedFiles.count();
     } else {
         result.error = processResult.stdError;
     }
@@ -331,8 +328,13 @@ QString ArchiveExtractor::findTool(const QStringList &candidates) const
 
 QStringList ArchiveExtractor::listFiles(const QString &dirPath) const
 {
-    QDir dir(dirPath);
-    return dir.entryList(QDir::Files | QDir::NoDotAndDotDot);
+    QStringList files;
+    QDirIterator it(dirPath, QDir::Files | QDir::NoDotAndDotDot, QDirIterator::Subdirectories);
+    while (it.hasNext()) {
+        it.next();
+        files.append(it.filePath());
+    }
+    return files;
 }
 
 } // namespace Remus

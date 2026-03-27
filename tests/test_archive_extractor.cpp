@@ -28,9 +28,12 @@ protected:
         return nextResult;
     }
 
-    QStringList listFiles(const QString &) const override
+    QStringList listFiles(const QString &dirPath) const override
     {
-        return fakeFiles;
+        QStringList result;
+        for (const QString &f : fakeFiles)
+            result.append(QDir(dirPath).absoluteFilePath(f));
+        return result;
     }
 };
 
@@ -232,6 +235,16 @@ void ArchiveExtractorTest::testExtractFileZipReturnsBasenameInOutputDir()
     archive.close();
 
     ExtractionResult result = extractor.extractFile(archivePath, "nested/file.bin", dir.path());
+
+    // The extractFile code verifies the file exists; create it so the check passes.
+    {
+        QFile f(dir.path() + "/file.bin");
+        QVERIFY(f.open(QIODevice::WriteOnly));
+        f.write("x");
+        f.close();
+    }
+    result = extractor.extractFile(archivePath, "nested/file.bin", dir.path());
+
     QVERIFY(result.success);
     QCOMPARE(result.filesExtracted, 1);
     QCOMPARE(result.extractedFiles.first(), dir.path() + "/file.bin");

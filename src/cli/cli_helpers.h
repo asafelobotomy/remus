@@ -9,6 +9,7 @@
 #include "../core/database.h"
 #include "../core/hasher.h"
 #include "../core/match_utils.h"
+#include "../core/conversion_result.h"
 #include "../core/constants/constants.h"
 #include "../metadata/metadata_provider.h"
 #include "../metadata/provider_orchestrator.h"
@@ -32,14 +33,13 @@ HashResult hashFileRecord(const FileRecord &file, Hasher &hasher);
 std::unique_ptr<ProviderOrchestrator> buildOrchestrator(const QCommandLineParser &parser,
                                                          Database *db = nullptr);
 
-// Discover the data/databases/ directory relative to cwd or app location.
-QString findDatabaseDir();
+// Discover a data/<subdir>/ directory relative to cwd or app location.
+QString findDataSubdir(const QString &subdir);
 
-// Discover the data/metadata/ directory relative to cwd or app location.
-QString findMetadataDir();
-
-// Discover the data/gametdb/ directory relative to cwd or app location.
-QString findGameTDBDir();
+// Convenience wrappers for common data subdirectories.
+inline QString findDatabaseDir() { return findDataSubdir(QStringLiteral("databases")); }
+inline QString findMetadataDir() { return findDataSubdir(QStringLiteral("metadata")); }
+inline QString findGameTDBDir()  { return findDataSubdir(QStringLiteral("gametdb")); }
 
 // Return only files that have at least one computed hash value.
 QList<FileRecord> getHashedFiles(Database &db);
@@ -57,3 +57,11 @@ int persistMetadata(Database &db, const FileRecord &file, const GameMetadata &me
 
 // Print a detailed file record to the current log category.
 void printFileInfo(const FileRecord &file);
+
+// Build an output path from an input file, optional output directory, and target extension.
+// Creates the output directory if it doesn't exist.
+QString buildOutputPath(const QString &inputPath, const QString &outputDir, const QString &targetExt);
+
+// Print conversion result statistics (sizes, compression ratio).
+// Returns true on success, false on failure.
+bool printConversionResult(const ConversionResult &result, const QString &formatName);

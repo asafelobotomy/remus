@@ -6,6 +6,7 @@
 #include <QTemporaryDir>
 #include "../core/archive_extractor.h"
 #include "../core/constants/files.h"
+#include "../core/space_calculator.h"
 #include "../core/system_resolver.h"
 #include "../metadata/filename_normalizer.h"
 #include "../metadata/local_database_provider.h"
@@ -114,60 +115,19 @@ HashResult hashFileRecord(const FileRecord &file, Hasher &hasher)
     return hasher.calculateHashes(extractedPath, headerSize > 0, headerSize);
 }
 
-QString findDatabaseDir()
+QString findDataSubdir(const QString &subdir)
 {
     const QString appDir = QCoreApplication::applicationDirPath();
     const QString cwd = QDir::currentPath();
+    const QString seg = QStringLiteral("data/") + subdir;
     const QStringList candidates = {
-        cwd + "/data/databases",
-        appDir + "/data/databases",
-        appDir + "/../data/databases",
-        appDir + "/../../data/databases",
-        appDir + "/../../../data/databases",
-        cwd + "/../data/databases",
-        cwd + "/../../data/databases"
-    };
-    for (const QString &dir : candidates) {
-        if (QDir(dir).exists()) {
-            return QDir::cleanPath(dir);
-        }
-    }
-    return QString();
-}
-
-QString findMetadataDir()
-{
-    const QString appDir = QCoreApplication::applicationDirPath();
-    const QString cwd = QDir::currentPath();
-    const QStringList candidates = {
-        cwd + "/data/metadata",
-        appDir + "/data/metadata",
-        appDir + "/../data/metadata",
-        appDir + "/../../data/metadata",
-        appDir + "/../../../data/metadata",
-        cwd + "/../data/metadata",
-        cwd + "/../../data/metadata"
-    };
-    for (const QString &dir : candidates) {
-        if (QDir(dir).exists()) {
-            return QDir::cleanPath(dir);
-        }
-    }
-    return QString();
-}
-
-QString findGameTDBDir()
-{
-    const QString appDir = QCoreApplication::applicationDirPath();
-    const QString cwd = QDir::currentPath();
-    const QStringList candidates = {
-        cwd + "/data/gametdb",
-        appDir + "/data/gametdb",
-        appDir + "/../data/gametdb",
-        appDir + "/../../data/gametdb",
-        appDir + "/../../../data/gametdb",
-        cwd + "/../data/gametdb",
-        cwd + "/../../data/gametdb"
+        cwd + "/" + seg,
+        appDir + "/" + seg,
+        appDir + "/../" + seg,
+        appDir + "/../../" + seg,
+        appDir + "/../../../" + seg,
+        cwd + "/../" + seg,
+        cwd + "/../../" + seg
     };
     for (const QString &dir : candidates) {
         if (QDir(dir).exists()) {
@@ -364,4 +324,30 @@ void printFileInfo(const FileRecord &file)
     qInfo() << "Patched:" << file.isPatched;
     qInfo() << "Patch Name:" << file.patchName;
     qInfo() << "Processed:" << file.isProcessed << "Status:" << file.processingStatus;
+}
+
+QString buildOutputPath(const QString &inputPath, const QString &outputDir, const QString &targetExt)
+{
+    QFileInfo info(inputPath);
+    const QString filename = info.completeBaseName() + "." + targetExt;
+    if (outputDir.isEmpty()) {
+        return QDir(info.absolutePath()).filePath(filename);
+    }
+    QDir().mkpath(outputDir);
+    return QDir(outputDir).filePath(filename);
+}
+
+bool printConversionResult(const ConversionResult &result, const QString &formatName)
+{
+    if (result.success) {
+        qInfo() << "✓ Conversion successful!";
+        qInfo().noquote() << "  Original size:" << SpaceCalculator::formatBytes(result.inputSize);
+        qInfo().noquote() << "  " + formatName + " size:" << SpaceCalculator::formatBytes(result.outputSize);
+        qInfo().noquote() << "  Saved:" << SpaceCalculator::formatBytes(result.inputSize - result.outputSize);
+        qInfo() << "  Compression:"
+                << QString::number((1.0 - result.compressionRatio) * 100, 'f', 1) << "%";
+        return true;
+    }
+    qCritical() << "✗ Conversion failed:" << result.error;
+    return false;
 }

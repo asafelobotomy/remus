@@ -4,6 +4,7 @@
 #include <QTextStream>
 #include <QSignalSpy>
 #include "core/scanner.h"
+#include "core/constants/settings.h"
 
 using namespace Remus;
 
@@ -15,6 +16,7 @@ private slots:
     void cancelStopsScan();
     void multiFileLinking();
     void markdownDocumentsAreSkippedButGenesisRomFilesRemain();
+    void exclusionMarkerChangesAreRespectedAcrossScans();
 };
 
 static QString writeFile(const QString &path, const QByteArray &data = QByteArray("data"))
@@ -127,6 +129,28 @@ void ScannerTest::markdownDocumentsAreSkippedButGenesisRomFilesRemain()
     QList<ScanResult> results = scanner.scan(dir.path());
     QCOMPARE(results.size(), 1);
     QCOMPARE(results.first().filename, QString("Sonic The Hedgehog (USA, Europe).md"));
+}
+
+void ScannerTest::exclusionMarkerChangesAreRespectedAcrossScans()
+{
+    QTemporaryDir dir;
+    QVERIFY(dir.isValid());
+
+    const QString romPath = dir.filePath("game.nes");
+    QVERIFY(!writeFile(romPath).isEmpty());
+
+    Scanner scanner;
+    scanner.setExtensions({".nes"});
+    scanner.setArchiveScanning(false);
+
+    QList<ScanResult> initialResults = scanner.scan(dir.path());
+    QCOMPARE(initialResults.size(), 1);
+
+    const QString markerPath = dir.filePath(Constants::Settings::Files::MARKER_SKIP_SCAN);
+    QVERIFY(!writeFile(markerPath, QByteArray("skip")).isEmpty());
+
+    QList<ScanResult> excludedResults = scanner.scan(dir.path());
+    QCOMPARE(excludedResults.size(), 0);
 }
 
 QTEST_MAIN(ScannerTest)

@@ -94,8 +94,21 @@ QList<Remus::ModEntry> filterCatalogMods(const QList<Remus::ModEntry> &mods,
 {
     QList<Remus::ModEntry> filtered;
     for (const auto &mod : mods) {
-        if (!options.systemFilter.isEmpty() && mod.system.compare(options.systemFilter, Qt::CaseInsensitive) != 0) {
-            continue;
+        if (!options.systemFilter.isEmpty()) {
+            // Support display names with aliases like "Sega Genesis / Mega Drive":
+            // match if either side contains the other, or any slash-delimited alias matches.
+            bool systemMatch = (mod.system.compare(options.systemFilter, Qt::CaseInsensitive) == 0);
+            if (!systemMatch) {
+                const QStringList aliases = options.systemFilter.split(QStringLiteral(" / "));
+                for (const QString &alias : aliases) {
+                    if (mod.system.compare(alias.trimmed(), Qt::CaseInsensitive) == 0
+                        || mod.system.contains(alias.trimmed(), Qt::CaseInsensitive)) {
+                        systemMatch = true;
+                        break;
+                    }
+                }
+            }
+            if (!systemMatch) continue;
         }
         if (!options.authorFilter.isEmpty() && !mod.author.contains(options.authorFilter, Qt::CaseInsensitive)) {
             continue;

@@ -295,7 +295,7 @@ RomBundler::BundleResult RomBundler::bundle(const FileRecord            &file,
                 return result;
             }
 
-            CHDConversionResult conversion;
+            ConversionResult conversion;
             if (ext == QStringLiteral("cue")) {
                 conversion = converter.convertCueToCHD(romInTemp, chdPath);
             } else if (ext == QStringLiteral("iso") || ext == QStringLiteral("img")) {

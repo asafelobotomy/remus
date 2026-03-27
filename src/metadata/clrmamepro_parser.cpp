@@ -52,28 +52,54 @@ QList<ClrMameProEntry> ClrMameProParser::parseGameBlocks(const QString &content)
     
     qDebug() << "ClrMameProParser: Content length:" << content.length();
     
-    // Match game blocks: game (\n ... \n)
-    // The closing paren is on its own line
-    QRegularExpression gameRegex(R"(game\s*\(([^{}]*?)\n\s*\))");
-    gameRegex.setPatternOptions(QRegularExpression::DotMatchesEverythingOption);
-    
-    qDebug() << "ClrMameProParser: Regex pattern:" << gameRegex.pattern();
-    qDebug() << "ClrMameProParser: Searching for game blocks...";
-    
-    QRegularExpressionMatchIterator it = gameRegex.globalMatch(content);
+    // Find game blocks by matching balanced parentheses.
+    // A simple regex cannot handle multi-line rom() sub-blocks
+    // (e.g., GameCube/Wii DATs) because the inner closing paren on its
+    // own line gets consumed first.
+    QList<QString> gameBlocks;
+    int searchFrom = 0;
+    while (true) {
+        int gameIdx = content.indexOf(QStringLiteral("game"), searchFrom);
+        if (gameIdx < 0) break;
+
+        // Find the opening paren after "game"
+        int openParen = content.indexOf(QLatin1Char('('), gameIdx + 4);
+        if (openParen < 0) break;
+
+        // Balance parentheses to find the matching close
+        int depth = 1;
+        bool inQuote = false;
+        int i = openParen + 1;
+        for (; i < content.length() && depth > 0; ++i) {
+            QChar c = content[i];
+            if (c == QLatin1Char('"')) {
+                inQuote = !inQuote;
+            } else if (!inQuote) {
+                if (c == QLatin1Char('(')) ++depth;
+                else if (c == QLatin1Char(')')) --depth;
+            }
+        }
+
+        if (depth == 0) {
+            // i is one past the closing paren
+            gameBlocks.append(content.mid(openParen + 1, i - openParen - 2));
+        }
+        searchFrom = i;
+    }
+
+    qDebug() << "ClrMameProParser: Found" << gameBlocks.size() << "game blocks";
     
     int matchCount = 0;
-    while (it.hasNext()) {
-        QRegularExpressionMatch match = it.next();
+    for (const QString &gameBlock : gameBlocks) {
         matchCount++;
-        QString gameBlock = match.captured(1);
-        
-        // Parse game metadata (multi-line format)
-        QMap<QString, QString> gameData = extractKeyValues(gameBlock);
         
         // Extract ROM block: rom ( ... )
-        // ROM blocks are single-line with space-separated attributes
         int romStart = gameBlock.indexOf("rom (");
+        
+        // Parse game metadata from the portion BEFORE the rom sub-block
+        // so that rom-level keys (e.g. "name") don't overwrite game-level keys.
+        QString gameMetadata = (romStart != -1) ? gameBlock.left(romStart) : gameBlock;
+        QMap<QString, QString> gameData = extractKeyValues(gameMetadata);
         
         if (romStart != -1) {
             int parenCount = 0;
@@ -130,13 +156,22 @@ QList<ClrMameProEntry> ClrMameProParser::parseGameBlocks(const QString &content)
                     }
                 }
                 
-                if (!entry.gameName.isEmpty() && !entry.crc32.isEmpty()) {
+                // Also pull serial from rom block if game-level serial is empty
+                if (entry.serial.isEmpty()) {
+                    entry.serial = romData.value("serial");
+                }
+
+                // Accept entries with either a hash or a serial for identification
+                const bool hasHash = !entry.crc32.isEmpty() || !entry.md5.isEmpty() || !entry.sha1.isEmpty();
+                const bool hasSerial = !entry.serial.isEmpty();
+                if (!entry.gameName.isEmpty() && (hasHash || hasSerial)) {
                     entries.append(entry);
                     
                     if (matchCount <= 3) {
                         qDebug() << "ClrMameProParser: Entry" << matchCount 
                                  << "game:" << entry.gameName.left(30)
                                  << "crc32:" << entry.crc32
+                                 << "serial:" << entry.serial
                                  << "size:" << entry.size;
                     }
                 }

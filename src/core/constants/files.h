@@ -32,6 +32,9 @@ inline const QString NRG = QStringLiteral(".nrg");
 inline const QString RAW = QStringLiteral(".raw");
 inline const QString SUB = QStringLiteral(".sub");
 inline const QString CHD = QStringLiteral(".chd");
+inline const QString RVZ = QStringLiteral(".rvz");
+inline const QString CSO = QStringLiteral(".cso");
+inline const QString GCM = QStringLiteral(".gcm");
 inline const QString M3U = QStringLiteral(".m3u");
 
 inline const QStringList ARCHIVE_EXTENSIONS = {
@@ -39,15 +42,23 @@ inline const QStringList ARCHIVE_EXTENSIONS = {
 };
 
 inline const QStringList CHD_SOURCE_EXTENSIONS = {
-    CUE, GDI, ISO, BIN, IMG, MDF, CDI, NRG
+    CUE, GDI, ISO, BIN, IMG, MDF, NRG
 };
 
 inline const QStringList COMPRESSIBLE_DISC_EXTENSIONS = {
     CUE, ISO, GDI
 };
 
+inline const QStringList RVZ_SOURCE_EXTENSIONS = {
+    ISO, GCM
+};
+
+inline const QStringList CSO_SOURCE_EXTENSIONS = {
+    ISO
+};
+
 inline const QStringList EXTRACTABLE_DISC_EXTENSIONS = {
-    CHD
+    CHD, RVZ, CSO
 };
 
 inline const QStringList ARCHIVE_OPERATION_EXTENSIONS = {
@@ -55,7 +66,7 @@ inline const QStringList ARCHIVE_OPERATION_EXTENSIONS = {
 };
 
 inline const QStringList SPACE_SCAN_EXTENSIONS = {
-    CUE, ISO, GDI, BIN, CHD
+    CUE, ISO, GDI, BIN, CHD, RVZ, CSO, GCM
 };
 
 inline const QStringList M3U_SOURCE_EXTENSIONS = {
@@ -93,6 +104,16 @@ inline bool isChdSourceExtension(const QString &extension)
     return containsExtension(CHD_SOURCE_EXTENSIONS, extension);
 }
 
+inline bool isRvzSourceExtension(const QString &extension)
+{
+    return containsExtension(RVZ_SOURCE_EXTENSIONS, extension);
+}
+
+inline bool isCsoSourceExtension(const QString &extension)
+{
+    return containsExtension(CSO_SOURCE_EXTENSIONS, extension);
+}
+
 inline bool isPrimaryDiscExtension(const QString &extension)
 {
     return containsExtension(PRIMARY_DISC_EXTENSIONS, extension);
@@ -107,6 +128,9 @@ inline int displayPriority(const QString &extension)
     if (normalized == M3U) return 2;
     if (normalized == ISO) return 3;
     if (normalized == CHD) return 4;
+    if (normalized == RVZ) return 5;
+    if (normalized == CSO) return 6;
+    if (normalized == GCM) return 7;
     if (normalized == BIN) return 10;
     if (normalized == IMG) return 11;
     if (normalized == RAW) return 12;

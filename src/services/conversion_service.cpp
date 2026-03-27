@@ -6,8 +6,33 @@
 
 namespace Remus {
 
+namespace {
+
+// RAII helper that wires a DiscConverter::conversionProgress signal to a callback
+// and disconnects automatically on destruction.
+class ScopedProgressConnection {
+public:
+    ScopedProgressConnection(DiscConverter *converter,
+                             ConversionService::ProgressCallback cb)
+    {
+        if (cb && converter) {
+            m_conn = QObject::connect(converter, &DiscConverter::conversionProgress,
+                [cb](int pct, const QString &info) { cb(pct, info); });
+        }
+    }
+    ~ScopedProgressConnection() { if (m_conn) QObject::disconnect(m_conn); }
+    ScopedProgressConnection(const ScopedProgressConnection &) = delete;
+    ScopedProgressConnection &operator=(const ScopedProgressConnection &) = delete;
+private:
+    QMetaObject::Connection m_conn;
+};
+
+} // anonymous namespace
+
 ConversionService::ConversionService()
     : m_chdConverter(new CHDConverter())
+    , m_rvzConverter(new RVZConverter())
+    , m_csoConverter(new CSOConverter())
     , m_archiveExtractor(new ArchiveExtractor())
     , m_archiveCreator(new ArchiveCreator())
 {
@@ -16,34 +41,30 @@ ConversionService::ConversionService()
 ConversionService::~ConversionService()
 {
     delete m_chdConverter;
+    delete m_rvzConverter;
+    delete m_csoConverter;
     delete m_archiveExtractor;
     delete m_archiveCreator;
 }
 
 // ── CHD Conversion ──────────────────────────────────────────
 
-CHDConversionResult ConversionService::convertToCHD(const QString &path,
+ConversionResult ConversionService::convertToCHD(const QString &path,
                                                      CHDCodec codec,
                                                      const QString &outputPath,
                                                      ProgressCallback progressCb)
 {
     QFileInfo fi(path);
     if (!fi.exists()) {
-        CHDConversionResult r;
+        ConversionResult r;
         r.error = "File not found: " + path;
         return r;
     }
 
     m_chdConverter->setCodec(codec);
+    ScopedProgressConnection guard(m_chdConverter, progressCb);
 
-    // Wire progress callback
-    QMetaObject::Connection conn;
-    if (progressCb) {
-        conn = QObject::connect(m_chdConverter, &CHDConverter::conversionProgress,
-            [&](int pct, const QString &info) { progressCb(pct, info); });
-    }
-
-    CHDConversionResult result;
+    ConversionResult result;
     const QString ext = fi.suffix().toLower();
 
     if (ext == "cue") {
@@ -56,54 +77,36 @@ CHDConversionResult ConversionService::convertToCHD(const QString &path,
         result.error = "Unsupported file format: " + ext;
     }
 
-    if (conn) QObject::disconnect(conn);
     return result;
 }
 
-CHDConversionResult ConversionService::extractCHD(const QString &chdPath,
+ConversionResult ConversionService::extractCHD(const QString &chdPath,
                                                    const QString &outputPath,
                                                    ProgressCallback progressCb)
 {
     QFileInfo fi(chdPath);
     if (!fi.exists()) {
-        CHDConversionResult r;
+        ConversionResult r;
         r.error = "File not found: " + chdPath;
         return r;
     }
 
-    QMetaObject::Connection conn;
-    if (progressCb) {
-        conn = QObject::connect(m_chdConverter, &CHDConverter::conversionProgress,
-            [&](int pct, const QString &info) { progressCb(pct, info); });
-    }
-
-    CHDConversionResult result = m_chdConverter->extractCHDToCue(chdPath, outputPath);
-
-    if (conn) QObject::disconnect(conn);
-    return result;
+    ScopedProgressConnection guard(m_chdConverter, progressCb);
+    return m_chdConverter->extractCHDToCue(chdPath, outputPath);
 }
 
-QList<CHDConversionResult> ConversionService::batchConvertToCHD(
+QList<ConversionResult> ConversionService::batchConvertToCHD(
     const QStringList &inputPaths,
     const QString &outputDir,
     CHDCodec codec,
     ProgressCallback progressCb)
 {
     m_chdConverter->setCodec(codec);
-
-    QMetaObject::Connection conn;
-    if (progressCb) {
-        conn = QObject::connect(m_chdConverter, &CHDConverter::conversionProgress,
-            [&](int pct, const QString &info) { progressCb(pct, info); });
-    }
-
-    QList<CHDConversionResult> results = m_chdConverter->batchConvert(inputPaths, outputDir);
-
-    if (conn) QObject::disconnect(conn);
-    return results;
+    ScopedProgressConnection guard(m_chdConverter, progressCb);
+    return m_chdConverter->batchConvert(inputPaths, outputDir);
 }
 
-CHDVerifyResult ConversionService::verifyCHD(const QString &chdPath)
+VerifyResult ConversionService::verifyCHD(const QString &chdPath)
 {
     return m_chdConverter->verifyCHD(chdPath);
 }
@@ -111,6 +114,97 @@ CHDVerifyResult ConversionService::verifyCHD(const QString &chdPath)
 CHDInfo ConversionService::getCHDInfo(const QString &chdPath)
 {
     return m_chdConverter->getCHDInfo(chdPath);
+}
+
+// ── RVZ Conversion ────────────────────────────────────────
+
+ConversionResult ConversionService::convertToRVZ(const QString &path,
+                                                     RVZCompression compression,
+                                                     const QString &outputPath,
+                                                     ProgressCallback progressCb)
+{
+    QFileInfo fi(path);
+    if (!fi.exists()) {
+        ConversionResult r;
+        r.error = "File not found: " + path;
+        return r;
+    }
+
+    m_rvzConverter->setCompression(compression);
+    ScopedProgressConnection guard(m_rvzConverter, progressCb);
+    return m_rvzConverter->convertIsoToRVZ(path, outputPath);
+}
+
+ConversionResult ConversionService::extractRVZ(const QString &rvzPath,
+                                                   const QString &outputPath,
+                                                   ProgressCallback progressCb)
+{
+    QFileInfo fi(rvzPath);
+    if (!fi.exists()) {
+        ConversionResult r;
+        r.error = "File not found: " + rvzPath;
+        return r;
+    }
+
+    ScopedProgressConnection guard(m_rvzConverter, progressCb);
+    return m_rvzConverter->extractRVZToIso(rvzPath, outputPath);
+}
+
+QList<ConversionResult> ConversionService::batchConvertToRVZ(
+    const QStringList &inputPaths,
+    const QString &outputDir,
+    RVZCompression compression,
+    ProgressCallback progressCb)
+{
+    m_rvzConverter->setCompression(compression);
+    ScopedProgressConnection guard(m_rvzConverter, progressCb);
+    return m_rvzConverter->batchConvert(inputPaths, outputDir);
+}
+
+VerifyResult ConversionService::verifyRVZ(const QString &rvzPath)
+{
+    return m_rvzConverter->verifyRVZ(rvzPath);
+}
+
+// ── CSO Conversion ────────────────────────────────────────
+
+ConversionResult ConversionService::convertToCSO(const QString &path,
+                                                     const QString &outputPath,
+                                                     ProgressCallback progressCb)
+{
+    QFileInfo fi(path);
+    if (!fi.exists()) {
+        ConversionResult r;
+        r.error = "File not found: " + path;
+        return r;
+    }
+
+    ScopedProgressConnection guard(m_csoConverter, progressCb);
+    return m_csoConverter->convertIsoToCSO(path, outputPath);
+}
+
+ConversionResult ConversionService::extractCSO(const QString &csoPath,
+                                                   const QString &outputPath,
+                                                   ProgressCallback progressCb)
+{
+    QFileInfo fi(csoPath);
+    if (!fi.exists()) {
+        ConversionResult r;
+        r.error = "File not found: " + csoPath;
+        return r;
+    }
+
+    ScopedProgressConnection guard(m_csoConverter, progressCb);
+    return m_csoConverter->extractCSOToIso(csoPath, outputPath);
+}
+
+QList<ConversionResult> ConversionService::batchConvertToCSO(
+    const QStringList &inputPaths,
+    const QString &outputDir,
+    ProgressCallback progressCb)
+{
+    ScopedProgressConnection guard(m_csoConverter, progressCb);
+    return m_csoConverter->batchConvert(inputPaths, outputDir);
 }
 
 // ── Archive Extraction ──────────────────────────────────────
@@ -180,6 +274,36 @@ void ConversionService::setChdmanPath(const QString &path)
     m_chdConverter->setChdmanPath(path);
 }
 
+bool ConversionService::isDolphinToolAvailable() const
+{
+    return m_rvzConverter->isDolphinToolAvailable();
+}
+
+QString ConversionService::getDolphinToolVersion() const
+{
+    return m_rvzConverter->getDolphinToolVersion();
+}
+
+void ConversionService::setDolphinToolPath(const QString &path)
+{
+    m_rvzConverter->setDolphinToolPath(path);
+}
+
+bool ConversionService::isMaxcsoAvailable() const
+{
+    return m_csoConverter->isMaxcsoAvailable();
+}
+
+QString ConversionService::getMaxcsoVersion() const
+{
+    return m_csoConverter->getMaxcsoVersion();
+}
+
+void ConversionService::setMaxcsoPath(const QString &path)
+{
+    m_csoConverter->setMaxcsoPath(path);
+}
+
 QMap<ArchiveFormat, bool> ConversionService::getArchiveToolStatus() const
 {
     return m_archiveExtractor->getAvailableTools();
@@ -240,13 +364,17 @@ QMap<ArchiveFormat, bool> ConversionService::getArchiveCompressionToolStatus() c
 void ConversionService::cancel()
 {
     m_chdConverter->cancel();
+    m_rvzConverter->cancel();
+    m_csoConverter->cancel();
     m_archiveExtractor->cancel();
     m_archiveCreator->cancel();
 }
 
 bool ConversionService::isRunning() const
 {
-    return m_chdConverter->isRunning() || m_archiveExtractor->isRunning() || m_archiveCreator->isRunning();
+    return m_chdConverter->isRunning() || m_rvzConverter->isRunning() ||
+           m_csoConverter->isRunning() || m_archiveExtractor->isRunning() ||
+           m_archiveCreator->isRunning();
 }
 
 } // namespace Remus

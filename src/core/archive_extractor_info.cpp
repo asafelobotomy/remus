@@ -80,7 +80,7 @@ ArchiveInfo ArchiveExtractor::getArchiveInfo(const QString &path)
             }
 
             const QString trimmed = line.trimmed();
-            const QRegularExpression re(R"(^(?:\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}\s+)?([A-Z.]{5})\s+(\d+)\s+(?:\d+\s+)?(.+)$)");
+            const QRegularExpression re(R"(^(?:\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}(?::\d{2})?\s+)?([A-Z.]{5})\s+(\d+)\s+(?:\d+\s+)?(.+)$)");
             const QRegularExpressionMatch match = re.match(trimmed);
 
             if (match.hasMatch()) {
@@ -95,12 +95,25 @@ ArchiveInfo ArchiveExtractor::getArchiveInfo(const QString &path)
                 continue;
             }
 
+            // Fallback: find the attribute column and reconstruct the full filename
+            // from all remaining parts after the numeric metadata columns
             const QStringList parts = trimmed.split(QRegularExpression(R"(\s+)"));
             if (parts.size() >= 3) {
-                const QString filename = parts.last();
-                if (!filename.isEmpty() && !filename.contains(QRegularExpression(R"(^\d+$)"))) {
-                    info.contents.append(filename);
-                    info.fileCount++;
+                int nameStartIdx = 0;
+                for (int i = 0; i < parts.size(); ++i) {
+                    if (QRegularExpression(R"(^[A-Z.]{5}$)").match(parts[i]).hasMatch()
+                        || QRegularExpression(R"(^\d)").match(parts[i]).hasMatch()
+                        || QRegularExpression(R"(^\d{4}-\d{2}-\d{2}$)").match(parts[i]).hasMatch()
+                        || QRegularExpression(R"(^\d{2}:\d{2})").match(parts[i]).hasMatch()) {
+                        nameStartIdx = i + 1;
+                    }
+                }
+                if (nameStartIdx > 0 && nameStartIdx < parts.size()) {
+                    const QString filename = QStringList(parts.mid(nameStartIdx)).join(' ');
+                    if (!filename.isEmpty() && !QRegularExpression(R"(^\d+$)").match(filename).hasMatch()) {
+                        info.contents.append(filename);
+                        info.fileCount++;
+                    }
                 }
             }
         }

@@ -78,7 +78,14 @@ QList<SearchResult> ScreenScraperProvider::searchByName(const QString &title,
     }
 
     // Parse JSON response
-    QJsonDocument doc = QJsonDocument::fromJson(response.data);
+    QJsonParseError parseError;
+    QJsonDocument doc = QJsonDocument::fromJson(response.data, &parseError);
+    if (parseError.error != QJsonParseError::NoError) {
+        qWarning() << "ScreenScraper JSON parse error (search):" << parseError.errorString();
+        emit errorOccurred("ScreenScraper JSON parse error: " + parseError.errorString());
+        return results;
+    }
+
     QJsonObject root = doc.object();
     
     if (root.contains("response") && root["response"].isObject()) {

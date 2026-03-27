@@ -132,7 +132,26 @@ int handleMetadataCommand(CliContext &ctx)
     qInfo() << "";
 
     auto provider = buildSingleProvider(ctx.parser);
-    if (!provider) { qInfo() << "No provider selected (use --provider)"; return 0; }
+    if (!provider) {
+        // No explicit provider — use the orchestrator for automatic fallback
+        auto orchestrator = buildOrchestrator(ctx.parser, &ctx.db);
+        GameMetadata metadata = orchestrator->searchWithFallback(hash, QString(), system);
+        if (!metadata.title.isEmpty()) {
+            qInfo() << "✓ Match found via" << metadata.providerId << "!";
+        } else {
+            qInfo() << "✗ No match found for hash:" << hash;
+            return 0;
+        }
+        qInfo() << "─────────────────────────────────────";
+        qInfo() << "Title:"        << metadata.title;
+        qInfo() << "System:"       << metadata.system;
+        qInfo() << "Region:"       << metadata.region;
+        qInfo() << "Developer:"    << metadata.developer;
+        qInfo() << "Publisher:"    << metadata.publisher;
+        qInfo() << "Release Date:" << metadata.releaseDate;
+        qInfo() << "Genres:"       << metadata.genres.join(", ");
+        return 0;
+    }
 
     GameMetadata metadata = provider->getByHash(hash, system);
     if (!metadata.title.isEmpty()) {
@@ -186,7 +205,20 @@ int handleSearchCommand(CliContext &ctx)
     qInfo() << "";
 
     auto provider = buildSingleProvider(ctx.parser);
-    if (!provider) { qInfo() << "No provider selected (use --provider)"; return 0; }
+    if (!provider) {
+        // No explicit provider — use the orchestrator for search-by-name
+        auto orchestrator = buildOrchestrator(ctx.parser, &ctx.db);
+        GameMetadata metadata = orchestrator->searchWithFallback(QString(), title, system);
+        if (!metadata.title.isEmpty()) {
+            qInfo() << "✓ Found via" << metadata.providerId << ":" << metadata.title;
+            qInfo() << "  System:" << metadata.system;
+            qInfo() << "  Developer:" << metadata.developer;
+            qInfo() << "  Publisher:" << metadata.publisher;
+        } else {
+            qInfo() << "No results found for:" << title;
+        }
+        return 0;
+    }
 
     QList<SearchResult> results = provider->searchByName(title, system);
     if (results.isEmpty()) {
