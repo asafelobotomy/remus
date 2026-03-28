@@ -56,6 +56,7 @@ ConversionResult RVZConverter::convertIsoToRVZ(const QString &isoPath,
     QStringList args;
     args << "convert"
          << "--format=rvz"
+         << "--block_size=131072"
          << "--input" << isoPath
          << "--output" << output;
 
