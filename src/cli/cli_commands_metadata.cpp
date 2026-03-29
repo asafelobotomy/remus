@@ -249,7 +249,7 @@ int handleSearchCommand(CliContext &ctx)
 
 int handleEnrichCommand(CliContext &ctx)
 {
-    if (!ctx.parser.isSet("enrich")) return 0;
+    if (!ctx.parser.isSet("enrich") && !ctx.processRequested) return 0;
 
     qInfo() << "";
     qInfo() << "=== Metadata Enrichment ===";

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QString>
+#include <QMap>
 
 #include "exports.h"
 
@@ -31,6 +32,35 @@ inline constexpr const char *BUNDLE_DISC_FORMAT = "original";
 inline constexpr const char *PATCH_FORMAT = "bps";
 inline const QString EXPORT_FORMAT = Exports::Formats::CSV;
 }
+
+/// Pre-configured processing presets for popular emulation frontends.
+/// Each preset selects a bundle format, disc-media format, and folder naming
+/// scheme tuned for the target frontend.
+struct ProcessPreset {
+    const char *name;
+    const char *displayName;
+    const char *bundleFormat;    ///< "zip" or "7z"
+    const char *discFormat;      ///< "chd" or "original"
+    const char *folderNaming;    ///< maps to FolderNaming::Scheme
+};
+
+inline const QMap<QString, ProcessPreset> PROCESS_PRESETS = {
+    {QStringLiteral("es-de"),     {"es-de",     "ES-DE",               "7z", "chd", "default"}},
+    {QStringLiteral("retrodeck"), {"retrodeck", "RetroDeck",           "7z", "chd", "default"}},
+    {QStringLiteral("emudeck"),   {"emudeck",   "EmuDeck (Steam Deck)","7z", "chd", "emudeck"}},
+    {QStringLiteral("batocera"),  {"batocera",  "Batocera Linux",      "7z", "chd", "batocera"}},
+    {QStringLiteral("retropie"),  {"retropie",  "RetroPie",            "zip","chd", "retropie"}},
+    {QStringLiteral("romm"),      {"romm",      "RomM Server",         "zip","original", "romm"}},
+};
+
+inline const QStringList PROCESS_PRESET_NAMES = {
+    QStringLiteral("es-de"),
+    QStringLiteral("retrodeck"),
+    QStringLiteral("emudeck"),
+    QStringLiteral("batocera"),
+    QStringLiteral("retropie"),
+    QStringLiteral("romm"),
+};
 
 } // Cli
 } // Constants

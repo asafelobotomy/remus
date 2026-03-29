@@ -55,6 +55,9 @@ inline Scheme schemeFromString(const QString &name)
         return Scheme::EmuDeck;
     if (lower == QLatin1String("romm"))
         return Scheme::RomM;
+    // RetroDeck embeds ES-DE, so it uses the Default (ES-DE) naming scheme
+    if (lower == QLatin1String("retrodeck"))
+        return Scheme::Default;
     return Scheme::None;
 }
 

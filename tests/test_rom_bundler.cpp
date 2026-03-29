@@ -93,10 +93,16 @@ void RomBundlerTest::testBundle_dryRun_outputPathContainsBaseName()
     cfg.includeBoxArt = false;
 
     const QString destDir = tmp.filePath("bundles");
-    RomBundler::BundleResult result = bundler.bundle(rec, makeMatch(), makeMetadata(), destDir, cfg);
 
+    // When metadata has a title, bundler uses it for the output archive name
+    RomBundler::BundleResult result = bundler.bundle(rec, makeMatch(), makeMetadata(), destDir, cfg);
     QVERIFY(result.success);
-    QVERIFY(result.outputPath.contains("Sonic The Hedgehog (USA)"));
+    QVERIFY(result.outputPath.contains("Test Game"));
+
+    // When metadata title is empty, bundler falls back to the ROM filename
+    RomBundler::BundleResult fallback = bundler.bundle(rec, makeMatch(""), makeMetadata(""), destDir, cfg);
+    QVERIFY(fallback.success);
+    QVERIFY(fallback.outputPath.contains("Sonic The Hedgehog (USA)"));
 }
 
 // ── bundle() real archives ───────────────────────────────────────────────

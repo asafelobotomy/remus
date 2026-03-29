@@ -358,7 +358,25 @@ RomBundler::BundleResult RomBundler::bundle(const FileRecord            &file,
 
     // ── 6. Determine output archive path ─────────────────────────────────────
     const QString ext = (config.outputFormat == ArchiveFormat::SevenZip) ? Constants::Files::SEVEN_Z : Constants::Files::ZIP;
-    const QString baseName = QFileInfo(file.filename).completeBaseName();
+
+    // Prefer the matched game title for the archive name; fall back to the raw
+    // ROM filename when no match is available.  Sanitise the title so it is safe
+    // for file-system use (strip characters forbidden on Windows and common
+    // special symbols that cause shell headaches).
+    QString baseName;
+    if (!metadata.title.isEmpty()) {
+        baseName = metadata.title;
+        if (!metadata.region.isEmpty() && !baseName.contains(QStringLiteral("("))
+            && !baseName.contains(metadata.region)) {
+            baseName += QStringLiteral(" (") + metadata.region + QStringLiteral(")");
+        }
+        static const QRegularExpression unsafeChars(QStringLiteral("[<>:\"/\\\\|?*]"));
+        baseName.replace(unsafeChars, QStringLiteral("_"));
+        baseName = baseName.trimmed();
+    }
+    if (baseName.isEmpty()) {
+        baseName = QFileInfo(file.filename).completeBaseName();
+    }
 
     const QString outputArchive = destDir.absoluteFilePath(baseName + ext);
 

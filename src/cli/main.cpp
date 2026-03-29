@@ -198,7 +198,12 @@ int main(int argc, char *argv[])
     addOption(QCommandLineOption(Constants::Cli::Options::EXPORT_PATH, "Export output path (file or directory)", "path"));
     addOption(QCommandLineOption(Constants::Cli::Options::EXPORT_SYSTEMS, "Comma-separated systems to include", "systems"));
 
-    addActionOption(QCommandLineOption("process", "Run scan->hash->match pipeline on directory", "path"));
+    addActionOption(QCommandLineOption("process", "Full pipeline: scan→hash→match→enrich→bundle on a directory", "path"));
+    addOption(QCommandLineOption("process-output", "Output directory for --process pipeline bundles/organized files", "directory"));
+    addOption(QCommandLineOption("process-preset",
+        "Frontend preset for --process (es-de|retrodeck|emudeck|batocera|retropie|romm). "
+        "Auto-configures bundle format, disc format, and folder naming.",
+        "preset"));
 
     addActionOption(QCommandLineOption("convert-chd",     "Convert disc image to CHD format",                    "path"));
     addOption(QCommandLineOption("chd-codec",       "CHD compression codec (lzma, zlib, flac, huff, auto)", "codec", "auto"));
@@ -245,7 +250,27 @@ int main(int argc, char *argv[])
 
     CliContext ctx{parser, db, detector,
                    /*dryRunAll*/        parser.isSet(Constants::Cli::Options::DRY_RUN_ALL),
-                   /*processRequested*/ parser.isSet("process")};
+                   /*processRequested*/ parser.isSet("process"),
+                   /*presetBundleFormat*/  {},
+                   /*presetDiscFormat*/    {},
+                   /*presetFolderNaming*/  {},
+                   /*presetDisplayName*/   {}};
+
+    // Resolve --process-preset into concrete overrides
+    if (parser.isSet("process-preset")) {
+        const QString presetKey = parser.value("process-preset").trimmed().toLower();
+        if (Constants::Cli::PROCESS_PRESETS.contains(presetKey)) {
+            const auto &preset = Constants::Cli::PROCESS_PRESETS.value(presetKey);
+            ctx.presetBundleFormat  = QString::fromLatin1(preset.bundleFormat);
+            ctx.presetDiscFormat    = QString::fromLatin1(preset.discFormat);
+            ctx.presetFolderNaming  = QString::fromLatin1(preset.folderNaming);
+            ctx.presetDisplayName   = QString::fromLatin1(preset.displayName);
+        } else {
+            qCritical() << "Unknown preset:" << presetKey;
+            qInfo() << "Available presets:" << Constants::Cli::PROCESS_PRESET_NAMES.join(", ");
+            return 1;
+        }
+    }
 
     if (int rc = handleStatsCommand(ctx))          return rc;
     if (int rc = handleInfoCommand(ctx))           return rc;
@@ -255,8 +280,8 @@ int main(int argc, char *argv[])
     if (int rc = handleHashAllCommand(ctx))        return rc;
     if (int rc = handleMetadataCommand(ctx))       return rc;
     if (int rc = handleSearchCommand(ctx))         return rc;
-    if (int rc = handleEnrichCommand(ctx))         return rc;
     if (int rc = handleMatchCommand(ctx))          return rc;
+    if (int rc = handleEnrichCommand(ctx))         return rc;
     if (int rc = handleMatchReportCommand(ctx))    return rc;
     if (int rc = handleChecksumVerifyCommand(ctx)) return rc;
     if (int rc = handleVerifyCommand(ctx))         return rc;

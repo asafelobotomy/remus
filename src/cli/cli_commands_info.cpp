@@ -113,6 +113,30 @@ int handleScanCommand(CliContext &ctx)
 
     if (scanPath.isEmpty()) { qCritical() << "Scan path not provided"; return 1; }
 
+    if (ctx.processRequested) {
+        const bool hasOutput = ctx.parser.isSet("process-output") || ctx.parser.isSet("bundle");
+        qInfo() << "=== Full Processing Pipeline ===";
+        if (!ctx.presetDisplayName.isEmpty())
+            qInfo() << "Preset:" << ctx.presetDisplayName;
+        qInfo() << "Source:" << scanPath;
+        if (hasOutput) {
+            const QString output = ctx.parser.isSet("process-output")
+                ? ctx.parser.value("process-output")
+                : ctx.parser.value("bundle");
+            qInfo() << "Output:" << output;
+        }
+        if (!ctx.presetBundleFormat.isEmpty())
+            qInfo() << "Archive:" << ctx.presetBundleFormat
+                     << "| Disc:" << ctx.presetDiscFormat
+                     << "| Folders:" << ctx.presetFolderNaming;
+        qInfo() << "";
+        QStringList stages = {QStringLiteral("scan"), QStringLiteral("hash"), QStringLiteral("match"),
+                              QStringLiteral("enrich")};
+        if (hasOutput) stages << QStringLiteral("bundle");
+        qInfo().noquote() << "Stages:" << stages.join(QStringLiteral(" → "));
+        qInfo() << "";
+    }
+
     qInfo() << "Scanning directory:" << scanPath;
     qInfo() << "";
 

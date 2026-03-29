@@ -16,6 +16,11 @@ struct CliContext {
     SystemDetector     &detector;
     bool                dryRunAll;
     bool                processRequested;
+    // Preset-resolved overrides (empty = use explicit CLI values)
+    QString             presetBundleFormat;
+    QString             presetDiscFormat;
+    QString             presetFolderNaming;
+    QString             presetDisplayName;
 };
 
 // ── Info / inspection ──────────────────────────────────────────────────────────
