@@ -12,16 +12,14 @@
 
 | Agent | File | Model (primary) | Role | Allow-list |
 |-------|------|-----------------|------|------------|
-| **Code** | `coding.agent.md` | GPT-5.1 / Claude Sonnet 4.6 | Implement features, refactor, multi-step coding tasks | Review, Doctor, Fast, Researcher, Explore, Security |
-| **Review** | `review.agent.md` | GPT-5.4 / Claude Opus 4.6 | Deep code review and architectural analysis with Lean/Kaizen critique | Code, Fast, Researcher, Doctor, Explore, Security |
-| **Doctor** | `doctor.agent.md` | Claude Sonnet 4.6 | Read-only health check — instructions, agents, MCP config, workspace files | Code, Update, Researcher, Explore, Security, Extensions |
-| **Update** | `update.agent.md` | Claude Sonnet 4.6 | Fetch and apply upstream instruction updates, or restore from backup | Doctor, Code, Researcher, Explore |
-| **Setup** | `setup.agent.md` | Claude Sonnet 4.6 | First-time project setup and onboarding from copilot-instructions-template | Doctor, Code, Extensions, Researcher, Explore |
-| **Researcher** | `researcher.agent.md` | Claude Sonnet 4.6 | Online and offline research — fetch docs, track URLs, structured output | Code, Doctor, Explore, Security |
-| **Fast** | `fast.agent.md` | Claude Haiku 4.5 | Quick questions, syntax lookups, and lightweight single-file edits | Code, Explore |
-| **Explore** | `explore.agent.md` | Claude Haiku 4.5 | Fast read-only codebase exploration and Q&A subagent | Researcher |
-| **Extensions** | `extensions.agent.md` | Claude Sonnet 4.6 | VS Code extension management, profiles, and workspace configuration | Security, Researcher, Doctor, Fast, Explore |
-| **Security** | `security.agent.md` | GPT-5.4 / Claude Opus 4.6 | Read-only security audit — OWASP, secrets, injection, supply-chain | Code, Doctor, Researcher, Explore, Review |
+| **Code** | `coding.agent.md` | GPT-5.1 / Claude Sonnet 4.6 | Implement features, refactor, multi-step coding tasks | Review, Doctor, Fast, Researcher, Explore |
+| **Review** | `review.agent.md` | GPT-5.4 / Claude Opus 4.6 | Deep code review and architectural analysis with Lean/Kaizen critique | Code, Fast, Researcher |
+| **Doctor** | `doctor.agent.md` | Claude Sonnet 4.6 | Read-only health check — instructions, agents, MCP config, workspace files | Code, Update, Researcher, Explore |
+| **Update** | `update.agent.md` | Claude Sonnet 4.6 | Fetch and apply upstream instruction updates, or restore from backup | Doctor |
+| **Setup** | `setup.agent.md` | Claude Sonnet 4.6 | First-time project setup and onboarding from copilot-instructions-template | Doctor |
+| **Researcher** | `researcher.agent.md` | Claude Sonnet 4.6 | Online and offline research — fetch docs, track URLs, structured output | Code, Doctor |
+| **Fast** | `fast.agent.md` | Claude Haiku 4.5 | Quick questions, syntax lookups, and lightweight single-file edits | Code |
+| **Explore** | `explore.agent.md` | Claude Haiku 4.5 | Fast read-only codebase exploration and Q&A subagent | *(none — leaf node)* |
 
 ---
 
@@ -74,17 +72,12 @@
 ```
 User → Code → Review → Code (iterate)
              ↘ Doctor (health check)
-             ↘ Security (security check before done)
 User → Doctor → Code (apply fixes)
               ↘ Update (version behind)
-              ↘ Security (security diagnostics)
 User → Update → Doctor (post-update health check)
 User → Researcher → Code (implement findings)
                   ↘ Doctor (verify written files)
 User → Fast → Code (escalate large tasks)
-User → Security → Code (apply fixes)
-               ↘ Doctor (post-fix health check)
-User → Extensions → Doctor (post-config health check)
 ```
 
 ---
