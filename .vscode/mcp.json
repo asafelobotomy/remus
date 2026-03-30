@@ -1,7 +1,7 @@
 {
   "servers": {
     "filesystem": {
-      "command": "/home/linuxbrew/.linuxbrew/bin/npx",
+      "command": "npx",
       "args": [
         "-y",
         "@modelcontextprotocol/server-filesystem",
@@ -9,7 +9,7 @@
       ]
     },
     "git": {
-      "command": "/home/linuxbrew/.linuxbrew/bin/uvx",
+      "command": "uvx",
       "args": ["mcp-server-git"]
     }
   }
