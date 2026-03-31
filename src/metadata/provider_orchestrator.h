@@ -64,6 +64,10 @@ public:
      * @param hash Optional file hash (CRC32/MD5/SHA1)
      * @param name Game name
      * @param system System identifier (e.g., "NES", "PlayStation")
+     * @param crc32 Optional CRC32 hash
+     * @param md5 Optional MD5 hash
+     * @param sha1 Optional SHA1 hash
+     * @param serial Optional disc serial (e.g., from IP.BIN header)
      * @return GameMetadata from first successful provider
      */
     GameMetadata searchWithFallback(const QString &hash,
@@ -71,7 +75,8 @@ public:
                                     const QString &system,
                                     const QString &crc32 = QString(),
                                     const QString &md5 = QString(),
-                                    const QString &sha1 = QString());
+                                    const QString &sha1 = QString(),
+                                    const QString &serial = QString());
     
     /**
      * @brief Get list of all search results from all providers

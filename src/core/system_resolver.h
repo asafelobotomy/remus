@@ -53,7 +53,21 @@ public:
      * @return System ID, or 0 if not found
      */
     static int systemIdByName(const QString &internalName);
-    
+
+    /**
+     * @brief Get system ID by DAT file canonical name (No-Intro / Redump)
+     * @param datName DAT canonical name like "Sega - Mega Drive - Genesis"
+     * @return System ID, or 0 if not found
+     */
+    static int systemIdByDatName(const QString &datName);
+
+    /**
+     * @brief Resolve a DAT name or internal name to internal name
+     * @param name DAT name, internal name, or alias
+     * @return Internal system name, or the original string if unresolved
+     */
+    static QString resolveSystemName(const QString &name);
+
     /**
      * @brief Check if system exists in registry
      * @param systemId System ID to check

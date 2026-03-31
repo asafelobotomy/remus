@@ -270,6 +270,9 @@ int handleEnrichCommand(CliContext &ctx)
         int fileId;
         QString title;
         QString system;
+        QString crc32;
+        QString md5;
+        QString sha1;
     };
     QList<EnrichCandidate> candidates;
     QSet<int> seenGames;
@@ -285,7 +288,15 @@ int handleEnrichCommand(CliContext &ctx)
         const QString system = fileMap.contains(m.fileId)
             ? ctx.db.getSystemDisplayName(fileMap[m.fileId].systemId)
             : QString();
-        candidates.append({m.gameId, m.fileId, m.gameTitle, system});
+
+        QString crc32, md5, sha1;
+        if (fileMap.contains(m.fileId)) {
+            const FileRecord &f = fileMap[m.fileId];
+            crc32 = f.crc32;
+            md5 = f.md5;
+            sha1 = f.sha1;
+        }
+        candidates.append({m.gameId, m.fileId, m.gameTitle, system, crc32, md5, sha1});
     }
 
     if (candidates.isEmpty()) {
@@ -301,8 +312,12 @@ int handleEnrichCommand(CliContext &ctx)
     for (const auto &c : candidates) {
         qInfo() << "Enriching:" << c.title << "(" << c.system << ")";
 
+        // Use hash-based lookup first (offline), then fall back to name search
+        const QString bestHash = !c.sha1.isEmpty() ? c.sha1 :
+                                 !c.md5.isEmpty()  ? c.md5  :
+                                 c.crc32;
         GameMetadata metadata = orchestrator->searchWithFallback(
-            QString(), c.title, c.system);
+            bestHash, c.title, c.system, c.crc32, c.md5, c.sha1);
 
         if (metadata.title.isEmpty()) {
             qInfo() << "  ✗ No metadata found";

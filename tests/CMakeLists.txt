@@ -81,6 +81,11 @@ add_remus_test(test_header_detector HeaderDetectorTest
     LIBS Qt6::Test Qt6::Core remus-core
 )
 
+add_remus_test(test_disc_magic_detector DiscMagicDetectorTest
+    SOURCES test_disc_magic_detector.cpp
+    LIBS Qt6::Test Qt6::Core remus-core
+)
+
 add_remus_test(test_system_resolver SystemResolverTest
     SOURCES test_system_resolver.cpp
     LIBS Qt6::Test Qt6::Core remus-core remus-constants

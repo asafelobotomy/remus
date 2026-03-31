@@ -92,3 +92,14 @@
 | https://www.wikidata.org/wiki/Wikidata:WikiProject_Video_games | Wikidata WikiProject Video games — CC0 licensed; SPARQL API; links 100+ game databases; publisher/developer/genre data; variable quality | 2026-03-26 | wikidata, sparql, metadata, cc0, free |
 | https://www.wikidata.org/wiki/Wikidata:Data_access | Wikidata data access methods — SPARQL endpoint, REST API, bulk dumps; all CC0 | 2026-03-26 | wikidata, api, sparql, bulk |
 | https://gamesdb.launchbox-app.com/ | LaunchBox Games Database — web UI only; no public API; no bulk download; not usable for Remus integration | 2026-03-26 | launchbox, metadata, no-api |
+
+## Disc Magic Byte Detection & System Identification (2026-06-05)
+
+| URL | Summary | Date | Tags |
+|-----|---------|------|------|
+| https://github.com/libretro/RetroArch/blob/master/tasks/task_database_cue.c | **PRIMARY** — complete `MAGIC_NUMBERS[]` table covering GC/Wii/Dreamcast/Saturn/Mega-CD/PS1/PS2/PSP/CDi; `detect_system()` algorithm; per-platform serial extractors | 2026-06-05 | retroarch, magic-bytes, disc, detection, system-identification |
+| https://github.com/dolphin-emu/dolphin/blob/master/Source/Core/DiscIO/Volume.cpp | Dolphin `TryCreateDisc()` — reads `GAMECUBE_DISC_MAGIC`/`WII_DISC_MAGIC` from disc header to select GC vs Wii disc parser | 2026-06-05 | dolphin, gamecube, wii, magic-bytes, detection |
+| https://raw.githubusercontent.com/dolphin-emu/dolphin/master/Source/Core/DiscIO/DiscUtils.h | Dolphin `DiscUtils.h` — defines `GAMECUBE_DISC_MAGIC = 0xC2339F3D` at 0x1C; `WII_DISC_MAGIC = 0x5D1C9EA3` at 0x18 | 2026-06-05 | dolphin, gamecube, wii, constants, magic-bytes |
+| https://github.com/hrydgard/ppsspp/blob/master/Core/Loaders.cpp | PPSSPP `Loaders.cpp` — multi-system ISO 9660 PVD detection; LBA 16 (offset 0x8000); systemId field: "PSP GAME"/"PS3"/"PLAYSTATION"; 800 MB PS1/PS2 heuristic | 2026-06-05 | ppsspp, psp, ps1, ps2, iso9660, pvd, detection |
+| https://dreamcast.wiki/IP.BIN | Dreamcast IP.BIN header spec — field offsets: hardware ID 0x00, product number 0x40, release date 0x50, game title 0x80; "SEGA SEGAKATANA" disc magic | 2026-06-05 | dreamcast, ipbin, serial, header, detection |
+| https://doc.qt.io/qt-6/qimagereader.html | Qt 6 `QImageReader` — static `imageFormat(QIODevice*)` probes magic bytes to detect PNG/JPEG/BMP/WebP independent of file extension; `setDecideFormatFromContent(true)` | 2026-06-05 | qt6, image, format-detection, artwork, qimagereader |

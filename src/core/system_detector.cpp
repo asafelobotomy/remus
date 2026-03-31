@@ -1,4 +1,5 @@
 #include "system_detector.h"
+#include "disc_magic_detector.h"
 #include "constants/constants.h"
 #include <QFileInfo>
 #include <QDir>
@@ -38,6 +39,17 @@ QString SystemDetector::detectSystem(const QString &extension, const QString &pa
     QStringList candidates = getCandidatesForExtension(ext);
     if (candidates.isEmpty()) {
         return QString();
+    }
+
+    // For ambiguous disc image extensions, probe magic bytes first
+    if (candidates.size() > 1 && !path.isEmpty() && DiscMagicDetector::isDiscImageExtension(ext)) {
+        DiscHeaderInfo discInfo = DiscMagicDetector::detect(path);
+        if (discInfo.detected && !discInfo.systemName.isEmpty()) {
+            // Verify this system is in our candidate list
+            if (candidates.contains(discInfo.systemName)) {
+                return discInfo.systemName;
+            }
+        }
     }
 
     if (candidates.size() > 1 && !path.isEmpty()) {

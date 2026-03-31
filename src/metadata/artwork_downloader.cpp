@@ -7,6 +7,7 @@
 #include <QEventLoop>
 #include <QTimer>
 #include <QDebug>
+#include <QImageReader>
 #include "../core/constants/constants.h"
 
 namespace Remus {
@@ -60,7 +61,27 @@ bool ArtworkDownloader::download(const QUrl &url, const QString &destPath)
     file.write(data);
     file.close();
 
-    emit downloadCompleted(url, destPath);
+    // Detect actual image format and fix extension if mismatched
+    QString finalPath = destPath;
+    QByteArray detectedFormat = QImageReader::imageFormat(destPath);
+    if (!detectedFormat.isEmpty()) {
+        QString correctExt = QLatin1Char('.') + QString::fromLatin1(detectedFormat);
+        QString currentExt = QFileInfo(destPath).suffix().toLower();
+        // Normalize jpeg → jpg for comparison
+        if (correctExt == QLatin1String(".jpeg")) correctExt = QStringLiteral(".jpg");
+        if (currentExt == QLatin1String("jpeg")) currentExt = QStringLiteral("jpg");
+
+        if (!currentExt.isEmpty() && correctExt != (QLatin1Char('.') + currentExt)) {
+            finalPath = destPath.left(destPath.lastIndexOf(QLatin1Char('.'))) + correctExt;
+            if (QFile::rename(destPath, finalPath)) {
+                qDebug() << "Artwork format corrected:" << destPath << "->" << finalPath;
+            } else {
+                finalPath = destPath; // rename failed, keep original
+            }
+        }
+    }
+
+    emit downloadCompleted(url, finalPath);
     return true;
 }
 

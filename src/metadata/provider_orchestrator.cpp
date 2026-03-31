@@ -1,6 +1,7 @@
 #include "provider_orchestrator.h"
 #include "filename_normalizer.h"
 #include "hasheous_provider.h"
+#include "local_database_provider.h"
 #include "metadata_cache.h"
 #include <QDebug>
 #include <algorithm>
@@ -243,11 +244,13 @@ GameMetadata ProviderOrchestrator::searchWithFallback(const QString &hash,
                                                       const QString &system,
                                                       const QString &crc32,
                                                       const QString &md5,
-                                                      const QString &sha1)
+                                                      const QString &sha1,
+                                                      const QString &serial)
 {
     // Strategy:
     // 1. Try hash-based providers first (if hash provided)
-    // 2. Fall back to name-based search on all providers
+    // 2. Try serial-based matching on local database (if serial provided)
+    // 3. Fall back to name-based search on all providers
     
     if (!hash.isEmpty()) {
         qInfo() << "Attempting hash-based search first for:" << name;
@@ -260,6 +263,38 @@ GameMetadata ProviderOrchestrator::searchWithFallback(const QString &hash,
         }
         
         qInfo() << "Hash-based search failed, falling back to name-based search";
+    }
+
+    // Try serial-based matching on local database (disc images with serial)
+    if (!serial.isEmpty()) {
+        for (auto it = m_providers.constBegin(); it != m_providers.constEnd(); ++it) {
+            if (!it.value().enabled) continue;
+            auto *localDb = qobject_cast<LocalDatabaseProvider *>(it.value().provider);
+            if (!localDb) continue;
+
+            ROMSignals romSignals;
+            romSignals.crc32 = crc32;
+            romSignals.md5 = md5;
+            romSignals.sha1 = sha1;
+            romSignals.filename = name;
+            romSignals.serial = serial;
+            QList<MultiSignalMatch> matches = localDb->matchROM(romSignals);
+            if (!matches.isEmpty() && matches.first().serialMatch) {
+                const MultiSignalMatch &best = matches.first();
+                GameMetadata metadata = localDb->getByHash(
+                    !best.entry.crc32.isEmpty() ? best.entry.crc32 :
+                    !best.entry.md5.isEmpty()   ? best.entry.md5   :
+                    best.entry.sha1, system);
+                if (!metadata.title.isEmpty()) {
+                    metadata.matchScore = best.confidencePercent() / 100.0f;
+                    metadata.matchMethod = QStringLiteral("serial");
+                    qInfo() << "Serial match:" << metadata.title << "via LocalDatabase";
+                    emit providerSucceeded(it.key(), QStringLiteral("serial"));
+                    return metadata;
+                }
+            }
+        }
+        qInfo() << "Serial-based matching failed for serial:" << serial;
     }
     
     // Try name-based search

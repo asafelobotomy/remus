@@ -5,6 +5,7 @@
 #include <QTextStream>
 #include "../metadata/provider_orchestrator.h"
 #include "../core/constants/constants.h"
+#include "../core/disc_magic_detector.h"
 #include "cli_logging.h"
 
 using namespace Remus;
@@ -54,9 +55,19 @@ int handleMatchCommand(CliContext &ctx)
 
         qInfo() << "Matching:" << displayName;
 
+        // Extract disc serial for disc image files (CDI, GDI, ISO, etc.)
+        QString discSerial;
+        if (DiscMagicDetector::isDiscImageExtension(file.extension)) {
+            DiscHeaderInfo discInfo = DiscMagicDetector::extractDreamcastHeader(file.currentPath);
+            if (discInfo.detected && !discInfo.serial.isEmpty()) {
+                discSerial = discInfo.serial;
+                qInfo() << "  Disc serial:" << discSerial;
+            }
+        }
+
         GameMetadata metadata = orchestrator->searchWithFallback(
             selectBestHash(file), displayName, systemName,
-            file.crc32, file.md5, file.sha1);
+            file.crc32, file.md5, file.sha1, discSerial);
 
         if (!metadata.title.isEmpty()) {
             const int confidence = metadata.matchScore > 0

@@ -14,6 +14,7 @@ add_library(remus-core STATIC
     scanner.cpp
     scanner_multifile.cpp
     system_detector.cpp
+    disc_magic_detector.cpp
     patched_rom_parser.cpp
     match_utils.cpp
     hasher.cpp

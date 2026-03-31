@@ -15,6 +15,9 @@ private slots:
     void testProviderName();
     void testSystemIdByName();
     void testIsValidSystem();
+    void testSystemIdByDatName();
+    void testSystemIdByDatName_caseInsensitive();
+    void testResolveSystemName();
 };
 
 void SystemResolverTest::testDisplayName()
@@ -48,6 +51,48 @@ void SystemResolverTest::testIsValidSystem()
 {
     QVERIFY(SystemResolver::isValidSystem(Constants::Systems::ID_GENESIS));
     QVERIFY(!SystemResolver::isValidSystem(-1));
+}
+
+void SystemResolverTest::testSystemIdByDatName()
+{
+    using namespace Constants::Systems;
+
+    // No-Intro canonical DAT names
+    QCOMPARE(SystemResolver::systemIdByDatName("Sega - Mega Drive - Genesis"), ID_GENESIS);
+    QCOMPARE(SystemResolver::systemIdByDatName("Nintendo - Nintendo Entertainment System"), ID_NES);
+    QCOMPARE(SystemResolver::systemIdByDatName("Sony - PlayStation"), ID_PSX);
+    QCOMPARE(SystemResolver::systemIdByDatName("Sony - PlayStation 2"), ID_PS2);
+    QCOMPARE(SystemResolver::systemIdByDatName("Nintendo - GameCube"), ID_GAMECUBE);
+    QCOMPARE(SystemResolver::systemIdByDatName("Sega - Dreamcast"), ID_DREAMCAST);
+    QCOMPARE(SystemResolver::systemIdByDatName("Sega - Master System - Mark III"), ID_MASTER_SYSTEM);
+    QCOMPARE(SystemResolver::systemIdByDatName("NEC - PC Engine - TurboGrafx-16"), ID_TURBOGRAFX16);
+
+    // Unknown DAT name returns 0
+    QCOMPARE(SystemResolver::systemIdByDatName("Unknown System"), 0);
+    QCOMPARE(SystemResolver::systemIdByDatName(""), 0);
+}
+
+void SystemResolverTest::testSystemIdByDatName_caseInsensitive()
+{
+    using namespace Constants::Systems;
+
+    QCOMPARE(SystemResolver::systemIdByDatName("sega - mega drive - genesis"), ID_GENESIS);
+    QCOMPARE(SystemResolver::systemIdByDatName("SONY - PLAYSTATION"), ID_PSX);
+}
+
+void SystemResolverTest::testResolveSystemName()
+{
+    // Internal name passes through
+    QCOMPARE(SystemResolver::resolveSystemName("Genesis"), QStringLiteral("Genesis"));
+    QCOMPARE(SystemResolver::resolveSystemName("PlayStation"), QStringLiteral("PlayStation"));
+
+    // DAT name resolves to internal name
+    QCOMPARE(SystemResolver::resolveSystemName("Sega - Mega Drive - Genesis"), QStringLiteral("Genesis"));
+    QCOMPARE(SystemResolver::resolveSystemName("Sony - PlayStation 2"), QStringLiteral("PlayStation 2"));
+    QCOMPARE(SystemResolver::resolveSystemName("Nintendo - GameCube"), QStringLiteral("GameCube"));
+
+    // Unknown name passes through unchanged
+    QCOMPARE(SystemResolver::resolveSystemName("Unknown DAT Name"), QStringLiteral("Unknown DAT Name"));
 }
 
 QTEST_MAIN(SystemResolverTest)

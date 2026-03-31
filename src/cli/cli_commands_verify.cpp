@@ -5,6 +5,7 @@
 #include "../core/verification_engine.h"
 #include "../core/space_calculator.h"
 #include "../core/dat_parser.h"
+#include "../core/system_resolver.h"
 #include "../metadata/clrmamepro_parser.h"
 #include "cli_logging.h"
 
@@ -122,6 +123,9 @@ int handleVerifyCommand(CliContext &ctx)
 
     QString systemName = ctx.detector.detectSystem("", datFile);
     if (systemName.isEmpty()) systemName = datInfo.completeBaseName();
+
+    // Resolve DAT canonical name (e.g., "Sega - Mega Drive - Genesis") to internal name ("Genesis")
+    systemName = Remus::SystemResolver::resolveSystemName(systemName);
 
     int importCount = 0;
     if (isClrMameProFormat(datFile)) {
