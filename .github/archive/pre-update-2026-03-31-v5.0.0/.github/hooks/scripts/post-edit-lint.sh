@@ -38,7 +38,6 @@ if [[ -z "$FILES" ]]; then
   exit 0
 fi
 
-
 while IFS= read -r filepath; do
   [[ -z "$filepath" ]] && continue
   [[ ! -f "$filepath" ]] && continue

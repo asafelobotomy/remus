@@ -24,7 +24,6 @@
 #include "systems.h"
 #include "templates.h"
 #include "settings.h"
-#include "ui_theme.h"
 #include "confidence.h"
 #include "file_types.h"
 #include "files.h"

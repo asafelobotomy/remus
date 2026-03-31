@@ -1,7 +1,7 @@
 {
   "servers": {
     "filesystem": {
-      "command": "${workspaceFolder}/.github/hooks/scripts/mcp-npx.sh",
+      "command": "npx",
       "args": [
         "-y",
         "@modelcontextprotocol/server-filesystem",
@@ -9,7 +9,7 @@
       ]
     },
     "git": {
-      "command": "${workspaceFolder}/.github/hooks/scripts/mcp-uvx.sh",
+      "command": "uvx",
       "args": ["mcp-server-git"]
     }
   }

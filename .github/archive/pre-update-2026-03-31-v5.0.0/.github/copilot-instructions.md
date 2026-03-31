@@ -1,6 +1,6 @@
 # Copilot Instructions — Remus
 
-> **Template version**: 5.1.0 <!-- x-release-please-version --> | **Applied**: 2026-02-19
+> **Template version**: 5.0.0 <!-- x-release-please-version --> | **Applied**: 2026-02-19
 > Living document — self-edit rules in §8.
 >
 > **Models**: each `.github/agents/*.agent.md` pins its model. Codex models are headless-only (no interactive prompts). See [model comparison](https://docs.github.com/en/copilot/reference/ai-models/model-comparison).
@@ -221,17 +221,16 @@ Event-triggered health checks that keep the agent aligned with real project stat
 
 Hooks are deterministic shell commands that VS Code executes at specific lifecycle points during an agent session. Unlike instructions (soft guidance), hooks run your code with guaranteed outcomes — they enforce rules that the agent would otherwise follow probabilistically.
 
-Hook configuration lives in `.github/hooks/copilot-hooks.json`. VS Code supports eight lifecycle events. The template wires all eight events using deterministic scripts:
+Hook configuration lives in `.github/hooks/copilot-hooks.json`. VS Code supports eight lifecycle events. The template ships seven starter hooks:
 
-| Event | Primary script(s) | Purpose |
-|-------|-------------------|---------|
-| `SessionStart` | `session-start.sh`, `pulse.sh --trigger session_start` | Inject project context and initialize heartbeat state |
-| `UserPromptSubmit` | `pulse.sh --trigger user_prompt` | Detect explicit heartbeat and retrospective prompts |
+| Event | Script | Purpose |
+|-------|--------|----------|
+| `SessionStart` | `session-start.sh` | Inject project context (name, version, branch, runtimes, heartbeat pulse) |
 | `PreToolUse` | `guard-destructive.sh` | Block dangerous commands; flag caution patterns for user confirmation (§5 enforcement) |
 | `PostToolUse` | `post-edit-lint.sh` | Auto-format edited files using the project's formatter |
-| `Stop` | `pulse.sh --trigger stop`, `enforce-retrospective.sh` | Persist session state and verify retrospective ran |
-| `PreCompact` | `save-context.sh`, `pulse.sh --trigger pre_compact` | Preserve workspace state before context compaction |
-| `SubagentStart` | `subagent-start.sh` | Inject governance context when a subagent spawns |
+| `Stop` | `enforce-retrospective.sh` | Prevent session end if retrospective has not been run |
+| `PreCompact` | `save-context.sh` | Preserve workspace state (heartbeat, memory, heuristics) before context compaction |
+| `SubagentStart` | `subagent-start.sh` | Inject governance context (depth limit, inherited protocols) when a subagent spawns |
 | `SubagentStop` | `subagent-stop.sh` | Log subagent completion and prompt result review |
 
 ---

@@ -65,12 +65,12 @@ add_remus_test(test_multi_file_detection MultiFileDetectionTest
 )
 
 add_remus_test(test_multi_signal_matching MultiSignalMatchingTest
-    SOURCES test_multi_signal_matching.cpp
+    SOURCES test_multi_signal_matching.cpp test_local_database_provider_fixture.h
     LIBS Qt6::Core remus-metadata remus-core
 )
 
 add_remus_test(test_pipeline_integration PipelineIntegrationTest
-    SOURCES test_pipeline_integration.cpp
+    SOURCES test_pipeline_integration.cpp test_local_database_provider_fixture.h
     LIBS Qt6::Core Qt6::Sql remus-metadata remus-core
 )
 

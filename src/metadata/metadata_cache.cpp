@@ -1,4 +1,7 @@
 #include "metadata_cache.h"
+
+#include <cmath>
+
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QVariant>
@@ -54,11 +57,13 @@ GameMetadata MetadataCache::getByHash(const QString &hash, const QString &system
             metadata.releaseDate = json["releaseDate"].toString();
             metadata.description = json["description"].toString();
             metadata.players = json["players"].toInt();
-            metadata.rating = static_cast<float>(json["rating"].toDouble());
+            const double rawRating1 = json["rating"].toDouble();
+            metadata.rating = static_cast<float>(std::isfinite(rawRating1) ? rawRating1 : 0.0);
             metadata.providerId = json["providerId"].toString();
             metadata.boxArtUrl = json["boxArtUrl"].toString();
             metadata.matchMethod = json["matchMethod"].toString();
-            metadata.matchScore = static_cast<float>(json["matchScore"].toDouble());
+            const double rawScore1 = json["matchScore"].toDouble();
+            metadata.matchScore = static_cast<float>(std::isfinite(rawScore1) ? rawScore1 : 0.0);
             
             // Deserialize genres
             QJsonArray genresArray = json["genres"].toArray();
@@ -115,11 +120,13 @@ GameMetadata MetadataCache::getByProviderId(const QString &providerId, const QSt
             metadata.releaseDate = json["releaseDate"].toString();
             metadata.description = json["description"].toString();
             metadata.players = json["players"].toInt();
-            metadata.rating = static_cast<float>(json["rating"].toDouble());
+            const double rawRating2 = json["rating"].toDouble();
+            metadata.rating = static_cast<float>(std::isfinite(rawRating2) ? rawRating2 : 0.0);
             metadata.providerId = json["providerId"].toString();
             metadata.boxArtUrl = json["boxArtUrl"].toString();
             metadata.matchMethod = json["matchMethod"].toString();
-            metadata.matchScore = static_cast<float>(json["matchScore"].toDouble());
+            const double rawScore2 = json["matchScore"].toDouble();
+            metadata.matchScore = static_cast<float>(std::isfinite(rawScore2) ? rawScore2 : 0.0);
             
             // Deserialize genres
             QJsonArray genresArray = json["genres"].toArray();
@@ -208,7 +215,9 @@ bool MetadataCache::store(const GameMetadata &metadata, const QString &hash, con
         QString hashKey = QString("metadata:hash:%1:%2").arg(system, hash);
         query.addBindValue(hashKey);
         query.addBindValue(data);
-        query.exec();
+        if (!query.exec()) {
+            qCWarning(logMetadata) << "Failed to store hash-keyed cache entry:" << query.lastError().text();
+        }
     }
 
     return true;

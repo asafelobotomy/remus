@@ -14,9 +14,8 @@
 |-------|------|-----------------|------|------------|
 | **Code** | `coding.agent.md` | GPT-5.1 / Claude Sonnet 4.6 | Implement features, refactor, multi-step coding tasks | Review, Doctor, Fast, Researcher, Explore, Security |
 | **Review** | `review.agent.md` | GPT-5.4 / Claude Opus 4.6 | Deep code review and architectural analysis with Lean/Kaizen critique | Code, Fast, Researcher, Doctor, Explore, Security |
-| **Doctor** | `doctor.agent.md` | Claude Sonnet 4.6 | Read-only health check — instructions, agents, MCP config, workspace files | Code, Update, Researcher, Explore, Security, Extensions |
-| **Update** | `update.agent.md` | Claude Sonnet 4.6 | Fetch and apply upstream instruction updates, or restore from backup | Doctor, Code, Researcher, Explore |
-| **Setup** | `setup.agent.md` | Claude Sonnet 4.6 | First-time project setup and onboarding from copilot-instructions-template | Doctor, Code, Extensions, Researcher, Explore |
+| **Doctor** | `doctor.agent.md` | Claude Sonnet 4.6 | Read-only health check — instructions, agents, MCP config, workspace files | Code, Setup, Researcher, Explore, Security, Extensions |
+| **Setup** | `setup.agent.md` | Claude Sonnet 4.6 | Template lifecycle — first-time setup, upstream updates, and backup restore | Doctor, Code, Extensions, Researcher, Explore |
 | **Researcher** | `researcher.agent.md` | Claude Sonnet 4.6 | Online and offline research — fetch docs, track URLs, structured output | Code, Doctor, Explore, Security |
 | **Fast** | `fast.agent.md` | Claude Haiku 4.5 | Quick questions, syntax lookups, and lightweight single-file edits | Code, Explore |
 | **Explore** | `explore.agent.md` | Claude Haiku 4.5 | Fast read-only codebase exploration and Q&A subagent | Researcher |
@@ -27,7 +26,7 @@
 
 ## Canonical Triggers
 
-### Update agent
+### Setup agent (update mode)
 
 | Trigger phrase | Behaviour |
 |----------------|-----------|
@@ -51,7 +50,7 @@
 | `Check agent files` | D4 only — validate all `.github/agents/` frontmatter |
 | `Check MCP config` | D5 only — validate `.vscode/mcp.json` |
 
-### Setup agent
+### Setup agent (setup mode)
 
 | Trigger phrase | Behaviour |
 |----------------|-----------|
@@ -76,9 +75,9 @@ User → Code → Review → Code (iterate)
              ↘ Doctor (health check)
              ↘ Security (security check before done)
 User → Doctor → Code (apply fixes)
-              ↘ Update (version behind)
+              ↘ Setup (version behind)
               ↘ Security (security diagnostics)
-User → Update → Doctor (post-update health check)
+User → Setup → Doctor (post-update health check)
 User → Researcher → Code (implement findings)
                   ↘ Doctor (verify written files)
 User → Fast → Code (escalate large tasks)

@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
+- Copilot instructions updated from template v5.0.0 → v5.1.0.
+  §8 (Living Update Protocol): Agent Hooks table expanded to 8 lifecycle events (added `UserPromptSubmit`).
+  Update agent merged into Setup agent. Hook scripts refreshed (21 files, includes new `pulse.sh` orchestrator and `mcp-npx.sh`/`mcp-uvx.sh` launcher wrappers).
+  Companion files updated: `HEARTBEAT.md`, `doctor.agent.md`, `setup.agent.md`, `.vscode/mcp.json`, `copilot-hooks.json`.
+  Backup at: `.github/archive/pre-update-2026-03-31-v5.0.0/`
 - Copilot instructions recreated from template v4.0.0 (file was missing from disk).
   All 13 sections restored. §10 values recovered from BOOTSTRAP.md, JOURNAL.md, and workspace identity files.
   Backup at: `.github/archive/pre-update-2026-03-20-v4.0.0/`

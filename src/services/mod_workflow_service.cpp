@@ -10,6 +10,7 @@
 #include <QNetworkReply>
 #include <QNetworkRequest>
 #include <QSqlQuery>
+#include <QSqlError>
 #include <QTimer>
 #include <QUrl>
 #include <QDebug>
@@ -210,7 +211,9 @@ bool ModWorkflowService::uninstall(int modInstallationId)
         QSqlQuery delFile(m_db.database());
         delFile.prepare(QStringLiteral("DELETE FROM files WHERE id = ?"));
         delFile.addBindValue(patchedFileId);
-        delFile.exec();
+        if (!delFile.exec()) {
+            qWarning() << "Failed to delete patched file record:" << delFile.lastError().text();
+        }
     }
 
     // Remove the mod_installations record

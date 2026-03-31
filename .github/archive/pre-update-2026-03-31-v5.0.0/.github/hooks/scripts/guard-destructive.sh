@@ -73,8 +73,8 @@ except Exception:
 
 # Blocked patterns — dangerous commands that should never auto-execute
 BLOCKED_PATTERNS=(
-  'rm -rf /([^a-zA-Z0-9._-]|$)'
-  'rm -rf ~([^a-zA-Z0-9._/-]|$)'
+  'rm -rf /'
+  'rm -rf ~'
   'rm -rf \.([[:space:]]|$)'
   'DROP TABLE'
   'DROP DATABASE'
@@ -82,10 +82,10 @@ BLOCKED_PATTERNS=(
   'DELETE FROM .* WHERE 1'
   'mkfs\.'
   'dd if=.* of=/dev/'
-  ':\(\)\{:[|]:&\};:'
-  'chmod -R 777 /([^a-zA-Z0-9._-]|$)'
-  'curl .*[|].*sh'
-  'wget .*[|].*sh'
+  ':(){:|:&};:'
+  'chmod -R 777 /'
+  'curl .* \| (sh|bash|zsh)([[:space:]]|$)'
+  'wget .* \| (sh|bash|zsh)([[:space:]]|$)'
 )
 
 for pattern in "${BLOCKED_PATTERNS[@]}"; do
@@ -108,7 +108,6 @@ done
 CAUTION_PATTERNS=(
   'rm -rf'
   'rm -r '
-  'chmod -R 777'
   'DROP '
   'DELETE FROM'
   'git push.*--force'

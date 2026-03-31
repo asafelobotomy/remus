@@ -9,14 +9,14 @@ model:
 tools: [codebase, runCommands, fetch, githubRepo]
 user-invocable: true
 disable-model-invocation: false
-agents: ['Code', 'Setup', 'Researcher', 'Explore', 'Security', 'Extensions']
+agents: ['Code', 'Update', 'Researcher', 'Explore', 'Security', 'Extensions']
 handoffs:
   - label: Apply fixes
     agent: Code
     prompt: The Doctor has identified issues with the Copilot instruction files. Apply the fixes listed in the health report. Start with CRITICAL items, then HIGH.
     send: false
   - label: Update instructions
-    agent: Setup
+    agent: Update
     prompt: The Doctor identified that the installed instructions are behind the template. Run the instruction update protocol now.
     send: true
   - label: Security audit

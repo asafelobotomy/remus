@@ -23,7 +23,10 @@ int VerificationEngine::importDat(const DatParseResult &parseResult, const QStri
     QSqlQuery query(m_database->database());
     query.prepare("DELETE FROM verification_dats WHERE system_name = ?");
     query.addBindValue(systemName);
-    query.exec();
+    if (!query.exec()) {
+        emit error(QString("Failed to clear existing DAT entries: %1").arg(query.lastError().text()));
+        return -1;
+    }
 
     const QString source = DatParser::detectSource(parseResult.header);
     query.prepare(R"(
@@ -94,7 +97,10 @@ int VerificationEngine::importPatchDat(const QString &datFilePath, const QString
     QSqlQuery query(m_database->database());
     query.prepare("DELETE FROM patch_verification_dats WHERE system_name = ?");
     query.addBindValue(systemName);
-    query.exec();
+    if (!query.exec()) {
+        emit error(QString("Failed to clear existing patch DAT entries: %1").arg(query.lastError().text()));
+        return -1;
+    }
 
     const QString source = DatParser::detectSource(parseResult.header);
     query.prepare(R"(

@@ -38,8 +38,9 @@ bool Database::initialize(const QString &dbPath, const QString &connectionName)
 
     // Check if schema exists
     QSqlQuery query(m_db);
-    if (!query.exec(QString("SELECT name FROM sqlite_master WHERE type='table' AND name='%1'")
-                        .arg(Constants::DatabaseSchema::Tables::SYSTEMS))) {
+    query.prepare(QStringLiteral("SELECT name FROM sqlite_master WHERE type='table' AND name=?"));
+    query.addBindValue(QString::fromLatin1(Constants::DatabaseSchema::Tables::SYSTEMS));
+    if (!query.exec()) {
         logError(QString("Failed to query database schema: %1").arg(query.lastError().text()));
         return false;
     }

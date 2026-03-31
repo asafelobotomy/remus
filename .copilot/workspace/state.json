@@ -1,0 +1,10 @@
+{
+  "last_compaction_epoch": 0,
+  "last_explicit_epoch": 0,
+  "last_soft_trigger_epoch": 0,
+  "last_trigger": "stop",
+  "last_write_epoch": 1774942544,
+  "schema_version": 1,
+  "session_id": "unknown",
+  "session_state": "complete"
+}
