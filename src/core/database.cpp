@@ -34,6 +34,13 @@ bool Database::initialize(const QString &dbPath, const QString &connectionName)
         return false;
     }
 
+    QSqlQuery pragmaQuery(m_db);
+    if (!pragmaQuery.exec(Constants::DatabaseSchema::PRAGMA_FOREIGN_KEYS)) {
+        logError("Failed to enable SQLite foreign keys: " + pragmaQuery.lastError().text());
+        close();
+        return false;
+    }
+
     qInfo() << "Database opened:" << dbPath;
 
     // Check if schema exists

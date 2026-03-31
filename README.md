@@ -10,53 +10,37 @@ The project is CLI-first. GUI and TUI code remain in the repository as archived 
 
 ## Features
 
-### ✅ Implemented (M0-M10.1)
-- 🎮 Support for 23+ retro gaming systems (NES, SNES, PlayStation, Genesis, etc.)
-- 🔍 Intelligent file scanning with hash-based game identification (CRC32/MD5/SHA1)
-- 🌐 Multiple metadata providers:
-  - **Hasheous** ⭐ - FREE hash matching (no auth required!)
-  - **ScreenScraper** - Hash + name matching
-  - **TheGamesDB** - Name matching
-  - **IGDB** - Rich metadata with Twitch OAuth
-- 🎯 Provider orchestration with intelligent fallback
-- 📊 Confidence scoring (hash 100%, exact name 90%, fuzzy 50-80%)
-- 💾 Local metadata caching (30-day SQLite cache)
-- 🚀 Rate limiting per provider
-- 📁 Template-based file organization (No-Intro/Redump naming conventions)
-- 🎨 Customizable naming templates with 13 variables
-- 🔒 Dry-run preview mode before applying changes
-- ⚙️ Smart collision handling (Skip/Overwrite/Rename/Ask)
-- 💿 M3U playlist auto-generation for multi-disc games
-- 💾 CHD compression (30-60% space savings)
-- 📦 Archive extraction (ZIP, 7z, RAR)
-- ⚡ Centralized constants library (type-safe, 150+ constants)
-- 🎨 Artwork management with local caching
-- ✏️ Metadata editing and user override
-- 📤 Export to RetroArch, EmulationStation, CSV, JSON
-- ✅ ROM verification against No-Intro/Redump DAT files
-- 🔧 ROM patching support (IPS, BPS, UPS, XDelta3 formats)
-- 🎯 Header detection (NES, SNES, Lynx, etc.)
+### Implemented in the active CLI build
+- Support for 23+ retro gaming systems across cartridge, optical-disc, and archive workflows.
+- Hash-first scanning and matching with CRC32, MD5, and SHA1.
+- Provider orchestration with offline and online fallback:
+  - Local DAT databases
+  - Hasheous
+  - ScreenScraper
+  - GameTDB
+  - TheGamesDB
+  - IGDB
+  - RetroAchievements
+  - Wikidata
+- Template-driven organization with dry-run support and collision handling.
+- Archive extraction for ZIP, 7z, and RAR inputs.
+- CHD conversion, M3U generation, verification, and patching workflows.
+- Artwork download and local bundle generation.
+- SQLite-backed metadata and cache storage.
 
 ## Project Status
 
-**Current Version:** 0.10.1  
-**Milestone:** M10.1 - Offline + Optional Online Metadata ✅ **COMPLETE**
+Current version: 0.10.1
 
-| Milestone | Description | Status |
-|-----------|-------------|--------|
-| M0 | Product Definition | ✅ |
-| M1 | Core Scanning Engine | ✅ |
-| M2 | Metadata Layer | ✅ |
-| M3 | Matching & Confidence | ✅ |
-| M4 | Organize & Rename | ✅ |
-| M4.5 | File Conversion | ✅ |
-| M5 | UI MVP | ✅ |
-| M6 | Constants Library | ✅ |
-| M7 | Packaging & CI/CD | ✅ |
-| M8 | Polish | ✅ |
-| M9 | Verification & Patching | ✅ |
-| M10 | Offline + Optional Online Metadata | ✅ |
-| M10.1 | First-run setup + permanent cache | ✅ |
+Remus ships as a CLI-first application. The Qt GUI and TUI code are preserved under `archive/gui-tui/`, but they are not part of the default build, CI, or release artifacts. See [docs/archive/FRONTEND-STATUS.md](docs/archive/FRONTEND-STATUS.md).
+
+Current delivery focus:
+- CLI workflow coverage
+- metadata and organization reliability
+- verification, patching, and mod support
+- documentation and build hygiene
+
+Historical milestone reports remain in [docs/milestones/](docs/milestones/).
 
 ## Documentation
 

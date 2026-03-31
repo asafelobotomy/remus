@@ -17,6 +17,8 @@ class ArtworkDownloader : public QObject {
 public:
     explicit ArtworkDownloader(QObject *parent = nullptr);
 
+    static bool isSupportedUrl(const QUrl &url);
+
     /**
      * @brief Download artwork to file
      * @param url Source URL

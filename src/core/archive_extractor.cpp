@@ -72,6 +72,86 @@ ArchiveFormat ArchiveExtractor::detectFormat(const QString &path)
     return ArchiveFormat::Unknown;
 }
 
+QString ArchiveExtractor::normalizeArchiveMemberPath(const QString &path)
+{
+    QString normalized = path;
+    normalized.replace(QLatin1Char('\\'), QLatin1Char('/'));
+    normalized = QDir::fromNativeSeparators(normalized).trimmed();
+    if (normalized.isEmpty()) {
+        return {};
+    }
+
+    while (normalized.startsWith(QStringLiteral("./"))) {
+        normalized.remove(0, 2);
+    }
+
+    if (normalized.isEmpty() || normalized == QStringLiteral(".") || normalized == QStringLiteral("..")) {
+        return {};
+    }
+
+    if (normalized.startsWith(QLatin1Char('/')) || normalized.startsWith(QLatin1Char('~'))) {
+        return {};
+    }
+
+    const QFileInfo info(normalized);
+    if (info.isAbsolute()) {
+        return {};
+    }
+
+    const QStringList segments = normalized.split(QLatin1Char('/'), Qt::SkipEmptyParts);
+    if (segments.isEmpty()) {
+        return {};
+    }
+
+    for (const QString &segment : segments) {
+        if (segment == QStringLiteral(".") || segment == QStringLiteral("..")) {
+            return {};
+        }
+    }
+
+    return segments.join(QLatin1Char('/'));
+}
+
+bool ArchiveExtractor::isPathWithinDirectory(const QString &rootPath, const QString &candidatePath)
+{
+    const QFileInfo rootInfo(rootPath);
+    const QFileInfo candidateInfo(candidatePath);
+    const QString canonicalRoot = rootInfo.canonicalFilePath().isEmpty()
+        ? QDir(rootPath).absolutePath()
+        : rootInfo.canonicalFilePath();
+    const QString canonicalCandidate = candidateInfo.canonicalFilePath().isEmpty()
+        ? QDir(candidatePath).absolutePath()
+        : candidateInfo.canonicalFilePath();
+
+    if (canonicalRoot.isEmpty() || canonicalCandidate.isEmpty()) {
+        return false;
+    }
+
+    return canonicalCandidate == canonicalRoot ||
+        canonicalCandidate.startsWith(canonicalRoot + QDir::separator());
+}
+
+QString ArchiveExtractor::validateArchiveEntries(const ArchiveInfo &info)
+{
+    if (!info.unsafeEntries.isEmpty()) {
+        return QStringLiteral("Archive contains unsafe path entries: %1")
+            .arg(info.unsafeEntries.first());
+    }
+
+    return {};
+}
+
+QString ArchiveExtractor::validateExtractedFiles(const QString &outputDir, const QStringList &files)
+{
+    for (const QString &file : files) {
+        if (!isPathWithinDirectory(outputDir, file)) {
+            return QStringLiteral("Extraction escaped output directory: %1").arg(file);
+        }
+    }
+
+    return {};
+}
+
 ExtractionResult ArchiveExtractor::extract(const QString &archivePath,
                                             const QString &outputDir,
                                             bool createSubfolder)
@@ -96,6 +176,13 @@ ExtractionResult ArchiveExtractor::extract(const QString &archivePath,
     }
     
     result.outputDir = targetDir;
+
+    const ArchiveInfo preflightInfo = getArchiveInfo(archivePath);
+    if (const QString validationError = validateArchiveEntries(preflightInfo); !validationError.isEmpty()) {
+        result.success = false;
+        result.error = validationError;
+        return result;
+    }
     
     // Create output directory if needed
     QDir().mkpath(targetDir);
@@ -121,6 +208,14 @@ ExtractionResult ArchiveExtractor::extract(const QString &archivePath,
             result.success = false;
             result.error = "Unsupported archive format";
     }
+
+    if (result.success) {
+        if (const QString validationError = validateExtractedFiles(result.outputDir, result.extractedFiles);
+            !validationError.isEmpty()) {
+            result.success = false;
+            result.error = validationError;
+        }
+    }
     
     emit extractionCompleted(result);
     return result;
@@ -133,6 +228,12 @@ ExtractionResult ArchiveExtractor::extractFile(const QString &archivePath,
     ExtractionResult result;
     result.archivePath = archivePath;
     result.outputDir = outputDir;
+
+    const QString normalizedFileName = normalizeArchiveMemberPath(fileName);
+    if (normalizedFileName.isEmpty()) {
+        result.error = "Unsafe archive member path";
+        return result;
+    }
     
     ArchiveFormat format = detectFormat(archivePath);
     
@@ -142,21 +243,21 @@ ExtractionResult ArchiveExtractor::extractFile(const QString &archivePath,
     switch (format) {
         case ArchiveFormat::ZIP:
             if (isToolAvailable(m_unzipPath)) {
-                args << archivePath << fileName << "-d" << outputDir;
+                args << archivePath << normalizedFileName << "-d" << outputDir;
                 processResult = runProcess(m_unzipPath, args, 120000);
             }
             break;
             
         case ArchiveFormat::SevenZip:
             if (isToolAvailable(m_sevenZipPath)) {
-                args << "e" << archivePath << "-o" + outputDir << fileName << "-y";
+                args << "e" << archivePath << "-o" + outputDir << normalizedFileName << "-y";
                 processResult = runProcess(m_sevenZipPath, args, 120000);
             }
             break;
             
         case ArchiveFormat::RAR:
             if (isToolAvailable(m_unrarPath)) {
-                args << "e" << archivePath << fileName << outputDir;
+                args << "e" << archivePath << normalizedFileName << outputDir;
                 processResult = runProcess(m_unrarPath, args, 120000);
             }
             break;
@@ -169,10 +270,14 @@ ExtractionResult ArchiveExtractor::extractFile(const QString &archivePath,
     result.success = (processResult.exitCode == 0 && processResult.started);
     
     if (result.success) {
-        const QString expectedPath = QDir(outputDir).filePath(QFileInfo(fileName).fileName());
+        const QString expectedPath = QDir(outputDir).filePath(QFileInfo(normalizedFileName).fileName());
         if (QFileInfo::exists(expectedPath)) {
             result.filesExtracted = 1;
             result.extractedFiles.append(expectedPath);
+            if (!isPathWithinDirectory(outputDir, expectedPath)) {
+                result.success = false;
+                result.error = QStringLiteral("Extraction escaped output directory: ") + expectedPath;
+            }
         } else {
             // 7z may exit 0 but extract nothing when the filename doesn't match;
             // mark as failed so the caller can fall back to full extraction.
@@ -239,6 +344,11 @@ ExtractionResult ArchiveExtractor::extractZip(const QString &archivePath, const 
     if (result.success) {
         result.extractedFiles = listFiles(outputDir);
         result.filesExtracted = result.extractedFiles.count();
+        if (const QString validationError = validateExtractedFiles(outputDir, result.extractedFiles);
+            !validationError.isEmpty()) {
+            result.success = false;
+            result.error = validationError;
+        }
         qInfo() << "Extraction successful:" << result.filesExtracted << "items";
     } else {
         result.error = processResult.stdError;
@@ -268,6 +378,11 @@ ExtractionResult ArchiveExtractor::extract7z(const QString &archivePath, const Q
     if (result.success) {
         result.extractedFiles = listFiles(outputDir);
         result.filesExtracted = result.extractedFiles.count();
+        if (const QString validationError = validateExtractedFiles(outputDir, result.extractedFiles);
+            !validationError.isEmpty()) {
+            result.success = false;
+            result.error = validationError;
+        }
     } else {
         result.error = processResult.stdError;
     }
@@ -301,6 +416,11 @@ ExtractionResult ArchiveExtractor::extractRar(const QString &archivePath, const 
     if (result.success) {
         result.extractedFiles = listFiles(outputDir);
         result.filesExtracted = result.extractedFiles.count();
+        if (const QString validationError = validateExtractedFiles(outputDir, result.extractedFiles);
+            !validationError.isEmpty()) {
+            result.success = false;
+            result.error = validationError;
+        }
     } else {
         result.error = processResult.stdError;
     }

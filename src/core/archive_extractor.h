@@ -31,6 +31,7 @@ struct ArchiveInfo {
     int fileCount = 0;             // Number of files in archive
     QStringList contents;          // List of contained files
     QMap<QString, qint64> entrySizes; // Uncompressed size per archive entry
+    QStringList unsafeEntries;     // Entries rejected as unsafe paths
 };
 
 /**
@@ -93,6 +94,12 @@ public:
     static ArchiveFormat detectFormat(const QString &path);
 
     /**
+     * @brief Normalize an archive member path for safe reuse.
+     * @return Clean relative path, or empty when the input is unsafe.
+     */
+    static QString normalizeArchiveMemberPath(const QString &path);
+
+    /**
      * @brief Extract archive to directory
      * @param archivePath Path to archive file
      * @param outputDir Output directory (optional, uses archive directory)
@@ -138,6 +145,9 @@ protected:
     virtual QStringList listFiles(const QString &dirPath) const;
 
 private:
+    static bool isPathWithinDirectory(const QString &rootPath, const QString &candidatePath);
+    static QString validateArchiveEntries(const ArchiveInfo &info);
+    static QString validateExtractedFiles(const QString &outputDir, const QStringList &files);
 
     ExtractionResult extractZip(const QString &archivePath, const QString &outputDir);
     ExtractionResult extract7z(const QString &archivePath, const QString &outputDir);

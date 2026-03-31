@@ -215,6 +215,7 @@ void ModWorkflowTest::install_patchVerificationFails()
     ModEntry mod;
     mod.id        = "test-sha1-fail";
     mod.title     = "SHA1 Fail Mod";
+    mod.type      = "hack";
     mod.patchUrl  = patchPath;
     mod.patchSha1 = "0000000000000000000000000000000000000000";
     mod.format    = "ips";
@@ -256,6 +257,7 @@ void ModWorkflowTest::install_missingPatchFile()
     ModEntry mod;
     mod.id       = "missing";
     mod.title    = "Missing Patch";
+    mod.type     = "hack";
     mod.patchUrl = "/nonexistent/patch.ips";
     mod.format   = "ips";
 
@@ -265,6 +267,73 @@ void ModWorkflowTest::install_missingPatchFile()
 
     QVERIFY(!result.success);
     QVERIFY(result.error.contains("not found"));
+
+    db.close();
+}
+
+void ModWorkflowTest::install_rollsBackWhenRecordingFails()
+{
+    QTemporaryDir dir;
+    QVERIFY(dir.isValid());
+
+    const QString basePath = dir.path() + "/rom.sfc";
+    QFile baseDiskFile(basePath);
+    QVERIFY(baseDiskFile.open(QIODevice::WriteOnly));
+    QVERIFY(writeAll(baseDiskFile, QByteArrayLiteral("base rom data")));
+    baseDiskFile.close();
+
+    const QString patchPath = dir.path() + "/patch.ips";
+    QFile patchFile(patchPath);
+    QVERIFY(patchFile.open(QIODevice::WriteOnly));
+    QVERIFY(writeAll(patchFile, QByteArrayLiteral("PATCHEOF")));
+    patchFile.close();
+
+    Database db;
+    QVERIFY(db.initialize(dir.path() + "/test.db", "install_rollback_test"));
+
+    const int libId = db.insertLibrary(dir.path(), "TestLib");
+    QVERIFY(libId > 0);
+    const int sysId = db.getSystemId("SNES");
+    QVERIFY(sysId > 0);
+
+    FileRecord baseFile;
+    baseFile.libraryId = libId;
+    baseFile.systemId = sysId;
+    baseFile.filename = QStringLiteral("rom.sfc");
+    baseFile.originalPath = basePath;
+    baseFile.currentPath = basePath;
+    baseFile.extension = QStringLiteral("sfc");
+    baseFile.fileSize = QFileInfo(basePath).size();
+    baseFile.id = db.insertFile(baseFile);
+    QVERIFY(baseFile.id > 0);
+
+    QSqlQuery trigger(db.database());
+    QVERIFY(trigger.exec(QStringLiteral(R"(
+        CREATE TRIGGER fail_mod_installation
+        BEFORE INSERT ON mod_installations
+        BEGIN
+            SELECT RAISE(ABORT, 'forced mod installation failure');
+        END
+    )")));
+
+    ModEntry mod;
+    mod.id = QStringLiteral("rollback-mod");
+    mod.title = QStringLiteral("Rollback Mod");
+    mod.type = QStringLiteral("hack");
+    mod.patchUrl = patchPath;
+    mod.format = QStringLiteral("ips");
+
+    PatchService patchSvc;
+    ModWorkflowService workflow(db, patchSvc);
+
+    const QString outDir = dir.path() + "/out";
+    const ModInstallResult result = workflow.install(baseFile, mod, outDir);
+    QVERIFY(!result.success);
+    QVERIFY(result.error.contains(QStringLiteral("failed to record mod installation"), Qt::CaseInsensitive));
+    QCOMPARE(result.patchedFileId, 0);
+    QVERIFY(!QFile::exists(outDir + "/rom [Rollback Mod].sfc"));
+    QCOMPARE(db.getAllFiles().size(), 1);
+    QVERIFY(db.getModInstallations(baseFile.id).isEmpty());
 
     db.close();
 }

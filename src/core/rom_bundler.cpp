@@ -235,7 +235,15 @@ RomBundler::BundleResult RomBundler::bundle(const FileRecord            &file,
         }
         // Prefer the specific internal path if recorded
         if (!file.archiveInternalPath.isEmpty()) {
-            romInTemp = tempBase + "/" + file.archiveInternalPath;
+            const QString normalizedInternalPath =
+                ArchiveExtractor::normalizeArchiveMemberPath(file.archiveInternalPath);
+            if (normalizedInternalPath.isEmpty()) {
+                result.error = "Archive member path is unsafe";
+                cleanup();
+                return result;
+            }
+
+            romInTemp = QDir(tempBase).filePath(normalizedInternalPath);
         } else if (!ex.extractedFiles.isEmpty()) {
             romInTemp = ex.extractedFiles.first();
         }

@@ -11,6 +11,7 @@
 #include <QNetworkRequest>
 #include <QSqlQuery>
 #include <QSqlError>
+#include <QSqlDriver>
 #include <QTimer>
 #include <QUrl>
 #include <QDebug>
@@ -35,6 +36,23 @@ ModInstallResult ModWorkflowService::install(const FileRecord  &baseFile,
                                              ProgressCallback    cb)
 {
     ModInstallResult result;
+    const QString modType = mod.type.trimmed().toLower();
+
+    if (modType.isEmpty()) {
+        result.error = "Catalog mod type is required";
+        return result;
+    }
+
+    const bool validModType = modType == Constants::FileTypes::HACK ||
+        modType == Constants::FileTypes::TRANSLATION ||
+        modType == Constants::FileTypes::IMPROVEMENT ||
+        modType == Constants::FileTypes::HOMEBREW ||
+        modType == Constants::FileTypes::PROTOTYPE ||
+        modType == Constants::FileTypes::OFFICIAL;
+    if (!validModType) {
+        result.error = "Catalog mod type is invalid: " + mod.type;
+        return result;
+    }
 
     if (cb) cb("resolving", 0);
 
@@ -75,7 +93,15 @@ ModInstallResult ModWorkflowService::install(const FileRecord  &baseFile,
         }
 
         if (!baseFile.archiveInternalPath.isEmpty()) {
-            baseRomPath = tempExtractDir + "/" + baseFile.archiveInternalPath;
+            const QString normalizedInternalPath =
+                ArchiveExtractor::normalizeArchiveMemberPath(baseFile.archiveInternalPath);
+            if (normalizedInternalPath.isEmpty()) {
+                result.error = "Base ROM archive path is unsafe";
+                QDir(tempExtractDir).removeRecursively();
+                return result;
+            }
+
+            baseRomPath = QDir(tempExtractDir).filePath(normalizedInternalPath);
         } else if (!ex.extractedFiles.isEmpty()) {
             baseRomPath = ex.extractedFiles.first();
         }
@@ -139,36 +165,56 @@ ModInstallResult ModWorkflowService::install(const FileRecord  &baseFile,
     patchedRecord.isPrimary      = false;
     patchedRecord.parentFileId   = baseFile.id;
     patchedRecord.baseTitle      = baseName;
-    patchedRecord.fileType       = mod.type.isEmpty() ? Constants::FileTypes::HACK : mod.type;
+    patchedRecord.fileType       = modType;
     patchedRecord.isPatched      = true;
     patchedRecord.patchName      = mod.title;
-
-    int patchedFileId = m_db.insertFile(patchedRecord);
-    if (patchedFileId <= 0) {
-        result.error = "Failed to register patched file in database";
-        return result;
-    }
-    result.patchedFileId = patchedFileId;
 
     // ── 8. Record in mod_installations ───────────────────────────────────────
     if (cb) cb("recording", 90);
     Database::ModInstallationRecord modRec;
     modRec.baseFileId    = baseFile.id;
-    modRec.patchedFileId = patchedFileId;
     modRec.catalogModId  = mod.id;
     modRec.modTitle      = mod.title;
     modRec.modAuthor     = mod.author;
     modRec.modVersion    = mod.version;
-    modRec.modType       = mod.type.isEmpty() ? Constants::FileTypes::HACK : mod.type;
+    modRec.modType       = modType;
     modRec.patchFormat   = mod.format;
     modRec.patchUrl      = mod.patchUrl;
     modRec.patchSha1     = mod.patchSha1;
     modRec.sourceUrl     = mod.sourceUrl;
 
-    if (m_db.insertModInstallation(modRec) < 0) {
-        result.error = "Patched file created but failed to record mod installation";
-        // Partial success — patched file exists but installation not tracked
+    QSqlDatabase &db = m_db.database();
+    const bool useTransaction = db.driver() && db.driver()->hasFeature(QSqlDriver::Transactions);
+    if (useTransaction && !db.transaction()) {
+        QFile::remove(patchedPath);
+        result.error = "Failed to start install transaction: " + db.lastError().text();
         return result;
+    }
+
+    const auto rollbackInstall = [&](const QString &errorMessage) {
+        if (useTransaction && !db.rollback()) {
+            qWarning() << "Failed to roll back mod install transaction:" << db.lastError().text();
+        }
+        m_db.removeFile(result.patchedFileId);
+        QFile::remove(patchedPath);
+        result.patchedFileId = 0;
+        result.error = errorMessage;
+        return result;
+    };
+
+    int patchedFileId = m_db.insertFile(patchedRecord);
+    if (patchedFileId <= 0) {
+        return rollbackInstall("Failed to register patched file in database");
+    }
+    result.patchedFileId = patchedFileId;
+    modRec.patchedFileId = patchedFileId;
+
+    if (m_db.insertModInstallation(modRec) < 0) {
+        return rollbackInstall("Patched file created but failed to record mod installation");
+    }
+
+    if (useTransaction && !db.commit()) {
+        return rollbackInstall("Failed to commit mod installation: " + db.lastError().text());
     }
 
     if (cb) cb("done", 100);

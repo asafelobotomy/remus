@@ -12,6 +12,7 @@ class ArtworkDownloaderTest : public QObject {
 private slots:
     void downloadsLocalFile();
     void invalidUrlFails();
+    void httpUrlFails();
 };
 
 void ArtworkDownloaderTest::downloadsLocalFile()
@@ -45,6 +46,17 @@ void ArtworkDownloaderTest::invalidUrlFails()
     const bool ok = downloader.download(QUrl("http://"), "/tmp/nowhere.bin");
     QVERIFY(!ok);
     QVERIFY(!failSpy.isEmpty());
+}
+
+void ArtworkDownloaderTest::httpUrlFails()
+{
+    ArtworkDownloader downloader;
+    QSignalSpy failSpy(&downloader, &ArtworkDownloader::downloadFailed);
+
+    const bool ok = downloader.download(QUrl(QStringLiteral("http://example.com/cover.jpg")),
+                                        QStringLiteral("/tmp/nowhere.bin"));
+    QVERIFY(!ok);
+    QCOMPARE(failSpy.count(), 1);
 }
 
 QTEST_MAIN(ArtworkDownloaderTest)

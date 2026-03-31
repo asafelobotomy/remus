@@ -111,6 +111,7 @@ void ModWorkflowTest::resolvePatchPath_fileUrl_resolves()
     ModEntry mod;
     mod.id       = "file-url-test";
     mod.title    = "File URL Test";
+    mod.type     = "hack";
     mod.patchUrl = fileUrl.toString();
     mod.format   = "ips";
 
@@ -136,6 +137,7 @@ void ModWorkflowTest::resolvePatchPath_emptyUrl_fails()
     ModWorkflowService workflow(db, patchSvc);
 
     ModEntry mod;
+    mod.type = "hack";
     mod.patchUrl = "";
 
     ModInstallResult result = workflow.install(FileRecord{}, mod, dir.path() + "/out");
@@ -157,6 +159,7 @@ void ModWorkflowTest::resolvePatchPath_unsupportedScheme_fails()
     ModWorkflowService workflow(db, patchSvc);
 
     ModEntry mod;
+    mod.type = "hack";
     mod.patchUrl = "ftp://example.com/patch.ips";
 
     ModInstallResult result = workflow.install(FileRecord{}, mod, dir.path() + "/out");
@@ -206,6 +209,7 @@ void ModWorkflowTest::verifySha1_correctHash()
     ModEntry mod;
     mod.id        = "sha1-correct";
     mod.title     = "SHA1 Correct";
+    mod.type      = "hack";
     mod.patchUrl  = filePath;
     mod.patchSha1 = expectedSha1;
     mod.format    = "ips";
@@ -245,6 +249,7 @@ void ModWorkflowTest::downloadPatch_unreachableUrl_fails()
     ModEntry mod;
     mod.id       = "dl-fail";
     mod.title    = "Download Fail";
+    mod.type     = "hack";
     mod.patchUrl = "https://unreachable.invalid/patch.ips";
     mod.format   = "ips";
 
@@ -294,6 +299,7 @@ void ModWorkflowTest::install_progressCallbackFires()
     ModEntry mod;
     mod.id       = "progress-test";
     mod.title    = "Progress Test";
+    mod.type     = "hack";
     mod.patchUrl = patchPath;
     mod.format   = "ips";
 
@@ -330,6 +336,7 @@ void ModWorkflowTest::downloadDir_cleanedOnDestruction()
             ModWorkflowService workflow(db, patchSvc);
             // Trigger download to create the temp dir (will fail — unreachable URL)
             ModEntry mod;
+            mod.type = "hack";
             mod.patchUrl = "https://unreachable.invalid/cleanup.ips";
             workflow.install(FileRecord{}, mod, dir.path() + "/out");
             // Can't easily capture m_downloadDir path from outside,

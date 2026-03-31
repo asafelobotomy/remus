@@ -266,25 +266,31 @@ void Scanner::processArchive(const QString &archivePath, QList<ScanResult> &resu
 
     // Process each file in the archive
     for (const QString &internalPath : archiveInfo.contents) {
-        const QString extension = "." + QFileInfo(internalPath).suffix().toLower();
+        const QString normalizedInternalPath = ArchiveExtractor::normalizeArchiveMemberPath(internalPath);
+        if (normalizedInternalPath.isEmpty()) {
+            qWarning() << "Skipping unsafe archive entry:" << internalPath;
+            continue;
+        }
+
+        const QString extension = "." + QFileInfo(normalizedInternalPath).suffix().toLower();
 
         // Skip if it's not a ROM file we care about.
-        if (!shouldScanArchiveEntry(internalPath)) {
+        if (!shouldScanArchiveEntry(normalizedInternalPath)) {
             continue;
         }
 
         ScanResult result;
         result.path = archivePath;  // Archive path is the main file
-        result.filename = QFileInfo(internalPath).fileName();
+        result.filename = QFileInfo(normalizedInternalPath).fileName();
         result.extension = extension;
-        result.fileSize = archiveInfo.entrySizes.value(internalPath, 0);
+        result.fileSize = archiveInfo.entrySizes.value(normalizedInternalPath, 0);
         result.lastModified = QFileInfo(archivePath).lastModified();
         result.isCompressed = true;
         result.archivePath = archivePath;
-        result.archiveInternalPath = internalPath;
+        result.archiveInternalPath = normalizedInternalPath;
         
         results.append(result);
-        emit fileFound(archivePath + "::" + internalPath);
+        emit fileFound(archivePath + "::" + normalizedInternalPath);
         
         if (m_filesProcessed % 100 == 0) {
             emit scanProgress(m_filesProcessed, -1);

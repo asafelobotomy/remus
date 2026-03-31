@@ -5,9 +5,11 @@
 #include <QTemporaryDir>
 #include <QDir>
 #include <QFile>
+#include <QFileInfo>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
+#include <QSqlQuery>
 #include <QUrl>
 
 #include "../src/services/mod_catalog_provider.h"
@@ -64,6 +66,7 @@ private slots:
     // ── ModWorkflowService install tests ──
     void install_patchVerificationFails();
     void install_missingPatchFile();
+    void install_rollsBackWhenRecordingFails();
     // ── Phase 2: URL loading + cache tests ──
     void loadFromUrl_fetchesAndCaches();
     void loadFromUrl_usesCacheWhenFresh();

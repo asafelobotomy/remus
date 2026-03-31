@@ -132,6 +132,27 @@ void DatabaseTest::testInitializeInMemory()
     QVERIFY(db.initialize(":memory:"));
 }
 
+void DatabaseTest::testInitializeEnablesForeignKeysOnExistingDatabase()
+{
+    QTemporaryDir dir;
+    QVERIFY(dir.isValid());
+
+    const QString dbPath = dir.filePath("foreign_keys.db");
+
+    {
+        Database db;
+        QVERIFY(db.initialize(dbPath));
+    }
+
+    Database reopened;
+    QVERIFY(reopened.initialize(dbPath));
+
+    QSqlQuery pragma(reopened.database());
+    QVERIFY(pragma.exec(QStringLiteral("PRAGMA foreign_keys")));
+    QVERIFY(pragma.next());
+    QCOMPARE(pragma.value(0).toInt(), 1);
+}
+
 void DatabaseTest::testInsertAndGetFile()
 {
     Database db;

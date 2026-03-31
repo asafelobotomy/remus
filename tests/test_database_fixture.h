@@ -14,6 +14,7 @@ class DatabaseTest : public QObject
 
 private slots:
     void testInitializeInMemory();
+    void testInitializeEnablesForeignKeysOnExistingDatabase();
     void testInsertAndGetFile();
     void testSystemIdsRemainStableAcrossReopen();
     void testInitializeRepairsDanglingSystemIds();

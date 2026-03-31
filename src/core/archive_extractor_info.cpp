@@ -58,8 +58,13 @@ ArchiveInfo ArchiveExtractor::getArchiveInfo(const QString &path)
                     const qint64 size = match.captured(1).toLongLong();
                     const QString filename = match.captured(3).trimmed();
                     if (!filename.isEmpty() && filename != "1 file") {
-                        info.contents.append(filename);
-                        info.entrySizes.insert(filename, size);
+                        const QString normalized = normalizeArchiveMemberPath(filename);
+                        if (normalized.isEmpty()) {
+                            info.unsafeEntries.append(filename);
+                            continue;
+                        }
+                        info.contents.append(normalized);
+                        info.entrySizes.insert(normalized, size);
                         info.uncompressedSize += size;
                         info.fileCount++;
                     }
@@ -86,11 +91,14 @@ ArchiveInfo ArchiveExtractor::getArchiveInfo(const QString &path)
             if (match.hasMatch()) {
                 const qint64 size = match.captured(2).toLongLong();
                 const QString filename = match.captured(3).trimmed();
-                if (!filename.isEmpty()) {
-                    info.contents.append(filename);
-                    info.entrySizes.insert(filename, size);
+                const QString normalized = normalizeArchiveMemberPath(filename);
+                if (!filename.isEmpty() && !normalized.isEmpty()) {
+                    info.contents.append(normalized);
+                    info.entrySizes.insert(normalized, size);
                     info.uncompressedSize += size;
                     info.fileCount++;
+                } else if (!filename.isEmpty()) {
+                    info.unsafeEntries.append(filename);
                 }
                 continue;
             }
@@ -110,9 +118,13 @@ ArchiveInfo ArchiveExtractor::getArchiveInfo(const QString &path)
                 }
                 if (nameStartIdx > 0 && nameStartIdx < parts.size()) {
                     const QString filename = QStringList(parts.mid(nameStartIdx)).join(' ');
-                    if (!filename.isEmpty() && !QRegularExpression(R"(^\d+$)").match(filename).hasMatch()) {
-                        info.contents.append(filename);
+                    const QString normalized = normalizeArchiveMemberPath(filename);
+                    if (!filename.isEmpty() && !QRegularExpression(R"(^\d+$)").match(filename).hasMatch() &&
+                        !normalized.isEmpty()) {
+                        info.contents.append(normalized);
                         info.fileCount++;
+                    } else if (!filename.isEmpty() && normalized.isEmpty()) {
+                        info.unsafeEntries.append(filename);
                     }
                 }
             }
@@ -131,11 +143,14 @@ ArchiveInfo ArchiveExtractor::getArchiveInfo(const QString &path)
                 if (match.hasMatch()) {
                     const QString filename = match.captured(1).trimmed();
                     const qint64 size = match.captured(2).toLongLong();
-                    if (!filename.isEmpty()) {
-                        info.contents.append(filename);
-                        info.entrySizes.insert(filename, size);
+                    const QString normalized = normalizeArchiveMemberPath(filename);
+                    if (!filename.isEmpty() && !normalized.isEmpty()) {
+                        info.contents.append(normalized);
+                        info.entrySizes.insert(normalized, size);
                         info.uncompressedSize += size;
                         info.fileCount++;
+                    } else if (!filename.isEmpty()) {
+                        info.unsafeEntries.append(filename);
                     }
                 }
             }

@@ -17,10 +17,24 @@ ArtworkDownloader::ArtworkDownloader(QObject *parent)
 {
 }
 
-bool ArtworkDownloader::download(const QUrl &url, const QString &destPath)
+bool ArtworkDownloader::isSupportedUrl(const QUrl &url)
 {
     if (!url.isValid()) {
-        emit downloadFailed(url, "Invalid URL");
+        return false;
+    }
+
+    if (url.isLocalFile()) {
+        return true;
+    }
+
+    return url.scheme().compare(QStringLiteral("https"), Qt::CaseInsensitive) == 0 &&
+        !url.host().trimmed().isEmpty();
+}
+
+bool ArtworkDownloader::download(const QUrl &url, const QString &destPath)
+{
+    if (!isSupportedUrl(url)) {
+        emit downloadFailed(url, "Unsupported artwork URL");
         return false;
     }
 
@@ -52,6 +66,11 @@ bool ArtworkDownloader::download(const QUrl &url, const QString &destPath)
 
 QByteArray ArtworkDownloader::downloadToMemory(const QUrl &url)
 {
+    if (!isSupportedUrl(url)) {
+        emit downloadFailed(url, "Unsupported artwork URL");
+        return {};
+    }
+
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::UserAgentHeader, Constants::API::USER_AGENT);
     request.setAttribute(QNetworkRequest::RedirectPolicyAttribute, 

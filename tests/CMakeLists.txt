@@ -1,6 +1,3 @@
-# Enable testing
-enable_testing()
-
 # Find Qt6 Test module
 find_package(Qt6 REQUIRED COMPONENTS Test)
 

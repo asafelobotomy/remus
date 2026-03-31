@@ -11,6 +11,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
+include(CTest)
+
 option(REMUS_ENABLE_CCACHE "Use ccache as compiler launcher when available" ON)
 if(REMUS_ENABLE_CCACHE)
     find_program(CCACHE_PROGRAM ccache)
@@ -109,8 +111,9 @@ if(REMUS_ENABLE_PCH)
 endif()
 
 # Enable testing
-enable_testing()
-add_subdirectory(tests)
+if(BUILD_TESTING)
+    add_subdirectory(tests)
+endif()
 
 # Installation rules
 install(TARGETS remus-cli

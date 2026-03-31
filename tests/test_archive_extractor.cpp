@@ -8,24 +8,41 @@ using namespace Remus;
 class FakeArchiveExtractor : public ArchiveExtractor
 {
 public:
-    ProcessResult nextResult;
+    using ProcessResult = ExternalToolRunner::ProcessResult;
+
+    QList<ProcessResult> queuedResults;
     QStringList fakeFiles;
     QString lastProgram;
     QStringList lastArgs;
+
+    void enqueueResult(const ProcessResult &result)
+    {
+        queuedResults.append(result);
+    }
 
 protected:
     ProcessResult runProcess(const QString &program, const QStringList &args, int) override
     {
         lastProgram = program;
         lastArgs = args;
-        return nextResult;
+        if (queuedResults.isEmpty()) {
+            return {};
+        }
+
+        const ProcessResult result = queuedResults.takeFirst();
+        return result;
     }
 
     ProcessResult runProcessTracked(const QString &program, const QStringList &args, int) override
     {
         lastProgram = program;
         lastArgs = args;
-        return nextResult;
+        if (queuedResults.isEmpty()) {
+            return {};
+        }
+
+        const ProcessResult result = queuedResults.takeFirst();
+        return result;
     }
 
     QStringList listFiles(const QString &dirPath) const override
@@ -37,12 +54,15 @@ protected:
     }
 };
 
+using FakeProcessResult = FakeArchiveExtractor::ProcessResult;
+
 class ArchiveExtractorTest : public QObject
 {
     Q_OBJECT
 
 private slots:
     void testDetectFormat();
+    void testNormalizeArchiveMemberPath();
     void testToolAvailabilityReflectsConfiguredPaths();
     void testGetArchiveInfoZip();
     void testGetArchiveInfo7z();
@@ -51,6 +71,7 @@ private slots:
     void testExtract7zCreatesSubfolderAndTracksFiles();
     void testExtractRarFallsBackToSevenZip();
     void testExtractFileZipReturnsBasenameInOutputDir();
+    void testExtractRejectsUnsafeArchiveEntries();
     void testBatchExtractCanBeCancelledAfterFirstItem();
     void testExtractUnsupported();
 };
@@ -65,10 +86,24 @@ void ArchiveExtractorTest::testDetectFormat()
     QCOMPARE(ArchiveExtractor::detectFormat("file.unknown"), ArchiveFormat::Unknown);
 }
 
+void ArchiveExtractorTest::testNormalizeArchiveMemberPath()
+{
+    QCOMPARE(ArchiveExtractor::normalizeArchiveMemberPath(QStringLiteral("roms/game.nes")),
+             QStringLiteral("roms/game.nes"));
+    QCOMPARE(ArchiveExtractor::normalizeArchiveMemberPath(QStringLiteral("nested\\game.nes")),
+             QStringLiteral("nested/game.nes"));
+    QVERIFY(ArchiveExtractor::normalizeArchiveMemberPath(QStringLiteral("../game.nes")).isEmpty());
+    QVERIFY(ArchiveExtractor::normalizeArchiveMemberPath(QStringLiteral("/etc/passwd")).isEmpty());
+}
+
 void ArchiveExtractorTest::testToolAvailabilityReflectsConfiguredPaths()
 {
     FakeArchiveExtractor extractor;
-    extractor.nextResult.exitStatus = QProcess::NormalExit;
+    FakeProcessResult versionResult;
+    versionResult.exitStatus = QProcess::NormalExit;
+    for (int i = 0; i < 24; ++i) {
+        extractor.enqueueResult(versionResult);
+    }
 
     extractor.setUnzipPath("/bin/sh");
     extractor.setSevenZipPath("/bin/sh");
@@ -90,15 +125,21 @@ void ArchiveExtractorTest::testToolAvailabilityReflectsConfiguredPaths()
 void ArchiveExtractorTest::testGetArchiveInfoZip()
 {
     FakeArchiveExtractor extractor;
-    extractor.nextResult.started = true;
-    extractor.nextResult.exitCode = 0;
-    extractor.nextResult.stdOutput =
+    FakeProcessResult versionResult;
+    versionResult.exitStatus = QProcess::NormalExit;
+    extractor.enqueueResult(versionResult);
+
+    FakeProcessResult result;
+    result.started = true;
+    result.exitCode = 0;
+    result.stdOutput =
         "Archive: test.zip\n"
         "  Length      Date    Time    Name\n"
         "---------  ---------- -----   ----\n"
         "   10  2020-01-01 00:00   file1.bin\n"
         "---------                     -------\n"
         "   10                     1 file\n";
+    extractor.enqueueResult(result);
 
     ArchiveInfo info = extractor.getArchiveInfo("test.zip");
     QCOMPARE(info.format, ArchiveFormat::ZIP);
@@ -111,10 +152,16 @@ void ArchiveExtractorTest::testGetArchiveInfoZip()
 void ArchiveExtractorTest::testGetArchiveInfo7z()
 {
     FakeArchiveExtractor extractor;
-    extractor.nextResult.started = true;
-    extractor.nextResult.exitCode = 0;
-    extractor.nextResult.stdOutput =
+    FakeProcessResult versionResult;
+    versionResult.exitStatus = QProcess::NormalExit;
+    extractor.enqueueResult(versionResult);
+
+    FakeProcessResult result;
+    result.started = true;
+    result.exitCode = 0;
+    result.stdOutput =
         "2026-02-05 18:40  .....       812000       400000  file.nes\n";
+    extractor.enqueueResult(result);
 
     ArchiveInfo info = extractor.getArchiveInfo("test.7z");
     QCOMPARE(info.format, ArchiveFormat::SevenZip);
@@ -127,11 +174,17 @@ void ArchiveExtractorTest::testGetArchiveInfo7z()
 void ArchiveExtractorTest::testGetArchiveInfoRar()
 {
     FakeArchiveExtractor extractor;
-    extractor.nextResult.started = true;
-    extractor.nextResult.exitCode = 0;
-    extractor.nextResult.stdOutput =
+    FakeProcessResult versionResult;
+    versionResult.exitStatus = QProcess::NormalExit;
+    extractor.enqueueResult(versionResult);
+
+    FakeProcessResult result;
+    result.started = true;
+    result.exitCode = 0;
+    result.stdOutput =
         "Name             Size   Packed Ratio  Date    Time   Attr CRC\n"
         "file.nes        812000  400000  49%  02-05-26 18:40  -rw- 12AB34CD\n";
+    extractor.enqueueResult(result);
 
     ArchiveInfo info = extractor.getArchiveInfo("test.rar");
     QCOMPARE(info.format, ArchiveFormat::RAR);
@@ -144,9 +197,29 @@ void ArchiveExtractorTest::testGetArchiveInfoRar()
 void ArchiveExtractorTest::testExtractZip()
 {
     FakeArchiveExtractor extractor;
-    extractor.nextResult.started = true;
-    extractor.nextResult.exitCode = 0;
-    extractor.nextResult.exitStatus = QProcess::NormalExit;
+    FakeProcessResult versionResult;
+    versionResult.exitStatus = QProcess::NormalExit;
+    extractor.enqueueResult(versionResult);
+    extractor.enqueueResult(versionResult);
+
+    FakeProcessResult listResult;
+    listResult.started = true;
+    listResult.exitCode = 0;
+    listResult.stdOutput =
+        "Archive: test.zip\n"
+        "  Length      Date    Time    Name\n"
+        "---------  ---------- -----   ----\n"
+        "   10  2020-01-01 00:00   a.bin\n"
+        "   10  2020-01-01 00:00   b.bin\n"
+        "---------                     -------\n"
+        "   20                     2 files\n";
+    extractor.enqueueResult(listResult);
+
+    FakeProcessResult extractResult;
+    extractResult.started = true;
+    extractResult.exitCode = 0;
+    extractResult.exitStatus = QProcess::NormalExit;
+    extractor.enqueueResult(extractResult);
     extractor.fakeFiles = {"a.bin", "b.bin"};
     extractor.setUnzipPath("/bin/sh");
 
@@ -168,9 +241,25 @@ void ArchiveExtractorTest::testExtractZip()
 void ArchiveExtractorTest::testExtract7zCreatesSubfolderAndTracksFiles()
 {
     FakeArchiveExtractor extractor;
-    extractor.nextResult.started = true;
-    extractor.nextResult.exitCode = 0;
-    extractor.nextResult.exitStatus = QProcess::NormalExit;
+    FakeProcessResult versionResult;
+    versionResult.exitStatus = QProcess::NormalExit;
+    extractor.enqueueResult(versionResult);
+    extractor.enqueueResult(versionResult);
+    extractor.enqueueResult(versionResult);
+
+    FakeProcessResult listResult;
+    listResult.started = true;
+    listResult.exitCode = 0;
+    listResult.stdOutput =
+        "2026-02-05 18:40  .....       812000       400000  disc.chd\n"
+        "2026-02-05 18:40  .....          128           64  .remus.md\n";
+    extractor.enqueueResult(listResult);
+
+    FakeProcessResult extractResult;
+    extractResult.started = true;
+    extractResult.exitCode = 0;
+    extractResult.exitStatus = QProcess::NormalExit;
+    extractor.enqueueResult(extractResult);
     extractor.fakeFiles = {"disc.chd", ".remus.md"};
     extractor.setSevenZipPath("/bin/sh");
 
@@ -195,9 +284,25 @@ void ArchiveExtractorTest::testExtract7zCreatesSubfolderAndTracksFiles()
 void ArchiveExtractorTest::testExtractRarFallsBackToSevenZip()
 {
     FakeArchiveExtractor extractor;
-    extractor.nextResult.started = true;
-    extractor.nextResult.exitCode = 0;
-    extractor.nextResult.exitStatus = QProcess::NormalExit;
+    FakeProcessResult versionResult;
+    versionResult.exitStatus = QProcess::NormalExit;
+    extractor.enqueueResult(versionResult);
+
+    FakeProcessResult listResult;
+    listResult.started = true;
+    listResult.exitCode = 0;
+    listResult.stdOutput =
+        "Name             Size   Packed Ratio  Date    Time   Attr CRC\n"
+        "file.nes        812000  400000  49%  02-05-26 18:40  -rw- 12AB34CD\n";
+    extractor.enqueueResult(listResult);
+
+    extractor.enqueueResult(versionResult);
+
+    FakeProcessResult extractResult;
+    extractResult.started = true;
+    extractResult.exitCode = 0;
+    extractResult.exitStatus = QProcess::NormalExit;
+    extractor.enqueueResult(extractResult);
     extractor.fakeFiles = {"file.nes"};
     extractor.setUnrarPath(QString());
     extractor.setSevenZipPath("/bin/sh");
@@ -220,9 +325,15 @@ void ArchiveExtractorTest::testExtractRarFallsBackToSevenZip()
 void ArchiveExtractorTest::testExtractFileZipReturnsBasenameInOutputDir()
 {
     FakeArchiveExtractor extractor;
-    extractor.nextResult.started = true;
-    extractor.nextResult.exitCode = 0;
-    extractor.nextResult.exitStatus = QProcess::NormalExit;
+    FakeProcessResult versionResult;
+    versionResult.exitStatus = QProcess::NormalExit;
+    extractor.enqueueResult(versionResult);
+
+    FakeProcessResult extractResult;
+    extractResult.started = true;
+    extractResult.exitCode = 0;
+    extractResult.exitStatus = QProcess::NormalExit;
+    extractor.enqueueResult(extractResult);
     extractor.setUnzipPath("/bin/sh");
 
     QTemporaryDir dir;
@@ -243,6 +354,8 @@ void ArchiveExtractorTest::testExtractFileZipReturnsBasenameInOutputDir()
         f.write("x");
         f.close();
     }
+    extractor.enqueueResult(versionResult);
+    extractor.enqueueResult(extractResult);
     result = extractor.extractFile(archivePath, "nested/file.bin", dir.path());
 
     QVERIFY(result.success);
@@ -251,12 +364,65 @@ void ArchiveExtractorTest::testExtractFileZipReturnsBasenameInOutputDir()
     QCOMPARE(extractor.lastArgs, QStringList({archivePath, QStringLiteral("nested/file.bin"), QStringLiteral("-d"), dir.path()}));
 }
 
+void ArchiveExtractorTest::testExtractRejectsUnsafeArchiveEntries()
+{
+    FakeArchiveExtractor extractor;
+    FakeProcessResult versionResult;
+    versionResult.exitStatus = QProcess::NormalExit;
+    extractor.enqueueResult(versionResult);
+
+    FakeProcessResult listResult;
+    listResult.started = true;
+    listResult.exitCode = 0;
+    listResult.stdOutput =
+        "Archive: test.zip\n"
+        "  Length      Date    Time    Name\n"
+        "---------  ---------- -----   ----\n"
+        "   10  2020-01-01 00:00   ../evil.bin\n"
+        "---------                     -------\n"
+        "   10                     1 file\n";
+    extractor.enqueueResult(listResult);
+    extractor.setUnzipPath("/bin/sh");
+
+    QTemporaryDir dir;
+    QVERIFY(dir.isValid());
+
+    const QString archivePath = dir.path() + "/test.zip";
+    QFile archive(archivePath);
+    QVERIFY(archive.open(QIODevice::WriteOnly));
+    QVERIFY(archive.write("zip") == 3);
+    archive.close();
+
+    const ExtractionResult result = extractor.extract(archivePath, dir.path(), false);
+    QVERIFY(!result.success);
+    QVERIFY(result.error.contains(QStringLiteral("unsafe path entries")));
+}
+
 void ArchiveExtractorTest::testBatchExtractCanBeCancelledAfterFirstItem()
 {
     FakeArchiveExtractor extractor;
-    extractor.nextResult.started = true;
-    extractor.nextResult.exitCode = 0;
-    extractor.nextResult.exitStatus = QProcess::NormalExit;
+    FakeProcessResult versionResult;
+    versionResult.exitStatus = QProcess::NormalExit;
+    extractor.enqueueResult(versionResult);
+    extractor.enqueueResult(versionResult);
+
+    FakeProcessResult listResult;
+    listResult.started = true;
+    listResult.exitCode = 0;
+    listResult.stdOutput =
+        "Archive: one.zip\n"
+        "  Length      Date    Time    Name\n"
+        "---------  ---------- -----   ----\n"
+        "   10  2020-01-01 00:00   file.bin\n"
+        "---------                     -------\n"
+        "   10                     1 file\n";
+    extractor.enqueueResult(listResult);
+
+    FakeProcessResult extractResult;
+    extractResult.started = true;
+    extractResult.exitCode = 0;
+    extractResult.exitStatus = QProcess::NormalExit;
+    extractor.enqueueResult(extractResult);
     extractor.fakeFiles = {"file.bin"};
     extractor.setUnzipPath("/bin/sh");
 
