@@ -1,4 +1,4 @@
-# Building Remus (M1-M2 - Scanning & Metadata)
+# Building Remus
 
 ## Prerequisites
 
@@ -44,7 +44,7 @@ cd build
 cmake -S .. -B .
 ```
 
-The default configure builds the CLI only. GUI and TUI targets stay out of the default build, CI, and release path until the CLI delivery track is stable.
+The default configure builds the CLI only. GUI and TUI code has been archived to `archive/gui-tui/` and is not part of the default build, CI, or release path.
 
 #### Optional build acceleration flags
 ```bash
@@ -295,7 +295,7 @@ sudMetadata Providers
 ## Delivery Focus
 
 - Ship and verify the CLI by default.
-- Keep GUI and TUI code out of the default build and release path.
+- Keep GUI and TUI code in `archive/gui-tui/`, out of the default build and release path.
 - Use simple release archives until the CLI workflow is stable.
 
 ## Testing

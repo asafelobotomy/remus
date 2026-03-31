@@ -144,9 +144,11 @@ Every file in the project is catalogued here. Update this file whenever a file i
 | `src/services/patch_service.cpp` | ROM patching workflow service | — |
 | `src/services/patch_service.h` | Patch service interface | — |
 
-### UI — Qt Quick/QML (`src/ui/`)
+### UI — Qt Quick/QML (archived to `archive/gui-tui/`)
 
-| File | Purpose | LOC |
+> GUI code was moved to `archive/gui-tui/` on 2026-03-26. See `docs/archive/FRONTEND-STATUS.md`.
+
+| File (archived) | Purpose | LOC |
 |------|---------|-----|
 | `src/ui/main.cpp` | Qt GUI entry point | — |
 | `src/ui/theme_constants.cpp` | UI theme constant definitions | — |
@@ -189,9 +191,11 @@ Every file in the project is catalogued here. Update this file whenever a file i
 | `src/ui/qml/VerificationView.qml` | ROM verification view | — |
 | `src/ui/qml/components/` | Reusable themed QML components (ThemedButton, etc.) | — |
 
-### TUI — Notcurses (`src/tui/`) — optional build target
+### TUI — Notcurses (archived to `archive/gui-tui/`)
 
-| File | Purpose | LOC |
+> TUI code was moved to `archive/gui-tui/` on 2026-03-26. See `docs/archive/FRONTEND-STATUS.md`.
+
+| File (archived) | Purpose | LOC |
 |------|---------|-----|
 | `src/tui/main.cpp` | TUI entry point | — |
 | `src/tui/app.cpp` | TUI application shell | — |

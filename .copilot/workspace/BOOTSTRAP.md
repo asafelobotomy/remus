@@ -12,10 +12,10 @@ This workspace was scaffolded on **2026-02-19** using the
 
 ## Baseline snapshot (2026-02-19)
 
-- Source files: 179 (`.cpp`, `.h`, `.qml`)
+- Source files: 179 (`.cpp`, `.h`)
 - Total LOC: 43,400
 - Test files: 49 · CTest registered tests: 76
-- Runtime deps: 8 (Qt6 Core/Sql/Network/Gui/Quick/Qml + ZLIB + Curses)
+- Runtime deps: 5 (Qt6 Core/Sql/Network/Concurrent/Gui + ZLIB)
 
 ## What was created
 

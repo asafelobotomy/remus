@@ -385,7 +385,7 @@ Constants::DatabaseSchema::Columns::Files::CRC32
 
 ### Error Handling
 
-GUI shows clear error messages:
+CLI shows clear error messages:
 - ✓ Success indicators for all operations
 - ✗ Failure indicators with error details
 - ⚠ Warning indicators for partial success

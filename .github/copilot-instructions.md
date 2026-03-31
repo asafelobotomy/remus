@@ -101,7 +101,6 @@ For deeper audits, activate the matching skill (§12) instead of expanding §2:
 - CMake target-based dependencies; no directory-level `include_directories`
 - SQLite via Qt's `QSqlDatabase` abstraction
 - Constants in `src/core/constants/` — no magic numbers in business logic
-- QML ↔ C++ via controllers registered as context properties
 
 **Universal rules**:
 
@@ -167,7 +166,7 @@ W1 Overproduction · W2 Waiting · W3 Transport · W4 Over-processing · W5 Inve
 
 | Metric | Command | Target |
 |--------|---------|--------|
-| Total LOC | `find src -name '*.cpp' -o -name '*.h' -o -name '*.qml' \| xargs cat \| wc -l` | Trending down or flat |
+| Total LOC | `find src -name '*.cpp' -o -name '*.h' \| xargs cat \| wc -l` | Trending down or flat |
 | Test count | `ctest --test-dir build -j$(nproc)` | Trending up |
 | Type errors | `cmake --build build 2>&1 \| head -30` (or `get_errors` built-in) | Zero |
 | Runtime deps | count from manifest | ≤ 10 |
@@ -276,7 +275,7 @@ Resolved values and project-specific overrides. Populated during setup; updated 
 | `TEST_COMMAND` | ctest --test-dir build -j$(nproc) |
 | `TYPE_CHECK_COMMAND` | cmake --build build 2>&1 \| head -30 |
 | `THREE_CHECK_COMMAND` | cmake --build build && ctest --test-dir build -j$(nproc) |
-| `LOC_COMMAND` | find src -name '*.cpp' -o -name '*.h' -o -name '*.qml' \| xargs cat \| wc -l |
+| `LOC_COMMAND` | find src -name '*.cpp' -o -name '*.h' \| xargs cat \| wc -l |
 | `METRICS_COMMAND` | cmake --build build && ctest --test-dir build --output-on-failure |
 | `TEST_FRAMEWORK` | Qt Test (CTest) |
 | `LOC_WARN_THRESHOLD` | 400 |

@@ -23,9 +23,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   workspace identity files (`.copilot/workspace/`), `JOURNAL.md`, `BIBLIOGRAPHY.md`, `METRICS.md`.
 
 ### Planned
-- DAT import/removal UI with file picker
+- DAT import/removal CLI commands
 - Auto-update checking for DAT files
-- Multi-DAT priority reordering (drag-and-drop)
 
 ---
 
