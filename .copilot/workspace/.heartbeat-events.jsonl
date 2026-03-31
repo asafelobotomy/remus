@@ -1,1 +1,6 @@
 {"detail": "complete", "trigger": "stop", "ts": 1774942544}
+{"trigger": "session_start", "ts": 1774942830}
+{"trigger": "soft_post_tool", "ts": 1774942841}
+{"trigger": "soft_post_tool", "ts": 1774943142}
+{"detail": "complete", "trigger": "stop", "ts": 1774943315}
+{"trigger": "soft_post_tool", "ts": 1774943608}
