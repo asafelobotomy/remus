@@ -6,9 +6,12 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QTextStream>
+#include <QTemporaryDir>
 #include "../core/scanner.h"
 #include "../core/hasher.h"
 #include "../core/header_detector.h"
+#include "../core/disc_magic_detector.h"
+#include "../core/archive_extractor.h"
 #include "../core/constants/constants.h"
 #include "terminal_image.h"
 #include "cli_logging.h"
@@ -161,7 +164,28 @@ int handleScanCommand(CliContext &ctx)
     for (const ScanResult &result : results) {
         const QString systemDetectPath = result.isCompressed && !result.archiveInternalPath.isEmpty()
             ? result.archiveInternalPath : result.path;
-        const QString systemName = ctx.detector.detectSystem(result.extension, systemDetectPath);
+        QString systemName = ctx.detector.detectSystem(result.extension, systemDetectPath);
+
+        // For compressed disc images, extract and probe magic bytes for accurate system detection
+        if (result.isCompressed && !result.archivePath.isEmpty()
+            && DiscMagicDetector::isDiscImageExtension(result.extension)) {
+            QTemporaryDir tempDir;
+            if (tempDir.isValid()) {
+                ArchiveExtractor extractor;
+                const QString memberPath = result.archiveInternalPath.isEmpty()
+                    ? result.filename : result.archiveInternalPath;
+                ExtractionResult ex = extractor.extractFile(
+                    result.archivePath, memberPath, tempDir.path());
+                if (ex.success && !ex.extractedFiles.isEmpty()) {
+                    DiscHeaderInfo discInfo = DiscMagicDetector::detect(ex.extractedFiles.first());
+                    if (discInfo.detected && !discInfo.systemName.isEmpty()) {
+                        systemName = discInfo.systemName;
+                        qInfo() << "  Disc magic:" << systemName << "(from" << result.filename << ")";
+                    }
+                }
+            }
+        }
+
         const int systemId = systemName.isEmpty() ? 0 : ctx.db.getSystemId(systemName);
 
         FileRecord record;

@@ -78,6 +78,11 @@ namespace MultiSignal {
     /// Bonus when serial number matches
     inline constexpr int SERIAL_BONUS = 20;
 
+    /// Base score for a serial-only fallback match (no hash, no filename+size)
+    /// A disc serial is a reliable product identifier embedded in the disc header.
+    /// 130/200 = 65%, comfortably above the default 60% minimum threshold.
+    inline constexpr int SERIAL_BASE = 130;
+
     /// Base score for a filename+size fallback match (no hash)
     inline constexpr int FILENAME_SIZE_BASE = 80;
 

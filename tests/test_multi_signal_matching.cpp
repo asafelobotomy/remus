@@ -269,6 +269,131 @@ bool testConfidenceScoring(LocalDatabaseProvider &provider) {
     return allPassed;
 }
 
+/**
+ * @brief Test 7: Serial Normalization Matching
+ * Verifies that disc serials with manufacturer prefixes (MK-, HDR-) and
+ * region suffixes (-50) are normalised to match bare numeric serials in DATs.
+ */
+bool testSerialNormalization() {
+    qInfo() << "\n=== Test 7: Serial Normalization (Dreamcast) ===";
+
+    QTemporaryDir tempDir;
+    if (!tempDir.isValid()) {
+        qWarning() << "✗ Cannot create temp directory";
+        return false;
+    }
+
+    const QString datPath = TestFixtures::writeDreamcastDat(tempDir);
+    if (datPath.isEmpty()) {
+        qWarning() << "✗ Cannot write Dreamcast DAT fixture";
+        return false;
+    }
+
+    LocalDatabaseProvider provider;
+    int entries = provider.loadDatabase(datPath);
+    qInfo() << "  Loaded" << entries << "Dreamcast DAT entries";
+    if (entries == 0) {
+        qWarning() << "✗ Failed to load Dreamcast DAT";
+        return false;
+    }
+
+    bool allPassed = true;
+
+    // Case 1: IP.BIN serial "MK-51000" should match DAT serial "51000" (USA)
+    {
+        ROMSignals romInput;
+        romInput.serial = QStringLiteral("MK-51000");
+        romInput.filename = QStringLiteral("Sonic Adventure (US).cdi");
+        romInput.fileSize = 1185760800;
+
+        QList<MultiSignalMatch> matches = provider.matchROM(romInput);
+        bool found = false;
+        for (const auto &m : matches) {
+            if (m.serialMatch) {
+                found = true;
+                qInfo() << "  ✓ MK-51000 matched" << m.entry.gameName
+                        << "(serial:" << m.entry.serial << ")";
+                break;
+            }
+        }
+        if (!found) {
+            qWarning() << "  ✗ MK-51000 did NOT serial-match any entry";
+            allPassed = false;
+        }
+    }
+
+    // Case 2: "MK-51000-50" (full EU format) should also match "51000" via normalization
+    {
+        ROMSignals romInput;
+        romInput.serial = QStringLiteral("MK-51000-50");
+        romInput.filename = QStringLiteral("Sonic Adventure (Europe).cdi");
+        romInput.fileSize = 1185760800;
+
+        QList<MultiSignalMatch> matches = provider.matchROM(romInput);
+        bool found = false;
+        for (const auto &m : matches) {
+            if (m.serialMatch) {
+                found = true;
+                qInfo() << "  ✓ MK-51000-50 matched" << m.entry.gameName
+                        << "(serial:" << m.entry.serial << ")";
+                break;
+            }
+        }
+        if (!found) {
+            qWarning() << "  ✗ MK-51000-50 did NOT serial-match any entry";
+            allPassed = false;
+        }
+    }
+
+    // Case 3: Exact match "51000" should still work
+    {
+        ROMSignals romInput;
+        romInput.serial = QStringLiteral("51000");
+        romInput.filename = QStringLiteral("Sonic Adventure (USA).bin");
+        romInput.fileSize = 1185760800;
+
+        QList<MultiSignalMatch> matches = provider.matchROM(romInput);
+        bool found = false;
+        for (const auto &m : matches) {
+            if (m.serialMatch) {
+                found = true;
+                qInfo() << "  ✓ 51000 exact-matched" << m.entry.gameName
+                        << "(serial:" << m.entry.serial << ")";
+                break;
+            }
+        }
+        if (!found) {
+            qWarning() << "  ✗ 51000 did NOT serial-match any entry";
+            allPassed = false;
+        }
+    }
+
+    // Case 4: HDR-0001 should NOT match 51000 (different core numbers)
+    {
+        ROMSignals romInput;
+        romInput.serial = QStringLiteral("HDR-0001");
+        romInput.filename = QStringLiteral("Sonic Adventure (Japan).bin");
+        romInput.fileSize = 1185760800;
+
+        QList<MultiSignalMatch> matches = provider.matchROM(romInput);
+        bool matchedUSA = false;
+        for (const auto &m : matches) {
+            if (m.serialMatch && m.entry.serial == QStringLiteral("51000")) {
+                matchedUSA = true;
+                break;
+            }
+        }
+        if (matchedUSA) {
+            qWarning() << "  ✗ HDR-0001 incorrectly matched USA entry (serial 51000)";
+            allPassed = false;
+        } else {
+            qInfo() << "  ✓ HDR-0001 correctly did NOT match USA (serial 51000)";
+        }
+    }
+
+    return allPassed;
+}
+
 int main(int argc, char *argv[])
 {
     QCoreApplication app(argc, argv);
@@ -337,6 +462,12 @@ int main(int argc, char *argv[])
     // Test 6: Confidence Scoring
     total++;
     if (testConfidenceScoring(provider)) {
+        passed++;
+    }
+    
+    // Test 7: Serial Normalization (Dreamcast)
+    total++;
+    if (testSerialNormalization()) {
         passed++;
     }
     

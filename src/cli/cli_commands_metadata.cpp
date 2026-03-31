@@ -282,7 +282,9 @@ int handleEnrichCommand(CliContext &ctx)
         if (seenGames.contains(m.gameId)) continue;
         seenGames.insert(m.gameId);
 
-        const bool sparse = m.description.isEmpty() && m.genre.isEmpty() && m.players.isEmpty();
+        const bool sparse = m.publisher.isEmpty() || m.developer.isEmpty()
+                          || m.genre.isEmpty() || m.players.isEmpty()
+                          || m.description.isEmpty();
         if (!sparse) continue;
 
         const QString system = fileMap.contains(m.fileId)

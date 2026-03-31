@@ -259,6 +259,60 @@ GameMetadata ProviderOrchestrator::searchWithFallback(const QString &hash,
         if (!metadata.title.isEmpty()) {
             metadata.matchScore = 1.0f;  // Hash match = 100% confidence
             metadata.matchMethod = MatchMethods::HASH;
+
+            // Supplement sparse hash results with serial-based DAT metadata
+            // (e.g. hasheous returns title but no publisher/developer, while
+            //  the inline DAT entry matched by serial has that data)
+            if (!serial.isEmpty() &&
+                (metadata.publisher.isEmpty() || metadata.developer.isEmpty())) {
+                for (auto it = m_providers.constBegin(); it != m_providers.constEnd(); ++it) {
+                    if (!it.value().enabled) continue;
+                    auto *localDb = qobject_cast<LocalDatabaseProvider *>(it.value().provider);
+                    if (!localDb) continue;
+
+                    ROMSignals romSignals;
+                    romSignals.crc32 = crc32;
+                    romSignals.md5 = md5;
+                    romSignals.sha1 = sha1;
+                    romSignals.filename = name;
+                    romSignals.serial = serial;
+                    QList<MultiSignalMatch> matches = localDb->matchROM(romSignals);
+                    if (!matches.isEmpty() && matches.first().serialMatch) {
+                        GameMetadata datMeta = localDb->getMetadataForEntry(matches.first());
+                        // Merge non-empty fields from DAT metadata
+                        if (metadata.publisher.isEmpty() && !datMeta.publisher.isEmpty())
+                            metadata.publisher = datMeta.publisher;
+                        if (metadata.developer.isEmpty() && !datMeta.developer.isEmpty())
+                            metadata.developer = datMeta.developer;
+                        if (metadata.releaseDate.isEmpty() && !datMeta.releaseDate.isEmpty())
+                            metadata.releaseDate = datMeta.releaseDate;
+                        if (metadata.players == 0 && datMeta.players != 0)
+                            metadata.players = datMeta.players;
+                        if (metadata.genres.isEmpty() && !datMeta.genres.isEmpty())
+                            metadata.genres = datMeta.genres;
+                        if (metadata.region.isEmpty() && !datMeta.region.isEmpty())
+                            metadata.region = datMeta.region;
+                        qInfo() << "Supplemented hash match with serial-based DAT metadata";
+                        break;
+                    }
+                }
+            }
+
+            // Supplement with libretro per-CRC metadata if still sparse
+            // (covers cases where the match came from hasheous/online but
+            //  libretro metadata files have publisher/developer/genre data)
+            if (metadata.publisher.isEmpty() || metadata.developer.isEmpty()
+                || metadata.genres.isEmpty() || metadata.players == 0
+                || metadata.releaseDate.isEmpty()) {
+                for (auto it = m_providers.constBegin(); it != m_providers.constEnd(); ++it) {
+                    if (!it.value().enabled) continue;
+                    auto *localDb = qobject_cast<LocalDatabaseProvider *>(it.value().provider);
+                    if (!localDb) continue;
+                    localDb->enrichFromLibretro(metadata, crc32);
+                    break;
+                }
+            }
+
             return metadata;
         }
         
@@ -281,10 +335,10 @@ GameMetadata ProviderOrchestrator::searchWithFallback(const QString &hash,
             QList<MultiSignalMatch> matches = localDb->matchROM(romSignals);
             if (!matches.isEmpty() && matches.first().serialMatch) {
                 const MultiSignalMatch &best = matches.first();
-                GameMetadata metadata = localDb->getByHash(
-                    !best.entry.crc32.isEmpty() ? best.entry.crc32 :
-                    !best.entry.md5.isEmpty()   ? best.entry.md5   :
-                    best.entry.sha1, system);
+                // Use getMetadataForEntry to convert the matched entry directly
+                // This works for serial-only entries (GameCube/Wii/Saturn) that
+                // have no CRC hashes and would fail a getByHash() lookup
+                GameMetadata metadata = localDb->getMetadataForEntry(best);
                 if (!metadata.title.isEmpty()) {
                     metadata.matchScore = best.confidencePercent() / 100.0f;
                     metadata.matchMethod = QStringLiteral("serial");

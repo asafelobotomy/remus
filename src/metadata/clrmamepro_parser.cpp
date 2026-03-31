@@ -139,6 +139,12 @@ QList<ClrMameProEntry> ClrMameProParser::parseGameBlocks(const QString &content)
                 entry.crc32 = romData.value("crc").toUpper();
                 entry.md5 = romData.value("md5").toLower();
                 entry.sha1 = romData.value("sha1").toLower();
+
+                // Inline metadata from Redump/GameTDB DATs
+                entry.publisher = gameData.value("publisher");
+                entry.developer = gameData.value("developer");
+                entry.releaseYear = gameData.value("releaseyear").toInt();
+                entry.users = gameData.value("users").toInt();
                 
                 // Use game-level region if present, otherwise extract from name
                 entry.region = gameData.value("region");

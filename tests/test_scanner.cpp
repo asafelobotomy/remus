@@ -91,12 +91,12 @@ void ScannerTest::multiFileLinking()
     // Expect cue + 3 bins + gdi = 5 entries
     QCOMPARE(results.size(), 5);
 
-    // Find bin linked to cue
-    auto itBin = std::find_if(results.begin(), results.end(), [](const ScanResult &r) {
-        return r.extension == ".bin" && r.parentFilePath.endsWith("game.cue");
+    // Find cue linked to bin (data track is primary, sheet is secondary)
+    auto itCue = std::find_if(results.begin(), results.end(), [](const ScanResult &r) {
+        return r.extension == ".cue" && r.parentFilePath.endsWith("game.bin");
     });
-    QVERIFY(itBin != results.end());
-    QCOMPARE(itBin->isPrimary, false);
+    QVERIFY(itCue != results.end());
+    QCOMPARE(itCue->isPrimary, false);
 
     // GDI tracks linked to gdi parent
     int linkedTracks = 0;

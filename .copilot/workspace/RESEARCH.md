@@ -45,6 +45,18 @@
 | https://raw.githubusercontent.com/RetroPie/RetroPie-Setup/master/scriptmodules/libretrocores/lr-bluemsx.sh | RetroPie lr-bluemsx — confirms: coleco (abbreviated, not colecovision) | 2026-05-24 | retropie, folder-names, source |
 | https://gamesdb.launchbox-app.com/ | LaunchBox Games Database — Platform display names (not folder names; LaunchBox is folder-agnostic) | 2026-05-24 | launchbox, platform-names, reference |
 
+## libretro-database metadat/ structure (2026-03-31)
+
+| URL | Summary | Date | Tags |
+|-----|---------|------|------|
+| https://github.com/libretro/libretro-database/tree/master/metadat | Root of metadat/ — subdirs: developer, publisher, genre, maxusers, releaseyear, redump, no-intro, libretro-dats, etc. | 2026-03-31 | libretro, metadat, dat |
+| https://github.com/libretro/libretro-database/tree/master/metadat/developer | developer/ metadata DAT files — cartridge systems + PS1, PS2, Dreamcast; no GameCube/Wii/Saturn/Mega-CD/PC-Engine-CD/3DO | 2026-03-31 | libretro, developer, dat |
+| https://github.com/libretro/libretro-database/tree/master/metadat/publisher | publisher/ metadata DAT files — same scope as developer minus PS1/PS2/Dreamcast (only PSP for Sony, no Dreamcast) | 2026-03-31 | libretro, publisher, dat |
+| https://github.com/libretro/libretro-database/tree/master/metadat/genre | genre/ metadata DAT files — similar scope to developer; no PS1/PS2/Dreamcast/disc systems | 2026-03-31 | libretro, genre, dat |
+| https://github.com/libretro/libretro-database/tree/master/metadat/maxusers | maxusers/ — cartridge systems only; no Sony/disc-based systems at all | 2026-03-31 | libretro, maxusers, dat |
+| https://github.com/libretro/libretro-database/tree/master/metadat/releaseyear | releaseyear/ — cartridge systems + PSP only; no PS1/PS2/Dreamcast/other disc systems | 2026-03-31 | libretro, releaseyear, dat |
+| https://github.com/libretro/libretro-database/tree/master/metadat/redump | redump/ — disc-based game identity DAT files (CRC of .bin tracks); covers all 9 target systems | 2026-03-31 | libretro, redump, dat, disc-based |
+
 ## Retro Game Metadata Sources Research (2026-03-26)
 
 | URL | Summary | Date | Tags |

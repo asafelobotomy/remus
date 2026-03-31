@@ -92,6 +92,38 @@ DiscHeaderInfo DiscMagicDetector::detectFromData(const QByteArray &data, qint64 
                 info.releaseDate = dcInfo.releaseDate;
             }
 
+            // GameCube / Wii: Game ID at offset 0x00 (6 bytes, e.g. "G8ME01")
+            if (entry.systemId == ID_GAMECUBE || entry.systemId == ID_WII) {
+                if (data.size() >= 6) {
+                    QByteArray rawId = data.mid(0, 6);
+                    // Validate: game IDs are printable ASCII
+                    bool valid = true;
+                    for (char c : rawId) {
+                        if (c < 0x20 || c > 0x7E) { valid = false; break; }
+                    }
+                    if (valid) {
+                        info.serial = QString::fromLatin1(rawId).trimmed();
+                    }
+                }
+            }
+
+            // Sega Saturn: serial at offset 0x20 (10 bytes) in header
+            if (entry.systemId == ID_SATURN) {
+                if (data.size() >= 0x20 + 10) {
+                    info.serial = QString::fromLatin1(data.mid(0x20, 10)).trimmed();
+                }
+            }
+
+            // Sega CD: serial at offset 0x183 (8 bytes) in header
+            if (entry.systemId == ID_SEGA_CD) {
+                if (data.size() >= 0x183 + 11) {
+                    info.serial = QString::fromLatin1(data.mid(0x183, 11)).trimmed();
+                }
+            }
+
+            // PSX / PS2: serial extracted from SYSTEM.CNF (requires filesystem parsing)
+            // For now, rely on existing filename-based serial extraction in scanner
+
             return info;
         }
     }

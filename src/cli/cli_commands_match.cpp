@@ -3,9 +3,11 @@
 #include <QDateTime>
 #include <QFile>
 #include <QTextStream>
+#include <QTemporaryDir>
 #include "../metadata/provider_orchestrator.h"
 #include "../core/constants/constants.h"
 #include "../core/disc_magic_detector.h"
+#include "../core/archive_extractor.h"
 #include "cli_logging.h"
 
 using namespace Remus;
@@ -58,10 +60,35 @@ int handleMatchCommand(CliContext &ctx)
         // Extract disc serial for disc image files (CDI, GDI, ISO, etc.)
         QString discSerial;
         if (DiscMagicDetector::isDiscImageExtension(file.extension)) {
-            DiscHeaderInfo discInfo = DiscMagicDetector::extractDreamcastHeader(file.currentPath);
+            QString probePath = file.currentPath;
+
+            // For archive members, extract to temp for probing
+            QTemporaryDir tempDir;
+            if (file.isCompressed && !file.archivePath.isEmpty() && tempDir.isValid()) {
+                ArchiveExtractor extractor;
+                const QString memberPath = file.archiveInternalPath.isEmpty()
+                    ? file.filename : file.archiveInternalPath;
+                ExtractionResult ex = extractor.extractFile(
+                    file.archivePath, memberPath, tempDir.path());
+                if (ex.success && !ex.extractedFiles.isEmpty()) {
+                    probePath = ex.extractedFiles.first();
+                }
+            }
+
+            DiscHeaderInfo discInfo = DiscMagicDetector::detect(probePath);
+            if (!discInfo.detected || discInfo.serial.isEmpty()) {
+                // CDI files embed data at unpredictable offsets — the 64KB
+                // probe in detect() may miss the magic. Fall back to the
+                // Dreamcast deep scanner that searches up to 16MB.
+                DiscHeaderInfo dcInfo = DiscMagicDetector::extractDreamcastHeader(probePath);
+                if (dcInfo.detected && !dcInfo.serial.isEmpty()) {
+                    discInfo = dcInfo;
+                }
+            }
             if (discInfo.detected && !discInfo.serial.isEmpty()) {
                 discSerial = discInfo.serial;
-                qInfo() << "  Disc serial:" << discSerial;
+                qInfo() << "  Disc serial:" << discSerial
+                        << "(" << discInfo.systemName << ")";
             }
         }
 
@@ -111,9 +138,8 @@ int handleMatchReportCommand(CliContext &ctx)
     qInfo() << "=== Matching Report with Confidence Scores ===";
     qInfo() << "";
 
-    auto orchestrator  = buildOrchestrator(ctx.parser, &ctx.db);
     QList<FileRecord> files = getHashedFiles(ctx.db);
-    int minConfidence  = ctx.parser.value(Cli::Options::MIN_CONFIDENCE).toInt();
+    QMap<int, Database::MatchResult> matches = ctx.db.getAllMatches();
 
     QFile reportFile;
     QTextStream outStream(stdout);
@@ -130,7 +156,7 @@ int handleMatchReportCommand(CliContext &ctx)
     outStream << "\n=== Matching Confidence Report ===\n";
     outStream << QString("Generated: %1\n").arg(QDateTime::currentDateTime().toString(Qt::ISODate));
     outStream << QString("Total files: %1\n").arg(files.size());
-    outStream << QString("Minimum confidence threshold: %1%\n\n").arg(minConfidence);
+    outStream << QString("Matched files: %1\n\n").arg(matches.size());
 
     outStream << "┌────────────┬──────────────────────────────┬──────────┬──────────┬──────────────────────┐\n";
     outStream << "│ ID         │ Filename                     │ Conf %   │ Method   │ Title                │\n";
@@ -138,16 +164,17 @@ int handleMatchReportCommand(CliContext &ctx)
 
     for (const FileRecord &file : files) {
         const QString displayName = getMatchingDisplayName(file);
-        const QString systemName = getMatchingSystemName(file);
 
-        GameMetadata metadata = orchestrator->searchWithFallback(
-            selectBestHash(file), displayName, systemName,
-            file.crc32, file.md5, file.sha1);
+        int confidence = 0;
+        QString method = "N/A";
+        QString title  = "No match";
 
-        const int confidence = metadata.matchScore > 0
-            ? static_cast<int>(metadata.matchScore * 100) : 0;
-        const QString method = metadata.matchMethod.isEmpty() ? "N/A" : metadata.matchMethod;
-        const QString title  = metadata.title.isEmpty()       ? "No match" : metadata.title;
+        if (matches.contains(file.id)) {
+            const auto &match = matches[file.id];
+            confidence = static_cast<int>(match.confidence);
+            method = match.matchMethod.isEmpty() ? "N/A" : match.matchMethod;
+            title  = match.gameTitle.isEmpty()    ? "No match" : match.gameTitle;
+        }
 
         QString indicator;
         if      (confidence >= 90) indicator = "✓✓✓";

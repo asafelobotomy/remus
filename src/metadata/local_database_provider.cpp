@@ -328,12 +328,57 @@ void LocalDatabaseProvider::indexEntries(const QList<ClrMameProEntry> &entries, 
             m_sha1Index[normalized] = entry;
             sha1Count++;
         }
+
+        // Index by serial (for entries with serial, especially those
+        // without any hash like GameCube/Wii/Saturn DAT entries)
+        if (!entry.serial.isEmpty()) {
+            m_serialIndex.insert(entry.serial.toUpper().trimmed(), entry);
+        }
     }
     
     qDebug() << "LocalDatabaseProvider:" << systemName 
              << "- CRC32:" << crc32Count 
              << "MD5:" << md5Count 
              << "SHA1:" << sha1Count;
+}
+
+GameMetadata LocalDatabaseProvider::getMetadataForEntry(const MultiSignalMatch &match) const
+{
+    return datEntryToMetadata(match.entry);
+}
+
+void LocalDatabaseProvider::enrichFromLibretro(GameMetadata &metadata, const QString &crc32) const
+{
+    auto apply = [&metadata](const LibretroMetadata &e) {
+        if (!e.genre.isEmpty() && metadata.genres.isEmpty())
+            metadata.genres = QStringList{e.genre};
+        if (!e.developer.isEmpty() && metadata.developer.isEmpty())
+            metadata.developer = e.developer;
+        if (!e.publisher.isEmpty() && metadata.publisher.isEmpty())
+            metadata.publisher = e.publisher;
+        if (e.maxUsers > 0 && metadata.players == 0)
+            metadata.players = e.maxUsers;
+        if (e.releaseYear > 0 && metadata.releaseDate.isEmpty())
+            metadata.releaseDate = QString::number(e.releaseYear);
+    };
+
+    // Try CRC first (cartridge systems)
+    if (!crc32.isEmpty()) {
+        const QString normalized = crc32.toUpper().trimmed();
+        if (m_metadataParser.contains(normalized)) {
+            apply(m_metadataParser.lookup(normalized));
+            return;
+        }
+    }
+
+    // Try name-based lookup (disc systems where CRC doesn't match libretro data)
+    if (!metadata.title.isEmpty()) {
+        LibretroMetadata byName = m_metadataParser.lookupByName(metadata.title);
+        if (!byName.developer.isEmpty() || !byName.publisher.isEmpty()) {
+            apply(byName);
+            return;
+        }
+    }
 }
 
 GameMetadata LocalDatabaseProvider::datEntryToMetadata(const ClrMameProEntry &entry) const
@@ -384,22 +429,36 @@ GameMetadata LocalDatabaseProvider::datEntryToMetadata(const ClrMameProEntry &en
     metadata.matchScore = 1.0f; // Hash match is 100% confidence
     metadata.matchMethod = QString::fromLatin1(Remus::Constants::MatchMethods::HASH);
     
-    // Enrich with libretro metadat (genre, developer, publisher, players, year)
+    // Primary enrichment: inline DAT metadata (Redump/GameTDB DATs)
+    if (!entry.publisher.isEmpty()) {
+        metadata.publisher = entry.publisher;
+    }
+    if (!entry.developer.isEmpty()) {
+        metadata.developer = entry.developer;
+    }
+    if (entry.releaseYear > 0) {
+        metadata.releaseDate = QString::number(entry.releaseYear);
+    }
+    if (entry.users > 0) {
+        metadata.players = entry.users;
+    }
+
+    // Secondary enrichment: libretro metadata files (fills gaps not covered by DAT)
     if (!entry.crc32.isEmpty() && m_metadataParser.contains(entry.crc32)) {
         LibretroMetadata enrichment = m_metadataParser.lookup(entry.crc32);
-        if (!enrichment.genre.isEmpty()) {
+        if (!enrichment.genre.isEmpty() && metadata.genres.isEmpty()) {
             metadata.genres = QStringList{enrichment.genre};
         }
-        if (!enrichment.developer.isEmpty()) {
+        if (!enrichment.developer.isEmpty() && metadata.developer.isEmpty()) {
             metadata.developer = enrichment.developer;
         }
-        if (!enrichment.publisher.isEmpty()) {
+        if (!enrichment.publisher.isEmpty() && metadata.publisher.isEmpty()) {
             metadata.publisher = enrichment.publisher;
         }
-        if (enrichment.maxUsers > 0) {
+        if (enrichment.maxUsers > 0 && metadata.players == 0) {
             metadata.players = enrichment.maxUsers;
         }
-        if (enrichment.releaseYear > 0) {
+        if (enrichment.releaseYear > 0 && metadata.releaseDate.isEmpty()) {
             metadata.releaseDate = QString::number(enrichment.releaseYear);
         }
     }

@@ -3,9 +3,42 @@
 #include "../core/constants/confidence.h"
 #include <QDebug>
 #include <QFileInfo>
+#include <QRegularExpression>
 #include <QSet>
 
 namespace Remus {
+
+// Normalise a disc serial for fuzzy comparison.
+// Strips known manufacturer prefixes (MK-, HDR-, T-, SDC-, etc.)
+// and region suffixes (-50, -53, etc.) to extract the core product number.
+static QString normalizeSerial(const QString &serial)
+{
+    QString s = serial.trimmed().toUpper();
+    // Strip known prefixes: "MK-", "HDR-", "SDC-", "T-" prefix
+    static const QRegularExpression prefixRe(
+        QStringLiteral("^(?:MK-|HDR-|SDC-|T-|HKT-)"),
+        QRegularExpression::CaseInsensitiveOption);
+    s.replace(prefixRe, QString());
+    // Strip trailing region suffix: dash followed by 1-2 digits at end (e.g. -50, -53)
+    static const QRegularExpression suffixRe(QStringLiteral("-\\d{1,2}$"));
+    s.replace(suffixRe, QString());
+    return s;
+}
+
+// Compare two serial numbers with normalisation.
+// Returns true if either the raw serials match or the normalised cores match.
+static bool serialsMatch(const QString &a, const QString &b)
+{
+    if (a.compare(b, Qt::CaseInsensitive) == 0)
+        return true;
+    const QString na = normalizeSerial(a);
+    const QString nb = normalizeSerial(b);
+    if (na.isEmpty() || nb.isEmpty())
+        return false;
+    return na == nb;
+}
+
+
 
 QList<MultiSignalMatch> LocalDatabaseProvider::matchROM(const ROMSignals &input) const
 {
@@ -73,7 +106,7 @@ QList<MultiSignalMatch> LocalDatabaseProvider::matchROM(const ROMSignals &input)
             }
 
             if (!input.serial.isEmpty() && !entry.serial.isEmpty()) {
-                if (input.serial.compare(entry.serial, Qt::CaseInsensitive) == 0) {
+                if (serialsMatch(input.serial, entry.serial)) {
                     match.serialMatch = true;
                     match.confidenceScore += MultiSignal::SERIAL_BONUS;
                     match.matchSignalCount++;
@@ -110,7 +143,7 @@ QList<MultiSignalMatch> LocalDatabaseProvider::matchROM(const ROMSignals &input)
                 match.matchSignalCount = 2;
 
                 if (!input.serial.isEmpty() && !entry.serial.isEmpty()) {
-                    if (input.serial.compare(entry.serial, Qt::CaseInsensitive) == 0) {
+                    if (serialsMatch(input.serial, entry.serial)) {
                         match.serialMatch = true;
                         match.confidenceScore += MultiSignal::SERIAL_BONUS;
                         match.matchSignalCount++;
@@ -120,6 +153,73 @@ QList<MultiSignalMatch> LocalDatabaseProvider::matchROM(const ROMSignals &input)
                 matches.append(match);
                 matchedVia = QStringLiteral("filename+size");
                 break;
+            }
+        }
+    }
+
+    // Third fallback: serial-only matching (for disc images where hash and
+    // filename may not match, but the disc serial was extracted from the header).
+    // Search both the CRC32 index (for entries that have both hash and serial)
+    // and the dedicated serial index (for entries like GameCube/Wii/Saturn
+    // that have serial but no hash).
+    if (matches.isEmpty() && !input.serial.isEmpty()) {
+        const QString normalizedSerial = input.serial.toUpper().trimmed();
+        QSet<QString> seenEntries;
+
+        // Check serial index first (O(1) lookup for serial-only entries)
+        auto serialRange = m_serialIndex.equal_range(normalizedSerial);
+        for (auto it = serialRange.first; it != serialRange.second; ++it) {
+            const ClrMameProEntry &entry = it.value();
+            const QString entryKey = entry.gameName + "|" + entry.romName;
+            if (seenEntries.contains(entryKey))
+                continue;
+            seenEntries.insert(entryKey);
+
+            MultiSignalMatch match;
+            match.entry = entry;
+            match.serialMatch = true;
+            match.confidenceScore = MultiSignal::SERIAL_BASE;
+            match.matchSignalCount = 1;
+
+            const qint64 sizeDiff = qAbs(input.fileSize - entry.size);
+            if (sizeDiff <= MultiSignal::SIZE_TOLERANCE) {
+                match.sizeMatch = true;
+                match.confidenceScore += MultiSignal::SIZE_BONUS;
+                match.matchSignalCount++;
+            }
+
+            matches.append(match);
+            matchedVia = QStringLiteral("serial");
+        }
+
+        // Also scan CRC32 index for entries that have both hash and serial
+        if (matches.isEmpty()) {
+            for (auto it = m_crc32Index.constBegin(); it != m_crc32Index.constEnd(); ++it) {
+                const ClrMameProEntry &entry = it.value();
+                if (entry.serial.isEmpty())
+                    continue;
+                const QString entryKey = entry.gameName + "|" + entry.romName;
+                if (seenEntries.contains(entryKey))
+                    continue;
+                seenEntries.insert(entryKey);
+
+                if (serialsMatch(input.serial, entry.serial)) {
+                    MultiSignalMatch match;
+                    match.entry = entry;
+                    match.serialMatch = true;
+                    match.confidenceScore = MultiSignal::SERIAL_BASE;
+                    match.matchSignalCount = 1;
+
+                    const qint64 sizeDiff = qAbs(input.fileSize - entry.size);
+                    if (sizeDiff <= MultiSignal::SIZE_TOLERANCE) {
+                        match.sizeMatch = true;
+                        match.confidenceScore += MultiSignal::SIZE_BONUS;
+                        match.matchSignalCount++;
+                    }
+
+                    matches.append(match);
+                    matchedVia = QStringLiteral("serial");
+                }
             }
         }
     }

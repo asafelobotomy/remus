@@ -59,6 +59,20 @@ public:
     LibretroMetadata lookup(const QString &crc32) const;
 
     /**
+     * @brief Look up enrichment metadata by serial
+     * @param serial Product serial (e.g., "SLUS-00707")
+     * @return Metadata (empty struct if not found)
+     */
+    LibretroMetadata lookupBySerial(const QString &serial) const;
+
+    /**
+     * @brief Look up enrichment metadata by game name
+     * @param name Exact game name (e.g., "Silent Hill (USA)")
+     * @return Metadata (empty struct if not found)
+     */
+    LibretroMetadata lookupByName(const QString &name) const;
+
+    /**
      * @brief Check whether any metadata exists for a CRC32
      */
     bool contains(const QString &crc32) const;
@@ -84,6 +98,12 @@ private:
 
     // CRC32 (uppercase) → merged metadata
     QHash<QString, LibretroMetadata> m_index;
+
+    // Serial (uppercase, trimmed) → merged metadata (for disc systems)
+    QHash<QString, LibretroMetadata> m_serialIndex;
+
+    // Game name → merged metadata (fallback for disc systems)
+    QHash<QString, LibretroMetadata> m_nameIndex;
 };
 
 } // namespace Remus

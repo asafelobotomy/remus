@@ -2,9 +2,12 @@
 
 #include "../core/scanner.h"
 #include "../core/system_detector.h"
+#include "../core/disc_magic_detector.h"
+#include "../core/archive_extractor.h"
 #include "../core/database.h"
 
 #include <QFileInfo>
+#include <QTemporaryDir>
 
 namespace Remus {
 
@@ -139,6 +142,26 @@ int LibraryService::persistScanResults(const QList<ScanResult> &results,
             ? sr.archiveInternalPath
             : sr.path;
         QString systemName = m_detector->detectSystem(sr.extension, systemDetectPath);
+
+        // For compressed disc images with ambiguous detection, extract and probe magic bytes
+        if (sr.isCompressed && !sr.archivePath.isEmpty()
+            && DiscMagicDetector::isDiscImageExtension(sr.extension)) {
+            QTemporaryDir tempDir;
+            if (tempDir.isValid()) {
+                ArchiveExtractor extractor;
+                const QString memberPath = sr.archiveInternalPath.isEmpty()
+                    ? sr.filename : sr.archiveInternalPath;
+                ExtractionResult ex = extractor.extractFile(
+                    sr.archivePath, memberPath, tempDir.path());
+                if (ex.success && !ex.extractedFiles.isEmpty()) {
+                    DiscHeaderInfo discInfo = DiscMagicDetector::detect(ex.extractedFiles.first());
+                    if (discInfo.detected && !discInfo.systemName.isEmpty()) {
+                        systemName = discInfo.systemName;
+                    }
+                }
+            }
+        }
+
         int systemId = systemName.isEmpty() ? 0 : db->getSystemId(systemName);
 
         FileRecord rec;

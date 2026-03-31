@@ -84,20 +84,23 @@ void Scanner::detectMultiFileSets(QList<ScanResult> &results)
 
 void Scanner::linkBinToCue(QList<ScanResult> &results)
 {
-    QMap<QString, int> cueFiles;
+    // For disc images, the data track (.bin/.img) is the file that DATs hash.
+    // Mark the sheet file (.cue) as non-primary so the data track gets hashed
+    // and matched against CRC/MD5/SHA1 values in the database.
+    QMap<QString, int> binFiles;
     for (int i = 0; i < results.size(); ++i) {
-        if (results[i].extension == Constants::Files::CUE) {
-            cueFiles[QFileInfo(results[i].path).completeBaseName()] = i;
+        if (results[i].extension == Constants::Files::BIN || results[i].extension == Constants::Files::IMG) {
+            binFiles[QFileInfo(results[i].path).completeBaseName()] = i;
         }
     }
 
     for (int i = 0; i < results.size(); ++i) {
-        if (results[i].extension == Constants::Files::BIN || results[i].extension == Constants::Files::IMG) {
+        if (results[i].extension == Constants::Files::CUE) {
             const QString baseName = QFileInfo(results[i].path).completeBaseName();
-            if (cueFiles.contains(baseName)) {
+            if (binFiles.contains(baseName)) {
                 results[i].isPrimary = false;
-                results[i].parentFilePath = results[cueFiles[baseName]].path;
-                qDebug() << "Linked" << results[i].filename << "to" << results[cueFiles[baseName]].filename;
+                results[i].parentFilePath = results[binFiles[baseName]].path;
+                qDebug() << "Linked" << results[i].filename << "to" << results[binFiles[baseName]].filename;
             }
         }
     }
@@ -133,23 +136,24 @@ void Scanner::linkGdiToTracks(QList<ScanResult> &results)
 
 void Scanner::linkCcdToImage(QList<ScanResult> &results)
 {
-    QMap<QString, int> ccdFiles;
+    // Data files (.img) should be primary; sheet files (.ccd, .sub) are non-primary.
+    QMap<QString, int> imgFiles;
     for (int i = 0; i < results.size(); ++i) {
-        if (results[i].extension == Constants::Files::CCD) {
+        if (results[i].extension == Constants::Files::IMG) {
             const QString key = QFileInfo(results[i].path).absolutePath() + "/" +
                                 QFileInfo(results[i].path).completeBaseName();
-            ccdFiles[key] = i;
+            imgFiles[key] = i;
         }
     }
 
     for (int i = 0; i < results.size(); ++i) {
-        if (results[i].extension == Constants::Files::IMG || results[i].extension == Constants::Files::SUB) {
+        if (results[i].extension == Constants::Files::CCD || results[i].extension == Constants::Files::SUB) {
             const QString key = QFileInfo(results[i].path).absolutePath() + "/" +
                                 QFileInfo(results[i].path).completeBaseName();
-            if (ccdFiles.contains(key)) {
+            if (imgFiles.contains(key)) {
                 results[i].isPrimary = false;
-                results[i].parentFilePath = results[ccdFiles[key]].path;
-                qDebug() << "Linked" << results[i].filename << "to" << results[ccdFiles[key]].filename;
+                results[i].parentFilePath = results[imgFiles[key]].path;
+                qDebug() << "Linked" << results[i].filename << "to" << results[imgFiles[key]].filename;
             }
         }
     }
@@ -157,23 +161,24 @@ void Scanner::linkCcdToImage(QList<ScanResult> &results)
 
 void Scanner::linkMdsToMdf(QList<ScanResult> &results)
 {
-    QMap<QString, int> mdsFiles;
-    for (int i = 0; i < results.size(); ++i) {
-        if (results[i].extension == Constants::Files::MDS) {
-            const QString key = QFileInfo(results[i].path).absolutePath() + "/" +
-                                QFileInfo(results[i].path).completeBaseName();
-            mdsFiles[key] = i;
-        }
-    }
-
+    // Data files (.mdf) should be primary; sheet files (.mds) are non-primary.
+    QMap<QString, int> mdfFiles;
     for (int i = 0; i < results.size(); ++i) {
         if (results[i].extension == Constants::Files::MDF) {
             const QString key = QFileInfo(results[i].path).absolutePath() + "/" +
                                 QFileInfo(results[i].path).completeBaseName();
-            if (mdsFiles.contains(key)) {
+            mdfFiles[key] = i;
+        }
+    }
+
+    for (int i = 0; i < results.size(); ++i) {
+        if (results[i].extension == Constants::Files::MDS) {
+            const QString key = QFileInfo(results[i].path).absolutePath() + "/" +
+                                QFileInfo(results[i].path).completeBaseName();
+            if (mdfFiles.contains(key)) {
                 results[i].isPrimary = false;
-                results[i].parentFilePath = results[mdsFiles[key]].path;
-                qDebug() << "Linked" << results[i].filename << "to" << results[mdsFiles[key]].filename;
+                results[i].parentFilePath = results[mdfFiles[key]].path;
+                qDebug() << "Linked" << results[i].filename << "to" << results[mdfFiles[key]].filename;
             }
         }
     }

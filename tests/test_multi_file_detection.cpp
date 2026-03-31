@@ -109,10 +109,10 @@ void MultiFileDetectionTest::testLinkCueBinPair() {
     QVERIFY(cueFile != nullptr);
     QVERIFY(binFile != nullptr);
     
-    // CUE should be primary, BIN should be secondary
-    QVERIFY(cueFile->isPrimary);
-    QVERIFY(!binFile->isPrimary);
-    QCOMPARE(binFile->parentFilePath, cueFile->path);
+    // BIN (data track) should be primary, CUE (sheet) should be secondary
+    QVERIFY(binFile->isPrimary);
+    QVERIFY(!cueFile->isPrimary);
+    QCOMPARE(cueFile->parentFilePath, binFile->path);
 }
 
 void MultiFileDetectionTest::testLinkCueMultipleBins() {
@@ -158,14 +158,14 @@ void MultiFileDetectionTest::testLinkCueImgFile() {
     
     QCOMPARE(results.size(), 2);
     
-    // Find IMG file
-    ScanResult *imgFile = nullptr;
+    // Find CUE file — it should be non-primary (linked to IMG data track)
+    ScanResult *cueFile = nullptr;
     for (auto &result : results) {
-        if (result.extension == ".img") imgFile = &result;
+        if (result.extension == ".cue") cueFile = &result;
     }
     
-    QVERIFY(imgFile != nullptr);
-    QVERIFY(!imgFile->isPrimary); // Should be linked
+    QVERIFY(cueFile != nullptr);
+    QVERIFY(!cueFile->isPrimary); // Sheet linked to data track
 }
 
 void MultiFileDetectionTest::testLinkGdiTracks() {
@@ -244,9 +244,9 @@ void MultiFileDetectionTest::testLinkCcdImgPair() {
     
     QVERIFY(ccdFile != nullptr);
     QVERIFY(imgFile != nullptr);
-    QVERIFY(ccdFile->isPrimary);
-    QVERIFY(!imgFile->isPrimary);
-    QCOMPARE(imgFile->parentFilePath, ccdFile->path);
+    QVERIFY(imgFile->isPrimary);
+    QVERIFY(!ccdFile->isPrimary);
+    QCOMPARE(ccdFile->parentFilePath, imgFile->path);
 }
 
 void MultiFileDetectionTest::testLinkCcdWithSub() {
@@ -263,7 +263,7 @@ void MultiFileDetectionTest::testLinkCcdWithSub() {
         if (result.isPrimary) primaryCount++;
     }
     
-    QCOMPARE(primaryCount, 1); // Only CCD is primary
+    QCOMPARE(primaryCount, 1); // Only IMG (data track) is primary
 }
 
 void MultiFileDetectionTest::testLinkCcdMismatch() {
@@ -298,9 +298,9 @@ void MultiFileDetectionTest::testLinkMdsMdfPair() {
     
     QVERIFY(mdsFile != nullptr);
     QVERIFY(mdfFile != nullptr);
-    QVERIFY(mdsFile->isPrimary);
-    QVERIFY(!mdfFile->isPrimary);
-    QCOMPARE(mdfFile->parentFilePath, mdsFile->path);
+    QVERIFY(mdfFile->isPrimary);
+    QVERIFY(!mdsFile->isPrimary);
+    QCOMPARE(mdsFile->parentFilePath, mdfFile->path);
 }
 
 void MultiFileDetectionTest::testLinkMdsMdfMismatch() {

@@ -150,6 +150,24 @@ public:
     GameMetadata getByHash(const QString &hash, const QString &system) override;
     GameMetadata getById(const QString &id) override;
     ArtworkUrls getArtwork(const QString &id) override;
+
+    /**
+     * @brief Convert a multi-signal match result to GameMetadata
+     *
+     * Use after matchROM() to get full metadata (including inline DAT
+     * fields like publisher/developer) for entries that may lack hashes
+     * (e.g. serial-only GameCube/Wii/Saturn entries).
+     */
+    GameMetadata getMetadataForEntry(const MultiSignalMatch &match) const;
+
+    /**
+     * @brief Enrich existing metadata with libretro per-CRC data
+     *
+     * Fills empty publisher/developer/genre/players/releaseDate from the
+     * libretro metadata files, keyed by CRC32. Useful when the match
+     * came from another provider (e.g. hasheous) that returned sparse data.
+     */
+    void enrichFromLibretro(GameMetadata &metadata, const QString &crc32) const;
     
     // MetadataProvider required methods
     QString name() const override { return "LocalDatabase"; }
@@ -222,6 +240,9 @@ private:
     QHash<QString, ClrMameProEntry> m_crc32Index;   // CRC32 -> ClrMameProEntry
     QHash<QString, ClrMameProEntry> m_md5Index;     // MD5 -> ClrMameProEntry
     QHash<QString, ClrMameProEntry> m_sha1Index;    // SHA1 -> ClrMameProEntry
+
+    // Serial index for entries with serial but no hash (GameCube, Wii, Saturn)
+    QMultiHash<QString, ClrMameProEntry> m_serialIndex;  // serial -> ClrMameProEntry
     
     // System statistics
     QMap<QString, int> m_systemStats;

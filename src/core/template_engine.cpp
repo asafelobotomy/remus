@@ -153,21 +153,99 @@ QMap<QString, QString> TemplateEngine::buildVariableMap(const GameMetadata &meta
                                                         const QMap<QString, QString> &fileInfo)
 {
     QMap<QString, QString> variables;
-    
+
+    // Strip No-Intro / Redump trailing parenthetical tags from title,
+    // extracting region, languages, version, status into separate fields.
+    QString cleanTitle = metadata.title;
+    QString extractedRegion;
+    QString extractedLanguages;
+    QString extractedVersion;
+    QString extractedStatus;
+
+    // Known region tokens
+    static const QStringList regionTokens = {
+        "USA", "Europe", "Japan", "World", "Australia", "Brazil",
+        "Canada", "China", "France", "Germany", "Italy", "Korea",
+        "Netherlands", "Russia", "Spain", "Sweden", "UK"
+    };
+    // Known status tokens
+    static const QStringList statusTokens = {
+        "Beta", "Proto", "Sample", "Demo", "Kiosk", "Debug",
+        "Unl", "Aftermarket", "Virtual Console"
+    };
+
+    // Match trailing (Tag1) (Tag2) ... groups
+    QRegularExpression tagPattern(R"(\s*\(([^)]+)\)\s*$)");
+    bool stripping = true;
+    while (stripping) {
+        QRegularExpressionMatch m = tagPattern.match(cleanTitle);
+        if (!m.hasMatch()) break;
+
+        QString tag = m.captured(1).trimmed();
+        bool recognized = false;
+
+        // Region: "USA", "Europe", "USA, Europe", etc.
+        QStringList tagParts = tag.split(',');
+        bool allRegion = !tagParts.isEmpty();
+        for (const QString &part : tagParts) {
+            if (!regionTokens.contains(part.trimmed(), Qt::CaseInsensitive)) {
+                allRegion = false;
+                break;
+            }
+        }
+        if (allRegion) {
+            extractedRegion = tag;
+            recognized = true;
+        }
+
+        // Languages: "En", "En,Fr,De", "En,Ja", etc.
+        if (!recognized) {
+            static const QRegularExpression langPattern(
+                R"(^[A-Z][a-z](?:,[A-Z][a-z])*$)");
+            if (langPattern.match(tag).hasMatch()) {
+                extractedLanguages = tag;
+                recognized = true;
+            }
+        }
+
+        // Version: "Rev A", "Rev 1", "v1.0", "v1.1", etc.
+        if (!recognized) {
+            static const QRegularExpression versionPattern(
+                R"(^(?:Rev\s+\w+|v\d+\.\d+.*)$)", QRegularExpression::CaseInsensitiveOption);
+            if (versionPattern.match(tag).hasMatch()) {
+                extractedVersion = tag;
+                recognized = true;
+            }
+        }
+
+        // Status: "Beta", "Proto", "Sample", etc.
+        if (!recognized && statusTokens.contains(tag, Qt::CaseInsensitive)) {
+            extractedStatus = tag;
+            recognized = true;
+        }
+
+        if (recognized) {
+            cleanTitle = cleanTitle.left(m.capturedStart()).trimmed();
+        } else {
+            stripping = false;  // Unrecognized tag — stop stripping
+        }
+    }
+
     // Title (normalized with articles moved)
-    variables[Constants::Templates::Variables::TITLE] = normalizeTitle(metadata.title);
+    variables[Constants::Templates::Variables::TITLE] = normalizeTitle(cleanTitle);
     
-    // Region
-    variables[Constants::Templates::Variables::REGION] = metadata.region;
+    // Region — prefer metadata, fall back to extracted
+    variables[Constants::Templates::Variables::REGION] =
+        !metadata.region.isEmpty() ? metadata.region : extractedRegion;
     
-    // Languages (from genres for now, proper support needs metadata enhancement)
-    variables[Constants::Templates::Variables::LANGUAGES] = "";
+    // Languages
+    variables[Constants::Templates::Variables::LANGUAGES] = extractedLanguages;
     
     // Version (only if specified in metadata)
-    variables[Constants::Templates::Variables::VERSION] = "";
+    variables[Constants::Templates::Variables::VERSION] = extractedVersion;
     
     // Status (Beta, Proto, Sample, etc.)
-    variables[Constants::Templates::Variables::STATUS] = "";
+    variables[Constants::Templates::Variables::STATUS] = extractedStatus;
     
     // Additional (Limited Edition, Greatest Hits, etc.)
     variables[Constants::Templates::Variables::ADDITIONAL] = "";

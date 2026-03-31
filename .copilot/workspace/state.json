@@ -1,9 +1,9 @@
 {
-  "last_compaction_epoch": 1774953576,
+  "last_compaction_epoch": 1774987800,
   "last_explicit_epoch": 0,
-  "last_soft_trigger_epoch": 1774954036,
+  "last_soft_trigger_epoch": 1774992280,
   "last_trigger": "stop",
-  "last_write_epoch": 1774954193,
+  "last_write_epoch": 1774992356,
   "schema_version": 1,
   "session_id": "unknown",
   "session_state": "complete"

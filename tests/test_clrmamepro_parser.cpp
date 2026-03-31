@@ -44,6 +44,10 @@ private slots:
     void testParseEmptyFile();
     void testParseNonExistentFile();
     void testParseNoGameBlocks();
+
+    // ── Inline metadata tests (Redump/GameTDB DATs) ──────────────
+    void testParseInlineMetadata();
+    void testParseInlineMetadataPartial();
 };
 
 // ─────────────────────────────────────────────────────────────────
@@ -221,6 +225,69 @@ void ClrMameProParserTest::testParseNoGameBlocks()
 
     QList<ClrMameProEntry> entries = ClrMameProParser::parse(path);
     QVERIFY(entries.isEmpty());
+}
+
+// ─────────────────────────────────────────────────────────────────
+// Inline metadata tests (Redump/GameTDB DATs)
+// ─────────────────────────────────────────────────────────────────
+
+void ClrMameProParserTest::testParseInlineMetadata()
+{
+    // Redump-style DAT with publisher, developer, releaseyear, users
+    QString content =
+        "game (\n"
+        "    name \"Paper Mario: The Thousand-Year Door (USA)\"\n"
+        "    serial \"G8ME01\"\n"
+        "    developer \"Intelligent Systems\"\n"
+        "    publisher \"Nintendo\"\n"
+        "    releaseyear 2004\n"
+        "    releasemonth 10\n"
+        "    releaseday 11\n"
+        "    users 1\n"
+        "    esrb_rating \"E\"\n"
+        "    rom (\n"
+        "        name \"Paper Mario: The Thousand-Year Door (USA).iso\"\n"
+        "        serial \"G8ME01\"\n"
+        "    )\n"
+        ")\n";
+
+    QTemporaryFile tmp;
+    QString path = writeTempDat(tmp, content);
+    QVERIFY(!path.isEmpty());
+
+    QList<ClrMameProEntry> entries = ClrMameProParser::parse(path);
+
+    QCOMPARE(entries.size(), 1);
+    QCOMPARE(entries[0].gameName, QString("Paper Mario: The Thousand-Year Door (USA)"));
+    QCOMPARE(entries[0].serial, QString("G8ME01"));
+    QCOMPARE(entries[0].publisher, QString("Nintendo"));
+    QCOMPARE(entries[0].developer, QString("Intelligent Systems"));
+    QCOMPARE(entries[0].releaseYear, 2004);
+    QCOMPARE(entries[0].users, 1);
+}
+
+void ClrMameProParserTest::testParseInlineMetadataPartial()
+{
+    // DAT with only publisher, no developer/year/users
+    QString content =
+        "game (\n"
+        "    name \"Some Game (Japan)\"\n"
+        "    serial \"SLPS-12345\"\n"
+        "    publisher \"Konami\"\n"
+        "    rom ( name \"Some Game (Japan).bin\" size 583415952 crc 8ACD8FB1 serial \"SLPS-12345\" )\n"
+        ")\n";
+
+    QTemporaryFile tmp;
+    QString path = writeTempDat(tmp, content);
+    QVERIFY(!path.isEmpty());
+
+    QList<ClrMameProEntry> entries = ClrMameProParser::parse(path);
+
+    QCOMPARE(entries.size(), 1);
+    QCOMPARE(entries[0].publisher, QString("Konami"));
+    QVERIFY(entries[0].developer.isEmpty());
+    QCOMPARE(entries[0].releaseYear, 0);
+    QCOMPARE(entries[0].users, 0);
 }
 
 QTEST_MAIN(ClrMameProParserTest)

@@ -20,6 +20,12 @@ struct ClrMameProEntry {
     QString md5;            // MD5 hash
     QString sha1;           // SHA1 hash
     QString serial;         // Serial number
+
+    // Inline metadata (present in Redump/GameTDB DATs)
+    QString publisher;
+    QString developer;
+    int releaseYear = 0;
+    int users = 0;          // Max players
 };
 
 /**
