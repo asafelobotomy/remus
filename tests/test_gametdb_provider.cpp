@@ -203,6 +203,27 @@ private slots:
         QCOMPARE(results.size(), 2); // Mario Kart Wii + Super Mario Sunshine
     }
 
+    void testSearchByNameRespectsSystemAndRegion()
+    {
+        QTemporaryDir tmpDir;
+        QVERIFY(tmpDir.isValid());
+
+        GameTDBProvider provider;
+        provider.loadDatabase(writeSampleXml(tmpDir.path()));
+
+        auto wiiResults = provider.searchByName("Mario", "Wii", "");
+        QCOMPARE(wiiResults.size(), 1);
+        QCOMPARE(wiiResults.first().title, QString("Mario Kart Wii"));
+
+        auto gcResults = provider.searchByName("Mario", "GameCube", "NTSC-U");
+        QCOMPARE(gcResults.size(), 1);
+        QCOMPARE(gcResults.first().title, QString("Super Mario Sunshine"));
+
+        auto palResults = provider.searchByName("Mario", "", "PAL");
+        QCOMPARE(palResults.size(), 1);
+        QCOMPARE(palResults.first().title, QString("Mario Kart Wii"));
+    }
+
     void testSearchByNameCaseInsensitive()
     {
         QTemporaryDir tmpDir;
@@ -350,7 +371,7 @@ private slots:
         GameTDBProvider provider;
         QCOMPARE(provider.name(), QString("GameTDB"));
         QCOMPARE(provider.requiresAuth(), false);
-        QCOMPARE(provider.priority(), 60);
+        QCOMPARE(provider.priority(), 150);
     }
 };
 

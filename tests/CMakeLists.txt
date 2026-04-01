@@ -141,6 +141,11 @@ add_remus_test(test_libretro_metadata_parser LibretroMetadataParserTest
     LIBS Qt6::Test Qt6::Core remus-metadata
 )
 
+add_remus_test(test_local_database_provider LocalDatabaseProviderTest
+    SOURCES test_local_database_provider.cpp
+    LIBS Qt6::Test Qt6::Core remus-metadata remus-core
+)
+
 add_remus_test(test_thumbnail_urls ThumbnailUrlTest
     SOURCES test_thumbnail_urls.cpp
     LIBS Qt6::Test Qt6::Core remus-metadata remus-core

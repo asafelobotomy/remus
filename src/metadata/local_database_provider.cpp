@@ -118,40 +118,66 @@ QList<SearchResult> LocalDatabaseProvider::searchByName(const QString &title,
     
     QString searchLower = title.toLower();
     
-    // Search CRC32 index (most entries)
-    for (auto it = m_crc32Index.constBegin(); it != m_crc32Index.constEnd(); ++it) {
-        const ClrMameProEntry &entry = it.value();
-        
-        // Simple substring matching
-        if (entry.gameName.toLower().contains(searchLower)) {
-            SearchResult result;
-            result.id = entry.crc32; // Use CRC32 as ID
-            result.title = entry.gameName;
-            result.system = system;
-            
-            // Calculate match score
-            if (entry.gameName.toLower() == searchLower) {
-                result.matchScore = 1.0f; // Exact match
-            } else if (entry.gameName.toLower().startsWith(searchLower)) {
-                result.matchScore = 0.9f; // Starts with
-            } else {
-                result.matchScore = 0.7f; // Contains
-            }
-            
-            // Filter by region if specified (extract from gameName)
-            if (!region.isEmpty()) {
-                if (!entry.gameName.contains(region, Qt::CaseInsensitive)) {
-                    continue; // Skip non-matching regions
-                }
-            }
-            
-            results.append(result);
-            
-            if (results.size() >= 10) {
-                break; // Limit results
-            }
+    QSet<QString> seenEntries;
+    auto maybeAppend = [&](const ClrMameProEntry &entry) {
+        if (results.size() >= 10) {
+            return;
         }
-    }
+
+        const QString entryKey = entry.gameName + QLatin1Char('|')
+            + entry.romName + QLatin1Char('|') + entry.serial;
+        if (seenEntries.contains(entryKey)) {
+            return;
+        }
+        seenEntries.insert(entryKey);
+
+        if (!entry.gameName.toLower().contains(searchLower)) {
+            return;
+        }
+
+        const QString entrySystem = systemForEntry(entry);
+        if (!system.isEmpty() && !entrySystem.isEmpty()
+            && !entrySystem.contains(system, Qt::CaseInsensitive)
+            && !system.contains(entrySystem, Qt::CaseInsensitive)) {
+            return;
+        }
+
+        if (!region.isEmpty()
+            && !entry.region.contains(region, Qt::CaseInsensitive)
+            && !entry.gameName.contains(region, Qt::CaseInsensitive)) {
+            return;
+        }
+
+        SearchResult result;
+        result.id = identifierForEntry(entry);
+        if (result.id.isEmpty()) {
+            return;
+        }
+
+        result.title = entry.gameName;
+        result.system = entrySystem.isEmpty() ? system : entrySystem;
+        result.region = entry.region;
+        result.releaseYear = entry.releaseYear;
+
+        if (entry.gameName.toLower() == searchLower) {
+            result.matchScore = 1.0f;
+        } else if (entry.gameName.toLower().startsWith(searchLower)) {
+            result.matchScore = 0.9f;
+        } else {
+            result.matchScore = 0.7f;
+        }
+
+        results.append(result);
+    };
+
+    for (auto it = m_crc32Index.constBegin(); it != m_crc32Index.constEnd(); ++it)
+        maybeAppend(it.value());
+    for (auto it = m_md5Index.constBegin(); it != m_md5Index.constEnd(); ++it)
+        maybeAppend(it.value());
+    for (auto it = m_sha1Index.constBegin(); it != m_sha1Index.constEnd(); ++it)
+        maybeAppend(it.value());
+    for (auto it = m_serialIndex.constBegin(); it != m_serialIndex.constEnd(); ++it)
+        maybeAppend(it.value());
     
     // Sort by match score
     std::sort(results.begin(), results.end(), [](const SearchResult &a, const SearchResult &b) {
@@ -206,22 +232,25 @@ GameMetadata LocalDatabaseProvider::getByHash(const QString &hash, const QString
 
 GameMetadata LocalDatabaseProvider::getById(const QString &id)
 {
-    // ID is the CRC32/MD5/SHA1 hash
-    return getByHash(id, QString());
+    QMutexLocker locker(&m_mutex);
+
+    ClrMameProEntry entry;
+    if (!findEntryById(id, &entry)) {
+        return GameMetadata();
+    }
+
+    return datEntryToMetadata(entry);
 }
 
 ArtworkUrls LocalDatabaseProvider::getArtwork(const QString &id)
 {
     QMutexLocker locker(&m_mutex);
-    QString normalized = normalizeHash(id);
 
-    // Find the entry and system name via CRC32 lookup
-    if (!m_crc32Index.contains(normalized) || !m_hashToSystem.contains(normalized)) {
+    ClrMameProEntry entry;
+    QString systemName;
+    if (!findEntryById(id, &entry, &systemName) || systemName.isEmpty()) {
         return ArtworkUrls();
     }
-
-    const ClrMameProEntry &entry = m_crc32Index[normalized];
-    const QString &systemName = m_hashToSystem[normalized];
 
     ArtworkUrls artwork;
     QStringList boxCandidates = generateThumbnailCandidates(systemName, entry.gameName, QStringLiteral("Named_Boxarts"));
@@ -300,6 +329,103 @@ QString LocalDatabaseProvider::buildThumbnailUrl(const QString &systemName,
     return url.toString(QUrl::FullyEncoded);
 }
 
+QString LocalDatabaseProvider::identifierForEntry(const ClrMameProEntry &entry) const
+{
+    if (!entry.crc32.isEmpty()) {
+        return entry.crc32;
+    }
+    if (!entry.md5.isEmpty()) {
+        return entry.md5;
+    }
+    if (!entry.sha1.isEmpty()) {
+        return entry.sha1;
+    }
+    return entry.serial.toUpper().trimmed();
+}
+
+QString LocalDatabaseProvider::systemForEntry(const ClrMameProEntry &entry) const
+{
+    if (!entry.crc32.isEmpty()) {
+        const QString normalized = normalizeHash(entry.crc32);
+        if (m_hashToSystem.contains(normalized)) {
+            return m_hashToSystem.value(normalized);
+        }
+    }
+
+    if (!entry.md5.isEmpty()) {
+        const QString normalized = normalizeHash(entry.md5);
+        if (m_hashToSystem.contains(normalized)) {
+            return m_hashToSystem.value(normalized);
+        }
+    }
+
+    if (!entry.sha1.isEmpty()) {
+        const QString normalized = normalizeHash(entry.sha1);
+        if (m_hashToSystem.contains(normalized)) {
+            return m_hashToSystem.value(normalized);
+        }
+    }
+
+    if (!entry.serial.isEmpty()) {
+        const QString normalized = entry.serial.toUpper().trimmed();
+        if (m_serialToSystem.contains(normalized)) {
+            return m_serialToSystem.value(normalized);
+        }
+    }
+
+    return QString();
+}
+
+bool LocalDatabaseProvider::findEntryById(const QString &id,
+                                          ClrMameProEntry *entry,
+                                          QString *systemName) const
+{
+    const QString normalizedHash = normalizeHash(id);
+
+    if (m_crc32Index.contains(normalizedHash)) {
+        if (entry) {
+            *entry = m_crc32Index.value(normalizedHash);
+        }
+        if (systemName) {
+            *systemName = m_hashToSystem.value(normalizedHash);
+        }
+        return true;
+    }
+
+    if (m_md5Index.contains(normalizedHash)) {
+        if (entry) {
+            *entry = m_md5Index.value(normalizedHash);
+        }
+        if (systemName) {
+            *systemName = m_hashToSystem.value(normalizedHash);
+        }
+        return true;
+    }
+
+    if (m_sha1Index.contains(normalizedHash)) {
+        if (entry) {
+            *entry = m_sha1Index.value(normalizedHash);
+        }
+        if (systemName) {
+            *systemName = m_hashToSystem.value(normalizedHash);
+        }
+        return true;
+    }
+
+    const QString normalizedSerial = id.toUpper().trimmed();
+    if (m_serialIndex.contains(normalizedSerial)) {
+        if (entry) {
+            *entry = m_serialIndex.value(normalizedSerial);
+        }
+        if (systemName) {
+            *systemName = m_serialToSystem.value(normalizedSerial);
+        }
+        return true;
+    }
+
+    return false;
+}
+
 void LocalDatabaseProvider::indexEntries(const QList<ClrMameProEntry> &entries, const QString &systemName)
 {
     QMutexLocker locker(&m_mutex);
@@ -319,6 +445,7 @@ void LocalDatabaseProvider::indexEntries(const QList<ClrMameProEntry> &entries, 
         if (!entry.md5.isEmpty()) {
             QString normalized = normalizeHash(entry.md5);
             m_md5Index[normalized] = entry;
+            m_hashToSystem[normalized] = systemName;
             md5Count++;
         }
         
@@ -326,13 +453,16 @@ void LocalDatabaseProvider::indexEntries(const QList<ClrMameProEntry> &entries, 
         if (!entry.sha1.isEmpty()) {
             QString normalized = normalizeHash(entry.sha1);
             m_sha1Index[normalized] = entry;
+            m_hashToSystem[normalized] = systemName;
             sha1Count++;
         }
 
         // Index by serial (for entries with serial, especially those
         // without any hash like GameCube/Wii/Saturn DAT entries)
         if (!entry.serial.isEmpty()) {
-            m_serialIndex.insert(entry.serial.toUpper().trimmed(), entry);
+            const QString normalizedSerial = entry.serial.toUpper().trimmed();
+            m_serialIndex.insert(normalizedSerial, entry);
+            m_serialToSystem[normalizedSerial] = systemName;
         }
     }
     
@@ -367,23 +497,25 @@ void LocalDatabaseProvider::enrichFromLibretro(GameMetadata &metadata, const QSt
         const QString normalized = crc32.toUpper().trimmed();
         if (m_metadataParser.contains(normalized)) {
             apply(m_metadataParser.lookup(normalized));
-            return;
         }
+    }
+
+    const QString serial = metadata.externalIds.value(QStringLiteral("serial")).toUpper().trimmed();
+    if (!serial.isEmpty()) {
+        apply(m_metadataParser.lookupBySerial(serial));
     }
 
     // Try name-based lookup (disc systems where CRC doesn't match libretro data)
     if (!metadata.title.isEmpty()) {
-        LibretroMetadata byName = m_metadataParser.lookupByName(metadata.title);
-        if (!byName.developer.isEmpty() || !byName.publisher.isEmpty()) {
-            apply(byName);
-            return;
-        }
+        apply(m_metadataParser.lookupByName(metadata.title));
     }
 }
 
 GameMetadata LocalDatabaseProvider::datEntryToMetadata(const ClrMameProEntry &entry) const
 {
     GameMetadata metadata;
+    metadata.id = identifierForEntry(entry);
+    metadata.providerId = QStringLiteral("localdatabase");
     
     // Use gameName as title (parent game)
     metadata.title = entry.gameName;
@@ -424,6 +556,7 @@ GameMetadata LocalDatabaseProvider::datEntryToMetadata(const ClrMameProEntry &en
     if (!entry.serial.isEmpty()) {
         metadata.externalIds["serial"] = entry.serial;
     }
+    metadata.system = systemForEntry(entry);
     
     // Match score and method
     metadata.matchScore = 1.0f; // Hash match is 100% confidence
@@ -444,55 +577,35 @@ GameMetadata LocalDatabaseProvider::datEntryToMetadata(const ClrMameProEntry &en
     }
 
     // Secondary enrichment: libretro metadata files (fills gaps not covered by DAT)
-    if (!entry.crc32.isEmpty() && m_metadataParser.contains(entry.crc32)) {
-        LibretroMetadata enrichment = m_metadataParser.lookup(entry.crc32);
-        if (!enrichment.genre.isEmpty() && metadata.genres.isEmpty()) {
-            metadata.genres = QStringList{enrichment.genre};
-        }
-        if (!enrichment.developer.isEmpty() && metadata.developer.isEmpty()) {
-            metadata.developer = enrichment.developer;
-        }
-        if (!enrichment.publisher.isEmpty() && metadata.publisher.isEmpty()) {
-            metadata.publisher = enrichment.publisher;
-        }
-        if (enrichment.maxUsers > 0 && metadata.players == 0) {
-            metadata.players = enrichment.maxUsers;
-        }
-        if (enrichment.releaseYear > 0 && metadata.releaseDate.isEmpty()) {
-            metadata.releaseDate = QString::number(enrichment.releaseYear);
-        }
-    }
+    enrichFromLibretro(metadata, entry.crc32);
 
     // Construct libretro-thumbnails artwork URLs with fallback candidates
-    if (!entry.crc32.isEmpty()) {
-        QString normalized = normalizeHash(entry.crc32);
-        if (m_hashToSystem.contains(normalized)) {
-            const QString &systemName = m_hashToSystem[normalized];
-            metadata.system = systemName;
+    const QString systemName = metadata.system.isEmpty() ? systemForEntry(entry) : metadata.system;
+    if (!systemName.isEmpty()) {
+        metadata.system = systemName;
 
-            // Box art: primary candidate first, then fallbacks
-            QStringList boxCandidates = generateThumbnailCandidates(
-                systemName, entry.gameName, QStringLiteral("Named_Boxarts"));
-            if (!boxCandidates.isEmpty()) {
-                metadata.boxArtUrl = boxCandidates.first();
-            }
+        // Box art: primary candidate first, then fallbacks
+        QStringList boxCandidates = generateThumbnailCandidates(
+            systemName, entry.gameName, QStringLiteral("Named_Boxarts"));
+        if (!boxCandidates.isEmpty()) {
+            metadata.boxArtUrl = boxCandidates.first();
+        }
 
-            // Screenshots: snap + title primary candidates, then all fallbacks
-            QStringList snapCandidates = generateThumbnailCandidates(
-                systemName, entry.gameName, QStringLiteral("Named_Snaps"));
-            QStringList titleCandidates = generateThumbnailCandidates(
-                systemName, entry.gameName, QStringLiteral("Named_Titles"));
-            if (!snapCandidates.isEmpty()) {
-                metadata.screenshotUrls.append(snapCandidates.first());
-            }
-            if (!titleCandidates.isEmpty()) {
-                metadata.screenshotUrls.append(titleCandidates.first());
-            }
+        // Screenshots: snap + title primary candidates, then all fallbacks
+        QStringList snapCandidates = generateThumbnailCandidates(
+            systemName, entry.gameName, QStringLiteral("Named_Snaps"));
+        QStringList titleCandidates = generateThumbnailCandidates(
+            systemName, entry.gameName, QStringLiteral("Named_Titles"));
+        if (!snapCandidates.isEmpty()) {
+            metadata.screenshotUrls.append(snapCandidates.first());
+        }
+        if (!titleCandidates.isEmpty()) {
+            metadata.screenshotUrls.append(titleCandidates.first());
+        }
 
-            // Append fallback box art candidates (index 1+)
-            for (int i = 1; i < boxCandidates.size(); ++i) {
-                metadata.screenshotUrls.append(boxCandidates.at(i));
-            }
+        // Append fallback box art candidates (index 1+)
+        for (int i = 1; i < boxCandidates.size(); ++i) {
+            metadata.screenshotUrls.append(boxCandidates.at(i));
         }
     }
 

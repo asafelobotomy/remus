@@ -153,6 +153,7 @@ private:
         int priority;
         bool enabled;
         bool supportsHash;
+        bool isLocal;   ///< True for offline providers (localdatabase, gametdb)
     };
     
     QMap<QString, ProviderInfo> m_providers;
@@ -164,13 +165,42 @@ private:
      * @return Sorted list of provider names
      */
     QStringList getSortedProviders(bool hashOnly = false) const;
-    
+
+    /** @brief Get local (offline) providers sorted by priority */
+    QStringList getSortedLocalProviders() const;
+
+    /** @brief Get remote (online) providers sorted by priority */
+    QStringList getSortedRemoteProviders() const;
+
+    /**
+     * @brief Query a single provider and merge results into the accumulator
+     *
+     * Tries hash → serial (LocalDatabase only) → name search in sequence.
+     * Fills only the fields that are still empty in @p accumulator (additive).
+     */
+    void queryProvider(GameMetadata &accumulator,
+                       const QString &providerName,
+                       const QString &hash,
+                       const QString &name,
+                       const QString &system,
+                       const QString &crc32,
+                       const QString &md5,
+                       const QString &sha1,
+                       const QString &serial);
+
     /**
      * @brief Determine if provider supports hash matching
      * @param name Provider identifier
      * @return True if hash-capable
      */
     bool detectHashSupport(const QString &name) const;
+
+    /**
+     * @brief Determine if provider is offline (no network required)
+     * @param name Provider identifier
+     * @return True for local/offline providers
+     */
+    bool detectLocalProvider(const QString &name) const;
 };
 
 } // namespace Remus

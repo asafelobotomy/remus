@@ -236,6 +236,23 @@ private:
      */
     QString normalizeHash(const QString &hash) const;
 
+    /**
+     * @brief Choose the best stable lookup identifier for an entry
+     */
+    QString identifierForEntry(const ClrMameProEntry &entry) const;
+
+    /**
+     * @brief Resolve the DAT system name for an entry
+     */
+    QString systemForEntry(const ClrMameProEntry &entry) const;
+
+    /**
+     * @brief Find an entry by hash or serial lookup ID
+     */
+    bool findEntryById(const QString &id,
+                       ClrMameProEntry *entry,
+                       QString *systemName = nullptr) const;
+
     // Hash indexes for O(1) lookup
     QHash<QString, ClrMameProEntry> m_crc32Index;   // CRC32 -> ClrMameProEntry
     QHash<QString, ClrMameProEntry> m_md5Index;     // MD5 -> ClrMameProEntry
@@ -250,8 +267,9 @@ private:
     // DAT metadata tracking
     QMap<QString, DatMetadata> m_datMetadata;  // System name -> DAT metadata
     
-    // Hash -> system name for thumbnail URL construction
-    QHash<QString, QString> m_hashToSystem;  // normalized CRC32 -> system name
+    // Lookup key -> system name for thumbnail URL construction and name search
+    QHash<QString, QString> m_hashToSystem;    // normalized CRC32/MD5/SHA1 -> system name
+    QHash<QString, QString> m_serialToSystem;  // normalized serial -> system name
 
     // Enrichment metadata (genre, developer, publisher, etc.)
     LibretroMetadataParser m_metadataParser;

@@ -182,15 +182,18 @@ QList<SearchResult> GameTDBProvider::searchByName(const QString &title,
                                                    const QString &system,
                                                    const QString &region)
 {
-    Q_UNUSED(system)
-    Q_UNUSED(region)
-
     QList<SearchResult> results;
     QMutexLocker locker(&m_mutex);
 
     const QString needle = title.toLower();
     for (auto it = m_idIndex.constBegin(); it != m_idIndex.constEnd(); ++it) {
         const GameTDBEntry &entry = it.value();
+        if (!system.isEmpty() && entry.type.compare(system, Qt::CaseInsensitive) != 0) {
+            continue;
+        }
+        if (!region.isEmpty() && !entry.region.contains(region, Qt::CaseInsensitive)) {
+            continue;
+        }
         if (entry.title.toLower().contains(needle)) {
             SearchResult sr;
             sr.id = entry.id;

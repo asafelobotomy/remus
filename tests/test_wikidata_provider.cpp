@@ -73,7 +73,7 @@ private slots:
     {
         auto info = Constants::Providers::getProviderInfo(Constants::Providers::WIKIDATA);
         QVERIFY(info != nullptr);
-        QCOMPARE(info->priority, 30);
+        QCOMPARE(info->priority, 40);
         QVERIFY(!info->supportsHashMatch);
         QVERIFY(info->supportsNameMatch);
         QVERIFY(!info->requiresAuth);

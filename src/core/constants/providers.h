@@ -14,16 +14,34 @@ namespace Providers {
 // Provider Identifiers (Internal use)
 // ============================================================================
 
-// Provider priority values (higher = tried first)
+// Provider priority values (higher = tried first).
+// Ordered by the number of GameMetadata fields each provider populates on a
+// successful match ("field-coverage score", out of 10 core fields).
+//
+// LOCAL BAND (200-100): offline providers — always exhausted before any
+//   network call is made (see two-phase waterfall in ProviderOrchestrator).
+//
+//   localdatabase 200 — 9/10: title pub dev genres date desc players art shots; +hashes+serial
+//   gametdb       150 — 8/10: title pub dev genres date desc players art; Nintendo/PS3 offline XML
+//
+// REMOTE BAND (90-40): online providers — queried only for fields still
+//   missing after all local providers have been exhausted.
+//
+//   screenscraper  90 — 10/10: all fields including rating & screenshots; requires auth
+//   hasheous       80 —  1/10 bare / 9/10 with MetadataProxy (IGDB data); hash-only
+//   igdb           70 —  8/10: title pub dev genres date desc players rating; requires OAuth
+//   retroachievements 60 — 6/10: title sys pub dev genres date art; MD5 hash-only, free key
+//   thegamesdb     50 —  6/10: title sys pub dev date desc players; simplified genres, no auth
+//   wikidata       40 —  6/10: title sys pub dev genres date desc; community-sourced, no auth
 namespace Priority {
-    inline constexpr int LOCAL_DATABASE     = 110;
-    inline constexpr int HASHEOUS           = 100;
+    inline constexpr int LOCAL_DATABASE     = 200;
+    inline constexpr int GAMETDB            = 150;
     inline constexpr int SCREENSCRAPER      = 90;
-    inline constexpr int GAMETDB            = 60;
+    inline constexpr int HASHEOUS           = 80;
+    inline constexpr int IGDB               = 70;
+    inline constexpr int RETROACHIEVEMENTS  = 60;
     inline constexpr int THEGAMESDB         = 50;
-    inline constexpr int RETROACHIEVEMENTS  = 45;
-    inline constexpr int IGDB               = 40;
-    inline constexpr int WIKIDATA           = 30;
+    inline constexpr int WIKIDATA           = 40;
 }
 
 /// Metadata provider: Hasheous (free, hash-only)
@@ -130,7 +148,7 @@ struct ProviderInfo {
  * 3. Fuzzy matches as last resort
  */
 inline const QMap<QString, ProviderInfo> PROVIDER_REGISTRY = {
-    // Priority 110: Local DAT database (offline, instant)
+    // Priority 200: Local DAT database (offline, instant) — 9/10 fields
     {LOCAL_DATABASE, {
         LOCAL_DATABASE,
         DISPLAY_LOCAL_DATABASE,
@@ -143,7 +161,7 @@ inline const QMap<QString, ProviderInfo> PROVIDER_REGISTRY = {
         true    // Free service
     }},
     
-    // Priority 100: Hash-first provider (best for hash-based matching)
+    // Priority 80: Hash identification + cross-references; 1/10 bare, 9/10 with MetadataProxy
     {HASHEOUS, {
         HASHEOUS,
         DISPLAY_HASHEOUS,
@@ -156,7 +174,7 @@ inline const QMap<QString, ProviderInfo> PROVIDER_REGISTRY = {
         true    // Free service
     }},
     
-    // Priority 90: Primary authenticated provider (comprehensive database)
+    // Priority 90: Most complete remote provider — 10/10 fields; requires auth
     {SCREENSCRAPER, {
         SCREENSCRAPER,
         DISPLAY_SCREENSCRAPER,
@@ -169,7 +187,7 @@ inline const QMap<QString, ProviderInfo> PROVIDER_REGISTRY = {
         true    // Free service available
     }},
     
-    // Priority 60: GameTDB (Nintendo/PS3, offline XML databases)
+    // Priority 150: Second local provider — 8/10 fields; Nintendo/PS3 offline XML
     {GAMETDB, {
         GAMETDB,
         DISPLAY_GAMETDB,
@@ -182,7 +200,7 @@ inline const QMap<QString, ProviderInfo> PROVIDER_REGISTRY = {
         true    // Free service
     }},
     
-    // Priority 50: Fallback provider
+    // Priority 50: Decent remote fallback — 6/10 fields, simplified genres, no auth
     {THEGAMESDB, {
         THEGAMESDB,
         DISPLAY_THEGAMESDB,
@@ -195,7 +213,7 @@ inline const QMap<QString, ProviderInfo> PROVIDER_REGISTRY = {
         true    // Free service
     }},
     
-    // Priority 45: RetroAchievements (hash-based, free API key)
+    // Priority 60: Hash-based identification — 6/10 fields; MD5-only, free API key
     {RETROACHIEVEMENTS, {
         RETROACHIEVEMENTS,
         DISPLAY_RETROACHIEVEMENTS,
@@ -208,7 +226,7 @@ inline const QMap<QString, ProviderInfo> PROVIDER_REGISTRY = {
         true    // Free service
     }},
     
-    // Priority 40: Commercial provider
+    // Priority 70: Rich metadata — 8/10 fields; requires Twitch OAuth, name-only
     {IGDB, {
         IGDB,
         DISPLAY_IGDB,
@@ -221,7 +239,7 @@ inline const QMap<QString, ProviderInfo> PROVIDER_REGISTRY = {
         false   // Requires subscription
     }},
     
-    // Priority 30: Wikidata SPARQL (no auth, CC0, supplementary)
+    // Priority 40: Community-sourced supplementary data — 6/10 fields, no auth
     {WIKIDATA, {
         WIKIDATA,
         DISPLAY_WIKIDATA,

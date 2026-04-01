@@ -161,7 +161,7 @@ std::unique_ptr<ProviderOrchestrator> buildOrchestrator(const QCommandLineParser
             }
             const auto localInfo = Providers::getProviderInfo(Providers::LOCAL_DATABASE);
             orchestrator->addProvider(Providers::LOCAL_DATABASE, localDbProvider,
-                                      localInfo ? localInfo->priority : 110);
+                                      localInfo ? localInfo->priority : 200);
         } else {
             delete localDbProvider;
         }
@@ -170,7 +170,7 @@ std::unique_ptr<ProviderOrchestrator> buildOrchestrator(const QCommandLineParser
     auto hasheousProvider = new HasheousProvider();
     const auto hasheousInfo = Providers::getProviderInfo(Providers::HASHEOUS);
     orchestrator->addProvider(Providers::HASHEOUS, hasheousProvider,
-                              hasheousInfo ? hasheousInfo->priority : 100);
+                              hasheousInfo ? hasheousInfo->priority : 80);
 
     if (parser.isSet("ss-user") && parser.isSet("ss-pass")) {
         auto ssProvider = new ScreenScraperProvider();
@@ -190,7 +190,7 @@ std::unique_ptr<ProviderOrchestrator> buildOrchestrator(const QCommandLineParser
         if (gametdbLoaded > 0) {
             const auto gametdbInfo = Providers::getProviderInfo(Providers::GAMETDB);
             orchestrator->addProvider(Providers::GAMETDB, gametdbProvider,
-                                      gametdbInfo ? gametdbInfo->priority : 60);
+                                      gametdbInfo ? gametdbInfo->priority : 150);
         } else {
             delete gametdbProvider;
         }
@@ -219,7 +219,7 @@ std::unique_ptr<ProviderOrchestrator> buildOrchestrator(const QCommandLineParser
         igdbProvider->setCredentials(igdbClientId, igdbClientSecret);
         const auto igdbInfo = Providers::getProviderInfo(Providers::IGDB);
         orchestrator->addProvider(Providers::IGDB, igdbProvider,
-                                  igdbInfo ? igdbInfo->priority : 40);
+                                  igdbInfo ? igdbInfo->priority : 70);
     }
 
     // RetroAchievements — hash-based, free API key required
@@ -234,14 +234,14 @@ std::unique_ptr<ProviderOrchestrator> buildOrchestrator(const QCommandLineParser
         raProvider->setCredentials(raUsername, raApiKey);
         const auto raInfo = Providers::getProviderInfo(Providers::RETROACHIEVEMENTS);
         orchestrator->addProvider(Providers::RETROACHIEVEMENTS, raProvider,
-                                  raInfo ? raInfo->priority : 45);
+                                  raInfo ? raInfo->priority : 60);
     }
 
     // Wikidata — SPARQL, no auth, CC0 licensed, lowest priority
     auto wikidataProvider = new WikidataProvider();
     const auto wdInfo = Providers::getProviderInfo(Providers::WIKIDATA);
     orchestrator->addProvider(Providers::WIKIDATA, wikidataProvider,
-                              wdInfo ? wdInfo->priority : 30);
+                              wdInfo ? wdInfo->priority : 40);
 
     return orchestrator;
 }

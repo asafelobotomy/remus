@@ -90,16 +90,20 @@ void ConstantsTest::testProviderPriority() {
     // Get providers sorted by priority
     auto providers = Providers::getProvidersByPriority();
     
-    // Verify order (highest priority first)
+    // Verify order (highest priority first).
+    // Ordered by metadata field-coverage score within each tier:
+    //   LOCAL  band: localdatabase (200), gametdb (150)
+    //   REMOTE band: screenscraper (90), hasheous (80), igdb (70),
+    //                retroachievements (60), thegamesdb (50), wikidata (40)
     QVERIFY(providers.size() >= 8);
-    QCOMPARE(providers[0], QString(Providers::LOCAL_DATABASE));  // Priority 110
-    QCOMPARE(providers[1], QString(Providers::HASHEOUS));  // Priority 100
-    QCOMPARE(providers[2], QString(Providers::SCREENSCRAPER));  // Priority 90
-    QCOMPARE(providers[3], QString(Providers::GAMETDB));  // Priority 60
-    QCOMPARE(providers[4], QString(Providers::THEGAMESDB));  // Priority 50
-    QCOMPARE(providers[5], QString(Providers::RETROACHIEVEMENTS));  // Priority 45
-    QCOMPARE(providers[6], QString(Providers::IGDB));  // Priority 40
-    QCOMPARE(providers[7], QString(Providers::WIKIDATA));  // Priority 30
+    QCOMPARE(providers[0], QString(Providers::LOCAL_DATABASE));    // Priority 200
+    QCOMPARE(providers[1], QString(Providers::GAMETDB));           // Priority 150
+    QCOMPARE(providers[2], QString(Providers::SCREENSCRAPER));     // Priority 90
+    QCOMPARE(providers[3], QString(Providers::HASHEOUS));          // Priority 80
+    QCOMPARE(providers[4], QString(Providers::IGDB));              // Priority 70
+    QCOMPARE(providers[5], QString(Providers::RETROACHIEVEMENTS)); // Priority 60
+    QCOMPARE(providers[6], QString(Providers::THEGAMESDB));        // Priority 50
+    QCOMPARE(providers[7], QString(Providers::WIKIDATA));          // Priority 40
     
     // Verify priorities are descending
     for (int i = 0; i < providers.size() - 1; ++i) {

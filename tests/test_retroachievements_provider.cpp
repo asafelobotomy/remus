@@ -103,7 +103,7 @@ private slots:
         auto info = Constants::Providers::getProviderInfo(
             Constants::Providers::RETROACHIEVEMENTS);
         QVERIFY(info != nullptr);
-        QCOMPARE(info->priority, 45);
+        QCOMPARE(info->priority, 60);
         QVERIFY(info->supportsHashMatch);
         QVERIFY(!info->supportsNameMatch);
         QVERIFY(info->requiresAuth);
