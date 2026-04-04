@@ -8,13 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
-
 - Copilot instructions updated from template v5.4.0 → v5.5.0.
   Preserved locally modified sections: §2, §5, §8, §9.
   Updated companion agents: `coding.agent.md`, `extensions.agent.md`, `fast.agent.md`, `review.agent.md`, and `setup.agent.md`.
-  Refreshed `.github/copilot-version.md` with section fingerprints, managed file hashes, and setup answers; synced `AGENTS.md` and `UPDATE.md` to the `v5.5.0` restore wording; reconciled `.copilot/workspace/workspace-index.json` to the newer schema while preserving the local inventory.
+  Refreshed `.github/copilot-version.md` with section fingerprints, managed file hashes, and setup answers; kept `.copilot/workspace/workspace-index.json` unchanged because the local inventory diverges from the upstream template shape.
   Backup at: `.github/archive/pre-update-2026-04-04-v5.4.0/`
-  Follow-up backup at: `.github/archive/pre-followup-2026-04-04-v5.5.0/`
 - Copilot instructions updated from template v5.1.0 → v5.4.0.
   Preserved locally modified sections: §2, §5, §8, §9.
   Refreshed heartbeat companion scripts (`pulse.sh` + Python helpers + policy file), added `commit-preflight` skill, migrated `.copilot/workspace/DOC_INDEX.json` to `.copilot/workspace/workspace-index.json`, and updated `HEARTBEAT.md` retrospective/response-contract guidance.
@@ -29,13 +27,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   Backup at: `.github/archive/pre-update-2026-03-20-v4.0.0/`
 
 ### Added
-
 - Copilot instructions scaffolded from [copilot-instructions-template](https://github.com/asafelobotomy/copilot-instructions-template) v1.0.3 on 2026-02-19.
   Includes: `.github/copilot-instructions.md`, model-pinned agents (`.github/agents/`),
   workspace identity files (`.copilot/workspace/`), `JOURNAL.md`, `BIBLIOGRAPHY.md`, `METRICS.md`.
 
 ### Planned
-
 - DAT import/removal CLI commands
 - Auto-update checking for DAT files
 

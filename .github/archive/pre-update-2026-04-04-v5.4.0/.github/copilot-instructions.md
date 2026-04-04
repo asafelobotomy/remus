@@ -1,6 +1,6 @@
 # Copilot Instructions — Remus
 
-> **Template version**: 5.5.0 <!-- x-release-please-version --> | **Applied**: 2026-04-04
+> **Template version**: 5.4.0 <!-- x-release-please-version --> | **Applied**: 2026-04-04
 > Living document — self-edit rules in §8.
 >
 > **Models**: each `.github/agents/*.agent.md` pins its model. Codex models are headless-only (no interactive prompts). See [model comparison](https://docs.github.com/en/copilot/reference/ai-models/model-comparison).
@@ -264,7 +264,7 @@ When spawning subagents:
 
 GitHub organizations can publish shared agents via a `.github-private` repository with an `agents/` directory. These run alongside project-level agents. When both exist, project-level agents take precedence for same-name conflicts. The `organizationCustomAgents.enabled` VS Code setting must be on for org agents to load. See the **skill-management** skill for the full scope hierarchy.
 
-<!-- update-note: template updated to v5.5.0 but user-modified, preserved -->
+<!-- update-note: template updated to v5.4.0 but user-modified, preserved -->
 
 ---
 

@@ -78,7 +78,7 @@ Updated: 2026-04-04
 .copilot/workspace/SOUL.md=d0123b0fedf2
 .copilot/workspace/TOOLS.md=cebc691dc35f
 .copilot/workspace/USER.md=03f4ccead739
-.copilot/workspace/workspace-index.json=16c8d3e3ad58
+.copilot/workspace/workspace-index.json=85014127ad53
 -->
 <!-- setup-answers
 PROJECT_NAME=Remus

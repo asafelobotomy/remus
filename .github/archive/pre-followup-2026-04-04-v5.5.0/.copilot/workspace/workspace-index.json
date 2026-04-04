@@ -61,32 +61,6 @@
       "commit-preflight"
     ]
   },
-  "prompts": [
-    "commit-msg.prompt.md",
-    "context-map.prompt.md",
-    "explain.prompt.md",
-    "refactor.prompt.md",
-    "review-file.prompt.md",
-    "test-gen.prompt.md"
-  ],
-  "instructions": [
-    "api-routes.instructions.md",
-    "config.instructions.md",
-    "docs.instructions.md",
-    "tests.instructions.md"
-  ],
-  "workspaceFiles": [
-    "BOOTSTRAP.md",
-    "HEARTBEAT.md",
-    "IDENTITY.md",
-    "MEMORY.md",
-    "RESEARCH.md",
-    "SOUL.md",
-    "TOOLS.md",
-    "USER.md",
-    "workspace-index.json"
-  ],
-  "workflowFiles": [],
   "hookScripts": {
     "shell": [
       "guard-destructive.sh",
@@ -116,7 +90,6 @@
   "notes": [
     "This index is the canonical metadata source for drift checks.",
     "Human-facing docs live on the docs branch.",
-    "Template-managed workflow files are tracked explicitly; this repo currently installs none.",
     "PowerShell scripts intentionally omitted — Linux-only project.",
     "Consumer template: template/copilot-instructions.md (with {{PLACEHOLDER}} tokens).",
     "Developer instructions: .github/copilot-instructions.md (zero placeholder tokens, developer-only)."

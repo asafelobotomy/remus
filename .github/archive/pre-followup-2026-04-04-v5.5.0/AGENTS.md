@@ -15,7 +15,7 @@
 | **Code** | `coding.agent.md` | GPT-5.1 / Claude Sonnet 4.6 | Implement features, refactor, multi-step coding tasks | Review, Doctor, Fast, Researcher, Explore, Security |
 | **Review** | `review.agent.md` | GPT-5.4 / Claude Opus 4.6 | Deep code review and architectural analysis with Lean/Kaizen critique | Code, Fast, Researcher, Doctor, Explore, Security |
 | **Doctor** | `doctor.agent.md` | Claude Sonnet 4.6 | Read-only health check — instructions, agents, MCP config, workspace files | Code, Setup, Researcher, Explore, Security, Extensions |
-| **Setup** | `setup.agent.md` | Claude Sonnet 4.6 | Template lifecycle — first-time setup, upstream updates, backup restore, and factory restore | Doctor, Code, Extensions, Researcher, Explore |
+| **Setup** | `setup.agent.md` | Claude Sonnet 4.6 | Template lifecycle — first-time setup, upstream updates, and backup restore | Doctor, Code, Extensions, Researcher, Explore |
 | **Researcher** | `researcher.agent.md` | Claude Sonnet 4.6 | Online and offline research — fetch docs, track URLs, structured output | Code, Doctor, Explore, Security |
 | **Fast** | `fast.agent.md` | Claude Haiku 4.5 | Quick questions, syntax lookups, and lightweight single-file edits | Code, Explore |
 | **Explore** | `explore.agent.md` | Claude Haiku 4.5 | Fast read-only codebase exploration and Q&A subagent | Researcher |
@@ -37,7 +37,6 @@
 | `Check the template for updates` | Same as above |
 | `Force check instruction updates` | Bypasses version equality check |
 | `Restore instructions from backup` | Restore from `.github/archive/` backup |
-| `Factory restore instructions` / `Reinstall instructions from scratch` | Archive current managed files, remove them, and reinstall from the latest upstream payload |
 | `Roll back the instructions update` | Same as above |
 | `List instruction backups` | List available backups in `.github/archive/` |
 
@@ -57,14 +56,6 @@
 |----------------|-----------|
 | `Set up this project` | Run full onboarding from copilot-instructions-template |
 | `Re-run setup` | Refresh scaffold files |
-
----
-
-## Canonical Protocol Sources
-
-- First-time setup: [SETUP.md](SETUP.md)
-- Update, backup restore, and factory restore: [UPDATE.md](UPDATE.md)
-- Canonical inventory and counts: `.copilot/workspace/workspace-index.json`
 
 ---
 
