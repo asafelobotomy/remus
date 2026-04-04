@@ -1,14 +1,15 @@
-5.1.0
-Applied: 2026-03-19
-Updated: 2026-03-31
+<!-- markdownlint-disable-file MD041 -->
+5.4.0
+Applied: 2026-04-04
+Updated: 2026-04-04
 <!-- section-fingerprints
-§1=e7622c238639
-§2=9077afe084b8
-§3=14d88278208d
-§4=93e8c726e606
-§5=468dc640560e
-§6=7aafa0fe8fc3
-§7=6a7edeb2b4c9
-§8=1373aab0b5ed
-§9=3bdd0ecfeceb
+§1=6968b3c9dca1
+§2=b3539023ceec
+§3=c0c85562f46c
+§4=4e5d9d52a486
+§5=b44776b3d657
+§6=5e4e1dec4e2c
+§7=5698ddc9df03
+§8=ab9545d87af1
+§9=f44d492b9843
 -->

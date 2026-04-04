@@ -57,9 +57,9 @@ Source of truth: `SETUP.md` (fetched from upstream).
 
 ## Update mode
 
-Source of truth: `UPDATE.md` (fetched from upstream).
+Source of truth: `UPDATE.md` in the current repo (mirrored from upstream).
 
-> Fetch URL: `https://raw.githubusercontent.com/asafelobotomy/copilot-instructions-template/main/UPDATE.md`
+> Upstream mirror URL: `https://raw.githubusercontent.com/asafelobotomy/copilot-instructions-template/main/UPDATE.md`
 
 - Back up before any write — create the pre-update backup in
   `.github/archive/pre-update-<TODAY>-v<VERSION>/` before the first write.

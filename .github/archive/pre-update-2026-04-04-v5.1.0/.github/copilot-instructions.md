@@ -1,6 +1,6 @@
 # Copilot Instructions — Remus
 
-> **Template version**: 5.4.0 <!-- x-release-please-version --> | **Applied**: 2026-04-04
+> **Template version**: 5.1.0 <!-- x-release-please-version --> | **Applied**: 2026-02-19
 > Living document — self-edit rules in §8.
 >
 > **Models**: each `.github/agents/*.agent.md` pins its model. Codex models are headless-only (no interactive prompts). See [model comparison](https://docs.github.com/en/copilot/reference/ai-models/model-comparison).
@@ -68,8 +68,6 @@ For deeper audits, activate the matching skill (§12) instead of expanding §2:
 
 - Produce a task breakdown before writing code.
 - Estimate complexity (S/M/L/XL). Flag anything XL for decomposition.
-
-<!-- update-note: template updated to v5.4.0 but user-modified, preserved -->
 
 ---
 
@@ -154,8 +152,6 @@ loop traps and wasted tokens:
 - **Time-box exploration**: limit exploratory searches to 5 tool calls per
   sub-question. If the answer is not found, surface the gap to the user.
 
-<!-- update-note: template updated to v5.4.0 but user-modified, preserved -->
-
 ---
 
 ## §6 — Waste Catalogue (Muda)
@@ -185,7 +181,7 @@ Copilot may edit this file when patterns stabilise. Rules:
 2. **Additive by default** — append to sections; don't restructure them.
 3. **Flag before writing** — describe the change and wait for confirmation on edits to §1–§7.
 4. **Self-update trigger phrases**: "Add this to your instructions", "Remember this for next time" — these add a convention to this file.
-5. **Template updates**: When the user says **"Update your instructions"** (or any variant listed in the Canonical triggers table of `AGENTS.md`), this means: follow [UPDATE.md](/home/solon/Documents/git/remus/UPDATE.md), which mirrors the upstream template protocol, then fetch the latest upstream version data as part of that flow. This is not a request to make arbitrary edits — it is specifically a check-for-upstream-updates command.
+5. **Template updates**: When the user says **"Update your instructions"** (or any variant listed in the Canonical triggers table of `AGENTS.md`), this means: go to the upstream template repository at `https://github.com/asafelobotomy/copilot-instructions-template`, fetch the latest version, compare it against the installed version, and run the update protocol defined in `UPDATE.md`. This is not a request to make arbitrary edits — it is specifically a check-for-upstream-updates command.
 
 ### Attention Budget
 
@@ -232,12 +228,10 @@ Hook configuration lives in `.github/hooks/copilot-hooks.json`. VS Code supports
 | `UserPromptSubmit` | `pulse.sh --trigger user_prompt` | Detect explicit heartbeat and retrospective prompts |
 | `PreToolUse` | `guard-destructive.sh` | Block dangerous commands; flag caution patterns for user confirmation (§5 enforcement) |
 | `PostToolUse` | `post-edit-lint.sh` | Auto-format edited files using the project's formatter |
-| `Stop` | `scan-secrets.sh`, `pulse.sh --trigger stop` | Scan changed files for secrets, persist session state, and verify retrospective ran |
-| `PreCompact` | `save-context.sh`, `pulse.sh --trigger compaction` | Preserve workspace state before context compaction |
+| `Stop` | `pulse.sh --trigger stop`, `enforce-retrospective.sh` | Persist session state and verify retrospective ran |
+| `PreCompact` | `save-context.sh`, `pulse.sh --trigger pre_compact` | Preserve workspace state before context compaction |
 | `SubagentStart` | `subagent-start.sh` | Inject governance context when a subagent spawns |
 | `SubagentStop` | `subagent-stop.sh` | Log subagent completion and prompt result review |
-
-<!-- update-note: template updated to v5.4.0 but user-modified, preserved -->
 
 ---
 
@@ -263,8 +257,6 @@ When spawning subagents:
 ### Organization-Level Agents
 
 GitHub organizations can publish shared agents via a `.github-private` repository with an `agents/` directory. These run alongside project-level agents. When both exist, project-level agents take precedence for same-name conflicts. The `organizationCustomAgents.enabled` VS Code setting must be on for org agents to load. See the **skill-management** skill for the full scope hierarchy.
-
-<!-- update-note: template updated to v5.4.0 but user-modified, preserved -->
 
 ---
 
@@ -384,4 +376,4 @@ Key rules (always loaded):
 
 ---
 
-*See also: `.github/agents/` (model-pinned VS Code agents) · `.github/hooks/` (agent lifecycle hooks) · `.copilot/workspace/` (session identity) · `.copilot/tools/` (reusable tool library) · `.github/skills/` (reusable skill library) · `.vscode/mcp.json` (MCP server configuration) · `UPDATE.md` (update protocol mirror) · `MIGRATION.md` (migration registry mirror) · `AGENTS.md` (AI agent entry point)*
+*See also: `.github/agents/` (model-pinned VS Code agents) · `.github/hooks/` (agent lifecycle hooks) · `.copilot/workspace/` (session identity) · `.copilot/tools/` (reusable tool library) · `.github/skills/` (reusable skill library) · `.vscode/mcp.json` (MCP server configuration) · `UPDATE.md` (update protocol) · `MIGRATION.md` (per-version migration registry) · `AGENTS.md` (AI agent entry point)*
