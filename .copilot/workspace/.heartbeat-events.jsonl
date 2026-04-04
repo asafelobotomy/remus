@@ -140,3 +140,16 @@
 {"detail": "complete", "trigger": "stop", "ts": 1775044605}
 {"trigger": "soft_post_tool", "ts": 1775044883}
 {"detail": "complete", "trigger": "stop", "ts": 1775045029}
+{"trigger": "session_start", "ts": 1775293058}
+{"trigger": "soft_post_tool", "ts": 1775293083}
+{"trigger": "soft_post_tool", "ts": 1775293385}
+{"trigger": "soft_post_tool", "ts": 1775293703}
+{"trigger": "soft_post_tool", "ts": 1775294026}
+{"session_id": "unknown", "trigger": "soft_post_tool", "ts": 1775297089, "ts_utc": "2026-04-04T10:04:49Z"}
+{"session_id": "unknown", "trigger": "compaction", "ts": 1775297204, "ts_utc": "2026-04-04T10:06:44Z"}
+{"session_id": "unknown", "trigger": "soft_post_tool", "ts": 1775297391, "ts_utc": "2026-04-04T10:09:51Z"}
+{"session_id": "unknown", "trigger": "soft_post_tool", "ts": 1775297731, "ts_utc": "2026-04-04T10:15:31Z"}
+{"session_id": "unknown", "trigger": "compaction", "ts": 1775297779, "ts_utc": "2026-04-04T10:16:19Z"}
+{"session_id": "unknown", "trigger": "soft_post_tool", "ts": 1775298035, "ts_utc": "2026-04-04T10:20:35Z"}
+{"detail": "not-needed", "duration_s": 1775298147, "session_id": "unknown", "trigger": "stop", "ts": 1775298147, "ts_utc": "2026-04-04T10:22:27Z"}
+{"detail": "not-needed", "duration_s": 1775298317, "session_id": "unknown", "trigger": "stop", "ts": 1775298317, "ts_utc": "2026-04-04T10:25:17Z"}
