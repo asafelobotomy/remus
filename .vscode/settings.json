@@ -10,6 +10,9 @@
   "cmake.configureOnOpen": true,
   "cmake.generator": "Unix Makefiles",
 
+  // ── Copilot MCP ─────────────────────────────────────────────
+  "chat.mcp.autostart": "newAndOutdated",
+
   // ── Editor defaults ─────────────────────────────────────────
   "editor.formatOnSave": false,
   "editor.tabSize": 4,

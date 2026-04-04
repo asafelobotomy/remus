@@ -14,7 +14,7 @@ Fire a heartbeat when any of these occur:
 - **Session start** — always
 - **Large change** — modified >5 files in a single task
 - **Refactor/migration** — task tagged as refactor, migration, or restructure
-- **Dependency update** — any manifest changed (CMakeLists.txt, etc.)
+- **Dependency update** — any manifest changed (CMakeLists.txt, package.json, Cargo.toml, requirements.txt, go.mod, etc.)
 - **CI resolution** — after resolving a CI failure
 - **Task completion** — after completing any user-requested task
 - **Explicit** — user says "Check your heartbeat"
@@ -35,36 +35,31 @@ Run each check; prepend `[!]` to Pulse if any fails:
 
 ## Retrospective
 
-After completing a task, reflect on these questions. Write insights to the indicated workspace files. Surface Q4 and Q5 to $USER directly — all other answers are silent.
+Retrospective runs autonomously via the `session_reflect` MCP tool. Do not prompt the user.
 
-1. **Approach review** — Were there any errors, corrections, or backtracking during this task? What concrete signal caused the course change? → *SOUL.md*
-2. **Scope audit** — Did the task scope grow or shrink during execution? Were any user requests deferred, simplified, or left incomplete? → *MEMORY.md (Known Gotchas)*
-3. **Gap analysis** — Review the original request and the delivered result. Is there any explicit requirement I did not address, or any file I modified without updating its tests or docs? → *MEMORY.md*
-4. **Issue report** — Did I spot any issues to report to $USER? (e.g. security concerns, tech debt, broken assumptions, stale dependencies) → *Surface to $USER*
-5. **Agent questions** — Do I have questions, suggestions, or things I misunderstood? → *Surface to $USER*
-6. **User profile** — What explicit preferences, corrections, or working patterns did $USER demonstrate? (Only record directly observable signals; do not infer emotion or intent.) → *USER.md*
-7. **Lessons learned** — State as concrete rules: "When [situation], do [action] instead of [what usually fails]." Only record lessons grounded in this session's events. → *MEMORY.md + SOUL.md*
-8. **Correction log** — Did $USER correct, reject, or redirect anything I produced? What was my original output and what did $USER want instead? → *MEMORY.md (Recurring Error Patterns) + SOUL.md*
+The Stop hook blocks the session and instructs you to call `session_reflect` when a significant task is detected (one strong signal: 8+ modified files or 30+ minutes active; or two supporting signals: 5+ modified files, 15+ minutes, context compaction).
 
-After completing retrospective steps, mark the current session sentinel complete:
+When `session_reflect` returns, process its output silently:
 
-```bash
-python3 - <<'PY'
-from pathlib import Path
-p = Path('.copilot/workspace/.heartbeat-session')
-if p.exists():
-    parts = p.read_text(encoding='utf-8').strip().split('|')
-    if len(parts) >= 3:
-        p.write_text(f"{parts[0]}|{parts[1]}|complete\n", encoding='utf-8')
-PY
-```
+- **Execution insights** → persist to *SOUL.md* if non-trivial
+- **Coverage gaps** → persist to *MEMORY.md* if incomplete
+- **User signals** → persist to *USER.md* if directly observable
+- **Actionable items** → surface to the user (security, tech debt, broken assumptions)
+- **Carry-forward lessons** → persist to *MEMORY.md + SOUL.md*
+
+The MCP tool records completion automatically by setting the session sentinel and writing a `session_reflect` completion event. No manual sentinel management is needed.
+
+If the `session_reflect` MCP tool is unavailable, briefly self-review: execution accuracy, scope completeness, and anything worth persisting to SOUL.md / MEMORY.md / USER.md, then rerun `session_reflect` once the heartbeat MCP server is restored.
 
 <!-- Add custom retrospective questions below this line -->
 
 ## Response Contract
 
-- If all checks pass and no new issues were found, keep Pulse as `HEARTBEAT_OK` and do not append a History row.
-- Append a History row only when trigger is Explicit or Session start, a check raised an alert, or retrospective output was persisted to SOUL.md / MEMORY.md / USER.md.
+<!-- template-section: heartbeat-response-contract v2 -->
+
+- Always append a History row when the trigger is Session start or Explicit — regardless of check results.
+- For all other triggers, append a History row only if a check raised an alert or retrospective output was persisted to SOUL.md / MEMORY.md / USER.md.
+- If checks pass and nothing was persisted on a non-explicit trigger, keep Pulse as `HEARTBEAT_OK` and omit the History row.
 
 ## Agent Notes
 
@@ -72,7 +67,7 @@ PY
 
 ## History
 
-*(Append-only. Keep last 5 entries.)*
+*(Append-only. Keep last 5 entries. Keep each row to trigger, result, and where durable insights were persisted.)*
 
 | Date | Session ID | Trigger | Result | Actions taken |
 |------|------------|---------|--------|---------------|

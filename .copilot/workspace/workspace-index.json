@@ -1,23 +1,27 @@
 {
+  "$schema": "https://raw.githubusercontent.com/asafelobotomy/copilot-instructions-template/main/.copilot/schema/workspace-index.schema.json",
   "schemaVersion": "1.0",
-  "updated": "2026-03-19",
+  "updated": "2026-04-04",
   "purpose": "Canonical machine-readable inventory for repository metadata.",
   "counts": {
-    "agents": 8,
-    "skillsRepo": 15,
-    "skillsTemplate": 15,
-    "hookScriptsShell": 9,
-    "hookScriptsPowerShell": 0
+    "agents": 9,
+    "skillsRepo": 16,
+    "skillsTemplate": 16,
+    "hookScriptsShell": 11,
+    "hookScriptsPowerShell": 0,
+    "hookScriptsPython": 5,
+    "hookScriptsJson": 1
   },
   "agents": [
     "setup.agent.md",
     "coding.agent.md",
     "review.agent.md",
     "fast.agent.md",
-    "update.agent.md",
     "doctor.agent.md",
+    "explore.agent.md",
+    "extensions.agent.md",
     "researcher.agent.md",
-    "explore.agent.md"
+    "security.agent.md"
   ],
   "skills": {
     "repo": [
@@ -35,7 +39,8 @@
       "mcp-management",
       "plugin-management",
       "extension-review",
-      "test-coverage-review"
+      "test-coverage-review",
+      "commit-preflight"
     ],
     "template": [
       "skill-creator",
@@ -52,26 +57,41 @@
       "mcp-management",
       "plugin-management",
       "extension-review",
-      "test-coverage-review"
+      "test-coverage-review",
+      "commit-preflight"
     ]
   },
   "hookScripts": {
     "shell": [
+      "guard-destructive.sh",
       "lib-hooks.sh",
+      "mcp-npx.sh",
+      "mcp-uvx.sh",
+      "post-edit-lint.sh",
+      "pulse.sh",
+      "save-context.sh",
       "scan-secrets.sh",
       "session-start.sh",
-      "guard-destructive.sh",
-      "post-edit-lint.sh",
-      "enforce-retrospective.sh",
-      "save-context.sh",
       "subagent-start.sh",
       "subagent-stop.sh"
     ],
-    "powershell": []
+    "powershell": [],
+    "python": [
+      "mcp-heartbeat-server.py",
+      "pulse_intent.py",
+      "pulse_paths.py",
+      "pulse_runtime.py",
+      "pulse_state.py"
+    ],
+    "json": [
+      "heartbeat-policy.json"
+    ]
   },
   "notes": [
     "This index is the canonical metadata source for drift checks.",
     "Human-facing docs live on the docs branch.",
-    "PowerShell scripts omitted — Linux-only project."
+    "PowerShell scripts intentionally omitted — Linux-only project.",
+    "Consumer template: template/copilot-instructions.md (with {{PLACEHOLDER}} tokens).",
+    "Developer instructions: .github/copilot-instructions.md (zero placeholder tokens, developer-only)."
   ]
 }

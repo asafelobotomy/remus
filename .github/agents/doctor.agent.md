@@ -310,7 +310,7 @@ Report drifted sections in a table:
 Fetch the upstream canonical inventory:
 
 ```text
-https://raw.githubusercontent.com/asafelobotomy/copilot-instructions-template/main/.copilot/workspace/DOC_INDEX.json
+https://raw.githubusercontent.com/asafelobotomy/copilot-instructions-template/main/.copilot/workspace/workspace-index.json
 ```
 
 If the fetch fails: Flag `[WARN]` — unable to verify companion completeness; skip gracefully.
@@ -320,14 +320,14 @@ each expected artefact:
 
 #### Agents
 
-For each entry in `DOC_INDEX.agents[]`, check that `.github/agents/<name>` exists locally.
+For each entry in `workspace-index.agents[]`, check that `.github/agents/<name>` exists locally.
 
 Flag: `[HIGH]` for each missing agent file — the agent will not be available.
 Flag: `[INFO]` for any local agent file NOT in the upstream inventory (user-added agent — valid).
 
 #### Skills
 
-For each entry in `DOC_INDEX.skills.template[]`, check that `.github/skills/<name>/SKILL.md`
+For each entry in `workspace-index.skills.template[]`, check that `.github/skills/<name>/SKILL.md`
 exists locally.
 
 Flag: `[WARN]` for each missing skill.
@@ -335,10 +335,10 @@ Flag: `[INFO]` for any local skill NOT in the upstream inventory (user-added ski
 
 #### Hook scripts
 
-For each entry in `DOC_INDEX.hookScripts.shell[]`, check that
+For each entry in `workspace-index.hookScripts.shell[]`, check that
 `.github/hooks/scripts/<name>` exists locally.
 
-For each entry in `DOC_INDEX.hookScripts.powershell[]`, check that
+For each entry in `workspace-index.hookScripts.powershell[]`, check that
 `.github/hooks/scripts/<name>` exists locally. **Only check PowerShell scripts on
 Windows** (`[Environment]::OSVersion` or if `.ps1` files already exist locally).
 
@@ -353,7 +353,7 @@ Flag: `[HIGH]` if missing — hooks will not function.
 
 #### Summary counts
 
-Compare local counts against upstream `DOC_INDEX.counts`:
+Compare local counts against upstream `workspace-index.counts`:
 
 ```text
 | Category | Upstream | Local | Status |

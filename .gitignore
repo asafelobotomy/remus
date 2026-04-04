@@ -46,6 +46,10 @@ Makefile
 # Cache
 cache/
 *.cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
 
 # Logs
 *.log

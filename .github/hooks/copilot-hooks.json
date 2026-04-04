@@ -4,13 +4,11 @@
       {
         "type": "command",
         "command": "./.github/hooks/scripts/session-start.sh",
-        "windows": "powershell -File .github\\hooks\\scripts\\session-start.ps1",
         "timeout": 10
       },
       {
         "type": "command",
         "command": "./.github/hooks/scripts/pulse.sh --trigger session_start",
-        "windows": "powershell -File .github\\hooks\\scripts\\pulse.ps1 -Trigger session_start",
         "timeout": 5
       }
     ],
@@ -18,7 +16,6 @@
       {
         "type": "command",
         "command": "./.github/hooks/scripts/pulse.sh --trigger user_prompt",
-        "windows": "powershell -File .github\\hooks\\scripts\\pulse.ps1 -Trigger user_prompt",
         "timeout": 3
       }
     ],
@@ -26,7 +23,6 @@
       {
         "type": "command",
         "command": "./.github/hooks/scripts/guard-destructive.sh",
-        "windows": "powershell -File .github\\hooks\\scripts\\guard-destructive.ps1",
         "timeout": 5
       }
     ],
@@ -34,13 +30,11 @@
       {
         "type": "command",
         "command": "./.github/hooks/scripts/post-edit-lint.sh",
-        "windows": "powershell -File .github\\hooks\\scripts\\post-edit-lint.ps1",
         "timeout": 30
       },
       {
         "type": "command",
         "command": "./.github/hooks/scripts/pulse.sh --trigger soft_post_tool",
-        "windows": "powershell -File .github\\hooks\\scripts\\pulse.ps1 -Trigger soft_post_tool",
         "timeout": 5
       }
     ],
@@ -48,13 +42,11 @@
       {
         "type": "command",
         "command": "./.github/hooks/scripts/scan-secrets.sh",
-        "windows": "powershell -File .github\\hooks\\scripts\\scan-secrets.ps1",
         "timeout": 30
       },
       {
         "type": "command",
         "command": "./.github/hooks/scripts/pulse.sh --trigger stop",
-        "windows": "powershell -File .github\\hooks\\scripts\\pulse.ps1 -Trigger stop",
         "timeout": 5
       }
     ],
@@ -62,13 +54,11 @@
       {
         "type": "command",
         "command": "./.github/hooks/scripts/save-context.sh",
-        "windows": "powershell -File .github\\hooks\\scripts\\save-context.ps1",
         "timeout": 10
       },
       {
         "type": "command",
         "command": "./.github/hooks/scripts/pulse.sh --trigger compaction",
-        "windows": "powershell -File .github\\hooks\\scripts\\pulse.ps1 -Trigger compaction",
         "timeout": 5
       }
     ],
@@ -76,7 +66,6 @@
       {
         "type": "command",
         "command": "./.github/hooks/scripts/subagent-start.sh",
-        "windows": "powershell -File .github\\hooks\\scripts\\subagent-start.ps1",
         "timeout": 5
       }
     ],
@@ -84,7 +73,6 @@
       {
         "type": "command",
         "command": "./.github/hooks/scripts/subagent-stop.sh",
-        "windows": "powershell -File .github\\hooks\\scripts\\subagent-stop.ps1",
         "timeout": 5
       }
     ]
