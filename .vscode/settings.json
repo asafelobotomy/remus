@@ -6,9 +6,8 @@
   "C_Cpp.errorSquiggles": "enabled",
 
   // ── CMake ───────────────────────────────────────────────────
-  "cmake.buildDirectory": "${workspaceFolder}/build",
+  "cmake.useCMakePresets": "always",
   "cmake.configureOnOpen": true,
-  "cmake.generator": "Unix Makefiles",
 
   // ── Copilot MCP ─────────────────────────────────────────────
   "chat.mcp.autostart": "newAndOutdated",
