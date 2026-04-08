@@ -16,11 +16,13 @@
   - Typical hash: CRC32, MD5
   
 - **GameCube**
-  - Extensions: `.iso`, `.gcm`, `.rvz`
+  - Extensions: `.iso`, `.gcm`, `.gcz`, `.rvz`
+  - Canonical archive output: `.rvz`
   - Typical hash: MD5, SHA1
   
 - **Wii**
-  - Extensions: `.iso`, `.wbfs`, `.rvz`
+  - Extensions: `.iso`, `.wbfs`, `.gcz`, `.rvz`
+  - Canonical archive output: `.rvz`
   - Typical hash: MD5, SHA1
 
 ### Nintendo Handheld
@@ -55,27 +57,33 @@
   
 - **Sega CD / Mega CD**
   - Extensions: `.cue`, `.bin`, `.iso`, `.chd`
+  - Canonical archive output: `.chd`
   - Typical hash: MD5, SHA1
   
 - **Saturn**
   - Extensions: `.cue`, `.bin`, `.iso`, `.chd`
+  - Canonical archive output: `.chd`
   - Typical hash: MD5, SHA1
   
 - **Dreamcast**
-  - Extensions: `.cdi`, `.gdi`, `.chd`
+  - Extensions: `.cdi`, `.gdi`, `.cue`, `.bin`, `.iso`, `.chd`
+  - Canonical archive output: `.chd`
   - Typical hash: MD5, SHA1
 
 ### Sony
 - **PlayStation**
-  - Extensions: `.cue`, `.bin`, `.iso`, `.pbp`, `.chd`
+  - Extensions: `.cue`, `.bin`, `.iso`, `.img`, `.pbp`, `.chd`, `.m3u`
+  - Canonical archive output: `.chd`
   - Typical hash: MD5, SHA1
   
 - **PlayStation 2**
-  - Extensions: `.iso`, `.chd`
+  - Extensions: `.iso`, `.img`, `.bin`, `.nrg`, `.chd`, `.cso`
+  - Canonical archive output: `.chd`
   - Typical hash: MD5, SHA1
   
 - **PSP**
-  - Extensions: `.iso`, `.cso`
+  - Extensions: `.iso`, `.cso`, `.pbp`
+  - Canonical compact output: `.cso`
   - Typical hash: MD5, SHA1
 
 ### Arcade
@@ -100,9 +108,13 @@
 ### Disc Images
 - **ISO**: `.iso` (raw disc image)
 - **CUE/BIN**: `.cue` (cue sheet) + `.bin` (binary data)
-- **CHD**: `.chd` (Compressed Hunks of Data - recommended for space savings)
+- **CHD**: `.chd` (canonical archival output for PlayStation, Sega CD, Saturn, Dreamcast, and PlayStation 2)
+- **RVZ**: `.rvz` (canonical archival output for GameCube and Wii)
+- **CSO**: `.cso` (canonical PSP output and optional PlayStation 2 export)
 - **M3U**: `.m3u` (multi-disc playlist file)
-- **Other**: `.pbp`, `.cso`, `.wbfs`, `.rvz`, `.gcm`, `.cdi`, `.gdi`
+- **Normalization-only inputs**: `.wbfs`, `.gcz`, `.gcm`, `.cdi`, `.gdi`
+- **Additional compatibility inputs**: `.img`, `.mdf`, `.mds`, `.ccd`, `.sub`, `.ecm`, `.nrg`
+- **Export-only outputs**: `.pbp`
 
 ### Special Files
 - **M3U Playlists**: For multi-disc games, contains list of disc files
@@ -440,21 +452,34 @@ Users can create custom templates with variables, but **default templates follow
 - Artwork types to download
 - Cache location and size limits
 - Undo history depth
-- CHD conversion preferences
+- Archive format preferences (CHD, RVZ, CSO)
 - M3U auto-generation for multi-disc games
+- PBP export preferences
 - Naming convention preference (No-Intro/Redump vs custom)
 
 ## File Conversion & Compression
+
+### Canonical Archive Policy
+
+Remus uses one canonical archive output per relevant system family:
+
+- **CHD** for PlayStation, Sega CD, Saturn, Dreamcast, and PlayStation 2.
+- **RVZ** for GameCube and Wii.
+- **CSO** for PSP. CSO remains an optional PlayStation 2 export, not the default archive target.
+- **WBFS**, **GCZ**, and similar legacy containers are normalization inputs or hardware-specific outputs, not canonical library formats.
+- **PBP** is an explicit PlayStation export target for PSP or PS3-style workflows, not a canonical library format.
 
 ### CHD Compression Support
 
 Remus supports converting disc images to CHD (Compressed Hunks of Data) format for space savings and better organization.
 
 #### Supported Conversions
-- **BIN/CUE → CHD** (PlayStation, Sega CD, Saturn, etc.)
-- **ISO → CHD** (PlayStation 2, Dreamcast, GameCube)
-- **GDI → CHD** (Dreamcast)
+- **BIN/CUE or IMG → CHD** (PlayStation, Sega CD, Saturn, and similar CD-based systems)
+- **ISO/IMG/BIN/NRG → CHD** (PlayStation 2)
+- **GDI/CUE/ISO → CHD** (Dreamcast)
 - **CHD → BIN/CUE** (extraction/reversal)
+
+GameCube and Wii use RVZ as the canonical target instead of CHD.
 
 #### Benefits
 - 30-60% space savings (lossless compression)
@@ -491,6 +516,65 @@ Final Fantasy VII (USA) (Disc 3).chd
 - Undo support (re-extract from CHD if needed)
 - Batch operation with error handling
 - Test in emulator option before cleanup
+
+### RVZ Compression Support
+
+Remus uses RVZ as the canonical archival output for GameCube and Wii workflows.
+
+#### Supported Conversions
+- **ISO/GCM → RVZ** (GameCube)
+- **ISO → RVZ** (Wii)
+- **RVZ → ISO** (extraction/reversal)
+
+#### Benefits
+- Lossless preservation of GameCube and Wii disc data
+- Strong compression on garbage-heavy Wii images
+- Direct compatibility with modern Dolphin workflows
+
+#### Policy Notes
+- `.wbfs` and `.gcz` are accepted as normalization inputs, not canonical archive targets.
+- Keep an ISO fallback path when `dolphin-tool` is unavailable.
+
+### CSO Compression Support
+
+Remus uses CSO as the canonical compact output for PSP and an optional export format for PlayStation 2.
+
+#### Supported Conversions
+- **ISO → CSO** (PSP)
+- **CSO → ISO** (extraction/reversal)
+- **ISO → CSO** (optional PlayStation 2 export)
+
+#### Policy Notes
+- Measure savings per title before bulk migration.
+- Keep compatibility-focused defaults for block size and compression settings.
+- CHD remains the default archival format for PlayStation 2.
+
+### WBFS Normalization Support
+
+Remus treats `.wbfs` as a Wii normalization input, not a canonical library format.
+
+#### Workflow
+1. Detect a `.wbfs` image during scan or process.
+2. Normalize the image to ISO internally.
+3. Apply the canonical Wii archive policy after normalization.
+4. Emit RVZ when the full toolchain is available, otherwise keep ISO.
+
+#### Policy Notes
+- WBFS is useful for real hardware and legacy loader workflows.
+- WBFS should not replace RVZ as the default archival target in the main library.
+
+### PBP Export Support
+
+Remus treats `.pbp` as an explicit export format for PlayStation compatibility workflows.
+
+#### Supported Exports
+- **CUE/BIN or ISO → PBP** (single-disc PlayStation)
+- **M3U → PBP** (multi-disc PlayStation export)
+
+#### Policy Notes
+- PBP is export-only.
+- PBP does not replace CHD or source disc files in the canonical library.
+- Multi-disc exports should use `.m3u` as the input contract.
 
 ### Archive Extraction
 

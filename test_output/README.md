@@ -1,6 +1,8 @@
 # Test Output Policy
 
-Use this folder for repository-local processed-ROM test runs and the tracked notes that explain them.
+Use this folder for repository-local processed-ROM test runs and lightweight local notes.
+
+Put durable summaries in [../docs/reports/](../docs/reports/README.md), not in this directory.
 
 ## Formalized Pipeline Testing
 
@@ -22,7 +24,7 @@ Run all pipeline tests through the test runner script to ensure consistent outpu
 
 Each run creates a timestamped directory with consistent artifact names:
 
-```
+```text
 test_output/full_test_3103_1530/
 ├── test.db               # SQLite database
 ├── match-report.txt      # Matching confidence report
@@ -33,13 +35,21 @@ test_output/full_test_3103_1530/
 
 The script automatically prunes test runs older than the 5 most recent.
 
+For ad-hoc cleanup after one-off validation runs, use:
+
+```bash
+./scripts/prune_test_output.sh --dry-run
+./scripts/prune_test_output.sh --apply
+```
+
 ## Rules
 
 - Keep no more than 5 active test runs in this folder at a time (auto-enforced by the script).
-- Store notes, command results, hashes, summaries, and review artifacts here.
+- Store temporary notes, command results, and review artifacts here.
 - Processed ROM payloads may exist here during local testing, but they should stay temporary and small.
 - Put any item that needs follow-up in `attention.log` instead of creating more output trees.
 - Remove stale output as soon as the underlying issue is resolved.
+- Move any retained validation summary into [../docs/reports/](../docs/reports/README.md).
 - **Do not** create ad-hoc `.db` or report files in the root of `test_output/` — use the script.
 
 Only lightweight notes and logs are intended to remain tracked in GitHub.

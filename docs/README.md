@@ -15,6 +15,7 @@ Documentation index for Remus.
 - [verification-and-patching.md](verification-and-patching.md) - DAT verification and ROM patching
 - [naming-standards.md](naming-standards.md) - Naming conventions
 - [chd-conversion.md](chd-conversion.md) - CHD conversion workflow
+- [format-matrix.md](format-matrix.md) - Recommended canonical formats, accepted inputs, and tool backends by system
 - [guides/TEST-DATA-POLICY.md](guides/TEST-DATA-POLICY.md) - Canonical `roms/` and `test_output/` policy
 
 ## Technical Reference
@@ -23,6 +24,8 @@ Documentation index for Remus.
 - [data-model.md](data-model.md) - SQLite data model
 - [requirements.md](requirements.md) - Requirements and scope
 - [plan.md](plan.md) - Roadmap and milestone plan
+- [plans/archive-format-backlog.md](plans/archive-format-backlog.md) - Concrete backlog for CSO, WBFS normalization, and PBP export
+- [adr/adr-0002-use-system-specific-canonical-archive-formats.md](adr/adr-0002-use-system-specific-canonical-archive-formats.md) - Locked archive policy for future format work
 - [metadata-providers.md](metadata-providers.md) - Metadata provider details
 - [cli/README.md](cli/README.md) - CLI implementation docs
 

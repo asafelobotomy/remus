@@ -6,6 +6,7 @@ Test results, implementation reports, and verification documentation.
 
 - **PHASE3-TEST-RESULTS.md** - Phase 3 testing results and metrics
 - **METADATA-VERIFICATION-REPORT.md** - Metadata verification and validation report
+- **TEST-OUTPUT-VALIDATION-SUMMARY-2026-04-05.md** - Final validation findings distilled from transient `test_output/` runs
 
 ## Legacy Reports
 
@@ -15,3 +16,5 @@ Test results, implementation reports, and verification documentation.
 ## Testing
 
 For comprehensive testing documentation, see [../guides/TESTING-GUIDE.md](../guides/TESTING-GUIDE.md).
+
+For the local disposable-output policy and pruning script, see [../../test_output/README.md](../../test_output/README.md) and [../../scripts/prune_test_output.sh](../../scripts/prune_test_output.sh).
