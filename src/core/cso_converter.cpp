@@ -80,7 +80,18 @@ QList<ConversionResult> CSOConverter::batchConvert(const QStringList &inputPaths
             outputPath = QDir(outputDir).filePath(inputInfo.completeBaseName() + ".cso");
         }
 
-        ConversionResult result = convertIsoToCSO(inputPath, outputPath);
+        QFileInfo info(inputPath);
+        const QString ext = QStringLiteral(".") + info.suffix().toLower();
+
+        ConversionResult result;
+        if (Constants::Files::containsExtension(Constants::Files::CSO_SOURCE_EXTENSIONS, ext)) {
+            result = convertIsoToCSO(inputPath, outputPath);
+        } else {
+            result.success = false;
+            result.inputPath = inputPath;
+            result.error = QStringLiteral("Unsupported format: %1").arg(ext);
+        }
+
         results.append(result);
         completed++;
 

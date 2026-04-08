@@ -145,6 +145,32 @@ private slots:
         runCli({"--convert-chd", cue, "--dry-run-all"});
     }
 
+    void testConvertCsoDryRun() {
+        if (QStandardPaths::findExecutable("maxcso").isEmpty()) {
+            QSKIP("maxcso not available");
+        }
+        QTemporaryDir dir;
+        QString iso = dir.filePath("sample.iso");
+        QFile f(iso);
+        QVERIFY(f.open(QIODevice::WriteOnly));
+        QVERIFY(f.write("dummy iso") == 9);
+        f.close();
+        runCli({"--convert-cso", iso, "--dry-run-all"});
+    }
+
+    void testExtractCsoDryRun() {
+        if (QStandardPaths::findExecutable("maxcso").isEmpty()) {
+            QSKIP("maxcso not available");
+        }
+        QTemporaryDir dir;
+        QString cso = dir.filePath("sample.cso");
+        QFile f(cso);
+        QVERIFY(f.open(QIODevice::WriteOnly));
+        QVERIFY(f.write("dummy cso") == 9);
+        f.close();
+        runCli({"--cso-extract", cso, "--dry-run-all"});
+    }
+
     void testOrganizeDryRun() {
         QTemporaryDir dir;
         runCli({"--organize", dir.path(), "--dry-run-all"});

@@ -250,6 +250,7 @@ int handleSearchCommand(CliContext &ctx)
 int handleEnrichCommand(CliContext &ctx)
 {
     if (!ctx.parser.isSet("enrich") && !ctx.processRequested) return 0;
+    if (ctx.processRequested && ctx.processHandled) return 0;
 
     qInfo() << "";
     qInfo() << "=== Metadata Enrichment ===";
@@ -281,6 +282,10 @@ int handleEnrichCommand(CliContext &ctx)
         const Database::MatchResult &m = it.value();
         if (seenGames.contains(m.gameId)) continue;
         seenGames.insert(m.gameId);
+        if (!fileMap.contains(m.fileId)) continue;
+        if (!fileMatchesSystemFilter(fileMap.value(m.fileId), ctx.processSystemIdFilter, &m)) {
+            continue;
+        }
 
         const bool sparse = m.publisher.isEmpty() || m.developer.isEmpty()
                           || m.genre.isEmpty() || m.players.isEmpty()

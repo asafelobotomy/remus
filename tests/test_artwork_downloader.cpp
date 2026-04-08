@@ -1,6 +1,7 @@
 #include <QtTest>
 #include <QTemporaryDir>
 #include <QFile>
+#include <QImage>
 #include <QSignalSpy>
 #include "metadata/artwork_downloader.h"
 
@@ -11,6 +12,7 @@ class ArtworkDownloaderTest : public QObject {
 
 private slots:
     void downloadsLocalFile();
+    void returnsCorrectedFormatPath();
     void invalidUrlFails();
     void httpUrlFails();
 };
@@ -37,6 +39,27 @@ void ArtworkDownloaderTest::downloadsLocalFile()
     QVERIFY(QFile::exists(dest));
     QVERIFY(!progressSpy.isEmpty());
     QCOMPARE(completeSpy.count(), 1);
+}
+
+void ArtworkDownloaderTest::returnsCorrectedFormatPath()
+{
+    QTemporaryDir dir;
+    QVERIFY(dir.isValid());
+
+    const QString source = dir.filePath("source.png");
+    QImage image(1, 1, QImage::Format_ARGB32);
+    image.fill(Qt::red);
+    QVERIFY(image.save(source, "PNG"));
+
+    const QString dest = dir.filePath("cover.jpg");
+    QString savedPath;
+
+    ArtworkDownloader downloader;
+    const bool ok = downloader.download(QUrl::fromLocalFile(source), dest, &savedPath);
+    QVERIFY(ok);
+    QCOMPARE(savedPath, dir.filePath("cover.png"));
+    QVERIFY(QFile::exists(savedPath));
+    QVERIFY(!QFile::exists(dest));
 }
 
 void ArtworkDownloaderTest::invalidUrlFails()

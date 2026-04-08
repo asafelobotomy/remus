@@ -1,6 +1,8 @@
 #include <QtTest>
 #include <QTemporaryDir>
 #include <QFile>
+#include <QProcess>
+#include <QStandardPaths>
 #include <QTextStream>
 #include <QSignalSpy>
 #include "core/scanner.h"
@@ -14,7 +16,9 @@ class ScannerTest : public QObject {
 private slots:
     void missingDirectoryEmitsError();
     void cancelStopsScan();
+    void archiveFilePathScansArchiveContents();
     void multiFileLinking();
+    void compressedArchiveMultiFileLinking();
     void markdownDocumentsAreSkippedButGenesisRomFilesRemain();
     void exclusionMarkerChangesAreRespectedAcrossScans();
 };
@@ -30,6 +34,37 @@ static QString writeFile(const QString &path, const QByteArray &data = QByteArra
     }
     f.close();
     return path;
+}
+
+static QString findSevenZip()
+{
+    const QStringList candidates = {"7z", "7za", "7zz"};
+    for (const QString &candidate : candidates) {
+        const QString executable = QStandardPaths::findExecutable(candidate);
+        if (!executable.isEmpty()) {
+            return executable;
+        }
+    }
+
+    return QString();
+}
+
+static bool createArchive(const QString &program,
+                          const QString &workingDirectory,
+                          const QString &archivePath,
+                          const QStringList &inputs)
+{
+    QProcess process;
+    process.setWorkingDirectory(workingDirectory);
+    process.start(program, QStringList{"a", "-t7z", archivePath} + inputs);
+    if (!process.waitForStarted()) {
+        return false;
+    }
+    if (!process.waitForFinished(30000)) {
+        return false;
+    }
+
+    return process.exitStatus() == QProcess::NormalExit && process.exitCode() == 0;
 }
 
 void ScannerTest::missingDirectoryEmitsError()
@@ -63,6 +98,34 @@ void ScannerTest::cancelStopsScan()
     QList<ScanResult> results = scanner.scan(dir.path());
     QVERIFY(scanner.wasCancelled());
     QVERIFY(results.size() < fileCount);  // Should stop early
+}
+
+void ScannerTest::archiveFilePathScansArchiveContents()
+{
+    const QString sevenZip = findSevenZip();
+    if (sevenZip.isEmpty()) {
+        QSKIP("7z not available");
+    }
+
+    QTemporaryDir dir;
+    QVERIFY(dir.isValid());
+
+    QTemporaryDir sourceDir;
+    QVERIFY(sourceDir.isValid());
+
+    QVERIFY(!writeFile(sourceDir.filePath("game.iso"), QByteArray(1024, '\0')).isEmpty());
+
+    const QString archivePath = dir.filePath("game.7z");
+    QVERIFY(createArchive(sevenZip, sourceDir.path(), archivePath, {"game.iso"}));
+
+    Scanner scanner;
+    scanner.setExtensions({".iso"});
+
+    const QList<ScanResult> results = scanner.scan(archivePath);
+    QCOMPARE(results.size(), 1);
+    QVERIFY(results.first().isCompressed);
+    QCOMPARE(results.first().archivePath, archivePath);
+    QCOMPARE(results.first().archiveInternalPath, QStringLiteral("game.iso"));
 }
 
 void ScannerTest::multiFileLinking()
@@ -108,6 +171,85 @@ void ScannerTest::multiFileLinking()
         }
     }
     QCOMPARE(linkedTracks, 2);
+}
+
+void ScannerTest::compressedArchiveMultiFileLinking()
+{
+    const QString sevenZip = findSevenZip();
+    if (sevenZip.isEmpty()) {
+        QSKIP("7z not available");
+    }
+
+    QTemporaryDir dir;
+    QVERIFY(dir.isValid());
+
+    QTemporaryDir sourceDir;
+    QVERIFY(sourceDir.isValid());
+
+    QVERIFY(QDir().mkpath(sourceDir.filePath("cue")));
+    QVERIFY(QDir().mkpath(sourceDir.filePath("gdi")));
+
+    const QByteArray cueContents = QByteArrayLiteral(
+        "FILE \"game.bin\" BINARY\n"
+        "  TRACK 01 MODE1/2352\n"
+        "    INDEX 01 00:00:00\n");
+    QVERIFY(!writeFile(sourceDir.filePath("cue/game.cue"), cueContents).isEmpty());
+    QVERIFY(!writeFile(sourceDir.filePath("cue/game.bin")).isEmpty());
+
+    const QByteArray gdiContents = QByteArrayLiteral(
+        "3\n"
+        "1 0 4 2352 \"track01.bin\" 0\n"
+        "2 45000 0 2352 \"track02.raw\" 0\n"
+        "3 90000 4 2352 \"track03.bin\" 0\n");
+    QVERIFY(!writeFile(sourceDir.filePath("gdi/disc.gdi"), gdiContents).isEmpty());
+    QVERIFY(!writeFile(sourceDir.filePath("gdi/track01.bin")).isEmpty());
+    QVERIFY(!writeFile(sourceDir.filePath("gdi/track02.raw")).isEmpty());
+    QVERIFY(!writeFile(sourceDir.filePath("gdi/track03.bin")).isEmpty());
+
+    const QString cueArchive = dir.filePath("cue_set.7z");
+    const QString gdiArchive = dir.filePath("gdi_set.7z");
+    QVERIFY(createArchive(sevenZip, sourceDir.path(), cueArchive, {"cue"}));
+    QVERIFY(createArchive(sevenZip, sourceDir.path(), gdiArchive, {"gdi"}));
+
+    Scanner scanner;
+    scanner.setExtensions({".cue", ".bin", ".raw", ".gdi"});
+    QList<ScanResult> results = scanner.scan(dir.path());
+
+    QCOMPARE(results.size(), 6);
+
+    auto findEntry = [&](const QString &archiveName, const QString &memberSuffix) -> ScanResult * {
+        for (auto &result : results) {
+            if (result.archivePath.endsWith(archiveName)
+                && result.archiveInternalPath.endsWith(memberSuffix)) {
+                return &result;
+            }
+        }
+        return nullptr;
+    };
+
+    ScanResult *cueFile = findEntry("cue_set.7z", "cue/game.cue");
+    ScanResult *binFile = findEntry("cue_set.7z", "cue/game.bin");
+    QVERIFY(cueFile != nullptr);
+    QVERIFY(binFile != nullptr);
+    QVERIFY(!cueFile->isPrimary);
+    QVERIFY(binFile->isPrimary);
+    QVERIFY(cueFile->parentFilePath.endsWith("cue_set.7z::cue/game.bin"));
+
+    ScanResult *gdiFile = findEntry("gdi_set.7z", "gdi/disc.gdi");
+    QVERIFY(gdiFile != nullptr);
+    QVERIFY(gdiFile->isPrimary);
+
+    const QStringList trackMembers = {
+        "gdi/track01.bin",
+        "gdi/track02.raw",
+        "gdi/track03.bin"
+    };
+    for (const QString &member : trackMembers) {
+        ScanResult *trackFile = findEntry("gdi_set.7z", member);
+        QVERIFY(trackFile != nullptr);
+        QVERIFY(!trackFile->isPrimary);
+        QVERIFY(trackFile->parentFilePath.endsWith("gdi_set.7z::gdi/disc.gdi"));
+    }
 }
 
 void ScannerTest::markdownDocumentsAreSkippedButGenesisRomFilesRemain()

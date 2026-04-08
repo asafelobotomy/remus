@@ -105,11 +105,14 @@ private slots:
     // ── bundle() real archives ──
     void testBundle_realZipContainsMarkerAndArtworkSubdir();
     void testBundle_realSevenZipContainsMarkerAndArtworkSubdir();
+    void testBundle_compressedNestedPayloadIsFlattenedToArchiveRoot();
     void testBundle_markerUsesStoredPercentConfidence();
     void testBundle_skipsWhenCurrentCompressedPathAlreadyBundled();
     // ── disc conversion ──
+    void testBundle_binPrimaryWithCueChildCanBePackagedAsChd();
     void testBundle_cueDiscMediaCanBePackagedAsChd();
     void testBundle_multiTrackGdiCanBePackagedAsChd();
+    void testBundle_gameCubeIsoPrefersRvzWhenDiscOptimizationRequested();
     void testBundle_discConversionFailsWhenReferencedTrackIsMissing();
     // ── struct defaults ──
     void testBundleConfig_defaults();

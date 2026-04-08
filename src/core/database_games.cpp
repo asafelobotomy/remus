@@ -33,7 +33,7 @@ QMap<int, Database::MatchResult> Database::getAllMatches()
             FROM matches
             GROUP BY file_id
         )
-        SELECT m.id, m.file_id, m.game_id, m.match_method, m.confidence, 
+        SELECT m.id, m.file_id, m.game_id, g.system_id, m.match_method, m.confidence, 
                m.is_confirmed, m.is_rejected,
                g.title, g.publisher, g.release_date, g.developer, g.description,
                g.genres, g.players, g.region, g.rating, m.name_match_score
@@ -63,27 +63,28 @@ QMap<int, Database::MatchResult> Database::getAllMatches()
         result.matchId = query.value(0).toInt();
         result.fileId = query.value(1).toInt();
         result.gameId = query.value(2).toInt();
-        result.matchMethod = query.value(3).toString();
-        result.confidence = query.value(4).toFloat();
-        result.isConfirmed = query.value(5).toBool();
-        result.isRejected = query.value(6).toBool();
-        result.gameTitle = query.value(7).toString();
-        result.publisher = query.value(8).toString();
+        result.systemId = query.value(3).toInt();
+        result.matchMethod = query.value(4).toString();
+        result.confidence = query.value(5).toFloat();
+        result.isConfirmed = query.value(6).toBool();
+        result.isRejected = query.value(7).toBool();
+        result.gameTitle = query.value(8).toString();
+        result.publisher = query.value(9).toString();
         
         // Parse year from release_date (ISO format: YYYY-MM-DD)
-        QString releaseDate = query.value(9).toString();
+        QString releaseDate = query.value(10).toString();
         if (!releaseDate.isEmpty()) {
             result.releaseYear = releaseDate.left(4).toInt();
         }
         
         // Populate remaining metadata fields
-        result.developer = query.value(10).toString();
-        result.description = query.value(11).toString();
-        result.genre = query.value(12).toString();
-        result.players = query.value(13).toString();
-        result.region = query.value(14).toString();
-        result.rating = query.value(15).toFloat();
-        result.nameMatchScore = query.value(16).toFloat();
+        result.developer = query.value(11).toString();
+        result.description = query.value(12).toString();
+        result.genre = query.value(13).toString();
+        result.players = query.value(14).toString();
+        result.region = query.value(15).toString();
+        result.rating = query.value(16).toFloat();
+        result.nameMatchScore = query.value(17).toFloat();
         
         results[result.fileId] = result;
     }
@@ -98,7 +99,7 @@ Database::MatchResult Database::getMatchForFile(int fileId)
     QSqlQuery query(m_db);
     
     query.prepare(R"(
-        SELECT m.id, m.file_id, m.game_id, m.match_method, m.confidence, 
+        SELECT m.id, m.file_id, m.game_id, g.system_id, m.match_method, m.confidence, 
                m.is_confirmed, m.is_rejected,
                g.title, g.publisher, g.developer, g.release_date,
                g.description, g.genres, g.players, g.region, g.rating,
@@ -120,25 +121,26 @@ Database::MatchResult Database::getMatchForFile(int fileId)
         result.matchId = query.value(0).toInt();
         result.fileId = query.value(1).toInt();
         result.gameId = query.value(2).toInt();
-        result.matchMethod = query.value(3).toString();
-        result.confidence = query.value(4).toFloat();
-        result.isConfirmed = query.value(5).toBool();
-        result.isRejected = query.value(6).toBool();
-        result.gameTitle = query.value(7).toString();
-        result.publisher = query.value(8).toString();
-        result.developer = query.value(9).toString();
+        result.systemId = query.value(3).toInt();
+        result.matchMethod = query.value(4).toString();
+        result.confidence = query.value(5).toFloat();
+        result.isConfirmed = query.value(6).toBool();
+        result.isRejected = query.value(7).toBool();
+        result.gameTitle = query.value(8).toString();
+        result.publisher = query.value(9).toString();
+        result.developer = query.value(10).toString();
         
-        QString releaseDate = query.value(10).toString();
+        QString releaseDate = query.value(11).toString();
         if (!releaseDate.isEmpty()) {
             result.releaseYear = releaseDate.left(4).toInt();
         }
         
-        result.description = query.value(11).toString();
-        result.genre = query.value(12).toString();
-        result.players = query.value(13).toString();
-        result.region = query.value(14).toString();
-        result.rating = query.value(15).toFloat();
-        result.nameMatchScore = query.value(16).toFloat();
+        result.description = query.value(12).toString();
+        result.genre = query.value(13).toString();
+        result.players = query.value(14).toString();
+        result.region = query.value(15).toString();
+        result.rating = query.value(16).toFloat();
+        result.nameMatchScore = query.value(17).toFloat();
     }
     
     return result;

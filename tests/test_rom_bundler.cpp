@@ -196,6 +196,69 @@ void RomBundlerTest::testBundle_realSevenZipContainsMarkerAndArtworkSubdir()
     QVERIFY(info.contents.contains("artwork/boxfront.jpg"));
 }
 
+void RomBundlerTest::testBundle_compressedNestedPayloadIsFlattenedToArchiveRoot()
+{
+    ArchiveCreator creator;
+    ArchiveExtractor extractor;
+    if (!creator.canCompress(ArchiveFormat::ZIP)) {
+        QSKIP("zip tool not available");
+    }
+    if (!extractor.canExtract(ArchiveFormat::ZIP)) {
+        QSKIP("unzip tool not available");
+    }
+
+    QTemporaryDir tmp;
+    QVERIFY(tmp.isValid());
+
+    const QString sourceDir = tmp.filePath("source");
+    QVERIFY(QDir().mkpath(sourceDir + "/Nested Game"));
+    const QString nestedRom = sourceDir + "/Nested Game/game.nes";
+    QVERIFY(writeFile(nestedRom, "ROMPAYLOAD"));
+
+    const QString sourceArchive = tmp.filePath("nested.zip");
+    const CompressionResult compressed = creator.compressDirectoryContents(
+        sourceDir, sourceArchive, ArchiveFormat::ZIP);
+    QVERIFY2(compressed.success, qPrintable(compressed.error));
+    QVERIFY(QFile::exists(sourceArchive));
+
+    Database db;
+    QVERIFY(db.initialize(tmp.filePath("test.db")));
+
+    FileRecord rec = makeFileRecord(0, sourceArchive, "game.nes");
+    rec.isCompressed = true;
+    rec.archivePath = sourceArchive;
+    rec.archiveInternalPath = "Nested Game/game.nes";
+    rec.extension = ".nes";
+    rec.id = db.insertFile(rec);
+    QVERIFY(rec.id > 0);
+
+    RomBundler bundler(db);
+
+    RomBundler::BundleConfig cfg;
+    cfg.includeBoxArt = false;
+    cfg.outputFormat = ArchiveFormat::ZIP;
+
+    const QString destDir = tmp.filePath("bundles");
+    const RomBundler::BundleResult result = bundler.bundle(
+        rec, makeMatch("Nested Game"), makeMetadata("Nested Game"), destDir, cfg);
+    QVERIFY2(result.success, qPrintable(result.error));
+    QVERIFY(QFile::exists(result.outputPath));
+
+    const ArchiveInfo info = extractor.getArchiveInfo(result.outputPath);
+    QVERIFY(info.contents.contains(".remus.md"));
+    QVERIFY(info.contents.contains("game.nes"));
+    QVERIFY(!info.contents.contains("Nested Game/game.nes"));
+
+    bool hasNestedFolder = false;
+    for (const QString &entry : info.contents) {
+        if (entry.startsWith("Nested Game/")) {
+            hasNestedFolder = true;
+            break;
+        }
+    }
+    QVERIFY(!hasNestedFolder);
+}
+
 void RomBundlerTest::testBundle_markerUsesStoredPercentConfidence()
 {
     ArchiveCreator creator;

@@ -137,6 +137,21 @@ QString Database::getLibraryPath(int libraryId)
     return QString();
 }
 
+int Database::getLibraryCount()
+{
+    QSqlQuery query(m_db);
+    if (!query.exec("SELECT COUNT(*) FROM libraries")) {
+        logError("Failed to count libraries: " + query.lastError().text());
+        return 0;
+    }
+
+    if (query.next()) {
+        return query.value(0).toInt();
+    }
+
+    return 0;
+}
+
 bool Database::deleteFilesForLibrary(int libraryId)
 {
     QSqlQuery query(m_db);

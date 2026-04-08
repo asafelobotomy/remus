@@ -79,6 +79,74 @@ private slots:
         // Just verify it doesn't crash
     }
 
+    void testIsMaxcsoAvailableDoesNotCrash()
+    {
+        ConversionService svc;
+        bool avail = svc.isMaxcsoAvailable();
+        Q_UNUSED(avail);
+    }
+
+    void testGetMaxcsoVersionDoesNotCrash()
+    {
+        ConversionService svc;
+        QString ver = svc.getMaxcsoVersion();
+        Q_UNUSED(ver);
+    }
+
+    void testConvertToCSOMissingFile()
+    {
+        ConversionService svc;
+        auto result = svc.convertToCSO("/nonexistent/game.iso");
+        QVERIFY(!result.success);
+    }
+
+    void testConvertToCSOUnsupportedFile()
+    {
+        ConversionService svc;
+        QTemporaryDir tmp;
+        QVERIFY(tmp.isValid());
+
+        const QString textPath = tmp.filePath("note.txt");
+        QFile file(textPath);
+        QVERIFY(file.open(QIODevice::WriteOnly));
+        QVERIFY(file.write("note") == 4);
+        file.close();
+
+        auto result = svc.convertToCSO(textPath);
+        QVERIFY(!result.success);
+        QVERIFY(result.error.contains("Unsupported file format"));
+    }
+
+    void testExtractCSOMissingFile()
+    {
+        ConversionService svc;
+        auto result = svc.extractCSO("/nonexistent/game.cso");
+        QVERIFY(!result.success);
+    }
+
+    void testExtractCSOUnsupportedFile()
+    {
+        ConversionService svc;
+        QTemporaryDir tmp;
+        QVERIFY(tmp.isValid());
+
+        const QString textPath = tmp.filePath("note.txt");
+        QFile file(textPath);
+        QVERIFY(file.open(QIODevice::WriteOnly));
+        QVERIFY(file.write("note") == 4);
+        file.close();
+
+        auto result = svc.extractCSO(textPath);
+        QVERIFY(!result.success);
+        QVERIFY(result.error.contains("Unsupported file format"));
+    }
+
+    void testSetMaxcsoPathDoesNotCrash()
+    {
+        ConversionService svc;
+        svc.setMaxcsoPath("/usr/bin/maxcso");
+    }
+
     void testIsRunningInitiallyFalse()
     {
         ConversionService svc;

@@ -16,6 +16,9 @@ function(add_remus_test target_name ctest_name)
     add_executable(${target_name} ${ART_SOURCES})
     target_link_libraries(${target_name} PRIVATE ${ART_LIBS})
     add_test(NAME ${ctest_name} COMMAND ${target_name})
+    set_tests_properties(${ctest_name} PROPERTIES
+        ENVIRONMENT "QT_QPA_PLATFORM=offscreen"
+    )
 
     list(APPEND REMUS_TEST_TARGETS ${target_name})
     set(REMUS_TEST_TARGETS "${REMUS_TEST_TARGETS}" PARENT_SCOPE)
@@ -98,6 +101,16 @@ add_remus_test(test_patched_rom_parser PatchedRomParserTest
 
 add_remus_test(test_chd_converter ChdConverterTest
     SOURCES test_chd_converter.cpp
+    LIBS Qt6::Test Qt6::Core remus-core
+)
+
+add_remus_test(test_conversion_planner ConversionPlannerTest
+    SOURCES test_conversion_planner.cpp
+    LIBS Qt6::Test Qt6::Core remus-core
+)
+
+add_remus_test(test_cso_converter CsoConverterTest
+    SOURCES test_cso_converter.cpp
     LIBS Qt6::Test Qt6::Core remus-core
 )
 

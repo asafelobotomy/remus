@@ -65,12 +65,16 @@ int handleArtworkCommand(CliContext &ctx)
         if (ctx.dryRunAll) {
             qInfo() << "  [DRY-RUN] would save" << destPath << "from" << url.toString();
             downloadedCount++;
-        } else if (downloader.download(url, destPath)) {
-            qInfo() << "  ✓ Saved" << destPath;
-            downloadedCount++;
         } else {
-            qInfo() << "  ✗ Download failed" << url.toString();
-            failedCount++;
+            QString savedPath;
+            if (!downloader.download(url, destPath, &savedPath)) {
+                qInfo() << "  ✗ Download failed" << url.toString();
+                failedCount++;
+                continue;
+            }
+
+            qInfo() << "  ✓ Saved" << (savedPath.isEmpty() ? destPath : savedPath);
+            downloadedCount++;
         }
     }
 
@@ -88,35 +92,38 @@ int handleBundleCommand(CliContext &ctx)
     const bool bundleFromProcess = ctx.processRequested &&
         (ctx.parser.isSet("process-output") || ctx.parser.isSet("bundle"));
     if (!bundleExplicit && !bundleFromProcess) return 0;
+    if (ctx.processRequested && ctx.processHandled) return 0;
 
     const QString destination  = ctx.parser.isSet("bundle")
         ? ctx.parser.value("bundle")
         : ctx.parser.value("process-output");
 
     // Preset values serve as defaults; explicit CLI flags override them
-    const QString formatStr    = ctx.parser.isSet("bundle-format") && !ctx.presetBundleFormat.isEmpty()
-        ? ctx.parser.value("bundle-format")    // explicit wins
-        : (!ctx.presetBundleFormat.isEmpty() ? ctx.presetBundleFormat
-                                             : ctx.parser.value("bundle-format"));
-    const QString discFormat   = (ctx.parser.isSet("bundle-disc-format") && !ctx.presetDiscFormat.isEmpty()
-        ? ctx.parser.value("bundle-disc-format")
-        : (!ctx.presetDiscFormat.isEmpty() ? ctx.presetDiscFormat
-                                           : ctx.parser.value("bundle-disc-format"))).toLower();
-    const QString folderStr    = ctx.parser.isSet("folder-naming") && !ctx.presetFolderNaming.isEmpty()
-        ? ctx.parser.value("folder-naming")
-        : (!ctx.presetFolderNaming.isEmpty() ? ctx.presetFolderNaming
-                                              : ctx.parser.value("folder-naming"));
+    const QString formatStr    = resolveCliOptionValue(ctx.parser,
+                                                       QStringLiteral("bundle-format"),
+                                                       ctx.presetBundleFormat);
+    const QString discFormat   = resolveCliOptionValue(ctx.parser,
+                                                       QStringLiteral("bundle-disc-format"),
+                                                       ctx.presetDiscFormat).toLower();
+    const QString folderStr    = resolveCliOptionValue(ctx.parser,
+                                                       QStringLiteral("folder-naming"),
+                                                       ctx.presetFolderNaming);
     const bool    dryRun       = ctx.parser.isSet("dry-run") || ctx.dryRunAll;
     const auto    folderNaming = Constants::FolderNaming::schemeFromString(folderStr);
     const QString artworkDir   = ctx.parser.value("bundle-art-dir");
 
     const ArchiveFormat fmt = (formatStr == "7z") ? ArchiveFormat::SevenZip
                                                   : ArchiveFormat::ZIP;
-    if (discFormat != "original" && discFormat != "chd") {
+    if (discFormat != "original" && discFormat != "chd" && discFormat != "rvz") {
         qCritical() << "✗ Unsupported bundle disc format:" << discFormat;
-        qInfo() << "Supported values: original, chd";
+        qInfo() << "Supported values: original, chd, rvz";
         return 1;
     }
+
+    const RomBundler::DiscOutputFormat discOutputFormat =
+        discFormat == QStringLiteral("rvz") ? RomBundler::DiscOutputFormat::Rvz :
+        discFormat == QStringLiteral("chd") ? RomBundler::DiscOutputFormat::Chd :
+                                              RomBundler::DiscOutputFormat::Original;
 
     qInfo() << "";
     qInfo() << "=== Bundle Matched ROMs ===";
@@ -156,6 +163,9 @@ int handleBundleCommand(CliContext &ctx)
 
         const Database::MatchResult &match = matches.value(file.id);
         if (match.isRejected) continue;
+        if (!fileMatchesSystemFilter(file, ctx.processSystemIdFilter, &match)) continue;
+
+        const int bundledSystemId = resolveMatchedSystemId(file, &match);
 
         // Build GameMetadata from the DB-cached match — no provider round-trip
         GameMetadata metadata;
@@ -200,11 +210,14 @@ int handleBundleCommand(CliContext &ctx)
 
                     if (dryRun) {
                         qInfo() << "  [DRY-RUN] Would download box art from:" << boxArtUrl;
-                    } else if (downloader.download(boxArtUrl, destPath)) {
-                        artworkPath = destPath;
-                        qInfo() << "  ✓ Downloaded box art:" << destPath;
                     } else {
-                        qWarning() << "  ⚠ Failed to download box art from:" << boxArtUrl;
+                        QString savedPath;
+                        if (downloader.download(boxArtUrl, destPath, &savedPath)) {
+                            artworkPath = savedPath.isEmpty() ? destPath : savedPath;
+                            qInfo() << "  ✓ Downloaded box art:" << artworkPath;
+                        } else {
+                            qWarning() << "  ⚠ Failed to download box art from:" << boxArtUrl;
+                        }
                     }
                 }
             }
@@ -212,9 +225,9 @@ int handleBundleCommand(CliContext &ctx)
 
         // Resolve system subfolder when folder-naming is active
         QString effectiveDestination = destination;
-        if (folderNaming != Constants::FolderNaming::Scheme::None && file.systemId > 0) {
+        if (folderNaming != Constants::FolderNaming::Scheme::None && bundledSystemId > 0) {
             const QString systemFolder = Constants::FolderNaming::folderNameForSystemId(
-                file.systemId, folderNaming);
+                bundledSystemId, folderNaming);
             if (!systemFolder.isEmpty()) {
                 effectiveDestination = QDir(destination).filePath(systemFolder);
             }
@@ -225,7 +238,7 @@ int handleBundleCommand(CliContext &ctx)
             /*dryRun*/        dryRun,
             /*outputFormat*/  fmt,
             /*artworkPath*/   artworkPath,
-            /*convertDiscsToChd*/ discFormat == QStringLiteral("chd")
+            /*discOutputFormat*/ discOutputFormat
         };
 
         qInfo() << "Bundling:" << file.filename;
@@ -320,6 +333,7 @@ int handleGenerateM3uCommand(CliContext &ctx)
 {
     const bool hasOutput = ctx.parser.isSet("process-output") || ctx.parser.isSet("bundle");
     if (!ctx.parser.isSet("generate-m3u") && !(ctx.processRequested && hasOutput)) return 0;
+    if (ctx.processRequested && ctx.processHandled) return 0;
 
     const QString m3uDir = ctx.parser.isSet("m3u-dir")
         ? ctx.parser.value("m3u-dir")

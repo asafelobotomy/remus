@@ -16,6 +16,7 @@ using namespace Remus::Constants;
 int handleMatchCommand(CliContext &ctx)
 {
     if (!ctx.parser.isSet("match") && !ctx.processRequested) return 0;
+    if (ctx.processRequested && ctx.processHandled) return 0;
 
     qInfo() << "";
     qInfo() << "=== Intelligent Metadata Matching (M3) ===";
@@ -50,6 +51,7 @@ int handleMatchCommand(CliContext &ctx)
     int matched = 0, failed = 0;
 
     for (const FileRecord &file : files) {
+        if (!fileMatchesSystemFilter(file, ctx.processSystemIdFilter)) continue;
         if (ctx.db.getMatchForFile(file.id).matchId != 0) continue;
 
         const QString displayName = getMatchingDisplayName(file);

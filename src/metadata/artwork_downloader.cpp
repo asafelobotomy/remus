@@ -32,7 +32,7 @@ bool ArtworkDownloader::isSupportedUrl(const QUrl &url)
         !url.host().trimmed().isEmpty();
 }
 
-bool ArtworkDownloader::download(const QUrl &url, const QString &destPath)
+bool ArtworkDownloader::download(const QUrl &url, const QString &destPath, QString *savedPath)
 {
     if (!isSupportedUrl(url)) {
         emit downloadFailed(url, "Unsupported artwork URL");
@@ -79,6 +79,10 @@ bool ArtworkDownloader::download(const QUrl &url, const QString &destPath)
                 finalPath = destPath; // rename failed, keep original
             }
         }
+    }
+
+    if (savedPath) {
+        *savedPath = finalPath;
     }
 
     emit downloadCompleted(url, finalPath);

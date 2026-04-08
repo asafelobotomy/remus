@@ -17,6 +17,8 @@ private slots:
     void testSelectBestHashCrc32Only();
     void testSelectBestHashPrefersHasheous();
     void testSelectBestHashEmptyWhenNoHashes();
+    void testResolveCliOptionValueUsesPresetWhenOptionUnset();
+    void testResolveCliOptionValuePrefersExplicitOption();
     void testGetMatchingSystemNameReturnsInternalName();
     void testGetMatchingSystemNameHandlesUnknownSystem();
     void testGetHashedFilesOnlyReturnsHashedRows();
@@ -99,6 +101,32 @@ void CliHelpersTest::testSelectBestHashEmptyWhenNoHashes()
     fr.hashCalculated = false;
     QString hash = selectBestHash(fr);
     QVERIFY(hash.isEmpty());
+}
+
+void CliHelpersTest::testResolveCliOptionValueUsesPresetWhenOptionUnset()
+{
+    QCommandLineParser parser;
+    parser.addOption(QCommandLineOption("bundle-disc-format", "", "format", "original"));
+    parser.process(QStringList{QStringLiteral("test")});
+
+    QCOMPARE(resolveCliOptionValue(parser,
+                                   QStringLiteral("bundle-disc-format"),
+                                   QStringLiteral("chd")),
+             QStringLiteral("chd"));
+}
+
+void CliHelpersTest::testResolveCliOptionValuePrefersExplicitOption()
+{
+    QCommandLineParser parser;
+    parser.addOption(QCommandLineOption("bundle-disc-format", "", "format", "original"));
+    parser.process(QStringList{QStringLiteral("test"),
+                               QStringLiteral("--bundle-disc-format"),
+                               QStringLiteral("rvz")});
+
+    QCOMPARE(resolveCliOptionValue(parser,
+                                   QStringLiteral("bundle-disc-format"),
+                                   QStringLiteral("chd")),
+             QStringLiteral("rvz"));
 }
 
 void CliHelpersTest::testGetMatchingSystemNameReturnsInternalName()

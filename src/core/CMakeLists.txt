@@ -13,6 +13,7 @@ target_link_libraries(remus-constants PUBLIC
 add_library(remus-core STATIC
     scanner.cpp
     scanner_multifile.cpp
+    conversion_planner.cpp
     system_detector.cpp
     disc_magic_detector.cpp
     patched_rom_parser.cpp

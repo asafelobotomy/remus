@@ -2,6 +2,7 @@
 
 #include <QDateTime>
 #include <QDir>
+#include <QDirIterator>
 #include <QFile>
 #include <QFileInfo>
 #include <QTextStream>
@@ -15,6 +16,21 @@ namespace {
 static constexpr const char *MARKER_FILENAME = ".remus.md";
 static constexpr const char *ARTWORK_SUBDIR  = "artwork";
 static constexpr const char *BOXART_FILENAME = "boxfront.jpg";
+
+QStringList collectArchiveEntries(const QString &rootDir)
+{
+    QStringList entries;
+    QDir root(rootDir);
+    QDirIterator it(rootDir,
+                    QDir::Files | QDir::Hidden,
+                    QDirIterator::Subdirectories);
+    while (it.hasNext()) {
+        it.next();
+        entries << root.relativeFilePath(it.filePath()).replace('\\', '/');
+    }
+    entries.sort();
+    return entries;
+}
 
 } // namespace
 
@@ -69,20 +85,17 @@ RomBundler::BundleResult RomBundler::bundleStaged(
         out << generateMarkerContent(patchedFile, baseMatch, metadata);
     }
 
-    QStringList archiveEntries = {
-        QDir(tempBase).relativeFilePath(destRom),
-        QString::fromLatin1(MARKER_FILENAME)
-    };
-
     if (config.includeBoxArt && !config.artworkPath.isEmpty()
         && QFile::exists(config.artworkPath)) {
         const QString artDestDir = tempBase + "/" + ARTWORK_SUBDIR;
         QDir().mkpath(artDestDir);
         const QString artDest = artDestDir + "/" + BOXART_FILENAME;
         if (QFile::copy(config.artworkPath, artDest)) {
-            archiveEntries << QString::fromLatin1(ARTWORK_SUBDIR) + "/" + BOXART_FILENAME;
+            result.archiveEntries << QString::fromLatin1(ARTWORK_SUBDIR) + "/" + BOXART_FILENAME;
         }
     }
+
+    result.archiveEntries = collectArchiveEntries(tempBase);
 
     const QString ext = (config.outputFormat == ArchiveFormat::SevenZip) ? Constants::Files::SEVEN_Z : Constants::Files::ZIP;
     const QString baseName = QFileInfo(patchedFile.filename).completeBaseName();

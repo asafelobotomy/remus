@@ -1,5 +1,6 @@
 #include "cli_commands.h"
 #include "cli_helpers.h"
+#include <algorithm>
 #include <QDir>
 #include <QMap>
 #include <QJsonArray>
@@ -19,6 +20,54 @@
 using namespace Remus;
 using namespace Remus::Constants;
 
+namespace {
+
+QString scanResultIdentifier(const ScanResult &result)
+{
+    if (result.isCompressed && !result.archivePath.isEmpty() && !result.archiveInternalPath.isEmpty()) {
+        const QString normalized = ArchiveExtractor::normalizeArchiveMemberPath(result.archiveInternalPath);
+        if (!normalized.isEmpty()) {
+            return result.archivePath + QStringLiteral("::") + normalized;
+        }
+    }
+
+    return QFileInfo(result.path).absoluteFilePath();
+}
+
+QList<int> orderedProcessSystemIds(Database &db)
+{
+    QMap<QString, int> knownSystems;
+    bool hasUnknown = false;
+
+    const QList<FileRecord> files = db.getExistingFiles();
+    for (const FileRecord &file : files) {
+        if (!file.isPrimary) {
+            continue;
+        }
+
+        if (file.systemId > 0) {
+            knownSystems.insert(db.getSystemDisplayName(file.systemId), file.systemId);
+        } else {
+            hasUnknown = true;
+        }
+    }
+
+    QList<int> systemIds = knownSystems.values();
+    if (hasUnknown) {
+        systemIds.append(0);
+    }
+
+    return systemIds;
+}
+
+QString processSystemLabel(Database &db, int systemId)
+{
+    return systemId > 0 ? db.getSystemDisplayName(systemId)
+                        : QStringLiteral("Unknown");
+}
+
+}
+
 int handleStatsCommand(CliContext &ctx)
 {
     if (!ctx.parser.isSet("stats")) return 0;
@@ -29,11 +78,11 @@ int handleStatsCommand(CliContext &ctx)
     for (const FileRecord &f : files) {
         if (f.hashCalculated) hashed++;
     }
-    const int systemCount = counts.size();  // Actual populated systems, not total definitions
+    const int libraryCount = ctx.db.getLibraryCount();
 
     if (ctx.parser.isSet("json")) {
         QJsonObject obj;
-        obj[QStringLiteral("libraries")] = systemCount;
+        obj[QStringLiteral("libraries")] = libraryCount;
         obj[QStringLiteral("files")] = files.size();
         obj[QStringLiteral("hashed")] = hashed;
         QJsonObject bySystem;
@@ -46,7 +95,7 @@ int handleStatsCommand(CliContext &ctx)
     }
 
     qInfo() << "=== Library Stats ===";
-    qInfo() << "Libraries:" << systemCount;
+    qInfo() << "Libraries:" << libraryCount;
     qInfo() << "Files:" << files.size();
     qInfo() << "Hashed:" << hashed << "/" << files.size();
     qInfo() << "By system:";
@@ -118,6 +167,15 @@ int handleScanCommand(CliContext &ctx)
 
     if (ctx.processRequested) {
         const bool hasOutput = ctx.parser.isSet("process-output") || ctx.parser.isSet("bundle");
+        const QString effectiveBundleFormat = resolveCliOptionValue(ctx.parser,
+                                                                    QStringLiteral("bundle-format"),
+                                                                    ctx.presetBundleFormat);
+        const QString effectiveDiscFormat = resolveCliOptionValue(ctx.parser,
+                                                                  QStringLiteral("bundle-disc-format"),
+                                                                  ctx.presetDiscFormat);
+        const QString effectiveFolderNaming = resolveCliOptionValue(ctx.parser,
+                                                                    QStringLiteral("folder-naming"),
+                                                                    ctx.presetFolderNaming);
         qInfo() << "=== Full Processing Pipeline ===";
         if (!ctx.presetDisplayName.isEmpty())
             qInfo() << "Preset:" << ctx.presetDisplayName;
@@ -128,19 +186,22 @@ int handleScanCommand(CliContext &ctx)
                 : ctx.parser.value("bundle");
             qInfo() << "Output:" << output;
         }
-        if (!ctx.presetBundleFormat.isEmpty())
-            qInfo() << "Archive:" << ctx.presetBundleFormat
-                     << "| Disc:" << ctx.presetDiscFormat
-                     << "| Folders:" << ctx.presetFolderNaming;
+        if (hasOutput)
+            qInfo() << "Archive:" << effectiveBundleFormat
+                     << "| Disc:" << effectiveDiscFormat
+                     << "| Folders:" << effectiveFolderNaming;
         qInfo() << "";
-        QStringList stages = {QStringLiteral("scan"), QStringLiteral("hash"), QStringLiteral("match"),
-                              QStringLiteral("enrich")};
-        if (hasOutput) stages << QStringLiteral("bundle");
+        QStringList stages = {QStringLiteral("scan"), QStringLiteral("per-system [hash → match → enrich")};
+        if (hasOutput) {
+            stages.last().append(QStringLiteral(" → bundle"));
+        }
+        stages.last().append(QStringLiteral("]"));
+        if (hasOutput) stages << QStringLiteral("m3u");
         qInfo().noquote() << "Stages:" << stages.join(QStringLiteral(" → "));
         qInfo() << "";
     }
 
-    qInfo() << "Scanning directory:" << scanPath;
+    qInfo() << "Scanning path:" << scanPath;
     qInfo() << "";
 
     Scanner scanner;
@@ -160,8 +221,15 @@ int handleScanCommand(CliContext &ctx)
     int libraryId = ctx.db.insertLibrary(scanPath);
     int insertedCount = 0;
     int skippedCount = 0;
+    QHash<QString, int> insertedIds;
 
-    for (const ScanResult &result : results) {
+    QList<ScanResult> orderedResults = results;
+    std::stable_sort(orderedResults.begin(), orderedResults.end(),
+                     [](const ScanResult &left, const ScanResult &right) {
+        return left.isPrimary && !right.isPrimary;
+    });
+
+    for (const ScanResult &result : orderedResults) {
         const QString systemDetectPath = result.isCompressed && !result.archiveInternalPath.isEmpty()
             ? result.archiveInternalPath : result.path;
         QString systemName = ctx.detector.detectSystem(result.extension, systemDetectPath);
@@ -200,9 +268,18 @@ int handleScanCommand(CliContext &ctx)
         record.archiveInternalPath = result.archiveInternalPath;
         record.systemId           = systemId;
         record.isPrimary          = result.isPrimary;
+        if (!result.parentFilePath.isEmpty()) {
+            record.parentFileId = insertedIds.value(result.parentFilePath);
+        }
         record.lastModified       = result.lastModified;
 
-        if (ctx.db.insertFile(record) > 0) insertedCount++; else skippedCount++;
+        const int insertedId = ctx.db.insertFile(record);
+        if (insertedId > 0) {
+            insertedCount++;
+            insertedIds.insert(scanResultIdentifier(result), insertedId);
+        } else {
+            skippedCount++;
+        }
     }
 
     qInfo() << "";
@@ -210,7 +287,67 @@ int handleScanCommand(CliContext &ctx)
     qInfo() << "  - Inserted:" << insertedCount << "files";
     qInfo() << "  - Skipped:" << skippedCount << "files";
 
-    if (ctx.parser.isSet("hash") || ctx.processRequested) {
+    if (ctx.processRequested) {
+        const bool hasOutput = ctx.parser.isSet("process-output") || ctx.parser.isSet("bundle");
+        const QList<int> systemIds = orderedProcessSystemIds(ctx.db);
+        Hasher hasher;
+
+        for (int systemId : systemIds) {
+            qInfo() << "";
+            qInfo() << "=== System Batch ===" << processSystemLabel(ctx.db, systemId);
+
+            const QList<FileRecord> filesToHash = ctx.db.getFilesWithoutHashes();
+            int totalForSystem = 0;
+            for (const FileRecord &file : filesToHash) {
+                if (fileMatchesSystemFilter(file, systemId)) {
+                    totalForSystem++;
+                }
+            }
+
+            qInfo() << "Hashing" << totalForSystem << "file(s)...";
+            int hashedCount = 0;
+            for (const FileRecord &file : filesToHash) {
+                if (!fileMatchesSystemFilter(file, systemId)) continue;
+
+                HashResult hashResult = hashFileRecord(file, hasher);
+                if (hashResult.success) {
+                    ctx.db.updateFileHashes(file.id, hashResult.crc32, hashResult.md5, hashResult.sha1);
+                    hashedCount++;
+                } else {
+                    qWarning() << "  Hash failed for" << file.filename << ":" << hashResult.error;
+                }
+            }
+            qInfo() << "Hash calculation complete:" << hashedCount << "files hashed";
+
+            ctx.processSystemIdFilter = systemId;
+            if (int rc = handleMatchCommand(ctx)) {
+                ctx.processSystemIdFilter = -1;
+                return rc;
+            }
+            if (int rc = handleEnrichCommand(ctx)) {
+                ctx.processSystemIdFilter = -1;
+                return rc;
+            }
+            if (hasOutput) {
+                if (int rc = handleBundleCommand(ctx)) {
+                    ctx.processSystemIdFilter = -1;
+                    return rc;
+                }
+            }
+        }
+
+        ctx.processSystemIdFilter = -1;
+        if (hasOutput) {
+            if (int rc = handleGenerateM3uCommand(ctx)) {
+                return rc;
+            }
+        }
+
+        ctx.processHandled = true;
+        return 0;
+    }
+
+    if (ctx.parser.isSet("hash")) {
         qInfo() << "";
         qInfo() << "Calculating hashes...";
 

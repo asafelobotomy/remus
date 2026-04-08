@@ -246,6 +246,21 @@ std::unique_ptr<ProviderOrchestrator> buildOrchestrator(const QCommandLineParser
     return orchestrator;
 }
 
+QString resolveCliOptionValue(const QCommandLineParser &parser,
+                              const QString &optionName,
+                              const QString &presetValue)
+{
+    if (parser.isSet(optionName)) {
+        return parser.value(optionName).trimmed();
+    }
+
+    if (!presetValue.trimmed().isEmpty()) {
+        return presetValue.trimmed();
+    }
+
+    return parser.value(optionName).trimmed();
+}
+
 QList<FileRecord> getHashedFiles(Database &db)
 {
     const QList<FileRecord> files = db.getExistingFiles();
@@ -255,6 +270,27 @@ QList<FileRecord> getHashedFiles(Database &db)
             filtered.append(f);
     }
     return filtered;
+}
+
+int resolveMatchedSystemId(const FileRecord &file,
+                           const Database::MatchResult *match)
+{
+    if (match && match->systemId > 0) {
+        return match->systemId;
+    }
+
+    return file.systemId;
+}
+
+bool fileMatchesSystemFilter(const FileRecord &file,
+                             int systemId,
+                             const Database::MatchResult *match)
+{
+    if (systemId < 0) {
+        return true;
+    }
+
+    return resolveMatchedSystemId(file, match) == systemId;
 }
 
 QString getMatchingDisplayName(const FileRecord &file)

@@ -16,6 +16,8 @@ struct CliContext {
     SystemDetector     &detector;
     bool                dryRunAll;
     bool                processRequested;
+    bool                processHandled;
+    int                 processSystemIdFilter;
     // Preset-resolved overrides (empty = use explicit CLI values)
     QString             presetBundleFormat;
     QString             presetDiscFormat;

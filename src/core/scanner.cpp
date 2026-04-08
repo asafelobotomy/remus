@@ -53,8 +53,8 @@ QList<ScanResult> Scanner::scan(const QString &libraryPath)
     m_excludedDirs.clear();
     m_checkedDirs.clear();
 
-    QDir dir(libraryPath);
-    if (!dir.exists()) {
+    const QFileInfo rootInfo(libraryPath);
+    if (!rootInfo.exists()) {
         emit scanError(QString("Directory does not exist: %1").arg(libraryPath));
         return results;
     }
@@ -69,6 +69,34 @@ QList<ScanResult> Scanner::scan(const QString &libraryPath)
     }
 
     emit scanStarted(libraryPath);
+
+    if (rootInfo.isFile()) {
+        const QString absolutePath = rootInfo.absoluteFilePath();
+        const QString extension = "." + rootInfo.suffix().toLower();
+
+        if (m_archiveScanning && isArchiveExtension(extension)) {
+            processArchive(absolutePath, results);
+            m_filesProcessed++;
+            emit fileFound(absolutePath);
+        } else if (shouldScanFile(rootInfo)) {
+            results.append(createScanResult(rootInfo));
+            m_filesProcessed++;
+            emit fileFound(absolutePath);
+        }
+
+        if (m_cancelRequested) {
+            m_cancelled = true;
+            return results;
+        }
+
+        if (m_multiFileDetection) {
+            detectMultiFileSets(results);
+        }
+
+        emit scanCompleted(results.size());
+        return results;
+    }
+
     scanDirectory(libraryPath, results);
 
     if (m_cancelRequested) {

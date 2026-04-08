@@ -65,6 +65,7 @@ private slots:
     void testNormalizeArchiveMemberPath();
     void testToolAvailabilityReflectsConfiguredPaths();
     void testGetArchiveInfoZip();
+    void testGetArchiveInfoZipViaSevenZipFallback();
     void testGetArchiveInfo7z();
     void testGetArchiveInfoRar();
     void testExtractZip();
@@ -100,6 +101,7 @@ void ArchiveExtractorTest::testToolAvailabilityReflectsConfiguredPaths()
 {
     FakeArchiveExtractor extractor;
     FakeProcessResult versionResult;
+    versionResult.started = true;
     versionResult.exitStatus = QProcess::NormalExit;
     for (int i = 0; i < 24; ++i) {
         extractor.enqueueResult(versionResult);
@@ -126,6 +128,7 @@ void ArchiveExtractorTest::testGetArchiveInfoZip()
 {
     FakeArchiveExtractor extractor;
     FakeProcessResult versionResult;
+    versionResult.started = true;
     versionResult.exitStatus = QProcess::NormalExit;
     extractor.enqueueResult(versionResult);
 
@@ -140,6 +143,8 @@ void ArchiveExtractorTest::testGetArchiveInfoZip()
         "---------                     -------\n"
         "   10                     1 file\n";
     extractor.enqueueResult(result);
+    extractor.setUnzipPath("/bin/sh");
+    extractor.setSevenZipPath(QString());
 
     ArchiveInfo info = extractor.getArchiveInfo("test.zip");
     QCOMPARE(info.format, ArchiveFormat::ZIP);
@@ -149,10 +154,55 @@ void ArchiveExtractorTest::testGetArchiveInfoZip()
     QCOMPARE(info.uncompressedSize, static_cast<qint64>(10));
 }
 
+void ArchiveExtractorTest::testGetArchiveInfoZipViaSevenZipFallback()
+{
+    FakeArchiveExtractor extractor;
+    FakeProcessResult versionResult;
+    versionResult.started = true;
+    versionResult.exitStatus = QProcess::NormalExit;
+    extractor.enqueueResult(versionResult);
+
+    FakeProcessResult result;
+    result.started = true;
+    result.exitCode = 0;
+    result.stdOutput =
+        "7-Zip 26.00 (x64)\n"
+        " 64-bit locale=en_US.UTF-8 Threads:4 OPEN_MAX:524288, ASM\n"
+        "\n"
+        "Scanning the drive for archives:\n"
+        "1 file, 812128 bytes (794 KiB)\n"
+        "\n"
+        "Listing archive: test.zip\n"
+        "\n"
+        "--\n"
+        "Path = test.zip\n"
+        "Type = zip\n"
+        "Physical Size = 812128\n"
+        "\n"
+        "2026-02-05 18:40  .....       812000       400000  nested/file.nes\n"
+        "2026-02-05 18:40  .....          128           64  .remus.md\n";
+    extractor.enqueueResult(result);
+
+    extractor.setUnzipPath(QString());
+    extractor.setSevenZipPath("/bin/sh");
+
+    ArchiveInfo info = extractor.getArchiveInfo("test.zip");
+    QCOMPARE(info.format, ArchiveFormat::ZIP);
+    QCOMPARE(info.fileCount, 2);
+    QCOMPARE(info.contents.at(0), QStringLiteral("nested/file.nes"));
+    QCOMPARE(info.contents.at(1), QStringLiteral(".remus.md"));
+    QCOMPARE(info.entrySizes.value(QStringLiteral("nested/file.nes")), static_cast<qint64>(812000));
+    QCOMPARE(info.entrySizes.value(QStringLiteral(".remus.md")), static_cast<qint64>(128));
+    QCOMPARE(info.uncompressedSize, static_cast<qint64>(812128));
+    QCOMPARE(extractor.lastProgram, QStringLiteral("/bin/sh"));
+    QCOMPARE(extractor.lastArgs, QStringList({QStringLiteral("l"), QStringLiteral("test.zip")}));
+}
+
 void ArchiveExtractorTest::testGetArchiveInfo7z()
 {
     FakeArchiveExtractor extractor;
     FakeProcessResult versionResult;
+    versionResult.started = true;
     versionResult.exitStatus = QProcess::NormalExit;
     extractor.enqueueResult(versionResult);
 
@@ -175,6 +225,7 @@ void ArchiveExtractorTest::testGetArchiveInfoRar()
 {
     FakeArchiveExtractor extractor;
     FakeProcessResult versionResult;
+    versionResult.started = true;
     versionResult.exitStatus = QProcess::NormalExit;
     extractor.enqueueResult(versionResult);
 
@@ -185,6 +236,8 @@ void ArchiveExtractorTest::testGetArchiveInfoRar()
         "Name             Size   Packed Ratio  Date    Time   Attr CRC\n"
         "file.nes        812000  400000  49%  02-05-26 18:40  -rw- 12AB34CD\n";
     extractor.enqueueResult(result);
+    extractor.setUnrarPath("/bin/sh");
+    extractor.setSevenZipPath(QString());
 
     ArchiveInfo info = extractor.getArchiveInfo("test.rar");
     QCOMPARE(info.format, ArchiveFormat::RAR);
@@ -198,6 +251,7 @@ void ArchiveExtractorTest::testExtractZip()
 {
     FakeArchiveExtractor extractor;
     FakeProcessResult versionResult;
+    versionResult.started = true;
     versionResult.exitStatus = QProcess::NormalExit;
     extractor.enqueueResult(versionResult);
     extractor.enqueueResult(versionResult);
@@ -242,6 +296,7 @@ void ArchiveExtractorTest::testExtract7zCreatesSubfolderAndTracksFiles()
 {
     FakeArchiveExtractor extractor;
     FakeProcessResult versionResult;
+    versionResult.started = true;
     versionResult.exitStatus = QProcess::NormalExit;
     extractor.enqueueResult(versionResult);
     extractor.enqueueResult(versionResult);
@@ -285,6 +340,7 @@ void ArchiveExtractorTest::testExtractRarFallsBackToSevenZip()
 {
     FakeArchiveExtractor extractor;
     FakeProcessResult versionResult;
+    versionResult.started = true;
     versionResult.exitStatus = QProcess::NormalExit;
     extractor.enqueueResult(versionResult);
 
@@ -326,6 +382,7 @@ void ArchiveExtractorTest::testExtractFileZipReturnsBasenameInOutputDir()
 {
     FakeArchiveExtractor extractor;
     FakeProcessResult versionResult;
+    versionResult.started = true;
     versionResult.exitStatus = QProcess::NormalExit;
     extractor.enqueueResult(versionResult);
 
@@ -368,6 +425,7 @@ void ArchiveExtractorTest::testExtractRejectsUnsafeArchiveEntries()
 {
     FakeArchiveExtractor extractor;
     FakeProcessResult versionResult;
+    versionResult.started = true;
     versionResult.exitStatus = QProcess::NormalExit;
     extractor.enqueueResult(versionResult);
 
@@ -402,6 +460,7 @@ void ArchiveExtractorTest::testBatchExtractCanBeCancelledAfterFirstItem()
 {
     FakeArchiveExtractor extractor;
     FakeProcessResult versionResult;
+    versionResult.started = true;
     versionResult.exitStatus = QProcess::NormalExit;
     extractor.enqueueResult(versionResult);
     extractor.enqueueResult(versionResult);

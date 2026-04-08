@@ -1,13 +1,19 @@
 #include "rom_bundler.h"
 
+#include <QDateTime>
 #include <QDir>
+#include <QDirIterator>
 #include <QFile>
 #include <QFileInfo>
 #include <QDebug>
 #include <QRegularExpression>
+#include <QTextStream>
 
 #include "constants/constants.h"
+#include "constants/files.h"
+#include "constants/systems.h"
 #include "logging_categories.h"
+#include "rvz_converter.h"
 
 #undef qDebug
 #undef qInfo
@@ -26,6 +32,12 @@ static constexpr const char *MARKER_FILENAME = ".remus.md";
 static constexpr const char *ARTWORK_SUBDIR  = "artwork";
 static constexpr const char *BOXART_FILENAME = "boxfront.jpg";
 
+static bool isDiscManifestPath(const QString &path)
+{
+    const QString suffix = QFileInfo(path).suffix().toLower();
+    return suffix == QStringLiteral("cue") || suffix == QStringLiteral("gdi");
+}
+
 static bool isChdConvertiblePath(const QString &path)
 {
     const QString suffix = QFileInfo(path).suffix().toLower();
@@ -33,6 +45,27 @@ static bool isChdConvertiblePath(const QString &path)
            suffix == QStringLiteral("iso") ||
            suffix == QStringLiteral("img") ||
            suffix == QStringLiteral("gdi");
+}
+
+static bool isRvzConvertiblePath(const QString &path)
+{
+    const QString extension = QStringLiteral(".") + QFileInfo(path).suffix().toLower();
+    return Constants::Files::isRvzSourceExtension(extension);
+}
+
+static QStringList collectArchiveEntries(const QString &rootDir)
+{
+    QStringList entries;
+    QDir root(rootDir);
+    QDirIterator it(rootDir,
+                    QDir::Files | QDir::Hidden,
+                    QDirIterator::Subdirectories);
+    while (it.hasNext()) {
+        it.next();
+        entries << root.relativeFilePath(it.filePath()).replace('\\', '/');
+    }
+    entries.sort();
+    return entries;
 }
 
 static bool clearDirectoryExcept(const QString &dirPath, const QString &keepPath)
@@ -55,6 +88,27 @@ static bool clearDirectoryExcept(const QString &dirPath, const QString &keepPath
         }
     }
 
+    return true;
+}
+
+static bool ensurePlaceholderFile(const QString &path, QString *error)
+{
+    const QFileInfo info(path);
+    if (!QDir().mkpath(info.absolutePath())) {
+        if (error) {
+            *error = QStringLiteral("Failed to create placeholder directory: %1").arg(info.absolutePath());
+        }
+        return false;
+    }
+
+    QFile file(path);
+    if (!file.open(QIODevice::WriteOnly)) {
+        if (error) {
+            *error = QStringLiteral("Failed to create placeholder file: %1").arg(path);
+        }
+        return false;
+    }
+    file.close();
     return true;
 }
 
@@ -156,6 +210,99 @@ static bool stageReferencedDiscFiles(const QString &manifestPath,
     return true;
 }
 
+static RomBundler::DiscOutputFormat resolveDiscOutputFormat(
+    const FileRecord &file,
+    const Database::MatchResult &match,
+    const QString &payloadPath,
+    const RomBundler::BundleConfig &config)
+{
+    const int resolvedSystemId = match.systemId > 0 ? match.systemId : file.systemId;
+
+    if (config.discOutputFormat == RomBundler::DiscOutputFormat::Original) {
+        return RomBundler::DiscOutputFormat::Original;
+    }
+
+    if (config.discOutputFormat == RomBundler::DiscOutputFormat::Rvz) {
+        return ((resolvedSystemId == Constants::Systems::ID_GAMECUBE
+                 || resolvedSystemId == Constants::Systems::ID_WII)
+                && isRvzConvertiblePath(payloadPath))
+            ? RomBundler::DiscOutputFormat::Rvz
+            : RomBundler::DiscOutputFormat::Original;
+    }
+
+    if ((resolvedSystemId == Constants::Systems::ID_GAMECUBE
+         || resolvedSystemId == Constants::Systems::ID_WII)
+        && isRvzConvertiblePath(payloadPath)) {
+        return RomBundler::DiscOutputFormat::Rvz;
+    }
+
+    return isChdConvertiblePath(payloadPath)
+        ? RomBundler::DiscOutputFormat::Chd
+        : RomBundler::DiscOutputFormat::Original;
+}
+
+static bool stageBundlePayloadAtRoot(const QString &payloadPath,
+                                     const QString &bundleRoot,
+                                     const QList<FileRecord> &childFiles,
+                                     QString *stagedPayloadPath,
+                                     QString *error)
+{
+    const QString payloadFileName = QFileInfo(payloadPath).fileName();
+    if (!copyFileIntoDirectory(payloadPath, bundleRoot, error, payloadFileName)) {
+        return false;
+    }
+
+    if (stagedPayloadPath) {
+        *stagedPayloadPath = QDir(bundleRoot).filePath(payloadFileName);
+    }
+
+    if (isDiscManifestPath(payloadPath)
+        && !stageReferencedDiscFiles(payloadPath, bundleRoot, error)) {
+        return false;
+    }
+
+    for (const FileRecord &child : childFiles) {
+        if (child.currentPath.isEmpty() || !QFile::exists(child.currentPath)) {
+            continue;
+        }
+
+        const QString childName = QFileInfo(child.filename).fileName();
+        if (!copyFileIntoDirectory(child.currentPath, bundleRoot, error, childName)) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+static QString findCompanionManifestPath(const QString &sourceRoot,
+                                         const QList<FileRecord> &childFiles)
+{
+    for (const FileRecord &child : childFiles) {
+        if (!isDiscManifestPath(child.filename)) {
+            continue;
+        }
+
+        QString candidatePath;
+        if (!child.archiveInternalPath.isEmpty()) {
+            const QString normalized = ArchiveExtractor::normalizeArchiveMemberPath(child.archiveInternalPath);
+            if (!normalized.isEmpty()) {
+                candidatePath = QDir(sourceRoot).filePath(normalized);
+            }
+        }
+
+        if (candidatePath.isEmpty() && !child.filename.isEmpty()) {
+            candidatePath = QDir(sourceRoot).filePath(QFileInfo(child.filename).fileName());
+        }
+
+        if (!candidatePath.isEmpty() && QFile::exists(candidatePath)) {
+            return candidatePath;
+        }
+    }
+
+    return {};
+}
+
 // ─── construction ─────────────────────────────────────────────────────────────
 
 RomBundler::RomBundler(Database &db, QObject *parent)
@@ -212,8 +359,9 @@ RomBundler::BundleResult RomBundler::bundle(const FileRecord            &file,
     const QString tempRoot = config.dryRun ? QDir::tempPath() : destDir.absolutePath();
     const QString tempBase = tempRoot + "/.remus_bundle_" +
                              QString::number(QDateTime::currentMSecsSinceEpoch());
+    const QString sourceRoot = tempBase + "/source";
     QDir tempDir(tempBase);
-    if (!tempDir.mkpath(".")) {
+    if (!tempDir.mkpath(".") || !QDir().mkpath(sourceRoot)) {
         result.error = "Cannot create temp directory: " + tempBase;
         return result;
     }
@@ -227,7 +375,7 @@ RomBundler::BundleResult RomBundler::bundle(const FileRecord            &file,
 
     if (file.isCompressed && !sourcePath.isEmpty()) {
         // Extract the current archive container (or whole archive if unknown)
-        ExtractionResult ex = m_extractor.extract(sourcePath, tempBase, false);
+        ExtractionResult ex = m_extractor.extract(sourcePath, sourceRoot, false);
         if (!ex.success) {
             result.error = "Archive extraction failed: " + ex.error;
             cleanup();
@@ -243,13 +391,13 @@ RomBundler::BundleResult RomBundler::bundle(const FileRecord            &file,
                 return result;
             }
 
-            romInTemp = QDir(tempBase).filePath(normalizedInternalPath);
+            romInTemp = QDir(sourceRoot).filePath(normalizedInternalPath);
         } else if (!ex.extractedFiles.isEmpty()) {
             romInTemp = ex.extractedFiles.first();
         }
     } else {
         // Loose file — copy into temp dir so we own it
-        const QString destRom = tempBase + "/" + QFileInfo(file.filename).fileName();
+        const QString destRom = sourceRoot + "/" + QFileInfo(file.filename).fileName();
         if (!QFile::copy(file.currentPath, destRom)) {
             result.error = "Failed to copy ROM to temp dir";
             cleanup();
@@ -264,38 +412,56 @@ RomBundler::BundleResult RomBundler::bundle(const FileRecord            &file,
         return result;
     }
 
-    QString bundlePayloadPath = romInTemp;
+    QList<FileRecord> childFiles = m_db.getFilesByParent(file.id);
+    if (!file.isCompressed) {
 
-    // ── 3. Optionally convert supported disc media to CHD ───────────────────
-    if (config.convertDiscsToChd && isChdConvertiblePath(romInTemp)) {
-        const QString ext = QFileInfo(romInTemp).suffix().toLower();
-        const QString chdPath = tempBase + "/" + QFileInfo(romInTemp).completeBaseName() + ".chd";
+        if (isDiscManifestPath(romInTemp)
+            && !stageReferencedDiscFiles(file.currentPath, sourceRoot, &result.error)) {
+            cleanup();
+            return result;
+        }
 
-        if (config.dryRun) {
-            qInfo() << "  [DRY-RUN] Would convert disc media to CHD:" << chdPath;
-            bundlePayloadPath = chdPath;
-        } else {
-            if (!file.isCompressed) {
-                if (!stageReferencedDiscFiles(file.currentPath, tempBase, &result.error)) {
-                    cleanup();
-                    return result;
-                }
-
-                const QList<FileRecord> children = m_db.getFilesByParent(file.id);
-                for (const FileRecord &child : children) {
-                    if (child.currentPath.isEmpty()) {
-                        continue;
-                    }
-                    if (!copyFileIntoDirectory(child.currentPath,
-                                               tempBase,
-                                               &result.error,
-                                               QFileInfo(child.filename).fileName())) {
-                        cleanup();
-                        return result;
-                    }
-                }
+        for (const FileRecord &child : childFiles) {
+            if (child.currentPath.isEmpty()) {
+                continue;
             }
 
+            if (!copyFileIntoDirectory(child.currentPath,
+                                       sourceRoot,
+                                       &result.error,
+                                       QFileInfo(child.filename).fileName())) {
+                cleanup();
+                return result;
+            }
+        }
+    }
+
+    QString bundlePayloadPath = romInTemp;
+    const QString companionManifestPath = findCompanionManifestPath(sourceRoot, childFiles);
+    if (!companionManifestPath.isEmpty()) {
+        bundlePayloadPath = companionManifestPath;
+    }
+
+    const DiscOutputFormat discOutputFormat = resolveDiscOutputFormat(file, match, bundlePayloadPath, config);
+
+    // ── 3. Optionally convert supported disc media to a system-aware format ─
+    if (discOutputFormat != DiscOutputFormat::Original) {
+        const QString ext = QFileInfo(bundlePayloadPath).suffix().toLower();
+        const QString targetExtension = discOutputFormat == DiscOutputFormat::Rvz
+            ? QStringLiteral("rvz")
+            : QStringLiteral("chd");
+        const QString convertedPath = sourceRoot + "/" + QFileInfo(bundlePayloadPath).completeBaseName() + "." + targetExtension;
+
+        if (config.dryRun) {
+            if (!ensurePlaceholderFile(convertedPath, &result.error)) {
+                cleanup();
+                return result;
+            }
+            qInfo() << "  [DRY-RUN] Would convert disc media to"
+                    << (discOutputFormat == DiscOutputFormat::Rvz ? "RVZ:" : "CHD:")
+                    << convertedPath;
+            bundlePayloadPath = convertedPath;
+        } else if (discOutputFormat == DiscOutputFormat::Chd) {
             CHDConverter converter;
             if (!converter.isChdmanAvailable()) {
                 result.error = "chdman not found. Install MAME tools to bundle discs as CHD";
@@ -305,14 +471,14 @@ RomBundler::BundleResult RomBundler::bundle(const FileRecord            &file,
 
             ConversionResult conversion;
             if (ext == QStringLiteral("cue")) {
-                conversion = converter.convertCueToCHD(romInTemp, chdPath);
+                conversion = converter.convertCueToCHD(bundlePayloadPath, convertedPath);
             } else if (ext == QStringLiteral("iso") || ext == QStringLiteral("img")) {
-                conversion = converter.convertIsoToCHD(romInTemp, chdPath);
+                conversion = converter.convertIsoToCHD(bundlePayloadPath, convertedPath);
             } else if (ext == QStringLiteral("gdi")) {
-                conversion = converter.convertGdiToCHD(romInTemp, chdPath);
+                conversion = converter.convertGdiToCHD(bundlePayloadPath, convertedPath);
             }
 
-            if (!conversion.success || !QFile::exists(chdPath)) {
+            if (!conversion.success || !QFile::exists(convertedPath)) {
                 result.error = conversion.error.isEmpty()
                     ? QStringLiteral("Disc-to-CHD conversion failed")
                     : conversion.error;
@@ -320,16 +486,61 @@ RomBundler::BundleResult RomBundler::bundle(const FileRecord            &file,
                 return result;
             }
 
-            if (!clearDirectoryExcept(tempBase, chdPath)) {
-                result.error = "Failed to clean temp directory after CHD conversion";
+            qInfo() << "  ✓ Disc media converted to CHD:" << convertedPath;
+            bundlePayloadPath = convertedPath;
+        } else {
+            RVZConverter converter;
+            if (!converter.isDolphinToolAvailable()) {
+                if (config.discOutputFormat == DiscOutputFormat::Rvz) {
+                    result.error = "dolphin-tool not found. Install Dolphin tools to bundle GameCube/Wii discs as RVZ";
+                    cleanup();
+                    return result;
+                }
+
+                qWarning() << "  ⚠ dolphin-tool not found; bundling original disc media for GameCube/Wii:" << QFileInfo(bundlePayloadPath).fileName();
+            } else {
+                const ConversionResult conversion = converter.convertIsoToRVZ(bundlePayloadPath, convertedPath);
+                if (!conversion.success || !QFile::exists(convertedPath)) {
+                    result.error = conversion.error.isEmpty()
+                        ? QStringLiteral("Disc-to-RVZ conversion failed")
+                        : conversion.error;
+                    cleanup();
+                    return result;
+                }
+
+                qInfo() << "  ✓ Disc media converted to RVZ:" << convertedPath;
+                bundlePayloadPath = convertedPath;
+            }
+        }
+
+        if (bundlePayloadPath == convertedPath) {
+            if (!clearDirectoryExcept(sourceRoot, convertedPath)) {
+                result.error = "Failed to clean temp directory after disc conversion";
                 cleanup();
                 return result;
             }
 
-            bundlePayloadPath = chdPath;
-            qInfo() << "  ✓ Disc media converted to CHD:" << chdPath;
+            childFiles.clear();
         }
     }
+
+    QString stagedPayloadPath;
+    if (!stageBundlePayloadAtRoot(bundlePayloadPath,
+                                  tempBase,
+                                  childFiles,
+                                  &stagedPayloadPath,
+                                  &result.error)) {
+        cleanup();
+        return result;
+    }
+
+    if (QDir(sourceRoot).exists() && !QDir(sourceRoot).removeRecursively()) {
+        result.error = "Failed to remove temporary source directory";
+        cleanup();
+        return result;
+    }
+
+    bundlePayloadPath = stagedPayloadPath;
 
     // ── 4. Write .remus.md marker ─────────────────────────────────────────────
     const QString markerPath = tempBase + "/" + MARKER_FILENAME;
@@ -345,11 +556,6 @@ RomBundler::BundleResult RomBundler::bundle(const FileRecord            &file,
     }
 
     // ── 5. Include pre-downloaded box art (optional) ─────────────────────────
-    QStringList archiveEntries = {
-        QDir(tempBase).relativeFilePath(bundlePayloadPath),
-        QString::fromLatin1(MARKER_FILENAME)
-    };
-
     if (config.includeBoxArt && !config.artworkPath.isEmpty() &&
         QFile::exists(config.artworkPath)) {
         // Copy into artwork/ subdirectory inside the temp tree
@@ -357,12 +563,13 @@ RomBundler::BundleResult RomBundler::bundle(const FileRecord            &file,
         QDir().mkpath(artDestDir);
         const QString artDest = artDestDir + "/" + BOXART_FILENAME;
         if (QFile::copy(config.artworkPath, artDest)) {
-            archiveEntries << QString::fromLatin1(ARTWORK_SUBDIR) + "/" + BOXART_FILENAME;
             qInfo() << "  ✓ Box art included from:" << config.artworkPath;
         } else {
             qWarning() << "  ⚠ Could not copy box art:" << config.artworkPath;
         }
     }
+
+    result.archiveEntries = collectArchiveEntries(tempBase);
 
     // ── 6. Determine output archive path ─────────────────────────────────────
     const QString ext = (config.outputFormat == ArchiveFormat::SevenZip) ? Constants::Files::SEVEN_Z : Constants::Files::ZIP;
@@ -391,7 +598,7 @@ RomBundler::BundleResult RomBundler::bundle(const FileRecord            &file,
     // ── 7. Dry-run short-circuit ──────────────────────────────────────────────
     if (config.dryRun) {
         qInfo() << "  [DRY-RUN] Would create bundle:" << outputArchive;
-        qInfo() << "  [DRY-RUN] Archive entries:" << archiveEntries;
+        qInfo() << "  [DRY-RUN] Archive entries:" << result.archiveEntries;
         result.success = true;
         result.outputPath = outputArchive;
         cleanup();

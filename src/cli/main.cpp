@@ -160,7 +160,7 @@ int main(int argc, char *argv[])
     addActionOption(QCommandLineOption("bundle",        "Fetch metadata, download box art, and repack matched ROMs into self-contained archives", "destination"));
     addOption(QCommandLineOption("bundle-format", "Output archive format for bundles (zip|7z, default: zip)", "format", Constants::Cli::Defaults::BUNDLE_FORMAT));
     addOption(QCommandLineOption("bundle-art-dir","Optional pre-downloaded artwork directory (avoids re-downloading box art)", "directory"));
-    addOption(QCommandLineOption("bundle-disc-format", "Disc media packaging inside bundles (original|chd, default: original)", "format", Constants::Cli::Defaults::BUNDLE_DISC_FORMAT));
+    addOption(QCommandLineOption("bundle-disc-format", "Disc media packaging inside bundles (original|chd|rvz, default: original). When chd is requested, GameCube/Wii disc images are packaged as RVZ.", "format", Constants::Cli::Defaults::BUNDLE_DISC_FORMAT));
 
     addActionOption(QCommandLineOption("patch-apply",    "Apply patch to base file",          "basefile"));
     addOption(QCommandLineOption("patch-patch",    "Patch file to apply",               "patchfile"));
@@ -251,6 +251,8 @@ int main(int argc, char *argv[])
     CliContext ctx{parser, db, detector,
                    /*dryRunAll*/        parser.isSet(Constants::Cli::Options::DRY_RUN_ALL),
                    /*processRequested*/ parser.isSet("process"),
+                   /*processHandled*/   false,
+                   /*processSystemIdFilter*/ -1,
                    /*presetBundleFormat*/  {},
                    /*presetDiscFormat*/    {},
                    /*presetFolderNaming*/  {},

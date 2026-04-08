@@ -85,6 +85,7 @@ struct MatchResult {
     int matchId = 0;
     int fileId = 0;
     int gameId = 0;
+    int systemId = 0;
     QString matchMethod;
     float confidence = 0;
     bool isConfirmed = false;

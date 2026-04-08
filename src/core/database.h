@@ -86,6 +86,12 @@ public:
     QString getLibraryPath(int libraryId);
 
     /**
+     * @brief Count persisted library roots
+     * @return Number of rows in the libraries table
+     */
+    int getLibraryCount();
+
+    /**
      * @brief Delete all files for a library
      * @param libraryId Library ID
      * @return True if successful

@@ -2,6 +2,61 @@
 
 // ── disc conversion ──────────────────────────────────────────────────────
 
+void RomBundlerTest::testBundle_binPrimaryWithCueChildCanBePackagedAsChd()
+{
+    ArchiveCreator creator;
+    ArchiveExtractor extractor;
+    CHDConverter converter;
+    if (!creator.canCompress(ArchiveFormat::ZIP)) {
+        QSKIP("zip tool not available");
+    }
+    if (!extractor.canExtract(ArchiveFormat::ZIP)) {
+        QSKIP("unzip tool not available");
+    }
+    if (!converter.isChdmanAvailable()) {
+        QSKIP("chdman not available");
+    }
+
+    QTemporaryDir tmp;
+    QVERIFY(tmp.isValid());
+
+    const QString cuePath = tmp.filePath("disc.cue");
+    const QString binPath = tmp.filePath("track01.bin");
+    QVERIFY(writeMinimalCueBinSet(cuePath, binPath));
+
+    Database db;
+    QVERIFY(db.initialize(tmp.filePath("test.db")));
+
+    FileRecord bin = makeFileRecord(0, binPath, "track01.bin");
+    bin.id = db.insertFile(bin);
+    QVERIFY(bin.id > 0);
+
+    FileRecord cue = makeFileRecord(0, cuePath, "disc.cue");
+    cue.parentFileId = bin.id;
+    cue.isPrimary = false;
+    cue.id = db.insertFile(cue);
+    QVERIFY(cue.id > 0);
+
+    RomBundler bundler(db);
+
+    RomBundler::BundleConfig cfg;
+    cfg.includeBoxArt = false;
+    cfg.outputFormat = ArchiveFormat::ZIP;
+    cfg.discOutputFormat = RomBundler::DiscOutputFormat::Chd;
+
+    const QString destDir = tmp.filePath("bundles");
+    const RomBundler::BundleResult result = bundler.bundle(
+        bin, makeMatch("Disc Test"), makeMetadata("Disc Test"), destDir, cfg);
+    QVERIFY2(result.success, qPrintable(result.error));
+    QVERIFY(QFile::exists(result.outputPath));
+
+    const ArchiveInfo info = extractor.getArchiveInfo(result.outputPath);
+    QVERIFY(info.contents.contains(".remus.md"));
+    QVERIFY(info.contents.contains("disc.chd"));
+    QVERIFY(!info.contents.contains("disc.cue"));
+    QVERIFY(!info.contents.contains("track01.bin"));
+}
+
 void RomBundlerTest::testBundle_cueDiscMediaCanBePackagedAsChd()
 {
     ArchiveCreator creator;
@@ -42,7 +97,7 @@ void RomBundlerTest::testBundle_cueDiscMediaCanBePackagedAsChd()
     RomBundler::BundleConfig cfg;
     cfg.includeBoxArt = false;
     cfg.outputFormat = ArchiveFormat::ZIP;
-    cfg.convertDiscsToChd = true;
+    cfg.discOutputFormat = RomBundler::DiscOutputFormat::Chd;
 
     const QString destDir = tmp.filePath("bundles");
     RomBundler::BundleResult result = bundler.bundle(cue, makeMatch("Disc Test"), makeMetadata("Disc Test"), destDir, cfg);
@@ -106,7 +161,7 @@ void RomBundlerTest::testBundle_multiTrackGdiCanBePackagedAsChd()
     RomBundler::BundleConfig cfg;
     cfg.includeBoxArt = false;
     cfg.outputFormat = ArchiveFormat::ZIP;
-    cfg.convertDiscsToChd = true;
+    cfg.discOutputFormat = RomBundler::DiscOutputFormat::Chd;
 
     const QString destDir = tmp.filePath("bundles");
     RomBundler::BundleResult result = bundler.bundle(gdi, makeMatch("Dreamcast Disc Test"), makeMetadata("Dreamcast Disc Test"), destDir, cfg);
@@ -147,13 +202,51 @@ void RomBundlerTest::testBundle_discConversionFailsWhenReferencedTrackIsMissing(
     RomBundler::BundleConfig cfg;
     cfg.includeBoxArt = false;
     cfg.outputFormat = ArchiveFormat::ZIP;
-    cfg.convertDiscsToChd = true;
+    cfg.discOutputFormat = RomBundler::DiscOutputFormat::Chd;
 
     const QString destDir = tmp.filePath("bundles");
     RomBundler::BundleResult result = bundler.bundle(cue, makeMatch("Broken Disc"), makeMetadata("Broken Disc"), destDir, cfg);
     QVERIFY(!result.success);
     QVERIFY(result.error.contains("Referenced disc file not found"));
     QVERIFY(!QFile::exists(destDir + "/disc.zip"));
+}
+
+void RomBundlerTest::testBundle_gameCubeIsoPrefersRvzWhenDiscOptimizationRequested()
+{
+    QTemporaryDir tmp;
+    QVERIFY(tmp.isValid());
+
+    const QString isoPath = tmp.filePath("disc.iso");
+    QVERIFY(writeFile(isoPath, QByteArray(4096, '\0')));
+
+    Database db;
+    QVERIFY(db.initialize(tmp.filePath("test.db")));
+
+    FileRecord disc = makeFileRecord(0, isoPath, "disc.iso");
+    disc.systemId = Remus::Constants::Systems::ID_PSX;
+    disc.id = db.insertFile(disc);
+    QVERIFY(disc.id > 0);
+
+    Database::MatchResult match = makeMatch("GameCube Disc");
+    match.systemId = Remus::Constants::Systems::ID_GAMECUBE;
+
+    GameMetadata metadata = makeMetadata("GameCube Disc");
+    metadata.system = QStringLiteral("GameCube");
+
+    RomBundler bundler(db);
+
+    RomBundler::BundleConfig cfg;
+    cfg.includeBoxArt = false;
+    cfg.dryRun = true;
+    cfg.outputFormat = ArchiveFormat::ZIP;
+    cfg.discOutputFormat = RomBundler::DiscOutputFormat::Chd;
+
+    const QString destDir = tmp.filePath("bundles");
+    const RomBundler::BundleResult result = bundler.bundle(disc, match, metadata, destDir, cfg);
+    QVERIFY2(result.success, qPrintable(result.error));
+    QVERIFY(result.archiveEntries.contains(".remus.md"));
+    QVERIFY(result.archiveEntries.contains("disc.rvz"));
+    QVERIFY(!result.archiveEntries.contains("disc.chd"));
 }
 
 // ── struct defaults ──────────────────────────────────────────────────────
@@ -165,7 +258,7 @@ void RomBundlerTest::testBundleConfig_defaults()
     QVERIFY(!cfg.dryRun);
     QCOMPARE(cfg.outputFormat, ArchiveFormat::ZIP);
     QVERIFY(cfg.artworkPath.isEmpty());
-    QVERIFY(!cfg.convertDiscsToChd);
+    QCOMPARE(cfg.discOutputFormat, RomBundler::DiscOutputFormat::Original);
 }
 
 void RomBundlerTest::testBundleResult_defaults()
@@ -174,5 +267,6 @@ void RomBundlerTest::testBundleResult_defaults()
     QVERIFY(!result.success);
     QVERIFY(!result.skippedAlreadyBundled);
     QVERIFY(result.outputPath.isEmpty());
+    QVERIFY(result.archiveEntries.isEmpty());
     QVERIFY(result.error.isEmpty());
 }

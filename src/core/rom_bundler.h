@@ -2,6 +2,7 @@
 
 #include <QObject>
 #include <QString>
+#include <QStringList>
 
 #include "database.h"
 #include "archive_extractor.h"
@@ -27,6 +28,12 @@ class RomBundler : public QObject {
     Q_OBJECT
 
 public:
+    enum class DiscOutputFormat {
+        Original,
+        Chd,
+        Rvz,
+    };
+
     /**
      * @brief Configuration for a bundle operation
      */
@@ -37,9 +44,9 @@ public:
         /// Path to an already-downloaded box-art file (handled by caller before bundling).
         /// If empty and includeBoxArt is true, the step is silently skipped.
         QString      artworkPath;
-        /// When true, supported disc-image inputs (.cue/.iso/.img/.gdi) are
-        /// converted to a CHD before packaging the final bundle archive.
-        bool         convertDiscsToChd = false;
+        /// Preferred disc packaging for bundle payloads. System-aware callers may
+        /// request CHD broadly and let the bundler redirect GameCube/Wii images to RVZ.
+        DiscOutputFormat discOutputFormat = DiscOutputFormat::Original;
     };
 
     /**
@@ -49,6 +56,7 @@ public:
         bool    success               = false;
         QString outputPath;           ///< Final archive path
         bool    skippedAlreadyBundled = false;
+        QStringList archiveEntries;   ///< Final staged archive entries (dry-run and real runs)
         QString error;
     };
 

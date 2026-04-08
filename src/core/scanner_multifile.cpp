@@ -5,6 +5,7 @@
 #include <QFileInfo>
 #include <QHash>
 #include <QMap>
+#include <QTemporaryDir>
 #include <QTextStream>
 
 #include "constants/files.h"
@@ -72,6 +73,86 @@ QStringList parseGdiTrackFiles(const QString &gdiPath)
     return trackFiles;
 }
 
+QString normalizedMemberPath(const ScanResult &result)
+{
+    if (!result.isCompressed || result.archiveInternalPath.isEmpty()) {
+        return QString();
+    }
+
+    return ArchiveExtractor::normalizeArchiveMemberPath(result.archiveInternalPath);
+}
+
+QString scanResultIdentifier(const ScanResult &result)
+{
+    const QString normalizedPath = normalizedMemberPath(result);
+    if (!normalizedPath.isEmpty() && !result.archivePath.isEmpty()) {
+        return result.archivePath + "::" + normalizedPath;
+    }
+
+    return QFileInfo(result.path).absoluteFilePath();
+}
+
+QString scanResultDirectoryKey(const ScanResult &result)
+{
+    const QString normalizedPath = normalizedMemberPath(result);
+    if (!normalizedPath.isEmpty() && !result.archivePath.isEmpty()) {
+        const QString internalDir = QFileInfo(normalizedPath).path();
+        return result.archivePath + "::" + (internalDir == "." ? QString() : internalDir);
+    }
+
+    return QFileInfo(result.path).absolutePath();
+}
+
+QString scanResultBaseName(const ScanResult &result)
+{
+    const QString normalizedPath = normalizedMemberPath(result);
+    return QFileInfo(normalizedPath.isEmpty() ? result.path : normalizedPath).completeBaseName();
+}
+
+QString multiFileKey(const ScanResult &result)
+{
+    return scanResultDirectoryKey(result) + "/" + scanResultBaseName(result);
+}
+
+QString siblingIdentifier(const ScanResult &result, const QString &fileName)
+{
+    const QString normalizedPath = normalizedMemberPath(result);
+    if (!normalizedPath.isEmpty() && !result.archivePath.isEmpty()) {
+        const QString baseDir = QFileInfo(normalizedPath).path();
+        const QString siblingPath = ArchiveExtractor::normalizeArchiveMemberPath(
+            QDir(baseDir).filePath(fileName));
+        if (siblingPath.isEmpty()) {
+            return QString();
+        }
+        return result.archivePath + "::" + siblingPath;
+    }
+
+    return QFileInfo(QDir(QFileInfo(result.path).absolutePath()).filePath(fileName)).absoluteFilePath();
+}
+
+QStringList gdiTrackFilesForResult(const ScanResult &result)
+{
+    if (!result.isCompressed || result.archivePath.isEmpty() || result.archiveInternalPath.isEmpty()) {
+        return parseGdiTrackFiles(result.path);
+    }
+
+    QTemporaryDir tempDir;
+    if (!tempDir.isValid()) {
+        return {};
+    }
+
+    ArchiveExtractor extractor;
+    ExtractionResult extraction = extractor.extractFile(
+        result.archivePath,
+        result.archiveInternalPath,
+        tempDir.path());
+    if (!extraction.success || extraction.extractedFiles.isEmpty()) {
+        return {};
+    }
+
+    return parseGdiTrackFiles(extraction.extractedFiles.first());
+}
+
 } // namespace
 
 void Scanner::detectMultiFileSets(QList<ScanResult> &results)
@@ -90,17 +171,17 @@ void Scanner::linkBinToCue(QList<ScanResult> &results)
     QMap<QString, int> binFiles;
     for (int i = 0; i < results.size(); ++i) {
         if (results[i].extension == Constants::Files::BIN || results[i].extension == Constants::Files::IMG) {
-            binFiles[QFileInfo(results[i].path).completeBaseName()] = i;
+            binFiles[multiFileKey(results[i])] = i;
         }
     }
 
     for (int i = 0; i < results.size(); ++i) {
         if (results[i].extension == Constants::Files::CUE) {
-            const QString baseName = QFileInfo(results[i].path).completeBaseName();
-            if (binFiles.contains(baseName)) {
+            const QString key = multiFileKey(results[i]);
+            if (binFiles.contains(key)) {
                 results[i].isPrimary = false;
-                results[i].parentFilePath = results[binFiles[baseName]].path;
-                qDebug() << "Linked" << results[i].filename << "to" << results[binFiles[baseName]].filename;
+                results[i].parentFilePath = scanResultIdentifier(results[binFiles[key]]);
+                qDebug() << "Linked" << results[i].filename << "to" << results[binFiles[key]].filename;
             }
         }
     }
@@ -110,7 +191,7 @@ void Scanner::linkGdiToTracks(QList<ScanResult> &results)
 {
     QHash<QString, int> pathIndex;
     for (int i = 0; i < results.size(); ++i) {
-        pathIndex[QFileInfo(results[i].path).absoluteFilePath()] = i;
+        pathIndex[scanResultIdentifier(results[i])] = i;
     }
 
     for (int i = 0; i < results.size(); ++i) {
@@ -118,16 +199,14 @@ void Scanner::linkGdiToTracks(QList<ScanResult> &results)
             continue;
         }
 
-        const QString gdiPath = results[i].path;
-        const QString baseDir = QFileInfo(gdiPath).absolutePath();
-        const QStringList trackFiles = parseGdiTrackFiles(gdiPath);
+        const QStringList trackFiles = gdiTrackFilesForResult(results[i]);
 
         for (const QString &trackFile : trackFiles) {
-            const QString normalized = QFileInfo(QDir(baseDir).filePath(trackFile)).absoluteFilePath();
-            if (pathIndex.contains(normalized)) {
-                const int index = pathIndex[normalized];
+            const QString identifier = siblingIdentifier(results[i], trackFile);
+            if (pathIndex.contains(identifier)) {
+                const int index = pathIndex[identifier];
                 results[index].isPrimary = false;
-                results[index].parentFilePath = gdiPath;
+                results[index].parentFilePath = scanResultIdentifier(results[i]);
                 qDebug() << "Linked" << results[index].filename << "to" << results[i].filename;
             }
         }
@@ -140,19 +219,16 @@ void Scanner::linkCcdToImage(QList<ScanResult> &results)
     QMap<QString, int> imgFiles;
     for (int i = 0; i < results.size(); ++i) {
         if (results[i].extension == Constants::Files::IMG) {
-            const QString key = QFileInfo(results[i].path).absolutePath() + "/" +
-                                QFileInfo(results[i].path).completeBaseName();
-            imgFiles[key] = i;
+            imgFiles[multiFileKey(results[i])] = i;
         }
     }
 
     for (int i = 0; i < results.size(); ++i) {
         if (results[i].extension == Constants::Files::CCD || results[i].extension == Constants::Files::SUB) {
-            const QString key = QFileInfo(results[i].path).absolutePath() + "/" +
-                                QFileInfo(results[i].path).completeBaseName();
+            const QString key = multiFileKey(results[i]);
             if (imgFiles.contains(key)) {
                 results[i].isPrimary = false;
-                results[i].parentFilePath = results[imgFiles[key]].path;
+                results[i].parentFilePath = scanResultIdentifier(results[imgFiles[key]]);
                 qDebug() << "Linked" << results[i].filename << "to" << results[imgFiles[key]].filename;
             }
         }
@@ -165,19 +241,16 @@ void Scanner::linkMdsToMdf(QList<ScanResult> &results)
     QMap<QString, int> mdfFiles;
     for (int i = 0; i < results.size(); ++i) {
         if (results[i].extension == Constants::Files::MDF) {
-            const QString key = QFileInfo(results[i].path).absolutePath() + "/" +
-                                QFileInfo(results[i].path).completeBaseName();
-            mdfFiles[key] = i;
+            mdfFiles[multiFileKey(results[i])] = i;
         }
     }
 
     for (int i = 0; i < results.size(); ++i) {
         if (results[i].extension == Constants::Files::MDS) {
-            const QString key = QFileInfo(results[i].path).absolutePath() + "/" +
-                                QFileInfo(results[i].path).completeBaseName();
+            const QString key = multiFileKey(results[i]);
             if (mdfFiles.contains(key)) {
                 results[i].isPrimary = false;
-                results[i].parentFilePath = results[mdfFiles[key]].path;
+                results[i].parentFilePath = scanResultIdentifier(results[mdfFiles[key]]);
                 qDebug() << "Linked" << results[i].filename << "to" << results[mdfFiles[key]].filename;
             }
         }

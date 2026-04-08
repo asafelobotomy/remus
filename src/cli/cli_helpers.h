@@ -41,8 +41,24 @@ inline QString findDatabaseDir() { return findDataSubdir(QStringLiteral("databas
 inline QString findMetadataDir() { return findDataSubdir(QStringLiteral("metadata")); }
 inline QString findGameTDBDir()  { return findDataSubdir(QStringLiteral("gametdb")); }
 
+// Resolve an option value when presets are acting as defaults.
+// Explicit CLI values win, then preset values, then parser defaults.
+QString resolveCliOptionValue(const QCommandLineParser &parser,
+                              const QString &optionName,
+                              const QString &presetValue = QString());
+
 // Return only files that have at least one computed hash value.
 QList<FileRecord> getHashedFiles(Database &db);
+
+// Resolve the effective system ID for downstream handling, preferring the
+// matched game system when available and falling back to the scanned file.
+int resolveMatchedSystemId(const FileRecord &file,
+                           const Database::MatchResult *match = nullptr);
+
+// Convenience predicate for per-system process batches.
+bool fileMatchesSystemFilter(const FileRecord &file,
+                             int systemId,
+                             const Database::MatchResult *match = nullptr);
 
 // Return the best user-facing name for matching/search. For archive-backed
 // records this prefers the container name over the inner entry extension.

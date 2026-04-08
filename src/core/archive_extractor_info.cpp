@@ -13,12 +13,14 @@ ArchiveInfo ArchiveExtractor::getArchiveInfo(const QString &path)
     info.compressedSize = QFileInfo(path).size();
 
     ProcessResult processResult;
+    bool parsedWithSevenZip = false;
 
     switch (info.format) {
     case ArchiveFormat::ZIP:
         if (isToolAvailable(m_unzipPath)) {
             processResult = runProcess(m_unzipPath, QStringList() << "-l" << path, 30000);
         } else if (isToolAvailable(m_sevenZipPath)) {
+            parsedWithSevenZip = true;
             processResult = runProcess(m_sevenZipPath, QStringList() << "l" << path, 30000);
         }
         break;
@@ -33,6 +35,7 @@ ArchiveInfo ArchiveExtractor::getArchiveInfo(const QString &path)
         if (isToolAvailable(m_unrarPath)) {
             processResult = runProcess(m_unrarPath, QStringList() << "l" << path, 30000);
         } else if (isToolAvailable(m_sevenZipPath)) {
+            parsedWithSevenZip = true;
             processResult = runProcess(m_sevenZipPath, QStringList() << "l" << path, 30000);
         }
         break;
@@ -43,7 +46,7 @@ ArchiveInfo ArchiveExtractor::getArchiveInfo(const QString &path)
 
     const QStringList lines = processResult.stdOutput.split('\n');
 
-    if (info.format == ArchiveFormat::ZIP) {
+    if (info.format == ArchiveFormat::ZIP && !parsedWithSevenZip) {
         for (const QString &line : lines) {
             if (line.contains("Archive:") || line.contains("Name") ||
                 line.contains("---------") || line.contains("files") ||
@@ -71,14 +74,21 @@ ArchiveInfo ArchiveExtractor::getArchiveInfo(const QString &path)
                 }
             }
         }
-    } else if (info.format == ArchiveFormat::SevenZip ||
+    } else if (parsedWithSevenZip || info.format == ArchiveFormat::SevenZip ||
                info.format == ArchiveFormat::GZip ||
                info.format == ArchiveFormat::TarGz ||
                info.format == ArchiveFormat::TarBz2) {
         for (const QString &line : lines) {
-            if (line.contains("Date") || line.contains("Time") ||
+            if (line.startsWith(QStringLiteral("7-Zip ")) ||
+                line.contains(QStringLiteral("locale=")) ||
+                line.contains(QStringLiteral("Scanning the drive for archives:")) ||
+                line.contains(QStringLiteral("Listing archive:")) ||
+                line.contains(QStringLiteral("bytes (")) ||
+                line.contains("Date") || line.contains("Time") ||
                 line.contains("---------") || line.contains("----------") ||
                 line.contains("Type =") || line.contains("Path =") ||
+                line.contains(QStringLiteral("Physical Size =")) ||
+                line.trimmed() == QStringLiteral("--") ||
                 line.contains("files") || line.contains("folders") ||
                 line.trimmed().isEmpty()) {
                 continue;

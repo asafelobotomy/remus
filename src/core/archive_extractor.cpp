@@ -4,6 +4,7 @@
 #include <QDirIterator>
 #include <QDebug>
 #include <QRegularExpression>
+#include <QStandardPaths>
 
 namespace Remus {
 
@@ -433,14 +434,15 @@ bool ArchiveExtractor::isToolAvailable(const QString &tool) const
     
     ProcessResult result = const_cast<ArchiveExtractor*>(this)
                                ->runProcess(tool, QStringList() << "--version", 3000);
-    return result.exitStatus == QProcess::NormalExit;
+    return result.started && result.exitStatus == QProcess::NormalExit;
 }
 
 QString ArchiveExtractor::findTool(const QStringList &candidates) const
 {
     for (const QString &tool : candidates) {
-        if (isToolAvailable(tool)) {
-            return tool;
+        const QString executable = QStandardPaths::findExecutable(tool);
+        if (!executable.isEmpty() && isToolAvailable(executable)) {
+            return executable;
         }
     }
     return QString();

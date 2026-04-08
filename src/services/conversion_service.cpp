@@ -1,5 +1,6 @@
 #include "conversion_service.h"
 #include "../core/database.h"
+#include "../core/constants/files.h"
 
 #include <QFileInfo>
 #include <QObject>
@@ -179,6 +180,13 @@ ConversionResult ConversionService::convertToCSO(const QString &path,
         return r;
     }
 
+    const QString ext = QStringLiteral(".") + fi.suffix().toLower();
+    if (!Constants::Files::containsExtension(Constants::Files::CSO_SOURCE_EXTENSIONS, ext)) {
+        ConversionResult r;
+        r.error = "Unsupported file format: " + ext;
+        return r;
+    }
+
     ScopedProgressConnection guard(m_csoConverter, progressCb);
     return m_csoConverter->convertIsoToCSO(path, outputPath);
 }
@@ -191,6 +199,13 @@ ConversionResult ConversionService::extractCSO(const QString &csoPath,
     if (!fi.exists()) {
         ConversionResult r;
         r.error = "File not found: " + csoPath;
+        return r;
+    }
+
+    const QString ext = QStringLiteral(".") + fi.suffix().toLower();
+    if (ext != Constants::Files::CSO) {
+        ConversionResult r;
+        r.error = "Unsupported file format: " + ext;
         return r;
     }
 
