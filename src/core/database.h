@@ -204,6 +204,14 @@ public:
      * @return True if successful
      */
     bool updateFileOriginalPath(int fileId, const QString &newOriginalPath);
+
+    /**
+     * @brief Update a file's system assignment
+     * @param fileId File ID
+     * @param systemId New system ID
+     * @return True if successful
+     */
+    bool updateFileSystemId(int fileId, int systemId);
     
     /**
      * @brief Get match information for all files (for FileListModel)

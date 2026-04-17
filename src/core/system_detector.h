@@ -59,6 +59,7 @@ public:
 private:
     void initializeDefaultSystems();
     QString detectFromPath(const QString &path, const QStringList &candidates) const;
+    QString detectFromIsoHeader(const QString &path, const QStringList &candidates) const;
     QStringList getCandidatesForExtension(const QString &extension) const;
 
     QMap<QString, QString> m_extensionMap;  // extension -> system name

@@ -205,13 +205,14 @@ bool ExportController::exportToJSON(const QString &outputPath,
     
     QSqlQuery query(m_db->database());
     query.exec(QString(R"(
-        SELECT g.id, g.title, g.system, g.region, g.year, g.publisher, 
-               g.developer, g.genre, g.description, g.players
+        SELECT g.id, g.title, s.name AS system, g.region, g.release_date AS year, g.publisher, 
+               g.developer, g.genres AS genre, g.description, g.players
         FROM games g
+        JOIN systems s ON g.system_id = s.id
         JOIN matches m ON g.id = m.game_id
         WHERE m.confidence >= %1
         GROUP BY g.id
-        ORDER BY g.system, g.title
+        ORDER BY s.name, g.title
     )").arg(minimumConfidence));
     
     QJsonArray games;
@@ -233,7 +234,7 @@ bool ExportController::exportToJSON(const QString &outputPath,
         int gameId = query.value("id").toInt();
         QSqlQuery fileQuery(m_db->database());
         fileQuery.prepare(R"(
-            SELECT f.filename, f.filepath, f.crc32, f.md5, f.sha1, m.confidence
+            SELECT f.filename, f.current_path AS filepath, f.crc32, f.md5, f.sha1, m.confidence
             FROM files f
             JOIN matches m ON f.id = m.file_id
             WHERE m.game_id = ?

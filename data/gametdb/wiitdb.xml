@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <datafile xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="wiitdb.xsd">
-	<WiiTDB version="20260326234317" filter="EN_wiiware_gamecube" games="10153"/>
+	<WiiTDB version="20260328190839" filter="EN_wiiware_gamecube" games="10153"/>
 	<!--
  GameTDB: Wii, Database started by Lustar in 2009 (https://www.gametdb.com)
  Never modify this file manually, it will get overwritten when you update. You can add games and fixes on the website.
@@ -4958,12 +4958,11 @@ Players can also customize their golfers with unlockable costumes and equipment,
 		<developer>Cooking Mama Limited</developer>
 		<publisher>Taito</publisher>
 		<date year="2008" month="12" day="4"/>
-		<genre>simulation</genre>
+		<genre>simulation,cooking</genre>
 		<rating type="CERO" value="A"/>
 		<wi-fi players="0"/>
 		<input players="2">
 			<control type="wiimote" required="true"/>
-			<control type="nunchuk" required="false"/>
 		</input>
 		<rom version="0" name="Cooking Mama 2: Taihen!! Mama wa Ooisogashi! (Japan) (JA).iso" size="4699979776" crc="003ed3aa" md5="9b52a51a322a284cfa85e09c168a2b88" sha1="3926792a999b62010cbbd9d0368a14d05023f632"/>
 	</game>
@@ -154205,6 +154204,7 @@ The Wii Remote transforms into your universal cooking tool as you chop, grate, s
 			<title>料理妈妈2合1(美)</title>
 			<synopsis/>
 		</locale>
+		<developer>Cooking Mama Limited / Majesco Entertainment</developer>
 		<publisher>Majesco Sales Inc</publisher>
 		<date year="2012" month="8" day="14"/>
 		<genre>simulation,cooking,compilation</genre>
@@ -154215,7 +154215,6 @@ The Wii Remote transforms into your universal cooking tool as you chop, grate, s
 		<wi-fi players="0"/>
 		<input players="2">
 			<control type="wiimote" required="true"/>
-			<control type="nunchuk" required="false"/>
 		</input>
 		<rom version="0" name="Mama's 2-Pack (USA) (EN).iso" size="4699979776" crc="fd1e82cd" md5="34ad6a77549e3ab1967d5bb6838170b7" sha1="1e4f976b4cfcc6bc70df568e190f25c6fc2bd4be"/>
 	</game>

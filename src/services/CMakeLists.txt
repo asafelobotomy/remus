@@ -6,6 +6,8 @@ add_library(remus-services STATIC
     patch_service.cpp
     mod_catalog_provider.cpp
     mod_workflow_service.cpp
+    rapatches_catalog_builder.cpp
+    retroachievements_enricher.cpp
 )
 
 target_include_directories(remus-services PUBLIC

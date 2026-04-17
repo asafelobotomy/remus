@@ -106,6 +106,7 @@ int main(int argc, char *argv[])
     addOption({{"d", "db"}, "Database file path", "database", Constants::DatabaseSchema::DATABASE_FILENAME});
     addActionOption(QCommandLineOption("hash", "Calculate hashes for scanned files"));
     addActionOption(QCommandLineOption("hash-all", "Calculate hashes for all files in database that lack hashes"));
+    addActionOption(QCommandLineOption("reclassify-iso", "Reclassify ISO file rows using current system detection heuristics"));
     addActionOption({{"l", "list"}, "List scanned files by system"});
     addActionOption(QCommandLineOption("stats", "Show library statistics"));
     addActionOption(QCommandLineOption("info", "Show detailed info for a file id", "fileId"));
@@ -193,6 +194,9 @@ int main(int argc, char *argv[])
     addOption(QCommandLineOption("mod-no-bundle",  "Skip bundling the patched ROM"));
     addActionOption(QCommandLineOption("mod-installed",  "List installed mods"));
     addActionOption(QCommandLineOption("mod-uninstall",  "Remove an installed mod by ID",      "installId"));
+    addActionOption(QCommandLineOption("mod-catalog-build",  "Build mod catalog JSON from a local RAPatches clone", "repoPath"));
+    addOption(QCommandLineOption("mod-catalog-output", "Output path for generated catalog JSON", "path"));
+    addActionOption(QCommandLineOption("mod-enrich-ra",  "Enrich a catalog with RetroAchievements PatchUrl data"));
 
     addActionOption(QCommandLineOption(Constants::Cli::Options::EXPORT, "Export library (retroarch|emustation|launchbox|csv|json)", "format"));
     addOption(QCommandLineOption(Constants::Cli::Options::EXPORT_PATH, "Export output path (file or directory)", "path"));
@@ -204,6 +208,18 @@ int main(int argc, char *argv[])
         "Frontend preset for --process (es-de|retrodeck|emudeck|batocera|retropie|romm). "
         "Auto-configures bundle format, disc format, and folder naming.",
         "preset"));
+
+    addActionOption(QCommandLineOption("update-dats", "Download/update DAT databases from libretro-database"));
+    addOption(QCommandLineOption("update-dats-all", "Download all systems (default: core 34 only)"));
+    addActionOption(QCommandLineOption("import-dat",  "Import a DAT file into the local database directory", "dat-file"));
+    addActionOption(QCommandLineOption("remove-dat",  "Remove an installed DAT file by name",                "name"));
+    addActionOption(QCommandLineOption("list-dats",   "List installed DAT files"));
+    addActionOption(QCommandLineOption("edit-metadata","Edit metadata for a matched file by ID",             "fileId"));
+    addOption(QCommandLineOption("set-title",     "Set game title (use with --edit-metadata)",     "title"));
+    addOption(QCommandLineOption("set-region",    "Set game region (use with --edit-metadata)",    "region"));
+    addOption(QCommandLineOption("set-genre",     "Set game genre (use with --edit-metadata)",     "genre"));
+    addOption(QCommandLineOption("set-developer", "Set game developer (use with --edit-metadata)", "developer"));
+    addOption(QCommandLineOption("set-publisher", "Set game publisher (use with --edit-metadata)", "publisher"));
 
     addActionOption(QCommandLineOption("convert-chd",     "Convert disc image to CHD format",                    "path"));
     addOption(QCommandLineOption("chd-codec",       "CHD compression codec (lzma, zlib, flac, huff, auto)", "codec", "auto"));
@@ -280,6 +296,7 @@ int main(int argc, char *argv[])
     if (int rc = handleScanCommand(ctx))           return rc;
     if (int rc = handleListCommand(ctx))           return rc;
     if (int rc = handleHashAllCommand(ctx))        return rc;
+    if (int rc = handleReclassifyIsoCommand(ctx))  return rc;
     if (int rc = handleMetadataCommand(ctx))       return rc;
     if (int rc = handleSearchCommand(ctx))         return rc;
     if (int rc = handleMatchCommand(ctx))          return rc;
@@ -304,6 +321,12 @@ int main(int argc, char *argv[])
     if (int rc = handleCsoExtractCommand(ctx))      return rc;    if (int rc = handleExportCommand(ctx))         return rc;
     if (int rc = handlePatchCommands(ctx))         return rc;
     if (int rc = handleModCommands(ctx))           return rc;
+    if (int rc = handleModCatalogBuildCommand(ctx)) return rc;
+    if (int rc = handleUpdateDatsCommand(ctx))     return rc;
+    if (int rc = handleImportDatCommand(ctx))      return rc;
+    if (int rc = handleRemoveDatCommand(ctx))      return rc;
+    if (int rc = handleListDatsCommand(ctx))       return rc;
+    if (int rc = handleEditMetadataCommand(ctx))   return rc;
 
     if (!jsonRequested) {
         qInfo() << "";

@@ -29,6 +29,11 @@ add_remus_test(test_constants ConstantsTest
     LIBS Qt6::Test remus-constants
 )
 
+add_remus_test(test_result ResultTest
+    SOURCES test_result.cpp
+    LIBS Qt6::Test
+)
+
 add_remus_test(test_cache_deserialization CacheDeserializationTest
     SOURCES test_cache_deserialization.cpp
     LIBS Qt6::Core remus-core remus-metadata
@@ -37,6 +42,11 @@ add_remus_test(test_cache_deserialization CacheDeserializationTest
 add_remus_test(test_system_name_resolution SystemNameResolutionTest
     SOURCES test_system_name_resolution.cpp
     LIBS Qt6::Core Qt6::Sql remus-core
+)
+
+add_remus_test(test_system_detector SystemDetectorTest
+    SOURCES test_system_detector.cpp
+    LIBS Qt6::Test Qt6::Core remus-core
 )
 
 add_remus_test(test_levenshtein_matching LevenshteinMatchingTest
@@ -295,6 +305,11 @@ add_remus_test(test_cli_helpers CliHelpersTest
 
 add_remus_test(test_cli_mod_support CliModSupportTest
     SOURCES test_cli_mod_support.cpp ../src/cli/cli_mod_support.cpp
+    LIBS Qt6::Test Qt6::Core Qt6::Network remus-services remus-core
+)
+
+add_remus_test(test_rapatches_catalog RAPatchesCatalogTest
+    SOURCES test_rapatches_catalog.cpp
     LIBS Qt6::Test Qt6::Core Qt6::Network remus-services remus-core
 )
 

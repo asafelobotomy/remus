@@ -7,6 +7,40 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+#### Phase 1 — Quick Wins
+- 3DO and Neo Geo CD system constants in `systems.h`
+- `--checksum-verify` help text documents compressed-file behavior
+
+#### Phase 2 — Core Data Quality
+- `--update-dats` CLI command: downloads/updates DAT databases from libretro-database via `scripts/update_dats.sh`
+- `--update-dats-all` flag: downloads all systems instead of the default 34 core systems
+- `--enrich` CLI command: fills sparse metadata (description, genre, players) from secondary providers
+- WikidataProvider `getArtwork()` queries Wikidata P18 (image) and builds Wikimedia Commons URLs
+
+#### Phase 3 — Provider Robustness
+- IGDB proactive token refresh: re-authenticates 24 hours before expiry (`IGDB_TOKEN_REFRESH_BUFFER_SECS`)
+- TheGamesDB monthly request tracking: warns at 80% (2,400), blocks at 95% (2,850) of 3,000 limit
+- `Remus::Result<T>` error type (`src/core/result.h`) with `ErrorTag` disambiguation for `T=QString`
+- `ResultTest` — 5 test cases for the new Result type
+
+#### Phase 4 — Distribution & Polish
+- AppImage packaging script (`scripts/package_appimage.sh`) using linuxdeploy
+- Release workflow packages AppImage + SHA-256 checksum alongside tar.gz archive
+- `--import-dat <file>` CLI command: imports a DAT file into the local database directory
+- `--remove-dat <name>` CLI command: removes an installed DAT file by name
+- `--list-dats` CLI command: lists installed DAT files with entry counts
+- `--edit-metadata <fileId>` CLI command: edits matched game metadata via `--set-title`, `--set-region`, `--set-genre`, `--set-developer`, `--set-publisher` flags
+
+#### Phase 5 — Community Mod Catalog (Tier 1 & 2)
+- `RAPatchesCatalogBuilder`: walks a local RAPatches clone (40+ systems) and generates a mod catalog JSON from directory structure, filenames, and README-embedded hashes
+- `RetroAchievementsEnricher`: optional Tier 2 enrichment via the free RA web API — maps ROM hashes to PatchUrls; gracefully skips if no API key is set
+- `--mod-catalog-build <repoPath>`: CLI command to build a catalog from a cloned RAPatches repository
+- `--mod-enrich-ra`: CLI command to enrich an existing catalog with RetroAchievements PatchUrl data
+- `--ra-api-key` / `--ra-username` CLI flags and `REMUS_RA_API_KEY` / `REMUS_RA_USERNAME` env vars for optional API key injection
+- 17 new test cases in `RAPatchesCatalogTest`: filename parsing, README hash extraction, system/type normalisation, JSON round-trip, directory scanning, enricher credential logic
+
 ### Changed
 
 - Copilot instructions updated from template v5.4.0 → v5.5.0.
@@ -27,12 +61,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Copilot instructions recreated from template v4.0.0 (file was missing from disk).
   All 13 sections restored. §10 values recovered from BOOTSTRAP.md, JOURNAL.md, and workspace identity files.
   Backup at: `.github/archive/pre-update-2026-03-20-v4.0.0/`
+- `local_database_provider.cpp` decomposed: thumbnail helpers extracted to `local_database_provider_thumbnails.cpp` (517 → 450 LOC)
 
 ### Added
 
 - Copilot instructions scaffolded from [copilot-instructions-template](https://github.com/asafelobotomy/copilot-instructions-template) v1.0.3 on 2026-02-19.
   Includes: `.github/copilot-instructions.md`, model-pinned agents (`.github/agents/`),
   workspace identity files (`.copilot/workspace/`), `JOURNAL.md`, `BIBLIOGRAPHY.md`, `METRICS.md`.
+
+### Fixed
+- ExportController `exportToJSON()` SQL columns aligned with schema (`system_id` join, `release_date`, `genres`, `current_path`)
+- RomBundlerTest date regex handles Homebrew's MM-DD-YYYY unzip format
 
 ### Planned
 

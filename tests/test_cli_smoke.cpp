@@ -188,6 +188,43 @@ private slots:
         runCli({"--scan", dir.path()});
     }
 
+    void testVerifyUsesNormalizedDatSystemName() {
+        QTemporaryDir dir;
+        QVERIFY(dir.isValid());
+
+        const QString dbPath = dir.filePath("test.db");
+        const QString romPath = dir.filePath("Test Game.nds");
+        {
+            QFile romFile(romPath);
+            QVERIFY(romFile.open(QIODevice::WriteOnly));
+            QVERIFY(romFile.write("ABCD") == 4);
+        }
+
+        const QString datPath = dir.filePath("Nintendo - Nintendo DS (Community Set).dat");
+        {
+            QFile datFile(datPath);
+            QVERIFY(datFile.open(QIODevice::WriteOnly | QIODevice::Text));
+            QTextStream out(&datFile);
+            out << "clrmamepro (\n";
+            out << "  name \"Nintendo - Nintendo DS (Community Set)\"\n";
+            out << "  description \"Normalization test DAT\"\n";
+            out << "  version \"1.0\"\n";
+            out << ")\n";
+            out << "game (\n";
+            out << "  name \"Test Game\"\n";
+            out << "  rom ( name \"Test Game.nds\" size 4 crc 00000000 )\n";
+            out << ")\n";
+        }
+
+        runCli({"--db", dbPath, "--scan", dir.path(), "--hash"});
+
+        QString output;
+        runCliCapture({"--db", dbPath, "--verify", datPath}, output);
+
+        QVERIFY2(output.contains("System: \"Nintendo DS\""), qPrintable(output));
+        QVERIFY2(output.contains("Total files: 1"), qPrintable(output));
+    }
+
     void testModSystemsFromCatalog() {
         const QString catalog = fixturePath("test_mod_catalog.json");
         QVERIFY2(!catalog.isEmpty(), "Fixture test_mod_catalog.json not found");

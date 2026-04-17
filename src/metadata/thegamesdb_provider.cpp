@@ -233,6 +233,15 @@ ArtworkUrls TheGamesDBProvider::getArtwork(const QString &id)
 
 TheGamesDBProvider::ApiResponse TheGamesDBProvider::makeRequest(const QUrl &url)
 {
+    if (m_monthlyRequestCount >= Constants::Network::THEGAMESDB_BLOCK_THRESHOLD) {
+        qCritical() << "TheGamesDB: Monthly request limit reached ("
+                    << m_monthlyRequestCount << "/" << Constants::Network::THEGAMESDB_MONTHLY_LIMIT
+                    << ") — blocking further requests until next month";
+        ApiResponse blocked;
+        blocked.error = QStringLiteral("TheGamesDB monthly request limit reached");
+        return blocked;
+    }
+
     incrementRequestCount();
 
     QNetworkRequest request(url);
@@ -294,7 +303,7 @@ void TheGamesDBProvider::loadRequestCount()
     m_monthlyRequestCount = settings.value(
         QStringLiteral("tgdb/requests/%1").arg(m_currentMonth), 0).toInt();
     qDebug() << "TheGamesDB: Loaded request count for" << m_currentMonth
-             << ":" << m_monthlyRequestCount << "/ 3000";
+             << ":" << m_monthlyRequestCount << "/" << Constants::Network::THEGAMESDB_MONTHLY_LIMIT;
 }
 
 void TheGamesDBProvider::incrementRequestCount()
@@ -311,12 +320,16 @@ void TheGamesDBProvider::incrementRequestCount()
     settings.setValue(QStringLiteral("tgdb/requests/%1").arg(m_currentMonth),
                      m_monthlyRequestCount);
 
-    if (m_monthlyRequestCount == 2700) {
-        qWarning() << "TheGamesDB: 90% of monthly request limit reached ("
-                    << m_monthlyRequestCount << "/ 3000)";
-    } else if (m_monthlyRequestCount == 2950) {
-        qCritical() << "TheGamesDB: Approaching monthly request limit ("
-                     << m_monthlyRequestCount << "/ 3000)";
+    if (m_monthlyRequestCount == Constants::Network::THEGAMESDB_WARN_THRESHOLD) {
+        qWarning() << "TheGamesDB: 80% of monthly request limit reached ("
+                   << m_monthlyRequestCount << "/" << Constants::Network::THEGAMESDB_MONTHLY_LIMIT << ")";
+        emit errorOccurred(QStringLiteral("TheGamesDB: approaching monthly request limit (%1/%2)")
+                               .arg(m_monthlyRequestCount)
+                               .arg(Constants::Network::THEGAMESDB_MONTHLY_LIMIT));
+    } else if (m_monthlyRequestCount == Constants::Network::THEGAMESDB_BLOCK_THRESHOLD) {
+        qCritical() << "TheGamesDB: 95% of monthly limit reached ("
+                    << m_monthlyRequestCount << "/" << Constants::Network::THEGAMESDB_MONTHLY_LIMIT
+                    << ") — requests will be blocked";
     }
 }
 

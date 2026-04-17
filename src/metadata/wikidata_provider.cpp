@@ -73,8 +73,33 @@ GameMetadata WikidataProvider::getById(const QString &id)
 
 ArtworkUrls WikidataProvider::getArtwork(const QString &id)
 {
-    Q_UNUSED(id);
-    return {};  // Wikidata images require Wikimedia Commons URL construction — skip for now
+    ArtworkUrls urls;
+
+    // Query Wikidata for P18 (image) property
+    const QString query = QStringLiteral(
+        "SELECT ?image WHERE {\n"
+        "  wd:%1 wdt:P18 ?image .\n"
+        "}\n"
+        "LIMIT 1\n"
+    ).arg(id);
+
+    QJsonObject response = executeSparql(query);
+    const QJsonArray bindings = response.value(QStringLiteral("results")).toObject()
+                                 .value(QStringLiteral("bindings")).toArray();
+
+    if (bindings.isEmpty())
+        return urls;
+
+    // P18 returns a Wikimedia Commons filename URL like:
+    // http://commons.wikimedia.org/wiki/Special:FilePath/Example.jpg
+    const QString imageUrl = bindings.first().toObject()
+                              .value(QStringLiteral("image")).toObject()
+                              .value(QStringLiteral("value")).toString();
+
+    if (!imageUrl.isEmpty())
+        urls.boxFront = QUrl(imageUrl);
+
+    return urls;
 }
 
 QJsonObject WikidataProvider::executeSparql(const QString &query)

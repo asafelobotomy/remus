@@ -130,6 +130,12 @@ inline constexpr int ID_XBOX360 = 38;
 /// Arcade / MAME
 inline constexpr int ID_ARCADE = 39;
 
+/// 3DO Interactive Multiplayer
+inline constexpr int ID_3DO = 40;
+
+/// Neo Geo CD
+inline constexpr int ID_NEO_GEO_CD = 41;
+
 // ============================================================================
 // System Definition
 // ============================================================================

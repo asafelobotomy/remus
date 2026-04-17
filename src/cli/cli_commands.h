@@ -33,6 +33,7 @@ int handleInspectCommands(CliContext &ctx);  // header-info + show-art
 int handleScanCommand(CliContext &ctx);
 int handleListCommand(CliContext &ctx);
 int handleHashAllCommand(CliContext &ctx);
+int handleReclassifyIsoCommand(CliContext &ctx);
 
 // ── Metadata ──────────────────────────────────────────────────────────────────
 // --metadata, --search, --enrich
@@ -88,5 +89,15 @@ int handlePatchCommands(CliContext &ctx);
 // ── Mod Workflow ──────────────────────────────────────────────────────────────
 // --mod-catalog, --mod-list, --mod-show, --mod-system, --mod-systems,
 // --mod-author, --mod-type, --mod-min-rating,
-// --mod-install, --mod-installed, --mod-uninstall
+// --mod-install, --mod-installed, --mod-uninstall,
+// --mod-catalog-build, --mod-enrich-ra
 int handleModCommands(CliContext &ctx);
+int handleModCatalogBuildCommand(CliContext &ctx);
+
+// ── DAT Management & Metadata Editing ─────────────────────────────────────────
+// --update-dats, --import-dat, --remove-dat, --list-dats, --edit-metadata
+int handleUpdateDatsCommand(CliContext &ctx);
+int handleImportDatCommand(CliContext &ctx);
+int handleRemoveDatCommand(CliContext &ctx);
+int handleListDatsCommand(CliContext &ctx);
+int handleEditMetadataCommand(CliContext &ctx);

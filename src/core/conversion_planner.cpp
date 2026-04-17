@@ -118,6 +118,8 @@ bool isChdCanonicalSystem(int systemId)
     case Systems::ID_SEGA_CD:
     case Systems::ID_TURBOGRAFX_CD:
     case Systems::ID_DREAMCAST:
+    case Systems::ID_3DO:
+    case Systems::ID_NEO_GEO_CD:
         return true;
     default:
         return false;

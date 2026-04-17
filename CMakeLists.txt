@@ -87,6 +87,8 @@ set(REMUS_CLI_SOURCES
     src/cli/cli_commands_convert.cpp
     src/cli/cli_commands_export.cpp
     src/cli/cli_commands_mods.cpp
+    src/cli/cli_commands_mod_catalog.cpp
+    src/cli/cli_commands_dat.cpp
 )
 
 add_executable(remus-cli ${REMUS_CLI_SOURCES})

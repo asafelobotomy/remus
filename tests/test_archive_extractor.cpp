@@ -67,6 +67,8 @@ private slots:
     void testGetArchiveInfoZip();
     void testGetArchiveInfoZipViaSevenZipFallback();
     void testGetArchiveInfo7z();
+    void testGetArchiveInfo7zWrappedFilename();
+    void testGetArchiveInfo7zNoDateEntries();
     void testGetArchiveInfoRar();
     void testExtractZip();
     void testExtract7zCreatesSubfolderAndTracksFiles();
@@ -179,8 +181,12 @@ void ArchiveExtractorTest::testGetArchiveInfoZipViaSevenZipFallback()
         "Type = zip\n"
         "Physical Size = 812128\n"
         "\n"
-        "2026-02-05 18:40  .....       812000       400000  nested/file.nes\n"
-        "2026-02-05 18:40  .....          128           64  .remus.md\n";
+        "   Date      Time    Attr         Size   Compressed  Name\n"
+        "------------------- ----- ------------ ------------  ------------------------\n"
+        "2026-02-05 18:40:00 .....       812000       400000  nested/file.nes\n"
+        "2026-02-05 18:40:00 .....          128           64  .remus.md\n"
+        "------------------- ----- ------------ ------------  ------------------------\n"
+        "2026-02-05 18:40:00              812128       400064  2 files\n";
     extractor.enqueueResult(result);
 
     extractor.setUnzipPath(QString());
@@ -210,7 +216,11 @@ void ArchiveExtractorTest::testGetArchiveInfo7z()
     result.started = true;
     result.exitCode = 0;
     result.stdOutput =
-        "2026-02-05 18:40  .....       812000       400000  file.nes\n";
+        "   Date      Time    Attr         Size   Compressed  Name\n"
+        "------------------- ----- ------------ ------------  ------------------------\n"
+        "2026-02-05 18:40:00 .....       812000       400000  file.nes\n"
+        "------------------- ----- ------------ ------------  ------------------------\n"
+        "2026-02-05 18:40:00              812000       400000  1 files\n";
     extractor.enqueueResult(result);
 
     ArchiveInfo info = extractor.getArchiveInfo("test.7z");
@@ -219,6 +229,101 @@ void ArchiveExtractorTest::testGetArchiveInfo7z()
     QCOMPARE(info.contents.first(), QStringLiteral("file.nes"));
     QCOMPARE(info.entrySizes.value(QStringLiteral("file.nes")), static_cast<qint64>(812000));
     QCOMPARE(info.uncompressedSize, static_cast<qint64>(812000));
+}
+
+void ArchiveExtractorTest::testGetArchiveInfo7zWrappedFilename()
+{
+    FakeArchiveExtractor extractor;
+    FakeProcessResult versionResult;
+    versionResult.started = true;
+    versionResult.exitStatus = QProcess::NormalExit;
+    extractor.enqueueResult(versionResult);
+
+    FakeProcessResult result;
+    result.started = true;
+    result.exitCode = 0;
+    // Simulate real 7z output with a filename that wraps to a second line.
+    // The word "Time" in the game title previously triggered a false-positive
+    // header filter (contains("Time")).
+    result.stdOutput =
+        "7-Zip [64] 17.05 : Copyright (c) 1999-2021 Igor Pavlov : 2017-08-28\n"
+        "\n"
+        "Path = test.7z\n"
+        "Type = 7z\n"
+        "Physical Size = 23009755\n"
+        "Headers Size = 258\n"
+        "Method = LZMA2:48m\n"
+        "Solid = +\n"
+        "Blocks = 1\n"
+        "\n"
+        "   Date      Time    Attr         Size   Compressed  Name\n"
+        "------------------- ----- ------------ ------------  ------------------------\n"
+        "2020-07-21 16:10:39 ....A          112     23009497  CDRomance.url\n"
+        "2017-06-30 14:59:08 ....A     33554432               Legend of Zelda, The - Ocar\n"
+        "ina of Time (USA) (Rev 2).z64\n"
+        "------------------- ----- ------------ ------------  ------------------------\n"
+        "2020-07-21 16:10:39           33554544     23009497  2 files\n";
+    extractor.enqueueResult(result);
+
+    ArchiveInfo info = extractor.getArchiveInfo("test.7z");
+    QCOMPARE(info.format, ArchiveFormat::SevenZip);
+    QCOMPARE(info.fileCount, 2);
+
+    // CDRomance.url should be parsed
+    QVERIFY(info.contents.contains(QStringLiteral("CDRomance.url")));
+    QCOMPARE(info.entrySizes.value(QStringLiteral("CDRomance.url")), static_cast<qint64>(112));
+
+    // The wrapped filename must be reassembled correctly
+    const QString expectedName = QStringLiteral("Legend of Zelda, The - Ocarina of Time (USA) (Rev 2).z64");
+    QVERIFY2(info.contents.contains(expectedName),
+             qPrintable("Expected '" + expectedName + "' in contents: " + info.contents.join(", ")));
+    QCOMPARE(info.entrySizes.value(expectedName), static_cast<qint64>(33554432));
+}
+
+void ArchiveExtractorTest::testGetArchiveInfo7zNoDateEntries()
+{
+    FakeArchiveExtractor extractor;
+    FakeProcessResult versionResult;
+    versionResult.started = true;
+    versionResult.exitStatus = QProcess::NormalExit;
+    extractor.enqueueResult(versionResult);
+
+    FakeProcessResult result;
+    result.started = true;
+    result.exitCode = 0;
+    // Some 7z archives have entries without date/time fields.
+    // Also tests that WARNINGS metadata doesn't interfere.
+    result.stdOutput =
+        "7-Zip [64] 17.05 : Copyright (c) 1999-2021 Igor Pavlov : 2017-08-28\n"
+        "\n"
+        "Path = test.7z\n"
+        "Type = 7z\n"
+        "WARNINGS:\n"
+        "There are data after the end of archive\n"
+        "Physical Size = 252257749\n"
+        "Tail Size = 38\n"
+        "Headers Size = 176\n"
+        "Method = LZMA:96m\n"
+        "Solid = +\n"
+        "Blocks = 1\n"
+        "\n"
+        "   Date      Time    Attr         Size   Compressed  Name\n"
+        "------------------- ----- ------------ ------------  ------------------------\n"
+        "                    .....    616494480    252257573  Silent Hill (USA).bin\n"
+        "                    .....           83               Silent Hill (USA).cue\n"
+        "------------------- ----- ------------ ------------  ------------------------\n"
+        "                             616494563    252257573  2 files\n"
+        "\n"
+        "Warnings: 1\n";
+    extractor.enqueueResult(result);
+
+    ArchiveInfo info = extractor.getArchiveInfo("test.7z");
+    QCOMPARE(info.format, ArchiveFormat::SevenZip);
+    QCOMPARE(info.fileCount, 2);
+    QVERIFY(info.contents.contains(QStringLiteral("Silent Hill (USA).bin")));
+    QVERIFY(info.contents.contains(QStringLiteral("Silent Hill (USA).cue")));
+    QCOMPARE(info.entrySizes.value(QStringLiteral("Silent Hill (USA).bin")), static_cast<qint64>(616494480));
+    QCOMPARE(info.entrySizes.value(QStringLiteral("Silent Hill (USA).cue")), static_cast<qint64>(83));
 }
 
 void ArchiveExtractorTest::testGetArchiveInfoRar()

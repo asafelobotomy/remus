@@ -141,6 +141,34 @@ inline constexpr const char* HASHEOUS_PROXY_IGDB_COMPANY = "/api/v1/MetadataProx
 inline constexpr const char* HASHEOUS_HEALTHCHECK_ENDPOINT = "/api/v1/HealthCheck";
 
 // ============================================================================
+// RetroAchievements Patch API
+// ============================================================================
+
+/// Base URL for RetroAchievements web API
+inline constexpr const char* RA_API_BASE_URL = "https://retroachievements.org/API";
+
+/// RAPatches GitHub repository (raw file base URL)
+inline constexpr const char* RAPATCHES_RAW_BASE = "https://github.com/RetroAchievements/RAPatches/raw/main";
+
+/// RAPatches GitHub repository clone URL
+inline constexpr const char* RAPATCHES_CLONE_URL = "https://github.com/RetroAchievements/RAPatches.git";
+
+/// RA API endpoint: get all console/system IDs
+inline constexpr const char* RA_CONSOLE_IDS_ENDPOINT = "/API_GetConsoleIDs.php";
+
+/// RA API endpoint: get game list (with optional hashes) for a system
+inline constexpr const char* RA_GAME_LIST_ENDPOINT = "/API_GetGameList.php";
+
+/// RA API endpoint: get supported hashes for a game
+inline constexpr const char* RA_GAME_HASHES_ENDPOINT = "/API_GetGameHashes.php";
+
+/// Environment variable name for RA API key (optional, skips RA enrichment if unset)
+inline constexpr const char* RA_API_KEY_ENV = "REMUS_RA_API_KEY";
+
+/// Environment variable name for RA username (optional)
+inline constexpr const char* RA_USERNAME_ENV = "REMUS_RA_USERNAME";
+
+// ============================================================================
 // Known ROM Database Services
 // ============================================================================
 

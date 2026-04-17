@@ -1,0 +1,34 @@
+[
+    {
+        "confidence": 100,
+        "fileId": 4,
+        "path": "roms/Dragon Quest I & II (Japan).zip",
+        "region": "Japan",
+        "system": "Super Nintendo Entertainment System",
+        "title": "Dragon Quest I & II"
+    },
+    {
+        "confidence": 100,
+        "fileId": 1,
+        "path": "roms/0479 - New Super Mario Bros. (Europe) (En,Fr,De,Es,It).zip",
+        "region": "Europe",
+        "system": "Nintendo DS",
+        "title": "New Super Mario Bros. (Europe) (En,Fr,De,Es,It)"
+    },
+    {
+        "confidence": 100,
+        "fileId": 3,
+        "path": "roms/Bare Knuckle II - Shitou e no Requiem ~ Streets of Rage II (Japan, Europe).zip",
+        "region": "Japan",
+        "system": "Sega Genesis / Mega Drive",
+        "title": "Streets of Rage II (Japan, Europe) (En,Ja)"
+    },
+    {
+        "confidence": 100,
+        "fileId": 2,
+        "path": "roms/Assassins_Creed_Bloodlines_USA_PSP-pSyPSP.7z",
+        "region": "USA",
+        "system": "PlayStation Portable",
+        "title": "Assassin's Creed - Bloodlines (USA) (En,Fr,De,Es,It)"
+    }
+]

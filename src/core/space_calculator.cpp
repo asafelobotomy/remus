@@ -35,10 +35,13 @@ SpaceCalculator::SpaceCalculator(QObject *parent)
     if (gc) m_typicalRatios[gc->internalName] = 0.65;        // ~65% of original (less audio)
     if (wii) m_typicalRatios[wii->internalName] = 0.70;      // ~70% of original
     
-    // Systems not yet in constants registry - these should be added to constants later
-    m_typicalRatios["3DO"] = 0.50;              // ~50% of original
-    m_typicalRatios["Neo Geo CD"] = 0.40;       // ~40% of original
-    m_typicalRatios["Xbox"] = 0.65;             // ~65% of original
+    const auto *threeDo = getSystemByName("3DO");
+    const auto *neogeocd = getSystemByName("Neo Geo CD");
+    const auto *xbox = getSystemByName("Xbox");
+    
+    if (threeDo) m_typicalRatios[threeDo->internalName] = 0.50;  // ~50% of original
+    if (neogeocd) m_typicalRatios[neogeocd->internalName] = 0.40; // ~40% of original
+    if (xbox) m_typicalRatios[xbox->internalName] = 0.65;        // ~65% of original
     m_typicalRatios["Default"] = 0.50;          // Default assumption
 }
 
@@ -370,13 +373,16 @@ QString SpaceCalculator::detectSystem(const QString &path) const
     if (wii && pathLower.contains("wii"))
         return wii->internalName;
     
-    // Systems not yet in constants registry
-    if (pathLower.contains("3do"))
-        return "3DO";
-    if (pathLower.contains("neo geo cd") || pathLower.contains("neogeocd"))
-        return "Neo Geo CD";
-    if (pathLower.contains("xbox"))
-        return "Xbox";
+    const auto *threeDo = getSystemByName("3DO");
+    const auto *neogeocd = getSystemByName("Neo Geo CD");
+    const auto *xbox = getSystemByName("Xbox");
+    
+    if (threeDo && pathLower.contains("3do"))
+        return threeDo->internalName;
+    if (neogeocd && (pathLower.contains("neo geo cd") || pathLower.contains("neogeocd")))
+        return neogeocd->internalName;
+    if (xbox && pathLower.contains("xbox"))
+        return xbox->internalName;
     
     return "Default";
 }

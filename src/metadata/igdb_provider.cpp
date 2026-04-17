@@ -25,9 +25,13 @@ void IGDBProvider::setCredentials(const QString &clientId, const QString &client
 
 bool IGDBProvider::authenticate()
 {
-    // Check if token is still valid
-    if (!m_accessToken.isEmpty() && QDateTime::currentDateTime() < m_tokenExpiry) {
+    // Check if token is still valid with proactive refresh buffer
+    if (!m_accessToken.isEmpty() && QDateTime::currentDateTime() < m_tokenExpiry.addSecs(-Constants::Network::IGDB_TOKEN_REFRESH_BUFFER_SECS)) {
         return true;
+    }
+
+    if (!m_accessToken.isEmpty()) {
+        qInfo() << "IGDB: token expiring within" << Constants::Network::IGDB_TOKEN_REFRESH_BUFFER_SECS / 3600 << "hours, refreshing proactively";
     }
 
     // Request new access token from Twitch

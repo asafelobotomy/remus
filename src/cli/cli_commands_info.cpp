@@ -6,6 +6,8 @@
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QSqlError>
+#include <QSqlQuery>
 #include <QTextStream>
 #include <QTemporaryDir>
 #include "../core/scanner.h"
@@ -429,5 +431,76 @@ int handleHashAllCommand(CliContext &ctx)
         }
     }
     qInfo() << "Hashing complete:" << hashedCount << "files hashed";
+    return 0;
+}
+
+int handleReclassifyIsoCommand(CliContext &ctx)
+{
+    if (!ctx.parser.isSet("reclassify-iso")) return 0;
+
+    qInfo() << "";
+    qInfo() << "Reclassifying ISO files...";
+
+    QSqlQuery select(ctx.db.database());
+    if (!select.exec(QStringLiteral(R"(
+        SELECT id, extension, current_path, is_compressed, archive_internal_path, system_id
+        FROM files
+        WHERE LOWER(extension) = '.iso' AND is_primary = 1
+    )"))) {
+        qCritical() << "Failed to load ISO file rows:" << select.lastError().text();
+        return 1;
+    }
+
+    QSqlQuery update(ctx.db.database());
+    update.prepare(QStringLiteral("UPDATE files SET system_id = ? WHERE id = ?"));
+
+    int scanned = 0;
+    int changed = 0;
+    int unchanged = 0;
+    int unresolved = 0;
+
+    while (select.next()) {
+        const int fileId = select.value(0).toInt();
+        const QString extension = select.value(1).toString();
+        const QString currentPath = select.value(2).toString();
+        const bool isCompressed = select.value(3).toBool();
+        const QString archiveInternalPath = select.value(4).toString();
+        const int currentSystemId = select.value(5).toInt();
+        ++scanned;
+
+        const QString detectPath = isCompressed && !archiveInternalPath.isEmpty()
+            ? archiveInternalPath
+            : currentPath;
+        const QString detectedSystemName = ctx.detector.detectSystem(extension, detectPath);
+        const int detectedSystemId = detectedSystemName.isEmpty()
+            ? 0
+            : ctx.db.getSystemId(detectedSystemName);
+
+        if (detectedSystemId == 0) {
+            ++unresolved;
+            continue;
+        }
+
+        if (currentSystemId == detectedSystemId) {
+            ++unchanged;
+            continue;
+        }
+
+        update.bindValue(0, detectedSystemId);
+        update.bindValue(1, fileId);
+        if (!update.exec()) {
+            qCritical() << "Failed to update system assignment for file" << fileId << ":"
+                        << update.lastError().text();
+            return 1;
+        }
+
+        ++changed;
+    }
+
+    qInfo() << "ISO reclassification complete:";
+    qInfo() << "  - Scanned:" << scanned;
+    qInfo() << "  - Changed:" << changed;
+    qInfo() << "  - Unchanged:" << unchanged;
+    qInfo() << "  - Unresolved:" << unresolved;
     return 0;
 }

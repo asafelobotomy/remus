@@ -10,6 +10,7 @@ add_library(remus-metadata STATIC
     clrmamepro_parser.cpp
     local_database_provider.cpp
     local_database_provider_match.cpp
+    local_database_provider_thumbnails.cpp
     gametdb_provider.cpp
     retroachievements_provider.cpp
     wikidata_provider.cpp

@@ -93,6 +93,12 @@ const QMap<int, SystemDef> SYSTEMS = {
                   {QStringLiteral(".xex"), QStringLiteral(".iso")}, QStringLiteral("MD5"), {QStringLiteral("USA"), QStringLiteral("EUR"), QStringLiteral("JPN")}, false, QStringLiteral("#107c10"), 2005}},
     {ID_ARCADE, {ID_ARCADE, QStringLiteral("Arcade"), QStringLiteral("Arcade / MAME"), QStringLiteral("Various"), 0,
                  {QStringLiteral(".zip")}, QStringLiteral("CRC32"), {}, true, QStringLiteral("#f1c40f"), 1970}},
+    {ID_3DO, {ID_3DO, QStringLiteral("3DO"), QStringLiteral("3DO Interactive Multiplayer"), QStringLiteral("Panasonic"), 5,
+              {QStringLiteral(".iso"), QStringLiteral(".cue"), QStringLiteral(".bin"), QStringLiteral(".chd")},
+              QStringLiteral("MD5"), {QStringLiteral("USA"), QStringLiteral("JPN"), QStringLiteral("EUR")}, true, QStringLiteral("#d4a017"), 1993}},
+    {ID_NEO_GEO_CD, {ID_NEO_GEO_CD, QStringLiteral("Neo Geo CD"), QStringLiteral("SNK Neo Geo CD"), QStringLiteral("SNK"), 5,
+                     {QStringLiteral(".cue"), QStringLiteral(".bin"), QStringLiteral(".chd"), QStringLiteral(".iso")},
+                     QStringLiteral("MD5"), {QStringLiteral("USA"), QStringLiteral("JPN")}, true, QStringLiteral("#f39c12"), 1994}},
 };
 
 const QMap<QString, QList<int>> EXTENSION_TO_SYSTEMS = {
@@ -119,13 +125,15 @@ const QMap<QString, QList<int>> EXTENSION_TO_SYSTEMS = {
     {QStringLiteral(".d64"), {ID_C64}}, {QStringLiteral(".d71"), {ID_C64}}, {QStringLiteral(".d81"), {ID_C64}}, {QStringLiteral(".t64"), {ID_C64}}, {QStringLiteral(".prg"), {ID_C64}}, {QStringLiteral(".p00"), {ID_C64}}, {QStringLiteral(".crt"), {ID_C64}}, {QStringLiteral(".g64"), {ID_C64}},
     {QStringLiteral(".adf"), {ID_AMIGA}}, {QStringLiteral(".adz"), {ID_AMIGA}}, {QStringLiteral(".dms"), {ID_AMIGA}}, {QStringLiteral(".ipf"), {ID_AMIGA}}, {QStringLiteral(".hdf"), {ID_AMIGA}},
     {QStringLiteral(".z80"), {ID_ZX_SPECTRUM}}, {QStringLiteral(".sna"), {ID_ZX_SPECTRUM}}, {QStringLiteral(".szx"), {ID_ZX_SPECTRUM}}, {QStringLiteral(".tzx"), {ID_ZX_SPECTRUM}}, {QStringLiteral(".pzx"), {ID_ZX_SPECTRUM}}, {QStringLiteral(".trd"), {ID_ZX_SPECTRUM}}, {QStringLiteral(".scl"), {ID_ZX_SPECTRUM}},
-    {QStringLiteral(".iso"), {ID_PSX, ID_PS2, ID_GAMECUBE, ID_WII, ID_PSP, ID_SATURN, ID_SEGA_CD, ID_DREAMCAST, ID_XBOX, ID_XBOX360}},
-    {QStringLiteral(".cue"), {ID_PSX, ID_SATURN, ID_SEGA_CD, ID_TURBOGRAFX_CD, ID_DREAMCAST, ID_PS2}},
-    {QStringLiteral(".bin"), {ID_PSX, ID_SATURN, ID_SEGA_CD, ID_TURBOGRAFX_CD, ID_ATARI_2600, ID_DREAMCAST, ID_PS2, ID_GENESIS}},
-    {QStringLiteral(".chd"), {ID_PSX, ID_PS2, ID_SATURN, ID_SEGA_CD, ID_TURBOGRAFX_CD, ID_DREAMCAST, ID_PSP}},
+    {QStringLiteral(".iso"), {ID_PSX, ID_PS2, ID_GAMECUBE, ID_WII, ID_PSP, ID_SATURN, ID_SEGA_CD, ID_DREAMCAST, ID_XBOX, ID_XBOX360, ID_3DO, ID_NEO_GEO_CD}},
+    {QStringLiteral(".cue"), {ID_PSX, ID_SATURN, ID_SEGA_CD, ID_TURBOGRAFX_CD, ID_DREAMCAST, ID_PS2, ID_3DO, ID_NEO_GEO_CD}},
+    {QStringLiteral(".bin"), {ID_PSX, ID_SATURN, ID_SEGA_CD, ID_TURBOGRAFX_CD, ID_ATARI_2600, ID_DREAMCAST, ID_PS2, ID_GENESIS, ID_3DO, ID_NEO_GEO_CD}},
+    {QStringLiteral(".chd"), {ID_PSX, ID_PS2, ID_SATURN, ID_SEGA_CD, ID_TURBOGRAFX_CD, ID_DREAMCAST, ID_PSP, ID_3DO, ID_NEO_GEO_CD}},
     {QStringLiteral(".img"), {ID_PSX, ID_PS2, ID_SATURN}}, {QStringLiteral(".m3u"), {ID_PSX, ID_PS2, ID_SATURN, ID_SEGA_CD, ID_DREAMCAST}},
     {QStringLiteral(".tap"), {ID_C64, ID_ZX_SPECTRUM}}, {QStringLiteral(".dsk"), {ID_ZX_SPECTRUM, ID_AMIGA}}, {QStringLiteral(".elf"), {ID_PS2, ID_GAMECUBE, ID_WII}},
     {QStringLiteral(".nrg"), {ID_PSX, ID_PS2}}, {QStringLiteral(".isz"), {ID_PS2}}, {QStringLiteral(".app"), {ID_NDS, ID_3DS}},
+    // 3DO and Neo Geo CD disc formats
+    {QStringLiteral(".3do"), {ID_3DO}},
 };
 
 const QList<int> NINTENDO_SYSTEMS = {ID_NES, ID_SNES, ID_N64, ID_GB, ID_GBC, ID_GBA, ID_NDS, ID_GAMECUBE, ID_WII, ID_VIRTUAL_BOY, ID_3DS, ID_SWITCH};
@@ -133,7 +141,7 @@ const QList<int> SEGA_SYSTEMS = {ID_MASTER_SYSTEM, ID_GENESIS, ID_SEGA_CD, ID_SA
 const QList<int> SONY_SYSTEMS = {ID_PSX, ID_PS2, ID_PSP, ID_PSVITA};
 const QList<int> MICROSOFT_SYSTEMS = {ID_XBOX, ID_XBOX360};
 const QList<int> HANDHELD_SYSTEMS = {ID_GB, ID_GBC, ID_GBA, ID_NDS, ID_PSP, ID_LYNX, ID_GAME_GEAR, ID_NGP, ID_WONDERSWAN, ID_VIRTUAL_BOY, ID_3DS, ID_PSVITA, ID_SWITCH};
-const QList<int> DISC_SYSTEMS = {ID_PSX, ID_PS2, ID_GAMECUBE, ID_WII, ID_DREAMCAST, ID_SATURN, ID_SEGA_CD, ID_TURBOGRAFX_CD, ID_3DS, ID_SWITCH, ID_XBOX, ID_XBOX360};
+const QList<int> DISC_SYSTEMS = {ID_PSX, ID_PS2, ID_GAMECUBE, ID_WII, ID_DREAMCAST, ID_SATURN, ID_SEGA_CD, ID_TURBOGRAFX_CD, ID_3DS, ID_SWITCH, ID_XBOX, ID_XBOX360, ID_3DO, ID_NEO_GEO_CD};
 const QList<int> CARTRIDGE_SYSTEMS = {ID_NES, ID_SNES, ID_N64, ID_GB, ID_GBC, ID_GBA, ID_NDS, ID_GENESIS, ID_MASTER_SYSTEM, ID_ATARI_2600, ID_ATARI_7800, ID_LYNX, ID_TURBOGRAFX16, ID_NEO_GEO, ID_GAME_GEAR, ID_32X, ID_ATARI_JAGUAR, ID_NGP, ID_WONDERSWAN, ID_VIRTUAL_BOY, ID_SUPERGRAFX};
 const QList<int> COMPUTER_SYSTEMS = {ID_C64, ID_AMIGA, ID_ZX_SPECTRUM};
 

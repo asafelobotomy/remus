@@ -55,7 +55,8 @@ ArchiveInfo ArchiveExtractor::getArchiveInfo(const QString &path)
             }
 
             if (line[0].isDigit() || line[0] == ' ') {
-                const QRegularExpression re("\\s+(\\d+)\\s+(\\d{4}-\\d{2}-\\d{2}\\s+\\d{2}:\\d{2})\\s+(.+)");
+                // Support both YYYY-MM-DD and MM-DD-YYYY date formats from different unzip versions
+                const QRegularExpression re("\\s+(\\d+)\\s+(\\d{2,4}-\\d{2}-\\d{2,4}\\s+\\d{2}:\\d{2})\\s+(.+)");
                 const QRegularExpressionMatch match = re.match(line);
                 if (match.hasMatch()) {
                     const qint64 size = match.captured(1).toLongLong();
@@ -78,22 +79,45 @@ ArchiveInfo ArchiveExtractor::getArchiveInfo(const QString &path)
                info.format == ArchiveFormat::GZip ||
                info.format == ArchiveFormat::TarGz ||
                info.format == ArchiveFormat::TarBz2) {
+        // Pre-process: join continuation lines for long filenames.
+        // 7z wraps filenames that exceed terminal width across multiple lines.
+        // We use the separator lines (----) to delimit the file table, then
+        // detect entry starts by date or attribute pattern. Anything else
+        // between separators is a filename continuation from the previous entry.
+        static const QRegularExpression separatorRe(R"(^-{5,})");
+        static const QRegularExpression entryStartRe(
+            R"(^\s*(?:\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}|[A-Z.]{5}\s+\d))");
+        static const QRegularExpression summaryRe(R"(\d+\s+files?\s*$|\d+\s+folders?\s*$)");
+
+        // Phase 1: Extract and join lines from the file table
+        QStringList joinedLines;
+        bool inTable = false;
         for (const QString &line : lines) {
-            if (line.startsWith(QStringLiteral("7-Zip ")) ||
-                line.contains(QStringLiteral("locale=")) ||
-                line.contains(QStringLiteral("Scanning the drive for archives:")) ||
-                line.contains(QStringLiteral("Listing archive:")) ||
-                line.contains(QStringLiteral("bytes (")) ||
-                line.contains("Date") || line.contains("Time") ||
-                line.contains("---------") || line.contains("----------") ||
-                line.contains("Type =") || line.contains("Path =") ||
-                line.contains(QStringLiteral("Physical Size =")) ||
-                line.trimmed() == QStringLiteral("--") ||
-                line.contains("files") || line.contains("folders") ||
-                line.trimmed().isEmpty()) {
+            const QString trimmed = line.trimmed();
+            if (trimmed.isEmpty()) continue;
+
+            if (separatorRe.match(trimmed).hasMatch()) {
+                if (inTable) break;  // Second separator → end of table
+                inTable = true;
                 continue;
             }
 
+            if (!inTable) continue;
+
+            // Skip summary lines that sneak inside the table
+            if (summaryRe.match(trimmed).hasMatch()) continue;
+
+            // Entry lines start with a date or attribute+size pattern
+            if (entryStartRe.match(line).hasMatch()) {
+                joinedLines.append(line);
+            } else if (!joinedLines.isEmpty()) {
+                // Continuation of previous line's wrapped filename
+                joinedLines.last() += line;
+            }
+        }
+
+        // Parse the joined entry lines
+        for (const QString &line : joinedLines) {
             const QString trimmed = line.trimmed();
             const QRegularExpression re(R"(^(?:\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}(?::\d{2})?\s+)?([A-Z.]{5})\s+(\d+)\s+(?:\d+\s+)?(.+)$)");
             const QRegularExpressionMatch match = re.match(trimmed);

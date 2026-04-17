@@ -1,9 +1,11 @@
 #include "system_detector.h"
 #include "disc_magic_detector.h"
 #include "constants/constants.h"
+#include <QtEndian>
 #include <QFileInfo>
 #include <QDir>
 #include <QDebug>
+#include <QFile>
 
 namespace Remus {
 
@@ -64,7 +66,17 @@ QString SystemDetector::detectSystem(const QString &extension, const QString &pa
 
 QString SystemDetector::detectFromPath(const QString &path, const QStringList &candidates) const
 {
-    QString lowerPath = path.toLower();
+    const QString lowerPath = path.toLower();
+
+    // For ambiguous ISO files, inspect headers first when possible.
+    const QFileInfo info(path);
+    const QString ext = QStringLiteral(".") + info.suffix().toLower();
+    if (ext == QStringLiteral(".iso")) {
+        const QString byHeader = detectFromIsoHeader(path, candidates);
+        if (!byHeader.isEmpty()) {
+            return byHeader;
+        }
+    }
     
     // Check for system name in path
     for (const QString &candidate : candidates) {
@@ -78,17 +90,91 @@ QString SystemDetector::detectFromPath(const QString &path, const QStringList &c
             return candidate;
         }
         if (candidate == "PlayStation 2" && 
-            (lowerPath.contains("ps2"))) {
+            (lowerPath.contains("ps2") || lowerPath.contains("pcsx2") ||
+             lowerPath.contains("slus") || lowerPath.contains("scus") ||
+             lowerPath.contains("sles") || lowerPath.contains("slps") ||
+             lowerPath.contains("scps"))) {
             return candidate;
         }
         if (candidate == "GameCube" && 
-            (lowerPath.contains("gamecube") || lowerPath.contains("gc"))) {
+            (lowerPath.contains("gamecube") || lowerPath.contains("gcn") ||
+             lowerPath.contains("ngc") || lowerPath.contains("dolphin") ||
+             lowerPath.endsWith(QStringLiteral(".gcm")) ||
+             lowerPath.endsWith(QStringLiteral(".gcz")) ||
+             lowerPath.endsWith(QStringLiteral(".rvz")))) {
+            return candidate;
+        }
+        if (candidate == "Wii" &&
+            (lowerPath.contains("wii") || lowerPath.contains("wbfs") ||
+             lowerPath.endsWith(QStringLiteral(".rvz")))) {
+            return candidate;
+        }
+        if (candidate == "PSP" &&
+            (lowerPath.contains("psp") || lowerPath.contains("ppsspp") ||
+             lowerPath.contains("ulus") || lowerPath.contains("ules") ||
+             lowerPath.contains("uljm") || lowerPath.contains("ucus") ||
+             lowerPath.contains("npuh") || lowerPath.contains("npjh"))) {
             return candidate;
         }
     }
 
     // Default to first candidate
     return candidates.first();
+}
+
+QString SystemDetector::detectFromIsoHeader(const QString &path, const QStringList &candidates) const
+{
+    QFile file(path);
+    if (!file.exists() || !file.open(QIODevice::ReadOnly)) {
+        return QString();
+    }
+
+    // Wii and GameCube magic values in disc header.
+    // Wii:      0x5D1C9EA3 at 0x18
+    // GameCube: 0xC2339F3D at 0x1C
+    if (file.size() > 0x20) {
+        if (file.seek(0x18)) {
+            const QByteArray wiiMagicBytes = file.read(4);
+            if (wiiMagicBytes.size() == 4) {
+                const quint32 wiiMagic = qFromBigEndian<quint32>(reinterpret_cast<const uchar *>(wiiMagicBytes.constData()));
+                if (wiiMagic == 0x5D1C9EA3u && candidates.contains(QStringLiteral("Wii"))) {
+                    return QStringLiteral("Wii");
+                }
+            }
+        }
+        if (file.seek(0x1C)) {
+            const QByteArray gcMagicBytes = file.read(4);
+            if (gcMagicBytes.size() == 4) {
+                const quint32 gcMagic = qFromBigEndian<quint32>(reinterpret_cast<const uchar *>(gcMagicBytes.constData()));
+                if (gcMagic == 0xC2339F3Du && candidates.contains(QStringLiteral("GameCube"))) {
+                    return QStringLiteral("GameCube");
+                }
+            }
+        }
+    }
+
+    // Light signature scan for PS2/PSP markers in first chunk.
+    if (file.seek(0)) {
+        const QByteArray head = file.read(4 * 1024 * 1024);
+        if (!head.isEmpty()) {
+            const QByteArray upper = head.toUpper();
+            if (candidates.contains(QStringLiteral("PlayStation 2")) &&
+                (upper.contains("BOOT2 = CDROM0:\\\\SL") ||
+                 upper.contains("SYSTEM.CNF"))) {
+                return QStringLiteral("PlayStation 2");
+            }
+            if (candidates.contains(QStringLiteral("PSP")) &&
+                (upper.contains("PSP_GAME") || upper.contains("UMD_DATA.BIN"))) {
+                return QStringLiteral("PSP");
+            }
+            if (candidates.contains(QStringLiteral("PlayStation")) &&
+                upper.contains("PLAYSTATION")) {
+                return QStringLiteral("PlayStation");
+            }
+        }
+    }
+
+    return QString();
 }
 
 SystemInfo SystemDetector::getSystemInfo(const QString &systemName) const

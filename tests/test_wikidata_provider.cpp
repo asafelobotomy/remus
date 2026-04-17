@@ -35,13 +35,14 @@ private slots:
         QVERIFY(result.id.isEmpty());
     }
 
-    void testGetArtworkReturnsEmpty()
+    void testGetArtworkReturnsGracefully()
     {
         WikidataProvider provider;
-        // Wikidata doesn't serve artwork directly
-        ArtworkUrls artwork = provider.getArtwork(QStringLiteral("Q12345"));
-        QVERIFY(artwork.boxFront.isEmpty());
-        QVERIFY(artwork.screenshot.isEmpty());
+        // getArtwork now queries Wikidata for P18 (image property)
+        // Without a valid game entity, should return gracefully (may be empty or populated)
+        ArtworkUrls artwork = provider.getArtwork(QStringLiteral("Q999999999"));
+        // Just verify no crash — result depends on network and entity existence
+        QVERIFY(artwork.screenshot.isEmpty()); // Only boxFront is ever populated
     }
 
     void testGetByIdReturnsEmptyWithoutNetwork()

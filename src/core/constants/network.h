@@ -52,12 +52,25 @@ inline constexpr int SCREENSCRAPER_RATE_LIMIT_MS = 2000;
 /// API allows 4 requests/second = 250ms minimum
 inline constexpr int IGDB_RATE_LIMIT_MS = 250;
 
+/// IGDB token refresh buffer (seconds)
+/// Re-authenticate proactively when token expires within this window
+inline constexpr int IGDB_TOKEN_REFRESH_BUFFER_SECS = 86400;  // 24 hours
+
 /// TheGamesDB minimum interval between requests (milliseconds)
 inline constexpr int THEGAMESDB_RATE_LIMIT_MS = 1000;
+
+/// TheGamesDB monthly request limits
+inline constexpr int THEGAMESDB_MONTHLY_LIMIT = 3000;
+inline constexpr int THEGAMESDB_WARN_THRESHOLD = 2400;   // 80%
+inline constexpr int THEGAMESDB_BLOCK_THRESHOLD = 2850;  // 95%
 
 /// Hasheous minimum interval between requests (milliseconds)
 /// Conservative despite fast service
 inline constexpr int HASHEOUS_RATE_LIMIT_MS = 1000;
+
+/// RetroAchievements minimum interval between requests (milliseconds)
+/// Free API — be polite; 500ms keeps well within limits
+inline constexpr int RA_RATE_LIMIT_MS = 500;
 
 /// Default rate limit for generic requests (milliseconds)
 inline constexpr int DEFAULT_RATE_LIMIT_MS = 1000;
