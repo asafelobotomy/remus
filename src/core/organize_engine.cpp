@@ -19,6 +19,29 @@
 
 namespace Remus {
 
+namespace {
+
+QString dottedSuffix(const QString &path)
+{
+    const QString suffix = QFileInfo(path).suffix();
+    return suffix.isEmpty() ? QString() : QStringLiteral(".") + suffix.toLower();
+}
+
+bool restoreBackupPath(const QString &backupPath, const QString &destinationPath)
+{
+    if (!QFile::exists(backupPath)) {
+        return true;
+    }
+
+    if (QFile::exists(destinationPath) && !QFile::remove(destinationPath)) {
+        return false;
+    }
+
+    return QFile::rename(backupPath, destinationPath);
+}
+
+}
+
 OrganizeEngine::OrganizeEngine(Database &db, QObject *parent)
     : QObject(parent)
     , m_database(db)
@@ -84,6 +107,10 @@ OrganizeResult OrganizeEngine::organizeFile(int fileId,
 
     emit operationStarted(fileId, result.oldPath, newPath);
 
+    const bool overwriteExisting = wouldCollide(newPath)
+        && m_collisionStrategy == CollisionStrategy::Overwrite;
+    QString backupPath;
+
     // Check for collision
     if (wouldCollide(newPath)) {
         if (m_collisionStrategy == CollisionStrategy::Skip) {
@@ -95,11 +122,6 @@ OrganizeResult OrganizeEngine::organizeFile(int fileId,
             newPath = resolveCollision(newPath, m_collisionStrategy);
             result.newPath = newPath;
             qInfo() << "Collision detected, renamed to:" << newPath;
-        } else {
-            // Overwrite: remove the existing file so QFile::copy/rename can proceed.
-            if (!QFile::remove(newPath)) {
-                qWarning() << "Overwrite: failed to remove existing file:" << newPath;
-            }
         }
     }
 
@@ -112,20 +134,65 @@ OrganizeResult OrganizeEngine::organizeFile(int fileId,
         return result;
     }
 
+    if (overwriteExisting) {
+        QFileInfo targetInfo(newPath);
+        backupPath = targetInfo.absoluteDir().filePath(
+            QStringLiteral(".%1.remus_backup_%2")
+                .arg(targetInfo.fileName(), QString::number(QDateTime::currentMSecsSinceEpoch())));
+
+        if (!QFile::rename(newPath, backupPath)) {
+            result.error = "Failed to stage existing destination for overwrite";
+            qWarning() << "Overwrite: failed to move existing file aside:" << newPath;
+            emit operationCompleted(fileId, false, result.error);
+            return result;
+        }
+    }
+
+    bool operationSucceeded = false;
+    if (overwriteExisting && operation == FileOperation::Copy) {
+        QFileInfo targetInfo(newPath);
+        const QString stagedCopyPath = targetInfo.absoluteDir().filePath(
+            QStringLiteral(".%1.remus_copy_%2")
+                .arg(targetInfo.fileName(), QString::number(QDateTime::currentMSecsSinceEpoch())));
+
+        if (QFile::copy(result.oldPath, stagedCopyPath) && QFile::rename(stagedCopyPath, newPath)) {
+            operationSucceeded = true;
+        } else {
+            QFile::remove(stagedCopyPath);
+        }
+    } else {
+        operationSucceeded = executeOperation(result.oldPath, newPath, operation);
+    }
+
     // Execute operation
-    if (executeOperation(result.oldPath, newPath, operation)) {
+    if (operationSucceeded) {
+        if (!backupPath.isEmpty()) {
+            QFile::remove(backupPath);
+        }
+
         result.success = true;
 
         // Record undo information
         result.undoId = recordUndo(result.oldPath, newPath, operation);
 
         // Update database with new path
-        m_database.updateFilePath(fileId, newPath);
+        FileRecord updatedRecord = fileRecord;
+        updatedRecord.currentPath = newPath;
+        if (updatedRecord.isCompressed && !updatedRecord.archivePath.isEmpty()) {
+            updatedRecord.archivePath = newPath;
+        } else {
+            updatedRecord.filename = QFileInfo(newPath).fileName();
+            updatedRecord.extension = dottedSuffix(newPath);
+        }
+        m_database.updateFileStorageState(updatedRecord);
 
         qInfo() << "✓" << (operation == FileOperation::Move ? "Moved" : "Copied")
                 << result.oldPath << "->" << newPath;
         emit operationCompleted(fileId, true, "");
     } else {
+        if (!backupPath.isEmpty() && !restoreBackupPath(backupPath, newPath)) {
+            qWarning() << "Overwrite: failed to restore original destination after error:" << newPath;
+        }
         result.error = "File operation failed";
         qWarning() << "✗ Operation failed:" << result.oldPath << "->" << newPath;
         emit operationCompleted(fileId, false, result.error);

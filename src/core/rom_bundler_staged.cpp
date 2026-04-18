@@ -32,6 +32,12 @@ QStringList collectArchiveEntries(const QString &rootDir)
     return entries;
 }
 
+QString dottedSuffix(const QString &path)
+{
+    const QString suffix = QFileInfo(path).suffix();
+    return suffix.isEmpty() ? QString() : QStringLiteral(".") + suffix.toLower();
+}
+
 } // namespace
 
 RomBundler::BundleResult RomBundler::bundleStaged(
@@ -109,6 +115,7 @@ RomBundler::BundleResult RomBundler::bundleStaged(
         return result;
     }
 
+    const QString bundledInternalPath = QFileInfo(destRom).fileName();
     CompressionResult cr = m_creator.compressDirectoryContents(
         tempBase, outputArchive, config.outputFormat);
     cleanup();
@@ -119,7 +126,15 @@ RomBundler::BundleResult RomBundler::bundleStaged(
     }
 
     m_db.markFileProcessed(patchedFile.id, Constants::Engines::ProcessingStatus::BUNDLED);
-    m_db.updateFilePath(patchedFile.id, outputArchive);
+    FileRecord bundledRecord = patchedFile;
+    bundledRecord.currentPath = outputArchive;
+    bundledRecord.isCompressed = true;
+    bundledRecord.archivePath = outputArchive;
+    bundledRecord.archiveInternalPath = bundledInternalPath;
+    bundledRecord.filename = bundledInternalPath;
+    bundledRecord.extension = dottedSuffix(destRom);
+    bundledRecord.fileSize = QFileInfo(destRom).size();
+    m_db.updateFileStorageState(bundledRecord);
 
     result.success = true;
     result.outputPath = outputArchive;

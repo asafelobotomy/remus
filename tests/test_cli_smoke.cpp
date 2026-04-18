@@ -387,6 +387,39 @@ private slots:
         QVERIFY(doc.isArray());
         QVERIFY(doc.array().isEmpty());
     }
+
+    void testScanCombinedWithGenerateM3uUsesWholeDatabase() {
+        QTemporaryDir dir;
+        QVERIFY(dir.isValid());
+
+        const QString dbPath = dir.filePath("cli.db");
+        const QString libraryA = dir.filePath("library-a");
+        const QString libraryB = dir.filePath("library-b");
+        const QString outputDir = dir.filePath("m3u-out");
+        QVERIFY(QDir().mkpath(libraryA));
+        QVERIFY(QDir().mkpath(libraryB));
+        QVERIFY(QDir().mkpath(outputDir));
+
+        QFile disc1(libraryA + "/Metal Gear Solid (USA) (Disc 1).chd");
+        QVERIFY(disc1.open(QIODevice::WriteOnly));
+        QVERIFY(disc1.write("disc1") == 5);
+        disc1.close();
+
+        QFile disc2(libraryA + "/Metal Gear Solid (USA) (Disc 2).chd");
+        QVERIFY(disc2.open(QIODevice::WriteOnly));
+        QVERIFY(disc2.write("disc2") == 5);
+        disc2.close();
+
+        QFile other(libraryB + "/Other Game.chd");
+        QVERIFY(other.open(QIODevice::WriteOnly));
+        QVERIFY(other.write("other") == 5);
+        other.close();
+
+        runCli({"--db", dbPath, "--scan", libraryA});
+        runCli({"--db", dbPath, "--scan", libraryB, "--generate-m3u", "--m3u-dir", outputDir});
+
+        QVERIFY(QFile::exists(outputDir + "/Metal Gear Solid (USA).m3u"));
+    }
 };
 
 QTEST_MAIN(CliSmokeTest)

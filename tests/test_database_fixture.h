@@ -30,6 +30,7 @@ private slots:
     void testUpdateGame();
     void testGetFileCountBySystem();
     void testGetFilesWithoutHashes();
+    void testInsertFileDuplicateReturnsZero();
     void testGetUnprocessedFiles();
     void testUpdateFilePath();
     void testInsertAndGetPatchedFileMetadata();

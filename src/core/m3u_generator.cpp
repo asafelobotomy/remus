@@ -47,6 +47,36 @@ QMap<QString, QList<int>> M3UGenerator::detectMultiDiscGames(const QString &syst
     return multiDiscGames;
 }
 
+QMap<QString, QList<int>> M3UGenerator::detectMultiDiscGames(const QSet<int> &fileIds)
+{
+    if (fileIds.isEmpty()) {
+        return detectMultiDiscGames(QString());
+    }
+
+    QList<FileRecord> files;
+    for (int fileId : fileIds) {
+        FileRecord file = m_database.getFileById(fileId);
+        if (file.id > 0) {
+            files.append(file);
+        }
+    }
+
+    QMap<QString, QList<FileRecord>> grouped = groupByBaseTitle(files);
+    QMap<QString, QList<int>> multiDiscGames;
+
+    for (auto it = grouped.constBegin(); it != grouped.constEnd(); ++it) {
+        if (it.value().size() >= 2) {
+            QList<int> ids;
+            for (const FileRecord &file : it.value()) {
+                ids.append(file.id);
+            }
+            multiDiscGames[it.key()] = ids;
+        }
+    }
+
+    return multiDiscGames;
+}
+
 bool M3UGenerator::generateM3U(const QString &gameTitle,
                               const QStringList &discPaths,
                               const QString &outputPath)
@@ -132,6 +162,52 @@ int M3UGenerator::generateAll(const QString &systemName, const QString &outputDi
                 QFileInfo firstDisc(discPaths.first());
                 m3uPath = firstDisc.absoluteDir().filePath(baseTitle + Constants::Files::M3U);
             }
+        }
+
+        if (generateM3U(baseTitle, discPaths, m3uPath)) {
+            generated++;
+        }
+    }
+
+    qInfo() << "Generated" << generated << "M3U playlists";
+    return generated;
+}
+
+int M3UGenerator::generateAll(const QSet<int> &fileIds, const QString &outputDir)
+{
+    QMap<QString, QList<int>> multiDiscGames = detectMultiDiscGames(fileIds);
+
+    if (multiDiscGames.isEmpty()) {
+        qInfo() << "No multi-disc games found";
+        return 0;
+    }
+
+    int generated = 0;
+
+    for (auto it = multiDiscGames.constBegin(); it != multiDiscGames.constEnd(); ++it) {
+        QString baseTitle = it.key();
+        QList<int> fileIdsForGame = it.value();
+
+        QList<FileRecord> fileInfos;
+        for (int fileId : fileIdsForGame) {
+            FileRecord file = m_database.getFileById(fileId);
+            if (file.id > 0) {
+                fileInfos.append(file);
+            }
+        }
+        fileInfos = sortByDiscNumber(fileInfos);
+
+        QStringList discPaths;
+        for (const FileRecord &file : fileInfos) {
+            discPaths.append(file.currentPath);
+        }
+
+        QString m3uPath;
+        if (!outputDir.isEmpty()) {
+            m3uPath = QDir(outputDir).filePath(baseTitle + Constants::Files::M3U);
+        } else if (!discPaths.isEmpty()) {
+            QFileInfo firstDisc(discPaths.first());
+            m3uPath = firstDisc.absoluteDir().filePath(baseTitle + Constants::Files::M3U);
         }
 
         if (generateM3U(baseTitle, discPaths, m3uPath)) {

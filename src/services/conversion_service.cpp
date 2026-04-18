@@ -2,6 +2,7 @@
 #include "../core/database.h"
 #include "../core/constants/files.h"
 
+#include <QDir>
 #include <QFileInfo>
 #include <QObject>
 
@@ -27,6 +28,42 @@ public:
 private:
     QMetaObject::Connection m_conn;
 };
+
+QString extractedRelativePath(const QString &outputDir, const QString &path)
+{
+    return QDir(outputDir).relativeFilePath(path).replace('\\', '/');
+}
+
+QString resolveExtractedPath(const QString &extractionRoot,
+                            const QStringList &extractedFiles,
+                            const FileRecord &file)
+{
+    const QString normalizedMember = ArchiveExtractor::normalizeArchiveMemberPath(file.archiveInternalPath);
+    if (!normalizedMember.isEmpty()) {
+        for (const QString &path : extractedFiles) {
+            if (extractedRelativePath(extractionRoot, path) == normalizedMember) {
+                return path;
+            }
+        }
+    }
+
+    QString matchedByName;
+    for (const QString &path : extractedFiles) {
+        if (QFileInfo(path).fileName().compare(file.filename, Qt::CaseInsensitive) == 0) {
+            if (!matchedByName.isEmpty()) {
+                return QString();
+            }
+            matchedByName = path;
+        }
+    }
+
+    if (!matchedByName.isEmpty()) {
+        return matchedByName;
+    }
+
+    const QString basenamePath = QDir(extractionRoot).filePath(file.filename);
+    return QFileInfo::exists(basenamePath) ? basenamePath : QString();
+}
 
 } // anonymous namespace
 
@@ -70,7 +107,7 @@ ConversionResult ConversionService::convertToCHD(const QString &path,
 
     if (ext == "cue") {
         result = m_chdConverter->convertCueToCHD(path, outputPath);
-    } else if (ext == "iso") {
+    } else if (ext == "iso" || ext == "img") {
         result = m_chdConverter->convertIsoToCHD(path, outputPath);
     } else if (ext == "gdi") {
         result = m_chdConverter->convertGdiToCHD(path, outputPath);
@@ -259,12 +296,24 @@ ExtractionResult ConversionService::extractArchiveWithDbUpdate(
         // Update database entries that reference this archive
         QList<FileRecord> files = db->getAllFiles();
         for (const FileRecord &file : files) {
-            if (file.currentPath == archivePath || file.originalPath.contains(archivePath)) {
-                QString extractedPath = outputDir + "/" + file.filename;
-                QFileInfo extractedInfo(extractedPath);
-                if (extractedInfo.exists()) {
-                    db->updateFilePath(file.id, extractedPath);
-                }
+            if (file.currentPath != archivePath && file.archivePath != archivePath) {
+                continue;
+            }
+
+            const QString extractedPath = resolveExtractedPath(result.outputDir, result.extractedFiles, file);
+            QFileInfo extractedInfo(extractedPath);
+            if (extractedInfo.exists()) {
+                FileRecord updatedRecord = file;
+                updatedRecord.currentPath = extractedPath;
+                updatedRecord.filename = extractedInfo.fileName();
+                updatedRecord.extension = extractedInfo.suffix().isEmpty()
+                    ? QString()
+                    : QStringLiteral(".") + extractedInfo.suffix().toLower();
+                updatedRecord.fileSize = extractedInfo.size();
+                updatedRecord.isCompressed = false;
+                updatedRecord.archivePath.clear();
+                updatedRecord.archiveInternalPath.clear();
+                db->updateFileStorageState(updatedRecord);
             }
         }
     }

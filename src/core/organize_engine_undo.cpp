@@ -18,6 +18,16 @@
 
 namespace Remus {
 
+namespace {
+
+QString dottedSuffix(const QString &path)
+{
+    const QString suffix = QFileInfo(path).suffix();
+    return suffix.isEmpty() ? QString() : QStringLiteral(".") + suffix.toLower();
+}
+
+}
+
 bool OrganizeEngine::undoOperation(int undoId)
 {
     QSqlQuery query(m_database.database());
@@ -61,7 +71,17 @@ bool OrganizeEngine::undoOperation(int undoId)
 
         success = QFile::rename(newPath, oldPath);
         if (success && fileId > 0) {
-            m_database.updateFilePath(fileId, oldPath);
+            FileRecord fileRecord = m_database.getFileById(fileId);
+            if (fileRecord.id > 0) {
+                fileRecord.currentPath = oldPath;
+                if (fileRecord.isCompressed && !fileRecord.archivePath.isEmpty()) {
+                    fileRecord.archivePath = oldPath;
+                } else {
+                    fileRecord.filename = QFileInfo(oldPath).fileName();
+                    fileRecord.extension = dottedSuffix(oldPath);
+                }
+                m_database.updateFileStorageState(fileRecord);
+            }
         }
     } else if (operationType == "copy") {
         if (QFile::exists(newPath)) {
@@ -72,7 +92,17 @@ bool OrganizeEngine::undoOperation(int undoId)
         }
 
         if (success && fileId > 0) {
-            m_database.updateFilePath(fileId, oldPath);
+            FileRecord fileRecord = m_database.getFileById(fileId);
+            if (fileRecord.id > 0) {
+                fileRecord.currentPath = oldPath;
+                if (fileRecord.isCompressed && !fileRecord.archivePath.isEmpty()) {
+                    fileRecord.archivePath = oldPath;
+                } else {
+                    fileRecord.filename = QFileInfo(oldPath).fileName();
+                    fileRecord.extension = dottedSuffix(oldPath);
+                }
+                m_database.updateFileStorageState(fileRecord);
+            }
         }
     } else if (operationType == "delete") {
         qWarning() << "Undo not supported for delete operations";

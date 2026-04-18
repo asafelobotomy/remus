@@ -114,6 +114,98 @@ private slots:
         QVERIFY2(!systems.isEmpty(), "Expected at least one detected system");
     }
 
+    void testScanPreservesCueBinParentLinkage()
+    {
+        QTemporaryDir tmp;
+        QVERIFY(tmp.isValid());
+
+        const QString cuePath = tmp.path() + "/disc.cue";
+        const QString binPath = tmp.path() + "/disc.bin";
+
+        QFile cue(cuePath);
+        QVERIFY(cue.open(QIODevice::WriteOnly | QIODevice::Text));
+        QVERIFY(cue.write("FILE \"disc.bin\" BINARY\n  TRACK 01 MODE1/2352\n    INDEX 01 00:00:00\n") > 0);
+        cue.close();
+
+        QFile bin(binPath);
+        QVERIFY(bin.open(QIODevice::WriteOnly));
+        QVERIFY(bin.write(QByteArray(2352, '\0')) == 2352);
+        bin.close();
+
+        QString dbPath = tmp.path() + "/lib_svc_lineage.db";
+        Database db;
+        QVERIFY(db.initialize(dbPath));
+
+        LibraryService svc;
+        const int inserted = svc.scan(tmp.path(), &db);
+        QVERIFY(inserted >= 2);
+
+        FileRecord cueRecord;
+        FileRecord binRecord;
+        for (const FileRecord &file : db.getAllFiles()) {
+            if (file.filename == "disc.cue") {
+                cueRecord = file;
+            } else if (file.filename == "disc.bin") {
+                binRecord = file;
+            }
+        }
+
+        QVERIFY(cueRecord.id > 0);
+        QVERIFY(binRecord.id > 0);
+        QCOMPARE(cueRecord.parentFileId, binRecord.id);
+        QVERIFY(binRecord.isPrimary);
+        QVERIFY(!cueRecord.isPrimary);
+    }
+
+    void testRescanLinksNewCueToExistingBinParent()
+    {
+        QTemporaryDir tmp;
+        QVERIFY(tmp.isValid());
+
+        const QString binPath = tmp.path() + "/disc.bin";
+        QFile bin(binPath);
+        QVERIFY(bin.open(QIODevice::WriteOnly));
+        QVERIFY(bin.write(QByteArray(2352, '\0')) == 2352);
+        bin.close();
+
+        QString dbPath = tmp.path() + "/lib_svc_rescan.db";
+        Database db;
+        QVERIFY(db.initialize(dbPath));
+        const int libraryId = db.insertLibrary(tmp.path(), "Test");
+        QVERIFY(libraryId > 0);
+
+        LibraryService svc;
+        QCOMPARE(svc.scan(tmp.path(), &db, {}, {}, libraryId), 1);
+
+        const QString cuePath = tmp.path() + "/disc.cue";
+        QFile cue(cuePath);
+        QVERIFY(cue.open(QIODevice::WriteOnly | QIODevice::Text));
+        QVERIFY(cue.write("FILE \"disc.bin\" BINARY\n  TRACK 01 MODE1/2352\n    INDEX 01 00:00:00\n") > 0);
+        cue.close();
+
+        QVERIFY(svc.scan(tmp.path(), &db, {}, {}, libraryId) >= 1);
+
+        FileRecord cueRecord;
+        FileRecord binRecord;
+        int cueCount = 0;
+        int binCount = 0;
+        for (const FileRecord &file : db.getAllFiles()) {
+            if (file.filename == "disc.cue") {
+                cueRecord = file;
+                cueCount++;
+            } else if (file.filename == "disc.bin") {
+                binRecord = file;
+                binCount++;
+            }
+        }
+
+        QVERIFY(cueRecord.id > 0);
+        QVERIFY(binRecord.id > 0);
+        QCOMPARE(cueCount, 1);
+        QCOMPARE(binCount, 1);
+        QCOMPARE(cueRecord.parentFileId, binRecord.id);
+    }
+
     void testScanEmptyDir()
     {
         QTemporaryDir tmp;

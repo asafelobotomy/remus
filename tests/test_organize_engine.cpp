@@ -20,6 +20,7 @@ private slots:
     void testCollisionSkip();
     void testCollisionRename();
     void testCollisionOverwrite();
+    void testCollisionOverwritePreservesDestinationOnFailure();
     void testUndoOperation();
     void testWouldCollide();
     void testResolveCollisionSkip();
@@ -225,6 +226,50 @@ void OrganizeEngineTest::testCollisionOverwrite()
     QFile f(result.newPath);
     QVERIFY(f.open(QIODevice::ReadOnly));
     QCOMPARE(f.readAll(), QByteArray("FAKE ROM DATA"));
+}
+
+void OrganizeEngineTest::testCollisionOverwritePreservesDestinationOnFailure()
+{
+    QTemporaryDir srcDir, dstDir;
+    QVERIFY(srcDir.isValid() && dstDir.isValid());
+
+    const QString missingSource = srcDir.path() + "/missing.nes";
+    const QString dst = dstDir.path() + "/Super Mario Bros..nes";
+    {
+        QFile f(dst);
+        QVERIFY(f.open(QIODevice::WriteOnly));
+        QVERIFY(f.write("old content") == 11);
+    }
+
+    Database db;
+    QVERIFY(db.initialize(":memory:"));
+
+    int libId = db.insertLibrary(srcDir.path(), "Test");
+    int sysId = db.getSystemId("NES");
+
+    FileRecord fr;
+    fr.libraryId = libId;
+    fr.filename = "missing.nes";
+    fr.originalPath = missingSource;
+    fr.currentPath = missingSource;
+    fr.extension = ".nes";
+    fr.systemId = sysId;
+    fr.fileSize = 0;
+    const int fileId = db.insertFile(fr);
+    QVERIFY(fileId > 0);
+
+    OrganizeEngine engine(db);
+    engine.setTemplate("{title}{ext}");
+    engine.setDryRun(false);
+    engine.setCollisionStrategy(CollisionStrategy::Overwrite);
+
+    OrganizeResult result = engine.organizeFile(fileId, makeMetadata(),
+                                                dstDir.path(), FileOperation::Copy);
+    QVERIFY(!result.success);
+
+    QFile f(dst);
+    QVERIFY(f.open(QIODevice::ReadOnly));
+    QCOMPARE(f.readAll(), QByteArray("old content"));
 }
 
 void OrganizeEngineTest::testUndoOperation()

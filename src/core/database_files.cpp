@@ -46,10 +46,21 @@ int Database::insertFile(const FileRecord &record)
     const bool isPatched = record.isPatched || patchedInfo.isPatched;
     const QString patchName = record.patchName.isEmpty() ? patchedInfo.patchName : record.patchName;
 
+    QSqlQuery existingQuery(m_db);
+    existingQuery.prepare("SELECT id FROM files WHERE original_path = ? AND filename = ?");
+    existingQuery.addBindValue(record.originalPath);
+    existingQuery.addBindValue(record.filename);
+    if (!existingQuery.exec()) {
+        logError("Failed to detect duplicate file: " + existingQuery.lastError().text());
+        return 0;
+    }
+    if (existingQuery.next()) {
+        return 0;
+    }
+
     QSqlQuery query(m_db);
-    // Use INSERT OR IGNORE to avoid duplicates based on original_path + filename
     query.prepare(R"(
-        INSERT OR IGNORE INTO files 
+        INSERT INTO files 
         (library_id, original_path, current_path, filename, extension, 
          file_size, is_compressed, archive_path, archive_internal_path, 
          system_id, is_primary, parent_file_id, base_title, file_type, is_patched,
@@ -79,7 +90,16 @@ int Database::insertFile(const FileRecord &record)
         return 0;
     }
 
-    return query.lastInsertId().toInt();
+    QSqlQuery insertedQuery(m_db);
+    insertedQuery.prepare("SELECT id FROM files WHERE original_path = ? AND filename = ?");
+    insertedQuery.addBindValue(record.originalPath);
+    insertedQuery.addBindValue(record.filename);
+    if (!insertedQuery.exec() || !insertedQuery.next()) {
+        logError("Failed to resolve inserted file id");
+        return 0;
+    }
+
+    return insertedQuery.value(0).toInt();
 }
 
 bool Database::updateFileHashes(int fileId, const QString &crc32,

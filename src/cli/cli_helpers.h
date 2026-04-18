@@ -5,6 +5,7 @@
 #include <memory>
 #include <QCommandLineParser>
 #include <QList>
+#include <QSet>
 #include <QString>
 #include "../core/database.h"
 #include "../core/hasher.h"
@@ -49,6 +50,8 @@ QString resolveCliOptionValue(const QCommandLineParser &parser,
 
 // Return only files that have at least one computed hash value.
 QList<FileRecord> getHashedFiles(Database &db);
+QList<FileRecord> getHashedFiles(Database &db, const QSet<int> &fileScopeIds);
+bool fileMatchesProcessScope(const FileRecord &file, const QSet<int> &fileScopeIds);
 
 // Resolve the effective system ID for downstream handling, preferring the
 // matched game system when available and falling back to the scanned file.

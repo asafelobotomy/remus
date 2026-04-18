@@ -20,6 +20,50 @@ bool Database::updateFilePath(int fileId, const QString &newPath)
     return query.numRowsAffected() > 0;
 }
 
+bool Database::updateFileStorageState(const FileRecord &record)
+{
+    if (record.id <= 0) {
+        logError("Failed to update file storage state: invalid file id");
+        return false;
+    }
+
+    QSqlQuery query(m_db);
+    query.prepare(R"(
+        UPDATE files
+        SET current_path = ?,
+            filename = ?,
+            extension = ?,
+            file_size = ?,
+            is_compressed = ?,
+            archive_path = ?,
+            archive_internal_path = ?,
+            crc32 = ?,
+            md5 = ?,
+            sha1 = ?,
+            hash_calculated = ?
+        WHERE id = ?
+    )");
+    query.addBindValue(record.currentPath);
+    query.addBindValue(record.filename);
+    query.addBindValue(record.extension);
+    query.addBindValue(record.fileSize);
+    query.addBindValue(record.isCompressed);
+    query.addBindValue(record.archivePath.isEmpty() ? QVariant() : record.archivePath);
+    query.addBindValue(record.archiveInternalPath.isEmpty() ? QVariant() : record.archiveInternalPath);
+    query.addBindValue(record.crc32.isEmpty() ? QVariant() : record.crc32);
+    query.addBindValue(record.md5.isEmpty() ? QVariant() : record.md5);
+    query.addBindValue(record.sha1.isEmpty() ? QVariant() : record.sha1);
+    query.addBindValue(record.hashCalculated);
+    query.addBindValue(record.id);
+
+    if (!query.exec()) {
+        logError("Failed to update file storage state: " + query.lastError().text());
+        return false;
+    }
+
+    return query.numRowsAffected() > 0;
+}
+
 bool Database::updateFileOriginalPath(int fileId, const QString &newOriginalPath)
 {
     QSqlQuery query(m_db);

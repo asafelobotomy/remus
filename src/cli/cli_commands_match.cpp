@@ -37,7 +37,7 @@ int handleMatchCommand(CliContext &ctx)
         qInfo() << "  [FAILED]" << name << "-" << error;
     });
 
-    QList<FileRecord> files = getHashedFiles(ctx.db);
+    QList<FileRecord> files = getHashedFiles(ctx.db, ctx.processFileScopeIds);
     int minConfidence = ctx.parser.value(Cli::Options::MIN_CONFIDENCE).toInt();
 
     qInfo() << "Matching" << files.size() << "files with minimum confidence:" << minConfidence << "%";

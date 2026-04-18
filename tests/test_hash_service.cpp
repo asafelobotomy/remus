@@ -12,6 +12,8 @@
 #include <QFile>
 
 #include "../src/services/hash_service.h"
+#include "../src/core/archive_creator.h"
+#include "../src/core/archive_extractor.h"
 #include "../src/core/database.h"
 #include "../src/core/hasher.h"
 
@@ -93,6 +95,52 @@ private slots:
     }
 
     // ── hashFile (with DB) ────────────────────────────────
+
+    void testHashRecordCompressedArchiveUsesRequestedMember()
+    {
+        ArchiveCreator creator;
+        ArchiveExtractor extractor;
+        if (!creator.canCompress(ArchiveFormat::ZIP) || !extractor.canExtract(ArchiveFormat::ZIP)) {
+            QSKIP("zip/unzip tools not available");
+        }
+
+        QTemporaryDir tmp;
+        QVERIFY(tmp.isValid());
+
+        const QString sourceDir = tmp.path() + "/source";
+        QVERIFY(QDir().mkpath(sourceDir + "/nested"));
+
+        const QString targetPath = sourceDir + "/nested/target.nes";
+        const QString otherPath = sourceDir + "/other.nes";
+        QVERIFY(!writeTestFile(sourceDir + "/nested", "target.nes", QByteArrayLiteral("TARGET_DATA")).isEmpty());
+        QVERIFY(!writeTestFile(sourceDir, "other.nes", QByteArrayLiteral("OTHER_DATA")).isEmpty());
+
+        const QString archivePath = tmp.path() + "/games.zip";
+        const CompressionResult compressed = creator.compressDirectoryContents(
+            sourceDir, archivePath, ArchiveFormat::ZIP);
+        QVERIFY2(compressed.success, qPrintable(compressed.error));
+
+        Hasher hasher;
+        const HashResult expected = hasher.calculateHashes(targetPath);
+        QVERIFY(expected.success);
+
+        FileRecord fr;
+        fr.currentPath = archivePath;
+        fr.archivePath = archivePath;
+        fr.archiveInternalPath = "nested/target.nes";
+        fr.filename = "target.nes";
+        fr.extension = ".nes";
+        fr.isCompressed = true;
+
+        HashService svc;
+        HashResult res = svc.hashRecord(fr);
+
+        QVERIFY(res.success);
+        QCOMPARE(res.crc32, expected.crc32);
+        QCOMPARE(res.md5, expected.md5);
+        QCOMPARE(res.sha1, expected.sha1);
+        QVERIFY(res.md5 != hasher.calculateHashes(otherPath).md5);
+    }
 
     void testHashFilePersistsToDatabase()
     {

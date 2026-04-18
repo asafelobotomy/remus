@@ -28,13 +28,14 @@ void RomBundlerTest::testBundle_binPrimaryWithCueChildCanBePackagedAsChd()
     QVERIFY(db.initialize(tmp.filePath("test.db")));
 
     FileRecord bin = makeFileRecord(0, binPath, "track01.bin");
-    bin.id = db.insertFile(bin);
+    bin.id = insertTestFile(db, bin);
     QVERIFY(bin.id > 0);
+    QVERIFY(db.updateFileHashes(bin.id, "AABBCCDD", "bin-md5", "bin-sha1"));
 
     FileRecord cue = makeFileRecord(0, cuePath, "disc.cue");
     cue.parentFileId = bin.id;
     cue.isPrimary = false;
-    cue.id = db.insertFile(cue);
+    cue.id = insertTestFile(db, cue);
     QVERIFY(cue.id > 0);
 
     RomBundler bundler(db);
@@ -55,6 +56,74 @@ void RomBundlerTest::testBundle_binPrimaryWithCueChildCanBePackagedAsChd()
     QVERIFY(info.contents.contains("disc.chd"));
     QVERIFY(!info.contents.contains("disc.cue"));
     QVERIFY(!info.contents.contains("track01.bin"));
+
+    const FileRecord bundled = db.getFileById(bin.id);
+    QCOMPARE(bundled.archiveInternalPath, QStringLiteral("disc.chd"));
+    QCOMPARE(bundled.filename, QStringLiteral("disc.chd"));
+    QCOMPARE(bundled.extension, QStringLiteral(".chd"));
+    QVERIFY(!bundled.hashCalculated);
+    QVERIFY(bundled.crc32.isEmpty());
+    QVERIFY(bundled.md5.isEmpty());
+    QVERIFY(bundled.sha1.isEmpty());
+    QVERIFY(bundled.fileSize > 0);
+}
+
+void RomBundlerTest::testBundle_binPrimaryWithCueChildKeepsPrimaryPayloadWhenBundlingOriginal()
+{
+    ArchiveCreator creator;
+    ArchiveExtractor extractor;
+    if (!creator.canCompress(ArchiveFormat::ZIP)) {
+        QSKIP("zip tool not available");
+    }
+    if (!extractor.canExtract(ArchiveFormat::ZIP)) {
+        QSKIP("unzip tool not available");
+    }
+
+    QTemporaryDir tmp;
+    QVERIFY(tmp.isValid());
+
+    const QString cuePath = tmp.filePath("disc.cue");
+    const QString binPath = tmp.filePath("track01.bin");
+    QVERIFY(writeMinimalCueBinSet(cuePath, binPath));
+
+    Database db;
+    QVERIFY(db.initialize(tmp.filePath("test.db")));
+
+    FileRecord bin = makeFileRecord(0, binPath, "track01.bin");
+    bin.id = insertTestFile(db, bin);
+    QVERIFY(bin.id > 0);
+    QVERIFY(db.updateFileHashes(bin.id, "AABBCCDD", "bin-md5", "bin-sha1"));
+
+    FileRecord cue = makeFileRecord(0, cuePath, "disc.cue");
+    cue.parentFileId = bin.id;
+    cue.isPrimary = false;
+    cue.id = insertTestFile(db, cue);
+    QVERIFY(cue.id > 0);
+
+    RomBundler bundler(db);
+
+    RomBundler::BundleConfig cfg;
+    cfg.includeBoxArt = false;
+    cfg.outputFormat = ArchiveFormat::ZIP;
+    cfg.discOutputFormat = RomBundler::DiscOutputFormat::Original;
+
+    const QString destDir = tmp.filePath("bundles");
+    const RomBundler::BundleResult result = bundler.bundle(
+        bin, makeMatch("Disc Test"), makeMetadata("Disc Test"), destDir, cfg);
+    QVERIFY2(result.success, qPrintable(result.error));
+    QVERIFY(QFile::exists(result.outputPath));
+
+    const ArchiveInfo info = extractor.getArchiveInfo(result.outputPath);
+    QVERIFY(info.contents.contains("track01.bin"));
+    QVERIFY(info.contents.contains("disc.cue"));
+
+    const FileRecord bundled = db.getFileById(bin.id);
+    QCOMPARE(bundled.archiveInternalPath, QStringLiteral("track01.bin"));
+    QCOMPARE(bundled.filename, QStringLiteral("track01.bin"));
+    QCOMPARE(bundled.extension, QStringLiteral(".bin"));
+    QCOMPARE(bundled.md5, QStringLiteral("bin-md5"));
+    QCOMPARE(bundled.sha1, QStringLiteral("bin-sha1"));
+    QVERIFY(bundled.hashCalculated);
 }
 
 void RomBundlerTest::testBundle_cueDiscMediaCanBePackagedAsChd()
@@ -83,13 +152,13 @@ void RomBundlerTest::testBundle_cueDiscMediaCanBePackagedAsChd()
     QVERIFY(db.initialize(tmp.filePath("test.db")));
 
     FileRecord cue = makeFileRecord(0, cuePath, "disc.cue");
-    cue.id = db.insertFile(cue);
+    cue.id = insertTestFile(db, cue);
     QVERIFY(cue.id > 0);
 
     FileRecord bin = makeFileRecord(0, binPath, "track01.bin");
     bin.parentFileId = cue.id;
     bin.isPrimary = false;
-    bin.id = db.insertFile(bin);
+    bin.id = insertTestFile(db, bin);
     QVERIFY(bin.id > 0);
 
     RomBundler bundler(db);
@@ -139,7 +208,7 @@ void RomBundlerTest::testBundle_multiTrackGdiCanBePackagedAsChd()
     QVERIFY(db.initialize(tmp.filePath("test.db")));
 
     FileRecord gdi = makeFileRecord(0, tmp.filePath("disc.gdi"), "disc.gdi");
-    gdi.id = db.insertFile(gdi);
+    gdi.id = insertTestFile(db, gdi);
     QVERIFY(gdi.id > 0);
 
     const QStringList trackNames = {
@@ -152,7 +221,7 @@ void RomBundlerTest::testBundle_multiTrackGdiCanBePackagedAsChd()
         FileRecord track = makeFileRecord(0, tmp.filePath(trackName), trackName);
         track.parentFileId = gdi.id;
         track.isPrimary = false;
-        track.id = db.insertFile(track);
+        track.id = insertTestFile(db, track);
         QVERIFY(track.id > 0);
     }
 
@@ -194,7 +263,7 @@ void RomBundlerTest::testBundle_discConversionFailsWhenReferencedTrackIsMissing(
     QVERIFY(db.initialize(tmp.filePath("test.db")));
 
     FileRecord cue = makeFileRecord(0, cuePath, "disc.cue");
-    cue.id = db.insertFile(cue);
+    cue.id = insertTestFile(db, cue);
     QVERIFY(cue.id > 0);
 
     RomBundler bundler(db);
@@ -224,7 +293,7 @@ void RomBundlerTest::testBundle_gameCubeIsoPrefersRvzWhenDiscOptimizationRequest
 
     FileRecord disc = makeFileRecord(0, isoPath, "disc.iso");
     disc.systemId = Remus::Constants::Systems::ID_PSX;
-    disc.id = db.insertFile(disc);
+    disc.id = insertTestFile(db, disc);
     QVERIFY(disc.id > 0);
 
     Database::MatchResult match = makeMatch("GameCube Disc");

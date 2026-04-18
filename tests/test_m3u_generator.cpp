@@ -23,6 +23,7 @@ private slots:
     void testDetectSingleDiscExcluded();
     void testGenerateM3UFile();
     void testGenerateAll();
+    void testGenerateAllScopedFileIds();
 
 private:
     static int insertDiscFile(Database &db, int libId, int sysId,
@@ -191,6 +192,33 @@ void M3UGeneratorTest::testGenerateAll()
     QDir outDir(dir.path());
     QStringList m3uFiles = outDir.entryList({"*.m3u"}, QDir::Files);
     QCOMPARE(m3uFiles.size(), 1);
+}
+
+void M3UGeneratorTest::testGenerateAllScopedFileIds()
+{
+    QTemporaryDir dir;
+    QVERIFY(dir.isValid());
+
+    Database db;
+    QVERIFY(db.initialize(":memory:"));
+
+    int libId = db.insertLibrary("/roms/psx", "PSX");
+    int sysId = db.getSystemId("PlayStation");
+    if (sysId == 0) QSKIP("PlayStation system not in default DB");
+
+    const int mgs1 = insertDiscFile(db, libId, sysId, "Metal Gear Solid (USA) (Disc 1).chd");
+    const int mgs2 = insertDiscFile(db, libId, sysId, "Metal Gear Solid (USA) (Disc 2).chd");
+    insertDiscFile(db, libId, sysId, "Final Fantasy VIII (USA) (Disc 1).chd");
+    insertDiscFile(db, libId, sysId, "Final Fantasy VIII (USA) (Disc 2).chd");
+
+    M3UGenerator gen(db);
+    const int count = gen.generateAll(QSet<int>{mgs1, mgs2}, dir.path());
+    QCOMPARE(count, 1);
+
+    QDir outDir(dir.path());
+    const QStringList m3uFiles = outDir.entryList({"*.m3u"}, QDir::Files);
+    QCOMPARE(m3uFiles.size(), 1);
+    QVERIFY(m3uFiles.first().contains("Metal Gear Solid"));
 }
 
 QTEST_MAIN(M3UGeneratorTest)

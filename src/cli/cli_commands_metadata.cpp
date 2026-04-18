@@ -283,6 +283,9 @@ int handleEnrichCommand(CliContext &ctx)
         if (seenGames.contains(m.gameId)) continue;
         seenGames.insert(m.gameId);
         if (!fileMap.contains(m.fileId)) continue;
+        if (!fileMatchesProcessScope(fileMap.value(m.fileId), ctx.processFileScopeIds)) {
+            continue;
+        }
         if (!fileMatchesSystemFilter(fileMap.value(m.fileId), ctx.processSystemIdFilter, &m)) {
             continue;
         }

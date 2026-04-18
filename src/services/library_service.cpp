@@ -7,9 +7,44 @@
 #include "../core/database.h"
 
 #include <QFileInfo>
+#include <QHash>
 #include <QTemporaryDir>
 
+#include <algorithm>
+
 namespace Remus {
+
+namespace {
+
+QString scanResultIdentifier(const ScanResult &result)
+{
+    if (result.isCompressed && !result.archivePath.isEmpty() && !result.archiveInternalPath.isEmpty()) {
+        const QString normalized = ArchiveExtractor::normalizeArchiveMemberPath(result.archiveInternalPath);
+        if (!normalized.isEmpty()) {
+            return result.archivePath + QStringLiteral("::") + normalized;
+        }
+    }
+
+    return QFileInfo(result.path).absoluteFilePath();
+}
+
+QString fileRecordIdentifier(const FileRecord &record)
+{
+    if (!record.archiveInternalPath.isEmpty()) {
+        const QString normalized = ArchiveExtractor::normalizeArchiveMemberPath(record.archiveInternalPath);
+        const QString archivePath = !record.originalPath.isEmpty()
+            ? QFileInfo(record.originalPath).absoluteFilePath()
+            : QFileInfo(record.archivePath.isEmpty() ? record.currentPath : record.archivePath).absoluteFilePath();
+        if (!normalized.isEmpty() && !archivePath.isEmpty()) {
+            return archivePath + QStringLiteral("::") + normalized;
+        }
+    }
+
+    const QString path = !record.originalPath.isEmpty() ? record.originalPath : record.currentPath;
+    return QFileInfo(path).absoluteFilePath();
+}
+
+}
 
 LibraryService::LibraryService()
     : m_scanner(new Scanner())
@@ -136,7 +171,22 @@ int LibraryService::persistScanResults(const QList<ScanResult> &results,
                                        int libraryId, Database *db)
 {
     int inserted = 0;
-    for (const ScanResult &sr : results) {
+    QHash<QString, int> insertedIds;
+
+    for (const FileRecord &existing : db->getAllFiles()) {
+        const QString identifier = fileRecordIdentifier(existing);
+        if (!identifier.isEmpty()) {
+            insertedIds.insert(identifier, existing.id);
+        }
+    }
+
+    QList<ScanResult> orderedResults = results;
+    std::stable_sort(orderedResults.begin(), orderedResults.end(),
+                     [](const ScanResult &left, const ScanResult &right) {
+        return static_cast<int>(!left.isPrimary) < static_cast<int>(!right.isPrimary);
+    });
+
+    for (const ScanResult &sr : orderedResults) {
         // Detect system — use internal archive path for compressed files
         const QString systemDetectPath = sr.isCompressed && !sr.archiveInternalPath.isEmpty()
             ? sr.archiveInternalPath
@@ -176,10 +226,15 @@ int LibraryService::persistScanResults(const QList<ScanResult> &results,
         rec.archiveInternalPath = sr.archiveInternalPath;
         rec.systemId           = systemId;
         rec.isPrimary          = sr.isPrimary;
+        if (!sr.parentFilePath.isEmpty()) {
+            rec.parentFileId = insertedIds.value(sr.parentFilePath);
+        }
         rec.lastModified       = sr.lastModified;
 
-        if (db->insertFile(rec) > 0) {
+        const int insertedId = db->insertFile(rec);
+        if (insertedId > 0) {
             inserted++;
+            insertedIds.insert(scanResultIdentifier(sr), insertedId);
         }
     }
     return inserted;

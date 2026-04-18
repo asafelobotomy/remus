@@ -22,6 +22,28 @@
 
 namespace Remus {
 
+namespace {
+
+bool shouldTreatAsArchive(const FileRecord &file)
+{
+    const QString archiveCandidate = file.archivePath.isEmpty() ? file.currentPath : file.archivePath;
+    const QString lower = archiveCandidate.toLower();
+
+    if (file.isCompressed || !file.archiveInternalPath.isEmpty()) {
+        return true;
+    }
+
+    for (const QString &extension : Constants::Files::ARCHIVE_EXTENSIONS) {
+        if (lower.endsWith(extension)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+}
+
 ModWorkflowService::ModWorkflowService(Database &db, PatchService &patchService)
     : m_db(db)
     , m_patchSvc(patchService)
@@ -76,7 +98,7 @@ ModInstallResult ModWorkflowService::install(const FileRecord  &baseFile,
     QString baseRomPath;
     QString tempExtractDir;
 
-    if (baseFile.isCompressed) {
+    if (shouldTreatAsArchive(baseFile)) {
         // Extract to a temp directory
         tempExtractDir = QDir::tempPath() + "/.remus_mod_"
                        + QString::number(QDateTime::currentMSecsSinceEpoch());
@@ -251,14 +273,14 @@ bool ModWorkflowService::uninstall(int modInstallationId)
     if (patchedFileId > 0) {
         FileRecord patchedFile = m_db.getFileById(patchedFileId);
         if (!patchedFile.currentPath.isEmpty() && QFile::exists(patchedFile.currentPath)) {
-            QFile::remove(patchedFile.currentPath);
+            if (!QFile::remove(patchedFile.currentPath)) {
+                qWarning() << "Failed to delete patched file from disk:" << patchedFile.currentPath;
+                return false;
+            }
         }
-        // Remove from files table
-        QSqlQuery delFile(m_db.database());
-        delFile.prepare(QStringLiteral("DELETE FROM files WHERE id = ?"));
-        delFile.addBindValue(patchedFileId);
-        if (!delFile.exec()) {
-            qWarning() << "Failed to delete patched file record:" << delFile.lastError().text();
+        if (!m_db.removeFile(patchedFileId)) {
+            qWarning() << "Failed to delete patched file record for ID:" << patchedFileId;
+            return false;
         }
     }
 

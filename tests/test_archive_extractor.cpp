@@ -73,7 +73,7 @@ private slots:
     void testExtractZip();
     void testExtract7zCreatesSubfolderAndTracksFiles();
     void testExtractRarFallsBackToSevenZip();
-    void testExtractFileZipReturnsBasenameInOutputDir();
+    void testExtractFileZipPreservesNestedRelativePath();
     void testExtractRejectsUnsafeArchiveEntries();
     void testBatchExtractCanBeCancelledAfterFirstItem();
     void testExtractUnsupported();
@@ -483,7 +483,7 @@ void ArchiveExtractorTest::testExtractRarFallsBackToSevenZip()
     QCOMPARE(extractor.lastArgs, QStringList({QStringLiteral("x"), archivePath, QStringLiteral("-o") + dir.path(), QStringLiteral("-y")}));
 }
 
-void ArchiveExtractorTest::testExtractFileZipReturnsBasenameInOutputDir()
+void ArchiveExtractorTest::testExtractFileZipPreservesNestedRelativePath()
 {
     FakeArchiveExtractor extractor;
     FakeProcessResult versionResult;
@@ -511,7 +511,8 @@ void ArchiveExtractorTest::testExtractFileZipReturnsBasenameInOutputDir()
 
     // The extractFile code verifies the file exists; create it so the check passes.
     {
-        QFile f(dir.path() + "/file.bin");
+        QVERIFY(QDir().mkpath(dir.path() + "/nested"));
+        QFile f(dir.path() + "/nested/file.bin");
         QVERIFY(f.open(QIODevice::WriteOnly));
         f.write("x");
         f.close();
@@ -522,7 +523,7 @@ void ArchiveExtractorTest::testExtractFileZipReturnsBasenameInOutputDir()
 
     QVERIFY(result.success);
     QCOMPARE(result.filesExtracted, 1);
-    QCOMPARE(result.extractedFiles.first(), dir.path() + "/file.bin");
+    QCOMPARE(result.extractedFiles.first(), dir.path() + "/nested/file.bin");
     QCOMPARE(extractor.lastArgs, QStringList({archivePath, QStringLiteral("nested/file.bin"), QStringLiteral("-d"), dir.path()}));
 }
 

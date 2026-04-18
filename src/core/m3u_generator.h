@@ -4,6 +4,7 @@
 #include <QString>
 #include <QStringList>
 #include <QMap>
+#include <QSet>
 #include "database.h"
 
 namespace Remus {
@@ -35,6 +36,7 @@ public:
      * @return Map of game title -> list of file IDs
      */
     QMap<QString, QList<int>> detectMultiDiscGames(const QString &systemName = QString());
+    QMap<QString, QList<int>> detectMultiDiscGames(const QSet<int> &fileIds);
 
     /**
      * @brief Generate M3U playlist for a game
@@ -54,6 +56,8 @@ public:
      * @return Number of playlists created
      */
     int generateAll(const QString &systemName = QString(), 
+                   const QString &outputDir = QString());
+    int generateAll(const QSet<int> &fileIds,
                    const QString &outputDir = QString());
 
     /**

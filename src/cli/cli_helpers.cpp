@@ -263,13 +263,26 @@ QString resolveCliOptionValue(const QCommandLineParser &parser,
 
 QList<FileRecord> getHashedFiles(Database &db)
 {
+    return getHashedFiles(db, {});
+}
+
+QList<FileRecord> getHashedFiles(Database &db, const QSet<int> &fileScopeIds)
+{
     const QList<FileRecord> files = db.getExistingFiles();
     QList<FileRecord> filtered;
     for (const FileRecord &f : files) {
+        if (!fileMatchesProcessScope(f, fileScopeIds)) {
+            continue;
+        }
         if (f.hashCalculated && (!f.crc32.isEmpty() || !f.md5.isEmpty() || !f.sha1.isEmpty()))
             filtered.append(f);
     }
     return filtered;
+}
+
+bool fileMatchesProcessScope(const FileRecord &file, const QSet<int> &fileScopeIds)
+{
+    return fileScopeIds.isEmpty() || fileScopeIds.contains(file.id);
 }
 
 int resolveMatchedSystemId(const FileRecord &file,

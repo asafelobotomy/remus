@@ -103,6 +103,19 @@ void DatabaseTest::testGetFilesWithoutHashes()
     QCOMPARE(noHash.first().id, fid2);
 }
 
+void DatabaseTest::testInsertFileDuplicateReturnsZero()
+{
+    Database db;
+    QVERIFY(db.initialize(":memory:"));
+
+    const int libId = db.insertLibrary("/roms", "Test");
+    const int sysId = db.getSystemId("NES");
+
+    const FileRecord first = makeRecord(libId, sysId, "mario.nes");
+    QVERIFY(db.insertFile(first) > 0);
+    QCOMPARE(db.insertFile(first), 0);
+}
+
 void DatabaseTest::testGetUnprocessedFiles()
 {
     Database db;

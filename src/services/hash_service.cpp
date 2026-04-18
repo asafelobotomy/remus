@@ -5,6 +5,7 @@
 #include "../core/archive_extractor.h"
 #include "../core/constants/files.h"
 
+#include <QDir>
 #include <QFileInfo>
 #include <QThread>
 #include <QThreadPool>
@@ -22,6 +23,36 @@ struct HashTaskResult {
     HashResult result;
     bool skipped = false;
 };
+
+QString selectExtractedMember(const QString &outputDir,
+                              const QStringList &extractedFiles,
+                              const QString &expectedMemberPath,
+                              const QString &fallbackFileName)
+{
+    const QString normalizedMember = ArchiveExtractor::normalizeArchiveMemberPath(expectedMemberPath);
+    const QString normalizedFallback = ArchiveExtractor::normalizeArchiveMemberPath(fallbackFileName);
+    const QString preferredFileName = QFileInfo(
+        !normalizedMember.isEmpty() ? normalizedMember : normalizedFallback).fileName();
+
+    for (const QString &path : extractedFiles) {
+        const QString relativePath = QDir(outputDir).relativeFilePath(path).replace('\\', '/');
+        if (!normalizedMember.isEmpty() && relativePath == normalizedMember) {
+            return path;
+        }
+    }
+
+    QString matchedByName;
+    for (const QString &path : extractedFiles) {
+        if (QFileInfo(path).fileName().compare(preferredFileName, Qt::CaseInsensitive) == 0) {
+            if (!matchedByName.isEmpty()) {
+                return QString();
+            }
+            matchedByName = path;
+        }
+    }
+
+    return matchedByName;
+}
 
 } // namespace
 
@@ -176,15 +207,17 @@ HashResult HashService::hashRecord(const FileRecord &file)
             return result;
         }
 
-        // Pick first file matching the expected extension
-        QString picked;
-        for (const QString &path : extraction.extractedFiles) {
-            if (path.endsWith(file.extension, Qt::CaseInsensitive)) {
-                picked = path;
-                break;
-            }
+        const QString picked = selectExtractedMember(
+            tempDir.path(),
+            extraction.extractedFiles,
+            internalPath,
+            file.filename);
+
+        if (picked.isEmpty()) {
+            result.error = QStringLiteral("Failed to locate extracted archive member: %1")
+                .arg(internalPath);
+            return result;
         }
-        if (picked.isEmpty()) picked = extraction.extractedFiles.first();
 
         int headerSize = Hasher::detectHeaderSize(picked, file.extension);
         return m_hasher->calculateHashes(picked, headerSize > 0, headerSize);

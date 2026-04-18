@@ -5,6 +5,7 @@
 //   1 → fatal error (caller should propagate as process exit code)
 
 #include <QCommandLineParser>
+#include <QSet>
 #include "../core/database.h"
 #include "../core/system_detector.h"
 
@@ -18,6 +19,7 @@ struct CliContext {
     bool                processRequested;
     bool                processHandled;
     int                 processSystemIdFilter;
+    QSet<int>           processFileScopeIds;
     // Preset-resolved overrides (empty = use explicit CLI values)
     QString             presetBundleFormat;
     QString             presetDiscFormat;

@@ -8,6 +8,15 @@
 
 namespace Remus {
 
+namespace {
+
+QString relativeExtractedPath(const QString &outputDir, const QString &path)
+{
+    return QDir(outputDir).relativeFilePath(path).replace('\\', '/');
+}
+
+}
+
 ArchiveExtractor::ArchiveExtractor(QObject *parent)
     : ExternalToolRunner(parent)
 {
@@ -271,19 +280,36 @@ ExtractionResult ArchiveExtractor::extractFile(const QString &archivePath,
     result.success = (processResult.exitCode == 0 && processResult.started);
     
     if (result.success) {
-        const QString expectedPath = QDir(outputDir).filePath(QFileInfo(normalizedFileName).fileName());
-        if (QFileInfo::exists(expectedPath)) {
+        const QString exactPath = QDir(outputDir).filePath(normalizedFileName);
+        const QString basenamePath = QDir(outputDir).filePath(QFileInfo(normalizedFileName).fileName());
+        QString resolvedPath;
+
+        if (QFileInfo::exists(exactPath)) {
+            resolvedPath = exactPath;
+        } else if (QFileInfo::exists(basenamePath)) {
+            resolvedPath = basenamePath;
+        } else {
+            const QStringList extractedPaths = listFiles(outputDir);
+            for (const QString &path : extractedPaths) {
+                if (relativeExtractedPath(outputDir, path) == normalizedFileName) {
+                    resolvedPath = path;
+                    break;
+                }
+            }
+        }
+
+        if (!resolvedPath.isEmpty()) {
             result.filesExtracted = 1;
-            result.extractedFiles.append(expectedPath);
-            if (!isPathWithinDirectory(outputDir, expectedPath)) {
+            result.extractedFiles.append(resolvedPath);
+            if (!isPathWithinDirectory(outputDir, resolvedPath)) {
                 result.success = false;
-                result.error = QStringLiteral("Extraction escaped output directory: ") + expectedPath;
+                result.error = QStringLiteral("Extraction escaped output directory: ") + resolvedPath;
             }
         } else {
             // 7z may exit 0 but extract nothing when the filename doesn't match;
             // mark as failed so the caller can fall back to full extraction.
             result.success = false;
-            result.error = QStringLiteral("Extracted file not found at expected path: ") + expectedPath;
+            result.error = QStringLiteral("Extracted file not found for archive member: ") + normalizedFileName;
         }
     } else {
         result.error = processResult.stdError;

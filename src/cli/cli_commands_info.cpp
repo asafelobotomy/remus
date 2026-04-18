@@ -36,13 +36,33 @@ QString scanResultIdentifier(const ScanResult &result)
     return QFileInfo(result.path).absoluteFilePath();
 }
 
-QList<int> orderedProcessSystemIds(Database &db)
+QString fileRecordIdentifier(const FileRecord &record)
+{
+    if (!record.archiveInternalPath.isEmpty()) {
+        const QString normalized = ArchiveExtractor::normalizeArchiveMemberPath(record.archiveInternalPath);
+        const QString archivePath = !record.originalPath.isEmpty()
+            ? QFileInfo(record.originalPath).absoluteFilePath()
+            : QFileInfo(record.archivePath.isEmpty() ? record.currentPath : record.archivePath).absoluteFilePath();
+        if (!normalized.isEmpty() && !archivePath.isEmpty()) {
+            return archivePath + QStringLiteral("::") + normalized;
+        }
+    }
+
+    const QString path = !record.originalPath.isEmpty() ? record.originalPath : record.currentPath;
+    return QFileInfo(path).absoluteFilePath();
+}
+
+QList<int> orderedProcessSystemIds(Database &db, const QSet<int> &fileScopeIds)
 {
     QMap<QString, int> knownSystems;
     bool hasUnknown = false;
 
     const QList<FileRecord> files = db.getExistingFiles();
     for (const FileRecord &file : files) {
+        if (!fileMatchesProcessScope(file, fileScopeIds)) {
+            continue;
+        }
+
         if (!file.isPrimary) {
             continue;
         }
@@ -161,6 +181,10 @@ int handleScanCommand(CliContext &ctx)
     const bool scanRequested = ctx.parser.isSet("scan") || ctx.processRequested;
     if (!scanRequested) return 0;
 
+    if (ctx.processRequested) {
+        ctx.processFileScopeIds.clear();
+    }
+
     const QString scanPath = ctx.parser.isSet("scan")
         ? ctx.parser.value("scan")
         : ctx.parser.value("process");
@@ -225,10 +249,17 @@ int handleScanCommand(CliContext &ctx)
     int skippedCount = 0;
     QHash<QString, int> insertedIds;
 
+    for (const FileRecord &existing : ctx.db.getAllFiles()) {
+        const QString identifier = fileRecordIdentifier(existing);
+        if (!identifier.isEmpty()) {
+            insertedIds.insert(identifier, existing.id);
+        }
+    }
+
     QList<ScanResult> orderedResults = results;
     std::stable_sort(orderedResults.begin(), orderedResults.end(),
                      [](const ScanResult &left, const ScanResult &right) {
-        return left.isPrimary && !right.isPrimary;
+        return static_cast<int>(!left.isPrimary) < static_cast<int>(!right.isPrimary);
     });
 
     for (const ScanResult &result : orderedResults) {
@@ -279,6 +310,9 @@ int handleScanCommand(CliContext &ctx)
         if (insertedId > 0) {
             insertedCount++;
             insertedIds.insert(scanResultIdentifier(result), insertedId);
+            if (ctx.processRequested && result.isPrimary) {
+                ctx.processFileScopeIds.insert(insertedId);
+            }
         } else {
             skippedCount++;
         }
@@ -290,8 +324,14 @@ int handleScanCommand(CliContext &ctx)
     qInfo() << "  - Skipped:" << skippedCount << "files";
 
     if (ctx.processRequested) {
+        if (ctx.processFileScopeIds.isEmpty()) {
+            qInfo() << "No new primary files found to process";
+            ctx.processHandled = true;
+            return 0;
+        }
+
         const bool hasOutput = ctx.parser.isSet("process-output") || ctx.parser.isSet("bundle");
-        const QList<int> systemIds = orderedProcessSystemIds(ctx.db);
+        const QList<int> systemIds = orderedProcessSystemIds(ctx.db, ctx.processFileScopeIds);
         Hasher hasher;
 
         for (int systemId : systemIds) {
@@ -301,7 +341,8 @@ int handleScanCommand(CliContext &ctx)
             const QList<FileRecord> filesToHash = ctx.db.getFilesWithoutHashes();
             int totalForSystem = 0;
             for (const FileRecord &file : filesToHash) {
-                if (fileMatchesSystemFilter(file, systemId)) {
+                if (fileMatchesProcessScope(file, ctx.processFileScopeIds)
+                    && fileMatchesSystemFilter(file, systemId)) {
                     totalForSystem++;
                 }
             }
@@ -309,7 +350,8 @@ int handleScanCommand(CliContext &ctx)
             qInfo() << "Hashing" << totalForSystem << "file(s)...";
             int hashedCount = 0;
             for (const FileRecord &file : filesToHash) {
-                if (!fileMatchesSystemFilter(file, systemId)) continue;
+                if (!fileMatchesProcessScope(file, ctx.processFileScopeIds)
+                    || !fileMatchesSystemFilter(file, systemId)) continue;
 
                 HashResult hashResult = hashFileRecord(file, hasher);
                 if (hashResult.success) {

@@ -196,6 +196,13 @@ public:
      * @return True if successful
      */
     bool updateFilePath(int fileId, const QString &newPath);
+
+    /**
+     * @brief Update storage-related file fields after moving, extracting, or rebundling
+     * @param record File record containing the new storage state
+     * @return True if successful
+     */
+    bool updateFileStorageState(const FileRecord &record);
     
     /**
      * @brief Update file's original path (used when file is extracted from archive)

@@ -29,14 +29,33 @@ protected:
     static FileRecord makeFileRecord(int id, const QString &path, const QString &filename = {})
     {
         FileRecord r;
+        const QString resolvedFilename = filename.isEmpty() ? QFileInfo(path).fileName() : filename;
+        const QString suffix = QFileInfo(resolvedFilename).suffix();
         r.id           = id;
+        r.originalPath = path;
         r.currentPath  = path;
-        r.filename     = filename.isEmpty() ? QFileInfo(path).fileName() : filename;
+        r.filename     = resolvedFilename;
+        r.extension    = suffix.isEmpty() ? QString() : "." + suffix;
+        r.fileSize     = QFileInfo(path).exists() ? QFileInfo(path).size() : 0;
         r.isCompressed = false;
         r.crc32        = "AABBCCDD";
         r.md5          = "abc123";
         r.sha1         = "def456";
         return r;
+    }
+
+    static int insertTestFile(Database &db, FileRecord &record)
+    {
+        const QString anchorPath = record.currentPath.isEmpty() ? record.originalPath : record.currentPath;
+        record.libraryId = db.insertLibrary(QFileInfo(anchorPath).absolutePath(), "Test");
+        if (record.originalPath.isEmpty()) {
+            record.originalPath = record.currentPath;
+        }
+        if (record.fileSize == 0 && QFileInfo(record.currentPath).exists()) {
+            record.fileSize = QFileInfo(record.currentPath).size();
+        }
+        record.id = db.insertFile(record);
+        return record.id;
     }
 
     static Database::MatchResult makeMatch(const QString &title = "Test Game")
@@ -105,6 +124,9 @@ private slots:
     // ── bundle() real archives ──
     void testBundle_realZipContainsMarkerAndArtworkSubdir();
     void testBundle_realSevenZipContainsMarkerAndArtworkSubdir();
+    void testBundle_updatesStoredFileStateToArchivePayload();
+    void testBundleStaged_updatesStoredFileStateAndReturnsOutputPath();
+    void testBundle_binPrimaryWithCueChildKeepsPrimaryPayloadWhenBundlingOriginal();
     void testBundle_compressedNestedPayloadIsFlattenedToArchiveRoot();
     void testBundle_markerUsesStoredPercentConfidence();
     void testBundle_skipsWhenCurrentCompressedPathAlreadyBundled();

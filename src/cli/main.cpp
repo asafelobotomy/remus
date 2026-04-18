@@ -269,6 +269,7 @@ int main(int argc, char *argv[])
                    /*processRequested*/ parser.isSet("process"),
                    /*processHandled*/   false,
                    /*processSystemIdFilter*/ -1,
+                   /*processFileScopeIds*/ {},
                    /*presetBundleFormat*/  {},
                    /*presetDiscFormat*/    {},
                    /*presetFolderNaming*/  {},

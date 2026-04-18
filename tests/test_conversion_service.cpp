@@ -7,9 +7,13 @@
  */
 
 #include <QtTest/QtTest>
+#include <QDir>
 #include <QTemporaryDir>
 #include <QFile>
 
+#include "../src/core/archive_creator.h"
+#include "../src/core/archive_extractor.h"
+#include "../src/core/database.h"
 #include "../src/services/conversion_service.h"
 
 using namespace Remus;
@@ -63,6 +67,14 @@ private slots:
         ConversionService svc;
         auto result = svc.convertToCHD("/nonexistent/game.cue");
         QVERIFY(!result.success);
+    }
+
+    void testConvertToChdMissingImgUsesSupportedPath()
+    {
+        ConversionService svc;
+        auto result = svc.convertToCHD("/nonexistent/game.img");
+        QVERIFY(!result.success);
+        QVERIFY(result.error.contains("File not found"));
     }
 
     void testExtractCHDMissingFile()
@@ -161,6 +173,66 @@ private slots:
 
         auto result = svc.extractArchive("/nonexistent/archive.zip", tmp.path());
         QVERIFY(!result.success);
+    }
+
+    void testExtractArchiveWithDbUpdatePreservesNestedMemberPath()
+    {
+        ArchiveCreator creator;
+        ArchiveExtractor extractor;
+        if (!creator.canCompress(ArchiveFormat::ZIP)) {
+            QSKIP("zip tool not available");
+        }
+        if (!extractor.canExtract(ArchiveFormat::ZIP)) {
+            QSKIP("unzip tool not available");
+        }
+
+        QTemporaryDir tmp;
+        QVERIFY(tmp.isValid());
+
+        const QString sourceDir = tmp.filePath("source");
+        QVERIFY(QDir().mkpath(sourceDir + "/nested"));
+
+        QFile sourceFile(sourceDir + "/nested/game.bin");
+        QVERIFY(sourceFile.open(QIODevice::WriteOnly));
+        QVERIFY(sourceFile.write("BINPAYLOAD") == 10);
+        sourceFile.close();
+
+        const QString archivePath = tmp.filePath("games.zip");
+        const CompressionResult compressed = creator.compressDirectoryContents(
+            sourceDir, archivePath, ArchiveFormat::ZIP);
+        QVERIFY2(compressed.success, qPrintable(compressed.error));
+
+        Database db;
+        QVERIFY(db.initialize(tmp.filePath("test.db")));
+        const int libraryId = db.insertLibrary(tmp.path(), "Test");
+        QVERIFY(libraryId > 0);
+
+        FileRecord rec;
+        rec.libraryId = libraryId;
+        rec.originalPath = archivePath;
+        rec.currentPath = archivePath;
+        rec.filename = "game.bin";
+        rec.extension = ".bin";
+        rec.isCompressed = true;
+        rec.archivePath = archivePath;
+        rec.archiveInternalPath = "nested/game.bin";
+        rec.id = db.insertFile(rec);
+        QVERIFY(rec.id > 0);
+
+        ConversionService svc;
+        const QString outputDir = tmp.filePath("extracted");
+        const ExtractionResult result = svc.extractArchiveWithDbUpdate(archivePath, outputDir, &db);
+        QVERIFY2(result.success, qPrintable(result.error));
+
+        const FileRecord extracted = db.getFileById(rec.id);
+        QCOMPARE(extracted.currentPath, result.outputDir + "/nested/game.bin");
+        QVERIFY(QFile::exists(extracted.currentPath));
+        QCOMPARE(extracted.filename, QStringLiteral("game.bin"));
+        QCOMPARE(extracted.extension, QStringLiteral(".bin"));
+        QCOMPARE(extracted.fileSize, static_cast<qint64>(10));
+        QVERIFY(!extracted.isCompressed);
+        QVERIFY(extracted.archivePath.isEmpty());
+        QVERIFY(extracted.archiveInternalPath.isEmpty());
     }
 
     void testCompressToArchiveNoFiles()

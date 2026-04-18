@@ -159,6 +159,7 @@ int handleBundleCommand(CliContext &ctx)
     int bundled = 0, skipped = 0, failed = 0;
 
     for (const FileRecord &file : files) {
+        if (!fileMatchesProcessScope(file, ctx.processFileScopeIds)) continue;
         if (!matches.contains(file.id)) continue;
 
         const Database::MatchResult &match = matches.value(file.id);
@@ -362,7 +363,9 @@ int handleGenerateM3uCommand(CliContext &ctx)
     QObject::connect(&generator, &M3UGenerator::errorOccurred,
         [](const QString &error) { qWarning() << "✗ Error:" << error; });
 
-    int count = generator.generateAll(QString(), m3uDir);
+    int count = ctx.processFileScopeIds.isEmpty()
+        ? generator.generateAll(QString(), m3uDir)
+        : generator.generateAll(ctx.processFileScopeIds, m3uDir);
     qInfo() << "";
     qInfo() << "Generated" << count << "M3U playlists";
     return 0;

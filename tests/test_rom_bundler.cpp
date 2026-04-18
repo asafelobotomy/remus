@@ -46,7 +46,7 @@ void RomBundlerTest::testBundle_dryRun_returnsSuccessWithoutCreatingFile()
 
     // Register the file in DB so markFileProcessed won't crash
     FileRecord rec = makeFileRecord(0, romPath, "game.nes");
-    const int id = db.insertFile(rec);
+    const int id = insertTestFile(db, rec);
     QVERIFY(id > 0);
     rec.id = id;
 
@@ -83,7 +83,7 @@ void RomBundlerTest::testBundle_dryRun_outputPathContainsBaseName()
     QVERIFY(db.initialize(tmp.filePath("test.db")));
 
     FileRecord rec = makeFileRecord(0, romPath);
-    rec.id = db.insertFile(rec);
+    rec.id = insertTestFile(db, rec);
     QVERIFY(rec.id > 0);
 
     RomBundler bundler(db);
@@ -130,7 +130,7 @@ void RomBundlerTest::testBundle_realZipContainsMarkerAndArtworkSubdir()
     QVERIFY(db.initialize(tmp.filePath("test.db")));
 
     FileRecord rec = makeFileRecord(0, romPath, "game.nes");
-    rec.id = db.insertFile(rec);
+    rec.id = insertTestFile(db, rec);
     QVERIFY(rec.id > 0);
 
     RomBundler bundler(db);
@@ -175,7 +175,7 @@ void RomBundlerTest::testBundle_realSevenZipContainsMarkerAndArtworkSubdir()
     QVERIFY(db.initialize(tmp.filePath("test.db")));
 
     FileRecord rec = makeFileRecord(0, romPath, "game.nes");
-    rec.id = db.insertFile(rec);
+    rec.id = insertTestFile(db, rec);
     QVERIFY(rec.id > 0);
 
     RomBundler bundler(db);
@@ -194,6 +194,96 @@ void RomBundlerTest::testBundle_realSevenZipContainsMarkerAndArtworkSubdir()
     const ArchiveInfo info = extractor.getArchiveInfo(result.outputPath);
     QVERIFY(info.contents.contains(".remus.md"));
     QVERIFY(info.contents.contains("artwork/boxfront.jpg"));
+}
+
+void RomBundlerTest::testBundle_updatesStoredFileStateToArchivePayload()
+{
+    ArchiveCreator creator;
+    ArchiveExtractor extractor;
+    if (!creator.canCompress(ArchiveFormat::ZIP)) {
+        QSKIP("zip tool not available");
+    }
+    if (!extractor.canExtract(ArchiveFormat::ZIP)) {
+        QSKIP("unzip tool not available");
+    }
+
+    QTemporaryDir tmp;
+    QVERIFY(tmp.isValid());
+
+    const QString romPath = tmp.filePath("game.nes");
+    QVERIFY(writeFile(romPath, "ROMPAYLOAD"));
+
+    Database db;
+    QVERIFY(db.initialize(tmp.filePath("test.db")));
+
+    FileRecord rec = makeFileRecord(0, romPath, "game.nes");
+    rec.id = insertTestFile(db, rec);
+    QVERIFY(rec.id > 0);
+
+    RomBundler bundler(db);
+
+    RomBundler::BundleConfig cfg;
+    cfg.includeBoxArt = false;
+    cfg.outputFormat = ArchiveFormat::ZIP;
+
+    const QString destDir = tmp.filePath("bundles");
+    RomBundler::BundleResult result = bundler.bundle(rec, makeMatch(), makeMetadata(), destDir, cfg);
+    QVERIFY2(result.success, qPrintable(result.error));
+
+    const FileRecord bundled = db.getFileById(rec.id);
+    QVERIFY(bundled.isCompressed);
+    QCOMPARE(bundled.currentPath, result.outputPath);
+    QCOMPARE(bundled.archivePath, result.outputPath);
+    QCOMPARE(bundled.archiveInternalPath, QStringLiteral("game.nes"));
+    QCOMPARE(bundled.filename, QStringLiteral("game.nes"));
+    QCOMPARE(bundled.extension, QStringLiteral(".nes"));
+    QCOMPARE(bundled.fileSize, static_cast<qint64>(10));
+}
+
+void RomBundlerTest::testBundleStaged_updatesStoredFileStateAndReturnsOutputPath()
+{
+    ArchiveCreator creator;
+    ArchiveExtractor extractor;
+    if (!creator.canCompress(ArchiveFormat::ZIP)) {
+        QSKIP("zip tool not available");
+    }
+    if (!extractor.canExtract(ArchiveFormat::ZIP)) {
+        QSKIP("unzip tool not available");
+    }
+
+    QTemporaryDir tmp;
+    QVERIFY(tmp.isValid());
+
+    const QString romPath = tmp.filePath("patched.nes");
+    QVERIFY(writeFile(romPath, "ROMPAYLOAD"));
+
+    Database db;
+    QVERIFY(db.initialize(tmp.filePath("test.db")));
+
+    FileRecord rec = makeFileRecord(0, romPath, "patched.nes");
+    rec.id = insertTestFile(db, rec);
+    QVERIFY(rec.id > 0);
+
+    RomBundler bundler(db);
+
+    RomBundler::BundleConfig cfg;
+    cfg.includeBoxArt = false;
+    cfg.outputFormat = ArchiveFormat::ZIP;
+
+    const QString destDir = tmp.filePath("bundles");
+    RomBundler::BundleResult result = bundler.bundleStaged(rec, makeMatch(), makeMetadata(), destDir, cfg);
+    QVERIFY2(result.success, qPrintable(result.error));
+    QVERIFY(!result.outputPath.isEmpty());
+    QVERIFY(QFile::exists(result.outputPath));
+
+    const FileRecord bundled = db.getFileById(rec.id);
+    QVERIFY(bundled.isCompressed);
+    QCOMPARE(bundled.currentPath, result.outputPath);
+    QCOMPARE(bundled.archivePath, result.outputPath);
+    QCOMPARE(bundled.archiveInternalPath, QStringLiteral("patched.nes"));
+    QCOMPARE(bundled.filename, QStringLiteral("patched.nes"));
+    QCOMPARE(bundled.extension, QStringLiteral(".nes"));
+    QCOMPARE(bundled.fileSize, static_cast<qint64>(10));
 }
 
 void RomBundlerTest::testBundle_compressedNestedPayloadIsFlattenedToArchiveRoot()
@@ -229,7 +319,7 @@ void RomBundlerTest::testBundle_compressedNestedPayloadIsFlattenedToArchiveRoot(
     rec.archivePath = sourceArchive;
     rec.archiveInternalPath = "Nested Game/game.nes";
     rec.extension = ".nes";
-    rec.id = db.insertFile(rec);
+    rec.id = insertTestFile(db, rec);
     QVERIFY(rec.id > 0);
 
     RomBundler bundler(db);
@@ -280,7 +370,7 @@ void RomBundlerTest::testBundle_markerUsesStoredPercentConfidence()
     QVERIFY(db.initialize(tmp.filePath("test.db")));
 
     FileRecord rec = makeFileRecord(0, romPath, "game.nes");
-    rec.id = db.insertFile(rec);
+    rec.id = insertTestFile(db, rec);
     QVERIFY(rec.id > 0);
 
     RomBundler bundler(db);
@@ -333,7 +423,7 @@ void RomBundlerTest::testBundle_skipsWhenCurrentCompressedPathAlreadyBundled()
     QVERIFY(db.initialize(tmp.filePath("test.db")));
 
     FileRecord original = makeFileRecord(0, romPath, "game.md");
-    original.id = db.insertFile(original);
+    original.id = insertTestFile(db, original);
     QVERIFY(original.id > 0);
 
     RomBundler bundler(db);
