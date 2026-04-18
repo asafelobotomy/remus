@@ -151,13 +151,14 @@ int handleExportCommand(CliContext &ctx)
         QTextStream out(&f);
         out << "<gameList>\n";
         for (const auto &row : rows) {
+            const QString name = (!row.match.gameTitle.isEmpty() ? row.match.gameTitle : row.file.filename).toHtmlEscaped();
             out << "  <game>\n";
-            out << "    <path>"    << row.file.currentPath << "</path>\n";
-            out << "    <name>"    << (!row.match.gameTitle.isEmpty() ? row.match.gameTitle : row.file.filename) << "</name>\n";
-            out << "    <desc>"    << row.match.description << "</desc>\n";
-            out << "    <genre>"   << row.match.genre << "</genre>\n";
+            out << "    <path>"    << row.file.currentPath.toHtmlEscaped() << "</path>\n";
+            out << "    <name>"    << name << "</name>\n";
+            out << "    <desc>"    << row.match.description.toHtmlEscaped() << "</desc>\n";
+            out << "    <genre>"   << row.match.genre.toHtmlEscaped() << "</genre>\n";
             out << "    <players>" << row.match.players << "</players>\n";
-            out << "    <region>"  << row.match.region << "</region>\n";
+            out << "    <region>"  << row.match.region.toHtmlEscaped() << "</region>\n";
             out << "  </game>\n";
         }
         out << "</gameList>\n";
@@ -172,11 +173,12 @@ int handleExportCommand(CliContext &ctx)
         QTextStream out(&f);
         out << "<LaunchBox>\n";
         for (const auto &row : rows) {
+            const QString title = (!row.match.gameTitle.isEmpty() ? row.match.gameTitle : row.file.filename).toHtmlEscaped();
             out << "  <Game>\n";
-            out << "    <Title>"           << (!row.match.gameTitle.isEmpty() ? row.match.gameTitle : row.file.filename) << "</Title>\n";
-            out << "    <ApplicationPath>" << row.file.currentPath << "</ApplicationPath>\n";
-            out << "    <Region>"          << row.match.region << "</Region>\n";
-            out << "    <Genre>"           << row.match.genre << "</Genre>\n";
+            out << "    <Title>"           << title << "</Title>\n";
+            out << "    <ApplicationPath>" << row.file.currentPath.toHtmlEscaped() << "</ApplicationPath>\n";
+            out << "    <Region>"          << row.match.region.toHtmlEscaped() << "</Region>\n";
+            out << "    <Genre>"           << row.match.genre.toHtmlEscaped() << "</Genre>\n";
             out << "  </Game>\n";
         }
         out << "</LaunchBox>\n";
@@ -189,13 +191,21 @@ int handleExportCommand(CliContext &ctx)
         }
         QFile f(outputPath); if (!openFile(f)) return 1;
         QTextStream out(&f);
+        // RFC 4180: wrap fields containing commas, double-quotes, or newlines in double-quotes;
+        // escape embedded double-quotes by doubling them.
+        const auto csvField = [](const QString &s) -> QString {
+            if (s.contains(QLatin1Char(',')) || s.contains(QLatin1Char('"')) || s.contains(QLatin1Char('\n'))) {
+                return QLatin1Char('"') + QString(s).replace(QLatin1Char('"'), QStringLiteral("\"\"")) + QLatin1Char('"');
+            }
+            return s;
+        };
         out << "file_id,title,system,path,region,confidence\n";
         for (const auto &row : rows) {
-            QString title = row.match.gameTitle;
-            title.replace(',', ' ');
-            out << row.file.id << "," << title << ","
-                << ctx.db.getSystemDisplayName(row.file.systemId) << ","
-                << row.file.currentPath << "," << row.match.region << ","
+            out << row.file.id << ","
+                << csvField(!row.match.gameTitle.isEmpty() ? row.match.gameTitle : row.file.filename) << ","
+                << csvField(ctx.db.getSystemDisplayName(row.file.systemId)) << ","
+                << csvField(row.file.currentPath) << ","
+                << csvField(row.match.region) << ","
                 << row.match.confidence << "\n";
         }
         qInfo() << "✓ CSV exported to" << outputPath;
