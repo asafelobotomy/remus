@@ -143,6 +143,91 @@ QString resolveSystemNameForDat(Database &db,
     return normalize(!headerName.isEmpty() ? headerName : fallbackName);
 }
 
+void printVerificationSummary(const VerificationSummary &summary)
+{
+    qInfo() << "=== Verification Results ===";
+    qInfo() << QString("Total files: %1").arg(summary.totalFiles);
+    qInfo() << QString("✓ Verified: %1").arg(summary.verified);
+    qInfo() << QString("⚠ Mismatched: %1").arg(summary.mismatched);
+    qInfo() << QString("✗ Not in DAT: %1").arg(summary.notInDat);
+    qInfo() << QString("? No hash: %1").arg(summary.noHash);
+    qInfo() << "";
+}
+
+void printVerificationDetails(const QList<VerificationResult> &results)
+{
+    if (results.isEmpty()) {
+        return;
+    }
+
+    qInfo() << "Detailed Results:";
+    qInfo() << "";
+
+    int shown = 0;
+    for (const VerificationResult &result : results) {
+        if (result.status == VerificationStatus::Verified) {
+            qInfo() << "✓" << result.filename << "- VERIFIED";
+            qInfo() << "  Title:" << result.datDescription;
+        } else if (result.status == VerificationStatus::Mismatch) {
+            qWarning() << "✗" << result.filename << "- HASH MISMATCH";
+            qWarning() << "  Expected:" << result.datHash;
+            qWarning() << "  Got:     " << result.fileHash;
+        } else if (result.status == VerificationStatus::NotInDat) {
+            qInfo() << "?" << result.filename << "- NOT IN DAT";
+        } else if (result.status == VerificationStatus::HashMissing) {
+            qInfo() << "?" << result.filename << "- NO HASH (calculate with --hash)";
+        }
+
+        if (++shown >= 50) {
+            qInfo() << "";
+            qInfo() << "... and" << (results.size() - shown) << "more results";
+            break;
+        }
+    }
+}
+
+int reportVerificationResults(CliContext &ctx,
+                              VerificationEngine &verifier,
+                              const QString &systemName,
+                              bool generateReport)
+{
+    const QList<VerificationResult> results = verifier.verifyLibrary(systemName);
+    const VerificationSummary summary = verifier.getLastSummary();
+
+    printVerificationSummary(summary);
+    printVerificationDetails(results);
+
+    if (generateReport && ctx.parser.isSet("report-file")) {
+        const QString reportPath = ctx.parser.value("report-file");
+        if (verifier.exportReport(results, reportPath, "csv")) {
+            qInfo() << "";
+            qInfo() << "✓ CSV report saved to:" << reportPath;
+        }
+    }
+
+    return 0;
+}
+
+bool importVerificationDat(CliContext &ctx,
+                           VerificationEngine &verifier,
+                           const QString &datFile,
+                           QString &systemName)
+{
+    const QFileInfo datInfo(datFile);
+    if (isClrMameProFormat(datFile)) {
+        const DatParseResult parsed = parseClrMameProAsDat(datFile);
+        systemName = resolveSystemNameForDat(ctx.db, datFile, parsed.header.name,
+                                             datInfo.completeBaseName());
+        return verifier.importDat(parsed, systemName) > 0;
+    }
+
+    DatParser parser;
+    const DatParseResult parsed = parser.parse(datFile);
+    systemName = resolveSystemNameForDat(ctx.db, datFile, parsed.header.name,
+                                         datInfo.completeBaseName());
+    return verifier.importDat(parsed, systemName) > 0;
+}
+
 } // anonymous namespace
 
 int handleChecksumVerifyCommand(CliContext &ctx)
@@ -209,129 +294,17 @@ int handleVerifyCommand(CliContext &ctx)
 
     VerificationEngine verifier(&ctx.db);
 
-    QString systemName = ctx.detector.detectSystem("", datFile);
-    if (systemName.isEmpty()) systemName = datInfo.completeBaseName();
-
-    // Resolve DAT canonical name (e.g., "Sega - Mega Drive - Genesis") to internal name ("Genesis")
-    systemName = Remus::SystemResolver::resolveSystemName(systemName);
-
-
-    int importCount = 0;
-    QString parsedHeaderName;
-    if (isClrMameProFormat(datFile)) {
-        DatParseResult parsed = parseClrMameProAsDat(datFile);
-        parsedHeaderName = parsed.header.name;
-        const QString systemName = resolveSystemNameForDat(ctx.db, datFile, parsedHeaderName,
-                                                           datInfo.completeBaseName());
-        importCount = verifier.importDat(parsed, systemName);
-        if (importCount > 0) {
-            qInfo() << "✓ DAT file loaded successfully";
-            qInfo() << "  System:" << systemName;
-            qInfo() << "";
-
-            QList<VerificationResult> results = verifier.verifyLibrary(systemName);
-            VerificationSummary summary        = verifier.getLastSummary();
-
-            qInfo() << "=== Verification Results ===";
-            qInfo() << QString("Total files: %1").arg(summary.totalFiles);
-            qInfo() << QString("✓ Verified: %1").arg(summary.verified);
-            qInfo() << QString("⚠ Mismatched: %1").arg(summary.mismatched);
-            qInfo() << QString("✗ Not in DAT: %1").arg(summary.notInDat);
-            qInfo() << QString("? No hash: %1").arg(summary.noHash);
-            qInfo() << "";
-
-            if (!results.isEmpty()) {
-                qInfo() << "Detailed Results:";
-                qInfo() << "";
-                int shown = 0;
-                for (const VerificationResult &r : results) {
-                    if      (r.status == VerificationStatus::Verified)    {
-                        qInfo() << "✓" << r.filename << "- VERIFIED";
-                        qInfo() << "  Title:" << r.datDescription;
-                    } else if (r.status == VerificationStatus::Mismatch) {
-                        qWarning() << "✗" << r.filename << "- HASH MISMATCH";
-                        qWarning() << "  Expected:" << r.datHash;
-                        qWarning() << "  Got:     " << r.fileHash;
-                    } else if (r.status == VerificationStatus::NotInDat) {
-                        qInfo() << "?" << r.filename << "- NOT IN DAT";
-                    } else if (r.status == VerificationStatus::HashMissing) {
-                        qInfo() << "?" << r.filename << "- NO HASH (calculate with --hash)";
-                    }
-                    if (++shown >= 50) {
-                        qInfo() << "";
-                        qInfo() << "... and" << (results.size() - shown) << "more results";
-                        break;
-                    }
-                }
-            }
-
-            if (generateReport && ctx.parser.isSet("report-file")) {
-                const QString reportPath = ctx.parser.value("report-file");
-                if (verifier.exportReport(results, reportPath, "csv")) {
-                    qInfo() << "";
-                    qInfo() << "✓ CSV report saved to:" << reportPath;
-                }
-            }
-            return 0;
-        }
-    } else {
-        const QString systemName = resolveSystemNameForDat(ctx.db, datFile, QString(),
-                                                           datInfo.completeBaseName());
-        importCount = verifier.importDat(datFile, systemName);
-        if (importCount <= 0) {
-            qCritical() << "✗ Failed to import DAT file";
-            return 1;
-        }
-
-        qInfo() << "✓ DAT file loaded successfully";
-        qInfo() << "  System:" << systemName;
-        qInfo() << "";
-
-        QList<VerificationResult> results = verifier.verifyLibrary(systemName);
-        VerificationSummary summary        = verifier.getLastSummary();
-
-        qInfo() << "=== Verification Results ===";
-        qInfo() << QString("Total files: %1").arg(summary.totalFiles);
-        qInfo() << QString("✓ Verified: %1").arg(summary.verified);
-        qInfo() << QString("⚠ Mismatched: %1").arg(summary.mismatched);
-        qInfo() << QString("✗ Not in DAT: %1").arg(summary.notInDat);
-        qInfo() << QString("? No hash: %1").arg(summary.noHash);
-        qInfo() << "";
-
-        if (!results.isEmpty()) {
-            qInfo() << "Detailed Results:";
-            qInfo() << "";
-            int shown = 0;
-            for (const VerificationResult &r : results) {
-                if      (r.status == VerificationStatus::Verified)    {
-                    qInfo() << "✓" << r.filename << "- VERIFIED";
-                    qInfo() << "  Title:" << r.datDescription;
-                } else if (r.status == VerificationStatus::Mismatch) {
-                    qWarning() << "✗" << r.filename << "- HASH MISMATCH";
-                    qWarning() << "  Expected:" << r.datHash;
-                    qWarning() << "  Got:     " << r.fileHash;
-                } else if (r.status == VerificationStatus::NotInDat) {
-                    qInfo() << "?" << r.filename << "- NOT IN DAT";
-                } else if (r.status == VerificationStatus::HashMissing) {
-                    qInfo() << "?" << r.filename << "- NO HASH (calculate with --hash)";
-                }
-                if (++shown >= 50) {
-                    qInfo() << "";
-                    qInfo() << "... and" << (results.size() - shown) << "more results";
-                    break;
-                }
-            }
-        }
-
-        if (generateReport && ctx.parser.isSet("report-file")) {
-            const QString reportPath = ctx.parser.value("report-file");
-            if (verifier.exportReport(results, reportPath, "csv")) {
-                qInfo() << "";
-                qInfo() << "✓ CSV report saved to:" << reportPath;
-            }
-        }
-        return 0;
+    QString systemName;
+    if (!importVerificationDat(ctx, verifier, datFile, systemName)) {
+        qCritical() << "✗ Failed to import DAT file";
+        return 1;
     }
+
+    qInfo() << "✓ DAT file loaded successfully";
+    qInfo() << "  System:" << systemName;
+    qInfo() << "";
+
+    return reportVerificationResults(ctx, verifier, systemName, generateReport);
 
     qCritical() << "✗ Failed to import DAT file";
     return 1;

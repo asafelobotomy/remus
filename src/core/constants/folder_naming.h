@@ -179,7 +179,10 @@ inline QString folderNameForSystemId(int systemId, Scheme scheme)
         return QStringLiteral("gamegear");
 
     case ID_SEGA_CD:
-        return QStringLiteral("segacd");
+        switch (scheme) {
+        case Scheme::Batocera: return QStringLiteral("megacd");
+        default:               return QStringLiteral("segacd");
+        }
 
     case ID_32X:
         switch (scheme) {
@@ -240,6 +243,10 @@ inline QString folderNameForSystemId(int systemId, Scheme scheme)
     case ID_SUPERGRAFX:
         return QStringLiteral("supergrafx");
 
+    // ── 3DO ─────────────────────────────────────────────
+    case ID_3DO:
+        return QStringLiteral("3do");
+
     // ── SNK ─────────────────────────────────────────────
     case ID_NEO_GEO:
         switch (scheme) {
@@ -247,6 +254,9 @@ inline QString folderNameForSystemId(int systemId, Scheme scheme)
         case Scheme::RomM:     return QStringLiteral("neogeoaes");
         default:               return QStringLiteral("neogeo");
         }
+
+    case ID_NEO_GEO_CD:
+        return QStringLiteral("neogeocd");
 
     case ID_NGP:
         switch (scheme) {

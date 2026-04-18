@@ -68,6 +68,7 @@ public:
      * @param md5 Optional MD5 hash
      * @param sha1 Optional SHA1 hash
      * @param serial Optional disc serial (e.g., from IP.BIN header)
+    * @param requireArtwork Continue fallback until boxArtUrl is populated
      * @return GameMetadata from first successful provider
      */
     GameMetadata searchWithFallback(const QString &hash,
@@ -76,7 +77,8 @@ public:
                                     const QString &crc32 = QString(),
                                     const QString &md5 = QString(),
                                     const QString &sha1 = QString(),
-                                    const QString &serial = QString());
+                             const QString &serial = QString(),
+                             bool requireArtwork = false);
     
     /**
      * @brief Get list of all search results from all providers

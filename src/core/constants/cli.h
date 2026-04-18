@@ -27,8 +27,8 @@ inline const QString PROVIDER = QStringLiteral("provider");
 namespace Defaults {
 inline constexpr const char *PROVIDER = "auto";
 inline constexpr const char *CHD_CODEC = "auto";
-inline constexpr const char *BUNDLE_FORMAT = "zip";
-inline constexpr const char *BUNDLE_DISC_FORMAT = "original";
+inline constexpr const char *BUNDLE_FORMAT = "7z";
+inline constexpr const char *BUNDLE_DISC_FORMAT = "chd";
 inline constexpr const char *PATCH_FORMAT = "bps";
 inline const QString EXPORT_FORMAT = Exports::Formats::CSV;
 }

@@ -25,6 +25,10 @@ struct CliContext {
     QString             presetDiscFormat;
     QString             presetFolderNaming;
     QString             presetDisplayName;
+    /// Persistent artwork cache dir for the process pipeline.
+    /// Pre-populated during the enrich phase; the bundle phase checks here first
+    /// to avoid duplicate provider round-trips across per-system batches.
+    QString             processArtworkCacheDir;
 };
 
 // ── Info / inspection ──────────────────────────────────────────────────────────

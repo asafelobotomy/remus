@@ -43,10 +43,11 @@ int handleArtworkCommand(CliContext &ctx)
 
     for (const FileRecord &file : getHashedFiles(ctx.db)) {
         const QString displayName = getMatchingDisplayName(file);
+        const QString systemName = getProviderLookupSystemName(file);
         qInfo() << "Processing:" << displayName;
         GameMetadata metadata = orchestrator->searchWithFallback(
-            selectBestHash(file), displayName, "",
-            file.crc32, file.md5, file.sha1);
+            selectBestHash(file), displayName, systemName,
+            file.crc32, file.md5, file.sha1, QString(), true);
 
         if (metadata.boxArtUrl.isEmpty()) {
             qInfo() << "  ✗ No box art URL";
@@ -167,6 +168,7 @@ int handleBundleCommand(CliContext &ctx)
         if (!fileMatchesSystemFilter(file, ctx.processSystemIdFilter, &match)) continue;
 
         const int bundledSystemId = resolveMatchedSystemId(file, &match);
+        const QString systemName = getProviderLookupSystemName(file, &match);
 
         // Build GameMetadata from the DB-cached match — no provider round-trip
         GameMetadata metadata;
@@ -183,7 +185,16 @@ int handleBundleCommand(CliContext &ctx)
 
         // Resolve artwork path for this specific file
         QString artworkPath;
-        if (!artworkDir.isEmpty()) {
+        // 1. Check process-run artwork cache (populated by earlier system batches;
+        //    avoids duplicate provider round-trips within a single --process run)
+        if (artworkPath.isEmpty() && !ctx.processArtworkCacheDir.isEmpty()) {
+            const QString cached = ctx.processArtworkCacheDir + "/" + QString::number(file.id) + ".jpg";
+            if (QFile::exists(cached))
+                artworkPath = cached;
+        }
+        // 2. Check explicit --bundle-art-dir
+        if (!artworkPath.isEmpty()) {
+        } else if (!artworkDir.isEmpty()) {
             const QString candidate = artworkDir + "/" +
                 QFileInfo(file.filename).completeBaseName() + ".jpg";
             if (QFile::exists(candidate))
@@ -197,8 +208,8 @@ int handleBundleCommand(CliContext &ctx)
 
             const QString displayName = getMatchingDisplayName(file);
             GameMetadata providerMeta = orchestrator->searchWithFallback(
-                selectBestHash(file), displayName, QString(),
-                file.crc32, file.md5, file.sha1);
+                selectBestHash(file), displayName, systemName,
+                file.crc32, file.md5, file.sha1, QString(), true);
 
             if (!providerMeta.boxArtUrl.isEmpty()) {
                 const QUrl boxArtUrl(providerMeta.boxArtUrl);
@@ -206,7 +217,11 @@ int handleBundleCommand(CliContext &ctx)
                     const QString ext = QFileInfo(boxArtUrl.path()).suffix().isEmpty()
                         ? QStringLiteral("jpg")
                         : QFileInfo(boxArtUrl.path()).suffix().toLower();
-                    const QString destPath = tempArtworkDir.path() + "/" +
+                    // Prefer persistent process cache; fall back to per-invocation temp dir
+                    const QString artCacheDir = ctx.processArtworkCacheDir.isEmpty()
+                        ? tempArtworkDir.path()
+                        : ctx.processArtworkCacheDir;
+                    const QString destPath = artCacheDir + "/" +
                         QString::number(file.id) + "." + ext;
 
                     if (dryRun) {

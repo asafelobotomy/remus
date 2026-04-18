@@ -104,7 +104,10 @@ bool Database::createSchema()
     query.exec("CREATE INDEX IF NOT EXISTS idx_files_current_path ON files(current_path)");
     query.exec("CREATE INDEX IF NOT EXISTS idx_files_system_id ON files(system_id)");
     query.exec("CREATE INDEX IF NOT EXISTS idx_files_hashes ON files(crc32, md5, sha1)");
-    query.exec("CREATE UNIQUE INDEX IF NOT EXISTS idx_files_original_path ON files(original_path, filename)");
+    query.exec("DROP INDEX IF EXISTS idx_files_original_path");
+    query.exec(
+        "CREATE UNIQUE INDEX IF NOT EXISTS idx_files_original_path "
+        "ON files(original_path, filename, COALESCE(archive_internal_path, ''))");
 
     // Create cache table for metadata
     QString createAppliedPatches = R"(

@@ -70,6 +70,11 @@ QString getMatchingDisplayName(const FileRecord &file);
 // Return the best system name to pass into metadata providers for this file.
 QString getMatchingSystemName(const FileRecord &file);
 
+// Return the best provider lookup system name, preferring the matched game
+// system when available and otherwise falling back to the scanned file.
+QString getProviderLookupSystemName(const FileRecord &file,
+                                    const Database::MatchResult *match = nullptr);
+
 // Insert a matched game into the database and record the match confidence/method.
 // Returns the newly-inserted gameId, or 0 on failure.
 int persistMetadata(Database &db, const FileRecord &file, const GameMetadata &metadata);

@@ -47,9 +47,12 @@ int Database::insertFile(const FileRecord &record)
     const QString patchName = record.patchName.isEmpty() ? patchedInfo.patchName : record.patchName;
 
     QSqlQuery existingQuery(m_db);
-    existingQuery.prepare("SELECT id FROM files WHERE original_path = ? AND filename = ?");
+    existingQuery.prepare(
+        "SELECT id FROM files WHERE original_path = ? AND filename = ? "
+        "AND COALESCE(archive_internal_path, '') = COALESCE(?, '')");
     existingQuery.addBindValue(record.originalPath);
     existingQuery.addBindValue(record.filename);
+    existingQuery.addBindValue(record.archiveInternalPath);
     if (!existingQuery.exec()) {
         logError("Failed to detect duplicate file: " + existingQuery.lastError().text());
         return 0;
@@ -91,9 +94,12 @@ int Database::insertFile(const FileRecord &record)
     }
 
     QSqlQuery insertedQuery(m_db);
-    insertedQuery.prepare("SELECT id FROM files WHERE original_path = ? AND filename = ?");
+    insertedQuery.prepare(
+        "SELECT id FROM files WHERE original_path = ? AND filename = ? "
+        "AND COALESCE(archive_internal_path, '') = COALESCE(?, '')");
     insertedQuery.addBindValue(record.originalPath);
     insertedQuery.addBindValue(record.filename);
+    insertedQuery.addBindValue(record.archiveInternalPath);
     if (!insertedQuery.exec() || !insertedQuery.next()) {
         logError("Failed to resolve inserted file id");
         return 0;

@@ -32,6 +32,7 @@ public:
         Original,
         Chd,
         Rvz,
+        Cso,    ///< PSP ISO → CSO (maxcso)
     };
 
     /**

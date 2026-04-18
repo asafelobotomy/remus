@@ -168,18 +168,14 @@ void VerificationEngine::loadDatCache(const QString &systemName)
         entry.description = query.value(6).toString();
         entry.status = query.value(7).toString();
 
-        // Index by preferred hash type
-        QString hash;
-        if (hashType == "sha1" && !entry.sha1.isEmpty()) {
-            hash = entry.sha1;
-        } else if (hashType == "md5" && !entry.md5.isEmpty()) {
-            hash = entry.md5;
-        } else if (!entry.crc32.isEmpty()) {
-            hash = entry.crc32;
+        if (!entry.sha1.isEmpty()) {
+            entries.insert(entry.sha1.toLower(), entry);
         }
-
-        if (!hash.isEmpty()) {
-            entries.insert(hash.toLower(), entry);
+        if (!entry.md5.isEmpty()) {
+            entries.insert(entry.md5.toLower(), entry);
+        }
+        if (!entry.crc32.isEmpty()) {
+            entries.insert(entry.crc32.toLower(), entry);
         }
     }
 

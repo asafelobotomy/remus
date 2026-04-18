@@ -141,8 +141,7 @@ public:
      * @param sha1 SHA1 hash
      * @return True if successful
      */
-    bool updateFileHashes(int fileId, const QString &crc32, 
-                          const QString &md5, const QString &sha1);
+    bool updateFileHashes(int fileId, const QString &crc32, const QString &md5, const QString &sha1);
 
     /**
      * @brief Get files without calculated hashes
@@ -248,10 +247,8 @@ public:
      * @return Game ID (0 if failed)
      */
     int insertGame(const QString &title, int systemId, const QString &region = QString(),
-                   const QString &publisher = QString(), const QString &developer = QString(),
-                   const QString &releaseDate = QString(), const QString &description = QString(),
-                   const QString &genres = QString(), const QString &players = QString(),
-                   float rating = 0.0f);
+                   const QString &publisher = QString(), const QString &developer = QString(), const QString &releaseDate = QString(),
+                   const QString &description = QString(), const QString &genres = QString(), const QString &players = QString(), float rating = 0.0f);
 
     /**
      * @brief Update an existing game record with enriched metadata.
@@ -265,14 +262,9 @@ public:
      * @param rating Rating 0-10 (negative → keep existing)
      * @return True if updated successfully
      */
-    bool updateGame(int gameId,
-                    const QString &publisher = QString(),
-                    const QString &developer = QString(),
-                    const QString &releaseDate = QString(),
-                    const QString &description = QString(),
-                    const QString &genres = QString(),
-                    const QString &players = QString(),
-                    float rating = -1.0f);
+    bool updateGame(int gameId, const QString &publisher = QString(), const QString &developer = QString(),
+                    const QString &releaseDate = QString(), const QString &description = QString(),
+                    const QString &genres = QString(), const QString &players = QString(), float rating = -1.0f);
     
     /**
      * @brief Insert or update a metadata match
@@ -282,8 +274,7 @@ public:
     * @param matchMethod Match method (hash/name/fuzzy/manual)
      * @return True if successful
      */
-    bool insertMatch(int fileId, int gameId, float confidence, const QString &matchMethod,
-                     float nameMatchScore = 0.0f);
+    bool insertMatch(int fileId, int gameId, float confidence, const QString &matchMethod, float nameMatchScore = 0.0f);
     
     /**
      * @brief Confirm a match (user verification)
