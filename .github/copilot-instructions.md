@@ -78,7 +78,7 @@ For deeper audits, activate the matching skill (§12) instead of expanding §2:
 | Baseline | Value | Action if exceeded |
 |----------|-------|-----------------|
 | File LOC (warn) | 400 lines | Flag, suggest decomposition |
-| File LOC (hard) | 600 lines | Refuse to extend; decompose first |
+| File LOC (hard) | 400 lines | Refuse to extend; decompose first |
 | Dependency budget | 10 runtime deps | Propose removal before adding |
 | Dependency budget (warn) | 8 runtime deps | Flag for review |
 | Test command | `ctest --test-dir build -j$(nproc)` | Must pass before task is done |
@@ -287,7 +287,7 @@ Resolved values and project-specific overrides. Populated during setup; updated 
 | `METRICS_COMMAND` | cmake --build build && ctest --test-dir build --output-on-failure |
 | `TEST_FRAMEWORK` | Qt Test (CTest) |
 | `LOC_WARN_THRESHOLD` | 400 |
-| `LOC_HIGH_THRESHOLD` | 600 |
+| `LOC_HIGH_THRESHOLD` | 400 |
 | `DEP_BUDGET` | 10 |
 | `DEP_BUDGET_WARN` | 8 |
 | `INTEGRATION_TEST_ENV_VAR` | REMUS_INTEGRATION_TESTS |
