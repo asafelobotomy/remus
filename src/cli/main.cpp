@@ -51,7 +51,6 @@ static void printBanner()
 {
     qInfo() << "╔════════════════════════════════════════╗";
     qInfo() << "║  Remus - Retro Game Library Manager   ║";
-    qInfo() << "║  M4.5: File Conversion & Compression  ║";
     qInfo() << "╚════════════════════════════════════════╝";
     qInfo() << "";
 }
@@ -159,9 +158,9 @@ int main(int argc, char *argv[])
     addOption(QCommandLineOption("dry-run-all", "Preview file outputs for all file-writing actions"));
 
     addActionOption(QCommandLineOption("bundle",        "Fetch metadata, download box art, and repack matched ROMs into self-contained archives", "destination"));
-    addOption(QCommandLineOption("bundle-format", "Output archive format for bundles (zip|7z, default: zip)", "format", Constants::Cli::Defaults::BUNDLE_FORMAT));
+    addOption(QCommandLineOption("bundle-format", "Output archive format for bundles (zip|7z, default: 7z)", "format", Constants::Cli::Defaults::BUNDLE_FORMAT));
     addOption(QCommandLineOption("bundle-art-dir","Optional pre-downloaded artwork directory (avoids re-downloading box art)", "directory"));
-    addOption(QCommandLineOption("bundle-disc-format", "Disc media packaging inside bundles (original|chd|rvz, default: original). When chd is requested, GameCube/Wii disc images are packaged as RVZ.", "format", Constants::Cli::Defaults::BUNDLE_DISC_FORMAT));
+    addOption(QCommandLineOption("bundle-disc-format", "Disc media packaging inside bundles (original|chd|rvz, default: chd). When chd is requested, the planner auto-selects: RVZ for GameCube/Wii, CSO for PSP, CHD for all other disc formats.", "format", Constants::Cli::Defaults::BUNDLE_DISC_FORMAT));
 
     addActionOption(QCommandLineOption("patch-apply",    "Apply patch to base file",          "basefile"));
     addOption(QCommandLineOption("patch-patch",    "Patch file to apply",               "patchfile"));
@@ -273,7 +272,8 @@ int main(int argc, char *argv[])
                    /*presetBundleFormat*/  {},
                    /*presetDiscFormat*/    {},
                    /*presetFolderNaming*/  {},
-                   /*presetDisplayName*/   {}};
+                   /*presetDisplayName*/   {},
+                   /*processArtworkCacheDir*/ {}};
 
     // Resolve --process-preset into concrete overrides
     if (parser.isSet("process-preset")) {
@@ -315,11 +315,13 @@ int main(int argc, char *argv[])
     if (int rc = handleChdVerifyCommand(ctx))      return rc;
     if (int rc = handleChdInfoCommand(ctx))        return rc;
     if (int rc = handleExtractArchiveCommand(ctx)) return rc;
-    if (int rc = handleSpaceReportCommand(ctx))    return rc;    if (int rc = handleConvertRvzCommand(ctx))      return rc;
-    if (int rc = handleRvzExtractCommand(ctx))      return rc;
-    if (int rc = handleRvzVerifyCommand(ctx))       return rc;
-    if (int rc = handleConvertCsoCommand(ctx))      return rc;
-    if (int rc = handleCsoExtractCommand(ctx))      return rc;    if (int rc = handleExportCommand(ctx))         return rc;
+    if (int rc = handleSpaceReportCommand(ctx))    return rc;
+    if (int rc = handleConvertRvzCommand(ctx))     return rc;
+    if (int rc = handleRvzExtractCommand(ctx))     return rc;
+    if (int rc = handleRvzVerifyCommand(ctx))      return rc;
+    if (int rc = handleConvertCsoCommand(ctx))     return rc;
+    if (int rc = handleCsoExtractCommand(ctx))     return rc;
+    if (int rc = handleExportCommand(ctx))         return rc;
     if (int rc = handlePatchCommands(ctx))         return rc;
     if (int rc = handleModCommands(ctx))           return rc;
     if (int rc = handleModCatalogBuildCommand(ctx)) return rc;
