@@ -128,3 +128,4 @@
 {"detail": "reflect-needed", "session_id": "local-ceef7b74", "trigger": "stop", "ts": 1776550256, "ts_utc": "2026-04-18T22:10:56Z"}
 {"detail": "complete", "session_id": "local-ceef7b74", "trigger": "session_reflect", "ts": 1776550262, "ts_utc": "2026-04-18T22:11:02Z"}
 {"session_id": "local-ceef7b74", "trigger": "soft_post_tool", "ts": 1776550514, "ts_utc": "2026-04-18T22:15:14Z"}
+{"detail": "complete", "duration_s": 4169, "session_id": "local-ceef7b74", "trigger": "stop", "ts": 1776550620, "ts_utc": "2026-04-18T22:17:00Z"}
