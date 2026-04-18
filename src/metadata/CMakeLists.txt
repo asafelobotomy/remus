@@ -9,13 +9,16 @@ add_library(remus-metadata STATIC
     hasheous_provider_enrichment.cpp
     clrmamepro_parser.cpp
     local_database_provider.cpp
+    local_database_provider_lookup.cpp
     local_database_provider_match.cpp
     local_database_provider_thumbnails.cpp
     gametdb_provider.cpp
+    gametdb_provider_artwork.cpp
     retroachievements_provider.cpp
     wikidata_provider.cpp
     libretro_metadata_parser.cpp
     provider_orchestrator.cpp
+    provider_orchestrator_fallback.cpp
     metadata_cache.cpp
     rate_limiter.cpp
     artwork_downloader.cpp

@@ -77,8 +77,10 @@ add_subdirectory(src/services)
 set(REMUS_CLI_SOURCES
     src/cli/main.cpp
     src/cli/cli_helpers.cpp
+    src/cli/cli_helpers_providers.cpp
     src/cli/cli_mod_support.cpp
     src/cli/cli_commands_info.cpp
+    src/cli/cli_commands_process.cpp
     src/cli/cli_commands_metadata.cpp
     src/cli/cli_commands_match.cpp
     src/cli/cli_commands_verify.cpp

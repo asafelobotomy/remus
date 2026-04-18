@@ -1,49 +1,17 @@
 #include "cli_helpers.h"
-#include <QCoreApplication>
 #include <QDir>
 #include <QFileInfo>
-#include <QSettings>
+#include <QRegularExpression>
 #include <QTemporaryDir>
 #include "../core/archive_extractor.h"
 #include "../core/constants/files.h"
 #include "../core/space_calculator.h"
 #include "../core/system_resolver.h"
 #include "../metadata/filename_normalizer.h"
-#include "../metadata/local_database_provider.h"
-#include "../metadata/metadata_cache.h"
-#include "../metadata/screenscraper_provider.h"
-#include "../metadata/thegamesdb_provider.h"
-#include "../metadata/igdb_provider.h"
-#include "../metadata/hasheous_provider.h"
-#include "../metadata/gametdb_provider.h"
-#include "../metadata/retroachievements_provider.h"
-#include "../metadata/wikidata_provider.h"
 #include "cli_logging.h"
 
 using namespace Remus;
 using namespace Remus::Constants;
-
-namespace {
-
-QSettings remusSettings()
-{
-    return QSettings(QString::fromLatin1(Constants::SETTINGS_ORGANIZATION),
-                     QString::fromLatin1(Constants::SETTINGS_APPLICATION));
-}
-
-QString parserOrSetting(const QCommandLineParser &parser,
-                        const QString &optionName,
-                        const char *settingKey)
-{
-    if (parser.isSet(optionName)) {
-        return parser.value(optionName).trimmed();
-    }
-
-    QSettings settings = remusSettings();
-    return settings.value(QString::fromLatin1(settingKey)).toString().trimmed();
-}
-
-}
 
 /**
  * @brief Select the best hash for matching based on system's preferred algorithm.
@@ -67,14 +35,99 @@ static bool isArchivePath(const QString &path)
     return false;
 }
 
+static QStringList referencedDiscFiles(const QString &manifestPath)
+{
+    const QString suffix = QFileInfo(manifestPath).suffix().toLower();
+    QFile manifestFile(manifestPath);
+    if (!manifestFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        return {};
+    }
+
+    QStringList referencedFiles;
+    QTextStream input(&manifestFile);
+
+    if (suffix == QStringLiteral("cue")) {
+        static const QRegularExpression cueFilePattern(
+            QStringLiteral("^\\s*FILE\\s+\"([^\"]+)\""),
+            QRegularExpression::CaseInsensitiveOption);
+
+        while (!input.atEnd()) {
+            const QString line = input.readLine();
+            const QRegularExpressionMatch match = cueFilePattern.match(line);
+            if (match.hasMatch()) {
+                referencedFiles << match.captured(1);
+            }
+        }
+    } else if (suffix == QStringLiteral("gdi")) {
+        static const QRegularExpression gdiFilePattern(
+            QStringLiteral("^\\s*\\d+\\s+\\d+\\s+\\d+\\s+\\d+\\s+(.+?)\\s+\\d+\\s*$"));
+
+        while (!input.atEnd()) {
+            const QString line = input.readLine().trimmed();
+            if (line.isEmpty()) {
+                continue;
+            }
+
+            const QRegularExpressionMatch match = gdiFilePattern.match(line);
+            if (!match.hasMatch()) {
+                continue;
+            }
+
+            QString fileName = match.captured(1).trimmed();
+            if (fileName.startsWith('"') && fileName.endsWith('"') && fileName.size() >= 2) {
+                fileName = fileName.mid(1, fileName.size() - 2);
+            }
+            referencedFiles << fileName;
+        }
+    }
+
+    referencedFiles.removeDuplicates();
+    return referencedFiles;
+}
+
+static QString resolveHashSourcePath(const QString &path)
+{
+    const QString suffix = QFileInfo(path).suffix().toLower();
+    if (suffix != QStringLiteral("cue") && suffix != QStringLiteral("gdi")) {
+        return path;
+    }
+
+    const QFileInfo manifestInfo(path);
+    const QDir manifestDir = manifestInfo.dir();
+    const QStringList referencedFiles = referencedDiscFiles(path);
+
+    QString bestPath;
+    qint64 bestSize = -1;
+    for (const QString &relativePath : referencedFiles) {
+        const QString candidatePath = manifestDir.filePath(relativePath);
+        const QFileInfo candidateInfo(candidatePath);
+        if (!candidateInfo.exists() || !candidateInfo.isFile()) {
+            continue;
+        }
+
+        if (candidateInfo.size() > bestSize) {
+            bestPath = candidateInfo.absoluteFilePath();
+            bestSize = candidateInfo.size();
+        }
+    }
+
+    return bestPath.isEmpty() ? path : bestPath;
+}
+
+static HashResult hashResolvedPath(const QString &path, Hasher &hasher)
+{
+    const QString extension = QStringLiteral(".") + QFileInfo(path).suffix().toLower();
+    const int headerSize = Hasher::detectHeaderSize(path, extension);
+    return hasher.calculateHashes(path, headerSize > 0, headerSize);
+}
+
 HashResult hashFileRecord(const FileRecord &file, Hasher &hasher)
 {
     const QString archivePath = file.archivePath.isEmpty() ? file.currentPath : file.archivePath;
     const bool treatAsArchive = file.isCompressed || isArchivePath(archivePath);
 
     if (!treatAsArchive) {
-        int headerSize = Hasher::detectHeaderSize(file.currentPath, file.extension);
-        return hasher.calculateHashes(file.currentPath, headerSize > 0, headerSize);
+        return hashResolvedPath(resolveHashSourcePath(file.currentPath), hasher);
     }
 
     HashResult result;
@@ -91,7 +144,13 @@ HashResult hashFileRecord(const FileRecord &file, Hasher &hasher)
 
     ArchiveExtractor extractor;
     const QString internalPath = file.archiveInternalPath.isEmpty() ? file.filename : file.archiveInternalPath;
-    ExtractionResult extraction = extractor.extractFile(archivePath, internalPath, tempDir.path());
+    const bool isDiscManifest = file.extension.compare(QStringLiteral(".cue"), Qt::CaseInsensitive) == 0 ||
+        file.extension.compare(QStringLiteral(".gdi"), Qt::CaseInsensitive) == 0;
+
+    ExtractionResult extraction;
+    if (!isDiscManifest) {
+        extraction = extractor.extractFile(archivePath, internalPath, tempDir.path());
+    }
     if (!extraction.success || extraction.extractedFiles.isEmpty()) {
         extraction = extractor.extract(archivePath, tempDir.path(), false);
         if (!extraction.success || extraction.extractedFiles.isEmpty()) {
@@ -101,150 +160,41 @@ HashResult hashFileRecord(const FileRecord &file, Hasher &hasher)
             return result;
         }
 
+        if (isDiscManifest) {
+            QString extractedManifestPath;
+            if (!file.archiveInternalPath.isEmpty()) {
+                const QString normalized = ArchiveExtractor::normalizeArchiveMemberPath(file.archiveInternalPath);
+                if (!normalized.isEmpty()) {
+                    extractedManifestPath = QDir(tempDir.path()).filePath(normalized);
+                }
+            }
+            if (extractedManifestPath.isEmpty() || !QFileInfo::exists(extractedManifestPath)) {
+                for (const QString &path : extraction.extractedFiles) {
+                    if (QFileInfo(path).suffix().compare(QFileInfo(file.filename).suffix(), Qt::CaseInsensitive) == 0) {
+                        extractedManifestPath = path;
+                        break;
+                    }
+                }
+            }
+            if (!extractedManifestPath.isEmpty() && QFileInfo::exists(extractedManifestPath)) {
+                return hashResolvedPath(resolveHashSourcePath(extractedManifestPath), hasher);
+            }
+        }
+
         QString picked;
         for (const QString &path : extraction.extractedFiles) {
             if (path.endsWith(file.extension, Qt::CaseInsensitive)) { picked = path; break; }
         }
         if (picked.isEmpty()) picked = extraction.extractedFiles.first();
-        int headerSize = Hasher::detectHeaderSize(picked, file.extension);
-        return hasher.calculateHashes(picked, headerSize > 0, headerSize);
+        return hashResolvedPath(resolveHashSourcePath(picked), hasher);
     }
 
     const QString extractedPath = extraction.extractedFiles.first();
-    int headerSize = Hasher::detectHeaderSize(extractedPath, file.extension);
-    return hasher.calculateHashes(extractedPath, headerSize > 0, headerSize);
+    return hashResolvedPath(resolveHashSourcePath(extractedPath), hasher);
 }
 
 QString findDataSubdir(const QString &subdir)
-{
-    const QString appDir = QCoreApplication::applicationDirPath();
-    const QString cwd = QDir::currentPath();
-    const QString seg = QStringLiteral("data/") + subdir;
-    const QStringList candidates = {
-        cwd + "/" + seg,
-        appDir + "/" + seg,
-        appDir + "/../" + seg,
-        appDir + "/../../" + seg,
-        appDir + "/../../../" + seg,
-        cwd + "/../" + seg,
-        cwd + "/../../" + seg
-    };
-    for (const QString &dir : candidates) {
-        if (QDir(dir).exists()) {
-            return QDir::cleanPath(dir);
-        }
-    }
-    return QString();
-}
-
-std::unique_ptr<ProviderOrchestrator> buildOrchestrator(const QCommandLineParser &parser,
-                                                         Database *db)
-{
-    auto orchestrator = std::make_unique<ProviderOrchestrator>();
-
-    // Wire metadata cache if a database is available
-    if (db) {
-        auto *cache = new MetadataCache(db->database(), orchestrator.get());
-        orchestrator->setCache(cache);
-    }
-
-    // Local DAT database — offline, no auth, highest priority
-    const QString dbDir = findDatabaseDir();
-    if (!dbDir.isEmpty()) {
-        auto localDbProvider = new LocalDatabaseProvider();
-        int loaded = localDbProvider->loadDatabases(dbDir);
-        if (loaded > 0) {
-            // Load enrichment metadata (genre, developer, publisher, etc.)
-            const QString metaDir = findMetadataDir();
-            if (!metaDir.isEmpty()) {
-                localDbProvider->loadMetadata(metaDir);
-            }
-            const auto localInfo = Providers::getProviderInfo(Providers::LOCAL_DATABASE);
-            orchestrator->addProvider(Providers::LOCAL_DATABASE, localDbProvider,
-                                      localInfo ? localInfo->priority : 200);
-        } else {
-            delete localDbProvider;
-        }
-    }
-
-    auto hasheousProvider = new HasheousProvider();
-    const auto hasheousInfo = Providers::getProviderInfo(Providers::HASHEOUS);
-    orchestrator->addProvider(Providers::HASHEOUS, hasheousProvider,
-                              hasheousInfo ? hasheousInfo->priority : 80);
-
-    if (parser.isSet("ss-user") && parser.isSet("ss-pass")) {
-        auto ssProvider = new ScreenScraperProvider();
-        ssProvider->setCredentials(parser.value("ss-user"), parser.value("ss-pass"));
-        if (parser.isSet("ss-devid") && parser.isSet("ss-devpass"))
-            ssProvider->setDeveloperCredentials(parser.value("ss-devid"), parser.value("ss-devpass"));
-        const auto ssInfo = Providers::getProviderInfo(Providers::SCREENSCRAPER);
-        orchestrator->addProvider(Providers::SCREENSCRAPER, ssProvider,
-                                  ssInfo ? ssInfo->priority : 90);
-    }
-
-    // GameTDB — offline XML databases for Nintendo/PS3, no auth
-    const QString gametdbDir = findGameTDBDir();
-    if (!gametdbDir.isEmpty()) {
-        auto gametdbProvider = new GameTDBProvider();
-        int gametdbLoaded = gametdbProvider->loadDatabases(gametdbDir);
-        if (gametdbLoaded > 0) {
-            const auto gametdbInfo = Providers::getProviderInfo(Providers::GAMETDB);
-            orchestrator->addProvider(Providers::GAMETDB, gametdbProvider,
-                                      gametdbInfo ? gametdbInfo->priority : 150);
-        } else {
-            delete gametdbProvider;
-        }
-    }
-
-    auto tgdbProvider = new TheGamesDBProvider();
-    const QString tgdbApiKey = parserOrSetting(parser,
-                                               QStringLiteral("tgdb-api-key"),
-                                               Settings::Providers::THEGAMESDB_API_KEY);
-    if (!tgdbApiKey.isEmpty()) {
-        tgdbProvider->setApiKey(tgdbApiKey);
-    }
-    const auto tgdbInfo = Providers::getProviderInfo(Providers::THEGAMESDB);
-    orchestrator->addProvider(Providers::THEGAMESDB, tgdbProvider,
-                              tgdbInfo ? tgdbInfo->priority : 50);
-
-    const QString igdbClientId = parserOrSetting(parser,
-                                                 QStringLiteral("igdb-client-id"),
-                                                 Settings::Providers::IGDB_CLIENT_ID);
-    const QString igdbClientSecret = parserOrSetting(parser,
-                                                     QStringLiteral("igdb-client-secret"),
-                                                     Settings::Providers::IGDB_CLIENT_SECRET);
-
-    if (!igdbClientId.isEmpty() && !igdbClientSecret.isEmpty()) {
-        auto igdbProvider = new IGDBProvider();
-        igdbProvider->setCredentials(igdbClientId, igdbClientSecret);
-        const auto igdbInfo = Providers::getProviderInfo(Providers::IGDB);
-        orchestrator->addProvider(Providers::IGDB, igdbProvider,
-                                  igdbInfo ? igdbInfo->priority : 70);
-    }
-
-    // RetroAchievements — hash-based, free API key required
-    const QString raUsername = parserOrSetting(parser,
-                                              QStringLiteral("ra-user"),
-                                              Settings::Providers::RETROACHIEVEMENTS_USERNAME);
-    const QString raApiKey = parserOrSetting(parser,
-                                            QStringLiteral("ra-api-key"),
-                                            Settings::Providers::RETROACHIEVEMENTS_API_KEY);
-    if (!raUsername.isEmpty() && !raApiKey.isEmpty()) {
-        auto raProvider = new RetroAchievementsProvider();
-        raProvider->setCredentials(raUsername, raApiKey);
-        const auto raInfo = Providers::getProviderInfo(Providers::RETROACHIEVEMENTS);
-        orchestrator->addProvider(Providers::RETROACHIEVEMENTS, raProvider,
-                                  raInfo ? raInfo->priority : 60);
-    }
-
-    // Wikidata — SPARQL, no auth, CC0 licensed, lowest priority
-    auto wikidataProvider = new WikidataProvider();
-    const auto wdInfo = Providers::getProviderInfo(Providers::WIKIDATA);
-    orchestrator->addProvider(Providers::WIKIDATA, wikidataProvider,
-                              wdInfo ? wdInfo->priority : 40);
-
-    return orchestrator;
-}
+;
 
 QString resolveCliOptionValue(const QCommandLineParser &parser,
                               const QString &optionName,
@@ -318,6 +268,18 @@ QString getMatchingSystemName(const FileRecord &file)
     }
 
     const QString systemName = SystemResolver::internalName(file.systemId);
+    return systemName == QStringLiteral("Unknown") ? QString() : systemName;
+}
+
+QString getProviderLookupSystemName(const FileRecord &file,
+                                    const Database::MatchResult *match)
+{
+    const int systemId = resolveMatchedSystemId(file, match);
+    if (systemId <= 0) {
+        return QString();
+    }
+
+    const QString systemName = SystemResolver::internalName(systemId);
     return systemName == QStringLiteral("Unknown") ? QString() : systemName;
 }
 

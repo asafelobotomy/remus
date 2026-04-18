@@ -14,6 +14,7 @@ add_library(remus-core STATIC
     scanner.cpp
     scanner_multifile.cpp
     conversion_planner.cpp
+    conversion_planner_plan.cpp
     system_detector.cpp
     disc_magic_detector.cpp
     patched_rom_parser.cpp
@@ -32,6 +33,7 @@ add_library(remus-core STATIC
     organize_engine.cpp
     organize_engine_undo.cpp
     rom_bundler.cpp
+    rom_bundler_bundle.cpp
     rom_bundler_staged.cpp
     m3u_generator.cpp
     chd_converter.cpp
@@ -40,6 +42,7 @@ add_library(remus-core STATIC
     disc_converter.cpp
     external_tool_runner.cpp
     archive_extractor.cpp
+    archive_extractor_extract.cpp
     archive_extractor_info.cpp
     archive_creator.cpp
     archive_creator_compress.cpp
@@ -47,6 +50,7 @@ add_library(remus-core STATIC
     dat_parser.cpp
     header_detector.cpp
     verification_engine.cpp
+    verification_engine_verify.cpp
     verification_engine_report.cpp
     verification_storage.cpp
     verification_storage_dat.cpp
@@ -54,6 +58,8 @@ add_library(remus-core STATIC
     patch_engine_apply.cpp
     logging_categories.cpp
     system_resolver.cpp
+    system_resolver_dat.cpp
+    system_resolver_provider_mappings.cpp
 )
 
 target_link_libraries(remus-core PUBLIC
