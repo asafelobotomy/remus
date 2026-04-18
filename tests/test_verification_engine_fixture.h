@@ -23,6 +23,7 @@ private slots:
     void testImportDat();
     void testImportPatchDat();
     void testVerifyMatchingHash();
+    void testVerifyOfficialDatFallsBackToMd5WhenPreferredHashMissing();
     void testVerifyMismatch();
     void testVerifyNotInDat();
     void testVerifyHashMissing();

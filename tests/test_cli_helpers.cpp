@@ -19,8 +19,11 @@ private slots:
     void testSelectBestHashEmptyWhenNoHashes();
     void testResolveCliOptionValueUsesPresetWhenOptionUnset();
     void testResolveCliOptionValuePrefersExplicitOption();
+    void testResolveCliOptionValueFallsBackToParserDefault();
     void testGetMatchingSystemNameReturnsInternalName();
     void testGetMatchingSystemNameHandlesUnknownSystem();
+    void testGetProviderLookupSystemNamePrefersMatchedSystem();
+    void testGetProviderLookupSystemNameFallsBackToFileSystem();
     void testGetHashedFilesOnlyReturnsHashedRows();
     void testGetMatchingDisplayNameForRegularFile();
     void testGetMatchingDisplayNameForArchiveFile();
@@ -30,6 +33,7 @@ private slots:
     void testPersistMetadataInsertsGame();
     void testPersistMetadataDuplicateGame();
     void testHashFileRecordRealFile();
+    void testHashFileRecordGdiUsesReferencedTrackPayload();
     void testPrintFileInfoDoesNotCrash();
 };
 
@@ -129,6 +133,18 @@ void CliHelpersTest::testResolveCliOptionValuePrefersExplicitOption()
              QStringLiteral("rvz"));
 }
 
+void CliHelpersTest::testResolveCliOptionValueFallsBackToParserDefault()
+{
+    QCommandLineParser parser;
+    parser.addOption(QCommandLineOption("bundle-disc-format", "", "format",
+                                        QString::fromLatin1(Constants::Cli::Defaults::BUNDLE_DISC_FORMAT)));
+    parser.process(QStringList{QStringLiteral("test")});
+
+    QCOMPARE(resolveCliOptionValue(parser,
+                                   QStringLiteral("bundle-disc-format")),
+             QString::fromLatin1(Constants::Cli::Defaults::BUNDLE_DISC_FORMAT));
+}
+
 void CliHelpersTest::testGetMatchingSystemNameReturnsInternalName()
 {
     FileRecord fr;
@@ -143,6 +159,25 @@ void CliHelpersTest::testGetMatchingSystemNameHandlesUnknownSystem()
     fr.systemId = -1;
 
     QVERIFY(getMatchingSystemName(fr).isEmpty());
+}
+
+void CliHelpersTest::testGetProviderLookupSystemNamePrefersMatchedSystem()
+{
+    FileRecord fr;
+    fr.systemId = Constants::Systems::ID_PSX;
+
+    Database::MatchResult match;
+    match.systemId = Constants::Systems::ID_GAMECUBE;
+
+    QCOMPARE(getProviderLookupSystemName(fr, &match), QStringLiteral("GameCube"));
+}
+
+void CliHelpersTest::testGetProviderLookupSystemNameFallsBackToFileSystem()
+{
+    FileRecord fr;
+    fr.systemId = Constants::Systems::ID_SNES;
+
+    QCOMPARE(getProviderLookupSystemName(fr), QStringLiteral("SNES"));
 }
 
 void CliHelpersTest::testGetHashedFilesOnlyReturnsHashedRows()
@@ -330,6 +365,57 @@ void CliHelpersTest::testHashFileRecordRealFile()
     QVERIFY(!result.crc32.isEmpty());
     QVERIFY(!result.md5.isEmpty());
     QVERIFY(!result.sha1.isEmpty());
+}
+
+void CliHelpersTest::testHashFileRecordGdiUsesReferencedTrackPayload()
+{
+    QTemporaryDir dir;
+    QVERIFY(dir.isValid());
+
+    const QString gdiPath = dir.path() + "/disc.gdi";
+    const QString track01Path = dir.path() + "/track01.bin";
+    const QString track02Path = dir.path() + "/track02.raw";
+    const QString track03Path = dir.path() + "/track03.bin";
+
+    {
+        QFile track01(track01Path);
+        QVERIFY(track01.open(QIODevice::WriteOnly));
+        QVERIFY(track01.write(QByteArray(1024, char(0x01))) == 1024);
+    }
+    {
+        QFile track02(track02Path);
+        QVERIFY(track02.open(QIODevice::WriteOnly));
+        QVERIFY(track02.write(QByteArray(2048, char(0x02))) == 2048);
+    }
+    {
+        QFile track03(track03Path);
+        QVERIFY(track03.open(QIODevice::WriteOnly));
+        QVERIFY(track03.write(QByteArray(4096, char(0x03))) == 4096);
+    }
+    {
+        QFile gdi(gdiPath);
+        QVERIFY(gdi.open(QIODevice::WriteOnly | QIODevice::Text));
+        QTextStream out(&gdi);
+        out << "3\n";
+        out << "1 0 4 2352 track01.bin 0\n";
+        out << "2 600 0 2352 track02.raw 0\n";
+        out << "3 45000 4 2352 track03.bin 0\n";
+    }
+
+    FileRecord fr;
+    fr.originalPath = gdiPath;
+    fr.currentPath = gdiPath;
+    fr.filename = QStringLiteral("disc.gdi");
+    fr.extension = QStringLiteral(".gdi");
+
+    Hasher hasher;
+    const HashResult expected = hasher.calculateHashes(track03Path, false, 0);
+    const HashResult actual = hashFileRecord(fr, hasher);
+
+    QVERIFY(actual.success);
+    QCOMPARE(actual.crc32, expected.crc32);
+    QCOMPARE(actual.md5, expected.md5);
+    QCOMPARE(actual.sha1, expected.sha1);
 }
 
 void CliHelpersTest::testPrintFileInfoDoesNotCrash()

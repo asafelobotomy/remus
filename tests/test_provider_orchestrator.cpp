@@ -62,6 +62,7 @@ private slots:
     void detailFetchFailureEmitsSpecificProviderError();
     void normalizesVersionedNamesBeforeNameSearch();
     void artworkFallback();
+    void searchWithFallbackContinuesPastCacheWithoutArtwork();
 
     // Phase 0 characterization tests — safety net for Phase 5
     void testRemoveProvider();
@@ -213,6 +214,47 @@ void ProviderOrchestratorTest::artworkFallback()
 
     ArtworkUrls loaded = orchestrator.getArtworkWithFallback("id-1", "NES", QString());
     QCOMPARE(loaded.boxFront, artwork.boxFront);
+}
+
+void ProviderOrchestratorTest::searchWithFallbackContinuesPastCacheWithoutArtwork()
+{
+    QSqlDatabase db = createTestCacheDb();
+    MetadataCache cache(db);
+    ProviderOrchestrator orchestrator;
+    orchestrator.setCache(&cache);
+
+    GameMetadata cached;
+    cached.id = "live-a-live";
+    cached.title = "Live A Live";
+    cached.publisher = "Square";
+    cached.developer = "Square";
+    cached.releaseDate = "1994-09-02";
+    cached.genres = {"RPG"};
+    cached.players = 1;
+    cache.store(cached, "6291ee08", "SNES");
+
+    auto *provider = new StubProvider("igdb");
+    SearchResult result;
+    result.id = "igdb-live-a-live";
+    result.title = "Live A Live";
+    result.matchScore = 0.99f;
+    provider->m_searchResults = {result};
+
+    GameMetadata enriched = cached;
+    enriched.boxArtUrl = "http://example.com/live-a-live-front.jpg";
+    provider->m_idMetadata = enriched;
+
+    orchestrator.addProvider("igdb", provider, 40);
+
+    GameMetadata found = orchestrator.searchWithFallback(
+        "6291ee08", "Live A Live", "SNES", QString(), QString(), QString(), QString(), true);
+
+    QCOMPARE(provider->m_lastSearchName, QString("Live A Live"));
+    QCOMPARE(found.title, QString("Live A Live"));
+    QCOMPARE(found.boxArtUrl, QString("http://example.com/live-a-live-front.jpg"));
+
+    GameMetadata fromCache = cache.getByHash("6291ee08", "SNES");
+    QCOMPARE(fromCache.boxArtUrl, QString("http://example.com/live-a-live-front.jpg"));
 }
 
 // ── Phase 0 characterization tests ─────────────────────────────────────────

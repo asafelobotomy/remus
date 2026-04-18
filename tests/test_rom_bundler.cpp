@@ -441,8 +441,9 @@ void RomBundlerTest::testBundle_skipsWhenCurrentCompressedPathAlreadyBundled()
 
     FileRecord bundled = original;
     bundled.isCompressed = true;
+    bundled.originalPath = first.outputPath;
     bundled.currentPath = first.outputPath;
-    bundled.archivePath = romPath;
+    bundled.archivePath = first.outputPath;
     bundled.archiveInternalPath = "game.md";
 
     const QByteArray before = QFileInfo(first.outputPath).exists() ? QByteArray::number(QFileInfo(first.outputPath).lastModified().toMSecsSinceEpoch()) : QByteArray();
@@ -455,6 +456,58 @@ void RomBundlerTest::testBundle_skipsWhenCurrentCompressedPathAlreadyBundled()
 
     const QByteArray after = QByteArray::number(QFileInfo(first.outputPath).lastModified().toMSecsSinceEpoch());
     QCOMPARE(after, before);
+}
+
+void RomBundlerTest::testBundle_rebundlesWhenCurrentPathPointsToPriorBundleOutput()
+{
+    ArchiveCreator creator;
+    ArchiveExtractor extractor;
+    if (!creator.canCompress(ArchiveFormat::ZIP)) {
+        QSKIP("zip tool not available");
+    }
+    if (!extractor.canExtract(ArchiveFormat::ZIP)) {
+        QSKIP("unzip tool not available");
+    }
+
+    QTemporaryDir tmp;
+    QVERIFY(tmp.isValid());
+
+    const QString romPath = tmp.filePath("game.md");
+    QVERIFY(writeFile(romPath, "ROMPAYLOAD"));
+
+    Database db;
+    QVERIFY(db.initialize(tmp.filePath("test.db")));
+
+    FileRecord original = makeFileRecord(0, romPath, "game.md");
+    original.id = insertTestFile(db, original);
+    QVERIFY(original.id > 0);
+
+    RomBundler bundler(db);
+
+    RomBundler::BundleConfig cfg;
+    cfg.includeBoxArt = false;
+    cfg.outputFormat  = ArchiveFormat::ZIP;
+
+    const QString firstDestDir = tmp.filePath("bundles-a");
+    const RomBundler::BundleResult first = bundler.bundle(
+        original, makeMatch(), makeMetadata(), firstDestDir, cfg);
+    QVERIFY2(first.success, qPrintable(first.error));
+    QVERIFY(QFile::exists(first.outputPath));
+
+    FileRecord rebundleCandidate = original;
+    rebundleCandidate.isCompressed = true;
+    rebundleCandidate.currentPath = first.outputPath;
+    rebundleCandidate.archivePath = first.outputPath;
+    rebundleCandidate.archiveInternalPath = "game.md";
+
+    const QString secondDestDir = tmp.filePath("bundles-b");
+    const RomBundler::BundleResult second = bundler.bundle(
+        rebundleCandidate, makeMatch(), makeMetadata(), secondDestDir, cfg);
+    QVERIFY2(second.success, qPrintable(second.error));
+    QVERIFY(!second.skippedAlreadyBundled);
+    QVERIFY(QFile::exists(second.outputPath));
+    QVERIFY(QFileInfo(second.outputPath).absolutePath() == QFileInfo(secondDestDir).absoluteFilePath());
+    QVERIFY(second.outputPath != first.outputPath);
 }
 
 QTEST_MAIN(RomBundlerTest)

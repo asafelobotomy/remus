@@ -52,6 +52,25 @@ static const char *k_patchDatXml =
     "    </game>\n"
     "</datafile>\n";
 
+static const char *k_md5OnlyDatXml =
+    "<?xml version=\"1.0\"?>\n"
+    "<!DOCTYPE datafile PUBLIC \"-//Logiqx//DTD ROM Management Datafile//EN\"\n"
+    "    \"http://www.logiqx.com/Docs/CMakeLists.dtd\">\n"
+    "<datafile>\n"
+    "    <header>\n"
+    "        <name>Nintendo - NES (MD5 Test)</name>\n"
+    "        <description>MD5-only DAT</description>\n"
+    "        <version>20260103</version>\n"
+    "        <author>test</author>\n"
+    "    </header>\n"
+    "    <game name=\"Super Mario Bros.\">\n"
+    "        <description>Super Mario Bros.</description>\n"
+    "        <rom name=\"Super Mario Bros. (World).nes\"\n"
+    "             size=\"40960\"\n"
+    "             md5=\"811b027eaf99c2def7b933c5208636de\"/>\n"
+    "    </game>\n"
+    "</datafile>\n";
+
 // ── File-scope helpers (kept outside the class body for MOC compatibility) ──
 
 QString writeDat(const QTemporaryDir &dir)
@@ -83,6 +102,24 @@ QString writePatchDat(const QTemporaryDir &dir)
 
     if (f.write(k_patchDatXml) != qstrlen(k_patchDatXml)) {
         qWarning() << "Failed to write patch DAT contents to:" << path;
+        return QString();
+    }
+
+    f.close();
+    return path;
+}
+
+QString writeMd5OnlyDat(const QTemporaryDir &dir)
+{
+    const QString path = dir.path() + "/md5-only.dat";
+    QFile f(path);
+    if (!f.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        qWarning() << "Failed to open MD5-only DAT file for writing:" << path;
+        return QString();
+    }
+
+    if (f.write(k_md5OnlyDatXml) != qstrlen(k_md5OnlyDatXml)) {
+        qWarning() << "Failed to write MD5-only DAT contents to:" << path;
         return QString();
     }
 
@@ -152,6 +189,30 @@ void VerificationEngineTest::testVerifyMatchingHash()
     VerificationResult result = engine.verifyFile(fileId);
     QCOMPARE(result.fileId, fileId);
     QCOMPARE(result.status, VerificationStatus::Verified);
+}
+
+void VerificationEngineTest::testVerifyOfficialDatFallsBackToMd5WhenPreferredHashMissing()
+{
+    QTemporaryDir dir;
+    QVERIFY(dir.isValid());
+
+    Database db;
+    QVERIFY(db.initialize(":memory:"));
+    const int fileId = populateDb(db,
+                                  QString(),
+                                  QStringLiteral("811b027eaf99c2def7b933c5208636de"),
+                                  QString(),
+                                  true);
+
+    VerificationEngine engine(&db);
+    const QString datPath = writeMd5OnlyDat(dir);
+    QVERIFY(!datPath.isEmpty());
+    QCOMPARE(engine.importDat(datPath, QStringLiteral("NES")), 1);
+
+    const VerificationResult result = engine.verifyFile(fileId);
+    QCOMPARE(result.status, VerificationStatus::Verified);
+    QCOMPARE(result.hashType, QStringLiteral("md5"));
+    QCOMPARE(result.fileHash, QStringLiteral("811b027eaf99c2def7b933c5208636de"));
 }
 
 void VerificationEngineTest::testImportPatchDat()

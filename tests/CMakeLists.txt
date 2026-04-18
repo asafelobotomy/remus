@@ -299,7 +299,7 @@ add_remus_test(test_rom_bundler RomBundlerTest
 )
 
 add_remus_test(test_cli_helpers CliHelpersTest
-    SOURCES test_cli_helpers.cpp ../src/cli/cli_helpers.cpp
+    SOURCES test_cli_helpers.cpp ../src/cli/cli_helpers.cpp ../src/cli/cli_helpers_providers.cpp
     LIBS Qt6::Test Qt6::Core Qt6::Sql Qt6::Network remus-core remus-metadata remus-constants
 )
 

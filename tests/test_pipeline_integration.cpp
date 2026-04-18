@@ -1,6 +1,6 @@
 /**
  * @file test_pipeline_integration.cpp
- * @brief Integration test for full metadata pipeline (scan → hash → match)
+ * @brief Integration test for full metadata pipeline (scan → hash → match → bundle)
  */
 
 #include <QCoreApplication>
@@ -8,6 +8,8 @@
 #include <QFile>
 #include <QTemporaryDir>
 #include "../src/core/database.h"
+#include "../src/core/rom_bundler.h"
+#include "../src/core/archive_extractor.h"
 #include "../src/metadata/local_database_provider.h"
 #include "test_local_database_provider_fixture.h"
 
@@ -170,11 +172,99 @@ int main(int argc, char *argv[])
     qInfo() << "╔══════════════════════════════════════════════════════════════╗";
     qInfo() << "║  Integration Test Summary                                   ║";
     qInfo() << "╚══════════════════════════════════════════════════════════════╝";
-    qInfo() << "✓ Database query: Working";
-    qInfo() << "✓ DAT loading: Working";
-    qInfo() << "✓ Multi-signal matching: Working";
-    qInfo() << "✓ Hash calculation: Working";
-    qInfo() << "✓ System detection: Working";
+
+    // ── Step 6: Bundling ────────────────────────────────────────────────────────
+    qInfo() << "Step 6: Testing bundling (scan \u2192 match \u2192 bundle)...";
+
+    // Write a real (fake-content) ROM file so RomBundler can copy it
+    const QString romPath = tempDir.path() + "/Sonic The Hedgehog (USA, Europe).md";
+    {
+        QFile romFile(romPath);
+        if (romFile.open(QIODevice::WriteOnly)) {
+            romFile.write(QByteArray(512, 0x00));  // 512 bytes of dummy data
+        }
+    }
+    if (!QFile::exists(romPath)) {
+        qCritical() << "\u2717 Failed to write ROM fixture for bundling test";
+        return 1;
+    }
+
+    // Update the DB record to point at the real file
+    FileRecord bundleRecord;
+    bundleRecord.id           = fileId;
+    bundleRecord.libraryId    = libraryId;
+    bundleRecord.originalPath = romPath;
+    bundleRecord.currentPath  = romPath;
+    bundleRecord.filename     = "Sonic The Hedgehog (USA, Europe).md";
+    bundleRecord.extension    = ".md";
+    bundleRecord.fileSize     = 512;
+    bundleRecord.systemId     = db.getSystemId("Genesis");
+    bundleRecord.crc32        = "f9394e97";
+    bundleRecord.isPrimary    = true;
+
+    // Insert a game + match so the bundler has metadata to work with
+    const int gameId = db.insertGame("Sonic The Hedgehog", bundleRecord.systemId, "USA");
+    if (gameId <= 0) {
+        qCritical() << "\u2717 Failed to insert game record";
+        return 1;
+    }
+    if (!db.insertMatch(fileId, gameId, 95.0f, "hash")) {
+        qCritical() << "\u2717 Failed to insert match record";
+        return 1;
+    }
+
+    Database::MatchResult bundleMatch = db.getMatchForFile(fileId);
+    if (bundleMatch.matchId <= 0) {
+        qCritical() << "\u2717 Match not found for bundle test";
+        return 1;
+    }
+
+    GameMetadata bundleMeta;
+    bundleMeta.title  = bundleMatch.gameTitle;
+    bundleMeta.region = bundleMatch.region;
+
+    QTemporaryDir bundleDestDir;
+    if (!bundleDestDir.isValid()) {
+        qCritical() << "\u2717 Failed to create bundle output directory";
+        return 1;
+    }
+
+    RomBundler bundler(db);
+    RomBundler::BundleConfig cfg;
+    cfg.includeBoxArt   = false;
+    cfg.dryRun          = false;
+    cfg.outputFormat    = ArchiveFormat::ZIP;
+    cfg.discOutputFormat = RomBundler::DiscOutputFormat::Original;
+
+    RomBundler::BundleResult bundleResult = bundler.bundle(
+        bundleRecord, bundleMatch, bundleMeta, bundleDestDir.path(), cfg);
+
+    if (!bundleResult.success) {
+        qCritical() << "\u2717 Bundle failed:" << bundleResult.error;
+        return 1;
+    }
+
+    // Verify .remus.md marker is inside the archive
+    ArchiveExtractor extractor;
+    const ArchiveInfo archiveInfo = extractor.getArchiveInfo(bundleResult.outputPath);
+    const bool hasMarker = archiveInfo.contents.contains(QLatin1String(".remus.md"));
+    if (!hasMarker) {
+        qCritical() << "\u2717 Bundle does not contain .remus.md marker";
+        return 1;
+    }
+    qInfo() << "\u2713 Bundle created:" << bundleResult.outputPath;
+    qInfo() << "\u2713 .remus.md marker present in archive";
+    qInfo() << "";
+
+    qInfo() << "\u2554\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2557";
+    qInfo() << "\u2551  Integration Test Summary                                   \u2551";
+    qInfo() << "\u255a\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u255d";
+    qInfo() << "\u2713 Database query: Working";
+    qInfo() << "\u2713 DAT loading: Working";
+    qInfo() << "\u2713 Multi-signal matching: Working";
+    qInfo() << "\u2713 Hash calculation: Working";
+    qInfo() << "\u2713 System detection: Working";
+    qInfo() << "\u2713 Bundling (.remus.md marker): Working";
     qInfo() << "";
     qInfo() << "Full metadata pipeline is operational!";
     

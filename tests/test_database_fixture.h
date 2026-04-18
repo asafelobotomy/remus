@@ -31,6 +31,7 @@ private slots:
     void testGetFileCountBySystem();
     void testGetFilesWithoutHashes();
     void testInsertFileDuplicateReturnsZero();
+    void testInsertArchiveMembersWithSameBasenameRemainDistinct();
     void testGetUnprocessedFiles();
     void testUpdateFilePath();
     void testInsertAndGetPatchedFileMetadata();

@@ -116,6 +116,29 @@ void DatabaseTest::testInsertFileDuplicateReturnsZero()
     QCOMPARE(db.insertFile(first), 0);
 }
 
+void DatabaseTest::testInsertArchiveMembersWithSameBasenameRemainDistinct()
+{
+    Database db;
+    QVERIFY(db.initialize(":memory:"));
+
+    const int libId = db.insertLibrary("/roms", "Test");
+    const int sysId = db.getSystemId("Nintendo DS");
+
+    FileRecord first = makeRecord(libId, sysId, "game.nds");
+    first.originalPath = QStringLiteral("/roms/archive.zip");
+    first.currentPath = first.originalPath;
+    first.isCompressed = true;
+    first.archivePath = first.originalPath;
+    first.archiveInternalPath = QStringLiteral("folder-a/game.nds");
+
+    FileRecord second = first;
+    second.archiveInternalPath = QStringLiteral("folder-b/game.nds");
+
+    QVERIFY(db.insertFile(first) > 0);
+    QVERIFY(db.insertFile(second) > 0);
+    QCOMPARE(db.getAllFiles().size(), 2);
+}
+
 void DatabaseTest::testGetUnprocessedFiles()
 {
     Database db;

@@ -10,6 +10,9 @@
 #include <QStandardPaths>
 #include <QDir>
 
+#include "../src/core/database.h"
+#include "../src/core/verification_engine.h"
+
 class CliSmokeTest : public QObject {
     Q_OBJECT
 
@@ -43,6 +46,7 @@ private:
     QProcessEnvironment cliEnvironment() const {
         QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
         env.insert("QT_QPA_PLATFORM", "offscreen");
+        env.insert("QT_FORCE_STDERR_LOGGING", "1");
         env.insert("QT_LOGGING_RULES", "remus.cli.info=true");
         env.insert("LANG", "en_US.UTF-8");
         env.insert("LC_ALL", "en_US.UTF-8");
@@ -59,6 +63,7 @@ private:
         const QString binary = cliPath();
         QVERIFY2(!binary.isEmpty(), "remus-cli binary not found next to tests");
         proc.start(binary, args);
+        QVERIFY2(proc.waitForStarted(), "CLI failed to start");
         bool finished = proc.waitForFinished(30000);
         QVERIFY2(finished, "CLI did not finish in time");
         QCOMPARE(proc.exitCode(), expectedExit);
@@ -66,7 +71,6 @@ private:
 
     void runCliCapture(const QStringList &extraArgs, QString &output, int expectedExit = 0) const {
         QProcess proc;
-        proc.setProcessChannelMode(QProcess::MergedChannels);
         proc.setProcessEnvironment(cliEnvironment());
 
         QStringList args = extraArgs;
@@ -76,10 +80,19 @@ private:
         const QString binary = cliPath();
         QVERIFY2(!binary.isEmpty(), "remus-cli binary not found next to tests");
         proc.start(binary, args);
+        QVERIFY2(proc.waitForStarted(), "CLI failed to start");
         bool finished = proc.waitForFinished(30000);
         QVERIFY2(finished, "CLI did not finish in time");
         QCOMPARE(proc.exitCode(), expectedExit);
-        output = QString::fromUtf8(proc.readAll());
+
+        output = QString::fromUtf8(proc.readAllStandardOutput());
+        const QString standardError = QString::fromUtf8(proc.readAllStandardError());
+        if (!standardError.isEmpty()) {
+            if (!output.isEmpty() && !output.endsWith(QLatin1Char('\n'))) {
+                output += QLatin1Char('\n');
+            }
+            output += standardError;
+        }
     }
 
     void runCliJson(const QStringList &extraArgs, QJsonDocument &doc, int expectedExit = 0) const {
@@ -221,8 +234,10 @@ private slots:
         QString output;
         runCliCapture({"--db", dbPath, "--verify", datPath}, output);
 
-        QVERIFY2(output.contains("System: \"Nintendo DS\""), qPrintable(output));
-        QVERIFY2(output.contains("Total files: 1"), qPrintable(output));
+        QVERIFY2(output.contains("System: \"Nintendo DS\""),
+                 qPrintable(QStringLiteral("Captured output:\n%1").arg(output)));
+        QVERIFY2(output.contains("Total files: 1"),
+                 qPrintable(QStringLiteral("Captured output:\n%1").arg(output)));
     }
 
     void testModSystemsFromCatalog() {
@@ -419,6 +434,48 @@ private slots:
         runCli({"--db", dbPath, "--scan", libraryB, "--generate-m3u", "--m3u-dir", outputDir});
 
         QVERIFY(QFile::exists(outputDir + "/Metal Gear Solid (USA).m3u"));
+    }
+
+    void testVerifyXmlDatUsesHeaderSystemName() {
+        QTemporaryDir dir;
+        QVERIFY(dir.isValid());
+
+        const QString dbPath = dir.filePath("test.db");
+        const QString romPath = dir.filePath("Test Game.nds");
+        {
+            QFile romFile(romPath);
+            QVERIFY(romFile.open(QIODevice::WriteOnly));
+            QVERIFY(romFile.write("ABCD") == 4);
+        }
+
+        const QString datPath = dir.filePath("test.dat");
+        {
+            QFile datFile(datPath);
+            QVERIFY(datFile.open(QIODevice::WriteOnly | QIODevice::Text));
+            QTextStream out(&datFile);
+            out << "<?xml version=\"1.0\"?>\n";
+            out << "<datafile>\n";
+            out << "  <header>\n";
+            out << "    <name>Nintendo - Nintendo DS</name>\n";
+            out << "    <description>Normalization test DAT</description>\n";
+            out << "    <version>1.0</version>\n";
+            out << "  </header>\n";
+            out << "  <game name=\"Test Game\">\n";
+            out << "    <description>Test Game</description>\n";
+            out << "    <rom name=\"Test Game.nds\" size=\"4\" crc=\"00000000\"/>\n";
+            out << "  </game>\n";
+            out << "</datafile>\n";
+        }
+
+        runCli({"--db", dbPath, "--scan", dir.path(), "--hash"});
+        runCli({"--db", dbPath, "--verify", datPath});
+
+        Remus::Database db;
+        QVERIFY(db.initialize(dbPath));
+        Remus::VerificationEngine engine(&db);
+        const QMap<QString, Remus::DatHeader> imported = engine.getImportedDats();
+        QVERIFY(imported.contains("Nintendo DS"));
+        QVERIFY(!imported.contains("test"));
     }
 };
 

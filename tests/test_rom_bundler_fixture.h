@@ -130,6 +130,7 @@ private slots:
     void testBundle_compressedNestedPayloadIsFlattenedToArchiveRoot();
     void testBundle_markerUsesStoredPercentConfidence();
     void testBundle_skipsWhenCurrentCompressedPathAlreadyBundled();
+    void testBundle_rebundlesWhenCurrentPathPointsToPriorBundleOutput();
     // ── disc conversion ──
     void testBundle_binPrimaryWithCueChildCanBePackagedAsChd();
     void testBundle_cueDiscMediaCanBePackagedAsChd();

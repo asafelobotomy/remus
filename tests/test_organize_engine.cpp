@@ -28,6 +28,9 @@ private slots:
     void testFolderNamingNoneIsFlat();
     void testFolderNamingDefaultCreatesSubfolder();
     void testFolderNamingBatoceraGenesis();
+    void testFolderNamingBatoceraSegaCD();
+    void testFolderNaming3DO();
+    void testFolderNamingNeoGeoCD();
     void testFolderNamingSchemeFromString();
 
 private:
@@ -433,6 +436,47 @@ void OrganizeEngineTest::testFolderNamingBatoceraGenesis()
     // Batocera uses "megadrive" for Genesis
     QFileInfo info(result.newPath);
     QCOMPARE(info.absolutePath(), QDir(dstDir.path()).filePath("megadrive"));
+}
+
+void OrganizeEngineTest::testFolderNamingBatoceraSegaCD()
+{
+    using Constants::FolderNaming::Scheme;
+    using Constants::FolderNaming::folderNameForSystemId;
+    using namespace Constants::Systems;
+
+    // Batocera uses "megacd" (not "segacd") for Sega CD
+    QCOMPARE(folderNameForSystemId(ID_SEGA_CD, Scheme::Batocera), QStringLiteral("megacd"));
+    // All other schemes use "segacd"
+    QCOMPARE(folderNameForSystemId(ID_SEGA_CD, Scheme::Default),  QStringLiteral("segacd"));
+    QCOMPARE(folderNameForSystemId(ID_SEGA_CD, Scheme::RetroPie), QStringLiteral("segacd"));
+    QCOMPARE(folderNameForSystemId(ID_SEGA_CD, Scheme::EmuDeck),  QStringLiteral("segacd"));
+    QCOMPARE(folderNameForSystemId(ID_SEGA_CD, Scheme::RomM),     QStringLiteral("segacd"));
+}
+
+void OrganizeEngineTest::testFolderNaming3DO()
+{
+    using Constants::FolderNaming::Scheme;
+    using Constants::FolderNaming::folderNameForSystemId;
+    using namespace Constants::Systems;
+
+    QCOMPARE(folderNameForSystemId(ID_3DO, Scheme::Default),  QStringLiteral("3do"));
+    QCOMPARE(folderNameForSystemId(ID_3DO, Scheme::Batocera), QStringLiteral("3do"));
+    QCOMPARE(folderNameForSystemId(ID_3DO, Scheme::RetroPie), QStringLiteral("3do"));
+    QCOMPARE(folderNameForSystemId(ID_3DO, Scheme::EmuDeck),  QStringLiteral("3do"));
+    QCOMPARE(folderNameForSystemId(ID_3DO, Scheme::RomM),     QStringLiteral("3do"));
+}
+
+void OrganizeEngineTest::testFolderNamingNeoGeoCD()
+{
+    using Constants::FolderNaming::Scheme;
+    using Constants::FolderNaming::folderNameForSystemId;
+    using namespace Constants::Systems;
+
+    QCOMPARE(folderNameForSystemId(ID_NEO_GEO_CD, Scheme::Default),  QStringLiteral("neogeocd"));
+    QCOMPARE(folderNameForSystemId(ID_NEO_GEO_CD, Scheme::Batocera), QStringLiteral("neogeocd"));
+    QCOMPARE(folderNameForSystemId(ID_NEO_GEO_CD, Scheme::RetroPie), QStringLiteral("neogeocd"));
+    QCOMPARE(folderNameForSystemId(ID_NEO_GEO_CD, Scheme::EmuDeck),  QStringLiteral("neogeocd"));
+    QCOMPARE(folderNameForSystemId(ID_NEO_GEO_CD, Scheme::RomM),     QStringLiteral("neogeocd"));
 }
 
 void OrganizeEngineTest::testFolderNamingSchemeFromString()
