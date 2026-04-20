@@ -208,6 +208,10 @@ int main(int argc, char *argv[])
         "Auto-configures bundle format, disc format, and folder naming.",
         "preset"));
 
+    addActionOption(QCommandLineOption("build-compendium", "Build a canonical compendium database from a manifest"));
+    addOption(QCommandLineOption("compendium-manifest", "Path to compendium source manifest JSON", "path"));
+    addOption(QCommandLineOption("compendium-output", "Output SQLite path for compiled compendium", "path", "data/compendium/remus_compendium.db"));
+
     addActionOption(QCommandLineOption("update-dats", "Download/update DAT databases from libretro-database"));
     addOption(QCommandLineOption("update-dats-all", "Download all systems (default: core 34 only)"));
     addActionOption(QCommandLineOption("import-dat",  "Import a DAT file into the local database directory", "dat-file"));
@@ -325,6 +329,7 @@ int main(int argc, char *argv[])
     if (int rc = handlePatchCommands(ctx))         return rc;
     if (int rc = handleModCommands(ctx))           return rc;
     if (int rc = handleModCatalogBuildCommand(ctx)) return rc;
+    if (int rc = handleBuildCompendiumCommand(ctx)) return rc;
     if (int rc = handleUpdateDatsCommand(ctx))     return rc;
     if (int rc = handleImportDatCommand(ctx))      return rc;
     if (int rc = handleRemoveDatCommand(ctx))      return rc;

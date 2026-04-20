@@ -6,6 +6,7 @@
 #include <QCoreApplication>
 #include <QDebug>
 #include <QFile>
+#include <QStandardPaths>
 #include <QTemporaryDir>
 #include "../src/core/database.h"
 #include "../src/core/rom_bundler.h"
@@ -233,7 +234,16 @@ int main(int argc, char *argv[])
     RomBundler::BundleConfig cfg;
     cfg.includeBoxArt   = false;
     cfg.dryRun          = false;
-    cfg.outputFormat    = ArchiveFormat::ZIP;
+    const bool hasZip = !QStandardPaths::findExecutable(QStringLiteral("zip")).isEmpty();
+    const bool hasSevenZip = !QStandardPaths::findExecutable(QStringLiteral("7z")).isEmpty()
+        || !QStandardPaths::findExecutable(QStringLiteral("7za")).isEmpty()
+        || !QStandardPaths::findExecutable(QStringLiteral("7zz")).isEmpty();
+    if (!hasZip && !hasSevenZip) {
+        qCritical() << "✗ No archive compression tool available for bundling test";
+        return 1;
+    }
+
+    cfg.outputFormat = hasZip ? ArchiveFormat::ZIP : ArchiveFormat::SevenZip;
     cfg.discOutputFormat = RomBundler::DiscOutputFormat::Original;
 
     RomBundler::BundleResult bundleResult = bundler.bundle(

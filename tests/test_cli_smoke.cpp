@@ -1,9 +1,13 @@
 #include <QtTest/QtTest>
+#include <QDateTime>
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QProcess>
 #include <QProcessEnvironment>
+#include <QSqlDatabase>
+#include <QSqlError>
+#include <QSqlQuery>
 #include <QTemporaryDir>
 #include <QFile>
 #include <QTextStream>
@@ -238,6 +242,97 @@ private slots:
                  qPrintable(QStringLiteral("Captured output:\n%1").arg(output)));
         QVERIFY2(output.contains("Total files: 1"),
                  qPrintable(QStringLiteral("Captured output:\n%1").arg(output)));
+    }
+
+    void testBuildCompendiumCreatesDatabaseAndReport() {
+        QTemporaryDir dir;
+        QVERIFY(dir.isValid());
+
+        const QString sourcePath = dir.filePath("dummy-source.dat");
+        {
+            QFile sourceFile(sourcePath);
+            QVERIFY(sourceFile.open(QIODevice::WriteOnly | QIODevice::Text));
+            QVERIFY(sourceFile.write("dummy\n") == 6);
+        }
+
+        const QString manifestPath = dir.filePath("manifest.json");
+        {
+            QFile manifestFile(manifestPath);
+            QVERIFY(manifestFile.open(QIODevice::WriteOnly | QIODevice::Text));
+
+            QJsonObject sourceObject;
+            sourceObject.insert("source_id", "test-source");
+            sourceObject.insert("display_name", "Test Source");
+            sourceObject.insert("source_type", "dat");
+            sourceObject.insert("snapshot_id", "snapshot-001");
+            sourceObject.insert("snapshot_label", "Snapshot 001");
+            sourceObject.insert("snapshot_ref", "test-ref");
+            sourceObject.insert("path", sourcePath);
+            sourceObject.insert("checksum_sha256", "abc123");
+            sourceObject.insert("enabled", true);
+            sourceObject.insert("priority", 10);
+
+            QJsonObject manifestObject;
+            manifestObject.insert("build_id", "test-build");
+            manifestObject.insert("schema_version", 1);
+            manifestObject.insert("sources", QJsonArray{sourceObject});
+
+            const QByteArray manifestJson = QJsonDocument(manifestObject).toJson(QJsonDocument::Indented);
+            QVERIFY(manifestFile.write(manifestJson) == manifestJson.size());
+        }
+
+        const QString outputDbPath = dir.filePath("remus_compendium_test.db");
+        const QString reportPath = dir.filePath("remus_compendium_test.report.json");
+
+        QString output;
+        runCliCapture({"--build-compendium", "--compendium-manifest", manifestPath, "--compendium-output", outputDbPath}, output);
+
+        QVERIFY2(QFile::exists(outputDbPath), qPrintable(output));
+        QVERIFY2(QFile::exists(reportPath), qPrintable(output));
+        QVERIFY2(output.contains("Build ID:"), qPrintable(output));
+        QVERIFY2(output.contains("Sources recorded:"), qPrintable(output));
+
+        QFile reportFile(reportPath);
+        QVERIFY(reportFile.open(QIODevice::ReadOnly | QIODevice::Text));
+        const QJsonDocument reportDoc = QJsonDocument::fromJson(reportFile.readAll());
+        QVERIFY(reportDoc.isObject());
+        QCOMPARE(reportDoc.object().value("build_id").toString(), QString("test-build"));
+        QCOMPARE(reportDoc.object().value("schema_version").toInt(), 1);
+        QCOMPARE(reportDoc.object().value("unresolved_conflicts").toInt(), 0);
+
+        const QString connectionName = QStringLiteral("compendium_smoke_%1")
+            .arg(QString::number(QDateTime::currentMSecsSinceEpoch()));
+        QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE", connectionName);
+        db.setDatabaseName(outputDbPath);
+        QVERIFY2(db.open(), qPrintable(db.lastError().text()));
+
+        QSqlQuery countsQuery(db);
+        QVERIFY2(countsQuery.exec("SELECT COUNT(*) FROM compendium_builds"), qPrintable(countsQuery.lastError().text()));
+        QVERIFY(countsQuery.next());
+        QCOMPARE(countsQuery.value(0).toInt(), 1);
+
+        QVERIFY2(countsQuery.exec("SELECT COUNT(*) FROM sources"), qPrintable(countsQuery.lastError().text()));
+        QVERIFY(countsQuery.next());
+        QCOMPARE(countsQuery.value(0).toInt(), 1);
+
+        QVERIFY2(countsQuery.exec("SELECT COUNT(*) FROM source_snapshots"), qPrintable(countsQuery.lastError().text()));
+        QVERIFY(countsQuery.next());
+        QCOMPARE(countsQuery.value(0).toInt(), 1);
+
+        QVERIFY2(countsQuery.exec("SELECT COUNT(*) FROM systems"), qPrintable(countsQuery.lastError().text()));
+        QVERIFY(countsQuery.next());
+        QCOMPARE(countsQuery.value(0).toInt(), 42);
+
+        QSqlQuery sourceQuery(db);
+        QVERIFY2(sourceQuery.exec("SELECT source_id, display_name, enabled, priority FROM sources"), qPrintable(sourceQuery.lastError().text()));
+        QVERIFY(sourceQuery.next());
+        QCOMPARE(sourceQuery.value(0).toString(), QString("test-source"));
+        QCOMPARE(sourceQuery.value(1).toString(), QString("Test Source"));
+        QCOMPARE(sourceQuery.value(2).toInt(), 1);
+        QCOMPARE(sourceQuery.value(3).toInt(), 10);
+
+        db.close();
+        QSqlDatabase::removeDatabase(connectionName);
     }
 
     void testModSystemsFromCatalog() {
