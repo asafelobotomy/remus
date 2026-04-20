@@ -23,6 +23,13 @@ add_library(remus-metadata STATIC
     rate_limiter.cpp
     artwork_downloader.cpp
     filename_normalizer.cpp
+    # Compendium compiler pipeline
+    compendium_dat_extractor.cpp
+    compendium_normalizer.cpp
+    compendium_identity_linker.cpp
+    compendium_fact_inserter.cpp
+    compendium_merge_resolver.cpp
+    compendium_compiler_service.cpp
 )
 
 target_link_libraries(remus-metadata PUBLIC
@@ -31,6 +38,7 @@ target_link_libraries(remus-metadata PUBLIC
     Qt6::Sql
     Qt6::Gui
     remus-constants
+    remus-core
 )
 
 target_include_directories(remus-metadata PUBLIC
