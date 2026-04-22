@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <datafile xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="wiiutdb.xsd">
-	<WiiUTDB version="20260326234346" filter="EN" games="2860"/>
+	<WiiUTDB version="20260422092849" filter="EN" games="2860"/>
 	<!--
  GameTDB: WiiU, Database started in 2012 (https://www.gametdb.com)
  Never modify this file manually, it will get overwritten when you update. You can add games and fixes on the website.
@@ -41004,10 +41004,13 @@ Promising to be the zaniest Rayman adventure yet, Raving Rabbids sees our haples
 		<publisher>Nintendo</publisher>
 		<date year="2016" month="8" day="17"/>
 		<genre>sports,baseball</genre>
-		<rating type="CERO" value=""/>
+		<rating type="CERO" value="A"/>
 		<wi-fi players="0"/>
 		<input players="4">
 			<control type="pad" required="true"/>
+			<control type="wiimote" required="true"/>
+			<control type="nunchuk" required="false"/>
+			<control type="mii" required="false"/>
 		</input>
 		<rom version="" name="Mario Super Sluggers (Japan) (JA).wud"/>
 	</game>
@@ -46698,12 +46701,14 @@ Can you reunite Shiny with his family?</synopsis>
 		<developer>Shin'en</developer>
 		<publisher>Shin'en Multimedia</publisher>
 		<date year="2015" month="12" day="10"/>
-		<genre>sci-fi,racing,futuristic racing</genre>
+		<genre>racing,sci-fi,arcade,futuristic racing</genre>
 		<rating type="PEGI" value="3">
 			<descriptor>online</descriptor>
 		</rating>
 		<wi-fi players="8">
 			<feature>online</feature>
+			<feature>download</feature>
+			<feature>score</feature>
 		</wi-fi>
 		<input players="4">
 			<control type="pad" required="false"/>

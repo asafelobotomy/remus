@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <datafile xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="wiitdb.xsd">
-	<WiiTDB version="20260328190839" filter="EN_wiiware_gamecube" games="10153"/>
+	<WiiTDB version="20260422092754" filter="EN_wiiware_gamecube" games="10154"/>
 	<!--
  GameTDB: Wii, Database started by Lustar in 2009 (https://www.gametdb.com)
  Never modify this file manually, it will get overwritten when you update. You can add games and fixes on the website.
@@ -7530,11 +7530,11 @@ Features
 			<synopsis/>
 		</locale>
 		<locale lang="ZHTW">
-			<title>密特羅德究極(日或中)</title>
+			<title>密特羅德究極1(日或中)</title>
 			<synopsis/>
 		</locale>
 		<locale lang="ZHCN">
-			<title>密特罗德究极(日或中)</title>
+			<title>密特罗德究极1(日或中)</title>
 			<synopsis/>
 		</locale>
 		<publisher>Nintendo</publisher>
@@ -9129,11 +9129,11 @@ Challenging for casual and hard-core players alike Ethical hunting integral to t
 			<synopsis/>
 		</locale>
 		<locale lang="ZHTW">
-			<title>EA運動活力(美)</title>
+			<title>EA運動活力1(美)</title>
 			<synopsis/>
 		</locale>
 		<locale lang="ZHCN">
-			<title>EA运动活力(美)</title>
+			<title>EA运动活力1(美)</title>
 			<synopsis/>
 		</locale>
 		<developer>EA Canada</developer>
@@ -9233,11 +9233,11 @@ Challenging for casual and hard-core players alike Ethical hunting integral to t
 			<synopsis/>
 		</locale>
 		<locale lang="ZHTW">
-			<title>EA運動活力(歐)</title>
+			<title>EA運動活力1(歐)</title>
 			<synopsis/>
 		</locale>
 		<locale lang="ZHCN">
-			<title>EA运动活力(欧)</title>
+			<title>EA运动活力1(欧)</title>
 			<synopsis/>
 		</locale>
 		<developer>EA Canada</developer>
@@ -12951,11 +12951,11 @@ Take control of the Raving Rabbids, Sam Fisher, Altair, the Prince of Persia, Ra
 			<synopsis/>
 		</locale>
 		<locale lang="ZHTW">
-			<title>你比五年級生聰明嗎(美)</title>
+			<title>你比五年級生聰明嗎1(美)</title>
 			<synopsis/>
 		</locale>
 		<locale lang="ZHCN">
-			<title>你比五年级生聪明吗(美)</title>
+			<title>你比五年级生聪明吗1(美)</title>
 			<synopsis/>
 		</locale>
 		<developer>ImaginEngine</developer>
@@ -14788,7 +14788,7 @@ Have a blast with Disney Sing It: Pop Hits – the video-based karaoke video gam
 		<date year="2008" month="10" day="20"/>
 		<genre>music,health,rhythm,coaching</genre>
 		<rating type="ESRB" value="E"/>
-		<wi-fi players="1">
+		<wi-fi players="0">
 			<feature>online</feature>
 			<feature>score</feature>
 			<feature>messageboard</feature>
@@ -14836,7 +14836,7 @@ Have a blast with Disney Sing It: Pop Hits – the video-based karaoke video gam
 		<date year="2008" month="10" day="16"/>
 		<genre>music,health,rhythm,coaching</genre>
 		<rating type="CERO" value="A"/>
-		<wi-fi players="1">
+		<wi-fi players="0">
 			<feature>online</feature>
 			<feature>score</feature>
 			<feature>messageboard</feature>
@@ -14982,7 +14982,7 @@ Create a musical masterpiece with up to four players. Anyone can play the huge s
 		<date year="2008" month="11" day="14"/>
 		<genre>music,health,rhythm,coaching</genre>
 		<rating type="PEGI" value="3"/>
-		<wi-fi players="1">
+		<wi-fi players="0">
 			<feature>online</feature>
 			<feature>score</feature>
 			<feature>messageboard</feature>
@@ -30653,11 +30653,11 @@ Enjoy over 30 levels and 6 unique games modes for hours of magical action!</syno
 		<developer>Office Create</developer>
 		<publisher>Taito</publisher>
 		<date year="2007" month="2" day="8"/>
+		<genre>simulation,cooking</genre>
 		<rating type="CERO" value="A"/>
 		<wi-fi players="0"/>
 		<input players="2">
 			<control type="wiimote" required="true"/>
-			<control type="nunchuk" required="false"/>
 		</input>
 		<rom version="0" name="Cooking Mama: Minna to Issho ni Oryouri Taikai! (Japan) (JA).iso" size="4699979776" crc="55da32da" md5="a4a44cada8dc5e8d664acb18ff3b3d92" sha1="70caa30a8ded3ad05e2a3e8fd70d331fd53cf775"/>
 		<case versions="2"/>
@@ -33410,7 +33410,7 @@ Lightning-fast fighting, light RPG and action gameplay elements give players the
 			<synopsis/>
 		</locale>
 		<locale lang="ZHCN">
-			<title>龙珠Z 电光火石(日)</title>
+			<title>龙珠Z 电光火石1(日)</title>
 			<synopsis/>
 		</locale>
 		<developer>Spike</developer>
@@ -36302,11 +36302,11 @@ In Resident Evil for the Wii, players now have a wide range of control options, 
 			<synopsis/>
 		</locale>
 		<locale lang="ZHTW">
-			<title>惡靈古堡(日或中)</title>
+			<title>惡靈古堡1(日或中)</title>
 			<synopsis/>
 		</locale>
 		<locale lang="ZHCN">
-			<title>生化危机(日或中)</title>
+			<title>生化危机1(日或中)</title>
 			<synopsis/>
 		</locale>
 		<developer>Capcom</developer>
@@ -36881,11 +36881,11 @@ By learning the ancient art of Japanese fighting with your katana and the focuse
 			<synopsis/>
 		</locale>
 		<locale lang="ZHTW">
-			<title>赤鐵(美)</title>
+			<title>赤鐵1(美)</title>
 			<synopsis/>
 		</locale>
 		<locale lang="ZHCN">
-			<title>赤铁(美)</title>
+			<title>赤铁1(美)</title>
 			<synopsis/>
 		</locale>
 		<developer>Ubisoft</developer>
@@ -39277,6 +39277,7 @@ All three minigames give you the option of playing with a Nunchuk or, if you don
 		<input players="4">
 			<control type="wiimote" required="true"/>
 			<control type="nunchuk" required="true"/>
+			<control type="mii" required="false"/>
 		</input>
 		<rom version="0" name="FIFA 08: World Class Soccer (Japan) (JA).iso" size="4699979776" crc="16469d1e" md5="ef021cbfd4fa197ff05c6c435c5962a3" sha1="137551516ce14bcb9dbf0f151bdf5e719397dd41"/>
 	</game>
@@ -39324,6 +39325,7 @@ All three minigames give you the option of playing with a Nunchuk or, if you don
 		<input players="4">
 			<control type="wiimote" required="true"/>
 			<control type="nunchuk" required="true"/>
+			<control type="mii" required="false"/>
 		</input>
 		<rom version="0" name="FIFA 08 (Korea) (KO).iso" size="4699979776" crc="82a3e323" md5="fec85a1cc384fefa930e49cfbc841d96" sha1="23c0859042765b97d3e86e1c03623d4efe173a48"/>
 	</game>
@@ -39391,6 +39393,7 @@ All three minigames give you the option of playing with a Nunchuk or, if you don
 		<input players="4">
 			<control type="wiimote" required="true"/>
 			<control type="nunchuk" required="true"/>
+			<control type="mii" required="false"/>
 		</input>
 		<rom version="0" name="FIFA 08 (Europe) (EN,NL).iso" size="4699979776" crc="950b8e26" md5="6b920b7e050e6800c446d3fb70796939" sha1="a2b227f4ecd909266b727f235e1d0317678157ad"/>
 	</game>
@@ -39450,6 +39453,7 @@ All three minigames give you the option of playing with a Nunchuk or, if you don
 		<input players="4">
 			<control type="wiimote" required="true"/>
 			<control type="nunchuk" required="true"/>
+			<control type="mii" required="false"/>
 		</input>
 		<rom version="0" name="FIFA 08 (Europe) (FR,DE).iso" size="4699979776" crc="571504b5" md5="0470f74ae4c5f8771ff6c935dfe5a3fd" sha1="8f4d08a434fbf30dd2840655d6f95b3dae9f98cf"/>
 	</game>
@@ -39509,6 +39513,7 @@ All three minigames give you the option of playing with a Nunchuk or, if you don
 		<input players="4">
 			<control type="wiimote" required="true"/>
 			<control type="nunchuk" required="true"/>
+			<control type="mii" required="false"/>
 		</input>
 		<rom version="0" name="FIFA 08 (Europe) (ES,IT).iso" size="4699979776" crc="815cd2b0" md5="384ee48d073e179452d05cc9250469ba" sha1="7d900b8417cd4702cb959b3e27ac0c7698cff45f"/>
 	</game>
@@ -40488,7 +40493,7 @@ Get help from a friend at various points in the game with co-op play sections th
 		<developer>Square Enix</developer>
 		<publisher>Square-Enix</publisher>
 		<date year="2009" month="3" day="24"/>
-		<genre>action,role-playing</genre>
+		<genre>action,adventure,role-playing</genre>
 		<rating type="ESRB" value="E10+">
 			<descriptor>fantasy violence</descriptor>
 			<descriptor>language</descriptor>
@@ -40497,11 +40502,13 @@ Get help from a friend at various points in the game with co-op play sections th
 		<wi-fi players="4">
 			<feature>online</feature>
 			<feature>nintendods</feature>
+			<feature>wiimmfi</feature>
 		</wi-fi>
 		<input players="1">
 			<control type="wiimote" required="true"/>
 			<control type="nunchuk" required="true"/>
 			<control type="nintendods" required="false"/>
+			<control type="mii" required="false"/>
 		</input>
 		<rom version="0" name="Final Fantasy Crystal Chronicles: Echoes of Time (USA) (EN,FR,ES).iso" size="4699979776" crc="0bc95379" md5="ea2b120e323d5259d7871ec465e4dab6" sha1="0c7ac30cc373c9876879080ba2758a50cdcc3fb5"/>
 	</game>
@@ -40537,15 +40544,18 @@ Get help from a friend at various points in the game with co-op play sections th
 		<developer>Square-Enix</developer>
 		<publisher>Square-Enix</publisher>
 		<date year="2009" month="1" day="29"/>
-		<genre>action,role-playing</genre>
+		<genre>action,adventure,role-playing</genre>
 		<rating type="CERO" value="A"/>
 		<wi-fi players="4">
 			<feature>online</feature>
 			<feature>nintendods</feature>
+			<feature>wiimmfi</feature>
 		</wi-fi>
 		<input players="1">
 			<control type="wiimote" required="true"/>
 			<control type="nunchuk" required="true"/>
+			<control type="nintendods" required="false"/>
+			<control type="mii" required="false"/>
 		</input>
 		<rom version="0" name="Final Fantasy Crystal Chronicles: Echoes of Time (Japan) (JA).iso" size="4699979776" crc="73c2462c" md5="03201960288c25cf1a1fa5e94ee6f351" sha1="23411e99c2b50093d3220a3e1cc36ecd5e9e4d34"/>
 	</game>
@@ -40589,7 +40599,7 @@ Get help from a friend at various points in the game with co-op play sections th
 		<developer>Square-Enix</developer>
 		<publisher>Square-Enix</publisher>
 		<date year="2009" month="3" day="26"/>
-		<genre>action,role-playing</genre>
+		<genre>action,adventure,role-playing</genre>
 		<rating type="PEGI" value="12">
 			<descriptor>language</descriptor>
 			<descriptor>violence</descriptor>
@@ -40598,11 +40608,13 @@ Get help from a friend at various points in the game with co-op play sections th
 		<wi-fi players="4">
 			<feature>online</feature>
 			<feature>nintendods</feature>
+			<feature>wiimmfi</feature>
 		</wi-fi>
 		<input players="1">
 			<control type="wiimote" required="true"/>
 			<control type="nunchuk" required="true"/>
 			<control type="nintendods" required="false"/>
+			<control type="mii" required="false"/>
 		</input>
 		<rom version="0" name="Final Fantasy Crystal Chronicles: Echoes of Time (Europe) (EN,FR,DE,ES).iso" size="4699979776" crc="e8663b8b" md5="80e60fa6e8802e3773606a05c99980c0" sha1="7bcca1d5e94c7e0b67486c33ed9e44a216ea69ae"/>
 	</game>
@@ -40933,16 +40945,18 @@ Maya provides you fitness advice and motivational pep talks during workouts that
 			<title>职棒家庭棒球场[WiFi](日)</title>
 			<synopsis/>
 		</locale>
+		<developer>Namco</developer>
 		<publisher>Namco</publisher>
 		<date year="2008" month="5" day="1"/>
 		<genre>sports,baseball</genre>
 		<rating type="CERO" value="A"/>
 		<wi-fi players="2">
 			<feature>online</feature>
+			<feature>wiimmfi</feature>
 		</wi-fi>
 		<input players="4">
 			<control type="wiimote" required="true"/>
-			<control type="nunchuk" required="false"/>
+			<control type="mii" required="false"/>
 		</input>
 		<rom version="0" name="Pro Yakyuu Family Stadium (Japan) (JA).iso" size="4699979776" crc="9e40c061" md5="1597b7b3ef043364cd2d6cc475763676" sha1="ba174c8daf63c9b3863b5df1ebb11e286993a3b2"/>
 	</game>
@@ -41702,6 +41716,7 @@ Inspired by the Spider-Man movies, this Action Adventure game reinterprets big-s
 			<control type="nunchuk" required="false"/>
 		</input>
 		<rom version="0" name="Wii Fit Plus (Taiwan) (ZHTW).iso" size="4699979776" crc="3f8e21c0" md5="5dc961f0745188724a6b8ad9dc6c915d" sha1="1126d7bc53e4c9864460fce71c6d3513304a8d30"/>
+		<case versions="2"/>
 	</game>
 	<game name="FaceBreaker K.O. Party (USA) (EN,FR)">
 		<id>RFQE69</id>
@@ -44427,6 +44442,7 @@ Wii and DS Linked Content - Link the DS and Wii versions to unlock bonus content
 			<title>银魂(日)</title>
 			<synopsis/>
 		</locale>
+		<developer>Natsume</developer>
 		<publisher>Namco</publisher>
 		<date year="2007" month="10" day="25"/>
 		<genre>action</genre>
@@ -44435,6 +44451,7 @@ Wii and DS Linked Content - Link the DS and Wii versions to unlock bonus content
 		<input players="1">
 			<control type="wiimote" required="true"/>
 			<control type="nunchuk" required="false"/>
+			<control type="mii" required="false"/>
 		</input>
 		<rom version="0" name="Gintama: Yorozuya Chuubu: Tsukkomable Douga (Japan) (JA).iso" size="4699979776" crc="d7457659" md5="94763429822cd893e6d407cb0ccfea89" sha1="a4b9ece5b61d908bd3d0ffbb76f30006556ad8d9"/>
 	</game>
@@ -46194,11 +46211,14 @@ Return to Hogwarts to help Harry survive his sixth year. You will have a chance 
 			<title>Sammy合集 北斗神拳[WiFi](日)</title>
 			<synopsis/>
 		</locale>
+		<developer>Sammy Studios</developer>
 		<publisher>Sega</publisher>
 		<date year="2007" month="5" day="24"/>
+		<genre>simulation,traditional</genre>
 		<rating type="CERO" value="A"/>
 		<wi-fi players="1">
 			<feature>online</feature>
+			<feature>wiimmfi</feature>
 		</wi-fi>
 		<input players="1">
 			<control type="wiimote" required="true"/>
@@ -53303,6 +53323,7 @@ For the first time, the beloved family game Jenga comes to the world of videogam
 			<title>人生游戏(日)</title>
 			<synopsis/>
 		</locale>
+		<developer>Takara Tomy</developer>
 		<publisher>Tomy</publisher>
 		<date year="2007" month="12" day="27"/>
 		<genre>party,board game</genre>
@@ -53310,7 +53331,7 @@ For the first time, the beloved family game Jenga comes to the world of videogam
 		<wi-fi players="0"/>
 		<input players="4">
 			<control type="wiimote" required="true"/>
-			<control type="nunchuk" required="false"/>
+			<control type="mii" required="false"/>
 		</input>
 		<rom version="0" name="Jinsei Game Wii (Japan) (JA).iso" size="4699979776" crc="e65f0a64" md5="0a6f7296f02708fa1d447b7184e89422" sha1="6fb553f4757f2e9b2a4c86c7aef040b45e10c818"/>
 	</game>
@@ -53879,6 +53900,7 @@ Features:
 			<control type="nunchuk" required="false"/>
 			<control type="classiccontroller" required="false"/>
 			<control type="gamecube" required="false"/>
+			<control type="mii" required="false"/>
 		</input>
 		<rom version="0" name="Jikkyou Powerful Pro Yakyuu Wii (Japan) (JA).iso" size="4699979776" crc="493a8f49" md5="b2f375ada690a6ee7d41fbeceae19744" sha1="bd70791fa5da7a09207786b3ea126815239150f4"/>
 	</game>
@@ -59808,11 +59830,10 @@ Avoid elimination and Tribal Council by winning the immunity challenges!
 			<title>Littlest Pet Shop</title>
 			<synopsis>Jump right into your own Littlest Pet Shop, full of cute, quirky pets that magically come to life in an exciting digital world. Collect some of the newest and cutest pets and explore the four separate environments where you can care for and play with your pets in a variety of mini-games. The more time you spend having fun with your pet, the more great stuff you earn for your pet shop, including new pets, playsets, accessories, and more. Experience your Littlest Pet Shop in a whole new way!
 
-
-* Collect and name 32 pets—all your soon to be favorite LITTLEST PET SHOP friends including brand new Fanciest, Cuddliest, Sportiest, and Chilliest pets, and many others too!
-    * Dress up your pets with over 100 accessories to make them even cuter. Choose from tons of unique pet accessories like scarves, glasses, and more!
-    * Play with your pets in four unique pet-sized worlds! Engage in all of your favorite winter activities, explore the depths of a thriving jungle, and enjoy a day out in the garden. Plus you’ll manage your pet shop through the hopping Pet Plaza.
-    * Compete in mini-games with your little pets! Play 16 fun and challenging games with your pet to unlock accessories, playsets, and new pets too! With a number of difficulty levels for each game, you can replay them over and over again.</synopsis>
+• Collect and name 32 pets—all your soon to be favorite LITTLEST PET SHOP friends including brand new Fanciest, Cuddliest, Sportiest, and Chilliest pets, and many others too!
+• Dress up your pets with over 100 accessories to make them even cuter. Choose from tons of unique pet accessories like scarves, glasses, and more!
+• Play with your pets in four unique pet-sized worlds! Engage in all of your favorite winter activities, explore the depths of a thriving jungle, and enjoy a day out in the garden. Plus you’ll manage your pet shop through the hopping Pet Plaza.
+• Compete in mini-games with your little pets! Play 16 fun and challenging games with your pet to unlock accessories, playsets, and new pets too! With a number of difficulty levels for each game, you can replay them over and over again.</synopsis>
 		</locale>
 		<locale lang="FR">
 			<title>Littlest Pet Shop</title>
@@ -59838,7 +59859,15 @@ Avoid elimination and Tribal Council by winning the immunity challenges!
 			<title>Littlest Pet Shop</title>
 			<synopsis/>
 		</locale>
+		<locale lang="SE">
+			<title>Littlest Pet Shop</title>
+			<synopsis/>
+		</locale>
 		<locale lang="DK">
+			<title>Littlest Pet Shop</title>
+			<synopsis/>
+		</locale>
+		<locale lang="FI">
 			<title>Littlest Pet Shop</title>
 			<synopsis/>
 		</locale>
@@ -65735,6 +65764,7 @@ Players will also get their nostalgia fix with the complete, original versions o
 			<control type="wiimote" required="true"/>
 			<control type="nunchuk" required="true"/>
 			<control type="classiccontroller" required="false"/>
+			<control type="mii" required="false"/>
 		</input>
 		<rom version="0" name="Namco Museum Remix (USA) (EN).iso" size="4699979776" crc="ba92694e" md5="856a0df7e2c90c17cb70db690fdd384c" sha1="573847ca025ada8f58dadf4d5fff8f967707bb86"/>
 	</game>
@@ -65801,6 +65831,7 @@ Also included in Namco Museum Remix are nine faithful classic Namco arcade games
 			<control type="wiimote" required="true"/>
 			<control type="nunchuk" required="true"/>
 			<control type="classiccontroller" required="false"/>
+			<control type="mii" required="false"/>
 		</input>
 		<rom version="0" name="Namco Museum Remix (Europe) (EN,FR,DE,ES,IT).iso" size="4699979776" crc="d3173f05" md5="ee5fdf64d27dd4e5b67aa945b2970abc" sha1="360889e4a356a529225cae4facd24de577ed4046"/>
 	</game>
@@ -66797,11 +66828,11 @@ Pass the ball inside and rule down low with ‘own the paint’ post play. Strin
 			<synopsis/>
 		</locale>
 		<locale lang="ZHTW">
-			<title>SNK街機經典Vol1(美)</title>
+			<title>SNK街機經典(美)</title>
 			<synopsis/>
 		</locale>
 		<locale lang="ZHCN">
-			<title>SNK街机经典Vol1(美)</title>
+			<title>SNK街机经典(美)</title>
 			<synopsis/>
 		</locale>
 		<developer>SNK Playmore</developer>
@@ -69315,6 +69346,7 @@ Can Anubis rise to the challenge that has been placed before him and bring peace
 			<control type="wiimote" required="true"/>
 			<control type="nunchuk" required="true"/>
 			<control type="classiccontroller" required="false"/>
+			<control type="mii" required="false"/>
 		</input>
 		<rom version="0" name="Namco Museum Remix (Korea).iso" size="4699979776" crc="e12f96eb" md5="b97bccea825c9bc2ede7fefb8f4dfce5" sha1="a370eb9723ce3198ba67d7a6d0363e9c80ca6f33"/>
 	</game>
@@ -72944,7 +72976,7 @@ Delicious Gameplay: An original, fresh combination of Wii™ gesture cooking and
 		<rating type="ESRB" value="E">
 			<descriptor>mild cartoon violence</descriptor>
 		</rating>
-		<wi-fi players="1">
+		<wi-fi players="0">
 			<feature>online</feature>
 			<feature>score</feature>
 		</wi-fi>
@@ -73040,7 +73072,7 @@ Delicious Gameplay: An original, fresh combination of Wii™ gesture cooking and
 		<date year="2009" month="3" day="12"/>
 		<genre>party</genre>
 		<rating type="PEGI" value="3"/>
-		<wi-fi players="1">
+		<wi-fi players="0">
 			<feature>online</feature>
 			<feature>score</feature>
 		</wi-fi>
@@ -73085,6 +73117,7 @@ Delicious Gameplay: An original, fresh combination of Wii™ gesture cooking and
 			<control type="nunchuk" required="true"/>
 			<control type="classiccontroller" required="false"/>
 			<control type="gamecube" required="false"/>
+			<control type="mii" required="false"/>
 		</input>
 		<rom version="1" name="Jikkyou Powerful Pro Yakyuu 15 (Japan) (JA) (v1).iso" size="4699979776" crc="b3ff25fc" md5="8761aca541a0fd45d061424b9af24aa2" sha1="0baad96099a1a22b7a1cb7a2fd79df9fa30e4fb4"/>
 	</game>
@@ -83124,7 +83157,6 @@ Special powers/weapons/moves/features: Anything from a Nintendo game could conce
 			<control type="nunchuk" required="false"/>
 			<control type="classiccontroller" required="false"/>
 			<control type="gamecube" required="false"/>
-			<control type="mii" required="false"/>
 		</input>
 		<save blocks="128"/>
 		<rom version="2" name="Super Smash Bros. Brawl (USA) (EN) (v2).iso" size="8511160320" crc="854b2889" md5="52ce7160ced2505ad5e397477d0ea4fe" sha1="59432f150bf6b871ab378bb5b28e92005e0862f6"/>
@@ -94876,6 +94908,22 @@ In the fine, white sand, you need to place your own balls as closely as possible
 			<title>Avatar: De Legende van Aang - De Vuurmeester</title>
 			<synopsis/>
 		</locale>
+		<locale lang="SE">
+			<title>Avatar: The Legend of Aang: Into the Inferno</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DK">
+			<title>Avatar: The Legend of Aang: Into the Inferno</title>
+			<synopsis/>
+		</locale>
+		<locale lang="NO">
+			<title>Avatar: The Legend of Aang: Into the Inferno</title>
+			<synopsis/>
+		</locale>
+		<locale lang="FI">
+			<title>Avatar: The Legend of Aang: Into the Inferno</title>
+			<synopsis/>
+		</locale>
 		<locale lang="KO">
 			<title>아바타: 앙의 전설 - 화염 속으로</title>
 			<synopsis/>
@@ -98686,10 +98734,11 @@ A variety of game modes, multiple characters, unlockable content, and online gam
 		</rating>
 		<wi-fi players="2">
 			<feature>online</feature>
+			<feature>wiimmfi</feature>
 		</wi-fi>
 		<input players="4">
 			<control type="wiimote" required="true"/>
-			<control type="nunchuk" required="false"/>
+			<control type="mii" required="false"/>
 		</input>
 		<rom version="0" name="We Love Golf! (USA) (EN,FR,ES).iso" size="4699979776" crc="a680c023" md5="30fac42c13f467006d7c84d830e532e6" sha1="8a2f83eeb771248f807d70e213b2f18b6c8c0204"/>
 	</game>
@@ -98731,10 +98780,11 @@ A variety of game modes, multiple characters, unlockable content, and online gam
 		<rating type="CERO" value="A"/>
 		<wi-fi players="2">
 			<feature>online</feature>
+			<feature>wiimmfi</feature>
 		</wi-fi>
 		<input players="4">
 			<control type="wiimote" required="true"/>
-			<control type="nunchuk" required="false"/>
+			<control type="mii" required="false"/>
 		</input>
 		<rom version="0" name="We Love Golf! (Japan) (JA).iso" size="4699979776" crc="e2d8a997" md5="ae632812a63d33c6c6865fbd52acfd9b" sha1="eab74ad79b99aaf45b71250f43b29571bad8ceda"/>
 	</game>
@@ -98781,13 +98831,16 @@ A variety of game modes, multiple characters, unlockable content, and online gam
 		<publisher>Capcom</publisher>
 		<date year="2008" month="7" day="3"/>
 		<genre>sports,golf</genre>
-		<rating type="PEGI" value="3"/>
+		<rating type="PEGI" value="3">
+			<descriptor>online</descriptor>
+		</rating>
 		<wi-fi players="2">
 			<feature>online</feature>
+			<feature>wiimmfi</feature>
 		</wi-fi>
 		<input players="4">
 			<control type="wiimote" required="true"/>
-			<control type="nunchuk" required="false"/>
+			<control type="mii" required="false"/>
 		</input>
 		<rom version="0" name="We Love Golf! (Europe) (EN,FR,DE,ES,IT).iso" size="4699979776" crc="e2804662" md5="4ffe4e5c9452faba5b3a8e44a8b49f6e" sha1="2006584d2ff0f2e0e78e4d158e537da1380a21b3"/>
 	</game>
@@ -102378,13 +102431,15 @@ Features
 			<title>人生游戏Wii EX(日)</title>
 			<synopsis/>
 		</locale>
+		<developer>Takara Tomy</developer>
 		<publisher>Tomy</publisher>
 		<date year="2008" month="11" day="13"/>
+		<genre>party,board game</genre>
 		<rating type="CERO" value="A"/>
 		<wi-fi players="0"/>
-		<input players="1">
+		<input players="4">
 			<control type="wiimote" required="true"/>
-			<control type="nunchuk" required="false"/>
+			<control type="mii" required="false"/>
 		</input>
 		<rom version="0" name="Jinsei Game Wii EX (Japan) (JA).iso" size="4699979776" crc="a499d1e2" md5="50a36262041d46319a010ff186c74311" sha1="2e27e8fca60a7263fa72e53813f3bd844fff97c5"/>
 	</game>
@@ -110773,7 +110828,7 @@ Key Features:
 		<developer>Voltage Software</developer>
 		<publisher>D3Publisher</publisher>
 		<date year="2012" month="11" day="16"/>
-		<genre>adventure</genre>
+		<genre>adventure,music,rhythm</genre>
 		<rating type="PEGI" value="3"/>
 		<wi-fi players="0"/>
 		<input players="1">
@@ -118188,6 +118243,7 @@ On some stages, Mario can pair up with his dinosaur buddy Yoshi and use his tong
 			<control type="nunchuk" required="true"/>
 		</input>
 		<rom version="0" name="Super Mario Galaxy 2 (Taiwan) (ZHTW).iso" size="4699979776" crc="0694c653" md5="c6384cf211c6f228a2db1796a51b1fb2" sha1="2fa5491be796428d0956a7c274f8f419fb0e74f0"/>
+		<case versions="2"/>
 	</game>
 	<game name="NBA 2K11 (USA) (EN,FR,ES)">
 		<id>SB5E54</id>
@@ -119116,7 +119172,7 @@ Key Game Features
 		<rating type="PEGI" value="18">
 			<descriptor>violence</descriptor>
 		</rating>
-		<wi-fi players="1">
+		<wi-fi players="0">
 			<feature>online</feature>
 			<feature>score</feature>
 			<feature>wiimmfi</feature>
@@ -146958,11 +147014,11 @@ Marvel Superheroes 3D: Grandmaster’s Challenge will be bundled with a selectio
 			<synopsis/>
 		</locale>
 		<locale lang="ZHTW">
-			<title>新超級瑪利歐兄弟Wii(美)</title>
+			<title>新超級瑪利歐兄弟Wii(中)</title>
 			<synopsis/>
 		</locale>
 		<locale lang="ZHCN">
-			<title>新超级马里奥兄弟Wii(美)</title>
+			<title>新超级马力欧兄弟Wii(中)</title>
 			<synopsis/>
 		</locale>
 		<developer>Nintendo</developer>
@@ -146977,7 +147033,7 @@ Marvel Superheroes 3D: Grandmaster’s Challenge will be bundled with a selectio
 		</input>
 		<rom version="0" name="New Super Mario Bros. Wii (Taiwan) (FR,ES,ZHTW).iso" size="4699979776" crc="7a9f51c9" md5="e4da04a12cad8a8734edbc57a2bbc322" sha1="11ad4d6d823ecbb4a52adee215bc8975544d6c83"/>
 		<rom version="1.02" name="New Super Mario Bros. Wii (Taiwan) (FR,ES,ZHTW) (v1.02).iso" size="4699979776" crc="8c30d1d7" md5="b31a7da0d493ec1f558b4e1899406a14" sha1="9ac7242a5feebe1d0a6e2775c21f482c471b2240"/>
-		<case color="ff0000"/>
+		<case color="ff0000" versions="2"/>
 	</game>
 	<game name="Michael Jackson: The Experience (USA) (EN,FR,ES)">
 		<id>SMOE41</id>
@@ -148817,11 +148873,11 @@ In Deal or No Deal: Special Edition, you'll enjoy the stylized 3D representation
 			<synopsis/>
 		</locale>
 		<locale lang="ZHTW">
-			<title>一擲千金特別版(美)</title>
+			<title>一擲千金 特別版(美)</title>
 			<synopsis/>
 		</locale>
 		<locale lang="ZHCN">
-			<title>一掷千金特别版(美)</title>
+			<title>一掷千金 特别版(美)</title>
 			<synopsis/>
 		</locale>
 		<developer>Zoo Games</developer>
@@ -151226,7 +151282,7 @@ This game aims to bring the crazy Wipeout experience into the living room by cre
 			<synopsis/>
 		</locale>
 		<locale lang="ZHCN">
-			<title>勇敢向前冲(美)</title>
+			<title>勇敢向前冲1(美)</title>
 			<synopsis/>
 		</locale>
 		<developer>ACRONYM</developer>
@@ -189381,7 +189437,7 @@ This is a mod for Mario Kart: Double Dash!! with 64 Retro Courses and 24 Retro B
 			<title>Mario Kart Double Dash!! Retro Track Grand Prix </title>
 			<synopsis>This mod adds waves of brand new double dash styled retro tracks to the game without replacing current tracks!
 
-This mod will include tracks all the way from Super Mario Kart (SNES) to Mario Kart (DS), built to completely encapsulate the double dash artistic style!
+This mod includes tracks all the way from Super Mario Kart (SNES) to Mario Kart 7 (3DS), built to completely encapsulate the double dash artistic style!
 
 It also comes with brand new music that is made to fit the era appropriate composition of Mario Kart Double Dash to immerse you in the double dash world!
 
@@ -241492,18 +241548,19 @@ My Pokémon Ranch can be linked with the Nintendo DS Pokémon Diamond version an
 		<input players="1">
 			<control type="wiimote" required="true"/>
 			<control type="mii" required="true"/>
+			<control type="nunchuk" required="false"/>
 			<control type="nintendods" required="false"/>
 		</input>
 		<rom version="" name="My Pokémon Ranch (USA) (EN).wad"/>
 		<case color="" versions="2"/>
 	</game>
-	<game name="Minna no Pokémon Bokujou - Platina Taiouban (Japan) (JA)">
+	<game name="Minna no Pokémon Bokujou (Japan) (JA)">
 		<id>WBMJ</id>
 		<type>WiiWare</type>
 		<region>NTSC-J</region>
 		<languages>JA</languages>
 		<locale lang="EN">
-			<title>Minna no Pokémon Bokujou - Platina Taiouban</title>
+			<title>Minna no Pokémon Bokujou</title>
 			<synopsis>Pokémon and Miis come together for the first time in My Pokémon Ranch, available exclusively through WiiWare. Enjoy the relaxing Ranch life by watching over your Ranch and its Pokémon, taking pictures and sending those pictures to your friends. The more Pokémon and Miis that you bring to your Ranch, the more fun it becomes!
 
 At My Pokémon Ranch, you can watch your Pokémon dance, march in a parade and give your Mii a ride around the Ranch. You never know what your favourite Pokémon will do next! When you’re ready to show off your Ranch, invite your Wii Friends to pay it a visit via Wii Connect 24.
@@ -241541,9 +241598,10 @@ When your Pokémon and Miis interact at the Ranch, they can find themselves in s
 		<input players="1">
 			<control type="wiimote" required="true"/>
 			<control type="mii" required="true"/>
+			<control type="nunchuk" required="false"/>
 			<control type="nintendods" required="false"/>
 		</input>
-		<rom version="" name="Minna no Pokémon Bokujou - Platina Taiouban (Japan) (JA).wad"/>
+		<rom version="" name="Minna no Pokémon Bokujou (Japan) (JA).wad"/>
 		<case color=""/>
 	</game>
 	<game name="My Pokémon Ranch (Europe) (EN,FR,DE,ES,IT,NL)">
@@ -241605,9 +241663,7 @@ When your Pokémon and Miis interact at the Ranch, they can find themselves in s
 		<publisher>Nintendo</publisher>
 		<date year="2008" month="7" day="4"/>
 		<genre>simulation,virtual pet</genre>
-		<rating type="PEGI" value="3">
-			<descriptor>online</descriptor>
-		</rating>
+		<rating type="PEGI" value="3"/>
 		<wi-fi players="0">
 			<feature>online</feature>
 			<feature>messageboard</feature>
@@ -241616,6 +241672,7 @@ When your Pokémon and Miis interact at the Ranch, they can find themselves in s
 		<input players="1">
 			<control type="wiimote" required="true"/>
 			<control type="mii" required="true"/>
+			<control type="nunchuk" required="false"/>
 			<control type="nintendods" required="false"/>
 		</input>
 		<rom version="" name="My Pokémon Ranch (Europe) (EN,FR,DE,ES,IT,NL).wad" crc="beb58fa2" md5="1915b3e3597d249653ffcc02e3acbaab" sha1="aeffdfe012583399d747bcf89e587bb03ddc62c2"/>
@@ -265899,9 +265956,7 @@ Get ready for the next chapter in an all-new epic 2D saga built for old and new 
 		<publisher>Sega</publisher>
 		<date year="2010" month="10" day="15"/>
 		<genre>action,platformer</genre>
-		<rating type="PEGI" value="3">
-			<descriptor>online</descriptor>
-		</rating>
+		<rating type="PEGI" value="3"/>
 		<wi-fi players="0">
 			<feature>online</feature>
 			<feature>score</feature>
@@ -358965,6 +359020,67 @@ FCE Ultra GX is a modified port of FCE Ultra. With it you can play NES games on 
 		<rom version="1.1" name="Mii Channel Symbols (Europe) (EN,FR,DE,ES,IT,NL) (v1.1).wad"/>
 		<case color=""/>
 	</game>
+	<game name="Homebrew Channel (Europe) (EN,FR,DE,ES,IT,NL)">
+		<id>HAXX</id>
+		<type>Homebrew</type>
+		<region>PAL</region>
+		<languages>EN,FR,DE,ES,IT,NL</languages>
+		<locale lang="EN">
+			<title>Homebrew Channel</title>
+			<synopsis>The Homebrew Channel is a channel for launching Wii homebrew applications without the need to run the Twilight Hack first. It will list apps stored and organised on an SD card in a nice little GUI, which you can very easily customise with descriptions and shiny little .png icons all by yourself if you want. You can also launch homebrew apps via TCP (with a correctly configured PC) or USB Gecko. Both of those built in options make it extremely convenient for testing out new code, as well as a general purpose homebrew launcher. You've seen the video,
+now try it yourself!</synopsis>
+		</locale>
+		<locale lang="FR">
+			<title>Chaîne Homebrew</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DE">
+			<title>Homebrew-Kanal</title>
+			<synopsis/>
+		</locale>
+		<locale lang="ES">
+			<title>Canal Homebrew</title>
+			<synopsis/>
+		</locale>
+		<locale lang="IT">
+			<title>Canale Homebrew</title>
+			<synopsis/>
+		</locale>
+		<locale lang="NL">
+			<title>Homebrew-Kanaal</title>
+			<synopsis/>
+		</locale>
+		<locale lang="KO">
+			<title>홈브류 채널</title>
+			<synopsis/>
+		</locale>
+		<locale lang="ZHTW">
+			<title>自制頻道(歐)</title>
+			<synopsis/>
+		</locale>
+		<locale lang="ZHCN">
+			<title>自制频道(欧)</title>
+			<synopsis/>
+		</locale>
+		<developer>Team Twiizers</developer>
+		<publisher>Team Twiizers</publisher>
+		<date year="2008" month="5" day="24"/>
+		<genre>software</genre>
+		<rating type="PEGI" value=""/>
+		<wi-fi players="0">
+			<feature>online</feature>
+			<feature>download</feature>
+		</wi-fi>
+		<input players="1">
+			<control type="wiimote" required="true"/>
+			<control type="nunchuk" required="false"/>
+			<control type="classiccontroller" required="false"/>
+			<control type="gamecube" required="false"/>
+			<control type="guitar" required="false"/>
+		</input>
+		<rom version="" name="Homebrew Channel (Europe) (EN,FR,DE,ES,IT,NL).wad"/>
+		<case color=""/>
+	</game>
 	<game name="HackWiiFlow (Europe) (EN,IT)">
 		<id>HWFL</id>
 		<type>Homebrew</type>
@@ -359031,7 +359147,7 @@ now try it yourself!</synopsis>
 		</locale>
 		<developer>Team Twiizers</developer>
 		<publisher>Team Twiizers</publisher>
-		<date year="2007" month="3" day="3"/>
+		<date year="2009" month="9" day="30"/>
 		<genre>software</genre>
 		<rating type="" value=""/>
 		<wi-fi players="0">
@@ -359080,7 +359196,7 @@ now try it yourself!</synopsis>
 		</locale>
 		<developer>Team Twiizers</developer>
 		<publisher>Team Twiizers</publisher>
-		<date year="2012" month="12" day="4"/>
+		<date year="2012" month="12" day="7"/>
 		<genre>software</genre>
 		<rating type="" value=""/>
 		<wi-fi players="0">
@@ -402800,6 +402916,10 @@ Gameplay is spread across 15 different levels where the player must save animals
 		<locale lang="EN">
 			<title>Need for Speed: Underground 2</title>
 			<synopsis>Need for Speed: Underground 2 will challenge gamers to immerse themselves in the tuner culture, exploring an expansive, free-roaming city divided into five distinct neighborhoods. Gamers will encounter rival racers who will initiate events, tip players off to the hottest racing spots, and show them where to buy the most sought-after licensed aftermarket upgrades. The game will feature new game modes, deep new performance customization and tuning, and more than 30 licensed cars. The game also delivers twice the visual customization upgrades as the original game, providing a staggering 70 billion possible car combinations for total automotive self-expression.</synopsis>
+		</locale>
+		<locale lang="FI">
+			<title>Need for Speed: Underground 2</title>
+			<synopsis/>
 		</locale>
 		<locale lang="KO">
 			<title>니드 포 스피드: 언더그라운드 2</title>
