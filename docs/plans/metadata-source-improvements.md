@@ -31,7 +31,7 @@ APIs that require keys or accounts become optional enrichment, not the primary p
 
 **Solution**:
 
-1. **Download script** — add `scripts/update_dats.sh` that clones/pulls `libretro/libretro-database` and copies `dat/*.dat` into `data/databases/`.
+1. **Compendium build workflow** — use `remus-cli --build-compendium --compendium-manifest <path> --compendium-output <path>` to rebuild bundled catalogs instead of shipping raw DAT files.
 2. **Ship core DATs** — bundle the top 15–20 systems (NES, SNES, GB, GBC, GBA, N64, Genesis, Master System, Game Gear, Atari 2600, Atari 7800, TG-16, Neo Geo, PSX, Saturn) so the first run works offline.
 3. **Register in orchestrator** — add `LocalDatabaseProvider` to `buildOrchestrator()` at priority 110 (above Hasheous). Hash matches from local DATs resolve instantly with no network.
 
@@ -45,7 +45,7 @@ APIs that require keys or accounts become optional enrichment, not the primary p
 
 **Solution**:
 
-1. **Extend `update_dats.sh`** — also copy `metadat/genre/*.dat`, `metadat/developer/*.dat`, `metadat/publisher/*.dat` etc. into `data/metadata/`.
+1. **Extend compendium refresh** — include metadata catalog ingestion (genre, developer, publisher, players) in the compendium update pipeline.
 2. **Add metadata DAT parser** — parse the simple `key = value` format used in metadat DATs. These use game name as the key, mapping to a genre string, developer name, etc.
 3. **Enrich in `datEntryToMetadata()`** — after a hash match gives us the canonical game name, look up that name in the metadata DAT indexes to fill `genre`, `developer`, `publisher`, `players`.
 
@@ -171,7 +171,7 @@ This alone should produce: title, region, CRC32/MD5/SHA1, serial, genre, develop
 
 | File | Purpose |
 |------|---------|
-| `scripts/update_dats.sh` | Download/update libretro-database DATs + metadata DATs |
+| `remus-cli --build-compendium` | Build bundled compendium catalogs (verification + patch metadata) from a manifest |
 | `src/metadata/libretro_metadata_parser.h/.cpp` | Parse libretro metadat DAT files (genre, developer, etc.) |
 | `src/metadata/wikidata_provider.h/.cpp` | Wikidata SPARQL provider (Tier 1, deferred) |
 | `src/metadata/gametdb_provider.h/.cpp` | GameTDB XML provider (Tier 3) |

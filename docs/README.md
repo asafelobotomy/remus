@@ -12,7 +12,7 @@ Documentation index for Remus.
 
 - [examples.md](examples.md) - End-to-end usage examples
 - [emulator-frontend-compatibility.md](emulator-frontend-compatibility.md) - Frontend export compatibility
-- [verification-and-patching.md](verification-and-patching.md) - DAT verification and ROM patching
+- [verification-and-patching.md](verification-and-patching.md) - Compendium-backed verification and ROM patching
 - [naming-standards.md](naming-standards.md) - Naming conventions
 - [chd-conversion.md](chd-conversion.md) - CHD conversion workflow
 - [format-matrix.md](format-matrix.md) - Recommended canonical formats, accepted inputs, and tool backends by system

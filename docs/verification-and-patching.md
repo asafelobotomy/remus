@@ -3,7 +3,8 @@
 ## Overview
 
 Remus includes two powerful features for ROM integrity and enhancement:
-1. **Verification**: Validate ROMs against No-Intro/Redump DAT files to ensure authenticity
+
+1. **Verification**: Validate ROMs against DAT catalogs, with optional bundled compendium data available for supplemental matching
 2. **Patching**: Apply translation patches, ROM hacks, and improvements from sources like romhacking.net
 
 ---
@@ -83,28 +84,30 @@ No-Intro and Redump use XML DAT files following this structure:
 
 ### Verification Process in Remus
 
-#### Step 1: Import DAT Files
-```
-1. Download DAT files from No-Intro/Redump
-2. Settings → Verification → Import DAT Files
-3. Select .dat or .xml files for your systems
-4. Remus parses and stores in local database
+#### Step 1: Supply A Verification Catalog
+
+```text
+1. Provide a DAT or XML catalog file from No-Intro, Redump, or another reference source
+2. Run the CLI verification flow with `--verify <dat-file>`
+3. If a bundled compendium database is present, Remus also attaches it for supplemental verification and patch matching
 ```
 
 #### Step 2: Run Verification
-```
+
+```text
 1. Library → Verify Collection
 2. Select systems to verify
-3. Remus compares file hashes against DAT entries
+3. Remus compares file hashes against imported verification catalog entries
 4. Results categorized as:
-   - ✅ Verified: Exact match with DAT
-   - ❌ Failed: Hash mismatch (corrupt/modified)
-   - ❓ Unknown: Not in DAT (hacks, bad dumps, unlicensed)
+  - ✅ Verified: Exact match with reference catalog data
+  - ❌ Failed: Hash mismatch (corrupt/modified)
+  - ❓ Unknown: Not in the supplied catalog data
 ```
 
 #### Step 3: Review Results
-```
-- View missing games (in DAT but not in library)
+
+```text
+- View missing games (in the supplied catalog but not in library)
 - View failed verification (potential corruption)
 - View unknown ROMs (candidates for patching detection)
 - Export verification report (CSV/JSON)
@@ -466,27 +469,15 @@ ALTER TABLE files ADD COLUMN is_patched BOOLEAN DEFAULT 0;
 
 ---
 
-## 5. CLI Examples (for M8 Implementation)
+## 5. CLI Examples
 
 ### Verification Commands
 ```bash
-# Import DAT file
-remus verify --import-dat ~/Downloads/No-Intro_NES_2024.dat
+# Verify scanned files against a DAT or XML catalog
+remus --verify ~/Downloads/No-Intro_NES_2024.dat --verify-report
 
-# Verify entire library
-remus verify --all
-
-# Verify specific system
-remus verify --system NES
-
-# Verify single file
-remus verify --file "/path/to/Super Mario Bros. (USA).nes"
-
-# List missing ROMs (in DAT but not in library)
-remus verify --missing --system SNES
-
-# Export verification report
-remus verify --report ~/reports/verification-2026-02-05.csv
+# Supplemental compendium data is attached automatically when
+# data/compendium/remus_compendium.db is available.
 ```
 
 ### Patching Commands
@@ -578,7 +569,7 @@ remus patch --unapply --file "/path/to/Super Mario Bros. (USA) [Deluxe].nes"
 - [ ] DAT file parser (XML format)
 - [ ] Header detection and stripping (NES, Lynx)
 - [ ] Verification engine (hash comparison)
-- [ ] CLI commands: `verify --import-dat`, `verify --all`
+- [ ] CLI commands: `--verify <dat-file>`, `--verify-report`
 - [ ] Verification status UI in library view
 
 ### M8.2: Manual Patching (Week 15)

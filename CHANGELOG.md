@@ -7,33 +7,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Added
+### Added in early setup
 
 #### Phase 1 — Quick Wins
+
 - 3DO and Neo Geo CD system constants in `systems.h`
 - `--checksum-verify` help text documents compressed-file behavior
 
 #### Phase 2 — Core Data Quality
-- `--update-dats` CLI command: downloads/updates DAT databases from libretro-database via `scripts/update_dats.sh`
-- `--update-dats-all` flag: downloads all systems instead of the default 34 core systems
+
+- Bundled compendium verification and patch data are consumed automatically when `data/compendium/remus_compendium.db` is present
 - `--enrich` CLI command: fills sparse metadata (description, genre, players) from secondary providers
 - WikidataProvider `getArtwork()` queries Wikidata P18 (image) and builds Wikimedia Commons URLs
 
 #### Phase 3 — Provider Robustness
+
 - IGDB proactive token refresh: re-authenticates 24 hours before expiry (`IGDB_TOKEN_REFRESH_BUFFER_SECS`)
 - TheGamesDB monthly request tracking: warns at 80% (2,400), blocks at 95% (2,850) of 3,000 limit
 - `Remus::Result<T>` error type (`src/core/result.h`) with `ErrorTag` disambiguation for `T=QString`
 - `ResultTest` — 5 test cases for the new Result type
 
 #### Phase 4 — Distribution & Polish
+
 - AppImage packaging script (`scripts/package_appimage.sh`) using linuxdeploy
 - Release workflow packages AppImage + SHA-256 checksum alongside tar.gz archive
-- `--import-dat <file>` CLI command: imports a DAT file into the local database directory
-- `--remove-dat <name>` CLI command: removes an installed DAT file by name
-- `--list-dats` CLI command: lists installed DAT files with entry counts
+- DAT management CLI commands (`--import-dat`, `--remove-dat`, `--list-dats`, `--update-dats`) are retained as compatibility no-ops and no longer perform raw DAT operations
 - `--edit-metadata <fileId>` CLI command: edits matched game metadata via `--set-title`, `--set-region`, `--set-genre`, `--set-developer`, `--set-publisher` flags
 
 #### Phase 5 — Community Mod Catalog (Tier 1 & 2)
+
 - `RAPatchesCatalogBuilder`: walks a local RAPatches clone (40+ systems) and generates a mod catalog JSON from directory structure, filenames, and README-embedded hashes
 - `RetroAchievementsEnricher`: optional Tier 2 enrichment via the free RA web API — maps ROM hashes to PatchUrls; gracefully skips if no API key is set
 - `--mod-catalog-build <repoPath>`: CLI command to build a catalog from a cloned RAPatches repository
@@ -69,11 +71,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   Includes: `.github/copilot-instructions.md`, model-pinned agents (`.github/agents/`),
   workspace identity files (`.copilot/workspace/`), `JOURNAL.md`, `BIBLIOGRAPHY.md`, `METRICS.md`.
 
-### Fixed
+### Fixed in early setup
+
 - ExportController `exportToJSON()` SQL columns aligned with schema (`system_id` join, `release_date`, `genres`, `current_path`)
 - RomBundlerTest date regex handles Homebrew's MM-DD-YYYY unzip format
 
-### Planned
+### Planned in early setup
 
 - DAT import/removal CLI commands
 - Auto-update checking for DAT files
@@ -117,24 +120,24 @@ Three critical improvements to offline ROM identification:
   - Automatically updates when DATs are loaded
   - Empty state message when no DATs present
 
-### Changed
+### Changed in 0.10.1
 
 - **ClrMamePro Parser**: Switched from regex to state machine for ROM block parsing
 - **LocalDatabaseProvider**: Now stores DatMetadata for each loaded DAT
 - **Settings Page**: Added DAT management section after Organization
 
-### Fixed
+### Fixed in 0.10.1
 
 - **Critical**: ClrMamePro parser now extracts ROM entries correctly (0 → 3267 entries)
 - Genesis DAT (886KB, 3267 games) fully parsed with all CRC32/MD5/SHA1 hashes
 
-### Performance
+### Performance in 0.10.1
 
 - **Parser**: 33% faster (450ms → 300ms for Genesis DAT)
 - **Hash Lookup**: 1-3ms (400-800x faster than network APIs)
 - **Memory**: +700KB per 3267-entry DAT (expected increase)
 
-### Documentation
+### Documentation for 0.10.1
 
 - `docs/milestones/M10.1-COMPLETION.md`: Complete implementation report
 - `tests/test_dat_parser.cpp`: Added tests for inline attribute parsing
@@ -201,20 +204,20 @@ Phase 2: Optional ScreenScraper free-tier integration with first-run wizard
   - "Fetch once, store forever" philosophy
   - Respects ScreenScraper free-tier limits (10k requests/day)
 
-### Changed
+### Changed in 0.10.0
 
 - **Provider Priority**: LocalDatabaseProvider now highest priority (110)
 - **Fallback Chain**: LocalDatabase → Hasheous → ScreenScraper → TheGamesDB → IGDB
 - **Resource Files**: Added SetupWizard.qml to resources.qrc
 
-### Known Issues
+### Known Issues in 0.10.0
 
 - **ClrMamePro Parser**: Finds game blocks but extracts 0 ROM entries for games with nested parentheses
   - Root cause: Regex pattern fails on complex ROM attributes
   - Workaround: Validate DAT files before import with `--test-dat` flag
   - Status: Low priority, affects <1% of DAT files
 
-### Documentation
+### Documentation for 0.10.0
 
 - `docs/milestones/M10-COMPLETION.md`: Complete M10 implementation report
 - `docs/data-model.md`: Updated with `dat_sources`, `dat_games`, `dat_roms` tables
@@ -301,14 +304,16 @@ Complete ROM verification against No-Intro/Redump DAT files and patch applicatio
   - Added "Patching" button to MainWindow sidebar
   - Two new StackView components registered
 
-### Changed
+### Changed in 0.9.0
+
 - MainWindow.qml navigation expanded to 8 views
 - resources.qrc includes VerificationView.qml and PatchView.qml
 - main.cpp registers verificationController and patchController
 - Core CMakeLists.txt includes 4 new source files
 - UI CMakeLists.txt includes 2 new controller files
 
-### Technical Details
+### Technical Details for 0.9.0
+
 - DAT parser uses Qt's QXmlStreamReader for efficient parsing
 - Verification uses in-memory hash index for O(1) lookups
 - IPS implementation follows official specification (3-byte offset, 2-byte length)
@@ -316,7 +321,8 @@ Complete ROM verification against No-Intro/Redump DAT files and patch applicatio
 - Header detection uses magic byte patterns for accuracy
 - All verification results stored in database for persistence
 
-### Dependencies
+### Dependencies for 0.9.0
+
 - **Optional**: `flips` (Floating IPS) for BPS/UPS patches
 - **Optional**: `xdelta3` for XDelta/VCDIFF patches
 - IPS patching works without any external tools
@@ -378,12 +384,14 @@ Complete artwork management, metadata editing, and export to emulator frontends.
   - Database class gets `database()` accessor for raw SQL operations
   - New QML files registered in resources.qrc
 
-### Changed
+### Changed in 0.8.0
+
 - MainWindow.qml updated with new navigation structure
 - CMakeLists.txt includes new controller source files
 - Minimum 6 navigation items: Library, Match Review, Conversions, Artwork, Export, Settings
 
-### Technical Details
+### Technical Details for 0.8.0
+
 - 3 new controllers: ArtworkController, MetadataEditorController, ExportController
 - 3 new QML views: ArtworkView, GameDetailsView, ExportView
 - Export formats follow official specs:
@@ -427,11 +435,13 @@ Complete packaging infrastructure for AppImage distribution and automated CI/CD.
   - Desktop entry (`remus.desktop`)
   - 2048x2048 PNG icon (`remus_icon.png`)
 
-### Changed
+### Changed in 0.7.0
+
 - README updated with CI badges and milestone table
 - Project status reflects M7 completion
 
-### Technical Details
+### Technical Details for 0.7.0
+
 - AppImage built on Ubuntu 22.04 LTS for maximum compatibility
 - Qt 6 plugins bundled: imageformats, platforms, sqldrivers
 - Auto-update uses zsync for efficient delta downloads
@@ -492,14 +502,16 @@ A centralized constants library eliminating 150+ hardcoded strings across the co
   - Linked to `remus-core` for automatic availability
   - 16 unit tests passing (providers, systems, templates, settings)
 
-### Changed
+### Changed in 0.6.0
+
 - CLI now uses `Providers::SCREENSCRAPER` instead of hardcoded strings
 - Metadata providers use constants for provider IDs
 - System detector uses `Systems::getSystemByName()`
 - Space calculator uses system definitions from constants
 - UI controllers use `Settings::` namespace for keys
 
-### Technical Details
+### Technical Details for 0.6.0
+
 - 7 header files, ~1,500 lines of constant definitions
 - Zero compilation warnings
 - All 16 constants tests passing
@@ -509,6 +521,7 @@ A centralized constants library eliminating 150+ hardcoded strings across the co
 ## [0.5.0] - 2026-02-05
 
 ### Added - M5: UI MVP (Qt/QML Desktop Application)
+
 - **Qt 6 GUI application** with QML + QtQuick Controls
 - **MVC Architecture** with models, controllers, and declarative views
 - **Library View** (`LibraryView.qml`)
@@ -544,7 +557,8 @@ A centralized constants library eliminating 150+ hardcoded strings across the co
 - **Database enhancements**: `insertGame()`, `insertMatch()` methods
 - **Build system**: CMake integration with Qt resources (QRC)
 
-### Technical Details
+### Technical Details for 0.5.0
+
 - 2,100+ lines of Qt/C++ and QML code
 - Clean compilation (0 errors, 0 warnings)
 - Database path: `~/.local/share/Remus/Remus/remus.db`
@@ -555,6 +569,7 @@ A centralized constants library eliminating 150+ hardcoded strings across the co
 ## [0.4.5] - 2026-01-XX
 
 ### Added - M4.5: File Conversion & Compression
+
 - **CHDConverter** (`chd_converter.h/cpp`)
   - Wrapper for MAME's `chdman` tool
   - Convert BIN/CUE, ISO, GDI to CHD format
@@ -587,7 +602,8 @@ A centralized constants library eliminating 150+ hardcoded strings across the co
   - `--space-report <dir>` - Estimate conversion savings
   - `--output-dir <dir>` - Output directory override
 
-### Dependencies
+### Dependencies for 0.4.5
+
 - External: `mame-tools` (chdman), `unzip`, `p7zip`, `unrar`
 
 ---
@@ -595,6 +611,7 @@ A centralized constants library eliminating 150+ hardcoded strings across the co
 ## [0.4.0] - 2025-01-19
 
 ### Added - M4: Organize & Rename Engine
+
 - **TemplateEngine** (`template_engine.h/cpp`)
   - Template-driven filename generation
   - 12 variables: `{title}`, `{region}`, `{languages}`, `{version}`, `{status}`, `{additional}`, `{tags}`, `{disc}`, `{year}`, `{publisher}`, `{system}`, `{ext}`
@@ -632,12 +649,13 @@ A centralized constants library eliminating 150+ hardcoded strings across the co
 ## [0.3.0] - 2025-01-19
 
 ### Added - M3: Matching & Confidence
+
 - **Hasheous Provider** (`hasheous_provider.h/cpp`)
   - FREE hash-based ROM matching (no auth required!)
   - MD5 and SHA1 hash support
   - IGDB metadata proxying
   - RetroAchievements ID extraction
-  - API: https://hasheous.org/api/v1/lookup
+  - API: <https://hasheous.org/api/v1/lookup>
 - **Provider Orchestrator** (`provider_orchestrator.h/cpp`)
   - Priority-based provider queue
   - Intelligent fallback: hash → name search
@@ -667,6 +685,7 @@ A centralized constants library eliminating 150+ hardcoded strings across the co
 ## [0.2.0] - 2025-01-XX
 
 ### Added - M2: Metadata Layer
+
 - **Provider Adapters** with unified metadata schema
   - ScreenScraper: Hash + name matching (CRC32/MD5/SHA1)
   - TheGamesDB: Name matching with artwork
@@ -685,6 +704,7 @@ A centralized constants library eliminating 150+ hardcoded strings across the co
 ## [0.1.0] - 2025-01-XX
 
 ### Added - M1: Core Scanning Engine
+
 - **Scanner** (`scanner.h/cpp`)
   - Recursive file scanning
   - Extension-based filtering
@@ -712,6 +732,7 @@ A centralized constants library eliminating 150+ hardcoded strings across the co
 ## [0.0.1] - 2026-02-05
 
 ### Added - M0: Product Definition
+
 - **Research & Planning**
   - 25+ target gaming systems defined
   - File format analysis (ROM, ISO, CUE/BIN, CHD)

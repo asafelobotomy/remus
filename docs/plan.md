@@ -19,7 +19,7 @@ GUI and TUI code remain in the repository as archived frontends. They are not pa
 
 Delivered capabilities in the active codebase:
 - Recursive scanning with system inference and hash generation.
-- Offline-first metadata matching through local DAT databases.
+- Offline-first metadata matching through the bundled compendium database.
 - Online metadata fallback through Hasheous, ScreenScraper, TheGamesDB, IGDB, RetroAchievements, GameTDB, and Wikidata when configured or available.
 - Template-based organization, M3U generation, and archive-aware workflows.
 - CHD conversion, verification, patch application, and mod installation flows.
@@ -38,7 +38,8 @@ Near-term priorities:
 ## Use the current fallback model
 
 The active provider strategy is:
-1. Local DAT databases when local data is present.
+
+1. Compendium when `data/compendium/remus_compendium.db` is present.
 2. Hasheous for no-auth hash matching.
 3. ScreenScraper for authenticated hash or name matching.
 4. GameTDB and TheGamesDB for system-specific and general name fallback.
