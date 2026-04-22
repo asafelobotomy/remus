@@ -6,6 +6,7 @@ INSERT OR REPLACE INTO regions (region_code, display_name, group_code, parent_re
 ('USA', 'United States', 'americas', 'GLOBAL'),
 ('EUR', 'Europe', 'europe', 'GLOBAL'),
 ('JPN', 'Japan', 'asia', 'GLOBAL'),
+('AUS', 'Australia', 'oceania', 'GLOBAL'),
 ('BRA', 'Brazil', 'americas', 'GLOBAL');
 
 COMMIT;
