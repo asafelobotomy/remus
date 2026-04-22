@@ -14,7 +14,7 @@ The project is CLI-first. GUI and TUI code remain in the repository as archived 
 - Support for 23+ retro gaming systems across cartridge, optical-disc, and archive workflows.
 - Hash-first scanning and matching with CRC32, MD5, and SHA1.
 - Provider orchestration with offline and online fallback:
-  - Local DAT databases
+  - Bundled compendium database
   - Hasheous
   - ScreenScraper
   - GameTDB
@@ -58,7 +58,7 @@ Historical milestone reports remain in [docs/milestones/](docs/milestones/).
 - **[Database Schema](docs/data-model.md)** - SQLite tables and relationships
 - **[Requirements Spec](docs/requirements.md)** - Functional and technical requirements
 - **[Naming Standards](docs/naming-standards.md)** - No-Intro/Redump conventions
-- **[Verification & Patching](docs/verification-and-patching.md)** - DAT files and ROM patching
+- **[Verification & Patching](docs/verification-and-patching.md)** - Compendium-backed verification and ROM patching
 
 ### Development
 - **[Architecture Docs](docs/architecture/)** - Design documents and implementation plans

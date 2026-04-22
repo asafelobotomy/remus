@@ -418,46 +418,33 @@ a-z A-Z 0-9 SPACE $ ! # % ' ( ) + , - . ; = @ [ ] ^ _ { } ~
 | Dreamcast | 1.2 GB | 700 MB | ~42% |
 | Sega CD | 600 MB | 350 MB | ~42% |
 | Saturn | 600 MB | 400 MB | ~33% |
-## Verification Commands (M8)
 
-### Import DAT Files
+## Verification Commands
+
+### Verify Against A DAT Catalog
+
 ```bash
-# Import No-Intro DAT for NES
-remus verify --import-dat ~/Downloads/No-Intro_NES_2024.dat
+# Verify scanned files against a DAT or XML catalog
+remus --verify ~/Downloads/No-Intro_NES_2024.dat --verify-report
 
-# Import Redump DAT for PlayStation
-remus verify --import-dat ~/Downloads/Redump_PSX_2024.dat
-```
-
-### Verify ROMs
-```bash
-# Verify entire library
-remus verify --all
-
-# Verify specific system
-remus verify --system NES
-
-# Verify single file
-remus verify --file "/path/to/Super Mario Bros. (USA).nes"
-
-# Show missing ROMs (in DAT but not in library)
-remus verify --missing --system SNES
-
-# Export verification report
-remus verify --report ~/reports/verification-2026-02-05.csv
+# The current CLI still takes an explicit DAT file.
+# When a bundled compendium database is present, Remus also attaches it as
+# supplemental catalog data for verification and patch matching.
 ```
 
 ### Verification Status Values
-```
-✅ verified      - Exact hash match with DAT (authentic dump)
+
+```text
+ ✅ verified      - Exact hash match with reference catalog data
 ❌ failed        - Hash mismatch (corrupted or modified file)
-❓ unknown       - Not in DAT (hack, translation, bad dump, unlicensed)
+ ❓ unknown       - Not in reference catalog data (hack, translation, bad dump, unlicensed)
 ⏭️  not_checked  - Verification not run yet
 ```
 
 ## Patching Commands (M8)
 
 ### Apply Patches Manually
+
 ```bash
 # Apply BPS patch (recommended, includes checksums)
 remus patch --apply \
@@ -479,6 +466,7 @@ remus patch --apply \
 ```
 
 ### Patch Discovery
+
 ```bash
 # Discover available patches for games in library
 remus patch --discover
@@ -493,6 +481,7 @@ remus patch --apply-from-web \
 ```
 
 ### Patch Management
+
 ```bash
 # List all applied patches
 remus patch --list-applied
@@ -505,7 +494,8 @@ remus patch --unapply --file "/path/to/Super Mario Bros. (USA) [Deluxe].nes"
 ```
 
 ### Supported Patch Formats
-```
+
+```text
 IPS      - Max 16 MB, no checksums (legacy)
 BPS      - Unlimited, checksums included (recommended)
 UPS      - Unlimited, checksums included
@@ -515,6 +505,7 @@ APS      - GBA/N64 specific formats
 ```
 
 ### Flips (BPS/IPS Tool) Commands
+
 ```bash
 # Apply BPS patch
 flips --apply patch.bps "base.rom" "output.rom"
@@ -527,6 +518,7 @@ flips --apply patch.bps "base.rom" "output.rom" --verbose
 ```
 
 ### XDelta3 Commands
+
 ```bash
 # Apply XDelta3 patch
 xdelta3 -d -s "base.iso" "patch.xdelta" "output.iso"
