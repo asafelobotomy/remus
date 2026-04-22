@@ -1,0 +1,15 @@
+clrmamepro (
+    name "Nintendo - GameCube"
+    description "Compendium smoke fixture"
+    version "20260421"
+)
+game (
+    name "Paper Mario: The Thousand-Year Door (USA)"
+    description "A turn-based adventure across the Mushroom Kingdom."
+    serial "G8ME01"
+    developer "Intelligent Systems"
+    publisher "Nintendo"
+    releaseyear 2004
+    users 1
+    rom ( name "Paper Mario - The Thousand-Year Door.iso" size 1459978240 md5 0123456789ABCDEF0123456789ABCDEF serial "G8ME01" )
+)

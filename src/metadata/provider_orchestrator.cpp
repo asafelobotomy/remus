@@ -74,7 +74,7 @@ bool ProviderOrchestrator::detectHashSupport(const QString &name) const
     QStringList hashProviders = Constants::Providers::getHashSupportingProviders();
     hashProviders << QStringLiteral("retroachievements") 
                   << QStringLiteral("playmatch")
-                  << QStringLiteral("localdatabase"); // Local DAT files support hash matching
+                  << QStringLiteral("localdatabase"); // Legacy local DAT provider still supports hash matching
     return hashProviders.contains(name.toLower());
 }
 
@@ -83,6 +83,7 @@ bool ProviderOrchestrator::detectLocalProvider(const QString &name) const
     // Providers that work entirely offline (no network required)
     const QString lower = name.toLower();
     return lower == QStringLiteral("localdatabase")
+    || lower == QStringLiteral("compendium")
         || lower == QStringLiteral("gametdb");
 }
 

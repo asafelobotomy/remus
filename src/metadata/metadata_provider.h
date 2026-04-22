@@ -116,6 +116,17 @@ public:
     virtual GameMetadata getByHash(const QString &hash, const QString &system) = 0;
 
     /**
+     * @brief Get metadata by disc/cartridge serial number
+     *
+     * Providers that do not index by serial should return an empty
+     * GameMetadata (the default implementation does exactly that).
+     *
+     * @param serial Disc serial string, e.g. "SLES-01234"
+     * @param system System name hint (may be empty)
+     */
+    virtual GameMetadata getBySerial(const QString &serial, const QString &system);
+
+    /**
      * @brief Get metadata by provider ID
      * @param id Provider-specific game ID
      * @return Game metadata

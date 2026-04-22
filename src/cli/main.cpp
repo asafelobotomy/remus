@@ -136,10 +136,10 @@ int main(int argc, char *argv[])
 
     addActionOption(QCommandLineOption("verify",        "Verify files against DAT file",          "dat-file"));
     addActionOption(QCommandLineOption("verify-report", "Generate detailed verification report"));
-    addActionOption(QCommandLineOption("patch-dat-import", "Import DAT-style patch catalog", "dat-file"));
-    addOption(QCommandLineOption("patch-dat-system", "System name for imported patch catalog", "system"));
-    addActionOption(QCommandLineOption("patch-dat-list", "List imported patch catalogs"));
-    addActionOption(QCommandLineOption("patch-dat-remove", "Remove imported patch catalog for system", "system"));
+    addActionOption(QCommandLineOption("patch-dat-import", "Deprecated no-op: manual patch catalog import has been replaced by bundled compendium data", "dat-file"));
+    addOption(QCommandLineOption("patch-dat-system", "Legacy system name argument for deprecated patch catalog import", "system"));
+    addActionOption(QCommandLineOption("patch-dat-list", "List patch catalogs available from the bundled compendium when present"));
+    addActionOption(QCommandLineOption("patch-dat-remove", "Deprecated no-op: manual patch catalog removal is no longer required", "system"));
 
     addActionOption(QCommandLineOption("download-artwork", "Download cover art for matched games"));
     addOption(QCommandLineOption("artwork-dir",   "Directory to store artwork (default: ~/.local/share/Remus/artwork/)", "directory"));
@@ -212,11 +212,11 @@ int main(int argc, char *argv[])
     addOption(QCommandLineOption("compendium-manifest", "Path to compendium source manifest JSON", "path"));
     addOption(QCommandLineOption("compendium-output", "Output SQLite path for compiled compendium", "path", "data/compendium/remus_compendium.db"));
 
-    addActionOption(QCommandLineOption("update-dats", "Download/update DAT databases from libretro-database"));
-    addOption(QCommandLineOption("update-dats-all", "Download all systems (default: core 34 only)"));
-    addActionOption(QCommandLineOption("import-dat",  "Import a DAT file into the local database directory", "dat-file"));
-    addActionOption(QCommandLineOption("remove-dat",  "Remove an installed DAT file by name",                "name"));
-    addActionOption(QCommandLineOption("list-dats",   "List installed DAT files"));
+    addActionOption(QCommandLineOption("update-dats", "Deprecated no-op: raw DAT update workflow has been replaced by bundled compendium data"));
+    addOption(QCommandLineOption("update-dats-all", "Legacy no-op flag retained for compatibility with --update-dats"));
+    addActionOption(QCommandLineOption("import-dat",  "Deprecated no-op: manual DAT import has been replaced by bundled compendium data", "dat-file"));
+    addActionOption(QCommandLineOption("remove-dat",  "Deprecated no-op: manual DAT removal is no longer required",                "name"));
+    addActionOption(QCommandLineOption("list-dats",   "Deprecated no-op: bundled builds do not manage installed raw DAT files"));
     addActionOption(QCommandLineOption("edit-metadata","Edit metadata for a matched file by ID",             "fileId"));
     addOption(QCommandLineOption("set-title",     "Set game title (use with --edit-metadata)",     "title"));
     addOption(QCommandLineOption("set-region",    "Set game region (use with --edit-metadata)",    "region"));

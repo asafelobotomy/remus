@@ -32,6 +32,16 @@ cp -a "$ROOT_DIR/README.md" "$ARCHIVE_DIR/README.md"
 cp -a "$ROOT_DIR/CHANGELOG.md" "$ARCHIVE_DIR/CHANGELOG.md"
 cp -a "$ROOT_DIR/VERSION" "$ARCHIVE_DIR/VERSION"
 
+# ── Bundle compendium database ───────────────────────────────────────────────
+COMPENDIUM_SRC="$ROOT_DIR/data/compendium/remus_compendium.db"
+if [[ -f "$COMPENDIUM_SRC" ]]; then
+    mkdir -p "$ARCHIVE_DIR/data/compendium"
+    cp -a "$COMPENDIUM_SRC" "$ARCHIVE_DIR/data/compendium/remus_compendium.db"
+    echo "Bundled compendium DB: $COMPENDIUM_SRC"
+else
+    echo "WARNING: compendium DB not found at $COMPENDIUM_SRC — skipping" >&2
+fi
+
 if [[ -f "$ROOT_DIR/LICENSE" ]]; then
     cp -a "$ROOT_DIR/LICENSE" "$ARCHIVE_DIR/LICENSE"
 fi

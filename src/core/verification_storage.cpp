@@ -1,11 +1,61 @@
 #include "verification_engine.h"
 #include "patched_rom_parser.h"
 #include "constants/systems.h"
+#include <QSqlDatabase>
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QDebug>
 
 namespace Remus {
+
+void VerificationEngine::setCompendiumDb(const QString &compendiumDbPath)
+{
+    // Switching catalog sources invalidates in-memory DAT caches.
+    m_datCache.clear();
+    m_patchDatCache.clear();
+    m_datHashTypes.clear();
+
+    const QString targetConnection = QString("compendium_verify_%1")
+        .arg(reinterpret_cast<quintptr>(this));
+
+    // Allow explicit detach by passing an empty path.
+    if (compendiumDbPath.trimmed().isEmpty()) {
+        if (QSqlDatabase::contains(targetConnection)) {
+            {
+                QSqlDatabase existing = QSqlDatabase::database(targetConnection, false);
+                if (existing.isValid() && existing.isOpen()) {
+                    existing.close();
+                }
+            }
+            QSqlDatabase::removeDatabase(targetConnection);
+        }
+        m_compendiumConnectionName.clear();
+        return;
+    }
+
+    if (QSqlDatabase::contains(targetConnection)) {
+        {
+            QSqlDatabase existing = QSqlDatabase::database(targetConnection, false);
+            if (existing.isValid() && existing.isOpen()) {
+                existing.close();
+            }
+        }
+        QSqlDatabase::removeDatabase(targetConnection);
+    }
+
+    QSqlDatabase db = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"),
+                                                targetConnection);
+    db.setDatabaseName(compendiumDbPath);
+    if (!db.open()) {
+        qWarning() << "VerificationEngine: failed to open compendium DB:"
+                   << compendiumDbPath;
+        m_compendiumConnectionName.clear();
+        return;
+    }
+
+    m_compendiumConnectionName = targetConnection;
+    qDebug() << "VerificationEngine: compendium DB attached:" << compendiumDbPath;
+}
 
 bool VerificationEngine::createVerificationSchema()
 {
@@ -140,6 +190,63 @@ void VerificationEngine::loadDatCache(const QString &systemName)
         return;  // Already loaded
     }
 
+    QMap<QString, DatRomEntry> entries;
+    QString hashType;
+
+    // ── Compendium path ────────────────────────────────────────────────────
+    if (!m_compendiumConnectionName.isEmpty()) {
+        QSqlDatabase cdb = QSqlDatabase::database(m_compendiumConnectionName);
+        QSqlQuery q(cdb);
+
+        // Preferred hash for this system
+        q.prepare("SELECT preferred_hash FROM systems WHERE internal_name = ?");
+        q.addBindValue(systemName);
+        if (q.exec() && q.next()) {
+            hashType = q.value(0).toString().toLower();
+        }
+
+        // Aggregate all hashes per game from game_signatures
+        q.prepare(R"(
+            SELECT g.canonical_title,
+                   MAX(CASE WHEN gs.hash_type='crc32' THEN gs.hash_value ELSE NULL END) AS crc32,
+                   MAX(CASE WHEN gs.hash_type='md5'   THEN gs.hash_value ELSE NULL END) AS md5,
+                   MAX(CASE WHEN gs.hash_type='sha1'  THEN gs.hash_value ELSE NULL END) AS sha1
+            FROM games g
+            JOIN systems s ON g.system_id = s.system_id
+            JOIN game_signatures gs ON gs.game_id = g.game_id
+            WHERE s.internal_name = ?
+            GROUP BY g.game_id
+        )");
+        q.addBindValue(systemName);
+
+        if (q.exec()) {
+            while (q.next()) {
+                DatRomEntry entry;
+                entry.gameName = q.value(0).toString();
+                entry.crc32    = q.value(1).toString();
+                entry.md5      = q.value(2).toString();
+                entry.sha1     = q.value(3).toString();
+
+                if (!entry.sha1.isEmpty())
+                    entries.insert(entry.sha1.toLower(), entry);
+                if (!entry.md5.isEmpty())
+                    entries.insert(entry.md5.toLower(), entry);
+                if (!entry.crc32.isEmpty())
+                    entries.insert(entry.crc32.toLower(), entry);
+            }
+            m_datCache.insert(systemName, entries);
+            m_datHashTypes.insert(systemName,
+                                  hashType.isEmpty() ? QStringLiteral("crc32") : hashType);
+            qDebug() << "Loaded" << entries.size()
+                     << "compendium DAT entries for" << systemName;
+            return;
+        }
+        qWarning() << "VerificationEngine: compendium loadDatCache query failed:"
+                   << q.lastError().text();
+    }
+
+    // ── Runtime-import fallback ────────────────────────────────────────────
+    hashType = getPreferredHashType(systemName);
     QSqlQuery query(m_database->database());
     query.prepare(R"(
         SELECT e.game_name, e.rom_name, e.rom_size, e.crc32, e.md5, e.sha1, e.description, e.status
@@ -153,9 +260,6 @@ void VerificationEngine::loadDatCache(const QString &systemName)
         qWarning() << "Failed to load DAT cache:" << query.lastError().text();
         return;
     }
-
-    QMap<QString, DatRomEntry> entries;
-    QString hashType = getPreferredHashType(systemName);
 
     while (query.next()) {
         DatRomEntry entry;
@@ -191,6 +295,53 @@ void VerificationEngine::loadPatchDatCache(const QString &systemName)
         return;
     }
 
+    QMap<QString, DatRomEntry> entries;
+
+    // ── Compendium path ────────────────────────────────────────────────────
+    if (!m_compendiumConnectionName.isEmpty()) {
+        QSqlDatabase cdb = QSqlDatabase::database(m_compendiumConnectionName);
+        QSqlQuery q(cdb);
+        q.prepare(R"(
+            SELECT pe.game_name, pe.rom_name, pe.rom_size, pe.crc32, pe.md5, pe.sha1,
+                   pe.description, pe.status, pe.base_title, pe.patch_name, pe.file_type
+            FROM patch_entries pe
+            JOIN patch_catalog_sources pcs ON pe.source_id = pcs.source_id
+            WHERE pcs.system_name = ?
+        )");
+        q.addBindValue(systemName);
+
+        if (q.exec()) {
+            while (q.next()) {
+                DatRomEntry entry;
+                entry.gameName  = q.value(0).toString();
+                entry.romName   = q.value(1).toString();
+                entry.size      = q.value(2).toLongLong();
+                entry.crc32     = q.value(3).toString();
+                entry.md5       = q.value(4).toString();
+                entry.sha1      = q.value(5).toString();
+                entry.description = q.value(6).toString();
+                entry.status    = q.value(7).toString();
+                entry.baseTitle = q.value(8).toString();
+                entry.patchName = q.value(9).toString();
+                entry.fileType  = q.value(10).toString();
+
+                if (!entry.sha1.isEmpty())
+                    entries.insert(entry.sha1.toLower(), entry);
+                if (!entry.md5.isEmpty())
+                    entries.insert(entry.md5.toLower(), entry);
+                if (!entry.crc32.isEmpty())
+                    entries.insert(entry.crc32.toLower(), entry);
+            }
+            m_patchDatCache.insert(systemName, entries);
+            qDebug() << "Loaded" << entries.size()
+                     << "compendium patch entries for" << systemName;
+            return;
+        }
+        qWarning() << "VerificationEngine: compendium loadPatchDatCache query failed:"
+                   << q.lastError().text();
+    }
+
+    // ── Runtime-import fallback ────────────────────────────────────────────
     QSqlQuery query(m_database->database());
     query.prepare(R"(
         SELECT e.game_name, e.rom_name, e.rom_size, e.crc32, e.md5, e.sha1,
@@ -206,7 +357,6 @@ void VerificationEngine::loadPatchDatCache(const QString &systemName)
         return;
     }
 
-    QMap<QString, DatRomEntry> entries;
     while (query.next()) {
         DatRomEntry entry;
         entry.gameName = query.value(0).toString();

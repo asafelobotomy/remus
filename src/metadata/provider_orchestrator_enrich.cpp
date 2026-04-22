@@ -1,14 +1,10 @@
 #include "provider_orchestrator.h"
 
-#include "filename_normalizer.h"
-#include "hasheous_provider.h"
-#include "local_database_provider.h"
 #include "metadata_cache.h"
 
 #include <QDebug>
 
 #include "../core/constants/constants.h"
-#include "../core/constants/match_methods.h"
 #include "../core/constants/provider_fields.h"
 #include "../core/logging_categories.h"
 
@@ -26,14 +22,6 @@ namespace Remus {
 using namespace Constants;
 
 namespace {
-
-bool hasUsableArtwork(const ArtworkUrls &artwork)
-{
-    return !artwork.boxFront.isEmpty()
-        || !artwork.titleScreen.isEmpty()
-        || !artwork.screenshot.isEmpty()
-        || !artwork.screenshot2.isEmpty();
-}
 
 void mergeMetadata(GameMetadata &target, const GameMetadata &source)
 {
@@ -63,204 +51,6 @@ void mergeMetadata(GameMetadata &target, const GameMetadata &source)
 }
 
 } // namespace
-
-void ProviderOrchestrator::queryProvider(GameMetadata &accumulator,
-                                         const QString &providerName,
-                                         const QString &hash,
-                                         const QString &name,
-                                         const QString &system,
-                                         const QString &crc32,
-                                         const QString &md5,
-                                         const QString &sha1,
-                                         const QString &serial)
-{
-    if (!m_providers.contains(providerName)) {
-        return;
-    }
-    const ProviderInfo &info = m_providers[providerName];
-    if (!info.enabled) {
-        return;
-    }
-
-    GameMetadata result;
-    if (!hash.isEmpty() && info.supportsHash) {
-        emit tryingProvider(providerName, MatchMethods::HASH);
-        try {
-            if (providerName.compare(Constants::Providers::HASHEOUS, Qt::CaseInsensitive) == 0) {
-                auto *hasheous = qobject_cast<HasheousProvider *>(info.provider);
-                if (hasheous && (!crc32.isEmpty() || !md5.isEmpty() || !sha1.isEmpty())) {
-                    result = hasheous->getByHashes(crc32, md5, sha1, system);
-                } else {
-                    result = info.provider->getByHash(hash, system);
-                }
-            } else {
-                result = info.provider->getByHash(hash, system);
-            }
-
-            if (!result.title.isEmpty()) {
-                result.matchScore = 1.0f;
-                result.matchMethod = MatchMethods::HASH;
-                qInfo() << "Hash match via" << providerName << ":" << result.title;
-                emit providerSucceeded(providerName, MatchMethods::HASH);
-            } else {
-                emit providerFailed(providerName, "No hash result");
-            }
-        } catch (const std::exception &error) {
-            qWarning() << providerName << "hash error:" << error.what();
-            emit providerFailed(providerName, error.what());
-        }
-    }
-
-    if (result.title.isEmpty() && !serial.isEmpty()) {
-        auto *localDb = qobject_cast<LocalDatabaseProvider *>(info.provider);
-        if (localDb) {
-            ROMSignals romSignals;
-            romSignals.crc32 = crc32;
-            romSignals.md5 = md5;
-            romSignals.sha1 = sha1;
-            romSignals.filename = name;
-            romSignals.serial = serial;
-            const QList<MultiSignalMatch> matches = localDb->matchROM(romSignals);
-            if (!matches.isEmpty() && matches.first().serialMatch) {
-                result = localDb->getMetadataForEntry(matches.first());
-                if (!result.title.isEmpty()) {
-                    result.matchScore = matches.first().confidencePercent() / 100.0f;
-                    result.matchMethod = QStringLiteral("serial");
-                    qInfo() << "Serial match via" << providerName << ":" << result.title;
-                    emit providerSucceeded(providerName, QStringLiteral("serial"));
-                }
-            }
-        }
-    }
-
-    if (result.title.isEmpty()) {
-        const QString searchTerm = accumulator.title.isEmpty()
-            ? Metadata::FilenameNormalizer::normalize(name)
-            : accumulator.title;
-        if (!searchTerm.isEmpty()) {
-            emit tryingProvider(providerName, MatchMethods::NAME);
-            try {
-                const QList<SearchResult> results = info.provider->searchByName(searchTerm, system);
-                if (!results.isEmpty()) {
-                    const SearchResult &best = results.first();
-                    result = info.provider->getById(best.id);
-                    if (!result.title.isEmpty()) {
-                        result.matchScore = best.matchScore;
-                        result.matchMethod = (best.matchScore >= 0.95f) ? MatchMethods::NAME : MatchMethods::FUZZY;
-                        qInfo() << "Name match via" << providerName << ":" << result.title << "(score:" << best.matchScore << ")";
-                        emit providerSucceeded(providerName, MatchMethods::NAME);
-                    } else {
-                        const QString detailError = QStringLiteral("Detail fetch failed after search hit: %1 (%2)")
-                            .arg(best.title, best.id);
-                        qWarning() << "✗" << providerName << detailError;
-                        emit providerFailed(providerName, detailError);
-                    }
-                } else {
-                    emit providerFailed(providerName, "No name results");
-                }
-            } catch (const std::exception &error) {
-                qWarning() << providerName << "name search error:" << error.what();
-                emit providerFailed(providerName, error.what());
-            }
-        }
-    }
-
-    if (!result.title.isEmpty() || !result.publisher.isEmpty() || !result.developer.isEmpty()) {
-        mergeMetadata(accumulator, result);
-    }
-
-    auto *localDb = qobject_cast<LocalDatabaseProvider *>(info.provider);
-    if (localDb && !crc32.isEmpty()) {
-        localDb->enrichFromLibretro(accumulator, crc32);
-    }
-}
-
-QList<SearchResult> ProviderOrchestrator::searchAllProviders(const QString &name, const QString &system)
-{
-    if (name.isEmpty()) {
-        qWarning() << "Cannot search: name is empty";
-        return {};
-    }
-
-    const QStringList providers = getSortedProviders(false);
-    QList<SearchResult> allResults;
-    for (const QString &providerName : providers) {
-        const ProviderInfo &info = m_providers[providerName];
-        emit tryingProvider(providerName, MatchMethods::NAME);
-        try {
-            QList<SearchResult> results = info.provider->searchByName(name, system);
-            if (!results.isEmpty()) {
-                qDebug() << providerName << "found" << results.size() << "results for:" << name;
-                for (SearchResult &result : results) {
-                    result.provider = providerName;
-                }
-                allResults.append(results);
-                emit providerSucceeded(providerName, MatchMethods::NAME);
-            } else {
-                emit providerFailed(providerName, "No results");
-            }
-        } catch (const std::exception &error) {
-            qWarning() << providerName << "search error:" << error.what();
-            emit providerFailed(providerName, error.what());
-        }
-    }
-
-    if (allResults.isEmpty()) {
-        qDebug() << "No name matches from" << providers.size() << "providers for:" << name;
-        emit allProvidersFailed();
-    }
-
-    return allResults;
-}
-
-ArtworkUrls ProviderOrchestrator::getArtworkWithFallback(const QString &id, const QString &system, const QString &providerName)
-{
-    Q_UNUSED(system);
-
-    if (m_cache) {
-        const ArtworkUrls cached = m_cache->getArtwork(id);
-        const bool hasScreenshots = !cached.titleScreen.isEmpty()
-            || !cached.screenshot.isEmpty()
-            || !cached.screenshot2.isEmpty();
-        if (!cached.boxFront.isEmpty() && hasScreenshots) {
-            qInfo() << "Cache hit for artwork ID:" << id;
-            return cached;
-        }
-    }
-
-    if (!providerName.isEmpty() && m_providers.contains(providerName)) {
-        const ProviderInfo &info = m_providers[providerName];
-        if (info.enabled) {
-            qInfo() << "Fetching artwork from preferred provider:" << providerName;
-            const ArtworkUrls artwork = info.provider->getArtwork(id);
-            if (hasUsableArtwork(artwork)) {
-                if (m_cache) {
-                    m_cache->storeArtwork(id, artwork);
-                }
-                return artwork;
-            }
-
-            qInfo() << "Preferred provider returned no usable artwork, continuing fallback:" << providerName;
-        }
-    }
-
-    const QStringList providers = getSortedProviders(false);
-    for (const QString &name : providers) {
-        const ProviderInfo &info = m_providers[name];
-        qInfo() << "Trying artwork from:" << name;
-        const ArtworkUrls artwork = info.provider->getArtwork(id);
-        if (hasUsableArtwork(artwork)) {
-            qInfo() << "✓ Got artwork from:" << name;
-            if (m_cache) {
-                m_cache->storeArtwork(id, artwork);
-            }
-            return artwork;
-        }
-    }
-
-    qWarning() << "No providers returned artwork for ID:" << id;
-    return {};
-}
 
 // ---------------------------------------------------------------------------
 // Field-targeted enrichment cascade

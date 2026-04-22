@@ -1,7 +1,12 @@
 #include <QtTest/QtTest>
+#include <QDateTime>
+#include <QDir>
 #include <QTemporaryDir>
 #include <QFile>
 #include <QCommandLineParser>
+#include <QSignalSpy>
+#include <QSqlDatabase>
+#include <QSqlQuery>
 #include "../src/cli/cli_helpers.h"
 #include "../src/core/database.h"
 #include "../src/core/hasher.h"
@@ -30,6 +35,7 @@ private slots:
     void testGetMatchingDisplayNameForPatchedFile();
     void testGetMatchingDisplayNameForPatchedArchive();
     void testBuildOrchestratorSkipsIgdbWithoutCredentials();
+    void testBuildOrchestratorLoadsCompendiumProviderFromDataDir();
     void testPersistMetadataInsertsGame();
     void testPersistMetadataDuplicateGame();
     void testHashFileRecordRealFile();
@@ -72,6 +78,71 @@ static GameMetadata makeMetadata(const QString &title = "Super Mario Bros.",
     m.matchScore  = 1.0f;
     m.matchMethod = "hash";
     return m;
+}
+
+class CurrentDirGuard
+{
+public:
+    explicit CurrentDirGuard(const QString &path)
+        : m_original(QDir::currentPath())
+    {
+        QDir::setCurrent(path);
+    }
+
+    ~CurrentDirGuard()
+    {
+        QDir::setCurrent(m_original);
+    }
+
+private:
+    QString m_original;
+};
+
+static bool execSql(QSqlDatabase &db, const QString &sql)
+{
+    QSqlQuery query(db);
+    return query.exec(sql);
+}
+
+static bool seedCompendiumDatabase(const QString &rootPath)
+{
+    const QString compendiumDir = rootPath + "/data/compendium";
+    if (!QDir().mkpath(compendiumDir)) {
+        return false;
+    }
+
+    const QString dbPath = compendiumDir + "/remus_compendium.db";
+    const QString connectionName = QStringLiteral("cli_helpers_compendium_%1")
+        .arg(QString::number(QDateTime::currentMSecsSinceEpoch()));
+
+    {
+        QSqlDatabase db = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), connectionName);
+        db.setDatabaseName(dbPath);
+        if (!db.open()) {
+            return false;
+        }
+
+        const bool ok =
+            execSql(db, QStringLiteral("CREATE TABLE systems (system_id INTEGER PRIMARY KEY, internal_name TEXT NOT NULL UNIQUE, display_name TEXT NOT NULL)")) &&
+            execSql(db, QStringLiteral("CREATE TABLE games (game_id TEXT PRIMARY KEY, system_id INTEGER NOT NULL, canonical_title TEXT NOT NULL, primary_region_code TEXT, release_date TEXT, release_year INTEGER, developer TEXT, publisher TEXT, genre TEXT, players_max INTEGER, description TEXT, rating REAL, canonical_confidence REAL NOT NULL DEFAULT 0)")) &&
+            execSql(db, QStringLiteral("CREATE TABLE game_signatures (signature_id INTEGER PRIMARY KEY AUTOINCREMENT, game_id TEXT NOT NULL, hash_type TEXT NOT NULL, hash_value TEXT NOT NULL, source_id TEXT NOT NULL DEFAULT 'test', snapshot_id TEXT, source_entry_key TEXT, confidence REAL NOT NULL, is_primary INTEGER NOT NULL DEFAULT 0)")) &&
+            execSql(db, QStringLiteral("CREATE TABLE game_serials (serial_id INTEGER PRIMARY KEY AUTOINCREMENT, game_id TEXT NOT NULL, serial_value TEXT NOT NULL, source_id TEXT NOT NULL DEFAULT 'test', snapshot_id TEXT, source_entry_key TEXT, confidence REAL NOT NULL)")) &&
+            execSql(db, QStringLiteral("CREATE TABLE game_facts (fact_id INTEGER PRIMARY KEY AUTOINCREMENT, game_id TEXT NOT NULL, field_name TEXT NOT NULL, field_value TEXT NOT NULL, value_type TEXT NOT NULL DEFAULT 'text', source_id TEXT NOT NULL DEFAULT 'test', snapshot_id TEXT NOT NULL DEFAULT '', source_item_id INTEGER, source_priority INTEGER NOT NULL DEFAULT 100, confidence REAL NOT NULL DEFAULT 1.0)")) &&
+            execSql(db, QStringLiteral("CREATE TABLE canonical_resolution (game_id TEXT NOT NULL, field_name TEXT NOT NULL, selected_fact_id INTEGER NOT NULL, resolved_by_rule TEXT NOT NULL, PRIMARY KEY (game_id, field_name))")) &&
+            execSql(db, QStringLiteral("CREATE TABLE game_names (game_name_id INTEGER PRIMARY KEY AUTOINCREMENT, game_id TEXT NOT NULL, name_text TEXT NOT NULL, alias_type TEXT NOT NULL, locale TEXT NOT NULL DEFAULT '', snapshot_id TEXT NOT NULL DEFAULT '', confidence REAL NOT NULL DEFAULT 0)")) &&
+            execSql(db, QStringLiteral("INSERT INTO systems (system_id, internal_name, display_name) VALUES (4, 'GameCube', 'Nintendo GameCube')")) &&
+            execSql(db, QStringLiteral("INSERT INTO games (game_id, system_id, canonical_title, primary_region_code, release_year, developer, publisher, genre, players_max, description, rating, canonical_confidence) VALUES ('game-1', 4, 'Paper Mario: The Thousand-Year Door', 'USA', 2004, 'Intelligent Systems', 'Nintendo', 'Role-Playing', 1, 'A turn-based adventure across the Mushroom Kingdom.', 9.0, 0.95)")) &&
+            execSql(db, QStringLiteral("INSERT INTO game_signatures (game_id, hash_type, hash_value, confidence, is_primary) VALUES ('game-1', 'md5', '0123456789abcdef0123456789abcdef', 1.0, 1)"));
+
+        db.close();
+        if (!ok) {
+            QSqlDatabase::removeDatabase(connectionName);
+            return false;
+        }
+    }
+
+    QSqlDatabase::removeDatabase(connectionName);
+    return QFile::exists(dbPath);
 }
 
 // ── Tests ─────────────────────────────────────────────────────────────────
@@ -287,6 +358,42 @@ void CliHelpersTest::testBuildOrchestratorSkipsIgdbWithoutCredentials()
     QVERIFY(providers.contains(QStringLiteral("hasheous")));
     QVERIFY(providers.contains(QStringLiteral("thegamesdb")));
     QVERIFY(!providers.contains(QStringLiteral("igdb")));
+}
+
+void CliHelpersTest::testBuildOrchestratorLoadsCompendiumProviderFromDataDir()
+{
+    QTemporaryDir dir;
+    QVERIFY(dir.isValid());
+    QVERIFY(seedCompendiumDatabase(dir.path()));
+
+    CurrentDirGuard currentDir(dir.path());
+
+    QCommandLineParser parser;
+    parser.addOption(QCommandLineOption("ss-user", "", "username"));
+    parser.addOption(QCommandLineOption("ss-pass", "", "password"));
+    parser.addOption(QCommandLineOption("igdb-client-id", "", "clientId"));
+    parser.addOption(QCommandLineOption("igdb-client-secret", "", "clientSecret"));
+    parser.process(QStringList{QStringLiteral("test")});
+
+    auto orchestrator = buildOrchestrator(parser);
+    const QStringList providers = orchestrator->getEnabledProviders();
+
+    QVERIFY(providers.contains(QStringLiteral("compendium")));
+    QCOMPARE(providers.first(), QStringLiteral("compendium"));
+    QVERIFY(orchestrator->providerSupportsHash(QStringLiteral("compendium")));
+
+    QSignalSpy trySpy(orchestrator.get(), &ProviderOrchestrator::tryingProvider);
+    const GameMetadata metadata = orchestrator->getByHashWithFallback(
+        QStringLiteral("0123456789ABCDEF0123456789ABCDEF"),
+        QStringLiteral("GameCube"));
+
+    QCOMPARE(metadata.title, QStringLiteral("Paper Mario: The Thousand-Year Door"));
+    QCOMPARE(metadata.system, QStringLiteral("GameCube"));
+    QCOMPARE(metadata.providerId, QStringLiteral("compendium"));
+    QCOMPARE(metadata.publisher, QStringLiteral("Nintendo"));
+    QVERIFY(!trySpy.isEmpty());
+    QCOMPARE(trySpy.at(0).at(0).toString(), QStringLiteral("compendium"));
+    QCOMPARE(trySpy.at(0).at(1).toString(), QStringLiteral("hash"));
 }
 
 void CliHelpersTest::testPersistMetadataInsertsGame()

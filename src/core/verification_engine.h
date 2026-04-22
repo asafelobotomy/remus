@@ -75,6 +75,19 @@ class VerificationEngine : public QObject {
 
 public:
     explicit VerificationEngine(Database *database, QObject *parent = nullptr);
+    ~VerificationEngine() override;
+
+    /**
+     * @brief Attach a compendium database as the primary verification catalog.
+     *
+     * When set, hasDat / hasPatchDat / loadDatCache / loadPatchDatCache all
+     * query the compendium instead of the runtime import tables.  The runtime
+     * import path remains available as a fallback if the compendium has no
+     * entries for a given system.
+     *
+     * @param compendiumDbPath Absolute path to remus_compendium.db
+     */
+    void setCompendiumDb(const QString &compendiumDbPath);
 
     /**
      * @brief Import a DAT file into the database
@@ -193,6 +206,7 @@ signals:
 
 private:
     Database *m_database;
+    QString m_compendiumConnectionName; // empty = no compendium attached
     VerificationSummary m_lastSummary;
     
     // In-memory cache of loaded DAT entries (indexed by hash)

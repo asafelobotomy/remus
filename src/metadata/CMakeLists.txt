@@ -1,5 +1,6 @@
 add_library(remus-metadata STATIC
     metadata_provider.cpp
+    thumbnail_url_helper.cpp
     http_metadata_provider.cpp
     screenscraper_provider.cpp
     screenscraper_provider_parse.cpp
@@ -18,6 +19,7 @@ add_library(remus-metadata STATIC
     wikidata_provider.cpp
     libretro_metadata_parser.cpp
     provider_orchestrator.cpp
+    provider_orchestrator_enrich.cpp
     provider_orchestrator_fallback.cpp
     metadata_cache.cpp
     rate_limiter.cpp
@@ -30,6 +32,7 @@ add_library(remus-metadata STATIC
     compendium_fact_inserter.cpp
     compendium_merge_resolver.cpp
     compendium_compiler_service.cpp
+    compendium_provider.cpp
 )
 
 target_link_libraries(remus-metadata PUBLIC

@@ -248,12 +248,8 @@ private slots:
         QTemporaryDir dir;
         QVERIFY(dir.isValid());
 
-        const QString sourcePath = dir.filePath("dummy-source.dat");
-        {
-            QFile sourceFile(sourcePath);
-            QVERIFY(sourceFile.open(QIODevice::WriteOnly | QIODevice::Text));
-            QVERIFY(sourceFile.write("dummy\n") == 6);
-        }
+        const QString sourcePath = fixturePath("test_compendium_source.dat");
+        QVERIFY2(!sourcePath.isEmpty(), "Fixture test_compendium_source.dat not found");
 
         const QString manifestPath = dir.filePath("manifest.json");
         {
@@ -298,40 +294,60 @@ private slots:
         QVERIFY(reportDoc.isObject());
         QCOMPARE(reportDoc.object().value("build_id").toString(), QString("test-build"));
         QCOMPARE(reportDoc.object().value("schema_version").toInt(), 1);
+        QVERIFY(reportDoc.object().value("records_ingested").toInt() > 0);
+        QVERIFY(reportDoc.object().value("games_created").toInt() > 0);
+        QVERIFY(reportDoc.object().value("signatures_created").toInt() > 0);
+        QVERIFY(reportDoc.object().value("serials_created").toInt() > 0);
+        QVERIFY(reportDoc.object().value("facts_created").toInt() > 0);
+        QVERIFY(reportDoc.object().value("resolved_fields").toInt() > 0);
         QCOMPARE(reportDoc.object().value("unresolved_conflicts").toInt(), 0);
 
         const QString connectionName = QStringLiteral("compendium_smoke_%1")
             .arg(QString::number(QDateTime::currentMSecsSinceEpoch()));
-        QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE", connectionName);
-        db.setDatabaseName(outputDbPath);
-        QVERIFY2(db.open(), qPrintable(db.lastError().text()));
+        {
+            QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE", connectionName);
+            db.setDatabaseName(outputDbPath);
+            QVERIFY2(db.open(), qPrintable(db.lastError().text()));
 
-        QSqlQuery countsQuery(db);
-        QVERIFY2(countsQuery.exec("SELECT COUNT(*) FROM compendium_builds"), qPrintable(countsQuery.lastError().text()));
-        QVERIFY(countsQuery.next());
-        QCOMPARE(countsQuery.value(0).toInt(), 1);
+            QSqlQuery countsQuery(db);
+            QVERIFY2(countsQuery.exec("SELECT COUNT(*) FROM compendium_builds"), qPrintable(countsQuery.lastError().text()));
+            QVERIFY(countsQuery.next());
+            QCOMPARE(countsQuery.value(0).toInt(), 1);
 
-        QVERIFY2(countsQuery.exec("SELECT COUNT(*) FROM sources"), qPrintable(countsQuery.lastError().text()));
-        QVERIFY(countsQuery.next());
-        QCOMPARE(countsQuery.value(0).toInt(), 1);
+            QVERIFY2(countsQuery.exec("SELECT COUNT(*) FROM sources"), qPrintable(countsQuery.lastError().text()));
+            QVERIFY(countsQuery.next());
+            QCOMPARE(countsQuery.value(0).toInt(), 1);
 
-        QVERIFY2(countsQuery.exec("SELECT COUNT(*) FROM source_snapshots"), qPrintable(countsQuery.lastError().text()));
-        QVERIFY(countsQuery.next());
-        QCOMPARE(countsQuery.value(0).toInt(), 1);
+            QVERIFY2(countsQuery.exec("SELECT COUNT(*) FROM source_snapshots"), qPrintable(countsQuery.lastError().text()));
+            QVERIFY(countsQuery.next());
+            QCOMPARE(countsQuery.value(0).toInt(), 1);
 
-        QVERIFY2(countsQuery.exec("SELECT COUNT(*) FROM systems"), qPrintable(countsQuery.lastError().text()));
-        QVERIFY(countsQuery.next());
-        QCOMPARE(countsQuery.value(0).toInt(), 42);
+            QVERIFY2(countsQuery.exec("SELECT COUNT(*) FROM systems"), qPrintable(countsQuery.lastError().text()));
+            QVERIFY(countsQuery.next());
+            QCOMPARE(countsQuery.value(0).toInt(), 42);
 
-        QSqlQuery sourceQuery(db);
-        QVERIFY2(sourceQuery.exec("SELECT source_id, display_name, enabled, priority FROM sources"), qPrintable(sourceQuery.lastError().text()));
-        QVERIFY(sourceQuery.next());
-        QCOMPARE(sourceQuery.value(0).toString(), QString("test-source"));
-        QCOMPARE(sourceQuery.value(1).toString(), QString("Test Source"));
-        QCOMPARE(sourceQuery.value(2).toInt(), 1);
-        QCOMPARE(sourceQuery.value(3).toInt(), 10);
+            QVERIFY2(countsQuery.exec("SELECT COUNT(*) FROM games"), qPrintable(countsQuery.lastError().text()));
+            QVERIFY(countsQuery.next());
+            QVERIFY(countsQuery.value(0).toInt() > 0);
 
-        db.close();
+            QVERIFY2(countsQuery.exec("SELECT COUNT(*) FROM game_signatures"), qPrintable(countsQuery.lastError().text()));
+            QVERIFY(countsQuery.next());
+            QVERIFY(countsQuery.value(0).toInt() > 0);
+
+            QVERIFY2(countsQuery.exec("SELECT COUNT(*) FROM source_items"), qPrintable(countsQuery.lastError().text()));
+            QVERIFY(countsQuery.next());
+            QVERIFY(countsQuery.value(0).toInt() > 0);
+
+            QSqlQuery sourceQuery(db);
+            QVERIFY2(sourceQuery.exec("SELECT source_id, display_name, enabled, priority FROM sources"), qPrintable(sourceQuery.lastError().text()));
+            QVERIFY(sourceQuery.next());
+            QCOMPARE(sourceQuery.value(0).toString(), QString("test-source"));
+            QCOMPARE(sourceQuery.value(1).toString(), QString("Test Source"));
+            QCOMPARE(sourceQuery.value(2).toInt(), 1);
+            QCOMPARE(sourceQuery.value(3).toInt(), 10);
+
+            db.close();
+        }
         QSqlDatabase::removeDatabase(connectionName);
     }
 

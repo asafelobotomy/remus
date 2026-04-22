@@ -11,7 +11,7 @@
 #include "../core/constants/folder_naming.h"
 #include "../core/system_resolver.h"
 #include "../metadata/artwork_downloader.h"
-#include "../metadata/local_database_provider.h"
+#include "../metadata/thumbnail_url_helper.h"
 #include "cli_logging.h"
 
 using namespace Remus;
@@ -29,7 +29,7 @@ QList<QUrl> thumbnailCandidatesForSystems(const QStringList &libretroSystemNames
         if (systemName.trimmed().isEmpty()) {
             continue;
         }
-        const QStringList candidates = LocalDatabaseProvider::generateThumbnailCandidates(
+        const QStringList candidates = Metadata::ThumbnailUrlHelper::generateThumbnailCandidates(
             systemName,
             displayName,
             type);
