@@ -527,6 +527,12 @@ RomBundler::BundleResult RomBundler::bundle(const FileRecord &file,
     }
 
     const QString bundledInternalPath = QDir(tempBase).relativeFilePath(bundlePayloadPath).replace('\\', '/');
+    const QFileInfo bundledPayloadInfo(bundlePayloadPath);
+    const QString bundledFilename = bundledPayloadInfo.fileName();
+    const QString bundledExtension = dottedSuffix(bundlePayloadPath);
+    const qint64 bundledFileSize = bundledPayloadInfo.size();
+    const bool preserveExistingHashes =
+        bundledFilename.compare(QFileInfo(romInTemp).fileName(), Qt::CaseInsensitive) == 0;
     const CompressionResult compression = m_creator.compressDirectoryContents(tempBase, outputArchive, config.outputFormat);
     cleanup();
     if (!compression.success) {
@@ -535,15 +541,18 @@ RomBundler::BundleResult RomBundler::bundle(const FileRecord &file,
     }
 
     m_db.markFileProcessed(file.id, Constants::Engines::ProcessingStatus::BUNDLED);
-    FileRecord bundledRecord = file;
+    FileRecord bundledRecord = file.id > 0 ? m_db.getFileById(file.id) : file;
+    if (bundledRecord.id <= 0) {
+        bundledRecord = file;
+    }
     bundledRecord.currentPath = outputArchive;
     bundledRecord.isCompressed = true;
     bundledRecord.archivePath = outputArchive;
     bundledRecord.archiveInternalPath = bundledInternalPath;
-    bundledRecord.filename = QFileInfo(bundlePayloadPath).fileName();
-    bundledRecord.extension = dottedSuffix(bundlePayloadPath);
-    bundledRecord.fileSize = QFileInfo(bundlePayloadPath).size();
-    if (QFileInfo(bundlePayloadPath).fileName().compare(QFileInfo(romInTemp).fileName(), Qt::CaseInsensitive) != 0) {
+    bundledRecord.filename = bundledFilename;
+    bundledRecord.extension = bundledExtension;
+    bundledRecord.fileSize = bundledFileSize;
+    if (!preserveExistingHashes) {
         bundledRecord.crc32.clear();
         bundledRecord.md5.clear();
         bundledRecord.sha1.clear();
