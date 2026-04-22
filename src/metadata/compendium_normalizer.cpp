@@ -46,6 +46,10 @@ void CompendiumNormalizer::buildRegionMap()
     const QString aus = QStringLiteral("AUS");
     m_regionToCode.insert(QStringLiteral("australia"), aus);
     m_regionToCode.insert(QStringLiteral("aus"),       aus);
+
+    const QString bra = QStringLiteral("BRA");
+    m_regionToCode.insert(QStringLiteral("brazil"), bra);
+    m_regionToCode.insert(QStringLiteral("bra"),    bra);
 }
 
 // ── Constructor ───────────────────────────────────────────────────────────────
@@ -87,13 +91,6 @@ QString CompendiumNormalizer::resolveRegionCode(const QString &rawRegion) const
 
     if (m_regionToCode.contains(key)) {
         return m_regionToCode.value(key);
-    }
-
-    // Substring scan for partial matches (e.g. raw region embedded in a title)
-    for (auto it = m_regionToCode.constBegin(); it != m_regionToCode.constEnd(); ++it) {
-        if (key.contains(it.key())) {
-            return it.value();
-        }
     }
 
     return {};
