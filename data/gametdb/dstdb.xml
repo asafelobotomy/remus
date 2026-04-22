@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <datafile xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="dstdb.xsd">
-	<DSTDB version="20260326224615" filter="EN" games="8459"/>
+	<DSTDB version="20260422092826" filter="EN" games="8459"/>
 	<!--
  GameTDB: DS, Database started in 2015 (https://www.gametdb.com)
  Never modify this file manually, it will get overwritten when you update. You can add games and fixes on the website.
@@ -1229,7 +1229,7 @@
 		<developer>Starfish SD</developer>
 		<publisher>505 Games</publisher>
 		<date year="2007" month="11" day="16"/>
-		<genre>puzzle</genre>
+		<genre>puzzle,educational</genre>
 		<rating type="PEGI" value="3"/>
 		<wi-fi players="0"/>
 		<input players-multi-cart="1" players-single-cart="1">
@@ -1284,13 +1284,19 @@
 			<title>I Did It Mum!: Girl</title>
 			<synopsis>The Award Winning Series is Back and Better Than Ever! The first and only developmentally appropriate game for the Nintendo DS just got better! Filled with a nice mix of fun, creativity and skill building games, this wholesome title is a must have for the youngest gamer! It's like carrying around a party inside your pocket which the whole family can enjoy!</synopsis>
 		</locale>
+		<locale lang="ES">
+			<title>Kids Training: Edición Rosa</title>
+			<synopsis/>
+		</locale>
 		<developer>Starfish SD</developer>
 		<publisher>505 Games</publisher>
 		<date year="2007" month="11" day="7"/>
-		<genre>puzzle</genre>
+		<genre>puzzle,educational</genre>
 		<rating type="PEGI" value="3"/>
 		<wi-fi players="0"/>
-		<input players-multi-cart="1" players-single-cart="1"/>
+		<input players-multi-cart="1" players-single-cart="1">
+			<control type="microphone" required="true"/>
+		</input>
 		<rom version="0" name="I Did It Mum!: Girl (Europe) (EN,FR,DE,ES,IT).ds" size="33554432" crc="1ca05151" md5="8b2ddde2213ad7e7ae3a62c59f8e5d4e" sha1="d188c5d9965351f4aff71873282e1dbf930c197c"/>
 	</game>
 	<game name="Shikaku Kentei DS (Japan) (EN,JA)">
@@ -14802,11 +14808,11 @@ The snickering elves are back with Santa, but there is a new twist as Santa's ne
 		<rom version="0" name="Flash Focus: Vision Training in Minutes a Day (USA) (EN).ds" size="33554432" crc="01a78201" md5="f6d77b5cc89ecc49dc3f20c83e60f25d" sha1="98cadb25e97d01b0e1134909ad12c1619c6645f0"/>
 		<case color="000000"/>
 	</game>
-	<game name="Miru Chikara o Jissen de Kitaeru: DS Medikara Training (Japan) (EN,JA)">
+	<game name="Miru Chikara o Jissen de Kitaeru: DS Medikara Training (Japan) (JA)">
 		<id>AG3J</id>
 		<type>DS</type>
 		<region>NTSC-J</region>
-		<languages>EN,JA</languages>
+		<languages>JA</languages>
 		<locale lang="EN">
 			<title>Miru Chikara o Jissen de Kitaeru: DS Medikara Training</title>
 			<synopsis/>
@@ -14815,12 +14821,14 @@ The snickering elves are back with Santa, but there is a new twist as Santa's ne
 			<title>見る力を実践で鍛える　ＤＳ眼力トレーニング</title>
 			<synopsis/>
 		</locale>
-		<publisher/>
+		<developer>Namco Bandai/Nintendo</developer>
+		<publisher>Nintendo</publisher>
 		<date year="2007" month="5" day="31"/>
+		<genre>health,exercise</genre>
 		<rating type="CERO" value="A"/>
 		<wi-fi players="0"/>
-		<input players-multi-cart="1" players-single-cart="1"/>
-		<rom version="0" name="Miru Chikara o Jissen de Kitaeru: DS Medikara Training (Japan) (EN,JA).ds" size="33554432" crc="99f65190" md5="056bdc0ec7dade1e33878f9fc1845407" sha1="09b7c09f20b169eb07e6e980521f2e491dad8a68"/>
+		<input players-multi-cart="1" players-single-cart="2"/>
+		<rom version="0" name="Miru Chikara o Jissen de Kitaeru: DS Medikara Training (Japan) (JA).ds" size="33554432" crc="99f65190" md5="056bdc0ec7dade1e33878f9fc1845407" sha1="09b7c09f20b169eb07e6e980521f2e491dad8a68"/>
 		<case color="000000"/>
 	</game>
 	<game name="Sumeoinneun Nunui Him: DS Allyeok Training (Korea) (KO)">
@@ -15706,6 +15714,18 @@ The snickering elves are back with Santa, but there is a new twist as Santa's ne
 		<region>PAL</region>
 		<languages>EN,FR,DE,ES,IT,NL,PT,SE,DK,NO,FI</languages>
 		<locale lang="EN">
+			<title>Garfield 2</title>
+			<synopsis/>
+		</locale>
+		<locale lang="SE">
+			<title>Garfield 2</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DK">
+			<title>Garfield 2</title>
+			<synopsis/>
+		</locale>
+		<locale lang="NO">
 			<title>Garfield 2</title>
 			<synopsis/>
 		</locale>
@@ -18727,9 +18747,10 @@ You accomplish this using The Hundred Cell Calculation Method. To be effective, 
 			<title>マジック大全</title>
 			<synopsis/>
 		</locale>
-		<publisher/>
+		<developer>Nintendo EAD</developer>
+		<publisher>Nintendo</publisher>
 		<date year="2006" month="11" day="16"/>
-		<genre>educational</genre>
+		<genre>health,cards,educational</genre>
 		<rating type="CERO" value="A"/>
 		<wi-fi players="0"/>
 		<input players-multi-cart="1" players-single-cart="1"/>
@@ -19876,7 +19897,20 @@ A fully 3D game! Let your dog run around rooms, environments, meet other dogs an
 		<languages>EN</languages>
 		<locale lang="EN">
 			<title>Kim Possible: Kimmunicator</title>
-			<synopsis>Mixing crime-fighting with cheerleading may be a tough job, but Kim Possible is up to the task! In Kim Possible: Kimmunicator, join Kim in this 3-D adventure that combines frantic action with a sense of humour. The dreaded Dr.</synopsis>
+			<synopsis>Rescue Wade and save the world! No big!
+Mixing crime-fighting with cheerleading may be a tough job, but Kim Possible is up to the task! In Kim Possible: Kimmunicator, join Kim in this 3-D adventure that combines frantic action with a sense of humour.
+
+• Help Kim go undercover using your Kimmunicator.
+• Collect and master cool gadgets and awesome new moves.
+• Dodge enemies and traps, using Kim's acrobatic skills to defeat enemies.</synopsis>
+		</locale>
+		<locale lang="SE">
+			<title>Kim Possible: Kimmunicator</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DK">
+			<title>Kim Possible: Kimmunicator</title>
+			<synopsis/>
 		</locale>
 		<publisher/>
 		<date year="2006" month="2" day="1"/>
@@ -21652,6 +21686,10 @@ A fully 3D game! Let your dog run around rooms, environments, meet other dogs an
 			<title>Looney Tunes: Duck Amuck</title>
 			<synopsis>Use the Touch Screen to wage a war of wits against the despicable Daffy Duck in Duck Amuck! Featuring laugh-a-minute mini-games, Duck Amuck puts you in the role of tormentor as you try to fill Daffy’s rage-o-meter to the brim and drive him quackers!</synopsis>
 		</locale>
+		<locale lang="SE">
+			<title>Looney Tunes: Duck Amuck</title>
+			<synopsis/>
+		</locale>
 		<locale lang="FI">
 			<title>Looney Tunes: Duck Amuck</title>
 			<synopsis/>
@@ -23304,25 +23342,33 @@ A fully 3D game! Let your dog run around rooms, environments, meet other dogs an
 		<rom version="0" name="Need for Speed Carbon: Own the City (USA) (EN).ds" size="33554432" crc="156a9446" md5="5de48e60c4a8fed0b29d005507f5d4fe" sha1="31a746a1ea5704219e51a957323f69b29cfd6526"/>
 		<case color="000000"/>
 	</game>
-	<game name="Need for Speed Carbon: Own the City (Europe) (EN,DE)">
+	<game name="Need for Speed Carbon: Own the City (Europe) (EN,FR,DE,ES,IT)">
 		<id>AN7P</id>
 		<type>DS</type>
 		<region>PAL</region>
-		<languages>EN,DE</languages>
+		<languages>EN,FR,DE,ES,IT</languages>
 		<locale lang="EN">
 			<title>Need for Speed Carbon: Own the City</title>
+			<synopsis>What starts in the city is settled in the canyons as Need for Speed Carbon immerses you into the world's most dangerous and adrenaline-filled form of street racing.</synopsis>
+		</locale>
+		<locale lang="ES">
+			<title>Need for Speed Carbono: Domina la Ciudad</title>
 			<synopsis/>
 		</locale>
 		<locale lang="FI">
 			<title>Need for Speed Carbon - Own the City</title>
 			<synopsis/>
 		</locale>
-		<publisher/>
-		<date year="" month="" day=""/>
-		<rating type="PEGI" value=""/>
+		<developer>Exient Entertainment</developer>
+		<publisher>Electronic Arts</publisher>
+		<date year="2006" month="11" day="3"/>
+		<genre>racing</genre>
+		<rating type="PEGI" value="7">
+			<descriptor>violence</descriptor>
+		</rating>
 		<wi-fi players="0"/>
 		<input players-multi-cart="4" players-single-cart="4"/>
-		<rom version="0" name="Need for Speed Carbon: Own the City (Europe) (EN,DE).ds" size="33554432" crc="e5f3c320" md5="af0c3a14156967450be89395dd88984a" sha1="073f15548560caa95bf560f7165f23769c7a16aa"/>
+		<rom version="0" name="Need for Speed Carbon: Own the City (Europe) (EN,FR,DE,ES,IT).ds" size="33554432" crc="e5f3c320" md5="af0c3a14156967450be89395dd88984a" sha1="073f15548560caa95bf560f7165f23769c7a16aa"/>
 	</game>
 	<game name="Princess Natasha: Student, Secret Agent, Princess (USA) (EN)">
 		<id>AN8E</id>
@@ -27672,7 +27718,11 @@ Based on the classic card game, Top Trumps: Dogs and Dinosaurs takes the experie
 		<languages>EN,FR,DE,ES,IT</languages>
 		<locale lang="EN">
 			<title>Spellbound</title>
-			<synopsis>How good is your spelling? An exciting, enjoyable new game for PSP and DS platforms for the whole family, based on the ever-growing fascination with SPELLING BEES and with 'brain' games, Spelling Challenges and More! is themed around a spelling game show but also is much more!</synopsis>
+			<synopsis>How good is your spelling? An exciting, enjoyable new game for Nintendo DS for the whole family, based on the ever-growing fascination with SPELLING BEES and with 'brain' games, Spelling Challenges and More! is themed around a spelling game show but also is much more!</synopsis>
+		</locale>
+		<locale lang="ES">
+			<title>Juega con tus palabras</title>
+			<synopsis/>
 		</locale>
 		<developer>puzzle.tv</developer>
 		<publisher>505 Games</publisher>
@@ -27856,6 +27906,18 @@ Based on the classic card game, Top Trumps: Dogs and Dinosaurs takes the experie
 			<synopsis>Are you a kitten lover? Purr Pals is your game! With Purr Pals you can adopt, care for and raise the kittens you've always wanted to have! Now you can choose your favorite breed, name it, feed it and play with it on your Nintendo DS. And, of course, buy him beautiful accessories and toys too. Your kitten will respond to the love and affection you give it!</synopsis>
 		</locale>
 		<locale lang="ES">
+			<title>Purr Pals</title>
+			<synopsis/>
+		</locale>
+		<locale lang="SE">
+			<title>Purr Pals</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DK">
+			<title>Purr Pals</title>
+			<synopsis/>
+		</locale>
+		<locale lang="NO">
 			<title>Purr Pals</title>
 			<synopsis/>
 		</locale>
@@ -31788,6 +31850,10 @@ Bowser's up to no good again...but this time, it's Princess Peach to the rescue!
 			<title>Super Princess Peach</title>
 			<synopsis/>
 		</locale>
+		<locale lang="NL">
+			<title>Super Princess Peach</title>
+			<synopsis/>
+		</locale>
 		<locale lang="FI">
 			<title>Super Princess Peach</title>
 			<synopsis/>
@@ -32431,6 +32497,14 @@ Bowser's up to no good again...but this time, it's Princess Peach to the rescue!
 			<title>42 Spel Klassiekers</title>
 			<synopsis/>
 		</locale>
+		<locale lang="SE">
+			<title>42 All-Time Classics</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DK">
+			<title>42 All-Time Classics</title>
+			<synopsis/>
+		</locale>
 		<locale lang="FI">
 			<title>42 All-Time Classics</title>
 			<synopsis/>
@@ -32490,11 +32564,11 @@ Bowser's up to no good again...but this time, it's Princess Peach to the rescue!
 		<input players-multi-cart="1" players-single-cart="1"/>
 		<rom version="0" name="Tootuff: Mission Nadia (Europe) (EN,FR,DE,ES,IT).ds" size="16777216" crc="36c03fdc" md5="1b5c9d1f7bc9e8ef23deaa1490932850" sha1="01de46d6badd3bc6a1da47b557916af7632ad46b"/>
 	</game>
-	<game name="Daredemo Asobi Taizen (Japan) (EN,JA)">
+	<game name="Daredemo Asobi Taizen (Japan) (JA)">
 		<id>ATGJ</id>
 		<type>DS</type>
 		<region>NTSC-J</region>
-		<languages>EN,JA</languages>
+		<languages>JA</languages>
 		<locale lang="EN">
 			<title>Daredemo Asobi Taizen</title>
 			<synopsis/>
@@ -32503,12 +32577,14 @@ Bowser's up to no good again...but this time, it's Princess Peach to the rescue!
 			<title>だれでもアソビ大全</title>
 			<synopsis/>
 		</locale>
-		<publisher/>
+		<developer>Agenda</developer>
+		<publisher>Nintendo</publisher>
 		<date year="2005" month="11" day="3"/>
-		<rating type="CERO" value=""/>
+		<genre>simulation,health,cards,poker,compilation</genre>
+		<rating type="CERO" value="A"/>
 		<wi-fi players="0"/>
-		<input players-multi-cart="8" players-single-cart="1"/>
-		<rom version="" name="Daredemo Asobi Taizen (Japan) (EN,JA).ds"/>
+		<input players-multi-cart="8" players-single-cart="8"/>
+		<rom version="" name="Daredemo Asobi Taizen (Japan) (JA).ds"/>
 		<case color="000000"/>
 	</game>
 	<game name="Texas Hold 'em Poker DS (USA) (EN)">
@@ -32557,13 +32633,17 @@ Bowser's up to no good again...but this time, it's Princess Peach to the rescue!
 		<languages>EN</languages>
 		<locale lang="EN">
 			<title>Electroplankton</title>
-			<synopsis/>
+			<synopsis>Electroplankton is an interactive music-making game. You can control one of 10 different type of electroplankton to generate musical and visual landscapes. Electroplankton uses all the features of the Nintendo DS, including the touch screen and microphone. In addition to the interactive mode, the game features a spectator mode where the computer generates music for you.</synopsis>
 		</locale>
-		<publisher/>
-		<date year="2005" month="" day=""/>
-		<rating type="ESRB" value=""/>
+		<developer>indieszero</developer>
+		<publisher>Nintendo</publisher>
+		<date year="2006" month="1" day="9"/>
+		<genre>music,health</genre>
+		<rating type="ESRB" value="E"/>
 		<wi-fi players="0"/>
-		<input players-multi-cart="1" players-single-cart="1"/>
+		<input players-multi-cart="1" players-single-cart="1">
+			<control type="microphone" required="false"/>
+		</input>
 		<rom version="" name="Electroplankton (USA) (EN).ds"/>
 		<case color="000000"/>
 	</game>
@@ -32583,10 +32663,12 @@ Bowser's up to no good again...but this time, it's Princess Peach to the rescue!
 		<developer>Nintendo EAD</developer>
 		<publisher>Nintendo</publisher>
 		<date year="2005" month="4" day="7"/>
-		<genre>music</genre>
+		<genre>music,health</genre>
 		<rating type="CERO" value="A"/>
 		<wi-fi players="0"/>
-		<input players-multi-cart="1" players-single-cart="1"/>
+		<input players-multi-cart="1" players-single-cart="1">
+			<control type="microphone" required="false"/>
+		</input>
 		<rom version="" name="Electroplankton (Japan) (JA).ds"/>
 		<case color="000000" versions="2"/>
 	</game>
@@ -32626,10 +32708,12 @@ Bowser's up to no good again...but this time, it's Princess Peach to the rescue!
 		<developer>Nintendo EAD</developer>
 		<publisher>Nintendo</publisher>
 		<date year="2006" month="7" day="7"/>
-		<genre>music</genre>
+		<genre>music,health</genre>
 		<rating type="PEGI" value="3"/>
 		<wi-fi players="0"/>
-		<input players-multi-cart="1" players-single-cart="1"/>
+		<input players-multi-cart="1" players-single-cart="1">
+			<control type="microphone" required="false"/>
+		</input>
 		<rom version="" name="Electroplankton (Europe) (EN,FR,DE,ES,IT).ds"/>
 	</game>
 	<game name="Star Trek: Tactical Assault (USA) (EN)">
@@ -34639,11 +34723,11 @@ Journey through 6 exotic locations filled with adventure to help Aang fulfill hi
 		<rom version="1" name="Minna de Flash Anzan DS (Japan) (EN,JA) (v1).ds" size="16777216" crc="773b61e3" md5="6fade7f3e64a7164017d0873525d0be7" sha1="95870f514edc6d320cec90ce06c24dcf21b07a2a"/>
 		<case color="000000"/>
 	</game>
-	<game name="Gintama: Gintoki vs Hijikata!: Kabukichou Gintama Daisoudatsusen!! (Japan) (EN,JA)">
+	<game name="Gintama: Gintoki vs Hijikata!: Kabukichou Gintama Daisoudatsusen!! (Japan) (JA)">
 		<id>AVGJ</id>
 		<type>DS</type>
 		<region>NTSC-J</region>
-		<languages>EN,JA</languages>
+		<languages>JA</languages>
 		<locale lang="EN">
 			<title>Gintama: Gintoki vs Hijikata!: Kabukichou Gintama Daisoudatsusen!!</title>
 			<synopsis/>
@@ -34652,13 +34736,15 @@ Journey through 6 exotic locations filled with adventure to help Aang fulfill hi
 			<title>銀魂　銀時ＶＳ土方！？かぶき町銀玉大争奪戦！！</title>
 			<synopsis/>
 		</locale>
-		<publisher/>
+		<developer>Banpresto</developer>
+		<publisher>Banpresto</publisher>
 		<date year="2006" month="12" day="14"/>
+		<genre>adventure</genre>
 		<rating type="CERO" value="A"/>
 		<wi-fi players="0"/>
 		<input players-multi-cart="1" players-single-cart="1"/>
-		<rom version="0" name="Gintama: Gintoki vs Hijikata!: Kabukichou Gintama Daisoudatsusen!! (Japan) (EN,JA).ds" size="67108864" crc="1241987b" md5="b37833b9a6b5fa59ccdb2952ff8c4f6f" sha1="8db4391e94d06c689114fde38b189730ce297236"/>
-		<rom version="1" name="Gintama: Gintoki vs Hijikata!: Kabukichou Gintama Daisoudatsusen!! (Japan) (EN,JA) (v1).ds" size="67108864" crc="7512fb24" md5="1ab36ab96cc3f303ed37a3d54811ae72" sha1="8dcaf300fc416945caf98397f76e59af51f2df8c"/>
+		<rom version="0" name="Gintama: Gintoki vs Hijikata!: Kabukichou Gintama Daisoudatsusen!! (Japan) (JA).ds" size="67108864" crc="1241987b" md5="b37833b9a6b5fa59ccdb2952ff8c4f6f" sha1="8db4391e94d06c689114fde38b189730ce297236"/>
+		<rom version="1" name="Gintama: Gintoki vs Hijikata!: Kabukichou Gintama Daisoudatsusen!! (Japan) (JA) (v1).ds" size="67108864" crc="7512fb24" md5="1ab36ab96cc3f303ed37a3d54811ae72" sha1="8dcaf300fc416945caf98397f76e59af51f2df8c"/>
 		<case color="000000" versions="2"/>
 	</game>
 	<game name="Over the Hedge: Hammy Goes Nuts! (USA) (EN)">
@@ -35012,11 +35098,11 @@ Journey through 6 exotic locations filled with adventure to help Aang fulfill hi
 		<rom version="" name="Mizuiro Blood (Japan) (EN,JA).ds"/>
 		<case color="000000"/>
 	</game>
-	<game name="DS Bimoji Training (Japan) (EN,JA)">
+	<game name="DS Bimoji Training (Japan) (JA)">
 		<id>AVMJ</id>
 		<type>DS</type>
 		<region>NTSC-J</region>
-		<languages>EN,JA</languages>
+		<languages>JA</languages>
 		<locale lang="EN">
 			<title>DS Bimoji Training</title>
 			<synopsis/>
@@ -35025,12 +35111,14 @@ Journey through 6 exotic locations filled with adventure to help Aang fulfill hi
 			<title>ＤＳ美文字トレーニング</title>
 			<synopsis/>
 		</locale>
-		<publisher/>
+		<developer>indieszero</developer>
+		<publisher>Nintendo</publisher>
 		<date year="2008" month="3" day="13"/>
+		<genre>health,educational,software</genre>
 		<rating type="CERO" value="A"/>
 		<wi-fi players="0"/>
 		<input players-multi-cart="6" players-single-cart="1"/>
-		<rom version="" name="DS Bimoji Training (Japan) (EN,JA).ds"/>
+		<rom version="" name="DS Bimoji Training (Japan) (JA).ds"/>
 		<case color="000000"/>
 	</game>
 	<game name="DS Dengeki Bunko: Inukami! feat. Animation (Japan) (EN,JA)">
@@ -35116,7 +35204,12 @@ Journey through 6 exotic locations filled with adventure to help Aang fulfill hi
 		<languages>EN</languages>
 		<locale lang="EN">
 			<title>Biker Mice from Mars</title>
-			<synopsis>The Biker Mice From Mars are on a quest to get hold of the Regenerator - the only device that can save their home planet from destruction. They must first rescue Stoker, who is being held captive at Rump Towers as he is the only one who can build it for them. Help the trio crush the crooks and restore order in the galaxy as you battle through lots of melee combat missions and action-packed racing. Each Biker Mice has cool individual special attacks to help them in their battle against evil. Let's rock and ride!</synopsis>
+			<synopsis>The Biker Mice From Mars are on a quest to get hold of the Regenerator - the only device that can save their home planet from destruction. They must first rescue Stoker, who is being held captive at Rump Towers as he is the only one who can build it for them.
+Help the trio crush the crooks and restore order in the galaxy as you battle through lots of melee combat missions and action-packed racing. Each Biker Mice has cool individual special attacks to help them in their battle against evil. Let's rock and ride!</synopsis>
+		</locale>
+		<locale lang="DK">
+			<title>Biker Mice from Mars</title>
+			<synopsis/>
 		</locale>
 		<locale lang="FI">
 			<title>Biker Mice from Mars</title>
@@ -43579,6 +43672,18 @@ Tiny is challenged in everything from deck-scrubbing to treasure hunts, but make
 			<title>ZhuZhu Babies</title>
 			<synopsis/>
 		</locale>
+		<locale lang="SE">
+			<title>ZhuZhu Babies</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DK">
+			<title>ZhuZhu Babies</title>
+			<synopsis/>
+		</locale>
+		<locale lang="NO">
+			<title>ZhuZhu Babies</title>
+			<synopsis/>
+		</locale>
 		<locale lang="FI">
 			<title>ZhuZhu Babies</title>
 			<synopsis/>
@@ -43827,8 +43932,7 @@ Tiny is challenged in everything from deck-scrubbing to treasure hunts, but make
 		<languages>NO</languages>
 		<locale lang="EN">
 			<title>Josefine: Hotell Skrotenborg</title>
-			<synopsis>Josefine and Lillebror arrive at Hotel Skrotenborg on the holiday island of Sole.
-But something is completely wrong with the hotel—Hotel Manager Sommer simply can't get it to run properly! There are no guests, the hotel looks worn out, and it has no stars.
+			<synopsis>Josefine and Lillebror arrive at Hotel Skrotenborg on the holiday island of Sole. But something is completely wrong with the hotel—Hotel Manager Sommer simply can't get it to run properly! There are no guests, the hotel looks worn out, and it has no stars.
 Fortunately, Josefine and Lillebror step in, allowing the hotel manager to take a well-deserved holiday.</synopsis>
 		</locale>
 		<locale lang="NO">
@@ -43925,6 +44029,18 @@ Luckily, Pixeline and Lillebror step in, allowing the hotel director to take a w
 		<region>PAL</region>
 		<languages>EN,FR,SE</languages>
 		<locale lang="EN">
+			<title>Zhu Zhu Pets: Quest for Zhu</title>
+			<synopsis/>
+		</locale>
+		<locale lang="SE">
+			<title>Zhu Zhu Pets: Quest for Zhu</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DK">
+			<title>Zhu Zhu Pets: Quest for Zhu</title>
+			<synopsis/>
+		</locale>
+		<locale lang="NO">
 			<title>Zhu Zhu Pets: Quest for Zhu</title>
 			<synopsis/>
 		</locale>
@@ -44168,11 +44284,11 @@ Luckily, Pixeline and Lillebror step in, allowing the hotel director to take a w
 		<rom version="" name="Cosmos Chaos (USA) (EN).ds"/>
 		<case color="000000"/>
 	</game>
-	<game name="Victorious: Hollywood Arts Debut (USA) (EN)">
+	<game name="Victorious: Hollywood Arts Debut (USA) (EN,FR,DE,ES,IT)">
 		<id>B6EE</id>
 		<type>DS</type>
 		<region>NTSC-U</region>
-		<languages>EN</languages>
+		<languages>EN,FR,DE,ES,IT</languages>
 		<locale lang="EN">
 			<title>Victorious: Hollywood Arts Debut</title>
 			<synopsis>It's your time to shine with Tori Vega and friends as you complete challenges, collect items from the show, and develop your talents as a member of Hollywood Arts! Victorious: Hollywood Arts Debut exclusively on Nintendo DS casts players as the new student at Victorious' Hollywood Arts, letting players make friends and go on adventures with the entire Victorious cast!</synopsis>
@@ -44180,14 +44296,14 @@ Luckily, Pixeline and Lillebror step in, allowing the hotel director to take a w
 		<developer>Behaviour Interactive</developer>
 		<publisher>D3 Publisher</publisher>
 		<date year="2011" month="11" day="15"/>
-		<genre>music,simulation</genre>
+		<genre>action,adventure,music,rhythm</genre>
 		<rating type="ESRB" value="E">
 			<descriptor>comic mischief</descriptor>
 			<descriptor>mild violence</descriptor>
 		</rating>
 		<wi-fi players="0"/>
 		<input players-multi-cart="1" players-single-cart="1"/>
-		<rom version="" name="Victorious: Hollywood Arts Debut (USA) (EN).ds"/>
+		<rom version="" name="Victorious: Hollywood Arts Debut (USA) (EN,FR,DE,ES,IT).ds"/>
 		<case color="000000"/>
 	</game>
 	<game name="Victorious: Hollywood Arts Debut (Europe) (EN)">
@@ -44199,10 +44315,14 @@ Luckily, Pixeline and Lillebror step in, allowing the hotel director to take a w
 			<title>Victorious: Hollywood Arts Debut</title>
 			<synopsis>It's your time to shine with Tori Vega and friends as you complete challenges, collect items from the show, and develop your talents as a member of Hollywood Arts!</synopsis>
 		</locale>
+		<locale lang="ES">
+			<title>Victorious: ¡Eres una Estrella!</title>
+			<synopsis/>
+		</locale>
 		<developer>Behaviour Interactive</developer>
 		<publisher>Namco Bandai Games</publisher>
 		<date year="2012" month="2" day="10"/>
-		<genre>music,simulation</genre>
+		<genre>action,adventure,music,rhythm</genre>
 		<rating type="PEGI" value="3"/>
 		<wi-fi players="0"/>
 		<input players-multi-cart="1" players-single-cart="1"/>
@@ -44268,6 +44388,10 @@ Luckily, Pixeline and Lillebror step in, allowing the hotel director to take a w
 			<synopsis/>
 		</locale>
 		<locale lang="ES">
+			<title>LEGO Batman 2: DC Super Heroes</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DK">
 			<title>LEGO Batman 2: DC Super Heroes</title>
 			<synopsis/>
 		</locale>
@@ -45702,6 +45826,18 @@ Tinker Bell's stubbornness and temper get the best of her, causing her to shatte
 		<region>PAL</region>
 		<languages>EN,FR</languages>
 		<locale lang="EN">
+			<title>7 Wonders II</title>
+			<synopsis/>
+		</locale>
+		<locale lang="SE">
+			<title>7 Wonders II</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DK">
+			<title>7 Wonders II</title>
+			<synopsis/>
+		</locale>
+		<locale lang="NO">
 			<title>7 Wonders II</title>
 			<synopsis/>
 		</locale>
@@ -47575,13 +47711,19 @@ In Animal Life - Dinosaurs you start a fantastic voyage into the past. You'll ge
 		<languages>DE</languages>
 		<locale lang="EN">
 			<title>Backgammon</title>
+			<synopsis>Die Würfel sind gefallen für eines der bekanntesten Brettspiele der Welt!</synopsis>
+		</locale>
+		<locale lang="DE">
+			<title>Backgammon</title>
 			<synopsis/>
 		</locale>
-		<publisher/>
-		<date year="2004" month="" day=""/>
-		<rating type="PEGI" value=""/>
+		<developer>FAKT Software</developer>
+		<publisher>DTP Young Entertainment</publisher>
+		<date year="2009" month="7" day="10"/>
+		<genre>strategy,board game</genre>
+		<rating type="PEGI" value="3"/>
 		<wi-fi players="0"/>
-		<input players-multi-cart="1" players-single-cart="1"/>
+		<input players-multi-cart="1" players-single-cart="2"/>
 		<rom version="" name="Backgammon (Europe) (DE).ds"/>
 	</game>
 	<game name="Eindeloos Backgammon (Europe) (NL)">
@@ -49188,13 +49330,13 @@ Leckeres und gesundes Essen gibt es natürlich ebenfalls! Über 200 Rezepte mach
 		<input players-multi-cart="1" players-single-cart="1"/>
 		<rom version="0" name="Transformers: War for Cybertron: Decepticons (Europe) (ES,IT).ds" size="67108864" crc="0c1d6c74" md5="eabcea923ac99ceb3ae25a7def227ae0" sha1="15ea093e0265a7b24b550fefaac7e664ca3b4507"/>
 	</game>
-	<game name="My Baby: Girl (USA) (EN)">
+	<game name="My Baby: Girl (Demo) (USA) (EN)">
 		<id>BDJE</id>
 		<type>DS</type>
 		<region>NTSC-U</region>
 		<languages>EN</languages>
 		<locale lang="EN">
-			<title>My Baby: Girl</title>
+			<title>My Baby: Girl (Demo)</title>
 			<synopsis/>
 		</locale>
 		<publisher/>
@@ -49202,7 +49344,7 @@ Leckeres und gesundes Essen gibt es natürlich ebenfalls! Über 200 Rezepte mach
 		<rating type="ESRB" value=""/>
 		<wi-fi players="0"/>
 		<input players-multi-cart="1" players-single-cart="1"/>
-		<rom version="0" name="My Baby: Girl (USA) (EN).ds" size="33554432" crc="3c5d74f6" md5="6764426d342c15c9d94a4053ca981659" sha1="03db6856b602d68262b2576699536f4bb06c4a91"/>
+		<rom version="0" name="My Baby: Girl (Demo) (USA) (EN).ds" size="33554432" crc="3c5d74f6" md5="6764426d342c15c9d94a4053ca981659" sha1="03db6856b602d68262b2576699536f4bb06c4a91"/>
 		<case color="000000"/>
 	</game>
 	<game name="Don Bluth Presents: Dragon's Lair (USA) (EN)">
@@ -49956,6 +50098,18 @@ Leckeres und gesundes Essen gibt es natürlich ebenfalls! Über 200 Rezepte mach
 		<region>PAL</region>
 		<languages>EN,PT,SE,DK,NO,FI</languages>
 		<locale lang="EN">
+			<title>Littlest Pet Shop 3: Biggest Stars - Blue Team</title>
+			<synopsis/>
+		</locale>
+		<locale lang="SE">
+			<title>Littlest Pet Shop 3: Biggest Stars - Blue Team</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DK">
+			<title>Littlest Pet Shop 3: Biggest Stars - Blue Team</title>
+			<synopsis/>
+		</locale>
+		<locale lang="NO">
 			<title>Littlest Pet Shop 3: Biggest Stars - Blue Team</title>
 			<synopsis/>
 		</locale>
@@ -52959,8 +53113,20 @@ Once the car is ready, you get to drive this showstopper of a car or some of the
 			<title>Horrid Henry: Missions of Mischief</title>
 			<synopsis>Henry is a headstrong boy, constantly raging against the tyranny of adults and infuriating girls. For Henry, life just isn’t fair. If he’s not battling his fearsome class teacher Miss Battle-Axe or Greta the Demon Dinner lady at school, then he’s in trouble with his Mum and Dad. Now Horrid Henry moves from the multi million selling book series and massively successful TV show onto Nintendo DS, Wii and PC in the form of a fun, fast and funny, action-puzzle game where the player takes the lead role of Henry himself. Henry has a range of special skills and equipment that he can use during missions and his task is to dash around locations playing pranks on the other characters all the while avoiding being caught.</synopsis>
 		</locale>
+		<locale lang="FR">
+			<title>Lucas la Cata</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DE">
+			<title>Henry der Schreckliche</title>
+			<synopsis/>
+		</locale>
 		<locale lang="ES">
 			<title>Pablo Diablo</title>
+			<synopsis/>
+		</locale>
+		<locale lang="IT">
+			<title>Rico la Peste</title>
 			<synopsis/>
 		</locale>
 		<developer>Asylum Entertainment</developer>
@@ -53454,6 +53620,18 @@ Once the car is ready, you get to drive this showstopper of a car or some of the
 		<languages>EN</languages>
 		<locale lang="EN">
 			<title>Petz: Hamster Superstar</title>
+			<synopsis>Train your Hamster to help him become a talented Superstar! Teach your hamsters amazing tricks and discover what their hidden talents are.</synopsis>
+		</locale>
+		<locale lang="SE">
+			<title>Petz: Hamster Superstar</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DK">
+			<title>Petz: Hamster Superstar</title>
+			<synopsis/>
+		</locale>
+		<locale lang="NO">
+			<title>Petz: Hamster Superstar</title>
 			<synopsis/>
 		</locale>
 		<publisher/>
@@ -53488,6 +53666,10 @@ Once the car is ready, you get to drive this showstopper of a car or some of the
 		<locale lang="EN">
 			<title>Build-A-Bear Workshop: Welcome to Hugsville</title>
 			<synopsis>Build-A-Bear Workshop: Welcome to Hugsville for Nintendo DS allows players to create a new friend, just like in the stores. Build-A-Bear Workshop mascots Bearemy and Pawlette Coufur guide players through eight different mini games, some of which allow players to construct their own Cub Condo or build their own vehicle.</synopsis>
+		</locale>
+		<locale lang="DK">
+			<title>Build-A-Bear Workshop: Welcome to Hugsville</title>
+			<synopsis/>
 		</locale>
 		<developer>The Game Factory</developer>
 		<publisher>The Game Factory</publisher>
@@ -54679,13 +54861,13 @@ mean animals who stand in her way.</synopsis>
 		<rom version="0" name="Jewelpet: Mahou no DS Kirapikarin (Japan) (EN,JA).ds" size="33554432" crc="a64e7342" md5="a644bf87b7166cec8844c11d31ce8727" sha1="89c947f0530fee750618efbf86f9c4f10cb22a78"/>
 		<case color="000000"/>
 	</game>
-	<game name="Josefine: Magi i Eventyrland (Europe) (SE,NO)">
+	<game name="Josefin Skolhjalp: Magi i Sagolandet (Europe) (SE,NO)">
 		<id>BJFX</id>
 		<type>DS</type>
 		<region>PAL</region>
 		<languages>SE,NO</languages>
 		<locale lang="EN">
-			<title>Josefine: Magi i Eventyrland</title>
+			<title>Josefin Skolhjalp: Magi i Sagolandet</title>
 			<synopsis>Restore the magic to Wonderland!
 Something mysterious has happened in Wonderland – the Little People have lost their magic! The gnomes can no longer keep things in order, and the poor fairies are unable to fly. Even the new inhabitants of Adventure Land are facing problems – and they need your help, along with Josefine's!</synopsis>
 		</locale>
@@ -54704,7 +54886,7 @@ Something mysterious has happened in Wonderland – the Little People have lost 
 		<rating type="PEGI" value="3"/>
 		<wi-fi players="0"/>
 		<input players-multi-cart="1" players-single-cart="1"/>
-		<rom version="0" name="Josefine: Magi i Eventyrland (Europe) (SE,NO).ds" size="134217728" crc="f91ac1a2" md5="d55d942ddc85ee742dc6ce2340f48314" sha1="dda8e7e6b0162572d23d47676ba269760b47434d"/>
+		<rom version="0" name="Josefin Skolhjalp: Magi i Sagolandet (Europe) (SE,NO).ds" size="134217728" crc="f91ac1a2" md5="d55d942ddc85ee742dc6ce2340f48314" sha1="dda8e7e6b0162572d23d47676ba269760b47434d"/>
 	</game>
 	<game name="Dr. Jekyll &amp; Mr. Hyde: Enigmes &amp; Objets Caches (Europe) (FR)">
 		<id>BJHF</id>
@@ -54729,11 +54911,15 @@ Something mysterious has happened in Wonderland – the Little People have lost 
 		<languages>EN</languages>
 		<locale lang="EN">
 			<title>The Mysterious Case of Dr. Jekyll &amp; Mr. Hyde</title>
-			<synopsis/>
+			<synopsis>The Mysterious Case of Dr. Jekyll &amp; Mr. Hyde is a game of riddle and mystery as players slip into the role of the whip-smart Inspector Newcomen and solve a very strange case!</synopsis>
 		</locale>
-		<publisher/>
-		<date year="2004" month="1" day="1"/>
-		<rating type="PEGI" value="7"/>
+		<developer>Joindots GmbH</developer>
+		<publisher>Oxygen Games</publisher>
+		<date year="2010" month="12" day="3"/>
+		<genre>adventure,puzzle</genre>
+		<rating type="PEGI" value="7">
+			<descriptor>fear</descriptor>
+		</rating>
 		<wi-fi players="0"/>
 		<input players-multi-cart="1" players-single-cart="1"/>
 		<rom version="" name="The Mysterious Case of Dr. Jekyll &amp; Mr. Hyde (Europe) (EN).ds"/>
@@ -55360,6 +55546,22 @@ Something mysterious has happened in Wonderland – the Little People have lost 
 		<region>PAL</region>
 		<languages>EN,FR,DE,ES,IT</languages>
 		<locale lang="EN">
+			<title>Hello Kitty: Birthday Adventures</title>
+			<synopsis/>
+		</locale>
+		<locale lang="SE">
+			<title>Hello Kitty: Birthday Adventures</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DK">
+			<title>Hello Kitty: Birthday Adventures</title>
+			<synopsis/>
+		</locale>
+		<locale lang="NO">
+			<title>Hello Kitty: Birthday Adventures</title>
+			<synopsis/>
+		</locale>
+		<locale lang="FI">
 			<title>Hello Kitty: Birthday Adventures</title>
 			<synopsis/>
 		</locale>
@@ -56565,8 +56767,12 @@ Something mysterious has happened in Wonderland – the Little People have lost 
 			<title>LEGO® Harry Potter: Anni 1-4</title>
 			<synopsis/>
 		</locale>
+		<locale lang="DK">
+			<title>LEGO Harry Potter: Years 1-4</title>
+			<synopsis/>
+		</locale>
 		<locale lang="FI">
-			<title>LEGO® Harry Potter: Years 1-4</title>
+			<title>LEGO Harry Potter: Years 1-4</title>
 			<synopsis/>
 		</locale>
 		<developer>TT Games</developer>
@@ -56642,6 +56848,22 @@ Something mysterious has happened in Wonderland – the Little People have lost 
 		</locale>
 		<locale lang="IT">
 			<title>LEGO Indiana Jones 2: L'Avventura Continua</title>
+			<synopsis/>
+		</locale>
+		<locale lang="SE">
+			<title>LEGO Indiana Jones 2: The Adventure Continues</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DK">
+			<title>LEGO Indiana Jones 2: The Adventure Continues</title>
+			<synopsis/>
+		</locale>
+		<locale lang="NO">
+			<title>LEGO Indiana Jones 2: The Adventure Continues</title>
+			<synopsis/>
+		</locale>
+		<locale lang="FI">
+			<title>LEGO Indiana Jones 2: The Adventure Continues</title>
 			<synopsis/>
 		</locale>
 		<developer>TT Games</developer>
@@ -56980,7 +57202,7 @@ Something mysterious has happened in Wonderland – the Little People have lost 
 		<languages>NO</languages>
 		<locale lang="EN">
 			<title>Sofie: Josefines Lillesøster - Hønseføtter og Gulerøtter</title>
-			<synopsis/>
+			<synopsis>Sofie, Josefine’s little sister, would like to play and sing with you. In her garden, you can find puzzles and memory games, play with letters and numbers, learn to tell the time, and draw and paint. In the songbook, you can both see and listen to well-known children’s songs.</synopsis>
 		</locale>
 		<locale lang="NO">
 			<title>Sofie: Josefines Lillesøster - Hønseføtter og Gulerøtter</title>
@@ -57039,17 +57261,17 @@ Something mysterious has happened in Wonderland – the Little People have lost 
 		<input players-multi-cart="1" players-single-cart="1"/>
 		<rom version="0" name="Sofie: Josefines Lillesøster - Syng, Lek og Lær (Europe) (NO).ds" size="67108864" crc="38df8892" md5="faa1a4ef411a3d3a1ec7994dd320c9fd" sha1="aadd731e2402cc980f1bb851ea3f7432509e6a75"/>
 	</game>
-	<game name="Silke: Pixelines Lillesøster - Syngg og Laer (Europe) (DK)">
+	<game name="Silke: Pixelines Lillesøster - Syng, Leg og Lær (Europe) (DK)">
 		<id>BLYQ</id>
 		<type>DS</type>
 		<region>PAL</region>
 		<languages>DK</languages>
 		<locale lang="EN">
-			<title>Silke: Pixelines Lillesøster - Syngg og Laer</title>
+			<title>Silke: Pixelines Lillesøster - Syng, Leg og Lær</title>
 			<synopsis>Silke, Pixeline’s little sister, wants to play and sing with you. In her room, you’ll find puzzles and memory games, as well as activities with letters and numbers. You can learn to tell the time, and draw and paint. In the songbook, you can both see and hear popular children’s songs</synopsis>
 		</locale>
 		<locale lang="DK">
-			<title>Silke: Pixelines Lillesøster - Syng, Leg og Laer</title>
+			<title>Silke: Pixelines Lillesøster - Syng, Leg og Lær</title>
 			<synopsis/>
 		</locale>
 		<developer>KREA Medie</developer>
@@ -57059,7 +57281,7 @@ Something mysterious has happened in Wonderland – the Little People have lost 
 		<rating type="PEGI" value="3"/>
 		<wi-fi players="0"/>
 		<input players-multi-cart="1" players-single-cart="1"/>
-		<rom version="0" name="Silke: Pixelines Lillesøster - Syngg og Laer (Europe) (DK).ds" size="67108864" crc="6f51be6a" md5="d27d0ad8f7364148746d38bfd647b3be" sha1="d6d6b1b91cdda3d412b8b155e059b1f8f74b4108"/>
+		<rom version="0" name="Silke: Pixelines Lillesøster - Syng, Leg og Lær (Europe) (DK).ds" size="67108864" crc="6f51be6a" md5="d27d0ad8f7364148746d38bfd647b3be" sha1="d6d6b1b91cdda3d412b8b155e059b1f8f74b4108"/>
 	</game>
 	<game name="Lernerfolg Grundschule: Englisch: Der Vokabeltrainer (Europe) (FR,DE,ES,IT,TR)">
 		<id>BLZP</id>
@@ -58510,6 +58732,18 @@ Something mysterious has happened in Wonderland – the Little People have lost 
 		<languages>EN</languages>
 		<locale lang="EN">
 			<title>Petz: Nursery</title>
+			<synopsis>Take care of the cutest Baby Petz in their own Nursery! Help the newborn animals and learn how to care for them until they are old enough to have fun with others.</synopsis>
+		</locale>
+		<locale lang="SE">
+			<title>Petz: Nursery</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DK">
+			<title>Petz: Nursery</title>
+			<synopsis/>
+		</locale>
+		<locale lang="NO">
+			<title>Petz: Nursery</title>
 			<synopsis/>
 		</locale>
 		<publisher/>
@@ -59673,6 +59907,10 @@ face perilous challenges.</synopsis>
 		<languages>NO</languages>
 		<locale lang="EN">
 			<title>Josefine Skolehjelp: Matematikk: Taake i Tallheimen</title>
+			<synopsis/>
+		</locale>
+		<locale lang="NO">
+			<title>Josefine Skolehjelp: Matematikk: Tåke i Tallheimen</title>
 			<synopsis/>
 		</locale>
 		<publisher/>
@@ -63366,6 +63604,18 @@ Aimed at younger gamers and tank-engine aficionados of all ages, Thomas &amp; Fr
 		<languages>EN</languages>
 		<locale lang="EN">
 			<title>Tinker Bell and the Lost Treasure</title>
+			<synopsis>Adventure beyond Pixie Hollow. Play as Tinker Bell and travel north of Never Land. Create your own fairy and help prepare for the Autumn Revelry.</synopsis>
+		</locale>
+		<locale lang="SE">
+			<title>Tinker Bell and the Lost Treasure</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DK">
+			<title>Tinker Bell and the Lost Treasure</title>
+			<synopsis/>
+		</locale>
+		<locale lang="NO">
+			<title>Tinker Bell and the Lost Treasure</title>
 			<synopsis/>
 		</locale>
 		<publisher/>
@@ -63875,6 +64125,18 @@ Aimed at younger gamers and tank-engine aficionados of all ages, Thomas &amp; Fr
 			<title>Tinker Bell and the Great Fairy Rescue</title>
 			<synopsis>Fly to the Mainland with Tinker Bell! Create and play as your own fairy. Team up with your fairy friends in six new adventures.</synopsis>
 		</locale>
+		<locale lang="SE">
+			<title>Tinker Bell and the Great Fairy Rescue</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DK">
+			<title>Tinker Bell and the Great Fairy Rescue</title>
+			<synopsis/>
+		</locale>
+		<locale lang="NO">
+			<title>Tinker Bell and the Great Fairy Rescue</title>
+			<synopsis/>
+		</locale>
 		<developer>Jupiter Corporation</developer>
 		<publisher>Disney Interactive Studios / Buena Vista Games</publisher>
 		<date year="2010" month="9" day="10"/>
@@ -64142,6 +64404,18 @@ Aimed at younger gamers and tank-engine aficionados of all ages, Thomas &amp; Fr
 		<region>PAL</region>
 		<languages>EN</languages>
 		<locale lang="EN">
+			<title>Generator Rex: Agent of Providence</title>
+			<synopsis/>
+		</locale>
+		<locale lang="SE">
+			<title>Generator Rex: Agent of Providence</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DK">
+			<title>Generator Rex: Agent of Providence</title>
+			<synopsis/>
+		</locale>
+		<locale lang="NO">
 			<title>Generator Rex: Agent of Providence</title>
 			<synopsis/>
 		</locale>
@@ -65683,13 +65957,15 @@ Aimed at younger gamers and tank-engine aficionados of all ages, Thomas &amp; Fr
 		<languages>EN,FR,DE</languages>
 		<locale lang="EN">
 			<title>Around the World in 80 Days</title>
-			<synopsis/>
+			<synopsis>A spectacular match-3 adventure over land and sea! Travel back in time to the late 19th century with english daredevil Phileas Fogg and his loyal French servant Passepourtout. With only 80 days to circumnavigate the globe, the stakes are high.</synopsis>
 		</locale>
-		<publisher/>
-		<date year="2004" month="1" day="1"/>
+		<developer>Joindots GmbH</developer>
+		<publisher>Purple Hills</publisher>
+		<date year="2010" month="3" day="5"/>
+		<genre>puzzle</genre>
 		<rating type="PEGI" value="3"/>
 		<wi-fi players="0"/>
-		<input players-multi-cart="1" players-single-cart="1"/>
+		<input players-multi-cart="2" players-single-cart="1"/>
 		<rom version="" name="Around the World in 80 Days (Europe) (EN,FR,DE).ds"/>
 		<case versions="3"/>
 	</game>
@@ -65700,13 +65976,15 @@ Aimed at younger gamers and tank-engine aficionados of all ages, Thomas &amp; Fr
 		<languages>EN,FR,NL</languages>
 		<locale lang="EN">
 			<title>Around the World in 80 Days</title>
-			<synopsis/>
+			<synopsis>A spectacular match-3 adventure over land and sea! Travel back in time to the late 19th century with english daredevil Phileas Fogg and his loyal French servant Passepourtout. With only 80 days to circumnavigate the globe, the stakes are high.</synopsis>
 		</locale>
-		<publisher/>
-		<date year="2004" month="1" day="1"/>
+		<developer>Joindots GmbH</developer>
+		<publisher>Purple Hills</publisher>
+		<date year="2010" month="3" day="5"/>
+		<genre>puzzle</genre>
 		<rating type="PEGI" value="3"/>
 		<wi-fi players="0"/>
-		<input players-multi-cart="1" players-single-cart="1"/>
+		<input players-multi-cart="2" players-single-cart="1"/>
 		<rom version="0" name="Around the World in 80 Days (Europe) (EN,FR,NL).ds" size="16777216" crc="3070d020" md5="cec53107f32a17c9bab543c7d24d38d7" sha1="c8855866c490a594bd8620feb585218f3d1651a4"/>
 		<rom version="1" name="Around the World in 80 Days (Europe) (EN,FR,NL) (v1).ds" size="16777216" crc="dbe09cfa" md5="c769f74247098ef286e813a8e88c0779" sha1="cebafb3a3cf4fd185fbe34c9383e446f5333c4df"/>
 		<case versions="2"/>
@@ -67005,6 +67283,10 @@ There are lots of fun mini-games around Gampetreff. Will you find them all? You 
 			<title>Bakugan: Rise of the Resistance</title>
 			<synopsis>A mysterious new group of Bakugan brawlers are invading New Vestroia. It’s up to you to defend the Resistance’s secret base against the unknown new foes! Travel through different lands of New Vestroia and control your personal Bakugan on the battlefield – you must become the greatest general of all in order to free the Bakugan and save New Vestroia!</synopsis>
 		</locale>
+		<locale lang="SE">
+			<title>Bakugan: Rise of the Resistance</title>
+			<synopsis/>
+		</locale>
 		<locale lang="FI">
 			<title>Bakugan: Rise of the Resistance</title>
 			<synopsis/>
@@ -68245,10 +68527,18 @@ There are lots of fun mini-games around Gampetreff. Will you find them all? You 
 			<synopsis>If you want a different experience, try the version of Phineas and Ferb Across the 2nd Dimension for Nintendo DS. You can play with Phineas, Ferb or Agent P, through five worlds and 30 action-packed levels. Along the way, you'll need to build and upgrade your weapons, like the Baseball Launcher or Agent P's favorite weapon, the Hitch Gun.</synopsis>
 		</locale>
 		<locale lang="SE">
-			<title>Phineas and Ferb Across the 2nd Dimension</title>
+			<title>Phineas and Ferb: Across the 2nd Dimension</title>
 			<synopsis/>
 		</locale>
 		<locale lang="DK">
+			<title>Phineas and Ferb: Across the 2nd Dimension</title>
+			<synopsis/>
+		</locale>
+		<locale lang="NO">
+			<title>Phineas and Ferb Across the 2nd Dimension</title>
+			<synopsis/>
+		</locale>
+		<locale lang="FI">
 			<title>Phineas and Ferb Across the 2nd Dimension</title>
 			<synopsis/>
 		</locale>
@@ -69204,6 +69494,18 @@ Create and customize your zoo experience and foster relationships to gain the tr
 			<title>Top Model</title>
 			<synopsis>Being a supermodel - the number 1 dream job of every young girl! Now the original &quot;Top Model&quot; from the USA is finally coming to the Nintendo DS. Fashion, beauty, shootings and catwalks are once again very trendy in 2010! Experience the start of a unique career and prove to the jury that you have what it takes to be a top model! The dream of an international modeling career begins now...</synopsis>
 		</locale>
+		<locale lang="SE">
+			<title>Top Model</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DK">
+			<title>Top Model</title>
+			<synopsis/>
+		</locale>
+		<locale lang="NO">
+			<title>Top Model</title>
+			<synopsis/>
+		</locale>
 		<locale lang="FI">
 			<title>Top Model</title>
 			<synopsis/>
@@ -69556,7 +69858,23 @@ Create and customize your zoo experience and foster relationships to gain the tr
 			<title>Ace Attorney Investigations: Miles Edgeworth</title>
 			<synopsis>Want to prove you've got what it takes to solve a crime? Think you've got sleuthing chops? Then check out Ace Attorney Investigations: Miles Edgeworth and be the one who works out whodunnit in a series of intriguing new cases.</synopsis>
 		</locale>
+		<locale lang="FR">
+			<title>Ace Attorney Investigations: Miles Edgeworth</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DE">
+			<title>Ace Attorney Investigations: Miles Edgeworth</title>
+			<synopsis/>
+		</locale>
 		<locale lang="ES">
+			<title>Ace Attorney Investigations: Miles Edgeworth</title>
+			<synopsis/>
+		</locale>
+		<locale lang="IT">
+			<title>Ace Attorney Investigations: Miles Edgeworth</title>
+			<synopsis/>
+		</locale>
+		<locale lang="NL">
 			<title>Ace Attorney Investigations: Miles Edgeworth</title>
 			<synopsis/>
 		</locale>
@@ -73439,21 +73757,35 @@ Join the residents of Moominvalley as they prepare for the Autumn Party. Visit t
 		<input players-multi-cart="1" players-single-cart="1"/>
 		<rom version="" name="Jonas (Europe) (EN,FR,DE,ES,IT,NL).ds"/>
 	</game>
-	<game name="Jonas (Europe) (EN)">
+	<game name="Jonas (Europe) (EN,SE,DK,NO)">
 		<id>C7OX</id>
 		<type>DS</type>
 		<region>PAL</region>
-		<languages>EN</languages>
+		<languages>EN,SE,DK,NO</languages>
 		<locale lang="EN">
+			<title>Jonas</title>
+			<synopsis>Live the rockstar life with JONAS! Play as Nick, Joe and Kevin. Strike the right guitar chords and power up your world. Tear up the stage with JONAS in 6 concerts.</synopsis>
+		</locale>
+		<locale lang="SE">
 			<title>Jonas</title>
 			<synopsis/>
 		</locale>
-		<publisher/>
-		<date year="2021" month="" day=""/>
-		<rating type="PEGI" value=""/>
+		<locale lang="DK">
+			<title>Jonas</title>
+			<synopsis/>
+		</locale>
+		<locale lang="NO">
+			<title>Jonas</title>
+			<synopsis/>
+		</locale>
+		<developer>Altron</developer>
+		<publisher>Disney Interactive Studios / Buena Vista Games</publisher>
+		<date year="2010" month="2" day="12"/>
+		<genre>adventure</genre>
+		<rating type="PEGI" value="3"/>
 		<wi-fi players="0"/>
 		<input players-multi-cart="1" players-single-cart="1"/>
-		<rom version="" name="Jonas (Europe) (EN).ds"/>
+		<rom version="" name="Jonas (Europe) (EN,SE,DK,NO).ds"/>
 	</game>
 	<game name="Peggle Dual Shot (USA) (EN)">
 		<id>C7PE</id>
@@ -74387,7 +74719,14 @@ Join the residents of Moominvalley as they prepare for the Autumn Party. Visit t
 		<languages>EN,FR,DE,ES,IT,NL,PT,SE,DK,NO,FI</languages>
 		<locale lang="EN">
 			<title>Casper's Scare School: Classroom Capers</title>
-			<synopsis>Casper Scare School - Classroom Capers is based around the movie &quot;Casper Scare School&quot; featuring Casper the Friendly Ghost. Casper visits Scare School with a cast of spooky &quot;children&quot; that includes as Thatch the Vampire, Mantha the Zombie and Ra the Mummy. The game also includes a lot of the original music and speech from the film.</synopsis>
+			<synopsis>The clock strikes midnight, the School Bell rings and a new term begins at the creepiest college... Scare School!
+Casper the Friendly Ghost is a new student in Scare School. Casper's been sent to Scare School by his ghastly uncles, Stinky, Fatso and Stretch. They want the School's terrifying tutors to give Casper a lesson in how to be truly scary.
+
+- Are you too ghoul for school? Join Casper and find out!
+- Your goal is to help Casper get good grades in all his classes so he can successfully graduate from Scare School and impress his uncles and friends with a glowing report.
+- In each lesson, once you have earned four ticks, you are given a grade of C or better depending on how quickly you completed you work.
+- If you are too slow and don't get 4 ticks before the lesson ends you will get a grade D or E and you will have to retake the class.
+- Basic reading ability is needed to fully enjoy this game.</synopsis>
 		</locale>
 		<locale lang="FR">
 			<title>Casper à L'école des Fantômes: Chahut dans la Classe</title>
@@ -75391,7 +75730,23 @@ With limitless customization and creative options, the possibilities are endless
 		<languages>EN,FR,DE,ES,IT,NL,SE,DK,NO</languages>
 		<locale lang="EN">
 			<title>Bratz Ponyz 2</title>
-			<synopsis>Designed for girls ages four and older, Bratz Ponyz 2 for the DS allows players to develop their 'passion for fashion' by participating in the Bratz Ponyz Town beauty pageant. Players can choose from four different Bratz Ponyz, which they can dress-up with accessories collected throughout the game's fashion, beauty, music, dancing, and arts and crafts-themed adventures.</synopsis>
+			<synopsis>Designed for girls ages four and older, Bratz Ponyz 2 for the DS allows players to develop their 'passion for fashion' by participating in the Bratz Ponyz Town beauty pageant. Players can choose from four different Bratz Ponyz, which they can dress-up with accessories collected throughout the game's fashion, beauty, music, dancing, and arts and crafts-themed adventures.
+
+• The Bratz Ponyz adventure continues with all-new minigames and activities plus 4 new Ponyz!
+• Primp and party as you do their hair and makeup, create cool accessories, help them dance and more.
+• You can even taken fabulous fashion photos.</synopsis>
+		</locale>
+		<locale lang="SE">
+			<title>Bratz Ponyz 2</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DK">
+			<title>Bratz Ponyz 2</title>
+			<synopsis/>
+		</locale>
+		<locale lang="NO">
+			<title>Bratz Ponyz 2</title>
+			<synopsis/>
 		</locale>
 		<developer>Neko Entertainment</developer>
 		<publisher>The Game Factory</publisher>
@@ -76153,11 +76508,11 @@ Enjoy an original story based on historical events! Your story will change depen
 		<rom version="0" name="Cid to Chocobo no Fushigi na Dungeon: Toki Wasure no Meikyuu DS+ (Japan) (EN,JA).ds" size="134217728" crc="6807d627" md5="c2e8497b5a5499c5049420eb68067fab" sha1="6d481cfb34ff42506dc0bdff8733c2610fc26ef2"/>
 		<case color="000000"/>
 	</game>
-	<game name="Tomodachi Collection (Japan) (EN,JA)">
+	<game name="Tomodachi Collection (Japan) (JA)">
 		<id>CCUJ</id>
 		<type>DS</type>
 		<region>NTSC-J</region>
-		<languages>EN,JA</languages>
+		<languages>JA</languages>
 		<locale lang="EN">
 			<title>Tomodachi Collection</title>
 			<synopsis/>
@@ -76169,7 +76524,7 @@ Enjoy an original story based on historical events! Your story will change depen
 		<developer>Nintendo</developer>
 		<publisher>Nintendo</publisher>
 		<date year="2009" month="6" day="18"/>
-		<genre>simulation</genre>
+		<genre>simulation,health,life simulation</genre>
 		<rating type="CERO" value="A"/>
 		<wi-fi players="0">
 			<feature>download</feature>
@@ -76177,8 +76532,8 @@ Enjoy an original story based on historical events! Your story will change depen
 		<input players-multi-cart="1" players-single-cart="1">
 			<control type="mii" required="true"/>
 		</input>
-		<rom version="0" name="Tomodachi Collection (Japan) (EN,JA).ds" size="67108864" crc="9826bf9e" md5="7e0ce1190b19a4249b982f044f6020fb" sha1="8f6645926d39bb698caeeef434bd9a51b11c6fa2"/>
-		<rom version="1" name="Tomodachi Collection (Japan) (EN,JA) (v1).ds" size="67108864" crc="487db169" md5="f94cb9b93a763ea74356b0f503234b8a" sha1="b3d4f42a787bc19bde5a824adec417240c4c4384"/>
+		<rom version="0" name="Tomodachi Collection (Japan) (JA).ds" size="67108864" crc="9826bf9e" md5="7e0ce1190b19a4249b982f044f6020fb" sha1="8f6645926d39bb698caeeef434bd9a51b11c6fa2"/>
+		<rom version="1" name="Tomodachi Collection (Japan) (JA) (v1).ds" size="67108864" crc="487db169" md5="f94cb9b93a763ea74356b0f503234b8a" sha1="b3d4f42a787bc19bde5a824adec417240c4c4384"/>
 		<case color="000000"/>
 	</game>
 	<game name="D&amp;CO: Ta Maison de Reve en 7 Jours (Europe) (FR,IT)">
@@ -77466,6 +77821,18 @@ Enjoy an original story based on historical events! Your story will change depen
 		<region>PAL</region>
 		<languages>SE,DK,NO</languages>
 		<locale lang="EN">
+			<title>Dora the Explorer: Dora Saves the Snow Princess</title>
+			<synopsis/>
+		</locale>
+		<locale lang="SE">
+			<title>Dora the Explorer: Dora Saves the Snow Princess</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DK">
+			<title>Dora the Explorer: Dora Saves the Snow Princess</title>
+			<synopsis/>
+		</locale>
+		<locale lang="NO">
 			<title>Dora the Explorer: Dora Saves the Snow Princess</title>
 			<synopsis/>
 		</locale>
@@ -78862,19 +79229,27 @@ As your adventure progresses, you will gradually meet people who will teach you 
 		<input players-multi-cart="2" players-single-cart="1"/>
 		<rom version="" name="Football Academy: Build and Prove Your Football Knowledge (Europe) (EN,FR,DE,ES,IT).ds"/>
 	</game>
-	<game name="Final Fantasy Crystal Chronicles: Echoes of Time (USA) (EN)">
+	<game name="Final Fantasy Crystal Chronicles: Echoes of Time (USA) (EN,FR,ES)">
 		<id>CFIE</id>
 		<type>DS</type>
 		<region>NTSC-U</region>
-		<languages>EN</languages>
+		<languages>EN,FR,ES</languages>
 		<locale lang="EN">
 			<title>Final Fantasy Crystal Chronicles: Echoes of Time</title>
 			<synopsis>Straying beyond the edge of the woods is forbidden, but when a mystery disease strikes in your village, the time for obeying rules is over.</synopsis>
 		</locale>
+		<locale lang="FR">
+			<title>Final Fantasy Crystal Chronicles: Echoes of Time</title>
+			<synopsis/>
+		</locale>
+		<locale lang="ES">
+			<title>Final Fantasy Crystal Chronicles: Echoes of Time</title>
+			<synopsis/>
+		</locale>
 		<developer>Square Enix</developer>
 		<publisher>Square Enix</publisher>
 		<date year="2009" month="3" day="24"/>
-		<genre>role-playing</genre>
+		<genre>action,adventure,role-playing</genre>
 		<rating type="ESRB" value="E10+">
 			<descriptor>fantasy violence</descriptor>
 			<descriptor>language</descriptor>
@@ -78886,50 +79261,67 @@ As your adventure progresses, you will gradually meet people who will teach you 
 		<input players-multi-cart="4" players-single-cart="1">
 			<control type="mii" required="false"/>
 		</input>
-		<rom version="" name="Final Fantasy Crystal Chronicles: Echoes of Time (USA) (EN).ds"/>
+		<rom version="" name="Final Fantasy Crystal Chronicles: Echoes of Time (USA) (EN,FR,ES).ds"/>
 		<case color="000000"/>
 	</game>
-	<game name="Final Fantasy Crystal Chronicles: Echoes of Time (Japan) (EN,JA)">
+	<game name="Final Fantasy Crystal Chronicles: Echoes of Time (Japan) (JA)">
 		<id>CFIJ</id>
 		<type>DS</type>
 		<region>NTSC-J</region>
-		<languages>EN,JA</languages>
+		<languages>JA</languages>
 		<locale lang="EN">
 			<title>Final Fantasy Crystal Chronicles: Echoes of Time</title>
 			<synopsis>Straying beyond the edge of the woods is forbidden, but when a mystery disease strikes in your village, the time for obeying rules is over.</synopsis>
 		</locale>
 		<locale lang="JA">
-			<title>FINAL FANTASY CRYSTAL CHRONICLES Echoes of Time</title>
+			<title>FINAL FANTASY CRYSTAL CHRONICLES エコーズ・オブ・タイム</title>
 			<synopsis/>
 		</locale>
-		<publisher/>
+		<developer>Square Enix</developer>
+		<publisher>Square Enix</publisher>
 		<date year="2009" month="1" day="29"/>
-		<genre>role-playing</genre>
+		<genre>action,adventure,role-playing,action rpg</genre>
 		<rating type="CERO" value="A"/>
 		<wi-fi players="0"/>
 		<input players-multi-cart="4" players-single-cart="1">
 			<control type="mii" required="false"/>
 		</input>
-		<rom version="0" name="Final Fantasy Crystal Chronicles: Echoes of Time (Japan) (EN,JA).ds" size="134217728" crc="9f77e9e2" md5="f497f311b7605bf6cb7248571832fcab" sha1="430035fa90b738c00bed95983fa78d919ef918fe"/>
+		<rom version="0" name="Final Fantasy Crystal Chronicles: Echoes of Time (Japan) (JA).ds" size="134217728" crc="9f77e9e2" md5="f497f311b7605bf6cb7248571832fcab" sha1="430035fa90b738c00bed95983fa78d919ef918fe"/>
 		<case color="000000"/>
 	</game>
-	<game name="Final Fantasy Crystal Chronicles: Echoes of Time (Europe) (EN,FR,DE,ES,IT)">
+	<game name="Final Fantasy Crystal Chronicles: Echoes of Time (Europe) (EN,FR,DE,ES)">
 		<id>CFIP</id>
 		<type>DS</type>
 		<region>PAL</region>
-		<languages>EN,FR,DE,ES,IT</languages>
+		<languages>EN,FR,DE,ES</languages>
 		<locale lang="EN">
 			<title>Final Fantasy Crystal Chronicles: Echoes of Time</title>
 			<synopsis>Straying beyond the edge of the woods is forbidden, but when a mystery disease strikes in your village, the time for obeying rules is over.</synopsis>
 		</locale>
+		<locale lang="FR">
+			<title>Final Fantasy Crystal Chronicles: Echoes of Time</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DE">
+			<title>Final Fantasy Crystal Chronicles: Echoes of Time</title>
+			<synopsis/>
+		</locale>
 		<locale lang="ES">
+			<title>Final Fantasy Crystal Chronicles: Echoes of Time</title>
+			<synopsis/>
+		</locale>
+		<locale lang="IT">
+			<title>Final Fantasy Crystal Chronicles: Echoes of Time</title>
+			<synopsis/>
+		</locale>
+		<locale lang="NL">
 			<title>Final Fantasy Crystal Chronicles: Echoes of Time</title>
 			<synopsis/>
 		</locale>
 		<developer>Square Enix</developer>
 		<publisher>Square Enix</publisher>
 		<date year="2009" month="3" day="27"/>
-		<genre>role-playing</genre>
+		<genre>action,adventure,role-playing</genre>
 		<rating type="PEGI" value="12">
 			<descriptor>violence</descriptor>
 			<descriptor>online</descriptor>
@@ -78940,7 +79332,7 @@ As your adventure progresses, you will gradually meet people who will teach you 
 		<input players-multi-cart="4" players-single-cart="1">
 			<control type="mii" required="false"/>
 		</input>
-		<rom version="" name="Final Fantasy Crystal Chronicles: Echoes of Time (Europe) (EN,FR,DE,ES,IT).ds"/>
+		<rom version="" name="Final Fantasy Crystal Chronicles: Echoes of Time (Europe) (EN,FR,DE,ES).ds"/>
 	</game>
 	<game name="Fast Food Panic (USA) (EN)">
 		<id>CFJE</id>
@@ -79166,6 +79558,18 @@ As your adventure progresses, you will gradually meet people who will teach you 
 		<region>PAL</region>
 		<languages>EN,NL,SE,DK,NO</languages>
 		<locale lang="EN">
+			<title>Real Stories: Passion 4 Fashion</title>
+			<synopsis/>
+		</locale>
+		<locale lang="SE">
+			<title>Real Stories: Passion 4 Fashion</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DK">
+			<title>Real Stories: Passion 4 Fashion</title>
+			<synopsis/>
+		</locale>
+		<locale lang="NO">
 			<title>Real Stories: Passion 4 Fashion</title>
 			<synopsis/>
 		</locale>
@@ -80254,7 +80658,7 @@ Continue shredding to your favorite tunes with complete portability.</synopsis>
 		<languages>EN,FR,DE,ES,IT,SE,DK,NO</languages>
 		<locale lang="EN">
 			<title>Imagine Champion Rider</title>
-			<synopsis>You are Sue, a horse rider who just arrives in her uncle's horse farm in the Utah State (US). There, you will take care of your horses and foals and live a great adventure where you'll discover and tame wild horses.</synopsis>
+			<synopsis>Saddle up for a wilderness adventure! You are Sue, a horse rider who just arrives in her uncle's horse farm in the Utah State (US). There, you will take care of your horses and foals and live a great adventure where you'll discover and tame wild horses.</synopsis>
 		</locale>
 		<locale lang="FR">
 			<title>Alexandra Ledermann – Le Mystère Des Chevaux Sauvages</title>
@@ -80274,6 +80678,18 @@ Continue shredding to your favorite tunes with complete portability.</synopsis>
 		</locale>
 		<locale lang="NL">
 			<title>Laura's Passie Paardrijden</title>
+			<synopsis/>
+		</locale>
+		<locale lang="SE">
+			<title>Imagine Champion Rider</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DK">
+			<title>Imagine Champion Rider</title>
+			<synopsis/>
+		</locale>
+		<locale lang="NO">
+			<title>Imagine Champion Rider</title>
 			<synopsis/>
 		</locale>
 		<developer>Virtual Toys / Lexis Numérique</developer>
@@ -81226,6 +81642,18 @@ The big competition is approaching. Sarah, Scarlet and their friends need your h
 			<title>Ice Age 3: Dawn of the Dinosaurs</title>
 			<synopsis>Join Ice Age’s unlikely herd of prehistoric pals for their wildest, most exciting adventure yet! Play as six beloved Ice Age characters as they embark on a rescue mission across melting snow to the mysterious Dinosaur World – an all-new, fur-raising jungle of carnivorous plants, lush foliage and fierce dinosaurs!</synopsis>
 		</locale>
+		<locale lang="SE">
+			<title>Ice Age 3: Dawn of the Dinosaurs</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DK">
+			<title>Ice Age 3: Dawn of the Dinosaurs</title>
+			<synopsis/>
+		</locale>
+		<locale lang="NO">
+			<title>Ice Age 3: Dawn of the Dinosaurs</title>
+			<synopsis/>
+		</locale>
 		<locale lang="FI">
 			<title>Ice Age 3: Dawn of the Dinosaurs</title>
 			<synopsis/>
@@ -82080,7 +82508,7 @@ Form your own music group and immerse yourself in its famous world. Create your 
 		<locale lang="EN">
 			<title>Imagine Girl Band</title>
 			<synopsis>Reach stardom by playing your way!
-Form your own music group and immerse yourself in its famous world. Create your most modern look, master all the instruments, surprise on stage and make your dreams come true.</synopsis>
+Form your own music group and immerse yourself in its famous world. Create your most modern look, master all the instruments, surprise on stage and make your dreams come true. Stay in rhythm with guitar, bass, keyboard and drums to become a pop star.</synopsis>
 		</locale>
 		<locale lang="NL">
 			<title>Imagine Girl Band</title>
@@ -82333,8 +82761,16 @@ But be careful, some of the children are very disobedient!</synopsis>
 			<title>Knight: Hero of the Kingdom</title>
 			<synopsis/>
 		</locale>
+		<locale lang="SE">
+			<title>Playmobil: Riddare</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DK">
+			<title>Playmobil: Riddere</title>
+			<synopsis/>
+		</locale>
 		<locale lang="NO">
-			<title>Playmobil Interactive - Riddere</title>
+			<title>Playmobil: Riddere</title>
 			<synopsis/>
 		</locale>
 		<developer>Morgen Studios</developer>
@@ -84553,6 +84989,18 @@ Retrouvez la mémoire ! Avec l'Histoire de France Pour les Nuls, jouez et appren
 			<title>Monsters vs Aliens</title>
 			<synopsis>Based on the DreamWorks 3D feature film, Monsters vs. Aliens puts the fate of the planet in players' hands, to save the world as only a monster can. Bash, skate, and ooze as the macho half-ape, half-fish The Missing Link, the 49'11&quot; tall woman, Ginormica, and the gelatinous, indestructible, and brainless B.O.B, with the help of the monstrous 350' tall grub Insectosaurus.</synopsis>
 		</locale>
+		<locale lang="SE">
+			<title>Monsters vs Aliens</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DK">
+			<title>Monsters vs Aliens</title>
+			<synopsis/>
+		</locale>
+		<locale lang="NO">
+			<title>Monsters vs Aliens</title>
+			<synopsis/>
+		</locale>
 		<locale lang="FI">
 			<title>Monsters vs Aliens</title>
 			<synopsis/>
@@ -85240,9 +85688,37 @@ Which language would you like to learn?</synopsis>
 		<languages>EN,FR,DE,ES,IT,NL,SE,DK,NO</languages>
 		<locale lang="EN">
 			<title>SimAnimals</title>
-			<synopsis>Get in-touch with nature – literally – with SimAnimals, the newest addition in the highly popular Sims franchise of games.</synopsis>
+			<synopsis>Run the Wild! Get in-touch with nature – literally – with SimAnimals, the newest addition in the highly popular Sims franchise of games. Play with 17+ animal species, as you discover and unlock new forest areas.</synopsis>
+		</locale>
+		<locale lang="FR">
+			<title>SimAnimals</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DE">
+			<title>SimAnimals</title>
+			<synopsis/>
 		</locale>
 		<locale lang="ES">
+			<title>SimAnimals</title>
+			<synopsis/>
+		</locale>
+		<locale lang="IT">
+			<title>SimAnimals</title>
+			<synopsis/>
+		</locale>
+		<locale lang="NL">
+			<title>SimAnimals</title>
+			<synopsis/>
+		</locale>
+		<locale lang="SE">
+			<title>SimAnimals</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DK">
+			<title>SimAnimals</title>
+			<synopsis/>
+		</locale>
+		<locale lang="NO">
 			<title>SimAnimals</title>
 			<synopsis/>
 		</locale>
@@ -85386,11 +85862,15 @@ Which language would you like to learn?</synopsis>
 		<languages>EN</languages>
 		<locale lang="EN">
 			<title>Mystery Case Files: MillionHeir (Demo)</title>
-			<synopsis/>
+			<synopsis>NEWS ALERT! Wealthy magnate Phil T Rich has gone missing. STOP Eagle-eyed detective required to locate heir to fortune and solve mystery. STOP Are you up to the challenge in Mystery Case Files: MillionHeir on Nintendo DS?</synopsis>
 		</locale>
-		<publisher/>
+		<developer>Big Fish Games/Amaze</developer>
+		<publisher>Nintendo</publisher>
 		<date year="" month="" day=""/>
-		<rating type="ESRB" value=""/>
+		<genre>health,puzzle,demo</genre>
+		<rating type="ESRB" value="E">
+			<descriptor>violent references</descriptor>
+		</rating>
 		<wi-fi players="0"/>
 		<input players-multi-cart="1" players-single-cart="1"/>
 		<rom version="0" name="Mystery Case Files: MillionHeir (Demo) (USA) (EN).ds" size="33554432" crc="b9588619" md5="10e314826ef7caca32d78bbd70691853" sha1="c6fc2b927dbdf5e140a0b309edb37923bbce509a"/>
@@ -85442,10 +85922,22 @@ Which language would you like to learn?</synopsis>
 		<languages>EN,DE</languages>
 		<locale lang="EN">
 			<title>Petz: My Monkey Family</title>
-			<synopsis/>
+			<synopsis>For the first time, raise your very own family of monkeys! Breed your monkeys to create playful babies completely unique yo you.</synopsis>
 		</locale>
 		<locale lang="DE">
-			<title>Petz - Meine Affen-Fanilie</title>
+			<title>Petz: Meine Affen-Fanilie</title>
+			<synopsis/>
+		</locale>
+		<locale lang="SE">
+			<title>Petz: My Monkey Family</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DK">
+			<title>Petz: My Monkey Family</title>
+			<synopsis/>
+		</locale>
+		<locale lang="NO">
+			<title>Petz: My Monkey Family</title>
 			<synopsis/>
 		</locale>
 		<publisher/>
@@ -86458,6 +86950,18 @@ Domina el vocabulario Alemán y mejora tu nivel de comprensión practicando con 
 			<title>Catan: Die Erste Insel</title>
 			<synopsis/>
 		</locale>
+		<locale lang="SE">
+			<title>Catan</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DK">
+			<title>Catan</title>
+			<synopsis/>
+		</locale>
+		<locale lang="NO">
+			<title>Catan</title>
+			<synopsis/>
+		</locale>
 		<developer>Exozel Games</developer>
 		<publisher>USM</publisher>
 		<date year="2009" month="5" day="28"/>
@@ -87320,6 +87824,14 @@ Love Solitaire? Jewel Quest: Solitaire Trio brings together Jewel Quest Solitair
 		<locale lang="EN">
 			<title>Cooking Guide: Can't decide what to eat?</title>
 			<synopsis>With hundreds of recipes from all around the globe, comprehensive details on how to prepare every dish and a host of handy extras, Cooking Guide is much more than just a cook book. It’s your all-in-one personal cooking assistant!</synopsis>
+		</locale>
+		<locale lang="SE">
+			<title>Cooking Guide</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DK">
+			<title>Cooking Guide</title>
+			<synopsis/>
 		</locale>
 		<developer>Nintendo EAD / indieszero</developer>
 		<publisher>Nintendo</publisher>
@@ -92444,6 +92956,18 @@ For becoming an &quot;expert&quot;, it is better to go for it while having fun. 
 			<title>Lock's Quest</title>
 			<synopsis/>
 		</locale>
+		<locale lang="SE">
+			<title>Lock's Quest</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DK">
+			<title>Lock's Quest</title>
+			<synopsis/>
+		</locale>
+		<locale lang="NO">
+			<title>Lock's Quest</title>
+			<synopsis/>
+		</locale>
 		<locale lang="FI">
 			<title>Lock's Quest</title>
 			<synopsis/>
@@ -97264,6 +97788,18 @@ Design an outfit from head to toe or edit an outfit from any of the Winx girl's 
 		<languages>EN</languages>
 		<locale lang="EN">
 			<title>My Paris Fashion House</title>
+			<synopsis>Develop your fashion house in Paris to become THE most fashionable designer!</synopsis>
+		</locale>
+		<locale lang="SE">
+			<title>My Paris Fashion House</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DK">
+			<title>My Paris Fashion House</title>
+			<synopsis/>
+		</locale>
+		<locale lang="NO">
+			<title>My Paris Fashion House</title>
 			<synopsis/>
 		</locale>
 		<publisher/>
@@ -97365,6 +97901,18 @@ Design an outfit from head to toe or edit an outfit from any of the Winx girl's 
 		<locale lang="EN">
 			<title>Giana Sisters DS</title>
 			<synopsis>Giana has returned! Get ready for her biggest adventure ever, as she braves a fantastic dreamworld in search of her lost diamonds. Take on a band of menacing enemies as Giana makes her way through 80+ new levels, unleashing a mighty arsenal of power-ups along the way!</synopsis>
+		</locale>
+		<locale lang="SE">
+			<title>Giana Sisters DS</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DK">
+			<title>Giana Sisters DS</title>
+			<synopsis/>
+		</locale>
+		<locale lang="NO">
+			<title>Giana Sisters DS</title>
+			<synopsis/>
 		</locale>
 		<locale lang="FI">
 			<title>Giana Sisters DS</title>
@@ -101185,21 +101733,26 @@ Every day is a snow day with Disney Frozen: Olaf's Quest, the new, puzzle platfo
 		<input players-multi-cart="1" players-single-cart="1"/>
 		<rom version="" name="Captain Morgane and the Golden Turtle (Europe) (EN).ds"/>
 	</game>
-	<game name="Victorious: Taking the Lead (USA) (EN)">
+	<game name="Victorious: Taking the Lead (USA) (EN,FR,DE,ES,IT)">
 		<id>TH2E</id>
 		<type>DS</type>
 		<region>NTSC-U</region>
-		<languages>EN</languages>
+		<languages>EN,FR,DE,ES,IT</languages>
 		<locale lang="EN">
 			<title>Victorious: Taking the Lead</title>
-			<synopsis/>
+			<synopsis>Victorious: Taking the Lead fulfills every Victorious fans' dream, allowing them to play as Tori Vega in a series of hilarious Hollywood Arts adventures based on the hit show. Win the lead role in a Hollywood Arts production by playing alongside favorite cast members in a variety of exciting rhythm and dance mini-games featuring songs from the Victorious soundtrack. But watch out, Jade is after the same role!</synopsis>
 		</locale>
-		<publisher/>
-		<date year="" month="" day=""/>
-		<rating type="ESRB" value=""/>
+		<developer>1st Playable Productions</developer>
+		<publisher>D3 Publisher</publisher>
+		<date year="2012" month="11" day="13"/>
+		<genre>adventure,music,rhythm</genre>
+		<rating type="ESRB" value="E10+">
+			<descriptor>comic mischief</descriptor>
+			<descriptor>mild lyrics</descriptor>
+		</rating>
 		<wi-fi players="0"/>
 		<input players-multi-cart="1" players-single-cart="1"/>
-		<rom version="0" name="Victorious: Taking the Lead (USA) (EN).ds" size="16777216" crc="566d150f" md5="dbb5adde92927cf171b8b33c10ae8781" sha1="2c0d1c286cc89abe0b551678099b4dac5788ed1c"/>
+		<rom version="0" name="Victorious: Taking the Lead (USA) (EN,FR,DE,ES,IT).ds" size="16777216" crc="566d150f" md5="dbb5adde92927cf171b8b33c10ae8781" sha1="2c0d1c286cc89abe0b551678099b4dac5788ed1c"/>
 		<case color="000000"/>
 	</game>
 	<game name="Victorious: Taking the Lead (Europe) (EN,FR,DE,ES,IT)">
@@ -101215,12 +101768,12 @@ Every day is a snow day with Disney Frozen: Olaf's Quest, the new, puzzle platfo
 			<title>Victorious: Salto a la fama</title>
 			<synopsis/>
 		</locale>
-		<developer>Voltage Software</developer>
+		<developer>1st Playable Productions</developer>
 		<publisher>D3Publisher / Namco Bandai Games</publisher>
 		<date year="2012" month="11" day="16"/>
-		<genre>adventure</genre>
+		<genre>adventure,music,rhythm</genre>
 		<rating type="PEGI" value="7">
-			<descriptor>language</descriptor>
+			<descriptor>violence</descriptor>
 		</rating>
 		<wi-fi players="0"/>
 		<input players-multi-cart="1" players-single-cart="1"/>
@@ -105012,7 +105565,7 @@ Program your own version of famous songs and share them with other players. Or j
 		<developer>Denso-Ten / Nintendo</developer>
 		<publisher>Nintendo</publisher>
 		<date year="2012" month="7" day="9"/>
-		<genre>simulation,trivia</genre>
+		<genre>simulation,health,party,trivia</genre>
 		<rating type="CERO" value="A"/>
 		<wi-fi players="1">
 			<feature>online</feature>
@@ -105205,7 +105758,7 @@ Program your own version of famous songs and share them with other players. Or j
 		<wi-fi players="0"/>
 		<input players-multi-cart="1" players-single-cart="1"/>
 		<rom version="0" name="Mario vs. Donkey Kong: Mini-Land Mayhem! (USA) (EN).ds" size="33554432" crc="728f07c6" md5="68867cada1aaf64018840857308520fe" sha1="2b02e61d1ec6e57db463c70978e2ca04abf4535d"/>
-		<case color="000000" versions="2"/>
+		<case color="000000"/>
 	</game>
 	<game name="Egokoro Kyoushitsu DS (Japan) (EN,JA)">
 		<id>VAAJ</id>
@@ -106934,22 +107487,6 @@ Program your own version of famous songs and share them with other players. Or j
 		<input players-multi-cart="1" players-single-cart="1"/>
 		<rom version="0" name="Licca-chan DS: Motto! Onnanoko Lesson: Oshare, Oshigoto, Otetsudai Daisuki! (Japan) (EN,JA).ds" size="67108864" crc="5d289034" md5="766c54c7da28b95429f5e455eee70fb2" sha1="d6e89817e8dc9a9aad18e6c10c9cf084a159a9c0"/>
 		<case color="000000"/>
-	</game>
-	<game name="Lost Identities (Europe) (EN,DE)">
-		<id>VLIV</id>
-		<type>DS</type>
-		<region>PAL</region>
-		<languages>EN,DE</languages>
-		<locale lang="EN">
-			<title>Lost Identities</title>
-			<synopsis/>
-		</locale>
-		<publisher/>
-		<date year="2004" month="1" day="1"/>
-		<rating type="PEGI" value="12"/>
-		<wi-fi players="0"/>
-		<input players-multi-cart="1" players-single-cart="1"/>
-		<rom version="0" name="Lost Identities (Europe) (EN,DE).ds" size="33554432" crc="0c4eed5f" md5="fac9681b11738525779039ad7212cf62" sha1="a6f008a565d78061ba14c810c332ccf020dc9979"/>
 	</game>
 	<game name="Kids Learn Music: A+ Edition (USA) (EN)">
 		<id>VM4E</id>
@@ -111344,6 +111881,14 @@ friends or family members to help prepare it. 300 recipes have been tested and p
 			<title>Bratz: 4 Real</title>
 			<synopsis/>
 		</locale>
+		<locale lang="SE">
+			<title>Bratz: 4 Real</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DK">
+			<title>Bratz: 4 Real</title>
+			<synopsis/>
+		</locale>
 		<developer>THQ</developer>
 		<publisher>THQ</publisher>
 		<date year="2007" month="11" day="30"/>
@@ -112526,9 +113071,25 @@ friends or family members to help prepare it. 300 recipes have been tested and p
 		<languages>EN,FR,DE,ES,IT,NL</languages>
 		<locale lang="EN">
 			<title>SimCity Creator</title>
-			<synopsis>Build the city of your dreams with this fun game, from the creators of The Sims. You can create it from ancient times, through the modern era and to the future, having all the necessary elements to be able to equip it with everything necessary to make it functional, practical and, of course, beautiful. It will have, of course, its Mayor, its Chief of Police, and all the citizens needed to make it as real as possible. Hire and train assistants who will help you effectively. Ready to practice like a real architect?</synopsis>
+			<synopsis>Build the city of your dreams with this fun game, from the creators of The Sims. You can create it from ancient times, through the modern era and to the future, having all the necessary elements to be able to equip it with everything necessary to make it functional, practical and, of course, beautiful. It will have, of course, its Mayor, its Chief of Police, and all the citizens needed to make it as real as possible. Hire and train assistants who will help you effectively. Ready to practice like a real architect?
+
+• Evolve your city through time! Make your city bigger, better and more powerful!
+• Build massive landmarks and amaze your citizens.
+• Take on epic disasters such as earthquakes, tornados, riots and more.</synopsis>
 		</locale>
 		<locale lang="ES">
+			<title>SimCity Creator</title>
+			<synopsis/>
+		</locale>
+		<locale lang="SE">
+			<title>SimCity Creator</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DK">
+			<title>SimCity Creator</title>
+			<synopsis/>
+		</locale>
+		<locale lang="NO">
 			<title>SimCity Creator</title>
 			<synopsis/>
 		</locale>
@@ -112703,6 +113264,18 @@ friends or family members to help prepare it. 300 recipes have been tested and p
 		</locale>
 		<locale lang="ES">
 			<title>Catz: ¡Diviértete con más felinos!</title>
+			<synopsis/>
+		</locale>
+		<locale lang="SE">
+			<title>Catz 2</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DK">
+			<title>Catz 2</title>
+			<synopsis/>
+		</locale>
+		<locale lang="NO">
+			<title>Catz 2</title>
 			<synopsis/>
 		</locale>
 		<developer>Powerhead Games</developer>
@@ -112959,7 +113532,10 @@ friends or family members to help prepare it. 300 recipes have been tested and p
 		<languages>EN,SE,DK</languages>
 		<locale lang="EN">
 			<title>Cars: Mater-National Championship</title>
-			<synopsis>Cars Mater-National features an all-new international group of racers vying for their chance to compete against Lightning McQueen in the First Annual Mater-National Race Festival, hosted by Lightning's best friend, Mater. Explore the new and improved open world of Radiator Springs, play in the all-new Monster Mode, jump into the fast lane with six new International racing competitors, burn rubber on new tracks, and twist and turn your way through new mini-games like Ramone's Rhythmic Rumble and Fillmore's Fuel Frenzy.</synopsis>
+			<synopsis>Cars Mater-National features an all-new international group of racers vying for their chance to compete against Lightning McQueen in the First Annual Mater-National Race Festival, hosted by Lightning's best friend, Mater. Explore the new and improved open world of Radiator Springs, play in the all-new Monster Mode, jump into the fast lane with six new International racing competitors, burn rubber on new tracks, and twist and turn your way through new mini-games like Ramone's Rhythmic Rumble and Fillmore's Fuel Frenzy.
+
+• Who will be the next world champ? Join the fun as Mater hosts the first annual Mater-National Championship, featuring new racers, new tracks and new mini-games.
+• Challenge your friends with multiplayer mode.</synopsis>
 		</locale>
 		<locale lang="SE">
 			<title>Bilar - Bärgarns Internationella Race</title>
@@ -114187,6 +114763,10 @@ friends or family members to help prepare it. 300 recipes have been tested and p
 		</locale>
 		<locale lang="IT">
 			<title>Dragon Quest IX: Le sentinelle del cielo</title>
+			<synopsis/>
+		</locale>
+		<locale lang="NL">
+			<title>Dragon Quest IX: Sentinels of the Starry Skies</title>
 			<synopsis/>
 		</locale>
 		<locale lang="PT">
@@ -116022,41 +116602,73 @@ Con unos 20 minutos al día de entrenamiento manejarás unas 150 palabras diaria
 		<rom version="0" name="Fort Boyard: Le Jeu (Europe) (EN).ds" size="16777216" crc="4eab9a63" md5="2a0508be68ffcff46568b8cb819a1a63" sha1="9dade3e807447d9956d87ea06e9280a512369e28"/>
 		<rom version="1" name="Fort Boyard: Le Jeu (Europe) (EN) (v1).ds" size="16777216" crc="7a4f247a" md5="9241e00988021bc39bc33007925d13e7" sha1="69a1a8b973992c6de3f78e7fc934f2837929bc54"/>
 	</game>
-	<game name="Mystery Case Files: MillionHeir (USA) (EN)">
+	<game name="Mystery Case Files: MillionHeir (USA) (EN,FR,ES)">
 		<id>YFCE</id>
 		<type>DS</type>
 		<region>NTSC-U</region>
-		<languages>EN</languages>
+		<languages>EN,FR,ES</languages>
 		<locale lang="EN">
 			<title>Mystery Case Files: MillionHeir</title>
 			<synopsis>NEWS ALERT! Wealthy magnate Phil T Rich has gone missing. STOP Eagle-eyed detective required to locate heir to fortune and solve mystery. STOP Are you up to the challenge in Mystery Case Files: MillionHeir on Nintendo DS?</synopsis>
 		</locale>
-		<publisher/>
-		<date year="2009" month="" day=""/>
-		<genre>puzzle</genre>
-		<rating type="ESRB" value=""/>
+		<locale lang="FR">
+			<title>Mystery Case Files: MillionHeir</title>
+			<synopsis/>
+		</locale>
+		<locale lang="ES">
+			<title>Mystery Case Files: MillionHeir</title>
+			<synopsis/>
+		</locale>
+		<developer>Big Fish Games/Amaze</developer>
+		<publisher>Nintendo</publisher>
+		<date year="2008" month="9" day="8"/>
+		<genre>health,puzzle</genre>
+		<rating type="ESRB" value="E">
+			<descriptor>violent references</descriptor>
+		</rating>
 		<wi-fi players="0"/>
-		<input players-multi-cart="1" players-single-cart="1"/>
-		<rom version="0" name="Mystery Case Files: MillionHeir (USA) (EN).ds" size="134217728" crc="47fc2cbb" md5="467cfde50960b36c9a363a57bb257730" sha1="1bb2c6c093ae129b8176226f1a8ad851ca10fcca"/>
-		<rom version="1" name="Mystery Case Files: MillionHeir (USA) (EN) (v1).ds" size="134217728" crc="f22c514e" md5="bc13fc3a83cb3d3e118df465609ba82f" sha1="9f321e5b23f7f8c2a3d066680bca5a930d5f3d31"/>
+		<input players-multi-cart="4" players-single-cart="1"/>
+		<rom version="0" name="Mystery Case Files: MillionHeir (USA) (EN,FR,ES).ds" size="134217728" crc="47fc2cbb" md5="467cfde50960b36c9a363a57bb257730" sha1="1bb2c6c093ae129b8176226f1a8ad851ca10fcca"/>
+		<rom version="1" name="Mystery Case Files: MillionHeir (USA) (EN,FR,ES) (v1).ds" size="134217728" crc="f22c514e" md5="bc13fc3a83cb3d3e118df465609ba82f" sha1="9f321e5b23f7f8c2a3d066680bca5a930d5f3d31"/>
 		<case color="000000"/>
 	</game>
-	<game name="Mystery Case Files: MillionHeir (Europe) (EN)">
+	<game name="Mystery Case Files: MillionHeir (Europe) (EN,FR,DE,ES,IT)">
 		<id>YFCP</id>
 		<type>DS</type>
 		<region>PAL</region>
-		<languages>EN</languages>
+		<languages>EN,FR,DE,ES,IT</languages>
 		<locale lang="EN">
 			<title>Mystery Case Files: MillionHeir</title>
 			<synopsis>NEWS ALERT! Wealthy magnate Phil T Rich has gone missing. STOP Eagle-eyed detective required to locate heir to fortune and solve mystery. STOP Are you up to the challenge in Mystery Case Files: MillionHeir on Nintendo DS?</synopsis>
 		</locale>
-		<publisher/>
+		<locale lang="FR">
+			<title>Mystery Case Files: MillionHeir</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DE">
+			<title>Mystery Case Files: MillionHeir</title>
+			<synopsis/>
+		</locale>
+		<locale lang="ES">
+			<title>Mystery Case Files: MillionHeir</title>
+			<synopsis/>
+		</locale>
+		<locale lang="IT">
+			<title>Mystery Case Files: MillionHeir</title>
+			<synopsis/>
+		</locale>
+		<locale lang="NL">
+			<title>Mystery Case Files: MillionHeir</title>
+			<synopsis/>
+		</locale>
+		<developer>Big Fish Games/Amaze</developer>
+		<publisher>Nintendo</publisher>
 		<date year="2009" month="2" day="6"/>
 		<genre>puzzle</genre>
 		<rating type="PEGI" value="3"/>
 		<wi-fi players="0"/>
-		<input players-multi-cart="1" players-single-cart="1"/>
-		<rom version="0" name="Mystery Case Files: MillionHeir (Europe) (EN).ds" size="134217728" crc="d94a266d" md5="b692b777c0b608de13e456b9f6c85166" sha1="d57e4f7c9c60d6456f148917c34e15f7fc32b856"/>
+		<input players-multi-cart="4" players-single-cart="1"/>
+		<rom version="0" name="Mystery Case Files: MillionHeir (Europe) (EN,FR,DE,ES,IT).ds" size="134217728" crc="d94a266d" md5="b692b777c0b608de13e456b9f6c85166" sha1="d57e4f7c9c60d6456f148917c34e15f7fc32b856"/>
 	</game>
 	<game name="Fire Emblem: Shadow Dragon (USA) (EN)">
 		<id>YFEE</id>
@@ -117964,6 +118576,22 @@ Con unos 20 minutos al día de entrenamiento manejarás unas 150 palabras diaria
 			<title>Hannah Montana: Music Jam</title>
 			<synopsis>It's a superstar showdown! Play as Hannah to win the Music Jam Online video competition.</synopsis>
 		</locale>
+		<locale lang="SE">
+			<title>Hannah Montana: Music Jam</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DK">
+			<title>Hannah Montana: Music Jam</title>
+			<synopsis/>
+		</locale>
+		<locale lang="NO">
+			<title>Hannah Montana: Music Jam</title>
+			<synopsis/>
+		</locale>
+		<locale lang="FI">
+			<title>Hannah Montana: Music Jam</title>
+			<synopsis/>
+		</locale>
 		<developer>Gorilla Games</developer>
 		<publisher>Disney Interactive Studios / Buena Vista Games</publisher>
 		<date year="2008" month="6" day="13"/>
@@ -118538,6 +119166,10 @@ Con unos 20 minutos al día de entrenamiento manejarás unas 150 palabras diaria
 		<locale lang="EN">
 			<title>My Horse &amp; Me</title>
 			<synopsis>Delivering all the excitement and fun of the equestrian life, from sports and leisure riding to horse care, My Horse &amp; Me is a unique gaming experience for anyone with an interest or passion for horses.</synopsis>
+		</locale>
+		<locale lang="SE">
+			<title>My Horse &amp; Me</title>
+			<synopsis/>
 		</locale>
 		<developer>Mistic Software</developer>
 		<publisher>Atari (Infogrames)</publisher>
@@ -119960,10 +120592,18 @@ Con unos 20 minutos al día de entrenamiento manejarás unas 150 palabras diaria
 		<languages>EN,FR,DE,ES,IT,DK</languages>
 		<locale lang="EN">
 			<title>LEGO Batman: The Videogame</title>
-			<synopsis>KAPOW! Gotham City is overrun with scurrilous villains and it’s up to you to don the famous suit and cape and stand up against crime and world domination in LEGO Batman: The Videogame for Nintendo DS !</synopsis>
+			<synopsis>KAPOW! Gotham City is overrun with scurrilous villains and it’s up to you to don the famous suit and cape and stand up against crime and world domination in LEGO Batman: The Videogame for Nintendo DS!
+
+• Play as Batman and his sidekick Robin as you build, drive, swing and fight your way through Gotham City.
+• Take control of favourite vehicles like the Batmobile and Batwing.
+• Master unique super-hero power-suits, moves, gadgets and weapons.</synopsis>
 		</locale>
 		<locale lang="ES">
 			<title>LEGO Batman: El videojuego</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DK">
+			<title>LEGO Batman: The Videogame</title>
 			<synopsis/>
 		</locale>
 		<locale lang="FI">
@@ -122417,6 +123057,10 @@ As the threat of a rogue Witch looms over Carnava, the Queen calls upon the Magi
 			<title>LEGO Star Wars - Die komplette Saga</title>
 			<synopsis/>
 		</locale>
+		<locale lang="DK">
+			<title>LEGO Star Wars: The Complete Saga</title>
+			<synopsis/>
+		</locale>
 		<locale lang="FI">
 			<title>LEGO Star Wars - The Complete Saga</title>
 			<synopsis/>
@@ -122562,6 +123206,10 @@ As the threat of a rogue Witch looms over Carnava, the Queen calls upon the Magi
 			<synopsis/>
 		</locale>
 		<locale lang="NL">
+			<title>LEGO Indiana Jones: The Original Adventures</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DK">
 			<title>LEGO Indiana Jones: The Original Adventures</title>
 			<synopsis/>
 		</locale>
@@ -123307,6 +123955,10 @@ As the threat of a rogue Witch looms over Carnava, the Queen calls upon the Magi
 			<title>Rythm Paradise</title>
 			<synopsis/>
 		</locale>
+		<locale lang="IT">
+			<title>Rythm Paradise</title>
+			<synopsis/>
+		</locale>
 		<locale lang="FI">
 			<title>Rhythm Paradise</title>
 			<synopsis/>
@@ -123969,6 +124621,10 @@ As the threat of a rogue Witch looms over Carnava, the Queen calls upon the Magi
 		<languages>EN,FR,DE,ES,IT,NL,PT,SE,DK,NO,FI</languages>
 		<locale lang="EN">
 			<title>Mr Bean</title>
+			<synopsis>Mr Bean is on his most outrageous adventure yet - and he's inviting you along for the ride. Teddy's been kidnapped by a mysterious villain, and Mr Bean needs your help to find the ransom - 450 cat biscuits!</synopsis>
+		</locale>
+		<locale lang="ES">
+			<title>Mr Bean</title>
 			<synopsis/>
 		</locale>
 		<locale lang="SE">
@@ -123987,9 +124643,11 @@ As the threat of a rogue Witch looms over Carnava, the Queen calls upon the Magi
 			<title>Mr Bean</title>
 			<synopsis/>
 		</locale>
-		<publisher/>
-		<date year="2004" month="1" day="1"/>
-		<rating type="PEGI" value=""/>
+		<developer>Beyond Reality</developer>
+		<publisher>Blast! Entertainment</publisher>
+		<date year="2008" month="3" day="14"/>
+		<genre>action,platformer</genre>
+		<rating type="PEGI" value="3"/>
 		<wi-fi players="0"/>
 		<input players-multi-cart="1" players-single-cart="1"/>
 		<rom version="" name="Mr Bean (Europe) (EN,FR,DE,ES,IT,NL,PT,SE,DK,NO,FI).ds"/>
@@ -126411,7 +127069,8 @@ Explore the ancient citadel of Zharrkarag and unleash powerful sentient weapons 
 		<languages>EN,FR,DE,ES,IT</languages>
 		<locale lang="EN">
 			<title>EA Playground</title>
-			<synopsis>EA Playground offers endless hours of entertainment for all ages. It is the ultimate party play experience, where bragging rights are at stake as you take on your friends and family in fun and immersive playground games.</synopsis>
+			<synopsis>EA Playground offers endless hours of entertainment for all ages. It is the ultimate party play experience, where bragging rights are at stake as you take on your friends and family in fun and immersive playground games.
+Have a blast with classic and new playground games like Dodgeball and Spit Balls.</synopsis>
 		</locale>
 		<locale lang="ES">
 			<title>EA Playground</title>
@@ -128749,16 +129408,12 @@ Climb aboard-and have loads of pirate fun!</synopsis>
 		<languages>EN,IT,SE,DK,NO</languages>
 		<locale lang="EN">
 			<title>Playmobil Interactive: Pirates Boarding!</title>
-			<synopsis>All abord, pirates!
-Embark on exciting adventures un the Caribbean with Pirate Patch:
+			<synopsis>All abord, pirates! Embark on exciting adventures un the Caribbean with Pirate Patch. Climb aboard-and have loads of pirate fun!
 
-Find the missing pieces of Captain Blackbeard's mysterious sea chart
-Explore the many islands
-Fight against fierce soldiers and dangerous sea Monsters
-Rescue the beautiful Mermaid
-Find the legendary pirate treasure
-
-Climb aboard-and have loads of pirate fun!</synopsis>
+- Find the missing pieces of Captain Blackbeard's mysterious sea chart.
+- Explore the many islands. Find the legendary pirate treasure.
+- Fight against fierce soldiers and dangerous sea Monsters.
+- Rescue the beautiful Mermaid.</synopsis>
 		</locale>
 		<locale lang="SE">
 			<title>Playmobil Interactive: Pirater</title>
@@ -130345,37 +131000,46 @@ Utile? - Non si tratta solo di essere alla moda. Anche Hello Kitty Daily è molt
 		<rom version="0" name="Mainichi Suteki!: Hello Kitty no Life Kit (Japan) (EN,JA).ds" size="16777216" crc="8ffb771d" md5="6fe4ead918bf11274c862291dd9903e2" sha1="b222791a72bc8a7a3d08736a91281787556babed"/>
 		<case color="000000"/>
 	</game>
-	<game name="Hello Kitty: Daily (Europe) (EN)">
+	<game name="Hello Kitty Daily (Europe) (EN)">
 		<id>YSRP</id>
 		<type>DS</type>
 		<region>PAL</region>
 		<languages>EN</languages>
 		<locale lang="EN">
-			<title>Hello Kitty: Daily</title>
-			<synopsis/>
+			<title>Hello Kitty Daily</title>
+			<synopsis>Your personal DS Assistant! Discover how to use your Nintendo DS in a whole new way with the adorable Hello Kitty!
+</synopsis>
 		</locale>
-		<publisher/>
-		<date year="2004" month="1" day="1"/>
+		<developer>Dorasu</developer>
+		<publisher>Nobilis</publisher>
+		<date year="2008" month="11" day="13"/>
+		<genre>health,educational,software</genre>
 		<rating type="PEGI" value="3"/>
 		<wi-fi players="0"/>
 		<input players-multi-cart="1" players-single-cart="1"/>
-		<rom version="0" name="Hello Kitty: Daily (Europe) (EN).ds" size="16777216" crc="07ecaf18" md5="f3b6360c6d8d1ad1f565173297d90a9d" sha1="37007860383c9979e3e3802891b55c853e5ec183"/>
+		<rom version="0" name="Hello Kitty Daily (Europe) (EN).ds" size="16777216" crc="07ecaf18" md5="f3b6360c6d8d1ad1f565173297d90a9d" sha1="37007860383c9979e3e3802891b55c853e5ec183"/>
 	</game>
-	<game name="Hello Kitty: Daily (Europe) (ES)">
+	<game name="Hello Kitty Daily (Europe) (ES)">
 		<id>YSRS</id>
 		<type>DS</type>
 		<region>PAL</region>
 		<languages>ES</languages>
 		<locale lang="EN">
-			<title>Hello Kitty: Daily</title>
+			<title>Hello Kitty Daily</title>
+			<synopsis>¿Fashion? - Definitivamente ¡como todos los objetos Hello Kitty! Además nos trae una moderna forma de usar la Nintendo DS con nuestra gatita más trendy!</synopsis>
+		</locale>
+		<locale lang="ES">
+			<title>Hello Kitty Daily</title>
 			<synopsis/>
 		</locale>
-		<publisher/>
-		<date year="2004" month="1" day="1"/>
+		<developer>Dorasu</developer>
+		<publisher>Nobilis</publisher>
+		<date year="2008" month="11" day="13"/>
+		<genre>health,educational,software</genre>
 		<rating type="PEGI" value="3"/>
 		<wi-fi players="0"/>
 		<input players-multi-cart="1" players-single-cart="1"/>
-		<rom version="0" name="Hello Kitty: Daily (Europe) (ES).ds" size="16777216" crc="c5d6dd87" md5="888e558c4d7fa4a2206308ae0dc51f71" sha1="d0fe69be93aa75f1811a3ede5a49f080966c5569"/>
+		<rom version="0" name="Hello Kitty Daily (Europe) (ES).ds" size="16777216" crc="c5d6dd87" md5="888e558c4d7fa4a2206308ae0dc51f71" sha1="d0fe69be93aa75f1811a3ede5a49f080966c5569"/>
 	</game>
 	<game name="The Legendary Starfy (USA) (EN)">
 		<id>YSSE</id>
@@ -130993,10 +131657,12 @@ Bold hero of countless adventures. Prince of Pufftop Kingdom. Master of spectacu
 		</locale>
 		<developer>Vicarious Visions</developer>
 		<publisher>Activison</publisher>
-		<date year="2004" month="" day=""/>
+		<date year="2007" month="" day=""/>
 		<genre>sports,skateboarding</genre>
 		<rating type="ESRB" value=""/>
-		<wi-fi players="0"/>
+		<wi-fi players="0">
+			<feature>online</feature>
+		</wi-fi>
 		<input players-multi-cart="4" players-single-cart="1"/>
 		<rom version="" name="Tony Hawk's Proving Ground (USA) (EN).ds"/>
 		<case color="000000"/>
@@ -133538,39 +134204,65 @@ Game Stack piles of colorful shapes without losing any. Use realistic physics an
 		<input players-multi-cart="2" players-single-cart="1"/>
 		<rom version="0" name="WWE SmackDown dae Raw 2009 Featuring ECW (Korea) (KO).ds" size="134217728" crc="61bb90dc" md5="47f09a3dce7280288cec50f1af121f93" sha1="00e6051d5de16fcfcc7b9f246706c7e7195b789c"/>
 	</game>
-	<game name="WWE SmackDown vs Raw 2009 Featuring ECW (Europe) (EN)">
+	<game name="WWE SmackDown vs. Raw 2009 Featuring ECW (Europe) (EN)">
 		<id>YW9P</id>
 		<type>DS</type>
 		<region>PAL</region>
 		<languages>EN</languages>
 		<locale lang="EN">
-			<title>WWE SmackDown vs Raw 2009 Featuring ECW</title>
-			<synopsis>WWE SmackDown vs. Raw 2009 upholds the franchise’s commitment to delivering the definitive videogame simulation of live WWE programming. WWE SmackDown vs.</synopsis>
+			<title>WWE SmackDown vs. Raw 2009 Featuring ECW</title>
+			<synopsis>WWE SmackDown vs. Raw 2009 upholds the franchise’s commitment to delivering the definitive videogame simulation of live WWE programming.</synopsis>
 		</locale>
-		<publisher>THQ</publisher>
+		<developer>TOSE</developer>
+		<publisher>THQ / Play THQ</publisher>
 		<date year="2008" month="11" day="7"/>
 		<genre>fighting</genre>
-		<rating type="PEGI" value="16"/>
+		<rating type="PEGI" value="16">
+			<descriptor>violence</descriptor>
+		</rating>
 		<wi-fi players="0"/>
 		<input players-multi-cart="2" players-single-cart="1"/>
-		<rom version="0" name="WWE SmackDown vs Raw 2009 Featuring ECW (Europe) (EN).ds" size="134217728" crc="7b7f2a00" md5="025d43c27955ce51be1c772a5b5574c3" sha1="003365e585bd5fbb9c0b8528b4e12786d6db4ad7"/>
+		<rom version="0" name="WWE SmackDown vs. Raw 2009 Featuring ECW (Europe) (EN).ds" size="134217728" crc="7b7f2a00" md5="025d43c27955ce51be1c772a5b5574c3" sha1="003365e585bd5fbb9c0b8528b4e12786d6db4ad7"/>
 	</game>
-	<game name="WWE SmackDown vs Raw 2009 Featuring ECW (Europe) (EN)">
+	<game name="WWE SmackDown vs. Raw 2009 Featuring ECW (Europe) (EN,FR,DE,ES,IT)">
 		<id>YW9X</id>
 		<type>DS</type>
 		<region>PAL</region>
-		<languages>EN</languages>
+		<languages>EN,FR,DE,ES,IT</languages>
 		<locale lang="EN">
-			<title>WWE SmackDown vs Raw 2009 Featuring ECW</title>
-			<synopsis>WWE SmackDown vs. Raw 2009 upholds the franchise’s commitment to delivering the definitive videogame simulation of live WWE programming. WWE SmackDown vs.</synopsis>
+			<title>WWE SmackDown vs. Raw 2009 Featuring ECW</title>
+			<synopsis>WWE SmackDown vs. Raw 2009 upholds the franchise’s commitment to delivering the definitive videogame simulation of live WWE programming.</synopsis>
 		</locale>
-		<publisher>THQ</publisher>
-		<date year="2008" month="" day=""/>
+		<locale lang="FR">
+			<title>WWE SmackDown vs. Raw 2009</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DE">
+			<title>WWE SmackDown vs. Raw 2009</title>
+			<synopsis/>
+		</locale>
+		<locale lang="ES">
+			<title>WWE SmackDown vs. Raw 2009</title>
+			<synopsis/>
+		</locale>
+		<locale lang="IT">
+			<title>WWE SmackDown vs. Raw 2009</title>
+			<synopsis/>
+		</locale>
+		<locale lang="NL">
+			<title>WWE SmackDown vs. Raw 2009</title>
+			<synopsis/>
+		</locale>
+		<developer>TOSE</developer>
+		<publisher>THQ / Play THQ</publisher>
+		<date year="2008" month="11" day="7"/>
 		<genre>fighting</genre>
-		<rating type="PEGI" value=""/>
+		<rating type="PEGI" value="16">
+			<descriptor>violence</descriptor>
+		</rating>
 		<wi-fi players="0"/>
 		<input players-multi-cart="2" players-single-cart="1"/>
-		<rom version="0" name="WWE SmackDown vs Raw 2009 Featuring ECW (Europe) (EN).ds" size="134217728" crc="8cb0582f" md5="4fbf2aa2504db51dbfa271034f8f1b5b" sha1="cf78be47bad0509da3f9c1277ce8b21fc2f16bd7"/>
+		<rom version="0" name="WWE SmackDown vs. Raw 2009 Featuring ECW (Europe) (EN,FR,DE,ES,IT).ds" size="134217728" crc="8cb0582f" md5="4fbf2aa2504db51dbfa271034f8f1b5b" sha1="cf78be47bad0509da3f9c1277ce8b21fc2f16bd7"/>
 	</game>
 	<game name="World Series of Poker 2008: The Official Video Game: Battle for the Bracelets (USA) (EN)">
 		<id>YWBE</id>
@@ -138200,6 +138892,18 @@ In Animal Life - Dinosaurs you start a fantastic voyage into the past. You'll ge
 			<title>Camp Rock: The Final Jam</title>
 			<synopsis>Camp Rock: The Final Jam allows players to create their own customized avatar and join Mitchie, Shane and other Camp Rockers as they explore music camp and participate in a variety of activities as they prepare to compete against their rival Camp Star.</synopsis>
 		</locale>
+		<locale lang="SE">
+			<title>Camp Rock: The Final Jam</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DK">
+			<title>Camp Rock: The Final Jam</title>
+			<synopsis/>
+		</locale>
+		<locale lang="NO">
+			<title>Camp Rock: The Final Jam</title>
+			<synopsis/>
+		</locale>
 		<developer>Disney Interactive Studios</developer>
 		<publisher>Disney Interactive Studios / Buena Vista Games</publisher>
 		<date year="2010" month="9" day="30"/>
@@ -138718,6 +139422,26 @@ Time is running out...</synopsis>
 		<input players-multi-cart="1" players-single-cart="1"/>
 		<rom version="0" name="Lost Identities (Europe) (EN,DE).ds" size="33554432" crc="cc233d70" md5="9757e73a1435a3f159051a1463871d5f" sha1="a444831d5f49355390f66983e36cf6b62e9c27ff"/>
 	</game>
+	<game name="Lost Identities (Europe) (EN,DE)">
+		<id>VLIV</id>
+		<type>DSi</type>
+		<region>PAL</region>
+		<languages>EN,DE</languages>
+		<locale lang="EN">
+			<title>Lost Identities</title>
+			<synopsis>Teenagers are disappearing without a trace, only to reappear with new personailities. FBI agents Derek and Alice begin with their investigation and are soon caught up between the government, FBI, and pharmaceuticals giant BioPharmaka. Time is running out...</synopsis>
+		</locale>
+		<developer>Engine Software</developer>
+		<publisher>DTP Young Entertainment</publisher>
+		<date year="2010" month="10" day="15"/>
+		<genre>adventure</genre>
+		<rating type="PEGI" value="12">
+			<descriptor>violence</descriptor>
+		</rating>
+		<wi-fi players="0"/>
+		<input players-multi-cart="1" players-single-cart="1"/>
+		<rom version="0" name="Lost Identities (Europe) (EN,DE).ds" size="33554432" crc="0c4eed5f" md5="fac9681b11738525779039ad7212cf62" sha1="a6f008a565d78061ba14c810c332ccf020dc9979"/>
+	</game>
 	<game name="Monster High: Ghoul Spirit (USA) (EN,FR)">
 		<id>VM2E</id>
 		<type>DSi</type>
@@ -139199,10 +139923,26 @@ Only you and the crazy Team Penguin can stop Dr. Blowhole and his plan for world
 		<languages>EN,FR,DE,ES,IT</languages>
 		<locale lang="EN">
 			<title>Rabbids Go Home</title>
-			<synopsis>Join those raving Rabbids in a hilarious puzzle-adventure game as you help them build a pile of stolen stuff reaching all the way to the moon.</synopsis>
+			<synopsis>The off your trolley Puzzle-Adventure! Join those raving Rabbids in a hilarious puzzle-adventure game as you help them build a pile of stolen stuff reaching all the way to the moon.
+
+• Stir up funny chain reactions in 150 silly brain teasers!
+• Create your own puzzles and share them with your friends.
+• On Nintendo DSi use the camera to take pictures and customize them with Rabbids.</synopsis>
 		</locale>
 		<locale lang="ES">
 			<title>Rabbids: Mi caaasa!!!</title>
+			<synopsis/>
+		</locale>
+		<locale lang="SE">
+			<title>Rabbids Go Home</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DK">
+			<title>Rabbids Go Home</title>
+			<synopsis/>
+		</locale>
+		<locale lang="NO">
+			<title>Rabbids Go Home</title>
 			<synopsis/>
 		</locale>
 		<developer>Ubisoft Casablanca</developer>
@@ -139231,6 +139971,18 @@ Only you and the crazy Team Penguin can stop Dr. Blowhole and his plan for world
 		</locale>
 		<locale lang="IT">
 			<title>Giulia passione Giornalista</title>
+			<synopsis/>
+		</locale>
+		<locale lang="SE">
+			<title>Imagine Journalist</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DK">
+			<title>Imagine Journalist</title>
+			<synopsis/>
+		</locale>
+		<locale lang="NO">
+			<title>Imagine Journalist</title>
 			<synopsis/>
 		</locale>
 		<developer>magic pockets</developer>
@@ -146149,10 +146901,11 @@ Several great bonus items with microphone support</synopsis>
 			<title>Around the World in 80 Days</title>
 			<synopsis/>
 		</locale>
-		<publisher>Joindots</publisher>
+		<developer>PlayV</developer>
+		<publisher>Joindots GmbH</publisher>
 		<date year="2015" month="2" day="26"/>
 		<genre>puzzle</genre>
-		<rating type="ESRB" value=""/>
+		<rating type="ESRB" value="E"/>
 		<wi-fi players="0"/>
 		<input players-multi-cart="2" players-single-cart="1"/>
 		<rom version="" name="Around the World in 80 Days (USA) (EN).ds"/>
@@ -167083,9 +167836,11 @@ Texte écran en français</synopsis>
 			<title>ＭＲ．ＢＲＡＩＮ ミスターブレイン</title>
 			<synopsis/>
 		</locale>
-		<publisher/>
-		<date year="" month="" day=""/>
-		<rating type="CERO" value=""/>
+		<developer>Square Enix</developer>
+		<publisher>Square Enix</publisher>
+		<date year="2009" month="5" day="27"/>
+		<genre>health,puzzle,coaching</genre>
+		<rating type="CERO" value="A"/>
 		<wi-fi players="0"/>
 		<input players-multi-cart="1" players-single-cart="1"/>
 		<rom version="0" name="Mr. Brain (Japan) (JA).ds" size="2452480" crc="57acb576" md5="54ee136b215890ab3f5b60567b3f2830" sha1="34bcac1b67d4700f83619f8ee7c6fe201ea57ac4"/>

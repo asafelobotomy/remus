@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <datafile xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="3dstdb.xsd">
-	<TDB3DS version="20260326234337" filter="EN" games="4785"/>
+	<TDB3DS version="20260422092842" filter="EN" games="4785"/>
 	<!--
  GameTDB: 3DS, Database started in 2015 (https://www.gametdb.com)
  Never modify this file manually, it will get overwritten when you update. You can add games and fixes on the website.
@@ -6833,21 +6833,38 @@ be able to save the future of mankind?</synopsis>
 		<input players="1"/>
 		<rom version="0" name="Dangerous Jiisan to 1000 nin no Otomodachi Ja (Japan) (EN,JA).3ds" size="536870912" crc="deb4c6a3" md5="525f65ff78e4834d8cb362a90d7ca000" sha1="c90a2c98e9573684cbbc8800fb719cfefc4d5976"/>
 	</game>
-	<game name="Pro Evolution Soccer 2012 3D (Europe) (EN,DE)">
+	<game name="Pro Evolution Soccer 2012 3D (Europe) (FR,DE)">
 		<id>AE2D</id>
 		<type>3DS</type>
 		<region>PAL</region>
-		<languages>EN,DE</languages>
+		<languages>FR,DE</languages>
 		<locale lang="EN">
+			<title>Pro Evolution Soccer 2012 3D</title>
+			<synopsis>Watch a world of football come to life in the palm of your hand in PES 2012 3D – Pro Evolution Soccer for Nintendo 3DS. 
+
+PES 2012 3D follows on from the soccer series’ Nintendo 3DS debut by adding new features that make this season more immersive than ever. Try your hand at Touch Screen controls, sample new game modes and take on all-comers in intense online matches! </synopsis>
+		</locale>
+		<locale lang="FR">
 			<title>Pro Evolution Soccer 2012 3D</title>
 			<synopsis/>
 		</locale>
+		<locale lang="DE">
+			<title>Pro Evolution Soccer 2012 3D</title>
+			<synopsis/>
+		</locale>
+		<developer>Konami</developer>
 		<publisher>Konami</publisher>
-		<date year="2011" month="" day=""/>
-		<rating type="PEGI" value=""/>
-		<wi-fi players="0"/>
-		<input players="1"/>
-		<rom version="0" name="Pro Evolution Soccer 2012 3D (Europe) (EN,DE).3ds" size="1073741824" crc="93fa1b09" md5="cf3fac2a3ff970b99bf99b54c6c11b40" sha1="912e19f0acbf7b263bb5f4c95e67b72eb9139068"/>
+		<date year="2011" month="12" day="1"/>
+		<genre>sports,football</genre>
+		<rating type="PEGI" value="3">
+			<descriptor>online</descriptor>
+		</rating>
+		<wi-fi players="2">
+			<feature>online</feature>
+			<feature>score</feature>
+		</wi-fi>
+		<input players="2"/>
+		<rom version="0" name="Pro Evolution Soccer 2012 3D (Europe) (FR,DE).3ds" size="1073741824" crc="93fa1b09" md5="cf3fac2a3ff970b99bf99b54c6c11b40" sha1="912e19f0acbf7b263bb5f4c95e67b72eb9139068"/>
 	</game>
 	<game name="Pro Evolution Soccer 2012 3D (USA) (EN)">
 		<id>AE2E</id>
@@ -6922,6 +6939,10 @@ PES 2012 3D follows on from the soccer series’ Nintendo 3DS debut by adding ne
 			<title>Pro Evolution Soccer 2012 3D</title>
 			<synopsis>Watch a world of football come to life in the palm of your hand in PES 2012 3D – Pro Evolution Soccer for Nintendo 3DS.
 PES 2012 3D follows on from the soccer series’ Nintendo 3DS debut by adding new features that make this season more immersive than ever. Try your hand at Touch Screen controls, sample new game modes and take on all-comers in intense online matches! </synopsis>
+		</locale>
+		<locale lang="NL">
+			<title>Pro Evolution Soccer 2012 3D</title>
+			<synopsis/>
 		</locale>
 		<developer>Konami</developer>
 		<publisher>Konami</publisher>
@@ -7390,11 +7411,15 @@ Eleven GO: Shadow today – game on!</synopsis>
 		<languages>EN</languages>
 		<locale lang="EN">
 			<title>Doodle Jump Adventures</title>
-			<synopsis/>
+			<synopsis>How high can you jump? Take the &quot;adventure of a lifetime&quot; with Doodle Jump Adventures on the Nintendo 3DS with exclusive new content. Journey up, up, up a sheet of graph paper, picking up jet packs, avoiding black holes, and blasting baddies with nose balls along the way.</synopsis>
 		</locale>
-		<publisher/>
-		<date year="" month="" day=""/>
-		<rating type="ESRB" value=""/>
+		<developer>Avanquest Software</developer>
+		<publisher>GameMill Publishing</publisher>
+		<date year="2013" month="10" day="29"/>
+		<genre>action,platformer</genre>
+		<rating type="ESRB" value="E">
+			<descriptor>mild cartoon violence</descriptor>
+		</rating>
 		<wi-fi players="0"/>
 		<input players="1"/>
 		<rom version="0" name="Doodle Jump Adventures (USA) (EN).3ds" size="134217728" crc="0178c5b1" md5="efca2f1e5627d64ab2516aad2dfd97bb" sha1="445ae4c6037d38e0b5d3e2a80a4f35da542e5095"/>
@@ -11872,10 +11897,16 @@ Visit amiibo.nintendo.eu for compatible amiibo™ and the latest information. To
 			<title>スーパーマリオメーカー for ニンテンドー3DS</title>
 			<synopsis/>
 		</locale>
+		<developer>Nintendo EAD</developer>
 		<publisher>Nintendo</publisher>
 		<date year="2016" month="12" day="1"/>
-		<rating type="CERO" value=""/>
-		<wi-fi players="0"/>
+		<genre>action,simulation,strategy,platformer,drawing</genre>
+		<rating type="CERO" value="A"/>
+		<wi-fi players="0">
+			<feature>online</feature>
+			<feature>download</feature>
+			<feature>score</feature>
+		</wi-fi>
 		<input players="1"/>
 		<rom version="0" name="Super Mario Maker for Nintendo 3DS (Japan) (JA).3ds" size="536870912" crc="be1f1ea4" md5="5dee8d636028d6012180da50464fb0d0" sha1="b0d4b98b58980f86c50417ac343a491b104779bb"/>
 		<rom version="2" name="Super Mario Maker for Nintendo 3DS (Japan) (JA) (v2).3ds" size="536870912" crc="980c8190" md5="519ba9c3fed4b53364acbd64b13b912f" sha1="dead6cd2df2a2eca6579501e21633a2eb3d68d11"/>
@@ -11924,7 +11955,7 @@ Want to take on some user created courses? Jump online and enter Course World to
 		<developer>Nintendo EAD</developer>
 		<publisher>Nintendo</publisher>
 		<date year="2016" month="12" day="2"/>
-		<genre>action,adventure,simulation,strategy,drawing</genre>
+		<genre>action,simulation,strategy,platformer,drawing</genre>
 		<rating type="PEGI" value="3">
 			<descriptor>online</descriptor>
 		</rating>
@@ -11982,27 +12013,27 @@ This will update the software to Version 1.1 with the following amendments:
 We apologize for any inconvenience caused, and recommend downloading this update to ensure a smooth game experience.</synopsis>
 		</locale>
 		<locale lang="FR">
-			<title>FE Echoes: Shadows of Valentia : Mise à jour</title>
+			<title>Fire Emblem Echoes: Shadows of Valentia</title>
 			<synopsis/>
 		</locale>
 		<locale lang="DE">
-			<title>Fire Emblem Echoes: Shadows of Valentia: Update</title>
+			<title>Fire Emblem Echoes: Shadows of Valentia</title>
 			<synopsis/>
 		</locale>
 		<locale lang="ES">
-			<title>FE Echoes: Shadows of Valentia: Actualización</title>
+			<title>Fire Emblem Echoes: Shadows of Valentia</title>
 			<synopsis/>
 		</locale>
 		<locale lang="IT">
-			<title>FE Echoes: Shadows of Valentia: Aggiornamenti</title>
+			<title>Fire Emblem Echoes: Shadows of Valentia</title>
 			<synopsis/>
 		</locale>
 		<locale lang="NL">
-			<title>Fire Emblem Echoes: Shadows of Valentia: Update</title>
+			<title>Fire Emblem Echoes: Shadows of Valentia</title>
 			<synopsis/>
 		</locale>
 		<locale lang="PT">
-			<title>FE Echoes: Shadows of Valentia: Atualização</title>
+			<title>Fire Emblem Echoes: Shadows of Valentia</title>
 			<synopsis/>
 		</locale>
 		<developer>Intelligent Systems</developer>
@@ -20700,6 +20731,64 @@ tense and exciting adventure game!</synopsis>
 		<input players="1"/>
 		<rom version="0" name="Shanghai 3D Cube (Japan) (EN,JA).3ds" size="134217728" crc="ba992da6" md5="82482d995813805cb9b090a16aa60696" sha1="1d23def2838c354223cbef03a4a35eb18273a663"/>
 	</game>
+	<game name="Etrian Odyssey IV: Legends of the Titan (Europe) (EN)">
+		<id>ASJP</id>
+		<type>3DS</type>
+		<region>PAL</region>
+		<languages>EN</languages>
+		<locale lang="EN">
+			<title>Etrian Odyssey IV: Legends of the Titan</title>
+			<synopsis>Etrian Odyssey IV brings an enhanced
+graphics engine boasting polygonal
+enemies and new 3D special effects;
+upgradable, customizable skyships
+that let players travel and battle amid
+the clouds. An exceedingly
+atmospheric and fully orchestrated
+musical score from Yuzo Koshiro in
+addition to expanded, more immersive
+3D dungeons with analog camera
+control rounds up the features of the
+newest addition to this beloved
+franchise.</synopsis>
+		</locale>
+		<locale lang="FR">
+			<title>Etrian Odyssey IV: Legends of the Titan</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DE">
+			<title>Etrian Odyssey IV: Legends of the Titan</title>
+			<synopsis/>
+		</locale>
+		<locale lang="ES">
+			<title>Etrian Odyssey IV: Legends of the Titan</title>
+			<synopsis/>
+		</locale>
+		<locale lang="IT">
+			<title>Etrian Odyssey IV: Legends of the Titan</title>
+			<synopsis/>
+		</locale>
+		<locale lang="NL">
+			<title>Etrian Odyssey IV: Legends of the Titan</title>
+			<synopsis/>
+		</locale>
+		<locale lang="PT">
+			<title>Etrian Odyssey IV: Legends of the Titan</title>
+			<synopsis/>
+		</locale>
+		<developer>Atlus</developer>
+		<publisher>Nippon Ichi Software America</publisher>
+		<date year="2013" month="8" day="30"/>
+		<genre>adventure,role-playing</genre>
+		<rating type="PEGI" value="12">
+			<descriptor>language</descriptor>
+			<descriptor>sex</descriptor>
+			<descriptor>violence</descriptor>
+		</rating>
+		<wi-fi players="0"/>
+		<input players="1"/>
+		<rom version="0" name="Etrian Odyssey IV: Legends of the Titan (Europe) (EN).3ds" size="1073741824" crc="b4a54689" md5="3d21302eac07a19c5f9351df231466ec" sha1="a50cff556374e275883ca62decb5cbaeddc2a2f8"/>
+	</game>
 	<game name="Ryoume de Unou o Kitaeru: 3D Sokudoku Jutsu (Japan) (EN,JA)">
 		<id>ASKJ</id>
 		<type>3DS</type>
@@ -21006,6 +21095,32 @@ The new Devilish Training exercises dynamically increase or decrease in difficul
 			<control type="mii" required="true"/>
 		</input>
 		<rom version="0" name="Brain Age: Concentration Training (USA) (EN).3ds" size="536870912" crc="060a4c5a" md5="fc0b74ed4a03d6e106ae2037152d983a" sha1="70c9cb48a1ab8b73ec0c06ada2f55dbaddd4c14c"/>
+	</game>
+	<game name="Tohoku Daigaku Karei Igaku Kenkyuusho: Kawashima Ryuuta Kyouju Kanshuu: Monosugoku Nou wo Kitaeru 5-Funkan no Oni Training (Japan) (JA)">
+		<id>ASRJ</id>
+		<type>3DS</type>
+		<region>NTSC-J</region>
+		<languages>JA</languages>
+		<locale lang="EN">
+			<title>Tohoku Daigaku Karei Igaku Kenkyuusho: Kawashima Ryuuta Kyouju Kanshuu: Monosugoku Nou wo Kitaeru 5-Funkan no Oni Training</title>
+			<synopsis/>
+		</locale>
+		<locale lang="JA">
+			<title>更新データ Ver. 1.1 ものすごく脳を鍛える5分間の鬼トレーニング</title>
+			<synopsis/>
+		</locale>
+		<developer>Nintendo</developer>
+		<publisher>Nintendo</publisher>
+		<date year="2012" month="10" day="31"/>
+		<genre>health,puzzle,coaching,educational</genre>
+		<rating type="CERO" value="A"/>
+		<wi-fi players="0">
+			<feature>online</feature>
+		</wi-fi>
+		<input players="4">
+			<control type="mii" required="true"/>
+		</input>
+		<rom version="0" name="Tohoku Daigaku Karei Igaku Kenkyuusho: Kawashima Ryuuta Kyouju Kanshuu: Monosugoku Nou wo Kitaeru 5-Funkan no Oni Training (Japan) (JA).3ds" size="268435456" crc="57a29b3d" md5="449e87432b3e5905b87e858cb2ed663b" sha1="a8947672c5d5236a6b828ad6edfee7fa12e7aff8"/>
 	</game>
 	<game name="Dr Kawashima's Devilish Brain Training: Can you stay focused? (Europe) (EN,FR,DE,ES,IT,NL,PT)">
 		<id>ASRP</id>
@@ -21437,6 +21552,70 @@ required.</synopsis>
 		<input players="1"/>
 		<rom version="0" name="The Oregon Trail (USA) (EN).3ds" size="134217728" crc="8792999c" md5="9d39a5858345d04f78e03d4c22320c25" sha1="cab11099bc3c35e5513589593e14e56d89a0205d"/>
 	</game>
+	<game name="Yoshi's New Island (Europe) (EN,FR,DE,ES,IT,NL,PT,RU)">
+		<id>ATAP</id>
+		<type>3DS</type>
+		<region>PAL</region>
+		<languages>EN,FR,DE,ES,IT,NL,PT,RU</languages>
+		<locale lang="EN">
+			<title>Yoshi's New Island</title>
+			<synopsis>Yoshi’s New Island is the first
+instalment in this series since Yoshi’s
+Island DS was released in 2006.
+
+Yoshi’s good old Flutter Jump,
+Ground Pound and egg-throwing
+return, along with new abilities and
+challenges that take advantage of the
+features of the Nintendo 3DS. You
+can use massive eggs called
+Mega-Eggs to destroy blocks and
+pipes, revealing secrets such as coins
+and hidden keys. The more things you
+destroy, the higher the Mega-Egg
+gauge goes, netting you extra lives in
+the process!
+
+The beautiful art is based on many
+classic styles, such as oil painting,
+watercolours and crayon drawings.</synopsis>
+		</locale>
+		<locale lang="FR">
+			<title>Yoshi's New Island</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DE">
+			<title>Yoshi's New Island</title>
+			<synopsis/>
+		</locale>
+		<locale lang="ES">
+			<title>Yoshi's New Island</title>
+			<synopsis/>
+		</locale>
+		<locale lang="IT">
+			<title>Yoshi's New Island</title>
+			<synopsis/>
+		</locale>
+		<locale lang="NL">
+			<title>Yoshi's New Island</title>
+			<synopsis/>
+		</locale>
+		<locale lang="PT">
+			<title>Yoshi's New Island</title>
+			<synopsis/>
+		</locale>
+		<developer>Arzest</developer>
+		<publisher>Nintendo</publisher>
+		<date year="2014" month="3" day="14"/>
+		<genre>action,platformer</genre>
+		<rating type="PEGI" value="3"/>
+		<wi-fi players="0">
+			<feature>online</feature>
+		</wi-fi>
+		<input players="2"/>
+		<rom version="0" name="Yoshi's New Island (Europe) (EN,FR,DE,ES,IT,NL,PT,RU).3ds" size="536870912" crc="f375aeaa" md5="0da92800dfce7556fb7ddb42a6397f5b" sha1="62d032adf107d647ad1a4d4eeeebc9d0c5d65e04"/>
+		<case versions="2"/>
+	</game>
 	<game name="Yoshi's New Island (Taiwan) (ZHTW)">
 		<id>ATAW</id>
 		<type>3DS</type>
@@ -21679,38 +21858,101 @@ required.</synopsis>
 		<input players="2"/>
 		<rom version="0" name="Tekken 3D: Prime Edition (Europe) (EN,FR,DE,ES,IT).3ds" size="2147483648" crc="a5a07dbd" md5="dfbd77d621d9d400d4a815774ddb1d11" sha1="234df291d6f14c220d6a3855c22aa3f07404ad46"/>
 	</game>
-	<game name="Tetris: Axis (USA) (EN)">
+	<game name="Tetris Axis (USA) (EN,FR,ES)">
 		<id>ATLE</id>
 		<type>3DS</type>
 		<region>NTSC-U</region>
-		<languages>EN</languages>
+		<languages>EN,FR,ES</languages>
 		<locale lang="EN">
-			<title>Tetris: Axis</title>
-			<synopsis/>
+			<title>Tetris Axis</title>
+			<synopsis>Nintendo 3DS takes Tetris® to a whole new dimension! Tetris Axis for Nintendo 3DS will allow fans to experience the game like never before...in 3D! With over 20 eye-catching game modes, Tetris for Nintendo 3DS delivers a rich mix of both traditional and innovative ways to enjoy playing the Tetris game.</synopsis>
 		</locale>
-		<publisher>Namco Bandai Entertainment</publisher>
-		<date year="2011" month="" day=""/>
-		<rating type="ESRB" value=""/>
-		<wi-fi players="0"/>
-		<input players="1"/>
-		<rom version="0" name="Tetris: Axis (USA) (EN).3ds" size="268435456" crc="2f439f5e" md5="cac003fcb87b125a1daba9f1e153053e" sha1="00066fec7c7c0aad612cbe50e5b2138b97405337"/>
+		<developer>Hudson Soft</developer>
+		<publisher>Nintendo</publisher>
+		<date year="2011" month="10" day="2"/>
+		<genre>puzzle</genre>
+		<rating type="ESRB" value="E"/>
+		<wi-fi players="8">
+			<feature>online</feature>
+		</wi-fi>
+		<input players="8">
+			<control type="camera" required="false"/>
+			<control type="card" required="false"/>
+		</input>
+		<rom version="0" name="Tetris Axis (USA) (EN,FR,ES).3ds" size="268435456" crc="2f439f5e" md5="cac003fcb87b125a1daba9f1e153053e" sha1="00066fec7c7c0aad612cbe50e5b2138b97405337"/>
 	</game>
-	<game name="Tetris (Europe) (EN)">
-		<id>ATLP</id>
+	<game name="Tetris (Japan) (JA)">
+		<id>ATLJ</id>
 		<type>3DS</type>
-		<region>PAL</region>
-		<languages>EN</languages>
+		<region>NTSC-J</region>
+		<languages>JA</languages>
 		<locale lang="EN">
 			<title>Tetris</title>
 			<synopsis/>
 		</locale>
-		<publisher>Namco Bandai Entertainment</publisher>
-		<date year="2011" month="" day=""/>
-		<rating type="PEGI" value=""/>
-		<wi-fi players="0"/>
-		<input players="1"/>
-		<rom version="0" name="Tetris (Europe) (EN).3ds" size="268435456" crc="3600df06" md5="d3f3ea59be8d44e17681fc026e8a7ccc" sha1="8ca47561d745b5b6b26b116e88668734cf450d33"/>
-		<rom version="1" name="Tetris (Europe) (EN) (v1).3ds" size="268435456" crc="5d9c4291" md5="b438fb583e89ee6b50199095e611ceee" sha1="50e72471eac1ee622ecfa70d160919c14990f69a"/>
+		<locale lang="JA">
+			<title>テトリス</title>
+			<synopsis/>
+		</locale>
+		<developer>Hudson Soft</developer>
+		<publisher>Namco Bandai Games</publisher>
+		<date year="2011" month="10" day="20"/>
+		<genre>puzzle</genre>
+		<rating type="CERO" value="A"/>
+		<wi-fi players="8">
+			<feature>online</feature>
+		</wi-fi>
+		<input players="8">
+			<control type="camera" required="false"/>
+			<control type="card" required="false"/>
+		</input>
+		<rom version="0" name="Tetris (Japan) (JA).3ds" size="268435456" crc="a9084480" md5="68293b44d08863f362cafc7f8a80244e" sha1="8b6506788fe43e50a5e75988dac18661e54dc277"/>
+	</game>
+	<game name="Tetris (Europe) (EN,FR,DE,ES,IT)">
+		<id>ATLP</id>
+		<type>3DS</type>
+		<region>PAL</region>
+		<languages>EN,FR,DE,ES,IT</languages>
+		<locale lang="EN">
+			<title>Tetris</title>
+			<synopsis>The music is affectionately etched into your memory, you remember the thrill of achieving a ‘Tetris™’ line clear after clearing four lines in a single move, you’ve enjoyed guiding the famous Tetrimino shapes into place for years, but you’ve never played a Tetris® game like this before.</synopsis>
+		</locale>
+		<locale lang="FR">
+			<title>Tetris</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DE">
+			<title>Tetris</title>
+			<synopsis/>
+		</locale>
+		<locale lang="ES">
+			<title>Tetris</title>
+			<synopsis/>
+		</locale>
+		<locale lang="IT">
+			<title>Tetris</title>
+			<synopsis/>
+		</locale>
+		<locale lang="NL">
+			<title>Tetris</title>
+			<synopsis/>
+		</locale>
+		<developer>Hudson Soft</developer>
+		<publisher>Tetris Online</publisher>
+		<date year="2011" month="10" day="21"/>
+		<genre>puzzle</genre>
+		<rating type="PEGI" value="3">
+			<descriptor>online</descriptor>
+		</rating>
+		<wi-fi players="8">
+			<feature>online</feature>
+		</wi-fi>
+		<input players="8">
+			<control type="camera" required="false"/>
+			<control type="card" required="false"/>
+		</input>
+		<rom version="0" name="Tetris (Europe) (EN,FR,DE,ES,IT).3ds" size="268435456" crc="3600df06" md5="d3f3ea59be8d44e17681fc026e8a7ccc" sha1="8ca47561d745b5b6b26b116e88668734cf450d33"/>
+		<rom version="1" name="Tetris (Europe) (EN,FR,DE,ES,IT) (v1).3ds" size="268435456" crc="5d9c4291" md5="b438fb583e89ee6b50199095e611ceee" sha1="50e72471eac1ee622ecfa70d160919c14990f69a"/>
 	</game>
 	<game name="The Adventures of Tintin: The Game (USA) (EN)">
 		<id>ATNE</id>
@@ -22512,6 +22754,75 @@ Only you can help to revive the seven Skytrees in order to give the Harvest Godd
 		<input players="1"/>
 		<rom version="0" name="Viking Invasion 2: Tower Defense (Europe) (EN).3ds" size="134217728" crc="a3a99237" md5="3112619a5e43650b025c615742a36971" sha1="556c7a778c98a425aa6e729216233bb204021e57"/>
 	</game>
+	<game name="Harvest Moon: The Lost Valley (Europe) (EN,FR,DE,ES)">
+		<id>AVMP</id>
+		<type>3DS</type>
+		<region>PAL</region>
+		<languages>EN,FR,DE,ES</languages>
+		<locale lang="EN">
+			<title>Harvest Moon: The Lost Valley</title>
+			<synopsis>An update for &quot;Harvest Moon®: The
+Lost Valley&quot; is now available from
+Nintendo eShop.
+
+All customers who own a copy of
+“Harvest Moon®: The Lost Valley”
+should download the update.
+
+This will update the software to
+Version 1.1 with the following
+amendments:
+
+- Various bugs have been fixed in
+order to provide a smoother gaming
+experience.
+
+• Once the update has been
+downloaded, it will be installed
+automatically.
+
+We apologize for any inconvenience
+caused, and recommend downloading
+this update to ensure a smooth game
+experience.</synopsis>
+		</locale>
+		<locale lang="FR">
+			<title>Harvest Moon: La Vallée Perdue : Mise à jour</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DE">
+			<title>Harvest Moon: Das verlorene Tal: Update</title>
+			<synopsis/>
+		</locale>
+		<locale lang="ES">
+			<title>Harvest Moon: El Valle Perdido: Actualización</title>
+			<synopsis/>
+		</locale>
+		<locale lang="IT">
+			<title>Harvest Moon: The Lost Valley: Aggiornamenti</title>
+			<synopsis/>
+		</locale>
+		<locale lang="NL">
+			<title>Harvest Moon: The Lost Valley: Update</title>
+			<synopsis/>
+		</locale>
+		<locale lang="PT">
+			<title>Harvest Moon: The Lost Valley: Atualização</title>
+			<synopsis/>
+		</locale>
+		<developer>Tabot Inc</developer>
+		<publisher>Marvelous Entertainment / Victor Entertainment / Pack-In-Video / Rising Star Games</publisher>
+		<date year="2015" month="10" day="28"/>
+		<genre>simulation</genre>
+		<rating type="PEGI" value="3"/>
+		<wi-fi players="0">
+			<feature>online</feature>
+			<feature>download</feature>
+		</wi-fi>
+		<input players="1"/>
+		<rom version="0" name="Harvest Moon: The Lost Valley (Europe) (EN,FR,DE,ES).3ds" size="268435456" crc="c24e6172" md5="e347bde8eefdaba7db5a9703ec9e38c3" sha1="96a617d82ba5a1537370a6e6e62541f3a10a15d2"/>
+		<case versions="2"/>
+	</game>
 	<game name="Marvel Disk Wars: Avengers: Ultimate Heroes (Japan) (EN,JA)">
 		<id>AVNJ</id>
 		<type>3DS</type>
@@ -22839,6 +23150,31 @@ ultimate case!</synopsis>
 		</input>
 		<rom version="0" name="Pilotwings Resort (USA) (EN,FR,ES).3ds" size="134217728" crc="340d616b" md5="15abab9a7a92eef5a0381325264f2ee1" sha1="bed52272e25776e19285232a4b2a3e532106c898"/>
 		<rom version="1" name="Pilotwings Resort (USA) (EN,FR,ES) (v1).3ds" size="134217728" crc="6131c2cb" md5="b1eb4dbdbc458ec5cd592a390d7997ae" sha1="6f850099c50e4ba0e99e2dfbca30d01b6496acb8"/>
+	</game>
+	<game name="Pilotwings Resort (Japan) (JA)">
+		<id>AWAJ</id>
+		<type>3DS</type>
+		<region>NTSC-J</region>
+		<languages>JA</languages>
+		<locale lang="EN">
+			<title>Pilotwings Resort</title>
+			<synopsis/>
+		</locale>
+		<locale lang="JA">
+			<title>パイロットウイングス リゾート</title>
+			<synopsis/>
+		</locale>
+		<developer>Nintendo EAD</developer>
+		<publisher>Nintendo</publisher>
+		<date year="2012" month="11" day="1"/>
+		<genre>sports,simulation,flight simulation</genre>
+		<rating type="CERO" value="A"/>
+		<wi-fi players="0"/>
+		<input players="1">
+			<control type="mii" required="true"/>
+		</input>
+		<rom version="0" name="Pilotwings Resort (Japan) (JA).3ds" size="134217728" crc="6c1853d3" md5="965ac62d551b62be2127f17ab43a052f" sha1="52a3a8b6d4a322734af6b2b94863babfb4bacf0a"/>
+		<rom version="1" name="Pilotwings Resort (Japan) (JA) (v1).3ds" size="134217728" crc="924b4498" md5="366a7d1c04ac63f7271aa358449b148e" sha1="a48cb85a2131077973ccc129f8653682464078aa"/>
 	</game>
 	<game name="Pilotwings Resort (Europe) (EN,FR,DE,ES,IT)">
 		<id>AWAP</id>
@@ -23652,7 +23988,7 @@ experience.</synopsis>
 		<rom version="2" name="Super Smash Bros. for Nintendo 3DS (Europe) (EN,FR,DE,ES,IT,NL,PT,RU) (v2).3ds" size="2147483648" crc="49451677" md5="43eaa321a6853bd02789daeecb5702cf" sha1="304c55e8aabed6ffc30a24c6956efbdb5045caa1"/>
 		<rom version="3" name="Super Smash Bros. for Nintendo 3DS (Europe) (EN,FR,DE,ES,IT,NL,PT,RU) (v3).3ds" size="2147483648" crc="f31dfe18" md5="f00c560eedfef331df5d00731e5cb2b1" sha1="2e651cb81ffd29b6f7dc22bd7205d1e58705fba8"/>
 		<rom version="4" name="Super Smash Bros. for Nintendo 3DS (Europe) (EN,FR,DE,ES,IT,NL,PT,RU) (v4).3ds" size="2147483648" crc="315d930d" md5="6ab84064b4487461153925b7fecac3ab" sha1="c7b42490274ea91a96b79280c8cbe011e4d40c26"/>
-		<case versions="2"/>
+		<case versions="3"/>
 	</game>
 	<game name="Kouekizaidan Houjin Nihon Kanji Nouryoku Kentei Kyoukai: Kanken Training (Japan) (EN,JA)">
 		<id>AXFJ</id>
@@ -23908,6 +24244,44 @@ on goal.</synopsis>
 		</wi-fi>
 		<input players="4"/>
 		<rom version="0" name="Inazuma Eleven 3: Lightning Bolt (Europe) (EN,FR,DE).3ds" size="2147483648" crc="e7815a16" md5="fbba21cbdfefafb70872862742e0b7bd" sha1="cacc63a218810cc5f4f6a74e80998c1504f2e78e"/>
+	</game>
+	<game name="Inazuma Eleven 3: Lightning Bolt (Europe) (EN,ES,IT)">
+		<id>AXSZ</id>
+		<type>3DS</type>
+		<region>PAL</region>
+		<languages>EN,ES,IT</languages>
+		<locale lang="EN">
+			<title>Inazuma Eleven 3: Lightning Bolt</title>
+			<synopsis/>
+		</locale>
+		<locale lang="FR">
+			<title>Inazuma Eleven 3: Lampo folgorante</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DE">
+			<title>Inazuma Eleven 3: Lampo folgorante</title>
+			<synopsis/>
+		</locale>
+		<locale lang="ES">
+			<title>Inazuma Eleven 3: Rayo celeste</title>
+			<synopsis/>
+		</locale>
+		<locale lang="IT">
+			<title>Inazuma Eleven 3: Lampo folgorante</title>
+			<synopsis/>
+		</locale>
+		<developer>Level-5</developer>
+		<publisher>Nintendo</publisher>
+		<date year="2013" month="9" day="27"/>
+		<genre>sports,role-playing,football</genre>
+		<rating type="PEGI" value="7">
+			<descriptor>violence</descriptor>
+		</rating>
+		<wi-fi players="0">
+			<feature>online</feature>
+		</wi-fi>
+		<input players="4"/>
+		<rom version="0" name="Inazuma Eleven 3: Lightning Bolt (Europe) (EN,ES,IT).3ds" size="2147483648" crc="c2961377" md5="ab4da4e05bc82c2d4b5e011138ec4409" sha1="8e433b6f301bbe760347da8218320d6310686889"/>
 	</game>
 	<game name="Andro Dunos 2 (USA) (EN)">
 		<id>AXTE</id>
@@ -24991,6 +25365,58 @@ his prison.</synopsis>
 		<input players="1"/>
 		<rom version="0" name="Azada (Europe) (EN,FR,DE,NL).3ds" size="134217728" crc="46776590" md5="797bde1112f93f100ba27753441caf0d" sha1="9f833668d8aa57f6a628caa22604af0e1ee71d1c"/>
 		<case versions="2"/>
+	</game>
+	<game name="Batman: Arkham Origins Blackgate (Europe) (EN,FR,DE,ES,IT)">
+		<id>AZEP</id>
+		<type>3DS</type>
+		<region>PAL</region>
+		<languages>EN,FR,DE,ES,IT</languages>
+		<locale lang="EN">
+			<title>Batman: Arkham Origins Blackgate</title>
+			<synopsis>Batman: Arkham Origins Blackgate is
+a 2.5-D game developed by Armature
+Studios that brings the Batman
+Arkham experience for the first time to
+Nintendo 3DS™. A companion game
+to Batman: Arkham Origins, players
+can continue the storyline of the
+console version and discover more
+details of the Dark Knight’s past.</synopsis>
+		</locale>
+		<locale lang="FR">
+			<title>Batman: Arkham Origins Blackgate</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DE">
+			<title>Batman: Arkham Origins Blackgate</title>
+			<synopsis/>
+		</locale>
+		<locale lang="ES">
+			<title>Batman: Arkham Origins Blackgate</title>
+			<synopsis/>
+		</locale>
+		<locale lang="IT">
+			<title>Batman: Arkham Origins Blackgate</title>
+			<synopsis/>
+		</locale>
+		<locale lang="NL">
+			<title>Batman: Arkham Origins Blackgate</title>
+			<synopsis/>
+		</locale>
+		<locale lang="PT">
+			<title>Batman: Arkham Origins Blackgate</title>
+			<synopsis/>
+		</locale>
+		<developer>Armature Studio</developer>
+		<publisher>Warner Bros. Interactive Entertainment</publisher>
+		<date year="2013" month="11" day="7"/>
+		<genre>action,adventure</genre>
+		<rating type="PEGI" value="16">
+			<descriptor>violence</descriptor>
+		</rating>
+		<wi-fi players="0"/>
+		<input players="1"/>
+		<rom version="0" name="Batman: Arkham Origins Blackgate (Europe) (EN,FR,DE,ES,IT).3ds" size="1073741824" crc="43a1003a" md5="62c548a34de60d225d365c9de488fb37" sha1="fa9b616660b8644f9fe6cb0c8acaf00509175bba"/>
 	</game>
 	<game name="LEGO Friends (USA) (EN)">
 		<id>AZJE</id>
@@ -32525,8 +32951,13 @@ Included in this remake is the Minion Quest: The Search for Bowser mode, which t
 			<descriptor>mild violence</descriptor>
 			<descriptor>mild lyrics</descriptor>
 		</rating>
-		<wi-fi players="0"/>
-		<input players="2"/>
+		<wi-fi players="0">
+			<feature>online</feature>
+		</wi-fi>
+		<input players="2">
+			<control type="camera" required="false"/>
+			<control type="card" required="false"/>
+		</input>
 		<rom version="0" name="Hatsune Miku: Project Mirai DX (USA) (EN).3ds" size="4294967296" crc="ecaf9a57" md5="2a1a01528d22fd886e6c7364812225f7" sha1="407af0e762f00452b54615d6fafc275db9ee147a"/>
 	</game>
 	<game name="Hatsune Miku: Project Mirai Deluxe (Japan) (JA)">
@@ -32547,7 +32978,7 @@ Included in this remake is the Minion Quest: The Search for Bowser mode, which t
 		<date year="2015" month="5" day="28"/>
 		<genre>music,rhythm</genre>
 		<rating type="CERO" value="A"/>
-		<wi-fi players="1">
+		<wi-fi players="0">
 			<feature>online</feature>
 		</wi-fi>
 		<input players="2">
@@ -33942,37 +34373,63 @@ Band together with up to three other players via Local Play and explore this con
 		<input players="1"/>
 		<rom version="0" name="Tenkai Knights: Brave Battle (Europe) (EN).3ds" size="268435456" crc="559c6d5b" md5="18e87ebc69949472114066fcb8267fe3" sha1="e58341b1184a456aac0e96c03ccd9a2bc7c65c29"/>
 	</game>
-	<game name="Tetris Ultimate (USA) (EN)">
+	<game name="Tetris Ultimate (USA) (EN,FR,ES,PT)">
 		<id>BTLE</id>
 		<type>3DS</type>
 		<region>NTSC-U</region>
-		<languages>EN</languages>
+		<languages>EN,FR,ES,PT</languages>
 		<locale lang="EN">
+			<title>Tetris Ultimate</title>
+			<synopsis>The world’s most-loved puzzle game arrives on next-gen consoles, and is better than ever in Tetris Ultimate. With six exciting modes, fun new features, and unique visuals, the evolution of this iconic game is the ultimate must-have on next-gen consoles.</synopsis>
+		</locale>
+		<locale lang="ES">
 			<title>Tetris Ultimate</title>
 			<synopsis/>
 		</locale>
-		<publisher/>
-		<date year="" month="" day=""/>
-		<rating type="ESRB" value=""/>
-		<wi-fi players="0"/>
-		<input players="1"/>
-		<rom version="0" name="Tetris Ultimate (USA) (EN).3ds" size="134217728" crc="2bfdbd1b" md5="48807ee6b5d12ff381ea101e8340bbb7" sha1="4ec09333b3ce6a94884ad535f529aff18c7c2ad3"/>
+		<developer>Ubisoft San Francisco</developer>
+		<publisher>Ubisoft</publisher>
+		<date year="2014" month="11" day="11"/>
+		<genre>puzzle</genre>
+		<rating type="ESRB" value="E"/>
+		<wi-fi players="8">
+			<feature>online</feature>
+			<feature>download</feature>
+			<feature>score</feature>
+		</wi-fi>
+		<input players="10">
+			<control type="mii" required="false"/>
+		</input>
+		<rom version="0" name="Tetris Ultimate (USA) (EN,FR,ES,PT).3ds" size="134217728" crc="2bfdbd1b" md5="48807ee6b5d12ff381ea101e8340bbb7" sha1="4ec09333b3ce6a94884ad535f529aff18c7c2ad3"/>
 	</game>
-	<game name="Tetris Ultimate (Europe) (EN)">
+	<game name="Tetris Ultimate (Europe) (EN,FR,DE,ES,IT)">
 		<id>BTLP</id>
 		<type>3DS</type>
 		<region>PAL</region>
-		<languages>EN</languages>
+		<languages>EN,FR,DE,ES,IT</languages>
 		<locale lang="EN">
+			<title>Tetris Ultimate</title>
+			<synopsis>The world’s most-loved puzzle game arrives on next-gen consoles, and is better than ever in Tetris Ultimate. With six exciting modes, fun new features, and unique visuals, the evolution of this iconic game is the ultimate must-have on next-gen consoles.</synopsis>
+		</locale>
+		<locale lang="ES">
 			<title>Tetris Ultimate</title>
 			<synopsis/>
 		</locale>
-		<publisher/>
-		<date year="" month="" day=""/>
-		<rating type="PEGI" value=""/>
-		<wi-fi players="0"/>
-		<input players="1"/>
-		<rom version="0" name="Tetris Ultimate (Europe) (EN).3ds" size="134217728" crc="3ea4c8b3" md5="08fbc1a711d0d03b87d0f337ff3439cb" sha1="2fd18237953cc1f1262eb839f677e308f3cd27c5"/>
+		<developer>Ubisoft San Francisco</developer>
+		<publisher>Ubisoft</publisher>
+		<date year="2014" month="11" day="14"/>
+		<genre>puzzle</genre>
+		<rating type="PEGI" value="3">
+			<descriptor>online</descriptor>
+		</rating>
+		<wi-fi players="8">
+			<feature>online</feature>
+			<feature>download</feature>
+			<feature>score</feature>
+		</wi-fi>
+		<input players="10">
+			<control type="mii" required="false"/>
+		</input>
+		<rom version="0" name="Tetris Ultimate (Europe) (EN,FR,DE,ES,IT).3ds" size="134217728" crc="3ea4c8b3" md5="08fbc1a711d0d03b87d0f337ff3439cb" sha1="2fd18237953cc1f1262eb839f677e308f3cd27c5"/>
 	</game>
 	<game name="LEGO Batman 3: The Game: Gotham kara Uchuu e (Japan) (EN,JA)">
 		<id>BTMJ</id>
@@ -47978,58 +48435,6 @@ Etrian Odyssey IV brings an enhanced graphics engine boasting polygonal enemies 
 		<rom version="0" name="Sekaiju no Meikyuu IV: Denshou no Kyoshin (Japan) (EN,JA).3ds" size="1073741824" crc="a661cb4a" md5="6b09b7169c203b56b44d6b4418350ae9" sha1="69a8bb5e368c56f09bab047d39b7f3b76a15b4bb"/>
 		<case versions="2"/>
 	</game>
-	<game name="Etrian Odyssey IV: Legends of the Titan (Europe) (EN)">
-		<id>ASJP</id>
-		<type>3DSWare</type>
-		<region>PAL</region>
-		<languages>EN</languages>
-		<locale lang="EN">
-			<title>Etrian Odyssey IV: Legends of the Titan</title>
-			<synopsis>Etrian Odyssey IV brings an enhanced
-graphics engine boasting polygonal
-enemies and new 3D special effects;
-upgradable, customizable skyships
-that let players travel and battle amid
-the clouds. An exceedingly
-atmospheric and fully orchestrated
-musical score from Yuzo Koshiro in
-addition to expanded, more immersive
-3D dungeons with analog camera
-control rounds up the features of the
-newest addition to this beloved
-franchise.</synopsis>
-		</locale>
-		<locale lang="FR">
-			<title>Etrian Odyssey IV: Legends of the Titan</title>
-			<synopsis/>
-		</locale>
-		<locale lang="DE">
-			<title>Etrian Odyssey IV: Legends of the Titan</title>
-			<synopsis/>
-		</locale>
-		<locale lang="ES">
-			<title>Etrian Odyssey IV: Legends of the Titan</title>
-			<synopsis/>
-		</locale>
-		<locale lang="IT">
-			<title>Etrian Odyssey IV: Legends of the Titan</title>
-			<synopsis/>
-		</locale>
-		<locale lang="NL">
-			<title>Etrian Odyssey IV: Legends of the Titan</title>
-			<synopsis/>
-		</locale>
-		<locale lang="PT">
-			<title>Etrian Odyssey IV: Legends of the Titan</title>
-			<synopsis/>
-		</locale>
-		<publisher>NIS America</publisher>
-		<date year="2013" month="9" day="5"/>
-		<rating type="PEGI" value=""/>
-		<wi-fi players="0"/>
-		<input players="1"/>
-		<rom version="0" name="Etrian Odyssey IV: Legends of the Titan (Europe) (EN).3ds" size="1073741824" crc="b4a54689" md5="3d21302eac07a19c5f9351df231466ec" sha1="a50cff556374e275883ca62decb5cbaeddc2a2f8"/>
-	</game>
 	<game name=" (Europe) (EN)">
 		<id>ASJV</id>
 		<type>3DSWare</type>
@@ -48221,26 +48626,6 @@ Collect new content and unlock bonus material, increasing variety, interaction a
 		<wi-fi players="0"/>
 		<input players="1"/>
 		<rom version="0" name="Sonic Generations: Ao no Bouken (Japan) (EN,JA).3ds" size="1073741824" crc="554ef289" md5="3de0ab7d5496185238dfb8675363578f" sha1="6517a393733734a53890cb05fee53811bb27c5fc"/>
-	</game>
-	<game name="Tohoku Daigaku Karei Igaku Kenkyuusho: Kawashima Ryuuta Kyouju Kanshuu: Monosugoku Nou wo Kitaeru 5-Funkan no Oni Training (Japan) (EN,JA)">
-		<id>ASRJ</id>
-		<type>3DSWare</type>
-		<region>NTSC-J</region>
-		<languages>EN,JA</languages>
-		<locale lang="EN">
-			<title>Tohoku Daigaku Karei Igaku Kenkyuusho: Kawashima Ryuuta Kyouju Kanshuu: Monosugoku Nou wo Kitaeru 5-Funkan no Oni Training</title>
-			<synopsis/>
-		</locale>
-		<locale lang="JA">
-			<title>更新データ Ver. 1.1 ものすごく脳を鍛える5分間の鬼トレーニング</title>
-			<synopsis/>
-		</locale>
-		<publisher>任天堂</publisher>
-		<date year="2012" month="10" day="31"/>
-		<rating type="CERO" value=""/>
-		<wi-fi players="0"/>
-		<input players="4"/>
-		<rom version="0" name="Tohoku Daigaku Karei Igaku Kenkyuusho: Kawashima Ryuuta Kyouju Kanshuu: Monosugoku Nou wo Kitaeru 5-Funkan no Oni Training (Japan) (EN,JA).3ds" size="268435456" crc="57a29b3d" md5="449e87432b3e5905b87e858cb2ed663b" sha1="a8947672c5d5236a6b828ad6edfee7fa12e7aff8"/>
 	</game>
 	<game name="Kawashima Ryuuta Baksa Gamsu: Chogangnyeok! 5-bunganui Jipjungnyeok Training (Korea) (KO)">
 		<id>ASRK</id>
@@ -48777,66 +49162,6 @@ But as Yoshi fans know, it’s all about the collectibles and they’re more ent
 		<input players="1"/>
 		<rom version="0" name="Yoshi New Island (Korea) (KO).3ds" size="536870912" crc="b2ee92e8" md5="9a67787c25ffee17c8e7d8c57622f1f9" sha1="0246a8e207520df5838ed288e0953d57e2050672"/>
 	</game>
-	<game name="Yoshi's New Island (Europe) (EN)">
-		<id>ATAP</id>
-		<type>3DSWare</type>
-		<region>PAL</region>
-		<languages>EN</languages>
-		<locale lang="EN">
-			<title>Yoshi's New Island</title>
-			<synopsis>Yoshi’s New Island is the first
-instalment in this series since Yoshi’s
-Island DS was released in 2006.
-
-Yoshi’s good old Flutter Jump,
-Ground Pound and egg-throwing
-return, along with new abilities and
-challenges that take advantage of the
-features of the Nintendo 3DS. You
-can use massive eggs called
-Mega-Eggs to destroy blocks and
-pipes, revealing secrets such as coins
-and hidden keys. The more things you
-destroy, the higher the Mega-Egg
-gauge goes, netting you extra lives in
-the process!
-
-The beautiful art is based on many
-classic styles, such as oil painting,
-watercolours and crayon drawings.</synopsis>
-		</locale>
-		<locale lang="FR">
-			<title>Yoshi's New Island</title>
-			<synopsis/>
-		</locale>
-		<locale lang="DE">
-			<title>Yoshi's New Island</title>
-			<synopsis/>
-		</locale>
-		<locale lang="ES">
-			<title>Yoshi's New Island</title>
-			<synopsis/>
-		</locale>
-		<locale lang="IT">
-			<title>Yoshi's New Island</title>
-			<synopsis/>
-		</locale>
-		<locale lang="NL">
-			<title>Yoshi's New Island</title>
-			<synopsis/>
-		</locale>
-		<locale lang="PT">
-			<title>Yoshi's New Island</title>
-			<synopsis/>
-		</locale>
-		<publisher>Nintendo</publisher>
-		<date year="2014" month="3" day="14"/>
-		<rating type="PEGI" value=""/>
-		<wi-fi players="0"/>
-		<input players="1"/>
-		<rom version="0" name="Yoshi's New Island (Europe) (EN).3ds" size="536870912" crc="f375aeaa" md5="0da92800dfce7556fb7ddb42a6397f5b" sha1="62d032adf107d647ad1a4d4eeeebc9d0c5d65e04"/>
-		<case versions="2"/>
-	</game>
 	<game name="Tousouchuu: Shijou Saikyou no Hunter-tachi Kara Nigekire! (Japan) (EN,JA)">
 		<id>ATCJ</id>
 		<type>3DSWare</type>
@@ -49020,26 +49345,6 @@ Each train has its own unique characteristics, looks, and sounds.</synopsis>
 		<wi-fi players="0"/>
 		<input players="1"/>
 		<rom version="" name="Japanese Rail Sim 3D  5 types of trains (Europe) (EN).3ds"/>
-	</game>
-	<game name="Tetris (Japan) (EN,JA)">
-		<id>ATLJ</id>
-		<type>3DSWare</type>
-		<region>NTSC-J</region>
-		<languages>EN,JA</languages>
-		<locale lang="EN">
-			<title>Tetris</title>
-			<synopsis/>
-		</locale>
-		<locale lang="JA">
-			<title>テトリス</title>
-			<synopsis/>
-		</locale>
-		<publisher>バンダイナムコエンターテインメント</publisher>
-		<date year="2013" month="2" day="28"/>
-		<rating type="CERO" value=""/>
-		<wi-fi players="0"/>
-		<input players="1"/>
-		<rom version="0" name="Tetris (Japan) (EN,JA).3ds" size="268435456" crc="a9084480" md5="68293b44d08863f362cafc7f8a80244e" sha1="8b6506788fe43e50a5e75988dac18661e54dc277"/>
 	</game>
 	<game name="Freakyforms Deluxe: Your Creations, Alive! (USA) (EN)">
 		<id>ATQE</id>
@@ -49753,70 +50058,6 @@ and sexy Ninja Arts!</synopsis>
 		<input players="1"/>
 		<rom version="0" name="Harvest Moon 3D: The Lost Valley (USA) (EN).3ds" size="134217728" crc="3c6cb92a" md5="45c68084a53500c34d79f25960287d14" sha1="6a14ebfce0d76156b4d2619f76ad230c4934f51b"/>
 	</game>
-	<game name="Harvest Moon: The Lost Valley (Europe) (EN)">
-		<id>AVMP</id>
-		<type>3DSWare</type>
-		<region>PAL</region>
-		<languages>EN</languages>
-		<locale lang="EN">
-			<title>Harvest Moon: The Lost Valley</title>
-			<synopsis>An update for &quot;Harvest Moon®: The
-Lost Valley&quot; is now available from
-Nintendo eShop.
-
-All customers who own a copy of
-“Harvest Moon®: The Lost Valley”
-should download the update.
-
-This will update the software to
-Version 1.1 with the following
-amendments:
-
-- Various bugs have been fixed in
-order to provide a smoother gaming
-experience.
-
-• Once the update has been
-downloaded, it will be installed
-automatically.
-
-We apologize for any inconvenience
-caused, and recommend downloading
-this update to ensure a smooth game
-experience.</synopsis>
-		</locale>
-		<locale lang="FR">
-			<title>Harvest Moon: La Vallée Perdue : Mise à jour</title>
-			<synopsis/>
-		</locale>
-		<locale lang="DE">
-			<title>Harvest Moon: Das verlorene Tal: Update</title>
-			<synopsis/>
-		</locale>
-		<locale lang="ES">
-			<title>Harvest Moon: El Valle Perdido: Actualización</title>
-			<synopsis/>
-		</locale>
-		<locale lang="IT">
-			<title>Harvest Moon: The Lost Valley: Aggiornamenti</title>
-			<synopsis/>
-		</locale>
-		<locale lang="NL">
-			<title>Harvest Moon: The Lost Valley: Update</title>
-			<synopsis/>
-		</locale>
-		<locale lang="PT">
-			<title>Harvest Moon: The Lost Valley: Atualização</title>
-			<synopsis/>
-		</locale>
-		<publisher>Rising Star Games</publisher>
-		<date year="2015" month="10" day="28"/>
-		<rating type="PEGI" value=""/>
-		<wi-fi players="0"/>
-		<input players="1"/>
-		<rom version="0" name="Harvest Moon: The Lost Valley (Europe) (EN).3ds" size="268435456" crc="c24e6172" md5="e347bde8eefdaba7db5a9703ec9e38c3" sha1="96a617d82ba5a1537370a6e6e62541f3a10a15d2"/>
-		<case versions="2"/>
-	</game>
 	<game name="Layton Kyouju vs Gyakuten Saiban (Japan) (EN,JA)">
 		<id>AVSJ</id>
 		<type>3DSWare</type>
@@ -49836,27 +50077,6 @@ experience.</synopsis>
 		<wi-fi players="0"/>
 		<input players="1"/>
 		<rom version="0" name="Layton Kyouju vs Gyakuten Saiban (Japan) (EN,JA).3ds" size="1073741824" crc="e00a7d8a" md5="d2ce2dd0991d0c1c6df8c6c8a5ed13c9" sha1="8cc2b395f0c65a1490465acd8fb8442cdc4f830e"/>
-	</game>
-	<game name="Pilotwings Resort (Japan) (EN,JA)">
-		<id>AWAJ</id>
-		<type>3DSWare</type>
-		<region>NTSC-J</region>
-		<languages>EN,JA</languages>
-		<locale lang="EN">
-			<title>Pilotwings Resort</title>
-			<synopsis/>
-		</locale>
-		<locale lang="JA">
-			<title>パイロットウイングス リゾート</title>
-			<synopsis/>
-		</locale>
-		<publisher>任天堂</publisher>
-		<date year="2012" month="11" day="1"/>
-		<rating type="CERO" value=""/>
-		<wi-fi players="0"/>
-		<input players="1"/>
-		<rom version="0" name="Pilotwings Resort (Japan) (EN,JA).3ds" size="134217728" crc="6c1853d3" md5="965ac62d551b62be2127f17ab43a052f" sha1="52a3a8b6d4a322734af6b2b94863babfb4bacf0a"/>
-		<rom version="1" name="Pilotwings Resort (Japan) (EN,JA) (v1).3ds" size="134217728" crc="924b4498" md5="366a7d1c04ac63f7271aa358449b148e" sha1="a48cb85a2131077973ccc129f8653682464078aa"/>
 	</game>
 	<game name="Wan Nyan Doubutsu Byouin 2 (Japan) (EN,JA)">
 		<id>AWNJ</id>
@@ -50770,38 +50990,6 @@ Players will utilize the touch screen to maneuver their way through crime scenes
 		<wi-fi players="0"/>
 		<input players="1"/>
 		<rom version=""/>
-	</game>
-	<game name="Inazuma Eleven 3: Lightning Bolt (Europe) (EN,ES,IT)">
-		<id>AXSZ</id>
-		<type>3DSWare</type>
-		<region>PAL</region>
-		<languages>EN,ES,IT</languages>
-		<locale lang="EN">
-			<title>Inazuma Eleven 3: Lightning Bolt</title>
-			<synopsis/>
-		</locale>
-		<locale lang="FR">
-			<title>Inazuma Eleven 3: Lampo folgorante</title>
-			<synopsis/>
-		</locale>
-		<locale lang="DE">
-			<title>Inazuma Eleven 3: Lampo folgorante</title>
-			<synopsis/>
-		</locale>
-		<locale lang="ES">
-			<title>Inazuma Eleven 3: Rayo celeste</title>
-			<synopsis/>
-		</locale>
-		<locale lang="IT">
-			<title>Inazuma Eleven 3: Lampo folgorante</title>
-			<synopsis/>
-		</locale>
-		<publisher>Nintendo</publisher>
-		<date year="2013" month="9" day="27"/>
-		<rating type="PEGI" value=""/>
-		<wi-fi players="0"/>
-		<input players="1"/>
-		<rom version="0" name="Inazuma Eleven 3: Lightning Bolt (Europe) (EN,ES,IT).3ds" size="2147483648" crc="c2961377" md5="ab4da4e05bc82c2d4b5e011138ec4409" sha1="8e433b6f301bbe760347da8218320d6310686889"/>
 	</game>
 	<game name=" (Europe) (EN)">
 		<id>AXXZ</id>
@@ -51821,54 +52009,6 @@ See what happens after the events of the Arkham Origins console game, told in an
 		<wi-fi players="0"/>
 		<input players="1"/>
 		<rom version="0" name="Batman: Arkham Origins Blackgate (USA) (EN).3ds" size="1073741824" crc="9e16b16d" md5="f285fe0d518123fb7baaa3d588a1bd2f" sha1="5aeb48d065978e04db2305e8e7e16b19186719a2"/>
-	</game>
-	<game name="Batman: Arkham Origins Blackgate (Europe) (EN)">
-		<id>AZEP</id>
-		<type>3DSWare</type>
-		<region>PAL</region>
-		<languages>EN</languages>
-		<locale lang="EN">
-			<title>Batman: Arkham Origins Blackgate</title>
-			<synopsis>Batman: Arkham Origins Blackgate is
-a 2.5-D game developed by Armature
-Studios that brings the Batman
-Arkham experience for the first time to
-Nintendo 3DS™. A companion game
-to Batman: Arkham Origins, players
-can continue the storyline of the
-console version and discover more
-details of the Dark Knight’s past.</synopsis>
-		</locale>
-		<locale lang="FR">
-			<title>Batman: Arkham Origins Blackgate</title>
-			<synopsis/>
-		</locale>
-		<locale lang="DE">
-			<title>Batman: Arkham Origins Blackgate</title>
-			<synopsis/>
-		</locale>
-		<locale lang="ES">
-			<title>Batman: Arkham Origins Blackgate</title>
-			<synopsis/>
-		</locale>
-		<locale lang="IT">
-			<title>Batman: Arkham Origins Blackgate</title>
-			<synopsis/>
-		</locale>
-		<locale lang="NL">
-			<title>Batman: Arkham Origins Blackgate</title>
-			<synopsis/>
-		</locale>
-		<locale lang="PT">
-			<title>Batman: Arkham Origins Blackgate</title>
-			<synopsis/>
-		</locale>
-		<publisher>WB Games</publisher>
-		<date year="2013" month="11" day="7"/>
-		<rating type="PEGI" value=""/>
-		<wi-fi players="0"/>
-		<input players="1"/>
-		<rom version="0" name="Batman: Arkham Origins Blackgate (Europe) (EN).3ds" size="1073741824" crc="43a1003a" md5="62c548a34de60d225d365c9de488fb37" sha1="fa9b616660b8644f9fe6cb0c8acaf00509175bba"/>
 	</game>
 	<game name="PET HOSPITAL (USA) (EN)">
 		<id>AZFE</id>
@@ -74790,9 +74930,12 @@ kaufen und deine Fantasie anzuregen!</synopsis>
 		<developer>Nintendo EAD</developer>
 		<publisher>Nintendo</publisher>
 		<date year="2012" month="7" day="12"/>
-		<genre>simulation,health,coaching,drawing</genre>
+		<genre>simulation,health,coaching,drawing,software</genre>
 		<rating type="PEGI" value="3"/>
-		<wi-fi players="0"/>
+		<wi-fi players="0">
+			<feature>online</feature>
+			<feature>download</feature>
+		</wi-fi>
 		<input players="1">
 			<control type="camera" required="true"/>
 		</input>
@@ -74825,11 +74968,18 @@ Sparkle Snapshots 3D gives you everything you need to make and share incredible 
 			<title>Sparkle Snapshots 3D</title>
 			<synopsis/>
 		</locale>
+		<developer>Nintendo</developer>
 		<publisher>Nintendo</publisher>
 		<date year="2012" month="10" day="18"/>
+		<genre>simulation,health,coaching,software</genre>
 		<rating type="ESRB" value=""/>
-		<wi-fi players="0"/>
-		<input players="1"/>
+		<wi-fi players="0">
+			<feature>online</feature>
+			<feature>download</feature>
+		</wi-fi>
+		<input players="1">
+			<control type="camera" required="true"/>
+		</input>
 		<rom version="" name="Sparkle Snapshots 3D (USA) (EN).3ds"/>
 	</game>
 	<game name="Déco Photo 3D (Europe) (FR)">
@@ -74880,9 +75030,12 @@ créativité !</synopsis>
 		<developer>Nintendo EAD</developer>
 		<publisher>Nintendo</publisher>
 		<date year="2012" month="7" day="12"/>
-		<genre>simulation,health,coaching,drawing</genre>
+		<genre>simulation,health,coaching,drawing,software</genre>
 		<rating type="PEGI" value="3"/>
-		<wi-fi players="0"/>
+		<wi-fi players="0">
+			<feature>online</feature>
+			<feature>download</feature>
+		</wi-fi>
 		<input players="1">
 			<control type="camera" required="true"/>
 		</input>
@@ -74932,9 +75085,12 @@ tua fantasia!</synopsis>
 		<developer>Nintendo EAD</developer>
 		<publisher>Nintendo</publisher>
 		<date year="2012" month="7" day="12"/>
-		<genre>simulation,health,coaching,drawing</genre>
+		<genre>simulation,health,coaching,drawing,software</genre>
 		<rating type="PEGI" value="3"/>
-		<wi-fi players="0"/>
+		<wi-fi players="0">
+			<feature>online</feature>
+			<feature>download</feature>
+		</wi-fi>
 		<input players="1">
 			<control type="camera" required="true"/>
 		</input>
@@ -74983,9 +75139,12 @@ imagination!</synopsis>
 		<developer>Nintendo EAD</developer>
 		<publisher>Nintendo</publisher>
 		<date year="2012" month="7" day="12"/>
-		<genre>simulation,health,coaching,drawing</genre>
+		<genre>simulation,health,coaching,drawing,software</genre>
 		<rating type="PEGI" value="3"/>
-		<wi-fi players="0"/>
+		<wi-fi players="0">
+			<feature>online</feature>
+			<feature>download</feature>
+		</wi-fi>
 		<input players="1">
 			<control type="camera" required="true"/>
 		</input>
@@ -75025,7 +75184,7 @@ imaginación.</synopsis>
 		<developer>Nintendo EAD</developer>
 		<publisher>Nintendo</publisher>
 		<date year="2012" month="7" day="12"/>
-		<genre>simulation,health,coaching,drawing</genre>
+		<genre>simulation,health,coaching,drawing,software</genre>
 		<rating type="PEGI" value="3"/>
 		<wi-fi players="0">
 			<feature>online</feature>
@@ -77739,11 +77898,11 @@ Field over 1000 potential recruits to craft your custom team and challenge your 
 		<input players="1"/>
 		<rom version="" name="Inazuma Eleven (USA) (EN).3ds"/>
 	</game>
-	<game name="INAZUMA ELEVEN (Europe) (EN)">
+	<game name="INAZUMA ELEVEN (Europe) (EN,FR,ES,IT)">
 		<id>JEUP</id>
 		<type>3DSWare</type>
 		<region>PAL</region>
-		<languages>EN</languages>
+		<languages>EN,FR,ES,IT</languages>
 		<locale lang="EN">
 			<title>INAZUMA ELEVEN</title>
 			<synopsis>The original world-renowned soccer
@@ -77804,12 +77963,16 @@ your friends via local wireless play!</synopsis>
 			<title>INAZUMA ELEVEN</title>
 			<synopsis/>
 		</locale>
-		<publisher>LEVEL-5</publisher>
+		<developer>Level-5</developer>
+		<publisher>Nintendo</publisher>
 		<date year="2014" month="2" day="14"/>
-		<rating type="PEGI" value=""/>
+		<genre>sports,role-playing,football</genre>
+		<rating type="PEGI" value="7">
+			<descriptor>violence</descriptor>
+		</rating>
 		<wi-fi players="0"/>
-		<input players="1"/>
-		<rom version="" name="INAZUMA ELEVEN (Europe) (EN).3ds"/>
+		<input players="4"/>
+		<rom version="" name="INAZUMA ELEVEN (Europe) (EN,FR,ES,IT).3ds"/>
 	</game>
 	<game name="escapeVektor (USA) (EN)">
 		<id>JEVE</id>
@@ -113271,18 +113434,24 @@ Metronome.</synopsis>
 			<title>Musicverse: Electronic Keyboard</title>
 			<synopsis/>
 		</locale>
+		<developer>Abylight</developer>
 		<publisher>Abylight</publisher>
 		<date year="2016" month="2" day="18"/>
-		<rating type="ESRB" value=""/>
-		<wi-fi players="0"/>
-		<input players="1"/>
+		<genre>music,health,educational,software</genre>
+		<rating type="ESRB" value="E"/>
+		<wi-fi players="0">
+			<feature>online</feature>
+		</wi-fi>
+		<input players="1">
+			<control type="mii" required="false"/>
+		</input>
 		<rom version="" name="Musicverse: Electronic Keyboard (USA) (EN).3ds"/>
 	</game>
-	<game name="Musicverse: Electronic Keyboard (Europe) (EN)">
+	<game name="Musicverse: Electronic Keyboard (Europe) (EN,FR,DE,ES)">
 		<id>KMKP</id>
 		<type>3DSWare</type>
 		<region>PAL</region>
-		<languages>EN</languages>
+		<languages>EN,FR,DE,ES</languages>
 		<locale lang="EN">
 			<title>Musicverse: Electronic Keyboard</title>
 			<synopsis>Share your musical genius using
@@ -113356,12 +113525,18 @@ and chorus parts.
 			<title>Musicverse: Electronic Keyboard</title>
 			<synopsis/>
 		</locale>
+		<developer>Abylight</developer>
 		<publisher>Abylight</publisher>
 		<date year="2016" month="3" day="3"/>
+		<genre>music,health,educational,software</genre>
 		<rating type="PEGI" value=""/>
-		<wi-fi players="0"/>
-		<input players="1"/>
-		<rom version="" name="Musicverse: Electronic Keyboard (Europe) (EN).3ds"/>
+		<wi-fi players="0">
+			<feature>online</feature>
+		</wi-fi>
+		<input players="1">
+			<control type="mii" required="false"/>
+		</input>
+		<rom version="" name="Musicverse: Electronic Keyboard (Europe) (EN,FR,DE,ES).3ds"/>
 	</game>
 	<game name="Mutant Mudds Super Challenge (USA) (EN)">
 		<id>KMME</id>
@@ -120020,11 +120195,11 @@ solve it?</synopsis>
 		<input players="1"/>
 		<rom version="" name="Tank Troopers (USA) (EN).3ds"/>
 	</game>
-	<game name="Tank Troopers (Europe) (EN)">
+	<game name="Tank Troopers (Europe) (EN,FR,DE,ES,IT,NL)">
 		<id>KTWP</id>
 		<type>3DSWare</type>
 		<region>PAL</region>
-		<languages>EN</languages>
+		<languages>EN,FR,DE,ES,IT,NL</languages>
 		<locale lang="EN">
 			<title>Tank Troopers</title>
 			<synopsis>Attention! Assemble your own colourful crew, hop inside a range of specialised tanks and roll into crazy tank warfare for up to six players in Tank Troopers.
@@ -120059,12 +120234,16 @@ Download Play.</synopsis>
 			<title>Tank Troopers</title>
 			<synopsis/>
 		</locale>
+		<developer>Nintendo</developer>
 		<publisher>Nintendo</publisher>
 		<date year="2017" month="2" day="16"/>
-		<rating type="PEGI" value=""/>
+		<genre>action</genre>
+		<rating type="PEGI" value="7">
+			<descriptor>violence</descriptor>
+		</rating>
 		<wi-fi players="0"/>
-		<input players="1"/>
-		<rom version="" name="Tank Troopers (Europe) (EN).3ds"/>
+		<input players="6"/>
+		<rom version="" name="Tank Troopers (Europe) (EN,FR,DE,ES,IT,NL).3ds"/>
 	</game>
 	<game name="Timberman (USA) (EN)">
 		<id>KTYE</id>

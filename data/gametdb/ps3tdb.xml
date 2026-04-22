@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <datafile xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="ps3tdb.xsd">
-	<PS3TDB version="20260326233906" filter="EN" games="10766"/>
+	<PS3TDB version="20260422092943" filter="EN" games="10766"/>
 	<!--
  GameTDB: PS3, Database started in 2012 (https://www.gametdb.com)
  Never modify this file manually, it will get overwritten when you update. You can add games and fixes on the website.
@@ -51131,28 +51131,24 @@ Fight a large variety of unique creatures, from goblins to griffins and huge dra
 		</input>
 		<rom version="" name="Everyone Sing (Europe) (EN).iso"/>
 	</game>
-	<game name="Assassin's Creed: Revelations (Europe) (EN)">
+	<game name="Assassin's Creed: Revelations (Europe) (EN,FR,DE,ES,IT)">
 		<id>BLES01384</id>
 		<type>PS3</type>
 		<region>PAL</region>
-		<languages>EN</languages>
+		<languages>EN,FR,DE,ES,IT</languages>
 		<locale lang="EN">
 			<title>Assassin's Creed: Revelations</title>
 			<synopsis/>
 		</locale>
-		<locale lang="FR">
-			<title>Split/Second Velocity</title>
-			<synopsis/>
-		</locale>
-		<developer>Black Rock Studio</developer>
-		<publisher>Disney Interactive</publisher>
-		<date year="2010" month="" day=""/>
+		<developer>Ubisoft Montréal</developer>
+		<publisher>Ubisoft Entertainment S.A.</publisher>
+		<date year="2011" month="" day=""/>
 		<rating type="PEGI" value=""/>
 		<wi-fi players="0"/>
 		<input players="1">
 			<control type="pad" required="true"/>
 		</input>
-		<rom version="" name="Assassin's Creed: Revelations (Europe) (EN).iso"/>
+		<rom version="" name="Assassin's Creed: Revelations (Europe) (EN,FR,DE,ES,IT).iso"/>
 	</game>
 	<game name="Assassin's Creed: Revelations (Europe) (EN)">
 		<id>BLES01385</id>
