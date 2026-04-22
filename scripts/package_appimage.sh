@@ -41,6 +41,16 @@ cp -a "$BIN_CLI" "$APPDIR/usr/bin/remus-cli"
 cp -a "$ROOT_DIR/assets/remus.desktop" "$APPDIR/usr/share/applications/remus.desktop"
 cp -a "$ROOT_DIR/assets/icon/remus_icon.png" "$APPDIR/usr/share/icons/hicolor/256x256/apps/remus.png"
 
+# ── Bundle compendium database ───────────────────────────────────────────────
+COMPENDIUM_SRC="$ROOT_DIR/data/compendium/remus_compendium.db"
+if [[ -f "$COMPENDIUM_SRC" ]]; then
+    mkdir -p "$APPDIR/usr/share/remus/data/compendium"
+    cp -a "$COMPENDIUM_SRC" "$APPDIR/usr/share/remus/data/compendium/remus_compendium.db"
+    echo "Bundled compendium DB: $COMPENDIUM_SRC"
+else
+    echo "WARNING: compendium DB not found at $COMPENDIUM_SRC — skipping" >&2
+fi
+
 # Symlink desktop and icon at AppDir root (required by linuxdeploy)
 ln -sf usr/share/applications/remus.desktop "$APPDIR/remus.desktop"
 ln -sf usr/share/icons/hicolor/256x256/apps/remus.png "$APPDIR/remus.png"

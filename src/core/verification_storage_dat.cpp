@@ -1,6 +1,7 @@
 #include "verification_engine.h"
 
 #include <QDebug>
+#include <QSqlDatabase>
 #include <QSqlError>
 #include <QSqlQuery>
 
@@ -165,8 +166,30 @@ int VerificationEngine::importPatchDat(const QString &datFilePath, const QString
 QMap<QString, DatHeader> VerificationEngine::getImportedDats()
 {
     QMap<QString, DatHeader> dats;
-    QSqlQuery query(m_database->database());
 
+    // ── Compendium path ────────────────────────────────────────────────────
+    if (!m_compendiumConnectionName.isEmpty()) {
+        QSqlDatabase cdb = QSqlDatabase::database(m_compendiumConnectionName);
+        QSqlQuery q(cdb);
+        q.exec(R"(
+            SELECT DISTINCT s.internal_name, s.display_name, s.preferred_hash
+            FROM systems s
+            JOIN games g ON g.system_id = s.system_id
+            JOIN game_signatures gs ON gs.game_id = g.game_id
+            ORDER BY s.internal_name
+        )");
+        while (q.next()) {
+            DatHeader header;
+            const QString sysName = q.value(0).toString();
+            header.name    = q.value(1).toString();
+            header.category = q.value(2).toString();   // preferred_hash in category slot
+            dats.insert(sysName, header);
+        }
+        if (!dats.isEmpty()) return dats;
+    }
+
+    // ── Runtime-import fallback ────────────────────────────────────────────
+    QSqlQuery query(m_database->database());
     query.exec("SELECT system_name, dat_name, dat_version, dat_source, dat_description FROM verification_dats");
     while (query.next()) {
         DatHeader header;
@@ -184,8 +207,30 @@ QMap<QString, DatHeader> VerificationEngine::getImportedDats()
 QMap<QString, DatHeader> VerificationEngine::getImportedPatchDats()
 {
     QMap<QString, DatHeader> dats;
-    QSqlQuery query(m_database->database());
 
+    // ── Compendium path ────────────────────────────────────────────────────
+    if (!m_compendiumConnectionName.isEmpty()) {
+        QSqlDatabase cdb = QSqlDatabase::database(m_compendiumConnectionName);
+        QSqlQuery q(cdb);
+        q.exec(R"(
+            SELECT system_name, catalog_name, catalog_version, catalog_source, catalog_description
+            FROM patch_catalog_sources
+            ORDER BY system_name
+        )");
+        while (q.next()) {
+            DatHeader header;
+            const QString sysName = q.value(0).toString();
+            header.name        = q.value(1).toString();
+            header.version     = q.value(2).toString();
+            header.category    = q.value(3).toString();
+            header.description = q.value(4).toString();
+            dats.insert(sysName, header);
+        }
+        if (!dats.isEmpty()) return dats;
+    }
+
+    // ── Runtime-import fallback ────────────────────────────────────────────
+    QSqlQuery query(m_database->database());
     query.exec("SELECT system_name, dat_name, dat_version, dat_source, dat_description FROM patch_verification_dats");
     while (query.next()) {
         DatHeader header;
@@ -228,6 +273,24 @@ bool VerificationEngine::removePatchDat(const QString &systemName)
 
 bool VerificationEngine::hasDat(const QString &systemName)
 {
+    // ── Compendium path ────────────────────────────────────────────────────
+    if (!m_compendiumConnectionName.isEmpty()) {
+        QSqlDatabase cdb = QSqlDatabase::database(m_compendiumConnectionName);
+        QSqlQuery q(cdb);
+        q.prepare(R"(
+            SELECT COUNT(DISTINCT gs.signature_id)
+            FROM game_signatures gs
+            JOIN games g ON gs.game_id = g.game_id
+            JOIN systems s ON g.system_id = s.system_id
+            WHERE s.internal_name = ?
+        )");
+        q.addBindValue(systemName);
+        if (q.exec() && q.next() && q.value(0).toInt() > 0) {
+            return true;
+        }
+    }
+
+    // ── Runtime-import fallback ────────────────────────────────────────────
     QSqlQuery query(m_database->database());
     query.prepare("SELECT COUNT(*) FROM verification_dats WHERE system_name = ?");
     query.addBindValue(systemName);
@@ -240,6 +303,18 @@ bool VerificationEngine::hasDat(const QString &systemName)
 
 bool VerificationEngine::hasPatchDat(const QString &systemName)
 {
+    // ── Compendium path ────────────────────────────────────────────────────
+    if (!m_compendiumConnectionName.isEmpty()) {
+        QSqlDatabase cdb = QSqlDatabase::database(m_compendiumConnectionName);
+        QSqlQuery q(cdb);
+        q.prepare("SELECT COUNT(*) FROM patch_catalog_sources WHERE system_name = ?");
+        q.addBindValue(systemName);
+        if (q.exec() && q.next() && q.value(0).toInt() > 0) {
+            return true;
+        }
+    }
+
+    // ── Runtime-import fallback ────────────────────────────────────────────
     QSqlQuery query(m_database->database());
     query.prepare("SELECT COUNT(*) FROM patch_verification_dats WHERE system_name = ?");
     query.addBindValue(systemName);

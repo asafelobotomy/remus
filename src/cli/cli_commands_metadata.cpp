@@ -1,6 +1,8 @@
 #include "cli_commands.h"
 #include "cli_helpers.h"
 #include <memory>
+#include <QDir>
+#include <QFileInfo>
 #include <QSettings>
 #include "../metadata/metadata_provider.h"
 #include "../metadata/provider_orchestrator.h"
@@ -8,6 +10,7 @@
 #include "../metadata/thegamesdb_provider.h"
 #include "../metadata/igdb_provider.h"
 #include "../metadata/hasheous_provider.h"
+#include "../metadata/compendium_provider.h"
 #include "../metadata/local_database_provider.h"
 #include "../metadata/gametdb_provider.h"
 #include "../metadata/retroachievements_provider.h"
@@ -79,6 +82,17 @@ static std::unique_ptr<MetadataProvider> buildSingleProvider(const QCommandLineP
     }
     if (providerName == Providers::HASHEOUS) {
         return std::make_unique<HasheousProvider>();
+    }
+    if (providerName == Providers::COMPENDIUM) {
+        auto p = std::make_unique<CompendiumProvider>();
+        const QString compendiumDir = findDataSubdir(QStringLiteral("compendium"));
+        if (!compendiumDir.isEmpty()) {
+            const QString compendiumPath = QDir(compendiumDir).filePath(QStringLiteral("remus_compendium.db"));
+            if (QFileInfo::exists(compendiumPath)) {
+                p->openDatabase(compendiumPath);
+            }
+        }
+        return p;
     }
     if (providerName == Providers::LOCAL_DATABASE) {
         auto p = std::make_unique<LocalDatabaseProvider>();

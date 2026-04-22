@@ -2,7 +2,6 @@
 
 #include "filename_normalizer.h"
 #include "hasheous_provider.h"
-#include "local_database_provider.h"
 #include "metadata_cache.h"
 
 #include <QDebug>
@@ -113,24 +112,19 @@ void ProviderOrchestrator::queryProvider(GameMetadata &accumulator,
     }
 
     if (result.title.isEmpty() && !serial.isEmpty()) {
-        auto *localDb = qobject_cast<LocalDatabaseProvider *>(info.provider);
-        if (localDb) {
-            ROMSignals romSignals;
-            romSignals.crc32 = crc32;
-            romSignals.md5 = md5;
-            romSignals.sha1 = sha1;
-            romSignals.filename = name;
-            romSignals.serial = serial;
-            const QList<MultiSignalMatch> matches = localDb->matchROM(romSignals);
-            if (!matches.isEmpty() && matches.first().serialMatch) {
-                result = localDb->getMetadataForEntry(matches.first());
-                if (!result.title.isEmpty()) {
-                    result.matchScore = matches.first().confidencePercent() / 100.0f;
-                    result.matchMethod = QStringLiteral("serial");
-                    qInfo() << "Serial match via" << providerName << ":" << result.title;
-                    emit providerSucceeded(providerName, QStringLiteral("serial"));
-                }
+        emit tryingProvider(providerName, QStringLiteral("serial"));
+        try {
+            const GameMetadata serialResult = info.provider->getBySerial(serial, system);
+            if (!serialResult.title.isEmpty()) {
+                result = serialResult;
+                qInfo() << "Serial match via" << providerName << ":" << result.title;
+                emit providerSucceeded(providerName, QStringLiteral("serial"));
+            } else {
+                emit providerFailed(providerName, "No serial result");
             }
+        } catch (const std::exception &error) {
+            qWarning() << providerName << "serial error:" << error.what();
+            emit providerFailed(providerName, error.what());
         }
     }
 
@@ -170,10 +164,6 @@ void ProviderOrchestrator::queryProvider(GameMetadata &accumulator,
         mergeMetadata(accumulator, result);
     }
 
-    auto *localDb = qobject_cast<LocalDatabaseProvider *>(info.provider);
-    if (localDb && !crc32.isEmpty()) {
-        localDb->enrichFromLibretro(accumulator, crc32);
-    }
 }
 
 GameMetadata ProviderOrchestrator::getByHashWithFallback(const QString &hash,

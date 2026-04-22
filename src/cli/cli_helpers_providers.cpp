@@ -2,12 +2,13 @@
 
 #include <QCoreApplication>
 #include <QDir>
+#include <QFileInfo>
 #include <QSettings>
 
+#include "../metadata/compendium_provider.h"
 #include "../metadata/gametdb_provider.h"
 #include "../metadata/hasheous_provider.h"
 #include "../metadata/igdb_provider.h"
-#include "../metadata/local_database_provider.h"
 #include "../metadata/metadata_cache.h"
 #include "../metadata/retroachievements_provider.h"
 #include "../metadata/screenscraper_provider.h"
@@ -71,20 +72,18 @@ std::unique_ptr<ProviderOrchestrator> buildOrchestrator(const QCommandLineParser
         orchestrator->setCache(cache);
     }
 
-    const QString dbDir = findDatabaseDir();
-    if (!dbDir.isEmpty()) {
-        auto localDbProvider = new LocalDatabaseProvider();
-        const int loaded = localDbProvider->loadDatabases(dbDir);
-        if (loaded > 0) {
-            const QString metaDir = findMetadataDir();
-            if (!metaDir.isEmpty()) {
-                localDbProvider->loadMetadata(metaDir);
+    const QString compendiumDir = findDataSubdir(QStringLiteral("compendium"));
+    if (!compendiumDir.isEmpty()) {
+        const QString compendiumPath = QDir(compendiumDir).filePath(QStringLiteral("remus_compendium.db"));
+        if (QFileInfo::exists(compendiumPath)) {
+            auto *compendiumProvider = new CompendiumProvider();
+            if (compendiumProvider->openDatabase(compendiumPath)) {
+                const auto compendiumInfo = Providers::getProviderInfo(Providers::COMPENDIUM);
+                orchestrator->addProvider(Providers::COMPENDIUM, compendiumProvider,
+                                          compendiumInfo ? compendiumInfo->priority : 180);
+            } else {
+                delete compendiumProvider;
             }
-            const auto localInfo = Providers::getProviderInfo(Providers::LOCAL_DATABASE);
-            orchestrator->addProvider(Providers::LOCAL_DATABASE, localDbProvider,
-                                      localInfo ? localInfo->priority : 200);
-        } else {
-            delete localDbProvider;
         }
     }
 

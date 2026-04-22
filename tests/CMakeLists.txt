@@ -169,6 +169,19 @@ add_remus_test(test_local_database_provider LocalDatabaseProviderTest
     LIBS Qt6::Test Qt6::Core remus-metadata remus-core
 )
 
+add_remus_test(test_compendium_dat_extractor CompendiumDatExtractorTest
+    SOURCES test_compendium_dat_extractor.cpp
+    LIBS Qt6::Test Qt6::Core remus-metadata
+)
+target_compile_definitions(test_compendium_dat_extractor PRIVATE
+    REMUS_SOURCE_DIR="${CMAKE_SOURCE_DIR}"
+)
+
+add_remus_test(test_compendium_provider CompendiumProviderTest
+    SOURCES test_compendium_provider.cpp
+    LIBS Qt6::Test Qt6::Core Qt6::Sql remus-metadata remus-core
+)
+
 add_remus_test(test_thumbnail_urls ThumbnailUrlTest
     SOURCES test_thumbnail_urls.cpp
     LIBS Qt6::Test Qt6::Core remus-metadata remus-core
@@ -275,6 +288,11 @@ add_remus_test(test_database DatabaseTest
 
 add_remus_test(test_verification_engine VerificationEngineTest
     SOURCES test_verification_engine.cpp test_verification_engine_reports.cpp test_verification_engine_fixture.h
+    LIBS Qt6::Test Qt6::Core Qt6::Sql remus-core
+)
+
+add_remus_test(test_verification_engine_compendium VerificationEngineCompendiumTest
+    SOURCES test_verification_engine_compendium.cpp
     LIBS Qt6::Test Qt6::Core Qt6::Sql remus-core
 )
 

@@ -16,6 +16,21 @@ SELECT 'seed_count.merge_policy' AS check_name,
        (SELECT COUNT(*) FROM merge_policy) AS observed,
        21 AS expected;
 
+SELECT 'content.games_nonzero' AS check_name,
+       CASE WHEN (SELECT COUNT(*) FROM games) > 0 THEN 'PASS' ELSE 'FAIL' END AS status,
+       (SELECT COUNT(*) FROM games) AS observed,
+       1 AS expected;
+
+SELECT 'content.game_signatures_nonzero' AS check_name,
+       CASE WHEN (SELECT COUNT(*) FROM game_signatures) > 0 THEN 'PASS' ELSE 'FAIL' END AS status,
+       (SELECT COUNT(*) FROM game_signatures) AS observed,
+       1 AS expected;
+
+SELECT 'content.source_items_nonzero' AS check_name,
+       CASE WHEN (SELECT COUNT(*) FROM source_items) > 0 THEN 'PASS' ELSE 'FAIL' END AS status,
+       (SELECT COUNT(*) FROM source_items) AS observed,
+       1 AS expected;
+
 SELECT 'orphan.system_regions.system_id' AS check_name,
        CASE WHEN COUNT(*) = 0 THEN 'PASS' ELSE 'FAIL' END AS status,
        COUNT(*) AS observed,

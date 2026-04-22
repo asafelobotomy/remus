@@ -34,6 +34,7 @@ namespace Providers {
 //   thegamesdb     50 —  6/10: title sys pub dev date desc players; simplified genres, no auth
 //   wikidata       40 —  6/10: title sys pub dev genres date desc; community-sourced, no auth
 namespace Priority {
+    inline constexpr int COMPENDIUM         = 210;
     inline constexpr int LOCAL_DATABASE     = 200;
     inline constexpr int GAMETDB            = 150;
     inline constexpr int SCREENSCRAPER      = 90;
@@ -58,6 +59,9 @@ inline constexpr const char* IGDB = "igdb";
 
 /// Metadata provider: Local DAT database (offline, no auth)
 inline constexpr const char* LOCAL_DATABASE = "localdatabase";
+
+/// Metadata provider: Canonical compendium database (offline, no auth)
+inline constexpr const char* COMPENDIUM = "compendium";
 
 /// Metadata provider: GameTDB (offline, no auth, Nintendo/PS3)
 inline constexpr const char* GAMETDB = "gametdb";
@@ -86,6 +90,9 @@ inline const QString DISPLAY_IGDB = QStringLiteral("IGDB");
 
 /// Human-readable name for Local Database
 inline const QString DISPLAY_LOCAL_DATABASE = QStringLiteral("Local Database");
+
+/// Human-readable name for Compendium
+inline const QString DISPLAY_COMPENDIUM = QStringLiteral("Compendium");
 
 /// Human-readable name for GameTDB
 inline const QString DISPLAY_GAMETDB = QStringLiteral("GameTDB");
@@ -158,6 +165,19 @@ inline const QMap<QString, ProviderInfo> PROVIDER_REGISTRY = {
         false,  // No auth required
         QStringLiteral(""),
         Priority::LOCAL_DATABASE,
+        true    // Free service
+    }},
+
+    // Priority 180: Canonical compendium database (offline, precompiled) — 8/10 fields
+    {COMPENDIUM, {
+        COMPENDIUM,
+        DISPLAY_COMPENDIUM,
+        QStringLiteral("Offline metadata from the canonical Remus compendium (no auth required)"),
+        true,   // Hash matching
+        true,   // Name search
+        false,  // No auth required
+        QStringLiteral(""),
+        Priority::COMPENDIUM,
         true    // Free service
     }},
     

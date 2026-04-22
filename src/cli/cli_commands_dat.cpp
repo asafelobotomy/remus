@@ -1,70 +1,18 @@
 #include "cli_commands.h"
-#include "cli_helpers.h"
-#include "../metadata/local_database_provider.h"
 #include <QCoreApplication>
-#include <QDir>
-#include <QFileInfo>
-#include <QProcess>
 
 // ── --update-dats ─────────────────────────────────────────────────────────────
 int handleUpdateDatsCommand(CliContext &ctx)
 {
     if (!ctx.parser.isSet("update-dats")) return 0;
 
-    const bool fetchAll = ctx.parser.isSet("update-dats-all");
-
-    // Locate the update script relative to the binary or cwd
-    const QString appDir = QCoreApplication::applicationDirPath();
-    const QString cwd    = QDir::currentPath();
-    const QStringList candidates = {
-        cwd    + "/scripts/update_dats.sh",
-        appDir + "/scripts/update_dats.sh",
-        appDir + "/../scripts/update_dats.sh",
-        appDir + "/../../scripts/update_dats.sh",
-    };
-
-    QString scriptPath;
-    for (const QString &c : candidates) {
-        if (QFileInfo::exists(c)) {
-            scriptPath = QDir::cleanPath(c);
-            break;
-        }
-    }
-
-    if (scriptPath.isEmpty()) {
-        qCritical() << "✗ Could not find scripts/update_dats.sh";
-        qInfo() << "Searched:";
-        for (const QString &c : candidates)
-            qInfo() << "  " << QDir::cleanPath(c);
-        return 1;
-    }
-
     qInfo() << "";
-    qInfo() << "=== Updating DAT Databases ===";
-    qInfo() << "Script:" << scriptPath;
+    qInfo() << "ℹ  Raw DAT management is no longer required.";
+    qInfo() << "   Verification catalogs (No-Intro / Redump) are bundled in the";
+    qInfo() << "   Remus compendium when the database is shipped with the build.";
+    qInfo() << "   This CLI build does not expose a standalone catalog refresh command.";
     qInfo() << "";
-
-    QProcess proc;
-    proc.setProcessChannelMode(QProcess::ForwardedChannels);
-
-    QStringList args;
-    if (fetchAll) args << "--all";
-    proc.start(QStringLiteral("bash"), QStringList{scriptPath} + args);
-
-    if (!proc.waitForStarted(5000)) {
-        qCritical() << "✗ Failed to start update script — is bash installed?";
-        return 1;
-    }
-
-    proc.waitForFinished(-1);   // no timeout — git clone can be slow
-
-    if (proc.exitStatus() != QProcess::NormalExit || proc.exitCode() != 0) {
-        qCritical() << "✗ Update script exited with code" << proc.exitCode();
-        return 1;
-    }
-
     qInfo() << "";
-    qInfo() << "DAT update complete. Re-run --match to use the new databases.";
     return 0;
 }
 
@@ -73,57 +21,11 @@ int handleImportDatCommand(CliContext &ctx)
 {
     if (!ctx.parser.isSet("import-dat")) return 0;
 
-    const QString datFile = ctx.parser.value("import-dat");
-    QFileInfo info(datFile);
-    if (!info.exists() || !info.isFile()) {
-        qCritical() << "✗ DAT file not found:" << datFile;
-        return 1;
-    }
-
-    const QString destDir = findDatabaseDir();
-    if (destDir.isEmpty()) {
-        // Create the default directory next to the binary
-        const QString fallback = QCoreApplication::applicationDirPath()
-                                 + QStringLiteral("/data/databases");
-        QDir().mkpath(fallback);
-        qInfo() << "Created DAT directory:" << fallback;
-    }
-
-    const QString targetDir = destDir.isEmpty()
-        ? QCoreApplication::applicationDirPath() + QStringLiteral("/data/databases")
-        : destDir;
-
-    const QString destPath = targetDir + QDir::separator() + info.fileName();
-    if (QFile::exists(destPath)) {
-        // Check if the incoming file is newer
-        LocalDatabaseProvider tempProvider;
-        tempProvider.loadDatabase(destPath);
-        if (!tempProvider.isDatNewer(datFile)) {
-            qInfo() << "DAT file is not newer than existing — skipping:" << info.fileName();
-            return 0;
-        }
-        QFile::remove(destPath);
-    }
-
-    if (!QFile::copy(datFile, destPath)) {
-        qCritical() << "✗ Failed to copy DAT file to:" << destPath;
-        return 1;
-    }
-
-    // Validate by loading
-    LocalDatabaseProvider provider;
-    int count = provider.loadDatabase(destPath);
-    if (count <= 0) {
-        qCritical() << "✗ DAT file loaded 0 entries — may be malformed:" << info.fileName();
-        QFile::remove(destPath);
-        return 1;
-    }
-
     qInfo() << "";
-    qInfo() << "=== DAT File Imported ===";
-    qInfo() << "File:" << info.fileName();
-    qInfo() << "Entries:" << count;
-    qInfo() << "Installed to:" << destPath;
+    qInfo() << "ℹ  Raw DAT import is no longer required.";
+    qInfo() << "   Verification catalogs are bundled in the Remus compendium when present.";
+    qInfo() << "   This CLI build does not expose a standalone catalog import or refresh command.";
+    qInfo() << "";
     return 0;
 }
 
@@ -132,35 +34,11 @@ int handleRemoveDatCommand(CliContext &ctx)
 {
     if (!ctx.parser.isSet("remove-dat")) return 0;
 
-    const QString datName = ctx.parser.value("remove-dat");
-    const QString destDir = findDatabaseDir();
-    if (destDir.isEmpty()) {
-        qCritical() << "✗ No DAT directory found";
-        return 1;
-    }
-
-    // Try exact filename first, then append .dat
-    QString target = destDir + QDir::separator() + datName;
-    if (!QFile::exists(target) && !datName.endsWith(".dat")) {
-        target = destDir + QDir::separator() + datName + ".dat";
-    }
-
-    if (!QFile::exists(target)) {
-        qCritical() << "✗ DAT file not found:" << datName;
-        qInfo() << "Available DATs in" << destDir << ":";
-        QDir dir(destDir);
-        for (const auto &f : dir.entryList({"*.dat"}, QDir::Files)) {
-            qInfo() << "  " << f;
-        }
-        return 1;
-    }
-
-    if (!QFile::remove(target)) {
-        qCritical() << "✗ Failed to remove:" << target;
-        return 1;
-    }
-
-    qInfo() << "Removed DAT:" << QFileInfo(target).fileName();
+    qInfo() << "";
+    qInfo() << "ℹ  Raw DAT management has been replaced by the Remus compendium.";
+    qInfo() << "   There are no manually-imported DAT files to remove.";
+    qInfo() << "   Verification catalog data lives inside the bundled compendium database.";
+    qInfo() << "";
     return 0;
 }
 
@@ -169,35 +47,12 @@ int handleListDatsCommand(CliContext &ctx)
 {
     if (!ctx.parser.isSet("list-dats")) return 0;
 
-    const QString destDir = findDatabaseDir();
-    if (destDir.isEmpty()) {
-        qInfo() << "No DAT directory found. Use --import-dat to add DAT files.";
-        return 0;
-    }
-
-    QDir dir(destDir);
-    QFileInfoList dats = dir.entryInfoList({"*.dat"}, QDir::Files, QDir::Name);
-
-    if (dats.isEmpty()) {
-        qInfo() << "No DAT files installed in" << destDir;
-        return 0;
-    }
-
     qInfo() << "";
-    qInfo() << "=== Installed DAT Files ===";
-    qInfo() << "Directory:" << destDir;
+    qInfo() << "ℹ  Raw DAT files are no longer used.";
+    qInfo() << "   Verification catalogs are bundled in the Remus compendium when present.";
+    qInfo() << "   This CLI build does not expose a dedicated catalog coverage report.";
     qInfo() << "";
-
-    LocalDatabaseProvider provider;
-    for (const QFileInfo &fi : dats) {
-        int count = provider.loadDatabase(fi.absoluteFilePath());
-        qInfo().noquote() << QString("  %1  (%2 entries)")
-            .arg(fi.fileName(), -50)
-            .arg(count);
-    }
-
     qInfo() << "";
-    qInfo() << "Total:" << dats.size() << "DAT files";
     return 0;
 }
 

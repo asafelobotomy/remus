@@ -62,4 +62,10 @@ bool MetadataProvider::isAvailable()
     return true;
 }
 
+GameMetadata MetadataProvider::getBySerial(const QString & /*serial*/, const QString & /*system*/)
+{
+    // Default: provider does not support serial-based lookup.
+    return {};
+}
+
 } // namespace Remus

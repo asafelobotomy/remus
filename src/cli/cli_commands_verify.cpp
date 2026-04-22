@@ -1,4 +1,5 @@
 #include "cli_commands.h"
+#include "cli_helpers.h"
 #include <QFileInfo>
 #include <QFile>
 #include <QRegularExpression>
@@ -294,6 +295,12 @@ int handleVerifyCommand(CliContext &ctx)
 
     VerificationEngine verifier(&ctx.db);
 
+    // Attach compendium as supplemental catalog when available
+    const QString compendiumDir = findDataSubdir(QStringLiteral("compendium"));
+    if (!compendiumDir.isEmpty()) {
+        verifier.setCompendiumDb(compendiumDir + QStringLiteral("/remus_compendium.db"));
+    }
+
     QString systemName;
     if (!importVerificationDat(ctx, verifier, datFile, systemName)) {
         qCritical() << "✗ Failed to import DAT file";
@@ -320,6 +327,12 @@ int handlePatchDatCommand(CliContext &ctx)
 
     VerificationEngine verifier(&ctx.db);
 
+    // Attach compendium — patch catalogs are now bundled there
+    const QString compendiumDir = findDataSubdir(QStringLiteral("compendium"));
+    if (!compendiumDir.isEmpty()) {
+        verifier.setCompendiumDb(compendiumDir + QStringLiteral("/remus_compendium.db"));
+    }
+
     if (listRequested) {
         const auto patchDats = verifier.getImportedPatchDats();
         qInfo() << "";
@@ -341,43 +354,18 @@ int handlePatchDatCommand(CliContext &ctx)
     }
 
     if (importRequested) {
-        const QString datFile = ctx.parser.value("patch-dat-import");
-        QFileInfo datInfo(datFile);
-        if (!datInfo.exists()) {
-            qCritical() << "✗ Patch DAT file not found:" << datFile;
-            return 1;
-        }
-
-        QString systemName = ctx.parser.value("patch-dat-system");
-        if (systemName.isEmpty()) {
-            systemName = resolveSystemNameForDat(ctx.db, datFile, QString(), datInfo.completeBaseName());
-        }
-
-        const int count = verifier.importPatchDat(datFile, systemName);
-        if (count <= 0) {
-            qCritical() << "✗ Failed to import patch DAT file";
-            return 1;
-        }
-
         qInfo() << "";
-        qInfo() << "=== Patch Catalog Imported ===";
-        qInfo() << "System:" << systemName;
-        qInfo() << "Entries:" << count;
-        qInfo() << "File:" << datFile;
+        qInfo() << "ℹ  Patch catalogs are now bundled in the Remus compendium.";
+        qInfo() << "   Manual patch-DAT import is no longer required.";
+        qInfo() << "   This CLI build does not expose a standalone patch catalog refresh command.";
+        qInfo() << "";
         return 0;
     }
 
-    const QString systemName = ctx.parser.value("patch-dat-remove");
-    if (systemName.isEmpty()) {
-        qCritical() << "✗ --patch-dat-remove requires a system name";
-        return 1;
-    }
-
-    if (!verifier.removePatchDat(systemName)) {
-        qCritical() << "✗ Failed to remove patch DAT for system:" << systemName;
-        return 1;
-    }
-
-    qInfo() << "Removed patch DAT for" << systemName;
+    // --patch-dat-remove
+    qInfo() << "";
+    qInfo() << "ℹ  Patch catalogs are now bundled in the Remus compendium.";
+    qInfo() << "   Manual patch-DAT removal is no longer required.";
+    qInfo() << "";
     return 0;
 }

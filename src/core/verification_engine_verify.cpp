@@ -4,6 +4,7 @@
 #include "constants/file_types.h"
 
 #include <QDebug>
+#include <QSqlDatabase>
 #include <QSqlError>
 #include <QSqlQuery>
 #include <QSet>
@@ -333,26 +334,71 @@ QList<DatRomEntry> VerificationEngine::getMissingGames(const QString &systemName
         return missing;
     }
 
-    loadDatCache(systemName);
-    const auto &datEntries = m_datCache.value(systemName);
-
+    // Collect hashes already present in the library for this system
     QSet<QString> verifiedHashes;
-    QSqlQuery query(m_database->database());
-    query.prepare(R"(
-        SELECT LOWER(f.crc32), LOWER(f.md5), LOWER(f.sha1)
-        FROM files f
-        JOIN systems s ON f.system_id = s.id
-        WHERE s.name = ? AND f.hash_calculated = 1
-    )");
-    query.addBindValue(systemName);
-
-    if (query.exec()) {
-        while (query.next()) {
-            verifiedHashes.insert(query.value(0).toString());
-            verifiedHashes.insert(query.value(1).toString());
-            verifiedHashes.insert(query.value(2).toString());
+    {
+        QSqlQuery query(m_database->database());
+        query.prepare(R"(
+            SELECT LOWER(f.crc32), LOWER(f.md5), LOWER(f.sha1)
+            FROM files f
+            JOIN systems s ON f.system_id = s.id
+            WHERE s.name = ? AND f.hash_calculated = 1
+        )");
+        query.addBindValue(systemName);
+        if (query.exec()) {
+            while (query.next()) {
+                for (int col = 0; col < 3; ++col) {
+                    const QString h = query.value(col).toString();
+                    if (!h.isEmpty()) verifiedHashes.insert(h);
+                }
+            }
         }
     }
+
+    // ── Compendium path ────────────────────────────────────────────────────
+    if (!m_compendiumConnectionName.isEmpty()) {
+        QSqlDatabase cdb = QSqlDatabase::database(m_compendiumConnectionName);
+        QSqlQuery q(cdb);
+        q.prepare(R"(
+            SELECT g.canonical_title,
+                   MAX(CASE WHEN gs.hash_type='crc32' THEN gs.hash_value ELSE NULL END) AS crc32,
+                   MAX(CASE WHEN gs.hash_type='md5'   THEN gs.hash_value ELSE NULL END) AS md5,
+                   MAX(CASE WHEN gs.hash_type='sha1'  THEN gs.hash_value ELSE NULL END) AS sha1
+            FROM games g
+            JOIN systems s ON g.system_id = s.system_id
+            JOIN game_signatures gs ON gs.game_id = g.game_id
+            WHERE s.internal_name = ?
+            GROUP BY g.game_id
+        )");
+        q.addBindValue(systemName);
+
+        if (q.exec()) {
+            while (q.next()) {
+                const QString crc32 = q.value(1).toString().toLower();
+                const QString md5   = q.value(2).toString().toLower();
+                const QString sha1  = q.value(3).toString().toLower();
+
+                const bool found = (!crc32.isEmpty() && verifiedHashes.contains(crc32)) ||
+                                   (!md5.isEmpty()   && verifiedHashes.contains(md5))   ||
+                                   (!sha1.isEmpty()  && verifiedHashes.contains(sha1));
+                if (!found) {
+                    DatRomEntry entry;
+                    entry.gameName = q.value(0).toString();
+                    entry.crc32    = crc32;
+                    entry.md5      = md5;
+                    entry.sha1     = sha1;
+                    missing.append(entry);
+                }
+            }
+            return missing;
+        }
+        qWarning() << "VerificationEngine: compendium getMissingGames query failed:"
+                   << q.lastError().text();
+    }
+
+    // ── Runtime-import fallback ────────────────────────────────────────────
+    loadDatCache(systemName);
+    const auto &datEntries = m_datCache.value(systemName);
 
     QSet<QString> seenEntries;
     for (auto it = datEntries.begin(); it != datEntries.end(); ++it) {

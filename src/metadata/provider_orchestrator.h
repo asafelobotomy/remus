@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QList>
 #include <QMap>
+#include <QSet>
 
 namespace Remus {
 
@@ -25,6 +26,9 @@ class ProviderOrchestrator : public QObject {
     Q_OBJECT
 
 public:
+    /** @brief Set of field name constants used to track enrichment gaps. */
+    using FieldSet = QSet<QString>;
+
     explicit ProviderOrchestrator(QObject *parent = nullptr);
     ~ProviderOrchestrator() override = default;
 
@@ -108,6 +112,27 @@ public:
      * @return ArtworkUrls from successful provider
      */
     ArtworkUrls getArtworkWithFallback(const QString &id, const QString &system, const QString &providerName = QString());
+
+    /**
+     * @brief Compute which metadata fields are still empty in @p m.
+     */
+    static FieldSet computeFieldGap(const GameMetadata &m);
+
+    /**
+     * @brief Fill @p missing fields by querying providers in priority order.
+     *
+     * Local (offline) providers are queried first, then remote providers.
+     * Returns a merged copy of @p existing with any newly fetched data.
+     */
+    GameMetadata enrichMissingFields(const FieldSet &missing,
+                                     const GameMetadata &existing,
+                                     const QString &hash,
+                                     const QString &name,
+                                     const QString &system,
+                                     const QString &crc32 = QString(),
+                                     const QString &md5 = QString(),
+                                     const QString &sha1 = QString(),
+                                     const QString &serial = QString());
 
     /**
      * @brief Get list of enabled providers
