@@ -256,12 +256,15 @@ rm ~/.local/share/Remus/remus.db      # Fresh database
 ./build/src/ui/remus-gui
 ```
 
-### Import DAT File (CLI)
+### Refresh Verification Catalogs (CLI)
+
 ```bash
-./build/remus-cli --import-dat ~/downloads/No-Intro_Genesis.dat --system Genesis
+./build/remus-cli --compendium-update
+./build/remus-cli --compendium-status
 ```
 
 ### Verify Cache TTL
+
 ```bash
 sqlite3 ~/.local/share/Remus/remus.db "
     SELECT cache_key, 

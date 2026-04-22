@@ -672,14 +672,18 @@ rm ~/.config/Remus/Remus.conf
 # ✓ Skip button visible on credentials page
 # ✓ Wizard closes on completion
 
-# Test LocalDatabaseProvider
-./build/remus-cli --import-dat ~/downloads/No-Intro_Genesis.dat --system Genesis
+# Refresh compendium catalogs
+./build/remus-cli --compendium-update
+./build/remus-cli --compendium-status
+
+# Test CompendiumProvider
 ./build/remus-cli --scan ~/roms/Genesis --hash --match
-# ✓ ROMs identified via LocalDatabaseProvider
+# ✓ ROMs identified via CompendiumProvider
 # ✓ Confidence level: 100 (Perfect)
 ```
 
 ### Cache Persistence Verification
+
 ```bash
 # Query cache expiry
 sqlite3 ~/.local/share/Remus/remus.db "
