@@ -6,7 +6,7 @@ compatibility: ">=1.4"
 
 # Conventional Commit
 
-> Skill metadata: version "1.1"; license MIT; tags [git, commit, conventional-commits, changelog, versioning]; compatibility ">=1.4"; recommended tools [codebase, runCommands].
+> Skill metadata: version "1.2"; license MIT; tags [git, commit, conventional-commits, changelog, versioning]; compatibility ">=1.4"; recommended tools [codebase, runCommands].
 
 Write a well-structured commit message following the [Conventional Commits](https://www.conventionalcommits.org/) specification.
 
@@ -18,8 +18,8 @@ Write a well-structured commit message following the [Conventional Commits](http
 
 ## When NOT to use
 
-- The user has their own commit message format documented in §10 of their project's Copilot instructions
-- The project uses a different commit convention (check §4 and §10 first)
+- Project has its own commit format in §10 of Copilot instructions
+- Project uses a different convention (check §4 and §10 first)
 
 ## Steps
 
@@ -32,41 +32,68 @@ Write a well-structured commit message following the [Conventional Commits](http
    | `feat` | A new feature or capability |
    | `fix` | A bug fix |
    | `docs` | Documentation-only changes |
-   | `style` | Formatting, whitespace — no logic change |
+   | `style` | Formatting, whitespace, semicolons — no logic change |
    | `refactor` | Code change that neither fixes a bug nor adds a feature |
    | `perf` | Performance improvement |
    | `test` | Adding or correcting tests |
    | `build` | Build system or external dependency changes |
    | `ci` | CI configuration changes |
    | `chore` | Maintenance tasks that don't modify src or test files |
+   | `revert` | Reverts a previous commit — subject should reference the reverted hash or subject |
 
-3. **Determine the scope** — Identify the primary area affected (e.g., `auth`, `api`, `ci`, `docs`). Use the directory name or module name. Omit scope if the change spans many areas.
+3. **Determine the scope** — Primary area affected (directory or module name). Omit if change spans many areas.
 
-4. **Write the subject line** — Format: `<type>(<scope>): <imperative summary>`
-   - Use imperative mood ("add", not "added" or "adds")
-   - Lowercase first letter after the colon
-   - No period at the end
-   - Maximum 72 characters
+4. **Write the subject line** — `<type>(<scope>): <imperative summary>`. Imperative mood, lowercase after colon, no period, ≤72 chars.
 
-5. **Write the body** (if the change is non-trivial):
-   - Blank line after the subject
-   - Explain *what* changed and *why* (not *how* — the diff shows how)
-   - Wrap at 72 characters
-   - Reference issue numbers if applicable: `Fixes #123`, `Closes #456`
+5. **Write the body** (non-trivial changes): blank line after subject, explain *what* and *why* (not *how*), wrap at 72 chars, reference issues (`Fixes #123`).
 
-6. **Add breaking change footer** (if applicable):
-   - Add `!` after the type/scope: `feat(api)!: remove v1 endpoints`
-   - Add footer: `BREAKING CHANGE: <description of what breaks and migration path>`
+6. **Breaking change** (if applicable): `!` after type/scope + `BREAKING CHANGE: <description and migration path>` footer.
 
-7. **Present the message** — Show the complete commit message for user review.
+7. **Present the message** — Show the complete commit message for user review:
 
-8. **Wait for approval** — Present the message and wait. Do not run `git commit` until the user approves or modifies the message.
+   ```text
+   <type>(<scope>): <subject>
 
-9. **Execute** — Once the user approves, run `git commit` with the message. Confirm the commit was created: `git log --oneline -1`
+   <body>
+
+   <footer>
+   ```
+
+8. **Approval gate** — Use `askQuestions` before committing. If called from the Commit agent, the agent's approval gate (commit workflow step 6) runs instead; skip this step in that context.
+
+   ```yaml
+   header: "Commit: <type>(<scope>): <subject>"
+   question: "Approve this commit message, or type an edited version below."
+   allowFreeformInput: true
+   options:
+     - label: "Approve as-is"
+       recommended: true
+     - label: "Skip this commit"
+       description: "Leave these files staged but do not commit them now"
+     - label: "Abort"
+       description: "Stop here without committing"
+   ```
+
+   - **Approve as-is**: proceed with the displayed message.
+   - **Freeform text**: treat as the replacement message and proceed.
+   - **Skip this commit** / **Abort**: stop; do not run `git commit`.
+
+9. **Execute** — Once approved, prefer `mcp_git_git_commit` for multi-line messages (handles newlines safely). When using the terminal, write the message to a temp file and use `git commit -F <tmpfile>`, then remove the file. Do NOT use `git commit -m "subject\n\nbody"` — shell newline escaping is unreliable across platforms.
+
+   ```bash
+   # Subject only
+   git commit -m "<type>(<scope>): <subject>"
+
+   # Subject + body/footer via temp file
+   tmp=$(mktemp); printf '%s\n\n%s\n\n%s' "<subject>" "<body>" "<footer>" > "$tmp"
+   git commit -F "$tmp"; rm -f "$tmp"
+   ```
+
+   Confirm the commit was created: `git log --oneline -1`
 
 ## Co-author attribution
 
-VS Code 1.110+ supports `git.addAICoAuthor` (enabled by default), which automatically appends a `Co-authored-by: GitHub Copilot` trailer to commits made with AI assistance.
+VS Code 1.110+ `git.addAICoAuthor` (enabled by default) auto-appends `Co-authored-by: GitHub Copilot`. Check/change in VS Code Settings.
 
 ## Verify
 

@@ -1,0 +1,19 @@
+name: Copilot Setup Steps
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-copilot-surfaces:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+      - name: Verify core companion files
+        run: |
+          test -f .github/copilot-instructions.md
+          test -f .github/copilot-version.md
+          test -f .copilot/workspace/workspace-index.json

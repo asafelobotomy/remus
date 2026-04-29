@@ -1,5 +1,8 @@
 #!/bin/bash
 
+set -euo pipefail
+shopt -s globstar nullglob
+
 # Grab .gdi file
 for f in ./**/*.gdi
 do

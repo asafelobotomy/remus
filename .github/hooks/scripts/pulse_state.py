@@ -4,8 +4,19 @@ from __future__ import annotations
 import json
 import os
 import subprocess
-import time
 from pathlib import Path
+
+from pulse_artifacts import (
+    atomic_write,
+    fallback_artifact_path,
+    fallback_artifact_paths,
+    fallback_artifact_roots,
+    file_lock,
+    heartbeat_artifact_paths,
+    iso_utc,
+    lock_path,
+    _copilot_repo_root,
+)
 
 
 DEFAULT_POLICY = {
@@ -19,10 +30,11 @@ DEFAULT_POLICY = {
             "min_emit_spacing_seconds": 120,
         },
         "messages": {
-            "session_start_guidance": "Open .copilot/workspace/HEARTBEAT.md and run the Checks section. If the Stop hook later flags significant work, call the session_reflect MCP tool before stopping.",
-            "explicit_system": "Heartbeat trigger detected. Run HEARTBEAT.md checks now.",
-            "stop_reflect_instruction": "Significant session detected. Call the session_reflect MCP tool now, process its output silently, then stop normally. If the MCP tool is unavailable, briefly review: execution accuracy, scope completeness, and anything worth persisting to SOUL.md / MEMORY.md / USER.md, then rerun session_reflect once the heartbeat MCP server is restored.",
-            "accepted_reason": "The user requested a retrospective. Call the session_reflect MCP tool, process its output, persist insights, then stop normally.",
+            "session_start_guidance": "Run HEARTBEAT.md checks. Call mcp_heartbeat_session_reflect if thresholds trigger.",
+            "explicit_system": "Heartbeat: run HEARTBEAT.md checks.",
+            "post_tool_reflect_instruction": "Call mcp_heartbeat_session_reflect, then continue. If unavailable, try tool_search once. Otherwise run python3 .github/hooks/scripts/session_reflect_fallback.py if it exists. If both fail, review scope and identity files manually.",
+            "stop_reflect_instruction": "Call mcp_heartbeat_session_reflect before stopping. If unavailable, try tool_search once. Otherwise run python3 .github/hooks/scripts/session_reflect_fallback.py if it exists.",
+            "accepted_reason": "User retro: run mcp_heartbeat_session_reflect, persist, stop. If unavailable, try tool_search once. Otherwise run python3 .github/hooks/scripts/session_reflect_fallback.py if it exists.",
         },
     }
 }
@@ -79,6 +91,16 @@ def default_state() -> dict:
         "signal_cross_cutting": False,
         "signal_scope_widening": False,
         "signal_reflection_likely": False,
+        "reflect_instruction_emitted": False,
+        "route_candidate": "",
+        "route_reason": "",
+        "route_confidence": 0.0,
+        "route_source": "",
+        "route_emitted": False,
+        "route_epoch": 0,
+        "route_last_hint_epoch": 0,
+        "route_emitted_agents": [],
+        "route_signal_counts": {},
         "changed_path_families": [],
         "touched_files_sample": [],
         "unique_touched_file_count": 0,
@@ -93,32 +115,45 @@ def default_state() -> dict:
 
 def load_state(state_path: Path) -> dict:
     state = default_state()
-    if not state_path.exists():
-        return state
-    try:
-        loaded = json.loads(state_path.read_text(encoding="utf-8"))
-        if isinstance(loaded, dict):
-            state.update({key: loaded[key] for key in state.keys() if key in loaded})
-    except Exception:
-        pass
+    for candidate in heartbeat_artifact_paths(state_path):
+        with file_lock(candidate):
+            if not candidate.exists():
+                continue
+            try:
+                loaded = json.loads(candidate.read_text(encoding="utf-8"))
+                if isinstance(loaded, dict):
+                    state.update({key: loaded[key] for key in state.keys() if key in loaded})
+                return state
+            except Exception:
+                continue
     return state
 
 
-def atomic_write(path: Path, text: str) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    tmp = path.with_suffix(path.suffix + ".tmp")
-    tmp.write_text(text, encoding="utf-8")
-    os.replace(tmp, path)
+def read_event_lines(events_path: Path) -> list[str]:
+    lines: list[str] = []
+    for candidate in heartbeat_artifact_paths(events_path):
+        with file_lock(candidate):
+            if not candidate.exists():
+                continue
+            try:
+                lines.extend(candidate.read_text(encoding="utf-8").splitlines())
+            except Exception:
+                continue
+    return lines
 
 
 def save_state(state: dict, workspace: Path, state_path: Path) -> None:
-    if not workspace.exists():
-        return
-    atomic_write(state_path, json.dumps(state, indent=2, sort_keys=True) + "\n")
-
-
-def iso_utc(epoch: int) -> str:
-    return time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(epoch))
+    text = json.dumps(state, indent=2, sort_keys=True) + "\n"
+    last_error: Exception | None = None
+    for candidate in heartbeat_artifact_paths(state_path):
+        try:
+            atomic_write(candidate, text)
+            return
+        except OSError as exc:
+            last_error = exc
+            continue
+    if last_error is not None:
+        raise last_error
 
 
 def append_event(
@@ -139,16 +174,26 @@ def append_event(
         event["duration_s"] = duration_s
     if session_id:
         event["session_id"] = session_id
-    with events_path.open("a", encoding="utf-8") as handle:
-        handle.write(json.dumps(event, sort_keys=True) + "\n")
+    payload = json.dumps(event, sort_keys=True) + "\n"
+    last_error = None
+    for candidate in heartbeat_artifact_paths(events_path):
+        try:
+            candidate.parent.mkdir(parents=True, exist_ok=True)
+            with file_lock(candidate):
+                with candidate.open("a", encoding="utf-8") as handle:
+                    handle.write(payload)
+            return
+        except OSError as exc:
+            last_error = exc
+            continue
+    if last_error is not None:
+        raise last_error
 
 
 def compute_session_medians(events_path: Path) -> str:
-    if not events_path.exists():
-        return ""
     durations = []
     try:
-        for line in events_path.read_text(encoding="utf-8").splitlines():
+        for line in read_event_lines(events_path):
             if not line.strip():
                 continue
             try:
@@ -172,38 +217,52 @@ def compute_session_medians(events_path: Path) -> str:
 
 
 def prune_events(events_path: Path, keep: int = 100) -> None:
-    if not events_path.exists():
-        return
-    try:
-        lines = [line for line in events_path.read_text(encoding="utf-8").splitlines() if line.strip()]
-        if len(lines) > keep:
-            atomic_write(events_path, "\n".join(lines[-keep:]) + "\n")
-    except Exception:
-        pass
+    for candidate in heartbeat_artifact_paths(events_path):
+        if not candidate.exists():
+            continue
+        try:
+            lines = [line for line in candidate.read_text(encoding="utf-8").splitlines() if line.strip()]
+            if len(lines) > keep:
+                atomic_write(candidate, "\n".join(lines[-keep:]) + "\n")
+        except Exception:
+            continue
 
 
 def set_sentinel(sentinel_path: Path, workspace: Path, now: int, session_id: str, status: str) -> None:
     if not workspace.exists():
         return
-    atomic_write(sentinel_path, f"{session_id}|{iso_utc(now)}|{status}\n")
+    text = f"{session_id}|{iso_utc(now)}|{status}\n"
+    last_error = None
+    for candidate in heartbeat_artifact_paths(sentinel_path):
+        try:
+            atomic_write(candidate, text)
+            return
+        except OSError as exc:
+            last_error = exc
+            continue
+    if last_error is not None:
+        raise last_error
 
 
-def sentinel_is_complete(sentinel_path: Path) -> bool:
-    if not sentinel_path.exists():
-        return False
-    try:
-        parts = sentinel_path.read_text(encoding="utf-8").strip().split("|")
-        return len(parts) >= 3 and parts[2].strip() == "complete"
-    except Exception:
-        return False
+def sentinel_is_complete(sentinel_path: Path, session_id: str | None = None) -> bool:
+    for candidate in heartbeat_artifact_paths(sentinel_path):
+        with file_lock(candidate):
+            if not candidate.exists():
+                continue
+            try:
+                parts = candidate.read_text(encoding="utf-8").strip().split("|")
+                if len(parts) >= 3 and parts[2].strip() == "complete":
+                    if session_id is not None and parts[0].strip() != session_id:
+                        continue
+                    return True
+            except Exception:
+                continue
+    return False
 
 
 def reflection_event_complete(events_path: Path, session_id: str, session_start_epoch: int) -> bool:
-    if not events_path.exists():
-        return False
-    try:
-        lines = events_path.read_text(encoding="utf-8").splitlines()
-    except Exception:
+    lines = read_event_lines(events_path)
+    if not lines:
         return False
     for line in reversed(lines):
         if not line.strip():
@@ -260,8 +319,8 @@ def read_workspace_file(workspace: Path, name: str, limit: int = 4000) -> str:
 
 
 def load_session_priors(workspace: Path) -> dict:
-    soul = read_workspace_file(workspace, "SOUL.md").lower()
-    user = read_workspace_file(workspace, "USER.md").lower()
+    soul = read_workspace_file(workspace, "identity/SOUL.md").lower()
+    user = read_workspace_file(workspace, "knowledge/USER.md").lower()
     return {
         "prior_small_batches": "small batches" in soul,
         "prior_explicitness": "explicit over implicit" in soul,

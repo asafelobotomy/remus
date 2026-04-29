@@ -1,5 +1,6 @@
 #include "cli_commands.h"
 #include "cli_helpers.h"
+#include "bundle_artwork_resolver.h"
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
@@ -16,40 +17,7 @@
 
 using namespace Remus;
 using namespace Remus::Constants;
-
-namespace {
-
-QList<QUrl> thumbnailCandidatesForSystems(const QStringList &libretroSystemNames,
-                                          const QString &displayName,
-                                          const QString &type)
-{
-    QList<QUrl> results;
-    QSet<QString> seen;
-    for (const QString &systemName : libretroSystemNames) {
-        if (systemName.trimmed().isEmpty()) {
-            continue;
-        }
-        const QStringList candidates = Metadata::ThumbnailUrlHelper::generateThumbnailCandidates(
-            systemName,
-            displayName,
-            type);
-        for (const QString &candidate : candidates) {
-            const QUrl url(candidate);
-            if (!url.isValid()) {
-                continue;
-            }
-            const QString normalized = url.toString(QUrl::FullyEncoded);
-            if (seen.contains(normalized)) {
-                continue;
-            }
-            seen.insert(normalized);
-            results.append(url);
-        }
-    }
-    return results;
-}
-
-} // namespace
+using namespace Remus::BundleArtworkResolver;
 
 int handleBundleCommand(CliContext &ctx)
 {
@@ -334,12 +302,7 @@ int handleBundleCommand(CliContext &ctx)
                 }
             }
 
-            struct ScreenshotPlan {
-                QString key;
-                QList<QUrl> candidates;
-            };
-            QList<ScreenshotPlan> screenshotPlan;
-            if (titleScreenUrl.isValid()) {
+            QList<ScreenshotPlan> screenshotPlan;            if (titleScreenUrl.isValid()) {
                 if (!titleCandidates.isEmpty()) {
                     screenshotPlan.append({QStringLiteral("title"), titleCandidates});
                 } else {
@@ -355,53 +318,11 @@ int handleBundleCommand(CliContext &ctx)
                 screenshotPlan.append({QStringLiteral("gameplay2"), gameplay2Candidates});
             }
 
-            QSet<QString> downloadedUrlSet;
-            for (const ScreenshotPlan &shot : screenshotPlan) {
-                bool slotDownloaded = false;
-                for (const QUrl &candidateUrl : shot.candidates) {
-                    if (!candidateUrl.isValid()) {
-                        continue;
-                    }
-
-                    const QString normalizedUrl = candidateUrl.toString(QUrl::FullyEncoded);
-                    if (downloadedUrlSet.contains(normalizedUrl)) {
-                        continue;
-                    }
-
-                    const QString ext = QFileInfo(candidateUrl.path()).suffix().isEmpty()
-                        ? QStringLiteral("jpg")
-                        : QFileInfo(candidateUrl.path()).suffix().toLower();
-                    const QString artCacheDir = ctx.processArtworkCacheDir.isEmpty()
-                        ? tempArtworkDir.path()
-                        : ctx.processArtworkCacheDir;
-                    const QString destPath = artCacheDir + "/" +
-                        QString::number(file.id) + "_" + shot.key + "." + ext;
-
-                    if (dryRun) {
-                        qInfo() << "  [DRY-RUN] Would download" << shot.key << "screenshot from:" << candidateUrl;
-                        screenshotPaths.append(destPath);
-                        downloadedUrlSet.insert(normalizedUrl);
-                        slotDownloaded = true;
-                        break;
-                    }
-
-                    QString savedPath;
-                    if (downloader.download(candidateUrl, destPath, &savedPath)) {
-                        const QString resolvedPath = savedPath.isEmpty() ? destPath : savedPath;
-                        screenshotPaths.append(resolvedPath);
-                        downloadedUrlSet.insert(normalizedUrl);
-                        qInfo() << "  ✓ Downloaded" << shot.key << "screenshot:" << resolvedPath;
-                        slotDownloaded = true;
-                        break;
-                    }
-
-                    qWarning() << "  ⚠ Failed to download" << shot.key << "screenshot from:" << candidateUrl;
-                }
-
-                if (!slotDownloaded) {
-                    qWarning() << "  ⚠ No valid" << shot.key << "screenshot candidates succeeded";
-                }
-            }
+            const QString artCacheDir = ctx.processArtworkCacheDir.isEmpty()
+                ? tempArtworkDir.path()
+                : ctx.processArtworkCacheDir;
+            screenshotPaths = downloadScreenshots(
+                screenshotPlan, file.id, artCacheDir, dryRun, downloader);
         }
 
         // Resolve system subfolder when folder-naming is active

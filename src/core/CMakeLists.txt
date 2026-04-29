@@ -34,6 +34,7 @@ add_library(remus-core STATIC
     organize_engine_undo.cpp
     rom_bundler.cpp
     rom_bundler_bundle.cpp
+    rom_bundler_bundle_helpers.cpp
     rom_bundler_staged.cpp
     m3u_generator.cpp
     chd_converter.cpp
@@ -52,8 +53,11 @@ add_library(remus-core STATIC
     verification_engine.cpp
     verification_engine_verify.cpp
     verification_engine_report.cpp
+    verification_hash_matcher.cpp
     verification_storage.cpp
+    verification_storage_schema.cpp
     verification_storage_dat.cpp
+    compendium_manifest_parser.cpp
     patch_engine.cpp
     patch_engine_apply.cpp
     logging_categories.cpp

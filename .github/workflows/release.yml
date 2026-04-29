@@ -25,7 +25,7 @@ jobs:
       should_release: ${{ steps.check.outputs.should_release }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
       - name: Get version from constants.h
         id: version
@@ -55,7 +55,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
       - name: Install dependencies
         run: |
@@ -84,7 +84,10 @@ jobs:
 
       - name: Download linuxdeploy
         run: |
-          wget -q https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage -O build/linuxdeploy-x86_64.AppImage
+          LINUXDEPLOY_URL="https://github.com/linuxdeploy/linuxdeploy/releases/download/1-alpha-20251107-1/linuxdeploy-x86_64.AppImage"
+          LINUXDEPLOY_SHA256="c20cd71e3a4e3b80c3483cef793cda3f4e990aca14014d23c544ca3ce1270b4d"
+          wget -q "$LINUXDEPLOY_URL" -O build/linuxdeploy-x86_64.AppImage
+          echo "$LINUXDEPLOY_SHA256  build/linuxdeploy-x86_64.AppImage" | sha256sum -c -
           chmod +x build/linuxdeploy-x86_64.AppImage
 
       - name: Package AppImage
@@ -101,7 +104,7 @@ jobs:
           git push origin "${{ needs.prepare-release.outputs.version }}"
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2
         with:
           tag_name: ${{ needs.prepare-release.outputs.version }}
           name: Remus ${{ needs.prepare-release.outputs.version }}

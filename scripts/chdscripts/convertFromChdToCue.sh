@@ -1,5 +1,8 @@
 #!/bin/bash
 
+set -euo pipefail
+shopt -s globstar nullglob
+
 # Grab .chd file
 for f in ./**/*.chd
 do

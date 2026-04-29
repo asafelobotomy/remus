@@ -92,6 +92,8 @@ set(REMUS_CLI_SOURCES
     src/cli/cli_commands_mod_catalog.cpp
     src/cli/cli_commands_dat.cpp
     src/cli/cli_commands_compendium.cpp
+    src/cli/cli_commands_compendium_enrich.cpp
+    src/cli/compendium_enrichment.cpp
 )
 
 add_executable(remus-cli ${REMUS_CLI_SOURCES})

@@ -1,25 +1,20 @@
 #!/usr/bin/env bash
-# purpose:  Log subagent completion and surface result summary
-# when:     SubagentStop hook — fires after a subagent finishes
-# inputs:   JSON via stdin with subagent result details
-# outputs:  JSON with additionalContext summarising outcome
+# purpose:  Mark subagent completion
+# when:     SubagentStop
+# inputs:   JSON via stdin with subagent details (agent_type, agent_id, stop_hook_active)
+# outputs:  JSON with hookSpecificOutput.additionalContext
 # risk:     safe
+# ESCALATION: none
 set -euo pipefail
 
-# shellcheck source=.github/hooks/scripts/lib-hooks.sh
+# shellcheck source=hooks/scripts/lib-hooks.sh
 source "$(dirname "$0")/lib-hooks.sh"
 
 INPUT=$(cat)
 
-# Extract subagent name if available (python3 for robust JSON parsing)
-AGENT_NAME=$(printf '%s' "$INPUT" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('agentName','unknown'))" 2>/dev/null) || AGENT_NAME="unknown"
+AGENT_NAME=$(json_field "$INPUT" "agent_type" "unknown")
 [[ -z "$AGENT_NAME" ]] && AGENT_NAME="unknown"
-
-# Build summary context
-CONTEXT="Subagent ${AGENT_NAME} completed. Review results before continuing."
-
-# JSON-escape the context
-CONTEXT_ESC=$(json_escape "$CONTEXT")
+CONTEXT_ESC=$(json_escape "${AGENT_NAME} done. Review next step.")
 
 cat <<EOF
 {

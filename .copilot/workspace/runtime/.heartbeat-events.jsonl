@@ -1,0 +1,65 @@
+{"session_id": "unknown", "trigger": "soft_post_tool", "ts": 1777419019, "ts_utc": "2026-04-28T23:30:19Z"}
+{"detail": "reflect-needed", "session_id": "unknown", "trigger": "post_tool_reflect", "ts": 1777419019, "ts_utc": "2026-04-28T23:30:19Z"}
+{"detail": "reflect-needed", "session_id": "unknown", "trigger": "stop", "ts": 1777419330, "ts_utc": "2026-04-28T23:35:30Z"}
+{"session_id": "unknown", "trigger": "soft_post_tool", "ts": 1777419337, "ts_utc": "2026-04-28T23:35:37Z"}
+{"detail": "complete", "session_id": "unknown", "trigger": "session_reflect", "ts": 1777419342, "ts_utc": "2026-04-28T23:35:42Z"}
+{"detail": "heartbeat", "session_id": "unknown", "trigger": "explicit_prompt", "ts": 1777443417, "ts_utc": "2026-04-29T06:16:57Z"}
+{"session_id": "unknown", "trigger": "soft_post_tool", "ts": 1777443448, "ts_utc": "2026-04-29T06:17:28Z"}
+{"detail": "heartbeat", "session_id": "unknown", "trigger": "explicit_prompt", "ts": 1777445201, "ts_utc": "2026-04-29T06:46:41Z"}
+{"session_id": "unknown", "trigger": "soft_post_tool", "ts": 1777445220, "ts_utc": "2026-04-29T06:47:00Z"}
+{"detail": "complete", "duration_s": 1777445398, "session_id": "unknown", "trigger": "stop", "ts": 1777445398, "ts_utc": "2026-04-29T06:49:58Z"}
+{"session_id": "unknown", "trigger": "soft_post_tool", "ts": 1777445545, "ts_utc": "2026-04-29T06:52:25Z"}
+{"detail": "heartbeat", "session_id": "unknown", "trigger": "explicit_prompt", "ts": 1777445849, "ts_utc": "2026-04-29T06:57:29Z"}
+{"session_id": "unknown", "trigger": "soft_post_tool", "ts": 1777445867, "ts_utc": "2026-04-29T06:57:47Z"}
+{"detail": "heartbeat", "session_id": "unknown", "trigger": "explicit_prompt", "ts": 1777445998, "ts_utc": "2026-04-29T06:59:58Z"}
+{"detail": "heartbeat", "session_id": "unknown", "trigger": "explicit_prompt", "ts": 1777446171, "ts_utc": "2026-04-29T07:02:51Z"}
+{"session_id": "unknown", "trigger": "soft_post_tool", "ts": 1777446189, "ts_utc": "2026-04-29T07:03:09Z"}
+{"detail": "heartbeat", "session_id": "unknown", "trigger": "explicit_prompt", "ts": 1777446415, "ts_utc": "2026-04-29T07:06:55Z"}
+{"session_id": "unknown", "trigger": "soft_post_tool", "ts": 1777446495, "ts_utc": "2026-04-29T07:08:15Z"}
+{"detail": "complete", "duration_s": 1777446564, "session_id": "unknown", "trigger": "stop", "ts": 1777446564, "ts_utc": "2026-04-29T07:09:24Z"}
+{"session_id": "unknown", "trigger": "soft_post_tool", "ts": 1777446824, "ts_utc": "2026-04-29T07:13:44Z"}
+{"detail": "complete", "duration_s": 1777446998, "session_id": "unknown", "trigger": "stop", "ts": 1777446998, "ts_utc": "2026-04-29T07:16:38Z"}
+{"session_id": "unknown", "trigger": "soft_post_tool", "ts": 1777447150, "ts_utc": "2026-04-29T07:19:10Z"}
+{"detail": "complete", "duration_s": 1777447224, "session_id": "unknown", "trigger": "stop", "ts": 1777447224, "ts_utc": "2026-04-29T07:20:24Z"}
+{"session_id": "unknown", "trigger": "compaction", "ts": 1777447514, "ts_utc": "2026-04-29T07:25:14Z"}
+{"session_id": "unknown", "trigger": "soft_post_tool", "ts": 1777447591, "ts_utc": "2026-04-29T07:26:31Z"}
+{"session_id": "unknown", "trigger": "soft_post_tool", "ts": 1777447892, "ts_utc": "2026-04-29T07:31:32Z"}
+{"session_id": "unknown", "trigger": "soft_post_tool", "ts": 1777448198, "ts_utc": "2026-04-29T07:36:38Z"}
+{"session_id": "unknown", "trigger": "soft_post_tool", "ts": 1777449969, "ts_utc": "2026-04-29T08:06:09Z"}
+{"detail": "complete", "duration_s": 1777450009, "session_id": "unknown", "trigger": "stop", "ts": 1777450009, "ts_utc": "2026-04-29T08:06:49Z"}
+{"detail": "complete", "duration_s": 1777450079, "session_id": "unknown", "trigger": "stop", "ts": 1777450079, "ts_utc": "2026-04-29T08:07:59Z"}
+{"detail": "complete", "duration_s": 1777450103, "session_id": "unknown", "trigger": "stop", "ts": 1777450103, "ts_utc": "2026-04-29T08:08:23Z"}
+{"session_id": "unknown", "trigger": "soft_post_tool", "ts": 1777450288, "ts_utc": "2026-04-29T08:11:28Z"}
+{"session_id": "unknown", "trigger": "soft_post_tool", "ts": 1777450709, "ts_utc": "2026-04-29T08:18:29Z"}
+{"detail": "complete", "duration_s": 1777450855, "session_id": "unknown", "trigger": "stop", "ts": 1777450855, "ts_utc": "2026-04-29T08:20:55Z"}
+{"detail": "complete", "duration_s": 1777450975, "session_id": "unknown", "trigger": "stop", "ts": 1777450975, "ts_utc": "2026-04-29T08:22:55Z"}
+{"session_id": "unknown", "trigger": "soft_post_tool", "ts": 1777451015, "ts_utc": "2026-04-29T08:23:35Z"}
+{"detail": "complete", "duration_s": 1777451017, "session_id": "unknown", "trigger": "stop", "ts": 1777451017, "ts_utc": "2026-04-29T08:23:37Z"}
+{"detail": "complete", "duration_s": 1777451043, "session_id": "unknown", "trigger": "stop", "ts": 1777451043, "ts_utc": "2026-04-29T08:24:03Z"}
+{"detail": "complete", "duration_s": 1777451199, "session_id": "unknown", "trigger": "stop", "ts": 1777451199, "ts_utc": "2026-04-29T08:26:39Z"}
+{"detail": "complete", "duration_s": 1777451248, "session_id": "unknown", "trigger": "stop", "ts": 1777451248, "ts_utc": "2026-04-29T08:27:28Z"}
+{"session_id": "unknown", "trigger": "soft_post_tool", "ts": 1777451319, "ts_utc": "2026-04-29T08:28:39Z"}
+{"session_id": "unknown", "trigger": "soft_post_tool", "ts": 1777451638, "ts_utc": "2026-04-29T08:33:58Z"}
+{"detail": "complete", "duration_s": 1777451851, "session_id": "unknown", "trigger": "stop", "ts": 1777451851, "ts_utc": "2026-04-29T08:37:31Z"}
+{"detail": "complete", "duration_s": 1777451910, "session_id": "unknown", "trigger": "stop", "ts": 1777451910, "ts_utc": "2026-04-29T08:38:30Z"}
+{"session_id": "unknown", "trigger": "soft_post_tool", "ts": 1777451954, "ts_utc": "2026-04-29T08:39:14Z"}
+{"detail": "complete", "duration_s": 1777451975, "session_id": "unknown", "trigger": "stop", "ts": 1777451975, "ts_utc": "2026-04-29T08:39:35Z"}
+{"session_id": "unknown", "trigger": "soft_post_tool", "ts": 1777452359, "ts_utc": "2026-04-29T08:45:59Z"}
+{"detail": "complete", "duration_s": 1777452366, "session_id": "unknown", "trigger": "stop", "ts": 1777452366, "ts_utc": "2026-04-29T08:46:06Z"}
+{"session_id": "unknown", "trigger": "soft_post_tool", "ts": 1777452710, "ts_utc": "2026-04-29T08:51:50Z"}
+{"detail": "complete", "duration_s": 1777452911, "session_id": "unknown", "trigger": "stop", "ts": 1777452911, "ts_utc": "2026-04-29T08:55:11Z"}
+{"session_id": "unknown", "trigger": "soft_post_tool", "ts": 1777453013, "ts_utc": "2026-04-29T08:56:53Z"}
+{"detail": "complete", "duration_s": 1777453055, "session_id": "unknown", "trigger": "stop", "ts": 1777453055, "ts_utc": "2026-04-29T08:57:35Z"}
+{"session_id": "unknown", "trigger": "soft_post_tool", "ts": 1777456272, "ts_utc": "2026-04-29T09:51:12Z"}
+{"detail": "complete", "duration_s": 1777456287, "session_id": "unknown", "trigger": "stop", "ts": 1777456287, "ts_utc": "2026-04-29T09:51:27Z"}
+{"detail": "complete", "duration_s": 1777456348, "session_id": "unknown", "trigger": "stop", "ts": 1777456348, "ts_utc": "2026-04-29T09:52:28Z"}
+{"detail": "complete", "duration_s": 1777456425, "session_id": "unknown", "trigger": "stop", "ts": 1777456425, "ts_utc": "2026-04-29T09:53:45Z"}
+{"detail": "complete", "duration_s": 1777456488, "session_id": "unknown", "trigger": "stop", "ts": 1777456488, "ts_utc": "2026-04-29T09:54:48Z"}
+{"detail": "complete", "duration_s": 1777456565, "session_id": "unknown", "trigger": "stop", "ts": 1777456565, "ts_utc": "2026-04-29T09:56:05Z"}
+{"session_id": "unknown", "trigger": "soft_post_tool", "ts": 1777456596, "ts_utc": "2026-04-29T09:56:36Z"}
+{"session_id": "unknown", "trigger": "compaction", "ts": 1777456647, "ts_utc": "2026-04-29T09:57:27Z"}
+{"detail": "complete", "duration_s": 1777456817, "session_id": "unknown", "trigger": "stop", "ts": 1777456817, "ts_utc": "2026-04-29T10:00:17Z"}
+{"detail": "complete", "duration_s": 1777456921, "session_id": "unknown", "trigger": "stop", "ts": 1777456921, "ts_utc": "2026-04-29T10:02:01Z"}
+{"session_id": "unknown", "trigger": "soft_post_tool", "ts": 1777457096, "ts_utc": "2026-04-29T10:04:56Z"}
+{"detail": "complete", "duration_s": 1777457105, "session_id": "unknown", "trigger": "stop", "ts": 1777457105, "ts_utc": "2026-04-29T10:05:05Z"}
+{"detail": "complete", "duration_s": 1777457160, "session_id": "unknown", "trigger": "stop", "ts": 1777457160, "ts_utc": "2026-04-29T10:06:00Z"}

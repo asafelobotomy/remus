@@ -88,16 +88,15 @@ def classify_path_family(path_text: str):
     filename = Path(path_text).name
     if path_text.startswith(".copilot/workspace/"):
         return "memory"
-    if path_text.startswith(".github/hooks/") or path_text.startswith("template/hooks/"):
+    if path_text.startswith(".github/hooks/") or path_text.startswith("hooks/"):
         return "hook"
     if (
         path_text.startswith(".github/agents/")
+        or path_text.startswith("agents/")
         or path_text.startswith(".github/prompts/")
         or path_text.startswith(".github/instructions/")
         or path_text.startswith(".github/skills/")
-        or path_text.startswith("template/prompts/")
-        or path_text.startswith("template/instructions/")
-        or path_text.startswith("template/skills/")
+        or path_text.startswith("skills/")
         or path_text in {"AGENTS.md", ".github/copilot-instructions.md", "template/copilot-instructions.md"}
     ):
         return "agent"
@@ -111,7 +110,7 @@ def classify_path_family(path_text: str):
         path_text.startswith(".github/workflows/")
         or path_text.startswith("scripts/release/")
         or path_text.startswith("scripts/sync/")
-        or path_text.startswith("scripts/validate/")
+        or path_text.startswith("scripts/ci/")
         or path_text.startswith("scripts/workspace/")
     ):
         return "ci_release"
@@ -126,9 +125,6 @@ def classify_path_family(path_text: str):
     if path_text.endswith(".md") or filename in {
         "README.md",
         "CHANGELOG.md",
-        "MIGRATION.md",
-        "SETUP.md",
-        "UPDATE.md",
         "VERSION.md",
         "CLAUDE.md",
         "llms.txt",
@@ -146,17 +142,15 @@ def path_requires_parity(path_text: str) -> bool:
     if not path_text:
         return False
     return (
-        path_text.startswith(".github/hooks/")
-        or path_text.startswith("template/hooks/")
+        path_text.startswith("hooks/")
+        or path_text.startswith(".github/hooks/")
+        or path_text.startswith("skills/")
         or path_text.startswith(".github/skills/")
-        or path_text.startswith("template/skills/")
         or path_text.startswith(".github/instructions/")
-        or path_text.startswith("template/instructions/")
         or path_text.startswith(".github/prompts/")
-        or path_text.startswith("template/prompts/")
         or path_text in {
-            ".copilot/workspace/workspace-index.json",
-            "template/workspace/workspace-index.json",
+            ".copilot/workspace/operations/workspace-index.json",
+            "template/workspace/operations/workspace-index.json",
         }
     )
 

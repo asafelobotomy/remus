@@ -1,0 +1,9 @@
+# Default ownership
+* @asafelobotomy
+
+# Security-sensitive surfaces
+.github/workflows/* @asafelobotomy
+.github/hooks/** @asafelobotomy
+scripts/** @asafelobotomy
+src/core/** @asafelobotomy
+src/services/** @asafelobotomy

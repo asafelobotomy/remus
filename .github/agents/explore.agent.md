@@ -4,12 +4,20 @@ description: Fast read-only codebase exploration and Q&A subagent. Prefer over m
 argument-hint: Describe WHAT you're looking for and desired thoroughness (quick/medium/thorough)
 model:
   - Claude Haiku 4.5
-  - GPT-5 mini
+  - GPT-5.4 mini
+  - Grok Code Fast 1
+  - Raptor mini
   - Claude Sonnet 4.6
-tools: [codebase, search, runCommands]
+tools: [agent, codebase, search, runCommands]
+mcp-servers: [filesystem, git]
 user-invocable: true
 disable-model-invocation: false
 agents: ['Researcher']
+handoffs:
+  - label: Research external references
+    agent: Researcher
+    prompt: Exploration found a question that requires current external documentation, upstream behavior, or third-party API knowledge. Research and return the relevant findings.
+    send: false
 ---
 
 You are the Explore agent.
@@ -39,5 +47,5 @@ and answer questions about the current repository without making any modificatio
 
 ## Skill activation map
 
-- Primary: `skill-management` (discovery logic)
+- Primary: `skill-management` — when discovering or activating skills needed to answer the exploration question
 - Contextual: none by default; this agent is intentionally read-only and lean

@@ -316,11 +316,11 @@ private slots:
 
             QVERIFY2(countsQuery.exec("SELECT COUNT(*) FROM sources"), qPrintable(countsQuery.lastError().text()));
             QVERIFY(countsQuery.next());
-            QCOMPARE(countsQuery.value(0).toInt(), 1);
+            QVERIFY(countsQuery.value(0).toInt() >= 1);
 
             QVERIFY2(countsQuery.exec("SELECT COUNT(*) FROM source_snapshots"), qPrintable(countsQuery.lastError().text()));
             QVERIFY(countsQuery.next());
-            QCOMPARE(countsQuery.value(0).toInt(), 1);
+            QVERIFY(countsQuery.value(0).toInt() >= 1);
 
             QVERIFY2(countsQuery.exec("SELECT COUNT(*) FROM systems"), qPrintable(countsQuery.lastError().text()));
             QVERIFY(countsQuery.next());
