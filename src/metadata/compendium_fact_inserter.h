@@ -46,7 +46,8 @@ private:
     bool insertFacts(const SourceRecordEnvelope &rec,
                      QSqlDatabase &db,
                      CompilerStats &stats,
-                     QString &error) const;
+                     QString &error,
+                     int sourcePriority) const;
 };
 
 } // namespace Compendium

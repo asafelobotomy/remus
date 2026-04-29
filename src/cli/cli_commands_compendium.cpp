@@ -97,6 +97,22 @@ int handleBuildCompendiumCommand(CliContext &ctx)
         return 1;
     }
 
+    // Bulk-build performance: disable fsync, keep journal in memory, enlarge cache.
+    // Safe here because the database is freshly created and rebuilt from scratch;
+    // a crash during build is handled by re-running the build.
+    const QStringList buildPragmas = {
+        QStringLiteral("PRAGMA synchronous = OFF"),
+        QStringLiteral("PRAGMA journal_mode = MEMORY"),
+        QStringLiteral("PRAGMA temp_store = MEMORY"),
+        QStringLiteral("PRAGMA cache_size = -131072"),  // 128 MiB
+    };
+    for (const QString &pragma : buildPragmas) {
+        if (!pragmaQuery.exec(pragma)) {
+            qWarning() << "[buildCompendium] PRAGMA hint failed (non-fatal):" << pragma
+                       << pragmaQuery.lastError().text();
+        }
+    }
+
     for (const QString &scriptPath : sqlScripts) {
         if (!executeSqlScript(database, scriptPath, error)) {
             qCritical().noquote() << QStringLiteral("✗ %1").arg(error);

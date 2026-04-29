@@ -1,5 +1,6 @@
 #include "compendium_fact_inserter.h"
 
+#include <QHash>
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QVariant>
@@ -230,13 +231,14 @@ bool FactInserter::insertSerials(const SourceRecordEnvelope &rec,
 bool FactInserter::insertFacts(const SourceRecordEnvelope &rec,
                                 QSqlDatabase &db,
                                 CompilerStats &stats,
-                                QString &error) const
+                                QString &error,
+                                int sourcePriority) const
 {
     if (rec.linkedGameId.isEmpty() || rec.resolvedSystemId <= 0) {
         return true;
     }
 
-    const int    priority   = fetchSourcePriority(rec.sourceId, db);
+    const int    priority   = sourcePriority;
     const double confidence = rec.linkedConfidencePercent / 100.0;
 
     for (auto it = rec.fields.constBegin(); it != rec.fields.constEnd(); ++it) {
@@ -273,6 +275,10 @@ bool FactInserter::insert(const QList<SourceRecordEnvelope> &records,
                            CompilerStats &stats,
                            QString &error) const
 {
+    // Cache source priorities so fetchSourcePriority is called once per source,
+    // not once per record (avoids an O(N) SELECT loop across large batches).
+    QHash<QString, int> priorityCache;
+
     for (const SourceRecordEnvelope &rec : records) {
         if (!ensureGame(rec, db, stats, error)) {
             return false;
@@ -286,7 +292,11 @@ bool FactInserter::insert(const QList<SourceRecordEnvelope> &records,
         if (!insertSerials(rec, db, stats, error)) {
             return false;
         }
-        if (!insertFacts(rec, db, stats, error)) {
+        auto it = priorityCache.constFind(rec.sourceId);
+        if (it == priorityCache.constEnd()) {
+            it = priorityCache.insert(rec.sourceId, fetchSourcePriority(rec.sourceId, db));
+        }
+        if (!insertFacts(rec, db, stats, error, it.value())) {
             return false;
         }
     }
