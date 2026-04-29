@@ -103,6 +103,7 @@ int handleModCatalogBuildCommand(CliContext &ctx);
 // ── DAT Management & Metadata Editing ─────────────────────────────────────────
 // --update-dats, --import-dat, --remove-dat, --list-dats, --edit-metadata
 int handleBuildCompendiumCommand(CliContext &ctx);
+int handleEnrichCompendiumCommand(CliContext &ctx);
 int handleUpdateDatsCommand(CliContext &ctx);
 int handleImportDatCommand(CliContext &ctx);
 int handleRemoveDatCommand(CliContext &ctx);

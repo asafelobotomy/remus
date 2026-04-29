@@ -12,10 +12,14 @@ if [[ -n "${NPX_BIN:-}" ]] && [[ -x "$NPX_BIN" ]]; then
 fi
 
 # Probe standard locations (covers Ubuntu, Arch, Fedora, nvm, fnm, Homebrew)
+_nvm_node_dir=""
+if [[ -d "$HOME/.nvm/versions/node" ]]; then
+  _nvm_node_dir=$(find "$HOME/.nvm/versions/node" -mindepth 1 -maxdepth 1 -type d 2>/dev/null | sort -V | tail -1 || true)
+fi
 for candidate in \
   "$(command -v npx 2>/dev/null || true)" \
   "$HOME/.local/share/fnm/aliases/default/bin/npx" \
-  "$HOME/.nvm/versions/node/$(ls "$HOME/.nvm/versions/node/" 2>/dev/null | sort -V | tail -1)/bin/npx" \
+  "${_nvm_node_dir:+${_nvm_node_dir}/bin/npx}" \
   "/opt/homebrew/bin/npx" \
   "/home/linuxbrew/.linuxbrew/bin/npx" \
   "$HOME/.linuxbrew/bin/npx" \
@@ -24,12 +28,9 @@ for candidate in \
   [[ -n "$candidate" ]] && [[ -x "$candidate" ]] && exec "$candidate" "$@"
 done
 
-# Toolbox / Distrobox fallback (Bazzite / immutable Fedora Atomic desktops)
-if command -v distrobox &>/dev/null; then
-  exec distrobox enter -- npx "$@" 2>/dev/null
-elif command -v toolbox &>/dev/null; then
-  exec toolbox run npx "$@" 2>/dev/null
-fi
+# shellcheck source=hooks/scripts/lib-hooks.sh
+source "$(dirname "$0")/lib-hooks.sh"
+try_exec_in_container npx "$@"
 
 echo "ERROR: npx not found." >&2
 echo "Install Node.js: https://nodejs.org/ or via your package manager." >&2

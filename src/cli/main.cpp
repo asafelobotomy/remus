@@ -209,6 +209,7 @@ int main(int argc, char *argv[])
         "preset"));
 
     addActionOption(QCommandLineOption("build-compendium", "Build a canonical compendium database from a manifest"));
+    addActionOption(QCommandLineOption("enrich-compendium", "Run enrichment passes (GameTDB) against an existing compendium database without rebuilding"));
     addOption(QCommandLineOption("compendium-manifest", "Path to compendium source manifest JSON", "path"));
     addOption(QCommandLineOption("compendium-output", "Output SQLite path for compiled compendium", "path", "data/compendium/remus_compendium.db"));
 
@@ -330,6 +331,7 @@ int main(int argc, char *argv[])
     if (int rc = handleModCommands(ctx))           return rc;
     if (int rc = handleModCatalogBuildCommand(ctx)) return rc;
     if (int rc = handleBuildCompendiumCommand(ctx)) return rc;
+    if (int rc = handleEnrichCompendiumCommand(ctx)) return rc;
     if (int rc = handleUpdateDatsCommand(ctx))     return rc;
     if (int rc = handleImportDatCommand(ctx))      return rc;
     if (int rc = handleRemoveDatCommand(ctx))      return rc;

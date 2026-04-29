@@ -1,11 +1,35 @@
 #include "system_resolver.h"
 
+#include <QRegularExpression>
+
 namespace Remus {
 
 using namespace Constants::Systems;
 
 int SystemResolver::systemIdByDatName(const QString &datName)
 {
+    auto normalizeDatName = [](QString value) {
+        static const QRegularExpression parenRe(QStringLiteral("\\s*\\([^)]*\\)"));
+        static const QRegularExpression dashSpacingRe(QStringLiteral("\\s*-\\s*"));
+        static const QRegularExpression whitespaceRe(QStringLiteral("\\s+"));
+
+        // Remove common suffix qualifiers that do not change the platform.
+        value.remove(parenRe);
+
+        // Normalize Unicode dash variants to ASCII '-' without regex escapes.
+        for (qsizetype i = 0; i < value.size(); ++i) {
+            const ushort code = value.at(i).unicode();
+            if (code >= 0x2010 && code <= 0x2015) {
+                value[i] = QLatin1Char('-');
+            }
+        }
+
+        // Normalize dash spacing and collapse whitespace.
+        value.replace(dashSpacingRe, QStringLiteral(" - "));
+        value.replace(whitespaceRe, QStringLiteral(" "));
+        return value.trimmed().toLower();
+    };
+
     static const QMap<QString, int> datNameMap = {
         {QStringLiteral("Nintendo - Nintendo Entertainment System"), ID_NES},
         {QStringLiteral("Nintendo - Family Computer Disk System"), ID_NES},
@@ -49,8 +73,22 @@ int SystemResolver::systemIdByDatName(const QString &datName)
         {QStringLiteral("Microsoft - Xbox 360"), ID_XBOX360},
     };
 
+    static QMap<QString, int> normalizedDatNameMap;
+    if (normalizedDatNameMap.isEmpty()) {
+        for (auto it = datNameMap.constBegin(); it != datNameMap.constEnd(); ++it) {
+            normalizedDatNameMap.insert(normalizeDatName(it.key()), it.value());
+        }
+        // Common alias where upstream alternates between -16 and 16.
+        normalizedDatNameMap.insert(normalizeDatName(QStringLiteral("NEC - PC Engine - TurboGrafx 16")), ID_TURBOGRAFX16);
+    }
+
     if (datNameMap.contains(datName)) {
         return datNameMap.value(datName);
+    }
+
+    const QString normalizedInput = normalizeDatName(datName);
+    if (normalizedDatNameMap.contains(normalizedInput)) {
+        return normalizedDatNameMap.value(normalizedInput);
     }
 
     for (auto it = datNameMap.constBegin(); it != datNameMap.constEnd(); ++it) {

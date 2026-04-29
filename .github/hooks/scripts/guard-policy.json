@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "blockedCommands": [
+    "git reset --hard",
+    "git checkout --",
+    "rm -rf /"
+  ],
+  "requiresConfirmation": [
+    "git push --force",
+    "git rebase -i"
+  ]
+}

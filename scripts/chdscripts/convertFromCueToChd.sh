@@ -1,5 +1,8 @@
 #!/bin/bash
 
+set -euo pipefail
+shopt -s globstar nullglob
+
 # Grab .cue file
 for f in ./**/*.cue
 do

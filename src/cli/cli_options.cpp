@@ -129,6 +129,7 @@ void registerAllOptions(QCommandLineParser &parser, QSet<QString> &actionOptions
         "preset"));
 
     addActionOption(QCommandLineOption("build-compendium", "Build a canonical compendium database from a manifest"));
+    addActionOption(QCommandLineOption("enrich-compendium", "Run enrichment passes (GameTDB) against an existing compendium database without rebuilding"));
     addOption(QCommandLineOption("compendium-manifest", "Path to compendium source manifest JSON", "path"));
     addOption(QCommandLineOption("compendium-output", "Output SQLite path for compiled compendium", "path", "data/compendium/remus_compendium.db"));
 

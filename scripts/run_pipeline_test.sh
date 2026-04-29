@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+set -euo pipefail
+
 # ──────────────────────────────────────────────────────────────────────
 # run_pipeline_test.sh — Formalized pipeline test runner for Remus
 #
@@ -33,7 +35,6 @@
 #   ├── summary.txt           Human-readable result summary
 #   └── organized/            Organized output (if organize step is run)
 # ──────────────────────────────────────────────────────────────────────
-set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 CLI="$ROOT_DIR/build/remus-cli"

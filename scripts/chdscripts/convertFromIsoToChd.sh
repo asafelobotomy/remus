@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -euo pipefail
+
 # Grab .iso file
 for f in ./*.iso
 do

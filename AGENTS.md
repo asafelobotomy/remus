@@ -12,15 +12,21 @@
 
 | Agent | File | Model (primary) | Role | Allow-list |
 |-------|------|-----------------|------|------------|
-| **Code** | `coding.agent.md` | GPT-5.1 / Claude Sonnet 4.6 | Implement features, refactor, multi-step coding tasks | Review, Doctor, Fast, Researcher, Explore, Security |
-| **Review** | `review.agent.md` | GPT-5.4 / Claude Opus 4.6 | Deep code review and architectural analysis with Lean/Kaizen critique | Code, Fast, Researcher, Doctor, Explore, Security |
-| **Doctor** | `doctor.agent.md` | Claude Sonnet 4.6 | Read-only health check — instructions, agents, MCP config, workspace files | Code, Setup, Researcher, Explore, Security, Extensions |
-| **Setup** | `setup.agent.md` | Claude Sonnet 4.6 | Template lifecycle — first-time setup, upstream updates, backup restore, and factory restore | Doctor, Code, Extensions, Researcher, Explore |
-| **Researcher** | `researcher.agent.md` | Claude Sonnet 4.6 | Online and offline research — fetch docs, track URLs, structured output | Code, Doctor, Explore, Security |
-| **Fast** | `fast.agent.md` | Claude Haiku 4.5 | Quick questions, syntax lookups, and lightweight single-file edits | Code, Explore |
+| **Code** | `coding.agent.md` | GPT-5.3-Codex / Claude Sonnet 4.6 | Implement features, refactor, multi-step coding tasks | Review, Audit, Researcher, Explore, Commit, Organise, Planner, Docs, Debugger, Cleaner |
+| **Review** | `review.agent.md` | GPT-5.4 / Claude Sonnet 4.6 | Deep code review and architectural analysis with Lean/Kaizen critique | Code, Audit, Organise, Docs, Debugger, Cleaner |
+| **Audit** | `audit.agent.md` | GPT-5.4 / Claude Sonnet 4.6 | Read-only health check and security audit — structural validation, upstream comparison, OWASP, secrets | Code, Setup, Researcher, Extensions, Organise, Planner, Cleaner |
+| **Setup** | `setup.agent.md` | Claude Sonnet 4.6 | Template lifecycle — first-time setup, upstream updates, backup restore, and factory restore | Audit, Extensions, Organise, Researcher |
+| **Researcher** | `researcher.agent.md` | Claude Sonnet 4.6 | Online and offline research — fetch docs, track URLs, structured output | Code, Audit, Explore, Docs, Planner |
+| **Fast** | `fast.agent.md` | Claude Haiku 4.5 | Quick questions, syntax lookups, and lightweight single-file edits | Code, Explore, Commit |
 | **Explore** | `explore.agent.md` | Claude Haiku 4.5 | Fast read-only codebase exploration and Q&A subagent | Researcher |
-| **Extensions** | `extensions.agent.md` | Claude Sonnet 4.6 | VS Code extension management, profiles, and workspace configuration | Security, Researcher, Doctor, Fast, Explore |
-| **Security** | `security.agent.md` | GPT-5.4 / Claude Opus 4.6 | Read-only security audit — OWASP, secrets, injection, supply-chain | Code, Doctor, Researcher, Explore, Review |
+| **Extensions** | `extensions.agent.md` | Claude Sonnet 4.6 | VS Code extension management, profiles, and workspace configuration | Code, Audit, Organise, Researcher |
+| **Commit** | `commit.agent.md` | GPT-5.2 / Claude Sonnet 4.6 | Full git lifecycle — stage, commit, push, pull, rebase, merge, branch, stash, tag, release, PR creation | Code, Review, Audit, Debugger, Organise, Cleaner |
+| **Debugger** | `debugger.agent.md` | GPT-5.4 / Claude Sonnet 4.6 | Diagnose failures, isolate root causes, triage regressions, and propose minimal fix paths | Code, Researcher, Audit, Planner |
+| **Docs** | `docs.agent.md` | Claude Sonnet 4.6 | Draft and update project documentation, walkthroughs, migration notes, README sections | Code, Researcher, Review, Explore |
+| **Organise** | `organise.agent.md` | GPT-5.3-Codex / Claude Sonnet 4.6 | Subagent-only structural worker — organise directories, move files, fix broken pathing | Code, Explore, Docs |
+| **Planner** | `planner.agent.md` | GPT-5.4 / Claude Sonnet 4.6 | Break down complex work into scoped execution plans, file lists, risks, verification steps | Code, Explore, Researcher, Debugger, Docs |
+| **Cleaner** | `cleaner.agent.md` | GPT-5.3-Codex / Claude Sonnet 4.6 | Repository hygiene — prune stale artefacts, caches, archives, and dead files | Code, Audit, Organise, Docs, Commit |
+| ~~Doctor~~ | `doctor.agent.md` | — | *Deprecated: replaced by the Audit agent. Kept for reference.* | — |
 
 ---
 
@@ -41,11 +47,13 @@
 | `Roll back the instructions update` | Same as above |
 | `List instruction backups` | List available backups in `.github/archive/` |
 
-### Doctor agent
+### Audit agent
 
 | Trigger phrase | Behaviour |
 |----------------|-----------|
-| `Health check` | Run D1–D9 checks across all instruction infrastructure |
+| `Health check` | Run D1–D14 checks across all instruction infrastructure |
+| `Security audit` | Run S1–S10 security checks (OWASP, secrets, injection, supply-chain) |
+| `Full audit` | Run both D1–D14 health checks and S1–S10 security checks |
 | `Check your heartbeat` | Fire heartbeat protocol (see `.copilot/workspace/HEARTBEAT.md`) |
 | `Check attention budget` | D1 only — count lines in copilot-instructions.md |
 | `Check agent files` | D4 only — validate all `.github/agents/` frontmatter |
@@ -65,6 +73,20 @@
 - First-time setup: [SETUP.md](SETUP.md)
 - Update, backup restore, and factory restore: [UPDATE.md](UPDATE.md)
 - Canonical inventory and counts: `.copilot/workspace/workspace-index.json`
+- Canonical managed-file manifest: `.github/copilot-version.md`
+
+## Skill Inventory
+
+Project skills live under `.github/skills/`.
+Use `.github/copilot-version.md` as the canonical inventory during audits.
+
+Installed skills:
+- `accessibility-review`, `agentic-workflows`, `api-design`, `changelog-entry`, `commit-preflight`, `compress-prose`, `conventional-commit`, `create-adr`, `dependency-update`, `docker-scaffold`, `env-config`, `extension-review`, `fix-ci-failure`, `issue-triage`, `lean-pr-review`, `mcp-builder`, `mcp-management`, `onboarding-docs`, `performance-profiling`, `plugin-management`, `refactor-extract`, `security-audit`, `skill-creator`, `skill-management`, `tech-debt-audit`, `test-coverage-review`, `tool-protocol`, `webapp-testing`
+
+## Compatibility Notes
+
+`doctor.agent.md` is retained as a compatibility-only reference during the Audit-agent transition.
+`security.agent.md` is intentionally absent because upstream merged that role into `audit.agent.md` plus the `security-audit` skill.
 
 ---
 
@@ -72,7 +94,7 @@
 
 - Maximum subagent depth: **3** (defined in §9 of copilot-instructions.md)
 - Each agent's `agents:` allow-list restricts which subagents it may invoke
-- All subagents inherit §11 Tool Protocol, §12 Skill Protocol, §13 MCP Protocol
+- All subagents inherit §11 Tool Protocol, §12 Skill Protocol, §13 MCP Protocol, §14 Workspace Knowledge
 - Subagent output must include: files changed, LOC delta, test result, baseline breaches
 
 ---
@@ -81,18 +103,21 @@
 
 ```
 User → Code → Review → Code (iterate)
-             ↘ Doctor (health check)
-             ↘ Security (security check before done)
-User → Doctor → Code (apply fixes)
-              ↘ Setup (version behind)
-              ↘ Security (security diagnostics)
-User → Setup → Doctor (post-update health check)
+             ↘ Audit (health check or security scan before done)
+             ↘ Commit (stage and publish changes)
+User → Audit → Code (apply fixes)
+             ↘ Setup (version behind)
+User → Setup → Audit (post-update health check)
 User → Researcher → Code (implement findings)
-                  ↘ Doctor (verify written files)
+                  ↘ Audit (verify written files)
 User → Fast → Code (escalate large tasks)
-User → Security → Code (apply fixes)
-               ↘ Doctor (post-fix health check)
-User → Extensions → Doctor (post-config health check)
+            ↘ Commit (stage and publish)
+User → Commit → Review (review before commit)
+              ↘ Audit (post-commit security scan)
+User → Extensions → Audit (post-config health check)
+User → Debugger → Code (implement the fix)
+User → Planner → Code (implement the plan)
+User → Docs → Review (review written docs)
 ```
 
 ---

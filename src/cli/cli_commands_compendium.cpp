@@ -1,13 +1,15 @@
 #include "cli_commands.h"
 #include "cli_helpers.h"
+#include "compendium_enrichment.h"
+#include "compendium_sql_utilities.h"
 
+#include "../core/compendium_manifest_parser.h"
 #include "../metadata/compendium_compiler_service.h"
 
 #include <QDateTime>
 #include <QDebug>
 #include <QDir>
 #include <QElapsedTimer>
-#include <QFile>
 #include <QFileInfo>
 #include <QJsonArray>
 #include <QJsonDocument>
@@ -17,265 +19,8 @@
 #include <QSqlQuery>
 #include <QUuid>
 
-namespace {
-
-struct CompendiumSourceDescriptor {
-    QString sourceId;
-    QString displayName;
-    QString sourceType;
-    QString snapshotId;
-    QString snapshotLabel;
-    QString snapshotRef;
-    QString path;
-    QString checksumSha256;
-    QString licenseId;
-    QString licenseUrl;
-    QString fetchedAt;
-    int priority = 0;
-    bool enabled = false;
-    bool attributionRequired = false;
-};
-
-QString reportPathForDatabase(const QString &databasePath)
-{
-    QFileInfo info(databasePath);
-    return info.dir().filePath(info.completeBaseName() + QStringLiteral(".report.json"));
-}
-
-bool readTextFile(const QString &path, QString &content, QString &error)
-{
-    QFile file(path);
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        error = QStringLiteral("Failed to open %1: %2").arg(path, file.errorString());
-        return false;
-    }
-
-    content = QString::fromUtf8(file.readAll());
-    return true;
-}
-
-bool executeSqlScript(QSqlDatabase &database, const QString &path, QString &error)
-{
-    QString content;
-    if (!readTextFile(path, content, error)) {
-        return false;
-    }
-
-    const QStringList statements = content.split(';');
-    for (const QString &rawStatement : statements) {
-        const QString statement = rawStatement.trimmed();
-        if (statement.isEmpty()) {
-            continue;
-        }
-
-        QSqlQuery query(database);
-        if (!query.exec(statement)) {
-            error = QStringLiteral("Failed to execute %1: %2")
-                .arg(path, query.lastError().text());
-            return false;
-        }
-    }
-
-    return true;
-}
-
-bool requireString(const QJsonObject &object,
-                   const QString &fieldName,
-                   QString &value,
-                   QString &error,
-                   bool allowEmpty = false)
-{
-    if (!object.contains(fieldName) || !object.value(fieldName).isString()) {
-        error = QStringLiteral("Manifest field '%1' must be a string").arg(fieldName);
-        return false;
-    }
-
-    value = object.value(fieldName).toString().trimmed();
-    if (!allowEmpty && value.isEmpty()) {
-        error = QStringLiteral("Manifest field '%1' must not be empty").arg(fieldName);
-        return false;
-    }
-
-    return true;
-}
-
-bool parseSourceDescriptor(const QJsonObject &object,
-                           CompendiumSourceDescriptor &descriptor,
-                           QString &error)
-{
-    if (!requireString(object, QStringLiteral("source_id"), descriptor.sourceId, error)) {
-        return false;
-    }
-    if (!requireString(object, QStringLiteral("source_type"), descriptor.sourceType, error)) {
-        return false;
-    }
-    if (!requireString(object, QStringLiteral("snapshot_id"), descriptor.snapshotId, error)) {
-        return false;
-    }
-    if (!requireString(object, QStringLiteral("snapshot_label"), descriptor.snapshotLabel, error)) {
-        return false;
-    }
-    if (!requireString(object, QStringLiteral("path"), descriptor.path, error)) {
-        return false;
-    }
-
-    descriptor.displayName = object.value(QStringLiteral("display_name")).toString().trimmed();
-    if (descriptor.displayName.isEmpty()) {
-        descriptor.displayName = descriptor.sourceId;
-    }
-
-    descriptor.snapshotRef = object.value(QStringLiteral("snapshot_ref")).toString().trimmed();
-    descriptor.checksumSha256 = object.value(QStringLiteral("checksum_sha256")).toString().trimmed();
-    descriptor.licenseId = object.value(QStringLiteral("license_id")).toString().trimmed();
-    descriptor.licenseUrl = object.value(QStringLiteral("license_url")).toString().trimmed();
-    descriptor.fetchedAt = object.value(QStringLiteral("fetched_at")).toString().trimmed();
-
-    if (!object.contains(QStringLiteral("enabled")) || !object.value(QStringLiteral("enabled")).isBool()) {
-        error = QStringLiteral("Source '%1' field 'enabled' must be a boolean").arg(descriptor.sourceId);
-        return false;
-    }
-    descriptor.enabled = object.value(QStringLiteral("enabled")).toBool();
-
-    if (!object.contains(QStringLiteral("priority")) || !object.value(QStringLiteral("priority")).isDouble()) {
-        error = QStringLiteral("Source '%1' field 'priority' must be an integer").arg(descriptor.sourceId);
-        return false;
-    }
-    descriptor.priority = object.value(QStringLiteral("priority")).toInt();
-
-    if (object.contains(QStringLiteral("attribution_required"))) {
-        if (!object.value(QStringLiteral("attribution_required")).isBool()) {
-            error = QStringLiteral("Source '%1' field 'attribution_required' must be a boolean")
-                .arg(descriptor.sourceId);
-            return false;
-        }
-        descriptor.attributionRequired = object.value(QStringLiteral("attribution_required")).toBool();
-    }
-
-    const QFileInfo inputInfo(descriptor.path);
-    if (descriptor.enabled && (!inputInfo.exists() || !inputInfo.isFile())) {
-        error = QStringLiteral("Source '%1' path does not exist: %2")
-            .arg(descriptor.sourceId, descriptor.path);
-        return false;
-    }
-
-    return true;
-}
-
-bool parseManifest(const QString &manifestPath,
-                   QString &buildId,
-                   int &schemaVersion,
-                   QString &manifestJson,
-                   QJsonArray &sourceObjects,
-                   QList<CompendiumSourceDescriptor> &sources,
-                   QString &error)
-{
-    if (!readTextFile(manifestPath, manifestJson, error)) {
-        return false;
-    }
-
-    QJsonParseError parseError;
-    const QJsonDocument document = QJsonDocument::fromJson(manifestJson.toUtf8(), &parseError);
-    if (parseError.error != QJsonParseError::NoError || !document.isObject()) {
-        error = QStringLiteral("Manifest JSON parse failed: %1").arg(parseError.errorString());
-        return false;
-    }
-
-    const QJsonObject root = document.object();
-    if (!requireString(root, QStringLiteral("build_id"), buildId, error)) {
-        return false;
-    }
-
-    if (!root.contains(QStringLiteral("schema_version")) || !root.value(QStringLiteral("schema_version")).isDouble()) {
-        error = QStringLiteral("Manifest field 'schema_version' must be an integer");
-        return false;
-    }
-    schemaVersion = root.value(QStringLiteral("schema_version")).toInt();
-    if (schemaVersion != 1) {
-        error = QStringLiteral("Unsupported schema_version %1 (expected 1)").arg(schemaVersion);
-        return false;
-    }
-
-    if (!root.contains(QStringLiteral("sources")) || !root.value(QStringLiteral("sources")).isArray()) {
-        error = QStringLiteral("Manifest field 'sources' must be an array");
-        return false;
-    }
-
-    sourceObjects = root.value(QStringLiteral("sources")).toArray();
-    if (sourceObjects.isEmpty()) {
-        error = QStringLiteral("Manifest field 'sources' must not be empty");
-        return false;
-    }
-
-    for (const QJsonValue &value : sourceObjects) {
-        if (!value.isObject()) {
-            error = QStringLiteral("Each manifest source must be an object");
-            return false;
-        }
-
-        CompendiumSourceDescriptor descriptor;
-        if (!parseSourceDescriptor(value.toObject(), descriptor, error)) {
-            return false;
-        }
-        sources.append(descriptor);
-    }
-
-    return true;
-}
-
-bool execPrepared(QSqlQuery &query, QString &error, const QString &context)
-{
-    if (!query.exec()) {
-        error = QStringLiteral("%1 failed: %2").arg(context, query.lastError().text());
-        return false;
-    }
-    return true;
-}
-
-int scalarCount(QSqlDatabase &database, const QString &sql, QString &error)
-{
-    QSqlQuery query(database);
-    if (!query.exec(sql)) {
-        error = query.lastError().text();
-        return -1;
-    }
-    if (!query.next()) {
-        error = QStringLiteral("No rows returned for count query");
-        return -1;
-    }
-    return query.value(0).toInt();
-}
-
-bool integrityCheckOk(QSqlDatabase &database, QString &error)
-{
-    QSqlQuery query(database);
-    if (!query.exec(QStringLiteral("PRAGMA integrity_check"))) {
-        error = query.lastError().text();
-        return false;
-    }
-    if (!query.next()) {
-        error = QStringLiteral("PRAGMA integrity_check returned no rows");
-        return false;
-    }
-    if (query.value(0).toString().trimmed().compare(QStringLiteral("ok"), Qt::CaseInsensitive) != 0) {
-        error = query.value(0).toString().trimmed();
-        return false;
-    }
-    return true;
-}
-
-bool writeReport(const QString &path, const QJsonObject &report, QString &error)
-{
-    QFile file(path);
-    if (!file.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text)) {
-        error = QStringLiteral("Failed to write report %1: %2").arg(path, file.errorString());
-        return false;
-    }
-
-    file.write(QJsonDocument(report).toJson(QJsonDocument::Indented));
-    return true;
-}
-
-} // namespace
+using namespace CompendiumSqlUtilities;
+using namespace Remus;
 
 int handleBuildCompendiumCommand(CliContext &ctx)
 {
@@ -476,6 +221,66 @@ int handleBuildCompendiumCommand(CliContext &ctx)
         return 1;
     }
 
+    // ── Enrichment pass 1: Libretro metadata DATs ─────────────────────────────
+    int metadataGamesEnriched = 0;
+    int metadataFactsInserted = 0;
+    const QString metadataDir = findDataSubdir(QStringLiteral("metadata"));
+    if (!metadataDir.isEmpty()) {
+        if (!database.transaction()) {
+            qCritical() << "✗ Failed to start libretro enrichment transaction:" << database.lastError().text();
+            database.close();
+            QSqlDatabase::removeDatabase(connectionName);
+            return 1;
+        }
+        if (!CompendiumEnrichment::enrichFromLibretroMetadata(database,
+                                                              metadataDir,
+                                                              metadataGamesEnriched,
+                                                              metadataFactsInserted,
+                                                              error)) {
+            database.rollback();
+            qCritical().noquote() << QStringLiteral("✗ Libretro metadata enrichment failed: %1").arg(error);
+            database.close();
+            QSqlDatabase::removeDatabase(connectionName);
+            return 1;
+        }
+        if (!database.commit()) {
+            qCritical() << "✗ Failed to commit libretro enrichment transaction:" << database.lastError().text();
+            database.close();
+            QSqlDatabase::removeDatabase(connectionName);
+            return 1;
+        }
+    }
+
+    // ── Enrichment pass 2: GameTDB XML databases ───────────────────────────────
+    int gametdbGamesEnriched = 0;
+    int gametdbFactsInserted = 0;
+    const QString gametdbDir = findDataSubdir(QStringLiteral("gametdb"));
+    if (!gametdbDir.isEmpty()) {
+        if (!database.transaction()) {
+            qCritical() << "✗ Failed to start GameTDB enrichment transaction:" << database.lastError().text();
+            database.close();
+            QSqlDatabase::removeDatabase(connectionName);
+            return 1;
+        }
+        if (!CompendiumEnrichment::enrichFromGameTDB(database,
+                                                     gametdbDir,
+                                                     gametdbGamesEnriched,
+                                                     gametdbFactsInserted,
+                                                     error)) {
+            database.rollback();
+            qCritical().noquote() << QStringLiteral("✗ GameTDB enrichment failed: %1").arg(error);
+            database.close();
+            QSqlDatabase::removeDatabase(connectionName);
+            return 1;
+        }
+        if (!database.commit()) {
+            qCritical() << "✗ Failed to commit GameTDB enrichment transaction:" << database.lastError().text();
+            database.close();
+            QSqlDatabase::removeDatabase(connectionName);
+            return 1;
+        }
+    }
+
     int systemsCount = scalarCount(database, QStringLiteral("SELECT COUNT(*) FROM systems"), error);
     if (systemsCount < 0) {
         qCritical().noquote() << QStringLiteral("✗ Failed to count systems: %1").arg(error);
@@ -513,6 +318,10 @@ int handleBuildCompendiumCommand(CliContext &ctx)
     report.insert(QStringLiteral("facts_created"), stats.factsCreated);
     report.insert(QStringLiteral("resolved_fields"), stats.resolvedFields);
     report.insert(QStringLiteral("unresolved_conflicts"), conflictsCount);
+    report.insert(QStringLiteral("metadata_games_enriched"), metadataGamesEnriched);
+    report.insert(QStringLiteral("metadata_facts_inserted"), metadataFactsInserted);
+    report.insert(QStringLiteral("gametdb_games_enriched"), gametdbGamesEnriched);
+    report.insert(QStringLiteral("gametdb_facts_inserted"), gametdbFactsInserted);
     report.insert(QStringLiteral("duration_ms"), static_cast<qint64>(timer.elapsed()));
 
     if (!writeReport(reportPath, report, error)) {
