@@ -86,8 +86,31 @@ if [[ ! -d "$DAT_DIR" ]]; then
 fi
 
 mapfile -d '' DAT_FILES < <(find "$DAT_DIR" -maxdepth 1 -type f -name '*.dat' -print0 | sort -z)
-if [[ ${#DAT_FILES[@]} -eq 0 ]]; then
-    echo "error: no .dat files found in $DAT_DIR" >&2
+mapfile -d '' NO_INTRO_FILES < <(find "$DAT_DIR/no-intro" -maxdepth 1 -type f -name '*.dat' -print0 2>/dev/null | sort -z)
+mapfile -d '' REDUMP_FILES < <(find "$DAT_DIR/redump" -maxdepth 1 -type f -name '*.dat' -print0 2>/dev/null | sort -z)
+
+ALL_FILES=()
+ALL_PREFIXES=()
+ALL_PRIORITIES=()
+
+for f in "${DAT_FILES[@]}"; do
+    ALL_FILES+=("$f")
+    ALL_PREFIXES+=("libretro-dat")
+    ALL_PRIORITIES+=("10")
+done
+for f in "${NO_INTRO_FILES[@]}"; do
+    ALL_FILES+=("$f")
+    ALL_PREFIXES+=("libretro-nointro")
+    ALL_PRIORITIES+=("20")
+done
+for f in "${REDUMP_FILES[@]}"; do
+    ALL_FILES+=("$f")
+    ALL_PREFIXES+=("libretro-redump")
+    ALL_PRIORITIES+=("30")
+done
+
+if [[ ${#ALL_FILES[@]} -eq 0 ]]; then
+    echo "error: no .dat files found in $DAT_DIR (including no-intro/ and redump/ subdirs)" >&2
     exit 1
 fi
 
@@ -99,13 +122,15 @@ mkdir -p "$(dirname "$OUTPUT_PATH")"
     printf '  "schema_version": 1,\n'
     printf '  "sources": [\n'
 
-    for i in "${!DAT_FILES[@]}"; do
-        dat_file="${DAT_FILES[$i]}"
+    for i in "${!ALL_FILES[@]}"; do
+        dat_file="${ALL_FILES[$i]}"
+        dat_prefix="${ALL_PREFIXES[$i]}"
+        dat_priority="${ALL_PRIORITIES[$i]}"
         dat_name="$(basename "$dat_file")"
         dat_stem="${dat_name%.dat}"
         slug="$(slugify "$dat_stem")"
 
-        source_id="libretro-dat-${slug}"
+        source_id="${dat_prefix}-${slug}"
         snapshot_id="${source_id}-${DATE_STAMP}"
         checksum_sha256="$(sha256sum "$dat_file" | awk '{print $1}')"
 
@@ -128,10 +153,10 @@ mkdir -p "$(dirname "$OUTPUT_PATH")"
         printf '      "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",\n'
         printf '      "fetched_at": "%s",\n' "$(json_escape "$FETCHED_AT")"
         printf '      "enabled": true,\n'
-        printf '      "priority": 10,\n'
+        printf '      "priority": %s,\n' "$dat_priority"
         printf '      "attribution_required": true\n'
 
-        if [[ "$i" -lt $((${#DAT_FILES[@]} - 1)) ]]; then
+        if [[ "$i" -lt $((${#ALL_FILES[@]} - 1)) ]]; then
             printf '    },\n'
         else
             printf '    }\n'
@@ -143,4 +168,4 @@ mkdir -p "$(dirname "$OUTPUT_PATH")"
 } > "$OUTPUT_PATH"
 
 echo "Manifest written: $OUTPUT_PATH"
-echo "Sources: ${#DAT_FILES[@]}"
+echo "Sources: ${#ALL_FILES[@]} total (${#DAT_FILES[@]} curated, ${#NO_INTRO_FILES[@]} no-intro, ${#REDUMP_FILES[@]} redump)"

@@ -67,6 +67,39 @@ void SystemResolverTest::testSystemIdByDatName()
     QCOMPARE(SystemResolver::systemIdByDatName("Sega - Master System - Mark III"), ID_MASTER_SYSTEM);
     QCOMPARE(SystemResolver::systemIdByDatName("NEC - PC Engine - TurboGrafx-16"), ID_TURBOGRAFX16);
 
+    // GameTDB-style DAT names (prepend "Nintendo - Nintendo" pattern)
+    QCOMPARE(SystemResolver::systemIdByDatName("Nintendo - Nintendo GameCube"), ID_GAMECUBE);
+    QCOMPARE(SystemResolver::systemIdByDatName("Nintendo - Nintendo Wii"), ID_WII);
+
+    // Systems previously missing from the resolver
+    QCOMPARE(SystemResolver::systemIdByDatName("Nintendo - Family Computer Disk System"), ID_FDS);
+    QCOMPARE(SystemResolver::systemIdByDatName("The 3DO Company - 3DO"), ID_3DO);
+    QCOMPARE(SystemResolver::systemIdByDatName("SNK - Neo Geo"), ID_NEO_GEO);
+    QCOMPARE(SystemResolver::systemIdByDatName("SNK - Neo Geo CD"), ID_NEO_GEO_CD);
+
+    // Newly added systems
+    QCOMPARE(SystemResolver::systemIdByDatName("Atari - 5200"), ID_ATARI_5200);
+    QCOMPARE(SystemResolver::systemIdByDatName("Atari - 8-bit Family"), ID_ATARI_8BIT);
+    QCOMPARE(SystemResolver::systemIdByDatName("Atari - ST"), ID_ATARI_ST);
+    QCOMPARE(SystemResolver::systemIdByDatName("Atari - Jaguar CD"), ID_ATARI_JAGUAR_CD);
+    QCOMPARE(SystemResolver::systemIdByDatName("Coleco - ColecoVision"), ID_COLECOVISION);
+    QCOMPARE(SystemResolver::systemIdByDatName("Mattel - Intellivision"), ID_INTELLIVISION);
+    QCOMPARE(SystemResolver::systemIdByDatName("Microsoft - MSX"), ID_MSX);
+    QCOMPARE(SystemResolver::systemIdByDatName("Microsoft - MSX2"), ID_MSX2);
+    QCOMPARE(SystemResolver::systemIdByDatName("NEC - PC-FX"), ID_PC_FX);
+    QCOMPARE(SystemResolver::systemIdByDatName("Philips - CD-i"), ID_CDI);
+    QCOMPARE(SystemResolver::systemIdByDatName("Commodore - CD32"), ID_CD32);
+    QCOMPARE(SystemResolver::systemIdByDatName("Sega - SG-1000"), ID_SG1000);
+    QCOMPARE(SystemResolver::systemIdByDatName("Sega - Naomi"), ID_NAOMI);
+    QCOMPARE(SystemResolver::systemIdByDatName("Sega - Naomi 2"), ID_NAOMI);
+    QCOMPARE(SystemResolver::systemIdByDatName("Sony - PlayStation 3"), ID_PS3);
+    QCOMPARE(SystemResolver::systemIdByDatName("Nintendo - Wii U"), ID_WIIU);
+
+    // Digital / download variants
+    QCOMPARE(SystemResolver::systemIdByDatName("Nintendo - Wii (Digital)"), ID_WII);
+    QCOMPARE(SystemResolver::systemIdByDatName("Nintendo - Wii U (Digital)"), ID_WIIU);
+    QCOMPARE(SystemResolver::systemIdByDatName("Microsoft - XBOX 360 (Games on Demand)"), ID_XBOX360);
+
     // Unknown DAT name returns 0
     QCOMPARE(SystemResolver::systemIdByDatName("Unknown System"), 0);
     QCOMPARE(SystemResolver::systemIdByDatName(""), 0);

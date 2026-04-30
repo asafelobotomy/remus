@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <datafile xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="dstdb.xsd">
-	<DSTDB version="20260422092826" filter="EN" games="8459"/>
+	<DSTDB version="20260430141144" filter="EN" games="8460"/>
 	<!--
  GameTDB: DS, Database started in 2015 (https://www.gametdb.com)
  Never modify this file manually, it will get overwritten when you update. You can add games and fixes on the website.
@@ -8676,7 +8676,7 @@ in the palm of your hand!</synopsis>
 		<languages>EN,FR,DE,ES,IT,NL</languages>
 		<locale lang="EN">
 			<title>SimCity DS</title>
-			<synopsis>With SimCity DS, making your own metropolis breaks free from the PC screen and becomes a portable activity, allowing you to create your own city from scratch, bit by bit wherever you go.</synopsis>
+			<synopsis>Build the World's Greatest City! With SimCity DS, making your own metropolis breaks free from the PC screen and becomes a portable activity, allowing you to create your own city from scratch, bit by bit wherever you go.</synopsis>
 		</locale>
 		<locale lang="ES">
 			<title>SimCity DS</title>
@@ -11685,7 +11685,7 @@ You will also be able to perform magic, which will get better and better as your
 		<input players-multi-cart="4" players-single-cart="1"/>
 		<rom version="0" name="Animal Crossing: Wild World (USA) (EN).ds" size="33554432" crc="e81d7b7f" md5="44e0c876e50eeac09e12c6ba4834c3c6" sha1="cacd23594e760b49e167294a8709c43126f34549"/>
 		<rom version="1" name="Animal Crossing: Wild World (USA) (EN) (v1).ds" size="33554432" crc="643a8653" md5="4c8760d94c7915141d1ace3805b4eca0" sha1="fc4f7a7ed1a75c2a489980f60aa3c53d0b342d67"/>
-		<case color="000000" versions="2"/>
+		<case color="000000"/>
 	</game>
 	<game name="Oide yo Doubutsu no Mori (Japan) (JA)">
 		<id>ADMJ</id>
@@ -17379,7 +17379,11 @@ The snickering elves are back with Santa, but there is a new twist as Santa's ne
 		<languages>EN,SE,DK,NO</languages>
 		<locale lang="EN">
 			<title>Horse &amp; Foal: My Riding Stables</title>
-			<synopsis>Finally the dream of your own estate comes true for the Nintendo DS as well. Get ahead as a stable hand, raise sweet little foals and take excellent care of your guests in &quot;My Riding Stables&quot;. Give outstanding riding lessons and prepare your horses and students perfectly, so that they will be the riding stars of the future.</synopsis>
+			<synopsis>Finally the dream of your own estate comes true for the Nintendo DS as well. Get ahead as a stable hand, raise sweet little foals and take excellent care of your guests in &quot;My Riding Stables&quot;. Give outstanding riding lessons and prepare your horses and students perfectly, so that they will be the riding stars of the future.
+
+• The dream of your own stables has come true! In 'My Riding Stables', you can have a career as a stable hand, raise sweet foals and look after the welfare of your guests.
+• Give riding lessons and make your horses and young riders the stars of the future.
+• You want to ride in tournaments, too? Join in and show what you can do!</synopsis>
 		</locale>
 		<locale lang="SE">
 			<title>Mitt Stuteri: My Riding Stables</title>
@@ -27399,7 +27403,11 @@ Based on the classic card game, Top Trumps: Dogs and Dinosaurs takes the experie
 		<languages>EN,SE,DK,NO</languages>
 		<locale lang="EN">
 			<title>My Pet Hotel 2</title>
-			<synopsis>My Pet Hotel 2 is the refined pet care programme for demanding players. Owners of fish, budgies, guinea pigs, rabbits, cats, dogs, horses and their young will leave their animals with you and you will return them in excellent condition of course. The more success, the more opportunities!</synopsis>
+			<synopsis>My Pet Hotel 2 is the refined pet care programme for demanding players. Owners of fish, budgies, guinea pigs, rabbits, cats, dogs, horses and their young will leave their animals with you and you will return them in excellent condition of course. The more success, the more opportunities!
+
+• The second edition is now here with entirely new tasks. Game in English.
+• You organize an optimum care programme for your large and small guests.
+• From luxury items to lovely decorative items, you can read every need and desire in your darlings' eyes.</synopsis>
 		</locale>
 		<locale lang="SE">
 			<title>Jag Älskar Djur! Mitt Djurhotell 2</title>
@@ -39919,6 +39927,14 @@ in Link's first DS game.</synopsis>
 			<synopsis/>
 		</locale>
 		<locale lang="NL">
+			<title>Nintendo presents: Style Boutique</title>
+			<synopsis/>
+		</locale>
+		<locale lang="SE">
+			<title>Nintendo presents: Style Boutique</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DK">
 			<title>Nintendo presents: Style Boutique</title>
 			<synopsis/>
 		</locale>
@@ -56339,6 +56355,18 @@ Something mysterious has happened in Wonderland – the Little People have lost 
 			<title>LEGO Star Wars III The Clone Wars</title>
 			<synopsis/>
 		</locale>
+		<locale lang="SE">
+			<title>LEGO Star Wars III: The Clone Wars</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DK">
+			<title>LEGO Star Wars III: The Clone Wars</title>
+			<synopsis/>
+		</locale>
+		<locale lang="NO">
+			<title>LEGO Star Wars III: The Clone Wars</title>
+			<synopsis/>
+		</locale>
 		<locale lang="FI">
 			<title>LEGO Star Wars III: The Clone Wars</title>
 			<synopsis/>
@@ -67157,6 +67185,14 @@ There are lots of fun mini-games around Gampetreff. Will you find them all? You 
 			<title>Sonic Colors</title>
 			<synopsis>A brand new high speed action adventure in which Sonic the Hedgehog races through incredible theme park inspired worlds to rescue a colourful alien race from the clutches of Dr Eggman.</synopsis>
 		</locale>
+		<locale lang="FR">
+			<title>Sonic Colors</title>
+			<synopsis/>
+		</locale>
+		<locale lang="ES">
+			<title>Sonic Colors</title>
+			<synopsis/>
+		</locale>
 		<developer>Sonic Team</developer>
 		<publisher>Sega</publisher>
 		<date year="2010" month="11" day="16"/>
@@ -67167,7 +67203,7 @@ There are lots of fun mini-games around Gampetreff. Will you find them all? You 
 		<wi-fi players="2">
 			<feature>online</feature>
 		</wi-fi>
-		<input players-multi-cart="2" players-single-cart="1"/>
+		<input players-multi-cart="2" players-single-cart="2"/>
 		<rom version="" name="Sonic Colors (USA) (EN,FR,ES).ds"/>
 		<case color="000000"/>
 	</game>
@@ -68240,6 +68276,18 @@ There are lots of fun mini-games around Gampetreff. Will you find them all? You 
 		<region>PAL</region>
 		<languages>EN</languages>
 		<locale lang="EN">
+			<title>Zoobles! Spring to Life!</title>
+			<synopsis/>
+		</locale>
+		<locale lang="SE">
+			<title>Zoobles! Spring to Life!</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DK">
+			<title>Zoobles! Spring to Life!</title>
+			<synopsis/>
+		</locale>
+		<locale lang="NO">
 			<title>Zoobles! Spring to Life!</title>
 			<synopsis/>
 		</locale>
@@ -75451,6 +75499,22 @@ With limitless customization and creative options, the possibilities are endless
 			<title>Bratz: Girlz Really Rock</title>
 			<synopsis/>
 		</locale>
+		<locale lang="SE">
+			<title>Bratz: Girlz Really Rock</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DK">
+			<title>Bratz: Girlz Really Rock</title>
+			<synopsis/>
+		</locale>
+		<locale lang="NO">
+			<title>Bratz: Girlz Really Rock</title>
+			<synopsis/>
+		</locale>
+		<locale lang="FI">
+			<title>Bratz: Girlz Really Rock</title>
+			<synopsis/>
+		</locale>
 		<developer>Blitz Games</developer>
 		<publisher>THQ</publisher>
 		<date year="2008" month="11" day="7"/>
@@ -75993,6 +76057,23 @@ With limitless customization and creative options, the possibilities are endless
 		<region>PAL</region>
 		<languages>EN</languages>
 		<locale lang="EN">
+			<title>Casper's Scare School: Spooky Sports Day</title>
+			<synopsis>Spooky Sports Day comes around once a year and this time Casper is determined not to let Thatch steal all the glory. Casper and his friends have been training hard to make sure that this year the prizes are shared more fairly!
+
+• Help Casper beat Thatch in a series of sporting events and stay ahead of the game!
+• Hassle the humans in People Chase. Shout &quot;Boo!&quot; into the microphone to scare the 'Fleshies'.
+• It's penalty shoot out with a difference in Goal Keeper. Hit the goalie to score!
+• Use the DS stylus to pull awesome skate moves in Scare Boarding.</synopsis>
+		</locale>
+		<locale lang="SE">
+			<title>Casper's Scare School: Spooky Sports Day</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DK">
+			<title>Casper's Scare School: Spooky Sports Day</title>
+			<synopsis/>
+		</locale>
+		<locale lang="NO">
 			<title>Casper's Scare School: Spooky Sports Day</title>
 			<synopsis/>
 		</locale>
@@ -95420,6 +95501,22 @@ Schlüpfe in die Rolle von Mo, Meggie oder Staubfinger und erlebe ein spannendes
 		<languages>EN</languages>
 		<locale lang="EN">
 			<title>Travel Games for Dummies</title>
+			<synopsis>Take the Fun with You! Three (Chess, Sudoku, Solitaire) games to sharpen your skills. Each game includes three modes: How to, Practice and Play.
+
+- Over 600 puzzles to play on the go!
+- Multiple difficulty levels. Get hints while you practice.
+- Includes: Chess, Sudoku and Solitaire.</synopsis>
+		</locale>
+		<locale lang="SE">
+			<title>Travel Games for Dummies</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DK">
+			<title>Travel Games for Dummies</title>
+			<synopsis/>
+		</locale>
+		<locale lang="NO">
+			<title>Travel Games for Dummies</title>
 			<synopsis/>
 		</locale>
 		<publisher/>
@@ -105350,7 +105447,23 @@ Choose from 15 action-packed games and activities including Sam's Fire Fight, Co
 			<title>Nintendo DS Browser</title>
 			<synopsis>Turn your Nintendo DS into a fully-functioning web browser with the Nintendo DS Browser. Surf websites, check and send emails, bank and shop online - all wirelessly!</synopsis>
 		</locale>
+		<locale lang="FR">
+			<title>Navigateur Nintendo DS</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DE">
+			<title>Nintendo DS Browser</title>
+			<synopsis/>
+		</locale>
 		<locale lang="ES">
+			<title>Nintendo DS Browser</title>
+			<synopsis/>
+		</locale>
+		<locale lang="IT">
+			<title>Nintendo DS Browser</title>
+			<synopsis/>
+		</locale>
+		<locale lang="NL">
 			<title>Nintendo DS Browser</title>
 			<synopsis/>
 		</locale>
@@ -108208,22 +108321,6 @@ Program your own version of famous songs and share them with other players. Or j
 		<rom version="0" name="TRON: Evolution (USA) (EN).ds" size="67108864" crc="0607dcf2" md5="d32130e2fdee1bb2dc93a4597de056b5" sha1="ffaff67b3ebd2c72ae045e5bb983077177f5dffa"/>
 		<case color="000000"/>
 	</game>
-	<game name="TRON: Evolution (Europe) (EN,FR,DE,ES,IT,NL)">
-		<id>VTEV</id>
-		<type>DS</type>
-		<region>PAL</region>
-		<languages>EN,FR,DE,ES,IT,NL</languages>
-		<locale lang="EN">
-			<title>TRON: Evolution</title>
-			<synopsis/>
-		</locale>
-		<publisher/>
-		<date year="2004" month="1" day="1"/>
-		<rating type="PEGI" value="12"/>
-		<wi-fi players="0"/>
-		<input players-multi-cart="1" players-single-cart="1"/>
-		<rom version="0" name="TRON: Evolution (Europe) (EN,FR,DE,ES,IT,NL).ds" size="67108864" crc="926dcd22" md5="0e41e852583770b0c64c6a7204945c22" sha1="b446ad997acb00d0017f79a1634df29229ff4407"/>
-	</game>
 	<game name="TRON: Evolution (Europe) (EN,SE,DK,NO)">
 		<id>VTEX</id>
 		<type>DS</type>
@@ -108231,6 +108328,18 @@ Program your own version of famous songs and share them with other players. Or j
 		<languages>EN,SE,DK,NO</languages>
 		<locale lang="EN">
 			<title>TRON: Evolution</title>
+			<synopsis>Save the Tron World from complete Meltdown! Battle enemies in light disc combat as a powerful System Monitor. Race Light Cycles and Battle in Grid Tanks with up to 4 players. Camera feature can only be used with Nintendo DSi or DSi XL systems.</synopsis>
+		</locale>
+		<locale lang="SE">
+			<title>Tron: Evolution</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DK">
+			<title>Tron: Evolution</title>
+			<synopsis/>
+		</locale>
+		<locale lang="NO">
+			<title>Tron: Evolution</title>
 			<synopsis/>
 		</locale>
 		<publisher/>
@@ -111667,7 +111776,10 @@ friends or family members to help prepare it. 300 recipes have been tested and p
 		<languages>EN,FR,DE,IT,SE,DK,NO</languages>
 		<locale lang="EN">
 			<title>Horse &amp; Foal: Best Friends - My Horse</title>
-			<synopsis>Your dream has come true! You are the proud owner of your very own horse. Groom, train, and care for your horse and become best friends forever!</synopsis>
+			<synopsis>You and your horse are not only best friends, but you will soon be a triumphant prize-winning team! If you win tournaments and earn points by looking after your horse correctly, you will gradually improve the facilities in your stables. You can go out on rides with your friends in multiplayer mode or compete against them in the show jumping.
+
+• Your dream has come true! You are the proud owner of your very own horse.
+• Groom, train, and care for your horse and become best friends forever!</synopsis>
 		</locale>
 		<locale lang="FR">
 			<title>Cheval &amp; Poney : Best Friends - Mon Cheval</title>
@@ -127679,7 +127791,15 @@ Have a blast with classic and new playground games like Dodgeball and Spit Balls
 			<synopsis>In Real Adventures: Pet Vet, players will learn the techniques required to diagnose and treat 23 different lovable pets, including a Yorkshire terrier, turtle, parakeet, rabbit and hamster. To do so, players must successfully administer more than 40 Touch Screen tests while interacting with stressed patients and concerned pet owners.</synopsis>
 		</locale>
 		<locale lang="SE">
-			<title>Jag är Veterinär: Du gör så att de söta, små djuren mår bättre!</title>
+			<title>Jag är Veterinär</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DK">
+			<title>Jeg er Dyrlæge</title>
+			<synopsis/>
+		</locale>
+		<locale lang="NO">
+			<title>Jeg er Dyrlege</title>
 			<synopsis/>
 		</locale>
 		<developer>FrontLine Studios</developer>
@@ -137041,6 +137161,18 @@ Enter Carnival: Funfair Games and let the fun begin!</synopsis>
 			<title>Zoo Tycoon 2 DS</title>
 			<synopsis/>
 		</locale>
+		<locale lang="SE">
+			<title>Zoo Tycoon 2 DS</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DK">
+			<title>Zoo Tycoon 2 DS</title>
+			<synopsis/>
+		</locale>
+		<locale lang="NO">
+			<title>Zoo Tycoon 2 DS</title>
+			<synopsis/>
+		</locale>
 		<locale lang="FI">
 			<title>Zoo Tycoon 2 DS</title>
 			<synopsis/>
@@ -140318,6 +140450,32 @@ Only you and the crazy Team Penguin can stop Dr. Blowhole and his plan for world
 		<rom version="0" name="TouchMaster 4: Connect (Europe) (EN,FR,DE,ES,IT).ds" size="67108864" crc="7a999d02" md5="7fcf596579a1f1f4982ef3000fb59a45" sha1="ca254e712c119ef4fe835e276dad42b443279aca"/>
 		<rom version="1" name="TouchMaster 4: Connect (Europe) (EN,FR,DE,ES,IT) (v1).ds" size="67108864" crc="403f4508" md5="be79f8a2db9c97568968cac6d6ff9bc1" sha1="536ee8c8aeb7ddfaaa44885251b57af9485a6660"/>
 	</game>
+	<game name="TRON: Evolution (Europe) (EN,FR,DE,ES,IT,NL)">
+		<id>VTEV</id>
+		<type>DSi</type>
+		<region>PAL</region>
+		<languages>EN,FR,DE,ES,IT,NL</languages>
+		<locale lang="EN">
+			<title>TRON: Evolution</title>
+			<synopsis>TRON: Evolution DS is an exciting action / adventure game that casts you in the story as a System Monitor investigating a power failure crisis that threatens the entire grid.</synopsis>
+		</locale>
+		<locale lang="ES">
+			<title>TRON: Evolution</title>
+			<synopsis/>
+		</locale>
+		<developer>n-Space</developer>
+		<publisher>Disney Interactive Studios / Buena Vista Games</publisher>
+		<date year="2010" month="11" day="26"/>
+		<genre>action,adventure</genre>
+		<rating type="PEGI" value="12">
+			<descriptor>violence</descriptor>
+		</rating>
+		<wi-fi players="0"/>
+		<input players-multi-cart="4" players-single-cart="1">
+			<control type="camera" required="false"/>
+		</input>
+		<rom version="0" name="TRON: Evolution (Europe) (EN,FR,DE,ES,IT,NL).ds" size="67108864" crc="926dcd22" md5="0e41e852583770b0c64c6a7204945c22" sha1="b446ad997acb00d0017f79a1634df29229ff4407"/>
+	</game>
 	<game name="Zhu Zhu Pets featuring the Wild Bunch (Europe) (EN,FR,DE,ES,IT)">
 		<id>VZUV</id>
 		<type>DSi</type>
@@ -140381,11 +140539,11 @@ Only you and the crazy Team Penguin can stop Dr. Blowhole and his plan for world
 		<input players-multi-cart="1" players-single-cart="1"/>
 		<rom version="" name="Nintendo DSi Shop (USA) (EN).ds"/>
 	</game>
-	<game name="Nintendo DSi Browser (USA) (EN)">
+	<game name="Nintendo DSi Browser (USA) (EN,FR,ES)">
 		<id>HNGE</id>
 		<type>DSiWare</type>
 		<region>NTSC-U</region>
-		<languages>EN</languages>
+		<languages>EN,FR,ES</languages>
 		<locale lang="EN">
 			<title>Nintendo DSi Browser</title>
 			<synopsis>This version of the popular Opera browser is made specifically for Nintendo DSi systems, and uses both screens of the Nintendo DSi and its Touch Screen technology to offer a comfortable, speedy and straightforward surfing experience. You can navigate web pages with your stylus and enter text whenever the need arises by using the on-screen keyboard or built-in handwriting recognition.
@@ -140402,12 +140560,14 @@ Explore the world from the palm of your hand with the Nintendo DSi Browser.</syn
 		</locale>
 		<developer>OPERA Software / Nintendo</developer>
 		<publisher>Nintendo</publisher>
-		<date year="" month="" day=""/>
+		<date year="2009" month="4" day="5"/>
 		<genre>software</genre>
 		<rating type="ESRB" value=""/>
-		<wi-fi players="0"/>
+		<wi-fi players="0">
+			<feature>online</feature>
+		</wi-fi>
 		<input players-multi-cart="1" players-single-cart="1"/>
-		<rom version="" name="Nintendo DSi Browser (USA) (EN).ds"/>
+		<rom version="" name="Nintendo DSi Browser (USA) (EN,FR,ES).ds"/>
 	</game>
 	<game name="Nintendo DSi Browser (Japan) (EN,JA)">
 		<id>HNGJ</id>
@@ -140434,7 +140594,23 @@ Explore the world from the palm of your hand with the Nintendo DSi Browser.</syn
 			<title>Nintendo DSi Browser</title>
 			<synopsis>This version of the popular Opera browser is made specifically for Nintendo DSi systems, and uses both screens of the Nintendo DSi and its Touch Screen technology to offer a comfortable, speedy and straightforward surfing experience. You can navigate web pages with your stylus and enter text whenever the need arises by using the on-screen keyboard or built-in handwriting recognition.</synopsis>
 		</locale>
+		<locale lang="FR">
+			<title>Nintendo DSi Browser</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DE">
+			<title>Nintendo DSi Browser</title>
+			<synopsis/>
+		</locale>
 		<locale lang="ES">
+			<title>Nintendo DSi Browser</title>
+			<synopsis/>
+		</locale>
+		<locale lang="IT">
+			<title>Nintendo DSi Browser</title>
+			<synopsis/>
+		</locale>
+		<locale lang="NL">
 			<title>Nintendo DSi Browser</title>
 			<synopsis/>
 		</locale>
@@ -140442,9 +140618,7 @@ Explore the world from the palm of your hand with the Nintendo DSi Browser.</syn
 		<publisher>Nintendo</publisher>
 		<date year="2009" month="4" day="3"/>
 		<genre>educational,software</genre>
-		<rating type="PEGI" value="3">
-			<descriptor>online</descriptor>
-		</rating>
+		<rating type="PEGI" value="3"/>
 		<wi-fi players="1">
 			<feature>online</feature>
 			<feature>download</feature>
@@ -140459,12 +140633,17 @@ Explore the world from the palm of your hand with the Nintendo DSi Browser.</syn
 		<languages>EN</languages>
 		<locale lang="EN">
 			<title>Nintendo DSi Browser</title>
-			<synopsis/>
+			<synopsis>This version of the popular Opera browser is made specifically for Nintendo DSi systems, and uses both screens of the Nintendo DSi and its Touch Screen technology to offer a comfortable, speedy and straightforward surfing experience. You can navigate web pages with your stylus and enter text whenever the need arises by using the on-screen keyboard or built-in handwriting recognition.</synopsis>
 		</locale>
-		<publisher/>
-		<date year="" month="" day=""/>
+		<developer>OPERA Software / Nintendo</developer>
+		<publisher>Nintendo</publisher>
+		<date year="2009" month="4" day="2"/>
+		<genre>educational,software</genre>
 		<rating type="PEGI" value=""/>
-		<wi-fi players="0"/>
+		<wi-fi players="1">
+			<feature>online</feature>
+			<feature>download</feature>
+		</wi-fi>
 		<input players-multi-cart="1" players-single-cart="1"/>
 		<rom version="" name="Nintendo DSi Browser (Europe) (EN).ds"/>
 	</game>
@@ -147869,6 +148048,30 @@ facing your clients.</synopsis>
 		<wi-fi players="0"/>
 		<input players-multi-cart="1" players-single-cart="1"/>
 		<rom version="" name="Kyara pasha! Ki kan sha tōmasu (Japan) (JA).ds"/>
+	</game>
+	<game name="Nintendo Fan Network (USA) (EN)">
+		<id>K8UE</id>
+		<type>DSiWare</type>
+		<region>NTSC-U</region>
+		<languages>EN</languages>
+		<locale lang="EN">
+			<title>Nintendo Fan Network</title>
+			<synopsis>Nintendo Fan Network makes your Mariners game-day experience more interactive, social and fun!
+Nintendo Fan Network enhances the live game by putting games, contests, stats, scores, news, and even the trajectory and location of each pitch directly on your Nintendo DS. Fill the time in between innings with special games and trivia, take part in the daily participation into contests, or order food and beverages directly to your seat!</synopsis>
+		</locale>
+		<developer>Nintendo</developer>
+		<publisher>Nintendo</publisher>
+		<date year="2007" month="4" day="2"/>
+		<genre>puzzle,trivia,software</genre>
+		<rating type="ESRB" value="">
+			<descriptor>some adult assistance may be needed</descriptor>
+		</rating>
+		<wi-fi players="0">
+			<feature>online</feature>
+			<feature>score</feature>
+		</wi-fi>
+		<input players-multi-cart="1" players-single-cart="1"/>
+		<rom version="" name="Nintendo Fan Network (USA) (EN).ds"/>
 	</game>
 	<game name="Sagittarius-A-Star (Japan) (JA)">
 		<id>K8XJ</id>

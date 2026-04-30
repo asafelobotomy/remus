@@ -52,6 +52,21 @@ INSERT OR REPLACE INTO systems (
 (39, 'Arcade', 'Arcade / MAME', 'Various', 0, 1970, 'CRC32', 0, 0),
 (40, '3DO', '3DO Interactive Multiplayer', 'Panasonic', 5, 1993, 'MD5', 1, 0),
 (41, 'Neo Geo CD', 'SNK Neo Geo CD', 'SNK', 5, 1994, 'MD5', 1, 0),
-(42, 'FDS', 'Nintendo - Family Computer Disk System', 'Nintendo', 3, 1986, 'CRC32', 0, 0);
+(42, 'FDS', 'Nintendo - Family Computer Disk System', 'Nintendo', 3, 1986, 'CRC32', 0, 0),
+(43, 'Atari 5200', 'Atari 5200', 'Atari', 2, 1982, 'CRC32', 0, 0),
+(44, 'Atari 8-bit', 'Atari 8-bit Family', 'Atari', 2, 1979, 'CRC32', 0, 0),
+(45, 'Atari ST', 'Atari ST', 'Atari', 3, 1985, 'CRC32', 0, 0),
+(46, 'ColecoVision', 'ColecoVision', 'Coleco', 2, 1982, 'CRC32', 0, 0),
+(47, 'Intellivision', 'Mattel Intellivision', 'Mattel', 2, 1979, 'CRC32', 0, 0),
+(48, 'MSX', 'MSX', 'Microsoft', 3, 1983, 'CRC32', 0, 0),
+(49, 'MSX2', 'MSX2', 'Microsoft', 3, 1985, 'CRC32', 0, 0),
+(50, 'PC-FX', 'NEC PC-FX', 'NEC', 5, 1994, 'MD5', 1, 0),
+(51, 'CD-i', 'Philips CD-i', 'Philips', 4, 1991, 'MD5', 1, 0),
+(52, 'CD32', 'Commodore Amiga CD32', 'Commodore', 5, 1993, 'MD5', 1, 0),
+(53, 'Naomi', 'Sega Naomi', 'Sega', 6, 1998, 'MD5', 1, 0),
+(54, 'SG-1000', 'Sega SG-1000', 'Sega', 2, 1983, 'CRC32', 0, 0),
+(55, 'Atari Jaguar CD', 'Atari Jaguar CD', 'Atari', 5, 1995, 'MD5', 1, 0),
+(56, 'Wii U', 'Nintendo Wii U', 'Nintendo', 8, 2012, 'SHA1', 1, 0),
+(57, 'PlayStation 3', 'Sony PlayStation 3', 'Sony', 7, 2006, 'SHA1', 1, 0);
 
 COMMIT;

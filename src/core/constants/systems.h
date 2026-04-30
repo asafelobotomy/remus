@@ -136,6 +136,54 @@ inline constexpr int ID_3DO = 40;
 /// Neo Geo CD
 inline constexpr int ID_NEO_GEO_CD = 41;
 
+/// Nintendo Family Computer Disk System
+inline constexpr int ID_FDS = 42;
+
+/// Atari 5200 SuperSystem
+inline constexpr int ID_ATARI_5200 = 43;
+
+/// Atari 8-bit Family (400/800/XL/XE)
+inline constexpr int ID_ATARI_8BIT = 44;
+
+/// Atari ST / STE / TT / Falcon
+inline constexpr int ID_ATARI_ST = 45;
+
+/// Coleco ColecoVision
+inline constexpr int ID_COLECOVISION = 46;
+
+/// Mattel Intellivision
+inline constexpr int ID_INTELLIVISION = 47;
+
+/// Microsoft MSX
+inline constexpr int ID_MSX = 48;
+
+/// Microsoft MSX2
+inline constexpr int ID_MSX2 = 49;
+
+/// NEC PC-FX
+inline constexpr int ID_PC_FX = 50;
+
+/// Philips CD-i
+inline constexpr int ID_CDI = 51;
+
+/// Commodore Amiga CD32
+inline constexpr int ID_CD32 = 52;
+
+/// Sega Naomi (arcade board)
+inline constexpr int ID_NAOMI = 53;
+
+/// Sega SG-1000
+inline constexpr int ID_SG1000 = 54;
+
+/// Atari Jaguar CD
+inline constexpr int ID_ATARI_JAGUAR_CD = 55;
+
+/// Nintendo Wii U
+inline constexpr int ID_WIIU = 56;
+
+/// Sony PlayStation 3
+inline constexpr int ID_PS3 = 57;
+
 // ============================================================================
 // System Definition
 // ============================================================================

@@ -7,6 +7,15 @@
 # By default, copies the core DATs (no-intro + redump + dat/) for the top
 # systems.  With --all, copies every DAT file found.
 #
+# Directory layout written to data/databases/:
+#   data/databases/           ← libretro dat/ (curated, GameTDB-style)
+#   data/databases/no-intro/  ← metadat/no-intro/ (No-Intro full catalogs)
+#   data/databases/redump/    ← metadat/redump/   (Redump full catalogs)
+#
+# Storing the three sources in separate subdirectories avoids filename
+# collisions (e.g. Sega - Saturn.dat exists in both dat/ and redump/)
+# and lets both be ingested as distinct catalog sources.
+#
 # Requires: git
 # License: CC-BY-SA-4.0 (libretro-database)
 
@@ -15,6 +24,8 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 TARGET_DIR="$PROJECT_ROOT/data/databases"
+NO_INTRO_DIR="$TARGET_DIR/no-intro"
+REDUMP_DIR="$TARGET_DIR/redump"
 CLONE_DIR="${TMPDIR:-/tmp}/libretro-database"
 REPO_URL="https://github.com/libretro/libretro-database.git"
 
@@ -63,6 +74,9 @@ fi
 
 echo "=== Remus DAT Updater ==="
 echo "Target: $TARGET_DIR"
+echo "  dat/       → $TARGET_DIR"
+echo "  no-intro/  → $NO_INTRO_DIR"
+echo "  redump/    → $REDUMP_DIR"
 
 # Clone or update the repo (shallow clone to save bandwidth)
 if [[ -d "$CLONE_DIR/.git" ]]; then
@@ -76,14 +90,15 @@ else
     git clone --depth=1 "$REPO_URL" "$CLONE_DIR"
 fi
 
-mkdir -p "$TARGET_DIR"
+mkdir -p "$TARGET_DIR" "$NO_INTRO_DIR" "$REDUMP_DIR"
 
 copied=0
 skipped=0
 
-# Helper: copy a DAT file if it exists
+# Helper: copy a DAT file to a target directory
 copy_dat() {
     local src="$1"
+    local dest_dir="$2"
     local basename
     basename="$(basename "$src")"
 
@@ -91,7 +106,7 @@ copy_dat() {
         return
     fi
 
-    cp "$src" "$TARGET_DIR/$basename"
+    cp "$src" "$dest_dir/$basename"
     copied=$((copied + 1))
 }
 
@@ -120,36 +135,36 @@ should_include() {
 echo ""
 echo "Copying DAT files..."
 
-# 1. metadat/no-intro/ — primary cartridge hash DATs
+# 1. metadat/no-intro/ — full No-Intro catalogs for cartridge systems
 if [[ -d "$CLONE_DIR/metadat/no-intro" ]]; then
     for dat in "$CLONE_DIR/metadat/no-intro/"*.dat; do
         [[ -f "$dat" ]] || continue
         if should_include "$dat"; then
-            copy_dat "$dat"
+            copy_dat "$dat" "$NO_INTRO_DIR"
         else
             skipped=$((skipped + 1))
         fi
     done
 fi
 
-# 2. metadat/redump/ — primary disc hash DATs
+# 2. metadat/redump/ — full Redump catalogs for disc systems
 if [[ -d "$CLONE_DIR/metadat/redump" ]]; then
     for dat in "$CLONE_DIR/metadat/redump/"*.dat; do
         [[ -f "$dat" ]] || continue
         if should_include "$dat"; then
-            copy_dat "$dat"
+            copy_dat "$dat" "$REDUMP_DIR"
         else
             skipped=$((skipped + 1))
         fi
     done
 fi
 
-# 3. dat/ — libretro's own DATs (smaller, curated)
+# 3. dat/ — libretro's curated DATs (GameTDB-style, supplemental metadata)
 if [[ -d "$CLONE_DIR/dat" ]]; then
     for dat in "$CLONE_DIR/dat/"*.dat; do
         [[ -f "$dat" ]] || continue
         if should_include "$dat"; then
-            copy_dat "$dat"
+            copy_dat "$dat" "$TARGET_DIR"
         else
             skipped=$((skipped + 1))
         fi
@@ -218,11 +233,16 @@ done
 
 echo ""
 echo "Done: $copied DATs copied, $skipped skipped, $meta_copied metadata DATs copied, $gametdb_copied GameTDB databases downloaded"
-echo "Location: $TARGET_DIR"
-ls -1 "$TARGET_DIR" | wc -l | xargs -I{} echo "Total DAT files: {}"
+echo ""
+echo "DAT file locations:"
+ls -1 "$TARGET_DIR"/*.dat 2>/dev/null | wc -l | xargs -I{} echo "  dat/ (curated):     {} files in $TARGET_DIR"
+ls -1 "$NO_INTRO_DIR"/*.dat 2>/dev/null | wc -l | xargs -I{} echo "  no-intro/:          {} files in $NO_INTRO_DIR"
+ls -1 "$REDUMP_DIR"/*.dat 2>/dev/null | wc -l | xargs -I{} echo "  redump/:            {} files in $REDUMP_DIR"
 if [[ -d "$METADATA_DIR" ]]; then
-    find "$METADATA_DIR" -name '*.dat' | wc -l | xargs -I{} echo "Total metadata DAT files: {}"
+    find "$METADATA_DIR" -name '*.dat' | wc -l | xargs -I{} echo "  metadata DATs:      {} files"
 fi
 if [[ -d "$GAMETDB_DIR" ]]; then
-    find "$GAMETDB_DIR" -name '*.xml' | wc -l | xargs -I{} echo "Total GameTDB XML files: {}"
+    find "$GAMETDB_DIR" -name '*.xml' | wc -l | xargs -I{} echo "  GameTDB XMLs:       {} files"
 fi
+echo ""
+echo "Next step: run scripts/generate_compendium_manifest.sh to update the manifest."

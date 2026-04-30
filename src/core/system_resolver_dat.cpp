@@ -32,11 +32,13 @@ int SystemResolver::systemIdByDatName(const QString &datName)
 
     static const QMap<QString, int> datNameMap = {
         {QStringLiteral("Nintendo - Nintendo Entertainment System"), ID_NES},
-        {QStringLiteral("Nintendo - Family Computer Disk System"), ID_NES},
+        {QStringLiteral("Nintendo - Family Computer Disk System"), ID_FDS},
         {QStringLiteral("Nintendo - Super Nintendo Entertainment System"), ID_SNES},
         {QStringLiteral("Nintendo - Nintendo 64"), ID_N64},
         {QStringLiteral("Nintendo - GameCube"), ID_GAMECUBE},
+        {QStringLiteral("Nintendo - Nintendo GameCube"), ID_GAMECUBE},
         {QStringLiteral("Nintendo - Wii"), ID_WII},
+        {QStringLiteral("Nintendo - Nintendo Wii"), ID_WII},
         {QStringLiteral("Nintendo - Game Boy"), ID_GB},
         {QStringLiteral("Nintendo - Game Boy Color"), ID_GBC},
         {QStringLiteral("Nintendo - Game Boy Advance"), ID_GBA},
@@ -62,15 +64,58 @@ int SystemResolver::systemIdByDatName(const QString &datName)
         {QStringLiteral("NEC - PC Engine - TurboGrafx-16"), ID_TURBOGRAFX16},
         {QStringLiteral("NEC - PC Engine CD - TurboGrafx-CD"), ID_TURBOGRAFX_CD},
         {QStringLiteral("NEC - PC Engine SuperGrafx"), ID_SUPERGRAFX},
+        {QStringLiteral("SNK - Neo Geo"), ID_NEO_GEO},
+        {QStringLiteral("SNK - Neo Geo CD"), ID_NEO_GEO_CD},
         {QStringLiteral("SNK - Neo Geo Pocket"), ID_NGP},
         {QStringLiteral("SNK - Neo Geo Pocket Color"), ID_NGP},
         {QStringLiteral("Bandai - WonderSwan"), ID_WONDERSWAN},
         {QStringLiteral("Bandai - WonderSwan Color"), ID_WONDERSWAN},
         {QStringLiteral("Commodore - 64"), ID_C64},
         {QStringLiteral("Commodore - Amiga"), ID_AMIGA},
+        {QStringLiteral("Commodore - CD32"), ID_CD32},
+        {QStringLiteral("Commodore - CDTV"), ID_AMIGA},
         {QStringLiteral("Sinclair - ZX Spectrum"), ID_ZX_SPECTRUM},
+        {QStringLiteral("Sinclair - ZX Spectrum +3"), ID_ZX_SPECTRUM},
         {QStringLiteral("Microsoft - Xbox"), ID_XBOX},
         {QStringLiteral("Microsoft - Xbox 360"), ID_XBOX360},
+        {QStringLiteral("Microsoft - MSX"), ID_MSX},
+        {QStringLiteral("Microsoft - MSX2"), ID_MSX2},
+        {QStringLiteral("The 3DO Company - 3DO"), ID_3DO},
+        // Atari expanded systems
+        {QStringLiteral("Atari - 5200"), ID_ATARI_5200},
+        {QStringLiteral("Atari - 8-bit Family"), ID_ATARI_8BIT},
+        {QStringLiteral("Atari - ST"), ID_ATARI_ST},
+        {QStringLiteral("Atari - Jaguar CD"), ID_ATARI_JAGUAR_CD},
+        // NEC expanded systems
+        {QStringLiteral("NEC - PC-FX"), ID_PC_FX},
+        {QStringLiteral("NEC - PC Engine - TurboGrafx 16"), ID_TURBOGRAFX16},
+        // Philips
+        {QStringLiteral("Philips - CD-i"), ID_CDI},
+        // Sega expanded systems
+        {QStringLiteral("Sega - SG-1000"), ID_SG1000},
+        {QStringLiteral("Sega - Naomi"), ID_NAOMI},
+        {QStringLiteral("Sega - Naomi 2"), ID_NAOMI},
+        // Coleco / Mattel
+        {QStringLiteral("Coleco - ColecoVision"), ID_COLECOVISION},
+        {QStringLiteral("Mattel - Intellivision"), ID_INTELLIVISION},
+        // Sony expanded
+        {QStringLiteral("Sony - PlayStation 3"), ID_PS3},
+        // Nintendo expanded
+        {QStringLiteral("Nintendo - Wii U"), ID_WIIU},
+        {QStringLiteral("Nintendo - Nintendo Wii U"), ID_WIIU},
+        // Digital / download variants that map to the same system
+        {QStringLiteral("Nintendo - Wii (Digital)"), ID_WII},
+        {QStringLiteral("Nintendo - Wii U (Digital)"), ID_WIIU},
+        {QStringLiteral("Nintendo - New Nintendo 3DS"), ID_3DS},
+        {QStringLiteral("Nintendo - Nintendo DSi"), ID_NDS},
+        {QStringLiteral("Nintendo - Nintendo 64DD"), ID_N64},
+        {QStringLiteral("Nintendo - Satellaview"), ID_SNES},
+        {QStringLiteral("Microsoft - XBOX 360 (Games on Demand)"), ID_XBOX360},
+        {QStringLiteral("Microsoft - XBOX 360 (Title Updates)"), ID_XBOX360},
+        {QStringLiteral("Microsoft - Xbox 360 (Digital)"), ID_XBOX360},
+        {QStringLiteral("Sony - PlayStation 3 (PSN)"), ID_PS3},
+        {QStringLiteral("Sony - PlayStation Portable (PSN)"), ID_PSP},
+        {QStringLiteral("Sony - PlayStation Vita (PSN)"), ID_PSVITA},
     };
 
     static QMap<QString, int> normalizedDatNameMap;

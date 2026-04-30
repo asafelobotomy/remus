@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <datafile xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="switchtdb.xsd">
-	<SwitchTDB version="20260422092853" filter="EN" games="20812"/>
+	<SwitchTDB version="20260430140209" filter="EN" games="20881"/>
 	<!--
  GameTDB: Switch, Database started in 2017 (https://www.gametdb.com)
  Never modify this file manually, it will get overwritten when you update. You can add games and fixes on the website.
@@ -31622,6 +31622,10 @@ Then they meet other &quot;loopers.&quot; Simon, the leader, and the mysterious 
 			<title>TASOMACHI: Behind the Twilight</title>
 			<synopsis/>
 		</locale>
+		<locale lang="JA">
+			<title>黄昏ニ眠ル街</title>
+			<synopsis/>
+		</locale>
 		<developer>Orbital Express</developer>
 		<publisher>PLAYISM</publisher>
 		<date year="2022" month="4" day="28"/>
@@ -40082,6 +40086,14 @@ With a new crisis facing the world, Dai makes a promise to his mentor,
 encounters new friends, and slowly learns about his own inescapable fate...
 This is the beginning of Dai's adventure, and his quest to become a true hero!</synopsis>
 		</locale>
+		<locale lang="ZHTW">
+			<title>無限神速斬 勇者鬥惡龍 達伊的大冒險 中文版</title>
+			<synopsis/>
+		</locale>
+		<locale lang="ZHCN">
+			<title>无限神速斩 勇者斗恶龙 达伊的大冒险 中文版</title>
+			<synopsis/>
+		</locale>
 		<publisher>SQUARE ENIX</publisher>
 		<date year="2023" month="9" day="28"/>
 		<genre>action,adventure,role-playing</genre>
@@ -43321,6 +43333,10 @@ amiibo - Compatible with all Splatoon™ series amiibo™ figures. By tapping th
 		</locale>
 		<locale lang="FR">
 			<title>Splatoon 2</title>
+			<synopsis/>
+		</locale>
+		<locale lang="JA">
+			<title>スプラトゥーン2</title>
 			<synopsis/>
 		</locale>
 		<developer>Nintendo</developer>
@@ -49131,6 +49147,11 @@ The Bayonetta 2 game also features an online and local wireless 2-player coopera
 		<date_JPN year="2018" month="2" day="17"/>
 		<date_EUR year="2018" month="2" day="16"/>
 		<genre>action</genre>
+		<rating_CERO value="D">
+			<descriptor_CERO>sex</descriptor_CERO>
+			<descriptor_CERO>violence</descriptor_CERO>
+			<descriptor_CERO>crime</descriptor_CERO>
+		</rating_CERO>
 		<rating_ESRB value="M">
 			<descriptor_ESRB>blood and gore</descriptor_ESRB>
 			<descriptor_ESRB>intense violence</descriptor_ESRB>
@@ -49144,7 +49165,6 @@ The Bayonetta 2 game also features an online and local wireless 2-player coopera
 		</rating_PEGI>
 		<wi-fi players="2">
 			<feature>online</feature>
-			<feature>score</feature>
 		</wi-fi>
 		<input players="1">
 			<control type="joycon" required="false"/>
@@ -58584,6 +58604,10 @@ Game modes have also evolved. The series’ popular Dream Penant and climactic o
 			<synopsis>Ys returns with a brand new adventure for the first time in 8 years!
 
 Adol awakens shipwrecked and stranded on a cursed island. There, he and the other shipwrecked passengers he rescues form a village to challenge fearsome beasts and mysterious ruins on the isolated island. Amidst this, Adol begins to dream of a mysterious blue-haired maiden living in a unknown world. Join Adol as he unravels the riddle of the cursed isle and the blue-haired maiden Dana in Ys VIII: Lacrimosa of Dana</synopsis>
+		</locale>
+		<locale lang="JA">
+			<title>イースVIII -Lacrimosa of DANA-</title>
+			<synopsis/>
 		</locale>
 		<publisher>Falcom</publisher>
 		<date year="" month="" day=""/>
@@ -80732,6 +80756,7 @@ Psikyo Collection Vol. 2 is coming up to Nintendo Switch. The four titles includ
 		</input>
 		<mode tv="true" handheld="true" tabletop="true"/>
 		<rom version="0" name="Psikyo Collection Vol. 2 (EN,JA,ZHTW,ZHCN).switch" size="1996488704" crc="3b2145b2" md5="cc899b2dd178efed8b4e39f65d015fad" sha1="b5571836f399672a50c31f67534f64634ee92975"/>
+		<case versions="2"/>
 	</game>
 	<game name="Under Night In-Birth - Exe:Late [cl-r] (EN,JA)">
 		<id>ARX2A</id>
@@ -89272,7 +89297,7 @@ Features:
 	<game name="Darksiders II - Deathinitive Edition (EN,FR,DE,ES,IT,KO,ZHCN,RU)">
 		<id>ATGPA</id>
 		<type>Switch</type>
-		<region>USA</region>
+		<region>USA,EUR</region>
 		<languages>EN,FR,DE,ES,IT,KO,ZHCN,RU</languages>
 		<locale lang="EN">
 			<title>Darksiders II - Deathinitive Edition</title>
@@ -94918,13 +94943,13 @@ SAMURAI JACK: BATTLE THROUGH TIME software © 2020 Cartoon Network. Adult Swim, 
 		<mode tv="true" handheld="true" tabletop="true"/>
 		<rom version="0" name="Samurai Jack: Battle Through Time (EN,FR,DE,ES,PT,JA,ZHCN,RU).switch" size="3992977408" crc="240eb5c8" md5="00f31a74f7bcc28263e1ecceaddaeea3" sha1="9633e95d17d047b02dae0615e2dd7cc5f3c28a42"/>
 	</game>
-	<game name="Psikyo Shooting Library Vol 1 (EN,JA)">
+	<game name="Psikyo Shooting Library Vol.1 (EN,JA)">
 		<id>AUF6A</id>
 		<type>Switch</type>
 		<region>JPN</region>
 		<languages>EN,JA</languages>
 		<locale lang="EN">
-			<title>Psikyo Shooting Library Vol 1</title>
+			<title>Psikyo Shooting Library Vol.1</title>
 			<synopsis>Strikers 1945
 A revolution broke out in shooting games in 1995. The Japanese brand &quot;Psikyo&quot; introduced a new enemy's attack, &quot;Spread bullets&quot; not seen before then, and the history of a new shooting game began.
 
@@ -94981,6 +95006,10 @@ Let’s blast off every enemy's planes from various sides of your screen.
 
 Fans who have enjoyed Psikyo Shooting will definitely enjoy this Zero Gunner 2.</synopsis>
 		</locale>
+		<locale lang="JA">
+			<title>彩京 Psikyo Shooting Library Vol.1</title>
+			<synopsis/>
+		</locale>
 		<publisher/>
 		<date year="" month="" day=""/>
 		<date_JPN year="2019" month="6" day="25"/>
@@ -94992,15 +95021,15 @@ Fans who have enjoyed Psikyo Shooting will definitely enjoy this Zero Gunner 2.<
 			<control type="procontroller" required="false"/>
 		</input>
 		<mode tv="true" handheld="true" tabletop="true"/>
-		<rom version="0" name="Psikyo Shooting Library Vol 1 (EN,JA).switch" size="1996488704" crc="bc7d606c" md5="169a115cc79a1564d01e4e84cf1d6032" sha1="d83e412043f3649867d67cb6a316d8bad0a08390"/>
+		<rom version="0" name="Psikyo Shooting Library Vol.1 (EN,JA).switch" size="1996488704" crc="bc7d606c" md5="169a115cc79a1564d01e4e84cf1d6032" sha1="d83e412043f3649867d67cb6a316d8bad0a08390"/>
 	</game>
-	<game name="Psikyo Shooting Library Vol 2 (EN,JA)">
+	<game name="Psikyo Shooting Library Vol.2 (EN,JA)">
 		<id>AUF8A</id>
 		<type>Switch</type>
 		<region>JPN</region>
 		<languages>EN,JA</languages>
 		<locale lang="EN">
-			<title>Psikyo Shooting Library Vol 2</title>
+			<title>Psikyo Shooting Library Vol.2</title>
 			<synopsis>Psikyo Shooting Library Vol. 2, squeezing six currently available eShop titles into one juicy bundle!
 
 Sengoku Ace
@@ -95037,6 +95066,10 @@ Will they be able to get the medicine before the Queen Pirates!?
 Gunbarich
 Gunbarich launched in arcade version in 2001. It is a new game with elements of puzzle and shooting in the late works of Japanese brand &quot;Psikyo&quot;. In Japan's amusement arcade, there is always one popular game.</synopsis>
 		</locale>
+		<locale lang="JA">
+			<title>彩京 Psikyo Shooting Library Vol.2</title>
+			<synopsis/>
+		</locale>
 		<publisher/>
 		<date year="" month="" day=""/>
 		<date_JPN year="2019" month="8" day="29"/>
@@ -95048,7 +95081,8 @@ Gunbarich launched in arcade version in 2001. It is a new game with elements of 
 			<control type="procontroller" required="false"/>
 		</input>
 		<mode tv="true" handheld="true" tabletop="true"/>
-		<rom version="0" name="Psikyo Shooting Library Vol 2 (EN,JA).switch" size="1996488704" crc="4208034f" md5="d0061a31177e892d69e2a002b01d16cf" sha1="6d90f1fdd1860024f4c7898bedee1f530d04c923"/>
+		<rom version="0" name="Psikyo Shooting Library Vol.2 (EN,JA).switch" size="1996488704" crc="4208034f" md5="d0061a31177e892d69e2a002b01d16cf" sha1="6d90f1fdd1860024f4c7898bedee1f530d04c923"/>
+		<case versions="2"/>
 	</game>
 	<game name="Hotline Miami Collection (EN,FR,DE,ES,PT,RU)">
 		<id>AUGBA</id>
@@ -153832,6 +153866,34 @@ Twin Hawk</synopsis>
 		</input>
 		<mode tv="true" handheld="true" tabletop="true"/>
 		<rom version="" name="Neopets - Mega Mini Games Collection - The Neopian Arcade Odyssey (EN,FR,DE,ES,IT,PT,JA,ZHTW,ZHCN).switch"/>
+		<case color=""/>
+	</game>
+	<game name="Reptilian Rising (EN,FR,DE,ES,PT,JA,ZHCN)">
+		<id>BUUZA</id>
+		<type>Switch</type>
+		<region>ALL</region>
+		<languages>EN,FR,DE,ES,PT,JA,ZHCN</languages>
+		<locale lang="EN">
+			<title>Reptilian Rising</title>
+			<synopsis/>
+		</locale>
+		<publisher>Numskull Games</publisher>
+		<date year="2026" month="4" day="23"/>
+		<genre>role-playing,strategy</genre>
+		<rating_ESRB value="T">
+			<descriptor_ESRB>blood</descriptor_ESRB>
+			<descriptor_ESRB>drug reference</descriptor_ESRB>
+			<descriptor_ESRB>suggestive themes</descriptor_ESRB>
+			<descriptor_ESRB>use of tobacco</descriptor_ESRB>
+			<descriptor_ESRB>violence</descriptor_ESRB>
+		</rating_ESRB>
+		<wi-fi players="0"/>
+		<input players="1">
+			<control type="joycon" required="false"/>
+			<control type="procontroller" required="false"/>
+		</input>
+		<mode tv="true" handheld="true" tabletop="true"/>
+		<rom version="" name="Reptilian Rising (EN,FR,DE,ES,PT,JA,ZHCN).switch"/>
 		<case color=""/>
 	</game>
 	<game name="NX Flash Cart (EN)">
@@ -217537,6 +217599,31 @@ Phoenix Wright: Ace Attorney - Trials and Tribulations
 		</input>
 		<mode tv="true" handheld="true" tabletop="true"/>
 		<rom version="" name="Mayhem in Single Valley (EN,FR,DE,ES,IT,PT,JA,KO,ZHCN,RU).switch"/>
+		<case color=""/>
+	</game>
+	<game name="Foreign Sun (EN)">
+		<id>A7YTA</id>
+		<type>eShop</type>
+		<region>ALL</region>
+		<languages>EN</languages>
+		<locale lang="EN">
+			<title>Foreign Sun</title>
+			<synopsis/>
+		</locale>
+		<developer>Final Scene Dev</developer>
+		<publisher>Brian Farina</publisher>
+		<date year="2026" month="4" day="21"/>
+		<genre>action</genre>
+		<rating_ESRB value="E10+">
+			<descriptor_ESRB>fantasy violence</descriptor_ESRB>
+		</rating_ESRB>
+		<wi-fi players="0"/>
+		<input players="1">
+			<control type="joycon" required="false"/>
+			<control type="procontroller" required="false"/>
+		</input>
+		<mode tv="true" handheld="true" tabletop="true"/>
+		<rom version="" name="Foreign Sun (EN).switch"/>
 		<case color=""/>
 	</game>
 	<game name="Flip The Buddy (EN)">
@@ -445243,6 +445330,32 @@ Assassin's Creed Anniversary Edition Mega Bundle requires download of at least 3
 		<rom version="" name="PICROSS S Doraemon &amp; F Characters edition (EN,FR,DE,ES,IT,PT,JA,KO,ZHTW,ZHCN).switch"/>
 		<case color=""/>
 	</game>
+	<game name="Locked-Room Mystery: Hidden Truths in Everyday Life (EN,KO,ZHTW)">
+		<id>BKAYB</id>
+		<type>eShop</type>
+		<region>USA</region>
+		<languages>EN,KO,ZHTW</languages>
+		<locale lang="EN">
+			<title>Locked-Room Mystery: Hidden Truths in Everyday Life</title>
+			<synopsis/>
+		</locale>
+		<publisher>MASK</publisher>
+		<date year="" month="" day=""/>
+		<date_USA year="2026" month="4" day="23"/>
+		<genre>adventure</genre>
+		<rating_ESRB value="E">
+			<descriptor_ESRB>mild blood</descriptor_ESRB>
+			<descriptor_ESRB>tobacco reference</descriptor_ESRB>
+		</rating_ESRB>
+		<wi-fi players="0"/>
+		<input players="1">
+			<control type="joycon" required="false"/>
+			<control type="procontroller" required="false"/>
+		</input>
+		<mode tv="true" handheld="true" tabletop="true"/>
+		<rom version="" name="Locked-Room Mystery: Hidden Truths in Everyday Life (EN,KO,ZHTW).switch"/>
+		<case color=""/>
+	</game>
 	<game name="Lost Pixel (EN)">
 		<id>BKAZA</id>
 		<type>eShop</type>
@@ -455714,6 +455827,32 @@ Assassin's Creed Anniversary Edition Mega Bundle requires download of at least 3
 		<rom version="" name="The Mansion of The Macabre (EN).switch"/>
 		<case color=""/>
 	</game>
+	<game name="Dark Light (EN,JA,ZHTW,ZHCN)">
+		<id>BL9VA</id>
+		<type>eShop</type>
+		<region>ALL</region>
+		<languages>EN,JA,ZHTW,ZHCN</languages>
+		<locale lang="EN">
+			<title>Dark Light</title>
+			<synopsis/>
+		</locale>
+		<developer>Mirari </developer>
+		<publisher>Mirari</publisher>
+		<date year="2026" month="4" day="23"/>
+		<genre>action</genre>
+		<rating_ESRB value="T">
+			<descriptor_ESRB>blood and gore</descriptor_ESRB>
+			<descriptor_ESRB>violence</descriptor_ESRB>
+		</rating_ESRB>
+		<wi-fi players="0"/>
+		<input players="1">
+			<control type="joycon" required="false"/>
+			<control type="procontroller" required="false"/>
+		</input>
+		<mode tv="true" handheld="true" tabletop="true"/>
+		<rom version="" name="Dark Light (EN,JA,ZHTW,ZHCN).switch"/>
+		<case color=""/>
+	</game>
 	<game name="Cursed Feed (EN)">
 		<id>BL9WA</id>
 		<type>eShop</type>
@@ -456060,6 +456199,31 @@ Assassin's Creed Anniversary Edition Mega Bundle requires download of at least 3
 		</input>
 		<mode tv="true" handheld="true" tabletop="true"/>
 		<rom version="" name="Ecchi Memories (EN).switch"/>
+		<case color=""/>
+	</game>
+	<game name="Traysia (EN,ES,JA)">
+		<id>BLAXA</id>
+		<type>eShop</type>
+		<region>ALL</region>
+		<languages>EN,ES,JA</languages>
+		<locale lang="EN">
+			<title>Traysia</title>
+			<synopsis/>
+		</locale>
+		<publisher>Ratalaika Games</publisher>
+		<date year="2026" month="4" day="24"/>
+		<genre>role-playing</genre>
+		<rating_ESRB value="E10+">
+			<descriptor_ESRB>fantasy violence</descriptor_ESRB>
+			<descriptor_ESRB>mild blood</descriptor_ESRB>
+		</rating_ESRB>
+		<wi-fi players="0"/>
+		<input players="2">
+			<control type="joycon" required="false"/>
+			<control type="procontroller" required="false"/>
+		</input>
+		<mode tv="true" handheld="true" tabletop="true"/>
+		<rom version="" name="Traysia (EN,ES,JA).switch"/>
 		<case color=""/>
 	</game>
 	<game name="Chicken Party: Animal Farm (EN)">
@@ -473346,6 +473510,30 @@ After enjoying the live performance, enjoy the mini-game &quot;SHORT SHORTs&quot
 		<rom version="" name="Golden Warden (EN,JA,ZHTW,ZHCN).switch"/>
 		<case color=""/>
 	</game>
+	<game name="Throw Anything: Zombie Invaders (EN,JA,KO)">
+		<id>BMSNA</id>
+		<type>eShop</type>
+		<region>ALL</region>
+		<languages>EN,JA,KO</languages>
+		<locale lang="EN">
+			<title>Throw Anything: Zombie Invaders</title>
+			<synopsis/>
+		</locale>
+		<publisher>CFK</publisher>
+		<date year="2026" month="4" day="23"/>
+		<genre>action</genre>
+		<rating_ESRB value="E10+">
+			<descriptor_ESRB>fantasy violence</descriptor_ESRB>
+		</rating_ESRB>
+		<wi-fi players="0"/>
+		<input players="1">
+			<control type="joycon" required="false"/>
+			<control type="procontroller" required="false"/>
+		</input>
+		<mode tv="true" handheld="true" tabletop="true"/>
+		<rom version="" name="Throw Anything: Zombie Invaders (EN,JA,KO).switch"/>
+		<case color=""/>
+	</game>
 	<game name="Bimfli &amp; His Time Travels: Egypt (EN)">
 		<id>BMSPA</id>
 		<type>eShop</type>
@@ -473390,6 +473578,30 @@ After enjoying the live performance, enjoy the mini-game &quot;SHORT SHORTs&quot
 		</input>
 		<mode tv="true" handheld="true" tabletop="true"/>
 		<rom version="" name="Bimfli &amp; His Time Travels: Japan (EN).switch"/>
+		<case color=""/>
+	</game>
+	<game name="CRUELTY (EN,FR,DE,ES,IT,JA,KO,ZHTW,ZHCN,RU)">
+		<id>BMSRA</id>
+		<type>eShop</type>
+		<region>ALL</region>
+		<languages>EN,FR,DE,ES,IT,JA,KO,ZHTW,ZHCN,RU</languages>
+		<locale lang="EN">
+			<title>CRUELTY</title>
+			<synopsis/>
+		</locale>
+		<publisher>CREEK </publisher>
+		<date year="2026" month="4" day="22"/>
+		<genre>action</genre>
+		<rating_ESRB value="M">
+			<descriptor_ESRB>blood and gore</descriptor_ESRB>
+		</rating_ESRB>
+		<wi-fi players="0"/>
+		<input players="1">
+			<control type="joycon" required="false"/>
+			<control type="procontroller" required="false"/>
+		</input>
+		<mode tv="true" handheld="true" tabletop="true"/>
+		<rom version="" name="CRUELTY (EN,FR,DE,ES,IT,JA,KO,ZHTW,ZHCN,RU).switch"/>
 		<case color=""/>
 	</game>
 	<game name="Kawaii Girls (EN)">
@@ -488231,6 +488443,29 @@ After enjoying the live performance, enjoy the mini-game &quot;SHORT SHORTs&quot
 		<rom version="" name="AGENT 07- SPY REVENGE (EN).switch"/>
 		<case color=""/>
 	</game>
+	<game name="Food Truck Chef - Full Course Edition (EN,FR,DE,ES,PT,JA,ZHTW,ZHCN)">
+		<id>BP7KA</id>
+		<type>eShop</type>
+		<region>ALL</region>
+		<languages>EN,FR,DE,ES,PT,JA,ZHTW,ZHCN</languages>
+		<locale lang="EN">
+			<title>Food Truck Chef - Full Course Edition</title>
+			<synopsis/>
+		</locale>
+		<developer>SOEDESCO</developer>
+		<publisher>Soedesco</publisher>
+		<date year="2026" month="4" day="23"/>
+		<genre>simulation</genre>
+		<rating_ESRB value="E"/>
+		<wi-fi players="0"/>
+		<input players="1">
+			<control type="joycon" required="false"/>
+			<control type="procontroller" required="false"/>
+		</input>
+		<mode tv="true" handheld="true" tabletop="true"/>
+		<rom version="" name="Food Truck Chef - Full Course Edition (EN,FR,DE,ES,PT,JA,ZHTW,ZHCN).switch"/>
+		<case color=""/>
+	</game>
 	<game name="Fighting Fantasy Classics Vol. 1 (EN)">
 		<id>BP7LA</id>
 		<type>eShop</type>
@@ -498144,6 +498379,7 @@ After enjoying the live performance, enjoy the mini-game &quot;SHORT SHORTs&quot
 		</input>
 		<mode tv="true" handheld="true" tabletop="true"/>
 		<rom version="" name="Just Dance 2026 Edition (EN,FR,DE,ES,IT,NL,PT,JA,KO,ZHTW,ZHCN,RU,PL).switch"/>
+		<case versions="2"/>
 	</game>
 	<game name="3 on 3 Soccer (EN)">
 		<id>BQ2UA</id>
@@ -498448,6 +498684,32 @@ After enjoying the live performance, enjoy the mini-game &quot;SHORT SHORTs&quot
 		<rom version="" name="Death by Scrolling (EN,FR,DE,ES,IT,PT,JA,KO,ZHCN,RU,PL).switch"/>
 		<case color=""/>
 	</game>
+	<game name="Vampire Crawlers: The Turbo Wildcard from Vampire Survivors (EN,FR,DE,ES,IT,PT,JA,KO,ZHTW,ZHCN,RU)">
+		<id>BQ45A</id>
+		<type>eShop</type>
+		<region>ALL</region>
+		<languages>EN,FR,DE,ES,IT,PT,JA,KO,ZHTW,ZHCN,RU</languages>
+		<locale lang="EN">
+			<title>Vampire Crawlers: The Turbo Wildcard from Vampire Survivors</title>
+			<synopsis/>
+		</locale>
+		<developer>poncle</developer>
+		<publisher>poncle</publisher>
+		<date year="2026" month="4" day="21"/>
+		<genre>action</genre>
+		<rating_ESRB value="T">
+			<descriptor_ESRB>blood</descriptor_ESRB>
+			<descriptor_ESRB>violence</descriptor_ESRB>
+		</rating_ESRB>
+		<wi-fi players="0"/>
+		<input players="1">
+			<control type="joycon" required="false"/>
+			<control type="procontroller" required="false"/>
+		</input>
+		<mode tv="true" handheld="true" tabletop="true"/>
+		<rom version="" name="Vampire Crawlers: The Turbo Wildcard from Vampire Survivors (EN,FR,DE,ES,IT,PT,JA,KO,ZHTW,ZHCN,RU).switch"/>
+		<case color=""/>
+	</game>
 	<game name="Clutter Puzzle Magazine Vol. 15 No. 1 Collector's Edition (EN)">
 		<id>BQ49A</id>
 		<type>eShop</type>
@@ -498562,6 +498824,32 @@ After enjoying the live performance, enjoy the mini-game &quot;SHORT SHORTs&quot
 		</input>
 		<mode tv="true" handheld="true" tabletop="true"/>
 		<rom version="" name="Demons Are Coming! (EN,FR,DE,ES,IT,NL,PT,JA,KO,ZHTW,ZHCN).switch"/>
+		<case color=""/>
+	</game>
+	<game name="Dragon Is Dead (EN,FR,DE,ES,IT,KO,ZHCN)">
+		<id>BQ4LA</id>
+		<type>eShop</type>
+		<region>ALL</region>
+		<languages>EN,FR,DE,ES,IT,KO,ZHCN</languages>
+		<locale lang="EN">
+			<title>Dragon Is Dead</title>
+			<synopsis/>
+		</locale>
+		<publisher>PM Studios</publisher>
+		<date year="2026" month="4" day="23"/>
+		<genre>action</genre>
+		<rating_ESRB value="T">
+			<descriptor_ESRB>blood and gore</descriptor_ESRB>
+			<descriptor_ESRB>mild language</descriptor_ESRB>
+			<descriptor_ESRB>violence</descriptor_ESRB>
+		</rating_ESRB>
+		<wi-fi players="0"/>
+		<input players="1">
+			<control type="joycon" required="false"/>
+			<control type="procontroller" required="false"/>
+		</input>
+		<mode tv="true" handheld="true" tabletop="true"/>
+		<rom version="" name="Dragon Is Dead (EN,FR,DE,ES,IT,KO,ZHCN).switch"/>
 		<case color=""/>
 	</game>
 	<game name="Electronics Puzzle Lab 2 (EN,FR,DE,ES,IT,PT,JA,KO,ZHTW,ZHCN,RU)">
@@ -500025,6 +500313,32 @@ After enjoying the live performance, enjoy the mini-game &quot;SHORT SHORTs&quot
 		</input>
 		<mode tv="true" handheld="true" tabletop="true"/>
 		<rom version="" name="Fetch Re;Quest (EN,JA,ZHTW,ZHCN).switch"/>
+		<case color=""/>
+	</game>
+	<game name="Party Club (EN,FR,DE,ES,IT,PT,JA,KO,TH,ZHTW,ZHCN,RU)">
+		<id>BQ9GA</id>
+		<type>eShop</type>
+		<region>ALL</region>
+		<languages>EN,FR,DE,ES,IT,PT,JA,KO,TH,ZHTW,ZHCN,RU</languages>
+		<locale lang="EN">
+			<title>Party Club</title>
+			<synopsis/>
+		</locale>
+		<developer>Lucid11</developer>
+		<publisher>LUCID11 BILISIM YAZILIM</publisher>
+		<date year="2026" month="4" day="23"/>
+		<genre>action</genre>
+		<rating_ESRB value="E">
+			<descriptor_ESRB>crude humor</descriptor_ESRB>
+			<descriptor_ESRB>mild fantasy violence</descriptor_ESRB>
+		</rating_ESRB>
+		<wi-fi players="0"/>
+		<input players="4">
+			<control type="joycon" required="false"/>
+			<control type="procontroller" required="false"/>
+		</input>
+		<mode tv="true" handheld="true" tabletop="true"/>
+		<rom version="" name="Party Club (EN,FR,DE,ES,IT,PT,JA,KO,TH,ZHTW,ZHCN,RU).switch"/>
 		<case color=""/>
 	</game>
 	<game name="Animal Party Puzzles: Meet All the Friends (EN)">
@@ -510872,6 +511186,32 @@ After enjoying the live performance, enjoy the mini-game &quot;SHORT SHORTs&quot
 		<rom version="" name="WINDSWEPT (EN,FR,DE,ES,IT,PT,JA,KO,ZHTW,ZHCN,RU).switch"/>
 		<case color=""/>
 	</game>
+	<game name="Monster Meals (EN,FR,DE,ES,PT,JA,ZHTW,ZHCN,RU)">
+		<id>BRDCA</id>
+		<type>eShop</type>
+		<region>ALL</region>
+		<languages>EN,FR,DE,ES,PT,JA,ZHTW,ZHCN,RU</languages>
+		<locale lang="EN">
+			<title>Monster Meals</title>
+			<synopsis/>
+		</locale>
+		<developer>Giant Warrior Studio</developer>
+		<publisher>Cyber Monkey Studios</publisher>
+		<date year="2026" month="4" day="23"/>
+		<genre>action,simulation</genre>
+		<rating_ESRB value="E10+">
+			<descriptor_ESRB>fantasy violence</descriptor_ESRB>
+			<descriptor_ESRB>mild blood</descriptor_ESRB>
+		</rating_ESRB>
+		<wi-fi players="0"/>
+		<input players="2">
+			<control type="joycon" required="false"/>
+			<control type="procontroller" required="false"/>
+		</input>
+		<mode tv="true" handheld="true" tabletop="true"/>
+		<rom version="" name="Monster Meals (EN,FR,DE,ES,PT,JA,ZHTW,ZHCN,RU).switch"/>
+		<case color=""/>
+	</game>
 	<game name="Moonlight in Garland (EN)">
 		<id>BRDDA</id>
 		<type>eShop</type>
@@ -511640,6 +511980,32 @@ After enjoying the live performance, enjoy the mini-game &quot;SHORT SHORTs&quot
 		</input>
 		<mode tv="true" handheld="true" tabletop="true"/>
 		<rom version="" name="Find the Cats: Japan Journey (EN).switch"/>
+		<case color=""/>
+	</game>
+	<game name="BAD END: If you play, you'll die? (EN,FR,DE,ES,JA)">
+		<id>BRG7A</id>
+		<type>eShop</type>
+		<region>ALL</region>
+		<languages>EN,FR,DE,ES,JA</languages>
+		<locale lang="EN">
+			<title>BAD END: If you play, you'll die?</title>
+			<synopsis/>
+		</locale>
+		<developer>Arai Koh Create Office</developer>
+		<publisher>YOX-Project</publisher>
+		<date year="2026" month="4" day="24"/>
+		<genre>adventure</genre>
+		<rating_ESRB value="E">
+			<descriptor_ESRB>mild blood</descriptor_ESRB>
+			<descriptor_ESRB>mild fantasy violence</descriptor_ESRB>
+		</rating_ESRB>
+		<wi-fi players="0"/>
+		<input players="1">
+			<control type="joycon" required="false"/>
+			<control type="procontroller" required="false"/>
+		</input>
+		<mode tv="true" handheld="true" tabletop="true"/>
+		<rom version="" name="BAD END: If you play, you'll die? (EN,FR,DE,ES,JA).switch"/>
 		<case color=""/>
 	</game>
 	<game name="Rookie Basketball Shoots (EN)">
@@ -514543,6 +514909,55 @@ After enjoying the live performance, enjoy the mini-game &quot;SHORT SHORTs&quot
 		</input>
 		<mode tv="true" handheld="true" tabletop="true"/>
 		<rom version="" name="Twins of the Sun (EN,FR,DE,ES,IT,NL,PT,JA,KO,ZHTW,ZHCN).switch"/>
+		<case color=""/>
+	</game>
+	<game name="KAZUMA KANEKO'S TSUKUYOMI (EN,JA,KO,ZHTW,ZHCN)">
+		<id>BRQWA</id>
+		<type>eShop</type>
+		<region>ALL</region>
+		<languages>EN,JA,KO,ZHTW,ZHCN</languages>
+		<locale lang="EN">
+			<title>KAZUMA KANEKO'S TSUKUYOMI</title>
+			<synopsis/>
+		</locale>
+		<developer>COLOPL, Inc.</developer>
+		<publisher>COLOPL</publisher>
+		<date year="2026" month="4" day="23"/>
+		<genre>role-playing</genre>
+		<rating_ESRB value="T">
+			<descriptor_ESRB>blood</descriptor_ESRB>
+			<descriptor_ESRB>mild violence</descriptor_ESRB>
+		</rating_ESRB>
+		<wi-fi players="0"/>
+		<input players="1">
+			<control type="joycon" required="false"/>
+			<control type="procontroller" required="false"/>
+		</input>
+		<mode tv="true" handheld="true" tabletop="true"/>
+		<rom version="" name="KAZUMA KANEKO'S TSUKUYOMI (EN,JA,KO,ZHTW,ZHCN).switch"/>
+		<case color=""/>
+	</game>
+	<game name="Indoor Baseball (EN)">
+		<id>BRR2A</id>
+		<type>eShop</type>
+		<region>ALL</region>
+		<languages>EN</languages>
+		<locale lang="EN">
+			<title>Indoor Baseball</title>
+			<synopsis/>
+		</locale>
+		<developer>Snow Day Software</developer>
+		<publisher>Snow Day Software</publisher>
+		<date year="2026" month="4" day="24"/>
+		<genre>sports</genre>
+		<rating_ESRB value="E"/>
+		<wi-fi players="0"/>
+		<input players="2">
+			<control type="joycon" required="false"/>
+			<control type="procontroller" required="false"/>
+		</input>
+		<mode tv="true" handheld="true" tabletop="true"/>
+		<rom version="" name="Indoor Baseball (EN).switch"/>
 		<case color=""/>
 	</game>
 	<game name="The Wolf and the Blood Moon (EN,JA)">
@@ -518905,6 +519320,31 @@ After enjoying the live performance, enjoy the mini-game &quot;SHORT SHORTs&quot
 		<rom version="" name="Parcel Push (EN).switch"/>
 		<case color=""/>
 	</game>
+	<game name="Kingdom's Return: Time-Eating Fruit and the Ancient Monster (EN,FR,DE,ES,IT,NL,PT,JA,KO,ZHTW,ZHCN)">
+		<id>BS7JA</id>
+		<type>eShop</type>
+		<region>ALL</region>
+		<languages>EN,FR,DE,ES,IT,NL,PT,JA,KO,ZHTW,ZHCN</languages>
+		<locale lang="EN">
+			<title>Kingdom's Return: Time-Eating Fruit and the Ancient Monster</title>
+			<synopsis/>
+		</locale>
+		<developer>INTI CREATES</developer>
+		<publisher>Inti Creates</publisher>
+		<date year="2026" month="4" day="23"/>
+		<genre>action,role-playing</genre>
+		<rating_ESRB value="E">
+			<descriptor_ESRB>mild fantasy violence</descriptor_ESRB>
+		</rating_ESRB>
+		<wi-fi players="0"/>
+		<input players="1">
+			<control type="joycon" required="false"/>
+			<control type="procontroller" required="false"/>
+		</input>
+		<mode tv="true" handheld="true" tabletop="true"/>
+		<rom version="" name="Kingdom's Return: Time-Eating Fruit and the Ancient Monster (EN,FR,DE,ES,IT,NL,PT,JA,KO,ZHTW,ZHCN).switch"/>
+		<case color=""/>
+	</game>
 	<game name="Hypercar Racing (EN,ES,JA)">
 		<id>BS7LA</id>
 		<type>eShop</type>
@@ -522768,6 +523208,28 @@ After enjoying the live performance, enjoy the mini-game &quot;SHORT SHORTs&quot
 		<rom version="" name="Mystic Explorer (EN,JA,KO,ZHTW,ZHCN).switch"/>
 		<case color=""/>
 	</game>
+	<game name="Sky Escort (EN,JA,ZHTW,ZHCN)">
+		<id>BSLQA</id>
+		<type>eShop</type>
+		<region>ALL</region>
+		<languages>EN,JA,ZHTW,ZHCN</languages>
+		<locale lang="EN">
+			<title>Sky Escort</title>
+			<synopsis/>
+		</locale>
+		<publisher>Wise Games</publisher>
+		<date year="2026" month="4" day="23"/>
+		<genre>strategy</genre>
+		<rating_ESRB value="E"/>
+		<wi-fi players="0"/>
+		<input players="1">
+			<control type="joycon" required="false"/>
+			<control type="procontroller" required="false"/>
+		</input>
+		<mode tv="true" handheld="true" tabletop="true"/>
+		<rom version="" name="Sky Escort (EN,JA,ZHTW,ZHCN).switch"/>
+		<case color=""/>
+	</game>
 	<game name="Where's the FOOD!? (EN,JA,KO,ZHTW)">
 		<id>BSLXA</id>
 		<type>eShop</type>
@@ -523610,6 +524072,33 @@ After enjoying the live performance, enjoy the mini-game &quot;SHORT SHORTs&quot
 		</input>
 		<mode tv="true" handheld="true" tabletop="true"/>
 		<rom version="" name="Heavy Duty (EN,FR,DE,ES,IT,PT,JA,KO,RU).switch"/>
+		<case color=""/>
+	</game>
+	<game name="Saint Slayer: Spear of Sacrilege (EN)">
+		<id>BSQBA</id>
+		<type>eShop</type>
+		<region>ALL</region>
+		<languages>EN</languages>
+		<locale lang="EN">
+			<title>Saint Slayer: Spear of Sacrilege</title>
+			<synopsis/>
+		</locale>
+		<developer>Lillymo Games</developer>
+		<publisher>Lillymo Games</publisher>
+		<date year="2026" month="4" day="20"/>
+		<genre>action,adventure</genre>
+		<rating_ESRB value="T">
+			<descriptor_ESRB>blood</descriptor_ESRB>
+			<descriptor_ESRB>suggestive themes</descriptor_ESRB>
+			<descriptor_ESRB>violence</descriptor_ESRB>
+		</rating_ESRB>
+		<wi-fi players="0"/>
+		<input players="1">
+			<control type="joycon" required="false"/>
+			<control type="procontroller" required="false"/>
+		</input>
+		<mode tv="true" handheld="true" tabletop="true"/>
+		<rom version="" name="Saint Slayer: Spear of Sacrilege (EN).switch"/>
 		<case color=""/>
 	</game>
 	<game name="Clutchtime: Basketball Deckbuilder (EN,FR,DE,ES,PT,JA,KO,ZHTW,ZHCN)">
@@ -525837,6 +526326,33 @@ After enjoying the live performance, enjoy the mini-game &quot;SHORT SHORTs&quot
 		<rom version="" name="EmyLiveShow: Demons and Mistresses Tale (EN,FR,DE,ES,IT,PT,JA,KO,ZHTW,ZHCN,RU).switch"/>
 		<case color=""/>
 	</game>
+	<game name="Nagi no Koi (EN,JA)">
+		<id>BSXEA</id>
+		<type>eShop</type>
+		<region>ALL</region>
+		<languages>EN,JA</languages>
+		<locale lang="EN">
+			<title>Nagi no Koi</title>
+			<synopsis/>
+		</locale>
+		<publisher>ENTERGRAM</publisher>
+		<date year="2026" month="4" day="23"/>
+		<genre>adventure</genre>
+		<rating_ESRB value="T">
+			<descriptor_ESRB>blood</descriptor_ESRB>
+			<descriptor_ESRB>suggestive themes</descriptor_ESRB>
+			<descriptor_ESRB>use of alcohol</descriptor_ESRB>
+			<descriptor_ESRB>violence</descriptor_ESRB>
+		</rating_ESRB>
+		<wi-fi players="0"/>
+		<input players="1">
+			<control type="joycon" required="false"/>
+			<control type="procontroller" required="false"/>
+		</input>
+		<mode tv="true" handheld="true" tabletop="true"/>
+		<rom version="" name="Nagi no Koi (EN,JA).switch"/>
+		<case color=""/>
+	</game>
 	<game name="Truck Simulator: Delivery in City (EN)">
 		<id>BSXFA</id>
 		<type>eShop</type>
@@ -525857,6 +526373,32 @@ After enjoying the live performance, enjoy the mini-game &quot;SHORT SHORTs&quot
 		</input>
 		<mode tv="true" handheld="true" tabletop="true"/>
 		<rom version="" name="Truck Simulator: Delivery in City (EN).switch"/>
+		<case color=""/>
+	</game>
+	<game name="Court of Darkness: Captivation's Kiss (EN,JA)">
+		<id>BSXHA</id>
+		<type>eShop</type>
+		<region>ALL</region>
+		<languages>EN,JA</languages>
+		<locale lang="EN">
+			<title>Court of Darkness: Captivation's Kiss</title>
+			<synopsis/>
+		</locale>
+		<developer>Voltage Inc.</developer>
+		<publisher>Voltage</publisher>
+		<date year="2026" month="4" day="24"/>
+		<genre>adventure</genre>
+		<rating_ESRB value="T">
+			<descriptor_ESRB>drug reference</descriptor_ESRB>
+			<descriptor_ESRB>suggestive themes</descriptor_ESRB>
+		</rating_ESRB>
+		<wi-fi players="0"/>
+		<input players="1">
+			<control type="joycon" required="false"/>
+			<control type="procontroller" required="false"/>
+		</input>
+		<mode tv="true" handheld="true" tabletop="true"/>
+		<rom version="" name="Court of Darkness: Captivation's Kiss (EN,JA).switch"/>
 		<case color=""/>
 	</game>
 	<game name="Anime Love Chat Girls (EN)">
@@ -526468,6 +527010,28 @@ After enjoying the live performance, enjoy the mini-game &quot;SHORT SHORTs&quot
 		</input>
 		<mode tv="true" handheld="true" tabletop="true"/>
 		<rom version="" name="Where's the Insect? (EN,JA,KO,ZHTW).switch"/>
+		<case color=""/>
+	</game>
+	<game name="Fruit Mountain Party (EN,FR,DE,ES,IT,PT,JA,KO,ZHTW,ZHCN,RU)">
+		<id>BSZFA</id>
+		<type>eShop</type>
+		<region>ALL</region>
+		<languages>EN,FR,DE,ES,IT,PT,JA,KO,ZHTW,ZHCN,RU</languages>
+		<locale lang="EN">
+			<title>Fruit Mountain Party</title>
+			<synopsis/>
+		</locale>
+		<publisher>BeXide</publisher>
+		<date year="2026" month="4" day="23"/>
+		<genre>action,puzzle</genre>
+		<rating_ESRB value="E"/>
+		<wi-fi players="0"/>
+		<input players="4">
+			<control type="joycon" required="false"/>
+			<control type="procontroller" required="false"/>
+		</input>
+		<mode tv="true" handheld="true" tabletop="true"/>
+		<rom version="" name="Fruit Mountain Party (EN,FR,DE,ES,IT,PT,JA,KO,ZHTW,ZHCN,RU).switch"/>
 		<case color=""/>
 	</game>
 	<game name="Picnic Girls (EN,JA)">
@@ -530154,6 +530718,28 @@ After enjoying the live performance, enjoy the mini-game &quot;SHORT SHORTs&quot
 		<rom version="" name="READY OR DIE (EN).switch"/>
 		<case color=""/>
 	</game>
+	<game name="Kanjozoku Game: Car Racing &amp; Highway Driving Simulator REMASTER (EN)">
+		<id>BTFBA</id>
+		<type>eShop</type>
+		<region>ALL</region>
+		<languages>EN</languages>
+		<locale lang="EN">
+			<title>Kanjozoku Game: Car Racing &amp; Highway Driving Simulator REMASTER</title>
+			<synopsis/>
+		</locale>
+		<publisher>Console Lab Games</publisher>
+		<date year="2026" month="4" day="25"/>
+		<genre>racing</genre>
+		<rating_ESRB value="E"/>
+		<wi-fi players="0"/>
+		<input players="1">
+			<control type="joycon" required="false"/>
+			<control type="procontroller" required="false"/>
+		</input>
+		<mode tv="true" handheld="true" tabletop="true"/>
+		<rom version="" name="Kanjozoku Game: Car Racing &amp; Highway Driving Simulator REMASTER (EN).switch"/>
+		<case color=""/>
+	</game>
 	<game name="The End of the Beginning of Courage, Reasoning, and Seaweed 10 (JA)">
 		<id>BTFDA</id>
 		<type>eShop</type>
@@ -530530,6 +531116,31 @@ After enjoying the live performance, enjoy the mini-game &quot;SHORT SHORTs&quot
 		</input>
 		<mode tv="true" handheld="true" tabletop="true"/>
 		<rom version="" name="Inhuman Resources: A Literary Machination (EN,FR).switch"/>
+		<case color=""/>
+	</game>
+	<game name="Jay and Silent Bob: Chronic Blunt Punch (EN,FR,DE,ES,IT,JA)">
+		<id>BTGCA</id>
+		<type>eShop</type>
+		<region>ALL</region>
+		<languages>EN,FR,DE,ES,IT,JA</languages>
+		<locale lang="EN">
+			<title>Jay and Silent Bob: Chronic Blunt Punch</title>
+			<synopsis/>
+		</locale>
+		<developer>Interabang Entertainment</developer>
+		<publisher>Atari</publisher>
+		<date year="2026" month="4" day="20"/>
+		<genre>action</genre>
+		<rating_ESRB value="M">
+			<descriptor_ESRB>drug reference</descriptor_ESRB>
+		</rating_ESRB>
+		<wi-fi players="0"/>
+		<input players="2">
+			<control type="joycon" required="false"/>
+			<control type="procontroller" required="false"/>
+		</input>
+		<mode tv="true" handheld="true" tabletop="true"/>
+		<rom version="" name="Jay and Silent Bob: Chronic Blunt Punch (EN,FR,DE,ES,IT,JA).switch"/>
 		<case color=""/>
 	</game>
 	<game name="Habitat Shapes (EN,PT)">
@@ -532182,6 +532793,32 @@ After enjoying the live performance, enjoy the mini-game &quot;SHORT SHORTs&quot
 		<rom version="" name="Emoji Battlefield - Island Warfare (EN,FR,DE,ES,IT,NL,PT,JA,KO,TH,ZHCN,RU,PL).switch"/>
 		<case color=""/>
 	</game>
+	<game name="Emoji Battlefield - Summer Vacation (EN,FR,DE,ES,IT,NL,PT,JA,KO,TH,ZHCN,RU,PL)">
+		<id>BTNZA</id>
+		<type>eShop</type>
+		<region>ALL</region>
+		<languages>EN,FR,DE,ES,IT,NL,PT,JA,KO,TH,ZHCN,RU,PL</languages>
+		<locale lang="EN">
+			<title>Emoji Battlefield - Summer Vacation</title>
+			<synopsis/>
+		</locale>
+		<developer>EpiXR Games</developer>
+		<publisher>EpiXR Games</publisher>
+		<date year="2026" month="4" day="23"/>
+		<genre>action,shooter</genre>
+		<rating_ESRB value="T">
+			<descriptor_ESRB>blood</descriptor_ESRB>
+			<descriptor_ESRB>violence</descriptor_ESRB>
+		</rating_ESRB>
+		<wi-fi players="0"/>
+		<input players="1">
+			<control type="joycon" required="false"/>
+			<control type="procontroller" required="false"/>
+		</input>
+		<mode tv="true" handheld="true" tabletop="true"/>
+		<rom version="" name="Emoji Battlefield - Summer Vacation (EN,FR,DE,ES,IT,NL,PT,JA,KO,TH,ZHCN,RU,PL).switch"/>
+		<case color=""/>
+	</game>
 	<game name="Popper Lands Colony (EN,FR,DE,ES,IT,NL,PT)">
 		<id>BTP3A</id>
 		<type>eShop</type>
@@ -532672,6 +533309,31 @@ After enjoying the live performance, enjoy the mini-game &quot;SHORT SHORTs&quot
 		</input>
 		<mode tv="true" handheld="true" tabletop="true"/>
 		<rom version="" name="Dadish 4 (EN).switch"/>
+		<case color=""/>
+	</game>
+	<game name="The Way of the Tray (EN,FR,DE,ES,IT,PT,JA,KO,ZHTW,ZHCN,RU)">
+		<id>BTQUA</id>
+		<type>eShop</type>
+		<region>ALL</region>
+		<languages>EN,FR,DE,ES,IT,PT,JA,KO,ZHTW,ZHCN,RU</languages>
+		<locale lang="EN">
+			<title>The Way of the Tray</title>
+			<synopsis/>
+		</locale>
+		<publisher>Smart Space Solutions</publisher>
+		<date year="2026" month="4" day="23"/>
+		<genre>action,simulation</genre>
+		<rating_ESRB value="E10+">
+			<descriptor_ESRB>fantasy violence</descriptor_ESRB>
+			<descriptor_ESRB>use of alcohol</descriptor_ESRB>
+		</rating_ESRB>
+		<wi-fi players="0"/>
+		<input players="1">
+			<control type="joycon" required="false"/>
+			<control type="procontroller" required="false"/>
+		</input>
+		<mode tv="true" handheld="true" tabletop="true"/>
+		<rom version="" name="The Way of the Tray (EN,FR,DE,ES,IT,PT,JA,KO,ZHTW,ZHCN,RU).switch"/>
 		<case color=""/>
 	</game>
 	<game name="Jukai Maze (EN,JA,ZHTW,ZHCN)">
@@ -533195,6 +533857,30 @@ After enjoying the live performance, enjoy the mini-game &quot;SHORT SHORTs&quot
 		</input>
 		<mode tv="true" handheld="true" tabletop="true"/>
 		<rom version="" name="Enchantment 2 Sun's Tear Collector's Edition (EN).switch"/>
+		<case color=""/>
+	</game>
+	<game name="Rumbral (EN,FR,DE,ES,PT,JA,ZHTW,ZHCN,RU)">
+		<id>BTSSA</id>
+		<type>eShop</type>
+		<region>ALL</region>
+		<languages>EN,FR,DE,ES,PT,JA,ZHTW,ZHCN,RU</languages>
+		<locale lang="EN">
+			<title>Rumbral</title>
+			<synopsis/>
+		</locale>
+		<publisher>Pdpartid@games</publisher>
+		<date year="2026" month="4" day="23"/>
+		<genre>adventure</genre>
+		<rating_ESRB value="E10+">
+			<descriptor_ESRB>fantasy violence</descriptor_ESRB>
+		</rating_ESRB>
+		<wi-fi players="0"/>
+		<input players="1">
+			<control type="joycon" required="false"/>
+			<control type="procontroller" required="false"/>
+		</input>
+		<mode tv="true" handheld="true" tabletop="true"/>
+		<rom version="" name="Rumbral (EN,FR,DE,ES,PT,JA,ZHTW,ZHCN,RU).switch"/>
 		<case color=""/>
 	</game>
 	<game name="Nightfall Village (EN)">
@@ -534559,6 +535245,28 @@ After enjoying the live performance, enjoy the mini-game &quot;SHORT SHORTs&quot
 		<rom version="" name="Cargo Runner - Mars (EN,FR,DE,ES,IT,NL,PT,JA,ZHCN,RU,PL).switch"/>
 		<case color=""/>
 	</game>
+	<game name="Kitchen Wars (EN,FR,DE,ES,IT,NL,PT,JA,KO,TH,ZHCN,RU,PL)">
+		<id>BTZSA</id>
+		<type>eShop</type>
+		<region>ALL</region>
+		<languages>EN,FR,DE,ES,IT,NL,PT,JA,KO,TH,ZHCN,RU,PL</languages>
+		<locale lang="EN">
+			<title>Kitchen Wars</title>
+			<synopsis/>
+		</locale>
+		<publisher>Take IT Studio!</publisher>
+		<date year="2026" month="4" day="23"/>
+		<genre>action</genre>
+		<rating_ESRB value="E"/>
+		<wi-fi players="0"/>
+		<input players="8">
+			<control type="joycon" required="false"/>
+			<control type="procontroller" required="false"/>
+		</input>
+		<mode tv="true" handheld="true" tabletop="true"/>
+		<rom version="" name="Kitchen Wars (EN,FR,DE,ES,IT,NL,PT,JA,KO,TH,ZHCN,RU,PL).switch"/>
+		<case color=""/>
+	</game>
 	<game name="Clue: Murder By Death (EN,FR,ES,IT)">
 		<id>BTZTA</id>
 		<type>eShop</type>
@@ -534701,6 +535409,30 @@ After enjoying the live performance, enjoy the mini-game &quot;SHORT SHORTs&quot
 		</input>
 		<mode tv="true" handheld="true" tabletop="true"/>
 		<rom version="" name="Hyakki Fantasia Mini Game Selection VOL.1 (EN,JA).switch"/>
+		<case color=""/>
+	</game>
+	<game name="Kickback Clicker (EN,FR,DE,ES,IT,PT,JA,KO,ZHTW,ZHCN,RU)">
+		<id>BU24A</id>
+		<type>eShop</type>
+		<region>ALL</region>
+		<languages>EN,FR,DE,ES,IT,PT,JA,KO,ZHTW,ZHCN,RU</languages>
+		<locale lang="EN">
+			<title>Kickback Clicker</title>
+			<synopsis/>
+		</locale>
+		<publisher>Smart Space Solutions</publisher>
+		<date year="2026" month="4" day="23"/>
+		<genre>shooter</genre>
+		<rating_ESRB value="E">
+			<descriptor_ESRB>violent references</descriptor_ESRB>
+		</rating_ESRB>
+		<wi-fi players="0"/>
+		<input players="1">
+			<control type="joycon" required="false"/>
+			<control type="procontroller" required="false"/>
+		</input>
+		<mode tv="true" handheld="true" tabletop="true"/>
+		<rom version="" name="Kickback Clicker (EN,FR,DE,ES,IT,PT,JA,KO,ZHTW,ZHCN,RU).switch"/>
 		<case color=""/>
 	</game>
 	<game name="VECTORED (EN)">
@@ -534915,6 +535647,27 @@ After enjoying the live performance, enjoy the mini-game &quot;SHORT SHORTs&quot
 		</input>
 		<mode tv="true" handheld="true" tabletop="true"/>
 		<rom version="" name="Stunt Race (EN).switch"/>
+		<case color=""/>
+	</game>
+	<game name="CRAYON SEA FRIENDS (EN)">
+		<id>BU4FA</id>
+		<type>eShop</type>
+		<region>ALL</region>
+		<languages>EN</languages>
+		<locale lang="EN">
+			<title>CRAYON SEA FRIENDS</title>
+			<synopsis/>
+		</locale>
+		<publisher>GaniTani</publisher>
+		<date year="2026" month="4" day="23"/>
+		<rating_ESRB value="E"/>
+		<wi-fi players="0"/>
+		<input players="1">
+			<control type="joycon" required="false"/>
+			<control type="procontroller" required="false"/>
+		</input>
+		<mode tv="true" handheld="true" tabletop="true"/>
+		<rom version="" name="CRAYON SEA FRIENDS (EN).switch"/>
 		<case color=""/>
 	</game>
 	<game name="Nocturne Routes (EN)">
@@ -535158,6 +535911,53 @@ After enjoying the live performance, enjoy the mini-game &quot;SHORT SHORTs&quot
 		<rom version="" name="Guts 'n Grunts (EN).switch"/>
 		<case color=""/>
 	</game>
+	<game name="Monster Rush Survivors (EN,FR,DE,ES,IT,PT,JA,KO,ZHTW,ZHCN,RU)">
+		<id>BU77A</id>
+		<type>eShop</type>
+		<region>ALL</region>
+		<languages>EN,FR,DE,ES,IT,PT,JA,KO,ZHTW,ZHCN,RU</languages>
+		<locale lang="EN">
+			<title>Monster Rush Survivors</title>
+			<synopsis/>
+		</locale>
+		<developer>Cube Games</developer>
+		<publisher>Cube Games</publisher>
+		<date year="2026" month="4" day="23"/>
+		<genre>action</genre>
+		<rating_ESRB value="E"/>
+		<wi-fi players="0"/>
+		<input players="1">
+			<control type="joycon" required="false"/>
+			<control type="procontroller" required="false"/>
+		</input>
+		<mode tv="true" handheld="true" tabletop="true"/>
+		<rom version="" name="Monster Rush Survivors (EN,FR,DE,ES,IT,PT,JA,KO,ZHTW,ZHCN,RU).switch"/>
+		<case color=""/>
+	</game>
+	<game name="Floor 9 (EN,FR,ES,IT,PT)">
+		<id>BU7EA</id>
+		<type>eShop</type>
+		<region>ALL</region>
+		<languages>EN,FR,ES,IT,PT</languages>
+		<locale lang="EN">
+			<title>Floor 9</title>
+			<synopsis/>
+		</locale>
+		<publisher>Dolores Ent.</publisher>
+		<date year="2026" month="4" day="24"/>
+		<genre>adventure</genre>
+		<rating_ESRB value="T">
+			<descriptor_ESRB>mild violence</descriptor_ESRB>
+		</rating_ESRB>
+		<wi-fi players="0"/>
+		<input players="1">
+			<control type="joycon" required="false"/>
+			<control type="procontroller" required="false"/>
+		</input>
+		<mode tv="true" handheld="true" tabletop="true"/>
+		<rom version="" name="Floor 9 (EN,FR,ES,IT,PT).switch"/>
+		<case color=""/>
+	</game>
 	<game name="Which Era Is This? Japanese History Era Guess Quiz (EN,JA,KO,ZHTW)">
 		<id>BU7YA</id>
 		<type>eShop</type>
@@ -535289,6 +536089,31 @@ After enjoying the live performance, enjoy the mini-game &quot;SHORT SHORTs&quot
 		</input>
 		<mode tv="true" handheld="true" tabletop="true"/>
 		<rom version="" name="Empire Hike (EN).switch"/>
+		<case color=""/>
+	</game>
+	<game name="Our Metal Bowl (EN,FR,DE,ES,IT,PT,JA,KO,ZHTW,ZHCN,RU,PL)">
+		<id>BU98A</id>
+		<type>eShop</type>
+		<region>ALL</region>
+		<languages>EN,FR,DE,ES,IT,PT,JA,KO,ZHTW,ZHCN,RU,PL</languages>
+		<locale lang="EN">
+			<title>Our Metal Bowl</title>
+			<synopsis/>
+		</locale>
+		<developer>Intrugli Games</developer>
+		<publisher>Intrugli Games</publisher>
+		<date year="2026" month="4" day="23"/>
+		<genre>action</genre>
+		<rating_ESRB value="E10+">
+			<descriptor_ESRB>fantasy violence</descriptor_ESRB>
+		</rating_ESRB>
+		<wi-fi players="0"/>
+		<input players="1">
+			<control type="joycon" required="false"/>
+			<control type="procontroller" required="false"/>
+		</input>
+		<mode tv="true" handheld="true" tabletop="true"/>
+		<rom version="" name="Our Metal Bowl (EN,FR,DE,ES,IT,PT,JA,KO,ZHTW,ZHCN,RU,PL).switch"/>
 		<case color=""/>
 	</game>
 	<game name="Hytale: Sandbox RPG (EN)">
@@ -535433,6 +536258,28 @@ After enjoying the live performance, enjoy the mini-game &quot;SHORT SHORTs&quot
 		</input>
 		<mode tv="true" handheld="true" tabletop="true"/>
 		<rom version="" name="Call of Beauty (EN,JA,RU).switch"/>
+		<case color=""/>
+	</game>
+	<game name="Goat Out Of Hell: Lost Pets (EN,PT)">
+		<id>BUAXA</id>
+		<type>eShop</type>
+		<region>ALL</region>
+		<languages>EN,PT</languages>
+		<locale lang="EN">
+			<title>Goat Out Of Hell: Lost Pets</title>
+			<synopsis/>
+		</locale>
+		<publisher>Afil Games</publisher>
+		<date year="2026" month="4" day="23"/>
+		<genre>puzzle</genre>
+		<rating_ESRB value="E"/>
+		<wi-fi players="0"/>
+		<input players="1">
+			<control type="joycon" required="false"/>
+			<control type="procontroller" required="false"/>
+		</input>
+		<mode tv="true" handheld="true" tabletop="true"/>
+		<rom version="" name="Goat Out Of Hell: Lost Pets (EN,PT).switch"/>
 		<case color=""/>
 	</game>
 	<game name="Destiny Powers: Dwarven Town (EN)">
@@ -535691,6 +536538,32 @@ After enjoying the live performance, enjoy the mini-game &quot;SHORT SHORTs&quot
 		<rom version="" name="Robo Rangers (EN).switch"/>
 		<case color=""/>
 	</game>
+	<game name="EGGCONSOLE ADVENTURE OF RANDAR MSX2 (EN,JA)">
+		<id>BUBSA</id>
+		<type>eShop</type>
+		<region>ALL</region>
+		<languages>EN,JA</languages>
+		<locale lang="EN">
+			<title>EGGCONSOLE ADVENTURE OF RANDAR MSX2</title>
+			<synopsis/>
+		</locale>
+		<developer>D4Enterprise Co.,Ltd.</developer>
+		<publisher>D4 Enterprise</publisher>
+		<date year="2026" month="4" day="23"/>
+		<genre>role-playing</genre>
+		<rating_ESRB value="E10+">
+			<descriptor_ESRB>fantasy violence</descriptor_ESRB>
+			<descriptor_ESRB>mild blood</descriptor_ESRB>
+		</rating_ESRB>
+		<wi-fi players="0"/>
+		<input players="1">
+			<control type="joycon" required="false"/>
+			<control type="procontroller" required="false"/>
+		</input>
+		<mode tv="true" handheld="true" tabletop="true"/>
+		<rom version="" name="EGGCONSOLE ADVENTURE OF RANDAR MSX2 (EN,JA).switch"/>
+		<case color=""/>
+	</game>
 	<game name="Monkey in the Zoo (EN,RU)">
 		<id>BUBTA</id>
 		<type>eShop</type>
@@ -535805,6 +536678,28 @@ After enjoying the live performance, enjoy the mini-game &quot;SHORT SHORTs&quot
 		</input>
 		<mode tv="true" handheld="true" tabletop="true"/>
 		<rom version="" name="Arcade Archives KONAMI GT (EN,FR,DE,ES,IT,JA).switch"/>
+		<case color=""/>
+	</game>
+	<game name="ARTDINK GAME LOG: Aquanaut's Holiday (JA)">
+		<id>BUCGA</id>
+		<type>eShop</type>
+		<region>ALL</region>
+		<languages>JA</languages>
+		<locale lang="EN">
+			<title>ARTDINK GAME LOG: Aquanaut's Holiday</title>
+			<synopsis/>
+		</locale>
+		<publisher>ARTDINK</publisher>
+		<date year="2026" month="4" day="23"/>
+		<genre>adventure</genre>
+		<rating_ESRB value="E"/>
+		<wi-fi players="0"/>
+		<input players="2">
+			<control type="joycon" required="false"/>
+			<control type="procontroller" required="false"/>
+		</input>
+		<mode tv="true" handheld="true" tabletop="true"/>
+		<rom version="" name="ARTDINK GAME LOG: Aquanaut's Holiday (JA).switch"/>
 		<case color=""/>
 	</game>
 	<game name="The Little Tomb: The Maholova Club and the Search for a Dead Body (EN,JA)">
@@ -536252,6 +537147,30 @@ After enjoying the live performance, enjoy the mini-game &quot;SHORT SHORTs&quot
 		<rom version="" name="Police Girls (EN,JA).switch"/>
 		<case color=""/>
 	</game>
+	<game name="GAME The Strongest Job Is Apparently Not a Hero or a Sage, but an Appraiser (Provisional)!~Dungeon and Mystery Girl~ (EN,JA,ZHTW,ZHCN)">
+		<id>BUDMA</id>
+		<type>eShop</type>
+		<region>ALL</region>
+		<languages>EN,JA,ZHTW,ZHCN</languages>
+		<locale lang="EN">
+			<title>GAME The Strongest Job Is Apparently Not a Hero or a Sage, but an Appraiser (Provisional)!~Dungeon and Mystery Girl~</title>
+			<synopsis/>
+		</locale>
+		<publisher>SUNSOFT</publisher>
+		<date year="2026" month="4" day="23"/>
+		<genre>action</genre>
+		<rating_ESRB value="E10+">
+			<descriptor_ESRB>fantasy violence</descriptor_ESRB>
+		</rating_ESRB>
+		<wi-fi players="0"/>
+		<input players="1">
+			<control type="joycon" required="false"/>
+			<control type="procontroller" required="false"/>
+		</input>
+		<mode tv="true" handheld="true" tabletop="true"/>
+		<rom version="" name="GAME The Strongest Job Is Apparently Not a Hero or a Sage, but an Appraiser (Provisional)!~Dungeon and Mystery Girl~ (EN,JA,ZHTW,ZHCN).switch"/>
+		<case color=""/>
+	</game>
 	<game name="Photo Girls: First Session (EN,JA,RU)">
 		<id>BUDNA</id>
 		<type>eShop</type>
@@ -536583,6 +537502,32 @@ After enjoying the live performance, enjoy the mini-game &quot;SHORT SHORTs&quot
 		</input>
 		<mode tv="true" handheld="true" tabletop="true"/>
 		<rom version="" name="Escape From Duck (EN).switch"/>
+		<case color=""/>
+	</game>
+	<game name="AVILION forever - Retro JRPG (EN,JA)">
+		<id>BUF4A</id>
+		<type>eShop</type>
+		<region>ALL</region>
+		<languages>EN,JA</languages>
+		<locale lang="EN">
+			<title>AVILION forever - Retro JRPG</title>
+			<synopsis/>
+		</locale>
+		<developer>STUDIO FRONTIER</developer>
+		<publisher>STUDIO FRONTIER</publisher>
+		<date year="2026" month="4" day="23"/>
+		<genre>role-playing</genre>
+		<rating_ESRB value="E10+">
+			<descriptor_ESRB>fantasy violence</descriptor_ESRB>
+			<descriptor_ESRB>mild language</descriptor_ESRB>
+		</rating_ESRB>
+		<wi-fi players="0"/>
+		<input players="1">
+			<control type="joycon" required="false"/>
+			<control type="procontroller" required="false"/>
+		</input>
+		<mode tv="true" handheld="true" tabletop="true"/>
+		<rom version="" name="AVILION forever - Retro JRPG (EN,JA).switch"/>
 		<case color=""/>
 	</game>
 	<game name="Color Mismatch Brain Quiz (EN,JA,KO,ZHTW)">
@@ -537051,6 +537996,31 @@ After enjoying the live performance, enjoy the mini-game &quot;SHORT SHORTs&quot
 		<rom version="" name="Claim the forest: Shape of Wolves (EN,PT).switch"/>
 		<case color=""/>
 	</game>
+	<game name="GluMe (EN,FR,ES,IT,PT,JA,ZHCN,RU)">
+		<id>BUGXA</id>
+		<type>eShop</type>
+		<region>ALL</region>
+		<languages>EN,FR,ES,IT,PT,JA,ZHCN,RU</languages>
+		<locale lang="EN">
+			<title>GluMe</title>
+			<synopsis/>
+		</locale>
+		<developer>eastasiasoft, Solluco</developer>
+		<publisher>eastasiasoft</publisher>
+		<date year="2026" month="4" day="22"/>
+		<genre>puzzle</genre>
+		<rating_ESRB value="E">
+			<descriptor_ESRB>mild fantasy violence</descriptor_ESRB>
+		</rating_ESRB>
+		<wi-fi players="0"/>
+		<input players="1">
+			<control type="joycon" required="false"/>
+			<control type="procontroller" required="false"/>
+		</input>
+		<mode tv="true" handheld="true" tabletop="true"/>
+		<rom version="" name="GluMe (EN,FR,ES,IT,PT,JA,ZHCN,RU).switch"/>
+		<case color=""/>
+	</game>
 	<game name="Wrack: Reclamation (EN)">
 		<id>BUGYA</id>
 		<type>eShop</type>
@@ -537301,6 +538271,56 @@ After enjoying the live performance, enjoy the mini-game &quot;SHORT SHORTs&quot
 		<rom version="" name="Soapy Tales (EN,JA).switch"/>
 		<case color=""/>
 	</game>
+	<game name="Mech Robot: Battle Shooter Warrior (EN)">
+		<id>BUJ3A</id>
+		<type>eShop</type>
+		<region>ALL</region>
+		<languages>EN</languages>
+		<locale lang="EN">
+			<title>Mech Robot: Battle Shooter Warrior</title>
+			<synopsis/>
+		</locale>
+		<publisher>STG SOFTWARE SRL</publisher>
+		<date year="2026" month="4" day="20"/>
+		<genre>action,shooter</genre>
+		<rating_ESRB value="E10+">
+			<descriptor_ESRB>fantasy violence</descriptor_ESRB>
+		</rating_ESRB>
+		<wi-fi players="0"/>
+		<input players="1">
+			<control type="joycon" required="false"/>
+			<control type="procontroller" required="false"/>
+		</input>
+		<mode tv="true" handheld="true" tabletop="true"/>
+		<rom version="" name="Mech Robot: Battle Shooter Warrior (EN).switch"/>
+		<case color=""/>
+	</game>
+	<game name="Drop Duchy - Complete Edition (EN,FR,DE,ES,IT,PT,JA,KO,ZHTW,ZHCN,RU)">
+		<id>BUJ4A</id>
+		<type>eShop</type>
+		<region>ALL</region>
+		<languages>EN,FR,DE,ES,IT,PT,JA,KO,ZHTW,ZHCN,RU</languages>
+		<locale lang="EN">
+			<title>Drop Duchy - Complete Edition</title>
+			<synopsis/>
+		</locale>
+		<developer>Sleepy Mill Studio</developer>
+		<publisher>The Arcade Crew</publisher>
+		<date year="2026" month="4" day="21"/>
+		<genre>puzzle,strategy</genre>
+		<rating_ESRB value="E">
+			<descriptor_ESRB>mild blood</descriptor_ESRB>
+			<descriptor_ESRB>mild fantasy violence</descriptor_ESRB>
+		</rating_ESRB>
+		<wi-fi players="0"/>
+		<input players="1">
+			<control type="joycon" required="false"/>
+			<control type="procontroller" required="false"/>
+		</input>
+		<mode tv="true" handheld="true" tabletop="true"/>
+		<rom version="" name="Drop Duchy - Complete Edition (EN,FR,DE,ES,IT,PT,JA,KO,ZHTW,ZHCN,RU).switch"/>
+		<case color=""/>
+	</game>
 	<game name="Aquamarine: Explorer's Edition (EN,FR,ES,IT,PT)">
 		<id>BUJ5A</id>
 		<type>eShop</type>
@@ -537421,6 +538441,30 @@ After enjoying the live performance, enjoy the mini-game &quot;SHORT SHORTs&quot
 		<rom version="" name="Cavorite (EN).switch"/>
 		<case color=""/>
 	</game>
+	<game name="My Winter Drive (EN)">
+		<id>BUJAA</id>
+		<type>eShop</type>
+		<region>ALL</region>
+		<languages>EN</languages>
+		<locale lang="EN">
+			<title>My Winter Drive</title>
+			<synopsis/>
+		</locale>
+		<publisher>DEZVOLT GAMES</publisher>
+		<date year="2026" month="4" day="18"/>
+		<genre>simulation</genre>
+		<rating_ESRB value="T">
+			<descriptor_ESRB>crude humor</descriptor_ESRB>
+		</rating_ESRB>
+		<wi-fi players="0"/>
+		<input players="1">
+			<control type="joycon" required="false"/>
+			<control type="procontroller" required="false"/>
+		</input>
+		<mode tv="true" handheld="true" tabletop="true"/>
+		<rom version="" name="My Winter Drive (EN).switch"/>
+		<case color=""/>
+	</game>
 	<game name="Spin Path 2 (EN)">
 		<id>BUJDA</id>
 		<type>eShop</type>
@@ -537467,6 +538511,30 @@ After enjoying the live performance, enjoy the mini-game &quot;SHORT SHORTs&quot
 		</input>
 		<mode tv="true" handheld="true" tabletop="true"/>
 		<rom version="" name="ELEVRAL (EN).switch"/>
+		<case color=""/>
+	</game>
+	<game name="Dollmaker (EN,FR,DE,ES,IT,NL,PT,JA,KO,ZHTW,ZHCN,RU,PL)">
+		<id>BUJJA</id>
+		<type>eShop</type>
+		<region>ALL</region>
+		<languages>EN,FR,DE,ES,IT,NL,PT,JA,KO,ZHTW,ZHCN,RU,PL</languages>
+		<locale lang="EN">
+			<title>Dollmaker</title>
+			<synopsis/>
+		</locale>
+		<publisher>Upscale Studio</publisher>
+		<date year="2026" month="4" day="24"/>
+		<genre>action</genre>
+		<rating_ESRB value="E10+">
+			<descriptor_ESRB>fantasy violence</descriptor_ESRB>
+		</rating_ESRB>
+		<wi-fi players="0"/>
+		<input players="1">
+			<control type="joycon" required="false"/>
+			<control type="procontroller" required="false"/>
+		</input>
+		<mode tv="true" handheld="true" tabletop="true"/>
+		<rom version="" name="Dollmaker (EN,FR,DE,ES,IT,NL,PT,JA,KO,ZHTW,ZHCN,RU,PL).switch"/>
 		<case color=""/>
 	</game>
 	<game name="Arcade Archives POLARIS (EN,FR,DE,ES,IT,JA)">
@@ -538010,6 +539078,32 @@ After enjoying the live performance, enjoy the mini-game &quot;SHORT SHORTs&quot
 		<rom version="" name="Dangerous Superheroes After Dark: Heroes Behind the Mask (EN,ES,JA,KO,ZHTW,ZHCN).switch"/>
 		<case color=""/>
 	</game>
+	<game name="Photo Girls: Raw Photo (EN,JA,RU)">
+		<id>BUMMA</id>
+		<type>eShop</type>
+		<region>ALL</region>
+		<languages>EN,JA,RU</languages>
+		<locale lang="EN">
+			<title>Photo Girls: Raw Photo</title>
+			<synopsis/>
+		</locale>
+		<developer>17Studio LLC</developer>
+		<publisher>17Studio</publisher>
+		<date year="2026" month="4" day="23"/>
+		<genre>puzzle</genre>
+		<rating_ESRB value="T">
+			<descriptor_ESRB>partial nudity</descriptor_ESRB>
+			<descriptor_ESRB>sexual themes</descriptor_ESRB>
+		</rating_ESRB>
+		<wi-fi players="0"/>
+		<input players="1">
+			<control type="joycon" required="false"/>
+			<control type="procontroller" required="false"/>
+		</input>
+		<mode tv="true" handheld="true" tabletop="true"/>
+		<rom version="" name="Photo Girls: Raw Photo (EN,JA,RU).switch"/>
+		<case color=""/>
+	</game>
 	<game name="Dangerous Superheroes After Dark: Heroines Behind the Mask (EN,ES,JA,KO,ZHTW,ZHCN)">
 		<id>BUMPA</id>
 		<type>eShop</type>
@@ -538155,6 +539249,28 @@ After enjoying the live performance, enjoy the mini-game &quot;SHORT SHORTs&quot
 		<rom version="" name="Highway Roads Racer (EN).switch"/>
 		<case color=""/>
 	</game>
+	<game name="Supermarket Simulator 2026 (EN)">
+		<id>BUN8A</id>
+		<type>eShop</type>
+		<region>ALL</region>
+		<languages>EN</languages>
+		<locale lang="EN">
+			<title>Supermarket Simulator 2026</title>
+			<synopsis/>
+		</locale>
+		<publisher>Global Games Publisher</publisher>
+		<date year="2026" month="4" day="24"/>
+		<genre>simulation</genre>
+		<rating_ESRB value="E"/>
+		<wi-fi players="0"/>
+		<input players="1">
+			<control type="joycon" required="false"/>
+			<control type="procontroller" required="false"/>
+		</input>
+		<mode tv="true" handheld="true" tabletop="true"/>
+		<rom version="" name="Supermarket Simulator 2026 (EN).switch"/>
+		<case color=""/>
+	</game>
 	<game name="EGGCONSOLE HYDLIDE MSX2 (EN,JA)">
 		<id>BUNDA</id>
 		<type>eShop</type>
@@ -538179,6 +539295,28 @@ After enjoying the live performance, enjoy the mini-game &quot;SHORT SHORTs&quot
 		</input>
 		<mode tv="true" handheld="true" tabletop="true"/>
 		<rom version="" name="EGGCONSOLE HYDLIDE MSX2 (EN,JA).switch"/>
+		<case color=""/>
+	</game>
+	<game name="Joy Piano (EN,DE,ES,IT,PT,JA,KO,ZHCN,RU)">
+		<id>BUNJA</id>
+		<type>eShop</type>
+		<region>ALL</region>
+		<languages>EN,DE,ES,IT,PT,JA,KO,ZHCN,RU</languages>
+		<locale lang="EN">
+			<title>Joy Piano</title>
+			<synopsis/>
+		</locale>
+		<publisher>GaniTani</publisher>
+		<date year="2026" month="4" day="23"/>
+		<genre>music</genre>
+		<rating_ESRB value="E"/>
+		<wi-fi players="0"/>
+		<input players="1">
+			<control type="joycon" required="false"/>
+			<control type="procontroller" required="false"/>
+		</input>
+		<mode tv="true" handheld="true" tabletop="true"/>
+		<rom version="" name="Joy Piano (EN,DE,ES,IT,PT,JA,KO,ZHCN,RU).switch"/>
 		<case color=""/>
 	</game>
 	<game name="Japanese Rural Life Adventure (EN,FR,DE,ES,IT,NL,PT,JA,KO,ZHTW,ZHCN,RU)">
@@ -538415,6 +539553,31 @@ After enjoying the live performance, enjoy the mini-game &quot;SHORT SHORTs&quot
 		</input>
 		<mode tv="true" handheld="true" tabletop="true"/>
 		<rom version="" name="Buck Blastem (EN).switch"/>
+		<case color=""/>
+	</game>
+	<game name="Arcade Archives STREET SMART (EN,FR,DE,ES,IT,JA)">
+		<id>BUPWA</id>
+		<type>eShop</type>
+		<region>ALL</region>
+		<languages>EN,FR,DE,ES,IT,JA</languages>
+		<locale lang="EN">
+			<title>Arcade Archives STREET SMART</title>
+			<synopsis/>
+		</locale>
+		<publisher>HAMSTER</publisher>
+		<date year="2026" month="4" day="23"/>
+		<genre>fighting</genre>
+		<rating_ESRB value="E10+">
+			<descriptor_ESRB>mild violence</descriptor_ESRB>
+			<descriptor_ESRB>use of tobacco</descriptor_ESRB>
+		</rating_ESRB>
+		<wi-fi players="0"/>
+		<input players="2">
+			<control type="joycon" required="false"/>
+			<control type="procontroller" required="false"/>
+		</input>
+		<mode tv="true" handheld="true" tabletop="true"/>
+		<rom version="" name="Arcade Archives STREET SMART (EN,FR,DE,ES,IT,JA).switch"/>
 		<case color=""/>
 	</game>
 	<game name="CRAYON LITTLE DINO (EN)">
@@ -539054,6 +540217,52 @@ After enjoying the live performance, enjoy the mini-game &quot;SHORT SHORTs&quot
 		<rom version="" name="Bad Girls: Tempting Night (EN,JA,RU).switch"/>
 		<case color=""/>
 	</game>
+	<game name="There's No Differences: Dragons (EN,JA,KO,ZHTW,ZHCN,PL)">
+		<id>BUU8A</id>
+		<type>eShop</type>
+		<region>ALL</region>
+		<languages>EN,JA,KO,ZHTW,ZHCN,PL</languages>
+		<locale lang="EN">
+			<title>There's No Differences: Dragons</title>
+			<synopsis/>
+		</locale>
+		<publisher>Error300 Games</publisher>
+		<date year="2026" month="4" day="20"/>
+		<genre>puzzle</genre>
+		<rating_ESRB value="E"/>
+		<wi-fi players="0"/>
+		<input players="1">
+			<control type="joycon" required="false"/>
+			<control type="procontroller" required="false"/>
+		</input>
+		<mode tv="true" handheld="true" tabletop="true"/>
+		<rom version="" name="There's No Differences: Dragons (EN,JA,KO,ZHTW,ZHCN,PL).switch"/>
+		<case color=""/>
+	</game>
+	<game name="Dead Stride (EN,FR,DE,ES,IT,JA,KO,ZHTW,ZHCN)">
+		<id>BUUCA</id>
+		<type>eShop</type>
+		<region>ALL</region>
+		<languages>EN,FR,DE,ES,IT,JA,KO,ZHTW,ZHCN</languages>
+		<locale lang="EN">
+			<title>Dead Stride</title>
+			<synopsis/>
+		</locale>
+		<publisher>TROOOZE</publisher>
+		<date year="2026" month="4" day="23"/>
+		<genre>action,shooter</genre>
+		<rating_ESRB value="M">
+			<descriptor_ESRB>blood and gore</descriptor_ESRB>
+		</rating_ESRB>
+		<wi-fi players="0"/>
+		<input players="1">
+			<control type="joycon" required="false"/>
+			<control type="procontroller" required="false"/>
+		</input>
+		<mode tv="true" handheld="true" tabletop="true"/>
+		<rom version="" name="Dead Stride (EN,FR,DE,ES,IT,JA,KO,ZHTW,ZHCN).switch"/>
+		<case color=""/>
+	</game>
 	<game name="Cat &amp; Friends: Purrfect Jump (EN,FR,DE,ES,PT,JA,KO,ZHTW,ZHCN)">
 		<id>BUUKA</id>
 		<type>eShop</type>
@@ -539193,6 +540402,28 @@ After enjoying the live performance, enjoy the mini-game &quot;SHORT SHORTs&quot
 		</input>
 		<mode tv="true" handheld="true" tabletop="true"/>
 		<rom version="" name="Jigsaw Puzzle Passport: Spain (EN).switch"/>
+		<case color=""/>
+	</game>
+	<game name="MAID CARD GACHA: COLLECT, DISPLAY, COMPLETE (EN,JA,ZHTW)">
+		<id>BUV4A</id>
+		<type>eShop</type>
+		<region>ALL</region>
+		<languages>EN,JA,ZHTW</languages>
+		<locale lang="EN">
+			<title>MAID CARD GACHA: COLLECT, DISPLAY, COMPLETE</title>
+			<synopsis/>
+		</locale>
+		<publisher>SHINISE GAMES</publisher>
+		<date year="2026" month="4" day="23"/>
+		<genre>simulation</genre>
+		<rating_ESRB value="E"/>
+		<wi-fi players="0"/>
+		<input players="1">
+			<control type="joycon" required="false"/>
+			<control type="procontroller" required="false"/>
+		</input>
+		<mode tv="true" handheld="true" tabletop="true"/>
+		<rom version="" name="MAID CARD GACHA: COLLECT, DISPLAY, COMPLETE (EN,JA,ZHTW).switch"/>
 		<case color=""/>
 	</game>
 	<game name="Hoodbound (EN)">
@@ -539516,6 +540747,30 @@ After enjoying the live performance, enjoy the mini-game &quot;SHORT SHORTs&quot
 		<rom version="" name="Deckline (EN,FR,DE,ES,IT,PT,JA,KO,ZHCN,RU).switch"/>
 		<case color=""/>
 	</game>
+	<game name="Poopy Time (EN)">
+		<id>BUX9A</id>
+		<type>eShop</type>
+		<region>ALL</region>
+		<languages>EN</languages>
+		<locale lang="EN">
+			<title>Poopy Time</title>
+			<synopsis/>
+		</locale>
+		<publisher>NOSTRA GAMES</publisher>
+		<date year="2026" month="4" day="23"/>
+		<genre>action</genre>
+		<rating_ESRB value="E10+">
+			<descriptor_ESRB>crude humor</descriptor_ESRB>
+		</rating_ESRB>
+		<wi-fi players="0"/>
+		<input players="1">
+			<control type="joycon" required="false"/>
+			<control type="procontroller" required="false"/>
+		</input>
+		<mode tv="true" handheld="true" tabletop="true"/>
+		<rom version="" name="Poopy Time (EN).switch"/>
+		<case color=""/>
+	</game>
 	<game name="GoodNightGirls (EN,JA)">
 		<id>BUXBA</id>
 		<type>eShop</type>
@@ -539557,6 +540812,29 @@ After enjoying the live performance, enjoy the mini-game &quot;SHORT SHORTs&quot
 		</input>
 		<mode tv="true" handheld="true" tabletop="true"/>
 		<rom version="" name="Japanese Basics HIRAGANA Fill-in Quiz (EN,JA,KO,ZHTW).switch"/>
+		<case color=""/>
+	</game>
+	<game name="Hole ASMR (EN)">
+		<id>BUXWA</id>
+		<type>eShop</type>
+		<region>ALL</region>
+		<languages>EN</languages>
+		<locale lang="EN">
+			<title>Hole ASMR</title>
+			<synopsis/>
+		</locale>
+		<developer>Entity3 Limited</developer>
+		<publisher>Entity3</publisher>
+		<date year="2026" month="4" day="18"/>
+		<genre>adventure</genre>
+		<rating_ESRB value="E"/>
+		<wi-fi players="0"/>
+		<input players="1">
+			<control type="joycon" required="false"/>
+			<control type="procontroller" required="false"/>
+		</input>
+		<mode tv="true" handheld="true" tabletop="true"/>
+		<rom version="" name="Hole ASMR (EN).switch"/>
 		<case color=""/>
 	</game>
 	<game name="Emerland Solitaire 2 Collector's Edition (EN,FR,DE,RU)">
@@ -539692,6 +540970,31 @@ After enjoying the live performance, enjoy the mini-game &quot;SHORT SHORTs&quot
 		</input>
 		<mode tv="true" handheld="true" tabletop="true"/>
 		<rom version="" name="The Last Case of John Morley (FR,DE,ES,PT,JA,KO,ZHCN).switch"/>
+		<case color=""/>
+	</game>
+	<game name="Alice in Wonder Underland AIWU (EN,JA)">
+		<id>BUYWA</id>
+		<type>eShop</type>
+		<region>ALL</region>
+		<languages>EN,JA</languages>
+		<locale lang="EN">
+			<title>Alice in Wonder Underland AIWU</title>
+			<synopsis/>
+		</locale>
+		<publisher>Regista</publisher>
+		<date year="2026" month="4" day="23"/>
+		<genre>adventure</genre>
+		<rating_ESRB value="T">
+			<descriptor_ESRB>blood</descriptor_ESRB>
+			<descriptor_ESRB>mild violence</descriptor_ESRB>
+		</rating_ESRB>
+		<wi-fi players="0"/>
+		<input players="1">
+			<control type="joycon" required="false"/>
+			<control type="procontroller" required="false"/>
+		</input>
+		<mode tv="true" handheld="true" tabletop="true"/>
+		<rom version="" name="Alice in Wonder Underland AIWU (EN,JA).switch"/>
 		<case color=""/>
 	</game>
 	<game name="Angry Dog (EN)">
@@ -540122,6 +541425,30 @@ After enjoying the live performance, enjoy the mini-game &quot;SHORT SHORTs&quot
 		<rom version="" name="Science Literacy Check for Adults (EN,JA,KO,ZHTW).switch"/>
 		<case color=""/>
 	</game>
+	<game name="FPS Dinosaurs (EN,FR,DE,ES,IT,PT,JA,KO,ZHCN,RU)">
+		<id>BVCUA</id>
+		<type>eShop</type>
+		<region>ALL</region>
+		<languages>EN,FR,DE,ES,IT,PT,JA,KO,ZHCN,RU</languages>
+		<locale lang="EN">
+			<title>FPS Dinosaurs</title>
+			<synopsis/>
+		</locale>
+		<publisher>GAME NACIONAL</publisher>
+		<date year="2026" month="4" day="25"/>
+		<genre>action,shooter</genre>
+		<rating_ESRB value="T">
+			<descriptor_ESRB>violence</descriptor_ESRB>
+		</rating_ESRB>
+		<wi-fi players="0"/>
+		<input players="1">
+			<control type="joycon" required="false"/>
+			<control type="procontroller" required="false"/>
+		</input>
+		<mode tv="true" handheld="true" tabletop="true"/>
+		<rom version="" name="FPS Dinosaurs (EN,FR,DE,ES,IT,PT,JA,KO,ZHCN,RU).switch"/>
+		<case color=""/>
+	</game>
 	<game name="Train Plus mini 1 (EN,JA)">
 		<id>BVCWA</id>
 		<type>eShop</type>
@@ -540142,6 +541469,31 @@ After enjoying the live performance, enjoy the mini-game &quot;SHORT SHORTs&quot
 		</input>
 		<mode tv="true" handheld="true" tabletop="true"/>
 		<rom version="" name="Train Plus mini 1 (EN,JA).switch"/>
+		<case color=""/>
+	</game>
+	<game name="Guts 'n Grunts Sr. (EN)">
+		<id>BVD3A</id>
+		<type>eShop</type>
+		<region>ALL</region>
+		<languages>EN</languages>
+		<locale lang="EN">
+			<title>Guts 'n Grunts Sr.</title>
+			<synopsis/>
+		</locale>
+		<developer>Cascadia Games LLC</developer>
+		<publisher>Cascadia Games</publisher>
+		<date year="2026" month="4" day="24"/>
+		<genre>shooter</genre>
+		<rating_ESRB value="E">
+			<descriptor_ESRB>mild fantasy violence</descriptor_ESRB>
+		</rating_ESRB>
+		<wi-fi players="0"/>
+		<input players="1">
+			<control type="joycon" required="false"/>
+			<control type="procontroller" required="false"/>
+		</input>
+		<mode tv="true" handheld="true" tabletop="true"/>
+		<rom version="" name="Guts 'n Grunts Sr. (EN).switch"/>
 		<case color=""/>
 	</game>
 	<game name="Gentle Classical Music Course for Grown-Ups (EN,JA,KO,ZHTW)">
@@ -540254,6 +541606,99 @@ After enjoying the live performance, enjoy the mini-game &quot;SHORT SHORTs&quot
 		</input>
 		<mode tv="true" handheld="true" tabletop="true"/>
 		<rom version="" name="Dog Chaos (EN).switch"/>
+		<case color=""/>
+	</game>
+	<game name="Challenge Together! Elementary School Quiz (EN,JA,KO,ZHTW)">
+		<id>BVE5A</id>
+		<type>eShop</type>
+		<region>ALL</region>
+		<languages>EN,JA,KO,ZHTW</languages>
+		<locale lang="EN">
+			<title>Challenge Together! Elementary School Quiz</title>
+			<synopsis/>
+		</locale>
+		<publisher>TT</publisher>
+		<date year="2026" month="4" day="23"/>
+		<rating_ESRB value="E"/>
+		<wi-fi players="0"/>
+		<input players="1">
+			<control type="joycon" required="false"/>
+			<control type="procontroller" required="false"/>
+		</input>
+		<mode tv="true" handheld="true" tabletop="true"/>
+		<rom version="" name="Challenge Together! Elementary School Quiz (EN,JA,KO,ZHTW).switch"/>
+		<case color=""/>
+	</game>
+	<game name="Crypt Carnage (EN)">
+		<id>BVEDA</id>
+		<type>eShop</type>
+		<region>ALL</region>
+		<languages>EN</languages>
+		<locale lang="EN">
+			<title>Crypt Carnage</title>
+			<synopsis/>
+		</locale>
+		<publisher>Gametry</publisher>
+		<date year="2026" month="4" day="24"/>
+		<genre>action,shooter</genre>
+		<rating_ESRB value="T">
+			<descriptor_ESRB>blood</descriptor_ESRB>
+			<descriptor_ESRB>violence</descriptor_ESRB>
+		</rating_ESRB>
+		<wi-fi players="0"/>
+		<input players="1">
+			<control type="joycon" required="false"/>
+			<control type="procontroller" required="false"/>
+		</input>
+		<mode tv="true" handheld="true" tabletop="true"/>
+		<rom version="" name="Crypt Carnage (EN).switch"/>
+		<case color=""/>
+	</game>
+	<game name="Frost Station (EN)">
+		<id>BVERA</id>
+		<type>eShop</type>
+		<region>ALL</region>
+		<languages>EN</languages>
+		<locale lang="EN">
+			<title>Frost Station</title>
+			<synopsis/>
+		</locale>
+		<publisher>Downmeadowstreet</publisher>
+		<date year="2026" month="4" day="25"/>
+		<genre>adventure</genre>
+		<rating_ESRB value="E"/>
+		<wi-fi players="0"/>
+		<input players="1">
+			<control type="joycon" required="false"/>
+			<control type="procontroller" required="false"/>
+		</input>
+		<mode tv="true" handheld="true" tabletop="true"/>
+		<rom version="" name="Frost Station (EN).switch"/>
+		<case color=""/>
+	</game>
+	<game name="Birthday Boy (EN)">
+		<id>BVEZA</id>
+		<type>eShop</type>
+		<region>ALL</region>
+		<languages>EN</languages>
+		<locale lang="EN">
+			<title>Birthday Boy</title>
+			<synopsis/>
+		</locale>
+		<developer>Playstige Interactive</developer>
+		<publisher>Playstige Interactive</publisher>
+		<date year="2026" month="4" day="24"/>
+		<genre>adventure</genre>
+		<rating_ESRB value="M">
+			<descriptor_ESRB>blood</descriptor_ESRB>
+		</rating_ESRB>
+		<wi-fi players="0"/>
+		<input players="1">
+			<control type="joycon" required="false"/>
+			<control type="procontroller" required="false"/>
+		</input>
+		<mode tv="true" handheld="true" tabletop="true"/>
+		<rom version="" name="Birthday Boy (EN).switch"/>
 		<case color=""/>
 	</game>
 	<game name="National Adult General Knowledge Selection Test (EN,JA,KO,ZHTW)">
@@ -540410,6 +541855,30 @@ After enjoying the live performance, enjoy the mini-game &quot;SHORT SHORTs&quot
 		<rom version="" name="The Universal Symphony (EN).switch"/>
 		<case color=""/>
 	</game>
+	<game name="Forensic Science Mystery - Crime Scene Tap &amp; Deduction Game - (EN,JA,KO,ZHTW)">
+		<id>BVGSA</id>
+		<type>eShop</type>
+		<region>ALL</region>
+		<languages>EN,JA,KO,ZHTW</languages>
+		<locale lang="EN">
+			<title>Forensic Science Mystery - Crime Scene Tap &amp; Deduction Game -</title>
+			<synopsis/>
+		</locale>
+		<publisher>TT</publisher>
+		<date year="2026" month="4" day="23"/>
+		<genre>adventure</genre>
+		<rating_ESRB value="T">
+			<descriptor_ESRB>mild violence</descriptor_ESRB>
+		</rating_ESRB>
+		<wi-fi players="0"/>
+		<input players="1">
+			<control type="joycon" required="false"/>
+			<control type="procontroller" required="false"/>
+		</input>
+		<mode tv="true" handheld="true" tabletop="true"/>
+		<rom version="" name="Forensic Science Mystery - Crime Scene Tap &amp; Deduction Game - (EN,JA,KO,ZHTW).switch"/>
+		<case color=""/>
+	</game>
 	<game name="Nationwide Academic Check Junior High Level (EN,JA,KO,ZHTW)">
 		<id>BVH3A</id>
 		<type>eShop</type>
@@ -540429,6 +541898,121 @@ After enjoying the live performance, enjoy the mini-game &quot;SHORT SHORTs&quot
 		</input>
 		<mode tv="true" handheld="true" tabletop="true"/>
 		<rom version="" name="Nationwide Academic Check Junior High Level (EN,JA,KO,ZHTW).switch"/>
+		<case color=""/>
+	</game>
+	<game name="Learn with Illustrations! English Prepositions 4-Choice Quiz (EN,JA,KO,ZHTW)">
+		<id>BVH4A</id>
+		<type>eShop</type>
+		<region>ALL</region>
+		<languages>EN,JA,KO,ZHTW</languages>
+		<locale lang="EN">
+			<title>Learn with Illustrations! English Prepositions 4-Choice Quiz</title>
+			<synopsis/>
+		</locale>
+		<publisher>MASK</publisher>
+		<date year="2026" month="4" day="23"/>
+		<rating_ESRB value="E"/>
+		<wi-fi players="0"/>
+		<input players="1">
+			<control type="joycon" required="false"/>
+			<control type="procontroller" required="false"/>
+		</input>
+		<mode tv="true" handheld="true" tabletop="true"/>
+		<rom version="" name="Learn with Illustrations! English Prepositions 4-Choice Quiz (EN,JA,KO,ZHTW).switch"/>
+		<case color=""/>
+	</game>
+	<game name="Planet of Lana II - Supporter Pack (EN,FR,DE,ES,IT,PT,JA,KO,ZHTW,ZHCN)">
+		<id>BVHAA</id>
+		<type>eShop</type>
+		<region>ALL</region>
+		<languages>EN,FR,DE,ES,IT,PT,JA,KO,ZHTW,ZHCN</languages>
+		<locale lang="EN">
+			<title>Planet of Lana II - Supporter Pack</title>
+			<synopsis/>
+		</locale>
+		<publisher>Thunderful</publisher>
+		<date year="2026" month="4" day="23"/>
+		<genre>puzzle</genre>
+		<rating_ESRB value="E10+">
+			<descriptor_ESRB>fantasy violence</descriptor_ESRB>
+		</rating_ESRB>
+		<wi-fi players="0"/>
+		<input players="1">
+			<control type="joycon" required="false"/>
+			<control type="procontroller" required="false"/>
+		</input>
+		<mode tv="true" handheld="true" tabletop="true"/>
+		<rom version="" name="Planet of Lana II - Supporter Pack (EN,FR,DE,ES,IT,PT,JA,KO,ZHTW,ZHCN).switch"/>
+		<case color=""/>
+	</game>
+	<game name="Amazing Lab! Science Experiments Quiz (EN,JA,KO,ZHTW)">
+		<id>BVJDA</id>
+		<type>eShop</type>
+		<region>ALL</region>
+		<languages>EN,JA,KO,ZHTW</languages>
+		<locale lang="EN">
+			<title>Amazing Lab! Science Experiments Quiz</title>
+			<synopsis/>
+		</locale>
+		<publisher>TT</publisher>
+		<date year="2026" month="4" day="23"/>
+		<rating_ESRB value="E"/>
+		<wi-fi players="0"/>
+		<input players="1">
+			<control type="joycon" required="false"/>
+			<control type="procontroller" required="false"/>
+		</input>
+		<mode tv="true" handheld="true" tabletop="true"/>
+		<rom version="" name="Amazing Lab! Science Experiments Quiz (EN,JA,KO,ZHTW).switch"/>
+		<case color=""/>
+	</game>
+	<game name="AquaDream (EN,FR,ES,JA,ZHCN,RU)">
+		<id>BVJGA</id>
+		<type>eShop</type>
+		<region>ALL</region>
+		<languages>EN,FR,ES,JA,ZHCN,RU</languages>
+		<locale lang="EN">
+			<title>AquaDream</title>
+			<synopsis/>
+		</locale>
+		<developer>Gossiam Games</developer>
+		<publisher>Brainium Games</publisher>
+		<date year="2026" month="4" day="23"/>
+		<genre>action,adventure</genre>
+		<rating_ESRB value="E10+">
+			<descriptor_ESRB>fantasy violence</descriptor_ESRB>
+		</rating_ESRB>
+		<wi-fi players="0"/>
+		<input players="1">
+			<control type="joycon" required="false"/>
+			<control type="procontroller" required="false"/>
+		</input>
+		<mode tv="true" handheld="true" tabletop="true"/>
+		<rom version="" name="AquaDream (EN,FR,ES,JA,ZHCN,RU).switch"/>
+		<case color=""/>
+	</game>
+	<game name="Robo Hop (EN)">
+		<id>BVJKA</id>
+		<type>eShop</type>
+		<region>ALL</region>
+		<languages>EN</languages>
+		<locale lang="EN">
+			<title>Robo Hop</title>
+			<synopsis/>
+		</locale>
+		<publisher>Gametry</publisher>
+		<date year="2026" month="4" day="24"/>
+		<genre>action</genre>
+		<rating_ESRB value="E">
+			<descriptor_ESRB>mild fantasy violence</descriptor_ESRB>
+		</rating_ESRB>
+		<wi-fi players="0"/>
+		<input players="1">
+			<control type="joycon" required="false"/>
+			<control type="procontroller" required="false"/>
+		</input>
+		<mode tv="true" handheld="true" tabletop="true"/>
+		<rom version="" name="Robo Hop (EN).switch"/>
 		<case color=""/>
 	</game>
 	<game name="Comfy Corners: Unpack and Decorate (EN)">
@@ -540451,6 +542035,27 @@ After enjoying the live performance, enjoy the mini-game &quot;SHORT SHORTs&quot
 		</input>
 		<mode tv="true" handheld="true" tabletop="true"/>
 		<rom version="" name="Comfy Corners: Unpack and Decorate (EN).switch"/>
+		<case color=""/>
+	</game>
+	<game name="Amazing Facts World Culture True or False Quiz (EN,JA,KO,ZHTW)">
+		<id>BVK8A</id>
+		<type>eShop</type>
+		<region>ALL</region>
+		<languages>EN,JA,KO,ZHTW</languages>
+		<locale lang="EN">
+			<title>Amazing Facts World Culture True or False Quiz</title>
+			<synopsis/>
+		</locale>
+		<publisher>TT</publisher>
+		<date year="2026" month="4" day="23"/>
+		<rating_ESRB value="E"/>
+		<wi-fi players="0"/>
+		<input players="1">
+			<control type="joycon" required="false"/>
+			<control type="procontroller" required="false"/>
+		</input>
+		<mode tv="true" handheld="true" tabletop="true"/>
+		<rom version="" name="Amazing Facts World Culture True or False Quiz (EN,JA,KO,ZHTW).switch"/>
 		<case color=""/>
 	</game>
 	<game name="Jewel Match Solitaire X (EN)">
@@ -540543,6 +542148,96 @@ After enjoying the live performance, enjoy the mini-game &quot;SHORT SHORTs&quot
 		</input>
 		<mode tv="true" handheld="true" tabletop="true"/>
 		<rom version="" name="Home Rescue Clean And Restore Collector's Edition (EN,FR,DE,RU).switch"/>
+		<case color=""/>
+	</game>
+	<game name="Party Pool (EN)">
+		<id>BVNEA</id>
+		<type>eShop</type>
+		<region>ALL</region>
+		<languages>EN</languages>
+		<locale lang="EN">
+			<title>Party Pool</title>
+			<synopsis/>
+		</locale>
+		<publisher>Eathrabaria</publisher>
+		<date year="2026" month="4" day="23"/>
+		<genre>sports</genre>
+		<rating_ESRB value="E"/>
+		<wi-fi players="0"/>
+		<input players="2">
+			<control type="joycon" required="false"/>
+			<control type="procontroller" required="false"/>
+		</input>
+		<mode tv="true" handheld="true" tabletop="true"/>
+		<rom version="" name="Party Pool (EN).switch"/>
+		<case color=""/>
+	</game>
+	<game name="Medieval Market Simulator (EN,FR,DE,ES,IT,NL,PT,JA,KO,ZHTW,ZHCN,RU,PL)">
+		<id>BVPBA</id>
+		<type>eShop</type>
+		<region>ALL</region>
+		<languages>EN,FR,DE,ES,IT,NL,PT,JA,KO,ZHTW,ZHCN,RU,PL</languages>
+		<locale lang="EN">
+			<title>Medieval Market Simulator</title>
+			<synopsis/>
+		</locale>
+		<publisher>GazeGames Interactive</publisher>
+		<date year="2026" month="4" day="23"/>
+		<genre>simulation</genre>
+		<rating_ESRB value="E"/>
+		<wi-fi players="0"/>
+		<input players="1">
+			<control type="joycon" required="false"/>
+			<control type="procontroller" required="false"/>
+		</input>
+		<mode tv="true" handheld="true" tabletop="true"/>
+		<rom version="" name="Medieval Market Simulator (EN,FR,DE,ES,IT,NL,PT,JA,KO,ZHTW,ZHCN,RU,PL).switch"/>
+		<case color=""/>
+	</game>
+	<game name="Dark Secrets Mystery Files (EN,JA,KO,ZHTW)">
+		<id>BVQNA</id>
+		<type>eShop</type>
+		<region>ALL</region>
+		<languages>EN,JA,KO,ZHTW</languages>
+		<locale lang="EN">
+			<title>Dark Secrets Mystery Files</title>
+			<synopsis/>
+		</locale>
+		<publisher>TT</publisher>
+		<date year="2026" month="4" day="23"/>
+		<genre>adventure</genre>
+		<rating_ESRB value="T">
+			<descriptor_ESRB>mild violence</descriptor_ESRB>
+		</rating_ESRB>
+		<wi-fi players="0"/>
+		<input players="1">
+			<control type="joycon" required="false"/>
+			<control type="procontroller" required="false"/>
+		</input>
+		<mode tv="true" handheld="true" tabletop="true"/>
+		<rom version="" name="Dark Secrets Mystery Files (EN,JA,KO,ZHTW).switch"/>
+		<case color=""/>
+	</game>
+	<game name="Jigsaw Puzzle: Worlds Beyond (EN)">
+		<id>BVTAA</id>
+		<type>eShop</type>
+		<region>ALL</region>
+		<languages>EN</languages>
+		<locale lang="EN">
+			<title>Jigsaw Puzzle: Worlds Beyond</title>
+			<synopsis/>
+		</locale>
+		<publisher>Downmeadowstreet</publisher>
+		<date year="2026" month="4" day="25"/>
+		<genre>puzzle</genre>
+		<rating_ESRB value="E"/>
+		<wi-fi players="0"/>
+		<input players="1">
+			<control type="joycon" required="false"/>
+			<control type="procontroller" required="false"/>
+		</input>
+		<mode tv="true" handheld="true" tabletop="true"/>
+		<rom version="" name="Jigsaw Puzzle: Worlds Beyond (EN).switch"/>
 		<case color=""/>
 	</game>
 </datafile>

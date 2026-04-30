@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <datafile xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="wiitdb.xsd">
-	<WiiTDB version="20260422092754" filter="EN_wiiware_gamecube" games="10154"/>
+	<WiiTDB version="20260430133353" filter="EN_wiiware_gamecube" games="10157"/>
 	<!--
  GameTDB: Wii, Database started by Lustar in 2009 (https://www.gametdb.com)
  Never modify this file manually, it will get overwritten when you update. You can add games and fixes on the website.
@@ -6039,7 +6039,6 @@ When Samus investigates an abandoned Federation ship on a planet named Aether, h
 		<input players="4">
 			<control type="wiimote" required="true"/>
 			<control type="guitar" required="true"/>
-			<control type="nunchuk" required="false"/>
 			<control type="microphone" required="false"/>
 			<control type="drums" required="false"/>
 		</input>
@@ -106345,7 +106344,7 @@ When you enroll, headmaster Professor Lobe will introduce you to Test mode, chal
 		<date year="2007" month="7" day="20"/>
 		<genre>health,puzzle,coaching,educational</genre>
 		<rating type="PEGI" value="3"/>
-		<wi-fi players="1">
+		<wi-fi players="0">
 			<feature>online</feature>
 			<feature>score</feature>
 		</wi-fi>
@@ -138143,6 +138142,10 @@ Wi-Fi Pay &amp; Play for 250 Wii Points each:
 			<title>Just Dance 3</title>
 			<synopsis/>
 		</locale>
+		<locale lang="NL">
+			<title>Just Dance 3</title>
+			<synopsis/>
+		</locale>
 		<locale lang="DK">
 			<title>Just Dance 3</title>
 			<synopsis/>
@@ -138163,10 +138166,8 @@ Wi-Fi Pay &amp; Play for 250 Wii Points each:
 		<publisher>Ubi Soft Entertainment</publisher>
 		<date year="2011" month="10" day="7"/>
 		<genre>music,party,dance</genre>
-		<rating type="PEGI" value="3">
-			<descriptor>online</descriptor>
-		</rating>
-		<wi-fi players="1">
+		<rating type="PEGI" value="3"/>
+		<wi-fi players="0">
 			<feature>online</feature>
 			<feature>download</feature>
 		</wi-fi>
@@ -138288,7 +138289,7 @@ Katy Perry - Teenage Dream</synopsis>
 		<date year="2011" month="10" day="14"/>
 		<genre>music,party,dance</genre>
 		<rating type="PEGI" value="3"/>
-		<wi-fi players="1">
+		<wi-fi players="0">
 			<feature>online</feature>
 			<feature>download</feature>
 		</wi-fi>
@@ -140377,7 +140378,7 @@ Download pay tracks:
 		<date year="2012" month="10" day="2"/>
 		<genre>music,party,dance</genre>
 		<rating type="PEGI" value="3"/>
-		<wi-fi players="1">
+		<wi-fi players="0">
 			<feature>online</feature>
 			<feature>download</feature>
 		</wi-fi>
@@ -140586,7 +140587,7 @@ Download pay tracks:
 		<date year="2012" month="10" day="2"/>
 		<genre>music,party,dance</genre>
 		<rating type="PEGI" value="3"/>
-		<wi-fi players="1">
+		<wi-fi players="0">
 			<feature>online</feature>
 			<feature>download</feature>
 		</wi-fi>
@@ -189004,7 +189005,7 @@ Modified to work via DML.</synopsis>
 			<title>마리오 카트 아케이드 GP 2</title>
 			<synopsis/>
 		</locale>
-		<publisher>Rocket Games / Ajinomoto</publisher>
+		<publisher/>
 		<date year="2014" month="1" day="1"/>
 		<rating type="CERO" value=""/>
 		<wi-fi players="0"/>
@@ -189775,6 +189776,88 @@ Speedrun.com page: www.speedrun.com/smsb</synopsis>
 			<control type="gamecube" required="true"/>
 		</input>
 		<rom version="1.0" name="Super Mario Sunshine (Korea) (KO) (v1.0).iso" size="1459978240"/>
+		<case color="000000"/>
+	</game>
+	<game name="Mario Kart Arcade GP 2 (USA) (EN)">
+		<id>GNLE82</id>
+		<type>CUSTOM</type>
+		<region>NTSC-U</region>
+		<languages>EN</languages>
+		<locale lang="EN">
+			<title>Mario Kart Arcade GP 2</title>
+			<synopsis>Mario Kart Arcade GP 2 (マリオカート アーケードグランプリ2) is an arcade-only iteration of Nintendo's Mario Kart series, developed by Namco. Designed for the Triforce arcade board (also used for F-Zero AX), players can race as one of eleven characters in twenty-four tracks. On certain machines, for an additional fee, a player's data can be saved on a magnetic card which can be inserted into the machine again later to retain unlocked items and records. Nintendo's limited role of development was mainly isolated to ensuring that it was a worthy title for the established franchised.
+
+Modified to work via DML.</synopsis>
+		</locale>
+		<locale lang="JA">
+			<title>マリオカート アーケードグランプリ2</title>
+			<synopsis/>
+		</locale>
+		<locale lang="KO">
+			<title>마리오 카트 아케이드 GP 2</title>
+			<synopsis/>
+		</locale>
+		<developer>Nintendo</developer>
+		<publisher>Nintendo/Namco/Triforce</publisher>
+		<date year="2007" month="1" day="1"/>
+		<genre>racing,kart racing,off-road racing,arcade</genre>
+		<rating type="ESRB" value="">
+			<descriptor>mild comic mischief</descriptor>
+			<descriptor>mild cartoon violence</descriptor>
+			<descriptor>animated violence</descriptor>
+		</rating>
+		<wi-fi players="0"/>
+		<input players="1">
+			<control type="wiimote" required="true"/>
+			<control type="gamecube" required="true"/>
+			<control type="nunchuk" required="false"/>
+		</input>
+		<rom version="" name="Mario Kart Arcade GP 2 (USA) (EN).iso" size="4699979776" sha1="b65eefcf20df7116544261ff04dcb9f219e9579b"/>
+		<case color="000000" versions="4"/>
+	</game>
+	<game name="Mario Kart Arcade GP 2 (Japan) (JA)">
+		<id>GNLJ82</id>
+		<type>CUSTOM</type>
+		<region>NTSC-J</region>
+		<languages>JA</languages>
+		<locale lang="EN">
+			<title>Mario Kart Arcade GP 2</title>
+			<synopsis></synopsis>
+		</locale>
+		<locale lang="JA">
+			<title>マリオカート アーケード GP2</title>
+			<synopsis/>
+		</locale>
+		<locale lang="KO">
+			<title>마리오 카트 아케이드 GP 2</title>
+			<synopsis/>
+		</locale>
+		<publisher/>
+		<date year="2014" month="1" day="1"/>
+		<rating type="CERO" value=""/>
+		<wi-fi players="0"/>
+		<input players="1">
+			<control type="wiimote" required="true"/>
+			<control type="nunchuk" required="false"/>
+		</input>
+		<rom version="" name="Mario Kart Arcade GP 2 (Japan) (JA).iso" size="1459978240"/>
+		<case color="000000"/>
+	</game>
+	<game name="The Legend of Zelda: Ocarina of Time 1.0 (USA) (EN)">
+		<id>GOZED3</id>
+		<type>CUSTOM</type>
+		<region>NTSC-U</region>
+		<languages>EN</languages>
+		<locale lang="EN">
+			<title>The Legend of Zelda: Ocarina of Time 1.0</title>
+			<synopsis></synopsis>
+		</locale>
+		<publisher/>
+		<date year="2026" month="" day=""/>
+		<rating type="ESRB" value=""/>
+		<wi-fi players="0"/>
+		<input players="1"/>
+		<rom version="" name="The Legend of Zelda: Ocarina of Time 1.0 (USA) (EN).iso" size="1459978240"/>
 		<case color="000000"/>
 	</game>
 	<game name="Mario Party 5+ Base Patch (USA) (EN)">
@@ -250456,13 +250539,18 @@ Note that the fifth court case will be available for download later in 2010 as a
 		</locale>
 		<developer>Capcom</developer>
 		<publisher>Capcom</publisher>
-		<date year="2014" month="" day=""/>
+		<date year="2009" month="12" day="15"/>
 		<genre>adventure,simulation</genre>
-		<rating type="CERO" value=""/>
-		<wi-fi players="0"/>
+		<rating type="CERO" value="B">
+			<descriptor>sex</descriptor>
+			<descriptor>violence</descriptor>
+		</rating>
+		<wi-fi players="0">
+			<feature>online</feature>
+			<feature>download</feature>
+		</wi-fi>
 		<input players="1">
 			<control type="wiimote" required="true"/>
-			<control type="nunchuk" required="false"/>
 		</input>
 		<rom version="" name="Gyakuten Saiban - Yomigaeru Gyakuten (Japan) (JA).wad"/>
 		<case color=""/>
@@ -366265,6 +366353,14 @@ The Sims Bustin' Out also features new integrated two-player gameplay and memory
 			<title>De Sims: Erop uit!</title>
 			<synopsis/>
 		</locale>
+		<locale lang="DK">
+			<title>The Sims: Bustin' Out</title>
+			<synopsis/>
+		</locale>
+		<locale lang="NO">
+			<title>The Sims: Bustin' Out</title>
+			<synopsis/>
+		</locale>
 		<locale lang="FI">
 			<title>The Sims: Ryntää Raitille</title>
 			<synopsis/>
@@ -378267,7 +378363,8 @@ Real-life riders like Mike Metzger, Clifford &quot;The Flyin' Hawaiian&quot; Adp
 		<languages>EN</languages>
 		<locale lang="EN">
 			<title>2002 FIFA World Cup</title>
-			<synopsis>The 2002 installment in the Electronic Arts soccer series. The game features 16 leagues, 500-plus teams and a total of 10 tournaments. FIFA also makes use of a reward system that lets you unlock new tournaments and even get some player cards. All of the game's rosters can be manipulated, teams can be edited (uniforms, stadiums, etc.), current players can be tweaked and new players can be created. As far as modes go, FIFA 2002 adds a World Cup qualification tournament. This allows you to take any of the teams in the AFC, CONCACAF, UEFA, or CONMEBOL and go through a series of matches that determine who gets to participate in the 2002 World Cup in Korea in Japan.</synopsis>
+			<synopsis>The 2002 installment in the Electronic Arts soccer series. The game features 16 leagues, 500-plus teams and a total of 10 tournaments. FIFA also makes use of a reward system that lets you unlock new tournaments and even get some player cards.
+All of the game's rosters can be manipulated, teams can be edited (uniforms, stadiums, etc.), current players can be tweaked and new players can be created. As far as modes go, FIFA 2002 adds a World Cup qualification tournament. This allows you to take any of the teams in the AFC, CONCACAF, UEFA, or CONMEBOL and go through a series of matches that determine who gets to participate in the 2002 World Cup in Korea in Japan.</synopsis>
 		</locale>
 		<locale lang="ES">
 			<title>Mundial FIFA 2002</title>
@@ -378275,6 +378372,14 @@ Real-life riders like Mike Metzger, Clifford &quot;The Flyin' Hawaiian&quot; Adp
 		</locale>
 		<locale lang="IT">
 			<title>Mondiali FIFA 2002</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DK">
+			<title>2002 FIFA World Cup</title>
+			<synopsis/>
+		</locale>
+		<locale lang="NO">
+			<title>2002 FIFA World Cup</title>
 			<synopsis/>
 		</locale>
 		<locale lang="KO">
@@ -381168,6 +381273,10 @@ The Japanese edition, to be titled Jam Jam Hype, was cancelled by publisher Atlu
 		</locale>
 		<locale lang="SE">
 			<title>Harry Potter och de Vises Sten</title>
+			<synopsis/>
+		</locale>
+		<locale lang="NO">
+			<title>Harry Potter og de Vises Stein</title>
 			<synopsis/>
 		</locale>
 		<locale lang="FI">
@@ -385860,7 +385969,7 @@ Tracklist (50 songs):
 		<wi-fi players="0"/>
 		<input players="1"/>
 		<rom version="" name="Mario Kart Arcade GP (Japan) (EN,JA).iso" size="1459978240"/>
-		<case color="000000"/>
+		<case color="000000" versions="2"/>
 	</game>
 	<game name="Jikkyou Powerful Pro Yakyuu 12 (Japan) (JA)">
 		<id>GKPJA4</id>
@@ -396678,6 +396787,10 @@ The countdown to Armageddon has begun! Spawn must save humanity from extinction.
 			<title>Harry Potter: Världsmästerskapen i Quidditch</title>
 			<synopsis/>
 		</locale>
+		<locale lang="DK">
+			<title>Harry Potter: Quidditch World Cup</title>
+			<synopsis/>
+		</locale>
 		<locale lang="NO">
 			<title>Harry Potter: Rumpeldunk Verdensmesterskap</title>
 			<synopsis/>
@@ -397229,7 +397342,16 @@ Owner mode offers a deeper set of responsibilities such as relocating your team,
 		<languages>EN,ES,IT,NL,SE</languages>
 		<locale lang="EN">
 			<title>Medal of Honor: Rising Sun</title>
-			<synopsis>The epic saga of World War II continues with Medal of Honor Rising Sun. Play as Marine Corporal Joseph Griffin in a far-reaching tale of two brothers trying to prevent Japanese forces from dominating the Pacific. Rising Sun features real-life historical battles like Pearl Harbor and Guadalcanal, over 20 authentic WWII weapons, highly intelligent enemies, and a heroic cast of characters that fight on your side from level to level. Battle other soldiers in ten multiplayer levels and an all-new two-player co-op mode.</synopsis>
+			<synopsis>The epic saga of World War II continues with Medal of Honor Rising Sun. Play as Marine Corporal Joseph Griffin in a far-reaching tale of two brothers trying to prevent Japanese forces from dominating the Pacific.
+Rising Sun features real-life historical battles like Pearl Harbor and Guadalcanal, over 20 authentic WWII weapons, highly intelligent enemies, and a heroic cast of characters that fight on your side from level to level. Battle other soldiers in ten multiplayer levels and an all-new two-player co-op mode.</synopsis>
+		</locale>
+		<locale lang="DK">
+			<title>Medal of Honor: Rising Sun</title>
+			<synopsis/>
+		</locale>
+		<locale lang="NO">
+			<title>Medal of Honor: Rising Sun</title>
+			<synopsis/>
 		</locale>
 		<locale lang="FI">
 			<title>Medal of Honor: Rising Sun</title>
@@ -404165,7 +404287,12 @@ In Marvel Nemesis: Rise of the Imperfects , an alien genius is experimenting in 
 		<languages>EN,FR,DE,ES,IT,DK</languages>
 		<locale lang="EN">
 			<title>Bionicle</title>
-			<synopsis>There's turmoil in the island of Mata Nui. The dark spirit Makuta has infected the Rahi throughout the island -- using his control of the Bohrok, Bohrok-Kal, and Rahkshi to kidnap the Matoran villagers throughout the various Wahi. It's up to the guardians of each Wahi, the Toa warriors Tahi, Lewa, Kopaka, Gali, Pohatu, and Onua, to rescue the Matorans and find the Toa of Light, who is the only one strong enough to stop Makuta. Players control the six Toa heroes in this blend of platform action, combat and racing. Use elemental powers to defeat enemies, then snowboard down mountains, surf through lava fields, ride mine carts and grind along tree limbs.</synopsis>
+			<synopsis>Live the legend! There's turmoil in the island of Mata Nui. The dark spirit Makuta has infected the Rahi throughout the island -- using his control of the Bohrok, Bohrok-Kal, and Rahkshi to kidnap the Matoran villagers throughout the various Wahi. It's up to the guardians of each Wahi, the Toa warriors Tahi, Lewa, Kopaka, Gali, Pohatu, and Onua, to rescue the Matorans and find the Toa of Light, who is the only one strong enough to stop Makuta.
+Players control the six Toa heroes in this blend of platform action, combat and racing. Use elemental powers to defeat enemies, then snowboard down mountains, surf through lava fields, ride mine carts and grind along tree limbs.</synopsis>
+		</locale>
+		<locale lang="DK">
+			<title>Bionicle</title>
+			<synopsis/>
 		</locale>
 		<locale lang="KO">
 			<title>바이오니클</title>

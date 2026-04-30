@@ -257,7 +257,7 @@ void DatabaseTest::testInitializeRepairsDanglingSystemIds()
             (id, name, display_name, manufacturer, generation, extensions, preferred_hash)
             VALUES (?, ?, ?, ?, ?, ?, ?)
         )");
-        insertLegacy.addBindValue(49);
+        insertLegacy.addBindValue(99);
         insertLegacy.addBindValue(QStringLiteral("Genesis"));
         insertLegacy.addBindValue(QStringLiteral("Sega Genesis / Mega Drive"));
         insertLegacy.addBindValue(QStringLiteral("Sega"));
@@ -268,7 +268,7 @@ void DatabaseTest::testInitializeRepairsDanglingSystemIds()
 
         QSqlQuery corruptFile(db.database());
         corruptFile.prepare("UPDATE files SET system_id = ? WHERE id = ?");
-        corruptFile.addBindValue(49);
+        corruptFile.addBindValue(99);
         corruptFile.addBindValue(fileId);
         QVERIFY(corruptFile.exec());
     }
