@@ -13,13 +13,19 @@ namespace Compendium {
 
 CompilerStats CompendiumCompilerService::run(const CompendiumBuildConfig &config,
                                               QSqlDatabase &db,
-                                              QString &error)
+                                              QString &error,
+                                              ProgressCallback onProgress)
 {
     CompilerStats stats;
     const CompendiumNormalizer normalizer;
     const IdentityLinker       linker;
     const FactInserter         inserter;
     const MergeResolver        resolver;
+
+    // Count enabled sources once for accurate progress reporting.
+    int totalEnabled = 0;
+    for (const auto &s : config.sources) { if (s.enabled) ++totalEnabled; }
+    int processed = 0;
 
     for (const CompendiumSourceConfig &src : config.sources) {
         if (!src.enabled) {
@@ -57,6 +63,11 @@ CompilerStats CompendiumCompilerService::run(const CompendiumBuildConfig &config
         // ── Persist ───────────────────────────────────────────────────────────
         if (!inserter.insert(records, db, stats, error)) {
             return stats; // error is set
+        }
+
+        ++processed;
+        if (onProgress) {
+            onProgress(processed, totalEnabled, src.sourceId, stats);
         }
     }
 

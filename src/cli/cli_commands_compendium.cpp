@@ -78,6 +78,7 @@ int handleBuildCompendiumCommand(CliContext &ctx)
     QFile::remove(outputInfo.absoluteFilePath());
 
     const QString connectionName = QStringLiteral("compendium-") + QUuid::createUuid().toString(QUuid::WithoutBraces);
+    const QDateTime startedAt = QDateTime::currentDateTimeUtc();
     QElapsedTimer timer;
     timer.start();
 
@@ -221,7 +222,39 @@ int handleBuildCompendiumCommand(CliContext &ctx)
     }
 
     Remus::Compendium::CompendiumCompilerService service;
-    const Remus::Compendium::CompilerStats stats = service.run(buildConfig, database, error);
+
+    // ── Progress tracking: <output>.progress.json — query with cat or jq ─────
+    const QString progressPath = outputInfo.absoluteFilePath() + QStringLiteral(".progress.json");
+    int totalEnabled = 0;
+    for (const auto &s : std::as_const(buildConfig.sources)) { if (s.enabled) ++totalEnabled; }
+
+    auto writeProgress = [&](const QString &status, int current,
+                              const QString &srcId, const Remus::Compendium::CompilerStats &s) {
+        const QJsonObject obj {
+            {QStringLiteral("status"),           status},
+            {QStringLiteral("current"),          current},
+            {QStringLiteral("total"),            totalEnabled},
+            {QStringLiteral("current_source"),   srcId},
+            {QStringLiteral("records_ingested"), s.recordsIngested},
+            {QStringLiteral("games_created"),    s.gamesCreated},
+            {QStringLiteral("elapsed_ms"),       static_cast<qint64>(timer.elapsed())},
+            {QStringLiteral("started_at"),       startedAt.toString(Qt::ISODate)},
+            {QStringLiteral("updated_at"),       QDateTime::currentDateTimeUtc().toString(Qt::ISODate)},
+        };
+        QFile pf(progressPath);
+        if (pf.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text))
+            pf.write(QJsonDocument(obj).toJson());
+    };
+    Remus::Compendium::ProgressCallback onProgress = [&](int current, int /*total*/,
+                                                          const QString &srcId,
+                                                          const Remus::Compendium::CompilerStats &s) {
+        qInfo().noquote() << QStringLiteral("[%1/%2] \u2714 %3")
+            .arg(current, 3).arg(totalEnabled, 3).arg(srcId);
+        writeProgress(QStringLiteral("in_progress"), current, srcId, s);
+    };
+    writeProgress(QStringLiteral("in_progress"), 0, {}, {});
+
+    const Remus::Compendium::CompilerStats stats = service.run(buildConfig, database, error, onProgress);
     if (!error.isEmpty()) {
         database.rollback();
         qCritical().noquote() << QStringLiteral("✗ Compiler service failed: %1").arg(error);
@@ -236,6 +269,7 @@ int handleBuildCompendiumCommand(CliContext &ctx)
         QSqlDatabase::removeDatabase(connectionName);
         return 1;
     }
+    writeProgress(QStringLiteral("enriching"), totalEnabled, {}, stats);
 
     // ── Enrichment pass 1: Libretro metadata DATs ─────────────────────────────
     int metadataGamesEnriched = 0;
@@ -356,6 +390,8 @@ int handleBuildCompendiumCommand(CliContext &ctx)
     qInfo() << "Sources recorded:" << sources.size();
     qInfo() << "Seeded systems:" << systemsCount;
     qInfo() << "Unresolved conflicts:" << conflictsCount;
+
+    writeProgress(QStringLiteral("complete"), totalEnabled, {}, stats);
 
     database.close();
     QSqlDatabase::removeDatabase(connectionName);

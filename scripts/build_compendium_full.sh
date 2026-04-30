@@ -14,6 +14,7 @@ SKIP_UPDATE=false
 DAT_DIR="$ROOT_DIR/data/databases"
 MANIFEST_PATH="$ROOT_DIR/data/compendium/compendium-manifest-full.json"
 OUTPUT_DB="$ROOT_DIR/data/compendium/remus_compendium.db"
+PROGRESS_FILE="${OUTPUT_DB}.progress.json"
 COVERAGE_REPORT="$ROOT_DIR/data/compendium/remus_compendium.coverage.tsv"
 BUILD_LOG="${TMPDIR:-/tmp}/remus_compendium_full_build.log"
 LOCK_PATH="$ROOT_DIR/data/compendium/remus_compendium_full.lock"
@@ -44,12 +45,21 @@ emit_build_heartbeat() {
         elapsed_seconds=$((now - started_at))
         log_size=$(stat -c '%s' "$BUILD_LOG" 2>/dev/null || echo 0)
 
-        marker=$(tail -n 300 "$BUILD_LOG" 2>/dev/null | grep -E "ClrMameProParser: Found|LibretroMetadataParser: Loaded metadata|=== Build Compendium ===|Build ID:|Sources recorded:|Unresolved conflicts:|Metadata enrichment failed|GameTDB enrichment failed|Compiler service failed|Integrity check failed" | tail -n 1 || true)
-        if [[ -z "$marker" ]]; then
-            marker="(no stage marker yet)"
+        # Read structured progress from the JSON file written by remus-cli.
+        # Query manually: cat "${OUTPUT_DB}.progress.json" (or pipe to jq)
+        if [[ -f "$PROGRESS_FILE" ]]; then
+            if command -v jq &>/dev/null; then
+                marker=$(jq -r '"[\(.current)/\(.total)] \(.status) \(.current_source) (\(.records_ingested // 0) records)"' \
+                    "$PROGRESS_FILE" 2>/dev/null || cat "$PROGRESS_FILE")
+            else
+                marker=$(cat "$PROGRESS_FILE")
+            fi
+        else
+            marker="(progress file not yet written — starting up)"
         fi
 
-        echo "==> Build heartbeat: elapsed=${elapsed_seconds}s log_size=${log_size} marker=${marker}"
+        echo "==> Build heartbeat: elapsed=${elapsed_seconds}s log_size=${log_size}"
+        echo "    $marker"
     done
 }
 
