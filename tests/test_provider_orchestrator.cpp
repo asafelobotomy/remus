@@ -23,7 +23,7 @@ public:
         return m_searchResults;
     }
 
-    GameMetadata getByHash(const QString &, const QString &) override { return m_hashMetadata; }
+    GameMetadata getByHash(const QString &, const QString &) override { ++m_hashCallCount; return m_hashMetadata; }
     GameMetadata getById(const QString &) override { return m_idMetadata; }
     ArtworkUrls getArtwork(const QString &) override { return m_artwork; }
 
@@ -32,6 +32,7 @@ public:
     QList<SearchResult> m_searchResults;
     ArtworkUrls m_artwork;
     QString m_lastSearchName;
+    int m_hashCallCount = 0;
 
 private:
     QString m_id;
@@ -63,6 +64,8 @@ private slots:
     void normalizesVersionedNamesBeforeNameSearch();
     void artworkFallback();
     void searchWithFallbackContinuesPastCacheWithoutArtwork();
+    void hashMatchSkipsRemainingProviders();
+    void hashMatchWithRequireArtworkContinuesForArtwork();
 
     // Phase 0 characterization tests — safety net for Phase 5
     void testRemoveProvider();
@@ -411,6 +414,79 @@ void ProviderOrchestratorTest::artworkCacheHitSkipsProviders()
 
     ArtworkUrls result = orchestrator.getArtworkWithFallback("art-1", "NES", QString());
     QCOMPARE(result.boxFront, QUrl("http://example/cached-front.png"));
+}
+
+void ProviderOrchestratorTest::hashMatchSkipsRemainingProviders()
+{
+    // A hash match from the first (local) provider must prevent any further
+    // provider from being queried — the ROM identity is resolved at 100%.
+    ProviderOrchestrator orchestrator;
+
+    auto *first = new StubProvider("compendium");
+    first->m_hashMetadata.title = "Super Mario World";
+    first->m_hashMetadata.matchScore = 1.0f;
+    first->m_hashMetadata.matchMethod = Constants::MatchMethods::HASH;
+
+    auto *second = new StubProvider("hasheous");
+    second->m_hashMetadata.title = "Should Not Be Called";
+
+    orchestrator.addProvider("compendium", first, 210);
+    orchestrator.addProvider("hasheous", second, 80);
+
+    QSignalSpy trySpy(&orchestrator, &ProviderOrchestrator::tryingProvider);
+
+    const GameMetadata result = orchestrator.searchWithFallback(
+        "AABBCCDD", "Super Mario World", "SNES");
+
+    QCOMPARE(result.title, QStringLiteral("Super Mario World"));
+
+    // The second provider should never have been queried.
+    QCOMPARE(second->m_hashCallCount, 0);
+
+    // Only the first provider should have been tried.
+    bool sawSecond = false;
+    for (int i = 0; i < trySpy.count(); ++i) {
+        if (trySpy.at(i).at(0).toString() == QLatin1String("hasheous"))
+            sawSecond = true;
+    }
+    QVERIFY(!sawSecond);
+}
+
+void ProviderOrchestratorTest::hashMatchWithRequireArtworkContinuesForArtwork()
+{
+    // With requireArtwork=true, if the hash-matched provider has no artwork,
+    // the orchestrator should continue to find artwork — but the title from
+    // the hash match must be preserved (not overwritten).
+    ProviderOrchestrator orchestrator;
+
+    auto *first = new StubProvider("compendium");
+    first->m_hashMetadata.title = "Chrono Trigger";
+    first->m_hashMetadata.matchScore = 1.0f;
+    first->m_hashMetadata.matchMethod = Constants::MatchMethods::HASH;
+    // No boxArtUrl set — artwork is missing.
+
+    auto *second = new StubProvider("thegamesdb");
+    SearchResult sr;
+    sr.id = "ct-42";
+    sr.title = "Chrono Trigger";
+    sr.matchScore = 0.99f;
+    second->m_searchResults = {sr};
+    GameMetadata enriched;
+    enriched.title = "Chrono Trigger";
+    enriched.boxArtUrl = "http://example.com/ct-front.jpg";
+    second->m_idMetadata = enriched;
+
+    orchestrator.addProvider("compendium", first, 210);
+    orchestrator.addProvider("thegamesdb", second, 50);
+
+    const GameMetadata result = orchestrator.searchWithFallback(
+        "CCDDEE11", "Chrono Trigger", "SNES",
+        QString(), QString(), QString(), QString(), /*requireArtwork=*/true);
+
+    // Title must come from the hash match.
+    QCOMPARE(result.title, QStringLiteral("Chrono Trigger"));
+    // Artwork should have been fetched from the second provider.
+    QVERIFY(!result.boxArtUrl.isEmpty());
 }
 
 QTEST_MAIN(ProviderOrchestratorTest)

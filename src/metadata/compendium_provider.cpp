@@ -211,7 +211,7 @@ GameMetadata CompendiumProvider::getByHash(const QString &hash, const QString &s
 
     QSqlQuery query(db);
     query.prepare(QStringLiteral(
-        "SELECT gs.game_id "
+        "SELECT gs.game_id, gs.source_entry_key "
         "FROM game_signatures gs "
         "JOIN games g ON g.game_id = gs.game_id "
         "WHERE gs.hash_type = ? AND gs.hash_value = ? "
@@ -225,10 +225,25 @@ GameMetadata CompendiumProvider::getByHash(const QString &hash, const QString &s
         return {};
     }
 
-    GameMetadata metadata = fetchGameMetadata(query.value(0).toString());
+    const QString gameId = query.value(0).toString();
+    const QString sourceEntryKey = query.value(1).toString();
+
+    GameMetadata metadata = fetchGameMetadata(gameId);
     if (!metadata.id.isEmpty()) {
         metadata.matchScore = 1.0f;
         metadata.matchMethod = QString::fromLatin1(Constants::MatchMethods::HASH);
+
+        // The source_entry_key is formatted as "System|ROM title|..." where the second
+        // pipe-delimited segment is the No-Intro/Redump title for this specific hash.
+        // Using it avoids returning a merged canonical title (which may be a Beta or
+        // alternate-region variant) when the matched ROM is a distinct regional release.
+        const QStringList entryParts = sourceEntryKey.split(QLatin1Char('|'));
+        if (entryParts.size() >= 2) {
+            const QString romTitle = entryParts.at(1).trimmed();
+            if (!romTitle.isEmpty()) {
+                metadata.title = romTitle;
+            }
+        }
     }
     return metadata;
 }
@@ -249,7 +264,7 @@ GameMetadata CompendiumProvider::getBySerial(const QString &serial, const QStrin
 
     QSqlQuery query(db);
     query.prepare(QStringLiteral(
-        "SELECT gs.game_id "
+        "SELECT gs.game_id, gs.source_entry_key "
         "FROM game_serials gs "
         "JOIN games g ON g.game_id = gs.game_id "
         "WHERE gs.serial_value = ? "
@@ -262,10 +277,21 @@ GameMetadata CompendiumProvider::getBySerial(const QString &serial, const QStrin
         return {};
     }
 
-    GameMetadata metadata = fetchGameMetadata(query.value(0).toString());
+    const QString gameId = query.value(0).toString();
+    const QString sourceEntryKey = query.value(1).toString();
+
+    GameMetadata metadata = fetchGameMetadata(gameId);
     if (!metadata.id.isEmpty()) {
         metadata.matchScore = 0.9f;
         metadata.matchMethod = QStringLiteral("serial");
+
+        const QStringList entryParts = sourceEntryKey.split(QLatin1Char('|'));
+        if (entryParts.size() >= 2) {
+            const QString romTitle = entryParts.at(1).trimmed();
+            if (!romTitle.isEmpty()) {
+                metadata.title = romTitle;
+            }
+        }
     }
     return metadata;
 }
