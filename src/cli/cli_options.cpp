@@ -121,6 +121,15 @@ void registerAllOptions(QCommandLineParser &parser, QSet<QString> &actionOptions
     addOption(QCommandLineOption(Constants::Cli::Options::EXPORT_PATH, "Export output path (file or directory)", "path"));
     addOption(QCommandLineOption(Constants::Cli::Options::EXPORT_SYSTEMS, "Comma-separated systems to include", "systems"));
 
+    addActionOption(QCommandLineOption("library",
+        "Full pipeline: scan→hash→match→enrich→bundle→organize on a ROM directory. "
+        "Defaults: 7z bundles, CHD disc conversion, system subfolders. "
+        "Use --output to specify the destination.",
+        "path"));
+    addOption(QCommandLineOption("output",
+        "Output directory for --library pipeline (organized library root).",
+        "directory"));
+
     addActionOption(QCommandLineOption("process", "Full pipeline: scan→hash→match→enrich→bundle on a directory", "path"));
     addOption(QCommandLineOption("process-output", "Output directory for --process pipeline bundles/organized files", "directory"));
     addOption(QCommandLineOption("process-preset",

@@ -29,6 +29,11 @@ struct CliContext {
     /// Pre-populated during the enrich phase; the bundle phase checks here first
     /// to avoid duplicate provider round-trips across per-system batches.
     QString             processArtworkCacheDir;
+    /// Canonical source path resolved from --process or --library.
+    QString             processSourcePath;
+    /// Canonical output path resolved from --process-output, --bundle, or --output.
+    /// Empty means no output step (hash/match/enrich only).
+    QString             processOutputPath;
 };
 
 // ── Info / inspection ──────────────────────────────────────────────────────────
@@ -101,11 +106,12 @@ int handleModCommands(CliContext &ctx);
 int handleModCatalogBuildCommand(CliContext &ctx);
 
 // ── DAT Management & Metadata Editing ─────────────────────────────────────────
-// --update-dats, --import-dat, --remove-dat, --list-dats, --edit-metadata
+// --update-dats, --import-dat, --remove-dat, --list-dats, --dat-coverage, --edit-metadata
 int handleBuildCompendiumCommand(CliContext &ctx);
 int handleEnrichCompendiumCommand(CliContext &ctx);
 int handleUpdateDatsCommand(CliContext &ctx);
 int handleImportDatCommand(CliContext &ctx);
 int handleRemoveDatCommand(CliContext &ctx);
 int handleListDatsCommand(CliContext &ctx);
+int handleDatCoverageCommand(CliContext &ctx);
 int handleEditMetadataCommand(CliContext &ctx);

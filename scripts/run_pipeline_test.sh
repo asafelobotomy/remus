@@ -21,9 +21,17 @@ set -euo pipefail
 #                                       export, extract, space-report
 #   -c, --confidence <pct>  Minimum match confidence  (default: 60)
 #   -t, --template <tmpl>   Organize template         (default: {NoIntroName})
-#   -f, --folder <scheme>   Folder naming scheme      (default: short)
+#   -f, --folder <scheme>   Folder naming scheme      (default: default)
 #   --dry-run               Preview organize without moving files
 #   -h, --help              Show this help message
+#
+# Environment variables:
+#   REMUS_TMPDIR            Override temp directory used when extracting
+#                            archives for hashing (default: system /tmp).
+#                            Set to a path on a larger partition when hashing
+#                            large disc images (e.g. multi-GB ISO/CHD files)
+#                            that would otherwise exhaust /tmp space.
+#                            Example: REMUS_TMPDIR=/mnt/data/tmp ./scripts/run_pipeline_test.sh
 #
 # Output:
 #   test_output/full_test_DDMM_HHMM/
@@ -45,7 +53,7 @@ LABEL="pipeline"
 STEPS="scan,stats,list,match,report,enrich,verify,export,extract,space-report"
 MIN_CONFIDENCE=60
 TEMPLATE="{NoIntroName}"
-FOLDER_SCHEME="short"
+FOLDER_SCHEME="default"
 DRY_RUN=""
 
 # ── Parse arguments ──────────────────────────────────────────────────

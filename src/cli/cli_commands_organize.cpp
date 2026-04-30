@@ -88,16 +88,15 @@ int handleArtworkCommand(CliContext &ctx)
 
 int handleBundleCommand(CliContext &ctx)
 {
-    // Trigger from --bundle directly, or from --process when output is provided
+    // Trigger from --bundle directly, or from --process/--library when output is provided
     const bool bundleExplicit = ctx.parser.isSet("bundle");
-    const bool bundleFromProcess = ctx.processRequested &&
-        (ctx.parser.isSet("process-output") || ctx.parser.isSet("bundle"));
+    const bool bundleFromProcess = ctx.processRequested && !ctx.processOutputPath.isEmpty();
     if (!bundleExplicit && !bundleFromProcess) return 0;
     if (ctx.processRequested && ctx.processHandled) return 0;
 
     const QString destination  = ctx.parser.isSet("bundle")
         ? ctx.parser.value("bundle")
-        : ctx.parser.value("process-output");
+        : ctx.processOutputPath;
 
     // Preset values serve as defaults; explicit CLI flags override them
     const QString formatStr    = resolveCliOptionValue(ctx.parser,
@@ -266,6 +265,8 @@ int handleBundleCommand(CliContext &ctx)
             qInfo() << "  ↷ Skipped (already bundled)";
             skipped++;
         } else if (result.success) {
+            if (!result.outputPath.isEmpty())
+                ctx.db.updateFilePath(file.id, result.outputPath);
             bundled++;
         } else {
             qWarning() << "  ✗ Failed:" << result.error;
@@ -283,11 +284,23 @@ int handleBundleCommand(CliContext &ctx)
 
 int handleOrganizeCommand(CliContext &ctx)
 {
-    if (!ctx.parser.isSet("organize")) return 0;
+    const bool organizeExplicit = ctx.parser.isSet("organize");
+    const bool organizeFromProcess = ctx.processRequested &&
+        !ctx.processOutputPath.isEmpty() && !ctx.processHandled;
+    if (!organizeExplicit && !organizeFromProcess) return 0;
 
-    const QString destination = ctx.parser.value("organize");
+    const QString destination = organizeExplicit
+        ? ctx.parser.value("organize")
+        : ctx.processOutputPath;
     const QString templateStr = ctx.parser.value("template");
-    const QString folderNamingStr = ctx.parser.value("folder-naming");
+    // When triggered from process/library, default to system subfolders if user
+    // has not set --folder-naming explicitly and no preset has already set it.
+    const QString folderNamingStr = !ctx.parser.value("folder-naming").isEmpty() &&
+                                    ctx.parser.value("folder-naming") != QStringLiteral("none")
+        ? ctx.parser.value("folder-naming")
+        : (!ctx.presetFolderNaming.isEmpty()
+            ? ctx.presetFolderNaming
+            : (organizeFromProcess ? QStringLiteral("default") : ctx.parser.value("folder-naming")));
     const bool dryRun = ctx.parser.isSet("dry-run") || ctx.dryRunAll;
     const auto folderNaming = Constants::FolderNaming::schemeFromString(folderNamingStr);
 
@@ -347,16 +360,13 @@ int handleOrganizeCommand(CliContext &ctx)
 
 int handleGenerateM3uCommand(CliContext &ctx)
 {
-    const bool hasOutput = ctx.parser.isSet("process-output") || ctx.parser.isSet("bundle");
+    const bool hasOutput = !ctx.processOutputPath.isEmpty();
     if (!ctx.parser.isSet("generate-m3u") && !(ctx.processRequested && hasOutput)) return 0;
     if (ctx.processRequested && ctx.processHandled) return 0;
 
     const QString m3uDir = ctx.parser.isSet("m3u-dir")
         ? ctx.parser.value("m3u-dir")
-        : (ctx.processRequested && hasOutput
-            ? (ctx.parser.isSet("process-output") ? ctx.parser.value("process-output")
-                                                  : ctx.parser.value("bundle"))
-            : QString());
+        : (ctx.processRequested && hasOutput ? ctx.processOutputPath : QString());
 
     if (ctx.dryRunAll) {
         qInfo() << "[DRY-RUN] Skipping M3U generation";

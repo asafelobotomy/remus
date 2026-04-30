@@ -90,14 +90,14 @@ int handleScanCommand(CliContext &ctx)
         ctx.processFileScopeIds.clear();
     }
 
-    const QString scanPath = ctx.parser.isSet("scan") ? ctx.parser.value("scan") : ctx.parser.value("process");
+    const QString scanPath = ctx.parser.isSet("scan") ? ctx.parser.value("scan") : ctx.processSourcePath;
     if (scanPath.isEmpty()) {
         qCritical() << "Scan path not provided";
         return 1;
     }
 
     if (ctx.processRequested) {
-        const bool hasOutput = ctx.parser.isSet("process-output") || ctx.parser.isSet("bundle");
+        const bool hasOutput = !ctx.processOutputPath.isEmpty();
         const QString effectiveBundleFormat = resolveCliOptionValue(ctx.parser,
                                                                     QStringLiteral("bundle-format"),
                                                                     ctx.presetBundleFormat);
@@ -113,10 +113,7 @@ int handleScanCommand(CliContext &ctx)
         }
         qInfo() << "Source:" << scanPath;
         if (hasOutput) {
-            const QString output = ctx.parser.isSet("process-output")
-                ? ctx.parser.value("process-output")
-                : ctx.parser.value("bundle");
-            qInfo() << "Output:" << output;
+            qInfo() << "Output:" << ctx.processOutputPath;
             qInfo() << "Archive:" << effectiveBundleFormat
                     << "| Disc:" << effectiveDiscFormat
                     << "| Folders:" << effectiveFolderNaming;
@@ -127,7 +124,7 @@ int handleScanCommand(CliContext &ctx)
         }
         stages.last().append(QStringLiteral("]"));
         if (hasOutput) {
-            stages << QStringLiteral("m3u");
+            stages << QStringLiteral("organize") << QStringLiteral("m3u");
         }
         qInfo().noquote() << "Stages:" << stages.join(QStringLiteral(" → "));
         qInfo() << "";
@@ -180,7 +177,10 @@ int handleScanCommand(CliContext &ctx)
 
         if (result.isCompressed && !result.archivePath.isEmpty() &&
             DiscMagicDetector::isDiscImageExtension(result.extension)) {
-            QTemporaryDir tempDir;
+            // Use REMUS_TMPDIR if set; fall back to system temp.
+            const QString tmpBase = qEnvironmentVariable("REMUS_TMPDIR",
+                                                         QDir::tempPath());
+            QTemporaryDir tempDir(tmpBase + QStringLiteral("/remus-discmagic-XXXXXX"));
             if (tempDir.isValid()) {
                 ArchiveExtractor extractor;
                 const QString memberPath = result.archiveInternalPath.isEmpty() ? result.filename : result.archiveInternalPath;
@@ -191,6 +191,11 @@ int handleScanCommand(CliContext &ctx)
                         systemName = discInfo.systemName;
                         qInfo() << "  Disc magic:" << systemName << "(from" << result.filename << ")";
                     }
+                } else {
+                    qWarning() << "  Disc magic detection failed for" << result.filename
+                               << "(extraction error:" << extraction.error.simplified() << ")"
+                               << "— falling back to extension-based system detection:"
+                               << systemName;
                 }
             }
         }
@@ -236,7 +241,7 @@ int handleScanCommand(CliContext &ctx)
             return 0;
         }
 
-        const bool hasOutput = ctx.parser.isSet("process-output") || ctx.parser.isSet("bundle");
+        const bool hasOutput = !ctx.processOutputPath.isEmpty();
         const QList<int> systemIds = orderedProcessSystemIds(ctx.db, ctx.processFileScopeIds);
         Hasher hasher;
 
@@ -307,6 +312,9 @@ int handleScanCommand(CliContext &ctx)
 
         ctx.processSystemIdFilter = -1;
         if (hasOutput) {
+            if (const int rc = handleOrganizeCommand(ctx)) {
+                return rc;
+            }
             if (const int rc = handleGenerateM3uCommand(ctx)) {
                 return rc;
             }

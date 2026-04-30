@@ -36,11 +36,10 @@ int handleEnrichCommand(CliContext &ctx)
         QString sha1;
         QString publisher;
         QString developer;
-        QString releaseDate;
+        int releaseYear = 0;
         QString description;
         QString genres;
         QString players;
-        QString boxArtUrl;
     };
     QList<EnrichCandidate> candidates;
     QSet<int> seenGames;
@@ -59,7 +58,7 @@ int handleEnrichCommand(CliContext &ctx)
 
         const bool sparse = m.publisher.isEmpty() || m.developer.isEmpty()
                           || m.genre.isEmpty() || m.players.isEmpty()
-                          || m.description.isEmpty() || m.boxArtUrl.isEmpty();
+                          || m.description.isEmpty();
         if (!sparse) continue;
 
         const QString system = fileMap.contains(m.fileId)
@@ -74,8 +73,7 @@ int handleEnrichCommand(CliContext &ctx)
             sha1 = f.sha1;
         }
         candidates.append({m.gameId, m.fileId, m.gameTitle, system, crc32, md5, sha1,
-                            m.publisher, m.developer, m.releaseDate, m.description, m.genre, m.players,
-                            m.boxArtUrl});
+                            m.publisher, m.developer, m.releaseYear, m.description, m.genre, m.players});
     }
 
     if (candidates.isEmpty()) {
@@ -83,16 +81,7 @@ int handleEnrichCommand(CliContext &ctx)
         return 0;
     }
 
-    QMap<int, QStringList> systemFileHints;
-    for (const EnrichCandidate &c : candidates) {
-        if (fileMap.contains(c.fileId)) {
-            const FileRecord &f = fileMap.value(c.fileId);
-            if (f.systemId > 0) {
-                systemFileHints[f.systemId].append(f.filename);
-            }
-        }
-    }
-    auto orchestrator = buildOrchestrator(ctx.parser, &ctx.db, systemFileHints);
+    auto orchestrator = buildOrchestrator(ctx.parser, &ctx.db);
 
     qInfo() << "Found" << candidates.size() << "game(s) with sparse metadata";
     qInfo() << "";
@@ -110,11 +99,10 @@ int handleEnrichCommand(CliContext &ctx)
         existing.system      = c.system;
         existing.publisher   = c.publisher;
         existing.developer   = c.developer;
-        existing.releaseDate = c.releaseDate;
+        existing.releaseDate = c.releaseYear > 0 ? QString::number(c.releaseYear) : QString();
         existing.description = c.description;
         existing.genres      = c.genres.isEmpty() ? QStringList() : c.genres.split(", ");
         existing.players     = c.players.toInt();
-        existing.boxArtUrl   = c.boxArtUrl;
 
         const QString bestHash = !c.sha1.isEmpty() ? c.sha1 :
                                  !c.md5.isEmpty()  ? c.md5  :
@@ -147,8 +135,7 @@ int handleEnrichCommand(CliContext &ctx)
                                          metadata.description,
                                          genres,
                                          players,
-                                         metadata.rating,
-                                         metadata.boxArtUrl);
+                                         metadata.rating);
         const ProviderOrchestrator::FieldSet remaining =
             ProviderOrchestrator::computeFieldGap(metadata);
         if (updated) {

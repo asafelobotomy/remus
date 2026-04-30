@@ -7,6 +7,7 @@
 
 #include <QDir>
 #include <QFileInfo>
+#include <QStorageInfo>
 #include <QThread>
 #include <QThreadPool>
 #include <QTemporaryDir>
@@ -23,6 +24,52 @@ struct HashTaskResult {
     HashResult result;
     bool skipped = false;
 };
+
+// Return a temp-dir base path that has at least estimatedBytes free.
+// Search order: REMUS_TMPDIR env var → system temp → archive parent dir.
+// Returns empty string if none of the candidates have sufficient space.
+struct TempDirChoice {
+    QString path;
+    QString warningIfFallback; // non-empty when we fell back from system temp
+};
+
+TempDirChoice chooseTempBase(const QString &archivePath, qint64 estimatedBytes)
+{
+    auto hasSpace = [](const QString &dir, qint64 needed) -> bool {
+        QStorageInfo info(dir);
+        return info.isValid() && info.bytesAvailable() >= needed;
+    };
+
+    // 1. User-specified override
+    const QString override = qEnvironmentVariable("REMUS_TMPDIR");
+    if (!override.isEmpty()) {
+        if (hasSpace(override, estimatedBytes))
+            return {override, {}};
+    }
+
+    // 2. System default temp
+    const QString sysTemp = QDir::tempPath();
+    if (hasSpace(sysTemp, estimatedBytes))
+        return {sysTemp, {}};
+
+    // 3. Archive's own parent directory as last resort
+    const QString parentDir = QFileInfo(archivePath).absolutePath();
+    if (hasSpace(parentDir, estimatedBytes)) {
+        return {parentDir,
+                QStringLiteral("System temp (%1) lacks space; extracting beside archive (%2)")
+                    .arg(sysTemp, parentDir)};
+    }
+
+    // Nothing suitable found — return empty so the caller can emit a clear error
+    QStorageInfo si(sysTemp);
+    return {{},
+            QStringLiteral("No temp location has ~%1 MB free. "
+                           "Set REMUS_TMPDIR to a directory on a larger partition. "
+                           "(%2 has %3 MB available)")
+                .arg(estimatedBytes / (1024 * 1024))
+                .arg(sysTemp)
+                .arg(si.bytesAvailable() / (1024 * 1024))};
+}
 
 QString selectExtractedMember(const QString &outputDir,
                               const QStringList &extractedFiles,
@@ -185,9 +232,23 @@ HashResult HashService::hashRecord(const FileRecord &file)
         return result;
     }
 
-    QTemporaryDir tempDir;
+    // Archive disc images can expand significantly from compressed form.
+    // Use 4× the compressed file size as a conservative space estimate.
+    const qint64 estimatedBytes = qMax(archiveInfo.size() * 4, qint64(512 * 1024 * 1024));
+    const TempDirChoice tempChoice = chooseTempBase(archivePath, estimatedBytes);
+
+    if (tempChoice.path.isEmpty()) {
+        result.error = tempChoice.warningIfFallback;
+        return result;
+    }
+
+    if (!tempChoice.warningIfFallback.isEmpty())
+        qWarning() << "remus.hash:" << tempChoice.warningIfFallback;
+
+    QTemporaryDir tempDir(tempChoice.path + QStringLiteral("/remus-hash-XXXXXX"));
     if (!tempDir.isValid()) {
-        result.error = "Failed to create temporary directory";
+        result.error = QStringLiteral("Failed to create temporary directory in %1: %2")
+                           .arg(tempChoice.path, tempDir.errorString());
         return result;
     }
 

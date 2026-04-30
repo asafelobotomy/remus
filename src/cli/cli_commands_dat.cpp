@@ -1,5 +1,15 @@
 #include "cli_commands.h"
+#include "cli_helpers.h"
+
 #include <QCoreApplication>
+#include <QFileInfo>
+#include <QSqlDatabase>
+#include <QSqlQuery>
+#include <QSqlError>
+
+#include "../core/constants/systems.h"
+
+using namespace Remus::Constants::Systems;
 
 // ── --update-dats ─────────────────────────────────────────────────────────────
 int handleUpdateDatsCommand(CliContext &ctx)
@@ -52,6 +62,108 @@ int handleListDatsCommand(CliContext &ctx)
     qInfo() << "   Verification catalogs are bundled in the Remus compendium when present.";
     qInfo() << "   This CLI build does not expose a dedicated catalog coverage report.";
     qInfo() << "";
+    qInfo() << "";
+    return 0;
+}
+
+// ── --dat-coverage ────────────────────────────────────────────────────────────
+int handleDatCoverageCommand(CliContext &ctx)
+{
+    if (!ctx.parser.isSet("dat-coverage")) return 0;
+
+    qInfo() << "";
+    qInfo() << "=== DAT / Catalog Coverage Report ===";
+    qInfo() << "";
+
+    // ── Compendium catalog coverage ─────────────────────────────────────────
+    const QString compendiumDir = findDataSubdir(QStringLiteral("compendium"));
+    QSet<QString> compendiumSystemNames;
+    int catalogEntryTotal = 0;
+
+    if (!compendiumDir.isEmpty()) {
+        const QString dbPath = compendiumDir + QStringLiteral("/remus_compendium.db");
+        if (QFileInfo::exists(dbPath)) {
+            const QString connName = QStringLiteral("dat_coverage_conn");
+            {
+                QSqlDatabase compDb = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), connName);
+                compDb.setDatabaseName(dbPath);
+                if (compDb.open()) {
+                    QSqlQuery q(compDb);
+                    q.exec(QStringLiteral(
+                        "SELECT s.internal_name, COUNT(gs.game_id) AS cnt "
+                        "FROM systems s "
+                        "LEFT JOIN games gs ON gs.system_id = s.system_id "
+                        "GROUP BY s.system_id, s.internal_name"));
+                    while (q.next()) {
+                        const QString internalName = q.value(0).toString();
+                        const int cnt = q.value(1).toInt();
+                        compendiumSystemNames.insert(internalName);
+                        catalogEntryTotal += cnt;
+                    }
+                }
+            }
+            QSqlDatabase::removeDatabase(connName);
+        }
+    }
+
+    // ── Library DB coverage ─────────────────────────────────────────────────
+    const QMap<QString, int> libCounts = ctx.db.getFileCountBySystem();
+
+    // ── Cross-reference with all known systems ──────────────────────────────
+    QStringList covered, uncoveredCompendium, uncoveredBoth;
+
+    for (auto it = SYSTEMS.cbegin(); it != SYSTEMS.cend(); ++it) {
+        const SystemDef &sys = it.value();
+        const bool inCompendium = compendiumSystemNames.contains(sys.internalName);
+        const bool inLibrary    = libCounts.contains(sys.displayName) && libCounts.value(sys.displayName) > 0;
+
+        if (inCompendium) {
+            covered.append(sys.displayName);
+        } else if (inLibrary) {
+            uncoveredCompendium.append(sys.displayName);
+        } else {
+            uncoveredBoth.append(sys.displayName);
+        }
+    }
+
+    std::sort(covered.begin(), covered.end());
+    std::sort(uncoveredCompendium.begin(), uncoveredCompendium.end());
+    std::sort(uncoveredBoth.begin(), uncoveredBoth.end());
+
+    // ── Report ──────────────────────────────────────────────────────────────
+    if (compendiumDir.isEmpty()) {
+        qInfo() << "ℹ  No compendium database found.";
+        qInfo() << "   Catalog coverage is unavailable without data/compendium/remus_compendium.db";
+        qInfo() << "";
+    } else {
+        qInfo() << QString("Compendium: %1 total catalog entries across %2 systems")
+                       .arg(catalogEntryTotal).arg(covered.size());
+        qInfo() << "";
+        qInfo() << QString("Systems with catalog data (%1):").arg(covered.size());
+        for (const QString &name : std::as_const(covered)) {
+            qInfo() << ("  ✔ " + name);
+        }
+    }
+
+    if (!uncoveredCompendium.isEmpty()) {
+        qInfo() << "";
+        qInfo() << QString("Systems in your library but not in compendium (%1):").arg(uncoveredCompendium.size());
+        for (const QString &name : std::as_const(uncoveredCompendium)) {
+            qInfo() << ("  ! " + name);
+        }
+    }
+
+    if (!uncoveredBoth.isEmpty()) {
+        qInfo() << "";
+        qInfo() << QString("Known systems with no coverage and no scanned files (%1):").arg(uncoveredBoth.size());
+        for (const QString &name : std::as_const(uncoveredBoth)) {
+            qInfo() << ("  - " + name);
+        }
+    }
+
+    qInfo() << "";
+    qInfo() << QString("Summary: %1 supported systems | %2 covered | %3 uncovered")
+                   .arg(SYSTEMS.size()).arg(covered.size()).arg(uncoveredCompendium.size() + uncoveredBoth.size());
     qInfo() << "";
     return 0;
 }
