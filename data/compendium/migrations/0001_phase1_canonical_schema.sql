@@ -194,8 +194,14 @@ CREATE TABLE IF NOT EXISTS merge_conflicts (
 CREATE INDEX IF NOT EXISTS idx_game_signatures_lookup
     ON game_signatures(hash_type, hash_value);
 
+CREATE INDEX IF NOT EXISTS idx_game_signatures_by_game
+    ON game_signatures(game_id, hash_type);
+
 CREATE INDEX IF NOT EXISTS idx_game_serials_lookup
     ON game_serials(serial_value);
+
+CREATE INDEX IF NOT EXISTS idx_game_serials_by_game
+    ON game_serials(game_id);
 
 CREATE INDEX IF NOT EXISTS idx_game_names_lookup
     ON game_names(name_text, alias_type);

@@ -7,6 +7,8 @@
 #include "compendium_merge_resolver.h"
 
 #include <QDebug>
+#include <QSqlDatabase>
+#include <QSqlError>
 
 namespace Remus {
 namespace Compendium {

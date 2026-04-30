@@ -5,6 +5,7 @@
 
 #include <QDate>
 #include <QDateTime>
+#include <QHash>
 #include <QSqlError>
 #include <QSqlQuery>
 
@@ -97,14 +98,34 @@ bool enrichFromLibretroMetadata(QSqlDatabase &database,
         return false;
     }
 
+    // Preload CRC32 hashes to avoid per-row correlated subqueries (O(N*M) → O(N+M))
+    QHash<QString, QString> gameCrc32;
+    {
+        QSqlQuery q(database);
+        if (!q.exec(QStringLiteral(
+                "SELECT game_id, hash_value FROM game_signatures WHERE hash_type = 'crc32'"))) {
+            error = QStringLiteral("Load CRC32 hashes: %1").arg(q.lastError().text());
+            return false;
+        }
+        while (q.next())
+            gameCrc32.insert(q.value(0).toString(), q.value(1).toString());
+    }
+
+    // Preload first serial per game
+    QHash<QString, QString> gameSerial;
+    {
+        QSqlQuery q(database);
+        if (!q.exec(QStringLiteral(
+                "SELECT game_id, MIN(serial_value) FROM game_serials GROUP BY game_id"))) {
+            error = QStringLiteral("Load serials: %1").arg(q.lastError().text());
+            return false;
+        }
+        while (q.next())
+            gameSerial.insert(q.value(0).toString(), q.value(1).toString());
+    }
+
     QSqlQuery gameQuery(database);
-    if (!gameQuery.exec(QStringLiteral(
-        "SELECT g.game_id, g.canonical_title, "
-        "COALESCE((SELECT gs.hash_value FROM game_signatures gs "
-        "          WHERE gs.game_id = g.game_id AND gs.hash_type = 'crc32' LIMIT 1), ''), "
-        "COALESCE((SELECT sr.serial_value FROM game_serials sr "
-        "          WHERE sr.game_id = g.game_id LIMIT 1), '') "
-        "FROM games g"))) {
+    if (!gameQuery.exec(QStringLiteral("SELECT game_id, canonical_title FROM games"))) {
         error = QStringLiteral("Load games for libretro enrichment: %1")
             .arg(gameQuery.lastError().text());
         return false;
@@ -131,14 +152,14 @@ bool enrichFromLibretroMetadata(QSqlDatabase &database,
                           const QString &value,
                           const QString &valueType) -> bool {
         if (value.isEmpty()) return true;
-        factQuery.addBindValue(gameId);
-        factQuery.addBindValue(field);
-        factQuery.addBindValue(value);
-        factQuery.addBindValue(valueType);
-        factQuery.addBindValue(sourceId);
-        factQuery.addBindValue(snapshotId);
-        factQuery.addBindValue(30);
-        factQuery.addBindValue(0.85);
+        factQuery.bindValue(0, gameId);
+        factQuery.bindValue(1, field);
+        factQuery.bindValue(2, value);
+        factQuery.bindValue(3, valueType);
+        factQuery.bindValue(4, sourceId);
+        factQuery.bindValue(5, snapshotId);
+        factQuery.bindValue(6, 30);
+        factQuery.bindValue(7, 0.85);
         if (!execPrepared(factQuery, error,
                           QStringLiteral("Insert libretro fact %1").arg(field)))
             return false;
@@ -149,8 +170,8 @@ bool enrichFromLibretroMetadata(QSqlDatabase &database,
     while (gameQuery.next()) {
         const QString gameId = gameQuery.value(0).toString();
         const QString title  = gameQuery.value(1).toString();
-        const QString crc32  = gameQuery.value(2).toString();
-        const QString serial = gameQuery.value(3).toString();
+        const QString crc32  = gameCrc32.value(gameId);
+        const QString serial = gameSerial.value(gameId);
 
         Remus::LibretroMetadata meta;
         if (!crc32.isEmpty())
@@ -175,12 +196,12 @@ bool enrichFromLibretroMetadata(QSqlDatabase &database,
             return v > 0 ? QVariant(v) : QVariant(QMetaType(QMetaType::Int));
         };
 
-        updateQuery.addBindValue(nullStr(meta.genre));
-        updateQuery.addBindValue(nullStr(meta.developer));
-        updateQuery.addBindValue(nullStr(meta.publisher));
-        updateQuery.addBindValue(nullInt(meta.maxUsers));
-        updateQuery.addBindValue(nullInt(meta.releaseYear));
-        updateQuery.addBindValue(gameId);
+        updateQuery.bindValue(0, nullStr(meta.genre));
+        updateQuery.bindValue(1, nullStr(meta.developer));
+        updateQuery.bindValue(2, nullStr(meta.publisher));
+        updateQuery.bindValue(3, nullInt(meta.maxUsers));
+        updateQuery.bindValue(4, nullInt(meta.releaseYear));
+        updateQuery.bindValue(5, gameId);
         if (!execPrepared(updateQuery, error, QStringLiteral("Update game libretro metadata")))
             return false;
         if (updateQuery.numRowsAffected() > 0) ++gamesEnriched;
@@ -230,17 +251,31 @@ bool enrichFromGameTDB(QSqlDatabase &database,
         return false;
     }
 
-    // Fetch all games with their CRC32, SHA1, and MD5 hashes for lookup.
+    // Preload CRC32, SHA1, MD5 hashes to avoid per-row correlated subqueries (O(N*M) → O(N+M))
+    QHash<QString, QString> gameCrc32;
+    QHash<QString, QString> gameSha1;
+    QHash<QString, QString> gameMd5;
+    {
+        QSqlQuery q(database);
+        if (!q.exec(QStringLiteral(
+                "SELECT game_id, hash_type, hash_value FROM game_signatures "
+                "WHERE hash_type IN ('crc32', 'sha1', 'md5')"))) {
+            error = QStringLiteral("Load hashes for GameTDB enrichment: %1")
+                .arg(q.lastError().text());
+            return false;
+        }
+        while (q.next()) {
+            const QString gid  = q.value(0).toString();
+            const QString type = q.value(1).toString();
+            const QString val  = q.value(2).toString();
+            if (type == QLatin1String("crc32"))      gameCrc32.insert(gid, val);
+            else if (type == QLatin1String("sha1"))  gameSha1.insert(gid, val);
+            else if (type == QLatin1String("md5"))   gameMd5.insert(gid, val);
+        }
+    }
+
     QSqlQuery gameQuery(database);
-    if (!gameQuery.exec(QStringLiteral(
-        "SELECT g.game_id, "
-        "COALESCE((SELECT gs.hash_value FROM game_signatures gs "
-        "          WHERE gs.game_id = g.game_id AND gs.hash_type = 'crc32' LIMIT 1), ''), "
-        "COALESCE((SELECT gs.hash_value FROM game_signatures gs "
-        "          WHERE gs.game_id = g.game_id AND gs.hash_type = 'sha1' LIMIT 1), ''), "
-        "COALESCE((SELECT gs.hash_value FROM game_signatures gs "
-        "          WHERE gs.game_id = g.game_id AND gs.hash_type = 'md5'  LIMIT 1), '') "
-        "FROM games g"))) {
+    if (!gameQuery.exec(QStringLiteral("SELECT game_id FROM games"))) {
         error = QStringLiteral("Load games for GameTDB enrichment: %1")
             .arg(gameQuery.lastError().text());
         return false;
@@ -267,14 +302,14 @@ bool enrichFromGameTDB(QSqlDatabase &database,
                           const QString &value,
                           const QString &valueType) -> bool {
         if (value.isEmpty()) return true;
-        factQuery.addBindValue(gameId);
-        factQuery.addBindValue(field);
-        factQuery.addBindValue(value);
-        factQuery.addBindValue(valueType);
-        factQuery.addBindValue(sourceId);
-        factQuery.addBindValue(snapshotId);
-        factQuery.addBindValue(40);
-        factQuery.addBindValue(0.90);
+        factQuery.bindValue(0, gameId);
+        factQuery.bindValue(1, field);
+        factQuery.bindValue(2, value);
+        factQuery.bindValue(3, valueType);
+        factQuery.bindValue(4, sourceId);
+        factQuery.bindValue(5, snapshotId);
+        factQuery.bindValue(6, 40);
+        factQuery.bindValue(7, 0.90);
         if (!execPrepared(factQuery, error,
                           QStringLiteral("Insert GameTDB fact %1").arg(field)))
             return false;
@@ -284,9 +319,9 @@ bool enrichFromGameTDB(QSqlDatabase &database,
 
     while (gameQuery.next()) {
         const QString gameId = gameQuery.value(0).toString();
-        const QString crc32  = gameQuery.value(1).toString();
-        const QString sha1   = gameQuery.value(2).toString();
-        const QString md5    = gameQuery.value(3).toString();
+        const QString crc32  = gameCrc32.value(gameId);
+        const QString sha1   = gameSha1.value(gameId);
+        const QString md5    = gameMd5.value(gameId);
 
         // GameTDBProvider::getByHash normalises the hash and checks
         // CRC32 → MD5 → SHA1 indexes in order.
@@ -315,12 +350,12 @@ bool enrichFromGameTDB(QSqlDatabase &database,
             return v > 0 ? QVariant(v) : QVariant(QMetaType(QMetaType::Int));
         };
 
-        updateQuery.addBindValue(nullStr(genre));
-        updateQuery.addBindValue(nullStr(meta.developer));
-        updateQuery.addBindValue(nullStr(meta.publisher));
-        updateQuery.addBindValue(nullInt(meta.players));
-        updateQuery.addBindValue(nullInt(releaseYear));
-        updateQuery.addBindValue(gameId);
+        updateQuery.bindValue(0, nullStr(genre));
+        updateQuery.bindValue(1, nullStr(meta.developer));
+        updateQuery.bindValue(2, nullStr(meta.publisher));
+        updateQuery.bindValue(3, nullInt(meta.players));
+        updateQuery.bindValue(4, nullInt(releaseYear));
+        updateQuery.bindValue(5, gameId);
         if (!execPrepared(updateQuery, error, QStringLiteral("Update game GameTDB metadata")))
             return false;
         if (updateQuery.numRowsAffected() > 0) ++gamesEnriched;

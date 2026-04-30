@@ -1,6 +1,5 @@
 #include "compendium_fact_inserter.h"
 
-#include <QHash>
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QVariant>
@@ -10,16 +9,7 @@ namespace Compendium {
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
-static bool execQuery(QSqlQuery &q, QString &error)
-{
-    if (!q.exec()) {
-        error = q.lastError().text();
-        return false;
-    }
-    return true;
-}
-
-// Look up the priority for a source; used as source_priority in game_facts.
+// Look up the priority for a source; called once per batch (not per record).
 static int fetchSourcePriority(const QString &sourceId, QSqlDatabase &db)
 {
     QSqlQuery q(db);
@@ -31,10 +21,12 @@ static int fetchSourcePriority(const QString &sourceId, QSqlDatabase &db)
     return 0;
 }
 
-// ── Game upsert ───────────────────────────────────────────────────────────────
+// ── ensureGame ────────────────────────────────────────────────────────────────
+// The redundant SELECT existence check has been removed — INSERT OR IGNORE is
+// sufficient and avoids an extra round-trip per record.
 
 bool FactInserter::ensureGame(const SourceRecordEnvelope &rec,
-                               QSqlDatabase &db,
+                               QSqlQuery &qGame, QSqlQuery &qName,
                                CompilerStats &stats,
                                QString &error) const
 {
@@ -43,36 +35,20 @@ bool FactInserter::ensureGame(const SourceRecordEnvelope &rec,
         return false;
     }
 
-    QSqlQuery qCheck(db);
-    qCheck.prepare(QStringLiteral("SELECT 1 FROM games WHERE game_id = ? LIMIT 1"));
-    qCheck.addBindValue(rec.linkedGameId);
-    if (!execQuery(qCheck, error)) {
-        return false;
-    }
-
-    const bool gameExists = qCheck.next();
-    if (!gameExists) {
-        // canonical_title must be non-empty per schema (NOT NULL).
+    // Attempt game row creation. OR IGNORE is a no-op when the row already exists.
+    // Skip when system_id is unresolved — the schema requires it NOT NULL.
+    if (rec.resolvedSystemId > 0) {
         const QString title = rec.titleRaw.isEmpty()
                                   ? QStringLiteral("[unknown]")
                                   : rec.titleRaw;
-        // system_id is NOT NULL per schema — skip insert if unresolved.
-        if (rec.resolvedSystemId <= 0) {
-            return true; // skip silently; record will still be in source_items
-        }
-
-        QSqlQuery qGame(db);
-        qGame.prepare(QStringLiteral(
-            "INSERT OR IGNORE INTO games "
-            "(game_id, canonical_title, system_id, primary_region_code) "
-            "VALUES (?, ?, ?, ?)"));
-        qGame.addBindValue(rec.linkedGameId);
-        qGame.addBindValue(title);
-        qGame.addBindValue(rec.resolvedSystemId);
-        qGame.addBindValue(rec.resolvedRegionCode.isEmpty()
-                               ? QVariant(QMetaType(QMetaType::QString))
-                               : rec.resolvedRegionCode);
-        if (!execQuery(qGame, error)) {
+        qGame.bindValue(0, rec.linkedGameId);
+        qGame.bindValue(1, title);
+        qGame.bindValue(2, rec.resolvedSystemId);
+        qGame.bindValue(3, rec.resolvedRegionCode.isEmpty()
+                              ? QVariant(QMetaType(QMetaType::QString))
+                              : rec.resolvedRegionCode);
+        if (!qGame.exec()) {
+            error = qGame.lastError().text();
             return false;
         }
         if (qGame.numRowsAffected() > 0) {
@@ -80,18 +56,15 @@ bool FactInserter::ensureGame(const SourceRecordEnvelope &rec,
         }
     }
 
-    // Always attempt to insert the name (IGNORE handles duplicates).
+    // Always attempt name insertion. FK OR IGNORE absorbs the case where the
+    // game row doesn't exist yet (unresolved system_id carried over from a prior source).
     if (!rec.titleRaw.isEmpty()) {
-        QSqlQuery qName(db);
-        qName.prepare(QStringLiteral(
-            "INSERT OR IGNORE INTO game_names "
-            "(game_id, name_text, alias_type, locale, source_id, snapshot_id, confidence) "
-            "VALUES (?, ?, 'official', '', ?, ?, 1.0)"));
-        qName.addBindValue(rec.linkedGameId);
-        qName.addBindValue(rec.titleRaw);
-        qName.addBindValue(rec.sourceId);
-        qName.addBindValue(rec.snapshotId);
-        if (!execQuery(qName, error)) {
+        qName.bindValue(0, rec.linkedGameId);
+        qName.bindValue(1, rec.titleRaw);
+        qName.bindValue(2, rec.sourceId);
+        qName.bindValue(3, rec.snapshotId);
+        if (!qName.exec()) {
+            error = qName.lastError().text();
             return false;
         }
     }
@@ -102,31 +75,27 @@ bool FactInserter::ensureGame(const SourceRecordEnvelope &rec,
 // ── Source item ───────────────────────────────────────────────────────────────
 
 bool FactInserter::insertSourceItem(const SourceRecordEnvelope &rec,
-                                     QSqlDatabase &db,
+                                     QSqlQuery &q,
                                      CompilerStats &stats,
                                      QString &error) const
 {
-    QSqlQuery q(db);
-    q.prepare(QStringLiteral(
-        "INSERT OR IGNORE INTO source_items "
-        "(source_id, snapshot_id, external_key, system_hint, title_raw, region_raw, payload_json) "
-        "VALUES (?, ?, ?, ?, ?, ?, ?)"));
-    q.addBindValue(rec.sourceId);
-    q.addBindValue(rec.snapshotId);
-    q.addBindValue(rec.externalKey);
-    q.addBindValue(rec.systemHint.isEmpty()
+    q.bindValue(0, rec.sourceId);
+    q.bindValue(1, rec.snapshotId);
+    q.bindValue(2, rec.externalKey);
+    q.bindValue(3, rec.systemHint.isEmpty()
                        ? QVariant(QMetaType(QMetaType::QString))
                        : rec.systemHint);
-    q.addBindValue(rec.titleRaw.isEmpty()
+    q.bindValue(4, rec.titleRaw.isEmpty()
                        ? QVariant(QMetaType(QMetaType::QString))
                        : rec.titleRaw);
-    q.addBindValue(rec.regionRaw.isEmpty()
+    q.bindValue(5, rec.regionRaw.isEmpty()
                        ? QVariant(QMetaType(QMetaType::QString))
                        : rec.regionRaw);
-    q.addBindValue(rec.payloadJson.isEmpty()
+    q.bindValue(6, rec.payloadJson.isEmpty()
                        ? QVariant(QMetaType(QMetaType::QString))
                        : rec.payloadJson);
-    if (!execQuery(q, error)) {
+    if (!q.exec()) {
+        error = q.lastError().text();
         return false;
     }
     if (q.numRowsAffected() > 0) {
@@ -138,17 +107,15 @@ bool FactInserter::insertSourceItem(const SourceRecordEnvelope &rec,
 // ── Signatures ────────────────────────────────────────────────────────────────
 
 bool FactInserter::insertSignatures(const SourceRecordEnvelope &rec,
-                                     QSqlDatabase &db,
+                                     QSqlQuery &q,
                                      CompilerStats &stats,
                                      QString &error) const
 {
     if (rec.linkedGameId.isEmpty() || rec.resolvedSystemId <= 0) {
-        // No canonical game row was created for this record; skip signatures.
         return true;
     }
 
     const double confidence = rec.linkedConfidencePercent / 100.0;
-
     const struct {
         const char *type;
         QString     value;
@@ -158,26 +125,21 @@ bool FactInserter::insertSignatures(const SourceRecordEnvelope &rec,
         {"crc32", rec.hashes.crc32},
     };
 
-    bool isPrimary = true; // first hash (sha1 preferred) is marked primary
+    bool isPrimary = true; // first non-empty hash (sha1 preferred) is marked primary
     for (const auto &h : hashes) {
         if (h.value.isEmpty()) {
             continue;
         }
-        QSqlQuery q(db);
-        q.prepare(QStringLiteral(
-            "INSERT OR IGNORE INTO game_signatures "
-            "(game_id, hash_type, hash_value, source_id, snapshot_id, "
-            " source_entry_key, confidence, is_primary) "
-            "VALUES (?, ?, ?, ?, ?, ?, ?, ?)"));
-        q.addBindValue(rec.linkedGameId);
-        q.addBindValue(QLatin1String(h.type));
-        q.addBindValue(h.value);
-        q.addBindValue(rec.sourceId);
-        q.addBindValue(rec.snapshotId);
-        q.addBindValue(rec.externalKey);
-        q.addBindValue(confidence);
-        q.addBindValue(isPrimary ? 1 : 0);
-        if (!execQuery(q, error)) {
+        q.bindValue(0, rec.linkedGameId);
+        q.bindValue(1, QLatin1String(h.type));
+        q.bindValue(2, h.value);
+        q.bindValue(3, rec.sourceId);
+        q.bindValue(4, rec.snapshotId);
+        q.bindValue(5, rec.externalKey);
+        q.bindValue(6, confidence);
+        q.bindValue(7, isPrimary ? 1 : 0);
+        if (!q.exec()) {
+            error = q.lastError().text();
             return false;
         }
         if (q.numRowsAffected() > 0) {
@@ -191,7 +153,7 @@ bool FactInserter::insertSignatures(const SourceRecordEnvelope &rec,
 // ── Serials ───────────────────────────────────────────────────────────────────
 
 bool FactInserter::insertSerials(const SourceRecordEnvelope &rec,
-                                  QSqlDatabase &db,
+                                  QSqlQuery &q,
                                   CompilerStats &stats,
                                   QString &error) const
 {
@@ -200,23 +162,18 @@ bool FactInserter::insertSerials(const SourceRecordEnvelope &rec,
     }
 
     const double confidence = rec.linkedConfidencePercent / 100.0;
-
     for (const QString &serial : rec.serials) {
         if (serial.isEmpty()) {
             continue;
         }
-        QSqlQuery q(db);
-        q.prepare(QStringLiteral(
-            "INSERT OR IGNORE INTO game_serials "
-            "(game_id, serial_value, source_id, snapshot_id, source_entry_key, confidence) "
-            "VALUES (?, ?, ?, ?, ?, ?)"));
-        q.addBindValue(rec.linkedGameId);
-        q.addBindValue(serial);
-        q.addBindValue(rec.sourceId);
-        q.addBindValue(rec.snapshotId);
-        q.addBindValue(rec.externalKey);
-        q.addBindValue(confidence);
-        if (!execQuery(q, error)) {
+        q.bindValue(0, rec.linkedGameId);
+        q.bindValue(1, serial);
+        q.bindValue(2, rec.sourceId);
+        q.bindValue(3, rec.snapshotId);
+        q.bindValue(4, rec.externalKey);
+        q.bindValue(5, confidence);
+        if (!q.exec()) {
+            error = q.lastError().text();
             return false;
         }
         if (q.numRowsAffected() > 0) {
@@ -229,7 +186,7 @@ bool FactInserter::insertSerials(const SourceRecordEnvelope &rec,
 // ── Facts ─────────────────────────────────────────────────────────────────────
 
 bool FactInserter::insertFacts(const SourceRecordEnvelope &rec,
-                                QSqlDatabase &db,
+                                QSqlQuery &q,
                                 CompilerStats &stats,
                                 QString &error,
                                 int sourcePriority) const
@@ -238,27 +195,20 @@ bool FactInserter::insertFacts(const SourceRecordEnvelope &rec,
         return true;
     }
 
-    const int    priority   = sourcePriority;
     const double confidence = rec.linkedConfidencePercent / 100.0;
-
     for (auto it = rec.fields.constBegin(); it != rec.fields.constEnd(); ++it) {
         if (it.value().isEmpty()) {
             continue;
         }
-        QSqlQuery q(db);
-        q.prepare(QStringLiteral(
-            "INSERT OR IGNORE INTO game_facts "
-            "(game_id, field_name, field_value, value_type, "
-            " source_id, snapshot_id, source_priority, confidence) "
-            "VALUES (?, ?, ?, 'text', ?, ?, ?, ?)"));
-        q.addBindValue(rec.linkedGameId);
-        q.addBindValue(it.key());
-        q.addBindValue(it.value());
-        q.addBindValue(rec.sourceId);
-        q.addBindValue(rec.snapshotId);
-        q.addBindValue(priority);
-        q.addBindValue(confidence);
-        if (!execQuery(q, error)) {
+        q.bindValue(0, rec.linkedGameId);
+        q.bindValue(1, it.key());
+        q.bindValue(2, it.value());
+        q.bindValue(3, rec.sourceId);
+        q.bindValue(4, rec.snapshotId);
+        q.bindValue(5, sourcePriority);
+        q.bindValue(6, confidence);
+        if (!q.exec()) {
+            error = q.lastError().text();
             return false;
         }
         if (q.numRowsAffected() > 0) {
@@ -275,28 +225,67 @@ bool FactInserter::insert(const QList<SourceRecordEnvelope> &records,
                            CompilerStats &stats,
                            QString &error) const
 {
-    // Cache source priorities so fetchSourcePriority is called once per source,
-    // not once per record (avoids an O(N) SELECT loop across large batches).
-    QHash<QString, int> priorityCache;
+    if (records.isEmpty()) {
+        return true;
+    }
+
+    // Source priority is constant within a single-source batch — fetch it once.
+    const int sourcePriority = fetchSourcePriority(records.first().sourceId, db);
+
+    // Prepare all statements once; reused (via bindValue) across every record.
+    // This avoids calling sqlite3_prepare_v2() once per record per statement.
+    QSqlQuery qGame(db);
+    QSqlQuery qName(db);
+    QSqlQuery qSourceItem(db);
+    QSqlQuery qSig(db);
+    QSqlQuery qSerial(db);
+    QSqlQuery qFact(db);
+
+    if (!qGame.prepare(QStringLiteral(
+            "INSERT OR IGNORE INTO games "
+            "(game_id, canonical_title, system_id, primary_region_code) "
+            "VALUES (?, ?, ?, ?)"))
+        || !qName.prepare(QStringLiteral(
+            "INSERT OR IGNORE INTO game_names "
+            "(game_id, name_text, alias_type, locale, source_id, snapshot_id, confidence) "
+            "VALUES (?, ?, 'official', '', ?, ?, 1.0)"))
+        || !qSourceItem.prepare(QStringLiteral(
+            "INSERT OR IGNORE INTO source_items "
+            "(source_id, snapshot_id, external_key, system_hint, title_raw, region_raw, payload_json) "
+            "VALUES (?, ?, ?, ?, ?, ?, ?)"))
+        || !qSig.prepare(QStringLiteral(
+            "INSERT OR IGNORE INTO game_signatures "
+            "(game_id, hash_type, hash_value, source_id, snapshot_id, "
+            " source_entry_key, confidence, is_primary) "
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?)"))
+        || !qSerial.prepare(QStringLiteral(
+            "INSERT OR IGNORE INTO game_serials "
+            "(game_id, serial_value, source_id, snapshot_id, source_entry_key, confidence) "
+            "VALUES (?, ?, ?, ?, ?, ?)"))
+        || !qFact.prepare(QStringLiteral(
+            "INSERT OR IGNORE INTO game_facts "
+            "(game_id, field_name, field_value, value_type, "
+            " source_id, snapshot_id, source_priority, confidence) "
+            "VALUES (?, ?, ?, 'text', ?, ?, ?, ?)")))
+    {
+        error = qGame.lastError().text();
+        return false;
+    }
 
     for (const SourceRecordEnvelope &rec : records) {
-        if (!ensureGame(rec, db, stats, error)) {
+        if (!ensureGame(rec, qGame, qName, stats, error)) {
             return false;
         }
-        if (!insertSourceItem(rec, db, stats, error)) {
+        if (!insertSourceItem(rec, qSourceItem, stats, error)) {
             return false;
         }
-        if (!insertSignatures(rec, db, stats, error)) {
+        if (!insertSignatures(rec, qSig, stats, error)) {
             return false;
         }
-        if (!insertSerials(rec, db, stats, error)) {
+        if (!insertSerials(rec, qSerial, stats, error)) {
             return false;
         }
-        auto it = priorityCache.constFind(rec.sourceId);
-        if (it == priorityCache.constEnd()) {
-            it = priorityCache.insert(rec.sourceId, fetchSourcePriority(rec.sourceId, db));
-        }
-        if (!insertFacts(rec, db, stats, error, it.value())) {
+        if (!insertFacts(rec, qFact, stats, error, sourcePriority)) {
             return false;
         }
     }
