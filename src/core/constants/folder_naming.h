@@ -296,6 +296,67 @@ inline QString folderNameForSystemId(int systemId, Scheme scheme)
         default:               return QStringLiteral("arcade");
         }
 
+    // ── Famicom Disk System ──────────────────────────────
+    case ID_FDS:             return QStringLiteral("fds");
+
+    // ── Nintendo extended ────────────────────────────────
+    case ID_WIIU:            return QStringLiteral("wiiu");
+
+    // ── Sony extended ────────────────────────────────────
+    case ID_PS3:             return QStringLiteral("ps3");
+
+    // ── Atari extended ───────────────────────────────────
+    case ID_ATARI_5200:      return QStringLiteral("atari5200");
+    case ID_ATARI_8BIT:      return QStringLiteral("atari800");
+    case ID_ATARI_ST:        return QStringLiteral("atarist");
+    case ID_ATARI_JAGUAR_CD: return QStringLiteral("atarijaguarcd");
+
+    // ── Sega extended ────────────────────────────────────
+    case ID_SG1000:
+        switch (scheme) {
+        case Scheme::Batocera: return QStringLiteral("sg1000");
+        default:               return QStringLiteral("sg-1000");
+        }
+    case ID_NAOMI:           return QStringLiteral("naomi");
+    case ID_SEGA_PICO:       return QStringLiteral("pico");
+
+    // ── Home computers ───────────────────────────────────
+    case ID_MSX:             return QStringLiteral("msx");
+    case ID_MSX2:            return QStringLiteral("msx2");
+    case ID_COLECOVISION:    return QStringLiteral("colecovision");
+    case ID_INTELLIVISION:   return QStringLiteral("intellivision");
+    case ID_AMSTRAD_CPC:     return QStringLiteral("amstradcpc");
+    case ID_ZX81:            return QStringLiteral("zx81");
+    case ID_VIC20:           return QStringLiteral("vic20");
+    case ID_PC98:            return QStringLiteral("pc-98");
+    case ID_SHARP_X1:        return QStringLiteral("x1");
+    case ID_X68000:          return QStringLiteral("x68000");
+    case ID_ENTERPRISE_128:  return QStringLiteral("ep128");
+    case ID_VIDEOTON_TVC:    return QStringLiteral("tvc");
+
+    // ── Disc-based / optical ─────────────────────────────
+    case ID_PC_FX:           return QStringLiteral("pcfx");
+    case ID_CDI:             return QStringLiteral("cdimono1");
+    case ID_CD32:            return QStringLiteral("amigacd32");
+
+    // ── Other consoles / handhelds ────────────────────────
+    case ID_ODYSSEY2:             return QStringLiteral("odyssey2");
+    case ID_VECTREX:              return QStringLiteral("vectrex");
+    case ID_POKEMON_MINI:         return QStringLiteral("pokemini");
+    case ID_CHANNEL_F:            return QStringLiteral("channelf");
+    case ID_SUPERVISION:          return QStringLiteral("supervision");
+    case ID_ARCADIA_2001:         return QStringLiteral("arcadia");
+    case ID_SCV:                  return QStringLiteral("scv");
+    case ID_GP32:                 return QStringLiteral("gp32");
+    case ID_GAMECOM:              return QStringLiteral("gamecom");
+    case ID_STUDIO_II:            return QStringLiteral("rca2");
+    case ID_ATOMISWAVE:           return QStringLiteral("atomiswave");
+    case ID_SUPER_ACAN:           return QStringLiteral("supracan");
+    case ID_POCKET_CHALLENGE_V2:  return QStringLiteral("pocketchallengewsc");
+    case ID_INTERTON_VC4000:      return QStringLiteral("vc4000");
+    case ID_CASIO_PV1000:         return QStringLiteral("pv1000");
+    case ID_CASIO_LOOPY:          return QStringLiteral("loopy");
+
     default:
         return {};
     }

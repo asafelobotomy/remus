@@ -105,6 +105,15 @@ OrganizeResult OrganizeEngine::organizeFile(int fileId,
     QString newPath = generateDestinationPath(fileRecord, metadata, destinationDir);
     result.newPath = newPath;
 
+    // If source and destination resolve to the same file, no move is needed.
+    // This happens when the bundle step already placed the file at the correct path.
+    if (QFileInfo(result.oldPath).absoluteFilePath() == QFileInfo(newPath).absoluteFilePath()) {
+        result.success = true;
+        result.newPath = result.oldPath;
+        emit operationCompleted(fileId, true, QString());
+        return result;
+    }
+
     emit operationStarted(fileId, result.oldPath, newPath);
 
     const bool overwriteExisting = wouldCollide(newPath)

@@ -168,11 +168,6 @@ QMap<QString, QString> TemplateEngine::buildVariableMap(const GameMetadata &meta
         "Canada", "China", "France", "Germany", "Italy", "Korea",
         "Netherlands", "Russia", "Spain", "Sweden", "UK"
     };
-    // Known status tokens
-    static const QStringList statusTokens = {
-        "Beta", "Proto", "Sample", "Demo", "Kiosk", "Debug",
-        "Unl", "Aftermarket", "Virtual Console"
-    };
 
     // Match trailing (Tag1) (Tag2) ... groups
     QRegularExpression tagPattern(R"(\s*\(([^)]+)\)\s*$)");
@@ -218,10 +213,16 @@ QMap<QString, QString> TemplateEngine::buildVariableMap(const GameMetadata &meta
             }
         }
 
-        // Status: "Beta", "Proto", "Sample", etc.
-        if (!recognized && statusTokens.contains(tag, Qt::CaseInsensitive)) {
-            extractedStatus = tag;
-            recognized = true;
+        // Status: "Beta", "Beta 1", "Proto", "Proto 2", "Sample", etc.
+        // Match bare token or token followed by optional number/word suffix.
+        if (!recognized) {
+            static const QRegularExpression statusPattern(
+                R"(^(?:Beta|Proto|Sample|Demo|Kiosk|Debug|Unl|Aftermarket|Virtual Console)(?:\s+\w+)?$)",
+                QRegularExpression::CaseInsensitiveOption);
+            if (statusPattern.match(tag).hasMatch()) {
+                extractedStatus = tag;
+                recognized = true;
+            }
         }
 
         if (recognized) {

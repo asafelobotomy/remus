@@ -31,6 +31,7 @@ private slots:
     void testFolderNamingBatoceraSegaCD();
     void testFolderNaming3DO();
     void testFolderNamingNeoGeoCD();
+    void testFolderNamingExtendedSystems();
     void testFolderNamingSchemeFromString();
 
 private:
@@ -477,6 +478,69 @@ void OrganizeEngineTest::testFolderNamingNeoGeoCD()
     QCOMPARE(folderNameForSystemId(ID_NEO_GEO_CD, Scheme::RetroPie), QStringLiteral("neogeocd"));
     QCOMPARE(folderNameForSystemId(ID_NEO_GEO_CD, Scheme::EmuDeck),  QStringLiteral("neogeocd"));
     QCOMPARE(folderNameForSystemId(ID_NEO_GEO_CD, Scheme::RomM),     QStringLiteral("neogeocd"));
+}
+
+void OrganizeEngineTest::testFolderNamingExtendedSystems()
+{
+    using Constants::FolderNaming::Scheme;
+    using Constants::FolderNaming::folderNameForSystemId;
+    using namespace Constants::Systems;
+
+    // Nintendo extended
+    QCOMPARE(folderNameForSystemId(ID_FDS,  Scheme::Default), QStringLiteral("fds"));
+    QCOMPARE(folderNameForSystemId(ID_WIIU, Scheme::Default), QStringLiteral("wiiu"));
+
+    // Sony extended
+    QCOMPARE(folderNameForSystemId(ID_PS3, Scheme::Default), QStringLiteral("ps3"));
+
+    // Atari extended
+    QCOMPARE(folderNameForSystemId(ID_ATARI_5200,      Scheme::Default), QStringLiteral("atari5200"));
+    QCOMPARE(folderNameForSystemId(ID_ATARI_8BIT,      Scheme::Default), QStringLiteral("atari800"));
+    QCOMPARE(folderNameForSystemId(ID_ATARI_ST,        Scheme::Default), QStringLiteral("atarist"));
+    QCOMPARE(folderNameForSystemId(ID_ATARI_JAGUAR_CD, Scheme::Default), QStringLiteral("atarijaguarcd"));
+
+    // Sega extended — SG-1000 differs between Batocera and other schemes
+    QCOMPARE(folderNameForSystemId(ID_SG1000,     Scheme::Batocera), QStringLiteral("sg1000"));
+    QCOMPARE(folderNameForSystemId(ID_SG1000,     Scheme::Default),  QStringLiteral("sg-1000"));
+    QCOMPARE(folderNameForSystemId(ID_NAOMI,      Scheme::Default),  QStringLiteral("naomi"));
+    QCOMPARE(folderNameForSystemId(ID_SEGA_PICO,  Scheme::Default),  QStringLiteral("pico"));
+
+    // Home computers
+    QCOMPARE(folderNameForSystemId(ID_MSX,            Scheme::Default), QStringLiteral("msx"));
+    QCOMPARE(folderNameForSystemId(ID_MSX2,           Scheme::Default), QStringLiteral("msx2"));
+    QCOMPARE(folderNameForSystemId(ID_COLECOVISION,   Scheme::Default), QStringLiteral("colecovision"));
+    QCOMPARE(folderNameForSystemId(ID_INTELLIVISION,  Scheme::Default), QStringLiteral("intellivision"));
+    QCOMPARE(folderNameForSystemId(ID_AMSTRAD_CPC,    Scheme::Default), QStringLiteral("amstradcpc"));
+    QCOMPARE(folderNameForSystemId(ID_ZX81,           Scheme::Default), QStringLiteral("zx81"));
+    QCOMPARE(folderNameForSystemId(ID_VIC20,          Scheme::Default), QStringLiteral("vic20"));
+    QCOMPARE(folderNameForSystemId(ID_PC98,           Scheme::Default), QStringLiteral("pc-98"));
+    QCOMPARE(folderNameForSystemId(ID_SHARP_X1,       Scheme::Default), QStringLiteral("x1"));
+    QCOMPARE(folderNameForSystemId(ID_X68000,         Scheme::Default), QStringLiteral("x68000"));
+    QCOMPARE(folderNameForSystemId(ID_ENTERPRISE_128, Scheme::Default), QStringLiteral("ep128"));
+    QCOMPARE(folderNameForSystemId(ID_VIDEOTON_TVC,   Scheme::Default), QStringLiteral("tvc"));
+
+    // Disc-based / optical
+    QCOMPARE(folderNameForSystemId(ID_PC_FX, Scheme::Default), QStringLiteral("pcfx"));
+    QCOMPARE(folderNameForSystemId(ID_CDI,   Scheme::Default), QStringLiteral("cdimono1"));
+    QCOMPARE(folderNameForSystemId(ID_CD32,  Scheme::Default), QStringLiteral("amigacd32"));
+
+    // Other consoles / handhelds
+    QCOMPARE(folderNameForSystemId(ID_ODYSSEY2,            Scheme::Default), QStringLiteral("odyssey2"));
+    QCOMPARE(folderNameForSystemId(ID_VECTREX,             Scheme::Default), QStringLiteral("vectrex"));
+    QCOMPARE(folderNameForSystemId(ID_POKEMON_MINI,        Scheme::Default), QStringLiteral("pokemini"));
+    QCOMPARE(folderNameForSystemId(ID_CHANNEL_F,           Scheme::Default), QStringLiteral("channelf"));
+    QCOMPARE(folderNameForSystemId(ID_SUPERVISION,         Scheme::Default), QStringLiteral("supervision"));
+    QCOMPARE(folderNameForSystemId(ID_ARCADIA_2001,        Scheme::Default), QStringLiteral("arcadia"));
+    QCOMPARE(folderNameForSystemId(ID_SCV,                 Scheme::Default), QStringLiteral("scv"));
+    QCOMPARE(folderNameForSystemId(ID_GP32,                Scheme::Default), QStringLiteral("gp32"));
+    QCOMPARE(folderNameForSystemId(ID_GAMECOM,             Scheme::Default), QStringLiteral("gamecom"));
+    QCOMPARE(folderNameForSystemId(ID_STUDIO_II,           Scheme::Default), QStringLiteral("rca2"));
+    QCOMPARE(folderNameForSystemId(ID_ATOMISWAVE,          Scheme::Default), QStringLiteral("atomiswave"));
+    QCOMPARE(folderNameForSystemId(ID_SUPER_ACAN,          Scheme::Default), QStringLiteral("supracan"));
+    QCOMPARE(folderNameForSystemId(ID_POCKET_CHALLENGE_V2, Scheme::Default), QStringLiteral("pocketchallengewsc"));
+    QCOMPARE(folderNameForSystemId(ID_INTERTON_VC4000,     Scheme::Default), QStringLiteral("vc4000"));
+    QCOMPARE(folderNameForSystemId(ID_CASIO_PV1000,        Scheme::Default), QStringLiteral("pv1000"));
+    QCOMPARE(folderNameForSystemId(ID_CASIO_LOOPY,         Scheme::Default), QStringLiteral("loopy"));
 }
 
 void OrganizeEngineTest::testFolderNamingSchemeFromString()
