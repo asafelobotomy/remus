@@ -324,7 +324,7 @@ private slots:
 
             QVERIFY2(countsQuery.exec("SELECT COUNT(*) FROM systems"), qPrintable(countsQuery.lastError().text()));
             QVERIFY(countsQuery.next());
-            QCOMPARE(countsQuery.value(0).toInt(), 57);
+            QCOMPARE(countsQuery.value(0).toInt(), 82);
 
             QVERIFY2(countsQuery.exec("SELECT COUNT(*) FROM games"), qPrintable(countsQuery.lastError().text()));
             QVERIFY(countsQuery.next());

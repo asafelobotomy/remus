@@ -184,6 +184,81 @@ inline constexpr int ID_WIIU = 56;
 /// Sony PlayStation 3
 inline constexpr int ID_PS3 = 57;
 
+/// Amstrad CPC
+inline constexpr int ID_AMSTRAD_CPC = 58;
+
+/// Enterprise 64/128
+inline constexpr int ID_ENTERPRISE_128 = 59;
+
+/// Sinclair ZX 81
+inline constexpr int ID_ZX81 = 60;
+
+/// Videoton TVC
+inline constexpr int ID_VIDEOTON_TVC = 61;
+
+/// Sega Pico
+inline constexpr int ID_SEGA_PICO = 62;
+
+/// Commodore VIC-20
+inline constexpr int ID_VIC20 = 63;
+
+/// Magnavox Odyssey2 / Philips Videopac
+inline constexpr int ID_ODYSSEY2 = 64;
+
+/// Watara Supervision
+inline constexpr int ID_SUPERVISION = 65;
+
+/// Benesse Pocket Challenge V2
+inline constexpr int ID_POCKET_CHALLENGE_V2 = 66;
+
+/// NEC PC-98
+inline constexpr int ID_PC98 = 67;
+
+/// Interton VC 4000
+inline constexpr int ID_INTERTON_VC4000 = 68;
+
+/// Emerson Arcadia 2001
+inline constexpr int ID_ARCADIA_2001 = 69;
+
+/// GCE Vectrex
+inline constexpr int ID_VECTREX = 70;
+
+/// Nintendo Pokémon Mini
+inline constexpr int ID_POKEMON_MINI = 71;
+
+/// Fairchild Channel F
+inline constexpr int ID_CHANNEL_F = 72;
+
+/// Epoch Super Cassette Vision
+inline constexpr int ID_SCV = 73;
+
+/// GamePark GP32
+inline constexpr int ID_GP32 = 74;
+
+/// Tiger Game.com
+inline constexpr int ID_GAMECOM = 75;
+
+/// RCA Studio II
+inline constexpr int ID_STUDIO_II = 76;
+
+/// Sega Atomiswave (arcade board)
+inline constexpr int ID_ATOMISWAVE = 77;
+
+/// Casio PV-1000
+inline constexpr int ID_CASIO_PV1000 = 78;
+
+/// Funtech Super A'Can
+inline constexpr int ID_SUPER_ACAN = 79;
+
+/// Casio Loopy
+inline constexpr int ID_CASIO_LOOPY = 80;
+
+/// Sharp X1
+inline constexpr int ID_SHARP_X1 = 81;
+
+/// Sharp X68000
+inline constexpr int ID_X68000 = 82;
+
 // ============================================================================
 // System Definition
 // ============================================================================

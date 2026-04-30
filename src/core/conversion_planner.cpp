@@ -172,6 +172,32 @@ bool isArchiveOnlySystem(int systemId)
     case Systems::ID_MSX:
     case Systems::ID_MSX2:
     case Systems::ID_SG1000:
+    // New systems (IDs 58-82) — all ROM/disk-image based, no CHD conversion required
+    case Systems::ID_AMSTRAD_CPC:
+    case Systems::ID_ENTERPRISE_128:
+    case Systems::ID_ZX81:
+    case Systems::ID_VIDEOTON_TVC:
+    case Systems::ID_SEGA_PICO:
+    case Systems::ID_VIC20:
+    case Systems::ID_ODYSSEY2:
+    case Systems::ID_SUPERVISION:
+    case Systems::ID_POCKET_CHALLENGE_V2:
+    case Systems::ID_PC98:
+    case Systems::ID_INTERTON_VC4000:
+    case Systems::ID_ARCADIA_2001:
+    case Systems::ID_VECTREX:
+    case Systems::ID_POKEMON_MINI:
+    case Systems::ID_CHANNEL_F:
+    case Systems::ID_SCV:
+    case Systems::ID_GP32:
+    case Systems::ID_GAMECOM:
+    case Systems::ID_STUDIO_II:
+    case Systems::ID_ATOMISWAVE:
+    case Systems::ID_CASIO_PV1000:
+    case Systems::ID_SUPER_ACAN:
+    case Systems::ID_CASIO_LOOPY:
+    case Systems::ID_SHARP_X1:
+    case Systems::ID_X68000:
         return true;
     default:
         return false;
