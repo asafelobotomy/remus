@@ -59,7 +59,39 @@ bool CompendiumProvider::openDatabase(const QString &databasePath)
     }
 
     m_databasePath = info.absoluteFilePath();
+    ensureFts5Index();
     return true;
+}
+
+void CompendiumProvider::ensureFts5Index()
+{
+    QSqlDatabase db = database();
+    if (!db.isOpen())
+        return;
+
+    // Create FTS5 virtual table if not present (handles existing DBs without rebuild)
+    QSqlQuery create(db);
+    create.exec(QStringLiteral(
+        "CREATE VIRTUAL TABLE IF NOT EXISTS games_fts USING fts5("
+        "    game_id UNINDEXED,"
+        "    system_id UNINDEXED,"
+        "    title_text,"
+        "    tokenize='unicode61 remove_diacritics 1'"
+        ")"));
+
+    // Populate only when the table is empty (first time or after wipe)
+    QSqlQuery countQ(db);
+    countQ.exec(QStringLiteral("SELECT COUNT(*) FROM games_fts"));
+    if (countQ.next() && countQ.value(0).toInt() > 0)
+        return;
+
+    QSqlQuery populate(db);
+    populate.exec(QStringLiteral(
+        "INSERT INTO games_fts(game_id, system_id, title_text) "
+        "SELECT game_id, system_id, canonical_title FROM games "
+        "UNION ALL "
+        "SELECT gn.game_id, g.system_id, gn.name_text "
+        "FROM game_names gn JOIN games g ON gn.game_id = g.game_id"));
 }
 
 QList<SearchResult> CompendiumProvider::searchByName(const QString &title,
@@ -68,69 +100,77 @@ QList<SearchResult> CompendiumProvider::searchByName(const QString &title,
 {
     QList<SearchResult> results;
     const QString searchTerm = title.trimmed();
-    if (searchTerm.isEmpty()) {
+    if (searchTerm.isEmpty())
         return results;
-    }
 
     QSqlDatabase db = database();
-    if (!db.isOpen()) {
+    if (!db.isOpen())
         return results;
-    }
 
     const int systemId = resolveSystemId(system);
     QString regionCode = m_normalizer.resolveRegionCode(region);
-    if (regionCode.isEmpty()) {
+    if (regionCode.isEmpty())
         regionCode = region.trimmed().toUpper();
-    }
+
+    // Build FTS5 MATCH expression: each word gets a prefix wildcard
+    QStringList words = searchTerm.split(QLatin1Char(' '), Qt::SkipEmptyParts);
+    QStringList ftsWords;
+    ftsWords.reserve(words.size());
+    for (const QString &w : words)
+        ftsWords.append(w + QLatin1Char('*'));
+    const QString ftsExpr = ftsWords.join(QLatin1Char(' '));
 
     QSqlQuery query(db);
+    bool usedFts = false;
     query.prepare(QStringLiteral(
-        "SELECT DISTINCT g.game_id "
-        "FROM games g "
-        "WHERE (? = 0 OR g.system_id = ?) "
-        "AND (? = '' OR UPPER(COALESCE(("
-        "    SELECT gf.field_value "
-        "    FROM canonical_resolution cr "
-        "    JOIN game_facts gf ON gf.fact_id = cr.selected_fact_id "
-        "    WHERE cr.game_id = g.game_id "
-        "      AND cr.field_name IN ('primary_region_code', 'region') "
-        "    LIMIT 1"
-        "), g.primary_region_code, '')) = ?) "
-        "AND ("
-        "    LOWER(g.canonical_title) LIKE LOWER(?) "
-        "    OR EXISTS ("
-        "        SELECT 1 FROM game_names gn "
-        "        WHERE gn.game_id = g.game_id AND LOWER(gn.name_text) LIKE LOWER(?)"
-        "    ) "
-        "    OR EXISTS ("
-        "        SELECT 1 FROM game_facts gf "
-        "        WHERE gf.game_id = g.game_id "
-        "          AND gf.field_name IN ('canonical_title', 'title') "
-        "          AND LOWER(gf.field_value) LIKE LOWER(?)"
-        "    )"
-        ") "
-        "ORDER BY LOWER(g.canonical_title) "
+        "SELECT DISTINCT f.game_id "
+        "FROM games_fts f "
+        "JOIN games g ON g.game_id = f.game_id "
+        "WHERE games_fts MATCH ? "
+        "AND (? = 0 OR g.system_id = ?) "
+        "AND (? = '' OR UPPER(COALESCE(g.primary_region_code, '')) = ?) "
+        "ORDER BY rank "
         "LIMIT 10"));
-    const QString likePattern = QStringLiteral("%%1%").arg(searchTerm);
+    query.addBindValue(ftsExpr);
     query.addBindValue(systemId);
     query.addBindValue(systemId);
     query.addBindValue(regionCode);
     query.addBindValue(regionCode);
-    query.addBindValue(likePattern);
-    query.addBindValue(likePattern);
-    query.addBindValue(likePattern);
+    usedFts = query.exec();
 
-    if (!query.exec()) {
-        return results;
+    if (!usedFts) {
+        // Fallback to LIKE for DBs without FTS5 or malformed queries
+        const QString likePattern = QStringLiteral("%%1%").arg(searchTerm);
+        query.prepare(QStringLiteral(
+            "SELECT DISTINCT g.game_id "
+            "FROM games g "
+            "WHERE (? = 0 OR g.system_id = ?) "
+            "AND (? = '' OR UPPER(COALESCE(g.primary_region_code, '')) = ?) "
+            "AND ("
+            "    LOWER(g.canonical_title) LIKE LOWER(?) "
+            "    OR EXISTS ("
+            "        SELECT 1 FROM game_names gn "
+            "        WHERE gn.game_id = g.game_id AND LOWER(gn.name_text) LIKE LOWER(?)"
+            "    )"
+            ") "
+            "ORDER BY LOWER(g.canonical_title) "
+            "LIMIT 10"));
+        query.addBindValue(systemId);
+        query.addBindValue(systemId);
+        query.addBindValue(regionCode);
+        query.addBindValue(regionCode);
+        query.addBindValue(likePattern);
+        query.addBindValue(likePattern);
+        if (!query.exec())
+            return results;
     }
 
     const QString loweredSearch = searchTerm.toLower();
     while (query.next()) {
         const QString gameId = query.value(0).toString();
         const GameMetadata metadata = fetchGameMetadata(gameId);
-        if (metadata.id.isEmpty()) {
+        if (metadata.id.isEmpty())
             continue;
-        }
 
         SearchResult result;
         result.id = metadata.id;

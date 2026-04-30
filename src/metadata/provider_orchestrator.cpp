@@ -46,7 +46,8 @@ void ProviderOrchestrator::addProvider(const QString &name, MetadataProvider *pr
     info.isLocal = detectLocalProvider(name);
     
     m_providers[name] = info;
-    
+    m_sortCacheDirty = true;
+
     qInfo() << "Added provider:" << name 
             << "| Priority:" << priority 
             << "| Hash support:" << (info.supportsHash ? "YES" : "NO");
@@ -57,6 +58,7 @@ void ProviderOrchestrator::removeProvider(const QString &name)
     if (m_providers.contains(name)) {
         ProviderInfo info = m_providers.take(name);
         delete info.provider;
+        m_sortCacheDirty = true;
         qInfo() << "Removed provider:" << name;
     }
 }
@@ -65,16 +67,22 @@ void ProviderOrchestrator::setProviderEnabled(const QString &name, bool enabled)
 {
     if (m_providers.contains(name)) {
         m_providers[name].enabled = enabled;
+        m_sortCacheDirty = true;
         qInfo() << "Provider" << name << (enabled ? "enabled" : "disabled");
     }
 }
 
 bool ProviderOrchestrator::detectHashSupport(const QString &name) const
 {
-    QStringList hashProviders = Constants::Providers::getHashSupportingProviders();
-    hashProviders << QStringLiteral("retroachievements") 
-                  << QStringLiteral("playmatch")
-                  << QStringLiteral("localdatabase"); // Legacy local DAT provider still supports hash matching
+    static const QSet<QString> hashProviders = []() {
+        QSet<QString> s;
+        for (const QString &p : Constants::Providers::getHashSupportingProviders())
+            s.insert(p);
+        s.insert(QStringLiteral("retroachievements"));
+        s.insert(QStringLiteral("playmatch"));
+        s.insert(QStringLiteral("localdatabase"));
+        return s;
+    }();
     return hashProviders.contains(name.toLower());
 }
 
@@ -97,34 +105,37 @@ bool ProviderOrchestrator::providerSupportsHash(const QString &name) const
 
 QStringList ProviderOrchestrator::getSortedProviders(bool hashOnly) const
 {
-    QList<QPair<QString, int>> providerPriorities;
-    
-    for (auto it = m_providers.constBegin(); it != m_providers.constEnd(); ++it) {
-        const ProviderInfo &info = it.value();
-        
-        if (!info.enabled) {
-            continue;
+    if (m_sortCacheDirty) {
+        QList<QPair<QString, int>> allPairs;
+        QList<QPair<QString, int>> hashPairs;
+
+        for (auto it = m_providers.constBegin(); it != m_providers.constEnd(); ++it) {
+            const ProviderInfo &info = it.value();
+            if (!info.enabled)
+                continue;
+            allPairs.append(qMakePair(it.key(), info.priority));
+            if (info.supportsHash)
+                hashPairs.append(qMakePair(it.key(), info.priority));
         }
-        
-        if (hashOnly && !info.supportsHash) {
-            continue;
-        }
-        
-        providerPriorities.append(qMakePair(it.key(), info.priority));
+
+        auto byPriority = [](const QPair<QString, int> &a, const QPair<QString, int> &b) {
+            return a.second > b.second;
+        };
+        std::sort(allPairs.begin(), allPairs.end(), byPriority);
+        std::sort(hashPairs.begin(), hashPairs.end(), byPriority);
+
+        m_cachedSortedAll.clear();
+        for (const auto &p : allPairs)
+            m_cachedSortedAll.append(p.first);
+
+        m_cachedSortedHash.clear();
+        for (const auto &p : hashPairs)
+            m_cachedSortedHash.append(p.first);
+
+        m_sortCacheDirty = false;
     }
-    
-    // Sort by priority (descending)
-    std::sort(providerPriorities.begin(), providerPriorities.end(),
-              [](const QPair<QString, int> &a, const QPair<QString, int> &b) {
-                  return a.second > b.second;
-              });
-    
-    QStringList result;
-    for (const auto &pair : providerPriorities) {
-        result.append(pair.first);
-    }
-    
-    return result;
+
+    return hashOnly ? m_cachedSortedHash : m_cachedSortedAll;
 }
 
 QStringList ProviderOrchestrator::getEnabledProviders() const

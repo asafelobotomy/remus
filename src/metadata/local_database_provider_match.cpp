@@ -82,11 +82,11 @@ QList<MultiSignalMatch> LocalDatabaseProvider::matchROM(const ROMSignals &input)
             match.confidenceScore = MultiSignal::HASH_BASE;
             match.matchSignalCount = 1;
 
-            if (!input.crc32.isEmpty() && normalizeHash(input.crc32) == normalizeHash(entry.crc32)) {
+            if (matchedVia == QLatin1String("CRC32")) {
                 match.matchedHash = "CRC32:" + entry.crc32;
-            } else if (!input.md5.isEmpty() && normalizeHash(input.md5) == normalizeHash(entry.md5)) {
+            } else if (matchedVia == QLatin1String("MD5")) {
                 match.matchedHash = "MD5:" + entry.md5;
-            } else if (!input.sha1.isEmpty() && normalizeHash(input.sha1) == normalizeHash(entry.sha1)) {
+            } else if (matchedVia == QLatin1String("SHA1")) {
                 match.matchedHash = "SHA1:" + entry.sha1;
             }
 
@@ -121,40 +121,46 @@ QList<MultiSignalMatch> LocalDatabaseProvider::matchROM(const ROMSignals &input)
         const QString signalBase = QFileInfo(input.filename).completeBaseName().toLower();
         QSet<QString> seenEntries;
 
-        for (auto it = m_crc32Index.constBegin(); it != m_crc32Index.constEnd(); ++it) {
-            const ClrMameProEntry &entry = it.value();
-            const QString entryKey = entry.gameName + "|" + entry.romName;
-            if (seenEntries.contains(entryKey)) {
-                continue;
-            }
-            seenEntries.insert(entryKey);
+        auto tryFallbackScan = [&](auto &index) {
+            if (!matches.isEmpty()) return;
+            for (auto it = index.constBegin(); it != index.constEnd(); ++it) {
+                const ClrMameProEntry &entry = it.value();
+                const QString entryKey = entry.gameName + "|" + entry.romName;
+                if (seenEntries.contains(entryKey))
+                    continue;
+                seenEntries.insert(entryKey);
 
-            const QString entryBase = QFileInfo(entry.romName).completeBaseName().toLower();
-            const bool filenameExact = (signalBase == entryBase);
-            const qint64 sizeDiff = qAbs(input.fileSize - entry.size);
-            const bool sizeMatch = (sizeDiff <= MultiSignal::SIZE_TOLERANCE);
+                const QString entryBase = QFileInfo(entry.romName).completeBaseName().toLower();
+                const bool filenameExact = (signalBase == entryBase);
+                const qint64 sizeDiff = qAbs(input.fileSize - entry.size);
+                const bool sizeMatch = (sizeDiff <= MultiSignal::SIZE_TOLERANCE);
 
-            if (filenameExact && sizeMatch) {
-                MultiSignalMatch match;
-                match.entry = entry;
-                match.filenameMatch = true;
-                match.sizeMatch = true;
-                match.confidenceScore = MultiSignal::FILENAME_SIZE_BASE;
-                match.matchSignalCount = 2;
+                if (filenameExact && sizeMatch) {
+                    MultiSignalMatch match;
+                    match.entry = entry;
+                    match.filenameMatch = true;
+                    match.sizeMatch = true;
+                    match.confidenceScore = MultiSignal::FILENAME_SIZE_BASE;
+                    match.matchSignalCount = 2;
 
-                if (!input.serial.isEmpty() && !entry.serial.isEmpty()) {
-                    if (serialsMatch(input.serial, entry.serial)) {
-                        match.serialMatch = true;
-                        match.confidenceScore += MultiSignal::SERIAL_BONUS;
-                        match.matchSignalCount++;
+                    if (!input.serial.isEmpty() && !entry.serial.isEmpty()) {
+                        if (serialsMatch(input.serial, entry.serial)) {
+                            match.serialMatch = true;
+                            match.confidenceScore += MultiSignal::SERIAL_BONUS;
+                            match.matchSignalCount++;
+                        }
                     }
-                }
 
-                matches.append(match);
-                matchedVia = QStringLiteral("filename+size");
-                break;
+                    matches.append(match);
+                    matchedVia = QStringLiteral("filename+size");
+                    break;
+                }
             }
-        }
+        };
+
+        tryFallbackScan(m_crc32Index);
+        tryFallbackScan(m_md5Index);
+        tryFallbackScan(m_sha1Index);
     }
 
     // Third fallback: serial-only matching (for disc images where hash and

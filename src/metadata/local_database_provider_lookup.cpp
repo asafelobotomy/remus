@@ -133,10 +133,16 @@ QList<SearchResult> LocalDatabaseProvider::searchByName(const QString &title,
         results.append(result);
     };
 
-    for (auto it = m_crc32Index.constBegin(); it != m_crc32Index.constEnd(); ++it) maybeAppend(it.value());
-    for (auto it = m_md5Index.constBegin(); it != m_md5Index.constEnd(); ++it) maybeAppend(it.value());
-    for (auto it = m_sha1Index.constBegin(); it != m_sha1Index.constEnd(); ++it) maybeAppend(it.value());
-    for (auto it = m_serialIndex.constBegin(); it != m_serialIndex.constEnd(); ++it) maybeAppend(it.value());
+    for (auto it = m_nameIndex.constBegin(); it != m_nameIndex.constEnd(); ++it) {
+        if (!it.key().contains(searchLower))
+            continue;
+        for (const ClrMameProEntry &entry : it.value()) {
+            maybeAppend(entry);
+            if (results.size() >= 10)
+                goto done;
+        }
+    }
+done:;
 
     std::sort(results.begin(), results.end(), [](const SearchResult &left, const SearchResult &right) {
         return left.matchScore > right.matchScore;

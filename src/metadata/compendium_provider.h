@@ -37,6 +37,7 @@ private:
     QMap<QString, QString> loadResolvedFacts(const QString &gameId) const;
     void populateExternalIds(GameMetadata &metadata, const QString &gameId) const;
     void closeConnection();
+    void ensureFts5Index();
 
     static QString detectHashType(const QString &hash, QString &normalizedValue);
 

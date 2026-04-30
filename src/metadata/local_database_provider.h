@@ -257,6 +257,7 @@ private:
     QHash<QString, ClrMameProEntry> m_crc32Index;   // CRC32 -> ClrMameProEntry
     QHash<QString, ClrMameProEntry> m_md5Index;     // MD5 -> ClrMameProEntry
     QHash<QString, ClrMameProEntry> m_sha1Index;    // SHA1 -> ClrMameProEntry
+    QHash<QString, QList<ClrMameProEntry>> m_nameIndex; // gameName.toLower() -> entries
 
     // Serial index for entries with serial but no hash (GameCube, Wii, Saturn)
     QMultiHash<QString, ClrMameProEntry> m_serialIndex;  // serial -> ClrMameProEntry

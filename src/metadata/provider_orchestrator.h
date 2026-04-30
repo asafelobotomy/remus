@@ -185,6 +185,10 @@ private:
     
     QMap<QString, ProviderInfo> m_providers;
     MetadataCache *m_cache = nullptr;
+
+    mutable bool m_sortCacheDirty = true;
+    mutable QStringList m_cachedSortedAll;
+    mutable QStringList m_cachedSortedHash;
     
     /**
      * @brief Get providers sorted by priority (highest first)

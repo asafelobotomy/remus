@@ -153,6 +153,11 @@ void LocalDatabaseProvider::indexEntries(const QList<ClrMameProEntry> &entries, 
             m_serialIndex.insert(normalizedSerial, entry);
             m_serialToSystem[normalizedSerial] = systemName;
         }
+
+        // Index by game name (for name-based search)
+        if (!entry.gameName.isEmpty()) {
+            m_nameIndex[entry.gameName.toLower()].append(entry);
+        }
     }
     
     qDebug() << "LocalDatabaseProvider:" << systemName 

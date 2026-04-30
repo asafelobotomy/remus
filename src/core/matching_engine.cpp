@@ -13,32 +13,6 @@ MatchingEngine::MatchingEngine(QObject *parent)
 {
 }
 
-Match MatchingEngine::matchFile(const QString &filePath, const QString &hash,
-                                const QString &fileName, const QString &system)
-{
-    emit matchingStarted(fileName);
-    
-    Match match;
-    match.matchedAt = QDateTime::currentDateTime();
-    
-    // Step 1: Try hash-based matching (highest confidence)
-    if (!hash.isEmpty()) {
-        emit tryingHashMatch();
-        match.matchedHash = hash;
-        match.matchMethod = QString::fromLatin1(Constants::MatchMethods::HASH_PENDING);
-        match.confidence = 0; // Will be set to 100 if hash matches
-    }
-    
-    // Step 2: Extract and normalize filename
-    QString gameTitle = extractGameTitle(fileName);
-    
-    qDebug() << "Match:" << fileName << (hash.isEmpty() ? "(no hash)" : hash) << "→" << gameTitle;
-    
-    match.matchedName = gameTitle;
-    
-    return match;
-}
-
 int MatchingEngine::calculateConfidence(const QString &method, float nameMatchScore)
 {
     const QString canonicalMethod = Constants::MatchMethods::canonicalize(method);
@@ -115,32 +89,21 @@ int MatchingEngine::levenshteinDistance(const QString &s1, const QString &s2)
 {
     const int len1 = s1.length();
     const int len2 = s2.length();
-    
-    // Create distance matrix
-    QVector<QVector<int>> d(len1 + 1, QVector<int>(len2 + 1));
-    
-    // Initialize first row and column
-    for (int i = 0; i <= len1; ++i) {
-        d[i][0] = i;
-    }
-    for (int j = 0; j <= len2; ++j) {
-        d[0][j] = j;
-    }
-    
-    // Calculate minimum edit distance
+
+    QVector<int> prev(len2 + 1), curr(len2 + 1);
+    for (int j = 0; j <= len2; ++j)
+        prev[j] = j;
+
     for (int i = 1; i <= len1; ++i) {
+        curr[0] = i;
         for (int j = 1; j <= len2; ++j) {
             int cost = (s1[i - 1] == s2[j - 1]) ? 0 : 1;
-            
-            d[i][j] = std::min({
-                d[i - 1][j] + 1,      // deletion
-                d[i][j - 1] + 1,      // insertion
-                d[i - 1][j - 1] + cost // substitution
-            });
+            curr[j] = std::min({prev[j] + 1, curr[j - 1] + 1, prev[j - 1] + cost});
         }
+        std::swap(prev, curr);
     }
-    
-    return d[len1][len2];
+
+    return prev[len2];
 }
 
 float MatchingEngine::calculateNameSimilarity(const QString &s1, const QString &s2)

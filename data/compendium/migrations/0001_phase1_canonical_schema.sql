@@ -215,4 +215,11 @@ CREATE INDEX IF NOT EXISTS idx_source_items_source
 CREATE INDEX IF NOT EXISTS idx_games_system_region
     ON games(system_id, primary_region_code);
 
+CREATE VIRTUAL TABLE IF NOT EXISTS games_fts USING fts5(
+    game_id UNINDEXED,
+    system_id UNINDEXED,
+    title_text,
+    tokenize='unicode61 remove_diacritics 1'
+);
+
 COMMIT;

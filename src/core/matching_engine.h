@@ -67,18 +67,6 @@ public:
     ~MatchingEngine() override = default;
 
     /**
-     * @brief Match a file against metadata providers
-     * 
-     * @param filePath Path to the file
-     * @param hash File hash (CRC32/MD5/SHA1)
-     * @param fileName Base filename without extension
-     * @param system System identifier
-     * @return Match result with confidence score
-     */
-    Match matchFile(const QString &filePath, const QString &hash, 
-                   const QString &fileName, const QString &system);
-    
-    /**
      * @brief Calculate confidence score based on matching method
     * @param method Match method string, normalized via Constants::MatchMethods
      * @param nameMatchScore For fuzzy matches, the similarity score (0.0-1.0)
@@ -111,29 +99,6 @@ public:
      * @return Game title (without region, version, etc.)
      */
     static QString extractGameTitle(const QString &fileName);
-
-signals:
-    /**
-     * @brief Emitted when matching process starts
-     * @param fileName File being matched
-     */
-    void matchingStarted(const QString &fileName);
-    
-    /**
-     * @brief Emitted when hash matching attempt begins
-     */
-    void tryingHashMatch();
-    
-    /**
-     * @brief Emitted when matching completes
-     * @param match Result with confidence score
-     */
-    void matchingCompleted(const Match &match);
-    
-    /**
-     * @brief Emitted when no match found
-     */
-    void noMatchFound();
 
 private:
     /**
