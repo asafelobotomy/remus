@@ -103,19 +103,25 @@ int SystemResolver::systemIdByDatName(const QString &datName)
         // Nintendo expanded
         {QStringLiteral("Nintendo - Wii U"), ID_WIIU},
         {QStringLiteral("Nintendo - Nintendo Wii U"), ID_WIIU},
-        // Digital / download variants that map to the same system
+        // Digital / download / accessory variants that map to the same system
         {QStringLiteral("Nintendo - Wii (Digital)"), ID_WII},
         {QStringLiteral("Nintendo - Wii U (Digital)"), ID_WIIU},
         {QStringLiteral("Nintendo - New Nintendo 3DS"), ID_3DS},
+        {QStringLiteral("Nintendo - New Nintendo 3DS (Digital)"), ID_3DS},
         {QStringLiteral("Nintendo - Nintendo DSi"), ID_NDS},
+        {QStringLiteral("Nintendo - Nintendo DS (Download Play)"), ID_NDS},
         {QStringLiteral("Nintendo - Nintendo 64DD"), ID_N64},
         {QStringLiteral("Nintendo - Satellaview"), ID_SNES},
+        {QStringLiteral("Nintendo - Sufami Turbo"), ID_SNES},
+        {QStringLiteral("Nintendo - e-Reader"), ID_GBA},
         {QStringLiteral("Microsoft - XBOX 360 (Games on Demand)"), ID_XBOX360},
         {QStringLiteral("Microsoft - XBOX 360 (Title Updates)"), ID_XBOX360},
         {QStringLiteral("Microsoft - Xbox 360 (Digital)"), ID_XBOX360},
         {QStringLiteral("Sony - PlayStation 3 (PSN)"), ID_PS3},
         {QStringLiteral("Sony - PlayStation Portable (PSN)"), ID_PSP},
+        {QStringLiteral("Sony - PlayStation Portable (PSX2PSP)"), ID_PSP},
         {QStringLiteral("Sony - PlayStation Vita (PSN)"), ID_PSVITA},
+        {QStringLiteral("Commodore - Amiga - WHDLoad"), ID_AMIGA},
         // New systems (IDs 58-82)
         {QStringLiteral("Amstrad - CPC"), ID_AMSTRAD_CPC},
         {QStringLiteral("Amstrad - CPC - clean-cpc-db"), ID_AMSTRAD_CPC},
