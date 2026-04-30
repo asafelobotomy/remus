@@ -141,27 +141,26 @@ RomBundler::BundleResult RomBundler::bundle(const FileRecord &file,
         } else if (discOutputFormat == DiscOutputFormat::Chd) {
             CHDConverter converter;
             if (!converter.isChdmanAvailable()) {
-                result.error = "chdman not found. Install MAME tools to bundle discs as CHD";
-                cleanup();
-                return result;
-            }
+                qWarning() << "  ⚠ chdman not found; bundling disc image as-is:" << QFileInfo(discSourcePath).fileName();
+                // Soft failure: original file stays as bundlePayloadPath
+            } else {
+                ConversionResult conversion;
+                if (ext == QStringLiteral("cue")) {
+                    conversion = converter.convertCueToCHD(discSourcePath, convertedPath);
+                } else if (ext == QStringLiteral("iso") || ext == QStringLiteral("img")) {
+                    conversion = converter.convertIsoToCHD(discSourcePath, convertedPath);
+                } else if (ext == QStringLiteral("gdi")) {
+                    conversion = converter.convertGdiToCHD(discSourcePath, convertedPath);
+                }
 
-            ConversionResult conversion;
-            if (ext == QStringLiteral("cue")) {
-                conversion = converter.convertCueToCHD(discSourcePath, convertedPath);
-            } else if (ext == QStringLiteral("iso") || ext == QStringLiteral("img")) {
-                conversion = converter.convertIsoToCHD(discSourcePath, convertedPath);
-            } else if (ext == QStringLiteral("gdi")) {
-                conversion = converter.convertGdiToCHD(discSourcePath, convertedPath);
+                if (!conversion.success || !QFile::exists(convertedPath)) {
+                    result.error = conversion.error.isEmpty() ? QStringLiteral("Disc-to-CHD conversion failed") : conversion.error;
+                    cleanup();
+                    return result;
+                }
+                qInfo() << "  ✓ Disc media converted to CHD:" << convertedPath;
+                bundlePayloadPath = convertedPath;
             }
-
-            if (!conversion.success || !QFile::exists(convertedPath)) {
-                result.error = conversion.error.isEmpty() ? QStringLiteral("Disc-to-CHD conversion failed") : conversion.error;
-                cleanup();
-                return result;
-            }
-            qInfo() << "  ✓ Disc media converted to CHD:" << convertedPath;
-            bundlePayloadPath = convertedPath;
         } else if (discOutputFormat == DiscOutputFormat::Cso) {
             CSOConverter converter;
             if (!converter.isMaxcsoAvailable()) {

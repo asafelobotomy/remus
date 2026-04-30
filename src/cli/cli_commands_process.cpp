@@ -299,10 +299,9 @@ int handleScanCommand(CliContext &ctx)
                 return rc;
             }
             if (hasOutput) {
-                if (const int rc = handleBundleCommand(ctx)) {
-                    ctx.processSystemIdFilter = -1;
-                    return rc;
-                }
+                // Bundle failures are per-file and non-fatal for the pipeline;
+                // continue processing remaining system batches regardless.
+                handleBundleCommand(ctx);
             }
         }
 

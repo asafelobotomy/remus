@@ -172,6 +172,9 @@ RomBundler::DiscOutputFormat resolveDiscOutputFormat(const FileRecord &file,
             : RomBundler::DiscOutputFormat::Original;
     }
     // CHD requested: delegate to ConversionPlanner for system-aware routing.
+    // ConversionPlanner may redirect to RVZ (GameCube/Wii) or CSO (PSP).
+    // If it returns Original (unknown/unrouted system), fall back to CHD when
+    // the payload is a convertible disc format.
     ConversionPlanner::Request req;
     req.systemId = resolvedSystemId;
     req.extension = QStringLiteral(".") + QFileInfo(payloadPath).suffix().toLower();
@@ -190,6 +193,11 @@ RomBundler::DiscOutputFormat resolveDiscOutputFormat(const FileRecord &file,
         return isChdConvertiblePath(payloadPath) ? RomBundler::DiscOutputFormat::Chd
                                                  : RomBundler::DiscOutputFormat::Original;
     default:
+        // ConversionPlanner doesn't know the system (ID 0 or unrouted); honour the
+        // explicit CHD request when the payload format supports it.
+        if (config.discOutputFormat == RomBundler::DiscOutputFormat::Chd && isChdConvertiblePath(payloadPath)) {
+            return RomBundler::DiscOutputFormat::Chd;
+        }
         return RomBundler::DiscOutputFormat::Original;
     }
 }
