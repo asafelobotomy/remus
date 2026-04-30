@@ -21,37 +21,6 @@ namespace Remus {
 
 using namespace Constants;
 
-namespace {
-
-void mergeMetadata(GameMetadata &target, const GameMetadata &source)
-{
-    if (target.title.isEmpty() && !source.title.isEmpty()) target.title = source.title;
-    if (target.system.isEmpty() && !source.system.isEmpty()) target.system = source.system;
-    if (target.region.isEmpty() && !source.region.isEmpty()) target.region = source.region;
-    if (target.publisher.isEmpty() && !source.publisher.isEmpty()) target.publisher = source.publisher;
-    if (target.developer.isEmpty() && !source.developer.isEmpty()) target.developer = source.developer;
-    if (target.genres.isEmpty() && !source.genres.isEmpty()) target.genres = source.genres;
-    if (target.releaseDate.isEmpty() && !source.releaseDate.isEmpty()) target.releaseDate = source.releaseDate;
-    if (target.description.isEmpty() && !source.description.isEmpty()) target.description = source.description;
-    if (target.players == 0 && source.players != 0) target.players = source.players;
-    if (target.rating == 0.0f && source.rating != 0.0f) target.rating = source.rating;
-    if (target.ratingSource.isEmpty() && !source.ratingSource.isEmpty()) target.ratingSource = source.ratingSource;
-    if (target.id.isEmpty() && !source.id.isEmpty()) target.id = source.id;
-    if (target.boxArtUrl.isEmpty() && !source.boxArtUrl.isEmpty()) target.boxArtUrl = source.boxArtUrl;
-    if (target.screenshotUrls.isEmpty() && !source.screenshotUrls.isEmpty()) target.screenshotUrls = source.screenshotUrls;
-    for (auto it = source.externalIds.constBegin(); it != source.externalIds.constEnd(); ++it) {
-        if (!target.externalIds.contains(it.key())) {
-            target.externalIds[it.key()] = it.value();
-        }
-    }
-    if (target.providerId.isEmpty() && !source.providerId.isEmpty()) target.providerId = source.providerId;
-    if (!target.fetchedAt.isValid() && source.fetchedAt.isValid()) target.fetchedAt = source.fetchedAt;
-    if (target.matchScore == 0.0f && source.matchScore > 0.0f) target.matchScore = source.matchScore;
-    if (target.matchMethod.isEmpty() && !source.matchMethod.isEmpty()) target.matchMethod = source.matchMethod;
-}
-
-} // namespace
-
 // ---------------------------------------------------------------------------
 // Field-targeted enrichment cascade
 // ---------------------------------------------------------------------------

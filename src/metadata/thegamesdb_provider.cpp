@@ -274,10 +274,17 @@ GameMetadata TheGamesDBProvider::parseGameJson(const QJsonObject &game)
         metadata.publisher = publishers[0].toString();
     }
     
-    // Genres
+    // Genres — API v2 returns an array of objects with "id" and "name".
+    // Older responses may return integers only; skip those since we have no
+    // lookup table and would produce meaningless values.
     QJsonArray genres = game["genres"].toArray();
     for (const QJsonValue &genreVal : genres) {
-        metadata.genres.append(genreVal.toInt() == 1 ? "Action" : "Other");  // Simplified
+        if (genreVal.isObject()) {
+            const QString name = genreVal.toObject()["name"].toString();
+            if (!name.isEmpty()) {
+                metadata.genres.append(name);
+            }
+        }
     }
     
     // Players

@@ -38,13 +38,17 @@ inline const QSet<QString> REQUIRED_FIELDS = {
 //      and the providerId field set by each MetadataProvider implementation).
 inline const QMap<QString, QSet<QString>> CAPABILITIES = {
     // LOCAL BAND — priority 200 / 150 — always tried before any network call.
+    { QStringLiteral("compendium"), {
+        TITLE, PUBLISHER, DEVELOPER, RELEASE_DATE,
+        GENRES, PLAYERS, BOX_ART_URL, DESCRIPTION
+    }},
     { QStringLiteral("localdatabase"), {
         TITLE, PUBLISHER, DEVELOPER, RELEASE_DATE,
-        GENRES, PLAYERS, BOX_ART_URL
+        GENRES, PLAYERS, BOX_ART_URL, DESCRIPTION
     }},
     { QStringLiteral("gametdb"), {
         TITLE, PUBLISHER, DEVELOPER, RELEASE_DATE,
-        GENRES, PLAYERS, BOX_ART_URL
+        GENRES, PLAYERS, BOX_ART_URL, DESCRIPTION
     }},
 
     // REMOTE BAND — queried only for fields still missing after local exhaustion.
@@ -53,7 +57,7 @@ inline const QMap<QString, QSet<QString>> CAPABILITIES = {
         DESCRIPTION, BOX_ART_URL, RATING, SCREENSHOTS
     }},
     { QStringLiteral("hasheous"), {
-        TITLE, PUBLISHER, DEVELOPER, GENRES, RELEASE_DATE, RATING
+        TITLE, PUBLISHER, DEVELOPER, GENRES, RELEASE_DATE, RATING, DESCRIPTION
     }},
     { QStringLiteral("igdb"), {
         TITLE, PUBLISHER, DEVELOPER, GENRES, RELEASE_DATE,

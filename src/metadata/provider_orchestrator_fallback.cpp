@@ -25,32 +25,6 @@ using namespace Constants;
 
 namespace {
 
-void mergeMetadata(GameMetadata &target, const GameMetadata &source)
-{
-    if (target.title.isEmpty() && !source.title.isEmpty()) target.title = source.title;
-    if (target.system.isEmpty() && !source.system.isEmpty()) target.system = source.system;
-    if (target.region.isEmpty() && !source.region.isEmpty()) target.region = source.region;
-    if (target.publisher.isEmpty() && !source.publisher.isEmpty()) target.publisher = source.publisher;
-    if (target.developer.isEmpty() && !source.developer.isEmpty()) target.developer = source.developer;
-    if (target.genres.isEmpty() && !source.genres.isEmpty()) target.genres = source.genres;
-    if (target.releaseDate.isEmpty() && !source.releaseDate.isEmpty()) target.releaseDate = source.releaseDate;
-    if (target.description.isEmpty() && !source.description.isEmpty()) target.description = source.description;
-    if (target.players == 0 && source.players != 0) target.players = source.players;
-    if (target.rating == 0.0f && source.rating != 0.0f) target.rating = source.rating;
-    if (target.ratingSource.isEmpty() && !source.ratingSource.isEmpty()) target.ratingSource = source.ratingSource;
-    if (target.boxArtUrl.isEmpty() && !source.boxArtUrl.isEmpty()) target.boxArtUrl = source.boxArtUrl;
-    if (target.screenshotUrls.isEmpty() && !source.screenshotUrls.isEmpty()) target.screenshotUrls = source.screenshotUrls;
-    for (auto it = source.externalIds.constBegin(); it != source.externalIds.constEnd(); ++it) {
-        if (!target.externalIds.contains(it.key())) {
-            target.externalIds[it.key()] = it.value();
-        }
-    }
-    if (target.providerId.isEmpty() && !source.providerId.isEmpty()) target.providerId = source.providerId;
-    if (!target.fetchedAt.isValid() && source.fetchedAt.isValid()) target.fetchedAt = source.fetchedAt;
-    if (target.matchScore == 0.0f && source.matchScore > 0.0f) target.matchScore = source.matchScore;
-    if (target.matchMethod.isEmpty() && !source.matchMethod.isEmpty()) target.matchMethod = source.matchMethod;
-}
-
 bool isSufficientlyEnriched(const GameMetadata &metadata, bool requireArtwork)
 {
     const bool hasCoreMetadata = !metadata.title.isEmpty()
@@ -58,6 +32,7 @@ bool isSufficientlyEnriched(const GameMetadata &metadata, bool requireArtwork)
         && !metadata.developer.isEmpty()
         && !metadata.releaseDate.isEmpty()
         && !metadata.genres.isEmpty()
+        && !metadata.description.isEmpty()
         && metadata.players != 0;
     return hasCoreMetadata && (!requireArtwork || !metadata.boxArtUrl.isEmpty());
 }
@@ -292,6 +267,17 @@ GameMetadata ProviderOrchestrator::searchWithFallback(const QString &hash,
         }
     }
 
+    // A perfect hash match definitively identifies the ROM. No further provider
+    // queries are needed for identity — only continue when the caller has
+    // explicitly requested artwork and it is still missing.
+    const auto identityResolved = [&](const GameMetadata &m) -> bool {
+        if (m.matchScore >= 1.0f
+                && m.matchMethod == QLatin1String(Constants::MatchMethods::HASH)) {
+            return !(requireArtwork && m.boxArtUrl.isEmpty());
+        }
+        return false;
+    };
+
     const QStringList localProviders = getSortedLocalProviders();
     for (const QString &providerName : localProviders) {
         queryProvider(accumulator, providerName, hash, name, system, crc32, md5, sha1, serial);
@@ -299,14 +285,22 @@ GameMetadata ProviderOrchestrator::searchWithFallback(const QString &hash,
             qInfo() << "Metadata complete after local provider:" << providerName;
             break;
         }
+        if (identityResolved(accumulator)) {
+            qInfo() << "Hash match — identity resolved, skipping remaining providers for:" << name;
+            break;
+        }
     }
 
-    if (!isSufficientlyEnriched(accumulator, requireArtwork)) {
+    if (!isSufficientlyEnriched(accumulator, requireArtwork) && !identityResolved(accumulator)) {
         const QStringList remoteProviders = getSortedRemoteProviders();
         for (const QString &providerName : remoteProviders) {
             queryProvider(accumulator, providerName, hash, name, system, crc32, md5, sha1, serial);
             if (isSufficientlyEnriched(accumulator, requireArtwork)) {
                 qInfo() << "Metadata complete after remote provider:" << providerName;
+                break;
+            }
+            if (identityResolved(accumulator)) {
+                qInfo() << "Hash match — identity resolved, skipping remaining providers for:" << name;
                 break;
             }
         }
@@ -351,6 +345,7 @@ ArtworkUrls ProviderOrchestrator::getArtworkWithFallback(const QString &id, cons
     const QStringList providers = getSortedProviders(false);
     for (const QString &name : providers) {
         const ProviderInfo &info = m_providers[name];
+        if (!info.enabled) continue;
         qInfo() << "Trying artwork from:" << name;
         const ArtworkUrls artwork = info.provider->getArtwork(id);
         if (!artwork.boxFront.isEmpty()) {

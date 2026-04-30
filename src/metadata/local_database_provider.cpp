@@ -227,14 +227,10 @@ GameMetadata LocalDatabaseProvider::datEntryToMetadata(const ClrMameProEntry &en
         }
     }
     
-    // Description uses the description field if available
+    // Use DAT description only if present; leave empty so remote providers can supply
+    // a real synopsis. ClrMamePro/No-Intro DATs rarely carry meaningful descriptions.
     if (!entry.description.isEmpty()) {
         metadata.description = entry.description;
-    } else {
-        // Fallback: clean up game name (remove region markers)
-        QString desc = entry.gameName;
-        desc.remove(QRegularExpression("\\s*\\([^)]*\\)\\s*")); // Remove (USA), (Rev 1), etc.
-        metadata.description = desc.trimmed();
     }
     
     // External ID is the hash

@@ -232,6 +232,14 @@ private:
      * @return True for local/offline providers
      */
     bool detectLocalProvider(const QString &name) const;
+
+    /**
+     * @brief Merge non-empty fields from @p source into @p target (first-non-empty wins).
+     *
+     * Used by queryProvider(), searchWithFallback(), and enrichMissingFields().
+     * Defined once here to avoid duplicate anonymous-namespace copies across TUs.
+     */
+    static void mergeMetadata(GameMetadata &target, const GameMetadata &source);
 };
 
 } // namespace Remus

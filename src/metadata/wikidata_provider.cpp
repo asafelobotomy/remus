@@ -218,10 +218,15 @@ GameMetadata WikidataProvider::parseDetailBindings(const QJsonArray &bindings,
                               .value(QStringLiteral("value")).toString();
         }
 
-        // Description
+        // Description — itemDescription is a short entity disambiguator (e.g. "2001
+        // platform video game"), not a game synopsis. Only accept it if it is long
+        // enough to be a meaningful description (≥80 chars).
         if (metadata.description.isEmpty()) {
-            metadata.description = b.value(QStringLiteral("itemDescription")).toObject()
-                                    .value(QStringLiteral("value")).toString();
+            const QString candidate = b.value(QStringLiteral("itemDescription")).toObject()
+                                       .value(QStringLiteral("value")).toString();
+            if (candidate.length() >= 80) {
+                metadata.description = candidate;
+            }
         }
 
         // Genre (collect unique)
