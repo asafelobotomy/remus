@@ -120,6 +120,7 @@ dist/
 # since it conflicts with Markdown. Rely on directory-level ignores above.
 ## Nintendo
 *.nes
+*.fds
 *.sfc
 *.smc
 *.snes
