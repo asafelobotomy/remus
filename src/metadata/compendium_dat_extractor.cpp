@@ -80,13 +80,12 @@ QList<SourceRecordEnvelope> DatExtractor::extract(const QString &filePath,
         return {};
     }
 
-    // Parse the DAT header to get the canonical system name
-    const QMap<QString, QString> header = ClrMameProParser::parseHeader(filePath);
+    // Parse header and all entries in one file pass
+    QMap<QString, QString> header;
+    const QList<ClrMameProEntry> entries = ClrMameProParser::parseAll(filePath, header);
     const QString systemHint = header.value(QStringLiteral("name"),
                                             info.completeBaseName());
 
-    // Parse all entries
-    const QList<ClrMameProEntry> entries = ClrMameProParser::parse(filePath);
     if (entries.isEmpty()) {
         error = QStringLiteral("DAT file produced no entries: %1").arg(filePath);
         return {};

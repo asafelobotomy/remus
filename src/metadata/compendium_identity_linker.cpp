@@ -1,6 +1,7 @@
 #include "compendium_identity_linker.h"
 
 #include <QCryptographicHash>
+#include <QHash>
 #include <QRegularExpression>
 #include <QSet>
 
@@ -43,13 +44,13 @@ int IdentityLinker::link(QList<SourceRecordEnvelope> &records) const
 {
     // Maps used to accumulate game IDs across passes.
     // key → assigned game_id
-    QMap<QString, QString> sha1ToId;
-    QMap<QString, QString> md5ToId;
-    QMap<QString, QString> crc32ToId;
+    QHash<QString, QString> sha1ToId;
+    QHash<QString, QString> md5ToId;
+    QHash<QString, QString> crc32ToId;
     // "<systemId>|<normalizedTitle>|<regionCode>" → game_id  (pass 3)
-    QMap<QString, QString> titleToId;
+    QHash<QString, QString> titleToId;
     // "<systemId>|<serial>" → game_id  (pass 2)
-    QMap<QString, QString> serialToId;
+    QHash<QString, QString> serialToId;
 
     int gamesCreated = 0;
 

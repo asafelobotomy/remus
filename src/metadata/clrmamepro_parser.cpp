@@ -2,7 +2,6 @@
 #include <QFile>
 #include <QTextStream>
 #include <QRegularExpression>
-#include <QDebug>
 
 namespace Remus {
 
@@ -46,11 +45,30 @@ QMap<QString, QString> ClrMameProParser::parseHeader(const QString &filePath)
     return header;
 }
 
+QList<ClrMameProEntry> ClrMameProParser::parseAll(const QString &filePath,
+                                                   QMap<QString, QString> &outHeader)
+{
+    QFile file(filePath);
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        return {};
+    }
+    QTextStream in(&file);
+    const QString content = in.readAll();
+    file.close();
+
+    // Parse header in the same pass
+    QRegularExpression headerRegex(R"(clrmamepro\s*\(([\s\S]*?)\n\))");
+    const QRegularExpressionMatch m = headerRegex.match(content);
+    if (m.hasMatch()) {
+        outHeader = extractKeyValues(m.captured(1));
+    }
+
+    return parseGameBlocks(content);
+}
+
 QList<ClrMameProEntry> ClrMameProParser::parseGameBlocks(const QString &content)
 {
     QList<ClrMameProEntry> entries;
-    
-    qDebug() << "ClrMameProParser: Content length:" << content.length();
     
     // Find game blocks by matching balanced parentheses.
     // A simple regex cannot handle multi-line rom() sub-blocks
@@ -87,8 +105,6 @@ QList<ClrMameProEntry> ClrMameProParser::parseGameBlocks(const QString &content)
         searchFrom = i;
     }
 
-    qDebug() << "ClrMameProParser: Found" << gameBlocks.size() << "game blocks";
-    
     int matchCount = 0;
     for (const QString &gameBlock : gameBlocks) {
         matchCount++;
@@ -172,20 +188,11 @@ QList<ClrMameProEntry> ClrMameProParser::parseGameBlocks(const QString &content)
                 const bool hasSerial = !entry.serial.isEmpty();
                 if (!entry.gameName.isEmpty() && (hasHash || hasSerial)) {
                     entries.append(entry);
-                    
-                    if (matchCount <= 3) {
-                        qDebug() << "ClrMameProParser: Entry" << matchCount 
-                                 << "game:" << entry.gameName.left(30)
-                                 << "crc32:" << entry.crc32
-                                 << "serial:" << entry.serial
-                                 << "size:" << entry.size;
-                    }
                 }
             }
         }
     }
     
-    qDebug() << "ClrMameProParser: Found" << matchCount << "game blocks, parsed" << entries.size() << "entries";
     return entries;
 }
 

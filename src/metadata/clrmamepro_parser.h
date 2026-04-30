@@ -60,6 +60,16 @@ public:
      */
     static QMap<QString, QString> parseHeader(const QString &filePath);
 
+    /**
+     * @brief Read the file once and return both the header and all game entries.
+     *        Prefer this over calling parse() + parseHeader() separately.
+     * @param filePath Path to .dat file
+     * @param outHeader Populated with header key-value pairs
+     * @return List of game entries
+     */
+    static QList<ClrMameProEntry> parseAll(const QString &filePath,
+                                           QMap<QString, QString> &outHeader);
+
 private:
     /**
      * @brief Parse game blocks from content
