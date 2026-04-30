@@ -98,12 +98,12 @@ int handleBuildCompendiumCommand(CliContext &ctx)
         return 1;
     }
 
-    // Bulk-build performance: disable fsync, keep journal in memory, enlarge cache.
-    // Safe here because the database is freshly created and rebuilt from scratch;
-    // a crash during build is handled by re-running the build.
+    // Bulk-build performance: WAL mode avoids fsync stalls and keeps the DB
+    // consistent on crash (unlike MEMORY journal which corrupts on OOM/crash).
+    // synchronous=OFF skips fsync on WAL frames — safe for a scratch build.
     const QStringList buildPragmas = {
+        QStringLiteral("PRAGMA journal_mode = WAL"),
         QStringLiteral("PRAGMA synchronous = OFF"),
-        QStringLiteral("PRAGMA journal_mode = MEMORY"),
         QStringLiteral("PRAGMA temp_store = MEMORY"),
         QStringLiteral("PRAGMA cache_size = -131072"),  // 128 MiB
     };
