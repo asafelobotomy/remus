@@ -56,9 +56,10 @@ bool FactInserter::ensureGame(const SourceRecordEnvelope &rec,
         }
     }
 
-    // Always attempt name insertion. FK OR IGNORE absorbs the case where the
-    // game row doesn't exist yet (unresolved system_id carried over from a prior source).
-    if (!rec.titleRaw.isEmpty()) {
+    // Only insert game_names when the game row exists. INSERT OR IGNORE does NOT
+    // suppress FK violations in SQLite — only UNIQUE violations. Inserting a name
+    // for a game with unresolved system_id (no games row) would raise FK error.
+    if (rec.resolvedSystemId > 0 && !rec.titleRaw.isEmpty()) {
         qName.bindValue(0, rec.linkedGameId);
         qName.bindValue(1, rec.titleRaw);
         qName.bindValue(2, rec.sourceId);

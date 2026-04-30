@@ -59,9 +59,12 @@ int handleBuildCompendiumCommand(CliContext &ctx)
 
     const QStringList sqlScripts = {
         QDir(compendiumDir).filePath(QStringLiteral("migrations/0001_phase1_canonical_schema.sql")),
+        QDir(compendiumDir).filePath(QStringLiteral("migrations/0002_patch_catalog.sql")),
         QDir(compendiumDir).filePath(QStringLiteral("seeds/0001_regions.sql")),
         QDir(compendiumDir).filePath(QStringLiteral("seeds/0002_systems.sql")),
-        QDir(compendiumDir).filePath(QStringLiteral("seeds/0003_merge_policy.sql"))
+        QDir(compendiumDir).filePath(QStringLiteral("seeds/0003_merge_policy.sql")),
+        QDir(compendiumDir).filePath(QStringLiteral("migrations/0003_systems_libretro_name.sql")),
+        QDir(compendiumDir).filePath(QStringLiteral("migrations/0004_fts5_search_index.sql")),
     };
 
     QString buildId;
@@ -328,6 +331,41 @@ int handleBuildCompendiumCommand(CliContext &ctx)
             database.close();
             QSqlDatabase::removeDatabase(connectionName);
             return 1;
+        }
+    }
+
+    // ── FTS search index population ────────────────────────────────────────────
+    {
+        qInfo() << "[buildCompendium] Populating FTS search index...";
+        if (!database.transaction()) {
+            qWarning() << "[buildCompendium] Could not start FTS transaction (non-fatal)";
+        } else {
+            QSqlQuery ftsQ(database);
+            const bool ok1 = ftsQ.exec(QStringLiteral(
+                "INSERT INTO games_search(title, game_id, system_id, region_code) "
+                "SELECT canonical_title, game_id, system_id, "
+                "       COALESCE(primary_region_code, '') FROM games"));
+            if (!ok1) {
+                qWarning() << "[buildCompendium] FTS canonical title insert failed (non-fatal):"
+                           << ftsQ.lastError().text();
+                database.rollback();
+            } else {
+                const bool ok2 = ftsQ.exec(QStringLiteral(
+                    "INSERT INTO games_search(title, game_id, system_id, region_code) "
+                    "SELECT gn.name_text, gn.game_id, g.system_id, "
+                    "       COALESCE(g.primary_region_code, '') "
+                    "FROM game_names gn JOIN games g ON g.game_id = gn.game_id"));
+                if (!ok2) {
+                    qWarning() << "[buildCompendium] FTS alias insert failed (non-fatal):"
+                               << ftsQ.lastError().text();
+                    database.rollback();
+                } else {
+                    database.commit();
+                    ftsQ.exec(QStringLiteral(
+                        "INSERT INTO games_search(games_search) VALUES('optimize')"));
+                    qInfo() << "[buildCompendium] FTS index populated and optimized.";
+                }
+            }
         }
     }
 
