@@ -165,7 +165,7 @@ QList<ClrMameProEntry> ClrMameProParser::parseGameBlocks(const QString &content)
                 // Use game-level region if present, otherwise extract from name
                 entry.region = gameData.value("region");
                 if (entry.region.isEmpty()) {
-                    QRegularExpression regionRegex(R"(\(([^)]+)\))");
+                    static const QRegularExpression regionRegex(R"(\(([^)]+)\))");
                     QRegularExpressionMatch regionMatch = regionRegex.match(entry.gameName);
                     if (regionMatch.hasMatch()) {
                         QString regionText = regionMatch.captured(1);
@@ -201,7 +201,7 @@ QMap<QString, QString> ClrMameProParser::extractKeyValues(const QString &block)
     QMap<QString, QString> data;
     
     // Match key-value pairs: key "value" or key value
-    QRegularExpression kvRegex(R"((\w+)\s+([^\n]+))");
+    static const QRegularExpression kvRegex(R"((\w+)\s+([^\n]+))");
     QRegularExpressionMatchIterator it = kvRegex.globalMatch(block);
     
     while (it.hasNext()) {
