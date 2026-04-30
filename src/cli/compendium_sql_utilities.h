@@ -1,5 +1,6 @@
 #pragma once
 
+#include <QDir>
 #include <QFile>
 #include <QFileInfo>
 #include <QJsonDocument>
