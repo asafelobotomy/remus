@@ -4,13 +4,14 @@
 [![Version](https://img.shields.io/badge/version-0.10.1-blue.svg)](CHANGELOG.md)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 
-A command-line application for scanning, organizing, and managing retro game ROM libraries with automatic metadata fetching and smart file organization.
+A C++17 retro game library manager for scanning, organizing, and managing ROM libraries with automatic metadata fetching, verification, conversion, patching, and mod workflows across both the command line and a Qt Quick desktop GUI.
 
-The project is CLI-first. GUI and TUI code remain in the repository as archived frontends while active delivery work focuses on the command-line workflow.
+The active build now ships a shared CLI and Qt Quick GUI. The legacy TUI remains archived under `archive/gui-tui/`.
 
 ## Features
 
-### Implemented in the active CLI build
+### Implemented in the active build
+
 - Support for 23+ retro gaming systems across cartridge, optical-disc, and archive workflows.
 - Hash-first scanning and matching with CRC32, MD5, and SHA1.
 - Provider orchestration with offline and online fallback:
@@ -32,9 +33,10 @@ The project is CLI-first. GUI and TUI code remain in the repository as archived 
 
 Current version: 0.10.1
 
-Remus ships as a CLI-first application. The Qt GUI and TUI code are preserved under `archive/gui-tui/`, but they are not part of the default build, CI, or release artifacts. See [docs/archive/FRONTEND-STATUS.md](docs/archive/FRONTEND-STATUS.md).
+Remus now builds `remus-cli` and `remus-gui` by default from the shared C++17/Qt 6 codebase. The legacy TUI remains preserved under `archive/gui-tui/` as historical reference code.
 
 Current delivery focus:
+
 - CLI workflow coverage
 - metadata and organization reliability
 - verification, patching, and mod support
@@ -47,6 +49,7 @@ Historical milestone reports remain in [docs/milestones/](docs/milestones/).
 **📖 [Complete Documentation Index](docs/README.md)**
 
 ### Quick Links
+
 - **[Build Instructions](docs/setup/BUILD.md)** - Build from source
 - **[Changelog](CHANGELOG.md)** - Version history
 - **[Project Roadmap](docs/plan.md)** - Development milestones
@@ -55,18 +58,20 @@ Historical milestone reports remain in [docs/milestones/](docs/milestones/).
 - **[Test Data Policy](docs/guides/TEST-DATA-POLICY.md)** - Canonical `roms/` and `test_output/` locations
 
 ### Technical Reference
+
 - **[Database Schema](docs/data-model.md)** - SQLite tables and relationships
 - **[Requirements Spec](docs/requirements.md)** - Functional and technical requirements
 - **[Naming Standards](docs/naming-standards.md)** - No-Intro/Redump conventions
 - **[Verification & Patching](docs/verification-and-patching.md)** - Compendium-backed verification and ROM patching
 
 ### Development
+
 - **[Architecture Docs](docs/architecture/)** - Design documents and implementation plans
 - **[Milestone Reports](docs/milestones/)** - Detailed completion reports and phase summaries
 
 ## Quick Start
 
-**CLI-first build is the default path.** See [docs/setup/BUILD.md](docs/setup/BUILD.md) for the supported build and release flow.
+**The default configure builds both `remus-cli` and `remus-gui`.** See [docs/setup/BUILD.md](docs/setup/BUILD.md) for the supported build and release flow.
 
 Repository-local path policy:
 
@@ -80,6 +85,9 @@ Repository-local path policy:
 mkdir build && cd build
 cmake ..
 make -j$(nproc)
+
+# Launch the desktop GUI
+./src/gui/remus-gui
 
 # Scan and hash ROMs
 ./remus-cli --scan ../roms/NES --hash
@@ -126,12 +134,13 @@ make -j$(nproc)
 **Requirements:** Qt 6 base development files, CMake 3.16+, C++17 compiler (optional C++20 mode supported), zlib, libarchive
 
 **Build performance tip:** See [docs/setup/BUILD.md](docs/setup/BUILD.md) for benchmark-backed build profiles:
+
 - **Fast clean rebuilds:** `PCH=ON` + `UNITY=ON`
 - **Fast iterative rebuilds across fresh build dirs:** `CCACHE=ON` + `PCH=OFF`
 
 ## Tech Stack
 
-- **Interface:** CLI (`remus-cli`)
+- **Interface:** CLI (`remus-cli`) and Qt Quick GUI (`remus-gui`)
 - **Core:** C++17
 - **Database:** SQLite
 - **Networking:** QtNetwork
@@ -143,13 +152,15 @@ make -j$(nproc)
 See **[docs/setup/BUILD.md](docs/setup/BUILD.md)** for detailed build instructions for Linux, macOS, and Windows.
 
 Quick build:
+
 ```bash
 cmake -S . -B build
 cmake --build build -j$(nproc)
 ./build/remus-cli --help
+./build/src/gui/remus-gui
 ```
 
-GUI and TUI sources remain in the repository as archived frontends. They are not part of the default build, CI, or release packaging while CLI delivery is the priority. See [docs/archive/FRONTEND-STATUS.md](docs/archive/FRONTEND-STATUS.md).
+The active build produces both the CLI and the Qt Quick desktop GUI. The legacy TUI remains archived under `archive/gui-tui/`.
 
 ## Contributing
 

@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added - GUI Surface
+
+- `remus-gui` Qt Quick desktop application target in the default build with an application shell, shared app state, and phase-oriented views for library browsing, scanning, hashing, metadata matching, artwork, DAT management, verification, organization, conversion, patching, mods, and settings
+
+### Changed - Build Surface
+
+- Default CMake configuration now includes the active Qt Quick GUI alongside `remus-cli`; canonical README and build docs now describe the GUI build and launch path while keeping the legacy TUI archived
+
 ### Added in early setup
 
 #### Phase 1 — Quick Wins

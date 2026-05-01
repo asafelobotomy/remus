@@ -6,6 +6,7 @@
 #include <QSet>
 #include <QStringList>
 #include <QTextStream>
+#include <memory>
 #include "cli_commands.h"
 #include "cli_helpers.h"
 #include "cli_options.h"
@@ -76,7 +77,7 @@ static void machineReadableMessageHandler(QtMsgType type,
 }
 
 // Global file pointer for --log-file tee output (non-JSON mode only).
-static QFile *g_logFile = nullptr;
+static std::unique_ptr<QFile> g_logFile;
 
 static void logFileTeeMessageHandler(QtMsgType type,
                                      const QMessageLogContext &context,
@@ -91,7 +92,7 @@ static void logFileTeeMessageHandler(QtMsgType type,
     }
 
     if (g_logFile && g_logFile->isOpen()) {
-        QTextStream fileStream(g_logFile);
+        QTextStream fileStream(g_logFile.get());
         fileStream << msg << Qt::endl;
     }
 
@@ -136,11 +137,10 @@ int main(int argc, char *argv[])
 
     if (!jsonRequested && parser.isSet(QStringLiteral("log-file"))) {
         const QString logPath = parser.value(QStringLiteral("log-file"));
-        g_logFile = new QFile(logPath);
+        g_logFile = std::make_unique<QFile>(logPath);
         if (!g_logFile->open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Append)) {
             qWarning() << "remus: could not open log file for writing:" << logPath;
-            delete g_logFile;
-            g_logFile = nullptr;
+            g_logFile.reset();
         } else {
             qInstallMessageHandler(logFileTeeMessageHandler);
         }
@@ -236,6 +236,9 @@ int main(int argc, char *argv[])
     if (int rc = handleRvzVerifyCommand(ctx))      return rc;
     if (int rc = handleConvertCsoCommand(ctx))     return rc;
     if (int rc = handleCsoExtractCommand(ctx))     return rc;
+    if (int rc = handleConvertWbfsCommand(ctx))    return rc;
+    if (int rc = handleWbfsExtractCommand(ctx))    return rc;
+    if (int rc = handleExportPBPCommand(ctx))      return rc;
     if (int rc = handleExportCommand(ctx))         return rc;
     if (int rc = handlePatchCommands(ctx))         return rc;
     if (int rc = handleModCommands(ctx))           return rc;

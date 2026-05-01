@@ -201,6 +201,11 @@ namespace Indexes {
 // Default Values & Constraints
 // ============================================================================
 
+namespace Migrations {
+    /// Offset used to temporarily relocate occupied canonical system IDs.
+    inline constexpr int LEGACY_SYSTEM_SLOT_OFFSET = 1000;
+}
+
 /// Maximum filename length
 inline constexpr int MAX_FILENAME_LENGTH = 255;
 

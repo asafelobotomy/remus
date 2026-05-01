@@ -2,6 +2,7 @@
 #include "constants/files.h"
 #include <QFileInfo>
 #include <QDir>
+#include <QTemporaryDir>
 #include <QDebug>
 
 namespace Remus {
@@ -57,6 +58,41 @@ ConversionResult CSOConverter::extractCSOToIso(const QString &csoPath,
          << "-o" << output;
 
     return runToolConversion(m_maxcsoPath, args, "maxcso", csoPath, output);
+}
+
+CSOVerifyResult CSOConverter::verifyCSO(const QString &csoPath)
+{
+    CSOVerifyResult result;
+
+    if (!QFileInfo::exists(csoPath)) {
+        result.error = QStringLiteral("File not found: %1").arg(csoPath);
+        return result;
+    }
+
+    QTemporaryDir tempDir;
+    if (!tempDir.isValid()) {
+        result.error = QStringLiteral("Failed to create temporary directory");
+        return result;
+    }
+
+    QFileInfo info(csoPath);
+    const QString isoPath = tempDir.filePath(info.completeBaseName() + QStringLiteral(".iso"));
+
+    const ConversionResult extraction = extractCSOToIso(csoPath, isoPath);
+    if (!extraction.success) {
+        result.error = extraction.error;
+        return result;
+    }
+
+    QFileInfo isoInfo(isoPath);
+    if (!isoInfo.exists() || isoInfo.size() == 0) {
+        result.error = QStringLiteral("Extracted ISO is missing or empty");
+        return result;
+    }
+
+    result.valid = true;
+    result.isoSize = isoInfo.size();
+    return result;
 }
 
 QList<ConversionResult> CSOConverter::batchConvert(const QStringList &inputPaths,

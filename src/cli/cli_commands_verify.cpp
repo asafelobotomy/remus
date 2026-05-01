@@ -3,6 +3,7 @@
 #include <QFileInfo>
 #include <QFile>
 #include <QRegularExpression>
+#include "../core/constants/files.h"
 #include <QSqlQuery>
 #include "../core/hasher.h"
 #include "../core/verification_engine.h"
@@ -250,6 +251,13 @@ int handleChecksumVerifyCommand(CliContext &ctx)
     if (!fileInfo.exists()) {
         qCritical() << "✗ File not found:" << filePath;
         return 1;
+    }
+
+    const QString ext = QStringLiteral(".") + fileInfo.suffix().toLower();
+    if (Constants::Files::isArchiveExtension(ext)) {
+        qInfo() << "Note: hashing the archive container, not the inner ROM.";
+        qInfo() << "      Use --inner-hash (when available) to hash the ROM inside.";
+        qInfo() << "";
     }
 
     Hasher hasher;

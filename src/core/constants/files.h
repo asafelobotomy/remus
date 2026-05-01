@@ -34,6 +34,8 @@ inline const QString SUB = QStringLiteral(".sub");
 inline const QString CHD = QStringLiteral(".chd");
 inline const QString RVZ = QStringLiteral(".rvz");
 inline const QString CSO = QStringLiteral(".cso");
+inline const QString WBFS = QStringLiteral(".wbfs");
+inline const QString PBP = QStringLiteral(".pbp");
 inline const QString GCM = QStringLiteral(".gcm");
 inline const QString M3U = QStringLiteral(".m3u");
 
@@ -57,8 +59,16 @@ inline const QStringList CSO_SOURCE_EXTENSIONS = {
     ISO
 };
 
+inline const QStringList WBFS_SOURCE_EXTENSIONS = {
+    ISO, GCM
+};
+
+inline const QStringList PBP_SOURCE_EXTENSIONS = {
+    CUE, ISO, M3U
+};
+
 inline const QStringList EXTRACTABLE_DISC_EXTENSIONS = {
-    CHD, RVZ, CSO
+    CHD, RVZ, CSO, WBFS
 };
 
 inline const QStringList ARCHIVE_OPERATION_EXTENSIONS = {
@@ -66,7 +76,7 @@ inline const QStringList ARCHIVE_OPERATION_EXTENSIONS = {
 };
 
 inline const QStringList SPACE_SCAN_EXTENSIONS = {
-    CUE, ISO, GDI, BIN, CHD, RVZ, CSO, GCM
+    CUE, ISO, GDI, BIN, CHD, RVZ, CSO, WBFS, GCM
 };
 
 inline const QStringList M3U_SOURCE_EXTENSIONS = {

@@ -132,6 +132,15 @@ namespace Patch {
     
     /// Backup directory for original files before patching
     inline constexpr const char* BACKUP_SUFFIX = ".backup";
+
+    /// Timeout for fast external patch tools (ips/ppf) in milliseconds.
+    inline constexpr int EXTERNAL_TOOL_TIMEOUT_MS = 60000;
+
+    /// Timeout for medium-size patching operations (bps/ups) in milliseconds.
+    inline constexpr int EXTERNAL_TOOL_LARGE_TIMEOUT_MS = 120000;
+
+    /// Timeout for large disc-image patching operations (xdelta) in milliseconds.
+    inline constexpr int EXTERNAL_TOOL_XDELTA_TIMEOUT_MS = 300000;
 }
 
 // ============================================================================

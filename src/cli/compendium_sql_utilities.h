@@ -12,6 +12,68 @@
 
 namespace CompendiumSqlUtilities {
 
+inline QStringList splitSqlStatements(const QString &content)
+{
+    QStringList statements;
+    QString current;
+    bool inSingleQuote = false;
+    bool inDoubleQuote = false;
+    bool inLineComment = false;
+
+    for (int i = 0; i < content.size(); ++i) {
+        const QChar ch = content.at(i);
+        const QChar next = (i + 1 < content.size()) ? content.at(i + 1) : QChar();
+
+        if (inLineComment) {
+            if (ch == QChar('\n')) {
+                inLineComment = false;
+            }
+            continue;
+        }
+
+        if (!inSingleQuote && !inDoubleQuote && ch == QChar('-') && next == QChar('-')) {
+            inLineComment = true;
+            ++i;
+            continue;
+        }
+
+        if (ch == QChar('\'') && !inDoubleQuote) {
+            current.append(ch);
+            if (inSingleQuote && next == QChar('\'')) {
+                current.append(next);
+                ++i;
+            } else {
+                inSingleQuote = !inSingleQuote;
+            }
+            continue;
+        }
+
+        if (ch == QChar('"') && !inSingleQuote) {
+            inDoubleQuote = !inDoubleQuote;
+            current.append(ch);
+            continue;
+        }
+
+        if (!inSingleQuote && !inDoubleQuote && ch == QChar(';')) {
+            const QString statement = current.trimmed();
+            if (!statement.isEmpty()) {
+                statements.append(statement);
+            }
+            current.clear();
+            continue;
+        }
+
+        current.append(ch);
+    }
+
+    const QString trailing = current.trimmed();
+    if (!trailing.isEmpty()) {
+        statements.append(trailing);
+    }
+
+    return statements;
+}
+
 inline QString reportPathForDatabase(const QString &databasePath)
 {
     QFileInfo info(databasePath);
@@ -27,9 +89,8 @@ inline bool executeSqlScript(QSqlDatabase &database, const QString &path, QStrin
     }
     const QString content = QString::fromUtf8(file.readAll());
 
-    const QStringList statements = content.split(';');
-    for (const QString &rawStatement : statements) {
-        const QString statement = rawStatement.trimmed();
+    const QStringList statements = splitSqlStatements(content);
+    for (const QString &statement : statements) {
         if (statement.isEmpty()) {
             continue;
         }

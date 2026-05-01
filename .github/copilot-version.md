@@ -1,19 +1,19 @@
 <!-- markdownlint-disable-file MD041 -->
-0.8.0
+0.9.0
 Applied: 2026-04-04
-Updated: 2026-04-29
+Updated: 2026-05-01
 <!-- manifest-scope: stable managed files only; .github/copilot-version.md is intentionally excluded because a file cannot hash its own current contents without a recursive convention -->
 <!-- section-fingerprints
-§1=6968b3c9dca1
-§2=888e44079a05
-§3=3df4c5fc9715
-§4=85a2bacd4bc2
-§5=d617aa68ea0f
-§6=5e4e1dec4e2c
-§7=5a7874a61983
-§8=32e73a9d284c
-§9=b83ad4881b78
-§10=716d69ec3d90
+§1=fea16f3c9e99
+§2=41f7d9236e10
+§3=6c0802ff9d0f
+§4=3792e00b3d93
+§5=d7a28629e553
+§6=683bf1bfeb3a
+§7=aff7b76e6ea8
+§8=938deb396149
+§9=ae9e819979f6
+§10=176e3e832823
 §11=24c58d10047e
 §12=3fd00b8f00a5
 §13=6d4fcec491ca
@@ -21,10 +21,10 @@ Updated: 2026-04-29
 -->
 <!-- file-manifest
 .copilot/workspace/workspace-index.json=68582200a649
-.github/agents/audit.agent.md=536e73b95f26
+.github/agents/audit.agent.md=ede54600372a
 .github/agents/cleaner.agent.md=05ddf596ea32
 .github/agents/coding.agent.md=d57bda3421b0
-.github/agents/commit.agent.md=3210cb904e8a
+.github/agents/commit.agent.md=d726bc3157a6
 .github/agents/debugger.agent.md=fab6e1b40d38
 .github/agents/docs.agent.md=cc1491e23eea
 .github/agents/doctor.agent.md=046d44654728
@@ -72,16 +72,22 @@ Updated: 2026-04-29
 .github/instructions/api-routes.instructions.md=bc5f67c87bbf
 .github/instructions/config.instructions.md=18b1ece4aff2
 .github/instructions/docs.instructions.md=27f110fcf0eb
+.github/instructions/plugin-components.instructions.md=587de9faed97
+.github/instructions/plugin.instructions.md=67e69eac2191
+.github/instructions/terminal.instructions.md=48b4a39dafcc
 .github/instructions/tests.instructions.md=f30a0f55a0ca
 .github/prompts/commit-msg.prompt.md=7ba404bd4a5d
 .github/prompts/context-map.prompt.md=023cec4bfe75
 .github/prompts/explain.prompt.md=dea28490a311
+.github/prompts/onboard-commit-style.prompt.md=bcce9e9cf083
+.github/prompts/onboarding.prompt.md=c09a3b3870b9
 .github/prompts/refactor.prompt.md=916980b47710
 .github/prompts/review-file.prompt.md=f6dd8db12760
 .github/prompts/test-gen.prompt.md=0ec94b637003
 .github/skills/accessibility-review/SKILL.md=de3dc13af8e7
 .github/skills/agentic-workflows/SKILL.md=6deaecc96e41
 .github/skills/api-design/SKILL.md=1b420e73b71a
+.github/skills/audit-procedures/SKILL.md=77692e699d55
 .github/skills/changelog-entry/SKILL.md=9cc11b7073bb
 .github/skills/commit-preflight/SKILL.md=5ca8e769deb4
 .github/skills/compress-prose/SKILL.md=add0f358d3c0
@@ -92,6 +98,7 @@ Updated: 2026-04-29
 .github/skills/env-config/SKILL.md=6c8384b1679a
 .github/skills/extension-review/SKILL.md=bb6b79e841e7
 .github/skills/fix-ci-failure/SKILL.md=b58f81ced9df
+.github/skills/git-workflows/SKILL.md=5bda537d8fbc
 .github/skills/issue-triage/SKILL.md=b65720ab9714
 .github/skills/lean-pr-review/SKILL.md=e97298d4e1cd
 .github/skills/mcp-builder/SKILL.md=e57f818acb16
@@ -122,6 +129,6 @@ TYPE_CHECK_COMMAND=cmake --build build 2>&1 | head -30
 THREE_CHECK_COMMAND=cmake --build build && ctest --test-dir build -j$(nproc)
 TEST_FRAMEWORK=Qt Test (CTest)
 SETUP_DATE=2026-04-04
-MCP_STACK_SERVERS=filesystem, git
-MCP_CUSTOM_SERVERS=None
+MCP_STACK_SERVERS=filesystem, git, fetch
+MCP_CUSTOM_SERVERS=heartbeat
 -->

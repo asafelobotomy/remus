@@ -7,6 +7,7 @@
 #include <QTemporaryDir>
 
 #include "../src/metadata/compendium_provider.h"
+#include "../src/core/constants/providers.h"
 
 using namespace Remus;
 
@@ -147,9 +148,11 @@ class CompendiumProviderTest : public QObject
 private slots:
     void getByHashReturnsCanonicalMetadata();
     void searchByNameUsesAliasAndFilters();
+    void searchByNameWithOfficialTitleReturnsSameGame();
     void getBySerialReturnsCanonicalMetadata();
     void getByIdReturnsExternalIds();
     void getArtworkBuildsLibretroThumbnailUrls();
+    void compendiumPriorityExceedsLocalDatabase();
 };
 
 void CompendiumProviderTest::getByHashReturnsCanonicalMetadata()
@@ -223,6 +226,33 @@ void CompendiumProviderTest::getByIdReturnsExternalIds()
              QStringLiteral("G8ME01"));
 }
 
+void CompendiumProviderTest::searchByNameWithOfficialTitleReturnsSameGame()
+{
+    // Searching by official title should resolve the same game as an alias search.
+    // Verifies that both alias types in game_names map to a single result.
+    const QString dbPath = createFixtureDatabase();
+    QVERIFY(!dbPath.isEmpty());
+
+    CompendiumProvider provider;
+    QVERIFY(provider.openDatabase(dbPath));
+
+    const QList<SearchResult> byAlias = provider.searchByName(
+        QStringLiteral("TTYD"),
+        QStringLiteral("GameCube"),
+        QStringLiteral("USA"));
+
+    const QList<SearchResult> byTitle = provider.searchByName(
+        QStringLiteral("Paper Mario: The Thousand-Year Door"),
+        QStringLiteral("GameCube"),
+        QStringLiteral("USA"));
+
+    QCOMPARE(byTitle.size(), 1);
+    QCOMPARE(byTitle.first().id, QStringLiteral("game-1"));
+
+    // Both search paths must yield the same canonical game id.
+    QCOMPARE(byTitle.first().id, byAlias.first().id);
+}
+
 void CompendiumProviderTest::getBySerialReturnsCanonicalMetadata()
 {
     const QString dbPath = createFixtureDatabase();
@@ -259,6 +289,14 @@ void CompendiumProviderTest::getArtworkBuildsLibretroThumbnailUrls()
              QStringLiteral("https://thumbnails.libretro.com/Nintendo - Nintendo GameCube/Named_Snaps/Paper Mario_ The Thousand-Year Door.png"));
     QCOMPARE(artwork.titleScreen.toString(),
              QStringLiteral("https://thumbnails.libretro.com/Nintendo - Nintendo GameCube/Named_Titles/Paper Mario_ The Thousand-Year Door.png"));
+}
+
+void CompendiumProviderTest::compendiumPriorityExceedsLocalDatabase()
+{
+    // Compendium is the highest-priority offline provider; local DAT database
+    // is second. Verify the constants enforce this ordering.
+    QVERIFY(Constants::Providers::Priority::COMPENDIUM
+            > Constants::Providers::Priority::LOCAL_DATABASE);
 }
 
 QTEST_MAIN(CompendiumProviderTest)

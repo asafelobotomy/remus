@@ -81,7 +81,7 @@ Project skills live under `.github/skills/`.
 Use `.github/copilot-version.md` as the canonical inventory during audits.
 
 Installed skills:
-- `accessibility-review`, `agentic-workflows`, `api-design`, `changelog-entry`, `commit-preflight`, `compress-prose`, `conventional-commit`, `create-adr`, `dependency-update`, `docker-scaffold`, `env-config`, `extension-review`, `fix-ci-failure`, `issue-triage`, `lean-pr-review`, `mcp-builder`, `mcp-management`, `onboarding-docs`, `performance-profiling`, `plugin-management`, `refactor-extract`, `security-audit`, `skill-creator`, `skill-management`, `tech-debt-audit`, `test-coverage-review`, `tool-protocol`, `webapp-testing`
+- `accessibility-review`, `agentic-workflows`, `api-design`, `audit-procedures`, `changelog-entry`, `commit-preflight`, `compress-prose`, `conventional-commit`, `create-adr`, `dependency-update`, `docker-scaffold`, `env-config`, `extension-review`, `fix-ci-failure`, `git-workflows`, `issue-triage`, `lean-pr-review`, `mcp-builder`, `mcp-management`, `onboarding-docs`, `performance-profiling`, `plugin-management`, `refactor-extract`, `security-audit`, `skill-creator`, `skill-management`, `tech-debt-audit`, `test-coverage-review`, `tool-protocol`, `webapp-testing`
 
 ## Compatibility Notes
 

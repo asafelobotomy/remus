@@ -95,6 +95,8 @@
     "commit-msg.prompt.md",
     "context-map.prompt.md",
     "explain.prompt.md",
+    "onboard-commit-style.prompt.md",
+    "onboarding.prompt.md",
     "refactor.prompt.md",
     "review-file.prompt.md",
     "test-gen.prompt.md"
@@ -103,6 +105,9 @@
     "api-routes.instructions.md",
     "config.instructions.md",
     "docs.instructions.md",
+    "plugin-components.instructions.md",
+    "plugin.instructions.md",
+    "terminal.instructions.md",
     "tests.instructions.md"
   ],
   "workspaceFiles": [

@@ -198,6 +198,8 @@ public:
      */
     bool hasPatchDat(const QString &systemName);
 
+    bool createVerificationSchema();
+
 signals:
     void verificationProgress(int current, int total, const QString &currentFile);
     void datImportProgress(int current, int total);
@@ -213,8 +215,7 @@ private:
     QMap<QString, QMap<QString, DatRomEntry>> m_datCache;  // system -> (hash -> entry)
     QMap<QString, QString> m_datHashTypes;                  // system -> preferred hash type
     QMap<QString, QMap<QString, DatRomEntry>> m_patchDatCache;  // system -> (hash -> entry)
-    
-    bool createVerificationSchema();
+
     void loadDatCache(const QString &systemName);
     void loadPatchDatCache(const QString &systemName);
     QString getPreferredHashType(const QString &systemName);

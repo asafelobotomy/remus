@@ -1,6 +1,7 @@
 # Build artifacts
 build/
 build-*/
+/build_output.txt
 *.o
 *.so
 *.a
@@ -97,6 +98,22 @@ data/compendium/*.report.json
 test_roms/
 test_library/
 rom_tests/
+
+# Spurious workspace files (shell dotfiles / IDE configs / stray ROM files)
+/.bash_profile
+/.bashrc
+/.profile
+/.zprofile
+/.zshrc
+/.gitconfig
+/.ripgreprc
+/.mcp.json
+/.gitmodules
+/.claude/
+/.idea
+# Stray ROM files at repo root
+/Super Mario World*
+/Super Metroid*
 
 # Extracted ROM/game output directories (can appear anywhere)
 **/extracted/

@@ -2,6 +2,7 @@
 #define REMUS_HASH_SERVICE_H
 
 #include <functional>
+#include <memory>
 #include <QString>
 #include <QList>
 
@@ -58,7 +59,7 @@ public:
     HashResult hashRecord(const FileRecord &file);
 
 private:
-    Hasher *m_hasher = nullptr;
+    std::unique_ptr<Hasher> m_hasher;
 };
 
 } // namespace Remus

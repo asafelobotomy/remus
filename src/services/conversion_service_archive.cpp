@@ -61,7 +61,7 @@ ExtractionResult ConversionService::extractArchive(const QString &archivePath,
 
     QMetaObject::Connection conn;
     if (progressCb) {
-        conn = QObject::connect(m_archiveExtractor, &ArchiveExtractor::extractionProgress,
+        conn = QObject::connect(m_archiveExtractor.get(), &ArchiveExtractor::extractionProgress,
             [&](int pct, const QString &info) { progressCb(pct, info); });
     }
 
@@ -115,7 +115,7 @@ CompressionResult ConversionService::compressToArchive(const QStringList &inputP
 {
     QMetaObject::Connection conn;
     if (progressCb) {
-        conn = QObject::connect(m_archiveCreator, &ArchiveCreator::compressionProgress,
+        conn = QObject::connect(m_archiveCreator.get(), &ArchiveCreator::compressionProgress,
             [&](int pct, const QString &info) { progressCb(pct, info); });
     }
 
@@ -132,7 +132,7 @@ QList<CompressionResult> ConversionService::batchCompressToArchive(const QString
 {
     QMetaObject::Connection conn;
     if (progressCb) {
-        conn = QObject::connect(m_archiveCreator, &ArchiveCreator::compressionProgress,
+        conn = QObject::connect(m_archiveCreator.get(), &ArchiveCreator::compressionProgress,
             [&](int pct, const QString &info) { progressCb(pct, info); });
     }
 

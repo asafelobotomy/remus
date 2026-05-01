@@ -4,6 +4,7 @@
 #include <QDir>
 #include <QFileInfo>
 #include <QSettings>
+#include <memory>
 
 #include "../metadata/compendium_provider.h"
 #include "../metadata/gametdb_provider.h"
@@ -68,55 +69,56 @@ std::unique_ptr<ProviderOrchestrator> buildOrchestrator(const QCommandLineParser
     auto orchestrator = std::make_unique<ProviderOrchestrator>();
 
     if (db) {
-        auto *cache = new MetadataCache(db->database(), orchestrator.get());
-        orchestrator->setCache(cache);
+        auto cache = std::make_unique<MetadataCache>(db->database(), orchestrator.get());
+        orchestrator->setCache(cache.get());
+        cache.release();
     }
 
     const QString compendiumDir = findDataSubdir(QStringLiteral("compendium"));
     if (!compendiumDir.isEmpty()) {
         const QString compendiumPath = QDir(compendiumDir).filePath(QStringLiteral("remus_compendium.db"));
         if (QFileInfo::exists(compendiumPath)) {
-            auto *compendiumProvider = new CompendiumProvider();
+            auto compendiumProvider = std::make_unique<CompendiumProvider>();
             if (compendiumProvider->openDatabase(compendiumPath)) {
                 const auto compendiumInfo = Providers::getProviderInfo(Providers::COMPENDIUM);
-                orchestrator->addProvider(Providers::COMPENDIUM, compendiumProvider,
+                orchestrator->addProvider(Providers::COMPENDIUM, compendiumProvider.get(),
                                           compendiumInfo ? compendiumInfo->priority : 180);
-            } else {
-                delete compendiumProvider;
+                compendiumProvider.release();
             }
         }
     }
 
-    auto hasheousProvider = new HasheousProvider();
+    auto hasheousProvider = std::make_unique<HasheousProvider>();
     const auto hasheousInfo = Providers::getProviderInfo(Providers::HASHEOUS);
-    orchestrator->addProvider(Providers::HASHEOUS, hasheousProvider,
+    orchestrator->addProvider(Providers::HASHEOUS, hasheousProvider.get(),
                               hasheousInfo ? hasheousInfo->priority : 80);
+    hasheousProvider.release();
 
     if (parser.isSet("ss-user") && parser.isSet("ss-pass")) {
-        auto ssProvider = new ScreenScraperProvider();
+        auto ssProvider = std::make_unique<ScreenScraperProvider>();
         ssProvider->setCredentials(parser.value("ss-user"), parser.value("ss-pass"));
         if (parser.isSet("ss-devid") && parser.isSet("ss-devpass")) {
             ssProvider->setDeveloperCredentials(parser.value("ss-devid"), parser.value("ss-devpass"));
         }
         const auto ssInfo = Providers::getProviderInfo(Providers::SCREENSCRAPER);
-        orchestrator->addProvider(Providers::SCREENSCRAPER, ssProvider,
+        orchestrator->addProvider(Providers::SCREENSCRAPER, ssProvider.get(),
                                   ssInfo ? ssInfo->priority : 90);
+        ssProvider.release();
     }
 
     const QString gametdbDir = findGameTDBDir();
     if (!gametdbDir.isEmpty()) {
-        auto gametdbProvider = new GameTDBProvider();
+        auto gametdbProvider = std::make_unique<GameTDBProvider>();
         const int gametdbLoaded = gametdbProvider->loadDatabases(gametdbDir);
         if (gametdbLoaded > 0) {
             const auto gametdbInfo = Providers::getProviderInfo(Providers::GAMETDB);
-            orchestrator->addProvider(Providers::GAMETDB, gametdbProvider,
+            orchestrator->addProvider(Providers::GAMETDB, gametdbProvider.get(),
                                       gametdbInfo ? gametdbInfo->priority : 150);
-        } else {
-            delete gametdbProvider;
+            gametdbProvider.release();
         }
     }
 
-    auto tgdbProvider = new TheGamesDBProvider();
+    auto tgdbProvider = std::make_unique<TheGamesDBProvider>();
     const QString tgdbApiKey = parserOrSetting(parser,
                                                QStringLiteral("tgdb-api-key"),
                                                Settings::Providers::THEGAMESDB_API_KEY);
@@ -124,8 +126,9 @@ std::unique_ptr<ProviderOrchestrator> buildOrchestrator(const QCommandLineParser
         tgdbProvider->setApiKey(tgdbApiKey);
     }
     const auto tgdbInfo = Providers::getProviderInfo(Providers::THEGAMESDB);
-    orchestrator->addProvider(Providers::THEGAMESDB, tgdbProvider,
+    orchestrator->addProvider(Providers::THEGAMESDB, tgdbProvider.get(),
                               tgdbInfo ? tgdbInfo->priority : 50);
+    tgdbProvider.release();
 
     const QString igdbClientId = parserOrSetting(parser,
                                                  QStringLiteral("igdb-client-id"),
@@ -134,11 +137,12 @@ std::unique_ptr<ProviderOrchestrator> buildOrchestrator(const QCommandLineParser
                                                      QStringLiteral("igdb-client-secret"),
                                                      Settings::Providers::IGDB_CLIENT_SECRET);
     if (!igdbClientId.isEmpty() && !igdbClientSecret.isEmpty()) {
-        auto igdbProvider = new IGDBProvider();
+        auto igdbProvider = std::make_unique<IGDBProvider>();
         igdbProvider->setCredentials(igdbClientId, igdbClientSecret);
         const auto igdbInfo = Providers::getProviderInfo(Providers::IGDB);
-        orchestrator->addProvider(Providers::IGDB, igdbProvider,
+        orchestrator->addProvider(Providers::IGDB, igdbProvider.get(),
                                   igdbInfo ? igdbInfo->priority : 70);
+        igdbProvider.release();
     }
 
     const QString raUsername = parserOrSetting(parser,
@@ -148,17 +152,19 @@ std::unique_ptr<ProviderOrchestrator> buildOrchestrator(const QCommandLineParser
                                              QStringLiteral("ra-api-key"),
                                              Settings::Providers::RETROACHIEVEMENTS_API_KEY);
     if (!raUsername.isEmpty() && !raApiKey.isEmpty()) {
-        auto raProvider = new RetroAchievementsProvider();
+        auto raProvider = std::make_unique<RetroAchievementsProvider>();
         raProvider->setCredentials(raUsername, raApiKey);
         const auto raInfo = Providers::getProviderInfo(Providers::RETROACHIEVEMENTS);
-        orchestrator->addProvider(Providers::RETROACHIEVEMENTS, raProvider,
+        orchestrator->addProvider(Providers::RETROACHIEVEMENTS, raProvider.get(),
                                   raInfo ? raInfo->priority : 60);
+        raProvider.release();
     }
 
-    auto wikidataProvider = new WikidataProvider();
+    auto wikidataProvider = std::make_unique<WikidataProvider>();
     const auto wdInfo = Providers::getProviderInfo(Providers::WIKIDATA);
-    orchestrator->addProvider(Providers::WIKIDATA, wikidataProvider,
+    orchestrator->addProvider(Providers::WIKIDATA, wikidataProvider.get(),
                               wdInfo ? wdInfo->priority : 40);
+    wikidataProvider.release();
 
     return orchestrator;
 }

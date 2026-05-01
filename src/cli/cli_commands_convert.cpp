@@ -4,6 +4,8 @@
 #include <QFileInfo>
 #include "../core/rvz_converter.h"
 #include "../core/cso_converter.h"
+#include "../core/wbfs_converter.h"
+#include "../core/pbp_exporter.h"
 #include "../core/constants/files.h"
 #include "../core/space_calculator.h"
 #include "cli_logging.h"
@@ -203,5 +205,128 @@ int handleCsoExtractCommand(CliContext &ctx)
         qCritical() << "✗ Extraction failed:" << result.error;
         return 1;
     }
+    return 0;
+}
+
+int handleConvertWbfsCommand(CliContext &ctx)
+{
+    if (!ctx.parser.isSet("convert-wbfs")) return 0;
+
+    const QString inputPath = ctx.parser.value("convert-wbfs");
+    const QString outputDir = ctx.parser.value("output-dir");
+
+    qInfo() << "";
+    qInfo() << "=== Convert ISO to WBFS ===";
+    qInfo() << "Input:" << inputPath;
+
+    WBFSConverter converter;
+    if (!converter.isWitAvailable()) {
+        qCritical() << "✗ wit not found. Install wiimms-iso-tools package";
+        return 1;
+    }
+    qInfo() << "wit version:" << converter.getWitVersion();
+
+    QFileInfo info(inputPath);
+    const QString ext = QStringLiteral(".") + info.suffix().toLower();
+    if (!Remus::Constants::Files::containsExtension(Remus::Constants::Files::WBFS_SOURCE_EXTENSIONS, ext)) {
+        qCritical() << "✗ Unsupported format:" << ext;
+        qInfo() << "Supported formats: .iso, .gcm";
+        return 1;
+    }
+
+    QString outputPath = buildOutputPath(inputPath, outputDir, "wbfs");
+
+    qInfo() << "Output:" << outputPath;
+    qInfo() << "";
+
+    if (ctx.dryRunAll) {
+        qInfo() << "[DRY-RUN] Would convert" << inputPath << "to" << outputPath;
+        return 0;
+    }
+
+    ConversionResult result = converter.convertIsoToWbfs(inputPath, outputPath);
+    if (!printConversionResult(result, "WBFS")) return 1;
+    return 0;
+}
+
+int handleWbfsExtractCommand(CliContext &ctx)
+{
+    if (!ctx.parser.isSet("wbfs-extract")) return 0;
+
+    const QString wbfsPath  = ctx.parser.value("wbfs-extract");
+    const QString outputDir = ctx.parser.value("output-dir");
+
+    qInfo() << "";
+    qInfo() << "=== Extract WBFS to ISO ===";
+    qInfo() << "Input:" << wbfsPath;
+
+    WBFSConverter converter;
+    if (!converter.isWitAvailable()) {
+        qCritical() << "✗ wit not found. Install wiimms-iso-tools package";
+        return 1;
+    }
+
+    QFileInfo info(wbfsPath);
+    QString outputPath = buildOutputPath(wbfsPath, outputDir, "iso");
+
+    qInfo() << "Output:" << outputPath;
+    qInfo() << "";
+
+    if (ctx.dryRunAll) {
+        qInfo() << "[DRY-RUN] Would extract" << wbfsPath << "to" << outputPath;
+        return 0;
+    }
+
+    ConversionResult result = converter.extractWbfsToIso(wbfsPath, outputPath);
+    if (result.success) {
+        qInfo() << "✓ Extraction successful!";
+        qInfo() << "  Extracted to:" << outputPath;
+    } else {
+        qCritical() << "✗ Extraction failed:" << result.error;
+        return 1;
+    }
+    return 0;
+}
+
+int handleExportPBPCommand(CliContext &ctx)
+{
+    if (!ctx.parser.isSet("export-pbp")) return 0;
+
+    const QString inputPath = ctx.parser.value("export-pbp");
+    const QString outputDir = ctx.parser.value("output-dir");
+
+    qInfo() << "";
+    qInfo() << "=== Export PS1 to PBP ===";
+    qInfo() << "Input:" << inputPath;
+    qInfo() << "Note: PBP is an export-only format. Source files are not modified.";
+
+    PBPExporter exporter;
+    if (!exporter.isPSXPackagerAvailable()) {
+        qCritical() << "✗ PSXPackager not found. Install PSXPackager from";
+        qCritical() << "  https://github.com/nicholasstephan/psxpackager";
+        return 1;
+    }
+    qInfo() << "PSXPackager version:" << exporter.getPSXPackagerVersion();
+
+    QFileInfo info(inputPath);
+    const QString ext = QStringLiteral(".") + info.suffix().toLower();
+    if (!Remus::Constants::Files::containsExtension(Remus::Constants::Files::PBP_SOURCE_EXTENSIONS, ext)) {
+        qCritical() << "✗ Unsupported format:" << ext;
+        qInfo() << "Supported formats: .cue, .iso, .m3u";
+        return 1;
+    }
+
+    QString outputPath = buildOutputPath(inputPath, outputDir, "pbp");
+
+    qInfo() << "Output:" << outputPath;
+    qInfo() << "";
+
+    if (ctx.dryRunAll) {
+        qInfo() << "[DRY-RUN] Would export" << inputPath << "to" << outputPath;
+        return 0;
+    }
+
+    ConversionResult result = exporter.exportToPBP(inputPath, outputPath);
+    if (!printConversionResult(result, "PBP")) return 1;
     return 0;
 }

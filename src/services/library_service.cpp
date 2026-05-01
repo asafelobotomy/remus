@@ -47,16 +47,14 @@ QString fileRecordIdentifier(const FileRecord &record)
 }
 
 LibraryService::LibraryService()
-    : m_scanner(new Scanner())
-    , m_detector(new SystemDetector())
+    : m_scanner(std::make_unique<Scanner>())
+    , m_detector(std::make_unique<SystemDetector>())
 {
     m_scanner->setExtensions(m_detector->getAllExtensions());
 }
 
 LibraryService::~LibraryService()
 {
-    delete m_scanner;
-    delete m_detector;
 }
 
 int LibraryService::scan(const QString &path, Database *db,
@@ -73,9 +71,9 @@ int LibraryService::scan(const QString &path, Database *db,
     // Wire scanner signals to callbacks (direct connections, same thread)
     QMetaObject::Connection progConn, fileConn;
     if (progressCb) {
-        progConn = QObject::connect(m_scanner, &Scanner::scanProgress,
+        progConn = QObject::connect(m_scanner.get(), &Scanner::scanProgress,
             [&](int done, int total) { progressCb(done, total, {}); });
-        fileConn = QObject::connect(m_scanner, &Scanner::fileFound,
+        fileConn = QObject::connect(m_scanner.get(), &Scanner::fileFound,
             [&](const QString &p) { progressCb(0, 0, p); });
     }
 

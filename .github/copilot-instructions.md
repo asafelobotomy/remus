@@ -1,6 +1,6 @@
 # Copilot Instructions — Remus
 
-> **Template version**: 0.8.0 <!-- x-release-please-version --> | **Applied**: 2026-04-04
+> **Template version**: 0.9.0 <!-- x-release-please-version --> | **Applied**: 2026-04-04
 > Living document — self-edit rules in §8.
 >
 > **Models**: each `.github/agents/*.agent.md` pins its model. Codex models are headless-only (no interactive prompts). See [model comparison](https://docs.github.com/en/copilot/reference/ai-models/model-comparison).
@@ -50,10 +50,23 @@
 
 Apply to every non-trivial change.
 
-**Plan**: State the goal. List the files that will change. Estimate LOC delta.
+**Plan**: State the goal. List the files that will change. Estimate LOC delta. For non-trivial tasks that span multiple files or introduce new behaviour, write a brief requirements summary before coding. Realign before proceeding if that summary changes the plan.
 **Do**: Implement. Write tests alongside code, not after.
-**Check**: Run \`ctest --test-dir build -j$(nproc)\`. Review output. Fix before proceeding.
+**Check**: During intermediate phases or multi-part tasks, run the narrowest deterministic targeted suites for the touched paths when available. Run `ctest --test-dir build -j$(nproc)` only when the selector or blast radius indicates a full-suite gate is warranted for broad or high-risk work. Review output. Fix before proceeding.
 **Act**: If baseline exceeded, address it now. Summarise what changed.
+
+### Test Scope Policy
+
+| Tier | Meaning | Use when |
+|------|---------|----------|
+| `PathTargeted` | Narrow deterministic checks mapped to touched paths | Default during intermediate work |
+| `AffectedSuite` | Broader checks for shared helpers or broad contract surfaces | Path-targeted coverage is too narrow |
+| `FullSuite` | Entire local test suite | Broad multi-surface change or final gate |
+| `MergeGate` | Verified state required before merge, release, or final handoff | Change is ready to leave the working session |
+
+- During intermediate phases, prefer deterministic path-based targeted suites tied to the files or directories actually touched.
+- Broaden early when changes touch shared helpers, broad policy surfaces, or any area without a reliable targeted test mapping.
+- Final gate: run `ctest --test-dir build -j$(nproc)` before marking the full task complete for broad or high-risk changes.
 
 ### Structured Thinking Discipline
 
@@ -80,11 +93,13 @@ loop traps and wasted tokens:
 - **Monotonic progress**: each step must produce new information or new output.
   If a step produces nothing new, skip it and move to the next.
 - **Scope lock**: once Plan is set, do not expand scope mid-task. If new work
-  is discovered, note it for a follow-up task.
+  is discovered, note it for a follow-up task. Each new user message establishes
+  a fresh scope; a prior plan does not carry forward unless the user explicitly
+  continues it. Apply the adjacent-work test: "Is this change strictly necessary
+  for the stated request to succeed?" Useful and related do not pass this test.
 - **Time-box exploration**: limit exploratory searches to 5 tool calls per
   sub-question. If the answer is not found, surface the gap to the user.
 
-<!-- update-note: template updated to v0.8.0 but user-modified, preserved -->
 
 ---
 
@@ -111,8 +126,7 @@ loop traps and wasted tokens:
 - Imports are grouped: stdlib → third-party → internal. One blank line between groups.
 - Functions do one thing. If you need "and" in the name, split it.
 - Read before claiming — never describe, reference, or modify a file not opened this session.
-  \`semantic_search\` or \`grep_search\` confirms existence; reading the file confirms content.
-
+  \`semantic_search\` or \`grep_search\` confirms existence; reading the file confirms content.**Terminal discipline**: See `.github/instructions/terminal.instructions.md`. Key rule: never mutate the persistent terminal session's shell state with strict-mode commands.
 ---
 
 ## §5 — Operating Modes
@@ -122,8 +136,12 @@ Switch modes explicitly. Default is **Implement**.
 ### Implement Mode (default)
 
 - Plan → implement → test → document in one uninterrupted flow.
-- Full PDCA for every non-trivial change.
-- Three-check ritual before marking a task complete.
+
+Three-check ritual before marking a full task complete end-to-end:
+
+1. `cmake --build build && ctest --test-dir build -j$(nproc)` — Must pass before the full task is done.
+2. Documentation updated (README, CHANGELOG, inline).
+3. Smoke test manually if meaningful UI/API changed.
 
 ### Review Mode
 
@@ -154,7 +172,6 @@ For deeper audits, activate the matching skill (§12) instead of expanding §5:
 - Produce a task breakdown before writing code.
 - Estimate complexity (S/M/L/XL). Flag anything XL for decomposition.
 
-<!-- update-note: template updated to v0.8.0 but user-modified, preserved -->
 
 ---
 
@@ -185,7 +202,7 @@ Copilot may edit this file when patterns stabilise. Rules:
 2. **Additive by default** — append to sections; don't restructure them.
 3. **Flag before writing** — describe the change and wait for confirmation on edits to §1–§7.
 4. **Self-update trigger phrases**: "Add this to your instructions", "Remember this for next time" — these add a convention to this file.
-5. **Template updates**: When the user says **"Update your instructions"** (or any variant listed in the Canonical triggers table of \`AGENTS.md\`), this means: follow [UPDATE.md](/home/solon/Documents/git/remus/UPDATE.md), which mirrors the upstream template protocol, then fetch the latest upstream version data as part of that flow. This is not a request to make arbitrary edits — it is specifically a check-for-upstream-updates command.
+5. **Template updates**: When the user says **"Update your instructions"** (or any variant listed in the Canonical triggers table of `AGENTS.md`), this means: run the update protocol via the Setup agent. The template is delivered as a VS Code Agent Plugin — updates are applied locally from the installed plugin version, not fetched from a remote URL. This is not a request to make arbitrary edits — it is specifically a check-for-upstream-updates command.
 
 ### Attention Budget
 
@@ -237,7 +254,6 @@ Hook configuration lives in \`.github/hooks/copilot-hooks.json\`. VS Code suppor
 | \`SubagentStart\` | \`subagent-start.sh\` | Inject governance context when a subagent spawns |
 | \`SubagentStop\` | \`subagent-stop.sh\` | Log subagent completion and prompt result review |
 
-<!-- update-note: template updated to v0.8.0 but user-modified, preserved -->
 
 ---
 
@@ -264,7 +280,6 @@ When spawning subagents:
 
 GitHub organizations can publish shared agents via a \`.github-private\` repository with an \`agents/\` directory. These run alongside project-level agents. When both exist, project-level agents take precedence for same-name conflicts. The \`organizationCustomAgents.enabled\` VS Code setting must be on for org agents to load. See the **skill-management** skill for the full scope hierarchy.
 
-<!-- update-note: template updated to v0.8.0 but user-modified, preserved -->
 
 ---
 
@@ -299,8 +314,8 @@ Resolved values and project-specific overrides. Populated during setup; updated 
 | \`SETUP_DATE\` | 2026-02-19 |
 | \`SKILL_SEARCH_PREFERENCE\` | local-only |
 | \`TRUST_OVERRIDES\` | Use defaults |
-| \`MCP_STACK_SERVERS\` | filesystem, git |
-| \`MCP_CUSTOM_SERVERS\` | None |
+| \`MCP_STACK_SERVERS\` | filesystem, git, fetch |
+| \`MCP_CUSTOM_SERVERS\` | heartbeat |
 
 </project_config>
 

@@ -2,6 +2,7 @@
 #define REMUS_PATCH_SERVICE_H
 
 #include <functional>
+#include <memory>
 #include <QString>
 #include <QStringList>
 #include <QMap>
@@ -125,10 +126,10 @@ public:
     /**
      * @brief Access underlying PatchEngine (for advanced use)
      */
-    PatchEngine *engine() { return m_engine; }
+    PatchEngine *engine() { return m_engine.get(); }
 
 private:
-    PatchEngine *m_engine = nullptr;
+    std::unique_ptr<PatchEngine> m_engine;
 };
 
 } // namespace Remus

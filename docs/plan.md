@@ -2,13 +2,13 @@
 
 ## Build the current product
 
-Remus is a CLI-first retro library manager. The active product scans ROM libraries, identifies content with offline and online metadata providers, verifies files against DAT data, applies patches, and organizes outputs safely.
+Remus is a retro library manager with shared CLI and Qt Quick GUI frontends. The active product scans ROM libraries, identifies content with offline and online metadata providers, verifies files against DAT data, applies patches, and organizes outputs safely.
 
-GUI and TUI code remain in the repository as archived frontends. They are not part of the default build, CI, or release path. See [archive/FRONTEND-STATUS.md](archive/FRONTEND-STATUS.md).
+The active build includes `remus-cli` and `remus-gui`. The legacy TUI remains archived under `archive/gui-tui/`.
 
 ## Keep the current stack
 
-- Interface: Qt 6 CLI application
+- Interface: Qt 6 CLI application plus Qt Quick desktop GUI
 - Core: C++17
 - Database: SQLite
 - Networking: QtNetwork
@@ -31,7 +31,7 @@ Historical milestone reports remain in [milestones/README.md](milestones/README.
 
 Near-term priorities:
 - Keep archive, patch, and mod workflows safe at trust boundaries.
-- Keep documentation aligned with the CLI-only build and the shipped commands.
+- Keep documentation aligned with the shipped CLI and GUI surfaces.
 - Improve release hygiene, including build and test ergonomics.
 - Expand targeted regression coverage when a bug fix changes control flow or file handling.
 

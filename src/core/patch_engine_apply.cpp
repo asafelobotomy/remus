@@ -1,4 +1,5 @@
 #include "patch_engine.h"
+#include "constants/constants.h"
 #include <QFile>
 #include <QFileInfo>
 #include <QProcess>
@@ -44,7 +45,7 @@ PatchResult PatchEngine::applyIPS(const QString &basePath, const QString &patchP
     process.setArguments({"--apply", patchPath, basePath, outputPath});
     
     process.start();
-    process.waitForFinished(60000);  // 60 second timeout
+    process.waitForFinished(Constants::Engines::Patch::EXTERNAL_TOOL_TIMEOUT_MS);
 
     if (process.exitCode() == 0) {
         result.success = true;
@@ -170,7 +171,7 @@ PatchResult PatchEngine::applyBPS(const QString &basePath, const QString &patchP
     process.setArguments({"--apply", patchPath, basePath, outputPath});
     
     process.start();
-    process.waitForFinished(120000);  // 2 minute timeout for larger patches
+    process.waitForFinished(Constants::Engines::Patch::EXTERNAL_TOOL_LARGE_TIMEOUT_MS);
 
     if (process.exitCode() == 0) {
         result.success = true;
@@ -204,7 +205,7 @@ PatchResult PatchEngine::applyXDelta(const QString &basePath, const QString &pat
     process.setArguments({"-d", "-s", basePath, patchPath, outputPath});
     
     process.start();
-    process.waitForFinished(300000);  // 5 minute timeout for large disc images
+    process.waitForFinished(Constants::Engines::Patch::EXTERNAL_TOOL_XDELTA_TIMEOUT_MS);
 
     if (process.exitCode() == 0) {
         result.success = true;
@@ -242,7 +243,7 @@ PatchResult PatchEngine::applyPPF(const QString &basePath, const QString &patchP
     process.setArguments({patchPath, outputPath});
 
     process.start();
-    process.waitForFinished(60000);
+    process.waitForFinished(Constants::Engines::Patch::EXTERNAL_TOOL_TIMEOUT_MS);
 
     if (process.exitCode() == 0) {
         result.success = true;

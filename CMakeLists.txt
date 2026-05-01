@@ -59,7 +59,7 @@ if(NOT COMMAND _qt_internal_should_include_targets)
 endif()
 
 # Find Qt6
-find_package(Qt6 REQUIRED COMPONENTS Core Sql Network Concurrent Gui)
+find_package(Qt6 REQUIRED COMPONENTS Core Sql Network Concurrent Gui Quick Qml QuickControls2 QuickLayouts)
 
 # Find zlib for CRC32 hashing
 find_package(ZLIB REQUIRED)
@@ -72,6 +72,9 @@ add_subdirectory(src/metadata)
 
 # Services library (shared business logic)
 add_subdirectory(src/services)
+
+# GUI executable
+add_subdirectory(src/gui)
 
 # CLI executable
 set(REMUS_CLI_SOURCES

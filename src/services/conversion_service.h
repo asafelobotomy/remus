@@ -2,6 +2,7 @@
 #define REMUS_CONVERSION_SERVICE_H
 
 #include <functional>
+#include <memory>
 #include <QString>
 #include <QStringList>
 #include <QList>
@@ -29,7 +30,7 @@ public:
     using LogCallback      = std::function<void(const QString &message)>;
 
     ConversionService();
-    ~ConversionService();
+    ~ConversionService() = default;
 
     // ── CHD Conversion ────────────────────────────────────
 
@@ -224,27 +225,27 @@ public:
     /**
      * @brief Access underlying CHDConverter (for advanced use)
      */
-    CHDConverter *chdConverter() { return m_chdConverter; }
+    CHDConverter *chdConverter() { return m_chdConverter.get(); }
 
     /**
      * @brief Access underlying ArchiveExtractor
      */
-    ArchiveExtractor *archiveExtractor() { return m_archiveExtractor; }
+    ArchiveExtractor *archiveExtractor() { return m_archiveExtractor.get(); }
 
     /**
      * @brief Access underlying ArchiveCreator
      */
-    ArchiveCreator *archiveCreator() { return m_archiveCreator; }
+    ArchiveCreator *archiveCreator() { return m_archiveCreator.get(); }
 
-    RVZConverter *rvzConverter() { return m_rvzConverter; }
-    CSOConverter *csoConverter() { return m_csoConverter; }
+    RVZConverter *rvzConverter() { return m_rvzConverter.get(); }
+    CSOConverter *csoConverter() { return m_csoConverter.get(); }
 
 private:
-    CHDConverter     *m_chdConverter     = nullptr;
-    RVZConverter     *m_rvzConverter     = nullptr;
-    CSOConverter     *m_csoConverter     = nullptr;
-    ArchiveExtractor *m_archiveExtractor = nullptr;
-    ArchiveCreator   *m_archiveCreator   = nullptr;
+    std::unique_ptr<CHDConverter> m_chdConverter;
+    std::unique_ptr<RVZConverter> m_rvzConverter;
+    std::unique_ptr<CSOConverter> m_csoConverter;
+    std::unique_ptr<ArchiveExtractor> m_archiveExtractor;
+    std::unique_ptr<ArchiveCreator> m_archiveCreator;
 };
 
 } // namespace Remus

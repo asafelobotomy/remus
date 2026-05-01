@@ -4,7 +4,7 @@
 
 ### Required Dependencies
 - **CMake** >= 3.16
-- **Qt 6 base development files** (Core, Gui, Sql, Network, Concurrent)
+- **Qt 6 development files** (Core, Gui, Sql, Network, Concurrent, Quick, QML, Quick Controls 2, Quick Layouts)
 - **C++17** compatible compiler (GCC 7+, Clang 5+, MSVC 2017+)
 - **zlib** (for CRC32 calculation)
 
@@ -13,17 +13,17 @@
 #### Ubuntu/Debian
 ```bash
 sudo apt update
-sudo apt install build-essential cmake qt6-base-dev qt6-base-dev-tools libqt6sql6-sqlite zlib1g-dev
+sudo apt install build-essential cmake qt6-base-dev qt6-base-dev-tools qt6-declarative-dev libqt6sql6-sqlite zlib1g-dev
 ```
 
 #### Fedora
 ```bash
-sudo dnf install cmake qt6-qtbase-devel qt6-qtbase-private-devel zlib-devel gcc-c++
+sudo dnf install cmake qt6-qtbase-devel qt6-qtbase-private-devel qt6-qtdeclarative-devel zlib-devel gcc-c++
 ```
 
 #### Arch Linux
 ```bash
-sudo pacman -S cmake qt6-base zlib gcc
+sudo pacman -S cmake qt6-base qt6-declarative zlib gcc
 ```
 
 ## Building from Source
@@ -44,7 +44,7 @@ cd build
 cmake -S .. -B .
 ```
 
-The default configure builds the CLI only. GUI and TUI code has been archived to `archive/gui-tui/` and is not part of the default build, CI, or release path.
+The default configure builds both `remus-cli` and `remus-gui`. The legacy TUI remains archived under `archive/gui-tui/` and is not part of the active build.
 
 #### Optional build acceleration flags
 ```bash
@@ -92,14 +92,19 @@ cmake --build . -j$(nproc)
 ```
 
 ### 5. Verify build
+
 ```bash
 ./remus-cli --version
+./src/gui/remus-gui
 ```
 
 Expected output:
-```
+
+```text
 remus-cli 0.1.0
 ```
+
+The GUI launches the Qt Quick shell with views for library browsing, scan/hash workflows, metadata matching, artwork, DAT management, verification, organization, conversion, patching, mods, and settings.
 
 ### 6. Package a CLI release archive
 

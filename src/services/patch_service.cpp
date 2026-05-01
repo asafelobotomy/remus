@@ -6,13 +6,12 @@
 namespace Remus {
 
 PatchService::PatchService()
-    : m_engine(new PatchEngine())
+    : m_engine(std::make_unique<PatchEngine>())
 {
 }
 
 PatchService::~PatchService()
 {
-    delete m_engine;
 }
 
 // ── Patch Detection ─────────────────────────────────────────
@@ -74,7 +73,7 @@ PatchResult PatchService::apply(const QString &basePath,
     // Wire progress callback
     QMetaObject::Connection conn;
     if (progressCb) {
-        conn = QObject::connect(m_engine, &PatchEngine::patchProgress,
+        conn = QObject::connect(m_engine.get(), &PatchEngine::patchProgress,
             [&](int pct) { progressCb(pct); });
     }
 

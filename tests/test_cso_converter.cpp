@@ -5,6 +5,7 @@
 #include <QFileInfo>
 
 #include "../src/core/cso_converter.h"
+#include "../src/core/external_tool_runner.h"
 
 using namespace Remus;
 
@@ -18,6 +19,7 @@ bool writeAll(QFile &file, const QByteArray &data)
 class FakeCsoConverter : public CSOConverter
 {
 public:
+    using ProcessResult = ExternalToolRunner::ProcessResult;
     ProcessResult nextProcess;
     ProcessResult nextTracked;
     QString lastProgram;
@@ -69,6 +71,8 @@ private slots:
     void testExtractCsoUsesDefaultIsoOutputPath();
     void testBatchConvertSupportedFormatsUsesOutputDirectory();
     void testBatchConvertUnsupportedFormat();
+    void testVerifyCsoSuccessWhenExtractionSucceeds();
+    void testVerifyCsoFailsOnMissingFile();
 };
 
 void CsoConverterTest::testAvailabilityUsesConfiguredToolPath()
@@ -189,6 +193,38 @@ void CsoConverterTest::testBatchConvertUnsupportedFormat()
     QCOMPARE(results.size(), 1);
     QVERIFY(!results.first().success);
     QVERIFY(results.first().error.contains(QStringLiteral("Unsupported format")));
+}
+
+void CsoConverterTest::testVerifyCsoSuccessWhenExtractionSucceeds()
+{
+    QTemporaryDir dir;
+    QVERIFY(dir.isValid());
+
+    // Write a fake CSO file so the pre-existence check passes
+    const QString csoPath = dir.path() + QStringLiteral("/game.cso");
+    QFile csoFile(csoPath);
+    QVERIFY(csoFile.open(QIODevice::WriteOnly));
+    QVERIFY(writeAll(csoFile, QByteArrayLiteral("CISO")));
+    csoFile.close();
+
+    FakeCsoConverter converter;
+    converter.autoCreateTrackedOutput = true;
+    converter.nextTracked.started = true;
+    converter.nextTracked.exitCode = 0;
+
+    const CSOVerifyResult result = converter.verifyCSO(csoPath);
+
+    QVERIFY(result.valid);
+    QVERIFY(result.error.isEmpty());
+    QVERIFY(result.isoSize > 0);
+}
+
+void CsoConverterTest::testVerifyCsoFailsOnMissingFile()
+{
+    FakeCsoConverter converter;
+    const CSOVerifyResult result = converter.verifyCSO(QStringLiteral("/no/such/file.cso"));
+    QVERIFY(!result.valid);
+    QVERIFY(!result.error.isEmpty());
 }
 
 QTEST_MAIN(CsoConverterTest)

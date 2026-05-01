@@ -168,6 +168,9 @@ void registerAllOptions(QCommandLineParser &parser, QSet<QString> &actionOptions
     addActionOption(QCommandLineOption("rvz-verify",      "Verify RVZ file integrity",                           "rvzfile"));
     addActionOption(QCommandLineOption("convert-cso",     "Convert PSP ISO to CSO format",                       "path"));
     addActionOption(QCommandLineOption("cso-extract",     "Extract CSO back to ISO",                             "csofile"));
+    addActionOption(QCommandLineOption("convert-wbfs",    "Convert GameCube/Wii ISO to WBFS format (requires wit)", "path"));
+    addActionOption(QCommandLineOption("wbfs-extract",    "Extract WBFS back to ISO (requires wit)",             "wbfsfile"));
+    addActionOption(QCommandLineOption("export-pbp",      "Export PS1 CUE/ISO/M3U to PBP (requires PSXPackager)", "path"));
     addOption(QCommandLineOption("output-dir",      "Output directory for conversions/extractions",         "directory"));
 
     addOption(QCommandLineOption(Constants::Cli::Options::NO_INTERACTIVE, "Accepted for backwards compatibility (this is a CLI-only build)"));

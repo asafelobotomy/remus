@@ -3,6 +3,7 @@
 #include <QSqlError>
 #include <QVariant>
 #include <QDebug>
+#include <QSet>
 
 namespace Remus {
 
@@ -192,10 +193,25 @@ bool Database::updateGame(int gameId,
                           const QString &genres, const QString &players,
                           float rating)
 {
+    static const QSet<QString> kAllowedUpdateColumns = {
+        QStringLiteral("publisher"),
+        QStringLiteral("developer"),
+        QStringLiteral("release_date"),
+        QStringLiteral("description"),
+        QStringLiteral("genres"),
+        QStringLiteral("players"),
+        QStringLiteral("rating")
+    };
+
     QStringList setClauses;
     QVariantList values;
+    bool invalidColumn = false;
 
     auto addIfSet = [&](const QString &col, const QString &val) {
+        if (!kAllowedUpdateColumns.contains(col)) {
+            invalidColumn = true;
+            return;
+        }
         if (!val.isEmpty()) {
             setClauses << col + " = ?";
             values << val;
@@ -209,7 +225,16 @@ bool Database::updateGame(int gameId,
     addIfSet("genres",       genres);
     addIfSet("players",      players);
 
+    if (invalidColumn) {
+        logError("Failed to update game: rejected unknown update column");
+        return false;
+    }
+
     if (rating >= 0.0f) {
+        if (!kAllowedUpdateColumns.contains(QStringLiteral("rating"))) {
+            logError("Failed to update game: rejected unknown update column");
+            return false;
+        }
         setClauses << "rating = ?";
         values << static_cast<double>(rating);
     }

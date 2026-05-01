@@ -80,14 +80,19 @@ int handleChdInfoCommand(CliContext &ctx);
 int handleExtractArchiveCommand(CliContext &ctx);
 int handleSpaceReportCommand(CliContext &ctx);
 
-// ── RVZ / CSO conversion ──────────────────────────────────────────────────────
+// ── RVZ / CSO / WBFS conversion ───────────────────────────────────────────────
 // --convert-rvz, --rvz-extract, --rvz-verify,
-// --convert-cso, --cso-extract
+// --convert-cso, --cso-extract,
+// --convert-wbfs, --wbfs-extract,
+// --export-pbp
 int handleConvertRvzCommand(CliContext &ctx);
 int handleRvzExtractCommand(CliContext &ctx);
 int handleRvzVerifyCommand(CliContext &ctx);
 int handleConvertCsoCommand(CliContext &ctx);
 int handleCsoExtractCommand(CliContext &ctx);
+int handleConvertWbfsCommand(CliContext &ctx);
+int handleWbfsExtractCommand(CliContext &ctx);
+int handleExportPBPCommand(CliContext &ctx);
 
 // ── Export ────────────────────────────────────────────────────────────────────
 // --export

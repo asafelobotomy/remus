@@ -40,6 +40,8 @@ add_library(remus-core STATIC
     chd_converter.cpp
     rvz_converter.cpp
     cso_converter.cpp
+    wbfs_converter.cpp
+    pbp_exporter.cpp
     disc_converter.cpp
     external_tool_runner.cpp
     archive_extractor.cpp

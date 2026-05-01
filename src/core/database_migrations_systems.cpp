@@ -36,7 +36,9 @@ bool migrateCanonicalSystems(QSqlDatabase &db,
                     .arg(info.id);
 
                 QSqlQuery renameOccupyingRow(db);
-                renameOccupyingRow.prepare("UPDATE systems SET id = id + 1000, name = ? WHERE id = ?");
+                renameOccupyingRow.prepare(
+                    "UPDATE systems SET id = id + ?, name = ? WHERE id = ?");
+                renameOccupyingRow.addBindValue(Constants::DatabaseSchema::Migrations::LEGACY_SYSTEM_SLOT_OFFSET);
                 renameOccupyingRow.addBindValue(movedName);
                 renameOccupyingRow.addBindValue(info.id);
                 if (!renameOccupyingRow.exec()) {

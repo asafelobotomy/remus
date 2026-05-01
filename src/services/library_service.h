@@ -2,6 +2,7 @@
 #define REMUS_LIBRARY_SERVICE_H
 
 #include <functional>
+#include <memory>
 #include <QString>
 #include <QList>
 #include <QVariantMap>
@@ -88,8 +89,8 @@ private:
     int persistScanResults(const QList<ScanResult> &results,
                            int libraryId, Database *db);
 
-    Scanner        *m_scanner  = nullptr;
-    SystemDetector *m_detector = nullptr;
+    std::unique_ptr<Scanner> m_scanner;
+    std::unique_ptr<SystemDetector> m_detector;
 };
 
 } // namespace Remus

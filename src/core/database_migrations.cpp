@@ -13,6 +13,22 @@ namespace {
 
 bool loadTableColumns(QSqlDatabase &db, const QString &tableName, QSet<QString> &columns, QString &error)
 {
+    static const QSet<QString> kAllowedTables = {
+        QString::fromLatin1(Remus::Constants::DatabaseSchema::Tables::SYSTEMS),
+        QString::fromLatin1(Remus::Constants::DatabaseSchema::Tables::LIBRARIES),
+        QString::fromLatin1(Remus::Constants::DatabaseSchema::Tables::FILES),
+        QString::fromLatin1(Remus::Constants::DatabaseSchema::Tables::GAMES),
+        QString::fromLatin1(Remus::Constants::DatabaseSchema::Tables::MATCHES),
+        QString::fromLatin1(Remus::Constants::DatabaseSchema::Tables::APPLIED_PATCHES),
+        QString::fromLatin1(Remus::Constants::DatabaseSchema::Tables::CACHE),
+        QString::fromLatin1(Remus::Constants::DatabaseSchema::Tables::UNDO_HISTORY)
+    };
+
+    if (!kAllowedTables.contains(tableName)) {
+        error = QStringLiteral("Unsupported table name for schema inspection: %1").arg(tableName);
+        return false;
+    }
+
     QSqlQuery query(db);
     if (!query.exec(QString("PRAGMA table_info(%1)").arg(tableName))) {
         error = query.lastError().text();

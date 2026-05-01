@@ -104,13 +104,12 @@ QString selectExtractedMember(const QString &outputDir,
 } // namespace
 
 HashService::HashService()
-    : m_hasher(new Hasher())
+    : m_hasher(std::make_unique<Hasher>())
 {
 }
 
 HashService::~HashService()
 {
-    delete m_hasher;
 }
 
 int HashService::hashAll(Database *db,

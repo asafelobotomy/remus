@@ -124,6 +124,16 @@ add_remus_test(test_cso_converter CsoConverterTest
     LIBS Qt6::Test Qt6::Core remus-core
 )
 
+add_remus_test(test_wbfs_converter WbfsConverterTest
+    SOURCES test_wbfs_converter.cpp
+    LIBS Qt6::Test Qt6::Core remus-core
+)
+
+add_remus_test(test_pbp_exporter PBPExporterTest
+    SOURCES test_pbp_exporter.cpp
+    LIBS Qt6::Test Qt6::Core remus-core
+)
+
 add_remus_test(test_archive_extractor ArchiveExtractorTest
     SOURCES test_archive_extractor.cpp
     LIBS Qt6::Test Qt6::Core remus-core
@@ -182,6 +192,11 @@ add_remus_test(test_compendium_provider CompendiumProviderTest
     LIBS Qt6::Test Qt6::Core Qt6::Sql remus-metadata remus-core
 )
 
+add_remus_test(test_compendium_sql_utilities CompendiumSqlUtilitiesTest
+    SOURCES test_compendium_sql_utilities.cpp
+    LIBS Qt6::Test Qt6::Core Qt6::Sql
+)
+
 add_remus_test(test_thumbnail_urls ThumbnailUrlTest
     SOURCES test_thumbnail_urls.cpp
     LIBS Qt6::Test Qt6::Core remus-metadata remus-core
@@ -200,6 +215,30 @@ add_remus_test(test_filename_normalizer FilenameNormalizerTest
 add_remus_test(test_metadata_cache MetadataCacheTest
     SOURCES test_metadata_cache.cpp
     LIBS Qt6::Test Qt6::Core Qt6::Sql remus-metadata remus-core
+)
+
+add_remus_test(test_app_controller_reopen AppControllerReopenTest
+    SOURCES test_app_controller_reopen.cpp ../src/gui/controllers/app_controller.cpp
+    LIBS Qt6::Test Qt6::Core Qt6::Sql remus-metadata remus-core
+)
+target_include_directories(test_app_controller_reopen PRIVATE
+    ${CMAKE_SOURCE_DIR}/src/gui
+)
+
+add_remus_test(test_workflow_controller WorkflowControllerTest
+    SOURCES
+        test_workflow_controller.cpp
+        ../src/gui/controllers/workflow_controller.cpp
+        ../src/gui/controllers/app_controller.cpp
+        ../src/gui/controllers/hash_controller.cpp
+        ../src/gui/controllers/match_controller.cpp
+        ../src/gui/models/match_list_model.cpp
+        ../src/gui/controllers/artwork_controller.cpp
+        ../src/gui/controllers/organize_controller.cpp
+    LIBS Qt6::Test Qt6::Core Qt6::Sql Qt6::Network remus-metadata remus-core remus-services
+)
+target_include_directories(test_workflow_controller PRIVATE
+    ${CMAKE_SOURCE_DIR}/src/gui
 )
 
 add_remus_test(test_provider_orchestrator ProviderOrchestratorTest
