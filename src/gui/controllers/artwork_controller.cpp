@@ -109,6 +109,15 @@ bool ArtworkController::refreshArtworkForFile(int fileId, bool requireDownloadab
         return false;
     }
 
+    // Artwork is only shown once a file has a confirmed match — at every stage.
+    const Database::MatchResult matchResult = m_appController->database()->getMatchForFile(fileId);
+    if (!matchResult.isConfirmed) {
+        m_previewUrl = QUrl();
+        m_localArtworkPath.clear();
+        emit previewChanged();
+        return false;
+    }
+
     const QString localPath = artworkPathForFile(fileId);
     if (QFileInfo::exists(localPath)) {
         m_localArtworkPath = localPath;
@@ -117,6 +126,16 @@ bool ArtworkController::refreshArtworkForFile(int fileId, bool requireDownloadab
         return true;
     }
 
+    // Auto-preview (file selection): never query providers — show local artwork only.
+    // Provider lookups only happen when the user explicitly requests artwork via a button.
+    if (!requireDownloadableUrl) {
+        m_previewUrl = QUrl();
+        m_localArtworkPath.clear();
+        emit previewChanged();
+        return false;
+    }
+
+    // Explicit artwork request: query providers for a downloadable URL.
     ProviderOrchestrator *orchestrator = m_appController->orchestrator();
     if (orchestrator == nullptr) {
         return false;
@@ -145,11 +164,6 @@ bool ArtworkController::refreshArtworkForFile(int fileId, bool requireDownloadab
     }
 
     if (boxArtUrl.isEmpty()) {
-        if (!requireDownloadableUrl) {
-            m_previewUrl = QUrl();
-            m_localArtworkPath.clear();
-            emit previewChanged();
-        }
         return false;
     }
 

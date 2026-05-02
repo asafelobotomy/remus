@@ -80,14 +80,26 @@ Frame {
             ScrollBar.vertical: ScrollBar {}
 
             delegate: ItemDelegate {
-                required property var modelData
+                id:                     fileItem
+                required property var   modelData
+
+                // Pre-compute extension list (primary + children) for chip display
+                property var fileExtensions: {
+                    const exts = []
+                    const prim = modelData.extension || ""
+                    if (prim.length > 0) exts.push(prim)
+                    const children = modelData.childExtensions || ""
+                    if (children.length > 0)
+                        children.split(",").forEach(e => { if (e.trim().length > 0) exts.push(e.trim()) })
+                    return exts
+                }
 
                 width:          ListView.view.width
                 padding:        6
                 highlighted:    appController.selectedFileId === modelData.fileId
 
                 contentItem: ColumnLayout {
-                    spacing: 1
+                    spacing: 2
 
                     Label {
                         Layout.fillWidth: true
@@ -95,6 +107,30 @@ Frame {
                         elide:            Text.ElideRight
                         font.pixelSize:   11
                         color:            "#ebdbb2"
+                    }
+
+                    // Extension chips row (e.g. .bin + .cue for a grouped disc image)
+                    Flow {
+                        Layout.fillWidth: true
+                        spacing:          3
+                        visible:          fileItem.fileExtensions.length > 0
+
+                        Repeater {
+                            model: fileItem.fileExtensions
+                            Rectangle {
+                                width:  extLabel.implicitWidth + 8
+                                height: 13
+                                radius: 3
+                                color:  "#3c3836"
+                                Label {
+                                    id:               extLabel
+                                    anchors.centerIn: parent
+                                    text:             modelData
+                                    font.pixelSize:   9
+                                    color:            "#bdae93"
+                                }
+                            }
+                        }
                     }
 
                     // Stage badge row

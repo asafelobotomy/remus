@@ -93,6 +93,130 @@ void ConversionController::convertSelected(const QString &format, const QString 
     emit libraryChanged();
 }
 
+QString ConversionController::resolveAutoFormat(const QString &extension)
+{
+    const QString ext = extension.toLower().remove('.');
+
+    // Already compressed — skip to avoid double-conversion
+    static const QSet<QString> skipExts = {
+        QStringLiteral("chd"), QStringLiteral("rvz"), QStringLiteral("cso"),
+        QStringLiteral("wbfs"), QStringLiteral("pbp"), QStringLiteral("zip"),
+        QStringLiteral("7z"), QStringLiteral("rar")
+    };
+    if (skipExts.contains(ext)) {
+        return QString();
+    }
+
+    // GameCube/Wii disc images → RVZ
+    static const QSet<QString> rvzExts = {
+        QStringLiteral("gcm")
+    };
+    if (rvzExts.contains(ext)) {
+        return QStringLiteral("RVZ");
+    }
+
+    // CD/DVD-based disc images → CHD (most universal lossy-free format)
+    static const QSet<QString> chdExts = {
+        QStringLiteral("cue"), QStringLiteral("bin"), QStringLiteral("iso"),
+        QStringLiteral("img"), QStringLiteral("gdi"), QStringLiteral("toc"),
+        QStringLiteral("nrg"), QStringLiteral("ccd")
+    };
+    if (chdExts.contains(ext)) {
+        return QStringLiteral("CHD");
+    }
+
+    return QString(); // Unsupported extension — skip
+}
+
+void ConversionController::convertAll(const QString &format, const QString &outputPath)
+{
+    if (m_converting) {
+        setLastMessage(QStringLiteral("A conversion is already running."));
+        return;
+    }
+
+    if (m_appController == nullptr || !m_appController->isLibraryOpen()) {
+        setLastMessage(QStringLiteral("Open a library before converting files."));
+        return;
+    }
+
+    applyToolPaths();
+
+    const QString normalizedInput = format.trimmed().toUpper();
+    const QList<FileRecord> files = m_appController->database()->getAllFiles();
+    if (files.isEmpty()) {
+        setLastMessage(QStringLiteral("No files in library to convert."));
+        return;
+    }
+
+    m_converting = true;
+    m_progress = 0;
+    emit convertingChanged();
+    emit progressChanged();
+
+    int converted = 0;
+    int skipped = 0;
+    int failed = 0;
+    const int total = files.size();
+
+    for (int i = 0; i < total; ++i) {
+        const FileRecord &file = files.at(i);
+
+        const QString normalizedFormat = (normalizedInput == QStringLiteral("AUTO"))
+            ? resolveAutoFormat(file.extension)
+            : normalizedInput;
+
+        if (normalizedFormat.isEmpty()) {
+            ++skipped;
+            m_progress = (i + 1) * 100 / total;
+            emit progressChanged();
+            continue;
+        }
+
+        const int capturedIndex = i;
+        auto progress = [this, capturedIndex, total](int percent, const QString &) {
+            m_progress = (capturedIndex * 100 + percent) / total;
+            emit progressChanged();
+        };
+
+        ConversionResult result;
+        if (normalizedFormat == QStringLiteral("CHD")) {
+            result = m_conversionService.convertToCHD(file.currentPath, CHDCodec::Auto, outputPath, progress);
+        } else if (normalizedFormat == QStringLiteral("RVZ")) {
+            result = m_conversionService.convertToRVZ(file.currentPath, RVZCompression::Auto, outputPath, progress);
+        } else if (normalizedFormat == QStringLiteral("CSO")) {
+            result = m_conversionService.convertToCSO(file.currentPath, outputPath, progress);
+        } else if (normalizedFormat == QStringLiteral("WBFS")) {
+            result = m_wbfsConverter.convertIsoToWbfs(file.currentPath, outputPath);
+        } else if (normalizedFormat == QStringLiteral("PBP")) {
+            result = m_pbpExporter.exportToPBP(file.currentPath, outputPath);
+        } else {
+            ++skipped;
+            continue;
+        }
+
+        m_progress = (i + 1) * 100 / total;
+        emit progressChanged();
+
+        if (result.success) {
+            ++converted;
+            registerOutputFile(file, result.outputPath);
+        } else {
+            ++failed;
+        }
+    }
+
+    m_converting = false;
+    emit convertingChanged();
+
+    setLastMessage(QStringLiteral("Converted %1 | Skipped %2 | Failed %3")
+                       .arg(converted).arg(skipped).arg(failed));
+    if (converted > 0) {
+        emit conversionFinished();
+        emit libraryChanged();
+    }
+}
+
 void ConversionController::refreshToolStatus()
 {
     applyToolPaths();

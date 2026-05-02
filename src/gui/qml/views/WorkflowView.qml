@@ -1,15 +1,31 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import QtQuick.Dialogs
 import Remus.Gui
 
 // The Workflow Workbench — three-panel layout:
 //   Left:   QueueSidebar  (stage-bucketed file list)
-//   Centre: Pipeline cards (5 stages, scrollable)
+//   Centre: Pipeline cards (6 stages, scrollable)
 //   Right:  InspectorPanel (selected-file details)
 Item {
     Layout.fillWidth:  true
     Layout.fillHeight: true
+
+    // ── Folder pickers ───────────────────────────────────────────────────────
+    FolderDialog {
+        id: scanFolderDialog
+        title: "Select directory to scan"
+        onAccepted: scanDirField.text = decodeURIComponent(
+                        selectedFolder.toString().replace(/^file:\/\//, ""))
+    }
+
+    FolderDialog {
+        id: organizeFolderDialog
+        title: "Select destination directory"
+        onAccepted: destDirField.text = decodeURIComponent(
+                        selectedFolder.toString().replace(/^file:\/\//, ""))
+    }
 
     SplitView {
         anchors.fill: parent
@@ -57,9 +73,9 @@ Item {
                     Item { Layout.fillWidth: true }
                 }
 
-                // ── Stage 1: Intake ──────────────────────────────────────────
+                // ── Stage 1: Scan ────────────────────────────────────────────
                 StageCard {
-                    stageTitle: "1 · Intake — Scan"
+                    stageTitle: "1 · Scan"
 
                     RowLayout {
                         Layout.fillWidth: true
@@ -73,14 +89,16 @@ Item {
                             font.pixelSize:   12
                         }
                         Button {
-                            text:      "Scan"
-                            enabled:   !scanController.scanning && scanDirField.text.length > 0
-                            onClicked: scanController.startScan(scanDirField.text)
+                            text:      "Browse"
+                            flat:      true
+                            onClicked: scanFolderDialog.open()
                         }
                         Button {
-                            text:      "Stop"
-                            enabled:   scanController.scanning
-                            onClicked: scanController.stopScan()
+                            text:      scanController.scanning ? "Stop" : "Scan"
+                            enabled:   scanController.scanning || scanDirField.text.length > 0
+                            onClicked: scanController.scanning
+                                           ? scanController.stopScan()
+                                           : scanController.startScan(scanDirField.text)
                         }
                     }
 
@@ -97,9 +115,9 @@ Item {
                     }
                 }
 
-                // ── Stage 2: Identity ────────────────────────────────────────
+                // ── Stage 2: Hash & Match ────────────────────────────────────
                 StageCard {
-                    stageTitle: "2 · Identity — Hash & Match"
+                    stageTitle: "2 · Hash & Match"
                     stageCount: workflowController.identityCount
 
                     // Hash sub-section
@@ -162,22 +180,22 @@ Item {
                     }
                 }
 
-                // ── Stage 3: Enrich ──────────────────────────────────────────
+                // ── Stage 3: Artwork & Metadata ──────────────────────────────
                 StageCard {
-                    stageTitle: "3 · Enrich — Artwork & Metadata"
+                    stageTitle: "3 · Artwork & Metadata"
                     stageCount: workflowController.enrichCount
 
                     RowLayout {
                         Layout.fillWidth: true
                         spacing: 6
-                        Label { text: "Artwork:"; color: "#a89984"; font.pixelSize: 12 }
+                        Label { text: "Enrich:"; color: "#a89984"; font.pixelSize: 12 }
                         Button {
-                            text:      "Fetch All"
+                            text:      "Enrich All"
                             enabled:   !artworkController.downloading && appController.libraryOpen
                             onClicked: artworkController.downloadAllMatched()
                         }
                         Button {
-                            text:      "Fetch Selected"
+                            text:      "Enrich Selected"
                             enabled:   !artworkController.downloading &&
                                        appController.selectedFileId > 0
                             onClicked: artworkController.downloadSelected()
@@ -201,9 +219,9 @@ Item {
                     }
                 }
 
-                // ── Stage 4: Package ─────────────────────────────────────────
+                // ── Stage 4: Convert ─────────────────────────────────────────
                 StageCard {
-                    stageTitle: "4 · Package — Convert & Bundle"
+                    stageTitle: "4 · Convert"
 
                     RowLayout {
                         Layout.fillWidth: true
@@ -211,8 +229,8 @@ Item {
 
                         Label { text: "Format:"; color: "#a89984"; font.pixelSize: 12 }
                         ComboBox {
-                            id:    packageFormatCombo
-                            model: ["CHD", "CSO", "Original"]
+                            id:    convertFormatCombo
+                            model: ["Auto", "CHD", "CSO", "RVZ", "WBFS", "PBP"]
                             font.pixelSize: 12
                         }
                         Button {
@@ -220,21 +238,28 @@ Item {
                             enabled:   appController.selectedFileId > 0 &&
                                        !conversionController.converting
                             onClicked: conversionController.convertSelected(
-                                           packageFormatCombo.currentText, "")
+                                           convertFormatCombo.currentText, "")
                         }
                         Button {
-                            text:      "Bundle Selected"
-                            enabled:   appController.selectedFileId > 0 &&
-                                       !exportController.exporting
-                            onClicked: exportController.bundleSelected("")
+                            text:      "Convert All"
+                            enabled:   appController.libraryOpen &&
+                                       !conversionController.converting
+                            onClicked: conversionController.convertAll(
+                                           convertFormatCombo.currentText, "")
                         }
                     }
 
+                    ProgressBar {
+                        Layout.fillWidth: true
+                        from:    0
+                        to:      100
+                        value:   conversionController.progress
+                        visible: conversionController.converting
+                    }
+
                     Label {
-                        visible:   conversionController.lastMessage.length > 0 ||
-                                   exportController.lastMessage.length > 0
-                        text:      conversionController.lastMessage ||
-                                   exportController.lastMessage
+                        visible:   conversionController.lastMessage.length > 0
+                        text:      conversionController.lastMessage
                         color:     "#a89984"
                         wrapMode:  Text.WordWrap
                         font.pixelSize: 11
@@ -242,9 +267,42 @@ Item {
                     }
                 }
 
-                // ── Stage 5: Place ───────────────────────────────────────────
+                // ── Stage 5: Bundle ──────────────────────────────────────────
                 StageCard {
-                    stageTitle: "5 · Place — Organize"
+                    stageTitle: "5 · Bundle"
+
+                    RowLayout {
+                        Layout.fillWidth: true
+                        spacing: 6
+
+                        Button {
+                            text:      "Bundle Selected"
+                            enabled:   appController.selectedFileId > 0 &&
+                                       !exportController.exporting
+                            onClicked: exportController.bundleSelected("")
+                        }
+                        Button {
+                            text:      "Bundle All"
+                            enabled:   appController.libraryOpen &&
+                                       !exportController.exporting
+                            onClicked: exportController.bundleAll("")
+                        }
+                        Item { Layout.fillWidth: true }
+                    }
+
+                    Label {
+                        visible:   exportController.lastMessage.length > 0
+                        text:      exportController.lastMessage
+                        color:     "#a89984"
+                        wrapMode:  Text.WordWrap
+                        font.pixelSize: 11
+                        Layout.fillWidth: true
+                    }
+                }
+
+                // ── Stage 6: Organize ────────────────────────────────────────
+                StageCard {
+                    stageTitle: "6 · Organize"
                     stageCount: workflowController.doneCount
 
                     RowLayout {
@@ -258,15 +316,22 @@ Item {
                             font.pixelSize:   12
                         }
                         Button {
+                            text:      "Browse"
+                            flat:      true
+                            onClicked: organizeFolderDialog.open()
+                        }
+                        Button {
                             text:      "Preview"
                             enabled:   appController.libraryOpen
-                            onClicked: organizeController.previewOrganize(destDirField.text)
+                            onClicked: organizeController.previewOrganize(
+                                           destDirField.text + "/Remus Library")
                         }
                         Button {
                             text:      "Apply"
                             enabled:   appController.libraryOpen &&
                                        !organizeController.organizing
-                            onClicked: organizeController.applyOrganize(destDirField.text)
+                            onClicked: organizeController.applyOrganize(
+                                           destDirField.text + "/Remus Library")
                         }
                         Button {
                             text:      "Undo"

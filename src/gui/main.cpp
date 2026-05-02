@@ -33,8 +33,6 @@ int main(int argc, char *argv[])
     QCoreApplication::setOrganizationName(QString::fromLatin1(Remus::Constants::SETTINGS_ORGANIZATION));
     QCoreApplication::setApplicationName(QString::fromLatin1(Remus::Constants::SETTINGS_APPLICATION));
 
-    QQmlApplicationEngine engine;
-
     Remus::AppController appController;
     Remus::SettingsController settingsController;
     Remus::FileListModel fileListModel;
@@ -61,6 +59,8 @@ int main(int argc, char *argv[])
         &matchController,
         &artworkController,
         &organizeController);
+
+    QQmlApplicationEngine engine;
 
     fileListModel.setAppController(&appController);
     matchController.setModel(&matchListModel);

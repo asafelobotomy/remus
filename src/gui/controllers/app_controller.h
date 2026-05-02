@@ -18,6 +18,7 @@ class AppController : public QObject {
     Q_PROPERTY(int currentView READ currentView WRITE setCurrentView NOTIFY currentViewChanged)
     Q_PROPERTY(int selectedFileId READ selectedFileId WRITE setSelectedFileId NOTIFY selectedFileChanged)
     Q_PROPERTY(int selectedGameId READ selectedGameId NOTIFY selectedGameChanged)
+    Q_PROPERTY(QVariantMap selectedMatchData READ selectedMatch NOTIFY selectedMatchDataChanged)
     Q_PROPERTY(QString statusMessage READ statusMessage NOTIFY statusMessageChanged)
 
 public:
@@ -45,6 +46,7 @@ public:
 
     Q_INVOKABLE bool openLibrary(const QString &dbPath);
     Q_INVOKABLE void closeLibrary();
+    Q_INVOKABLE bool eraseLibraryDatabase();
     Q_INVOKABLE QString defaultLibraryPath() const;
     Q_INVOKABLE QVariantMap selectedFile();
     Q_INVOKABLE QVariantMap selectedMatch();
@@ -54,6 +56,7 @@ public slots:
     void setCurrentView(int view);
     void setSelectedFileId(int fileId);
     void setStatusMessage(const QString &message);
+    void refreshSelectedMatch();
 
 signals:
     void libraryPathChanged();
@@ -61,14 +64,15 @@ signals:
     void currentViewChanged();
     void selectedFileChanged();
     void selectedGameChanged();
+    void selectedMatchDataChanged();
     void statusMessageChanged();
     void libraryOpened();
     void libraryClosed();
+    void libraryDatabaseErased();
     void orchestratorChanged();
 
 private:
     void rebuildOrchestrator();
-    void refreshSelectedMatch();
 
     Database m_database;
     QString m_libraryPath;

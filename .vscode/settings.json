@@ -57,5 +57,15 @@
   "shellcheck.run": "onSave",
 
   // ── Git ─────────────────────────────────────────────────────
-  "git.autofetch": true
+  "git.autofetch": true,
+
+  // ── Copilot agent terminal allow-list ────────────────────────
+  // Pre-approve build/test commands so they run without a sandbox prompt.
+  "github.copilot.chat.agent.terminal.allowList": [
+    "cmake",
+    "ctest",
+    "make",
+    "ninja",
+    "DISPLAY=*"
+  ]
 }

@@ -69,6 +69,7 @@ target_link_libraries(remus-gui PRIVATE
     Qt6::Qml
     Qt6::QuickControls2
     Qt6::QuickLayouts
+    Qt6::QuickDialogs2
 )
 
 set_target_properties(remus-gui PROPERTIES

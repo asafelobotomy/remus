@@ -19,6 +19,8 @@ MatchController::MatchController(AppController *appController, QObject *parent)
     , m_appController(appController)
 {
     connect(m_appController, &AppController::orchestratorChanged, this, &MatchController::connectOrchestratorSignals);
+    connect(m_appController, &AppController::libraryClosed,       this, &MatchController::clearState);
+    connect(this, &MatchController::libraryChanged, m_appController, &AppController::refreshSelectedMatch);
     connectOrchestratorSignals();
 }
 
@@ -300,6 +302,15 @@ int MatchController::levenshteinDistance(const QString &left, const QString &rig
     }
 
     return matrix[leftLength][rightLength];
+}
+
+void MatchController::clearState()
+{
+    setLastMessage(QStringLiteral(""));
+    if (!m_currentProvider.isEmpty()) {
+        m_currentProvider.clear();
+        emit currentProviderChanged();
+    }
 }
 
 void MatchController::setLastMessage(const QString &message)

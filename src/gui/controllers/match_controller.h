@@ -40,6 +40,7 @@ signals:
 
 private:
     void connectOrchestratorSignals();
+    void clearState();
     bool matchFileRecord(const FileRecord &file);
     float calculateNameSimilarity(const QString &left, const QString &right) const;
     int levenshteinDistance(const QString &left, const QString &right) const;

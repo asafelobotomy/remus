@@ -34,6 +34,7 @@ public:
     QVariantMap toolStatus() const { return m_toolStatus; }
 
     Q_INVOKABLE void convertSelected(const QString &format, const QString &outputPath = QString());
+    Q_INVOKABLE void convertAll(const QString &format, const QString &outputPath = QString());
     Q_INVOKABLE void refreshToolStatus();
 
 public slots:
@@ -52,6 +53,7 @@ private:
     void applyToolPaths();
     void registerOutputFile(const FileRecord &sourceFile, const QString &outputPath);
     void setLastMessage(const QString &message);
+    static QString resolveAutoFormat(const QString &extension);
 
     AppController *m_appController;
     ConversionService m_conversionService;

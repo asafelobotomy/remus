@@ -59,7 +59,7 @@ if(NOT COMMAND _qt_internal_should_include_targets)
 endif()
 
 # Find Qt6
-find_package(Qt6 REQUIRED COMPONENTS Core Sql Network Concurrent Gui Quick Qml QuickControls2 QuickLayouts)
+find_package(Qt6 REQUIRED COMPONENTS Core Sql Network Concurrent Gui Quick Qml QuickControls2 QuickLayouts QuickDialogs2)
 
 # Find zlib for CRC32 hashing
 find_package(ZLIB REQUIRED)

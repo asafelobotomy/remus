@@ -54,6 +54,54 @@ void ExportController::bundleSelected(const QString &destinationDir)
     emit libraryChanged();
 }
 
+void ExportController::bundleAll(const QString &destinationDir)
+{
+    if (m_appController == nullptr || !m_appController->isLibraryOpen()) {
+        setLastMessage(QStringLiteral("Open a library before bundling files."));
+        return;
+    }
+
+    const auto allMatches = m_appController->database()->getAllMatches();
+    if (allMatches.isEmpty()) {
+        setLastMessage(QStringLiteral("No matched files to bundle."));
+        return;
+    }
+
+    m_exporting = true;
+    emit exportingChanged();
+
+    int bundled = 0;
+    int failed = 0;
+
+    for (auto it = allMatches.constBegin(); it != allMatches.constEnd(); ++it) {
+        const FileRecord file = m_appController->database()->getFileById(it.key());
+        const Database::MatchResult &match = it.value();
+        if (file.id <= 0) {
+            continue;
+        }
+
+        RomBundler::BundleConfig config;
+        const RomBundler::BundleResult result =
+            m_bundler->bundle(file, match, metadataForMatch(match), destinationDir, config);
+
+        if (result.success) {
+            ++bundled;
+        } else {
+            ++failed;
+        }
+    }
+
+    m_exporting = false;
+    emit exportingChanged();
+
+    m_lastOutputPath = destinationDir;
+    setLastMessage(QStringLiteral("Bundled %1 | Failed %2").arg(bundled).arg(failed));
+    if (bundled > 0) {
+        emit exportFinished();
+        emit libraryChanged();
+    }
+}
+
 bool ExportController::exportM3u(const QString &outputPath)
 {
     if (m_appController == nullptr || !m_appController->isLibraryOpen()) {

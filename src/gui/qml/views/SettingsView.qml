@@ -64,5 +64,49 @@ ScrollView {
             text: "Reset Saved Settings"
             onClicked: settingsController.resetToDefaults()
         }
+
+        Rectangle {
+            Layout.fillWidth: true
+            height: 1
+            color: "#504945"
+        }
+
+        Label {
+            text: "Danger Zone"
+            font.bold: true
+            color: "#fb4934"
+        }
+
+        Label {
+            Layout.fillWidth: true
+            text: "Erase Library Database permanently removes all imported file records, matches, and metadata from the local library database. ROM files on disk are not affected."
+            wrapMode: Text.WordWrap
+            color: "#a89984"
+        }
+
+        Button {
+            id: eraseButton
+            text: "Erase Library Database"
+            enabled: appController.libraryOpen
+            palette.button: enabled ? "#cc241d" : "#504945"
+            palette.buttonText: "#fbf1c7"
+            onClicked: eraseConfirmDialog.open()
+        }
+
+        Dialog {
+            id: eraseConfirmDialog
+            title: "Erase Library Database?"
+            modal: true
+            standardButtons: Dialog.Ok | Dialog.Cancel
+            anchors.centerIn: Overlay.overlay
+
+            Label {
+                text: "This will permanently erase all imported data from the library database.\nROM files on disk will not be deleted.\n\nThis action cannot be undone."
+                wrapMode: Text.WordWrap
+                width: 360
+            }
+
+            onAccepted: appController.eraseLibraryDatabase()
+        }
     }
 }

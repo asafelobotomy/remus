@@ -2,8 +2,8 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 
-// Right-side inspector showing details for the selected file.
-// Covers: artwork preview, file info, match actions, metadata, package, place.
+// Right-side inspector: shows rich metadata for the selected ROM.
+// All fields remain visible but empty until the ROM has a confirmed match.
 Frame {
     id: panel
 
@@ -22,110 +22,277 @@ Frame {
 
         ColumnLayout {
             width:   parent.width
-            spacing: 12
+            spacing: 0
 
-            // Placeholder when nothing selected
+            // ── No-selection hint ───────────────────────────────────────────
             Label {
-                visible:         appController.selectedFileId <= 0
-                Layout.fillWidth: true
-                text:            workflowController.hint
-                wrapMode:        Text.WordWrap
-                color:           "#a89984"
-                font.pixelSize:  13
+                visible:             appController.selectedFileId <= 0
+                Layout.fillWidth:    true
+                text:                "Select a ROM from the queue to view its details."
+                wrapMode:            Text.WordWrap
+                color:               "#a89984"
+                font.pixelSize:      13
                 horizontalAlignment: Text.AlignHCenter
-                topPadding:      32
+                topPadding:          40
             }
 
-            // ── Content (file selected) ─────────────────────────────────────
+            // ── Content ─────────────────────────────────────────────────────
             ColumnLayout {
                 visible:          appController.selectedFileId > 0
                 Layout.fillWidth: true
-                spacing:          10
+                spacing:          0
 
-                // Artwork
-                Image {
-                    Layout.fillWidth:  true
-                    Layout.preferredHeight: 160
-                    source:            artworkController.previewUrl
-                    fillMode:          Image.PreserveAspectFit
-                    clip:              true
+                // ── Box art ─────────────────────────────────────────────────
+                Rectangle {
+                    Layout.fillWidth:      true
+                    Layout.preferredHeight: 180
+                    color:                 "#282828"
+
+                    Image {
+                        anchors.fill:    parent
+                        source:          artworkController.previewUrl
+                        fillMode:        Image.PreserveAspectFit
+                        clip:            true
+                        visible:         status === Image.Ready
+                    }
+
+                    Label {
+                        anchors.centerIn: parent
+                        text:             artworkController.previewUrl.toString().length > 0
+                                          ? "" : "Box Art"
+                        color:            "#665c54"
+                        font.pixelSize:   12
+                        visible:          artworkController.previewUrl.toString().length === 0
+                    }
+                }
+
+                // ── Screenshots row ──────────────────────────────────────────
+                RowLayout {
+                    Layout.fillWidth: true
+                    spacing:          2
 
                     Rectangle {
-                        anchors.fill: parent
-                        color:        "#282828"
-                        visible:      parent.status !== Image.Ready
+                        Layout.fillWidth:      true
+                        Layout.preferredHeight: 80
+                        color:                 "#242424"
                         Label {
                             anchors.centerIn: parent
-                            text:             "No artwork"
-                            color:            "#665c54"
+                            text:             "Title Screen"
+                            color:            "#504945"
+                            font.pixelSize:   10
+                        }
+                    }
+                    Rectangle {
+                        Layout.fillWidth:      true
+                        Layout.preferredHeight: 80
+                        color:                 "#242424"
+                        Label {
+                            anchors.centerIn: parent
+                            text:             "Gameplay"
+                            color:            "#504945"
+                            font.pixelSize:   10
                         }
                     }
                 }
 
-                // File info
+                // ── Metadata fields ──────────────────────────────────────────
                 ColumnLayout {
-                    Layout.fillWidth: true
-                    spacing:          4
+                    Layout.fillWidth:  true
+                    Layout.topMargin:  10
+                    Layout.leftMargin: 10
+                    Layout.rightMargin: 10
+                    spacing:           6
 
-                    Label {
-                        Layout.fillWidth: true
-                        text:    appController.selectedFile().filename || ""
-                        elide:   Text.ElideRight
-                        font.bold:       true
-                        font.pixelSize:  13
-                        color:           "#fbf1c7"
-                    }
-                    Label {
-                        text:  appController.selectedFile().systemName || ""
-                        color: "#a89984"
-                        font.pixelSize: 11
-                    }
-                }
-
-                // Hint label
-                Label {
-                    Layout.fillWidth: true
-                    text:    workflowController.hint
-                    wrapMode: Text.WordWrap
-                    color:   "#83a598"
-                    font.pixelSize: 11
-                }
-
-                // ── Match section ──────────────────────────────────────────
-                Frame {
-                    Layout.fillWidth: true
-                    background: Rectangle {
-                        color: "#282828"; border.color: "#504945"; radius: 8
+                    // Title
+                    MetaField {
+                        label: "Title"
+                        value: appController.selectedMatchData.title || ""
+                        bold:  true
                     }
 
-                    ColumnLayout {
-                        anchors.fill: parent
-                        spacing:      6
+                    // Platform / System
+                    MetaField {
+                        label: "Platform"
+                        value: appController.selectedFile().systemName || ""
+                    }
 
-                        Label {
-                            text:            appController.selectedMatch().title || "No match"
-                            font.bold:       true
-                            font.pixelSize:  12
-                            color:           "#fbf1c7"
-                            elide:           Text.ElideRight
-                            Layout.fillWidth: true
+                    // Release Date
+                    MetaField {
+                        label: "Release"
+                        value: {
+                            const y = appController.selectedMatchData.releaseYear
+                            return (y && y > 0) ? y.toString() : ""
                         }
+                    }
+
+                    // Genre
+                    MetaField {
+                        label: "Genre"
+                        value: appController.selectedMatchData.genre || ""
+                    }
+
+                    // Publisher
+                    MetaField {
+                        label: "Publisher"
+                        value: appController.selectedMatchData.publisher || ""
+                    }
+
+                    // Developer
+                    MetaField {
+                        label: "Developer"
+                        value: appController.selectedMatchData.developer || ""
+                    }
+
+                    // Rating
+                    MetaField {
+                        label: "Rating"
+                        value: {
+                            const r = appController.selectedMatchData.rating
+                            return (r && r > 0) ? r.toFixed(1) + " / 10" : ""
+                        }
+                    }
+
+                    // Region
+                    MetaField {
+                        label: "Region"
+                        value: appController.selectedMatchData.region || ""
+                    }
+
+                    // Format
+                    MetaField {
+                        label: "Format"
+                        value: appController.selectedFile().extension || ""
+                    }
+
+                    // Divider
+                    Rectangle {
+                        Layout.fillWidth: true
+                        height:           1
+                        color:            "#3c3836"
+                        Layout.topMargin: 2
+                        Layout.bottomMargin: 2
+                    }
+
+                    // Description
+                    ColumnLayout {
+                        Layout.fillWidth: true
+                        spacing:          3
 
                         Label {
-                            visible: appController.selectedMatch().confidence > 0
-                            text:    "Confidence: " +
-                                     Math.round(appController.selectedMatch().confidence * 100) + "%"
-                            color:   "#a89984"
+                            text:           "Description"
+                            color:          "#a89984"
+                            font.pixelSize: 10
+                            font.bold:      true
+                        }
+                        Label {
+                            Layout.fillWidth: true
+                            text:     appController.selectedMatchData.description || ""
+                            wrapMode: Text.WordWrap
+                            color:    appController.selectedMatchData.description
+                                      ? "#ebdbb2" : "#504945"
                             font.pixelSize: 11
+                            visible:  true
+                        }
+                    }
+
+                    // Divider
+                    Rectangle {
+                        Layout.fillWidth: true
+                        height:           1
+                        color:            "#3c3836"
+                        Layout.topMargin: 2
+                        Layout.bottomMargin: 2
+                    }
+
+                    // Hash info
+                    ColumnLayout {
+                        Layout.fillWidth: true
+                        spacing:          3
+
+                        Label {
+                            text:           "Hash Info"
+                            color:          "#a89984"
+                            font.pixelSize: 10
+                            font.bold:      true
+                        }
+                        MetaField { label: "MD5";  value: appController.selectedFile().md5  || ""; mono: true }
+                        MetaField { label: "SHA1"; value: appController.selectedFile().sha1 || ""; mono: true }
+                        MetaField { label: "CRC";  value: appController.selectedFile().crc32 || ""; mono: true }
+                        MetaField {
+                            label: "Size"
+                            value: {
+                                const b = appController.selectedFile().fileSize
+                                if (!b || b <= 0) return ""
+                                if (b >= 1073741824) return (b / 1073741824).toFixed(2) + " GB"
+                                if (b >= 1048576)    return (b / 1048576).toFixed(2) + " MB"
+                                return (b / 1024).toFixed(1) + " KB"
+                            }
+                        }
+                    }
+
+                    // Divider
+                    Rectangle {
+                        Layout.fillWidth: true
+                        height:           1
+                        color:            "#3c3836"
+                        Layout.topMargin: 2
+                        Layout.bottomMargin: 2
+                    }
+
+                    // Match info
+                    ColumnLayout {
+                        Layout.fillWidth: true
+                        spacing:          3
+                        visible:          !!appController.selectedMatchData.matchId
+
+                        Label {
+                            text:           "Match Info"
+                            color:          "#a89984"
+                            font.pixelSize: 10
+                            font.bold:      true
+                        }
+                        MetaField {
+                            label: "Method"
+                            value: appController.selectedMatchData.method || ""
+                        }
+                        MetaField {
+                            label: "Confidence"
+                            value: {
+                                const c = appController.selectedMatchData.confidence
+                                return (c && c > 0) ? Math.round(c * 100) + "%" : ""
+                            }
+                        }
+                    }
+
+                    // Divider
+                    Rectangle {
+                        Layout.fillWidth: true
+                        height:           1
+                        color:            "#3c3836"
+                        Layout.topMargin: 2
+                        Layout.bottomMargin: 2
+                    }
+
+                    // Match actions
+                    ColumnLayout {
+                        Layout.fillWidth: true
+                        spacing:          4
+
+                        Label {
+                            text:           appController.selectedMatchData.confirmed
+                                            ? "Matched" : "No match"
+                            font.bold:      true
+                            font.pixelSize: 12
+                            color:          appController.selectedMatchData.confirmed
+                                            ? "#b8bb26" : "#cc241d"
                         }
 
                         RowLayout {
                             spacing: 6
-
                             Button {
                                 text:     "✓ Confirm"
                                 enabled:  appController.selectedFileId > 0 &&
-                                          !appController.selectedMatch().confirmed
+                                          !appController.selectedMatchData.confirmed
                                 font.pixelSize: 11
                                 padding:  6
                                 onClicked: matchController.confirmSelected()
@@ -133,116 +300,57 @@ Frame {
                             Button {
                                 text:     "✗ Reject"
                                 enabled:  appController.selectedFileId > 0 &&
-                                          !appController.selectedMatch().rejected
+                                          !appController.selectedMatchData.rejected
                                 font.pixelSize: 11
                                 padding:  6
                                 onClicked: matchController.rejectSelected()
                             }
                         }
-                    }
-                }
-
-                // ── Artwork section ────────────────────────────────────────
-                RowLayout {
-                    Layout.fillWidth: true
-                    spacing:          6
-
-                    Button {
-                        text:       "Get Artwork"
-                        enabled:    appController.selectedFileId > 0
-                        font.pixelSize: 11
-                        padding:    6
-                        onClicked:  artworkController.downloadSelected()
-                    }
-                    ProgressBar {
-                        Layout.fillWidth:  true
-                        from:              0
-                        to:                artworkController.downloadTotal || 1
-                        value:             artworkController.downloadProgress
-                        visible:           artworkController.downloading
-                    }
-                }
-
-                // ── Package section ────────────────────────────────────────
-                Frame {
-                    Layout.fillWidth: true
-                    background: Rectangle {
-                        color: "#282828"; border.color: "#504945"; radius: 8
-                    }
-
-                    ColumnLayout {
-                        anchors.fill: parent
-                        spacing:      6
 
                         Label {
-                            text: "Package"
-                            font.bold: true
-                            font.pixelSize: 12
-                            color: "#fbf1c7"
-                        }
-
-                        ComboBox {
-                            id:               formatCombo
+                            visible:          matchController.lastMessage.length > 0
                             Layout.fillWidth: true
-                            model:            ["CHD", "CSO", "Original"]
-                            currentIndex:     0
-                            font.pixelSize:   11
-                        }
-
-                        RowLayout {
-                            spacing: 6
-                            Button {
-                                text:       "Convert"
-                                enabled:    appController.selectedFileId > 0 &&
-                                            !conversionController.converting
-                                font.pixelSize: 11
-                                padding:    6
-                                onClicked:  conversionController.convertSelected(
-                                                formatCombo.currentText, "")
-                            }
-                            Button {
-                                text:       "Bundle"
-                                enabled:    appController.selectedFileId > 0 &&
-                                            !exportController.exporting
-                                font.pixelSize: 11
-                                padding:    6
-                                onClicked:  exportController.bundleSelected("")
-                            }
-                        }
-
-                        Label {
-                            visible:   conversionController.lastMessage.length > 0
-                            text:      conversionController.lastMessage
-                            color:     "#a89984"
-                            wrapMode:  Text.WordWrap
-                            font.pixelSize: 10
-                            Layout.fillWidth: true
+                            text:             matchController.lastMessage
+                            color:            "#83a598"
+                            font.pixelSize:   10
+                            wrapMode:         Text.WordWrap
                         }
                     }
-                }
 
-                // ── Place section ──────────────────────────────────────────
-                RowLayout {
-                    Layout.fillWidth: true
-                    spacing:          6
-
-                    Button {
-                        text:       "Preview Org."
-                        enabled:    appController.selectedFileId > 0
-                        font.pixelSize: 11
-                        padding:    6
-                        onClicked:  organizeController.previewOrganize("")
-                    }
-                    Button {
-                        text:       "Apply Org."
-                        enabled:    appController.selectedFileId > 0 &&
-                                    !organizeController.organizing
-                        font.pixelSize: 11
-                        padding:    6
-                        onClicked:  organizeController.applyOrganize("")
-                    }
+                    // Bottom padding
+                    Item { Layout.preferredHeight: 12 }
                 }
             }
         }
     }
+
+    // ── Inline helper component: labelled metadata row ──────────────────────
+    component MetaField: RowLayout {
+        property string label: ""
+        property string value: ""
+        property bool   bold:  false
+        property bool   mono:  false
+
+        Layout.fillWidth: true
+        spacing:          6
+
+        Label {
+            text:           label + ":"
+            color:          "#a89984"
+            font.pixelSize: 10
+            font.bold:      true
+            Layout.minimumWidth: 72
+        }
+        Label {
+            Layout.fillWidth: true
+            text:             value.length > 0 ? value : "—"
+            color:            value.length > 0 ? "#ebdbb2" : "#504945"
+            font.pixelSize:   11
+            font.bold:        bold
+            font.family:      mono ? "monospace" : font.family
+            elide:            Text.ElideRight
+            wrapMode:         mono ? Text.NoWrap : Text.WordWrap
+        }
+    }
 }
+

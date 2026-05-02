@@ -96,16 +96,15 @@ void WorkflowController::refreshCounts()
 
     QSqlDatabase db = m_appController->database()->database();
 
-    // Identity: no hash OR no confirmed (non-rejected) match
+    // Identity: no confirmed (non-rejected) match
     {
         QSqlQuery q(db);
         const bool ok = q.exec(QStringLiteral(
             "SELECT COUNT(DISTINCT f.id) FROM files f "
-            "WHERE (f.md5 IS NULL OR f.md5 = '') "
-            "   OR NOT EXISTS ("
-            "     SELECT 1 FROM matches m "
-            "     WHERE m.file_id = f.id "
-            "       AND m.is_confirmed = 1 AND m.is_rejected = 0)"));
+            "WHERE NOT EXISTS ("
+            "  SELECT 1 FROM matches m "
+            "  WHERE m.file_id = f.id "
+            "    AND m.is_confirmed = 1 AND m.is_rejected = 0)"));
         m_identityCount = (ok && q.next()) ? q.value(0).toInt() : 0;
     }
 
@@ -145,33 +144,48 @@ void WorkflowController::refreshQueueFiles()
     QSqlDatabase db = m_appController->database()->database();
     QSqlQuery q(db);
 
-    // Build SQL depending on filter
+    // Columns: 0=id, 1=filename, 2=current_path, 3=md5, 4=base_title, 5=extension, 6=child_exts
+    // Only primary files are shown; secondary files (e.g. .cue linked to .bin) are
+    // surfaced as extension chips via the child_exts subquery.
+    static const QLatin1String kChildExts(
+        "(SELECT GROUP_CONCAT(f2.extension, ',') FROM files f2 "
+        " WHERE f2.parent_file_id = f.id) AS child_exts");
+
     QString sql;
     switch (m_queueStage) {
     case Identity:
         sql = QStringLiteral(
-            "SELECT DISTINCT f.id, f.filename, f.current_path, f.md5 FROM files f "
-            "WHERE (f.md5 IS NULL OR f.md5 = '') "
-            "   OR NOT EXISTS ("
-            "     SELECT 1 FROM matches m "
-            "     WHERE m.file_id = f.id "
-            "       AND m.is_confirmed = 1 AND m.is_rejected = 0) "
-            "ORDER BY f.filename LIMIT 500");
+            "SELECT f.id, f.filename, f.current_path, f.md5, f.base_title, f.extension, "
+            "%1 "
+            "FROM files f "
+            "WHERE f.is_primary = 1 "
+            "  AND ((f.md5 IS NULL OR f.md5 = '') "
+            "       OR NOT EXISTS ("
+            "         SELECT 1 FROM matches m "
+            "         WHERE m.file_id = f.id "
+            "           AND m.is_confirmed = 1 AND m.is_rejected = 0)) "
+            "ORDER BY COALESCE(f.base_title, f.filename) LIMIT 500").arg(kChildExts);
         break;
     case Enrich:
     case Done:
         sql = QStringLiteral(
-            "SELECT DISTINCT f.id, f.filename, f.current_path, f.md5 FROM files f "
-            "WHERE EXISTS ("
-            "  SELECT 1 FROM matches m "
-            "  WHERE m.file_id = f.id "
-            "    AND m.is_confirmed = 1 AND m.is_rejected = 0) "
-            "ORDER BY f.filename LIMIT 500");
+            "SELECT f.id, f.filename, f.current_path, f.md5, f.base_title, f.extension, "
+            "%1 "
+            "FROM files f "
+            "WHERE f.is_primary = 1 "
+            "  AND EXISTS ("
+            "    SELECT 1 FROM matches m "
+            "    WHERE m.file_id = f.id "
+            "      AND m.is_confirmed = 1 AND m.is_rejected = 0) "
+            "ORDER BY COALESCE(f.base_title, f.filename) LIMIT 500").arg(kChildExts);
         break;
     default: // AllFiles
         sql = QStringLiteral(
-            "SELECT f.id, f.filename, f.current_path, f.md5 FROM files f "
-            "ORDER BY f.filename LIMIT 500");
+            "SELECT f.id, f.filename, f.current_path, f.md5, f.base_title, f.extension, "
+            "%1 "
+            "FROM files f "
+            "WHERE f.is_primary = 1 "
+            "ORDER BY COALESCE(f.base_title, f.filename) LIMIT 500").arg(kChildExts);
         break;
     }
 
@@ -181,18 +195,22 @@ void WorkflowController::refreshQueueFiles()
     }
 
     while (q.next()) {
-        const int    id         = q.value(0).toInt();
-        const bool   hasArtwork = artworkExistsForFile(id);
+        const int     id          = q.value(0).toInt();
+        const bool    hasArtwork  = artworkExistsForFile(id);
+        const QString baseTitle   = q.value(4).toString();
+        const QString displayName = baseTitle.isEmpty() ? q.value(1).toString() : baseTitle;
 
         if (m_queueStage == Enrich && hasArtwork)  continue;
         if (m_queueStage == Done   && !hasArtwork) continue;
 
         QVariantMap item;
-        item[QStringLiteral("fileId")]     = id;
-        item[QStringLiteral("filename")]   = q.value(1).toString();
-        item[QStringLiteral("path")]       = q.value(2).toString();
-        item[QStringLiteral("hasHash")]    = !q.value(3).toString().isEmpty();
-        item[QStringLiteral("hasArtwork")] = hasArtwork;
+        item[QStringLiteral("fileId")]          = id;
+        item[QStringLiteral("filename")]         = displayName;
+        item[QStringLiteral("path")]             = q.value(2).toString();
+        item[QStringLiteral("hasHash")]          = !q.value(3).toString().isEmpty();
+        item[QStringLiteral("hasArtwork")]       = hasArtwork;
+        item[QStringLiteral("extension")]        = q.value(5).toString();
+        item[QStringLiteral("childExtensions")]  = q.value(6).toString();
         m_queueFiles.append(item);
     }
 

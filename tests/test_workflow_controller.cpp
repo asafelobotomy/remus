@@ -61,14 +61,26 @@ private:
     }
 
     // Insert a confirmed match for a file
-    void insertConfirmedMatch(AppController *app, int fileId, int gameId = 1)
+    void insertConfirmedMatch(AppController *app, int fileId, int gameId = -1)
     {
-        QSqlQuery q(app->database()->database());
+        QSqlDatabase db = app->database()->database();
+
+        // If no game id supplied, insert a minimal game row and use its id
+        int resolvedGameId = gameId;
+        if (resolvedGameId <= 0) {
+            QSqlQuery gq(db);
+            gq.prepare(QStringLiteral("INSERT INTO games (title) VALUES ('Test Game')"));
+            const bool gok = gq.exec();
+            Q_ASSERT_X(gok, "insertConfirmedMatch/game", qPrintable(gq.lastError().text()));
+            resolvedGameId = gq.lastInsertId().toInt();
+        }
+
+        QSqlQuery q(db);
         q.prepare(QStringLiteral(
-            "INSERT INTO matches (file_id, game_id, confidence, is_confirmed, is_rejected) "
-            "VALUES (?, ?, ?, 1, 0)"));
+            "INSERT INTO matches (file_id, game_id, confidence, match_method, is_confirmed, is_rejected) "
+            "VALUES (?, ?, ?, 'test', 1, 0)"));
         q.addBindValue(fileId);
-        q.addBindValue(gameId);
+        q.addBindValue(resolvedGameId);
         q.addBindValue(0.9);
         const bool ok = q.exec();
         Q_ASSERT_X(ok, "insertConfirmedMatch", qPrintable(q.lastError().text()));
@@ -160,7 +172,7 @@ private slots:
         insertFile(&app, QStringLiteral("a.iso"));
         insertFile(&app, QStringLiteral("b.iso"));
 
-        wf.setQueueStage(WorkflowController::AllFiles);
+        wf.refresh();
         QCOMPARE(wf.queueFiles().count(), 2);
     }
 

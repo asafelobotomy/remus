@@ -2,6 +2,7 @@
 
 #include <QCoreApplication>
 #include <QDir>
+#include <QFile>
 #include <QFileInfo>
 #include <QSettings>
 #include <QStandardPaths>
@@ -137,6 +138,31 @@ void AppController::closeLibrary()
         emit orchestratorChanged();
         emit libraryClosed();
     }
+}
+
+bool AppController::eraseLibraryDatabase()
+{
+    if (!m_libraryOpen) {
+        setStatusMessage(QStringLiteral("No library is open."));
+        return false;
+    }
+
+    const QString dbPath = m_libraryPath;
+    closeLibrary();
+
+    if (QFile::exists(dbPath) && !QFile::remove(dbPath)) {
+        setStatusMessage(QStringLiteral("Failed to erase library database: %1").arg(dbPath));
+        return false;
+    }
+
+    const bool reopened = openLibrary(dbPath);
+    if (reopened) {
+        emit libraryDatabaseErased();
+        setStatusMessage(QStringLiteral("Library database erased and reset."));
+    } else {
+        setStatusMessage(QStringLiteral("Library database erased but could not reopen: %1").arg(dbPath));
+    }
+    return reopened;
 }
 
 QString AppController::defaultLibraryPath() const
@@ -366,6 +392,9 @@ void AppController::refreshSelectedMatch()
         m_selectedGameId = nextGameId;
         emit selectedGameChanged();
     }
+
+    // Always notify QML so metadata fields re-evaluate after any match DB change.
+    emit selectedMatchDataChanged();
 }
 
 } // namespace Remus
