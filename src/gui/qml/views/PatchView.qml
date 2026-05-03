@@ -20,7 +20,7 @@ Item {
         Label {
             Layout.fillWidth: true
             wrapMode: Text.WordWrap
-            text: "Base ROM: " + (appController.selectedFile().path || "Select a file in the library view.")
+            text: "Base ROM: " + (appController.selectedFileData.path || "Select a file in the library view.")
         }
 
         TextField {

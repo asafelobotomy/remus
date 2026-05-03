@@ -262,8 +262,74 @@ Frame {
                             label: "Confidence"
                             value: {
                                 const c = appController.selectedMatchData.confidence
-                                return (c && c > 0) ? Math.round(c * 100) + "%" : ""
+                                return (c && c > 0) ? Math.round(c) + "%" : ""
                             }
+                        }
+                    }
+
+                    // ── File Paths ────────────────────────────────────────────
+                    Rectangle {
+                        Layout.fillWidth:   true
+                        height:             1
+                        color:              "#3c3836"
+                        Layout.topMargin:   2
+                        Layout.bottomMargin: 2
+                        visible:            appController.selectedFileId > 0
+                    }
+                    ColumnLayout {
+                        Layout.fillWidth: true
+                        spacing:          3
+                        visible:          appController.selectedFileId > 0
+
+                        Label {
+                            text:           "Paths"
+                            color:          "#a89984"
+                            font.pixelSize: 10
+                            font.bold:      true
+                        }
+
+                        // ROM Path — the file's location on disk (original or moved-to-original_roms)
+                        MetaField {
+                            property bool   _origExists: appController.selectedFileData.originalExists || false
+                            property bool   _currExists: appController.selectedFileData.currentExists  || false
+                            property string _orig: appController.selectedFileData.originalPath || ""
+                            property string _curr: appController.selectedFileData.path         || ""
+
+                            // Show if original still exists, OR if file was moved (currentPath differs and exists)
+                            visible: _origExists || (_currExists && _curr !== _orig &&
+                                     !(appController.selectedFileData.isOrganized || false))
+                            label:   "ROM Path"
+                            value:   _origExists ? _orig : _curr
+                        }
+
+                        // Converted ROM — only when converted, not yet bundled or organized
+                        MetaField {
+                            property string _curr: appController.selectedFileData.path         || ""
+                            property string _orig: appController.selectedFileData.originalPath || ""
+
+                            visible: (appController.selectedFileData.isConverted  || false) &&
+                                     !(appController.selectedFileData.isBundled   || false) &&
+                                     !(appController.selectedFileData.isOrganized || false) &&
+                                     _curr.length > 0 && _curr !== _orig
+                            label:   "Converted ROM"
+                            value:   _curr
+                        }
+
+                        // Bundle path — when bundled but not organized
+                        MetaField {
+                            visible: (appController.selectedFileData.isBundled    || false) &&
+                                     !(appController.selectedFileData.isOrganized || false) &&
+                                     (appController.selectedFileData.bundleOutputPath || "").length > 0
+                            label:   "Bundle"
+                            value:   appController.selectedFileData.bundleOutputPath || ""
+                        }
+
+                        // Organized destination
+                        MetaField {
+                            visible: (appController.selectedFileData.isOrganized  || false) &&
+                                     (appController.selectedFileData.organizedPath || "").length > 0
+                            label:   "Organized"
+                            value:   appController.selectedFileData.organizedPath || ""
                         }
                     }
 

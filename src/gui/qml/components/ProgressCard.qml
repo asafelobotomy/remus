@@ -28,12 +28,41 @@ Frame {
         }
 
         ProgressBar {
+            visible:          progressTotal > 0
             Layout.fillWidth: true
-            from:              0
-            to:                Math.max(1, progressTotal)
-            value:             progressValue
-            // Show a pulsing bar while the total is unknown (e.g. during scan)
-            indeterminate:     progressTotal <= 0
+            from:             0
+            to:               Math.max(1, progressTotal)
+            value:            progressValue
+        }
+
+        // Custom animated sweep when total is unknown (Fusion style ignores indeterminate)
+        Rectangle {
+            visible:          progressTotal <= 0
+            Layout.fillWidth: true
+            height:           6
+            radius:           3
+            color:            "#3c3836"
+            clip:             true
+
+            Rectangle {
+                id:     sweeper
+                width:  parent.width * 0.35
+                height: parent.height
+                radius: parent.radius
+                color:  "#689d6a"
+                x:      -width
+
+                SequentialAnimation on x {
+                    running:  progressTotal <= 0
+                    loops:    Animation.Infinite
+                    NumberAnimation {
+                        from:        -sweeper.width
+                        to:          sweeper.parent.width
+                        duration:    1100
+                        easing.type: Easing.InOutSine
+                    }
+                }
+            }
         }
 
         Label {

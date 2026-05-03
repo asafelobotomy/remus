@@ -4,15 +4,15 @@ Applied: 2026-04-04
 Updated: 2026-05-01
 <!-- manifest-scope: stable managed files only; .github/copilot-version.md is intentionally excluded because a file cannot hash its own current contents without a recursive convention -->
 <!-- section-fingerprints
-§1=fea16f3c9e99
-§2=41f7d9236e10
-§3=6c0802ff9d0f
-§4=3792e00b3d93
-§5=d7a28629e553
-§6=683bf1bfeb3a
-§7=aff7b76e6ea8
-§8=938deb396149
-§9=ae9e819979f6
+§1=6968b3c9dca1
+§2=888e44079a05
+§3=0a0889eaa2c4
+§4=a667dcab9946
+§5=aa4d9e603116
+§6=5e4e1dec4e2c
+§7=5a7874a61983
+§8=57a31447bd40
+§9=4591e34bd3b3
 §10=176e3e832823
 §11=24c58d10047e
 §12=3fd00b8f00a5

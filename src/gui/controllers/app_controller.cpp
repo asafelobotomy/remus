@@ -232,6 +232,39 @@ QVariantMap AppController::selectedFile()
     result.insert(QStringLiteral("baseTitle"), file.baseTitle);
     result.insert(QStringLiteral("archivePath"), file.archivePath);
     result.insert(QStringLiteral("isCompressed"), file.isCompressed);
+
+    // Pipeline stage flags and paths
+    QSqlQuery flagsQ(m_database.database());
+    flagsQ.prepare(QStringLiteral(
+        "SELECT is_converted, is_bundled, bundle_output_path FROM files WHERE id = ?"));
+    flagsQ.addBindValue(m_selectedFileId);
+    bool isConverted = false, isBundled = false;
+    QString bundleOutputPath;
+    if (flagsQ.exec() && flagsQ.next()) {
+        isConverted      = flagsQ.value(0).toBool();
+        isBundled        = flagsQ.value(1).toBool();
+        bundleOutputPath = flagsQ.value(2).toString();
+    }
+
+    QSqlQuery orgQ(m_database.database());
+    orgQ.prepare(QStringLiteral(
+        "SELECT new_path FROM undo_queue "
+        "WHERE file_id = ? AND undone = 0 "
+        "ORDER BY executed_at DESC LIMIT 1"));
+    orgQ.addBindValue(m_selectedFileId);
+    QString organizedPath;
+    if (orgQ.exec() && orgQ.next())
+        organizedPath = orgQ.value(0).toString();
+
+    result.insert(QStringLiteral("originalPath"),     file.originalPath);
+    result.insert(QStringLiteral("originalExists"),   QFileInfo::exists(file.originalPath));
+    result.insert(QStringLiteral("currentExists"),    QFileInfo::exists(file.currentPath));
+    result.insert(QStringLiteral("isConverted"),      isConverted);
+    result.insert(QStringLiteral("isBundled"),        isBundled);
+    result.insert(QStringLiteral("isOrganized"),      !organizedPath.isEmpty());
+    result.insert(QStringLiteral("organizedPath"),    organizedPath);
+    result.insert(QStringLiteral("bundleOutputPath"), bundleOutputPath);
+
     return result;
 }
 

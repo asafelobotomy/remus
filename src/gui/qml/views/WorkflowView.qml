@@ -16,6 +16,11 @@ Item {
     // Which stage card is currently open (1–6).  0 = all collapsed.
     property int openStage: 1
 
+    // Track the last file ID for which we auto-switched stage.
+    // Auto-switching only happens when a different file is selected, not when
+    // library state changes mid-work (e.g. after conversion completes).
+    property int lastAutoStagedFileId: -1
+
     // Derive the active stage from the selected ROM's processing state.
     // Reading enrichCount/doneCount ensures re-evaluation after artwork downloads.
     readonly property int autoStage: {
@@ -29,12 +34,34 @@ Item {
             return 2  // Hash & Match — needs hashing
         if (!m || !m["confirmed"])
             return 2  // Hash & Match — needs matching
+        if (f["isOrganized"] || false)
+            return 6  // Already organized — show outcome
+        if (f["isBundled"] || false)
+            return 6  // Bundled — next step is Organize
         if (!workflowController.artworkExistsForFile(appController.selectedFileId))
             return 3  // Artwork & Metadata
-        return 5      // Bundle
+        if (f["isConverted"] || false)
+            return 5  // Converted — next step is Bundle & Rename
+        return 5      // Bundle & Rename
     }
 
-    onAutoStageChanged: openStage = autoStage
+    // Only auto-switch when a different file is selected.  Library data changes
+    // (e.g. counts updating after conversion) must not hijack the open stage.
+    onAutoStageChanged: {
+        if (appController.selectedFileId <= 0) return
+        if (appController.selectedFileId !== lastAutoStagedFileId) {
+            lastAutoStagedFileId = appController.selectedFileId
+            openStage = autoStage
+        }
+    }
+
+    Connections {
+        target: appController
+        function onSelectedFileIdChanged() {
+            lastAutoStagedFileId = appController.selectedFileId
+            openStage = autoStage
+        }
+    }
 
     // ── Folder pickers ───────────────────────────────────────────────────────
     FolderDialog {
@@ -51,15 +78,100 @@ Item {
                         selectedFolder.toString().replace(/^file:\/\//, ""))
     }
 
+    // ── Apply: no organize directory warning ─────────────────────────────────
+    Dialog {
+        id: applyNoDirDialog
+        title: "No Organize Directory"
+        modal: true
+        anchors.centerIn: Overlay.overlay
+
+        Label {
+            text: "Please select an Organize directory in section 6 before using Apply."
+            wrapMode: Text.WordWrap
+            width: 320
+        }
+
+        standardButtons: Dialog.Ok
+    }
+
+    // ── Apply: confirmation dialog ───────────────────────────────────────────
+    Dialog {
+        id: applyConfirmDialog
+        title: "Apply All \u2014 Confirm"
+        modal: true
+        anchors.centerIn: Overlay.overlay
+
+        ColumnLayout {
+            width: 400
+            spacing: 10
+
+            Label {
+                text: "The following actions will be applied to <b>all</b> matched ROMs:"
+                Layout.fillWidth: true
+                wrapMode: Text.WordWrap
+                textFormat: Text.RichText
+            }
+
+            Rectangle {
+                Layout.fillWidth: true
+                height: 1
+                color: "#504945"
+            }
+
+            Label {
+                visible: matchController.unconfirmedMatchCount > 0
+                text: "\u2022 Confirm " + matchController.unconfirmedMatchCount +
+                      " pending Hash & Match result(s)"
+                Layout.fillWidth: true
+                wrapMode: Text.WordWrap
+                color: "#fabd2f"
+            }
+
+            Label {
+                text: "\u2022 Bundle & Rename using template: <i>" +
+                      bundleNameTemplate.editText + "</i>"
+                Layout.fillWidth: true
+                wrapMode: Text.WordWrap
+                textFormat: Text.RichText
+            }
+
+            Label {
+                text: "\u2022 Organize ROMs into: <i>" +
+                      destDirField.text + "/Remus Library</i>"
+                Layout.fillWidth: true
+                wrapMode: Text.WordWrap
+                textFormat: Text.RichText
+            }
+
+            Label {
+                visible: scanController.lastDirectory.length > 0
+                text: "Scan directory: " + scanController.lastDirectory
+                font.pixelSize: 11
+                color: "#928374"
+                Layout.fillWidth: true
+                wrapMode: Text.WordWrap
+            }
+        }
+
+        standardButtons: Dialog.Ok | Dialog.Cancel
+
+        onAccepted: {
+            matchController.confirmAll()
+            exportController.bundleAll(scanController.lastDirectory,
+                                       bundleNameTemplate.editText)
+            organizeController.applyOrganize(destDirField.text + "/Remus Library")
+        }
+    }
+
     SplitView {
         anchors.fill: parent
         orientation:  Qt.Horizontal
 
         // ── Left: Queue ──────────────────────────────────────────────────────
         QueueSidebar {
-            SplitView.preferredWidth: 200
-            SplitView.minimumWidth:   140
-            SplitView.maximumWidth:   300
+            SplitView.preferredWidth: 260
+            SplitView.minimumWidth:   180
+            SplitView.maximumWidth:   400
         }
 
         // ── Centre: Pipeline Cards ───────────────────────────────────────────
@@ -152,14 +264,14 @@ Item {
                         spacing: 6
 
                         Button {
-                            text:      "Hash & Match All"
+                            text:      "Hash && Match All"
                             enabled:   !hashController.hashing &&
                                        !matchController.matching &&
                                        appController.libraryOpen
                             onClicked: workflowController.hashAndMatchAll()
                         }
                         Button {
-                            text:      "Hash & Match Selected"
+                            text:      "Hash && Match Selected"
                             enabled:   !hashController.hashing &&
                                        !matchController.matching &&
                                        appController.selectedFileId > 0
@@ -180,20 +292,19 @@ Item {
                         message:       hashController.hashing
                                            ? hashController.progressMessage
                                            : matchController.progressMessage
-                        visible:       hashController.hashing ||
-                                       matchController.matching ||
-                                       hashController.progressMessage.length > 0 ||
-                                       matchController.progressMessage.length > 0
+                        visible:       hashController.hashing || matchController.matching
                     }
 
                     // ── Confirm / Reject selected match ──────────────────────
+                    // Only shown once the selected file has been hashed
                     RowLayout {
+                        visible:         (appController.selectedFileData.md5 || "").length > 0
                         Layout.fillWidth: true
                         spacing: 6
 
                         Label {
                             text:           appController.selectedMatchData.confirmed
-                                            ? "Matched" : "No match"
+                                            ? "Matched" : "Match Unconfirmed"
                             font.bold:      true
                             font.pixelSize: 12
                             color:          appController.selectedMatchData.confirmed
@@ -201,7 +312,15 @@ Item {
                         }
 
                         Button {
-                            text:      "✓ Confirm"
+                            text:          "Confirm All"
+                            visible:       matchController.unconfirmedMatchCount > 0
+                            enabled:       !matchController.matching
+                            font.pixelSize: 11
+                            padding:        6
+                            onClicked:      matchController.confirmAll()
+                        }
+                        Button {
+                            text:      "✓ Confirm Selected"
                             enabled:   appController.selectedFileId > 0 &&
                                        !appController.selectedMatchData.confirmed
                             font.pixelSize: 11
@@ -221,7 +340,8 @@ Item {
                     }
 
                     Label {
-                        visible:          matchController.lastMessage.length > 0
+                        visible:          (appController.selectedFileData.md5 || "").length > 0 &&
+                                          matchController.lastMessage.length > 0
                         Layout.fillWidth: true
                         text:             matchController.lastMessage
                         color:            "#83a598"
@@ -308,9 +428,9 @@ Item {
                     }
                 }
 
-                // ── Stage 5: Bundle ──────────────────────────────────────────
+                // ── Stage 5: Bundle & Rename ─────────────────────────────────
                 StageCard {
-                    stageTitle: "5 · Bundle"
+                    stageTitle: "5 · Bundle & Rename"
                     expanded:   openStage === 5
                     onToggleRequested: openStage = (openStage === 5 ? 0 : 5)
 
@@ -322,15 +442,38 @@ Item {
                             text:      "Bundle Selected"
                             enabled:   appController.selectedFileId > 0 &&
                                        !exportController.exporting
-                            onClicked: exportController.bundleSelected("")
+                            onClicked: exportController.bundleSelected(scanController.lastDirectory, bundleNameTemplate.editText)
                         }
                         Button {
                             text:      "Bundle All"
                             enabled:   appController.libraryOpen &&
                                        !exportController.exporting
-                            onClicked: exportController.bundleAll("")
+                            onClicked: exportController.bundleAll(scanController.lastDirectory, bundleNameTemplate.editText)
                         }
                         Item { Layout.fillWidth: true }
+                    }
+
+                    RowLayout {
+                        Layout.fillWidth: true
+                        spacing: 6
+
+                        Label {
+                            text:           "Name:"
+                            color:          "#a89984"
+                            font.pixelSize: 12
+                        }
+                        ComboBox {
+                            id:             bundleNameTemplate
+                            Layout.fillWidth: true
+                            editable:       true
+                            model:          ["{title} ({region})",
+                                             "{title}",
+                                             "{title} ({year})",
+                                             "{title} ({system})",
+                                             "{title} ({region}) [{system}]"]
+                            currentIndex:   0
+                            font.pixelSize: 12
+                        }
                     }
 
                     ProgressCard {
@@ -367,13 +510,7 @@ Item {
                             onClicked: organizeFolderDialog.open()
                         }
                         Button {
-                            text:      "Preview"
-                            enabled:   appController.libraryOpen
-                            onClicked: organizeController.previewOrganize(
-                                           destDirField.text + "/Remus Library")
-                        }
-                        Button {
-                            text:      "Apply"
+                            text:      "Organize"
                             enabled:   appController.libraryOpen &&
                                        !organizeController.organizing
                             onClicked: organizeController.applyOrganize(
@@ -383,37 +520,6 @@ Item {
                             text:      "Undo"
                             flat:      true
                             onClicked: organizeController.undoLast()
-                        }
-                    }
-
-                    // Template field
-                    RowLayout {
-                        Layout.fillWidth: true
-                        spacing: 6
-                        Label { text: "Template:"; color: "#a89984"; font.pixelSize: 12 }
-                        TextField {
-                            Layout.fillWidth: true
-                            text:             organizeController.namingTemplate
-                            font.pixelSize:   12
-                            onEditingFinished: organizeController.namingTemplate = text
-                        }
-                    }
-
-                    // Preview list
-                    ListView {
-                        Layout.fillWidth: true
-                        Layout.preferredHeight: Math.min(previewModel.count * 24, 120)
-                        model:   organizeController.previewEntries
-                        id:      previewModel
-                        clip:    true
-                        visible: count > 0
-                        delegate: Label {
-                            required property string modelData
-                            width: ListView.view.width
-                            text:  modelData
-                            elide: Text.ElideLeft
-                            font.pixelSize: 11
-                            color: "#a89984"
                         }
                     }
 
@@ -435,6 +541,35 @@ Item {
                         font.pixelSize: 11
                         Layout.fillWidth: true
                     }
+                }
+
+                // ── Apply ────────────────────────────────────────────────────
+                RowLayout {
+                    Layout.fillWidth: true
+                    spacing: 8
+
+                    Button {
+                        id: applyButton
+                        text: "Apply"
+                        highlighted: true
+                        enabled: appController.libraryOpen &&
+                                 !hashController.hashing &&
+                                 !matchController.matching &&
+                                 !artworkController.downloading &&
+                                 !exportController.exporting &&
+                                 !organizeController.organizing &&
+                                 (matchController.unconfirmedMatchCount +
+                                  workflowController.enrichCount +
+                                  workflowController.doneCount) > 0
+                        onClicked: {
+                            if (destDirField.text.length === 0)
+                                applyNoDirDialog.open()
+                            else
+                                applyConfirmDialog.open()
+                        }
+                    }
+
+                    Item { Layout.fillWidth: true }
                 }
 
                 Item {

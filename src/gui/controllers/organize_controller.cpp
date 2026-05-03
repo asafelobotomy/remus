@@ -12,6 +12,8 @@ OrganizeController::OrganizeController(AppController *appController, QObject *pa
     , m_appController(appController)
     , m_engine(std::make_unique<OrganizeEngine>(*appController->database(), this))
 {
+    connect(this, &OrganizeController::libraryChanged,
+            m_appController, &AppController::refreshSelectedFile);
     QSettings settings(QString::fromLatin1(Constants::SETTINGS_ORGANIZATION),
                        QString::fromLatin1(Constants::SETTINGS_APPLICATION));
     m_namingTemplate = settings.value(

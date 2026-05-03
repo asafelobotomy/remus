@@ -1,12 +1,18 @@
 #include "conversion_controller.h"
 
+#include <memory>
+#include <QCoreApplication>
+#include <QDir>
+#include <QFile>
 #include <QFileInfo>
 #include <QSettings>
 #include <QSqlDatabase>
 #include <QSqlQuery>
+#include <QTemporaryDir>
 
 #include "app_controller.h"
 #include "settings_controller.h"
+#include "../../core/archive_extractor.h"
 #include "../../core/constants/constants.h"
 
 namespace Remus {
@@ -15,6 +21,8 @@ ConversionController::ConversionController(AppController *appController, QObject
     : QObject(parent)
     , m_appController(appController)
 {
+    connect(this, &ConversionController::libraryChanged,
+            m_appController, &AppController::refreshSelectedFile);
     refreshToolStatus();
 }
 
@@ -38,42 +46,58 @@ void ConversionController::convertSelected(const QString &format, const QString 
 
     applyToolPaths();
 
-    const QString normalizedFormat = format.trimmed().isEmpty() ? m_targetFormat : format.trimmed().toUpper();
+    const QString rawFormat = format.trimmed().isEmpty() ? m_targetFormat : format.trimmed().toUpper();
     const FileRecord file = m_appController->database()->getFileById(fileId);
     if (file.id <= 0) {
         setLastMessage(QStringLiteral("The selected file no longer exists in the database."));
         return;
     }
 
+    std::unique_ptr<QTemporaryDir> tmpDir;
+    const QString romPath = extractIfArchive(file.currentPath, tmpDir);
+
+    // For AUTO, resolve the target format from the (possibly extracted) ROM extension
+    const QString detectedExt = QFileInfo(romPath).suffix().toLower();
+    const QString normalizedFormat = (rawFormat == QStringLiteral("AUTO"))
+        ? resolveAutoFormat(detectedExt)
+        : rawFormat;
+    if (normalizedFormat.isEmpty()) {
+        setLastMessage(QStringLiteral("No conversion format determined for \"%1\" — skipped.").arg(file.filename));
+        return;
+    }
+
     m_converting = true;
     m_progress = 0;
-    m_progressMessage = QStringLiteral("Converting \"%1\" to %2\u2026").arg(QFileInfo(file.currentPath).fileName(), normalizedFormat);
+    m_progressMessage = QStringLiteral("Converting \"%1\" to %2\u2026").arg(QFileInfo(romPath).fileName(), normalizedFormat);
     emit convertingChanged();
     emit progressChanged();
     emit progressMessageChanged();
 
     ConversionResult result;
     if (normalizedFormat == QStringLiteral("CHD")) {
-        result = m_conversionService.convertToCHD(file.currentPath, CHDCodec::Auto, outputPath, [this](int percent, const QString &) {
+        result = m_conversionService.convertToCHD(romPath, CHDCodec::Auto, outputPath, [this](int percent, const QString &) {
             m_progress = percent;
             emit progressChanged();
+            QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
         });
     } else if (normalizedFormat == QStringLiteral("RVZ")) {
-        result = m_conversionService.convertToRVZ(file.currentPath, RVZCompression::Auto, outputPath, [this](int percent, const QString &) {
+        result = m_conversionService.convertToRVZ(romPath, RVZCompression::Auto, outputPath, [this](int percent, const QString &) {
             m_progress = percent;
             emit progressChanged();
+            QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
         });
     } else if (normalizedFormat == QStringLiteral("CSO")) {
-        result = m_conversionService.convertToCSO(file.currentPath, outputPath, [this](int percent, const QString &) {
+        result = m_conversionService.convertToCSO(romPath, outputPath, [this](int percent, const QString &) {
             m_progress = percent;
             emit progressChanged();
+            QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
         });
     } else if (normalizedFormat == QStringLiteral("WBFS")) {
-        result = m_wbfsConverter.convertIsoToWbfs(file.currentPath, outputPath);
+        result = m_wbfsConverter.convertIsoToWbfs(romPath, outputPath);
         m_progress = 100;
         emit progressChanged();
     } else if (normalizedFormat == QStringLiteral("PBP")) {
-        result = m_pbpExporter.exportToPBP(file.currentPath, outputPath);
+        result = m_pbpExporter.exportToPBP(romPath, outputPath);
         m_progress = 100;
         emit progressChanged();
     } else {
@@ -91,20 +115,75 @@ void ConversionController::convertSelected(const QString &format, const QString 
         return;
     }
 
+    // Move converted file out of temp dir to the original archive's directory
+    // before tmpDir goes out of scope and deletes it.
+    QString finalOutputPath = result.outputPath;
+    if (tmpDir && !result.outputPath.isEmpty()) {
+        const QFileInfo outInfo(result.outputPath);
+        const QString destDir = QFileInfo(file.currentPath).absolutePath();
+        const QString destPath = destDir + QDir::separator() + outInfo.fileName();
+        if (QFile::rename(result.outputPath, destPath))
+            finalOutputPath = destPath;
+    }
+
     m_compressionRatio = result.compressionRatio;
-    m_lastOutputPath = result.outputPath;
-    registerOutputFile(file, result.outputPath);
+    m_lastOutputPath = finalOutputPath;
     {
+        QFileInfo outInfo(finalOutputPath);
+        FileRecord updated = file;
+        updated.currentPath = finalOutputPath;
+        updated.filename = outInfo.fileName();
+        updated.extension = outInfo.suffix().toLower();
+        updated.fileSize = outInfo.size();
+        updated.isCompressed = false;
+        updated.archivePath.clear();
+        updated.archiveInternalPath.clear();
+        // Keep hashes — they represent the game content and preserve the
+        // confirmed match; re-hashing is user-initiated if needed.
+        m_appController->database()->updateFileStorageState(updated);
+
         QSqlQuery upd(m_appController->database()->database());
         upd.prepare(QStringLiteral("UPDATE files SET is_converted = 1 WHERE id = ?"));
         upd.addBindValue(file.id);
         upd.exec();
     }
-    m_progressMessage = QStringLiteral("Created %1").arg(QFileInfo(result.outputPath).fileName());
+    m_progressMessage = QStringLiteral("Created %1").arg(QFileInfo(finalOutputPath).fileName());
     emit progressMessageChanged();
-    setLastMessage(QStringLiteral("Created %1").arg(QFileInfo(result.outputPath).fileName()));
+    setLastMessage(QStringLiteral("Created %1").arg(QFileInfo(finalOutputPath).fileName()));
     emit conversionFinished();
     emit libraryChanged();
+}
+
+QString ConversionController::extractIfArchive(const QString &filePath,
+                                               std::unique_ptr<QTemporaryDir> &tmpDirOut)
+{
+    ArchiveExtractor extractor;
+    if (!extractor.canExtract(filePath))
+        return filePath;
+
+    auto tmp = std::make_unique<QTemporaryDir>();
+    if (!tmp->isValid())
+        return filePath;
+
+    const ExtractionResult exResult = extractor.extract(filePath, tmp->path());
+    if (!exResult.success || exResult.extractedFiles.isEmpty())
+        return filePath;
+
+    // Prefer the file with the most converter-friendly extension
+    static const QStringList priority = {
+        QStringLiteral("cue"), QStringLiteral("gdi"), QStringLiteral("iso"),
+        QStringLiteral("bin"), QStringLiteral("img"), QStringLiteral("gcm"),
+        QStringLiteral("toc"), QStringLiteral("nrg"), QStringLiteral("ccd")
+    };
+    for (const QString &ext : priority) {
+        for (const QString &extracted : exResult.extractedFiles) {
+            if (QFileInfo(extracted).suffix().toLower() == ext) {
+                tmpDirOut = std::move(tmp);
+                return extracted;
+            }
+        }
+    }
+    return filePath; // no recognizable ROM inside — pass through
 }
 
 QString ConversionController::resolveAutoFormat(const QString &extension)
@@ -178,13 +257,18 @@ void ConversionController::convertAll(const QString &format, const QString &outp
     for (int i = 0; i < total; ++i) {
         const FileRecord &file = files.at(i);
 
-        const QString normalizedFormat = (normalizedInput == QStringLiteral("AUTO"))
-            ? resolveAutoFormat(file.extension)
-            : normalizedInput;
-
         m_progressMessage = QStringLiteral("Converting %1 / %2: \"%3\"\u2026")
                                 .arg(i + 1).arg(total).arg(QFileInfo(file.currentPath).fileName());
         emit progressMessageChanged();
+
+        std::unique_ptr<QTemporaryDir> tmpDir;
+        const QString romPath = extractIfArchive(file.currentPath, tmpDir);
+
+        // For AUTO, resolve from the (possibly extracted) ROM extension
+        const QString detectedExt = QFileInfo(romPath).suffix().toLower();
+        const QString normalizedFormat = (normalizedInput == QStringLiteral("AUTO"))
+            ? resolveAutoFormat(detectedExt)
+            : normalizedInput;
 
         if (normalizedFormat.isEmpty()) {
             ++skipped;
@@ -201,15 +285,15 @@ void ConversionController::convertAll(const QString &format, const QString &outp
 
         ConversionResult result;
         if (normalizedFormat == QStringLiteral("CHD")) {
-            result = m_conversionService.convertToCHD(file.currentPath, CHDCodec::Auto, outputPath, progress);
+            result = m_conversionService.convertToCHD(romPath, CHDCodec::Auto, outputPath, progress);
         } else if (normalizedFormat == QStringLiteral("RVZ")) {
-            result = m_conversionService.convertToRVZ(file.currentPath, RVZCompression::Auto, outputPath, progress);
+            result = m_conversionService.convertToRVZ(romPath, RVZCompression::Auto, outputPath, progress);
         } else if (normalizedFormat == QStringLiteral("CSO")) {
-            result = m_conversionService.convertToCSO(file.currentPath, outputPath, progress);
+            result = m_conversionService.convertToCSO(romPath, outputPath, progress);
         } else if (normalizedFormat == QStringLiteral("WBFS")) {
-            result = m_wbfsConverter.convertIsoToWbfs(file.currentPath, outputPath);
+            result = m_wbfsConverter.convertIsoToWbfs(romPath, outputPath);
         } else if (normalizedFormat == QStringLiteral("PBP")) {
-            result = m_pbpExporter.exportToPBP(file.currentPath, outputPath);
+            result = m_pbpExporter.exportToPBP(romPath, outputPath);
         } else {
             ++skipped;
             continue;
@@ -220,7 +304,26 @@ void ConversionController::convertAll(const QString &format, const QString &outp
 
         if (result.success) {
             ++converted;
-            registerOutputFile(file, result.outputPath);
+            // Move output out of temp dir before tmpDir is destroyed
+            QString finalOutputPath = result.outputPath;
+            if (tmpDir && !result.outputPath.isEmpty()) {
+                const QFileInfo outInfo(result.outputPath);
+                const QString destDir = QFileInfo(file.currentPath).absolutePath();
+                const QString destPath = destDir + QDir::separator() + outInfo.fileName();
+                if (QFile::rename(result.outputPath, destPath))
+                    finalOutputPath = destPath;
+            }
+            QFileInfo outInfo(finalOutputPath);
+            FileRecord updated = file;
+            updated.currentPath = finalOutputPath;
+            updated.filename = outInfo.fileName();
+            updated.extension = outInfo.suffix().toLower();
+            updated.fileSize = outInfo.size();
+            updated.isCompressed = false;
+            updated.archivePath.clear();
+            updated.archiveInternalPath.clear();
+            // Keep hashes to preserve confirmed match
+            m_appController->database()->updateFileStorageState(updated);
             {
                 QSqlQuery upd(m_appController->database()->database());
                 upd.prepare(QStringLiteral("UPDATE files SET is_converted = 1 WHERE id = ?"));
@@ -297,29 +400,6 @@ void ConversionController::applyToolPaths()
     if (!psxPackagerPath.isEmpty()) {
         m_pbpExporter.setPSXPackagerPath(psxPackagerPath);
     }
-}
-
-void ConversionController::registerOutputFile(const FileRecord &sourceFile, const QString &outputPath)
-{
-    if (m_appController == nullptr || outputPath.isEmpty()) {
-        return;
-    }
-
-    QFileInfo info(outputPath);
-    if (!info.exists()) {
-        return;
-    }
-
-    FileRecord record;
-    record.libraryId = sourceFile.libraryId;
-    record.originalPath = outputPath;
-    record.currentPath = outputPath;
-    record.filename = info.fileName();
-    record.extension = info.suffix().toLower();
-    record.fileSize = info.size();
-    record.systemId = sourceFile.systemId;
-    record.baseTitle = info.completeBaseName();
-    m_appController->database()->insertFile(record);
 }
 
 void ConversionController::setLastMessage(const QString &message)

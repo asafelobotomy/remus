@@ -35,6 +35,44 @@ QString artworkPathForFile(int fileId)
     return QString(); // not found
 }
 
+bool trashOriginalEnabled()
+{
+    QSettings settings(QString::fromLatin1(Constants::SETTINGS_ORGANIZATION),
+                       QString::fromLatin1(Constants::SETTINGS_APPLICATION));
+    return settings.value(QStringLiteral("gui/trash_original_after_bundle"), false).toBool();
+}
+
+/// Move @p filePath to {scanDir}/original_roms/ before bundling.
+/// Returns the new path on success, or an empty string on failure.
+QString moveToOriginalRoms(const QString &filePath, const QString &scanDir)
+{
+    const QString origRomsDir = QDir(scanDir).filePath(QStringLiteral("original_roms"));
+    if (!QDir().mkpath(origRomsDir))
+        return QString();
+
+    const QString destPath = QDir(origRomsDir).filePath(QFileInfo(filePath).fileName());
+    if (QFileInfo::exists(destPath)) {
+        // Already moved in a previous run — just acknowledge it.
+        if (!QFileInfo::exists(filePath))
+            return destPath;
+        // Both exist; rename with a numeric suffix to avoid clobbering.
+        int n = 1;
+        QString candidate;
+        do {
+            candidate = QDir(origRomsDir).filePath(
+                QFileInfo(filePath).completeBaseName()
+                + QStringLiteral("_%1.").arg(n++)
+                + QFileInfo(filePath).suffix());
+        } while (QFileInfo::exists(candidate));
+        if (!QFile::rename(filePath, candidate))
+            return QString();
+        return candidate;
+    }
+    if (!QFile::rename(filePath, destPath))
+        return QString();
+    return destPath;
+}
+
 } // anonymous namespace
 
 ExportController::ExportController(AppController *appController, QObject *parent)
@@ -42,9 +80,11 @@ ExportController::ExportController(AppController *appController, QObject *parent
     , m_appController(appController)
     , m_bundler(std::make_unique<RomBundler>(*appController->database(), this))
 {
+    connect(this, &ExportController::libraryChanged,
+            m_appController, &AppController::refreshSelectedFile);
 }
 
-void ExportController::bundleSelected(const QString &destinationDir)
+void ExportController::bundleSelected(const QString &scanDir, const QString &namingTemplate)
 {
     if (m_appController == nullptr || !m_appController->isLibraryOpen()) {
         setLastMessage(QStringLiteral("Open a library before bundling files."));
@@ -57,12 +97,15 @@ void ExportController::bundleSelected(const QString &destinationDir)
         return;
     }
 
-    const FileRecord file = m_appController->database()->getFileById(fileId);
+    FileRecord file = m_appController->database()->getFileById(fileId);
     const Database::MatchResult match = m_appController->database()->getMatchForFile(fileId);
     if (file.id <= 0 || match.matchId <= 0) {
         setLastMessage(QStringLiteral("Bundling requires a selected file with a metadata match."));
         return;
     }
+
+    // Bundle goes into the ROM's own directory.
+    const QString romDir = QFileInfo(file.currentPath).absolutePath();
 
     m_exporting = true;
     m_bundledFiles = 0;
@@ -72,12 +115,31 @@ void ExportController::bundleSelected(const QString &destinationDir)
     emit bundleProgressChanged();
     emit progressMessageChanged();
 
-    RomBundler::BundleConfig config;
-    const QString cachedArt = artworkPathForFile(fileId);
-    if (QFileInfo::exists(cachedArt)) {
-        config.artworkPath = cachedArt;
+    const bool trashOriginal = trashOriginalEnabled();
+
+    if (!trashOriginal) {
+        // Move original to original_roms/ before placing the bundle so it can
+        // take its canonical name.  Fall back to the ROM's own directory when
+        // no scan directory is recorded (e.g. library re-opened across sessions).
+        const QString baseDir = scanDir.isEmpty() ? romDir : scanDir;
+        const QString newPath = moveToOriginalRoms(file.currentPath, baseDir);
+        if (newPath.isEmpty()) {
+            m_exporting = false;
+            emit exportingChanged();
+            setLastMessage(QStringLiteral("Failed to move original ROM to original_roms/."));
+            return;
+        }
+        m_appController->database()->updateFilePath(fileId, newPath);
+        file = m_appController->database()->getFileById(fileId);
     }
-    const RomBundler::BundleResult result = m_bundler->bundle(file, match, metadataForMatch(match), destinationDir, config);
+
+    RomBundler::BundleConfig config;
+    config.namingTemplate = namingTemplate;
+    const QString cachedArt = artworkPathForFile(fileId);
+    if (QFileInfo::exists(cachedArt))
+        config.artworkPath = cachedArt;
+
+    const RomBundler::BundleResult result = m_bundler->bundle(file, match, metadataForMatch(match), romDir, config);
 
     m_exporting = false;
     m_bundledFiles = 1;
@@ -91,10 +153,16 @@ void ExportController::bundleSelected(const QString &destinationDir)
         return;
     }
 
+    // Trash original if requested (bundle was created successfully).
+    if (trashOriginal && QFileInfo::exists(file.currentPath)) {
+        QFile::moveToTrash(file.currentPath);
+    }
+
     m_lastOutputPath = result.outputPath;
     {
         QSqlQuery upd(m_appController->database()->database());
-        upd.prepare(QStringLiteral("UPDATE files SET is_bundled = 1 WHERE id = ?"));
+        upd.prepare(QStringLiteral("UPDATE files SET is_bundled = 1, bundle_output_path = ? WHERE id = ?"));
+        upd.addBindValue(result.outputPath);
         upd.addBindValue(fileId);
         upd.exec();
     }
@@ -105,7 +173,7 @@ void ExportController::bundleSelected(const QString &destinationDir)
     emit libraryChanged();
 }
 
-void ExportController::bundleAll(const QString &destinationDir)
+void ExportController::bundleAll(const QString &scanDir, const QString &namingTemplate)
 {
     if (m_appController == nullptr || !m_appController->isLibraryOpen()) {
         setLastMessage(QStringLiteral("Open a library before bundling files."));
@@ -126,39 +194,60 @@ void ExportController::bundleAll(const QString &destinationDir)
     emit bundleProgressChanged();
     emit progressMessageChanged();
 
+    const bool trashOriginal = trashOriginalEnabled();
     int bundled = 0;
-    int failed = 0;
+    int failed  = 0;
 
     for (auto it = allMatches.constBegin(); it != allMatches.constEnd(); ++it) {
-        const FileRecord file = m_appController->database()->getFileById(it.key());
+        FileRecord file = m_appController->database()->getFileById(it.key());
         const Database::MatchResult &match = it.value();
         if (file.id <= 0) {
+            ++failed;
+            ++m_bundledFiles;
+            emit bundleProgressChanged();
             continue;
         }
 
         m_progressMessage = QStringLiteral("Bundling %1 / %2\u2026").arg(m_bundledFiles + 1).arg(m_totalBundleFiles);
         emit progressMessageChanged();
 
-        RomBundler::BundleConfig config;
-        const QString cachedArt = artworkPathForFile(it.key());
-        if (QFileInfo::exists(cachedArt)) {
-            config.artworkPath = cachedArt;
+        const QString romDir = QFileInfo(file.currentPath).absolutePath();
+
+        if (!trashOriginal) {
+            // Move original to original_roms/ before bundling.  Fall back to
+            // the ROM's own directory when no scan directory is available.
+            const QString baseDir = scanDir.isEmpty() ? romDir : scanDir;
+            const QString newPath = moveToOriginalRoms(file.currentPath, baseDir);
+            if (!newPath.isEmpty()) {
+                m_appController->database()->updateFilePath(it.key(), newPath);
+                file = m_appController->database()->getFileById(it.key());
+            }
         }
+
+        RomBundler::BundleConfig config;
+        config.namingTemplate = namingTemplate;
+        const QString cachedArt = artworkPathForFile(it.key());
+        if (QFileInfo::exists(cachedArt))
+            config.artworkPath = cachedArt;
+
         const RomBundler::BundleResult result =
-            m_bundler->bundle(file, match, metadataForMatch(match), destinationDir, config);
+            m_bundler->bundle(file, match, metadataForMatch(match), romDir, config);
 
         if (result.success) {
+            if (trashOriginal && QFileInfo::exists(file.currentPath))
+                QFile::moveToTrash(file.currentPath);
             ++bundled;
             {
                 QSqlQuery upd(m_appController->database()->database());
-                upd.prepare(QStringLiteral("UPDATE files SET is_bundled = 1 WHERE id = ?"));
+                upd.prepare(QStringLiteral("UPDATE files SET is_bundled = 1, bundle_output_path = ? WHERE id = ?"));
+                upd.addBindValue(result.outputPath);
                 upd.addBindValue(it.key());
                 upd.exec();
             }
         } else {
             ++failed;
         }
-        m_bundledFiles++;
+        ++m_bundledFiles;
         emit bundleProgressChanged();
     }
 
@@ -168,7 +257,7 @@ void ExportController::bundleAll(const QString &destinationDir)
     emit bundleProgressChanged();
     emit progressMessageChanged();
 
-    m_lastOutputPath = destinationDir;
+    m_lastOutputPath = scanDir;
     setLastMessage(QStringLiteral("Bundled %1 | Failed %2").arg(bundled).arg(failed));
     if (bundled > 0) {
         emit exportFinished();
