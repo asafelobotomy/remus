@@ -77,6 +77,8 @@ bool Database::createSchema()
             patch_name TEXT,
             is_processed BOOLEAN DEFAULT 0,
             processing_status TEXT DEFAULT 'unprocessed',
+            is_converted BOOLEAN DEFAULT 0,
+            is_bundled BOOLEAN DEFAULT 0,
             last_modified TIMESTAMP,
             scanned_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY (library_id) REFERENCES libraries(id) ON DELETE CASCADE,
@@ -96,6 +98,8 @@ bool Database::createSchema()
     query.exec("ALTER TABLE files ADD COLUMN file_type TEXT DEFAULT 'official'");
     query.exec("ALTER TABLE files ADD COLUMN is_patched BOOLEAN DEFAULT 0");
     query.exec("ALTER TABLE files ADD COLUMN patch_name TEXT");
+    query.exec("ALTER TABLE files ADD COLUMN is_converted BOOLEAN DEFAULT 0");
+    query.exec("ALTER TABLE files ADD COLUMN is_bundled BOOLEAN DEFAULT 0");
     
     // Create index for processed status
     query.exec("CREATE INDEX IF NOT EXISTS idx_files_processed ON files(is_processed)");

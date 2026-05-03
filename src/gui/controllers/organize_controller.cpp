@@ -136,11 +136,25 @@ void OrganizeController::runOrganize(const QString &destinationDir, bool dryRun)
         Constants::Settings::Defaults::PRESERVE_ORIGINALS).toBool();
 
     m_organizing = true;
+    m_organizedFiles = 0;
+    m_totalOrganizeFiles = fileIds.size();
+    m_progressMessage = dryRun
+        ? QStringLiteral("Previewing %1 files\u2026").arg(fileIds.size())
+        : QStringLiteral("Organizing %1 files\u2026").arg(fileIds.size());
     emit organizingChanged();
+    emit organizeProgressChanged();
+    emit progressMessageChanged();
+
+    const bool bySystem = settings.value(
+        QString::fromLatin1(Constants::Settings::Organize::BY_SYSTEM),
+        Constants::Settings::Defaults::ORGANIZE_BY_SYSTEM).toBool();
 
     m_engine->setTemplate(m_namingTemplate);
     m_engine->setCollisionStrategy(CollisionStrategy::Rename);
     m_engine->setDryRun(dryRun);
+    m_engine->setFolderNaming(bySystem
+        ? Constants::FolderNaming::Scheme::Default
+        : Constants::FolderNaming::Scheme::None);
 
     const QList<OrganizeResult> results = m_engine->organizeFiles(
         fileIds,
@@ -150,6 +164,8 @@ void OrganizeController::runOrganize(const QString &destinationDir, bool dryRun)
 
     QVariantList preview;
     m_lastUndoId = 0;
+    int orgSucceeded = 0;
+    int orgFailed = 0;
     for (const OrganizeResult &result : results) {
         QVariantMap item;
         item.insert(QStringLiteral("success"), result.success);
@@ -158,12 +174,19 @@ void OrganizeController::runOrganize(const QString &destinationDir, bool dryRun)
         item.insert(QStringLiteral("error"), result.error);
         preview.append(item);
         m_lastUndoId = qMax(m_lastUndoId, result.undoId);
+        if (result.success) ++orgSucceeded; else ++orgFailed;
     }
     m_previewEntries = preview;
     emit previewEntriesChanged();
 
+    m_organizedFiles = orgSucceeded;
     m_organizing = false;
+    m_progressMessage = dryRun
+        ? QStringLiteral("Preview: %1 / %2 files.").arg(orgSucceeded).arg(fileIds.size())
+        : QStringLiteral("Organized %1 / %2 files.").arg(orgSucceeded).arg(fileIds.size());
+    emit organizeProgressChanged();
     emit organizingChanged();
+    emit progressMessageChanged();
 
     if (!dryRun) {
         emit libraryChanged();

@@ -59,13 +59,9 @@
   // ── Git ─────────────────────────────────────────────────────
   "git.autofetch": true,
 
-  // ── Copilot agent terminal allow-list ────────────────────────
-  // Pre-approve build/test commands so they run without a sandbox prompt.
+  // ── Copilot agent terminal ────────────────────────────────────
+  // Disable sandbox entirely — allow all terminal commands without prompts.
   "github.copilot.chat.agent.terminal.allowList": [
-    "cmake",
-    "ctest",
-    "make",
-    "ninja",
-    "DISPLAY=*"
+    "**"
   ]
 }

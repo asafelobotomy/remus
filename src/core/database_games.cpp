@@ -230,7 +230,7 @@ bool Database::updateGame(int gameId,
         return false;
     }
 
-    if (rating >= 0.0f) {
+    if (rating > 0.0f) {
         if (!kAllowedUpdateColumns.contains(QStringLiteral("rating"))) {
             logError("Failed to update game: rejected unknown update column");
             return false;

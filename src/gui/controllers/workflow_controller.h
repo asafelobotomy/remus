@@ -48,6 +48,8 @@ public:
     Q_INVOKABLE void refresh();
     Q_INVOKABLE void runAll();
     Q_INVOKABLE void cancel();
+    Q_INVOKABLE void hashAndMatchAll();
+    Q_INVOKABLE void hashAndMatchSelected();
     Q_INVOKABLE bool artworkExistsForFile(int fileId) const;
 
 signals:

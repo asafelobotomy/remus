@@ -10,6 +10,7 @@
 #include <QFileInfo>
 #include <QSettings>
 #include <QSqlDatabase>
+#include <QSqlError>
 #include <QSqlQuery>
 #include <QStandardPaths>
 
@@ -34,6 +35,14 @@ WorkflowController::WorkflowController(AppController   *app,
             this, &WorkflowController::refresh);
     connect(app, &AppController::selectedFileChanged,
             this, &WorkflowController::onSelectedFileChanged);
+    connect(hash,  &HashController::libraryChanged,
+            this, &WorkflowController::refresh);
+    connect(match, &MatchController::libraryChanged,
+            this, &WorkflowController::refresh);
+    connect(organize, &OrganizeController::libraryChanged,
+            this, &WorkflowController::refresh);
+    connect(artwork, &ArtworkController::artworkDownloaded,
+            this, &WorkflowController::refresh);
 }
 
 // ── Public invokables ─────────────────────────────────────────────────────────
@@ -67,12 +76,33 @@ void WorkflowController::cancel()
     if (m_running) cancelRunAll();
 }
 
+void WorkflowController::hashAndMatchAll()
+{
+    if (!m_appController || !m_appController->isLibraryOpen()) return;
+    connect(m_hashController, &HashController::hashCompleted,
+            this, [this](int) { m_matchController->matchAll(); },
+            Qt::SingleShotConnection);
+    m_hashController->startHashAll();
+}
+
+void WorkflowController::hashAndMatchSelected()
+{
+    if (!m_appController || !m_appController->isLibraryOpen()) return;
+    connect(m_hashController, &HashController::hashCompleted,
+            this, [this](int) { m_matchController->matchSelected(); },
+            Qt::SingleShotConnection);
+    m_hashController->hashSelected();
+}
+
 bool WorkflowController::artworkExistsForFile(int fileId) const
 {
     if (fileId <= 0) return false;
-    const QString path =
-        QDir(artworkDirPath()).filePath(QStringLiteral("artwork_%1.png").arg(fileId));
-    return QFileInfo::exists(path);
+    const QString base = QDir(artworkDirPath()).filePath(QStringLiteral("artwork_%1").arg(fileId));
+    for (const char *ext : {".png", ".jpg", ".jpeg", ".webp"}) {
+        if (QFileInfo::exists(base + QLatin1String(ext)))
+            return true;
+    }
+    return false;
 }
 
 // ── Private helpers ───────────────────────────────────────────────────────────
@@ -144,12 +174,22 @@ void WorkflowController::refreshQueueFiles()
     QSqlDatabase db = m_appController->database()->database();
     QSqlQuery q(db);
 
-    // Columns: 0=id, 1=filename, 2=current_path, 3=md5, 4=base_title, 5=extension, 6=child_exts
+    // Columns: 0=id, 1=filename, 2=current_path, 3=md5, 4=base_title, 5=extension,
+    //           6=child_exts, 7=has_match (confirmed), 8=has_any_match (any non-rejected),
+    //           9=is_organized, 10=is_converted, 11=is_bundled
     // Only primary files are shown; secondary files (e.g. .cue linked to .bin) are
     // surfaced as extension chips via the child_exts subquery.
     static const QLatin1String kChildExts(
         "(SELECT GROUP_CONCAT(f2.extension, ',') FROM files f2 "
-        " WHERE f2.parent_file_id = f.id) AS child_exts");
+        " WHERE f2.parent_file_id = f.id) AS child_exts,"
+        " EXISTS(SELECT 1 FROM matches m2"
+        "  WHERE m2.file_id = f.id AND m2.is_confirmed = 1 AND m2.is_rejected = 0) AS has_match,"
+        " EXISTS(SELECT 1 FROM matches m3"
+        "  WHERE m3.file_id = f.id AND m3.is_rejected = 0) AS has_any_match,"
+        " EXISTS(SELECT 1 FROM undo_queue u"
+        "  WHERE u.file_id = f.id AND u.undone = 0) AS is_organized,"
+        " f.is_converted,"
+        " f.is_bundled");
 
     QString sql;
     switch (m_queueStage) {
@@ -190,6 +230,7 @@ void WorkflowController::refreshQueueFiles()
     }
 
     if (!q.exec(sql)) {
+        qWarning() << "WorkflowController::reloadQueue query failed:" << q.lastError().text();
         emit queueFilesChanged();
         return;
     }
@@ -207,10 +248,22 @@ void WorkflowController::refreshQueueFiles()
         item[QStringLiteral("fileId")]          = id;
         item[QStringLiteral("filename")]         = displayName;
         item[QStringLiteral("path")]             = q.value(2).toString();
+        static const QStringList kConvertibleExts = {
+            QStringLiteral(".cue"), QStringLiteral(".gdi"), QStringLiteral(".iso"),
+            QStringLiteral(".bin"), QStringLiteral(".img"), QStringLiteral(".mdf"),
+            QStringLiteral(".nrg"), QStringLiteral(".gcm")
+        };
+        const QString rawExt = q.value(5).toString().toLower(); // already stored with leading dot
         item[QStringLiteral("hasHash")]          = !q.value(3).toString().isEmpty();
-        item[QStringLiteral("hasArtwork")]       = hasArtwork;
-        item[QStringLiteral("extension")]        = q.value(5).toString();
-        item[QStringLiteral("childExtensions")]  = q.value(6).toString();
+        item[QStringLiteral("hasArtwork")]        = hasArtwork;
+        item[QStringLiteral("extension")]         = q.value(5).toString();
+        item[QStringLiteral("childExtensions")]   = q.value(6).toString();
+        item[QStringLiteral("hasMatch")]          = q.value(7).toBool();
+        item[QStringLiteral("hasAnyMatch")]       = q.value(8).toBool();
+        item[QStringLiteral("isOrganized")]       = q.value(9).toBool();
+        item[QStringLiteral("isConverted")]       = q.value(10).toBool();
+        item[QStringLiteral("isBundled")]         = q.value(11).toBool();
+        item[QStringLiteral("isConvertible")]     = kConvertibleExts.contains(rawExt);
         m_queueFiles.append(item);
     }
 

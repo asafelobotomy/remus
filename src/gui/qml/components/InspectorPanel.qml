@@ -53,7 +53,10 @@ Frame {
                         source:          artworkController.previewUrl
                         fillMode:        Image.PreserveAspectFit
                         clip:            true
-                        visible:         status === Image.Ready
+                        cache:           false
+                        asynchronous:    true
+                        visible:         artworkController.previewUrl.toString().length > 0 &&
+                                         status !== Image.Error
                     }
 
                     Label {
@@ -113,7 +116,7 @@ Frame {
                     // Platform / System
                     MetaField {
                         label: "Platform"
-                        value: appController.selectedFile().systemName || ""
+                        value: appController.selectedFileData.systemName || ""
                     }
 
                     // Release Date
@@ -161,7 +164,7 @@ Frame {
                     // Format
                     MetaField {
                         label: "Format"
-                        value: appController.selectedFile().extension || ""
+                        value: appController.selectedFileData.extension || ""
                     }
 
                     // Divider
@@ -215,13 +218,13 @@ Frame {
                             font.pixelSize: 10
                             font.bold:      true
                         }
-                        MetaField { label: "MD5";  value: appController.selectedFile().md5  || ""; mono: true }
-                        MetaField { label: "SHA1"; value: appController.selectedFile().sha1 || ""; mono: true }
-                        MetaField { label: "CRC";  value: appController.selectedFile().crc32 || ""; mono: true }
+                        MetaField { label: "MD5";  value: appController.selectedFileData.md5  || ""; mono: true }
+                        MetaField { label: "SHA1"; value: appController.selectedFileData.sha1 || ""; mono: true }
+                        MetaField { label: "CRC";  value: appController.selectedFileData.crc32 || ""; mono: true }
                         MetaField {
                             label: "Size"
                             value: {
-                                const b = appController.selectedFile().fileSize
+                                const b = appController.selectedFileData.fileSize
                                 if (!b || b <= 0) return ""
                                 if (b >= 1073741824) return (b / 1073741824).toFixed(2) + " GB"
                                 if (b >= 1048576)    return (b / 1048576).toFixed(2) + " MB"
@@ -261,59 +264,6 @@ Frame {
                                 const c = appController.selectedMatchData.confidence
                                 return (c && c > 0) ? Math.round(c * 100) + "%" : ""
                             }
-                        }
-                    }
-
-                    // Divider
-                    Rectangle {
-                        Layout.fillWidth: true
-                        height:           1
-                        color:            "#3c3836"
-                        Layout.topMargin: 2
-                        Layout.bottomMargin: 2
-                    }
-
-                    // Match actions
-                    ColumnLayout {
-                        Layout.fillWidth: true
-                        spacing:          4
-
-                        Label {
-                            text:           appController.selectedMatchData.confirmed
-                                            ? "Matched" : "No match"
-                            font.bold:      true
-                            font.pixelSize: 12
-                            color:          appController.selectedMatchData.confirmed
-                                            ? "#b8bb26" : "#cc241d"
-                        }
-
-                        RowLayout {
-                            spacing: 6
-                            Button {
-                                text:     "✓ Confirm"
-                                enabled:  appController.selectedFileId > 0 &&
-                                          !appController.selectedMatchData.confirmed
-                                font.pixelSize: 11
-                                padding:  6
-                                onClicked: matchController.confirmSelected()
-                            }
-                            Button {
-                                text:     "✗ Reject"
-                                enabled:  appController.selectedFileId > 0 &&
-                                          !appController.selectedMatchData.rejected
-                                font.pixelSize: 11
-                                padding:  6
-                                onClicked: matchController.rejectSelected()
-                            }
-                        }
-
-                        Label {
-                            visible:          matchController.lastMessage.length > 0
-                            Layout.fillWidth: true
-                            text:             matchController.lastMessage
-                            color:            "#83a598"
-                            font.pixelSize:   10
-                            wrapMode:         Text.WordWrap
                         }
                     }
 

@@ -1,13 +1,15 @@
 #include "mod_workflow_service.h"
 
-#include <QDateTime>
 #include <QDir>
+#include <QTemporaryDir>
 #include <QFile>
 #include <QFileInfo>
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QSqlDriver>
 #include <QDebug>
+
+#include <optional>
 
 #include "../core/archive_extractor.h"
 #include "../core/constants/constants.h"
@@ -89,21 +91,22 @@ ModInstallResult ModWorkflowService::install(const FileRecord  &baseFile,
     // ── 3. Resolve base ROM path ─────────────────────────────────────────────
     if (cb) cb("preparing", 20);
     QString baseRomPath;
-    QString tempExtractDir;
+    std::optional<QTemporaryDir> tempDir;
 
     if (shouldTreatAsArchive(baseFile)) {
-        // Extract to a temp directory
-        tempExtractDir = QDir::tempPath() + "/.remus_mod_"
-                       + QString::number(QDateTime::currentMSecsSinceEpoch());
-        QDir().mkpath(tempExtractDir);
+        // Extract to a secure temporary directory (auto-removed on destruction)
+        tempDir.emplace();
+        if (!tempDir->isValid()) {
+            result.error = "Failed to create temporary extraction directory";
+            return result;
+        }
 
         ArchiveExtractor extractor;
         const QString archivePath = baseFile.currentPath.isEmpty()
                                     ? baseFile.archivePath : baseFile.currentPath;
-        ExtractionResult ex = extractor.extract(archivePath, tempExtractDir, false);
+        ExtractionResult ex = extractor.extract(archivePath, tempDir->path(), false);
         if (!ex.success) {
             result.error = "Failed to extract base ROM: " + ex.error;
-            QDir(tempExtractDir).removeRecursively();
             return result;
         }
 
@@ -112,11 +115,10 @@ ModInstallResult ModWorkflowService::install(const FileRecord  &baseFile,
                 ArchiveExtractor::normalizeArchiveMemberPath(baseFile.archiveInternalPath);
             if (normalizedInternalPath.isEmpty()) {
                 result.error = "Base ROM archive path is unsafe";
-                QDir(tempExtractDir).removeRecursively();
                 return result;
             }
 
-            baseRomPath = QDir(tempExtractDir).filePath(normalizedInternalPath);
+            baseRomPath = QDir(tempDir->path()).filePath(normalizedInternalPath);
         } else if (!ex.extractedFiles.isEmpty()) {
             baseRomPath = ex.extractedFiles.first();
         }
@@ -126,7 +128,6 @@ ModInstallResult ModWorkflowService::install(const FileRecord  &baseFile,
 
     if (baseRomPath.isEmpty() || !QFile::exists(baseRomPath)) {
         result.error = "Base ROM file not found";
-        if (!tempExtractDir.isEmpty()) QDir(tempExtractDir).removeRecursively();
         return result;
     }
 
@@ -134,7 +135,6 @@ ModInstallResult ModWorkflowService::install(const FileRecord  &baseFile,
     QDir outDir(outputDir);
     if (!outDir.exists() && !outDir.mkpath(".")) {
         result.error = "Cannot create output directory: " + outputDir;
-        if (!tempExtractDir.isEmpty()) QDir(tempExtractDir).removeRecursively();
         return result;
     }
 
@@ -147,8 +147,8 @@ ModInstallResult ModWorkflowService::install(const FileRecord  &baseFile,
     if (cb) cb("patching", 40);
     PatchResult patchResult = m_patchSvc.apply(baseRomPath, patchPath, patchedPath);
 
-    // Clean up temp extraction
-    if (!tempExtractDir.isEmpty()) QDir(tempExtractDir).removeRecursively();
+    // tempDir (QTemporaryDir) is released here — auto-removes the extraction directory
+    tempDir.reset();
 
     if (!patchResult.success) {
         result.error = "Patch failed: " + patchResult.error;
@@ -256,7 +256,11 @@ bool ModWorkflowService::uninstall(int modInstallationId)
         "SELECT patched_file_id FROM mod_installations WHERE id = ?"));
     query.addBindValue(modInstallationId);
 
-    if (!query.exec() || !query.next()) {
+    if (!query.exec()) {
+        qWarning() << "ModWorkflowService::uninstall query failed:" << query.lastError().text();
+        return false;
+    }
+    if (!query.next()) {
         return false;
     }
 

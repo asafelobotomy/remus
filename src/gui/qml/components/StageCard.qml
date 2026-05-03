@@ -12,6 +12,10 @@ Frame {
     property int    stageCount:  0
     property bool   expanded:    true
 
+    // Emitted when the user clicks the collapse/expand toggle.
+    // The parent is responsible for updating `expanded` in accordion mode.
+    signal toggleRequested()
+
     // Children declared by users go into the content ColumnLayout
     default property alias items: contentArea.data
 
@@ -56,7 +60,7 @@ Frame {
                 text:     root.expanded ? "▲" : "▼"
                 flat:     true
                 padding:  4
-                onClicked: root.expanded = !root.expanded
+                onClicked: root.toggleRequested()
             }
         }
 

@@ -133,50 +133,91 @@ Frame {
                         }
                     }
 
-                    // Stage badge row
-                    RowLayout {
-                        spacing: 4
+                    // Pipeline completion badges — single rect per stage, colour-coded:
+                    //   RED    = process not yet run
+                    //   YELLOW = H&M only: match found but not confirmed
+                    //   GREEN  = completed successfully
+                    Flow {
+                        width:   parent.width
+                        spacing: 3
 
+                        // ── H&M ──────────────────────────────────────────────
                         Rectangle {
-                            visible:  !modelData.hasHash
-                            width:    noHashLabel.implicitWidth + 8
-                            height:   14
-                            radius:   7
-                            color:    "#cc241d"
+                            width:  hmBadge.implicitWidth + 8
+                            height: 14
+                            radius: 7
+                            color:  modelData.hasMatch     ? "#689d6a"
+                                  : modelData.hasAnyMatch  ? "#d79921"
+                                  :                          "#cc241d"
                             Label {
-                                id:               noHashLabel
+                                id:               hmBadge
                                 anchors.centerIn: parent
-                                text:             "no hash"
+                                text:             "H&M"
                                 font.pixelSize:   9
-                                color:            "#fbf1c7"
+                                color:            modelData.hasMatch ? "#1d2021"
+                                                : modelData.hasAnyMatch ? "#1d2021"
+                                                : "#fbf1c7"
                             }
                         }
+
+                        // ── Art ───────────────────────────────────────────────
                         Rectangle {
-                            visible:  modelData.hasHash && !modelData.hasArtwork
-                            width:    noArtLabel.implicitWidth + 8
-                            height:   14
-                            radius:   7
-                            color:    "#d79921"
+                            width:  artBadge.implicitWidth + 8
+                            height: 14
+                            radius: 7
+                            color:  modelData.hasArtwork ? "#689d6a" : "#cc241d"
                             Label {
-                                id:               noArtLabel
+                                id:               artBadge
                                 anchors.centerIn: parent
-                                text:             "no art"
+                                text:             "Art"
                                 font.pixelSize:   9
-                                color:            "#1d2021"
+                                color:            modelData.hasArtwork ? "#1d2021" : "#fbf1c7"
                             }
                         }
+
+                        // ── Bndl ─────────────────────────────────────────────
                         Rectangle {
-                            visible:  modelData.hasHash && modelData.hasArtwork
-                            width:    doneLabel.implicitWidth + 8
-                            height:   14
-                            radius:   7
-                            color:    "#689d6a"
+                            width:  bndlBadge.implicitWidth + 8
+                            height: 14
+                            radius: 7
+                            color:  modelData.isBundled ? "#689d6a" : "#cc241d"
                             Label {
-                                id:               doneLabel
+                                id:               bndlBadge
                                 anchors.centerIn: parent
-                                text:             "done"
+                                text:             "Bndl"
                                 font.pixelSize:   9
-                                color:            "#1d2021"
+                                color:            modelData.isBundled ? "#1d2021" : "#fbf1c7"
+                            }
+                        }
+
+                        // ── Org ───────────────────────────────────────────────
+                        Rectangle {
+                            width:  orgBadge.implicitWidth + 8
+                            height: 14
+                            radius: 7
+                            color:  modelData.isOrganized ? "#689d6a" : "#cc241d"
+                            Label {
+                                id:               orgBadge
+                                anchors.centerIn: parent
+                                text:             "Org"
+                                font.pixelSize:   9
+                                color:            modelData.isOrganized ? "#1d2021" : "#fbf1c7"
+                            }
+                        }
+
+                        // ── Conv (disc/image formats only) ────────────────────
+                        Rectangle {
+                            visible: modelData.isConvertible
+                            width:   convBadge.implicitWidth + 8
+                            height:  14
+                            radius:  7
+                            color:   modelData.isConverted ? "#689d6a" : "#cc241d"
+                            Label {
+                                id:               convBadge
+                                anchors.centerIn: parent
+                                text:             "Conv"
+                                font.pixelSize:   9
+                                color:            modelData.isConverted ? "#1d2021" : "#fbf1c7"
                             }
                         }
                     }

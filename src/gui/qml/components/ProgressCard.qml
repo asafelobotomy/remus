@@ -29,9 +29,11 @@ Frame {
 
         ProgressBar {
             Layout.fillWidth: true
-            from: 0
-            to: Math.max(1, progressTotal)
-            value: progressValue
+            from:              0
+            to:                Math.max(1, progressTotal)
+            value:             progressValue
+            // Show a pulsing bar while the total is unknown (e.g. during scan)
+            indeterminate:     progressTotal <= 0
         }
 
         Label {

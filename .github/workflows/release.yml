@@ -29,9 +29,11 @@ jobs:
 
       - name: Get version from constants.h
         id: version
+        env:
+          INPUT_VERSION: ${{ github.event.inputs.version }}
         run: |
-          if [[ -n "${{ github.event.inputs.version }}" ]]; then
-            VERSION="${{ github.event.inputs.version }}"
+          if [[ -n "$INPUT_VERSION" ]]; then
+            VERSION="$INPUT_VERSION"
           else
             VERSION="v$(grep -E 'APP_VERSION' src/core/constants/constants.h | sed -E 's/.*"([0-9]+\.[0-9]+\.[0-9]+)".*/\1/')"
           fi

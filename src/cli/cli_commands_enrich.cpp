@@ -58,7 +58,7 @@ int handleEnrichCommand(CliContext &ctx)
 
         const bool sparse = m.publisher.isEmpty() || m.developer.isEmpty()
                           || m.genre.isEmpty() || m.players.isEmpty()
-                          || m.description.isEmpty();
+                          || m.description.isEmpty() || m.releaseYear == 0;
         if (!sparse) continue;
 
         const QString system = fileMap.contains(m.fileId)

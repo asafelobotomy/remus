@@ -9,6 +9,7 @@
 #include <QDateTime>
 #include <QFileInfo>
 #include <QSqlDatabase>
+#include <QSqlError>
 #include <QSqlQuery>
 #include <QUuid>
 
@@ -161,8 +162,10 @@ QList<SearchResult> CompendiumProvider::searchByName(const QString &title,
         query.addBindValue(regionCode);
         query.addBindValue(likePattern);
         query.addBindValue(likePattern);
-        if (!query.exec())
+        if (!query.exec()) {
+            qWarning() << "CompendiumProvider::searchByName query failed:" << query.lastError().text();
             return results;
+        }
     }
 
     const QString loweredSearch = searchTerm.toLower();
@@ -221,7 +224,11 @@ GameMetadata CompendiumProvider::getByHash(const QString &hash, const QString &s
     query.addBindValue(normalizedHash);
     query.addBindValue(systemId);
     query.addBindValue(systemId);
-    if (!query.exec() || !query.next()) {
+    if (!query.exec()) {
+        qWarning() << "CompendiumProvider::getByHash query failed:" << query.lastError().text();
+        return {};
+    }
+    if (!query.next()) {
         return {};
     }
 
@@ -273,7 +280,11 @@ GameMetadata CompendiumProvider::getBySerial(const QString &serial, const QStrin
     query.addBindValue(trimmedSerial);
     query.addBindValue(systemId);
     query.addBindValue(systemId);
-    if (!query.exec() || !query.next()) {
+    if (!query.exec()) {
+        qWarning() << "CompendiumProvider::getBySerial query failed:" << query.lastError().text();
+        return {};
+    }
+    if (!query.next()) {
         return {};
     }
 

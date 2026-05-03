@@ -1,11 +1,41 @@
 #include "export_controller.h"
 
+#include <QDir>
 #include <QFile>
+#include <QFileInfo>
+#include <QSettings>
+#include <QSqlDatabase>
+#include <QSqlQuery>
+#include <QStandardPaths>
 #include <QTextStream>
 
 #include "app_controller.h"
+#include "../../core/constants/constants.h"
 
 namespace Remus {
+
+namespace {
+
+/// Returns the path where ArtworkController stores downloaded artwork for a file,
+/// probing common image extensions because the downloader may rename the file.
+QString artworkPathForFile(int fileId)
+{
+    QSettings settings(QString::fromLatin1(Constants::SETTINGS_ORGANIZATION),
+                       QString::fromLatin1(Constants::SETTINGS_APPLICATION));
+    const QString configured = settings.value(QStringLiteral("gui/artwork_cache_dir")).toString().trimmed();
+    const QString artDir = configured.isEmpty()
+        ? QDir(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)).filePath(QStringLiteral("artwork"))
+        : configured;
+    const QString base = QDir(artDir).filePath(QStringLiteral("artwork_%1").arg(fileId));
+    for (const char *ext : {".png", ".jpg", ".jpeg", ".webp"}) {
+        const QString candidate = base + QLatin1String(ext);
+        if (QFileInfo::exists(candidate))
+            return candidate;
+    }
+    return QString(); // not found
+}
+
+} // anonymous namespace
 
 ExportController::ExportController(AppController *appController, QObject *parent)
     : QObject(parent)
@@ -35,20 +65,41 @@ void ExportController::bundleSelected(const QString &destinationDir)
     }
 
     m_exporting = true;
+    m_bundledFiles = 0;
+    m_totalBundleFiles = 1;
+    m_progressMessage = QStringLiteral("Bundling \"%1\"\u2026").arg(QFileInfo(file.currentPath).fileName());
     emit exportingChanged();
+    emit bundleProgressChanged();
+    emit progressMessageChanged();
 
     RomBundler::BundleConfig config;
+    const QString cachedArt = artworkPathForFile(fileId);
+    if (QFileInfo::exists(cachedArt)) {
+        config.artworkPath = cachedArt;
+    }
     const RomBundler::BundleResult result = m_bundler->bundle(file, match, metadataForMatch(match), destinationDir, config);
 
     m_exporting = false;
+    m_bundledFiles = 1;
     emit exportingChanged();
+    emit bundleProgressChanged();
 
     if (!result.success) {
+        m_progressMessage = result.error.isEmpty() ? QStringLiteral("Bundle export failed.") : result.error;
+        emit progressMessageChanged();
         setLastMessage(result.error.isEmpty() ? QStringLiteral("Bundle export failed.") : result.error);
         return;
     }
 
     m_lastOutputPath = result.outputPath;
+    {
+        QSqlQuery upd(m_appController->database()->database());
+        upd.prepare(QStringLiteral("UPDATE files SET is_bundled = 1 WHERE id = ?"));
+        upd.addBindValue(fileId);
+        upd.exec();
+    }
+    m_progressMessage = QStringLiteral("Bundle created: %1").arg(QFileInfo(result.outputPath).fileName());
+    emit progressMessageChanged();
     setLastMessage(QStringLiteral("Bundle created: %1").arg(result.outputPath));
     emit exportFinished();
     emit libraryChanged();
@@ -68,7 +119,12 @@ void ExportController::bundleAll(const QString &destinationDir)
     }
 
     m_exporting = true;
+    m_bundledFiles = 0;
+    m_totalBundleFiles = allMatches.size();
+    m_progressMessage = QStringLiteral("Bundling files\u2026");
     emit exportingChanged();
+    emit bundleProgressChanged();
+    emit progressMessageChanged();
 
     int bundled = 0;
     int failed = 0;
@@ -80,19 +136,37 @@ void ExportController::bundleAll(const QString &destinationDir)
             continue;
         }
 
+        m_progressMessage = QStringLiteral("Bundling %1 / %2\u2026").arg(m_bundledFiles + 1).arg(m_totalBundleFiles);
+        emit progressMessageChanged();
+
         RomBundler::BundleConfig config;
+        const QString cachedArt = artworkPathForFile(it.key());
+        if (QFileInfo::exists(cachedArt)) {
+            config.artworkPath = cachedArt;
+        }
         const RomBundler::BundleResult result =
             m_bundler->bundle(file, match, metadataForMatch(match), destinationDir, config);
 
         if (result.success) {
             ++bundled;
+            {
+                QSqlQuery upd(m_appController->database()->database());
+                upd.prepare(QStringLiteral("UPDATE files SET is_bundled = 1 WHERE id = ?"));
+                upd.addBindValue(it.key());
+                upd.exec();
+            }
         } else {
             ++failed;
         }
+        m_bundledFiles++;
+        emit bundleProgressChanged();
     }
 
     m_exporting = false;
+    m_progressMessage = QStringLiteral("Bundled %1 | Failed %2").arg(bundled).arg(failed);
     emit exportingChanged();
+    emit bundleProgressChanged();
+    emit progressMessageChanged();
 
     m_lastOutputPath = destinationDir;
     setLastMessage(QStringLiteral("Bundled %1 | Failed %2").arg(bundled).arg(failed));

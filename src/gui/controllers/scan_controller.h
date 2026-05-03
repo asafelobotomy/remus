@@ -2,6 +2,7 @@
 
 #include <QObject>
 #include <QStringList>
+#include <QThread>
 
 #include "../../services/library_service.h"
 
@@ -14,6 +15,7 @@ class ScanController : public QObject {
     Q_PROPERTY(bool scanning READ isScanning NOTIFY scanningChanged)
     Q_PROPERTY(int scannedFiles READ scannedFiles NOTIFY progressChanged)
     Q_PROPERTY(int totalFiles READ totalFiles NOTIFY progressChanged)
+    Q_PROPERTY(QString progressMessage READ progressMessage NOTIFY progressMessageChanged)
     Q_PROPERTY(QStringList recentLogs READ recentLogs NOTIFY recentLogsChanged)
     Q_PROPERTY(QString lastDirectory READ lastDirectory WRITE setLastDirectory NOTIFY lastDirectoryChanged)
 
@@ -23,6 +25,7 @@ public:
     bool isScanning() const { return m_scanning; }
     int scannedFiles() const { return m_scannedFiles; }
     int totalFiles() const { return m_totalFiles; }
+    QString progressMessage() const { return m_progressMessage; }
     QStringList recentLogs() const { return m_recentLogs; }
     QString lastDirectory() const { return m_lastDirectory; }
 
@@ -35,6 +38,7 @@ public slots:
 signals:
     void scanningChanged();
     void progressChanged();
+    void progressMessageChanged();
     void recentLogsChanged();
     void lastDirectoryChanged();
     void scanCompleted(int insertedFiles);
@@ -49,8 +53,10 @@ private:
     bool m_scanning = false;
     int m_scannedFiles = 0;
     int m_totalFiles = 0;
+    QString m_progressMessage;
     QStringList m_recentLogs;
     QString m_lastDirectory;
+    QThread *m_thread = nullptr;
 };
 
 } // namespace Remus

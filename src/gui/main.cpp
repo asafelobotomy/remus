@@ -60,6 +60,9 @@ int main(int argc, char *argv[])
         &artworkController,
         &organizeController);
 
+    QObject::connect(&exportController, &Remus::ExportController::libraryChanged,
+                     &workflowController, &Remus::WorkflowController::refresh);
+
     QQmlApplicationEngine engine;
 
     fileListModel.setAppController(&appController);

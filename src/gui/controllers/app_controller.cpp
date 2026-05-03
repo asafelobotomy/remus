@@ -5,6 +5,7 @@
 #include <QFile>
 #include <QFileInfo>
 #include <QSettings>
+#include <QSqlQuery>
 #include <QStandardPaths>
 
 #include "../../core/constants/constants.h"
@@ -140,29 +141,63 @@ void AppController::closeLibrary()
     }
 }
 
-bool AppController::eraseLibraryDatabase()
+bool AppController::eraseLibraryDatabase(bool eraseFiles,
+                                         bool eraseMatchData,
+                                         bool eraseApiCache,
+                                         bool eraseArtwork)
 {
     if (!m_libraryOpen) {
         setStatusMessage(QStringLiteral("No library is open."));
         return false;
     }
 
-    const QString dbPath = m_libraryPath;
-    closeLibrary();
-
-    if (QFile::exists(dbPath) && !QFile::remove(dbPath)) {
-        setStatusMessage(QStringLiteral("Failed to erase library database: %1").arg(dbPath));
+    if (!eraseFiles && !eraseMatchData && !eraseApiCache && !eraseArtwork) {
+        setStatusMessage(QStringLiteral("Nothing selected to erase."));
         return false;
     }
 
-    const bool reopened = openLibrary(dbPath);
-    if (reopened) {
+    QSqlQuery q(m_database.database());
+    QStringList erased;
+
+    if (eraseFiles) {
+        // Deleting libraries cascades to files → matches, undo_queue (FK SET NULL).
+        // Games and applied_patches are not cascade-linked so we remove them explicitly.
+        q.exec(QStringLiteral("DELETE FROM applied_patches"));
+        q.exec(QStringLiteral("DELETE FROM libraries")); // cascade: files → matches; undo_queue FK SET NULL
+        q.exec(QStringLiteral("DELETE FROM undo_queue"));
+        q.exec(QStringLiteral("DELETE FROM games"));
+        erased << QStringLiteral("file records");
         emit libraryDatabaseErased();
-        setStatusMessage(QStringLiteral("Library database erased and reset."));
-    } else {
-        setStatusMessage(QStringLiteral("Library database erased but could not reopen: %1").arg(dbPath));
+    } else if (eraseMatchData) {
+        // Keep file records but strip match results and game metadata.
+        q.exec(QStringLiteral("DELETE FROM matches"));
+        q.exec(QStringLiteral("DELETE FROM games"));
+        erased << QStringLiteral("match results");
     }
-    return reopened;
+
+    if (eraseApiCache) {
+        q.exec(QStringLiteral("DELETE FROM cache"));
+        const QString modCacheDir = QDir(
+            QStandardPaths::writableLocation(QStandardPaths::AppDataLocation))
+            .filePath(QStringLiteral("mod_catalog_cache"));
+        QDir(modCacheDir).removeRecursively();
+        erased << QStringLiteral("API cache");
+    }
+
+    if (eraseArtwork) {
+        emit artworkCacheEraseRequested();
+        erased << QStringLiteral("artwork cache");
+    }
+
+    // Reset selection state and notify all views to reload from the now-empty DB.
+    m_selectedFileId = 0;
+    m_selectedGameId = 0;
+    emit selectedFileChanged();
+    emit selectedGameChanged();
+    emit libraryOpened(); // reloads FileListModel, WorkflowController, etc.
+
+    setStatusMessage(QStringLiteral("Erased: %1.").arg(erased.join(QStringLiteral(", "))));
+    return true;
 }
 
 QString AppController::defaultLibraryPath() const
@@ -263,6 +298,7 @@ void AppController::setSelectedFileId(int fileId)
 
     m_selectedFileId = fileId;
     emit selectedFileChanged();
+    emit selectedFileDataChanged();
     refreshSelectedMatch();
 }
 
@@ -296,7 +332,7 @@ void AppController::rebuildOrchestrator()
                 m_orchestrator->addProvider(
                     Constants::Providers::COMPENDIUM,
                     compendiumProvider,
-                    providerPriorityOrDefault(Constants::Providers::COMPENDIUM, 180));
+                    providerPriorityOrDefault(Constants::Providers::COMPENDIUM, Constants::Providers::Priority::COMPENDIUM));
             } else {
                 compendiumProvider->deleteLater();
             }
@@ -306,7 +342,7 @@ void AppController::rebuildOrchestrator()
     m_orchestrator->addProvider(
         Constants::Providers::HASHEOUS,
         new HasheousProvider(m_orchestrator.get()),
-        providerPriorityOrDefault(Constants::Providers::HASHEOUS, 80));
+        providerPriorityOrDefault(Constants::Providers::HASHEOUS, Constants::Providers::Priority::HASHEOUS));
 
     QSettings settings = remusSettings();
 
@@ -325,7 +361,7 @@ void AppController::rebuildOrchestrator()
         m_orchestrator->addProvider(
             Constants::Providers::SCREENSCRAPER,
             provider,
-            providerPriorityOrDefault(Constants::Providers::SCREENSCRAPER, 90));
+            providerPriorityOrDefault(Constants::Providers::SCREENSCRAPER, Constants::Providers::Priority::SCREENSCRAPER));
     }
 
     const QString gametdbDir = findGameTdbDir();
@@ -335,21 +371,23 @@ void AppController::rebuildOrchestrator()
             m_orchestrator->addProvider(
                 Constants::Providers::GAMETDB,
                 provider,
-                providerPriorityOrDefault(Constants::Providers::GAMETDB, 150));
+                providerPriorityOrDefault(Constants::Providers::GAMETDB, Constants::Providers::Priority::GAMETDB));
         } else {
             provider->deleteLater();
         }
     }
 
-    auto *tgdbProvider = new TheGamesDBProvider(m_orchestrator.get());
     const QString tgdbApiKey = settings.value(QString::fromLatin1(Constants::Settings::Providers::THEGAMESDB_API_KEY)).toString().trimmed();
     if (!tgdbApiKey.isEmpty()) {
+        auto *tgdbProvider = new TheGamesDBProvider(m_orchestrator.get());
         tgdbProvider->setApiKey(tgdbApiKey);
+        m_orchestrator->addProvider(
+            Constants::Providers::THEGAMESDB,
+            tgdbProvider,
+            providerPriorityOrDefault(Constants::Providers::THEGAMESDB, Constants::Providers::Priority::THEGAMESDB));
+    } else {
+        qInfo() << "TheGamesDB: skipped (no API key configured)";
     }
-    m_orchestrator->addProvider(
-        Constants::Providers::THEGAMESDB,
-        tgdbProvider,
-        providerPriorityOrDefault(Constants::Providers::THEGAMESDB, 50));
 
     const QString igdbClientId = settings.value(QString::fromLatin1(Constants::Settings::Providers::IGDB_CLIENT_ID)).toString().trimmed();
     const QString igdbClientSecret = settings.value(QString::fromLatin1(Constants::Settings::Providers::IGDB_CLIENT_SECRET)).toString().trimmed();
@@ -359,7 +397,7 @@ void AppController::rebuildOrchestrator()
         m_orchestrator->addProvider(
             Constants::Providers::IGDB,
             igdbProvider,
-            providerPriorityOrDefault(Constants::Providers::IGDB, 70));
+            providerPriorityOrDefault(Constants::Providers::IGDB, Constants::Providers::Priority::IGDB));
     }
 
     const QString raUser = settings.value(QString::fromLatin1(Constants::Settings::Providers::RETROACHIEVEMENTS_USERNAME)).toString().trimmed();
@@ -370,13 +408,13 @@ void AppController::rebuildOrchestrator()
         m_orchestrator->addProvider(
             Constants::Providers::RETROACHIEVEMENTS,
             provider,
-            providerPriorityOrDefault(Constants::Providers::RETROACHIEVEMENTS, 60));
+            providerPriorityOrDefault(Constants::Providers::RETROACHIEVEMENTS, Constants::Providers::Priority::RETROACHIEVEMENTS));
     }
 
     m_orchestrator->addProvider(
         Constants::Providers::WIKIDATA,
         new WikidataProvider(m_orchestrator.get()),
-        providerPriorityOrDefault(Constants::Providers::WIKIDATA, 40));
+        providerPriorityOrDefault(Constants::Providers::WIKIDATA, Constants::Providers::Priority::WIKIDATA));
 
     emit orchestratorChanged();
 }
@@ -395,6 +433,11 @@ void AppController::refreshSelectedMatch()
 
     // Always notify QML so metadata fields re-evaluate after any match DB change.
     emit selectedMatchDataChanged();
+}
+
+void AppController::refreshSelectedFile()
+{
+    emit selectedFileDataChanged();
 }
 
 } // namespace Remus

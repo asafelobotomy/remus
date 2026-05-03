@@ -16,6 +16,7 @@ class ConversionController : public QObject {
     Q_OBJECT
     Q_PROPERTY(bool converting READ isConverting NOTIFY convertingChanged)
     Q_PROPERTY(int progress READ progress NOTIFY progressChanged)
+    Q_PROPERTY(QString progressMessage READ progressMessage NOTIFY progressMessageChanged)
     Q_PROPERTY(QString targetFormat READ targetFormat WRITE setTargetFormat NOTIFY targetFormatChanged)
     Q_PROPERTY(double compressionRatio READ compressionRatio NOTIFY conversionFinished)
     Q_PROPERTY(QString lastOutputPath READ lastOutputPath NOTIFY conversionFinished)
@@ -27,6 +28,7 @@ public:
 
     bool isConverting() const { return m_converting; }
     int progress() const { return m_progress; }
+    QString progressMessage() const { return m_progressMessage; }
     QString targetFormat() const { return m_targetFormat; }
     double compressionRatio() const { return m_compressionRatio; }
     QString lastOutputPath() const { return m_lastOutputPath; }
@@ -43,6 +45,7 @@ public slots:
 signals:
     void convertingChanged();
     void progressChanged();
+    void progressMessageChanged();
     void targetFormatChanged();
     void conversionFinished();
     void lastMessageChanged();
@@ -61,6 +64,7 @@ private:
     PBPExporter m_pbpExporter;
     bool m_converting = false;
     int m_progress = 0;
+    QString m_progressMessage;
     QString m_targetFormat = QStringLiteral("CHD");
     double m_compressionRatio = 0.0;
     QString m_lastOutputPath;

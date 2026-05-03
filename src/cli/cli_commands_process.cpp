@@ -139,7 +139,7 @@ int handleScanCommand(CliContext &ctx)
         qDebug() << "Found:" << path;
     });
     QObject::connect(&scanner, &Scanner::scanProgress, [](int processed, int) {
-        if (processed % 50 == 0) {
+        if (processed > 0 && processed % 50 == 0) {
             qInfo() << "Processed" << processed << "files...";
         }
     });

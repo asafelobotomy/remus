@@ -104,9 +104,11 @@ void ProviderOrchestrator::queryProvider(GameMetadata &accumulator,
     }
 
     if (result.title.isEmpty()) {
-        const QString searchTerm = accumulator.title.isEmpty()
-            ? Metadata::FilenameNormalizer::normalize(name)
-            : accumulator.title;
+        // Always normalize for name searches: strip region/revision parentheticals
+        // (e.g. "Streets of Rage (World) (En,Ja)" → "Streets of Rage") so
+        // name-only providers like TheGamesDB can match against their own titles.
+        const QString rawTerm = accumulator.title.isEmpty() ? name : accumulator.title;
+        const QString searchTerm = Metadata::FilenameNormalizer::normalize(rawTerm);
         if (!searchTerm.isEmpty()) {
             emit tryingProvider(providerName, MatchMethods::NAME);
             try {

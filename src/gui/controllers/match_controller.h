@@ -13,6 +13,9 @@ struct FileRecord;
 class MatchController : public QObject {
     Q_OBJECT
     Q_PROPERTY(bool matching READ isMatching NOTIFY matchingChanged)
+    Q_PROPERTY(int matchedFiles READ matchedFiles NOTIFY matchProgressChanged)
+    Q_PROPERTY(int totalMatchFiles READ totalMatchFiles NOTIFY matchProgressChanged)
+    Q_PROPERTY(QString progressMessage READ progressMessage NOTIFY progressMessageChanged)
     Q_PROPERTY(QString currentProvider READ currentProvider NOTIFY currentProviderChanged)
     Q_PROPERTY(QString lastMessage READ lastMessage NOTIFY lastMessageChanged)
 
@@ -20,6 +23,9 @@ public:
     explicit MatchController(AppController *appController, QObject *parent = nullptr);
 
     bool isMatching() const { return m_matching; }
+    int matchedFiles() const { return m_matchedFiles; }
+    int totalMatchFiles() const { return m_totalMatchFiles; }
+    QString progressMessage() const { return m_progressMessage; }
     QString currentProvider() const { return m_currentProvider; }
     QString lastMessage() const { return m_lastMessage; }
 
@@ -33,6 +39,8 @@ public:
 
 signals:
     void matchingChanged();
+    void matchProgressChanged();
+    void progressMessageChanged();
     void currentProviderChanged();
     void lastMessageChanged();
     void libraryChanged();
@@ -50,6 +58,9 @@ private:
     MatchListModel *m_model = nullptr;
     QPointer<ProviderOrchestrator> m_connectedOrchestrator;
     bool m_matching = false;
+    int m_matchedFiles = 0;
+    int m_totalMatchFiles = 0;
+    QString m_progressMessage;
     QString m_currentProvider;
     QString m_lastMessage;
 };

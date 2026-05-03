@@ -82,12 +82,29 @@ public:
      */
     QStringList getAllExtensions() const;
 
-private:
     /**
-     * @brief Convert scan results to FileRecords and insert into DB
+     * @brief Scan a directory for ROM files — filesystem only, no database access.
+     *
+     * Safe to call from a worker thread. Progress and log callbacks are invoked
+     * on the calling thread; callers are responsible for thread-hopping if needed.
+     *
+     * @param path       Directory to scan
+     * @param progressCb Progress callback (done, total, currentFile)
+     * @param logCb      Optional log callback
+     * @return Ordered list of scan results
+     */
+    QList<ScanResult> scanFilesystem(const QString &path,
+                                     ProgressCallback progressCb = nullptr,
+                                     LogCallback logCb = nullptr);
+
+    /**
+     * @brief Convert scan results to FileRecords and insert into DB.
+     *
+     * Must be called on the thread that owns the Database connection.
      */
     int persistScanResults(const QList<ScanResult> &results,
-                           int libraryId, Database *db);
+                           int libraryId, Database *db,
+                           ProgressCallback progressCb = nullptr);
 
     std::unique_ptr<Scanner> m_scanner;
     std::unique_ptr<SystemDetector> m_detector;

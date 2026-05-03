@@ -356,7 +356,7 @@ void CliHelpersTest::testBuildOrchestratorSkipsIgdbWithoutCredentials()
 
     const QStringList providers = orchestrator->getEnabledProviders();
     QVERIFY(providers.contains(QStringLiteral("hasheous")));
-    QVERIFY(providers.contains(QStringLiteral("thegamesdb")));
+    QVERIFY(!providers.contains(QStringLiteral("thegamesdb")));  // gated on API key
     QVERIFY(!providers.contains(QStringLiteral("igdb")));
 }
 

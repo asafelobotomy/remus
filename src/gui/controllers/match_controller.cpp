@@ -78,10 +78,21 @@ void MatchController::matchSelected()
     }
 
     m_matching = true;
+    m_matchedFiles    = 0;
+    m_totalMatchFiles = 1;
+    m_progressMessage = QStringLiteral("Matching selected file\u2026");
     emit matchingChanged();
+    emit matchProgressChanged();
+    emit progressMessageChanged();
+
     const bool matched = matchFileRecord(m_appController->database()->getFileById(fileId));
+
+    m_matchedFiles = 1;
     m_matching = false;
+    m_progressMessage = matched ? QStringLiteral("Match found.") : QStringLiteral("No match found.");
     emit matchingChanged();
+    emit matchProgressChanged();
+    emit progressMessageChanged();
 
     if (!matched) {
         emit matchError(QStringLiteral("No metadata match found for the selected file."));
@@ -105,18 +116,32 @@ void MatchController::matchAll()
     }
 
     m_matching = true;
+    m_matchedFiles    = 0;
+    m_totalMatchFiles = 0;
+    m_progressMessage = QStringLiteral("Matching files\u2026");
     emit matchingChanged();
+    emit matchProgressChanged();
+    emit progressMessageChanged();
 
     int matchedCount = 0;
     const QList<FileRecord> files = m_appController->database()->getExistingFiles();
+    m_totalMatchFiles = files.size();
+    emit matchProgressChanged();
+
     for (const FileRecord &file : files) {
+        m_progressMessage = QStringLiteral("Matching %1 / %2\u2026").arg(m_matchedFiles + 1).arg(m_totalMatchFiles);
+        emit progressMessageChanged();
         if (matchFileRecord(file)) {
             matchedCount++;
         }
+        m_matchedFiles++;
+        emit matchProgressChanged();
     }
 
     m_matching = false;
+    m_progressMessage = QStringLiteral("Matched %1 of %2 files.").arg(matchedCount).arg(files.size());
     emit matchingChanged();
+    emit progressMessageChanged();
     setLastMessage(QStringLiteral("Matched %1 of %2 files.").arg(matchedCount).arg(files.size()));
     refreshModel();
     emit libraryChanged();

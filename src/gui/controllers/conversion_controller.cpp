@@ -2,6 +2,8 @@
 
 #include <QFileInfo>
 #include <QSettings>
+#include <QSqlDatabase>
+#include <QSqlQuery>
 
 #include "app_controller.h"
 #include "settings_controller.h"
@@ -45,8 +47,10 @@ void ConversionController::convertSelected(const QString &format, const QString 
 
     m_converting = true;
     m_progress = 0;
+    m_progressMessage = QStringLiteral("Converting \"%1\" to %2\u2026").arg(QFileInfo(file.currentPath).fileName(), normalizedFormat);
     emit convertingChanged();
     emit progressChanged();
+    emit progressMessageChanged();
 
     ConversionResult result;
     if (normalizedFormat == QStringLiteral("CHD")) {
@@ -81,6 +85,8 @@ void ConversionController::convertSelected(const QString &format, const QString 
     emit convertingChanged();
 
     if (!result.success) {
+        m_progressMessage = result.error.isEmpty() ? QStringLiteral("Conversion failed.") : result.error;
+        emit progressMessageChanged();
         setLastMessage(result.error.isEmpty() ? QStringLiteral("Conversion failed.") : result.error);
         return;
     }
@@ -88,6 +94,14 @@ void ConversionController::convertSelected(const QString &format, const QString 
     m_compressionRatio = result.compressionRatio;
     m_lastOutputPath = result.outputPath;
     registerOutputFile(file, result.outputPath);
+    {
+        QSqlQuery upd(m_appController->database()->database());
+        upd.prepare(QStringLiteral("UPDATE files SET is_converted = 1 WHERE id = ?"));
+        upd.addBindValue(file.id);
+        upd.exec();
+    }
+    m_progressMessage = QStringLiteral("Created %1").arg(QFileInfo(result.outputPath).fileName());
+    emit progressMessageChanged();
     setLastMessage(QStringLiteral("Created %1").arg(QFileInfo(result.outputPath).fileName()));
     emit conversionFinished();
     emit libraryChanged();
@@ -151,8 +165,10 @@ void ConversionController::convertAll(const QString &format, const QString &outp
 
     m_converting = true;
     m_progress = 0;
+    m_progressMessage = QStringLiteral("Converting files\u2026");
     emit convertingChanged();
     emit progressChanged();
+    emit progressMessageChanged();
 
     int converted = 0;
     int skipped = 0;
@@ -165,6 +181,10 @@ void ConversionController::convertAll(const QString &format, const QString &outp
         const QString normalizedFormat = (normalizedInput == QStringLiteral("AUTO"))
             ? resolveAutoFormat(file.extension)
             : normalizedInput;
+
+        m_progressMessage = QStringLiteral("Converting %1 / %2: \"%3\"\u2026")
+                                .arg(i + 1).arg(total).arg(QFileInfo(file.currentPath).fileName());
+        emit progressMessageChanged();
 
         if (normalizedFormat.isEmpty()) {
             ++skipped;
@@ -201,13 +221,21 @@ void ConversionController::convertAll(const QString &format, const QString &outp
         if (result.success) {
             ++converted;
             registerOutputFile(file, result.outputPath);
+            {
+                QSqlQuery upd(m_appController->database()->database());
+                upd.prepare(QStringLiteral("UPDATE files SET is_converted = 1 WHERE id = ?"));
+                upd.addBindValue(file.id);
+                upd.exec();
+            }
         } else {
             ++failed;
         }
     }
 
     m_converting = false;
+    m_progressMessage = QStringLiteral("Converted %1 | Skipped %2 | Failed %3").arg(converted).arg(skipped).arg(failed);
     emit convertingChanged();
+    emit progressMessageChanged();
 
     setLastMessage(QStringLiteral("Converted %1 | Skipped %2 | Failed %3")
                        .arg(converted).arg(skipped).arg(failed));

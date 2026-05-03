@@ -57,6 +57,46 @@ LibraryService::~LibraryService()
 {
 }
 
+QList<ScanResult> LibraryService::scanFilesystem(const QString &path,
+                                                  ProgressCallback progressCb,
+                                                  LogCallback logCb)
+{
+    if (logCb) logCb(QString("Scanning: %1").arg(path));
+
+    // Track how many files have been found; total is unknown until the walk
+    // finishes, so we pass 0 for 'total' during scanning (indeterminate).
+    int foundCount = 0;
+    int lastTotal  = 0;
+
+    QMetaObject::Connection progConn, fileConn;
+    if (progressCb) {
+        progConn = QObject::connect(m_scanner.get(), &Scanner::scanProgress,
+            [&, progressCb](int done, int total) {
+                foundCount = done;
+                lastTotal  = total > 0 ? total : 0;
+                progressCb(foundCount, lastTotal, {});
+            });
+        fileConn = QObject::connect(m_scanner.get(), &Scanner::fileFound,
+            [&, progressCb](const QString &p) {
+                progressCb(++foundCount, lastTotal, p);
+            });
+    }
+
+    QList<ScanResult> results = m_scanner->scan(path);
+
+    if (progConn) QObject::disconnect(progConn);
+    if (fileConn) QObject::disconnect(fileConn);
+
+    if (!m_scanner->wasCancelled()) {
+        if (progressCb) progressCb(results.size(), results.size(), {});
+        if (logCb) logCb(QString("Scan complete: %1 files").arg(results.size()));
+    } else {
+        if (logCb) logCb("Scan cancelled");
+    }
+
+    return results;
+}
+
 int LibraryService::scan(const QString &path, Database *db,
                          ProgressCallback progressCb, LogCallback logCb,
                          int existingLibraryId)
@@ -66,39 +106,19 @@ int LibraryService::scan(const QString &path, Database *db,
         return 0;
     }
 
-    if (logCb) logCb(QString("Scanning: %1").arg(path));
-
-    // Wire scanner signals to callbacks (direct connections, same thread)
-    QMetaObject::Connection progConn, fileConn;
-    if (progressCb) {
-        progConn = QObject::connect(m_scanner.get(), &Scanner::scanProgress,
-            [&](int done, int total) { progressCb(done, total, {}); });
-        fileConn = QObject::connect(m_scanner.get(), &Scanner::fileFound,
-            [&](const QString &p) { progressCb(0, 0, p); });
-    }
-
-    QList<ScanResult> results = m_scanner->scan(path);
-
-    // Disconnect temporary connections
-    if (progConn) QObject::disconnect(progConn);
-    if (fileConn) QObject::disconnect(fileConn);
+    const QList<ScanResult> results = scanFilesystem(path, progressCb, logCb);
 
     if (m_scanner->wasCancelled()) {
-        if (logCb) logCb("Scan cancelled");
         return 0;
     }
 
-    if (progressCb) progressCb(results.size(), results.size(), {});
-    if (logCb) logCb(QString("Scan complete: %1 files").arg(results.size()));
-
-    // Create or reuse library entry
     int libraryId = existingLibraryId > 0 ? existingLibraryId : db->insertLibrary(path);
     if (libraryId == 0) {
         if (logCb) logCb("Failed to create library entry");
         return 0;
     }
 
-    int inserted = persistScanResults(results, libraryId, db);
+    const int inserted = persistScanResults(results, libraryId, db);
     if (logCb) logCb(QString("Inserted %1 files into database").arg(inserted));
     return inserted;
 }
@@ -166,7 +186,8 @@ QStringList LibraryService::getAllExtensions() const
 }
 
 int LibraryService::persistScanResults(const QList<ScanResult> &results,
-                                       int libraryId, Database *db)
+                                       int libraryId, Database *db,
+                                       ProgressCallback progressCb)
 {
     int inserted = 0;
     QHash<QString, int> insertedIds;
@@ -234,6 +255,9 @@ int LibraryService::persistScanResults(const QList<ScanResult> &results,
             inserted++;
             insertedIds.insert(scanResultIdentifier(sr), insertedId);
         }
+
+        if (progressCb)
+            progressCb(inserted, orderedResults.size(), {});
     }
     return inserted;
 }

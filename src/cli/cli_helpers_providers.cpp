@@ -118,17 +118,19 @@ std::unique_ptr<ProviderOrchestrator> buildOrchestrator(const QCommandLineParser
         }
     }
 
-    auto tgdbProvider = std::make_unique<TheGamesDBProvider>();
     const QString tgdbApiKey = parserOrSetting(parser,
                                                QStringLiteral("tgdb-api-key"),
                                                Settings::Providers::THEGAMESDB_API_KEY);
     if (!tgdbApiKey.isEmpty()) {
+        auto tgdbProvider = std::make_unique<TheGamesDBProvider>();
         tgdbProvider->setApiKey(tgdbApiKey);
+        const auto tgdbInfo = Providers::getProviderInfo(Providers::THEGAMESDB);
+        orchestrator->addProvider(Providers::THEGAMESDB, tgdbProvider.get(),
+                                  tgdbInfo ? tgdbInfo->priority : 50);
+        tgdbProvider.release();
+    } else {
+        qInfo() << "TheGamesDB: skipped (no API key configured)";
     }
-    const auto tgdbInfo = Providers::getProviderInfo(Providers::THEGAMESDB);
-    orchestrator->addProvider(Providers::THEGAMESDB, tgdbProvider.get(),
-                              tgdbInfo ? tgdbInfo->priority : 50);
-    tgdbProvider.release();
 
     const QString igdbClientId = parserOrSetting(parser,
                                                  QStringLiteral("igdb-client-id"),

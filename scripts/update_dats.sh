@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 # update_dats.sh — Download/update libretro-database DATs for Remus
 #
 # Usage:
@@ -19,14 +20,13 @@
 # Requires: git
 # License: CC-BY-SA-4.0 (libretro-database)
 
-set -euo pipefail
-
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 TARGET_DIR="$PROJECT_ROOT/data/databases"
 NO_INTRO_DIR="$TARGET_DIR/no-intro"
 REDUMP_DIR="$TARGET_DIR/redump"
-CLONE_DIR="${TMPDIR:-/tmp}/libretro-database"
+CLONE_DIR="$(mktemp -d)"
+trap 'rm -rf "$CLONE_DIR"' EXIT
 REPO_URL="https://github.com/libretro/libretro-database.git"
 
 # Core systems to include by default (filename stems as they appear in the repo)

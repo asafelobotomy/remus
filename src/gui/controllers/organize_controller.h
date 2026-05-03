@@ -14,6 +14,9 @@ class OrganizeController : public QObject {
     Q_OBJECT
     Q_PROPERTY(QString namingTemplate READ namingTemplate WRITE setNamingTemplate NOTIFY namingTemplateChanged)
     Q_PROPERTY(bool organizing READ isOrganizing NOTIFY organizingChanged)
+    Q_PROPERTY(int organizedFiles READ organizedFiles NOTIFY organizeProgressChanged)
+    Q_PROPERTY(int totalOrganizeFiles READ totalOrganizeFiles NOTIFY organizeProgressChanged)
+    Q_PROPERTY(QString progressMessage READ progressMessage NOTIFY progressMessageChanged)
     Q_PROPERTY(QVariantList previewEntries READ previewEntries NOTIFY previewEntriesChanged)
     Q_PROPERTY(QString lastError READ lastError NOTIFY lastErrorChanged)
 
@@ -22,6 +25,9 @@ public:
 
     QString namingTemplate() const { return m_namingTemplate; }
     bool isOrganizing() const { return m_organizing; }
+    int organizedFiles() const { return m_organizedFiles; }
+    int totalOrganizeFiles() const { return m_totalOrganizeFiles; }
+    QString progressMessage() const { return m_progressMessage; }
     QVariantList previewEntries() const { return m_previewEntries; }
     QString lastError() const { return m_lastError; }
 
@@ -35,6 +41,8 @@ public slots:
 signals:
     void namingTemplateChanged();
     void organizingChanged();
+    void organizeProgressChanged();
+    void progressMessageChanged();
     void previewEntriesChanged();
     void lastErrorChanged();
     void libraryChanged();
@@ -49,6 +57,9 @@ private:
     std::unique_ptr<OrganizeEngine> m_engine;
     QString m_namingTemplate;
     bool m_organizing = false;
+    int m_organizedFiles = 0;
+    int m_totalOrganizeFiles = 0;
+    QString m_progressMessage;
     QVariantList m_previewEntries;
     QString m_lastError;
     int m_lastUndoId = 0;

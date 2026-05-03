@@ -72,9 +72,25 @@ int handleInfoCommand(CliContext &ctx)
 
     qInfo() << "=== File Info ===";
     printFileInfo(file);
-    auto match = ctx.db.getMatchForFile(fileId);
+    const Database::MatchResult match = ctx.db.getMatchForFile(fileId);
     if (match.matchId != 0) {
-        qInfo() << "Match:" << match.gameTitle << "(" << match.confidence << "%)" << match.matchMethod;
+        qInfo() << "";
+        qInfo() << "=== Match ===";
+        qInfo() << "Title:      " << match.gameTitle;
+        qInfo().noquote() << QStringLiteral("Confidence:  %1% [%2]").arg(match.confidence).arg(match.matchMethod);
+        qInfo() << "Publisher:  " << (match.publisher.isEmpty()  ? QStringLiteral("-") : match.publisher);
+        qInfo() << "Developer:  " << (match.developer.isEmpty()  ? QStringLiteral("-") : match.developer);
+        qInfo() << "Release:    " << (match.releaseYear > 0      ? QString::number(match.releaseYear) : QStringLiteral("-"));
+        qInfo() << "Genre:      " << (match.genre.isEmpty()      ? QStringLiteral("-") : match.genre);
+        qInfo() << "Players:    " << (match.players.isEmpty()    ? QStringLiteral("-") : match.players);
+        qInfo() << "Rating:     " << (match.rating > 0.0f        ? QString::number(match.rating, 'f', 1) : QStringLiteral("-"));
+        qInfo() << "Region:     " << (match.region.isEmpty()     ? QStringLiteral("-") : match.region);
+        qInfo() << "Confirmed:  " << (match.isConfirmed ? QStringLiteral("yes") : QStringLiteral("no"));
+        if (!match.description.isEmpty()) {
+            qInfo() << "Description:" << match.description.left(200) + (match.description.length() > 200 ? "..." : "");
+        } else {
+            qInfo() << "Description: -";
+        }
     }
     return 0;
 }
@@ -146,7 +162,12 @@ int handleListCommand(CliContext &ctx)
 
 int handleHashAllCommand(CliContext &ctx)
 {
-    if (!ctx.parser.isSet("hash-all")) return 0;
+    // --hash-all: explicit opt-in to hash everything in the DB.
+    // --hash without --scan: same behaviour — hash all files lacking hashes.
+    const bool scanRequested = ctx.parser.isSet("scan");
+    const bool hashRequested = ctx.parser.isSet("hash") || ctx.parser.isSet("hash-all");
+    if (!hashRequested) return 0;
+    if (ctx.parser.isSet("hash") && scanRequested) return 0; // handled inside handleScanCommand
 
     qInfo() << "";
     qInfo() << "Hashing files without hashes...";
