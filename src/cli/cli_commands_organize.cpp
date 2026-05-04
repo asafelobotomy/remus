@@ -63,7 +63,7 @@ int handleArtworkCommand(CliContext &ctx)
         const QString destPath = artworkDirStr + "/" +
             QFileInfo(file.filename).completeBaseName() + ".jpg";
 
-        if (ctx.dryRunAll) {
+        if (ctx.dryRunAll || ctx.parser.isSet(QStringLiteral("dry-run"))) {
             qInfo() << "  [DRY-RUN] would save" << destPath << "from" << url.toString();
             downloadedCount++;
         } else {

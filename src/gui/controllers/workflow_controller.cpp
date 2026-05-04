@@ -315,11 +315,16 @@ void WorkflowController::advanceRunAll()
     switch (m_runStep++) {
 
     case 0: {
-        // Hash all files
-        connect(m_hashController, &HashController::hashCompleted,
-                this, [this](int) { advanceRunAll(); }, Qt::SingleShotConnection);
-        connect(m_hashController, &HashController::hashError,
-                this, [this](const QString &) { cancelRunAll(); }, Qt::SingleShotConnection);
+        // Hash all files — guard ensures only one of the two connections fires
+        auto *guard = new QObject(this);
+        connect(m_hashController, &HashController::hashCompleted, guard, [this, guard](int) {
+            delete guard;
+            advanceRunAll();
+        });
+        connect(m_hashController, &HashController::hashError, guard, [this, guard](const QString &) {
+            delete guard;
+            cancelRunAll();
+        });
         m_hashController->startHashAll();
         break;
     }
@@ -336,6 +341,12 @@ void WorkflowController::advanceRunAll()
     }
 
     case 2:
+        // Confirm all matches so artwork lookup finds them
+        m_matchController->confirmAll();
+        advanceRunAll();
+        break;
+
+    case 3:
         // Artwork (synchronous download loop)
         m_artworkController->downloadAllMatched();
         advanceRunAll();
