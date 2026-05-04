@@ -91,21 +91,21 @@ void ProviderOrchestrator::addProvider(const QString &name, MetadataProvider *pr
         qWarning() << "Cannot add null provider:" << name;
         return;
     }
-    
+
     provider->setParent(this);
-    
+
     ProviderInfo info;
     info.provider = provider;
     info.priority = priority;
     info.enabled = true;
     info.supportsHash = detectHashSupport(name);
     info.isLocal = detectLocalProvider(name);
-    
+
     m_providers[name] = info;
     m_sortCacheDirty = true;
 
-    qInfo() << "Added provider:" << name 
-            << "| Priority:" << priority 
+    qInfo() << "Added provider:" << name
+            << "| Priority:" << priority
             << "| Hash support:" << (info.supportsHash ? "YES" : "NO");
 }
 
@@ -113,7 +113,10 @@ void ProviderOrchestrator::removeProvider(const QString &name)
 {
     if (m_providers.contains(name)) {
         ProviderInfo info = m_providers.take(name);
-        delete info.provider;
+        // Provider is Qt-parented to the orchestrator; Qt parent-child cleanup handles
+        // deletion at orchestrator destruction. Manual delete here would be a double-free.
+        info.provider->setParent(nullptr);
+        info.provider->deleteLater();
         m_sortCacheDirty = true;
         qInfo() << "Removed provider:" << name;
     }

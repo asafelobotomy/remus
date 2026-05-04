@@ -133,9 +133,9 @@ int OrganizeEngine::undoAll(int limit)
 {
     QSqlQuery query(m_database.database());
 
-    QString sql = "SELECT id FROM undo_queue WHERE undone = 0 ORDER BY executed_at DESC";
+    QString sql = QStringLiteral("SELECT id FROM undo_queue WHERE undone = 0 ORDER BY executed_at DESC");
     if (limit > 0) {
-        sql += " LIMIT ?";
+        sql += QStringLiteral(" LIMIT ?");
     }
 
     query.prepare(sql);
