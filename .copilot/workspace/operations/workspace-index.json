@@ -5,12 +5,12 @@
   "purpose": "Canonical machine-readable inventory for repository metadata.",
   "counts": {
     "agents": 15,
-    "skillsRepo": 28,
-    "skillsTemplate": 28,
+    "skillsRepo": 30,
+    "skillsTemplate": 30,
     "hookScriptsShell": 11,
     "hookScriptsPowerShell": 9,
     "hookScriptsPython": 11,
-    "hookScriptsJson": 1
+    "hookScriptsJson": 3
   },
   "agents": [
     "audit.agent.md",
@@ -34,6 +34,7 @@
       "accessibility-review",
       "agentic-workflows",
       "api-design",
+      "audit-procedures",
       "changelog-entry",
       "commit-preflight",
       "compress-prose",
@@ -44,6 +45,7 @@
       "env-config",
       "extension-review",
       "fix-ci-failure",
+      "git-workflows",
       "issue-triage",
       "lean-pr-review",
       "mcp-builder",
@@ -64,6 +66,7 @@
       "accessibility-review",
       "agentic-workflows",
       "api-design",
+      "audit-procedures",
       "changelog-entry",
       "commit-preflight",
       "compress-prose",
@@ -74,6 +77,7 @@
       "env-config",
       "extension-review",
       "fix-ci-failure",
+      "git-workflows",
       "issue-triage",
       "lean-pr-review",
       "mcp-builder",
@@ -124,7 +128,9 @@
   "workflowFiles": [
     "ci.yml",
     "codeql.yml",
-    "release.yml"
+    "copilot-setup-steps.yml",
+    "release.yml",
+    "setup.yml"
   ],
   "hookScripts": {
     "shell": [
@@ -165,7 +171,9 @@
       "session_reflect_fallback.py"
     ],
     "json": [
-      "heartbeat-policy.json"
+      "guard-policy.json",
+      "heartbeat-policy.json",
+      "secrets-patterns.json"
     ]
   },
   "notes": [
