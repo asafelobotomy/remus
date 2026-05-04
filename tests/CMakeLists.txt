@@ -218,7 +218,7 @@ add_remus_test(test_metadata_cache MetadataCacheTest
 )
 
 add_remus_test(test_app_controller_reopen AppControllerReopenTest
-    SOURCES test_app_controller_reopen.cpp ../src/gui/controllers/app_controller.cpp
+    SOURCES test_app_controller_reopen.cpp ../src/gui/controllers/app_controller.cpp ../src/gui/controllers/app_controller_orchestrator.cpp
     LIBS Qt6::Test Qt6::Core Qt6::Sql remus-metadata remus-core
 )
 target_include_directories(test_app_controller_reopen PRIVATE
@@ -230,6 +230,7 @@ add_remus_test(test_workflow_controller WorkflowControllerTest
         test_workflow_controller.cpp
         ../src/gui/controllers/workflow_controller.cpp
         ../src/gui/controllers/app_controller.cpp
+        ../src/gui/controllers/app_controller_orchestrator.cpp
         ../src/gui/controllers/hash_controller.cpp
         ../src/gui/controllers/match_controller.cpp
         ../src/gui/models/match_list_model.cpp

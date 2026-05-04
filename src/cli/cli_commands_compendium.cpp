@@ -1,4 +1,5 @@
 #include "cli_commands.h"
+#include "cli_compendium_build_phases.h"
 #include "cli_helpers.h"
 #include "compendium_enrichment.h"
 #include "compendium_sql_utilities.h"
@@ -274,100 +275,24 @@ int handleBuildCompendiumCommand(CliContext &ctx)
     }
     writeProgress(QStringLiteral("enriching"), totalEnabled, {}, stats);
 
-    // ── Enrichment pass 1: Libretro metadata DATs ─────────────────────────────
+    // ── Enrichment passes + FTS index ─────────────────────────────────────────
     int metadataGamesEnriched = 0;
     int metadataFactsInserted = 0;
-    const QString metadataDir = findDataSubdir(QStringLiteral("metadata"));
-    if (!metadataDir.isEmpty()) {
-        if (!database.transaction()) {
-            qCritical() << "✗ Failed to start libretro enrichment transaction:" << database.lastError().text();
-            database.close();
-            QSqlDatabase::removeDatabase(connectionName);
-            return 1;
-        }
-        if (!CompendiumEnrichment::enrichFromLibretroMetadata(database,
-                                                              metadataDir,
-                                                              metadataGamesEnriched,
-                                                              metadataFactsInserted,
-                                                              error)) {
-            database.rollback();
-            qCritical().noquote() << QStringLiteral("✗ Libretro metadata enrichment failed: %1").arg(error);
-            database.close();
-            QSqlDatabase::removeDatabase(connectionName);
-            return 1;
-        }
-        if (!database.commit()) {
-            qCritical() << "✗ Failed to commit libretro enrichment transaction:" << database.lastError().text();
-            database.close();
-            QSqlDatabase::removeDatabase(connectionName);
-            return 1;
-        }
-    }
-
-    // ── Enrichment pass 2: GameTDB XML databases ───────────────────────────────
-    int gametdbGamesEnriched = 0;
-    int gametdbFactsInserted = 0;
-    const QString gametdbDir = findDataSubdir(QStringLiteral("gametdb"));
-    if (!gametdbDir.isEmpty()) {
-        if (!database.transaction()) {
-            qCritical() << "✗ Failed to start GameTDB enrichment transaction:" << database.lastError().text();
-            database.close();
-            QSqlDatabase::removeDatabase(connectionName);
-            return 1;
-        }
-        if (!CompendiumEnrichment::enrichFromGameTDB(database,
-                                                     gametdbDir,
-                                                     gametdbGamesEnriched,
-                                                     gametdbFactsInserted,
-                                                     error)) {
-            database.rollback();
-            qCritical().noquote() << QStringLiteral("✗ GameTDB enrichment failed: %1").arg(error);
-            database.close();
-            QSqlDatabase::removeDatabase(connectionName);
-            return 1;
-        }
-        if (!database.commit()) {
-            qCritical() << "✗ Failed to commit GameTDB enrichment transaction:" << database.lastError().text();
-            database.close();
-            QSqlDatabase::removeDatabase(connectionName);
-            return 1;
-        }
-    }
-
-    // ── FTS search index population ────────────────────────────────────────────
+    int gametdbGamesEnriched  = 0;
+    int gametdbFactsInserted  = 0;
     {
-        qInfo() << "[buildCompendium] Populating FTS search index...";
-        if (!database.transaction()) {
-            qWarning() << "[buildCompendium] Could not start FTS transaction (non-fatal)";
-        } else {
-            QSqlQuery ftsQ(database);
-            const bool ok1 = ftsQ.exec(QStringLiteral(
-                "INSERT INTO games_search(title, game_id, system_id, region_code) "
-                "SELECT canonical_title, game_id, system_id, "
-                "       COALESCE(primary_region_code, '') FROM games"));
-            if (!ok1) {
-                qWarning() << "[buildCompendium] FTS canonical title insert failed (non-fatal):"
-                           << ftsQ.lastError().text();
-                database.rollback();
-            } else {
-                const bool ok2 = ftsQ.exec(QStringLiteral(
-                    "INSERT INTO games_search(title, game_id, system_id, region_code) "
-                    "SELECT gn.name_text, gn.game_id, g.system_id, "
-                    "       COALESCE(g.primary_region_code, '') "
-                    "FROM game_names gn JOIN games g ON g.game_id = gn.game_id"));
-                if (!ok2) {
-                    qWarning() << "[buildCompendium] FTS alias insert failed (non-fatal):"
-                               << ftsQ.lastError().text();
-                    database.rollback();
-                } else {
-                    database.commit();
-                    ftsQ.exec(QStringLiteral(
-                        "INSERT INTO games_search(games_search) VALUES('optimize')"));
-                    qInfo() << "[buildCompendium] FTS index populated and optimized.";
-                }
-            }
+        const QString metadataDir = findDataSubdir(QStringLiteral("metadata"));
+        const QString gametdbDir  = findDataSubdir(QStringLiteral("gametdb"));
+        if (!runCompendiumEnrichmentPasses(database, metadataDir, gametdbDir,
+                                           metadataGamesEnriched, metadataFactsInserted,
+                                           gametdbGamesEnriched, gametdbFactsInserted, error)) {
+            qCritical().noquote() << QStringLiteral("✗ %1").arg(error);
+            database.close();
+            QSqlDatabase::removeDatabase(connectionName);
+            return 1;
         }
     }
+    populateCompendiumFtsIndex(database);
 
     int systemsCount = scalarCount(database, QStringLiteral("SELECT COUNT(*) FROM systems"), error);
     if (systemsCount < 0) {

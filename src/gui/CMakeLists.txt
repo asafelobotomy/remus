@@ -1,6 +1,7 @@
 qt_add_executable(remus-gui
     main.cpp
     controllers/app_controller.cpp
+    controllers/app_controller_orchestrator.cpp
     controllers/scan_controller.cpp
     controllers/hash_controller.cpp
     controllers/match_controller.cpp
@@ -10,6 +11,7 @@ qt_add_executable(remus-gui
     controllers/verification_controller.cpp
     controllers/organize_controller.cpp
     controllers/conversion_controller.cpp
+    controllers/conversion_controller_tools.cpp
     controllers/export_controller.cpp
     controllers/patch_controller.cpp
     controllers/mod_controller.cpp

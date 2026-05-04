@@ -33,6 +33,7 @@ add_library(remus-metadata STATIC
     compendium_merge_resolver.cpp
     compendium_compiler_service.cpp
     compendium_provider.cpp
+    compendium_provider_lookup.cpp
     compendium_provider_fetch.cpp
 )
 
