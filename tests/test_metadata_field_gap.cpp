@@ -123,9 +123,9 @@ void MetadataFieldGapTest::capabilities_intersect_detectsSkipCandidate()
     // description should have an empty intersection with the gap.
     const ProviderOrchestrator::FieldSet gap = { QLatin1String(DESCRIPTION) };
 
-    // localdatabase does NOT supply description per the capability map.
-    const QSet<QString> &localCaps = CAPABILITIES.value(QStringLiteral("localdatabase"));
-    QVERIFY(!localCaps.intersects(gap)); // should be skipped
+    // retroachievements does NOT supply description per the capability map.
+    const QSet<QString> &raCaps = CAPABILITIES.value(QStringLiteral("retroachievements"));
+    QVERIFY(!raCaps.intersects(gap)); // should be skipped
 
     // screenscraper DOES supply description.
     const QSet<QString> &ssCaps = CAPABILITIES.value(QStringLiteral("screenscraper"));

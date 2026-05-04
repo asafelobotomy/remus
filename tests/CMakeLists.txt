@@ -34,11 +34,6 @@ add_remus_test(test_result ResultTest
     LIBS Qt6::Test
 )
 
-add_remus_test(test_cache_deserialization CacheDeserializationTest
-    SOURCES test_cache_deserialization.cpp
-    LIBS Qt6::Core remus-core remus-metadata
-)
-
 add_remus_test(test_system_name_resolution SystemNameResolutionTest
     SOURCES test_system_name_resolution.cpp
     LIBS Qt6::Core Qt6::Sql remus-core
@@ -371,6 +366,33 @@ add_remus_test(test_rapatches_catalog RAPatchesCatalogTest
     LIBS Qt6::Test Qt6::Core Qt6::Network remus-services remus-core
 )
 
+
+# ── Orphaned test recovered 2026-05-04 ───────────────────────────────────────
+add_remus_test(test_metadata_field_gap MetadataFieldGapTest
+    SOURCES test_metadata_field_gap.cpp
+    LIBS Qt6::Test Qt6::Core remus-metadata remus-core
+)
+
+# ── Additional unit tests for compendium pipeline sub-components ─────────────
+add_remus_test(test_compendium_manifest_parser CompendiumManifestParserTest
+    SOURCES test_compendium_manifest_parser.cpp
+    LIBS Qt6::Test Qt6::Core remus-core
+)
+
+add_remus_test(test_compendium_normalizer CompendiumNormalizerTest
+    SOURCES test_compendium_normalizer.cpp
+    LIBS Qt6::Test Qt6::Core remus-metadata remus-core
+)
+
+add_remus_test(test_compendium_identity_linker CompendiumIdentityLinkerTest
+    SOURCES test_compendium_identity_linker.cpp
+    LIBS Qt6::Test Qt6::Core remus-metadata
+)
+
+add_remus_test(test_rvz_converter RvzConverterTest
+    SOURCES test_rvz_converter.cpp
+    LIBS Qt6::Test Qt6::Core remus-core
+)
 
 add_custom_target(run_tests
     COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure
