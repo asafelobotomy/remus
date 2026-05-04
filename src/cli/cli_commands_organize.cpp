@@ -41,7 +41,7 @@ int handleArtworkCommand(CliContext &ctx)
     auto orchestrator = buildOrchestrator(ctx.parser, &ctx.db);
     int downloadedCount = 0, failedCount = 0;
 
-    for (const FileRecord &file : getHashedFiles(ctx.db)) {
+    for (const FileRecord &file : getHashedFiles(ctx.db, ctx.processFileScopeIds)) {
         const QString displayName = getMatchingDisplayName(file);
         const QString systemName = getProviderLookupSystemName(file);
         qInfo() << "Processing:" << displayName;

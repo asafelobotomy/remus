@@ -177,6 +177,9 @@ void registerAllOptions(QCommandLineParser &parser, QSet<QString> &actionOptions
     addOption(QCommandLineOption(QStringLiteral("log-file"),
                                  QStringLiteral("Write full CLI output to a log file (auto-enabled for scan/process/match/enrich/bundle/convert commands)"),
                                  QStringLiteral("path")));
+    addOption(QCommandLineOption(QStringLiteral("file-id"),
+                                 QStringLiteral("Scope hash/match/enrich/bundle/organize/artwork to a specific database file ID (repeatable: --file-id 1 --file-id 2)"),
+                                 QStringLiteral("id")));
 }
 
 } // namespace Remus

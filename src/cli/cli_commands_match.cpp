@@ -140,7 +140,7 @@ int handleMatchReportCommand(CliContext &ctx)
     qInfo() << "=== Matching Report with Confidence Scores ===";
     qInfo() << "";
 
-    QList<FileRecord> files = getHashedFiles(ctx.db);
+    QList<FileRecord> files = getHashedFiles(ctx.db, ctx.processFileScopeIds);
     QMap<int, Database::MatchResult> matches = ctx.db.getAllMatches();
 
     QFile reportFile;

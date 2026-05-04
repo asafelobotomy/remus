@@ -70,9 +70,53 @@ int handleInfoCommand(CliContext &ctx)
     FileRecord file = ctx.db.getFileById(fileId);
     if (file.id == 0) { qCritical() << "File not found"; return 1; }
 
+    const Database::MatchResult match = ctx.db.getMatchForFile(fileId);
+
+    if (ctx.parser.isSet("json")) {
+        QJsonObject obj;
+        obj[QStringLiteral("id")]             = file.id;
+        obj[QStringLiteral("filename")]       = file.filename;
+        obj[QStringLiteral("path")]           = file.currentPath;
+        obj[QStringLiteral("originalPath")]   = file.originalPath;
+        obj[QStringLiteral("extension")]      = file.extension;
+        obj[QStringLiteral("size")]           = static_cast<qint64>(file.fileSize);
+        obj[QStringLiteral("systemId")]       = file.systemId;
+        obj[QStringLiteral("hashCalculated")] = file.hashCalculated;
+        obj[QStringLiteral("crc32")]          = file.crc32;
+        obj[QStringLiteral("md5")]            = file.md5;
+        obj[QStringLiteral("sha1")]           = file.sha1;
+        obj[QStringLiteral("isCompressed")]   = file.isCompressed;
+        obj[QStringLiteral("isPrimary")]      = file.isPrimary;
+        obj[QStringLiteral("fileType")]       = file.fileType;
+        obj[QStringLiteral("isPatched")]      = file.isPatched;
+        obj[QStringLiteral("patchName")]      = file.patchName;
+        if (match.matchId != 0) {
+            QJsonObject m;
+            m[QStringLiteral("matchId")]     = match.matchId;
+            m[QStringLiteral("gameId")]      = match.gameId;
+            m[QStringLiteral("title")]       = match.gameTitle;
+            m[QStringLiteral("confidence")]  = match.confidence;
+            m[QStringLiteral("method")]      = match.matchMethod;
+            m[QStringLiteral("publisher")]   = match.publisher;
+            m[QStringLiteral("developer")]   = match.developer;
+            m[QStringLiteral("releaseYear")] = match.releaseYear;
+            m[QStringLiteral("genre")]       = match.genre;
+            m[QStringLiteral("players")]     = match.players;
+            m[QStringLiteral("rating")]      = static_cast<double>(match.rating);
+            m[QStringLiteral("region")]      = match.region;
+            m[QStringLiteral("description")] = match.description;
+            m[QStringLiteral("confirmed")]   = match.isConfirmed;
+            obj[QStringLiteral("match")]     = m;
+        } else {
+            obj[QStringLiteral("match")] = QJsonValue::Null;
+        }
+        QTextStream out(stdout);
+        out << QString::fromUtf8(QJsonDocument(obj).toJson(QJsonDocument::Indented)).trimmed() << Qt::endl;
+        return 0;
+    }
+
     qInfo() << "=== File Info ===";
     printFileInfo(file);
-    const Database::MatchResult match = ctx.db.getMatchForFile(fileId);
     if (match.matchId != 0) {
         qInfo() << "";
         qInfo() << "=== Match ===";
@@ -173,6 +217,22 @@ int handleHashAllCommand(CliContext &ctx)
     qInfo() << "Hashing files without hashes...";
     Hasher hasher;
     QList<FileRecord> filesToHash = ctx.db.getFilesWithoutHashes();
+
+    // Respect --file-id scope when provided
+    if (!ctx.processFileScopeIds.isEmpty()) {
+        filesToHash.erase(
+            std::remove_if(filesToHash.begin(), filesToHash.end(),
+                [&ctx](const FileRecord &f) {
+                    return !fileMatchesProcessScope(f, ctx.processFileScopeIds);
+                }),
+            filesToHash.end());
+    }
+
+    if (filesToHash.isEmpty()) {
+        qInfo() << "No files to hash (scope empty or all files already hashed).";
+        return 0;
+    }
+
     int hashedCount = 0;
 
     for (const FileRecord &file : filesToHash) {

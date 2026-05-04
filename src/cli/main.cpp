@@ -206,6 +206,18 @@ int main(int argc, char *argv[])
         if (ctx.presetDisplayName.isEmpty())   ctx.presetDisplayName   = QStringLiteral("library");
     }
 
+    // --file-id: populate processFileScopeIds so all scope-aware commands
+    // (hash, match, enrich, bundle, organize, artwork, match-report) operate
+    // on the specified file(s) only — the CLI equivalent of GUI per-file ops.
+    for (const QString &idStr : parser.values(QStringLiteral("file-id"))) {
+        bool ok = false;
+        const int id = idStr.toInt(&ok);
+        if (ok && id > 0)
+            ctx.processFileScopeIds.insert(id);
+        else
+            qWarning() << "remus: ignoring invalid --file-id value:" << idStr;
+    }
+
     if (int rc = handleStatsCommand(ctx))          return rc;
     if (int rc = handleInfoCommand(ctx))           return rc;
     if (int rc = handleInspectCommands(ctx))       return rc;
