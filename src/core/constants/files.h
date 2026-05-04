@@ -38,6 +38,14 @@ inline const QString WBFS = QStringLiteral(".wbfs");
 inline const QString PBP = QStringLiteral(".pbp");
 inline const QString GCM = QStringLiteral(".gcm");
 inline const QString M3U = QStringLiteral(".m3u");
+inline const QString GCZ = QStringLiteral(".gcz");
+inline const QString WAD = QStringLiteral(".wad");
+inline const QString ELF = QStringLiteral(".elf");
+inline const QString ISZ = QStringLiteral(".isz");
+inline const QString ECM = QStringLiteral(".ecm");
+inline const QString DAT = QStringLiteral(".dat");
+inline const QString LST = QStringLiteral(".lst");
+inline const QString DOL = QStringLiteral(".dol");
 
 inline const QStringList ARCHIVE_EXTENSIONS = {
     ZIP, SEVEN_Z, RAR, GZ, TAR, BZ2, XZ, TAR_GZ, TGZ, TAR_BZ2, TBZ2

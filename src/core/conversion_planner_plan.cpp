@@ -15,24 +15,23 @@ using Remus::Constants::Files::IMG;
 using Remus::Constants::Files::ISO;
 using Remus::Constants::Files::M3U;
 using Remus::Constants::Files::RVZ;
+using Remus::Constants::Files::CDI;
+using Remus::Constants::Files::CCD;
+using Remus::Constants::Files::DAT;
+using Remus::Constants::Files::DOL;
+using Remus::Constants::Files::ECM;
+using Remus::Constants::Files::ELF;
+using Remus::Constants::Files::GCZ;
+using Remus::Constants::Files::GZ;
+using Remus::Constants::Files::ISZ;
+using Remus::Constants::Files::LST;
+using Remus::Constants::Files::MDS;
+using Remus::Constants::Files::PBP;
+using Remus::Constants::Files::SUB;
+using Remus::Constants::Files::WBFS;
+using Remus::Constants::Files::WAD;
 namespace Systems = Remus::Constants::Systems;
 namespace Files = Remus::Constants::Files;
-
-QString pbpExtension() { return QStringLiteral(".pbp"); }
-QString wbfsExtension() { return QStringLiteral(".wbfs"); }
-QString gczExtension() { return QStringLiteral(".gcz"); }
-QString wadExtension() { return QStringLiteral(".wad"); }
-QString elfExtension() { return QStringLiteral(".elf"); }
-QString iszExtension() { return QStringLiteral(".isz"); }
-QString gzExtension() { return QStringLiteral(".gz"); }
-QString ecmExtension() { return QStringLiteral(".ecm"); }
-QString cdiExtension() { return QStringLiteral(".cdi"); }
-QString datExtension() { return QStringLiteral(".dat"); }
-QString lstExtension() { return QStringLiteral(".lst"); }
-QString subExtension() { return QStringLiteral(".sub"); }
-QString ccdExtension() { return QStringLiteral(".ccd"); }
-QString mdsExtension() { return QStringLiteral(".mds"); }
-QString dolExtension() { return QStringLiteral(".dol"); }
 
 QString noFallbackRequired() { return QStringLiteral("No fallback required."); }
 QString keepOriginalUntilToolAvailable(const QString &toolName)
@@ -155,34 +154,34 @@ bool isCanonicalPlaylistExtension(int systemId, const QString &extension)
 bool isChdConvertibleExtension(const QString &extension)
 {
     return Files::isChdSourceExtension(extension)
-        || extension == subExtension()
-        || extension == ccdExtension()
-        || extension == mdsExtension()
-        || extension == datExtension()
-        || extension == lstExtension();
+        || extension == SUB
+        || extension == CCD
+        || extension == MDS
+        || extension == DAT
+        || extension == LST;
 }
 
 bool isChdNormalizationExtension(int systemId, const QString &extension)
 {
-    if (systemId == Systems::ID_PSX && extension == ecmExtension()) return true;
-    if (systemId == Systems::ID_PS2 && (extension == CSO || extension == gzExtension() || extension == iszExtension())) return true;
-    if (systemId == Systems::ID_DREAMCAST && extension == cdiExtension()) return true;
+    if (systemId == Systems::ID_PSX && extension == ECM) return true;
+    if (systemId == Systems::ID_PS2 && (extension == CSO || extension == GZ || extension == ISZ)) return true;
+    if (systemId == Systems::ID_DREAMCAST && extension == CDI) return true;
     return false;
 }
 
 bool isRvzNormalizationExtension(const QString &extension)
 {
-    return extension == wbfsExtension() || extension == gczExtension() || extension == CSO;
+    return extension == WBFS || extension == GCZ || extension == CSO;
 }
 
 bool isRvzArchiveOnlyExtension(const QString &extension)
 {
-    return extension == wadExtension() || extension == dolExtension() || extension == elfExtension();
+    return extension == WAD || extension == DOL || extension == ELF;
 }
 
 bool isPs2ArchiveOnlyExtension(const QString &extension)
 {
-    return extension == elfExtension();
+    return extension == ELF;
 }
 
 bool isPspNormalizationExtension(const QString &extension)
@@ -236,7 +235,7 @@ ConversionPlanner::Plan ConversionPlanner::plan(const Request &request)
                             QStringLiteral("%1 is already in the canonical CHD workflow for %2.").arg(extension, systemName));
         }
 
-        if (request.systemId == Systems::ID_PSX && extension == pbpExtension()) {
+        if (request.systemId == Systems::ID_PSX && extension == PBP) {
             const PlannedAction action = request.intent == PlanningIntent::ExplicitExport ? PlannedAction::ExportPbp : PlannedAction::NoOp;
             return makePlan(FormatRole::ExportOnly, action, request.systemId, {}, {QStringLiteral("PSXPackager")},
                             keepOriginalUntilToolAvailable(QStringLiteral("PSXPackager")),
@@ -253,9 +252,9 @@ ConversionPlanner::Plan ConversionPlanner::plan(const Request &request)
             QString reason;
             if (request.systemId == Systems::ID_PS2 && extension == CSO) {
                 reason = QStringLiteral("PlayStation 2 CSO files are optional export artifacts. Normalize %1 back to ISO before the canonical CHD path.").arg(extension);
-            } else if (request.systemId == Systems::ID_PSX && extension == ecmExtension()) {
+            } else if (request.systemId == Systems::ID_PSX && extension == ECM) {
                 reason = QStringLiteral("PlayStation ECM payloads are compatibility inputs. Normalize %1 back to source disc assets before the canonical CHD path.").arg(extension);
-            } else if (request.systemId == Systems::ID_DREAMCAST && extension == cdiExtension()) {
+            } else if (request.systemId == Systems::ID_DREAMCAST && extension == CDI) {
                 reason = QStringLiteral("Dreamcast CDI images are accepted for ingest, but they should normalize to an ISO-like intermediate before the canonical CHD path.");
             } else {
                 reason = QStringLiteral("%1 is treated as a normalization-first input for %2 before the canonical CHD path.").arg(extension, systemName);
@@ -310,7 +309,7 @@ ConversionPlanner::Plan ConversionPlanner::plan(const Request &request)
                             keepOriginalUntilToolAvailable(QStringLiteral("maxcso")),
                             QStringLiteral("%1 should convert %2 into CSO as the canonical compact output.").arg(systemName, extension));
         }
-        if (extension == pbpExtension()) {
+        if (extension == PBP) {
             return makePlan(FormatRole::ExportOnly, PlannedAction::NoOp, request.systemId, {}, {QStringLiteral("PSXPackager")},
                             keepOriginalUntilToolAvailable(QStringLiteral("PSXPackager")),
                             QStringLiteral("PBP is treated as a compatibility package around PSP workflows, not as the canonical PSP library format."));
