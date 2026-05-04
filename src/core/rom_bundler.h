@@ -48,6 +48,9 @@ public:
         /// Preferred disc packaging for bundle payloads. System-aware callers may
         /// request CHD broadly and let the bundler redirect GameCube/Wii images to RVZ.
         DiscOutputFormat discOutputFormat = DiscOutputFormat::Original;
+        /// Output filename template. Tokens: {title}, {region}, {year}, {system}, {publisher}.
+        /// If empty, the default naming logic (title + region) is used.
+        QString      namingTemplate;
     };
 
     /**

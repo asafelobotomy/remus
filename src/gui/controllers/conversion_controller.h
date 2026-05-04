@@ -1,11 +1,14 @@
 #pragma once
 
+#include <memory>
 #include <QObject>
 #include <QVariantMap>
 
 #include "../../services/conversion_service.h"
 #include "../../core/wbfs_converter.h"
 #include "../../core/pbp_exporter.h"
+
+class QTemporaryDir;
 
 namespace Remus {
 
@@ -54,9 +57,9 @@ signals:
 
 private:
     void applyToolPaths();
-    void registerOutputFile(const FileRecord &sourceFile, const QString &outputPath);
     void setLastMessage(const QString &message);
     static QString resolveAutoFormat(const QString &extension);
+    static QString extractIfArchive(const QString &filePath, std::unique_ptr<QTemporaryDir> &tmpDirOut);
 
     AppController *m_appController;
     ConversionService m_conversionService;

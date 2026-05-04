@@ -303,13 +303,29 @@ bool Database::confirmMatch(int fileId)
     QSqlQuery query(m_db);
     query.prepare("UPDATE matches SET is_confirmed = 1, is_rejected = 0, confidence = 100 WHERE file_id = ?");
     query.addBindValue(fileId);
-    
-    if (!query.exec()) {
+
+    if (!query.exec() || query.numRowsAffected() == 0) {
         logError("Failed to confirm match: " + query.lastError().text());
         return false;
     }
-    
-    return query.numRowsAffected() > 0;
+
+    // Propagate the confirmed game title into files.base_title so the queue
+    // sidebar reflects the canonical name immediately after confirmation.
+    QSqlQuery titleQ(m_db);
+    titleQ.prepare(
+        "UPDATE files SET base_title = "
+        " (SELECT g.title FROM games g "
+        "  JOIN matches m ON m.game_id = g.id "
+        "  WHERE m.file_id = :fid AND m.is_confirmed = 1 "
+        "  LIMIT 1) "
+        "WHERE id = :fid");
+    titleQ.bindValue(QStringLiteral(":fid"), fileId);
+    if (!titleQ.exec()) {
+        logError("Failed to update base_title on confirm: " + titleQ.lastError().text());
+        // Non-fatal — match is already confirmed
+    }
+
+    return true;
 }
 
 bool Database::rejectMatch(int fileId)

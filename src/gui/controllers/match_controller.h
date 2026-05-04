@@ -18,6 +18,7 @@ class MatchController : public QObject {
     Q_PROPERTY(QString progressMessage READ progressMessage NOTIFY progressMessageChanged)
     Q_PROPERTY(QString currentProvider READ currentProvider NOTIFY currentProviderChanged)
     Q_PROPERTY(QString lastMessage READ lastMessage NOTIFY lastMessageChanged)
+    Q_PROPERTY(int unconfirmedMatchCount READ unconfirmedMatchCount NOTIFY libraryChanged)
 
 public:
     explicit MatchController(AppController *appController, QObject *parent = nullptr);
@@ -28,6 +29,7 @@ public:
     QString progressMessage() const { return m_progressMessage; }
     QString currentProvider() const { return m_currentProvider; }
     QString lastMessage() const { return m_lastMessage; }
+    int unconfirmedMatchCount() const;
 
     void setModel(MatchListModel *model) { m_model = model; }
 
@@ -35,6 +37,7 @@ public:
     Q_INVOKABLE void matchSelected();
     Q_INVOKABLE void matchAll();
     Q_INVOKABLE void confirmSelected();
+    Q_INVOKABLE void confirmAll();
     Q_INVOKABLE void rejectSelected();
 
 signals:

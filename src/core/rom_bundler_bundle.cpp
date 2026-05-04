@@ -245,14 +245,37 @@ RomBundler::BundleResult RomBundler::bundle(const FileRecord &file,
     result.archiveEntries = collectArchiveEntries(tempBase);
     const QString ext = (config.outputFormat == ArchiveFormat::SevenZip) ? Constants::Files::SEVEN_Z : Constants::Files::ZIP;
 
+    static const QRegularExpression kUnsafeFilenameChars(QStringLiteral("[<>:\"/\\\\|?*]"));
+
     QString baseName;
-    if (!metadata.title.isEmpty()) {
+    if (!config.namingTemplate.isEmpty()) {
+        const QString title     = metadata.title.isEmpty() ? match.gameTitle : metadata.title;
+        const QString region    = metadata.region.isEmpty() ? match.region    : metadata.region;
+        const QString system    = m_db.getSystemDisplayName(match.systemId);
+        const QString publisher = metadata.publisher.isEmpty() ? match.publisher : metadata.publisher;
+        const int year = match.releaseYear > 0
+                             ? match.releaseYear
+                             : (metadata.releaseDate.length() >= 4
+                                    ? metadata.releaseDate.left(4).toInt()
+                                    : 0);
+        baseName = config.namingTemplate;
+        baseName.replace(QStringLiteral("{title}"),     title);
+        baseName.replace(QStringLiteral("{region}"),    region);
+        baseName.replace(QStringLiteral("{year}"),      year > 0 ? QString::number(year) : QString());
+        baseName.replace(QStringLiteral("{system}"),    system);
+        baseName.replace(QStringLiteral("{publisher}"), publisher);
+        baseName.replace(kUnsafeFilenameChars, QStringLiteral("_"));
+        // Clean up artefacts from empty substitutions (e.g. "(_)", "[]", trailing spaces)
+        baseName.replace(QStringLiteral("(_)"), QString());
+        baseName.replace(QStringLiteral("[]"),  QString());
+        baseName = baseName.simplified().trimmed();
+    }
+    if (baseName.isEmpty() && !metadata.title.isEmpty()) {
         baseName = metadata.title;
         if (!metadata.region.isEmpty() && !baseName.contains(QStringLiteral("(")) && !baseName.contains(metadata.region)) {
             baseName += QStringLiteral(" (") + metadata.region + QStringLiteral(")");
         }
-        static const QRegularExpression unsafeChars(QStringLiteral("[<>:\"/\\\\|?*]"));
-        baseName.replace(unsafeChars, QStringLiteral("_"));
+        baseName.replace(kUnsafeFilenameChars, QStringLiteral("_"));
         baseName = baseName.trimmed();
     }
     if (baseName.isEmpty()) {

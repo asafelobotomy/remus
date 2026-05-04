@@ -104,7 +104,7 @@ Frame {
                     Label {
                         Layout.fillWidth: true
                         text:             modelData.filename
-                        elide:            Text.ElideRight
+                        wrapMode:         Text.WordWrap
                         font.pixelSize:   11
                         color:            "#ebdbb2"
                     }
@@ -152,7 +152,7 @@ Frame {
                             Label {
                                 id:               hmBadge
                                 anchors.centerIn: parent
-                                text:             "H&M"
+                                text:             "Hash&Match"
                                 font.pixelSize:   9
                                 color:            modelData.hasMatch ? "#1d2021"
                                                 : modelData.hasAnyMatch ? "#1d2021"
@@ -165,13 +165,16 @@ Frame {
                             width:  artBadge.implicitWidth + 8
                             height: 14
                             radius: 7
-                            color:  modelData.hasArtwork ? "#689d6a" : "#cc241d"
+                            color:  modelData.hasArtwork  ? "#689d6a"
+                                  : modelData.hasMatch    ? "#d79921"
+                                  :                         "#cc241d"
                             Label {
                                 id:               artBadge
                                 anchors.centerIn: parent
-                                text:             "Art"
+                                text:             "Art&Meta"
                                 font.pixelSize:   9
-                                color:            modelData.hasArtwork ? "#1d2021" : "#fbf1c7"
+                                color:            (modelData.hasArtwork || modelData.hasMatch)
+                                                  ? "#1d2021" : "#fbf1c7"
                             }
                         }
 
@@ -184,7 +187,7 @@ Frame {
                             Label {
                                 id:               bndlBadge
                                 anchors.centerIn: parent
-                                text:             "Bndl"
+                                text:             "Bun&Ren"
                                 font.pixelSize:   9
                                 color:            modelData.isBundled ? "#1d2021" : "#fbf1c7"
                             }

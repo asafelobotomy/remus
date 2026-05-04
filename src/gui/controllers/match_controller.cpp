@@ -1,6 +1,7 @@
 #include "match_controller.h"
 
 #include <QFileInfo>
+#include <QSqlQuery>
 #include <QVector>
 
 #include "app_controller.h"
@@ -168,6 +169,24 @@ void MatchController::confirmSelected()
     emit libraryChanged();
 }
 
+int MatchController::unconfirmedMatchCount() const
+{
+    if (m_appController == nullptr || !m_appController->isLibraryOpen()) return 0;
+    QSqlQuery q(m_appController->database()->database());
+    if (!q.exec(QStringLiteral("SELECT COUNT(*) FROM matches WHERE is_confirmed = 0 AND is_rejected = 0")))
+        return 0;
+    return q.next() ? q.value(0).toInt() : 0;
+}
+
+void MatchController::confirmAll()
+{
+    if (m_appController == nullptr || !m_appController->isLibraryOpen()) return;
+    QSqlQuery q(m_appController->database()->database());
+    q.exec(QStringLiteral("UPDATE matches SET is_confirmed = 1 WHERE is_confirmed = 0 AND is_rejected = 0"));
+    refreshModel();
+    emit libraryChanged();
+}
+
 void MatchController::rejectSelected()
 {
     if (m_appController == nullptr || !m_appController->isLibraryOpen()) {
@@ -280,7 +299,6 @@ bool MatchController::matchFileRecord(const FileRecord &file)
     }
 
     setLastMessage(QStringLiteral("Matched %1 -> %2").arg(file.filename, metadata.title));
-    m_appController->setSelectedFileId(file.id);
     return true;
 }
 

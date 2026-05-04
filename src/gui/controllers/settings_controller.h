@@ -2,6 +2,7 @@
 
 #include <QObject>
 #include <QSettings>
+#include <QStandardPaths>
 #include <QVariantList>
 
 namespace Remus {
@@ -23,18 +24,23 @@ inline constexpr const char *PPF_PATH = "tools/ppf_path";
 class SettingsController : public QObject {
     Q_OBJECT
     Q_PROPERTY(QVariantList providerFields READ providerFields CONSTANT)
-    Q_PROPERTY(QVariantList toolFields READ toolFields CONSTANT)
+    Q_PROPERTY(QVariantList providerGroups READ providerGroups CONSTANT)
+    Q_PROPERTY(QVariantList toolFields     READ toolFields     CONSTANT)
 
 public:
     explicit SettingsController(QObject *parent = nullptr);
 
     QVariantList providerFields() const;
+    QVariantList providerGroups() const;
     QVariantList toolFields() const;
 
     Q_INVOKABLE QString stringValue(const QString &key, const QString &defaultValue = QString()) const;
+    Q_INVOKABLE bool    boolValue(const QString &key, bool defaultValue = false) const;
     Q_INVOKABLE QVariant value(const QString &key, const QVariant &defaultValue = QVariant()) const;
     Q_INVOKABLE void setValue(const QString &key, const QVariant &value);
     Q_INVOKABLE void resetToDefaults();
+    Q_INVOKABLE void autoDetectTools();
+    Q_INVOKABLE QString authenticateProvider(const QString &groupKey);
 
 signals:
     void settingsChanged();

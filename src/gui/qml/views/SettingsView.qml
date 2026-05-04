@@ -1,11 +1,33 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import QtQuick.Dialogs
 import Remus.Gui
 
 ScrollView {
     Layout.fillWidth: true
     Layout.fillHeight: true
+
+    // Shared dialogs for browsing tool paths
+    FileDialog {
+        id: toolFileDialog
+        title: "Select Tool Executable"
+        property string targetKey: ""
+        onAccepted: {
+            const path = decodeURIComponent(selectedFile.toString().replace(/^file:\/\//, ""))
+            settingsController.setValue(targetKey, path)
+        }
+    }
+
+    FolderDialog {
+        id: toolFolderDialog
+        title: "Select Directory"
+        property string targetKey: ""
+        onAccepted: {
+            const path = decodeURIComponent(selectedFolder.toString().replace(/^file:\/\//, ""))
+            settingsController.setValue(targetKey, path)
+        }
+    }
 
     ColumnLayout {
         width: parent.width
@@ -17,29 +39,95 @@ ScrollView {
             font.bold: true
         }
 
+        // ── Metadata Providers ───────────────────────────────────────────────
         Label { text: "Metadata Providers"; font.bold: true }
-        Repeater {
-            model: settingsController.providerFields
 
-            delegate: RowLayout {
+        Repeater {
+            model: settingsController.providerGroups
+
+            delegate: ColumnLayout {
                 required property var modelData
                 Layout.fillWidth: true
+                spacing: 4
 
+                // Provider group heading
                 Label {
-                    Layout.preferredWidth: 220
-                    text: modelData.label
+                    text: modelData.groupName
+                    font.bold: true
+                    font.pixelSize: 12
+                    color: "#a89984"
                 }
 
-                TextField {
+                // Fields for this provider
+                Repeater {
+                    model: modelData.fields
+
+                    delegate: RowLayout {
+                        required property var modelData
+                        Layout.fillWidth: true
+
+                        Label {
+                            Layout.preferredWidth: 200
+                            text: modelData.label
+                            font.pixelSize: 12
+                        }
+
+                        TextField {
+                            id: providerField
+                            Layout.fillWidth: true
+                            font.pixelSize: 12
+                            echoMode: modelData.password ? TextInput.Password : TextInput.Normal
+                            text: settingsController.stringValue(modelData.key)
+                            onEditingFinished: settingsController.setValue(modelData.key, text)
+                        }
+                    }
+                }
+
+                // Authenticate button + result row
+                RowLayout {
                     Layout.fillWidth: true
-                    echoMode: modelData.password ? TextInput.Password : TextInput.Normal
-                    text: settingsController.stringValue(modelData.key)
-                    onEditingFinished: settingsController.setValue(modelData.key, text)
+                    spacing: 8
+
+                    Button {
+                        text: "Authenticate"
+                        font.pixelSize: 11
+                        padding: 6
+                        onClicked: {
+                            const msg = settingsController.authenticateProvider(modelData.groupKey)
+                            authResultLabel.text = msg
+                            authResultLabel.color = msg === "Credentials saved." ? "#b8bb26" : "#fb4934"
+                        }
+                    }
+
+                    Label {
+                        id: authResultLabel
+                        font.pixelSize: 11
+                        color: "#a89984"
+                    }
+
+                    Item { Layout.fillWidth: true }
+                }
+
+                Rectangle {
+                    Layout.fillWidth: true
+                    height: 1
+                    color: "#3c3836"
                 }
             }
         }
 
-        Label { text: "Tools and Paths"; font.bold: true }
+        // ── Tools and Paths ──────────────────────────────────────────────────
+        RowLayout {
+            Layout.fillWidth: true
+            Label { text: "Tools and Paths"; font.bold: true; Layout.fillWidth: true }
+            Button {
+                text:    "Auto-Detect Tools"
+                font.pixelSize: 11
+                padding: 6
+                onClicked: settingsController.autoDetectTools()
+            }
+        }
+
         Repeater {
             model: settingsController.toolFields
 
@@ -48,14 +136,41 @@ ScrollView {
                 Layout.fillWidth: true
 
                 Label {
-                    Layout.preferredWidth: 220
+                    Layout.preferredWidth: 200
                     text: modelData.label
+                    font.pixelSize: 12
                 }
 
                 TextField {
+                    id: toolField
                     Layout.fillWidth: true
+                    font.pixelSize: 12
                     text: settingsController.stringValue(modelData.key)
                     onEditingFinished: settingsController.setValue(modelData.key, text)
+
+                    Connections {
+                        target: settingsController
+                        function onSettingsChanged() {
+                            toolField.text = settingsController.stringValue(modelData.key)
+                        }
+                    }
+                }
+
+                Button {
+                    visible: modelData.browsable
+                    text:    "Browse"
+                    flat:    true
+                    font.pixelSize: 11
+                    padding: 6
+                    onClicked: {
+                        if (modelData.isDirectory) {
+                            toolFolderDialog.targetKey = modelData.key
+                            toolFolderDialog.open()
+                        } else {
+                            toolFileDialog.targetKey = modelData.key
+                            toolFileDialog.open()
+                        }
+                    }
                 }
             }
         }
@@ -63,6 +178,39 @@ ScrollView {
         Button {
             text: "Reset Saved Settings"
             onClicked: settingsController.resetToDefaults()
+        }
+
+        Rectangle {
+            Layout.fillWidth: true
+            height: 1
+            color: "#504945"
+        }
+
+        // ── Bundle & Rename ──────────────────────────────────────────────────
+        Label { text: "Bundle && Rename"; font.bold: true }
+
+        CheckBox {
+            id: chkTrashOriginal
+            text: "Trash original ROM after Bundle && Rename completes?"
+            checked: settingsController.boolValue("gui/trash_original_after_bundle")
+            onCheckedChanged: settingsController.setValue("gui/trash_original_after_bundle", checked)
+
+            Connections {
+                target: settingsController
+                function onSettingsChanged() {
+                    chkTrashOriginal.checked = settingsController.boolValue("gui/trash_original_after_bundle")
+                }
+            }
+        }
+        Label {
+            text: chkTrashOriginal.checked
+                  ? "After bundling, the original ROM will be sent to the system trash."
+                  : "After bundling, the original ROM will be moved to an 'original_roms' folder in the scan directory."
+            font.pixelSize: 11
+            color: "#928374"
+            leftPadding: 28
+            Layout.fillWidth: true
+            wrapMode: Text.WordWrap
         }
 
         Rectangle {

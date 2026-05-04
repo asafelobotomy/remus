@@ -175,6 +175,12 @@ public:
     QList<FileRecord> getExistingFiles();
 
     /**
+     * @brief Get files that have a user-confirmed match
+     * @return List of file records with is_confirmed=1 and is_rejected=0
+     */
+    QList<FileRecord> getFilesWithConfirmedMatch();
+
+    /**
      * @brief Get files by system name
      * @param systemName System name
      * @return List of file records

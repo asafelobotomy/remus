@@ -28,8 +28,8 @@ public:
     QString lastOutputPath() const { return m_lastOutputPath; }
     QString lastMessage() const { return m_lastMessage; }
 
-    Q_INVOKABLE void bundleSelected(const QString &destinationDir);
-    Q_INVOKABLE void bundleAll(const QString &destinationDir);
+    Q_INVOKABLE void bundleSelected(const QString &scanDir, const QString &namingTemplate = QString());
+    Q_INVOKABLE void bundleAll(const QString &scanDir, const QString &namingTemplate = QString());
     Q_INVOKABLE bool exportM3u(const QString &outputPath);
 
 signals:

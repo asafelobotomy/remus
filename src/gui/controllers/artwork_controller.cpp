@@ -141,11 +141,11 @@ void ArtworkController::downloadAllMatched()
         return;
     }
 
-    const QList<FileRecord> files = m_appController->database()->getExistingFiles();
+    const QList<FileRecord> files = m_appController->database()->getFilesWithConfirmedMatch();
     m_downloading      = true;
     m_downloadProgress = 0;
     m_downloadTotal    = files.size();
-    m_progressMessage  = QStringLiteral("Downloading artwork for all matched ROMs\u2026");
+    m_progressMessage  = QStringLiteral("Downloading artwork for all confirmed-match ROMs\u2026");
     emit downloadingChanged();
     emit progressChanged();
     emit progressMessageChanged();
