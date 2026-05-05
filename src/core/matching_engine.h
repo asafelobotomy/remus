@@ -100,7 +100,6 @@ public:
      */
     static QString extractGameTitle(const QString &fileName);
 
-private:
     /**
      * @brief Calculate Levenshtein distance (edit distance) between strings
      * @param s1 First string
@@ -108,6 +107,8 @@ private:
      * @return Edit distance (lower = more similar)
      */
     static int levenshteinDistance(const QString &s1, const QString &s2);
+
+private:
 };
 
 } // namespace Remus

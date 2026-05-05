@@ -1,5 +1,6 @@
 #include "match_controller.h"
 
+#include <QCoreApplication>
 #include <QFileInfo>
 #include <QSqlQuery>
 #include <QVector>
@@ -10,6 +11,7 @@
 #include "../../core/constants/match_methods.h"
 #include "../../core/database.h"
 #include "../../core/match_utils.h"
+#include "../../core/matching_engine.h"
 #include "../../metadata/metadata_provider.h"
 #include "../../metadata/provider_orchestrator.h"
 
@@ -58,6 +60,7 @@ void MatchController::refreshModel()
     }
 
     m_model->setEntries(entries);
+    updateUnconfirmedCount();
 }
 
 void MatchController::matchSelected()
@@ -137,6 +140,7 @@ void MatchController::matchAll()
         }
         m_matchedFiles++;
         emit matchProgressChanged();
+        QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
     }
 
     m_matching = false;
@@ -165,17 +169,22 @@ void MatchController::confirmSelected()
         return;
     }
 
+    updateUnconfirmedCount();
     refreshModel();
     emit libraryChanged();
 }
 
-int MatchController::unconfirmedMatchCount() const
+void MatchController::updateUnconfirmedCount()
 {
-    if (m_appController == nullptr || !m_appController->isLibraryOpen()) return 0;
-    QSqlQuery q(m_appController->database()->database());
-    if (!q.exec(QStringLiteral("SELECT COUNT(*) FROM matches WHERE is_confirmed = 0 AND is_rejected = 0")))
-        return 0;
-    return q.next() ? q.value(0).toInt() : 0;
+    if (m_appController == nullptr || !m_appController->isLibraryOpen()) {
+        m_unconfirmedMatchCount = 0;
+        return;
+    }
+    const int count = m_appController->database()->getUnconfirmedMatchCount();
+    if (m_unconfirmedMatchCount != count) {
+        m_unconfirmedMatchCount = count;
+        emit libraryChanged();
+    }
 }
 
 void MatchController::confirmAll()
@@ -313,38 +322,13 @@ float MatchController::calculateNameSimilarity(const QString &left, const QStrin
         return 90.0f;
     }
 
-    const int distance = levenshteinDistance(normalizedLeft, normalizedRight);
+    const int distance = MatchingEngine::levenshteinDistance(normalizedLeft, normalizedRight);
     const int maxLength = qMax(normalizedLeft.length(), normalizedRight.length());
     if (maxLength == 0) {
         return 100.0f;
     }
 
     return qMax(0.0f, (1.0f - static_cast<float>(distance) / static_cast<float>(maxLength)) * 100.0f);
-}
-
-int MatchController::levenshteinDistance(const QString &left, const QString &right) const
-{
-    const int leftLength = left.length();
-    const int rightLength = right.length();
-    QVector<QVector<int>> matrix(leftLength + 1, QVector<int>(rightLength + 1));
-
-    for (int i = 0; i <= leftLength; ++i) {
-        matrix[i][0] = i;
-    }
-    for (int j = 0; j <= rightLength; ++j) {
-        matrix[0][j] = j;
-    }
-
-    for (int i = 1; i <= leftLength; ++i) {
-        for (int j = 1; j <= rightLength; ++j) {
-            const int cost = left[i - 1] == right[j - 1] ? 0 : 1;
-            matrix[i][j] = qMin(
-                matrix[i - 1][j] + 1,
-                qMin(matrix[i][j - 1] + 1, matrix[i - 1][j - 1] + cost));
-        }
-    }
-
-    return matrix[leftLength][rightLength];
 }
 
 void MatchController::clearState()

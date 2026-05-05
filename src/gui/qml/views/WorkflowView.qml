@@ -40,14 +40,16 @@ Item {
             return 6  // Bundled — next step is Organize
         if (!workflowController.artworkExistsForFile(appController.selectedFileId))
             return 3  // Artwork & Metadata
-        if (f["isConverted"] || false)
-            return 5  // Converted — next step is Bundle & Rename
+        if (!(f["isConverted"] || false))
+            return 4  // Convert — needs conversion
         return 5      // Bundle & Rename
     }
 
     // Only auto-switch when a different file is selected.  Library data changes
     // (e.g. counts updating after conversion) must not hijack the open stage.
+    // While Run All Stages is running, stage tracking is driven by the pipeline.
     onAutoStageChanged: {
+        if (workflowController.running) return
         if (appController.selectedFileId <= 0) return
         if (appController.selectedFileId !== lastAutoStagedFileId) {
             lastAutoStagedFileId = appController.selectedFileId
@@ -58,8 +60,23 @@ Item {
     Connections {
         target: appController
         function onSelectedFileIdChanged() {
+            if (workflowController.running) return
             lastAutoStagedFileId = appController.selectedFileId
             openStage = autoStage
+        }
+    }
+
+    // Track Run All Stages pipeline: open the relevant stage card as the
+    // pipeline advances, then collapse everything when done.
+    Connections {
+        target: workflowController
+        function onActiveStageChanged() {
+            if (workflowController.running)
+                openStage = workflowController.activeStage
+        }
+        function onRunningChanged() {
+            if (!workflowController.running)
+                openStage = 0  // collapse all when pipeline finishes
         }
     }
 
@@ -138,9 +155,18 @@ Item {
             Label {
                 text: "\u2022 Organize ROMs into: <i>" +
                       destDirField.text + "/Remus Library</i>"
+                visible: destDirField.text.length > 0
                 Layout.fillWidth: true
                 wrapMode: Text.WordWrap
                 textFormat: Text.RichText
+            }
+
+            Label {
+                visible: destDirField.text.length === 0
+                text: "\u2022 Organize: skipped (no destination directory set)"
+                Layout.fillWidth: true
+                wrapMode: Text.WordWrap
+                color: "#a89984"
             }
 
             Label {
@@ -197,9 +223,18 @@ Item {
 
                     Button {
                         text:    workflowController.running ? "Cancel" : "▶ Run All Stages"
-                        onClicked: workflowController.running
-                                       ? workflowController.cancel()
-                                       : workflowController.runAll()
+                        onClicked: {
+                            if (workflowController.running) {
+                                workflowController.cancel()
+                            } else {
+                                workflowController.runAll(
+                                    scanController.lastDirectory,
+                                    destDirField.text.length > 0
+                                        ? destDirField.text + "/Remus Library"
+                                        : "",
+                                    bundleNameTemplate.editText)
+                            }
+                        }
                     }
                     Button {
                         text:     "↻ Refresh Counts"
@@ -295,10 +330,29 @@ Item {
                         visible:       hashController.hashing || matchController.matching
                     }
 
-                    // ── Confirm / Reject selected match ──────────────────────
-                    // Only shown once the selected file has been hashed
+                    // ── Confirm All (global) ─────────────────────────────────
+                    // Visible whenever there are unconfirmed matches, regardless
+                    // of whether a specific file is selected.
                     RowLayout {
-                        visible:         (appController.selectedFileData.md5 || "").length > 0
+                        visible:          matchController.unconfirmedMatchCount > 0
+                        Layout.fillWidth: true
+                        spacing: 6
+
+                        Button {
+                            text:          "Confirm All (" + matchController.unconfirmedMatchCount + ")"
+                            enabled:       !matchController.matching
+                            font.pixelSize: 11
+                            padding:        6
+                            onClicked:      matchController.confirmAll()
+                        }
+
+                        Item { Layout.fillWidth: true }
+                    }
+
+                    // ── Confirm / Reject selected match ──────────────────────
+                    // Only shown once the selected file has been hashed.
+                    RowLayout {
+                        visible:          (appController.selectedFileData.md5 || "").length > 0
                         Layout.fillWidth: true
                         spacing: 6
 
@@ -311,14 +365,6 @@ Item {
                                             ? "#b8bb26" : "#cc241d"
                         }
 
-                        Button {
-                            text:          "Confirm All"
-                            visible:       matchController.unconfirmedMatchCount > 0
-                            enabled:       !matchController.matching
-                            font.pixelSize: 11
-                            padding:        6
-                            onClicked:      matchController.confirmAll()
-                        }
                         Button {
                             text:      "✓ Confirm Selected"
                             enabled:   appController.selectedFileId > 0 &&
@@ -406,14 +452,16 @@ Item {
                             enabled:   appController.selectedFileId > 0 &&
                                        !conversionController.converting
                             onClicked: conversionController.convertSelected(
-                                           convertFormatCombo.currentText, "")
+                                           convertFormatCombo.currentText, "",
+                                           scanController.lastDirectory)
                         }
                         Button {
                             text:      "Convert All"
                             enabled:   appController.libraryOpen &&
                                        !conversionController.converting
                             onClicked: conversionController.convertAll(
-                                           convertFormatCombo.currentText, "")
+                                           convertFormatCombo.currentText, "",
+                                           scanController.lastDirectory)
                         }
                     }
 
@@ -510,9 +558,18 @@ Item {
                             onClicked: organizeFolderDialog.open()
                         }
                         Button {
+                            text:      "Organize All"
+                            enabled:   appController.libraryOpen &&
+                                       !organizeController.organizing &&
+                                       destDirField.text.length > 0
+                            onClicked: organizeController.organizeAll(
+                                           destDirField.text + "/Remus Library")
+                        }
+                        Button {
                             text:      "Organize"
                             enabled:   appController.libraryOpen &&
-                                       !organizeController.organizing
+                                       !organizeController.organizing &&
+                                       destDirField.text.length > 0
                             onClicked: organizeController.applyOrganize(
                                            destDirField.text + "/Remus Library")
                         }

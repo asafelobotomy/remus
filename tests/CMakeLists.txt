@@ -230,7 +230,10 @@ add_remus_test(test_workflow_controller WorkflowControllerTest
         ../src/gui/controllers/match_controller.cpp
         ../src/gui/models/match_list_model.cpp
         ../src/gui/controllers/artwork_controller.cpp
+        ../src/gui/controllers/conversion_controller.cpp
+        ../src/gui/controllers/conversion_controller_tools.cpp
         ../src/gui/controllers/organize_controller.cpp
+        ../src/gui/controllers/export_controller.cpp
     LIBS Qt6::Test Qt6::Core Qt6::Sql Qt6::Network remus-metadata remus-core remus-services
 )
 target_include_directories(test_workflow_controller PRIVATE

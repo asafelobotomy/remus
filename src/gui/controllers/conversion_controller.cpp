@@ -10,8 +10,50 @@
 #include <QTemporaryDir>
 
 #include "app_controller.h"
+#include "../../core/constants/settings.h"
 
 namespace Remus {
+
+namespace {
+
+/// Move @p filePath to {baseDir}/original_roms/ to preserve the original ROM
+/// before or after conversion. Returns the new path on success or empty on failure.
+static QString moveToOriginalRomsConv(const QString &filePath, const QString &baseDir)
+{
+    const QString origRomsDir = QDir(baseDir).filePath(QStringLiteral("original_roms"));
+    if (!QDir().mkpath(origRomsDir))
+        return QString();
+
+    // Write the .remusdir marker so the scanner automatically skips this directory.
+    const QString markerPath = QDir(origRomsDir).filePath(
+        QString::fromLatin1(Constants::Settings::Files::MARKER_SKIP_SCAN));
+    if (!QFileInfo::exists(markerPath)) {
+        QFile marker(markerPath);
+        marker.open(QIODevice::WriteOnly);
+    }
+
+    const QString destPath = QDir(origRomsDir).filePath(QFileInfo(filePath).fileName());
+    if (QFileInfo::exists(destPath)) {
+        if (!QFileInfo::exists(filePath))
+            return destPath; // already moved in a previous run
+        int n = 1;
+        QString candidate;
+        do {
+            candidate = QDir(origRomsDir).filePath(
+                QFileInfo(filePath).completeBaseName()
+                + QStringLiteral("_%1.").arg(n++)
+                + QFileInfo(filePath).suffix());
+        } while (QFileInfo::exists(candidate));
+        if (!QFile::rename(filePath, candidate))
+            return QString();
+        return candidate;
+    }
+    if (!QFile::rename(filePath, destPath))
+        return QString();
+    return destPath;
+}
+
+} // anonymous namespace
 
 ConversionController::ConversionController(AppController *appController, QObject *parent)
     : QObject(parent)
@@ -22,7 +64,7 @@ ConversionController::ConversionController(AppController *appController, QObject
     refreshToolStatus();
 }
 
-void ConversionController::convertSelected(const QString &format, const QString &outputPath)
+void ConversionController::convertSelected(const QString &format, const QString &outputPath, const QString &scanDir)
 {
     if (m_converting) {
         setLastMessage(QStringLiteral("A conversion is already running."));
@@ -143,6 +185,14 @@ void ConversionController::convertSelected(const QString &format, const QString 
         upd.addBindValue(file.id);
         upd.exec();
     }
+
+    // Move the original ROM to original_roms/ for preservation.
+    {
+        const QString baseDir = scanDir.isEmpty() ? QFileInfo(file.currentPath).absolutePath() : scanDir;
+        if (QFileInfo::exists(file.currentPath) && file.currentPath != finalOutputPath)
+            moveToOriginalRomsConv(file.currentPath, baseDir);
+    }
+
     m_progressMessage = QStringLiteral("Created %1").arg(QFileInfo(finalOutputPath).fileName());
     emit progressMessageChanged();
     setLastMessage(QStringLiteral("Created %1").arg(QFileInfo(finalOutputPath).fileName()));
@@ -150,7 +200,7 @@ void ConversionController::convertSelected(const QString &format, const QString 
     emit libraryChanged();
 }
 
-void ConversionController::convertAll(const QString &format, const QString &outputPath)
+void ConversionController::convertAll(const QString &format, const QString &outputPath, const QString &scanDir)
 {
     if (m_converting) {
         setLastMessage(QStringLiteral("A conversion is already running."));
@@ -177,6 +227,8 @@ void ConversionController::convertAll(const QString &format, const QString &outp
     emit convertingChanged();
     emit progressChanged();
     emit progressMessageChanged();
+    // Yield to the event loop so the progress bar becomes visible before the loop.
+    QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
 
     int converted = 0;
     int skipped = 0;
@@ -189,6 +241,7 @@ void ConversionController::convertAll(const QString &format, const QString &outp
         m_progressMessage = QStringLiteral("Converting %1 / %2: \"%3\"\u2026")
                                 .arg(i + 1).arg(total).arg(QFileInfo(file.currentPath).fileName());
         emit progressMessageChanged();
+        QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
 
         std::unique_ptr<QTemporaryDir> tmpDir;
         const QString romPath = extractIfArchive(file.currentPath, tmpDir);
@@ -210,6 +263,7 @@ void ConversionController::convertAll(const QString &format, const QString &outp
         auto progress = [this, capturedIndex, total](int percent, const QString &) {
             m_progress = (capturedIndex * 100 + percent) / total;
             emit progressChanged();
+            QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
         };
 
         ConversionResult result;
@@ -221,8 +275,14 @@ void ConversionController::convertAll(const QString &format, const QString &outp
             result = m_conversionService.convertToCSO(romPath, outputPath, progress);
         } else if (normalizedFormat == QStringLiteral("WBFS")) {
             result = m_wbfsConverter.convertIsoToWbfs(romPath, outputPath);
+            m_progress = (i + 1) * 100 / total;
+            emit progressChanged();
+            QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
         } else if (normalizedFormat == QStringLiteral("PBP")) {
             result = m_pbpExporter.exportToPBP(romPath, outputPath);
+            m_progress = (i + 1) * 100 / total;
+            emit progressChanged();
+            QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
         } else {
             ++skipped;
             continue;
@@ -258,6 +318,13 @@ void ConversionController::convertAll(const QString &format, const QString &outp
                 upd.prepare(QStringLiteral("UPDATE files SET is_converted = 1 WHERE id = ?"));
                 upd.addBindValue(file.id);
                 upd.exec();
+            }
+            // Move the original ROM to original_roms/ for preservation.
+            {
+                const QString baseDir = scanDir.isEmpty()
+                    ? QFileInfo(file.currentPath).absolutePath() : scanDir;
+                if (QFileInfo::exists(file.currentPath) && file.currentPath != finalOutputPath)
+                    moveToOriginalRomsConv(file.currentPath, baseDir);
             }
         } else {
             ++failed;

@@ -10,6 +10,7 @@
 #include <QTextStream>
 
 #include "app_controller.h"
+#include "settings_controller.h"
 #include "../../core/constants/constants.h"
 
 namespace Remus {
@@ -22,7 +23,7 @@ QString artworkPathForFile(int fileId)
 {
     QSettings settings(QString::fromLatin1(Constants::SETTINGS_ORGANIZATION),
                        QString::fromLatin1(Constants::SETTINGS_APPLICATION));
-    const QString configured = settings.value(QStringLiteral("gui/artwork_cache_dir")).toString().trimmed();
+    const QString configured = settings.value(QLatin1String(GuiSettings::ARTWORK_CACHE_DIR)).toString().trimmed();
     const QString artDir = configured.isEmpty()
         ? QDir(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)).filePath(QStringLiteral("artwork"))
         : configured;
@@ -49,6 +50,15 @@ QString moveToOriginalRoms(const QString &filePath, const QString &scanDir)
     const QString origRomsDir = QDir(scanDir).filePath(QStringLiteral("original_roms"));
     if (!QDir().mkpath(origRomsDir))
         return QString();
+
+    // Write the .remusdir marker so the scanner automatically skips this
+    // directory on future scans — original ROMs must not be re-imported.
+    const QString markerPath = QDir(origRomsDir).filePath(
+        QString::fromLatin1(Constants::Settings::Files::MARKER_SKIP_SCAN));
+    if (!QFileInfo::exists(markerPath)) {
+        QFile marker(markerPath);
+        marker.open(QIODevice::WriteOnly);
+    }
 
     const QString destPath = QDir(origRomsDir).filePath(QFileInfo(filePath).fileName());
     if (QFileInfo::exists(destPath)) {
@@ -101,6 +111,10 @@ void ExportController::bundleSelected(const QString &scanDir, const QString &nam
     const Database::MatchResult match = m_appController->database()->getMatchForFile(fileId);
     if (file.id <= 0 || match.matchId <= 0) {
         setLastMessage(QStringLiteral("Bundling requires a selected file with a metadata match."));
+        return;
+    }
+    if (!match.isConfirmed) {
+        setLastMessage(QStringLiteral("Bundling requires a confirmed match. Please confirm the match first."));
         return;
     }
 
@@ -201,6 +215,22 @@ void ExportController::bundleAll(const QString &scanDir, const QString &namingTe
     for (auto it = allMatches.constBegin(); it != allMatches.constEnd(); ++it) {
         FileRecord file = m_appController->database()->getFileById(it.key());
         const Database::MatchResult &match = it.value();
+        if (match.isRejected || !match.isConfirmed) {
+            ++m_bundledFiles;
+            emit bundleProgressChanged();
+            continue;
+        }
+        // Skip files that were already bundled in a previous run.
+        {
+            QSqlQuery checkQ(m_appController->database()->database());
+            checkQ.prepare(QStringLiteral("SELECT is_bundled FROM files WHERE id = ?"));
+            checkQ.addBindValue(it.key());
+            if (checkQ.exec() && checkQ.next() && checkQ.value(0).toBool()) {
+                ++m_bundledFiles;
+                emit bundleProgressChanged();
+                continue;
+            }
+        }
         if (file.id <= 0) {
             ++failed;
             ++m_bundledFiles;
@@ -287,6 +317,12 @@ bool ExportController::exportM3u(const QString &outputPath)
 
     QTextStream stream(&outFile);
     stream << file.currentPath << '\n';
+    // Include child files (multi-disc/multi-track groups)
+    const QList<FileRecord> children = m_appController->database()->getFilesByParent(fileId);
+    for (const FileRecord &child : children) {
+        if (!child.currentPath.isEmpty())
+            stream << child.currentPath << '\n';
+    }
     outFile.close();
 
     m_lastOutputPath = outputPath;

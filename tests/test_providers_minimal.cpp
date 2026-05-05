@@ -51,7 +51,9 @@ void ProvidersMinimalTest::thegamesdbHashUnsupported()
     QSignalSpy spy(&provider, &TheGamesDBProvider::errorOccurred);
     GameMetadata md = provider.getByHash("abcd", "NES");
     QVERIFY(md.title.isEmpty());
-    QVERIFY(!spy.isEmpty());
+    // getByHash() is a silent no-op for TheGamesDB (no error signal emitted);
+    // the orchestrator's supportsHashMatch flag prevents this path in normal use.
+    QVERIFY(spy.isEmpty());
     QVERIFY(provider.isAvailable());
 }
 

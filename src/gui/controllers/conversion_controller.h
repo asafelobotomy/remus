@@ -38,8 +38,8 @@ public:
     QString lastMessage() const { return m_lastMessage; }
     QVariantMap toolStatus() const { return m_toolStatus; }
 
-    Q_INVOKABLE void convertSelected(const QString &format, const QString &outputPath = QString());
-    Q_INVOKABLE void convertAll(const QString &format, const QString &outputPath = QString());
+    Q_INVOKABLE void convertSelected(const QString &format, const QString &outputPath = QString(), const QString &scanDir = QString());
+    Q_INVOKABLE void convertAll(const QString &format, const QString &outputPath = QString(), const QString &scanDir = QString());
     Q_INVOKABLE void refreshToolStatus();
 
 public slots:

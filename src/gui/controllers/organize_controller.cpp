@@ -1,6 +1,7 @@
 #include "organize_controller.h"
 
 #include <QSettings>
+#include <QSqlQuery>
 
 #include "app_controller.h"
 #include "../../core/constants/constants.h"
@@ -29,6 +30,11 @@ void OrganizeController::previewOrganize(const QString &destinationDir)
 void OrganizeController::applyOrganize(const QString &destinationDir)
 {
     runOrganize(destinationDir, false);
+}
+
+void OrganizeController::organizeAll(const QString &destinationDir)
+{
+    runOrganize(destinationDir, false, true);
 }
 
 void OrganizeController::undoLast()
@@ -64,11 +70,30 @@ QList<int> OrganizeController::targetFileIds() const
         return {m_appController->selectedFileId()};
     }
 
-    QList<int> fileIds;
-    const auto matches = m_appController->database()->getAllMatches();
-    for (auto it = matches.constBegin(); it != matches.constEnd(); ++it) {
-        fileIds.append(it.key());
+    return bundledFileIds();
+}
+
+QList<int> OrganizeController::bundledFileIds() const
+{
+    if (m_appController == nullptr || !m_appController->isLibraryOpen()) {
+        return {};
     }
+
+    // Only files that are hashed, have a confirmed match, and have been bundled
+    // are eligible for the Organize step.
+    QSqlQuery q(m_appController->database()->database());
+    q.prepare(QStringLiteral(
+        "SELECT DISTINCT f.id FROM files f "
+        "JOIN matches m ON m.file_id = f.id "
+        "WHERE f.is_bundled = 1 "
+        "  AND m.is_confirmed = 1 AND m.is_rejected = 0 "
+        "  AND (f.md5 IS NOT NULL AND f.md5 != '')"));
+    if (!q.exec())
+        return {};
+
+    QList<int> fileIds;
+    while (q.next())
+        fileIds.append(q.value(0).toInt());
     return fileIds;
 }
 
@@ -112,14 +137,14 @@ void OrganizeController::setLastError(const QString &message)
     emit lastErrorChanged();
 }
 
-void OrganizeController::runOrganize(const QString &destinationDir, bool dryRun)
+void OrganizeController::runOrganize(const QString &destinationDir, bool dryRun, bool allBundled)
 {
     if (m_appController == nullptr || !m_appController->isLibraryOpen()) {
         setLastError(QStringLiteral("Open a library before organizing files."));
         return;
     }
 
-    const QList<int> fileIds = targetFileIds();
+    const QList<int> fileIds = allBundled ? bundledFileIds() : targetFileIds();
     if (fileIds.isEmpty()) {
         setLastError(QStringLiteral("Select a matched file first, or create matches for your library."));
         return;

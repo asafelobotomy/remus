@@ -29,7 +29,7 @@ public:
     QString progressMessage() const { return m_progressMessage; }
     QString currentProvider() const { return m_currentProvider; }
     QString lastMessage() const { return m_lastMessage; }
-    int unconfirmedMatchCount() const;
+    int unconfirmedMatchCount() const { return m_unconfirmedMatchCount; }
 
     void setModel(MatchListModel *model) { m_model = model; }
 
@@ -54,8 +54,8 @@ private:
     void clearState();
     bool matchFileRecord(const FileRecord &file);
     float calculateNameSimilarity(const QString &left, const QString &right) const;
-    int levenshteinDistance(const QString &left, const QString &right) const;
     void setLastMessage(const QString &message);
+    void updateUnconfirmedCount();
 
     AppController *m_appController;
     MatchListModel *m_model = nullptr;
@@ -66,6 +66,7 @@ private:
     QString m_progressMessage;
     QString m_currentProvider;
     QString m_lastMessage;
+    int m_unconfirmedMatchCount = 0;
 };
 
 } // namespace Remus

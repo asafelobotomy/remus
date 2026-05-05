@@ -1,11 +1,14 @@
 #include "scan_controller.h"
 
+#include <QCoreApplication>
 #include <QDir>
 #include <QFileInfo>
 #include <QMetaObject>
+#include <QSettings>
 #include <QThread>
 
 #include "app_controller.h"
+#include "../../core/constants/constants.h"
 
 namespace Remus {
 
@@ -13,6 +16,10 @@ ScanController::ScanController(AppController *appController, QObject *parent)
     : QObject(parent)
     , m_appController(appController)
 {
+    // Restore the last scanned directory across sessions.
+    QSettings settings(QString::fromLatin1(Constants::SETTINGS_ORGANIZATION),
+                       QString::fromLatin1(Constants::SETTINGS_APPLICATION));
+    m_lastDirectory = settings.value(QStringLiteral("scan/last_directory")).toString();
 }
 
 void ScanController::startScan(const QString &directory)
@@ -100,6 +107,7 @@ void ScanController::startScan(const QString &directory)
                     m_progressMessage = QStringLiteral("Saving to library\u2026 %1 / %2").arg(done).arg(m_totalFiles);
                     emit progressChanged();
                     emit progressMessageChanged();
+                    QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
                 });
 
             // Phase complete — fill bar to 100 %
@@ -119,7 +127,10 @@ void ScanController::startScan(const QString &directory)
         }, Qt::QueuedConnection);
     });
 
-    connect(m_thread, &QThread::finished, m_thread, &QObject::deleteLater);
+    connect(m_thread, &QThread::finished, this, [this]() {
+        m_thread->deleteLater();
+        m_thread = nullptr;
+    }, Qt::QueuedConnection);
     m_thread->start();
 }
 
@@ -141,6 +152,11 @@ void ScanController::setLastDirectory(const QString &directory)
 
     m_lastDirectory = cleaned;
     emit lastDirectoryChanged();
+
+    // Persist across sessions.
+    QSettings settings(QString::fromLatin1(Constants::SETTINGS_ORGANIZATION),
+                       QString::fromLatin1(Constants::SETTINGS_APPLICATION));
+    settings.setValue(QStringLiteral("scan/last_directory"), cleaned);
 }
 
 void ScanController::appendLog(const QString &message)

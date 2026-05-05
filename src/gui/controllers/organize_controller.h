@@ -33,6 +33,7 @@ public:
 
     Q_INVOKABLE void previewOrganize(const QString &destinationDir);
     Q_INVOKABLE void applyOrganize(const QString &destinationDir);
+    Q_INVOKABLE void organizeAll(const QString &destinationDir);
     Q_INVOKABLE void undoLast();
 
 public slots:
@@ -49,9 +50,10 @@ signals:
 
 private:
     QList<int> targetFileIds() const;
+    QList<int> bundledFileIds() const;
     QMap<int, GameMetadata> metadataForFiles(const QList<int> &fileIds) const;
     void setLastError(const QString &message);
-    void runOrganize(const QString &destinationDir, bool dryRun);
+    void runOrganize(const QString &destinationDir, bool dryRun, bool allBundled = false);
 
     AppController *m_appController;
     std::unique_ptr<OrganizeEngine> m_engine;

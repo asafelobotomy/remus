@@ -274,10 +274,9 @@ GameMetadata HasheousProvider::getById(const QString &id)
 ArtworkUrls HasheousProvider::getArtwork(const QString &id)
 {
     Q_UNUSED(id);
-    
-    // Artwork is included in the hash lookup response
-    qWarning() << "Hasheous artwork is included in hash lookup, use getByHash() instead";
-    
+    // Hasheous artwork URLs are embedded in hash lookup responses (boxArtUrl).
+    // There is no standalone artwork endpoint; return empty so the artwork
+    // fallback cascade can continue to the next provider.
     return ArtworkUrls();
 }
 

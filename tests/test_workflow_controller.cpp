@@ -1,4 +1,5 @@
 #include <QtTest/QtTest>
+#include <QCoreApplication>
 #include <QSqlDatabase>
 #include <QSqlQuery>
 #include <QSqlError>
@@ -12,6 +13,7 @@
 #include "controllers/hash_controller.h"
 #include "controllers/match_controller.h"
 #include "controllers/artwork_controller.h"
+#include "controllers/conversion_controller.h"
 #include "controllers/organize_controller.h"
 #include "../src/core/database_types.h"
 
@@ -98,10 +100,11 @@ private slots:
         MatchController  match(&app);
         ArtworkController art(&app);
         OrganizeController org(&app);
-        WorkflowController wf(&app, &hash, &match, &art, &org);
+        WorkflowController wf(&app, &hash, &match, &art, nullptr, &org, nullptr);
 
         setupTempLibrary(&app);
         wf.refresh();
+        QCoreApplication::processEvents();
 
         QCOMPARE(wf.identityCount(), 0);
         QCOMPARE(wf.enrichCount(),   0);
@@ -115,13 +118,14 @@ private slots:
         MatchController  match(&app);
         ArtworkController art(&app);
         OrganizeController org(&app);
-        WorkflowController wf(&app, &hash, &match, &art, &org);
+        WorkflowController wf(&app, &hash, &match, &art, nullptr, &org, nullptr);
 
         setupTempLibrary(&app);
         insertFile(&app, QStringLiteral("game1.iso")); // no hash
         insertFile(&app, QStringLiteral("game2.iso")); // no hash
 
         wf.refresh();
+        QCoreApplication::processEvents();
         QCOMPARE(wf.identityCount(), 2);
     }
 
@@ -132,12 +136,13 @@ private slots:
         MatchController  match(&app);
         ArtworkController art(&app);
         OrganizeController org(&app);
-        WorkflowController wf(&app, &hash, &match, &art, &org);
+        WorkflowController wf(&app, &hash, &match, &art, nullptr, &org, nullptr);
 
         setupTempLibrary(&app);
         insertFile(&app, QStringLiteral("game1.iso"), QStringLiteral("abc123")); // hashed, no match
 
         wf.refresh();
+        QCoreApplication::processEvents();
         QCOMPARE(wf.identityCount(), 1);
     }
 
@@ -148,13 +153,14 @@ private slots:
         MatchController  match(&app);
         ArtworkController art(&app);
         OrganizeController org(&app);
-        WorkflowController wf(&app, &hash, &match, &art, &org);
+        WorkflowController wf(&app, &hash, &match, &art, nullptr, &org, nullptr);
 
         setupTempLibrary(&app);
         const int fid = insertFile(&app, QStringLiteral("game1.iso"), QStringLiteral("abc123"));
         insertConfirmedMatch(&app, fid);
 
         wf.refresh();
+        QCoreApplication::processEvents();
         QCOMPARE(wf.identityCount(), 0); // matched → not identity
         QCOMPARE(wf.enrichCount(),   1); // confirmed but no artwork
     }
@@ -166,13 +172,14 @@ private slots:
         MatchController  match(&app);
         ArtworkController art(&app);
         OrganizeController org(&app);
-        WorkflowController wf(&app, &hash, &match, &art, &org);
+        WorkflowController wf(&app, &hash, &match, &art, nullptr, &org, nullptr);
 
         setupTempLibrary(&app);
         insertFile(&app, QStringLiteral("a.iso"));
         insertFile(&app, QStringLiteral("b.iso"));
 
         wf.refresh();
+        QCoreApplication::processEvents();
         QCOMPARE(wf.queueFiles().count(), 2);
     }
 
@@ -183,10 +190,11 @@ private slots:
         MatchController  match(&app);
         ArtworkController art(&app);
         OrganizeController org(&app);
-        WorkflowController wf(&app, &hash, &match, &art, &org);
+        WorkflowController wf(&app, &hash, &match, &art, nullptr, &org, nullptr);
 
         setupTempLibrary(&app);
         wf.refresh();
+        QCoreApplication::processEvents();
 
         QVERIFY(!wf.hint().isEmpty());
         QVERIFY(wf.hint().contains("Select", Qt::CaseInsensitive));
@@ -199,7 +207,7 @@ private slots:
         MatchController  match(&app);
         ArtworkController art(&app);
         OrganizeController org(&app);
-        WorkflowController wf(&app, &hash, &match, &art, &org);
+        WorkflowController wf(&app, &hash, &match, &art, nullptr, &org, nullptr);
 
         QVERIFY(!wf.artworkExistsForFile(9999));
     }

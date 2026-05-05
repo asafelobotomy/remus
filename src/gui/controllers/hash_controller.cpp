@@ -1,5 +1,7 @@
 #include "hash_controller.h"
 
+#include <QCoreApplication>
+
 #include "app_controller.h"
 
 namespace Remus {
@@ -25,8 +27,8 @@ void HashController::startHashAll()
 
     m_hashing = true;
     m_hashedFiles = 0;
-    m_totalFiles = m_appController->database()->getFilesWithoutHashes().size();
-    m_progressMessage = QStringLiteral("Hashing files\u2026 0 / %1").arg(m_totalFiles);
+    m_totalFiles = 0;
+    m_progressMessage = QStringLiteral("Hashing files\u2026");
     emit hashingChanged();
     emit progressChanged();
     emit progressMessageChanged();
@@ -39,6 +41,7 @@ void HashController::startHashAll()
             m_progressMessage = QStringLiteral("Hashing files\u2026 %1 / %2").arg(done).arg(total);
             emit progressChanged();
             emit progressMessageChanged();
+            QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
         });
 
     m_hashing = false;

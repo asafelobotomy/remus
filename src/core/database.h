@@ -295,7 +295,13 @@ public:
      * @return True if successful
      */
     bool rejectMatch(int fileId);
-    
+
+    /**
+     * @brief Count pending matches (not confirmed and not rejected)
+     * @return Count of unconfirmed non-rejected matches
+     */
+    int getUnconfirmedMatchCount();
+
     /**
      * @brief Get file path by ID
      * @param fileId File ID

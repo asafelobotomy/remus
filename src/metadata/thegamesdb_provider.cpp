@@ -108,10 +108,11 @@ QList<SearchResult> TheGamesDBProvider::searchByName(const QString &title,
 
 GameMetadata TheGamesDBProvider::getByHash(const QString &hash, const QString &system)
 {
-    // TheGamesDB does not support hash-based lookups
-    GameMetadata metadata;
-    emit errorOccurred("TheGamesDB does not support hash-based lookups");
-    return metadata;
+    Q_UNUSED(hash);
+    Q_UNUSED(system);
+    // TheGamesDB does not support hash-based lookups; return empty silently.
+    // The orchestrator's supportsHashMatch flag prevents this path in normal use.
+    return {};
 }
 
 GameMetadata TheGamesDBProvider::getById(const QString &id)
@@ -299,7 +300,10 @@ GameMetadata TheGamesDBProvider::parseGameJson(const QJsonObject &game)
 
 bool TheGamesDBProvider::isAvailable()
 {
-    // TheGamesDB is generally available without auth
+    // Unavailable when the monthly request cap has been reached.
+    if (m_monthlyRequestCount >= Constants::Network::THEGAMESDB_BLOCK_THRESHOLD) {
+        return false;
+    }
     return true;
 }
 

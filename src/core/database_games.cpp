@@ -94,6 +94,14 @@ QMap<int, Database::MatchResult> Database::getAllMatches()
     return results;
 }
 
+int Database::getUnconfirmedMatchCount()
+{
+    QSqlQuery q(m_db);
+    if (!q.exec(QStringLiteral("SELECT COUNT(*) FROM matches WHERE is_confirmed = 0 AND is_rejected = 0")))
+        return 0;
+    return q.next() ? q.value(0).toInt() : 0;
+}
+
 Database::MatchResult Database::getMatchForFile(int fileId)
 {
     MatchResult result;

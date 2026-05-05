@@ -1,10 +1,13 @@
 #include "workflow_controller.h"
 
 #include "app_controller.h"
+#include "conversion_controller.h"
 #include "hash_controller.h"
 #include "match_controller.h"
 #include "artwork_controller.h"
 #include "organize_controller.h"
+#include "export_controller.h"
+#include "settings_controller.h"
 
 #include <QDir>
 #include <QFileInfo>
@@ -19,16 +22,31 @@ namespace Remus {
 WorkflowController::WorkflowController(AppController   *app,
                                        HashController  *hash,
                                        MatchController *match,
-                                       ArtworkController   *artwork,
-                                       OrganizeController  *organize,
+                                       ArtworkController    *artwork,
+                                       ConversionController *conversion,
+                                       OrganizeController   *organize,
+                                       ExportController     *export_ctl,
                                        QObject *parent)
     : QObject(parent)
     , m_appController(app)
     , m_hashController(hash)
     , m_matchController(match)
     , m_artworkController(artwork)
+    , m_conversionController(conversion)
     , m_organizeController(organize)
+    , m_exportController(export_ctl)
 {
+    // Debounce refresh() calls so that multiple rapid signals (e.g. from several
+    // controllers finishing in quick succession) trigger only one filesystem scan.
+    // openStage 1–6 (QML StageCards) != Stage enum 0–3 (pipeline queue buckets).
+    m_refreshTimer = new QTimer(this);
+    m_refreshTimer->setSingleShot(true);
+    m_refreshTimer->setInterval(0); // coalesces back-to-back signals; fires on next event loop tick
+    connect(m_refreshTimer, &QTimer::timeout, this, [this]() {
+        refreshCounts();
+        refreshQueueFiles();
+        refreshHint();
+    });
     connect(app, &AppController::libraryOpened,
             this, &WorkflowController::refresh);
     connect(app, &AppController::libraryClosed,
@@ -41,6 +59,10 @@ WorkflowController::WorkflowController(AppController   *app,
             this, &WorkflowController::refresh);
     connect(organize, &OrganizeController::libraryChanged,
             this, &WorkflowController::refresh);
+    connect(export_ctl, &ExportController::libraryChanged,
+            this, &WorkflowController::refresh);
+    connect(conversion, &ConversionController::libraryChanged,
+            this, &WorkflowController::refresh);
     connect(artwork, &ArtworkController::artworkDownloaded,
             this, &WorkflowController::refresh);
 }
@@ -49,9 +71,8 @@ WorkflowController::WorkflowController(AppController   *app,
 
 void WorkflowController::refresh()
 {
-    refreshCounts();
-    refreshQueueFiles();
-    refreshHint();
+    if (m_refreshTimer)
+        m_refreshTimer->start(); // coalesce rapid-fire signals into one refresh
 }
 
 void WorkflowController::setQueueStage(int stage)
@@ -62,9 +83,13 @@ void WorkflowController::setQueueStage(int stage)
     refreshQueueFiles();
 }
 
-void WorkflowController::runAll()
+void WorkflowController::runAll(const QString &scanDir, const QString &destDir,
+                                const QString &namingTemplate)
 {
     if (!m_appController || !m_appController->isLibraryOpen() || m_running) return;
+    m_scanDir        = scanDir;
+    m_destDir        = destDir;
+    m_namingTemplate = namingTemplate;
     m_running  = true;
     m_runStep  = 0;
     emit runningChanged();
@@ -110,7 +135,7 @@ bool WorkflowController::artworkExistsForFile(int fileId) const
 QString WorkflowController::artworkDirPath() const
 {
     QSettings s;
-    const QString cfg = s.value(QStringLiteral("gui/artwork_cache_dir")).toString().trimmed();
+    const QString cfg = s.value(QLatin1String(GuiSettings::ARTWORK_CACHE_DIR)).toString().trimmed();
     if (!cfg.isEmpty()) return cfg;
     return QDir(QStandardPaths::writableLocation(
                     QStandardPaths::AppDataLocation)).filePath(QStringLiteral("artwork"));
@@ -316,6 +341,7 @@ void WorkflowController::advanceRunAll()
 
     case 0: {
         // Hash all files — guard ensures only one of the two connections fires
+        setActiveStage(2);
         auto *guard = new QObject(this);
         connect(m_hashController, &HashController::hashCompleted, guard, [this, guard](int) {
             delete guard;
@@ -348,7 +374,29 @@ void WorkflowController::advanceRunAll()
 
     case 3:
         // Artwork (synchronous download loop)
+        setActiveStage(3);
         m_artworkController->downloadAllMatched();
+        advanceRunAll();
+        break;
+
+    case 4:  // Convert — synchronous loop; AUTO resolves format per file
+        setActiveStage(4);
+        if (m_conversionController)
+            m_conversionController->convertAll(QStringLiteral("AUTO"), QString(), m_scanDir);
+        advanceRunAll();
+        break;
+
+    case 5:  // Bundle confirmed ROMs (rejected and unconfirmed filtered by bundleAll)
+        setActiveStage(5);
+        if (m_exportController)
+            m_exportController->bundleAll(m_scanDir, m_namingTemplate);
+        advanceRunAll();
+        break;
+
+    case 6:  // Organize confirmed ROMs into the destination directory
+        setActiveStage(6);
+        if (!m_destDir.isEmpty())
+            m_organizeController->applyOrganize(m_destDir);
         advanceRunAll();
         break;
 
@@ -360,10 +408,18 @@ void WorkflowController::advanceRunAll()
 
 void WorkflowController::cancelRunAll()
 {
-    m_running = false;
-    m_runStep = 0;
-    emit runningChanged();
+    m_running     = false;
+    m_runStep     = 0;
+    m_activeStage = 0;
+    emit runningChanged();  // QML onRunningChanged handler collapses stages to 0
     refresh();
+}
+
+void WorkflowController::setActiveStage(int stage)
+{
+    if (m_activeStage == stage) return;
+    m_activeStage = stage;
+    emit activeStageChanged();
 }
 
 } // namespace Remus

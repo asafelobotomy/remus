@@ -1,5 +1,6 @@
 #include "artwork_controller.h"
 
+#include <QCoreApplication>
 #include <QDir>
 #include <QFileInfo>
 #include <QRegularExpression>
@@ -151,20 +152,28 @@ void ArtworkController::downloadAllMatched()
     emit progressMessageChanged();
 
     int done = 0;
+    int downloadSucceeded = 0;
+    int downloadFailed = 0;
     for (const FileRecord &file : files) {
         m_progressMessage = QStringLiteral("Processing %1 / %2").arg(done + 1).arg(files.size());
         emit progressMessageChanged();
         if (refreshArtworkForFile(file.id, true) && m_previewUrl.isValid() && !m_previewUrl.isLocalFile()) {
-            QString ignoredSavedPath;
-            m_downloader.download(m_previewUrl, artworkPathForFile(file.id), &ignoredSavedPath);
+            QString savedPath;
+            if (m_downloader.download(m_previewUrl, artworkPathForFile(file.id), &savedPath))
+                ++downloadSucceeded;
+            else
+                ++downloadFailed;
         }
         m_downloadProgress = ++done;
         emit progressChanged();
+        QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
     }
 
     refreshSelectedArtwork();
     m_downloading     = false;
-    m_progressMessage = QStringLiteral("Completed: %1 ROMs processed.").arg(done);
+    m_progressMessage = QStringLiteral("Completed: %1 downloaded, %2 failed, %3 skipped.")
+                            .arg(downloadSucceeded).arg(downloadFailed)
+                            .arg(done - downloadSucceeded - downloadFailed);
     emit downloadingChanged();
     emit progressMessageChanged();
     emit artworkDownloaded();

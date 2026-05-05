@@ -58,10 +58,12 @@ int main(int argc, char *argv[])
         &hashController,
         &matchController,
         &artworkController,
-        &organizeController);
+        &conversionController,
+        &organizeController,
+        &exportController);
 
-    QObject::connect(&exportController, &Remus::ExportController::libraryChanged,
-                     &workflowController, &Remus::WorkflowController::refresh);
+    // Note: exportController → workflowController::refresh is already wired
+    // inside WorkflowController's constructor; no second connect needed here.
 
     QQmlApplicationEngine engine;
 
