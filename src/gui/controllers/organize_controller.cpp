@@ -146,7 +146,9 @@ void OrganizeController::runOrganize(const QString &destinationDir, bool dryRun,
 
     const QList<int> fileIds = allBundled ? bundledFileIds() : targetFileIds();
     if (fileIds.isEmpty()) {
-        setLastError(QStringLiteral("Select a matched file first, or create matches for your library."));
+        setLastError(allBundled
+            ? QStringLiteral("No bundled ROMs found. Complete Stage 5 (Bundle & Rename) before organizing.")
+            : QStringLiteral("Select a matched file first, or create matches for your library."));
         return;
     }
 

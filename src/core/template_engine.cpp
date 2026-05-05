@@ -235,9 +235,35 @@ QMap<QString, QString> TemplateEngine::buildVariableMap(const GameMetadata &meta
     // Title (normalized with articles moved)
     variables[Constants::Templates::Variables::TITLE] = normalizeTitle(cleanTitle);
     
-    // Region — prefer metadata, fall back to extracted
-    variables[Constants::Templates::Variables::REGION] =
-        !metadata.region.isEmpty() ? metadata.region : extractedRegion;
+    // Region — prefer extracted (from title); only fall back to metadata.region if no region
+    // is found anywhere in the title. This prevents double-adding when the stripping loop
+    // stops early at an unrecognized tag and the region tag remains embedded in cleanTitle.
+    if (extractedRegion.isEmpty() && cleanTitle.contains(QLatin1Char('('))) {
+        static const QRegularExpression anyTag(R"(\(([^)]+)\))");
+        QRegularExpressionMatchIterator it2 = anyTag.globalMatch(cleanTitle);
+        while (it2.hasNext()) {
+            const QString tag = it2.next().captured(1).trimmed();
+            const QStringList parts = tag.split(QLatin1Char(','));
+            bool allRegion = !parts.isEmpty();
+            for (const QString &p : parts) {
+                if (!regionTokens.contains(p.trimmed(), Qt::CaseInsensitive)) { allRegion = false; break; }
+            }
+            if (allRegion) { extractedRegion = tag; break; }
+        }
+    }
+    // If a region was found in the title (stripped or embedded), use it.
+    // If not, fall back to the provider metadata region.
+    // Also guard against appending the metadata region when it already appears in cleanTitle
+    // (e.g., when stripping stopped before reaching it).
+    QString finalRegion = extractedRegion;
+    if (finalRegion.isEmpty() && !metadata.region.isEmpty()) {
+        // Only add metadata region if it does not already appear in the title.
+        const bool alreadyInTitle = cleanTitle.contains(
+            QLatin1Char('(') + metadata.region, Qt::CaseInsensitive);
+        if (!alreadyInTitle)
+            finalRegion = metadata.region;
+    }
+    variables[Constants::Templates::Variables::REGION] = finalRegion;
     
     // Languages
     variables[Constants::Templates::Variables::LANGUAGES] = extractedLanguages;

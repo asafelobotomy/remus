@@ -192,6 +192,15 @@ void MatchController::confirmAll()
     if (m_appController == nullptr || !m_appController->isLibraryOpen()) return;
     QSqlQuery q(m_appController->database()->database());
     q.exec(QStringLiteral("UPDATE matches SET is_confirmed = 1 WHERE is_confirmed = 0 AND is_rejected = 0"));
+    // Propagate confirmed game titles to files.base_title so the queue shows the game name.
+    q.exec(QStringLiteral(
+        "UPDATE files SET base_title = ("
+        "  SELECT g.title FROM games g"
+        "  JOIN matches m ON m.game_id = g.id"
+        "  WHERE m.file_id = files.id AND m.is_confirmed = 1"
+        "  LIMIT 1"
+        ") WHERE id IN (SELECT file_id FROM matches WHERE is_confirmed = 1)"));
+    updateUnconfirmedCount();
     refreshModel();
     emit libraryChanged();
 }

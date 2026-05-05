@@ -29,7 +29,8 @@ const QSet<QString> kMarkdownDocumentNames = {
     "contributing.md",
     "copying.md",
     "license.md",
-    "todo.md"
+    "todo.md",
+    ".remus.md"  // bundler marker written inside bundle archives — must not be treated as a ROM
 };
 
 }

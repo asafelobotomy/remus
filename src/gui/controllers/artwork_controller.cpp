@@ -154,6 +154,7 @@ void ArtworkController::downloadAllMatched()
     int done = 0;
     int downloadSucceeded = 0;
     int downloadFailed = 0;
+    m_batchDownloading = true;
     for (const FileRecord &file : files) {
         m_progressMessage = QStringLiteral("Processing %1 / %2").arg(done + 1).arg(files.size());
         emit progressMessageChanged();
@@ -169,6 +170,7 @@ void ArtworkController::downloadAllMatched()
         QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
     }
 
+    m_batchDownloading = false;
     refreshSelectedArtwork();
     m_downloading     = false;
     m_progressMessage = QStringLiteral("Completed: %1 downloaded, %2 failed, %3 skipped.")
@@ -204,7 +206,7 @@ bool ArtworkController::refreshArtworkForFile(int fileId, bool requireDownloadab
     if (matchResult.matchId <= 0) {
         m_previewUrl = QUrl();
         m_localArtworkPath.clear();
-        emit previewChanged();
+        if (!m_batchDownloading) emit previewChanged();
         return false;
     }
 
@@ -215,12 +217,12 @@ bool ArtworkController::refreshArtworkForFile(int fileId, bool requireDownloadab
         if (QFileInfo::exists(localPath)) {
             m_localArtworkPath = localPath;
             m_previewUrl = QUrl::fromLocalFile(localPath);
-            emit previewChanged();
+            if (!m_batchDownloading) emit previewChanged();
             return true;
         }
         m_previewUrl = QUrl();
         m_localArtworkPath.clear();
-        emit previewChanged();
+        if (!m_batchDownloading) emit previewChanged();
         return false;
     }
 
@@ -228,7 +230,7 @@ bool ArtworkController::refreshArtworkForFile(int fileId, bool requireDownloadab
     if (requireConfirmed && !matchResult.isConfirmed) {
         m_previewUrl = QUrl();
         m_localArtworkPath.clear();
-        emit previewChanged();
+        if (!m_batchDownloading) emit previewChanged();
         return false;
     }
 
@@ -300,7 +302,7 @@ bool ArtworkController::refreshArtworkForFile(int fileId, bool requireDownloadab
     if (QFileInfo::exists(localPath)) {
         m_localArtworkPath = localPath;
         m_previewUrl = QUrl::fromLocalFile(localPath);
-        emit previewChanged();
+        if (!m_batchDownloading) emit previewChanged();
         return true;
     }
 
@@ -311,7 +313,7 @@ bool ArtworkController::refreshArtworkForFile(int fileId, bool requireDownloadab
 
     m_previewUrl = QUrl(enriched.boxArtUrl);
     m_localArtworkPath.clear();
-    emit previewChanged();
+    if (!m_batchDownloading) emit previewChanged();
     return true;
 }
 

@@ -52,6 +52,7 @@ private:
     AppController *m_appController;
     ArtworkDownloader m_downloader;
     bool m_downloading = false;
+    bool m_batchDownloading = false;  // suppresses previewChanged() during downloadAllMatched()
     int m_downloadProgress = 0;
     int m_downloadTotal = 0;
     QString m_progressMessage;
