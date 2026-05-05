@@ -1,10 +1,12 @@
 #include "export_controller.h"
 
+#include <QCoreApplication>
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
 #include <QSettings>
 #include <QSqlDatabase>
+#include <QSqlError>
 #include <QSqlQuery>
 #include <QStandardPaths>
 #include <QTextStream>
@@ -175,8 +177,12 @@ void ExportController::bundleSelected(const QString &scanDir, const QString &nam
     m_lastOutputPath = result.outputPath;
     {
         QSqlQuery upd(m_appController->database()->database());
-        upd.prepare(QStringLiteral("UPDATE files SET is_bundled = 1, bundle_output_path = ? WHERE id = ?"));
+        upd.prepare(QStringLiteral(
+            "UPDATE files SET is_bundled = 1, bundle_output_path = ?, base_title = ? WHERE id = ?"));
         upd.addBindValue(result.outputPath);
+        // Store the bundle display name (filename without archive extension) as base_title
+        // so the queue sidebar reflects the bundled & renamed title.
+        upd.addBindValue(QFileInfo(result.outputPath).completeBaseName());
         upd.addBindValue(fileId);
         upd.exec();
     }
@@ -207,6 +213,8 @@ void ExportController::bundleAll(const QString &scanDir, const QString &namingTe
     emit exportingChanged();
     emit bundleProgressChanged();
     emit progressMessageChanged();
+    // Yield so the progress bar becomes visible before the loop starts.
+    QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
 
     const bool trashOriginal = trashOriginalEnabled();
     int bundled = 0;
@@ -218,6 +226,7 @@ void ExportController::bundleAll(const QString &scanDir, const QString &namingTe
         if (match.isRejected || !match.isConfirmed) {
             ++m_bundledFiles;
             emit bundleProgressChanged();
+            QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
             continue;
         }
         // Skip files that were already bundled in a previous run.
@@ -228,6 +237,7 @@ void ExportController::bundleAll(const QString &scanDir, const QString &namingTe
             if (checkQ.exec() && checkQ.next() && checkQ.value(0).toBool()) {
                 ++m_bundledFiles;
                 emit bundleProgressChanged();
+                QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
                 continue;
             }
         }
@@ -235,6 +245,7 @@ void ExportController::bundleAll(const QString &scanDir, const QString &namingTe
             ++failed;
             ++m_bundledFiles;
             emit bundleProgressChanged();
+            QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
             continue;
         }
 
@@ -269,16 +280,20 @@ void ExportController::bundleAll(const QString &scanDir, const QString &namingTe
             ++bundled;
             {
                 QSqlQuery upd(m_appController->database()->database());
-                upd.prepare(QStringLiteral("UPDATE files SET is_bundled = 1, bundle_output_path = ? WHERE id = ?"));
+                upd.prepare(QStringLiteral(
+                    "UPDATE files SET is_bundled = 1, bundle_output_path = ?, base_title = ? WHERE id = ?"));
                 upd.addBindValue(result.outputPath);
+                upd.addBindValue(QFileInfo(result.outputPath).completeBaseName());
                 upd.addBindValue(it.key());
-                upd.exec();
+                if (!upd.exec())
+                    qWarning() << "bundleAll: failed to set is_bundled=1 for file" << it.key() << upd.lastError().text();
             }
         } else {
             ++failed;
         }
         ++m_bundledFiles;
         emit bundleProgressChanged();
+        QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
     }
 
     m_exporting = false;
@@ -289,10 +304,11 @@ void ExportController::bundleAll(const QString &scanDir, const QString &namingTe
 
     m_lastOutputPath = scanDir;
     setLastMessage(QStringLiteral("Bundled %1 | Failed %2").arg(bundled).arg(failed));
-    if (bundled > 0) {
+    // Always refresh the library so badge colours update even when all files were
+    // already bundled in a previous session (bundled == 0 but is_bundled = 1 in DB).
+    emit libraryChanged();
+    if (bundled > 0)
         emit exportFinished();
-        emit libraryChanged();
-    }
 }
 
 bool ExportController::exportM3u(const QString &outputPath)

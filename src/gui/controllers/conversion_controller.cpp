@@ -238,7 +238,7 @@ void ConversionController::convertAll(const QString &format, const QString &outp
     for (int i = 0; i < total; ++i) {
         const FileRecord &file = files.at(i);
 
-        m_progressMessage = QStringLiteral("Converting %1 / %2: \"%3\"\u2026")
+        m_progressMessage = QStringLiteral("Processing %1 / %2: \"%3\"\u2026")
                                 .arg(i + 1).arg(total).arg(QFileInfo(file.currentPath).fileName());
         emit progressMessageChanged();
         QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents);

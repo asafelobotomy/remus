@@ -22,6 +22,58 @@
 namespace Remus {
 using namespace BundleHelpers;
 
+namespace {
+
+/// Strip trailing No-Intro / Redump parenthetical tags from a raw game title
+/// and return the clean title along with the first region tag found.
+/// Mirrors the stripping logic in TemplateEngine::buildVariableMap().
+QPair<QString, QString> stripNoIntroTags(const QString &rawTitle)
+{
+    static const QStringList kRegionTokens = {
+        QStringLiteral("USA"), QStringLiteral("Europe"), QStringLiteral("Japan"),
+        QStringLiteral("World"), QStringLiteral("Australia"), QStringLiteral("Brazil"),
+        QStringLiteral("Canada"), QStringLiteral("China"), QStringLiteral("France"),
+        QStringLiteral("Germany"), QStringLiteral("Italy"), QStringLiteral("Korea"),
+        QStringLiteral("Netherlands"), QStringLiteral("Russia"), QStringLiteral("Spain"),
+        QStringLiteral("Sweden"), QStringLiteral("UK")
+    };
+    static const QRegularExpression kTagPat(QStringLiteral(R"(\s*\(([^)]+)\)\s*$)"));
+    static const QRegularExpression kLangPat(QStringLiteral(R"(^[A-Z][a-z](?:,[A-Z][a-z])*$)"));
+    static const QRegularExpression kVerPat(
+        QStringLiteral(R"(^(?:Rev\s+\w+|v\d+\.\d+.*)$)"),
+        QRegularExpression::CaseInsensitiveOption);
+    static const QRegularExpression kStatusPat(
+        QStringLiteral(R"(^(?:Beta|Proto|Sample|Demo|Kiosk|Debug|Unl|Aftermarket|Virtual Console)(?:\s+\w+)?$)"),
+        QRegularExpression::CaseInsensitiveOption);
+
+    QString clean = rawTitle;
+    QString region;
+    bool stripping = true;
+    while (stripping) {
+        const QRegularExpressionMatch m = kTagPat.match(clean);
+        if (!m.hasMatch()) break;
+        const QString tag = m.captured(1).trimmed();
+        const QStringList parts = tag.split(QLatin1Char(','));
+        bool allRegion = !parts.isEmpty();
+        for (const QString &p : parts) {
+            if (!kRegionTokens.contains(p.trimmed(), Qt::CaseInsensitive)) { allRegion = false; break; }
+        }
+        const bool isKnown = allRegion
+            || kLangPat.match(tag).hasMatch()
+            || kVerPat.match(tag).hasMatch()
+            || kStatusPat.match(tag).hasMatch();
+        if (isKnown) {
+            if (allRegion && region.isEmpty())
+                region = tag;
+            clean = clean.left(m.capturedStart()).trimmed();
+        } else {
+            stripping = false;
+        }
+    }
+    return {clean, region};
+}
+
+} // anonymous namespace
 
 RomBundler::BundleResult RomBundler::bundle(const FileRecord &file,
                                             const Database::MatchResult &match,
@@ -247,10 +299,18 @@ RomBundler::BundleResult RomBundler::bundle(const FileRecord &file,
 
     static const QRegularExpression kUnsafeFilenameChars(QStringLiteral("[<>:\"/\\\\|?*]"));
 
+    // Resolve the raw title from metadata (already stripped of tags by the template
+    // engine when called via TemplateEngine, but the bundler receives the raw DAT title).
+    const QString rawTitle  = metadata.title.isEmpty() ? match.gameTitle : metadata.title;
+    const QPair<QString, QString> stripped = stripNoIntroTags(rawTitle);
+    const QString cleanTitle = stripped.first;
+    // Region priority: explicit match region > extracted from title tags > metadata region
+    const QString region = !match.region.isEmpty()   ? match.region
+                         : !stripped.second.isEmpty() ? stripped.second
+                         : metadata.region;
+
     QString baseName;
     if (!config.namingTemplate.isEmpty()) {
-        const QString title     = metadata.title.isEmpty() ? match.gameTitle : metadata.title;
-        const QString region    = metadata.region.isEmpty() ? match.region    : metadata.region;
         const QString system    = m_db.getSystemDisplayName(match.systemId);
         const QString publisher = metadata.publisher.isEmpty() ? match.publisher : metadata.publisher;
         const int year = match.releaseYear > 0
@@ -259,7 +319,9 @@ RomBundler::BundleResult RomBundler::bundle(const FileRecord &file,
                                     ? metadata.releaseDate.left(4).toInt()
                                     : 0);
         baseName = config.namingTemplate;
-        baseName.replace(QStringLiteral("{title}"),     title);
+        // {title} always receives the clean title (all No-Intro tags stripped).
+        // {region} receives only the region, so adding both never produces duplicates.
+        baseName.replace(QStringLiteral("{title}"),     cleanTitle);
         baseName.replace(QStringLiteral("{region}"),    region);
         baseName.replace(QStringLiteral("{year}"),      year > 0 ? QString::number(year) : QString());
         baseName.replace(QStringLiteral("{system}"),    system);
@@ -270,11 +332,11 @@ RomBundler::BundleResult RomBundler::bundle(const FileRecord &file,
         baseName.replace(QStringLiteral("[]"),  QString());
         baseName = baseName.simplified().trimmed();
     }
-    if (baseName.isEmpty() && !metadata.title.isEmpty()) {
-        baseName = metadata.title;
-        if (!metadata.region.isEmpty() && !baseName.contains(QStringLiteral("(")) && !baseName.contains(metadata.region)) {
-            baseName += QStringLiteral(" (") + metadata.region + QStringLiteral(")");
-        }
+    if (baseName.isEmpty() && !cleanTitle.isEmpty()) {
+        // Fallback (no template): clean title + region
+        baseName = cleanTitle;
+        if (!region.isEmpty())
+            baseName += QStringLiteral(" (") + region + QStringLiteral(")");
         baseName.replace(kUnsafeFilenameChars, QStringLiteral("_"));
         baseName = baseName.trimmed();
     }

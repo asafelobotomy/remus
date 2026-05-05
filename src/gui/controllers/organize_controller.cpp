@@ -79,15 +79,17 @@ QList<int> OrganizeController::bundledFileIds() const
         return {};
     }
 
-    // Only files that are hashed, have a confirmed match, and have been bundled
-    // are eligible for the Organize step.
+    // Only files that have been bundled and have a confirmed match are eligible
+    // for the Organize step. The md5 check is intentionally omitted: disc ROMs
+    // that were converted to CHD/CSO/RVZ during bundling have their hash cleared
+    // (the new hash belongs to the converted payload) so requiring md5 would
+    // silently exclude those files.
     QSqlQuery q(m_appController->database()->database());
     q.prepare(QStringLiteral(
         "SELECT DISTINCT f.id FROM files f "
         "JOIN matches m ON m.file_id = f.id "
         "WHERE f.is_bundled = 1 "
-        "  AND m.is_confirmed = 1 AND m.is_rejected = 0 "
-        "  AND (f.md5 IS NOT NULL AND f.md5 != '')"));
+        "  AND m.is_confirmed = 1 AND m.is_rejected = 0"));
     if (!q.exec())
         return {};
 
