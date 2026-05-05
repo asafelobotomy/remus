@@ -90,6 +90,9 @@ bool Database::runMigrations()
     const bool hasFileType = fileColumns.contains(Constants::DatabaseSchema::Columns::Files::FILE_TYPE);
     const bool hasIsPatched = fileColumns.contains(Constants::DatabaseSchema::Columns::Files::IS_PATCHED);
     const bool hasPatchName = fileColumns.contains(Constants::DatabaseSchema::Columns::Files::PATCH_NAME);
+    const bool hasIsConverted = fileColumns.contains(Constants::DatabaseSchema::Columns::Files::IS_CONVERTED);
+    const bool hasIsBundled = fileColumns.contains(Constants::DatabaseSchema::Columns::Files::IS_BUNDLED);
+    const bool hasBundleOutputPath = fileColumns.contains(Constants::DatabaseSchema::Columns::Files::BUNDLE_OUTPUT_PATH);
     
     // Add is_processed column if missing
     if (!hasIsProcessed) {
@@ -189,6 +192,39 @@ bool Database::runMigrations()
                              .arg(Constants::DatabaseSchema::Tables::FILES,
                                   Constants::DatabaseSchema::Columns::Files::PATCH_NAME),
                          "Migration: Failed to add patch_name column to files table")) {
+            return false;
+        }
+    }
+
+    if (!hasIsConverted) {
+        qInfo() << "Migration: Adding is_converted column to files table";
+        if (!execChecked(query,
+                         QString("ALTER TABLE %1 ADD COLUMN %2 BOOLEAN DEFAULT 0")
+                             .arg(Constants::DatabaseSchema::Tables::FILES,
+                                  Constants::DatabaseSchema::Columns::Files::IS_CONVERTED),
+                         "Migration: Failed to add is_converted column to files table")) {
+            return false;
+        }
+    }
+
+    if (!hasIsBundled) {
+        qInfo() << "Migration: Adding is_bundled column to files table";
+        if (!execChecked(query,
+                         QString("ALTER TABLE %1 ADD COLUMN %2 BOOLEAN DEFAULT 0")
+                             .arg(Constants::DatabaseSchema::Tables::FILES,
+                                  Constants::DatabaseSchema::Columns::Files::IS_BUNDLED),
+                         "Migration: Failed to add is_bundled column to files table")) {
+            return false;
+        }
+    }
+
+    if (!hasBundleOutputPath) {
+        qInfo() << "Migration: Adding bundle_output_path column to files table";
+        if (!execChecked(query,
+                         QString("ALTER TABLE %1 ADD COLUMN %2 TEXT")
+                             .arg(Constants::DatabaseSchema::Tables::FILES,
+                                  Constants::DatabaseSchema::Columns::Files::BUNDLE_OUTPUT_PATH),
+                         "Migration: Failed to add bundle_output_path column to files table")) {
             return false;
         }
     }

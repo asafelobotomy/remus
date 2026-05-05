@@ -105,6 +105,9 @@ namespace Columns {
         inline constexpr const char* PATCH_NAME = "patch_name";
         inline constexpr const char* IS_PROCESSED = "is_processed";
         inline constexpr const char* PROCESSING_STATUS = "processing_status";
+        inline constexpr const char* IS_CONVERTED = "is_converted";
+        inline constexpr const char* IS_BUNDLED = "is_bundled";
+        inline constexpr const char* BUNDLE_OUTPUT_PATH = "bundle_output_path";
         inline constexpr const char* LAST_MODIFIED = "last_modified";
         inline constexpr const char* SCANNED_AT = "scanned_at";
     }

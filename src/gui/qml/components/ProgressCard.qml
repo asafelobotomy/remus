@@ -27,30 +27,36 @@ Frame {
             color: "#fbf1c7"
         }
 
-        ProgressBar {
-            visible:          progressTotal > 0
-            Layout.fillWidth: true
-            from:             0
-            to:               Math.max(1, progressTotal)
-            value:            progressValue
-        }
-
-        // Custom animated sweep when total is unknown (Fusion style ignores indeterminate)
+        // Unified custom bar — consistent across all pipeline stages
         Rectangle {
-            visible:          progressTotal <= 0
             Layout.fillWidth: true
             height:           6
             radius:           3
             color:            "#3c3836"
             clip:             true
 
+            // Determinate fill
             Rectangle {
-                id:     sweeper
-                width:  parent.width * 0.35
-                height: parent.height
-                radius: parent.radius
-                color:  "#689d6a"
-                x:      -width
+                visible: progressTotal > 0
+                width:   (progressValue / Math.max(1, progressTotal)) * parent.width
+                height:  parent.height
+                radius:  parent.radius
+                color:   "#689d6a"
+
+                Behavior on width {
+                    NumberAnimation { duration: 150; easing.type: Easing.InOutSine }
+                }
+            }
+
+            // Indeterminate sweep
+            Rectangle {
+                id:      sweeper
+                visible: progressTotal <= 0
+                width:   parent.width * 0.35
+                height:  parent.height
+                radius:  parent.radius
+                color:   "#689d6a"
+                x:       -width
 
                 SequentialAnimation on x {
                     running:  progressTotal <= 0
