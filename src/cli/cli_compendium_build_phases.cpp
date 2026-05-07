@@ -73,12 +73,14 @@ void populateCompendiumFtsIndex(QSqlDatabase &db)
     }
 
     QSqlQuery ftsQ(db);
+
+    // ── games_search (trigram, columns: title / game_id / system_id / region_code) ──
     const bool ok1 = ftsQ.exec(QStringLiteral(
         "INSERT INTO games_search(title, game_id, system_id, region_code) "
         "SELECT canonical_title, game_id, system_id, "
         "       COALESCE(primary_region_code, '') FROM games"));
     if (!ok1) {
-        qWarning() << "[buildCompendium] FTS canonical title insert failed (non-fatal):"
+        qWarning() << "[buildCompendium] games_search canonical title insert failed (non-fatal):"
                    << ftsQ.lastError().text();
         db.rollback();
         return;
@@ -90,7 +92,23 @@ void populateCompendiumFtsIndex(QSqlDatabase &db)
         "       COALESCE(g.primary_region_code, '') "
         "FROM game_names gn JOIN games g ON g.game_id = gn.game_id"));
     if (!ok2) {
-        qWarning() << "[buildCompendium] FTS alias insert failed (non-fatal):"
+        qWarning() << "[buildCompendium] games_search alias insert failed (non-fatal):"
+                   << ftsQ.lastError().text();
+        db.rollback();
+        return;
+    }
+
+    // ── games_fts (unicode61, columns: game_id / system_id / title_text) ─────────
+    // Populated here so the provider does not perform a slow lazy-populate on first
+    // open of a pipeline-built DB.
+    const bool ok3 = ftsQ.exec(QStringLiteral(
+        "INSERT INTO games_fts(game_id, system_id, title_text) "
+        "SELECT game_id, system_id, canonical_title FROM games "
+        "UNION ALL "
+        "SELECT gn.game_id, g.system_id, gn.name_text "
+        "FROM game_names gn JOIN games g ON gn.game_id = g.game_id"));
+    if (!ok3) {
+        qWarning() << "[buildCompendium] games_fts insert failed (non-fatal):"
                    << ftsQ.lastError().text();
         db.rollback();
         return;
@@ -98,5 +116,6 @@ void populateCompendiumFtsIndex(QSqlDatabase &db)
 
     db.commit();
     ftsQ.exec(QStringLiteral("INSERT INTO games_search(games_search) VALUES('optimize')"));
+    ftsQ.exec(QStringLiteral("INSERT INTO games_fts(games_fts) VALUES('optimize')"));
     qInfo() << "[buildCompendium] FTS index populated and optimized.";
 }

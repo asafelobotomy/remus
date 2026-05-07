@@ -224,6 +224,7 @@ add_remus_test(test_workflow_controller WorkflowControllerTest
     SOURCES
         test_workflow_controller.cpp
         ../src/gui/controllers/workflow_controller.cpp
+        ../src/gui/controllers/workflow_controller_run.cpp
         ../src/gui/controllers/app_controller.cpp
         ../src/gui/controllers/app_controller_orchestrator.cpp
         ../src/gui/controllers/hash_controller.cpp

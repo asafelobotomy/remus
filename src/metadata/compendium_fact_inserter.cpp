@@ -186,6 +186,20 @@ bool FactInserter::insertSerials(const SourceRecordEnvelope &rec,
 
 // ── Facts ─────────────────────────────────────────────────────────────────────
 
+// Maps fact field names to their value_type tag stored in game_facts.value_type.
+// Used by the merge resolver's explicit_region_codes rule and numeric rules.
+static QString valueTypeForField(const QString &fieldName)
+{
+    if (fieldName == QLatin1String("region")) {
+        return QStringLiteral("explicit_region_code");
+    }
+    if (fieldName == QLatin1String("release_year")
+            || fieldName == QLatin1String("players_max")) {
+        return QStringLiteral("int");
+    }
+    return QStringLiteral("text");
+}
+
 bool FactInserter::insertFacts(const SourceRecordEnvelope &rec,
                                 QSqlQuery &q,
                                 CompilerStats &stats,
@@ -204,10 +218,11 @@ bool FactInserter::insertFacts(const SourceRecordEnvelope &rec,
         q.bindValue(0, rec.linkedGameId);
         q.bindValue(1, it.key());
         q.bindValue(2, it.value());
-        q.bindValue(3, rec.sourceId);
-        q.bindValue(4, rec.snapshotId);
-        q.bindValue(5, sourcePriority);
-        q.bindValue(6, confidence);
+        q.bindValue(3, valueTypeForField(it.key()));
+        q.bindValue(4, rec.sourceId);
+        q.bindValue(5, rec.snapshotId);
+        q.bindValue(6, sourcePriority);
+        q.bindValue(7, confidence);
         if (!q.exec()) {
             error = q.lastError().text();
             return false;
@@ -267,7 +282,7 @@ bool FactInserter::insert(const QList<SourceRecordEnvelope> &records,
             "INSERT OR IGNORE INTO game_facts "
             "(game_id, field_name, field_value, value_type, "
             " source_id, snapshot_id, source_priority, confidence) "
-            "VALUES (?, ?, ?, 'text', ?, ?, ?, ?)")))
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?)")))
     {
         error = qGame.lastError().text();
         return false;

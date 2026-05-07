@@ -7,9 +7,9 @@ SELECT 'seed_count.systems' AS check_name,
        42 AS expected;
 
 SELECT 'seed_count.regions' AS check_name,
-       CASE WHEN (SELECT COUNT(*) FROM regions) = 6 THEN 'PASS' ELSE 'FAIL' END AS status,
+       CASE WHEN (SELECT COUNT(*) FROM regions) = 21 THEN 'PASS' ELSE 'FAIL' END AS status,
        (SELECT COUNT(*) FROM regions) AS observed,
-       6 AS expected;
+       21 AS expected;
 
 SELECT 'seed_count.merge_policy' AS check_name,
        CASE WHEN (SELECT COUNT(*) FROM merge_policy) = 21 THEN 'PASS' ELSE 'FAIL' END AS status,

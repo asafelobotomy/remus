@@ -50,6 +50,86 @@ void CompendiumNormalizer::buildRegionMap()
     const QString bra = QStringLiteral("BRA");
     m_regionToCode.insert(QStringLiteral("brazil"), bra);
     m_regionToCode.insert(QStringLiteral("bra"),    bra);
+
+    // Korea
+    const QString kor = QStringLiteral("KOR");
+    m_regionToCode.insert(QStringLiteral("korea"),       kor);
+    m_regionToCode.insert(QStringLiteral("kor"),         kor);
+    m_regionToCode.insert(QStringLiteral("south korea"), kor);
+    m_regionToCode.insert(QStringLiteral("ntsc-k"),      kor);
+
+    // China
+    const QString chn = QStringLiteral("CHN");
+    m_regionToCode.insert(QStringLiteral("china"),          chn);
+    m_regionToCode.insert(QStringLiteral("chn"),            chn);
+    m_regionToCode.insert(QStringLiteral("mainland china"), chn);
+
+    // Taiwan
+    const QString twn = QStringLiteral("TWN");
+    m_regionToCode.insert(QStringLiteral("taiwan"), twn);
+    m_regionToCode.insert(QStringLiteral("twn"),    twn);
+    m_regionToCode.insert(QStringLiteral("tw"),     twn);
+
+    // Asia (generic)
+    const QString asia = QStringLiteral("ASIA");
+    m_regionToCode.insert(QStringLiteral("asia"), asia);
+
+    // France
+    const QString fra = QStringLiteral("FRA");
+    m_regionToCode.insert(QStringLiteral("france"),  fra);
+    m_regionToCode.insert(QStringLiteral("fra"),     fra);
+    m_regionToCode.insert(QStringLiteral("french"),  fra);
+
+    // Germany
+    const QString deu = QStringLiteral("DEU");
+    m_regionToCode.insert(QStringLiteral("germany"),     deu);
+    m_regionToCode.insert(QStringLiteral("ger"),         deu);
+    m_regionToCode.insert(QStringLiteral("german"),      deu);
+    m_regionToCode.insert(QStringLiteral("deutschland"), deu);
+
+    // Italy
+    const QString ita = QStringLiteral("ITA");
+    m_regionToCode.insert(QStringLiteral("italy"),   ita);
+    m_regionToCode.insert(QStringLiteral("ita"),     ita);
+    m_regionToCode.insert(QStringLiteral("italian"), ita);
+
+    // Spain
+    const QString esp = QStringLiteral("ESP");
+    m_regionToCode.insert(QStringLiteral("spain"),   esp);
+    m_regionToCode.insert(QStringLiteral("spa"),     esp);
+    m_regionToCode.insert(QStringLiteral("spanish"), esp);
+
+    // Sweden
+    const QString swe = QStringLiteral("SWE");
+    m_regionToCode.insert(QStringLiteral("sweden"),  swe);
+    m_regionToCode.insert(QStringLiteral("swe"),     swe);
+
+    // Netherlands
+    const QString nld = QStringLiteral("NLD");
+    m_regionToCode.insert(QStringLiteral("netherlands"), nld);
+    m_regionToCode.insert(QStringLiteral("holland"),     nld);
+    m_regionToCode.insert(QStringLiteral("hol"),         nld);
+    m_regionToCode.insert(QStringLiteral("nld"),         nld);
+
+    // Portugal
+    const QString por = QStringLiteral("POR");
+    m_regionToCode.insert(QStringLiteral("portugal"), por);
+    m_regionToCode.insert(QStringLiteral("por"),      por);
+
+    // Scandinavia
+    const QString sca = QStringLiteral("SCA");
+    m_regionToCode.insert(QStringLiteral("scandinavia"), sca);
+    m_regionToCode.insert(QStringLiteral("sca"),         sca);
+
+    // Russia
+    const QString rus = QStringLiteral("RUS");
+    m_regionToCode.insert(QStringLiteral("russia"), rus);
+    m_regionToCode.insert(QStringLiteral("rus"),    rus);
+
+    // Latin America
+    const QString latam = QStringLiteral("LATAM");
+    m_regionToCode.insert(QStringLiteral("latin america"), latam);
+    m_regionToCode.insert(QStringLiteral("latam"),         latam);
 }
 
 // ── Constructor ───────────────────────────────────────────────────────────────

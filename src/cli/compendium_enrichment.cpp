@@ -275,7 +275,7 @@ bool enrichFromGameTDB(QSqlDatabase &database,
     }
 
     QSqlQuery gameQuery(database);
-    if (!gameQuery.exec(QStringLiteral("SELECT game_id FROM games"))) {
+    if (!gameQuery.exec(QStringLiteral("SELECT game_id, canonical_title FROM games"))) {
         error = QStringLiteral("Load games for GameTDB enrichment: %1")
             .arg(gameQuery.lastError().text());
         return false;
@@ -333,6 +333,18 @@ bool enrichFromGameTDB(QSqlDatabase &database,
         if (meta.title.isEmpty() && !md5.isEmpty())
             meta = provider.getByHash(md5, QString());
 
+        // Title-based fallback for entries with no matching hashes.
+        if (meta.title.isEmpty()) {
+            const QString title = gameQuery.value(1).toString();
+            if (!title.isEmpty()) {
+                const QList<Remus::SearchResult> results =
+                    provider.searchByName(title, QString());
+                if (!results.isEmpty()) {
+                    meta = provider.getById(results.first().id);
+                }
+            }
+        }
+
         if (meta.title.isEmpty()) continue;
 
         const QString genre = meta.genres.join(QStringLiteral(", "));
@@ -370,7 +382,7 @@ bool enrichFromGameTDB(QSqlDatabase &database,
             && !insertFact(gameId, QStringLiteral("release_year"),
                            QString::number(releaseYear),        QStringLiteral("int")))   return false;
         if (!meta.description.isEmpty()
-            && !insertFact(gameId, QStringLiteral("synopsis"),  meta.description,          QStringLiteral("text"))) return false;
+            && !insertFact(gameId, QStringLiteral("description"), meta.description,          QStringLiteral("text"))) return false;
     }
 
     return true;
