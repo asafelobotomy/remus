@@ -56,6 +56,21 @@
   "shellcheck.enable": true,
   "shellcheck.run": "onSave",
 
+  // ── SQLTools ────────────────────────────────────────────────
+  "sqltools.autoOpenSessionFiles": false,
+  "sqltools.connections": [
+    {
+      "name": "Compendium DB",
+      "driver": "SQLite",
+      "database": "/mnt/SteamLibrary/git/remus/data/compendium/remus_compendium.db"
+    },
+    {
+      "name": "Library DB",
+      "driver": "SQLite",
+      "database": "/mnt/SteamLibrary/git/remus/remus.db"
+    }
+  ],
+
   // ── Git ─────────────────────────────────────────────────────
   "git.autofetch": true,
 
@@ -73,5 +88,6 @@
     "mkdir -p*", "cp*", "mv*", "touch*", "chmod*",
     "bash .github/hooks/scripts/*", "bash scripts/*",
     "sh .github/hooks/scripts/*"
-  ]
+  ],
+  "sqltools.useNodeRuntime": true
 }

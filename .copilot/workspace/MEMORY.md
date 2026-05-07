@@ -21,4 +21,9 @@
 - [2026-04] Template `security.agent.md` removed upstream (merged into `audit.agent.md` + `security-audit` skill). The installed file at `.github/agents/security.agent.md` is unmaintained by upstream. Keep per §8 but note it will diverge.
 - [2026-04] When an agent file returns 404 during template update: keep installed version, do NOT delete — §8 forbids deletion without explicit user instruction.
 
+- [2026-05] `canonical_resolution` is now fully wired: `MergeResolver::resolve()` writes winners, then a 10-field materialize loop propagates them to `games.*` columns via UPDATE subqueries. CompendiumProvider query results reflect resolved metadata.
+- [2026-05] `merge_conflicts` is populated post-resolve via `json_group_array(fact_id)` grouped by (game_id, field_name). Status is `auto_resolved` when canonical_resolution has an entry, `unresolved` otherwise.
+- [2026-05] `valueTypeForField()` in `compendium_fact_inserter.cpp` maps `region` facts to `explicit_region_code`, numeric fields to `int`, others to `text`. This allows `explicit_region_codes` merge policy rule to fire correctly.
+- [2026-05] Compendium regions seed now contains 21 rows (was 7). 14 new codes added: KOR, CHN, TWN, ASIA, FRA, DEU, ITA, ESP, SWE, NLD, POR, SCA, RUS, LATAM. Validation check updated to match.
+
 *(Updated as the memory system is used.)*

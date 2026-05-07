@@ -9,10 +9,18 @@
     "github.vscode-pull-request-github",
     "eamodio.gitlens",
     "davidanson.vscode-markdownlint",
-    "timonwong.shellcheck"
+    "timonwong.shellcheck",
+    "mtxr.sqltools",
+    "mtxr.sqltools-driver-sqlite"
   ],
   "unwantedRecommendations": [
     "ms-vscode.cpptools-extension-pack",
-    "ms-vscode.cpptools-themes"
+    "ms-vscode.cpptools-themes",
+    "ms-mssql.mssql",
+    "ms-mssql.data-workspace-vscode",
+    "ms-mssql.sql-bindings-vscode",
+    "ms-mssql.sql-database-projects-vscode",
+    "ms-dotnettools.vscode-dotnet-runtime",
+    "mtxr.sqltools-driver-mysql"
   ]
 }
