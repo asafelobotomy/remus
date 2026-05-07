@@ -48,6 +48,9 @@ private slots:
     // ── Inline metadata tests (Redump/GameTDB DATs) ──────────────
     void testParseInlineMetadata();
     void testParseInlineMetadataPartial();
+
+    // ── Redump multi-track disc tests ─────────────────────────────
+    void testParseMultiRomBlocks();
 };
 
 // ─────────────────────────────────────────────────────────────────
@@ -288,6 +291,48 @@ void ClrMameProParserTest::testParseInlineMetadataPartial()
     QVERIFY(entries[0].developer.isEmpty());
     QCOMPARE(entries[0].releaseYear, 0);
     QCOMPARE(entries[0].users, 0);
+}
+
+// ─────────────────────────────────────────────────────────────────
+// Redump multi-track disc tests
+// ─────────────────────────────────────────────────────────────────
+
+void ClrMameProParserTest::testParseMultiRomBlocks()
+{
+    // Redump PS1 style: one game block with a tiny .cue descriptor track
+    // followed by the main .bin data track.  The parser must return one
+    // entry per rom ( ) block — not just the first one.
+    const QString content =
+        "game (\n"
+        "    name \"Castlevania - Symphony of the Night (USA)\"\n"
+        "    serial \"SLUS-00067\"\n"
+        "    rom ( name \"Castlevania - Symphony of the Night (USA).cue\""
+        " size 104 crc AABB1122 )\n"
+        "    rom ( name \"Castlevania - Symphony of the Night (USA).bin\""
+        " size 615335424 crc DEADBEEF )\n"
+        ")\n";
+
+    QTemporaryFile tmp;
+    const QString path = writeTempDat(tmp, content);
+    QVERIFY(!path.isEmpty());
+
+    const QList<ClrMameProEntry> entries = ClrMameProParser::parse(path);
+
+    // Both rom blocks must be returned; the extractor is responsible for
+    // selecting the canonical data track.
+    QCOMPARE(entries.size(), 2);
+
+    // Both entries share the same game name and serial.
+    QCOMPARE(entries[0].gameName, QString("Castlevania - Symphony of the Night (USA)"));
+    QCOMPARE(entries[1].gameName, QString("Castlevania - Symphony of the Night (USA)"));
+    QCOMPARE(entries[0].serial,   QString("SLUS-00067"));
+    QCOMPARE(entries[1].serial,   QString("SLUS-00067"));
+
+    // The rom-level names and hashes differ per track.
+    QVERIFY(entries[0].romName.endsWith(QStringLiteral(".cue")));
+    QVERIFY(entries[1].romName.endsWith(QStringLiteral(".bin")));
+    QCOMPARE(entries[0].crc32.toLower(), QString("aabb1122"));
+    QCOMPARE(entries[1].crc32.toLower(), QString("deadbeef"));
 }
 
 QTEST_MAIN(ClrMameProParserTest)

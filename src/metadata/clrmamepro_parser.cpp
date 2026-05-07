@@ -105,94 +105,93 @@ QList<ClrMameProEntry> ClrMameProParser::parseGameBlocks(const QString &content)
         searchFrom = i;
     }
 
-    int matchCount = 0;
     for (const QString &gameBlock : gameBlocks) {
-        matchCount++;
-        
-        // Extract ROM block: rom ( ... )
-        int romStart = gameBlock.indexOf("rom (");
-        
-        // Parse game metadata from the portion BEFORE the rom sub-block
-        // so that rom-level keys (e.g. "name") don't overwrite game-level keys.
-        QString gameMetadata = (romStart != -1) ? gameBlock.left(romStart) : gameBlock;
-        QMap<QString, QString> gameData = extractKeyValues(gameMetadata);
-        
-        if (romStart != -1) {
-            int parenCount = 0;
-            int i = romStart + 5; // Start after "rom ("
-            int romEnd = -1;
-            
-            bool inQuote = false;
-            for (; i < gameBlock.length(); i++) {
-                QChar c = gameBlock[i];
-                
-                if (c == '"') {
-                    inQuote = !inQuote;
-                } else if (!inQuote) {
-                    if (c == '(') {
-                        parenCount++;
-                    } else if (c == ')') {
-                        if (parenCount == 0) {
-                            romEnd = i;
-                            break;
-                        }
-                        parenCount--;
-                    }
-                }
-            }
-            
-            if (romEnd != -1) {
-                QString romBlock = gameBlock.mid(romStart + 5, romEnd - romStart - 5).trimmed();
-                QMap<QString, QString> romData = parseInlineAttributes(romBlock);
-                
-                // Create entry
-                ClrMameProEntry entry;
-                entry.gameName = gameData.value("name");
-                entry.description = gameData.value("description", gameData.value("name"));
-                entry.serial = gameData.value("serial");
-                entry.romName = romData.value("name");
-                entry.size = romData.value("size").toLongLong();
-                entry.crc32 = romData.value("crc").toUpper();
-                entry.md5 = romData.value("md5").toLower();
-                entry.sha1 = romData.value("sha1").toLower();
+        // Find the first rom block to determine where game-level metadata ends.
+        const int firstRomStart = gameBlock.indexOf(QStringLiteral("rom ("));
+        const QString gameMetadata = (firstRomStart != -1)
+                                         ? gameBlock.left(firstRomStart)
+                                         : gameBlock;
+        const QMap<QString, QString> gameData = extractKeyValues(gameMetadata);
 
-                // Inline metadata from Redump/GameTDB DATs
-                entry.publisher = gameData.value("publisher");
-                entry.developer = gameData.value("developer");
-                entry.releaseYear = gameData.value("releaseyear").toInt();
-                entry.users = gameData.value("users").toInt();
-                
-                // Use game-level region if present, otherwise extract from name
-                entry.region = gameData.value("region");
-                if (entry.region.isEmpty()) {
-                    static const QRegularExpression regionRegex(R"(\(([^)]+)\))");
-                    QRegularExpressionMatch regionMatch = regionRegex.match(entry.gameName);
-                    if (regionMatch.hasMatch()) {
-                        QString regionText = regionMatch.captured(1);
-                        // Take first region if comma-separated
-                        if (regionText.contains(',')) {
-                            entry.region = regionText.split(',').first().trimmed();
-                        } else {
-                            entry.region = regionText.trimmed();
-                        }
-                    }
-                }
-                
-                // Also pull serial from rom block if game-level serial is empty
-                if (entry.serial.isEmpty()) {
-                    entry.serial = romData.value("serial");
-                }
-
-                // Accept entries with either a hash or a serial for identification
-                const bool hasHash = !entry.crc32.isEmpty() || !entry.md5.isEmpty() || !entry.sha1.isEmpty();
-                const bool hasSerial = !entry.serial.isEmpty();
-                if (!entry.gameName.isEmpty() && (hasHash || hasSerial)) {
-                    entries.append(entry);
-                }
+        // Derive region once from game-level data or from the title parenthetical.
+        QString baseRegion = gameData.value(QStringLiteral("region"));
+        if (baseRegion.isEmpty()) {
+            const QString gameName = gameData.value(QStringLiteral("name"));
+            static const QRegularExpression regionRegex(R"(\(([^)]+)\))");
+            const QRegularExpressionMatch rm = regionRegex.match(gameName);
+            if (rm.hasMatch()) {
+                const QString regionText = rm.captured(1);
+                baseRegion = regionText.contains(QLatin1Char(','))
+                                 ? regionText.split(QLatin1Char(',')).first().trimmed()
+                                 : regionText.trimmed();
             }
         }
+
+        if (firstRomStart == -1) continue; // no rom blocks in this game
+
+        // Iterate ALL rom ( ... ) blocks so multi-track disc games yield one
+        // entry per ROM file.  The DatExtractor will then select the canonical
+        // data-track entry.
+        int searchPos = firstRomStart;
+        while (searchPos < gameBlock.length()) {
+            const int romStart = gameBlock.indexOf(QStringLiteral("rom ("), searchPos);
+            if (romStart == -1) break;
+
+            // Balance parentheses to find the matching closing paren.
+            int parenCount = 0;
+            int i = romStart + 5; // start after "rom ("
+            int romEnd = -1;
+            bool inQuote = false;
+            for (; i < gameBlock.length(); ++i) {
+                const QChar c = gameBlock[i];
+                if (c == QLatin1Char('"')) {
+                    inQuote = !inQuote;
+                } else if (!inQuote) {
+                    if (c == QLatin1Char('('))      ++parenCount;
+                    else if (c == QLatin1Char(')')) {
+                        if (parenCount == 0) { romEnd = i; break; }
+                        --parenCount;
+                    }
+                }
+            }
+
+            if (romEnd == -1) break; // malformed block — stop
+
+            const QString romBlock =
+                gameBlock.mid(romStart + 5, romEnd - romStart - 5).trimmed();
+            const QMap<QString, QString> romData = parseInlineAttributes(romBlock);
+
+            ClrMameProEntry entry;
+            entry.gameName    = gameData.value(QStringLiteral("name"));
+            entry.description = gameData.value(QStringLiteral("description"),
+                                               gameData.value(QStringLiteral("name")));
+            entry.serial      = gameData.value(QStringLiteral("serial"));
+            entry.publisher   = gameData.value(QStringLiteral("publisher"));
+            entry.developer   = gameData.value(QStringLiteral("developer"));
+            entry.releaseYear = gameData.value(QStringLiteral("releaseyear")).toInt();
+            entry.users       = gameData.value(QStringLiteral("users")).toInt();
+            entry.region      = baseRegion;
+
+            entry.romName = romData.value(QStringLiteral("name"));
+            entry.size    = romData.value(QStringLiteral("size")).toLongLong();
+            entry.crc32   = romData.value(QStringLiteral("crc")).toUpper();
+            entry.md5     = romData.value(QStringLiteral("md5")).toLower();
+            entry.sha1    = romData.value(QStringLiteral("sha1")).toLower();
+
+            if (entry.serial.isEmpty())
+                entry.serial = romData.value(QStringLiteral("serial"));
+
+            const bool hasHash   = !entry.crc32.isEmpty()
+                                   || !entry.md5.isEmpty()
+                                   || !entry.sha1.isEmpty();
+            const bool hasSerial = !entry.serial.isEmpty();
+            if (!entry.gameName.isEmpty() && (hasHash || hasSerial))
+                entries.append(entry);
+
+            searchPos = romEnd + 1;
+        }
     }
-    
+
     return entries;
 }
 

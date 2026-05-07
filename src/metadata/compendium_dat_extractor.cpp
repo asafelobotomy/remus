@@ -1,5 +1,8 @@
 #include "compendium_dat_extractor.h"
 
+#include "../core/dat_parser.h"
+
+#include <QFile>
 #include <QFileInfo>
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -17,6 +20,50 @@ QString DatExtractor::normalizeHash(const QString &raw)
 QString DatExtractor::normalizeSerial(const QString &raw)
 {
     return raw.trimmed().toUpper();
+}
+
+// Returns true for file extensions that are metadata-only tracks (.cue, .m3u,
+// etc.) — these should not be used as the canonical ROM identity entry.
+static bool isMetaTrack(const QString &romName)
+{
+    static const QStringList kMetaExtensions = {
+        QStringLiteral(".cue"), QStringLiteral(".m3u"), QStringLiteral(".gdi"),
+        QStringLiteral(".toc"), QStringLiteral(".sbi"), QStringLiteral(".sub"),
+        QStringLiteral(".ccd"), QStringLiteral(".mds"),
+    };
+    const QString lower = romName.toLower();
+    for (const QString &ext : kMetaExtensions) {
+        if (lower.endsWith(ext)) return true;
+    }
+    return false;
+}
+
+// Given a list of entries that all share the same gameName (i.e., multiple
+// rom-track entries from one game block), select the canonical data-track entry.
+// Prefers the first non-meta-track; falls back to the first entry overall.
+static ClrMameProEntry selectDataTrack(const QList<ClrMameProEntry> &group)
+{
+    for (const ClrMameProEntry &e : group) {
+        if (!isMetaTrack(e.romName))
+            return e;
+    }
+    return group.first();
+}
+
+// Convert a Logiqx DatRomEntry to a ClrMameProEntry so XML-format DATs can
+// feed the same downstream pipeline.
+static ClrMameProEntry datRomEntryToClrMame(const Remus::DatRomEntry &src)
+{
+    ClrMameProEntry entry;
+    entry.gameName   = src.gameName;
+    entry.description = src.description;
+    entry.romName    = src.romName;
+    entry.size       = src.size;
+    entry.crc32      = src.crc32.toUpper();
+    entry.md5        = src.md5.toLower();
+    entry.sha1       = src.sha1.toLower();
+    entry.serial     = src.serial;
+    return entry;
 }
 
 QString DatExtractor::makeExternalKey(const QString &systemHint,
@@ -82,19 +129,54 @@ QList<SourceRecordEnvelope> DatExtractor::extract(const QString &filePath,
 
     // Parse header and all entries in one file pass
     QMap<QString, QString> header;
-    const QList<ClrMameProEntry> entries = ClrMameProParser::parseAll(filePath, header);
-    const QString systemHint = header.value(QStringLiteral("name"),
-                                            info.completeBaseName());
+    QList<ClrMameProEntry> entries = ClrMameProParser::parseAll(filePath, header);
+    QString systemHint = header.value(QStringLiteral("name"),
+                                      info.completeBaseName());
 
     if (entries.isEmpty()) {
-        error = QStringLiteral("DAT file produced no entries: %1").arg(filePath);
-        return {};
+        // XML fallback: try Logiqx XML format (used by Redump, No-Intro XML exports)
+        QFile peekFile(filePath);
+        bool isXml = false;
+        if (peekFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+            const QByteArray peek = peekFile.read(6);
+            peekFile.close();
+            isXml = peek.startsWith("<?xml") || peek.startsWith("<dataf");
+        }
+
+        if (isXml) {
+            Remus::DatParser xmlParser;
+            const Remus::DatParseResult xmlResult = xmlParser.parse(filePath);
+            if (!xmlResult.success || xmlResult.entries.isEmpty()) {
+                error = QStringLiteral("DAT file produced no entries: %1").arg(filePath);
+                return {};
+            }
+            if (!xmlResult.header.name.isEmpty())
+                systemHint = xmlResult.header.name;
+            entries.reserve(xmlResult.entries.size());
+            for (const Remus::DatRomEntry &re : xmlResult.entries)
+                entries.append(datRomEntryToClrMame(re));
+        } else {
+            error = QStringLiteral("DAT file produced no entries: %1").arg(filePath);
+            return {};
+        }
     }
 
-    QList<SourceRecordEnvelope> records;
-    records.reserve(entries.size());
+    // Group entries by gameName and select the canonical data-track per game.
+    // For single-entry games this is a no-op; for multi-track disc games
+    // (Redump PS1/PS2/Saturn) it discards .cue/.m3u metadata entries.
+    QMap<QString, QList<ClrMameProEntry>> groups;
+    for (const ClrMameProEntry &e : entries)
+        groups[e.gameName].append(e);
 
-    for (const ClrMameProEntry &entry : entries) {
+    QList<ClrMameProEntry> canonical;
+    canonical.reserve(groups.size());
+    for (auto it = groups.cbegin(), end = groups.cend(); it != end; ++it)
+        canonical.append(it->size() == 1 ? it->first() : selectDataTrack(*it));
+
+    QList<SourceRecordEnvelope> records;
+    records.reserve(canonical.size());
+
+    for (const ClrMameProEntry &entry : canonical) {
         SourceRecordEnvelope rec;
 
         rec.sourceId   = sourceId;
