@@ -1,5 +1,5 @@
-<!-- markdownlint-disable-file MD041 -->
 0.9.0
+<!-- markdownlint-disable-file MD041 -->
 Applied: 2026-04-04
 Updated: 2026-05-01
 <!-- manifest-scope: stable managed files only; .github/copilot-version.md is intentionally excluded because a file cannot hash its own current contents without a recursive convention -->
@@ -37,19 +37,15 @@ Updated: 2026-05-01
 .github/agents/review.agent.md=1e19517d43c7
 .github/agents/setup.agent.md=625be174163e
 .github/hooks/copilot-hooks.json=83f88ccc20b5
-.github/hooks/scripts/guard-destructive.ps1=a9b1027feb26
 .github/hooks/scripts/guard-destructive.sh=def097bc0e21
 .github/hooks/scripts/heartbeat-policy.json=c8930a86a8ad
 .github/hooks/scripts/heartbeat_clock_summary.py=e59276ab5b3a
-.github/hooks/scripts/invoke-hook-sh.ps1=0492d7b4dfbb
 .github/hooks/scripts/lib-hooks.sh=f19f3a6e3291
 .github/hooks/scripts/mcp-heartbeat-server.py=7ed54e7741c6
 .github/hooks/scripts/mcp-npx.sh=00b7600b59fc
 .github/hooks/scripts/mcp-uvx.sh=756f5b13c7fb
 .github/hooks/scripts/mcp_heartbeat_lib.py=fdf7c43c1619
-.github/hooks/scripts/post-edit-lint.ps1=034ecea6715d
 .github/hooks/scripts/post-edit-lint.sh=444de67dd8f7
-.github/hooks/scripts/pulse.ps1=b321d4d7d6b4
 .github/hooks/scripts/pulse.sh=dec09e66b194
 .github/hooks/scripts/pulse_artifacts.py=0103f94a4dab
 .github/hooks/scripts/pulse_handlers.py=2c33ab735b2a
@@ -58,16 +54,11 @@ Updated: 2026-05-01
 .github/hooks/scripts/pulse_routing.py=8588abb5eeb6
 .github/hooks/scripts/pulse_runtime.py=871ca113bab3
 .github/hooks/scripts/pulse_state.py=f80d84e4512f
-.github/hooks/scripts/save-context.ps1=2ecb2035bb1e
 .github/hooks/scripts/save-context.sh=3689d106dc36
-.github/hooks/scripts/scan-secrets.ps1=86e5d624e5d3
 .github/hooks/scripts/scan-secrets.sh=19c3aa91db0f
-.github/hooks/scripts/session-start.ps1=46755eea74de
 .github/hooks/scripts/session-start.sh=14cace047c26
 .github/hooks/scripts/session_reflect_fallback.py=99e97a27ed83
-.github/hooks/scripts/subagent-start.ps1=a1ab3f5244dc
 .github/hooks/scripts/subagent-start.sh=da65494a9d8e
-.github/hooks/scripts/subagent-stop.ps1=704830ee5c32
 .github/hooks/scripts/subagent-stop.sh=a455d1724609
 .github/instructions/api-routes.instructions.md=bc5f67c87bbf
 .github/instructions/config.instructions.md=18b1ece4aff2

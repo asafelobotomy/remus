@@ -36,7 +36,7 @@
 |----------|-------|-----------------|
 | File LOC (warn) | 400 lines | Flag, suggest decomposition |
 | File LOC (hard) | 400 lines | Refuse to extend; decompose first |
-| Dependency budget | 10 runtime deps | Propose removal before adding |
+| Dependency budget | 11 runtime deps | Propose removal before adding |
 | Dependency budget (warn) | 8 runtime deps | Flag for review |
 | Test command | \`ctest --test-dir build -j$(nproc)\` | Must pass before the full task is done |
 | Type check | \`cmake --build build 2>&1 \| head -30\` | Must pass before task is done |
@@ -303,7 +303,7 @@ Resolved values and project-specific overrides. Populated during setup; updated 
 | \`TEST_FRAMEWORK\` | Qt Test (CTest) |
 | \`LOC_WARN_THRESHOLD\` | 400 |
 | \`LOC_HIGH_THRESHOLD\` | 400 |
-| \`DEP_BUDGET\` | 10 |
+| \`DEP_BUDGET\` | 11 |
 | \`DEP_BUDGET_WARN\` | 8 |
 | \`INTEGRATION_TEST_ENV_VAR\` | REMUS_INTEGRATION_TESTS |
 | \`PREFERRED_SERIALISATION\` | JSON / SQLite |

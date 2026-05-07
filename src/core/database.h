@@ -107,39 +107,26 @@ public:
 
     /**
      * @brief Insert system info
-     * @param system System information
-     * @return System ID
      */
     int insertSystem(const SystemInfo &system);
 
     /**
      * @brief Get system ID by name
-     * @param name System name
-     * @return System ID (0 if not found)
      */
     int getSystemId(const QString &name);
 
     /**
      * @brief Get system display name by ID
-     * @param systemId System ID
-     * @return System display name (empty if not found)
      */
     QString getSystemDisplayName(int systemId);
 
     /**
      * @brief Insert file record
-     * @param record File record to insert
-     * @return File ID
      */
     int insertFile(const FileRecord &record);
 
     /**
      * @brief Update file hashes
-     * @param fileId File ID
-     * @param crc32 CRC32 hash
-     * @param md5 MD5 hash
-     * @param sha1 SHA1 hash
-     * @return True if successful
      */
     bool updateFileHashes(int fileId, const QString &crc32, const QString &md5, const QString &sha1);
 

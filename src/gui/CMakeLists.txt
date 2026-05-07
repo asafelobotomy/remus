@@ -17,6 +17,7 @@ qt_add_executable(remus-gui
     controllers/mod_controller.cpp
     controllers/settings_controller.cpp
     controllers/workflow_controller.cpp
+    controllers/workflow_controller_run.cpp
     models/file_list_model.cpp
     models/match_list_model.cpp
     models/verification_result_model.cpp

@@ -60,8 +60,18 @@
   "git.autofetch": true,
 
   // ── Copilot agent terminal ────────────────────────────────────
-  // Disable sandbox entirely — allow all terminal commands without prompts.
+  // Allow standard build/dev commands; require confirmation for destructive ops.
+  // guard-destructive.sh provides a secondary hook-layer guard.
   "github.copilot.chat.agent.terminal.allowList": [
-    "**"
+    "cmake*", "ctest*", "make*", "ninja*",
+    "git diff*", "git log*", "git status*", "git add*", "git commit*",
+    "git stash*", "git checkout*", "git branch*", "git fetch*",
+    "git pull*", "git push*", "git tag*",
+    "find*", "grep*", "ls*", "cat*", "head*", "tail*", "wc*",
+    "echo*", "printf*", "sed*", "awk*", "sort*", "uniq*",
+    "python3*", "env -i*", "which*", "pwd", "uname*",
+    "mkdir -p*", "cp*", "mv*", "touch*", "chmod*",
+    "bash .github/hooks/scripts/*", "bash scripts/*",
+    "sh .github/hooks/scripts/*"
   ]
 }
