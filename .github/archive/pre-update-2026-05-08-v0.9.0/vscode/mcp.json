@@ -1,0 +1,89 @@
+{
+  "sandbox": {
+    "filesystem": {
+      "allowWrite": ["${userHome}/.npm"]
+    }
+  },
+  "servers": {
+    "filesystem": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "${workspaceFolder}"],
+      "sandboxEnabled": true,
+      "sandbox": {
+        "network": {
+          "allowedDomains": ["registry.npmjs.org", "npmjs.org"]
+        },
+        "filesystem": {
+          "allowWrite": ["${workspaceFolder}", "${userHome}/.npm"],
+          "denyRead": ["${userHome}/.ssh", "${userHome}/.gnupg", "${userHome}/.aws"]
+        }
+      }
+    },
+    "git": {
+      "type": "stdio",
+      "command": "uvx",
+      "args": ["mcp-server-git", "--repository", "${workspaceFolder}"]
+    },
+    "github": {
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp/",
+      "disabled": true
+    },
+    "fetch": {
+      "type": "stdio",
+      "command": "uvx",
+      "env": {
+        "CLAUDE_TMPDIR": "${userHome}/.cache/uv",
+        "TMPDIR": "${userHome}/.cache/uv"
+      },
+      "args": ["--with", "httpx[socks]>=0.28", "mcp-server-fetch"],
+      "disabled": true
+    },
+    "heartbeat": {
+      "type": "stdio",
+      "command": "uvx",
+      "env": {
+        "HEARTBEAT_WORKSPACE": "${workspaceFolder}",
+        "CLAUDE_TMPDIR": "${userHome}/.cache/uv/.copilot-tmp",
+        "TMPDIR": "${userHome}/.cache/uv/.copilot-tmp"
+      },
+      "args": [
+        "--from",
+        "mcp[cli]",
+        "mcp",
+        "run",
+        "${workspaceFolder}/.github/hooks/scripts/mcp-heartbeat-server.py"
+      ]
+    },
+    "context7": {
+      "type": "http",
+      "url": "https://mcp.context7.com/mcp",
+      "disabled": true
+    },
+    "sequential-thinking": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-sequential-thinking"
+      ],
+      "disabled": true,
+      "sandboxEnabled": true,
+      "sandbox": {
+        "network": {
+          "allowedDomains": ["registry.npmjs.org", "npmjs.org"]
+        },
+        "filesystem": {
+          "allowWrite": ["${userHome}/.npm"]
+        }
+      }
+    },
+    "duckduckgo": {
+      "type": "stdio",
+      "command": "uvx",
+      "args": ["duckduckgo-mcp-server"],
+      "disabled": true
+    }
+  }
+}

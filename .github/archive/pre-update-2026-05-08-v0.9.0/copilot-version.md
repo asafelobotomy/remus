@@ -1,7 +1,7 @@
-0.10.0
+0.9.0
 <!-- markdownlint-disable-file MD041 -->
 Applied: 2026-04-04
-Updated: 2026-05-08
+Updated: 2026-05-01
 <!-- manifest-scope: stable managed files only; .github/copilot-version.md is intentionally excluded because a file cannot hash its own current contents without a recursive convention -->
 <!-- section-fingerprints
 §1=6968b3c9dca1
@@ -67,9 +67,9 @@ Updated: 2026-05-08
 .github/instructions/plugin.instructions.md=67e69eac2191
 .github/instructions/terminal.instructions.md=48b4a39dafcc
 .github/instructions/tests.instructions.md=f30a0f55a0ca
-.github/prompts/commit-msg.prompt.md=02ffbd52b736
+.github/prompts/commit-msg.prompt.md=7ba404bd4a5d
 .github/prompts/context-map.prompt.md=023cec4bfe75
-.github/prompts/explain.prompt.md=496d85c10832
+.github/prompts/explain.prompt.md=dea28490a311
 .github/prompts/onboard-commit-style.prompt.md=bcce9e9cf083
 .github/prompts/onboarding.prompt.md=c09a3b3870b9
 .github/prompts/refactor.prompt.md=916980b47710
@@ -78,12 +78,7 @@ Updated: 2026-05-08
 .github/skills/accessibility-review/SKILL.md=de3dc13af8e7
 .github/skills/agentic-workflows/SKILL.md=6deaecc96e41
 .github/skills/api-design/SKILL.md=1b420e73b71a
-.github/skills/audit-procedures/SKILL.md=fce4b831d8cf
-.github/hooks/scripts/mcp-docs-server.py=9ea58305ac98
-.github/hooks/scripts/mcp-duckduckgo-server.py=7d50e18b5373
-.github/hooks/scripts/mcp-fetch-server.py=2f3860bab3b8
-.github/hooks/scripts/mcp-git-server.py=d1c5fa6cbc6b
-.github/hooks/scripts/mcp-sequential-thinking-server.py=61856120ce56
+.github/skills/audit-procedures/SKILL.md=77692e699d55
 .github/skills/changelog-entry/SKILL.md=9cc11b7073bb
 .github/skills/commit-preflight/SKILL.md=5ca8e769deb4
 .github/skills/compress-prose/SKILL.md=add0f358d3c0
@@ -98,7 +93,7 @@ Updated: 2026-05-08
 .github/skills/issue-triage/SKILL.md=b65720ab9714
 .github/skills/lean-pr-review/SKILL.md=e97298d4e1cd
 .github/skills/mcp-builder/SKILL.md=e57f818acb16
-.github/skills/mcp-management/SKILL.md=d51d48ed1894
+.github/skills/mcp-management/SKILL.md=7187f7a3e0f6
 .github/skills/onboarding-docs/SKILL.md=af214897e9a7
 .github/skills/performance-profiling/SKILL.md=b92cf9dcba4d
 .github/skills/plugin-management/SKILL.md=7ba88db06039
@@ -112,7 +107,7 @@ Updated: 2026-05-08
 .github/skills/webapp-testing/SKILL.md=2c5db186e367
 .vscode/settings.json=50eebb1ed53d
 .vscode/extensions.json=7688a76c5a3a
-.vscode/mcp.json=d9ae11ae309a
+.vscode/mcp.json=e7d75d48d827
 AGENTS.md=a0f7669e1b47
 -->
 <!-- setup-answers
@@ -127,6 +122,4 @@ TEST_FRAMEWORK=Qt Test (CTest)
 SETUP_DATE=2026-04-04
 MCP_STACK_SERVERS=filesystem, git, fetch
 MCP_CUSTOM_SERVERS=heartbeat
-MCP_AVAILABLE=github,fetch,heartbeat,docs,sequential-thinking,duckduckgo
-MCP_ENABLED=heartbeat
 -->

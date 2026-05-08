@@ -1,6 +1,6 @@
 # Copilot Instructions — Remus
 
-> **Template version**: 0.10.0 <!-- x-release-please-version --> | **Applied**: 2026-04-04
+> **Template version**: 0.9.0 <!-- x-release-please-version --> | **Applied**: 2026-04-04
 > Living document — self-edit rules in §8.
 >
 > **Models**: each `.github/agents/*.agent.md` pins its model. Codex models are headless-only (no interactive prompts). See [model comparison](https://docs.github.com/en/copilot/reference/ai-models/model-comparison).
@@ -73,7 +73,6 @@ Apply to every non-trivial change.
 Before acting on any medium-to-complex task, apply this decision sequence to avoid
 loop traps and wasted tokens:
 
-0. **Route** — call `mcp_heartbeat_suggest_delegation(task="<one-sentence description>")`. If it returns `match: true`, delegate to the named agent immediately — do not absorb the specialist workflow inline. For sub-agent calls, also pass `calling_agent` to avoid self-routing. Skip only for trivial single-line lookups (e.g. "what does this regex match?").
 1. **Frame** — state the problem in one sentence. If you cannot, the task needs
    decomposition before proceeding.
 2. **Gather** — identify the minimum information needed to act. Search once with
@@ -262,7 +261,6 @@ Hook configuration lives in \`.github/hooks/copilot-hooks.json\`. VS Code suppor
 
 When spawning subagents:
 
-- The parent/default agent follows this protocol too: call `mcp_heartbeat_suggest_delegation` before any non-trivial task (step 0 of the Structured Thinking Discipline). If it returns a match, delegate to the matching agent instead of absorbing the specialist workflow inline.
 - Each \`.github/agents/*.agent.md\` declares an \`agents:\` allow-list restricting which subagents it may invoke. Respect these boundaries.
 - Pass the full contents of this file as system context.
 - Set \`max_depth = 3\`. Stop and surface to user if reached.

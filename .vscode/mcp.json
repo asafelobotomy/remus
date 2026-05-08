@@ -8,7 +8,7 @@
     "filesystem": {
       "type": "stdio",
       "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-filesystem", "${workspaceFolder}"],
+      "args": ["-y", "@modelcontextprotocol/server-filesystem@2026.1.14", "${workspaceFolder}"],
       "sandboxEnabled": true,
       "sandbox": {
         "network": {
@@ -16,18 +16,42 @@
         },
         "filesystem": {
           "allowWrite": ["${workspaceFolder}", "${userHome}/.npm"],
-          "denyRead": ["${userHome}/.ssh", "${userHome}/.gnupg", "${userHome}/.aws"]
+          "denyRead": [
+            "${userHome}/.ssh",
+            "${userHome}/.gnupg",
+            "${userHome}/.aws",
+            "${userHome}/.netrc",
+            "${userHome}/.docker",
+            "${userHome}/.kube",
+            "${userHome}/.config",
+            "${userHome}/.bash_history",
+            "${userHome}/.zsh_history",
+            "${userHome}/.local/share/keyrings"
+          ]
         }
       }
     },
     "git": {
       "type": "stdio",
       "command": "uvx",
-      "args": ["mcp-server-git", "--repository", "${workspaceFolder}"]
+      "env": {
+        "GIT_MCP_REPOSITORY": "${workspaceFolder}",
+        "CLAUDE_TMPDIR": "${userHome}/.cache/uv",
+        "TMPDIR": "${userHome}/.cache/uv"
+      },
+      "args": [
+        "--from", "mcp[cli]",
+        "--with", "gitpython==3.1.50",
+        "mcp", "run",
+        "${workspaceFolder}/.github/hooks/scripts/mcp-git-server.py"
+      ]
     },
     "github": {
       "type": "http",
-      "url": "https://api.githubcopilot.com/mcp/",
+      "url": "https://api.githubcopilot.com/mcp/readonly",
+      "headers": {
+        "X-MCP-Toolsets": "issues,pull_requests,actions,dependabot"
+      },
       "disabled": true
     },
     "fetch": {
@@ -37,7 +61,13 @@
         "CLAUDE_TMPDIR": "${userHome}/.cache/uv",
         "TMPDIR": "${userHome}/.cache/uv"
       },
-      "args": ["--with", "httpx[socks]>=0.28", "mcp-server-fetch"],
+      "args": [
+        "--from", "mcp[cli]",
+        "--with", "httpx==0.28.1",
+        "--with", "beautifulsoup4==4.14.3",
+        "mcp", "run",
+        "${workspaceFolder}/.github/hooks/scripts/mcp-fetch-server.py"
+      ],
       "disabled": true
     },
     "heartbeat": {
@@ -56,33 +86,48 @@
         "${workspaceFolder}/.github/hooks/scripts/mcp-heartbeat-server.py"
       ]
     },
-    "context7": {
-      "type": "http",
-      "url": "https://mcp.context7.com/mcp",
+    "docs": {
+      "type": "stdio",
+      "command": "uvx",
+      "env": {
+        "CLAUDE_TMPDIR": "${userHome}/.cache/uv",
+        "TMPDIR": "${userHome}/.cache/uv"
+      },
+      "args": [
+        "--from", "mcp[cli]",
+        "--with", "httpx==0.28.1",
+        "--with", "beautifulsoup4==4.14.3",
+        "mcp", "run",
+        "${workspaceFolder}/.github/hooks/scripts/mcp-docs-server.py"
+      ],
       "disabled": true
     },
     "sequential-thinking": {
       "type": "stdio",
-      "command": "npx",
+      "command": "uvx",
+      "env": {
+        "CLAUDE_TMPDIR": "${userHome}/.cache/uv",
+        "TMPDIR": "${userHome}/.cache/uv"
+      },
       "args": [
-        "-y",
-        "@modelcontextprotocol/server-sequential-thinking"
+        "--from",
+        "mcp[cli]",
+        "mcp",
+        "run",
+        "${workspaceFolder}/.github/hooks/scripts/mcp-sequential-thinking-server.py"
       ],
-      "disabled": true,
-      "sandboxEnabled": true,
-      "sandbox": {
-        "network": {
-          "allowedDomains": ["registry.npmjs.org", "npmjs.org"]
-        },
-        "filesystem": {
-          "allowWrite": ["${userHome}/.npm"]
-        }
-      }
+      "disabled": true
     },
     "duckduckgo": {
       "type": "stdio",
       "command": "uvx",
-      "args": ["duckduckgo-mcp-server"],
+      "args": [
+        "--from", "mcp[cli]",
+        "--with", "httpx==0.28.1",
+        "--with", "beautifulsoup4==4.14.3",
+        "mcp", "run",
+        "${workspaceFolder}/.github/hooks/scripts/mcp-duckduckgo-server.py"
+      ],
       "disabled": true
     }
   }
