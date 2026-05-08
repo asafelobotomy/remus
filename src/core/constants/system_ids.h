@@ -254,6 +254,69 @@ inline constexpr int ID_SHARP_X1 = 81;
 /// Sharp X68000
 inline constexpr int ID_X68000 = 82;
 
+/// IBM PC Compatible (DOS/Windows CD-ROM)
+inline constexpr int ID_IBM_PC = 83;
+
+/// Sony PlayStation 4
+inline constexpr int ID_PS4 = 84;
+
+/// Microsoft Xbox One
+inline constexpr int ID_XBOX_ONE = 85;
+
+/// Apple Macintosh (classic CD-ROM era)
+inline constexpr int ID_MAC = 86;
+
+/// Fujitsu FM Towns
+inline constexpr int ID_FM_TOWNS = 87;
+
+/// NEC PC-8801
+inline constexpr int ID_PC88 = 88;
+
+/// Commodore CDTV
+inline constexpr int ID_CDTV = 89;
+
+/// Amiga CD (ACD — pre-CD32 Amiga CD releases)
+inline constexpr int ID_AMIGA_CD = 90;
+
+/// Acorn Archimedes
+inline constexpr int ID_ARCHIMEDES = 91;
+
+/// Sega Triforce (arcade board, GameCube-based)
+inline constexpr int ID_TRIFORCE = 92;
+
+/// Sega Chihiro (arcade board, Xbox-based)
+inline constexpr int ID_CHIHIRO = 93;
+
+/// Tandy / Memorex VIS
+inline constexpr int ID_TANDY_VIS = 94;
+
+/// Sega Lindbergh (arcade board, Linux-based)
+inline constexpr int ID_LINDBERGH = 95;
+
+/// Palm OS
+inline constexpr int ID_PALM_OS = 96;
+
+/// Bandai Playdia
+inline constexpr int ID_PLAYDIA = 97;
+
+/// Apple II / II+ / IIe / IIc / IIGS
+inline constexpr int ID_APPLE_II = 98;
+
+/// Acorn BBC Micro / Electron
+inline constexpr int ID_BBC_MICRO = 99;
+
+/// Commodore 16 / Plus/4
+inline constexpr int ID_C16 = 100;
+
+/// Mega Duck / Cougar Boy
+inline constexpr int ID_MEGA_DUCK = 101;
+
+/// Milton Bradley Microvision
+inline constexpr int ID_MICROVISION = 102;
+
+/// VM Labs Nuon
+inline constexpr int ID_NUON = 103;
+
 } // namespace Systems
 } // namespace Constants
 } // namespace Remus

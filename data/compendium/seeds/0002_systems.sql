@@ -92,6 +92,27 @@ INSERT OR REPLACE INTO systems (
 (79, 'Super A''Can', 'Funtech Super A''Can', 'Funtech', 4, 1995, 'CRC32', 0, 0),
 (80, 'Casio Loopy', 'Casio Loopy', 'Casio', 5, 1995, 'CRC32', 0, 0),
 (81, 'Sharp X1', 'Sharp X1', 'Sharp', 3, 1982, 'CRC32', 0, 0),
-(82, 'X68000', 'Sharp X68000', 'Sharp', 4, 1987, 'CRC32', 0, 0);
+(82, 'X68000', 'Sharp X68000', 'Sharp', 4, 1987, 'CRC32', 0, 0),
+(83, 'PC', 'IBM PC Compatible', 'IBM', 5, 1981, 'MD5', 1, 0),
+(84, 'PlayStation 4', 'Sony PlayStation 4', 'Sony', 8, 2013, 'SHA1', 1, 0),
+(85, 'Xbox One', 'Microsoft Xbox One', 'Microsoft', 8, 2013, 'SHA1', 1, 0),
+(86, 'Mac', 'Apple Macintosh', 'Apple', 3, 1984, 'MD5', 1, 0),
+(87, 'FM Towns', 'Fujitsu FM Towns', 'Fujitsu', 4, 1989, 'MD5', 1, 0),
+(88, 'PC-88', 'NEC PC-8801', 'NEC', 3, 1981, 'CRC32', 0, 0),
+(89, 'CDTV', 'Commodore CDTV', 'Commodore', 4, 1991, 'MD5', 1, 0),
+(90, 'Amiga CD', 'Amiga CD', 'Commodore', 4, 1993, 'MD5', 1, 0),
+(91, 'Archimedes', 'Acorn Archimedes', 'Acorn', 4, 1987, 'MD5', 1, 0),
+(92, 'Triforce', 'Sega Triforce', 'Sega', 6, 2002, 'MD5', 1, 0),
+(93, 'Chihiro', 'Sega Chihiro', 'Sega', 6, 2002, 'MD5', 1, 0),
+(94, 'VIS', 'Tandy VIS', 'Tandy', 5, 1992, 'MD5', 1, 0),
+(95, 'Lindbergh', 'Sega Lindbergh', 'Sega', 7, 2005, 'MD5', 1, 0),
+(96, 'Palm OS', 'Palm OS', 'Palm', 6, 1996, 'CRC32', 0, 1),
+(97, 'Playdia', 'Bandai Playdia', 'Bandai', 5, 1994, 'MD5', 1, 0),
+(98, 'Apple II', 'Apple II / IIe / IIc / IIGS', 'Apple', 2, 1977, 'CRC32', 0, 0),
+(99, 'BBC Micro', 'Acorn BBC Micro / Electron', 'Acorn', 3, 1981, 'CRC32', 0, 0),
+(100, 'Commodore 16', 'Commodore 16 / Plus/4', 'Commodore', 3, 1984, 'CRC32', 0, 0),
+(101, 'Mega Duck', 'Mega Duck / Cougar Boy', 'Welback', 4, 1993, 'CRC32', 0, 1),
+(102, 'Microvision', 'Milton Bradley Microvision', 'Milton Bradley', 1, 1979, 'CRC32', 0, 1),
+(103, 'Nuon', 'VM Labs Nuon', 'VM Labs', 6, 1999, 'MD5', 1, 0);
 
 COMMIT;
