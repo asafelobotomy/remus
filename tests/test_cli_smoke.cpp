@@ -15,6 +15,7 @@
 #include <QDir>
 
 #include "../src/core/database.h"
+#include "../src/core/constants/systems.h"
 #include "../src/core/verification_engine.h"
 
 class CliSmokeTest : public QObject {
@@ -324,7 +325,8 @@ private slots:
 
             QVERIFY2(countsQuery.exec("SELECT COUNT(*) FROM systems"), qPrintable(countsQuery.lastError().text()));
             QVERIFY(countsQuery.next());
-            QCOMPARE(countsQuery.value(0).toInt(), 82);
+            const int expectedSystemCount = Remus::Constants::Systems::getSystemInternalNames().size();
+            QCOMPARE(countsQuery.value(0).toInt(), expectedSystemCount);
 
             QVERIFY2(countsQuery.exec("SELECT COUNT(*) FROM games"), qPrintable(countsQuery.lastError().text()));
             QVERIFY(countsQuery.next());

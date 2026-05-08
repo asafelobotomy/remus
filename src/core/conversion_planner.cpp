@@ -268,11 +268,7 @@ QString ConversionPlanner::canonicalExtensionForSystem(int systemId)
 
 bool ConversionPlanner::isSystemClassified(int systemId)
 {
-    return isChdCanonicalSystem(systemId)
-        || isRvzCanonicalSystem(systemId)
-        || systemId == Systems::ID_PSP
-        || isArchiveOnlySystem(systemId)
-        || isDeferredSystem(systemId);
+    return Constants::Systems::getSystem(systemId) != nullptr;
 }
 
 QString ConversionPlanner::normalizedExtension(const QString &extension)

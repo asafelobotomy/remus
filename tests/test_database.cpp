@@ -237,6 +237,8 @@ void DatabaseTest::testInitializeRepairsDanglingSystemIds()
 
         const int genesisId = db.getSystemId("Genesis");
         QCOMPARE(genesisId, 10);
+        const int legacyGenesisId =
+            Constants::DatabaseSchema::Migrations::LEGACY_SYSTEM_SLOT_OFFSET * 2 + genesisId;
 
         const int libId = db.insertLibrary("/roms", "Test");
         QVERIFY(libId > 0);
@@ -257,7 +259,7 @@ void DatabaseTest::testInitializeRepairsDanglingSystemIds()
             (id, name, display_name, manufacturer, generation, extensions, preferred_hash)
             VALUES (?, ?, ?, ?, ?, ?, ?)
         )");
-        insertLegacy.addBindValue(99);
+        insertLegacy.addBindValue(legacyGenesisId);
         insertLegacy.addBindValue(QStringLiteral("Genesis"));
         insertLegacy.addBindValue(QStringLiteral("Sega Genesis / Mega Drive"));
         insertLegacy.addBindValue(QStringLiteral("Sega"));
@@ -268,7 +270,7 @@ void DatabaseTest::testInitializeRepairsDanglingSystemIds()
 
         QSqlQuery corruptFile(db.database());
         corruptFile.prepare("UPDATE files SET system_id = ? WHERE id = ?");
-        corruptFile.addBindValue(99);
+        corruptFile.addBindValue(legacyGenesisId);
         corruptFile.addBindValue(fileId);
         QVERIFY(corruptFile.exec());
     }
