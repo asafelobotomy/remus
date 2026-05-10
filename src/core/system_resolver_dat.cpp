@@ -73,7 +73,8 @@ int SystemResolver::systemIdByDatName(const QString &datName)
         {QStringLiteral("Commodore - 64"), ID_C64},
         {QStringLiteral("Commodore - Amiga"), ID_AMIGA},
         {QStringLiteral("Commodore - CD32"), ID_CD32},
-        {QStringLiteral("Commodore - CDTV"), ID_AMIGA},
+        {QStringLiteral("Commodore - CDTV"), ID_CDTV},
+        {QStringLiteral("Commodore - Plus-4"), ID_C16},
         {QStringLiteral("Sinclair - ZX Spectrum"), ID_ZX_SPECTRUM},
         {QStringLiteral("Sinclair - ZX Spectrum +3"), ID_ZX_SPECTRUM},
         {QStringLiteral("Microsoft - Xbox"), ID_XBOX},
@@ -155,6 +156,20 @@ int SystemResolver::systemIdByDatName(const QString &datName)
         {QStringLiteral("Casio - Loopy"), ID_CASIO_LOOPY},
         {QStringLiteral("Sharp - X1"), ID_SHARP_X1},
         {QStringLiteral("Sharp - X68000"), ID_X68000},
+        // IBM PC / DOS
+        {QStringLiteral("DOS"), ID_IBM_PC},
+        // Mobile
+        {QStringLiteral("Mobile - Palm OS"), ID_PALM_OS},
+        // Educational / children's platforms
+        {QStringLiteral("VTech - V.Smile"), ID_VSMILE},
+        {QStringLiteral("LeapFrog - Leapster Learning Game System"), ID_LEAPSTER},
+        {QStringLiteral("LeapFrog - LeapPad"), ID_LEAPPAD},
+        {QStringLiteral("Sega - Beena"), ID_SEGA_BEENA},
+        {QStringLiteral("VTech - CreatiVision"), ID_CREATIVISION},
+        {QStringLiteral("Konami - Picno"), ID_PICNO},
+        {QStringLiteral("Hartung - Game Master"), ID_GAME_MASTER},
+        {QStringLiteral("Mobile - Symbian"), ID_SYMBIAN},
+        {QStringLiteral("Entex - Adventure Vision"), ID_ADVENTURE_VISION},
     };
 
     static QMap<QString, int> normalizedDatNameMap;

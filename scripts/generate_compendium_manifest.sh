@@ -85,6 +85,54 @@ if [[ ! -d "$DAT_DIR" ]]; then
     exit 1
 fi
 
+# Source IDs that produce zero signatures because the system has no compendium
+# mapping (engine-based platforms, scripting environments, ROM hacks, etc.).
+# Disabled rather than removed so they still appear in the manifest for auditing.
+EXCLUDED_SOURCE_IDS=(
+    "libretro-dat-mobile-j2me"          # 214 K items, no system mapping
+    "libretro-dat-scummvm"              # engine-only
+    "libretro-dat-hbmame"               # MAME hack set, no mapping
+    "libretro-dat-pico-8"               # scripting env
+    "libretro-dat-tic-80"               # scripting env
+    "libretro-dat-puzzlescript"         # scripting env
+    "libretro-dat-doom"                 # engine WADs
+    "libretro-dat-lowres-nx"            # fantasy console
+    "libretro-dat-wasm-4"               # fantasy console
+    "libretro-dat-uzebox"               # homebrew micro
+    "libretro-dat-handheld-electronic-game" # LCD games, no mapping
+    "libretro-dat-vircon32"             # fantasy console
+    "libretro-dat-chip-8"               # interpreter
+    "libretro-dat-cave-story"           # single game
+    "libretro-dat-infocom-z-machine"    # interpreter
+    "libretro-dat-rick-dangerous"       # single game
+    "libretro-dat-flashback"            # single game
+    "libretro-dat-dinothawr"            # single game
+    "libretro-dat-cannonball"           # single game
+    "libretro-dat-mrboom"               # single game
+    "libretro-dat-quake"                # engine WADs
+    "libretro-dat-quake-ii"             # engine WADs
+    "libretro-dat-quake-iii"            # engine WADs
+    "libretro-dat-wolfenstein-3d"       # engine WADs
+    "libretro-dat-chailove"             # scripting env
+    "libretro-dat-tomb-raider"          # engine assets
+    "libretro-dat-jump-n-bump"          # single game
+    "libretro-dat-rpg-maker"            # engine assets
+    "libretro-dat-microw8"              # fantasy console
+    "libretro-dat-arduboy-inc-arduboy"  # duplicate of nointro variant
+    "libretro-dat-system"               # meta entry
+    "libretro-dat-elektor-tv-games-computer" # no system mapping
+    "libretro-dat-dice"                 # no system mapping
+    "libretro-nointro-mobile-j2me"      # no system mapping
+)
+
+is_excluded() {
+    local id="$1"
+    for excluded in "${EXCLUDED_SOURCE_IDS[@]}"; do
+        [[ "$id" == "$excluded" ]] && return 0
+    done
+    return 1
+}
+
 mapfile -d '' DAT_FILES < <(find "$DAT_DIR" -maxdepth 1 -type f -name '*.dat' -print0 | sort -z)
 mapfile -d '' NO_INTRO_FILES < <(find "$DAT_DIR/no-intro" -maxdepth 1 -type f -name '*.dat' -print0 2>/dev/null | sort -z)
 mapfile -d '' REDUMP_FILES < <(find "$DAT_DIR/redump" -maxdepth 1 -type f -name '*.dat' -print0 2>/dev/null | sort -z)
@@ -152,7 +200,11 @@ mkdir -p "$(dirname "$OUTPUT_PATH")"
         printf '      "license_id": "CC-BY-SA-4.0",\n'
         printf '      "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",\n'
         printf '      "fetched_at": "%s",\n' "$(json_escape "$FETCHED_AT")"
-        printf '      "enabled": true,\n'
+        if is_excluded "$source_id"; then
+            printf '      "enabled": false,\n'
+        else
+            printf '      "enabled": true,\n'
+        fi
         printf '      "priority": %s,\n' "$dat_priority"
         printf '      "attribution_required": true\n'
 

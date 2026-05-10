@@ -4,6 +4,8 @@
 #include <QHash>
 #include <QRegularExpression>
 #include <QSet>
+#include <QSqlError>
+#include <QSqlQuery>
 
 namespace Remus {
 namespace Compendium {
@@ -38,20 +40,87 @@ QString IdentityLinker::normalizeTitle(const QString &raw)
     return s.trimmed();
 }
 
-// ── Main linker ───────────────────────────────────────────────────────────────
-
-int IdentityLinker::link(QList<SourceRecordEnvelope> &records) const
+bool IdentityLinker::loadFromDatabase(QSqlDatabase &db, QString &error)
 {
-    // Maps used to accumulate game IDs across passes.
-    // key → assigned game_id
-    QHash<QString, QString> sha1ToId;
-    QHash<QString, QString> md5ToId;
-    QHash<QString, QString> crc32ToId;
-    // "<systemId>|<normalizedTitle>|<regionCode>" → game_id  (pass 3)
-    QHash<QString, QString> titleToId;
-    // "<systemId>|<serial>" → game_id  (pass 2)
-    QHash<QString, QString> serialToId;
+    // ── Pass 1: hash signatures ───────────────────────────────────────────────
+    {
+        QSqlQuery q(db);
+        q.setForwardOnly(true);
+        if (!q.exec(QStringLiteral(
+                "SELECT hash_type, hash_value, game_id FROM game_signatures"))) {
+            error = q.lastError().text();
+            return false;
+        }
+        while (q.next()) {
+            const QString type  = q.value(0).toString();
+            const QString value = q.value(1).toString();
+            const QString id    = q.value(2).toString();
+            if (type == QLatin1String("sha1")) {
+                m_sha1ToId.insert(value, id);
+            } else if (type == QLatin1String("md5")) {
+                m_md5ToId.insert(value, id);
+            } else if (type == QLatin1String("crc32")) {
+                m_crc32ToId.insert(value, id);
+            }
+        }
+    }
 
+    // ── Pass 2: serials ───────────────────────────────────────────────────────
+    {
+        QSqlQuery q(db);
+        q.setForwardOnly(true);
+        if (!q.exec(QStringLiteral(
+                "SELECT gs.serial_value, gs.game_id, g.system_id "
+                "FROM game_serials gs JOIN games g ON g.game_id = gs.game_id"))) {
+            error = q.lastError().text();
+            return false;
+        }
+        while (q.next()) {
+            const QString serial   = q.value(0).toString();
+            const QString id       = q.value(1).toString();
+            const int     systemId = q.value(2).toInt();
+            if (serial.isEmpty() || systemId <= 0) continue;
+            const QString key = QString::number(systemId) + QLatin1Char('|') + serial;
+            if (!m_serialToId.contains(key)) {
+                m_serialToId.insert(key, id);
+            }
+        }
+    }
+
+    // ── Pass 3: title map (game_names stores all raw titleRaw values) ─────────
+    // Normalising name_text here reproduces the same keys that link() would have
+    // built during the original ingest, so incoming records will match against
+    // the same normalised forms.
+    {
+        QSqlQuery q(db);
+        q.setForwardOnly(true);
+        if (!q.exec(QStringLiteral(
+                "SELECT gn.name_text, gn.game_id, g.system_id, "
+                "       COALESCE(g.primary_region_code, '') "
+                "FROM game_names gn JOIN games g ON g.game_id = gn.game_id"))) {
+            error = q.lastError().text();
+            return false;
+        }
+        while (q.next()) {
+            const QString name     = q.value(0).toString();
+            const QString id       = q.value(1).toString();
+            const int     systemId = q.value(2).toInt();
+            const QString region   = q.value(3).toString();
+            if (name.isEmpty() || systemId <= 0) continue;
+            const QString normTitle = normalizeTitle(name);
+            const QString key = QString::number(systemId) + QLatin1Char('|')
+                                + normTitle + QLatin1Char('|') + region;
+            if (!m_titleToId.contains(key)) {
+                m_titleToId.insert(key, id);
+            }
+        }
+    }
+
+    return true;
+}
+
+int IdentityLinker::link(QList<SourceRecordEnvelope> &records)
+{
     int gamesCreated = 0;
 
     // Single pass — assign each record to an existing game_id or mint a new one.
@@ -61,24 +130,24 @@ int IdentityLinker::link(QList<SourceRecordEnvelope> &records) const
 
         // Pass 1a — sha1
         if (!rec.hashes.sha1.isEmpty()) {
-            if (sha1ToId.contains(rec.hashes.sha1)) {
-                assignedId = sha1ToId.value(rec.hashes.sha1);
+            if (m_sha1ToId.contains(rec.hashes.sha1)) {
+                assignedId = m_sha1ToId.value(rec.hashes.sha1);
                 confidence = 100;
             }
         }
 
         // Pass 1b — md5
         if (assignedId.isEmpty() && !rec.hashes.md5.isEmpty()) {
-            if (md5ToId.contains(rec.hashes.md5)) {
-                assignedId = md5ToId.value(rec.hashes.md5);
+            if (m_md5ToId.contains(rec.hashes.md5)) {
+                assignedId = m_md5ToId.value(rec.hashes.md5);
                 confidence = 95;
             }
         }
 
         // Pass 1c — crc32
         if (assignedId.isEmpty() && !rec.hashes.crc32.isEmpty()) {
-            if (crc32ToId.contains(rec.hashes.crc32)) {
-                assignedId = crc32ToId.value(rec.hashes.crc32);
+            if (m_crc32ToId.contains(rec.hashes.crc32)) {
+                assignedId = m_crc32ToId.value(rec.hashes.crc32);
                 confidence = 90;
             }
         }
@@ -91,8 +160,8 @@ int IdentityLinker::link(QList<SourceRecordEnvelope> &records) const
                 }
                 const QString serialKey = QString::number(rec.resolvedSystemId)
                                           + QLatin1Char('|') + serial;
-                if (serialToId.contains(serialKey)) {
-                    assignedId = serialToId.value(serialKey);
+                if (m_serialToId.contains(serialKey)) {
+                    assignedId = m_serialToId.value(serialKey);
                     confidence = 80;
                     break;
                 }
@@ -106,8 +175,8 @@ int IdentityLinker::link(QList<SourceRecordEnvelope> &records) const
             const QString titleKey  = QString::number(rec.resolvedSystemId)
                                       + QLatin1Char('|') + normTitle
                                       + QLatin1Char('|') + rec.resolvedRegionCode;
-            if (titleToId.contains(titleKey)) {
-                assignedId = titleToId.value(titleKey);
+            if (m_titleToId.contains(titleKey)) {
+                assignedId = m_titleToId.value(titleKey);
                 confidence = 60;
             }
         }
@@ -124,21 +193,21 @@ int IdentityLinker::link(QList<SourceRecordEnvelope> &records) const
 
         // Register this record's identifiers so later records can link to it
         if (!rec.hashes.sha1.isEmpty()) {
-            sha1ToId.insert(rec.hashes.sha1, assignedId);
+            m_sha1ToId.insert(rec.hashes.sha1, assignedId);
         }
         if (!rec.hashes.md5.isEmpty()) {
-            md5ToId.insert(rec.hashes.md5, assignedId);
+            m_md5ToId.insert(rec.hashes.md5, assignedId);
         }
         if (!rec.hashes.crc32.isEmpty()) {
-            crc32ToId.insert(rec.hashes.crc32, assignedId);
+            m_crc32ToId.insert(rec.hashes.crc32, assignedId);
         }
         if (rec.resolvedSystemId > 0) {
             for (const QString &serial : std::as_const(rec.serials)) {
                 if (!serial.isEmpty()) {
                     const QString serialKey = QString::number(rec.resolvedSystemId)
                                               + QLatin1Char('|') + serial;
-                    if (!serialToId.contains(serialKey)) {
-                        serialToId.insert(serialKey, assignedId);
+                    if (!m_serialToId.contains(serialKey)) {
+                        m_serialToId.insert(serialKey, assignedId);
                     }
                 }
             }
@@ -147,8 +216,8 @@ int IdentityLinker::link(QList<SourceRecordEnvelope> &records) const
                 const QString titleKey  = QString::number(rec.resolvedSystemId)
                                           + QLatin1Char('|') + normTitle
                                           + QLatin1Char('|') + rec.resolvedRegionCode;
-                if (!titleToId.contains(titleKey)) {
-                    titleToId.insert(titleKey, assignedId);
+                if (!m_titleToId.contains(titleKey)) {
+                    m_titleToId.insert(titleKey, assignedId);
                 }
             }
         }

@@ -55,4 +55,50 @@ bool enrichFromGameTDB(QSqlDatabase &database,
                        int &factsInserted,
                        QString &error);
 
+/**
+ * @brief Enrich games with the OpenVGDB SQLite database.
+ *
+ * Matches compendium games by CRC32 hash against the OpenVGDB ROM index and
+ * fills in description, genre, developer, publisher, and release year using
+ * COALESCE semantics (existing values are never overwritten).
+ *
+ * @param database      Open SQLite connection (must be in a transaction).
+ * @param openvgdbPath  Path to openvgdb.sqlite (skipped if file absent).
+ * @param gamesEnriched [out] Number of game rows actually updated.
+ * @param factsInserted [out] Number of new game_facts rows inserted.
+ * @param error         [out] Human-readable error message on failure.
+ * @return true on success, false on error.
+ */
+bool enrichFromOpenVGDB(QSqlDatabase &database,
+                        const QString &openvgdbPath,
+                        int &gamesEnriched,
+                        int &factsInserted,
+                        QString &error);
+
+/**
+ * @brief Enrich games using the IGDB online API (bulk platform-slug fetch).
+ *
+ * Authenticates with IGDB, then for each system that has games missing
+ * descriptions bulk-fetches all IGDB entries for that platform slug and
+ * matches by normalised title (lowercase, strip articles, keep alnum).
+ * Fills in description, genre, developer, publisher, and release year
+ * with COALESCE semantics (existing values are never overwritten).
+ *
+ * This function manages its own per-system transactions internally.
+ * Do NOT wrap it in an external transaction.
+ *
+ * @param database         Open SQLite connection (no active transaction required).
+ * @param credentialsPath  Path to enrichment-credentials.json; silently skipped
+ *                         if absent or if the igdb credentials block is empty.
+ * @param gamesEnriched    [out] Number of game rows actually updated.
+ * @param factsInserted    [out] Number of new game_facts rows inserted.
+ * @param error            [out] Human-readable error message on failure.
+ * @return true on success (or silently skipped), false on error.
+ */
+bool enrichFromIGDB(QSqlDatabase &database,
+                    const QString &credentialsPath,
+                    int &gamesEnriched,
+                    int &factsInserted,
+                    QString &error);
+
 } // namespace CompendiumEnrichment

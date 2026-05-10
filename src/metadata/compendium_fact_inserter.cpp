@@ -75,34 +75,42 @@ bool FactInserter::ensureGame(const SourceRecordEnvelope &rec,
 
 // ── Source item ───────────────────────────────────────────────────────────────
 
-bool FactInserter::insertSourceItem(const SourceRecordEnvelope &rec,
-                                     QSqlQuery &q,
-                                     CompilerStats &stats,
-                                     QString &error) const
+qint64 FactInserter::insertSourceItem(const SourceRecordEnvelope &rec,
+                                       QSqlQuery &qInsert, QSqlQuery &qSelect,
+                                       CompilerStats &stats,
+                                       QString &error) const
 {
-    q.bindValue(0, rec.sourceId);
-    q.bindValue(1, rec.snapshotId);
-    q.bindValue(2, rec.externalKey);
-    q.bindValue(3, rec.systemHint.isEmpty()
-                       ? QVariant(QMetaType(QMetaType::QString))
-                       : rec.systemHint);
-    q.bindValue(4, rec.titleRaw.isEmpty()
-                       ? QVariant(QMetaType(QMetaType::QString))
-                       : rec.titleRaw);
-    q.bindValue(5, rec.regionRaw.isEmpty()
-                       ? QVariant(QMetaType(QMetaType::QString))
-                       : rec.regionRaw);
-    q.bindValue(6, rec.payloadJson.isEmpty()
-                       ? QVariant(QMetaType(QMetaType::QString))
-                       : rec.payloadJson);
-    if (!q.exec()) {
-        error = q.lastError().text();
-        return false;
+    qInsert.bindValue(0, rec.sourceId);
+    qInsert.bindValue(1, rec.snapshotId);
+    qInsert.bindValue(2, rec.externalKey);
+    qInsert.bindValue(3, rec.systemHint.isEmpty()
+                             ? QVariant(QMetaType(QMetaType::QString))
+                             : rec.systemHint);
+    qInsert.bindValue(4, rec.titleRaw.isEmpty()
+                             ? QVariant(QMetaType(QMetaType::QString))
+                             : rec.titleRaw);
+    qInsert.bindValue(5, rec.regionRaw.isEmpty()
+                             ? QVariant(QMetaType(QMetaType::QString))
+                             : rec.regionRaw);
+    qInsert.bindValue(6, rec.payloadJson.isEmpty()
+                             ? QVariant(QMetaType(QMetaType::QString))
+                             : rec.payloadJson);
+    if (!qInsert.exec()) {
+        error = qInsert.lastError().text();
+        return -1;
     }
-    if (q.numRowsAffected() > 0) {
+    if (qInsert.numRowsAffected() > 0) {
         ++stats.recordsIngested;
+        return qInsert.lastInsertId().toLongLong();
     }
-    return true;
+    // Row already existed (INSERT OR IGNORE was a no-op) — fetch the existing id.
+    qSelect.bindValue(0, rec.sourceId);
+    qSelect.bindValue(1, rec.externalKey);
+    if (!qSelect.exec() || !qSelect.next()) {
+        error = qSelect.lastError().text();
+        return -1;
+    }
+    return qSelect.value(0).toLongLong();
 }
 
 // ── Signatures ────────────────────────────────────────────────────────────────
@@ -204,7 +212,7 @@ bool FactInserter::insertFacts(const SourceRecordEnvelope &rec,
                                 QSqlQuery &q,
                                 CompilerStats &stats,
                                 QString &error,
-                                int sourcePriority) const
+                                int sourcePriority, qint64 sourceItemId) const
 {
     if (rec.linkedGameId.isEmpty() || rec.resolvedSystemId <= 0) {
         return true;
@@ -223,6 +231,9 @@ bool FactInserter::insertFacts(const SourceRecordEnvelope &rec,
         q.bindValue(5, rec.snapshotId);
         q.bindValue(6, sourcePriority);
         q.bindValue(7, confidence);
+        q.bindValue(8, sourceItemId > 0
+                           ? QVariant(sourceItemId)
+                           : QVariant(QMetaType(QMetaType::LongLong)));
         if (!q.exec()) {
             error = q.lastError().text();
             return false;
@@ -252,7 +263,8 @@ bool FactInserter::insert(const QList<SourceRecordEnvelope> &records,
     // This avoids calling sqlite3_prepare_v2() once per record per statement.
     QSqlQuery qGame(db);
     QSqlQuery qName(db);
-    QSqlQuery qSourceItem(db);
+    QSqlQuery qSourceItemInsert(db);
+    QSqlQuery qSourceItemSelect(db);
     QSqlQuery qSig(db);
     QSqlQuery qSerial(db);
     QSqlQuery qFact(db);
@@ -265,10 +277,13 @@ bool FactInserter::insert(const QList<SourceRecordEnvelope> &records,
             "INSERT OR IGNORE INTO game_names "
             "(game_id, name_text, alias_type, locale, source_id, snapshot_id, confidence) "
             "VALUES (?, ?, 'official', '', ?, ?, 1.0)"))
-        || !qSourceItem.prepare(QStringLiteral(
+        || !qSourceItemInsert.prepare(QStringLiteral(
             "INSERT OR IGNORE INTO source_items "
             "(source_id, snapshot_id, external_key, system_hint, title_raw, region_raw, payload_json) "
             "VALUES (?, ?, ?, ?, ?, ?, ?)"))
+        || !qSourceItemSelect.prepare(QStringLiteral(
+            "SELECT source_item_id FROM source_items "
+            "WHERE source_id = ? AND external_key = ? LIMIT 1"))
         || !qSig.prepare(QStringLiteral(
             "INSERT OR IGNORE INTO game_signatures "
             "(game_id, hash_type, hash_value, source_id, snapshot_id, "
@@ -281,8 +296,8 @@ bool FactInserter::insert(const QList<SourceRecordEnvelope> &records,
         || !qFact.prepare(QStringLiteral(
             "INSERT OR IGNORE INTO game_facts "
             "(game_id, field_name, field_value, value_type, "
-            " source_id, snapshot_id, source_priority, confidence) "
-            "VALUES (?, ?, ?, ?, ?, ?, ?, ?)")))
+            " source_id, snapshot_id, source_priority, confidence, source_item_id) "
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)")))
     {
         error = qGame.lastError().text();
         return false;
@@ -292,7 +307,8 @@ bool FactInserter::insert(const QList<SourceRecordEnvelope> &records,
         if (!ensureGame(rec, qGame, qName, stats, error)) {
             return false;
         }
-        if (!insertSourceItem(rec, qSourceItem, stats, error)) {
+        const qint64 sourceItemId = insertSourceItem(rec, qSourceItemInsert, qSourceItemSelect, stats, error);
+        if (sourceItemId < 0) {
             return false;
         }
         if (!insertSignatures(rec, qSig, stats, error)) {
@@ -301,7 +317,7 @@ bool FactInserter::insert(const QList<SourceRecordEnvelope> &records,
         if (!insertSerials(rec, qSerial, stats, error)) {
             return false;
         }
-        if (!insertFacts(rec, qFact, stats, error, sourcePriority)) {
+        if (!insertFacts(rec, qFact, stats, error, sourcePriority, sourceItemId)) {
             return false;
         }
     }

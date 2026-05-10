@@ -12,30 +12,42 @@ class QSqlDatabase;
  * reporting to the user.
  */
 
+// Aggregated counts returned by runCompendiumEnrichmentPasses.
+struct EnrichmentStats {
+    int metadataGamesEnriched = 0;
+    int metadataFactsInserted = 0;
+    int gametdbGamesEnriched  = 0;
+    int gametdbFactsInserted  = 0;
+    int openvgdbGamesEnriched = 0;
+    int openvgdbFactsInserted = 0;
+    int igdbGamesEnriched     = 0;
+    int igdbFactsInserted     = 0;
+    int resolvedFields        = 0;
+};
+
 /**
- * @brief Run both enrichment passes (Libretro metadata + GameTDB) against an open database.
+ * @brief Run all enrichment passes (Libretro metadata, GameTDB, OpenVGDB, IGDB) and
+ *        follow with a merge-resolution pass to materialise enriched facts.
  *
- * Each pass runs inside its own transaction supplied by this function.
- * On failure the transaction is rolled back and @p error is set to a human-readable
- * description; the database connection itself remains open for the caller to close.
+ * Each transactional pass runs inside its own transaction. IGDB manages its own
+ * per-system transactions internally.  On failure the current transaction is rolled
+ * back, @p error is set, and the DB connection remains open for the caller to close.
  *
- * @param db                   Open SQLite connection (no active transaction required).
- * @param metadataDir          Path to data/metadata/ (may be empty — pass is skipped).
- * @param gametdbDir           Path to data/gametdb/  (may be empty — pass is skipped).
- * @param metadataGamesEnriched [out] Games updated by the Libretro pass.
- * @param metadataFactsInserted [out] Facts inserted by the Libretro pass.
- * @param gametdbGamesEnriched  [out] Games updated by the GameTDB pass.
- * @param gametdbFactsInserted  [out] Facts inserted by the GameTDB pass.
- * @param error                [out] Human-readable error message on failure.
+ * @param db          Open SQLite connection (no active transaction required).
+ * @param metadataDir Path to data/metadata/  (empty → Libretro pass skipped).
+ * @param gametdbDir  Path to data/gametdb/   (empty → GameTDB pass skipped).
+ * @param openvgdbPath Path to openvgdb.sqlite (empty → OpenVGDB pass skipped).
+ * @param credPath    Path to enrichment-credentials.json (empty → IGDB skipped).
+ * @param stats       [out] Aggregated enrichment and merge-resolution counts.
+ * @param error       [out] Human-readable error message on failure.
  * @return true on success, false on error.
  */
 bool runCompendiumEnrichmentPasses(QSqlDatabase &db,
                                    const QString &metadataDir,
                                    const QString &gametdbDir,
-                                   int &metadataGamesEnriched,
-                                   int &metadataFactsInserted,
-                                   int &gametdbGamesEnriched,
-                                   int &gametdbFactsInserted,
+                                   const QString &openvgdbPath,
+                                   const QString &credPath,
+                                   EnrichmentStats &stats,
                                    QString &error);
 
 /**

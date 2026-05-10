@@ -102,6 +102,13 @@ public:
                                    const QString &gameId,
                                    const QString &extension);
 
+    /**
+     * @brief O(1) lookup by normalized (lowercase trimmed) title.
+     * Returns the first matching game ID, or an empty string if not found.
+     * Used by the enrichment pipeline to avoid the O(N) searchByName scan.
+     */
+    QString gameIdByNormalizedTitle(const QString &normalizedTitle) const;
+
 private:
     GameMetadata entryToMetadata(const GameTDBEntry &entry) const;
     QString normalizeHash(const QString &hash) const;
@@ -111,6 +118,7 @@ private:
     QHash<QString, QString> m_crc32Index;          // CRC32 -> gameId
     QHash<QString, QString> m_md5Index;            // MD5 -> gameId
     QHash<QString, QString> m_sha1Index;           // SHA1 -> gameId
+    QHash<QString, QString> m_titleIndex;          // normalized title -> gameId (first seen)
 };
 
 } // namespace Remus

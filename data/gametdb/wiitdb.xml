@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <datafile xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="wiitdb.xsd">
-	<WiiTDB version="20260430133353" filter="EN_wiiware_gamecube" games="10157"/>
+	<WiiTDB version="20260510004122" filter="EN_wiiware_gamecube" games="10157"/>
 	<!--
  GameTDB: Wii, Database started by Lustar in 2009 (https://www.gametdb.com)
  Never modify this file manually, it will get overwritten when you update. You can add games and fixes on the website.
@@ -116102,6 +116102,10 @@ Notes:
 			<title>The Amazing Spider-Man</title>
 			<synopsis/>
 		</locale>
+		<locale lang="ES">
+			<title>The Amazing Spider-Man</title>
+			<synopsis/>
+		</locale>
 		<locale lang="KO">
 			<title>어메이징 스파이더맨</title>
 			<synopsis/>
@@ -163346,6 +163350,10 @@ Whether riding on cement or snow, Tony Hawk: Shred has it covered. In addition t
 			<title>Nickelodeon Dance 2</title>
 			<synopsis/>
 		</locale>
+		<locale lang="ES">
+			<title>Nickelodeon Dance 2</title>
+			<synopsis/>
+		</locale>
 		<locale lang="KO">
 			<title>니켈로데온 댄스 2</title>
 			<synopsis/>
@@ -163366,7 +163374,6 @@ Whether riding on cement or snow, Tony Hawk: Shred has it covered. In addition t
 		<wi-fi players="0"/>
 		<input players="2">
 			<control type="wiimote" required="true"/>
-			<control type="nunchuk" required="false"/>
 		</input>
 		<rom version="0" name="Nickelodeon Dance 2 (Europe) (EN,FR,ES,NL).iso" size="4699979776" crc="1c2d422c" md5="3bdf6446fc152fbf28ced8420d34ff13" sha1="9b8bcfd74d11c32fb21ebc7a8c62e34749d8f00f"/>
 	</game>
@@ -233512,14 +233519,14 @@ Features:
 			<synopsis/>
 		</locale>
 		<developer>Gameloft</developer>
-		<publisher>Gameloft</publisher>
-		<date year="2014" month="" day=""/>
+		<publisher>Gameloft / Ubisoft</publisher>
+		<date year="2008" month="10" day="8"/>
 		<genre>puzzle,educational</genre>
-		<rating type="CERO" value=""/>
+		<rating type="CERO" value="A"/>
 		<wi-fi players="0"/>
 		<input players="4">
 			<control type="wiimote" required="true"/>
-			<control type="nunchuk" required="false"/>
+			<control type="mii" required="false"/>
 		</input>
 		<rom version="" name="Brain Challenge (Japan) (JA).wad"/>
 		<case color=""/>
@@ -234097,13 +234104,12 @@ Choose from six different single and multiplayer modes such as Speed Catch, whic
 		</locale>
 		<developer>Prope</developer>
 		<publisher>Sega</publisher>
-		<date year="2014" month="" day=""/>
+		<date year="2008" month="12" day="16"/>
 		<genre>sports</genre>
-		<rating type="CERO" value=""/>
+		<rating type="CERO" value="A"/>
 		<wi-fi players="0"/>
 		<input players="4">
 			<control type="wiimote" required="true"/>
-			<control type="nunchuk" required="false"/>
 		</input>
 		<rom version="" name="Let's Catch (Japan) (JA).wad"/>
 		<case color=""/>
@@ -241517,13 +241523,16 @@ On top of all that, you can enjoy a further 100 rounds, facing off against new b
 		</locale>
 		<developer>Taito</developer>
 		<publisher>Square Enix</publisher>
-		<date year="2014" month="" day=""/>
+		<date year="2009" month="2" day="10"/>
 		<genre>action,puzzle</genre>
-		<rating type="CERO" value=""/>
-		<wi-fi players="0"/>
+		<rating type="CERO" value="A"/>
+		<wi-fi players="0">
+			<feature>online</feature>
+			<feature>score</feature>
+			<feature>wiimmfi</feature>
+		</wi-fi>
 		<input players="4">
 			<control type="wiimote" required="true"/>
-			<control type="nunchuk" required="false"/>
 			<control type="classiccontroller" required="false"/>
 		</input>
 		<rom version="" name="Bubble Bobble Wii (Japan) (JA).wad"/>
@@ -247106,13 +247115,15 @@ Throw your well-intentioned ambitions to save the world out of the window and en
 		</locale>
 		<developer>Square Enix</developer>
 		<publisher>Square Enix</publisher>
-		<date year="2014" month="" day=""/>
+		<date year="2009" month="6" day="30"/>
 		<genre>strategy</genre>
-		<rating type="CERO" value=""/>
-		<wi-fi players="0"/>
+		<rating type="CERO" value="A"/>
+		<wi-fi players="0">
+			<feature>online</feature>
+			<feature>download</feature>
+		</wi-fi>
 		<input players="1">
 			<control type="wiimote" required="true"/>
-			<control type="nunchuk" required="false"/>
 		</input>
 		<rom version="" name="Final Fantasy Crystal Chronicles - The Tower of the Chaos Princess (Japan) (JA).wad"/>
 		<case color=""/>
@@ -248190,7 +248201,6 @@ Frogger Returns takes the heart-pounding challenge of arcade Frogger and takes i
 		<wi-fi players="0"/>
 		<input players="2">
 			<control type="wiimote" required="true"/>
-			<control type="nunchuk" required="false"/>
 		</input>
 		<rom version="" name="Frogger Returns (USA) (EN).wad"/>
 		<case color=""/>
@@ -248915,14 +248925,14 @@ Players can jump into the action with classic and brand-new game modes like Tile
 			<title>돌아온 프로거</title>
 			<synopsis/>
 		</locale>
+		<developer>Konami</developer>
 		<publisher>Konami Digital Entertainment GmbH</publisher>
 		<date year="2010" month="2" day="12"/>
-		<genre>action,platformer,arcade</genre>
+		<genre>action,arcade,platformer</genre>
 		<rating type="PEGI" value="3"/>
 		<wi-fi players="0"/>
 		<input players="2">
 			<control type="wiimote" required="true"/>
-			<control type="nunchuk" required="false"/>
 		</input>
 		<rom version="" name="Frogger Returns (Europe) (EN,FR,DE,ES,IT,NL).wad"/>
 		<case color=""/>
@@ -301734,13 +301744,13 @@ Play solo in the main GP Race mode, go for your fastest laps in Time Attack mode
 		</locale>
 		<developer>Nintendo</developer>
 		<publisher>Nintendo</publisher>
-		<date year="2014" month="1" day="1"/>
+		<date year="2007" month="5" day="29"/>
 		<genre>racing,futuristic racing</genre>
-		<rating type="CERO" value=""/>
+		<rating type="CERO" value="A"/>
 		<wi-fi players="0"/>
 		<input players="4">
-			<control type="wiimote" required="true"/>
-			<control type="nunchuk" required="false"/>
+			<control type="classiccontroller" required="true"/>
+			<control type="gamecube" required="false"/>
 		</input>
 		<rom version="" name="F-Zero X (Japan) (JA).wad"/>
 		<case color=""/>
@@ -301812,13 +301822,15 @@ Play solo in the main GP Race mode, go for your fastest laps in Time Attack mode
 			<title>에어로게이지</title>
 			<synopsis/>
 		</locale>
-		<publisher/>
-		<date year="2014" month="1" day="1"/>
+		<developer>Locomotive</developer>
+		<publisher>ASCII</publisher>
+		<date year="" month="" day=""/>
+		<genre>racing</genre>
 		<rating type="CERO" value=""/>
 		<wi-fi players="0"/>
 		<input players="1">
-			<control type="wiimote" required="true"/>
-			<control type="nunchuk" required="false"/>
+			<control type="classiccontroller" required="true"/>
+			<control type="gamecube" required="false"/>
 		</input>
 		<rom version="" name="Aerogauge (Japan) (JA).wad"/>
 		<case color=""/>
@@ -301884,13 +301896,13 @@ Eat fruit, avoid enemies and obstacles, and throw eggs from the Yoshis’ never-
 		</locale>
 		<developer>Nintendo</developer>
 		<publisher>Nintendo</publisher>
-		<date year="2014" month="1" day="1"/>
+		<date year="2007" month="10" day="30"/>
 		<genre>action,platformer</genre>
-		<rating type="CERO" value=""/>
+		<rating type="CERO" value="A"/>
 		<wi-fi players="0"/>
 		<input players="1">
-			<control type="wiimote" required="true"/>
-			<control type="nunchuk" required="false"/>
+			<control type="classiccontroller" required="true"/>
+			<control type="gamecube" required="false"/>
 		</input>
 		<rom version="" name="Yoshi's Story (Japan) (JA).wad"/>
 		<case color=""/>
@@ -302010,13 +302022,13 @@ Play against a pal in Vs. mode, choose Time Trials Mode to shave off seconds fro
 		</locale>
 		<developer>Nintendo</developer>
 		<publisher>Nintendo</publisher>
-		<date year="2014" month="1" day="1"/>
+		<date year="2007" month="7" day="31"/>
 		<genre>racing,watercraft racing</genre>
-		<rating type="CERO" value=""/>
+		<rating type="CERO" value="A"/>
 		<wi-fi players="0"/>
 		<input players="2">
-			<control type="wiimote" required="true"/>
-			<control type="nunchuk" required="false"/>
+			<control type="classiccontroller" required="true"/>
+			<control type="gamecube" required="false"/>
 		</input>
 		<rom version="" name="Wave Race 64 (Japan) (JA).wad"/>
 		<case color=""/>
@@ -302104,15 +302116,17 @@ Battle across land, sea and sky; collect energy, time and point bonuses; rack up
 			<title>죄와 벌</title>
 			<synopsis/>
 		</locale>
-		<developer>Nintendo</developer>
+		<developer>Nintendo / Treasure</developer>
 		<publisher>Nintendo</publisher>
-		<date year="2014" month="1" day="1"/>
+		<date year="2007" month="9" day="20"/>
 		<genre>action,shooter</genre>
-		<rating type="CERO" value=""/>
+		<rating type="CERO" value="B">
+			<descriptor>violence</descriptor>
+		</rating>
 		<wi-fi players="0"/>
 		<input players="2">
-			<control type="wiimote" required="true"/>
-			<control type="nunchuk" required="false"/>
+			<control type="classiccontroller" required="true"/>
+			<control type="gamecube" required="false"/>
 		</input>
 		<rom version="" name="Tsumi to Batsu - Hoshi no Keishousha (Japan) (JA).wad"/>
 		<case color=""/>
@@ -302421,13 +302435,13 @@ Also, the Virtual Console version of Pokémon Snap has been enhanced to work wit
 		</locale>
 		<developer>Nintendo</developer>
 		<publisher>Nintendo</publisher>
-		<date year="2014" month="1" day="1"/>
+		<date year="2007" month="12" day="4"/>
 		<genre>action</genre>
-		<rating type="CERO" value=""/>
+		<rating type="CERO" value="A"/>
 		<wi-fi players="0"/>
 		<input players="1">
-			<control type="wiimote" required="true"/>
-			<control type="nunchuk" required="false"/>
+			<control type="classiccontroller" required="true"/>
+			<control type="gamecube" required="false"/>
 		</input>
 		<rom version="" name="Pokémon Snap (Japan) (JA).wad"/>
 		<case color=""/>
@@ -302585,13 +302599,13 @@ If you’re a fan of Super Smash Bros. Brawl for Wii or Super Smash Bros. Melee 
 		</locale>
 		<developer>Nintendo</developer>
 		<publisher>Nintendo</publisher>
-		<date year="2014" month="1" day="1"/>
+		<date year="2009" month="1" day="20"/>
 		<genre>fighting</genre>
-		<rating type="CERO" value=""/>
+		<rating type="CERO" value="A"/>
 		<wi-fi players="0"/>
 		<input players="4">
-			<control type="wiimote" required="true"/>
-			<control type="nunchuk" required="false"/>
+			<control type="classiccontroller" required="true"/>
+			<control type="gamecube" required="false"/>
 		</input>
 		<rom version="" name="Nintendo All-Star! Dairantou Smash Brothers (Japan) (JA).wad"/>
 		<case color=""/>
@@ -302717,13 +302731,13 @@ On your quest you’ll explore planets made of lava, water or even sweets; and b
 		</locale>
 		<developer>Nintendo</developer>
 		<publisher>Nintendo</publisher>
-		<date year="2014" month="1" day="1"/>
+		<date year="2008" month="4" day="15"/>
 		<genre>action,platformer</genre>
-		<rating type="CERO" value=""/>
+		<rating type="CERO" value="A"/>
 		<wi-fi players="0"/>
 		<input players="4">
-			<control type="wiimote" required="true"/>
-			<control type="nunchuk" required="false"/>
+			<control type="classiccontroller" required="true"/>
+			<control type="gamecube" required="false"/>
 		</input>
 		<rom version="" name="Hoshi no Kirby 64 (Japan) (JA).wad"/>
 		<case color=""/>
@@ -302960,13 +302974,13 @@ As well as battling, many other exciting challenges await you; from the 3D Puzzl
 		</locale>
 		<developer>Nintendo</developer>
 		<publisher>Nintendo</publisher>
-		<date year="2014" month="" day=""/>
+		<date year="" month="" day=""/>
 		<genre>puzzle</genre>
 		<rating type="CERO" value=""/>
 		<wi-fi players="0"/>
 		<input players="2">
-			<control type="wiimote" required="true"/>
-			<control type="nunchuk" required="false"/>
+			<control type="classiccontroller" required="true"/>
+			<control type="gamecube" required="false"/>
 		</input>
 		<rom version="" name="Pokémon Puzzle League (Japan) (JA).wad"/>
 		<case color=""/>
@@ -303086,13 +303100,13 @@ Impressive 3D graphics (lens flare, varying weather and lighting conditions) and
 		</locale>
 		<developer>Nintendo</developer>
 		<publisher>Nintendo</publisher>
-		<date year="2014" month="1" day="1"/>
+		<date year="2008" month="1" day="15"/>
 		<genre>sports,snowboarding</genre>
-		<rating type="CERO" value=""/>
+		<rating type="CERO" value="A"/>
 		<wi-fi players="0"/>
 		<input players="2">
-			<control type="wiimote" required="true"/>
-			<control type="nunchuk" required="false"/>
+			<control type="classiccontroller" required="true"/>
+			<control type="gamecube" required="false"/>
 		</input>
 		<rom version="" name="1080 Snowboarding (Japan) (JA).wad"/>
 		<case color=""/>
@@ -303194,13 +303208,15 @@ Impressive 3D graphics (lens flare, varying weather and lighting conditions) and
 			<title>커스텀 로보 V2</title>
 			<synopsis/>
 		</locale>
-		<publisher/>
-		<date year="2014" month="1" day="1"/>
-		<rating type="CERO" value=""/>
+		<developer>Noise</developer>
+		<publisher>Nintendo</publisher>
+		<date year="2008" month="2" day="19"/>
+		<genre>action,role-playing</genre>
+		<rating type="CERO" value="A"/>
 		<wi-fi players="0"/>
 		<input players="1">
-			<control type="wiimote" required="true"/>
-			<control type="nunchuk" required="false"/>
+			<control type="classiccontroller" required="true"/>
+			<control type="gamecube" required="false"/>
 		</input>
 		<rom version="" name="Custom Robo V2 (Japan) (JA).wad"/>
 		<case color=""/>
@@ -303398,13 +303414,13 @@ Based on the hit arcade game, Cruis’n USA features a wide selection of cars, f
 		</locale>
 		<developer>Nintendo</developer>
 		<publisher>Nintendo</publisher>
-		<date year="2014" month="" day=""/>
+		<date year="" month="" day=""/>
 		<genre>racing</genre>
 		<rating type="CERO" value=""/>
 		<wi-fi players="0"/>
 		<input players="2">
-			<control type="wiimote" required="true"/>
-			<control type="nunchuk" required="false"/>
+			<control type="classiccontroller" required="true"/>
+			<control type="gamecube" required="false"/>
 		</input>
 		<rom version="" name="Cruis'n USA (Japan) (JA).wad"/>
 		<case color=""/>
@@ -303528,13 +303544,13 @@ Whether trying to unlock all the secrets in single-player mode, or having friend
 		</locale>
 		<developer>Nintendo</developer>
 		<publisher>Nintendo</publisher>
-		<date year="2014" month="1" day="1"/>
+		<date year="2010" month="8" day="31"/>
 		<genre>sports,tennis</genre>
-		<rating type="CERO" value=""/>
+		<rating type="CERO" value="A"/>
 		<wi-fi players="0"/>
 		<input players="4">
-			<control type="wiimote" required="true"/>
-			<control type="nunchuk" required="false"/>
+			<control type="classiccontroller" required="true"/>
+			<control type="gamecube" required="false"/>
 		</input>
 		<rom version="" name="Mario Tennis 64 (Japan) (JA).wad"/>
 		<case color=""/>
@@ -303668,13 +303684,13 @@ With easy-to-learn gameplay and a four-player competitive mode, anyone can get i
 		</locale>
 		<developer>Nintendo</developer>
 		<publisher>Nintendo</publisher>
-		<date year="2014" month="1" day="1"/>
+		<date year="2008" month="10" day="30"/>
 		<genre>sports,golf</genre>
-		<rating type="CERO" value=""/>
+		<rating type="CERO" value="A"/>
 		<wi-fi players="0"/>
 		<input players="4">
-			<control type="wiimote" required="true"/>
-			<control type="nunchuk" required="false"/>
+			<control type="classiccontroller" required="true"/>
+			<control type="gamecube" required="false"/>
 		</input>
 		<rom version="" name="Mario Golf 64 (Japan) (JA).wad"/>
 		<case color=""/>
@@ -303803,13 +303819,15 @@ The game tells the story of Magnus Gallant, a recently graduated officer of the 
 		</locale>
 		<developer>Quest</developer>
 		<publisher>Square Enix</publisher>
-		<date year="2014" month="1" day="1"/>
+		<date year="2010" month="1" day="26"/>
 		<genre>role-playing,strategy</genre>
-		<rating type="CERO" value=""/>
+		<rating type="CERO" value="B">
+			<descriptor>crime</descriptor>
+		</rating>
 		<wi-fi players="0"/>
 		<input players="1">
-			<control type="wiimote" required="true"/>
-			<control type="nunchuk" required="false"/>
+			<control type="classiccontroller" required="true"/>
+			<control type="gamecube" required="false"/>
 		</input>
 		<rom version="" name="Ogre Battle 64 - Person of Lordly Caliber (Japan) (JA).wad"/>
 		<case color=""/>
@@ -303928,13 +303946,13 @@ Up to four players can play, traveling around the boards and competing in miniga
 		</locale>
 		<developer>Nintendo</developer>
 		<publisher>Nintendo</publisher>
-		<date year="2014" month="1" day="1"/>
-		<genre>party</genre>
-		<rating type="CERO" value=""/>
+		<date year="2010" month="11" day="2"/>
+		<genre>party,board game</genre>
+		<rating type="CERO" value="A"/>
 		<wi-fi players="0"/>
 		<input players="4">
-			<control type="wiimote" required="true"/>
-			<control type="nunchuk" required="false"/>
+			<control type="classiccontroller" required="true"/>
+			<control type="gamecube" required="false"/>
 		</input>
 		<rom version="" name="Mario Party 2 (Japan) (JA).wad"/>
 		<case color=""/>
@@ -315807,7 +315825,7 @@ Start the game while holding the R Button on the Nintendo GameCube Controller Co
 			<synopsis/>
 		</locale>
 		<developer>HUDSON SOFT</developer>
-		<publisher>HUDSON SOFT</publisher>
+		<publisher>Hudson Soft / Hudson Entertainment</publisher>
 		<date year="2006" month="11" day="22"/>
 		<genre>action</genre>
 		<rating type="ESRB" value="E">
@@ -315817,7 +315835,6 @@ Start the game while holding the R Button on the Nintendo GameCube Controller Co
 		<input players="1">
 			<control type="wiimote" required="true"/>
 			<control type="classiccontroller" required="true"/>
-			<control type="nunchuk" required="false"/>
 			<control type="gamecube" required="false"/>
 		</input>
 		<rom version="" name="Bonk's Adventure (USA) (EN).wad"/>
@@ -315895,14 +315912,13 @@ There are a variety of levels, starting off in the Prehistoric countryside. Get 
 			<synopsis/>
 		</locale>
 		<developer>Red Company</developer>
-		<publisher>Hudson Soft</publisher>
+		<publisher>Hudson Soft / Hudson Entertainment</publisher>
 		<date year="2006" month="12" day="8"/>
 		<genre>action,platformer</genre>
 		<rating type="PEGI" value="3"/>
 		<wi-fi players="0"/>
 		<input players="1">
 			<control type="wiimote" required="true"/>
-			<control type="nunchuk" required="false"/>
 			<control type="classiccontroller" required="false"/>
 			<control type="gamecube" required="false"/>
 		</input>
@@ -378374,6 +378390,10 @@ All of the game's rosters can be manipulated, teams can be edited (uniforms, sta
 			<title>Mondiali FIFA 2002</title>
 			<synopsis/>
 		</locale>
+		<locale lang="SE">
+			<title>2002 FIFA World Cup</title>
+			<synopsis/>
+		</locale>
 		<locale lang="DK">
 			<title>2002 FIFA World Cup</title>
 			<synopsis/>
@@ -380045,6 +380065,18 @@ China officially agrees to a multinational force to safeguard the China-North Ko
 		</locale>
 		<locale lang="FR">
 			<title>Need for Speed: Poursuite Infernale 2</title>
+			<synopsis/>
+		</locale>
+		<locale lang="SE">
+			<title>Need for Speed: Hot Pursuit 2</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DK">
+			<title>Need for Speed: Hot Pursuit 2</title>
+			<synopsis/>
+		</locale>
+		<locale lang="NO">
+			<title>Need for Speed: Hot Pursuit 2</title>
 			<synopsis/>
 		</locale>
 		<locale lang="FI">
@@ -385714,6 +385746,14 @@ Tracklist (50 songs):
 			<title>Sagan om Konungens Återkomst: Härskarringen</title>
 			<synopsis/>
 		</locale>
+		<locale lang="DK">
+			<title>The Lord of the Rings: The Return of the King</title>
+			<synopsis/>
+		</locale>
+		<locale lang="NO">
+			<title>The Lord of the Rings: The Return of the King</title>
+			<synopsis/>
+		</locale>
 		<locale lang="FI">
 			<title>The Lord of the Rings: The Return of the King</title>
 			<synopsis/>
@@ -387491,7 +387531,11 @@ In the game, players will assume the role of Remy and relive some of the film's 
 		<languages>EN,FR,DE,ES,IT</languages>
 		<locale lang="EN">
 			<title>Looney Tunes: Back in Action</title>
-			<synopsis>Looney Tunes: Back in Action is a 3D Platformer game, developed by Warthog and published by Warner Bros., which was released in 2003.</synopsis>
+			<synopsis>The hunt is on! Play as Bugs &amp; Daffy on their globetrotting adventure to find the mythical Blue Monkey diamond. 5 huge locations, with tons of exciting challenges.
+
+• Interact with your favourite Looney Tunes characters.
+• Wear outrageous costumes to outwit your enemies.
+• Test your skill with fun mini-games.</synopsis>
 		</locale>
 		<locale lang="FR">
 			<title>Les Looney Tunes Passent à l'Action</title>
@@ -387499,6 +387543,14 @@ In the game, players will assume the role of Remy and relive some of the film's 
 		</locale>
 		<locale lang="ES">
 			<title>Looney Tunes: De Nuevo En Accion</title>
+			<synopsis/>
+		</locale>
+		<locale lang="SE">
+			<title>Looney Tunes: Back in Action</title>
+			<synopsis/>
+		</locale>
+		<locale lang="NO">
+			<title>Looney Tunes: Back in Action</title>
 			<synopsis/>
 		</locale>
 		<locale lang="KO">
@@ -387668,6 +387720,10 @@ In the game, players will assume the role of Remy and relive some of the film's 
 		</locale>
 		<locale lang="SE">
 			<title>Sagan om de Två Tornen: Härskarringen</title>
+			<synopsis/>
+		</locale>
+		<locale lang="NO">
+			<title>Ringenes Herre: To Tårn</title>
 			<synopsis/>
 		</locale>
 		<locale lang="FI">
@@ -397345,6 +397401,10 @@ Owner mode offers a deeper set of responsibilities such as relocating your team,
 			<synopsis>The epic saga of World War II continues with Medal of Honor Rising Sun. Play as Marine Corporal Joseph Griffin in a far-reaching tale of two brothers trying to prevent Japanese forces from dominating the Pacific.
 Rising Sun features real-life historical battles like Pearl Harbor and Guadalcanal, over 20 authentic WWII weapons, highly intelligent enemies, and a heroic cast of characters that fight on your side from level to level. Battle other soldiers in ten multiplayer levels and an all-new two-player co-op mode.</synopsis>
 		</locale>
+		<locale lang="SE">
+			<title>Medal of Honor: Rising Sun</title>
+			<synopsis/>
+		</locale>
 		<locale lang="DK">
 			<title>Medal of Honor: Rising Sun</title>
 			<synopsis/>
@@ -404290,6 +404350,10 @@ In Marvel Nemesis: Rise of the Imperfects , an alien genius is experimenting in 
 			<synopsis>Live the legend! There's turmoil in the island of Mata Nui. The dark spirit Makuta has infected the Rahi throughout the island -- using his control of the Bohrok, Bohrok-Kal, and Rahkshi to kidnap the Matoran villagers throughout the various Wahi. It's up to the guardians of each Wahi, the Toa warriors Tahi, Lewa, Kopaka, Gali, Pohatu, and Onua, to rescue the Matorans and find the Toa of Light, who is the only one strong enough to stop Makuta.
 Players control the six Toa heroes in this blend of platform action, combat and racing. Use elemental powers to defeat enemies, then snowboard down mountains, surf through lava fields, ride mine carts and grind along tree limbs.</synopsis>
 		</locale>
+		<locale lang="SE">
+			<title>Bionicle</title>
+			<synopsis/>
+		</locale>
 		<locale lang="DK">
 			<title>Bionicle</title>
 			<synopsis/>
@@ -404904,6 +404968,22 @@ Players control the six Toa heroes in this blend of platform action, combat and 
 			<synopsis>Driven by a completely new and original storyline, James Bond 007: Agent Under Fire is a first-person action game that balances furious action and stealth tactics. An evil world organization has been replacing world leaders with their more docile clones and it's up to you to put a stop to it. As Bond, you'll encounter villains and allies, both new and familiar, detailed 3D environments, and spy-packed, fast-action gameplay. And don't worry, Q will provide you with all the innovative weapons, sophisticated spy-craft, and state-of-the-art gadgets that Bond fans expect.</synopsis>
 		</locale>
 		<locale lang="PT">
+			<title>007: Agent Under Fire</title>
+			<synopsis/>
+		</locale>
+		<locale lang="SE">
+			<title>007: Agent Under Fire</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DK">
+			<title>007: Agent Under Fire</title>
+			<synopsis/>
+		</locale>
+		<locale lang="NO">
+			<title>007: Agent Under Fire</title>
+			<synopsis/>
+		</locale>
+		<locale lang="FI">
 			<title>007: Agent Under Fire</title>
 			<synopsis/>
 		</locale>
@@ -406910,6 +406990,14 @@ Prepare for the wettest, wildest racing ever as Wave Race splashes onto the Nint
 			<synopsis>Drop in and conquer the massive, living mountain rife with ego-crushing challenges and gravity-bending thrills. SSX 3 returns with more slopes and all-new hazards to overcome including lightning storms, vertical drops, serpentine slopestyle courses and avalanches. Customize your rider's clothes, abilities, and moves. Pull off three levels of awesome &quot;Uber tricks.&quot; Dominate the mountain, and then test your skills online. It's a long way down, so make sure you're ready for the challenge.</synopsis>
 		</locale>
 		<locale lang="DE">
+			<title>SSX 3</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DK">
+			<title>SSX 3</title>
+			<synopsis/>
+		</locale>
+		<locale lang="NO">
 			<title>SSX 3</title>
 			<synopsis/>
 		</locale>

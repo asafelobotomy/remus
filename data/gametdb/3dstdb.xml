@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <datafile xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="3dstdb.xsd">
-	<TDB3DS version="20260430141154" filter="EN" games="4785"/>
+	<TDB3DS version="20260510013132" filter="EN" games="4785"/>
 	<!--
  GameTDB: 3DS, Database started in 2015 (https://www.gametdb.com)
  Never modify this file manually, it will get overwritten when you update. You can add games and fixes on the website.
@@ -1091,11 +1091,16 @@ We apologize for any inconvenience caused, and recommend downloading this update
 			<title>マリオ＆ルイージRPG3 DX</title>
 			<synopsis/>
 		</locale>
-		<publisher/>
-		<date year="2018" month="" day=""/>
-		<rating type="CERO" value=""/>
+		<developer>AlphaDream</developer>
+		<publisher>Nintendo</publisher>
+		<date year="2018" month="12" day="27"/>
+		<genre>action,adventure,role-playing</genre>
+		<rating type="CERO" value="A"/>
 		<wi-fi players="0"/>
-		<input players="1"/>
+		<input players="1">
+			<control type="slidepad" required="false"/>
+			<control type="amiibo" required="false"/>
+		</input>
 		<rom version="0" name="Mario &amp; Luigi RPG3 DX (Japan) (JA).3ds" size="1073741824" crc="ae1de02c" md5="96ccd38adc40a7925651611ee124f058" sha1="b8062cd660ba062d852154d7c52b95411636b02e"/>
 	</game>
 	<game name="Mario &amp; Luigi: Bowser's Inside Story + Bowser Jr.'s Journey (Europe) (EN,FR,DE,ES,IT)">
@@ -3742,13 +3747,45 @@ cautiously explore.</synopsis>
 		<input players="1"/>
 		<rom version="0" name="Battleship (Europe) (EN).3ds" size="134217728" crc="713a2585" md5="eafc32756ddf5a99216044ecb618be30" sha1="c9145678807d23ba26b92fe266d21ab6ddacfc26"/>
 	</game>
-	<game name="Bit.Trip Saga (Europe) (EN)">
+	<game name="BIT.TRIP SAGA (USA) (EN)">
+		<id>ABTE</id>
+		<type>3DS</type>
+		<region>NTSC-U</region>
+		<languages>EN</languages>
+		<locale lang="EN">
+			<title>BIT.TRIP SAGA</title>
+			<synopsis>All six BIT.TRIP games morphed into a single entity called BIT.TRIP SAGA. Experience the crushing difficulty of the rhythmic galaxies through the head of CommanderVideo and ride along the long journey with him as he completes his mission and returns...home. Dance to the Chiptune-inspired soundtrack and look out for special guest appearances by Super Meat Boy and Mr. Robotube. BIT.TRIP SAGA includes: BIT.TRIP BEAT, BIT.TRIP CORE, BIT.TRIP VOID, BIT.TRIP RUNNER, BIT.TRIP FATE, and BIT.TRIP FLUX...in 3D!</synopsis>
+		</locale>
+		<locale lang="FR">
+			<title>BIT.TRIP SAGA</title>
+			<synopsis/>
+		</locale>
+		<locale lang="ES">
+			<title>BIT.TRIP SAGA</title>
+			<synopsis/>
+		</locale>
+		<locale lang="PT">
+			<title>BIT.TRIP SAGA</title>
+			<synopsis/>
+		</locale>
+		<developer>Gaijin Games</developer>
+		<publisher>Aksys Games</publisher>
+		<date year="2011" month="9" day="13"/>
+		<genre>arcade,compilation</genre>
+		<rating type="ESRB" value="E">
+			<descriptor>mild fantasy violence</descriptor>
+		</rating>
+		<wi-fi players="0"/>
+		<input players="1"/>
+		<rom version="0" name="BIT.TRIP SAGA (USA) (EN).3ds" size="536870912" crc="bbb9e27b" md5="69abb8a6cdfd255241be68f8649eef0c" sha1="939a06fe33e193a0ebbf1bf94dc7ee0ea0cbc2a2"/>
+	</game>
+	<game name="BIT.TRIP SAGA (Europe) (EN)">
 		<id>ABTP</id>
 		<type>3DS</type>
 		<region>PAL</region>
 		<languages>EN</languages>
 		<locale lang="EN">
-			<title>Bit.Trip Saga</title>
+			<title>BIT.TRIP SAGA</title>
 			<synopsis>BIT.TRIP SAGA is a collection of all
 six highly regarded games in the
 BIT.TRIP series, combining retro
@@ -3785,12 +3822,12 @@ perfect for the entire family.</synopsis>
 		</locale>
 		<developer>Gaijin Games</developer>
 		<publisher>Marvelous Entertainment / Victor Entertainment / Pack-In-Video / Rising Star Games</publisher>
-		<date year="2013" month="4" day="25"/>
+		<date year="2012" month="3" day="16"/>
 		<genre>arcade,compilation</genre>
 		<rating type="PEGI" value="3"/>
 		<wi-fi players="0"/>
 		<input players="1"/>
-		<rom version="0" name="Bit.Trip Saga (Europe) (EN).3ds" size="536870912" crc="842630eb" md5="8e91b791a8fd906a792ebead7d855b50" sha1="050a7a26b7e537becc9083b08e6709f8dd5fc3e1"/>
+		<rom version="0" name="BIT.TRIP SAGA (Europe) (EN).3ds" size="536870912" crc="842630eb" md5="8e91b791a8fd906a792ebead7d855b50" sha1="050a7a26b7e537becc9083b08e6709f8dd5fc3e1"/>
 	</game>
 	<game name="My Exotic Farm (Europe) (EN,FR,DE,ES,IT,NL,PT,SE,DK,NO,FI)">
 		<id>ABUP</id>
@@ -6685,13 +6722,60 @@ Visit amiibo.nintendo.eu for compatible amiibo™ and the latest information. To
 		<input players="1"/>
 		<rom version="0" name="Doraemon: Nobita's Number Adventure (Taiwan) (ZHTW).3ds" size="134217728" crc="2990b920" md5="400baacde450f32fceedc8c03974bcc0" sha1="a558a33963dc23e8c63779585a04f4e8760b63bf"/>
 	</game>
-	<game name="Shin Megami Tensei: Devil Survivor 2: Record Breaker (Europe) (EN)">
+	<game name="Shin Megami Tensei: Devil Survivor 2 Record Breaker (USA) (EN)">
+		<id>ADXE</id>
+		<type>3DS</type>
+		<region>NTSC-U</region>
+		<languages>EN</languages>
+		<locale lang="EN">
+			<title>Shin Megami Tensei: Devil Survivor 2 Record Breaker</title>
+			<synopsis>Offers in-game purchases
+
+Your days are numbered. Your character in Shin Megami Tensei: Devil Survivor 2 Record Breaker is stuck in a world that has been invaded and is on the brink of non-existence. At the same time, you and your friends have gained the ability to summon demons via your cell phone, and with it, a power to fight against fate. The countdown begins; will you be able to save the future of mankind? 
+
+With new abilities and demons, a brand new character, fully voiced English story dialogue, and over 100 hours of gameplay, the new content in Record Breaker greatly expands on the original Nintendo DS game. Most importantly, Record Breaker will introduce a brand new chapter to the captivating story. Both newcomers and veterans alike will have a chance to learn more about the world of Devil Survivor 2, with the option of skipping to the new content right away or playing through the original game first. Either way, hard decisions will have to be made in order to survive. 
+
+Check out the theme inspired by this game in the Theme Shop. Just tap the icon in the upper left corner of your Nintendo 3DS HOME Menu to get started.</synopsis>
+		</locale>
+		<locale lang="FR">
+			<title>Shin Megami Tensei: Devil Survivor 2 Record Breaker</title>
+			<synopsis/>
+		</locale>
+		<locale lang="ES">
+			<title>Shin Megami Tensei: Devil Survivor 2 Record Breaker</title>
+			<synopsis/>
+		</locale>
+		<locale lang="PT">
+			<title>Shin Megami Tensei: Devil Survivor 2: Record Breaker</title>
+			<synopsis/>
+		</locale>
+		<developer>Atlus</developer>
+		<publisher>Sega</publisher>
+		<date year="2015" month="5" day="5"/>
+		<genre>role-playing,strategy</genre>
+		<rating type="ESRB" value="T">
+			<descriptor>alcohol reference</descriptor>
+			<descriptor>blood</descriptor>
+			<descriptor>violence</descriptor>
+			<descriptor>language</descriptor>
+			<descriptor>partial nudity</descriptor>
+			<descriptor>suggestive themes</descriptor>
+			<descriptor>use of tobacco</descriptor>
+		</rating>
+		<wi-fi players="0">
+			<feature>online</feature>
+			<feature>download</feature>
+		</wi-fi>
+		<input players="1"/>
+		<rom version="0" name="Shin Megami Tensei: Devil Survivor 2 Record Breaker (USA) (EN).3ds" size="4294967296" crc="81ab669f" md5="3e8ba5e10e82a42d5dd84376f1c7969d" sha1="ebe31a8173b848e78f60fff39af608ebc7e2dfcd"/>
+	</game>
+	<game name="Shin Megami Tensei: Devil Survivor 2 Record Breaker (Europe) (EN)">
 		<id>ADXP</id>
 		<type>3DS</type>
 		<region>PAL</region>
 		<languages>EN</languages>
 		<locale lang="EN">
-			<title>Shin Megami Tensei: Devil Survivor 2: Record Breaker</title>
+			<title>Shin Megami Tensei: Devil Survivor 2 Record Breaker</title>
 			<synopsis>Your days are numbered. You're
 stuck in a world that has been invaded
 and is on the brink of non-existence.
@@ -6705,23 +6789,23 @@ The countdown begins; will you
 be able to save the future of mankind?</synopsis>
 		</locale>
 		<locale lang="FR">
-			<title>Shin Megami Tensei: Devil Survivor 2: Record Breaker</title>
+			<title>Shin Megami Tensei: Devil Survivor 2 Record Breaker</title>
 			<synopsis/>
 		</locale>
 		<locale lang="DE">
-			<title>Shin Megami Tensei: Devil Survivor 2: Record Breaker</title>
+			<title>Shin Megami Tensei: Devil Survivor 2 Record Breaker</title>
 			<synopsis/>
 		</locale>
 		<locale lang="ES">
-			<title>Shin Megami Tensei: Devil Survivor 2: Record Breaker</title>
+			<title>Shin Megami Tensei: Devil Survivor 2 Record Breaker</title>
 			<synopsis/>
 		</locale>
 		<locale lang="IT">
-			<title>Shin Megami Tensei: Devil Survivor 2: Record Breaker</title>
+			<title>Shin Megami Tensei: Devil Survivor 2 Record Breaker</title>
 			<synopsis/>
 		</locale>
 		<locale lang="NL">
-			<title>Shin Megami Tensei: Devil Survivor 2: Record Breaker</title>
+			<title>Shin Megami Tensei: Devil Survivor 2 Record Breaker</title>
 			<synopsis/>
 		</locale>
 		<locale lang="PT">
@@ -6743,7 +6827,7 @@ be able to save the future of mankind?</synopsis>
 			<feature>download</feature>
 		</wi-fi>
 		<input players="1"/>
-		<rom version="0" name="Shin Megami Tensei: Devil Survivor 2: Record Breaker (Europe) (EN).3ds" size="4294967296" crc="dc93e773" md5="53a9a0f245c7b9ec99b6b76b390f70eb" sha1="1c87e16e196731ef755038d63a1e24cdc5822574"/>
+		<rom version="0" name="Shin Megami Tensei: Devil Survivor 2 Record Breaker (Europe) (EN).3ds" size="4294967296" crc="dc93e773" md5="53a9a0f245c7b9ec99b6b76b390f70eb" sha1="1c87e16e196731ef755038d63a1e24cdc5822574"/>
 	</game>
 	<game name="Disney Infinity: Toy Box Challenge (USA) (EN)">
 		<id>ADYE</id>
@@ -8497,6 +8581,40 @@ world rich with character.</synopsis>
 		<input players="1"/>
 		<rom version="0" name="The LEGO Movie Videogame (Europe) (EN,FR,DE,ES,IT,NL,DK).3ds" size="536870912" crc="837d1471" md5="c1a0752c8c4eed32ff6a5be19c351ef0" sha1="8ee781ecd49e0110482d5f834f3e1c8b0f56c739"/>
 	</game>
+	<game name="The LEGO Movie Videogame (USA) (EN,FR,ES,PT)">
+		<id>AFJE</id>
+		<type>3DS</type>
+		<region>NTSC-U</region>
+		<languages>EN,FR,ES,PT</languages>
+		<locale lang="EN">
+			<title>The LEGO Movie Videogame</title>
+			<synopsis>Join Emmet and an unlikely group of resistance fighters in their heroic quest to thwart Lord Business’ evil plans, a mission that Emmet is hopelessly and hilariously unprepared for.  It’s a wild ride with a surprising mix of over 90 playable characters including Batman, Superman, Wonder Woman, the Green Ninja, Gandalf, Shakespeare, Cleopatra and more.</synopsis>
+		</locale>
+		<locale lang="FR">
+			<title>The LEGO Movie Videogame</title>
+			<synopsis/>
+		</locale>
+		<locale lang="ES">
+			<title>The LEGO Movie Videogame</title>
+			<synopsis/>
+		</locale>
+		<locale lang="PT">
+			<title>The LEGO Movie Videogame</title>
+			<synopsis/>
+		</locale>
+		<developer>TT Games</developer>
+		<publisher>Warner Bros. Interactive Entertainment</publisher>
+		<date year="2014" month="2" day="7"/>
+		<genre>action,adventure</genre>
+		<rating type="ESRB" value="E10+">
+			<descriptor>comic mischief</descriptor>
+			<descriptor>cartoon violence</descriptor>
+		</rating>
+		<wi-fi players="0"/>
+		<input players="1"/>
+		<rom version="0" name="The LEGO Movie Videogame (USA) (EN,FR,ES,PT).3ds" size="536870912" crc="5443bf43" md5="19cb2378c692a994c8f426878885c537" sha1="309471e2910dd86c8058ce1691009c34bb047ca9"/>
+		<case versions="2"/>
+	</game>
 	<game name="La Grande LEGO Aventure: Le Jeu Video (Europe) (EN,FR,ES,IT,NL,DK)">
 		<id>AFJF</id>
 		<type>3DS</type>
@@ -8633,6 +8751,54 @@ selection text update.</synopsis>
 		<wi-fi players="0"/>
 		<input players="1"/>
 		<rom version="0" name="Outdoors Unleashed: Africa 3D (Europe) (EN).3ds" size="134217728" crc="5c51f14f" md5="46e92d45aae7adffd485e5389e391cdd" sha1="0b4205f717d7dc901981fe3e546a884befab895c"/>
+	</game>
+	<game name="Fantasy Life (USA) (EN,FR,DE,ES,IT,NL,PT)">
+		<id>AFLE</id>
+		<type>3DS</type>
+		<region>NTSC-U</region>
+		<languages>EN,FR,DE,ES,IT,NL,PT</languages>
+		<locale lang="EN">
+			<title>Fantasy Life</title>
+			<synopsis>Offers in-game purchases
+
+Embark on the adventure of your dream life as you craft, cast, battle, and role-play like never before. With the innovative Life system, your choices don’t just upgrade characters—they help shape your journey! Explore a huge fantasy landscape beside surly dark paladins, slick pirate captains, and others who share your taste for the unknown.
+
+Choose from 12 Life classes: Will you pick the combat class to take down foes with weapon in hand or the crafter’s path to create stronger weapons and tools? Your choices unlock your potential as you level up, harvest items, and craft gear. The more resources and abilities you have, the more freedom to personalize your journey. Traverse an area as one Life class and return as another to gain different items.
+
+To Get a special angel-themed outfit follow these instructions:
+1. Go to the Castile Post Office
+2. Talk to the Password Clerk
+3. Input &quot;I'm finished!&quot; (case sensitive)
+4. The clerk will provide you with an angel-themed outfit.</synopsis>
+		</locale>
+		<locale lang="FR">
+			<title>Fantasy Life</title>
+			<synopsis/>
+		</locale>
+		<locale lang="ES">
+			<title>Fantasy Life</title>
+			<synopsis/>
+		</locale>
+		<locale lang="PT">
+			<title>Fantasy Life</title>
+			<synopsis/>
+		</locale>
+		<developer>Level-5</developer>
+		<publisher>Nintendo</publisher>
+		<date year="2014" month="10" day="24"/>
+		<genre>adventure,role-playing</genre>
+		<rating type="ESRB" value="E10+">
+			<descriptor>comic mischief</descriptor>
+			<descriptor>fantasy violence</descriptor>
+			<descriptor>mild suggestive themes</descriptor>
+			<descriptor>use of alcohol</descriptor>
+		</rating>
+		<wi-fi players="3">
+			<feature>online</feature>
+			<feature>download</feature>
+		</wi-fi>
+		<input players="3"/>
+		<rom version="0" name="Fantasy Life (USA) (EN,FR,DE,ES,IT,NL,PT).3ds" size="1073741824" crc="2eb87c8c" md5="acb6bba999c2bd0eacd90cce8a381674" sha1="39afbd1b4141792de318b380b11cf4629081a613"/>
 	</game>
 	<game name="Fantasy Life (Europe) (EN,FR,DE,ES,IT)">
 		<id>AFLP</id>
@@ -9620,6 +9786,46 @@ you win.</synopsis>
 		<input players="1"/>
 		<rom version="0" name="Gravity Falls: Legend of the Gnome Gemulets (Europe) (EN).3ds" size="268435456" crc="22ffb60e" md5="8a001d7fdde0beb9cb79aa807d9e9dd7" sha1="21318a4993fc0eec4d76ea6d167c11299bfefccc"/>
 	</game>
+	<game name="Luigi's Mansion: Dark Moon (USA) (EN,FR,ES)">
+		<id>AGGE</id>
+		<type>3DS</type>
+		<region>NTSC-U</region>
+		<languages>EN,FR,ES</languages>
+		<locale lang="EN">
+			<title>Luigi's Mansion: Dark Moon</title>
+			<synopsis>Luigi’s Mansion™: Dark Moon is the brand new Luigi’s Mansion title on the Nintendo 3DS™ system. This time there are multiple mansions each with unique puzzles and ghosts. 
+
+Using a vacuum-like machine called the “Poltergust 5000,” Luigi™ must explore and hunt ghosts in these mansions to complete specific missions for the great ghost researcher Professor E. Gadd. 
+
+But shining the flashlight is no longer enough.  Luigi must activate the new strobe function at just the right moment to stun the ghosts first, then catch them using the Poltergust 5000.  Each mansion is filled with different gimmicks and puzzle elements, and exploring them can be a spooky challenge.</synopsis>
+		</locale>
+		<locale lang="FR">
+			<title>Luigi's Mansion: Dark Moon</title>
+			<synopsis/>
+		</locale>
+		<locale lang="ES">
+			<title>Luigi's Mansion: Dark Moon</title>
+			<synopsis/>
+		</locale>
+		<locale lang="PT">
+			<title>Luigi's Mansion: Dark Moon</title>
+			<synopsis/>
+		</locale>
+		<developer>Nintendo</developer>
+		<publisher>Nintendo</publisher>
+		<date year="2013" month="3" day="24"/>
+		<genre>action,adventure</genre>
+		<rating type="ESRB" value="E">
+			<descriptor>crude humor</descriptor>
+			<descriptor>mild cartoon violence</descriptor>
+		</rating>
+		<wi-fi players="4">
+			<feature>online</feature>
+		</wi-fi>
+		<input players="4"/>
+		<rom version="0" name="Luigi's Mansion: Dark Moon (USA) (EN,FR,ES).3ds" size="1073741824" crc="41a30e32" md5="8fbfeeb31c1718021aefab2242b39df0" sha1="240dc534175993423efd49a4dcad39b459654ceb"/>
+		<case versions="2"/>
+	</game>
 	<game name="Luigi's Mansion: Dark Moon (Korea) (KO)">
 		<id>AGGK</id>
 		<type>3DS</type>
@@ -9785,6 +9991,42 @@ offer.</synopsis>
 		<input players="1"/>
 		<rom version="0" name="Green Lantern: Rise of the Manhunters (Europe) (EN).3ds" size="268435456" crc="a2c316b8" md5="c471ccc6e56e720b11452876750f6822" sha1="2a717b36ec4ccf3e5cccfe3edb0af7e8d3ba1db0"/>
 	</game>
+	<game name="Garfield Kart (USA) (EN)">
+		<id>AGPE</id>
+		<type>3DS</type>
+		<region>NTSC-U</region>
+		<languages>EN</languages>
+		<locale lang="EN">
+			<title>Garfield Kart</title>
+			<synopsis>Join Garfield and his friends in the funniest fast and furry-ious game!
+16 different circuits withstunning 3D environments from the world of Garfield
+8 characters (Garfield, Odie, Jon, Nermal, Arlene, Liz, Harry and Squeak)
+Use your driving skills (skids, mini jumps, shortcuts)
+8 bonuses for some crazy attacks and defenses</synopsis>
+		</locale>
+		<locale lang="FR">
+			<title>Garfield Kart</title>
+			<synopsis/>
+		</locale>
+		<locale lang="ES">
+			<title>Garfield Kart</title>
+			<synopsis/>
+		</locale>
+		<locale lang="PT">
+			<title>Garfield Kart</title>
+			<synopsis/>
+		</locale>
+		<developer>Most Wanted Intertainment</developer>
+		<publisher>Anuman Interactive / Koch Media</publisher>
+		<date year="2015" month="8" day="11"/>
+		<genre>racing</genre>
+		<rating type="ESRB" value="E">
+			<descriptor>comic mischief</descriptor>
+		</rating>
+		<wi-fi players="0"/>
+		<input players="1"/>
+		<rom version="0" name="Garfield Kart (USA) (EN).3ds" size="134217728" crc="abd43ad1" md5="b824e2640301ee67640338e2cec3f1b2" sha1="50cedc1897dc0b479f7675c7e60b0b8302d087f7"/>
+	</game>
 	<game name="Garfield Kart (Europe) (EN,FR,DE,ES,IT)">
 		<id>AGPP</id>
 		<type>3DS</type>
@@ -9828,8 +10070,8 @@ and defenses</synopsis>
 			<title>Garfield Kart</title>
 			<synopsis/>
 		</locale>
-		<developer>Artefacts Studios</developer>
-		<publisher>Microids</publisher>
+		<developer>Most Wanted Intertainment</developer>
+		<publisher>Anuman Interactive / Koch Media</publisher>
 		<date year="2015" month="6" day="25"/>
 		<genre>racing,kart racing</genre>
 		<rating type="PEGI" value="3"/>
@@ -18423,10 +18665,22 @@ Can our favorite heroes defeat monsters, discover treasure, and navigate their w
 			<title>Persona Q2: New Cinema Labyrinth</title>
 			<synopsis/>
 		</locale>
-		<publisher/>
-		<date year="2022" month="" day=""/>
-		<rating type="CERO" value=""/>
-		<wi-fi players="0"/>
+		<locale lang="JA">
+			<title>ペルソナQ2 ニューシネマ ラビリンス</title>
+			<synopsis/>
+		</locale>
+		<developer>Atlus</developer>
+		<publisher>Atlus</publisher>
+		<date year="2018" month="11" day="29"/>
+		<genre>adventure,role-playing</genre>
+		<rating type="CERO" value="B">
+			<descriptor>sex</descriptor>
+			<descriptor>crime</descriptor>
+		</rating>
+		<wi-fi players="0">
+			<feature>online</feature>
+			<feature>download</feature>
+		</wi-fi>
 		<input players="1"/>
 		<rom version="0" name="Persona Q2: New Cinema Labyrinth (Japan) (JA).3ds" size="4294967296" crc="0083c83b" md5="c482cd76479d47f9b118dfcf876606d8" sha1="e8794941ebe4f37cf236b7e0179247427afac981"/>
 	</game>
@@ -28569,6 +28823,44 @@ The story of Shin Megami Tensei IV: Apocalypse focuses on a Hunter cadet protago
 		<wi-fi players="0"/>
 		<input players="1"/>
 		<rom version="0" name="Gudetama: Hanjuku de Tanomuwa (Japan) (JA).3ds" size="134217728" crc="76741041" md5="711d4a1d5ec78fe5a977d53c71a66ad2" sha1="e756bbecf6fe81616ebcba5e2d8ef13f32018c30"/>
+	</game>
+	<game name="Gardening Mama 2: Forest Friends (USA) (EN,FR,ES)">
+		<id>BGME</id>
+		<type>3DS</type>
+		<region>NTSC-U</region>
+		<languages>EN,FR,ES</languages>
+		<locale lang="EN">
+			<title>Gardening Mama 2: Forest Friends</title>
+			<synopsis>Plant the Seeds of Friendship!
+
+Mama is back in her gardening gloves planting the seeds of friendship! Make your animal friends happy by growing flowers, fruits and vegetables they can sell in their forest shops.
+With intuitive, stylus based-activities, customization and tons of fun rewards, Garden Mama 2: Forest Friends will get you growing in no time!</synopsis>
+		</locale>
+		<locale lang="FR">
+			<title>Gardening Mama 2: Forest Friends</title>
+			<synopsis/>
+		</locale>
+		<locale lang="ES">
+			<title>Gardening Mama 2: Forest Friends</title>
+			<synopsis/>
+		</locale>
+		<locale lang="PT">
+			<title>Gardening Mama 2: Forest Friends</title>
+			<synopsis/>
+		</locale>
+		<developer>Office Create</developer>
+		<publisher>Majesco Entertainment</publisher>
+		<date year="2014" month="4" day="29"/>
+		<genre>simulation,health,management simulation</genre>
+		<rating type="ESRB" value="E">
+			<descriptor>alcohol reference</descriptor>
+		</rating>
+		<wi-fi players="0">
+			<feature>online</feature>
+		</wi-fi>
+		<input players="1"/>
+		<rom version="0" name="Gardening Mama 2: Forest Friends (USA) (EN,FR,ES).3ds" size="268435456" crc="c281407f" md5="1cb283bd323264725750ed51ec051ad7" sha1="e3f4ff3da7d472d8d03ddb729e0b7e041501eefb"/>
+		<case versions="2"/>
 	</game>
 	<game name="Gardening Mama: Forest Friends (Europe) (EN,FR,DE,ES,IT)">
 		<id>BGMP</id>
@@ -39684,34 +39976,6 @@ Players will have the option to either purchase the game at retail stores or dow
 		<rom version="2" name="Bokujou Monogatari: Hajimari no Daichi (Japan) (EN,JA) (v2).3ds" size="536870912" crc="88263f09" md5="4886e175cc17266058f1ac6cfbd1d6fe" sha1="b9c59d99ff8bf0b021700319a89d324ebc64172a"/>
 		<case versions="2"/>
 	</game>
-	<game name="Bit.Trip Saga (USA) (EN)">
-		<id>ABTE</id>
-		<type>3DSWare</type>
-		<region>NTSC-U</region>
-		<languages>EN</languages>
-		<locale lang="EN">
-			<title>Bit.Trip Saga</title>
-			<synopsis>All six BIT.TRIP games morphed into a single entity called BIT.TRIP SAGA. Experience the crushing difficulty of the rhythmic galaxies through the head of CommanderVideo and ride along the long journey with him as he completes his mission and returns...home. Dance to the Chiptune-inspired soundtrack and look out for special guest appearances by Super Meat Boy and Mr. Robotube. BIT.TRIP SAGA includes: BIT.TRIP BEAT, BIT.TRIP CORE, BIT.TRIP VOID, BIT.TRIP RUNNER, BIT.TRIP FATE, and BIT.TRIP FLUX...in 3D!</synopsis>
-		</locale>
-		<locale lang="FR">
-			<title>BIT.TRIP SAGA</title>
-			<synopsis/>
-		</locale>
-		<locale lang="ES">
-			<title>BIT.TRIP SAGA</title>
-			<synopsis/>
-		</locale>
-		<locale lang="PT">
-			<title>BIT.TRIP SAGA</title>
-			<synopsis/>
-		</locale>
-		<publisher>Aksys Games</publisher>
-		<date year="2012" month="12" day="20"/>
-		<rating type="ESRB" value=""/>
-		<wi-fi players="0"/>
-		<input players="1"/>
-		<rom version="0" name="Bit.Trip Saga (USA) (EN).3ds" size="536870912" crc="bbb9e27b" md5="69abb8a6cdfd255241be68f8649eef0c" sha1="939a06fe33e193a0ebbf1bf94dc7ee0ea0cbc2a2"/>
-	</game>
 	<game name="My Exotic Farm (USA) (EN)">
 		<id>ABUE</id>
 		<type>3DSWare</type>
@@ -40779,42 +41043,6 @@ Considered a fairytale, its telling was common at campfires and as a bedtime sto
 		<input players="1"/>
 		<rom version="0" name="DoraKazu: Nobita no Suuji Daibouken (Japan) (EN,JA).3ds" size="134217728" crc="ab3d2fbd" md5="f1bd7a7884abe0b310bd0aeeb02c21e2" sha1="f9ef0624ad36348b7eecfb436b066e2826c48d23"/>
 	</game>
-	<game name="Shin Megami Tensei: Devil Survivor 2: Record Breaker (USA) (EN)">
-		<id>ADXE</id>
-		<type>3DSWare</type>
-		<region>NTSC-U</region>
-		<languages>EN</languages>
-		<locale lang="EN">
-			<title>Shin Megami Tensei: Devil Survivor 2: Record Breaker</title>
-			<synopsis>Offers in-game purchases
-
-Your days are numbered. Your character in Shin Megami Tensei: Devil Survivor 2 Record Breaker is stuck in a world that has been invaded and is on the brink of non-existence. At the same time, you and your friends have gained the ability to summon demons via your cell phone, and with it, a power to fight against fate. The countdown begins; will you be able to save the future of mankind? 
-
-With new abilities and demons, a brand new character, fully voiced English story dialogue, and over 100 hours of gameplay, the new content in Record Breaker greatly expands on the original Nintendo DS game. Most importantly, Record Breaker will introduce a brand new chapter to the captivating story. Both newcomers and veterans alike will have a chance to learn more about the world of Devil Survivor 2, with the option of skipping to the new content right away or playing through the original game first. Either way, hard decisions will have to be made in order to survive. 
-
-Check out the theme inspired by this game in the Theme Shop. Just tap the icon in the upper left corner of your Nintendo 3DS HOME Menu to get started.</synopsis>
-		</locale>
-		<locale lang="FR">
-			<title>Shin Megami Tensei: Devil Survivor 2: Record Breaker</title>
-			<synopsis/>
-		</locale>
-		<locale lang="ES">
-			<title>Shin Megami Tensei: Devil Survivor 2: Record Breaker</title>
-			<synopsis/>
-		</locale>
-		<locale lang="PT">
-			<title>Shin Megami Tensei: Devil Survivor 2: Record Breaker</title>
-			<synopsis/>
-		</locale>
-		<developer>Atlus</developer>
-		<publisher>SEGA</publisher>
-		<date year="2015" month="5" day="5"/>
-		<genre>strategy</genre>
-		<rating type="ESRB" value=""/>
-		<wi-fi players="0"/>
-		<input players="1"/>
-		<rom version="0" name="Shin Megami Tensei: Devil Survivor 2: Record Breaker (USA) (EN).3ds" size="4294967296" crc="81ab669f" md5="3e8ba5e10e82a42d5dd84376f1c7969d" sha1="ebe31a8173b848e78f60fff39af608ebc7e2dfcd"/>
-	</game>
 	<game name="Devil Survivor 2: Break Record (Japan) (EN,JA)">
 		<id>ADXJ</id>
 		<type>3DSWare</type>
@@ -41350,73 +41578,6 @@ Tons of Accessories: Master the art of fishing with 500+ lures, 13 rods, and 12 
 		<input players="1"/>
 		<rom version="0" name="Bravely Default: Flying Fairy (Japan) (EN,JA).3ds" size="2147483648" crc="3e5c01e4" md5="668cb633d123ca31db02cc977f386e6d" sha1="298629af6ccbc17c7de1429e5e32864119f36e0a"/>
 		<case color="000000"/>
-	</game>
-	<game name="The LEGO Movie Videogame (USA) (EN)">
-		<id>AFJE</id>
-		<type>3DSWare</type>
-		<region>NTSC-U</region>
-		<languages>EN</languages>
-		<locale lang="EN">
-			<title>The LEGO Movie Videogame</title>
-			<synopsis>Join Emmet and an unlikely group of resistance fighters in their heroic quest to thwart Lord Business’ evil plans, a mission that Emmet is hopelessly and hilariously unprepared for.  It’s a wild ride with a surprising mix of over 90 playable characters including Batman, Superman, Wonder Woman, the Green Ninja, Gandalf, Shakespeare, Cleopatra and more.</synopsis>
-		</locale>
-		<locale lang="FR">
-			<title>The LEGO Movie Videogame</title>
-			<synopsis/>
-		</locale>
-		<locale lang="ES">
-			<title>The LEGO Movie Videogame</title>
-			<synopsis/>
-		</locale>
-		<locale lang="PT">
-			<title>The LEGO Movie Videogame</title>
-			<synopsis/>
-		</locale>
-		<publisher>WB Games</publisher>
-		<date year="2014" month="2" day="7"/>
-		<rating type="ESRB" value=""/>
-		<wi-fi players="0"/>
-		<input players="1"/>
-		<rom version="0" name="The LEGO Movie Videogame (USA) (EN).3ds" size="536870912" crc="5443bf43" md5="19cb2378c692a994c8f426878885c537" sha1="309471e2910dd86c8058ce1691009c34bb047ca9"/>
-		<case versions="2"/>
-	</game>
-	<game name="Fantasy Life (USA) (EN)">
-		<id>AFLE</id>
-		<type>3DSWare</type>
-		<region>NTSC-U</region>
-		<languages>EN</languages>
-		<locale lang="EN">
-			<title>Fantasy Life</title>
-			<synopsis>Offers in-game purchases
-
-Embark on the adventure of your dream life as you craft, cast, battle, and role-play like never before. With the innovative Life system, your choices don’t just upgrade characters—they help shape your journey! Explore a huge fantasy landscape beside surly dark paladins, slick pirate captains, and others who share your taste for the unknown.
-
-Choose from 12 Life classes: Will you pick the combat class to take down foes with weapon in hand or the crafter’s path to create stronger weapons and tools? Your choices unlock your potential as you level up, harvest items, and craft gear. The more resources and abilities you have, the more freedom to personalize your journey. Traverse an area as one Life class and return as another to gain different items.
-
-To Get a special angel-themed outfit follow these instructions:
-1. Go to the Castile Post Office
-2. Talk to the Password Clerk
-3. Input &quot;I'm finished!&quot; (case sensitive)
-4. The clerk will provide you with an angel-themed outfit.</synopsis>
-		</locale>
-		<locale lang="FR">
-			<title>Fantasy Life</title>
-			<synopsis/>
-		</locale>
-		<locale lang="ES">
-			<title>Fantasy Life</title>
-			<synopsis/>
-		</locale>
-		<locale lang="PT">
-			<title>Fantasy Life</title>
-			<synopsis/>
-		</locale>
-		<publisher>Nintendo</publisher>
-		<date year="2014" month="10" day="24"/>
-		<rating type="ESRB" value=""/>
-		<wi-fi players="0"/>
-		<input players="1"/>
-		<rom version="0" name="Fantasy Life (USA) (EN).3ds" size="1073741824" crc="2eb87c8c" md5="acb6bba999c2bd0eacd90cce8a381674" sha1="39afbd1b4141792de318b380b11cf4629081a613"/>
 	</game>
 	<game name="Fantasy Life (Japan) (EN,JA)">
 		<id>AFLJ</id>
@@ -42109,39 +42270,6 @@ Lovingly drawn with elaborate animation</synopsis>
 		<rom version="1" name="Mario Tennis Open (Japan) (EN,JA) (v1).3ds" size="536870912" crc="18d2ea0c" md5="479c4dbd8c57e19c480544146fceb3a0" sha1="6132096c7679bab82dcfadba9ef13adb03627a6f"/>
 		<case versions="2"/>
 	</game>
-	<game name="Luigi's Mansion: Dark Moon (USA) (EN)">
-		<id>AGGE</id>
-		<type>3DSWare</type>
-		<region>NTSC-U</region>
-		<languages>EN</languages>
-		<locale lang="EN">
-			<title>Luigi's Mansion: Dark Moon</title>
-			<synopsis>Luigi’s Mansion™: Dark Moon is the brand new Luigi’s Mansion title on the Nintendo 3DS™ system. This time there are multiple mansions each with unique puzzles and ghosts. 
-
-Using a vacuum-like machine called the “Poltergust 5000,” Luigi™ must explore and hunt ghosts in these mansions to complete specific missions for the great ghost researcher Professor E. Gadd. 
-
-But shining the flashlight is no longer enough.  Luigi must activate the new strobe function at just the right moment to stun the ghosts first, then catch them using the Poltergust 5000.  Each mansion is filled with different gimmicks and puzzle elements, and exploring them can be a spooky challenge.</synopsis>
-		</locale>
-		<locale lang="FR">
-			<title>Luigi's Mansion: Dark Moon</title>
-			<synopsis/>
-		</locale>
-		<locale lang="ES">
-			<title>Luigi's Mansion: Dark Moon</title>
-			<synopsis/>
-		</locale>
-		<locale lang="PT">
-			<title>Luigi's Mansion: Dark Moon</title>
-			<synopsis/>
-		</locale>
-		<publisher>Nintendo</publisher>
-		<date year="2013" month="3" day="24"/>
-		<rating type="ESRB" value=""/>
-		<wi-fi players="0"/>
-		<input players="1"/>
-		<rom version="0" name="Luigi's Mansion: Dark Moon (USA) (EN).3ds" size="1073741824" crc="41a30e32" md5="8fbfeeb31c1718021aefab2242b39df0" sha1="240dc534175993423efd49a4dcad39b459654ceb"/>
-		<case versions="2"/>
-	</game>
 	<game name="Luigi Mansion 2 (Japan) (EN,JA)">
 		<id>AGGJ</id>
 		<type>3DSWare</type>
@@ -42356,39 +42484,6 @@ newcomers alike</synopsis>
 		<wi-fi players="0"/>
 		<input players="1"/>
 		<rom version=""/>
-	</game>
-	<game name="Garfield Kart (USA) (EN)">
-		<id>AGPE</id>
-		<type>3DSWare</type>
-		<region>NTSC-U</region>
-		<languages>EN</languages>
-		<locale lang="EN">
-			<title>Garfield Kart</title>
-			<synopsis>Join Garfield and his friends in the funniest fast and furry-ious game!
-16 different circuits withstunning 3D environments from the world of Garfield
-8 characters (Garfield, Odie, Jon, Nermal, Arlene, Liz, Harry and Squeak)
-Use your driving skills (skids, mini jumps, shortcuts)
-8 bonuses for some crazy attacks and defenses</synopsis>
-		</locale>
-		<locale lang="FR">
-			<title>Garfield Kart</title>
-			<synopsis/>
-		</locale>
-		<locale lang="ES">
-			<title>Garfield Kart</title>
-			<synopsis/>
-		</locale>
-		<locale lang="PT">
-			<title>Garfield Kart</title>
-			<synopsis/>
-		</locale>
-		<publisher>HUMONGOUS</publisher>
-		<date year="2015" month="8" day="13"/>
-		<genre>racing</genre>
-		<rating type="ESRB" value="E"/>
-		<wi-fi players="0"/>
-		<input players="1"/>
-		<rom version="0" name="Garfield Kart (USA) (EN).3ds" size="134217728" crc="abd43ad1" md5="b824e2640301ee67640338e2cec3f1b2" sha1="50cedc1897dc0b479f7675c7e60b0b8302d087f7"/>
 	</game>
 	<game name=" (Europe) (EN)">
 		<id>AGQZ</id>
@@ -55629,38 +55724,6 @@ This is an update for the game card version of the Azure Striker Gunvolt: Strike
 		<wi-fi players="0"/>
 		<input players="1"/>
 		<rom version="0" name="San Goku Shi (Japan) (EN,JA).3ds" size="536870912" crc="938a282a" md5="daeef5f6680552562b4600fab9c05d61" sha1="7dbd980c8caa7b23e02f563f4f4b2942b66a4779"/>
-	</game>
-	<game name="Gardening Mama 2: Forest Friends (USA) (EN)">
-		<id>BGME</id>
-		<type>3DSWare</type>
-		<region>NTSC-U</region>
-		<languages>EN</languages>
-		<locale lang="EN">
-			<title>Gardening Mama 2: Forest Friends</title>
-			<synopsis>Plant the Seeds of Friendship!
-
-Mama is back in her gardening gloves planting the seeds of friendship! Make your animal friends happy by growing flowers, fruits and vegetables they can sell in their forest shops.
-With intuitive, stylus based-activities, customization and tons of fun rewards, Garden Mama 2: Forest Friends will get you growing in no time!</synopsis>
-		</locale>
-		<locale lang="FR">
-			<title>Gardening Mama 2: Forest Friends</title>
-			<synopsis/>
-		</locale>
-		<locale lang="ES">
-			<title>Gardening Mama 2: Forest Friends</title>
-			<synopsis/>
-		</locale>
-		<locale lang="PT">
-			<title>Gardening Mama 2: Forest Friends</title>
-			<synopsis/>
-		</locale>
-		<publisher>Majesco Entertainment</publisher>
-		<date year="2014" month="4" day="29"/>
-		<rating type="ESRB" value=""/>
-		<wi-fi players="0"/>
-		<input players="1"/>
-		<rom version="0" name="Gardening Mama 2: Forest Friends (USA) (EN).3ds" size="268435456" crc="c281407f" md5="1cb283bd323264725750ed51ec051ad7" sha1="e3f4ff3da7d472d8d03ddb729e0b7e041501eefb"/>
-		<case versions="2"/>
 	</game>
 	<game name="Gardening Mama: Mama to Mori no Nakama-tachi (Japan) (EN,JA)">
 		<id>BGMJ</id>

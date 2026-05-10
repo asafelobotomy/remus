@@ -320,9 +320,6 @@ int handleVerifyCommand(CliContext &ctx)
     qInfo() << "";
 
     return reportVerificationResults(ctx, verifier, systemName, generateReport);
-
-    qCritical() << "✗ Failed to import DAT file";
-    return 1;
 }
 
 int handlePatchDatCommand(CliContext &ctx)

@@ -160,6 +160,12 @@ int GameTDBProvider::loadDatabase(const QString &filePath)
                     if (!current.sha1.isEmpty()) {
                         m_sha1Index.insert(current.sha1, current.id);
                     }
+                    // Title index: first entry for a normalized title wins.
+                    // Used by the enrichment pipeline for O(1) name fallback.
+                    const QString normTitle = current.title.trimmed().toLower();
+                    if (!normTitle.isEmpty() && !m_titleIndex.contains(normTitle)) {
+                        m_titleIndex.insert(normTitle, current.id);
+                    }
                     ++loaded;
                 }
             }
@@ -176,6 +182,12 @@ int GameTDBProvider::loadDatabase(const QString &filePath)
 // ============================================================================
 // MetadataProvider Interface
 // ============================================================================
+
+QString GameTDBProvider::gameIdByNormalizedTitle(const QString &normalizedTitle) const
+{
+    QMutexLocker locker(&m_mutex);
+    return m_titleIndex.value(normalizedTitle);
+}
 
 QList<SearchResult> GameTDBProvider::searchByName(const QString &title,
                                                    const QString &system,

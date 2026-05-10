@@ -233,16 +233,44 @@ done
 
 echo ""
 echo "Done: $copied DATs copied, $skipped skipped, $meta_copied metadata DATs copied, $gametdb_copied GameTDB databases downloaded"
+
+# ── OpenVGDB SQLite ────────────────────────────────────────────────────────────
+# OpenVGDB v29.0 (MIT licence) — CRC/SHA1/MD5 ROM metadata with descriptions,
+# genres, developers, publishers, and release dates for ~53 k ROM entries.
+# Source: https://github.com/OpenVGDB/OpenVGDB/releases
+OPENVGDB_DIR="$PROJECT_ROOT/data/openvgdb"
+OPENVGDB_DEST="$OPENVGDB_DIR/openvgdb.sqlite"
+OPENVGDB_URL="https://github.com/OpenVGDB/OpenVGDB/releases/latest/download/openvgdb.zip"
+
+mkdir -p "$OPENVGDB_DIR"
+echo ""
+echo "Updating OpenVGDB..."
+openvgdb_tmp="$(mktemp -d)"
+trap 'rm -rf "$openvgdb_tmp"' RETURN
+if curl -fsSL -o "$openvgdb_tmp/openvgdb.zip" "$OPENVGDB_URL"; then
+    if unzip -o -q "$openvgdb_tmp/openvgdb.zip" "openvgdb.sqlite" -d "$openvgdb_tmp" 2>/dev/null; then
+        mv "$openvgdb_tmp/openvgdb.sqlite" "$OPENVGDB_DEST"
+        echo "  OpenVGDB updated: $OPENVGDB_DEST"
+    else
+        echo "  Warning: failed to extract openvgdb.sqlite from zip"
+    fi
+else
+    echo "  Warning: failed to download OpenVGDB from $OPENVGDB_URL"
+fi
+
 echo ""
 echo "DAT file locations:"
-ls -1 "$TARGET_DIR"/*.dat 2>/dev/null | wc -l | xargs -I{} echo "  dat/ (curated):     {} files in $TARGET_DIR"
-ls -1 "$NO_INTRO_DIR"/*.dat 2>/dev/null | wc -l | xargs -I{} echo "  no-intro/:          {} files in $NO_INTRO_DIR"
-ls -1 "$REDUMP_DIR"/*.dat 2>/dev/null | wc -l | xargs -I{} echo "  redump/:            {} files in $REDUMP_DIR"
+find "$TARGET_DIR" -maxdepth 1 -name '*.dat' 2>/dev/null | wc -l | xargs -I{} echo "  dat/ (curated):     {} files in $TARGET_DIR"
+find "$NO_INTRO_DIR" -maxdepth 1 -name '*.dat' 2>/dev/null | wc -l | xargs -I{} echo "  no-intro/:          {} files in $NO_INTRO_DIR"
+find "$REDUMP_DIR" -maxdepth 1 -name '*.dat' 2>/dev/null | wc -l | xargs -I{} echo "  redump/:            {} files in $REDUMP_DIR"
 if [[ -d "$METADATA_DIR" ]]; then
     find "$METADATA_DIR" -name '*.dat' | wc -l | xargs -I{} echo "  metadata DATs:      {} files"
 fi
 if [[ -d "$GAMETDB_DIR" ]]; then
     find "$GAMETDB_DIR" -name '*.xml' | wc -l | xargs -I{} echo "  GameTDB XMLs:       {} files"
+fi
+if [[ -f "$OPENVGDB_DEST" ]]; then
+    echo "  OpenVGDB:           $OPENVGDB_DEST"
 fi
 echo ""
 echo "Next step: run scripts/generate_compendium_manifest.sh to update the manifest."

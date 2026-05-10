@@ -217,26 +217,11 @@ else
     echo "==> Build completed cleanly (exit code 0)"
 fi
 
-# Emit a machine-friendly per-source yield report.
-# Columns: source_id,source_items,signatures,signature_yield_percent
-sqlite3 -header -separator $'\t' "$OUTPUT_DB" "
-WITH si AS (
-  SELECT source_id, COUNT(*) AS source_items
-  FROM source_items
-  GROUP BY source_id
-), gs AS (
-  SELECT source_id, COUNT(*) AS signatures
-  FROM game_signatures
-  GROUP BY source_id
-)
-SELECT si.source_id,
-       si.source_items,
-       COALESCE(gs.signatures, 0) AS signatures,
-       ROUND(COALESCE(gs.signatures, 0) * 100.0 / si.source_items, 2) AS signature_yield_percent
-FROM si
-LEFT JOIN gs ON gs.source_id = si.source_id
-ORDER BY signature_yield_percent ASC, si.source_items DESC;
-" > "$COVERAGE_REPORT"
+# Emit a machine-friendly per-source coverage report via remus-cli --coverage-report.
+# Columns: source_id, source_items, sigs_owned, games_covered, coverage_pct (TSV)
+# sigs_owned    – signature rows attributed to this source (0 for shadowed sources)
+# games_covered – games from this source that have any signature (honest ingest coverage)
+"$ROOT_DIR/build/remus-cli" --coverage-report --compendium-output "$OUTPUT_DB" > "$COVERAGE_REPORT"
 
 summary_query="
 SELECT 'games', COUNT(*) FROM games
@@ -251,8 +236,22 @@ UNION ALL SELECT 'unresolved_merge_conflicts', COUNT(*)
 echo "==> Build summary"
 sqlite3 -header -column "$OUTPUT_DB" "$summary_query"
 
-echo "==> Low-yield sources (top 15)"
-head -16 "$COVERAGE_REPORT"
+echo "==> Low-coverage sources (top 15)"
+head -17 "$COVERAGE_REPORT"
 
 echo "==> Coverage report written: $COVERAGE_REPORT"
+
+# Warn about systems that have no games ingested (coverage gaps).
+empty_systems=$(sqlite3 "$OUTPUT_DB" "
+SELECT display_name FROM systems s
+LEFT JOIN games g ON g.system_id = s.system_id
+GROUP BY s.system_id
+HAVING COUNT(g.game_id) = 0
+ORDER BY display_name;
+")
+if [ -n "$empty_systems" ]; then
+    echo "==> [WARNING] Systems with no games (no DAT coverage):"
+    echo "$empty_systems" | while IFS= read -r line; do echo "    - $line"; done
+fi
+
 echo "==> Build log: $BUILD_LOG"

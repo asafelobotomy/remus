@@ -83,6 +83,7 @@ set(REMUS_CLI_SOURCES
     src/cli/cli_helpers_providers.cpp
     src/cli/cli_options.cpp
     src/cli/cli_mod_support.cpp
+    src/cli/cli_mod_support_format.cpp
     src/cli/cli_commands_info.cpp
     src/cli/cli_commands_process.cpp
     src/cli/cli_commands_metadata.cpp
@@ -90,6 +91,7 @@ set(REMUS_CLI_SOURCES
     src/cli/cli_commands_match.cpp
     src/cli/cli_commands_verify.cpp
     src/cli/cli_commands_organize.cpp
+    src/cli/cli_commands_bundle.cpp
     src/cli/cli_commands_chd.cpp
     src/cli/cli_commands_convert.cpp
     src/cli/cli_commands_export.cpp
@@ -99,7 +101,12 @@ set(REMUS_CLI_SOURCES
     src/cli/cli_commands_compendium.cpp
     src/cli/cli_compendium_build_phases.cpp
     src/cli/cli_commands_compendium_enrich.cpp
+    src/cli/cli_commands_compendium_ingest.cpp
+    src/cli/cli_commands_compendium_coverage.cpp
     src/cli/compendium_enrichment.cpp
+    src/cli/compendium_enrichment_gametdb.cpp
+    src/cli/compendium_enrichment_igdb.cpp
+    src/cli/compendium_enrichment_openvgdb.cpp
 )
 
 add_executable(remus-cli ${REMUS_CLI_SOURCES})

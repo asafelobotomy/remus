@@ -66,6 +66,7 @@ struct SourceRecordEnvelope {
 struct CompilerStats {
     int recordsIngested      = 0;
     int gamesCreated         = 0;
+    int deduplicatedGames    = 0;
     int signaturesCreated    = 0;
     int serialsCreated       = 0;
     int factsCreated         = 0;

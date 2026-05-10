@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <datafile xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="wiiutdb.xsd">
-	<WiiUTDB version="20260430141200" filter="EN" games="2860"/>
+	<WiiUTDB version="20260510013140" filter="EN" games="2860"/>
 	<!--
  GameTDB: WiiU, Database started in 2012 (https://www.gametdb.com)
  Never modify this file manually, it will get overwritten when you update. You can add games and fixes on the website.
@@ -47909,7 +47909,7 @@ We apologise to those of you currently using this service, and we ask for your u
 		</locale>
 		<developer>Google</developer>
 		<publisher>Nintendo</publisher>
-		<date year="2014" month="1" day="1"/>
+		<date year="2013" month="2" day="14"/>
 		<genre>software</genre>
 		<rating type="PEGI" value="3"/>
 		<wi-fi players="0"/>

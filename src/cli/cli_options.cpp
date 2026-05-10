@@ -139,6 +139,10 @@ void registerAllOptions(QCommandLineParser &parser, QSet<QString> &actionOptions
 
     addActionOption(QCommandLineOption("build-compendium", "Build a canonical compendium database from a manifest"));
     addActionOption(QCommandLineOption("enrich-compendium", "Run enrichment passes (GameTDB) against an existing compendium database without rebuilding"));
+    addActionOption(QCommandLineOption("ingest-source", "Incrementally ingest a single DAT file into an existing compendium database", "dat-file"));
+    addOption(QCommandLineOption("source-id", "Source identifier for --ingest-source (default: derived from filename)", "id"));
+    addOption(QCommandLineOption("source-priority", "Source priority for --ingest-source (default: 10; no-intro=20, redump=30)", "n", "10"));
+    addActionOption(QCommandLineOption("coverage-report", "Emit a per-source signature-yield coverage report for a compendium database (TSV to stdout)"));
     addOption(QCommandLineOption("compendium-manifest", "Path to compendium source manifest JSON", "path"));
     addOption(QCommandLineOption("compendium-output", "Output SQLite path for compiled compendium", "path", "data/compendium/remus_compendium.db"));
 

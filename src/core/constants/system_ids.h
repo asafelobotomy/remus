@@ -317,6 +317,33 @@ inline constexpr int ID_MICROVISION = 102;
 /// VM Labs Nuon
 inline constexpr int ID_NUON = 103;
 
+/// VTech V.Smile
+inline constexpr int ID_VSMILE = 104;
+
+/// LeapFrog Leapster Learning Game System
+inline constexpr int ID_LEAPSTER = 105;
+
+/// LeapFrog LeapPad
+inline constexpr int ID_LEAPPAD = 106;
+
+/// Sega Beena
+inline constexpr int ID_SEGA_BEENA = 107;
+
+/// VTech CreatiVision
+inline constexpr int ID_CREATIVISION = 108;
+
+/// Konami Picno
+inline constexpr int ID_PICNO = 109;
+
+/// Hartung Game Master
+inline constexpr int ID_GAME_MASTER = 110;
+
+/// Mobile Symbian
+inline constexpr int ID_SYMBIAN = 111;
+
+/// Entex Adventure Vision
+inline constexpr int ID_ADVENTURE_VISION = 112;
+
 } // namespace Systems
 } // namespace Constants
 } // namespace Remus

@@ -1,7 +1,10 @@
 #include "cli_compendium_build_phases.h"
 
 #include "compendium_enrichment.h"
+#include "../metadata/compendium_merge_resolver.h"
+#include "../metadata/compendium_types.h"
 
+#include <QFile>
 #include <QSqlDatabase>
 #include <QSqlError>
 #include <QSqlQuery>
@@ -9,10 +12,9 @@
 bool runCompendiumEnrichmentPasses(QSqlDatabase &db,
                                    const QString &metadataDir,
                                    const QString &gametdbDir,
-                                   int &metadataGamesEnriched,
-                                   int &metadataFactsInserted,
-                                   int &gametdbGamesEnriched,
-                                   int &gametdbFactsInserted,
+                                   const QString &openvgdbPath,
+                                   const QString &credPath,
+                                   EnrichmentStats &stats,
                                    QString &error)
 {
     // ── Enrichment pass 1: Libretro metadata DATs ─────────────────────────────
@@ -24,8 +26,8 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db,
         }
         if (!CompendiumEnrichment::enrichFromLibretroMetadata(db,
                                                               metadataDir,
-                                                              metadataGamesEnriched,
-                                                              metadataFactsInserted,
+                                                              stats.metadataGamesEnriched,
+                                                              stats.metadataFactsInserted,
                                                               error)) {
             db.rollback();
             error = QStringLiteral("Libretro metadata enrichment failed: %1").arg(error);
@@ -47,8 +49,8 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db,
         }
         if (!CompendiumEnrichment::enrichFromGameTDB(db,
                                                      gametdbDir,
-                                                     gametdbGamesEnriched,
-                                                     gametdbFactsInserted,
+                                                     stats.gametdbGamesEnriched,
+                                                     stats.gametdbFactsInserted,
                                                      error)) {
             db.rollback();
             error = QStringLiteral("GameTDB enrichment failed: %1").arg(error);
@@ -61,18 +63,76 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db,
         }
     }
 
+    // ── Enrichment pass 3: OpenVGDB ───────────────────────────────────────────
+    if (!openvgdbPath.isEmpty() && QFile::exists(openvgdbPath)) {
+        if (!db.transaction()) {
+            error = QStringLiteral("Failed to start OpenVGDB enrichment transaction: %1")
+                        .arg(db.lastError().text());
+            return false;
+        }
+        if (!CompendiumEnrichment::enrichFromOpenVGDB(db,
+                                                      openvgdbPath,
+                                                      stats.openvgdbGamesEnriched,
+                                                      stats.openvgdbFactsInserted,
+                                                      error)) {
+            db.rollback();
+            error = QStringLiteral("OpenVGDB enrichment failed: %1").arg(error);
+            return false;
+        }
+        if (!db.commit()) {
+            error = QStringLiteral("Failed to commit OpenVGDB enrichment transaction: %1")
+                        .arg(db.lastError().text());
+            return false;
+        }
+    }
+
+    // ── Enrichment pass 4: IGDB (manages its own per-system transactions) ─────
+    if (!credPath.isEmpty() && QFile::exists(credPath)) {
+        if (!CompendiumEnrichment::enrichFromIGDB(db,
+                                                  credPath,
+                                                  stats.igdbGamesEnriched,
+                                                  stats.igdbFactsInserted,
+                                                  error)) {
+            error = QStringLiteral("IGDB enrichment failed: %1").arg(error);
+            return false;
+        }
+    }
+
+    // ── Post-enrichment: re-run merge resolution to pick up newly-written facts ─
+    {
+        Remus::Compendium::CompilerStats resolveStats;
+        const Remus::Compendium::MergeResolver resolver;
+        if (!resolver.resolve(db, resolveStats, error)) {
+            error = QStringLiteral("Post-enrichment merge resolution failed: %1").arg(error);
+            return false;
+        }
+        stats.resolvedFields = resolveStats.resolvedFields;
+    }
+
     return true;
 }
 
 void populateCompendiumFtsIndex(QSqlDatabase &db)
 {
-    qInfo() << "[buildCompendium] Populating FTS search index...";
+    qInfo() << "[buildCompendium] Rebuilding FTS search index (clearing previous content)...";
     if (!db.transaction()) {
         qWarning() << "[buildCompendium] Could not start FTS transaction (non-fatal)";
         return;
     }
 
     QSqlQuery ftsQ(db);
+
+    // Clear any previously populated FTS content. Both tables are FTS5 so the
+    // special 'delete-all' command clears the inverted index without a full row
+    // scan. This prevents duplicate rows on re-runs (e.g. --enrich-compendium).
+    if (!ftsQ.exec(QStringLiteral("INSERT INTO games_search(games_search) VALUES('delete-all')"))) {
+        qWarning() << "[buildCompendium] games_search delete-all failed (non-fatal):"
+                   << ftsQ.lastError().text();
+    }
+    if (!ftsQ.exec(QStringLiteral("INSERT INTO games_fts(games_fts) VALUES('delete-all')"))) {
+        qWarning() << "[buildCompendium] games_fts delete-all failed (non-fatal):"
+                   << ftsQ.lastError().text();
+    }
 
     // ── games_search (trigram, columns: title / game_id / system_id / region_code) ──
     const bool ok1 = ftsQ.exec(QStringLiteral(
@@ -117,5 +177,5 @@ void populateCompendiumFtsIndex(QSqlDatabase &db)
     db.commit();
     ftsQ.exec(QStringLiteral("INSERT INTO games_search(games_search) VALUES('optimize')"));
     ftsQ.exec(QStringLiteral("INSERT INTO games_fts(games_fts) VALUES('optimize')"));
-    qInfo() << "[buildCompendium] FTS index populated and optimized.";
+    qInfo() << "[buildCompendium] FTS index rebuilt and optimized.";
 }

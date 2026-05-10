@@ -77,6 +77,8 @@ static void mergeAllFields(LibretroMetadata &dst, const LibretroMetadata &src)
         dst.maxUsers = src.maxUsers;
     if (dst.releaseYear == 0 && src.releaseYear != 0)
         dst.releaseYear = src.releaseYear;
+    if (dst.description.isEmpty() && !src.description.isEmpty())
+        dst.description = src.description;
 }
 
 int LibretroMetadataParser::parseFile(const QString &filePath, const QString &type)
@@ -118,6 +120,7 @@ int LibretroMetadataParser::parseFile(const QString &filePath, const QString &ty
     static const QRegularExpression publisherRegex(R"re(publisher\s+"([^"]+)")re");
     static const QRegularExpression usersRegex(R"re(users\s+(\d+))re");
     static const QRegularExpression yearRegex(R"re(releaseyear\s+"(\d+)")re");
+    static const QRegularExpression descriptionRegex(R"re(description\s+"([^"]+)")re");
     int parsed = 0;
     auto it = gameRegex.globalMatch(content);
 
@@ -174,6 +177,9 @@ int LibretroMetadataParser::parseFile(const QString &filePath, const QString &ty
 
         auto ym = yearRegex.match(block);
         if (ym.hasMatch()) { parsedMeta.releaseYear = ym.captured(1).toInt(); found = true; }
+
+        auto desm = descriptionRegex.match(block);
+        if (desm.hasMatch()) { parsedMeta.description = desm.captured(1); found = true; }
 
         if (!found)
             continue;

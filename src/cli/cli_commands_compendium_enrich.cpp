@@ -1,7 +1,10 @@
 #include "cli_commands.h"
+#include "cli_compendium_build_phases.h"
 #include "cli_helpers.h"
 #include "compendium_enrichment.h"
 #include "compendium_sql_utilities.h"
+#include "../metadata/compendium_merge_resolver.h"
+#include "../metadata/compendium_types.h"
 
 #include <QDateTime>
 #include <QDebug>
@@ -60,7 +63,7 @@ int handleEnrichCompendiumCommand(CliContext &ctx)
         return 1;
     }
 
-    // Check whether GameTDB enrichment already ran
+    // Check which enrichments have already been applied
     QString checkError;
     const int existingGameTDB = CompendiumSqlUtilities::scalarCount(database,
         QStringLiteral("SELECT COUNT(*) FROM sources WHERE source_id = 'gametdb'"),
@@ -71,43 +74,87 @@ int handleEnrichCompendiumCommand(CliContext &ctx)
         QSqlDatabase::removeDatabase(connectionName);
         return 1;
     }
-    if (existingGameTDB > 0) {
-        qInfo() << "GameTDB enrichment already applied — nothing to do.";
+
+    const int existingIGDB = CompendiumSqlUtilities::scalarCount(database,
+        QStringLiteral("SELECT COUNT(*) FROM sources WHERE source_id = 'igdb'"),
+        checkError);
+    if (existingIGDB < 0) {
+        qCritical().noquote() << "✗ Could not query sources table:" << checkError;
+        database.close();
+        QSqlDatabase::removeDatabase(connectionName);
+        return 1;
+    }
+
+    const QString credPath = outputInfo.dir().filePath(QStringLiteral("enrichment-credentials.json"));
+    const bool needsGameTDB = (existingGameTDB == 0);
+    const bool needsIGDB    = (existingIGDB == 0) && QFile::exists(credPath);
+
+    if (!needsGameTDB && !needsIGDB) {
+        qInfo() << "All enrichments already applied — nothing to do.";
         database.close();
         QSqlDatabase::removeDatabase(connectionName);
         return 0;
     }
 
-    qInfo() << "Running GameTDB enrichment on" << outputInfo.absoluteFilePath();
+    qInfo() << "Running enrichment on" << outputInfo.absoluteFilePath();
 
-    if (!database.transaction()) {
-        qCritical() << "✗ Failed to start GameTDB enrichment transaction:" << database.lastError().text();
-        database.close();
-        QSqlDatabase::removeDatabase(connectionName);
-        return 1;
+    // ── Enrichment pass: GameTDB ──────────────────────────────────────────────
+    int gametdbGamesEnriched = 0, gametdbFactsInserted = 0;
+    if (needsGameTDB) {
+        if (!database.transaction()) {
+            qCritical() << "✗ Failed to start GameTDB enrichment transaction:" << database.lastError().text();
+            database.close();
+            QSqlDatabase::removeDatabase(connectionName);
+            return 1;
+        }
+        QString error;
+        if (!CompendiumEnrichment::enrichFromGameTDB(database,
+                                                     gametdbDir,
+                                                     gametdbGamesEnriched,
+                                                     gametdbFactsInserted,
+                                                     error)) {
+            database.rollback();
+            qCritical().noquote() << QStringLiteral("✗ GameTDB enrichment failed: %1").arg(error);
+            database.close();
+            QSqlDatabase::removeDatabase(connectionName);
+            return 1;
+        }
+        if (!database.commit()) {
+            qCritical() << "✗ Failed to commit GameTDB enrichment transaction:" << database.lastError().text();
+            database.close();
+            QSqlDatabase::removeDatabase(connectionName);
+            return 1;
+        }
     }
 
-    QString error;
-    int gametdbGamesEnriched = 0;
-    int gametdbFactsInserted = 0;
-    if (!CompendiumEnrichment::enrichFromGameTDB(database,
-                                                 gametdbDir,
-                                                 gametdbGamesEnriched,
-                                                 gametdbFactsInserted,
-                                                 error)) {
-        database.rollback();
-        qCritical().noquote() << QStringLiteral("✗ GameTDB enrichment failed: %1").arg(error);
-        database.close();
-        QSqlDatabase::removeDatabase(connectionName);
-        return 1;
+    // ── Enrichment pass: IGDB (manages its own per-system transactions) ───────
+    int igdbGamesEnriched = 0, igdbFactsInserted = 0;
+    if (needsIGDB) {
+        QString error;
+        if (!CompendiumEnrichment::enrichFromIGDB(database, credPath,
+                                                  igdbGamesEnriched, igdbFactsInserted, error)) {
+            qCritical().noquote() << QStringLiteral("✗ IGDB enrichment failed: %1").arg(error);
+            database.close();
+            QSqlDatabase::removeDatabase(connectionName);
+            return 1;
+        }
     }
 
-    if (!database.commit()) {
-        qCritical() << "✗ Failed to commit GameTDB enrichment transaction:" << database.lastError().text();
-        database.close();
-        QSqlDatabase::removeDatabase(connectionName);
-        return 1;
+    // Re-run merge resolution to pick up facts written by enrichment passes.
+    {
+        Remus::Compendium::CompilerStats resolveStats;
+        QString resolveError;
+        const Remus::Compendium::MergeResolver resolver;
+        if (!resolver.resolve(database, resolveStats, resolveError)) {
+            qWarning() << "[enrich-compendium] Merge resolution failed (non-fatal):" << resolveError;
+        } else if (resolveStats.resolvedFields > 0) {
+            qInfo().noquote() << QStringLiteral("[enrich-compendium] Merge resolved %1 fields.")
+                                     .arg(resolveStats.resolvedFields);
+        }
     }
+
+    // Rebuild FTS index to pick up new descriptions
+    populateCompendiumFtsIndex(database);
 
     // Update (or create) the report JSON alongside the DB
     const QString reportPath = CompendiumSqlUtilities::reportPathForDatabase(outputInfo.absoluteFilePath());
@@ -126,10 +173,13 @@ int handleEnrichCompendiumCommand(CliContext &ctx)
 
     report.insert(QStringLiteral("gametdb_games_enriched"), gametdbGamesEnriched);
     report.insert(QStringLiteral("gametdb_facts_inserted"), gametdbFactsInserted);
+    report.insert(QStringLiteral("igdb_games_enriched"), igdbGamesEnriched);
+    report.insert(QStringLiteral("igdb_facts_inserted"), igdbFactsInserted);
     report.insert(QStringLiteral("enrich_compendium_duration_ms"), static_cast<qint64>(timer.elapsed()));
 
-    if (!CompendiumSqlUtilities::writeReport(reportPath, report, error)) {
-        qCritical().noquote() << QStringLiteral("✗ %1").arg(error);
+    QString reportError;
+    if (!CompendiumSqlUtilities::writeReport(reportPath, report, reportError)) {
+        qCritical().noquote() << QStringLiteral("✗ %1").arg(reportError);
         database.close();
         QSqlDatabase::removeDatabase(connectionName);
         return 1;
@@ -140,6 +190,8 @@ int handleEnrichCompendiumCommand(CliContext &ctx)
     qInfo() << "Database:" << outputInfo.absoluteFilePath();
     qInfo() << "GameTDB games enriched:" << gametdbGamesEnriched;
     qInfo() << "GameTDB facts inserted:" << gametdbFactsInserted;
+    qInfo() << "IGDB games enriched:" << igdbGamesEnriched;
+    qInfo() << "IGDB facts inserted:" << igdbFactsInserted;
     qInfo().nospace() << "Duration: " << timer.elapsed() << " ms";
 
     database.close();

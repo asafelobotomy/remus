@@ -93,6 +93,7 @@ tmp_task/
 data/compendium/*.lock
 data/compendium/*.progress.json
 data/compendium/*.report.json
+data/compendium/enrichment-credentials.json
 
 # Test data
 test_roms/
@@ -124,6 +125,9 @@ data/databases/**/*.dat
 
 # Legacy downloaded metadata DATs (if raw DAT workflows are used manually)
 data/metadata/
+
+# OpenVGDB SQLite (downloaded by update_dats.sh — large binary, not tracked)
+data/openvgdb/*.sqlite
 
 # Canonical local ROM storage (keep ROM payloads out of git)
 /roms/**

@@ -1,6 +1,8 @@
 # Constants library
 add_library(remus-constants STATIC
     systems.cpp
+    systems_defs.cpp
+    systems_extensions.cpp
 )
 target_include_directories(remus-constants PUBLIC
     ${CMAKE_SOURCE_DIR}/src

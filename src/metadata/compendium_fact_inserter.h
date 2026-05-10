@@ -30,9 +30,10 @@ private:
                     QSqlQuery &qGame, QSqlQuery &qName,
                     CompilerStats &stats, QString &error) const;
 
-    bool insertSourceItem(const SourceRecordEnvelope &rec,
-                          QSqlQuery &q,
-                          CompilerStats &stats, QString &error) const;
+    // Returns the source_item_id of the inserted or pre-existing row, or -1 on error.
+    qint64 insertSourceItem(const SourceRecordEnvelope &rec,
+                            QSqlQuery &qInsert, QSqlQuery &qSelect,
+                            CompilerStats &stats, QString &error) const;
 
     bool insertSignatures(const SourceRecordEnvelope &rec,
                           QSqlQuery &q,
@@ -45,7 +46,7 @@ private:
     bool insertFacts(const SourceRecordEnvelope &rec,
                      QSqlQuery &q,
                      CompilerStats &stats, QString &error,
-                     int sourcePriority) const;
+                     int sourcePriority, qint64 sourceItemId) const;
 };
 
 } // namespace Compendium

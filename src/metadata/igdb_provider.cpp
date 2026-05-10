@@ -313,4 +313,40 @@ bool IGDBProvider::isAvailable()
     return m_authenticated && !m_clientId.isEmpty();
 }
 
+QList<GameMetadata> IGDBProvider::fetchGamesByPlatformSlug(
+    const QString &platformSlug, int offset, int limit)
+{
+    QList<GameMetadata> results;
+    if (!m_authenticated && !authenticate())
+        return results;
+
+    m_rateLimiter->waitIfNeeded();
+
+    const QString body = QStringLiteral(
+        "fields name,summary,genres.name,first_release_date,"
+        "involved_companies.company.name,involved_companies.developer,"
+        "involved_companies.publisher; "
+        "where platforms.slug = \"%1\"; "
+        "limit %2; offset %3;")
+        .arg(platformSlug)
+        .arg(limit)
+        .arg(offset);
+
+    const ApiResponse response = makeRequest(QStringLiteral("/games"), body);
+    if (!response.success)
+        return results;
+
+    QJsonParseError parseError;
+    const QJsonDocument doc = QJsonDocument::fromJson(response.data, &parseError);
+    if (parseError.error != QJsonParseError::NoError)
+        return results;
+
+    const QJsonArray games = doc.array();
+    results.reserve(games.size());
+    for (const QJsonValue &v : games)
+        results.append(parseGameJson(v.toObject()));
+
+    return results;
+}
+
 } // namespace Remus

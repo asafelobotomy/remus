@@ -57,5 +57,12 @@ public:
                       ProgressCallback onProgress = nullptr);
 };
 
+// Merge game rows that share the same (system_id, canonical_title), keeping
+// the row with the most signatures and reassigning all child rows to the winner.
+// Called automatically by CompendiumCompilerService::run() and also exposed
+// here for incremental-ingest callers that run their own pipeline.
+// Returns the number of merged rows, or -1 on fatal DB error.
+int deduplicateGames(QSqlDatabase &db, QString &error);
+
 } // namespace Compendium
 } // namespace Remus

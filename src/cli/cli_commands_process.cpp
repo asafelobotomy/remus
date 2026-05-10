@@ -90,8 +90,10 @@ int handleScanCommand(CliContext &ctx)
         ctx.processFileScopeIds.clear();
     }
 
-    const QString scanPath = ctx.parser.isSet("scan") ? ctx.parser.value("scan") : ctx.processSourcePath;
-    if (scanPath.isEmpty()) {
+    const QStringList scanPaths = ctx.parser.isSet("scan")
+                                  ? ctx.parser.values("scan")
+                                  : QStringList{ctx.processSourcePath};
+    if (scanPaths.isEmpty() || scanPaths.first().isEmpty()) {
         qCritical() << "Scan path not provided";
         return 1;
     }
@@ -111,7 +113,7 @@ int handleScanCommand(CliContext &ctx)
         if (!ctx.presetDisplayName.isEmpty()) {
             qInfo() << "Preset:" << ctx.presetDisplayName;
         }
-        qInfo() << "Source:" << scanPath;
+        qInfo() << "Source:" << scanPaths.join(QStringLiteral(", "));
         if (hasOutput) {
             qInfo() << "Output:" << ctx.processOutputPath;
             qInfo() << "Archive:" << effectiveBundleFormat
@@ -130,25 +132,6 @@ int handleScanCommand(CliContext &ctx)
         qInfo() << "";
     }
 
-    qInfo() << "Scanning path:" << scanPath;
-    qInfo() << "";
-
-    Scanner scanner;
-    scanner.setExtensions(ctx.detector.getAllExtensions());
-    QObject::connect(&scanner, &Scanner::fileFound, [](const QString &path) {
-        qDebug() << "Found:" << path;
-    });
-    QObject::connect(&scanner, &Scanner::scanProgress, [](int processed, int) {
-        if (processed > 0 && processed % 50 == 0) {
-            qInfo() << "Processed" << processed << "files...";
-        }
-    });
-
-    const QList<ScanResult> results = scanner.scan(scanPath);
-    qInfo() << "";
-    qInfo() << "Scan complete:" << results.size() << "files found";
-
-    const int libraryId = ctx.db.insertLibrary(scanPath);
     int insertedCount = 0;
     int skippedCount = 0;
     QHash<QString, int> insertedIds;
@@ -159,17 +142,38 @@ int handleScanCommand(CliContext &ctx)
         }
     }
 
-    QList<ScanResult> orderedResults = results;
-    std::stable_sort(orderedResults.begin(), orderedResults.end(),
-                     [](const ScanResult &left, const ScanResult &right) {
-                         // Primary files always before companions
-                         if (left.isPrimary != right.isPrimary)
-                             return left.isPrimary > right.isPrimary;
-                         // Among primaries: smallest first (fast failures surface early)
-                         return left.fileSize < right.fileSize;
-                     });
+    for (const QString &scanPath : scanPaths) {
+        qInfo() << "Scanning path:" << scanPath;
+        qInfo() << "";
 
-    for (const ScanResult &result : orderedResults) {
+        Scanner scanner;
+        scanner.setExtensions(ctx.detector.getAllExtensions());
+        QObject::connect(&scanner, &Scanner::fileFound, [](const QString &path) {
+            qDebug() << "Found:" << path;
+        });
+        QObject::connect(&scanner, &Scanner::scanProgress, [](int processed, int) {
+            if (processed > 0 && processed % 50 == 0) {
+                qInfo() << "Processed" << processed << "files...";
+            }
+        });
+
+        const QList<ScanResult> results = scanner.scan(scanPath);
+        qInfo() << "";
+        qInfo() << "Scan complete:" << results.size() << "files found";
+
+        const int libraryId = ctx.db.insertLibrary(scanPath);
+
+        QList<ScanResult> orderedResults = results;
+        std::stable_sort(orderedResults.begin(), orderedResults.end(),
+                         [](const ScanResult &left, const ScanResult &right) {
+                             // Primary files always before companions
+                             if (left.isPrimary != right.isPrimary)
+                                 return left.isPrimary > right.isPrimary;
+                             // Among primaries: smallest first (fast failures surface early)
+                             return left.fileSize < right.fileSize;
+                         });
+
+        for (const ScanResult &result : orderedResults) {
         const QString systemDetectPath = result.isCompressed && !result.archiveInternalPath.isEmpty()
             ? result.archiveInternalPath
             : result.path;
@@ -228,6 +232,7 @@ int handleScanCommand(CliContext &ctx)
             skippedCount++;
         }
     }
+    } // end per-path scan loop
 
     qInfo() << "";
     qInfo() << "Database updated:";

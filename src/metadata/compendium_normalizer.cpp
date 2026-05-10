@@ -180,6 +180,22 @@ void CompendiumNormalizer::normalize(SourceRecordEnvelope &record) const
 {
     record.resolvedSystemId   = resolveSystemId(record.systemHint);
     record.resolvedRegionCode = resolveRegionCode(record.regionRaw);
+
+    // Normalize the 'region' field stored in game_facts to a canonical
+    // region_code. The games.primary_region_code column has an FK to
+    // regions(region_code), so the merge resolver's UPDATE would violate that
+    // constraint if a raw string like "Korea" reached the column. Either map it
+    // to the canonical code ("KOR") or remove it when it cannot be mapped.
+    static const QString kRegionField = QStringLiteral("region");
+    const auto it = record.fields.find(kRegionField);
+    if (it != record.fields.end()) {
+        const QString code = resolveRegionCode(it.value());
+        if (!code.isEmpty()) {
+            it.value() = code;
+        } else {
+            record.fields.erase(it);
+        }
+    }
 }
 
 } // namespace Compendium

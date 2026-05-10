@@ -70,6 +70,17 @@ jobs:
             libqt6sql6-sqlite \
             zlib1g-dev
 
+      - name: Capture dependency versions
+        run: |
+          mkdir -p build dist
+          dpkg-query -W -f='${Package}==${Version}\n' \
+            build-essential cmake qt6-base-dev qt6-base-dev-tools libqt6sql6-sqlite zlib1g-dev \
+            > dist/dependency-manifest.txt
+          echo "--- cmake version ---" >> dist/dependency-manifest.txt
+          cmake --version >> dist/dependency-manifest.txt
+          echo "--- compiler version ---" >> dist/dependency-manifest.txt
+          c++ --version >> dist/dependency-manifest.txt
+
       - name: Configure
         run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
 
@@ -118,3 +129,4 @@ jobs:
             dist/*.sha256
             dist/*.AppImage
             dist/*.AppImage.sha256
+            dist/dependency-manifest.txt

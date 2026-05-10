@@ -38,9 +38,13 @@ std::unique_ptr<ProviderOrchestrator> buildOrchestrator(const QCommandLineParser
 QString findDataSubdir(const QString &subdir);
 
 // Convenience wrappers for common data subdirectories.
-inline QString findDatabaseDir() { return findDataSubdir(QStringLiteral("databases")); }
-inline QString findMetadataDir() { return findDataSubdir(QStringLiteral("metadata")); }
-inline QString findGameTDBDir()  { return findDataSubdir(QStringLiteral("gametdb")); }
+inline QString findDatabaseDir()  { return findDataSubdir(QStringLiteral("databases")); }
+inline QString findMetadataDir()  { return findDataSubdir(QStringLiteral("metadata")); }
+inline QString findGameTDBDir()   { return findDataSubdir(QStringLiteral("gametdb")); }
+inline QString findOpenVGDBPath() {
+    const QString dir = findDataSubdir(QStringLiteral("openvgdb"));
+    return dir.isEmpty() ? QString() : dir + QStringLiteral("/openvgdb.sqlite");
+}
 
 // Resolve an option value when presets are acting as defaults.
 // Explicit CLI values win, then preset values, then parser defaults.

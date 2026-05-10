@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <datafile xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="dstdb.xsd">
-	<DSTDB version="20260430141144" filter="EN" games="8460"/>
+	<DSTDB version="20260510013117" filter="EN" games="8460"/>
 	<!--
  GameTDB: DS, Database started in 2015 (https://www.gametdb.com)
  Never modify this file manually, it will get overwritten when you update. You can add games and fixes on the website.
@@ -7887,6 +7887,14 @@ in the palm of your hand!</synopsis>
 		</locale>
 		<locale lang="ES">
 			<title>Harvest Moon DS: La isla de la alegría</title>
+			<synopsis/>
+		</locale>
+		<locale lang="SE">
+			<title>Harvest Moon DS: Island of Happiness</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DK">
+			<title>Harvest Moon DS: Island of Happiness</title>
 			<synopsis/>
 		</locale>
 		<locale lang="FI">
@@ -18631,35 +18639,39 @@ You accomplish this using The Hundred Cell Calculation Method. To be effective, 
 		<languages>EN</languages>
 		<locale lang="EN">
 			<title>Master Jin Jin's IQ Challenge</title>
-			<synopsis/>
+			<synopsis>Let Master Jin Jin guide you through five styles of IQ Challenges whike you try to achieve his highest rating.</synopsis>
 		</locale>
-		<publisher/>
-		<date year="2006" month="" day=""/>
-		<rating type="ESRB" value=""/>
+		<developer>Astroll</developer>
+		<publisher>Valcon Games</publisher>
+		<date year="2007" month="10" day="8"/>
+		<genre>health,coaching,educational</genre>
+		<rating type="ESRB" value="E"/>
 		<wi-fi players="0"/>
 		<input players-multi-cart="1" players-single-cart="1"/>
 		<rom version="0" name="Master Jin Jin's IQ Challenge (USA) (EN).ds" size="33554432" crc="058dcc91" md5="ff3fb9283d4d1712ee3188d2aeadf8e1" sha1="ca1935bb8aec1a02b2b2b64c9d1749949b12ee20"/>
 		<case color="000000"/>
 	</game>
-	<game name="Zennou Series Vol. 01: Akiyama Jin Kyouju Kanshuu: Zennou JinJin (Japan) (EN,JA)">
+	<game name="Zennou Series Vol. 01: Akiyama Jin Kyouju Kanshuu: Zennou JinJin (Japan) (JA)">
 		<id>AJNJ</id>
 		<type>DS</type>
 		<region>NTSC-J</region>
-		<languages>EN,JA</languages>
+		<languages>JA</languages>
 		<locale lang="EN">
 			<title>Zennou Series Vol. 01: Akiyama Jin Kyouju Kanshuu: Zennou JinJin</title>
-			<synopsis/>
+			<synopsis>Let Master Jin Jin guide you through five styles of IQ Challenges while you try to achieve his highest rating.</synopsis>
 		</locale>
 		<locale lang="JA">
 			<title>全脳シリーズVol.01 秋山仁教授監修 全脳JINJIN</title>
 			<synopsis/>
 		</locale>
-		<publisher/>
+		<developer>Astroll</developer>
+		<publisher>ASCII</publisher>
 		<date year="2006" month="9" day="1"/>
+		<genre>health,coaching,educational</genre>
 		<rating type="CERO" value="A"/>
 		<wi-fi players="0"/>
 		<input players-multi-cart="1" players-single-cart="1"/>
-		<rom version="0" name="Zennou Series Vol. 01: Akiyama Jin Kyouju Kanshuu: Zennou JinJin (Japan) (EN,JA).ds" size="33554432" crc="a6ddfe6e" md5="b13c84283c5bd9c945dad5210c186cd9" sha1="acd71ba4ae2f789769ee93f1fef3b11ead3ede2d"/>
+		<rom version="0" name="Zennou Series Vol. 01: Akiyama Jin Kyouju Kanshuu: Zennou JinJin (Japan) (JA).ds" size="33554432" crc="a6ddfe6e" md5="b13c84283c5bd9c945dad5210c186cd9" sha1="acd71ba4ae2f789769ee93f1fef3b11ead3ede2d"/>
 		<case color="000000"/>
 	</game>
 	<game name="MinDStorm: Train Your Brain (Europe) (EN,FR,DE,ES,IT)">
@@ -41595,6 +41607,22 @@ For the first time, you can choose and combine the ingredients yourself; look fo
 			<synopsis>Cook with Mama as if it were the first time!
 For the first time, you can choose and combine the ingredients yourself; look for new and exciting flavour combinations! But there's more! You'll have to go shopping for Mama; it sounds fun but be careful, don't forget anything on the list...</synopsis>
 		</locale>
+		<locale lang="SE">
+			<title>Cooking Mama 3</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DK">
+			<title>Cooking Mama 3</title>
+			<synopsis/>
+		</locale>
+		<locale lang="NO">
+			<title>Cooking Mama 3</title>
+			<synopsis/>
+		</locale>
+		<locale lang="FI">
+			<title>Cooking Mama 3</title>
+			<synopsis/>
+		</locale>
 		<developer>Cooking Mama Limited</developer>
 		<publisher>505 Games</publisher>
 		<date year="2009" month="11" day="13"/>
@@ -44921,6 +44949,18 @@ Tinker Bell's stubbornness and temper get the best of her, causing her to shatte
 			<synopsis>Discover Bakugan like never before. Start your journey today and enjoy a whole new world!</synopsis>
 		</locale>
 		<locale lang="ES">
+			<title>Bakugan Battle Brawlers</title>
+			<synopsis/>
+		</locale>
+		<locale lang="SE">
+			<title>Bakugan Battle Brawlers</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DK">
+			<title>Bakugan Battle Brawlers</title>
+			<synopsis/>
+		</locale>
+		<locale lang="NO">
 			<title>Bakugan Battle Brawlers</title>
 			<synopsis/>
 		</locale>
@@ -58135,6 +58175,18 @@ Something mysterious has happened in Wonderland – the Little People have lost 
 			<title>Crazy Machines 2</title>
 			<synopsis>Tinker around, solve puzzles, have fun and keep your gray matter in tip-top condition: welcome to &quot;Crazy Machines&quot;. The absent-minded Professor is back, and is now leaving his secret laboratory to explore the wide world where he can fiddle with his complex experiments.</synopsis>
 		</locale>
+		<locale lang="SE">
+			<title>Crazy Machines 2</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DK">
+			<title>Crazy Machines 2</title>
+			<synopsis/>
+		</locale>
+		<locale lang="NO">
+			<title>Crazy Machines 2</title>
+			<synopsis/>
+		</locale>
 		<locale lang="FI">
 			<title>Crazy Machines 2</title>
 			<synopsis/>
@@ -59912,13 +59964,17 @@ face perilous challenges.</synopsis>
 		<rom version="0" name="Press Your Luck: 2010 Edition (USA) (EN).ds" size="16777216" crc="4a161d13" md5="86c3d41351ff82f384affbca42d69ba1" sha1="5408195008649aab3ddd78216c1e319516416df2"/>
 		<case color="000000"/>
 	</game>
-	<game name="Josefin Skolhjalp: Matematik: Dimma over Sifferkoping (Europe) (SE)">
+	<game name="Josefin Skolhjalp: Matematik - Dimma over Sifferkoping (Europe) (SE)">
 		<id>BP7M</id>
 		<type>DS</type>
 		<region>PAL</region>
 		<languages>SE</languages>
 		<locale lang="EN">
-			<title>Josefin Skolhjalp: Matematik: Dimma over Sifferkoping</title>
+			<title>Josefin Skolhjalp: Matematik - Dimma over Sifferkoping</title>
+			<synopsis/>
+		</locale>
+		<locale lang="SE">
+			<title>Josefin Skolhjälp: Matematik - Dimma över Sifferköping</title>
 			<synopsis/>
 		</locale>
 		<publisher/>
@@ -59926,7 +59982,7 @@ face perilous challenges.</synopsis>
 		<rating type="PEGI" value=""/>
 		<wi-fi players="0"/>
 		<input players-multi-cart="1" players-single-cart="1"/>
-		<rom version="0" name="Josefin Skolhjalp: Matematik: Dimma over Sifferkoping (Europe) (SE).ds" size="33554432" crc="5fb9f412" md5="4a104a8e44bab583a202641fedc93c22" sha1="569dd8afab1e98abb68c2de709e912aa8515c0aa"/>
+		<rom version="0" name="Josefin Skolhjalp: Matematik - Dimma over Sifferkoping (Europe) (SE).ds" size="33554432" crc="5fb9f412" md5="4a104a8e44bab583a202641fedc93c22" sha1="569dd8afab1e98abb68c2de709e912aa8515c0aa"/>
 	</game>
 	<game name="Josefine Skolehjelp: Matematikk: Taake i Tallheimen (Europe) (NO)">
 		<id>BP7N</id>
@@ -79297,6 +79353,18 @@ As your adventure progresses, you will gradually meet people who will teach you 
 			<title>Football Academy: Build and Prove Your Football Knowledge</title>
 			<synopsis>Join the EA SPORTS™ Football Academy to build and prove your knowledge of the world’s most popular sport, in a unique fun packed interactive football game that covers all areas of the game on and off the pitch.</synopsis>
 		</locale>
+		<locale lang="SE">
+			<title>Football Academy</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DK">
+			<title>Football Academy</title>
+			<synopsis/>
+		</locale>
+		<locale lang="NO">
+			<title>Football Academy</title>
+			<synopsis/>
+		</locale>
 		<developer>EA Sports / EA Canada</developer>
 		<publisher>Electronic Arts</publisher>
 		<date year="2009" month="3" day="19"/>
@@ -86781,6 +86849,18 @@ Domina el vocabulario Alemán y mejora tu nivel de comprensión practicando con 
 		<region>PAL</region>
 		<languages>EN,FR,DE,ES,IT,SE,DK,NO,FI</languages>
 		<locale lang="EN">
+			<title>My Make-Up</title>
+			<synopsis/>
+		</locale>
+		<locale lang="SE">
+			<title>My Make-Up</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DK">
+			<title>My Make-Up</title>
+			<synopsis/>
+		</locale>
+		<locale lang="NO">
 			<title>My Make-Up</title>
 			<synopsis/>
 		</locale>
@@ -125535,7 +125615,23 @@ Really sick animals can be admitted for in-patient care and healed in your anima
 		<languages>EN,FR,ES,IT,NL,SE,DK,NO</languages>
 		<locale lang="EN">
 			<title>America's Next Top Model</title>
-			<synopsis>Are you ready to compete in the fiercest modeling competition on Nintendo DS? Think you have what it takes to take yourself to the top of the modeling world? If so, you’ve come to the right game.</synopsis>
+			<synopsis>Are you ready to compete in the fiercest modeling competition on Nintendo DS? Think you have what it takes to take yourself to the top of the modeling world? If so, you’ve come to the right game.
+
+• Make your dreams come true and become a Top Model!
+• Pose elegantly during photo shoots, prove that you've got the best style and make-up at all times, and leave your opponents looking pale by comparison.
+• Organise your week so that you'll shine on the final catwalk!</synopsis>
+		</locale>
+		<locale lang="SE">
+			<title>Top Model</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DK">
+			<title>Top Model</title>
+			<synopsis/>
+		</locale>
+		<locale lang="NO">
+			<title>Top Model</title>
+			<synopsis/>
 		</locale>
 		<developer>Arts Software</developer>
 		<publisher>DTP Young Entertainment</publisher>

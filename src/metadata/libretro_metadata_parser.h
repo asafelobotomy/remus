@@ -16,6 +16,7 @@ struct LibretroMetadata {
     QString genre;
     QString developer;
     QString publisher;
+    QString description;
     int maxUsers = 0;
     int releaseYear = 0;
 };

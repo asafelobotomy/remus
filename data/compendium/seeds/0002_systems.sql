@@ -113,6 +113,15 @@ INSERT OR REPLACE INTO systems (
 (100, 'Commodore 16', 'Commodore 16 / Plus/4', 'Commodore', 3, 1984, 'CRC32', 0, 0),
 (101, 'Mega Duck', 'Mega Duck / Cougar Boy', 'Welback', 4, 1993, 'CRC32', 0, 1),
 (102, 'Microvision', 'Milton Bradley Microvision', 'Milton Bradley', 1, 1979, 'CRC32', 0, 1),
-(103, 'Nuon', 'VM Labs Nuon', 'VM Labs', 6, 1999, 'MD5', 1, 0);
+(103, 'Nuon', 'VM Labs Nuon', 'VM Labs', 6, 1999, 'MD5', 1, 0),
+(104, 'V.Smile', 'VTech V.Smile', 'VTech', 6, 2004, 'CRC32', 0, 0),
+(105, 'Leapster', 'LeapFrog Leapster', 'LeapFrog', 6, 2003, 'CRC32', 0, 1),
+(106, 'LeapPad', 'LeapFrog LeapPad', 'LeapFrog', 5, 1999, 'CRC32', 0, 0),
+(107, 'Beena', 'Sega Beena', 'Sega', 7, 2005, 'CRC32', 0, 0),
+(108, 'CreatiVision', 'VTech CreatiVision', 'VTech', 2, 1981, 'CRC32', 0, 0),
+(109, 'Picno', 'Konami Picno', 'Konami', 4, 1993, 'CRC32', 0, 0),
+(110, 'Game Master', 'Hartung Game Master', 'Hartung', 4, 1990, 'CRC32', 0, 1),
+(111, 'Symbian', 'Mobile Symbian', 'Nokia', 7, 2000, 'CRC32', 0, 1),
+(112, 'Adventure Vision', 'Entex Adventure Vision', 'Entex', 2, 1982, 'CRC32', 0, 0);
 
 COMMIT;

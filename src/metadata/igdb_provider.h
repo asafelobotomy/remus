@@ -33,6 +33,17 @@ public:
     GameMetadata getById(const QString &id) override;
     ArtworkUrls getArtwork(const QString &id) override;
 
+    /**
+     * @brief Bulk-fetch all IGDB games for a platform slug (for compendium enrichment).
+     *
+     * Uses Apicalypse: `where platforms.slug = "<slug>"` with pagination.
+     * Returns at most @p limit entries starting from @p offset.
+     * An empty list either means end-of-data or an authentication/network failure.
+     */
+    QList<GameMetadata> fetchGamesByPlatformSlug(const QString &platformSlug,
+                                                  int offset = 0,
+                                                  int limit = 500);
+
     bool isAvailable() override;
 
 private:

@@ -124,3 +124,18 @@
 | https://github.com/libretro/libretro-database/tree/master/metadat/releaseyear | libretro-database releaseyear/ sub-directory: confirmed Lynx, Jaguar, SuperGrafx; no disc-system DATs | 2026-04-01 | libretro, releaseyear, metadata |
 | https://github.com/libretro/libretro-database/tree/master/metadat/redump | libretro-database redump/ sub-directory: identity-only DATs for Xbox, Xbox360, Dreamcast, Saturn, Mega-CD, PCE-CD, 3DO, PS1, PS2; NOT descriptive metadata | 2026-04-01 | libretro, redump, identification |
 | https://query.wikidata.org/sparql | Wikidata SPARQL endpoint; CC0 data; P400=platform, P136=genre, P178=developer, P123=publisher, P577=publication date; useful CC0 fallback for sparse platforms | 2026-04-01 | wikidata, cc0, metadata, sparql |
+
+## Offline Metadata Sources for Compendium Enrichment (2026-05-09)
+
+| URL | Summary | Date | Tags |
+|-----|---------|------|------|
+| https://github.com/OpenVGDB/OpenVGDB | OpenVGDB — SQLite ROM hash→metadata DB; ~65 MB uncompressed; MD5 join; covers NES/SNES/GBA/PS1/PS2/Xbox/GCN; last updated Nov 2021 | 2026-05-09 | openvgdb, sqlite, offline, metadata, hash |
+| https://github.com/OpenVGDB/OpenVGDB/releases/download/v29.0/openvgdb.zip | OpenVGDB v29.0 direct download — ~8.7 MB zip; schema: ROMS(romMD5), RELEASES(releaseDescription, releaseDeveloper, releaseGenre, releaseDate) | 2026-05-09 | openvgdb, download, sqlite |
+| https://www.tosecdev.org/downloads | TOSEC DAT downloads page — complete pack 4743 DATs (2025-03-13); strong Amiga/C64/Amstrad CPC coverage; ClrMAMePro format; CRC32+MD5+SHA1 | 2026-05-09 | tosec, dat, amiga, c64, amstrad, offline |
+| https://www.tosecdev.org/downloads/category/59-2025-03-13 | TOSEC 2025-03-13 release notes — 3111 main + 283 ISO + 1132 PIX DATs; PS2 WIP ISO; new Amstrad CPC CDT/DSK DATs | 2026-05-09 | tosec, release, amiga, c64, amstrad |
+| https://datomatic.no-intro.org/index.php?page=download | No-Intro DAT-o-MATIC download page — Standard DAT/DB XML/daily bundle; free account required; covers Xbox 360 (17k entries), DS, C64, Amiga | 2026-05-09 | no-intro, dat, download, xbox360, ds |
+| https://api-docs.retroachievements.org/v1/get-game-list.html | RetroAchievements API: GetGameList with h=1 returns MD5 hashes per console; custom RA hashing algorithm (not standard MD5 of whole file) | 2026-05-09 | retroachievements, api, hash, md5 |
+| https://www.mobygames.com/info/api/ | MobyGames REST API — 720 req/hr non-commercial; platforms: DOS(2), Amiga(19), C64(4), Amstrad CPC(60), Xbox 360(69), PS2(7); best legacy PC metadata | 2026-05-09 | mobygames, api, dos, amiga, c64, amstrad, xbox360, ps2 |
+| https://shiraga.me/ | shiragame — SQLite compiling No-Intro+Redump+TOSEC; MIT license; ~87 MB zip; hash→gamename only; last release 2022-08-13 (stale) | 2026-05-09 | shiragame, sqlite, offline, hash |
+| https://github.com/SnowflakePowered/shiragame | shiragame GitHub — download: shiragame.db.zip (~87 MB); Stone platform IDs; auto-compiled from cataloguing orgs | 2026-05-09 | shiragame, github, download |
+| https://docs/research/offline-metadata-sources-2026-05-09.md | Full research report: 10 sources compared; priority ranking; implementation notes for TOSEC/OpenVGDB/libretro metadat | 2026-05-09 | research, metadata, compendium, offline |

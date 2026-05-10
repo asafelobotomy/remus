@@ -257,6 +257,8 @@ int main(int argc, char *argv[])
     if (int rc = handleModCatalogBuildCommand(ctx)) return rc;
     if (int rc = handleBuildCompendiumCommand(ctx)) return rc;
     if (int rc = handleEnrichCompendiumCommand(ctx)) return rc;
+    if (int rc = handleIngestSourceCommand(ctx)) return rc;
+    if (int rc = handleCoverageReportCommand(ctx)) return rc;
     if (int rc = handleUpdateDatsCommand(ctx))     return rc;
     if (int rc = handleImportDatCommand(ctx))      return rc;
     if (int rc = handleRemoveDatCommand(ctx))      return rc;

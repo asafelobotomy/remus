@@ -361,7 +361,7 @@ add_remus_test(test_cli_helpers CliHelpersTest
 )
 
 add_remus_test(test_cli_mod_support CliModSupportTest
-    SOURCES test_cli_mod_support.cpp ../src/cli/cli_mod_support.cpp
+    SOURCES test_cli_mod_support.cpp ../src/cli/cli_mod_support.cpp ../src/cli/cli_mod_support_format.cpp
     LIBS Qt6::Test Qt6::Core Qt6::Network remus-services remus-core
 )
 

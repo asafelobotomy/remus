@@ -34,6 +34,8 @@ private slots:
     // normalize
     void normalize_setsSystemAndRegion();
     void normalize_unknownHintsProduceZeroAndEmpty();
+    void normalize_normalizesRegionInFields();
+    void normalize_removesUnmappableRegionFromFields();
 };
 
 // ── resolveRegionCode ─────────────────────────────────────────────────────────
@@ -173,6 +175,41 @@ void CompendiumNormalizerTest::normalize_unknownHintsProduceZeroAndEmpty()
 
     QCOMPARE(rec.resolvedSystemId,   0);
     QVERIFY(rec.resolvedRegionCode.isEmpty());
+}
+
+void CompendiumNormalizerTest::normalize_normalizesRegionInFields()
+{
+    // Raw region strings in rec.fields["region"] must be mapped to canonical
+    // region_codes so the merge resolver can safely propagate them to
+    // games.primary_region_code (which has an FK to regions(region_code)).
+    CompendiumNormalizer n;
+
+    SourceRecordEnvelope rec;
+    rec.systemHint = QStringLiteral("Sony - PlayStation");
+    rec.regionRaw  = QStringLiteral("Japan");
+    rec.fields.insert(QStringLiteral("region"), QStringLiteral("Japan"));
+
+    n.normalize(rec);
+
+    QCOMPARE(rec.resolvedRegionCode, QStringLiteral("JPN"));
+    QCOMPARE(rec.fields.value(QStringLiteral("region")), QStringLiteral("JPN"));
+}
+
+void CompendiumNormalizerTest::normalize_removesUnmappableRegionFromFields()
+{
+    // Unmappable region strings must be removed from rec.fields to prevent
+    // the merge resolver from writing an invalid value to primary_region_code.
+    CompendiumNormalizer n;
+
+    SourceRecordEnvelope rec;
+    rec.systemHint = QStringLiteral("Sony - PlayStation");
+    rec.regionRaw  = QStringLiteral("Narnia");
+    rec.fields.insert(QStringLiteral("region"), QStringLiteral("Narnia"));
+
+    n.normalize(rec);
+
+    QVERIFY(rec.resolvedRegionCode.isEmpty());
+    QVERIFY(!rec.fields.contains(QStringLiteral("region")));
 }
 
 QTEST_MAIN(CompendiumNormalizerTest)

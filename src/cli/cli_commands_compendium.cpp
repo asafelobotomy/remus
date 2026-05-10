@@ -1,7 +1,6 @@
 #include "cli_commands.h"
 #include "cli_compendium_build_phases.h"
 #include "cli_helpers.h"
-#include "compendium_enrichment.h"
 #include "compendium_sql_utilities.h"
 
 #include "../core/compendium_manifest_parser.h"
@@ -77,6 +76,35 @@ int handleBuildCompendiumCommand(CliContext &ctx)
     if (!parseManifest(buildManifestPath, buildId, schemaVersion, manifestJson, sourceObjects, sources, error)) {
         qCritical().noquote() << QStringLiteral("✗ %1").arg(error);
         return 1;
+    }
+
+    // G: Skip full rebuild if the existing DB already has a matching snapshot for
+    // every enabled source (same checksum_sha256). Avoids reprocessing unchanged DATs.
+    if (outputInfo.exists()) {
+        const QString checkConn = QStringLiteral("compendium-check-")
+                                  + QUuid::createUuid().toString(QUuid::WithoutBraces);
+        QSqlDatabase checkDb = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), checkConn);
+        checkDb.setDatabaseName(outputInfo.absoluteFilePath());
+        bool allMatch = checkDb.open();
+        if (allMatch) {
+            for (const CompendiumSourceDescriptor &src : std::as_const(sources)) {
+                if (!src.enabled || src.checksumSha256.isEmpty()) continue;
+                QSqlQuery q(checkDb);
+                q.prepare(QStringLiteral(
+                    "SELECT 1 FROM source_snapshots "
+                    "WHERE source_id = ? AND checksum_sha256 = ? LIMIT 1"));
+                q.addBindValue(src.sourceId);
+                q.addBindValue(src.checksumSha256);
+                if (!q.exec() || !q.next()) { allMatch = false; break; }
+            }
+            checkDb.close();
+        }
+        QSqlDatabase::removeDatabase(checkConn);
+        if (allMatch) {
+            qInfo() << "[build-compendium] All source checksums match existing DB — skipping rebuild.";
+            qInfo() << "[build-compendium] Delete the DB to force a full rebuild.";
+            return 0;
+        }
     }
 
     QFile::remove(outputInfo.absoluteFilePath());
@@ -275,23 +303,23 @@ int handleBuildCompendiumCommand(CliContext &ctx)
     }
     writeProgress(QStringLiteral("enriching"), totalEnabled, {}, stats);
 
-    // ── Enrichment passes + FTS index ─────────────────────────────────────────
-    int metadataGamesEnriched = 0;
-    int metadataFactsInserted = 0;
-    int gametdbGamesEnriched  = 0;
-    int gametdbFactsInserted  = 0;
+    // ── Enrichment passes (Libretro, GameTDB, OpenVGDB, IGDB) + merge resolve ──
+    EnrichmentStats enrichStats;
     {
-        const QString metadataDir = findDataSubdir(QStringLiteral("metadata"));
-        const QString gametdbDir  = findDataSubdir(QStringLiteral("gametdb"));
+        const QString metadataDir  = findDataSubdir(QStringLiteral("metadata"));
+        const QString gametdbDir   = findDataSubdir(QStringLiteral("gametdb"));
+        const QString openvgdbPath = findOpenVGDBPath();
+        const QString credPath     = outputInfo.dir().filePath(
+                                         QStringLiteral("enrichment-credentials.json"));
         if (!runCompendiumEnrichmentPasses(database, metadataDir, gametdbDir,
-                                           metadataGamesEnriched, metadataFactsInserted,
-                                           gametdbGamesEnriched, gametdbFactsInserted, error)) {
+                                          openvgdbPath, credPath, enrichStats, error)) {
             qCritical().noquote() << QStringLiteral("✗ %1").arg(error);
             database.close();
             QSqlDatabase::removeDatabase(connectionName);
             return 1;
         }
     }
+
     populateCompendiumFtsIndex(database);
 
     int systemsCount = scalarCount(database, QStringLiteral("SELECT COUNT(*) FROM systems"), error);
@@ -326,15 +354,21 @@ int handleBuildCompendiumCommand(CliContext &ctx)
     report.insert(QStringLiteral("input_sources"), sourceObjects);
     report.insert(QStringLiteral("records_ingested"), stats.recordsIngested);
     report.insert(QStringLiteral("games_created"), stats.gamesCreated);
+    report.insert(QStringLiteral("games_deduplicated"), stats.deduplicatedGames);
     report.insert(QStringLiteral("signatures_created"), stats.signaturesCreated);
     report.insert(QStringLiteral("serials_created"), stats.serialsCreated);
     report.insert(QStringLiteral("facts_created"), stats.factsCreated);
     report.insert(QStringLiteral("resolved_fields"), stats.resolvedFields);
     report.insert(QStringLiteral("unresolved_conflicts"), conflictsCount);
-    report.insert(QStringLiteral("metadata_games_enriched"), metadataGamesEnriched);
-    report.insert(QStringLiteral("metadata_facts_inserted"), metadataFactsInserted);
-    report.insert(QStringLiteral("gametdb_games_enriched"), gametdbGamesEnriched);
-    report.insert(QStringLiteral("gametdb_facts_inserted"), gametdbFactsInserted);
+    report.insert(QStringLiteral("metadata_games_enriched"), enrichStats.metadataGamesEnriched);
+    report.insert(QStringLiteral("metadata_facts_inserted"), enrichStats.metadataFactsInserted);
+    report.insert(QStringLiteral("gametdb_games_enriched"),  enrichStats.gametdbGamesEnriched);
+    report.insert(QStringLiteral("gametdb_facts_inserted"),  enrichStats.gametdbFactsInserted);
+    report.insert(QStringLiteral("openvgdb_games_enriched"), enrichStats.openvgdbGamesEnriched);
+    report.insert(QStringLiteral("openvgdb_facts_inserted"), enrichStats.openvgdbFactsInserted);
+    report.insert(QStringLiteral("igdb_games_enriched"),     enrichStats.igdbGamesEnriched);
+    report.insert(QStringLiteral("igdb_facts_inserted"),     enrichStats.igdbFactsInserted);
+    report.insert(QStringLiteral("post_enrich_resolved_fields"), enrichStats.resolvedFields);
     report.insert(QStringLiteral("duration_ms"), static_cast<qint64>(timer.elapsed()));
 
     if (!writeReport(reportPath, report, error)) {
