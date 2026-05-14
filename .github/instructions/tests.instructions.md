@@ -1,16 +1,17 @@
 ---
 name: Test Files
-applyTo: "**/*.test.*,**/*.spec.*,**/tests/**,**/test/**,**/__tests__/**"
-description: "Conventions for test and spec files — naming, structure, mocking, and the arrange/act/assert pattern"
+applyTo: "**/tests/**,**/test_*.py,**/*_test.py"
+description: "Conventions for test files in this workspace — framework, fixture approach, and verification discipline"
 ---
 
 # Test File Instructions
 
-- Testing framework: Qt Test (CTest)
-- Run tests: `cd build && ctest --output-on-failure`
-- Name test files to mirror the source file they cover (e.g. `hash_service.cpp` → `test_hash_service.cpp`).
-- Each test should have a clear arrange/act/assert structure.
-- Prefer testing behaviour over implementation details — avoid asserting internal state.
-- Mock external dependencies; do not mock the module under test.
-- Use descriptive test names that explain the expected behaviour, not the method name.
+- Testing framework for this workspace: **(not detected)** — run tests with `(not detected)`
+- Run the narrowest targeted test for a single changed module during intermediate work.
+- Run the full suite at task completion or when shared helpers are touched.
+- Fixtures are self-contained in test methods — no external test data files unless the framework requires them.
+- Use temporary directories for any test that needs a filesystem workspace; ensure cleanup is automatic.
+- Test through public interfaces, not internal implementation details.
 - When fixing a bug, write a failing test first, then fix the code.
+- Each test class or module covers one logical concern; test method or function names describe the expected behaviour, not the implementation.
+- Always — write tests alongside every code change.

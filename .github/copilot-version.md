@@ -1,132 +1,17 @@
-0.10.0
-<!-- markdownlint-disable-file MD041 -->
-Applied: 2026-04-04
-Updated: 2026-05-09
-<!-- manifest-scope: stable managed files only; .github/copilot-version.md is intentionally excluded because a file cannot hash its own current contents without a recursive convention -->
-<!-- section-fingerprints
-§1=fea16f3c9e99
-§2=9061aac5d2b2
-§3=ea6012da946d
-§4=3792e00b3d93
-§5=d7a28629e553
-§6=683bf1bfeb3a
-§7=aff7b76e6ea8
-§8=938deb396149
-§9=c807629fb94c
-§10=176e3e832823
-§11=24c58d10047e
-§12=3fd00b8f00a5
-§13=6d4fcec491ca
-§14=7230aa55b900
--->
-<!-- file-manifest
-.copilot/workspace/workspace-index.json=68582200a649
-.github/agents/audit.agent.md=ede54600372a
-.github/agents/cleaner.agent.md=05ddf596ea32
-.github/agents/coding.agent.md=d57bda3421b0
-.github/agents/commit.agent.md=d726bc3157a6
-.github/agents/debugger.agent.md=fab6e1b40d38
-.github/agents/docs.agent.md=cc1491e23eea
-.github/agents/doctor.agent.md=046d44654728
-.github/agents/explore.agent.md=1b20dbfb2375
-.github/agents/extensions.agent.md=a7c8953699c3
-.github/agents/fast.agent.md=d2a80764eaf5
-.github/agents/organise.agent.md=6fb7682eb550
-.github/agents/planner.agent.md=8162e0142259
-.github/agents/researcher.agent.md=50636e87d681
-.github/agents/review.agent.md=1e19517d43c7
-.github/agents/setup.agent.md=625be174163e
-.github/hooks/copilot-hooks.json=83f88ccc20b5
-.github/hooks/scripts/guard-destructive.sh=def097bc0e21
-.github/hooks/scripts/heartbeat-policy.json=c8930a86a8ad
-.github/hooks/scripts/heartbeat_clock_summary.py=e59276ab5b3a
-.github/hooks/scripts/lib-hooks.sh=f19f3a6e3291
-.github/hooks/scripts/mcp-heartbeat-server.py=7ed54e7741c6
-.github/hooks/scripts/mcp-npx.sh=00b7600b59fc
-.github/hooks/scripts/mcp-uvx.sh=756f5b13c7fb
-.github/hooks/scripts/mcp_heartbeat_lib.py=fdf7c43c1619
-.github/hooks/scripts/post-edit-lint.sh=444de67dd8f7
-.github/hooks/scripts/pulse.sh=dec09e66b194
-.github/hooks/scripts/pulse_artifacts.py=0103f94a4dab
-.github/hooks/scripts/pulse_handlers.py=2c33ab735b2a
-.github/hooks/scripts/pulse_intent.py=ffc6139b1ddb
-.github/hooks/scripts/pulse_paths.py=e15c83bdb530
-.github/hooks/scripts/pulse_routing.py=8588abb5eeb6
-.github/hooks/scripts/pulse_runtime.py=871ca113bab3
-.github/hooks/scripts/pulse_state.py=f80d84e4512f
-.github/hooks/scripts/save-context.sh=3689d106dc36
-.github/hooks/scripts/scan-secrets.sh=19c3aa91db0f
-.github/hooks/scripts/session-start.sh=14cace047c26
-.github/hooks/scripts/session_reflect_fallback.py=99e97a27ed83
-.github/hooks/scripts/subagent-start.sh=da65494a9d8e
-.github/hooks/scripts/subagent-stop.sh=a455d1724609
-.github/instructions/api-routes.instructions.md=bc5f67c87bbf
-.github/instructions/config.instructions.md=18b1ece4aff2
-.github/instructions/docs.instructions.md=27f110fcf0eb
-.github/instructions/plugin-components.instructions.md=587de9faed97
-.github/instructions/plugin.instructions.md=67e69eac2191
-.github/instructions/terminal.instructions.md=48b4a39dafcc
-.github/instructions/tests.instructions.md=f30a0f55a0ca
-.github/prompts/commit-msg.prompt.md=02ffbd52b736
-.github/prompts/context-map.prompt.md=023cec4bfe75
-.github/prompts/explain.prompt.md=496d85c10832
-.github/prompts/onboard-commit-style.prompt.md=bcce9e9cf083
-.github/prompts/onboarding.prompt.md=c09a3b3870b9
-.github/prompts/refactor.prompt.md=916980b47710
-.github/prompts/review-file.prompt.md=f6dd8db12760
-.github/prompts/test-gen.prompt.md=0ec94b637003
-.github/skills/accessibility-review/SKILL.md=de3dc13af8e7
-.github/skills/agentic-workflows/SKILL.md=6deaecc96e41
-.github/skills/api-design/SKILL.md=1b420e73b71a
-.github/skills/audit-procedures/SKILL.md=fce4b831d8cf
-.github/hooks/scripts/mcp-docs-server.py=9ea58305ac98
-.github/hooks/scripts/mcp-duckduckgo-server.py=7d50e18b5373
-.github/hooks/scripts/mcp-fetch-server.py=2f3860bab3b8
-.github/hooks/scripts/mcp-git-server.py=d1c5fa6cbc6b
-.github/hooks/scripts/mcp-sequential-thinking-server.py=61856120ce56
-.github/skills/changelog-entry/SKILL.md=9cc11b7073bb
-.github/skills/commit-preflight/SKILL.md=5ca8e769deb4
-.github/skills/compress-prose/SKILL.md=add0f358d3c0
-.github/skills/conventional-commit/SKILL.md=4da2b224f67c
-.github/skills/create-adr/SKILL.md=2575d801b9dd
-.github/skills/dependency-update/SKILL.md=2aa3aab97abd
-.github/skills/docker-scaffold/SKILL.md=c25f8b32ab99
-.github/skills/env-config/SKILL.md=6c8384b1679a
-.github/skills/extension-review/SKILL.md=bb6b79e841e7
-.github/skills/fix-ci-failure/SKILL.md=b58f81ced9df
-.github/skills/git-workflows/SKILL.md=5bda537d8fbc
-.github/skills/issue-triage/SKILL.md=b65720ab9714
-.github/skills/lean-pr-review/SKILL.md=e97298d4e1cd
-.github/skills/mcp-builder/SKILL.md=e57f818acb16
-.github/skills/mcp-management/SKILL.md=d51d48ed1894
-.github/skills/onboarding-docs/SKILL.md=af214897e9a7
-.github/skills/performance-profiling/SKILL.md=b92cf9dcba4d
-.github/skills/plugin-management/SKILL.md=7ba88db06039
-.github/skills/refactor-extract/SKILL.md=47151cd0d9e2
-.github/skills/security-audit/SKILL.md=0f3a3c7c3cfc
-.github/skills/skill-creator/SKILL.md=c548b6bb2917
-.github/skills/skill-management/SKILL.md=c29f5309bca6
-.github/skills/tech-debt-audit/SKILL.md=d01b5c193621
-.github/skills/test-coverage-review/SKILL.md=ddc593bbd568
-.github/skills/tool-protocol/SKILL.md=1d32ebc214a3
-.github/skills/webapp-testing/SKILL.md=2c5db186e367
-.vscode/settings.json=50eebb1ed53d
-.vscode/extensions.json=7688a76c5a3a
-.vscode/mcp.json=d9ae11ae309a
-AGENTS.md=a0f7669e1b47
--->
-<!-- setup-answers
-PROJECT_NAME=Remus
-LANGUAGE=C++17
-RUNTIME=Native desktop (Qt 6, compiled via CMake)
-PACKAGE_MANAGER=CMake
-TEST_COMMAND=ctest --test-dir build -j$(nproc)
-TYPE_CHECK_COMMAND=cmake --build build 2>&1 | head -30
-THREE_CHECK_COMMAND=cmake --build build && ctest --test-dir build -j$(nproc)
-TEST_FRAMEWORK=Qt Test (CTest)
-SETUP_DATE=2026-04-04
-MCP_STACK_SERVERS=filesystem, git, fetch
-MCP_CUSTOM_SERVERS=heartbeat
-MCP_AVAILABLE=github,fetch,heartbeat,docs,sequential-thinking,duckduckgo
-MCP_ENABLED=heartbeat
--->
+# xanadAssistant Installed Summary
+
+Version: 0.1.0
+Profile: balanced
+Selected packs: none
+Applied at: 2026-05-14T20:16:33Z
+Lockfile: .github/xanadAssistant-lock.json
+
+```json
+{
+  "version": "0.1.0",
+  "profile": "balanced",
+  "selectedPacks": [],
+  "manifestHash": "sha256:6cafc33127efeaf9806512c2c596b8dcb75c17eb9a99700874bbe243517b88aa",
+  "appliedAt": "2026-05-14T20:16:33Z"
+}
+```

@@ -1,0 +1,174 @@
+{
+  "schemaVersion": "0.1.0",
+  "package": {
+    "name": "xanadAssistant",
+    "packageRoot": "/home/solon/.xanadAssistant/pkg-cache/github/asafelobotomy-xanadassistant/ref-main"
+  },
+  "manifest": {
+    "schemaVersion": "0.1.0",
+    "hash": "sha256:6cafc33127efeaf9806512c2c596b8dcb75c17eb9a99700874bbe243517b88aa"
+  },
+  "timestamps": {
+    "appliedAt": "2026-05-14T20:16:33Z",
+    "updatedAt": "2026-05-14T20:16:33Z"
+  },
+  "selectedPacks": [],
+  "profile": "balanced",
+  "ownershipBySurface": {
+    "agents": "local",
+    "instructions": "local",
+    "hooks": "local",
+    "prompts": "local",
+    "skills": "local",
+    "mcp": "local",
+    "vscode-settings": "local"
+  },
+  "setupAnswers": {
+    "setup.depth": "simple",
+    "profile.selected": "balanced",
+    "packs.selected": [],
+    "mcp.enabled": true,
+    "ownership.agents": "local",
+    "ownership.skills": "local",
+    "response.style": "balanced",
+    "autonomy.level": "act-then-tell",
+    "agent.persona": "pair-programmer",
+    "testing.philosophy": "always",
+    "mcp.servers": [
+      "github"
+    ],
+    "hooks.enabled": true
+  },
+  "resolvedTokenConflicts": {},
+  "installMetadata": {
+    "mcpAvailable": true,
+    "mcpEnabled": true
+  },
+  "files": [],
+  "skippedManagedFiles": [
+    ".github/hooks/scripts/devopsEnvCheck.py",
+    ".github/hooks/scripts/docsLinkCheck.py",
+    ".github/hooks/scripts/leanContextBudget.py",
+    ".github/hooks/scripts/leanTestReporter.py",
+    ".github/hooks/scripts/mlopsModelCheck.py",
+    ".github/hooks/scripts/ossGitLog.py",
+    ".github/hooks/scripts/ossLicenseCheck.py",
+    ".github/hooks/scripts/secureOsv.py",
+    ".github/hooks/scripts/shapeupScopeCheck.py",
+    ".github/hooks/scripts/tddTestRunner.py",
+    ".github/prompts/devops-incident.prompt.md",
+    ".github/prompts/devops-pipeline.prompt.md",
+    ".github/prompts/docs-draft.prompt.md",
+    ".github/prompts/docs-review.prompt.md",
+    ".github/prompts/lean-plan.prompt.md",
+    ".github/prompts/lean-review.prompt.md",
+    ".github/prompts/lean-status.prompt.md",
+    ".github/prompts/mlops-drift.prompt.md",
+    ".github/prompts/mlops-experiment.prompt.md",
+    ".github/prompts/oss-changelog.prompt.md",
+    ".github/prompts/oss-pr.prompt.md",
+    ".github/prompts/security-review.prompt.md",
+    ".github/prompts/shapeup-kickoff.prompt.md",
+    ".github/prompts/shapeup-pitch.prompt.md",
+    ".github/prompts/tdd-review.prompt.md",
+    ".github/prompts/tdd-session.prompt.md",
+    ".github/prompts/threat-model.prompt.md",
+    ".github/skills/dependencyAudit/SKILL.md",
+    ".github/skills/devopsCiCd/SKILL.md",
+    ".github/skills/devopsContainers/SKILL.md",
+    ".github/skills/devopsInfraAsCode/SKILL.md",
+    ".github/skills/devopsReview/SKILL.md",
+    ".github/skills/docsApi/SKILL.md",
+    ".github/skills/docsReview/SKILL.md",
+    ".github/skills/docsStructure/SKILL.md",
+    ".github/skills/docsStyle/SKILL.md",
+    ".github/skills/leanAndon/SKILL.md",
+    ".github/skills/leanContext/SKILL.md",
+    ".github/skills/leanOutput/SKILL.md",
+    ".github/skills/leanVerification/SKILL.md",
+    ".github/skills/mlopsDataPipelines/SKILL.md",
+    ".github/skills/mlopsExperiments/SKILL.md",
+    ".github/skills/mlopsModelServing/SKILL.md",
+    ".github/skills/mlopsReview/SKILL.md",
+    ".github/skills/ossChangelog/SKILL.md",
+    ".github/skills/ossCodeReview/SKILL.md",
+    ".github/skills/ossContributing/SKILL.md",
+    ".github/skills/ossLicensing/SKILL.md",
+    ".github/skills/secretScanning/SKILL.md",
+    ".github/skills/secureReview/SKILL.md",
+    ".github/skills/shapeupBetting/SKILL.md",
+    ".github/skills/shapeupCycleWork/SKILL.md",
+    ".github/skills/shapeupPitching/SKILL.md",
+    ".github/skills/shapeupReview/SKILL.md",
+    ".github/skills/tddCycle/SKILL.md",
+    ".github/skills/testArchitecture/SKILL.md",
+    ".github/skills/testCoverage/SKILL.md",
+    ".github/skills/testDoubles/SKILL.md",
+    ".github/skills/threatModel/SKILL.md",
+    ".vscode/settings.json"
+  ],
+  "retiredManagedFiles": [
+    {
+      "id": "migration.cleanup..github/hooks/copilot-hooks.json",
+      "action": "archived",
+      "target": ".github/hooks/copilot-hooks.json",
+      "archivePath": ".xanadAssistant/archive/.github/hooks/copilot-hooks.json"
+    },
+    {
+      "id": "migration.cleanup..github/instructions/api-routes.instructions.md",
+      "action": "archived",
+      "target": ".github/instructions/api-routes.instructions.md",
+      "archivePath": ".xanadAssistant/archive/.github/instructions/api-routes.instructions.md"
+    },
+    {
+      "id": "migration.cleanup..github/instructions/config.instructions.md",
+      "action": "archived",
+      "target": ".github/instructions/config.instructions.md",
+      "archivePath": ".xanadAssistant/archive/.github/instructions/config.instructions.md"
+    },
+    {
+      "id": "migration.cleanup..github/instructions/docs.instructions.md",
+      "action": "archived",
+      "target": ".github/instructions/docs.instructions.md",
+      "archivePath": ".xanadAssistant/archive/.github/instructions/docs.instructions.md"
+    },
+    {
+      "id": "migration.cleanup..github/instructions/plugin-components.instructions.md",
+      "action": "archived",
+      "target": ".github/instructions/plugin-components.instructions.md",
+      "archivePath": ".xanadAssistant/archive/.github/instructions/plugin-components.instructions.md"
+    },
+    {
+      "id": "migration.cleanup..github/instructions/plugin.instructions.md",
+      "action": "archived",
+      "target": ".github/instructions/plugin.instructions.md",
+      "archivePath": ".xanadAssistant/archive/.github/instructions/plugin.instructions.md"
+    },
+    {
+      "id": "migration.cleanup..github/instructions/terminal.instructions.md",
+      "action": "archived",
+      "target": ".github/instructions/terminal.instructions.md",
+      "archivePath": ".xanadAssistant/archive/.github/instructions/terminal.instructions.md"
+    },
+    {
+      "id": "migration.cleanup..mcp.json",
+      "action": "archived",
+      "target": ".mcp.json",
+      "archivePath": ".xanadAssistant/archive/.mcp.json"
+    }
+  ],
+  "consumerResolutions": {
+    ".github/instructions/api-routes.instructions.md": "keep",
+    ".github/instructions/config.instructions.md": "keep",
+    ".github/instructions/docs.instructions.md": "keep",
+    ".github/instructions/plugin-components.instructions.md": "keep",
+    ".github/instructions/plugin.instructions.md": "keep",
+    ".github/instructions/terminal.instructions.md": "keep",
+    ".vscode/extensions.json": "keep",
+    ".vscode/settings.json": "keep"
+  },
+  "unknownValues": {},
+  "lastBackup": {
+    "path": ".xanadAssistant/backups/2026-05-14T20-16-33Z"
+  }
+}

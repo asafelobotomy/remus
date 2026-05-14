@@ -1,1 +1,0 @@
-- 2026-05-01T19:04:21Z FakeConverter success-path tests must set both nextTracked.started=true AND nextTracked.exitCode=0; missing exitCode causes runToolConversion to report failure (gates on exitCode==0 && outputPath exis
