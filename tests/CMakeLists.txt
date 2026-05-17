@@ -383,6 +383,11 @@ add_remus_test(test_compendium_manifest_parser CompendiumManifestParserTest
     LIBS Qt6::Test Qt6::Core remus-core
 )
 
+add_remus_test(test_compendium_merge_resolver CompendiumMergeResolverTest
+    SOURCES test_compendium_merge_resolver.cpp
+    LIBS Qt6::Test Qt6::Core Qt6::Sql remus-metadata
+)
+
 add_remus_test(test_compendium_normalizer CompendiumNormalizerTest
     SOURCES test_compendium_normalizer.cpp
     LIBS Qt6::Test Qt6::Core remus-metadata remus-core

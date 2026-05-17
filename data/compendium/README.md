@@ -15,9 +15,12 @@ Manual steps:
 
 ```bash
 sqlite3 data/compendium/remus_compendium.db < data/compendium/migrations/0001_phase1_canonical_schema.sql
+sqlite3 data/compendium/remus_compendium.db < data/compendium/migrations/0002_patch_catalog.sql
 sqlite3 data/compendium/remus_compendium.db < data/compendium/seeds/0001_regions.sql
 sqlite3 data/compendium/remus_compendium.db < data/compendium/seeds/0002_systems.sql
 sqlite3 data/compendium/remus_compendium.db < data/compendium/seeds/0003_merge_policy.sql
+sqlite3 data/compendium/remus_compendium.db < data/compendium/migrations/0003_systems_libretro_name.sql
+sqlite3 data/compendium/remus_compendium.db < data/compendium/migrations/0004_fts5_search_index.sql
 ```
 
 ## Validate phase 1 constraints and collisions
@@ -36,9 +39,13 @@ sqlite3 data/compendium/remus_compendium.db "SELECT COUNT(*) AS merge_policy_cou
 
 Expected values:
 
-- systems_count: `42`
-- regions_count: `6`
+- systems_count: `112`
+- regions_count: `21`
 - merge_policy_count: `21`
+
+A fresh bootstrap database contains schema, seeds, and indexes only. The full
+validator is intended for a populated build output, so `content.*` checks will
+remain `FAIL` until you run a compendium build or ingest workflow.
 
 ## Build and inspect compendium catalogs
 
@@ -59,8 +66,11 @@ sqlite3 data/compendium/remus_compendium.db "SELECT system_name, catalog_name, e
 ## Files
 
 - Migration: [data/compendium/migrations/0001_phase1_canonical_schema.sql](migrations/0001_phase1_canonical_schema.sql)
+- Patch catalog migration: [data/compendium/migrations/0002_patch_catalog.sql](migrations/0002_patch_catalog.sql)
 - Regions seed: [data/compendium/seeds/0001_regions.sql](seeds/0001_regions.sql)
 - Systems seed: [data/compendium/seeds/0002_systems.sql](seeds/0002_systems.sql)
 - Merge policy seed: [data/compendium/seeds/0003_merge_policy.sql](seeds/0003_merge_policy.sql)
+- Libretro name migration: [data/compendium/migrations/0003_systems_libretro_name.sql](migrations/0003_systems_libretro_name.sql)
+- FTS migration: [data/compendium/migrations/0004_fts5_search_index.sql](migrations/0004_fts5_search_index.sql)
 - Validator: [data/compendium/validation/0001_phase1_checks.sql](validation/0001_phase1_checks.sql)
 - Runner script: [scripts/setup_compendium_db.sh](../../scripts/setup_compendium_db.sh)

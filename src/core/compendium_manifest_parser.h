@@ -32,9 +32,12 @@ bool requireString(const QJsonObject &object,
                    QString &error,
                    bool allowEmpty = false);
 
+QString resolveManifestRelativePath(const QString &manifestPath, const QString &sourcePath);
+
 bool parseSourceDescriptor(const QJsonObject &object,
-                            CompendiumSourceDescriptor &descriptor,
-                            QString &error);
+                           const QString &manifestPath,
+                           CompendiumSourceDescriptor &descriptor,
+                           QString &error);
 
 bool parseManifest(const QString &manifestPath,
                    QString &buildId,

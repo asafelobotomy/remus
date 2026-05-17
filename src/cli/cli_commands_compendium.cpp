@@ -10,10 +10,12 @@
 #include <QDebug>
 #include <QDir>
 #include <QElapsedTimer>
+#include <QFile>
 #include <QFileInfo>
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QJsonParseError>
 #include <QSqlDatabase>
 #include <QSqlError>
 #include <QSqlQuery>
@@ -21,6 +23,57 @@
 
 using namespace CompendiumSqlUtilities;
 using namespace Remus;
+
+namespace {
+
+QString normalizeManifestJson(const QString &manifestJson)
+{
+    QJsonParseError parseError;
+    const QJsonDocument document = QJsonDocument::fromJson(manifestJson.toUtf8(), &parseError);
+    if (parseError.error != QJsonParseError::NoError || document.isNull()) {
+        return manifestJson;
+    }
+    return QString::fromUtf8(document.toJson(QJsonDocument::Compact));
+}
+
+QString makeStagedSiblingPath(const QString &finalPath)
+{
+    return finalPath + QStringLiteral(".staged-")
+           + QUuid::createUuid().toString(QUuid::WithoutBraces);
+}
+
+bool promoteStagedFile(const QString &stagedPath,
+                      const QString &finalPath,
+                      QString &error)
+{
+    if (stagedPath == finalPath) {
+        return true;
+    }
+
+    const QString backupPath = finalPath + QStringLiteral(".bak");
+    QFile::remove(backupPath);
+
+    const bool hadExistingTarget = QFile::exists(finalPath);
+    if (hadExistingTarget && !QFile::rename(finalPath, backupPath)) {
+        error = QStringLiteral("Failed to stage existing output %1 for replacement").arg(finalPath);
+        return false;
+    }
+
+    if (!QFile::rename(stagedPath, finalPath)) {
+        if (hadExistingTarget) {
+            QFile::rename(backupPath, finalPath);
+        }
+        error = QStringLiteral("Failed to promote staged output %1 to %2").arg(stagedPath, finalPath);
+        return false;
+    }
+
+    if (hadExistingTarget) {
+        QFile::remove(backupPath);
+    }
+    return true;
+}
+
+} // namespace
 
 int handleBuildCompendiumCommand(CliContext &ctx)
 {
@@ -50,6 +103,12 @@ int handleBuildCompendiumCommand(CliContext &ctx)
         qCritical() << "✗ Failed to create output directory:" << outputInfo.dir().absolutePath();
         return 1;
     }
+    const QString finalOutputPath = outputInfo.absoluteFilePath();
+    const QString stagedOutputPath = makeStagedSiblingPath(finalOutputPath);
+    const QString finalReportPath = reportPathForDatabase(finalOutputPath);
+    const QString stagedReportPath = reportPathForDatabase(stagedOutputPath);
+    QFile::remove(stagedOutputPath);
+    QFile::remove(stagedReportPath);
 
     const QString compendiumDir = findDataSubdir(QStringLiteral("compendium"));
     if (compendiumDir.isEmpty()) {
@@ -77,37 +136,34 @@ int handleBuildCompendiumCommand(CliContext &ctx)
         qCritical().noquote() << QStringLiteral("✗ %1").arg(error);
         return 1;
     }
+    const QString normalizedManifestJson = normalizeManifestJson(manifestJson);
 
-    // G: Skip full rebuild if the existing DB already has a matching snapshot for
-    // every enabled source (same checksum_sha256). Avoids reprocessing unchanged DATs.
-    if (outputInfo.exists()) {
+    // Skip only when the persisted manifest contract exactly matches the current
+    // build request. This catches disabled/removed sources and identity changes.
+    if (QFileInfo::exists(finalOutputPath)) {
         const QString checkConn = QStringLiteral("compendium-check-")
                                   + QUuid::createUuid().toString(QUuid::WithoutBraces);
         QSqlDatabase checkDb = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), checkConn);
-        checkDb.setDatabaseName(outputInfo.absoluteFilePath());
-        bool allMatch = checkDb.open();
-        if (allMatch) {
-            for (const CompendiumSourceDescriptor &src : std::as_const(sources)) {
-                if (!src.enabled || src.checksumSha256.isEmpty()) continue;
-                QSqlQuery q(checkDb);
-                q.prepare(QStringLiteral(
-                    "SELECT 1 FROM source_snapshots "
-                    "WHERE source_id = ? AND checksum_sha256 = ? LIMIT 1"));
-                q.addBindValue(src.sourceId);
-                q.addBindValue(src.checksumSha256);
-                if (!q.exec() || !q.next()) { allMatch = false; break; }
-            }
+        checkDb.setDatabaseName(finalOutputPath);
+        bool manifestMatches = checkDb.open();
+        if (manifestMatches) {
+            QSqlQuery q(checkDb);
+            q.prepare(QStringLiteral(
+                "SELECT 1 FROM compendium_builds "
+                "WHERE build_id = ? AND schema_version = ? AND source_manifest_json = ? LIMIT 1"));
+            q.addBindValue(buildId);
+            q.addBindValue(schemaVersion);
+            q.addBindValue(normalizedManifestJson);
+            manifestMatches = q.exec() && q.next();
             checkDb.close();
         }
         QSqlDatabase::removeDatabase(checkConn);
-        if (allMatch) {
-            qInfo() << "[build-compendium] All source checksums match existing DB — skipping rebuild.";
-            qInfo() << "[build-compendium] Delete the DB to force a full rebuild.";
+        if (manifestMatches) {
+            qInfo() << "[build-compendium] Existing DB already matches the requested manifest — skipping rebuild.";
+            qInfo() << "[build-compendium] Change the manifest or delete the DB to force a full rebuild.";
             return 0;
         }
     }
-
-    QFile::remove(outputInfo.absoluteFilePath());
 
     const QString connectionName = QStringLiteral("compendium-") + QUuid::createUuid().toString(QUuid::WithoutBraces);
     const QDateTime startedAt = QDateTime::currentDateTimeUtc();
@@ -115,7 +171,7 @@ int handleBuildCompendiumCommand(CliContext &ctx)
     timer.start();
 
     QSqlDatabase database = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), connectionName);
-    database.setDatabaseName(outputInfo.absoluteFilePath());
+    database.setDatabaseName(stagedOutputPath);
     if (!database.open()) {
         qCritical() << "✗ Failed to open output database:" << database.lastError().text();
         QSqlDatabase::removeDatabase(connectionName);
@@ -169,7 +225,7 @@ int handleBuildCompendiumCommand(CliContext &ctx)
     buildQuery.addBindValue(buildId);
     buildQuery.addBindValue(schemaVersion);
     buildQuery.addBindValue(QDateTime::currentDateTimeUtc().toString(Qt::ISODate));
-    buildQuery.addBindValue(manifestJson);
+    buildQuery.addBindValue(normalizedManifestJson);
     buildQuery.addBindValue(QStringLiteral("Phase 1 bootstrap compiler run"));
     if (!execPrepared(buildQuery, error, QStringLiteral("Insert compendium build"))) {
         database.rollback();
@@ -256,7 +312,7 @@ int handleBuildCompendiumCommand(CliContext &ctx)
     Remus::Compendium::CompendiumCompilerService service;
 
     // ── Progress tracking: <output>.progress.json — query with cat or jq ─────
-    const QString progressPath = outputInfo.absoluteFilePath() + QStringLiteral(".progress.json");
+    const QString progressPath = finalOutputPath + QStringLiteral(".progress.json");
     int totalEnabled = 0;
     for (const auto &s : std::as_const(buildConfig.sources)) { if (s.enabled) ++totalEnabled; }
 
@@ -347,7 +403,7 @@ int handleBuildCompendiumCommand(CliContext &ctx)
         return 1;
     }
 
-    const QString reportPath = reportPathForDatabase(outputInfo.absoluteFilePath());
+    const QString reportPath = stagedReportPath;
     QJsonObject report;
     report.insert(QStringLiteral("build_id"), buildId);
     report.insert(QStringLiteral("schema_version"), schemaVersion);
@@ -381,8 +437,8 @@ int handleBuildCompendiumCommand(CliContext &ctx)
     qInfo() << "";
     qInfo() << "=== Build Compendium ===";
     qInfo() << "Manifest:" << manifestInfo.absoluteFilePath();
-    qInfo() << "Output:" << outputInfo.absoluteFilePath();
-    qInfo() << "Report:" << reportPath;
+    qInfo() << "Output:" << finalOutputPath;
+    qInfo() << "Report:" << finalReportPath;
     qInfo() << "Build ID:" << buildId;
     qInfo() << "Sources recorded:" << sources.size();
     qInfo() << "Seeded systems:" << systemsCount;
@@ -392,5 +448,18 @@ int handleBuildCompendiumCommand(CliContext &ctx)
 
     database.close();
     QSqlDatabase::removeDatabase(connectionName);
+
+    if (!promoteStagedFile(stagedOutputPath, finalOutputPath, error)) {
+        qCritical().noquote() << QStringLiteral("✗ %1").arg(error);
+        QFile::remove(stagedOutputPath);
+        QFile::remove(stagedReportPath);
+        return 1;
+    }
+    if (!promoteStagedFile(stagedReportPath, finalReportPath, error)) {
+        qCritical().noquote() << QStringLiteral("✗ %1").arg(error);
+        QFile::remove(stagedReportPath);
+        return 1;
+    }
+
     return conflictsCount > 0 ? 2 : 0;
 }

@@ -255,6 +255,9 @@ bool MergeResolver::resolve(QSqlDatabase &db,
     // Insert one row per (game_id, field_name) that has competing distinct values.
     // Fields already resolved by canonical_resolution are marked 'auto_resolved';
     // any others are left as 'unresolved' for manual review.
+    n = runInsert(db, QStringLiteral("DELETE FROM merge_conflicts"), error);
+    if (n < 0) return false;
+
     n = runInsert(db, QStringLiteral(
         "INSERT INTO merge_conflicts "
         "    (game_id, field_name, fact_ids_json, resolution_status, chosen_fact_id) "

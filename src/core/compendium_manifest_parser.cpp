@@ -2,6 +2,7 @@
 
 #include <QFile>
 #include <QFileInfo>
+#include <QDir>
 #include <QJsonDocument>
 #include <QJsonParseError>
 #include <QJsonValue>
@@ -40,7 +41,19 @@ bool requireString(const QJsonObject &object,
     return true;
 }
 
+QString resolveManifestRelativePath(const QString &manifestPath, const QString &sourcePath)
+{
+    const QFileInfo sourceInfo(sourcePath);
+    if (sourceInfo.isAbsolute()) {
+        return sourceInfo.absoluteFilePath();
+    }
+
+    const QFileInfo manifestInfo(manifestPath);
+    return manifestInfo.dir().absoluteFilePath(sourcePath);
+}
+
 bool parseSourceDescriptor(const QJsonObject &object,
+                           const QString &manifestPath,
                             CompendiumSourceDescriptor &descriptor,
                             QString &error)
 {
@@ -59,6 +72,7 @@ bool parseSourceDescriptor(const QJsonObject &object,
     if (!requireString(object, QStringLiteral("path"), descriptor.path, error)) {
         return false;
     }
+    descriptor.path = resolveManifestRelativePath(manifestPath, descriptor.path);
 
     descriptor.displayName = object.value(QStringLiteral("display_name")).toString().trimmed();
     if (descriptor.displayName.isEmpty()) {
@@ -154,7 +168,7 @@ bool parseManifest(const QString &manifestPath,
         }
 
         CompendiumSourceDescriptor descriptor;
-        if (!parseSourceDescriptor(value.toObject(), descriptor, error)) {
+        if (!parseSourceDescriptor(value.toObject(), manifestPath, descriptor, error)) {
             return false;
         }
         sources.append(descriptor);

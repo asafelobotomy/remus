@@ -2,9 +2,9 @@
 -- Run with: sqlite3 -header -column <db_path> < data/compendium/validation/0001_phase1_checks.sql
 
 SELECT 'seed_count.systems' AS check_name,
-       CASE WHEN (SELECT COUNT(*) FROM systems) = 42 THEN 'PASS' ELSE 'FAIL' END AS status,
+  CASE WHEN (SELECT COUNT(*) FROM systems) = 112 THEN 'PASS' ELSE 'FAIL' END AS status,
        (SELECT COUNT(*) FROM systems) AS observed,
-       42 AS expected;
+  112 AS expected;
 
 SELECT 'seed_count.regions' AS check_name,
        CASE WHEN (SELECT COUNT(*) FROM regions) = 21 THEN 'PASS' ELSE 'FAIL' END AS status,

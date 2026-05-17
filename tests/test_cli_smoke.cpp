@@ -120,6 +120,10 @@ private:
         return {};
     }
 
+    static QString uniqueConnectionName(const QString &prefix) {
+        return prefix + QString::number(QDateTime::currentMSecsSinceEpoch());
+    }
+
 private slots:
     void initTestCase() {
         QCoreApplication::setOrganizationName("Remus");
@@ -351,6 +355,152 @@ private slots:
             db.close();
         }
         QSqlDatabase::removeDatabase(connectionName);
+    }
+
+    void testBuildCompendiumFailurePreservesExistingDatabase() {
+        QTemporaryDir dir;
+        QVERIFY(dir.isValid());
+
+        const QString existingDbPath = dir.filePath("remus_compendium_test.db");
+        const QString seedConnectionName = uniqueConnectionName(QStringLiteral("compendium_seed_"));
+        {
+            QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE", seedConnectionName);
+            db.setDatabaseName(existingDbPath);
+            QVERIFY2(db.open(), qPrintable(db.lastError().text()));
+
+            QSqlQuery query(db);
+            QVERIFY2(query.exec("CREATE TABLE sentinel (value TEXT NOT NULL)"), qPrintable(query.lastError().text()));
+            QVERIFY2(query.exec("INSERT INTO sentinel (value) VALUES ('keep-me')"), qPrintable(query.lastError().text()));
+            db.close();
+        }
+        QSqlDatabase::removeDatabase(seedConnectionName);
+
+        const QString sourcePath = fixturePath("test_compendium_source.dat");
+        QVERIFY2(!sourcePath.isEmpty(), "Fixture test_compendium_source.dat not found");
+
+        const QString manifestPath = dir.filePath("manifest_fail.json");
+        {
+            QFile manifestFile(manifestPath);
+            QVERIFY(manifestFile.open(QIODevice::WriteOnly | QIODevice::Text));
+
+            QJsonObject badSourceA;
+            badSourceA.insert("source_id", "duplicate-source");
+            badSourceA.insert("display_name", "Duplicate Source A");
+            badSourceA.insert("source_type", "dat");
+            badSourceA.insert("snapshot_id", "snapshot-001");
+            badSourceA.insert("snapshot_label", "Snapshot 001");
+            badSourceA.insert("path", sourcePath);
+            badSourceA.insert("checksum_sha256", "abc123");
+            badSourceA.insert("enabled", true);
+            badSourceA.insert("priority", 10);
+
+            QJsonObject badSourceB = badSourceA;
+            badSourceB.insert("display_name", "Duplicate Source B");
+            badSourceB.insert("snapshot_id", "snapshot-002");
+
+            QJsonObject manifestObject;
+            manifestObject.insert("build_id", "test-build-failure");
+            manifestObject.insert("schema_version", 1);
+            manifestObject.insert("sources", QJsonArray{badSourceA, badSourceB});
+
+            const QByteArray manifestJson = QJsonDocument(manifestObject).toJson(QJsonDocument::Indented);
+            QVERIFY(manifestFile.write(manifestJson) == manifestJson.size());
+        }
+
+        QString output;
+        runCliCapture({"--build-compendium", "--compendium-manifest", manifestPath, "--compendium-output", existingDbPath},
+                      output, 1);
+
+        QVERIFY2(QFile::exists(existingDbPath), qPrintable(output));
+
+        const QString verifyConnectionName = uniqueConnectionName(QStringLiteral("compendium_verify_"));
+        {
+            QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE", verifyConnectionName);
+            db.setDatabaseName(existingDbPath);
+            QVERIFY2(db.open(), qPrintable(db.lastError().text()));
+
+            QSqlQuery query(db);
+            QVERIFY2(query.exec("SELECT value FROM sentinel"), qPrintable(query.lastError().text()));
+            QVERIFY(query.next());
+            QCOMPARE(query.value(0).toString(), QStringLiteral("keep-me"));
+            db.close();
+        }
+        QSqlDatabase::removeDatabase(verifyConnectionName);
+    }
+
+    void testBuildCompendiumSkipsOnlyEquivalentManifest() {
+        QTemporaryDir dir;
+        QVERIFY(dir.isValid());
+
+        const QString sourcePath = fixturePath("test_compendium_source.dat");
+        QVERIFY2(!sourcePath.isEmpty(), "Fixture test_compendium_source.dat not found");
+
+        const QString manifestPath = dir.filePath("manifest_skip.json");
+        const QString outputDbPath = dir.filePath("remus_compendium_skip_test.db");
+
+        const auto writeManifest = [&](bool enabled) {
+            QFile manifestFile(manifestPath);
+            QVERIFY(manifestFile.open(QIODevice::WriteOnly | QIODevice::Text));
+
+            QJsonObject sourceObject;
+            sourceObject.insert("source_id", "test-source");
+            sourceObject.insert("display_name", "Test Source");
+            sourceObject.insert("source_type", "dat");
+            sourceObject.insert("snapshot_id", "snapshot-001");
+            sourceObject.insert("snapshot_label", "Snapshot 001");
+            sourceObject.insert("snapshot_ref", "test-ref");
+            sourceObject.insert("path", sourcePath);
+            sourceObject.insert("checksum_sha256", "abc123");
+            sourceObject.insert("enabled", enabled);
+            sourceObject.insert("priority", 10);
+
+            QJsonObject manifestObject;
+            manifestObject.insert("build_id", "test-build-skip");
+            manifestObject.insert("schema_version", 1);
+            manifestObject.insert("sources", QJsonArray{sourceObject});
+
+            const QByteArray manifestJson = QJsonDocument(manifestObject).toJson(QJsonDocument::Indented);
+            QVERIFY(manifestFile.write(manifestJson) == manifestJson.size());
+            manifestFile.close();
+        };
+
+        writeManifest(true);
+
+        QString firstOutput;
+        runCliCapture({"--build-compendium", "--compendium-manifest", manifestPath, "--compendium-output", outputDbPath},
+                      firstOutput);
+        QVERIFY2(QFile::exists(outputDbPath), qPrintable(firstOutput));
+        QVERIFY2(!firstOutput.contains("skipping rebuild", Qt::CaseInsensitive), qPrintable(firstOutput));
+
+        QString secondOutput;
+        runCliCapture({"--build-compendium", "--compendium-manifest", manifestPath, "--compendium-output", outputDbPath},
+                      secondOutput);
+        QVERIFY2(secondOutput.contains("matches the requested manifest", Qt::CaseInsensitive), qPrintable(secondOutput));
+
+        writeManifest(false);
+
+        QString thirdOutput;
+        runCliCapture({"--build-compendium", "--compendium-manifest", manifestPath, "--compendium-output", outputDbPath},
+                      thirdOutput);
+        QVERIFY2(!thirdOutput.contains("matches the requested manifest", Qt::CaseInsensitive), qPrintable(thirdOutput));
+
+        const QString verifyConnectionName = uniqueConnectionName(QStringLiteral("compendium_skip_verify_"));
+        {
+            QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE", verifyConnectionName);
+            db.setDatabaseName(outputDbPath);
+            QVERIFY2(db.open(), qPrintable(db.lastError().text()));
+
+            QSqlQuery query(db);
+            QVERIFY2(query.exec("SELECT enabled FROM sources WHERE source_id = 'test-source'"), qPrintable(query.lastError().text()));
+            QVERIFY(query.next());
+            QCOMPARE(query.value(0).toInt(), 0);
+
+            QVERIFY2(query.exec("SELECT source_manifest_json FROM compendium_builds WHERE build_id = 'test-build-skip'"), qPrintable(query.lastError().text()));
+            QVERIFY(query.next());
+            QVERIFY(query.value(0).toString().contains("\"enabled\":false"));
+            db.close();
+        }
+        QSqlDatabase::removeDatabase(verifyConnectionName);
     }
 
     void testModSystemsFromCatalog() {
