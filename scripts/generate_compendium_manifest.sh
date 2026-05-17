@@ -85,6 +85,10 @@ if [[ ! -d "$DAT_DIR" ]]; then
     exit 1
 fi
 
+DAT_DIR="$(cd "$DAT_DIR" && pwd)"
+
+DAT_DIR="$(cd "$DAT_DIR" && pwd)"
+
 # Source IDs that produce zero signatures because the system has no compendium
 # mapping (engine-based platforms, scripting environments, ROM hacks, etc.).
 # Disabled rather than removed so they still appear in the manifest for auditing.
@@ -163,6 +167,8 @@ if [[ ${#ALL_FILES[@]} -eq 0 ]]; then
 fi
 
 mkdir -p "$(dirname "$OUTPUT_PATH")"
+OUTPUT_DIR="$(cd "$(dirname "$OUTPUT_PATH")" && pwd)"
+OUTPUT_PATH="$OUTPUT_DIR/$(basename "$OUTPUT_PATH")"
 
 {
     printf '{\n'
@@ -182,11 +188,7 @@ mkdir -p "$(dirname "$OUTPUT_PATH")"
         snapshot_id="${source_id}-${DATE_STAMP}"
         checksum_sha256="$(sha256sum "$dat_file" | awk '{print $1}')"
 
-        if [[ "$dat_file" == "$ROOT_DIR/"* ]]; then
-            rel_path="${dat_file#"$ROOT_DIR/"}"
-        else
-            rel_path="$dat_file"
-        fi
+        rel_path="$(realpath --relative-to="$OUTPUT_DIR" "$dat_file")"
 
         printf '    {\n'
         printf '      "source_id": "%s",\n' "$(json_escape "$source_id")"

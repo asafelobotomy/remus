@@ -29,6 +29,12 @@ cleanup_monitor() {
     fi
 }
 
+cleanup_lock() {
+    if [[ -e "$LOCK_PATH" ]]; then
+        : > "$LOCK_PATH"
+    fi
+}
+
 emit_build_heartbeat() {
     local build_pid="$1"
     local interval_seconds="$2"
@@ -63,7 +69,7 @@ emit_build_heartbeat() {
     done
 }
 
-trap cleanup_monitor EXIT
+trap 'cleanup_monitor; cleanup_lock' EXIT
 
 usage() {
     cat <<'USAGE'

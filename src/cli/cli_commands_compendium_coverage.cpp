@@ -40,89 +40,82 @@ int handleCoverageReportCommand(CliContext &ctx)
     database.setConnectOptions(QStringLiteral("QSQLITE_OPEN_READONLY"));
     if (!database.open()) {
         qCritical() << "✗ Failed to open database:" << database.lastError().text();
+        database = QSqlDatabase();
         QSqlDatabase::removeDatabase(connectionName);
         return 1;
     }
 
     const auto cleanup = [&]() {
         database.close();
+        database = QSqlDatabase();
         QSqlDatabase::removeDatabase(connectionName);
     };
 
-    // ── Summary counts ────────────────────────────────────────────────────────
-    QSqlQuery q(database);
-    const auto scalar = [&](const QString &sql) -> qint64 {
-        if (!q.exec(sql) || !q.next()) return -1;
-        return q.value(0).toLongLong();
-    };
+    {
+        QSqlQuery q(database);
+        const auto scalar = [&](const QString &sql) -> qint64 {
+            if (!q.exec(sql) || !q.next()) return -1;
+            return q.value(0).toLongLong();
+        };
 
-    const qint64 totalGames      = scalar(QStringLiteral("SELECT COUNT(*) FROM games"));
-    const qint64 totalSignatures = scalar(QStringLiteral("SELECT COUNT(*) FROM game_signatures"));
-    const qint64 totalSystems    = scalar(QStringLiteral("SELECT COUNT(*) FROM systems"));
-    const qint64 totalSources    = scalar(QStringLiteral("SELECT COUNT(*) FROM sources WHERE enabled = 1"));
+        const qint64 totalGames      = scalar(QStringLiteral("SELECT COUNT(*) FROM games"));
+        const qint64 totalSignatures = scalar(QStringLiteral("SELECT COUNT(*) FROM game_signatures"));
+        const qint64 totalSystems    = scalar(QStringLiteral("SELECT COUNT(*) FROM systems"));
+        const qint64 totalSources    = scalar(QStringLiteral("SELECT COUNT(*) FROM sources WHERE enabled = 1"));
 
-    if (totalGames < 0) {
-        qCritical() << "✗ Failed to query database:" << q.lastError().text();
-        cleanup();
-        return 1;
+        if (totalGames < 0) {
+            qCritical() << "✗ Failed to query database:" << q.lastError().text();
+            cleanup();
+            return 1;
+        }
+
+        const bool ok = q.exec(QStringLiteral(
+            "WITH "
+            "si AS ( "
+            "  SELECT source_id, COUNT(*) AS source_items "
+            "  FROM source_items GROUP BY source_id "
+            "), "
+            "gs_owned AS ( "
+            "  SELECT source_id, COUNT(*) AS sigs_owned "
+            "  FROM game_signatures GROUP BY source_id "
+            "), "
+            "games_with_sig AS ( "
+            "  SELECT DISTINCT game_id FROM game_signatures "
+            "), "
+            "gf_covered AS ( "
+            "  SELECT gf.source_id, COUNT(DISTINCT gf.game_id) AS games_covered "
+            "  FROM game_facts gf "
+            "  INNER JOIN games_with_sig gws ON gws.game_id = gf.game_id "
+            "  GROUP BY gf.source_id "
+            ") "
+            "SELECT si.source_id, "
+            "       si.source_items, "
+            "       COALESCE(gs_owned.sigs_owned, 0) AS sigs_owned, "
+            "       COALESCE(gf_covered.games_covered, 0) AS games_covered, "
+            "       ROUND(COALESCE(gf_covered.games_covered, 0) * 100.0 / si.source_items, 1) AS coverage_pct "
+            "FROM si "
+            "LEFT JOIN gs_owned   ON gs_owned.source_id   = si.source_id "
+            "LEFT JOIN gf_covered ON gf_covered.source_id = si.source_id "
+            "ORDER BY coverage_pct ASC, si.source_items DESC"));
+        if (!ok) {
+            qCritical() << "✗ Failed to query source coverage:" << q.lastError().text();
+            cleanup();
+            return 1;
+        }
+
+        QTextStream out(stdout);
+        out << QStringLiteral("# games=%1 signatures=%2 systems=%3 active_sources=%4\n")
+                   .arg(totalGames).arg(totalSignatures).arg(totalSystems).arg(totalSources);
+        out << QStringLiteral("source_id\tsource_items\tsigs_owned\tgames_covered\tcoverage_pct\n");
+        while (q.next()) {
+            out << q.value(0).toString() << '\t'
+                << q.value(1).toLongLong() << '\t'
+                << q.value(2).toLongLong() << '\t'
+                << q.value(3).toLongLong() << '\t'
+                << q.value(4).toString()   << '\n';
+        }
+        out.flush();
     }
-
-    // ── Per-source coverage report ────────────────────────────────────────────
-    // Two metrics per source:
-    //   sigs_owned    – signature rows in game_signatures attributed to this source
-    //                   (zero for sources shadowed by a higher-priority duplicate)
-    //   games_covered – games from this source (via game_facts.source_id) that have
-    //                   at least one signature in game_signatures from any source
-    //                   (honest end-to-end ingest coverage, unaffected by shadowing)
-    // coverage_pct = games_covered / source_items * 100
-    const bool ok = q.exec(QStringLiteral(
-        "WITH "
-        "si AS ( "
-        "  SELECT source_id, COUNT(*) AS source_items "
-        "  FROM source_items GROUP BY source_id "
-        "), "
-        "gs_owned AS ( "
-        "  SELECT source_id, COUNT(*) AS sigs_owned "
-        "  FROM game_signatures GROUP BY source_id "
-        "), "
-        "games_with_sig AS ( "
-        "  SELECT DISTINCT game_id FROM game_signatures "
-        "), "
-        "gf_covered AS ( "
-        "  SELECT gf.source_id, COUNT(DISTINCT gf.game_id) AS games_covered "
-        "  FROM game_facts gf "
-        "  INNER JOIN games_with_sig gws ON gws.game_id = gf.game_id "
-        "  GROUP BY gf.source_id "
-        ") "
-        "SELECT si.source_id, "
-        "       si.source_items, "
-        "       COALESCE(gs_owned.sigs_owned, 0) AS sigs_owned, "
-        "       COALESCE(gf_covered.games_covered, 0) AS games_covered, "
-        "       ROUND(COALESCE(gf_covered.games_covered, 0) * 100.0 / si.source_items, 1) AS coverage_pct "
-        "FROM si "
-        "LEFT JOIN gs_owned   ON gs_owned.source_id   = si.source_id "
-        "LEFT JOIN gf_covered ON gf_covered.source_id = si.source_id "
-        "ORDER BY coverage_pct ASC, si.source_items DESC"));
-    if (!ok) {
-        qCritical() << "✗ Failed to query source coverage:" << q.lastError().text();
-        cleanup();
-        return 1;
-    }
-
-    QTextStream out(stdout);
-    // Summary header line (prefixed with '#' so it can be grepped/skipped by parsers)
-    out << QStringLiteral("# games=%1 signatures=%2 systems=%3 active_sources=%4\n")
-               .arg(totalGames).arg(totalSignatures).arg(totalSystems).arg(totalSources);
-    // TSV column header
-    out << QStringLiteral("source_id\tsource_items\tsigs_owned\tgames_covered\tcoverage_pct\n");
-    while (q.next()) {
-        out << q.value(0).toString() << '\t'
-            << q.value(1).toLongLong() << '\t'
-            << q.value(2).toLongLong() << '\t'
-            << q.value(3).toLongLong() << '\t'
-            << q.value(4).toString()   << '\n';
-    }
-    out.flush();
 
     cleanup();
     return 0;

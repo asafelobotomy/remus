@@ -122,15 +122,15 @@ void populateCompendiumFtsIndex(QSqlDatabase &db)
 
     QSqlQuery ftsQ(db);
 
-    // Clear any previously populated FTS content. Both tables are FTS5 so the
-    // special 'delete-all' command clears the inverted index without a full row
-    // scan. This prevents duplicate rows on re-runs (e.g. --enrich-compendium).
-    if (!ftsQ.exec(QStringLiteral("INSERT INTO games_search(games_search) VALUES('delete-all')"))) {
-        qWarning() << "[buildCompendium] games_search delete-all failed (non-fatal):"
+    // Clear any previously populated FTS content before repopulating. These
+    // are contentful FTS5 tables, so a normal DELETE avoids unsupported
+    // 'delete-all' warnings from SQLite on rebuilds.
+    if (!ftsQ.exec(QStringLiteral("DELETE FROM games_search"))) {
+        qWarning() << "[buildCompendium] games_search clear failed (non-fatal):"
                    << ftsQ.lastError().text();
     }
-    if (!ftsQ.exec(QStringLiteral("INSERT INTO games_fts(games_fts) VALUES('delete-all')"))) {
-        qWarning() << "[buildCompendium] games_fts delete-all failed (non-fatal):"
+    if (!ftsQ.exec(QStringLiteral("DELETE FROM games_fts"))) {
+        qWarning() << "[buildCompendium] games_fts clear failed (non-fatal):"
                    << ftsQ.lastError().text();
     }
 

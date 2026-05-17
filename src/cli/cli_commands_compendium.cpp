@@ -73,6 +73,13 @@ bool promoteStagedFile(const QString &stagedPath,
     return true;
 }
 
+void releaseDatabase(QSqlDatabase &database, const QString &connectionName)
+{
+    database.close();
+    database = QSqlDatabase();
+    QSqlDatabase::removeDatabase(connectionName);
+}
+
 } // namespace
 
 int handleBuildCompendiumCommand(CliContext &ctx)
@@ -157,6 +164,7 @@ int handleBuildCompendiumCommand(CliContext &ctx)
             manifestMatches = q.exec() && q.next();
             checkDb.close();
         }
+        checkDb = QSqlDatabase();
         QSqlDatabase::removeDatabase(checkConn);
         if (manifestMatches) {
             qInfo() << "[build-compendium] Existing DB already matches the requested manifest — skipping rebuild.";
@@ -174,31 +182,30 @@ int handleBuildCompendiumCommand(CliContext &ctx)
     database.setDatabaseName(stagedOutputPath);
     if (!database.open()) {
         qCritical() << "✗ Failed to open output database:" << database.lastError().text();
+        database = QSqlDatabase();
         QSqlDatabase::removeDatabase(connectionName);
         return 1;
     }
 
-    QSqlQuery pragmaQuery(database);
-    if (!pragmaQuery.exec(QStringLiteral("PRAGMA foreign_keys = ON"))) {
-        qCritical() << "✗ Failed to enable foreign keys:" << pragmaQuery.lastError().text();
-        database.close();
-        QSqlDatabase::removeDatabase(connectionName);
-        return 1;
-    }
+    {
+        QSqlQuery pragmaQuery(database);
+        if (!pragmaQuery.exec(QStringLiteral("PRAGMA foreign_keys = ON"))) {
+            qCritical() << "✗ Failed to enable foreign keys:" << pragmaQuery.lastError().text();
+            releaseDatabase(database, connectionName);
+            return 1;
+        }
 
-    // Bulk-build performance: WAL mode avoids fsync stalls and keeps the DB
-    // consistent on crash (unlike MEMORY journal which corrupts on OOM/crash).
-    // synchronous=OFF skips fsync on WAL frames — safe for a scratch build.
-    const QStringList buildPragmas = {
-        QStringLiteral("PRAGMA journal_mode = WAL"),
-        QStringLiteral("PRAGMA synchronous = OFF"),
-        QStringLiteral("PRAGMA temp_store = MEMORY"),
-        QStringLiteral("PRAGMA cache_size = -131072"),  // 128 MiB
-    };
-    for (const QString &pragma : buildPragmas) {
-        if (!pragmaQuery.exec(pragma)) {
-            qWarning() << "[buildCompendium] PRAGMA hint failed (non-fatal):" << pragma
-                       << pragmaQuery.lastError().text();
+        const QStringList buildPragmas = {
+            QStringLiteral("PRAGMA journal_mode = WAL"),
+            QStringLiteral("PRAGMA synchronous = OFF"),
+            QStringLiteral("PRAGMA temp_store = MEMORY"),
+            QStringLiteral("PRAGMA cache_size = -131072"),
+        };
+        for (const QString &pragma : buildPragmas) {
+            if (!pragmaQuery.exec(pragma)) {
+                qWarning() << "[buildCompendium] PRAGMA hint failed (non-fatal):" << pragma
+                           << pragmaQuery.lastError().text();
+            }
         }
     }
 
@@ -218,21 +225,22 @@ int handleBuildCompendiumCommand(CliContext &ctx)
         return 1;
     }
 
-    QSqlQuery buildQuery(database);
-    buildQuery.prepare(QStringLiteral(
-        "INSERT INTO compendium_builds (build_id, schema_version, built_at, source_manifest_json, notes) "
-        "VALUES (?, ?, ?, ?, ?)"));
-    buildQuery.addBindValue(buildId);
-    buildQuery.addBindValue(schemaVersion);
-    buildQuery.addBindValue(QDateTime::currentDateTimeUtc().toString(Qt::ISODate));
-    buildQuery.addBindValue(normalizedManifestJson);
-    buildQuery.addBindValue(QStringLiteral("Phase 1 bootstrap compiler run"));
-    if (!execPrepared(buildQuery, error, QStringLiteral("Insert compendium build"))) {
-        database.rollback();
-        qCritical().noquote() << QStringLiteral("✗ %1").arg(error);
-        database.close();
-        QSqlDatabase::removeDatabase(connectionName);
-        return 1;
+    {
+        QSqlQuery buildQuery(database);
+        buildQuery.prepare(QStringLiteral(
+            "INSERT INTO compendium_builds (build_id, schema_version, built_at, source_manifest_json, notes) "
+            "VALUES (?, ?, ?, ?, ?)"));
+        buildQuery.addBindValue(buildId);
+        buildQuery.addBindValue(schemaVersion);
+        buildQuery.addBindValue(QDateTime::currentDateTimeUtc().toString(Qt::ISODate));
+        buildQuery.addBindValue(normalizedManifestJson);
+        buildQuery.addBindValue(QStringLiteral("Phase 1 bootstrap compiler run"));
+        if (!execPrepared(buildQuery, error, QStringLiteral("Insert compendium build"))) {
+            database.rollback();
+            qCritical().noquote() << QStringLiteral("✗ %1").arg(error);
+            releaseDatabase(database, connectionName);
+            return 1;
+        }
     }
 
     for (const CompendiumSourceDescriptor &source : sources) {
@@ -446,8 +454,7 @@ int handleBuildCompendiumCommand(CliContext &ctx)
 
     writeProgress(QStringLiteral("complete"), totalEnabled, {}, stats);
 
-    database.close();
-    QSqlDatabase::removeDatabase(connectionName);
+    releaseDatabase(database, connectionName);
 
     if (!promoteStagedFile(stagedOutputPath, finalOutputPath, error)) {
         qCritical().noquote() << QStringLiteral("✗ %1").arg(error);

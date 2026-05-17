@@ -45,11 +45,11 @@ QString resolveManifestRelativePath(const QString &manifestPath, const QString &
 {
     const QFileInfo sourceInfo(sourcePath);
     if (sourceInfo.isAbsolute()) {
-        return sourceInfo.absoluteFilePath();
+        return QDir::cleanPath(sourceInfo.absoluteFilePath());
     }
 
     const QFileInfo manifestInfo(manifestPath);
-    return manifestInfo.dir().absoluteFilePath(sourcePath);
+    return QDir::cleanPath(manifestInfo.dir().absoluteFilePath(sourcePath));
 }
 
 bool parseSourceDescriptor(const QJsonObject &object,

@@ -4,6 +4,7 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QList>
+#include <QDir>
 #include <QTemporaryDir>
 
 #include "../src/core/compendium_manifest_parser.h"
@@ -25,6 +26,7 @@ private slots:
     void parseSourceDescriptor_valid();
     void parseSourceDescriptor_missingSourceId();
     void parseSourceDescriptor_resolvesRelativePathFromManifest();
+    void parseSourceDescriptor_resolvesManifestRelativeParentPath();
     void parseManifest_valid();
     void parseManifest_missingBuildId();
     void parseManifest_noSources();
@@ -176,6 +178,39 @@ void CompendiumManifestParserTest::parseSourceDescriptor_resolvesRelativePathFro
     CompendiumSourceDescriptor descriptor;
     QString error;
     const QString manifestPath = dir.filePath("manifest.json");
+    QVERIFY(parseSourceDescriptor(obj, manifestPath, descriptor, error));
+    QCOMPARE(descriptor.path, sourcePath);
+}
+
+void CompendiumManifestParserTest::parseSourceDescriptor_resolvesManifestRelativeParentPath()
+{
+    QTemporaryDir dir;
+    QVERIFY(dir.isValid());
+
+    const QString manifestDir = dir.filePath("data/compendium");
+    const QString databasesDir = dir.filePath("data/databases");
+    QVERIFY(QDir().mkpath(manifestDir));
+    QVERIFY(QDir().mkpath(databasesDir));
+
+    const QString sourcePath = databasesDir + QStringLiteral("/source.dat");
+    QFile sourceFile(sourcePath);
+    QVERIFY(sourceFile.open(QIODevice::WriteOnly | QIODevice::Text));
+    sourceFile.write("placeholder");
+    sourceFile.close();
+
+    QJsonObject obj;
+    obj.insert(QStringLiteral("source_id"), QStringLiteral("nointro"));
+    obj.insert(QStringLiteral("display_name"), QStringLiteral("No-Intro"));
+    obj.insert(QStringLiteral("source_type"), QStringLiteral("dat"));
+    obj.insert(QStringLiteral("snapshot_id"), QStringLiteral("snap-001"));
+    obj.insert(QStringLiteral("snapshot_label"), QStringLiteral("Snapshot 1"));
+    obj.insert(QStringLiteral("path"), QStringLiteral("../databases/source.dat"));
+    obj.insert(QStringLiteral("priority"), 5);
+    obj.insert(QStringLiteral("enabled"), true);
+
+    CompendiumSourceDescriptor descriptor;
+    QString error;
+    const QString manifestPath = manifestDir + QStringLiteral("/manifest.json");
     QVERIFY(parseSourceDescriptor(obj, manifestPath, descriptor, error));
     QCOMPARE(descriptor.path, sourcePath);
 }
