@@ -232,4 +232,4 @@ biosROM.*
 
 # Test fixtures — always committed regardless of extension rules above
 !tests/fixtures/**
-
+.github/xanadAssistant/memory/

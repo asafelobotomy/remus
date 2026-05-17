@@ -3,8 +3,10 @@
 Use this prompt when the user asks to install or refresh xanadAssistant in the
 active repository.
 
-Target workspace: remus
+Target workspace: remus (display name)
 Selected profile: balanced
+
+Use `.` as the workspace path in CLI examples below when running from the target repository root.
 
 ## Workflow
 
@@ -26,9 +28,9 @@ package source, fall back to the CLI commands below.
 
 ### 1. Inspect current state
 
-```
+```sh
 python3 xanadAssistant.py inspect \
-  --workspace remus \
+  --workspace . \
   --package-root <path-to-xanadAssistant-checkout> \
   --ui agent --json-lines
 ```
@@ -36,10 +38,10 @@ python3 xanadAssistant.py inspect \
 Review `installState`, `manifestSummary`, and any warnings. Ask the user to
 confirm the target workspace path if it is not clear from context.
 
-When `mcp.enabled` is true, the plan should also install the local hook scripts.
-Expect `.github/hooks/scripts/xanadWorkspaceMcp.py`,
-`.github/hooks/scripts/mcpSequentialThinkingServer.py`, and `.vscode/mcp.json`
-to appear in the planned writes.
+When `mcp.enabled` is true, the plan should also install the local MCP scripts.
+Expect entries under `.github/mcp/scripts/` plus `.vscode/mcp.json` to appear
+in the planned writes; at minimum, `xanadWorkspaceMcp.py`, `memoryMcp.py`, and
+`sequentialThinkingMcp.py` should be present.
 
 If the warnings include `package_name_mismatch` or `successor_cleanup_required`,
 treat the workspace as a predecessor `copilot-instructions-template` install.
@@ -51,9 +53,9 @@ files and adopt the workspace cleanly.
 If `installState` is `not-installed` or if the user wants to change pack or
 profile selection, run the interview:
 
-```
+```sh
 python3 xanadAssistant.py interview \
-  --workspace remus \
+  --workspace . \
   --package-root <path-to-xanadAssistant-checkout> \
   --mode setup --json-lines
 ```
@@ -64,10 +66,20 @@ and write the collected answers to `.xanadAssistant/tmp/setup-answers.json`.
 Include only keys the user explicitly overrides — omitted keys are filled from
 their declared `default` values by the lifecycle engine.
 
+Each question also carries a `batch` field:
+
+- `setup` — always first; ask `setup.depth` before anything else
+- `simple` — always shown
+- `advanced` — shown when `setup.depth` is `advanced` or `full`
+- `full` — shown only when `setup.depth` is `full`
+
+Use the user's `setup.depth` answer to decide which later questions to show.
+
 **Answer file format:**
 
 ```json
 {
+  "setup.depth": "simple",
   "profile.selected": "balanced",
   "packs.selected": [],
   "ownership.agents": "plugin-backed-copilot-format",
@@ -80,6 +92,10 @@ their declared `default` values by the lifecycle engine.
   "mcp.servers": []
 }
 ```
+
+`packs.selected` accepts one or more pack names as an array. If the user selects
+multiple packs, the plan step will surface any token conflicts that need
+resolution before proceeding.
 
 If the user accepts all defaults, use `--non-interactive` and omit `--answers`.
 
@@ -105,16 +121,17 @@ mapping relative path → decision string:
 }
 ```
 
-Pass `--resolutions .xanadAssistant/tmp/conflict-resolutions.json` to both
-`plan setup` and `apply` below.  If `existingFiles` is empty, skip this step.
+Pass `--resolutions .xanadAssistant/tmp/conflict-resolutions.json` to
+`plan setup` below.  If `existingFiles` is empty, skip this step.
 
 ### 3. Generate a plan
 
-```
+```sh
 python3 xanadAssistant.py plan setup \
-  --workspace remus \
+  --workspace . \
   --package-root <path-to-xanadAssistant-checkout> \
   --answers .xanadAssistant/tmp/setup-answers.json \
+  --plan-out .xanadAssistant/tmp/setup-plan.json \
   --non-interactive --json-lines
 ```
 
@@ -125,18 +142,18 @@ If `approvalRequired` is true in the plan payload, summarise the planned writes
 and retired files for the user and ask for approval before proceeding.
 
 To preview what would be written without making any changes, pass `--dry-run` to
-the `apply` command instead of running `plan` first.
+the `plan` command and inspect the serialized plan instead of running `apply`.
 
 ### 4. Apply
 
 Once the user approves (or `approvalRequired` is false):
 
-```
+```sh
 python3 xanadAssistant.py apply \
-  --workspace remus \
+  --workspace . \
   --package-root <path-to-xanadAssistant-checkout> \
-  --answers .xanadAssistant/tmp/setup-answers.json \
-  --non-interactive --ui agent --json-lines
+  --plan .xanadAssistant/tmp/setup-plan.json \
+  --ui agent --json-lines
 ```
 
 For predecessor-managed installs, replace `apply` with

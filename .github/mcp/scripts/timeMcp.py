@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import sys
 from datetime import datetime, timezone
+from math import isfinite
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 try:
@@ -35,7 +36,7 @@ mcp = FastMCP("xanadTime")
 # Helpers
 # ---------------------------------------------------------------------------
 
-def _parse_iso(ts: str) -> datetime:
+def _parse_iso(ts: str, *, assume_utc_for_naive: bool = True) -> datetime:
     ts = ts.strip()
     try:
         dt = datetime.fromisoformat(ts)
@@ -43,7 +44,7 @@ def _parse_iso(ts: str) -> datetime:
         raise ValueError(
             f"Cannot parse {ts!r} — expected ISO-8601 (e.g. '2026-05-10T14:30:00')."
         ) from exc
-    if dt.tzinfo is None:
+    if dt.tzinfo is None and assume_utc_for_naive:
         dt = dt.replace(tzinfo=timezone.utc)
     return dt
 
@@ -97,7 +98,7 @@ def convert_timezone(timestamp: str, from_tz: str, to_tz: str) -> str:
         from_tz: Source IANA timezone name (used if timestamp has no tzinfo).
         to_tz: Target IANA timezone name.
     """
-    dt = _parse_iso(timestamp)
+    dt = _parse_iso(timestamp, assume_utc_for_naive=False)
     if dt.tzinfo is None or dt.tzinfo.utcoffset(dt) is None:  # pragma: no cover
         dt = dt.replace(tzinfo=_tz(from_tz))
     return dt.astimezone(_tz(to_tz)).isoformat(timespec="seconds")

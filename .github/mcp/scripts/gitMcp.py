@@ -21,7 +21,6 @@ from __future__ import annotations
 
 import subprocess
 import sys
-from pathlib import Path
 from typing import Literal
 
 try:
@@ -36,9 +35,14 @@ except ImportError as _exc:  # pragma: no cover
 
 mcp = FastMCP("xanadGit")
 
-# ---------------------------------------------------------------------------
-# Internal helpers
-# ---------------------------------------------------------------------------
+
+def _reject_flag_like(arg: str) -> str:
+    if arg.startswith("-"):
+        raise ValueError(
+            f"Argument {arg!r} looks like a flag.  "
+            "Pass options through dedicated parameters, not raw strings."
+        )
+    return arg
 
 def _run_flags(repo_path: str, base_args: list[str], flags: list[str],
                tail: list[str], timeout: int = 30) -> str:
@@ -48,11 +52,7 @@ def _run_flags(repo_path: str, base_args: list[str], flags: list[str],
     Flags must be hardcoded literals assembled by the calling tool function.
     """
     for arg in tail:
-        if arg.startswith("-"):
-            raise ValueError(
-                f"Argument {arg!r} looks like a flag.  "
-                "Pass options through dedicated parameters, not raw strings."
-            )
+        _reject_flag_like(arg)
     cmd = ["git", *base_args, *flags, *tail]
     result = subprocess.run(
         cmd,
@@ -71,18 +71,12 @@ def _run_flags(repo_path: str, base_args: list[str], flags: list[str],
 
 def _run(repo_path: str, *args: str, timeout: int = 30) -> str:
     """Convenience wrapper: validate user args then delegate to _run_flags."""
-    for arg in args:
-        if arg.startswith("-"):
-            raise ValueError(
-                f"Argument {arg!r} looks like a flag.  "
-                "Pass options through dedicated parameters, not raw strings."
-            )
-    return _run_flags(repo_path, list(args), [], [], timeout=timeout)
+    return _run_flags(repo_path, [_reject_flag_like(arg) for arg in args], [], [], timeout=timeout)
 
 
-# ---------------------------------------------------------------------------
-# Local — inspection
-# ---------------------------------------------------------------------------
+def _validate_user_arg(arg: str) -> str:
+    """Return a user-supplied git argument after rejecting flag-like values."""
+    return _reject_flag_like(arg)
 
 @mcp.tool()
 def git_status(repo_path: str) -> str:
@@ -130,10 +124,6 @@ def git_show(repo_path: str, revision: str) -> str:
     """Show contents of a commit or object (e.g. HEAD, a SHA, or tag)."""
     return _run(repo_path, "show", revision)
 
-
-# ---------------------------------------------------------------------------
-# Local — branch management
-# ---------------------------------------------------------------------------
 
 @mcp.tool()
 def git_branch_list(
@@ -189,10 +179,6 @@ def git_delete_branch(
     return _run_flags(repo_path, ["branch"], ["-D" if force else "-d"], [branch_name])
 
 
-# ---------------------------------------------------------------------------
-# Local — staging and committing
-# ---------------------------------------------------------------------------
-
 @mcp.tool()
 def git_add(repo_path: str, files: list[str]) -> str:
     """Stage files for commit.
@@ -214,18 +200,18 @@ def git_reset(repo_path: str) -> str:
 def git_commit(repo_path: str, message: str) -> str:
     """Record staged changes as a new commit.
 
+    The message string is passed directly to subprocess (not via a shell), so
+    embedded newlines (``\\n``) are preserved as-is — multi-paragraph messages
+    work without a temp file.
+
     Args:
         repo_path: Absolute path to the git repository.
-        message: Commit message (subject line; include a blank line +
-                 body in the string for multi-paragraph messages).
+        message: Commit message. Use a blank line between subject and body
+                 for multi-paragraph messages (e.g. "subject\\n\\nbody").
     """
     if not message.strip(): raise ValueError("Commit message must not be empty.")
     return _run_flags(repo_path, ["commit"], ["-m", message], [])
 
-
-# ---------------------------------------------------------------------------
-# Local — stash
-# ---------------------------------------------------------------------------
 
 @mcp.tool()
 def git_stash(repo_path: str, message: str = "") -> str:
@@ -251,10 +237,6 @@ def git_stash_list(repo_path: str) -> str:
     return _run(repo_path, "stash", "list")
 
 
-# ---------------------------------------------------------------------------
-# Local — tags
-# ---------------------------------------------------------------------------
-
 @mcp.tool()
 def git_tag(
     repo_path: str,
@@ -270,6 +252,8 @@ def git_tag(
         message: When provided, creates an annotated tag; otherwise lightweight.
         ref: Commit, branch, or tag to tag; defaults to HEAD.
     """
+    name = _validate_user_arg(name)
+    ref = _validate_user_arg(ref)
     return (_run_flags(repo_path, ["tag"], ["-a", name, "-m", message], [ref])
             if message else _run(repo_path, "tag", name, ref))
 
@@ -279,10 +263,6 @@ def git_tag_list(repo_path: str) -> str:
     """List all tags."""
     return _run_flags(repo_path, ["tag"], ["--list"], [])
 
-
-# ---------------------------------------------------------------------------
-# Local — rebase
-# ---------------------------------------------------------------------------
 
 @mcp.tool()
 def git_rebase(
@@ -302,10 +282,6 @@ def git_rebase(
         return _run(repo_path, "rebase", onto)
     return _run_flags(repo_path, ["rebase"], [f"--{action}"], [])
 
-
-# ---------------------------------------------------------------------------
-# Remote — fetch, pull, push
-# ---------------------------------------------------------------------------
 
 @mcp.tool()
 def git_fetch(
@@ -371,10 +347,6 @@ def git_push(
     if tags: flags.append("--tags")
     return _run_flags(repo_path, ["push"], flags, [remote] + ([branch] if branch else []))
 
-
-# ---------------------------------------------------------------------------
-# Entry point
-# ---------------------------------------------------------------------------
 
 if __name__ == "__main__":  # pragma: no cover
     mcp.run()

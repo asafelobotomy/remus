@@ -4,7 +4,7 @@ description: "Use when: set up xanadAssistant, inspect workspace, run lifecycle 
 argument-hint: "Describe the lifecycle task: inspect, check, interview, plan setup, apply, update, repair, or factory restore."
 model:
   - Claude Sonnet 4.6
-  - GPT-5
+  - GPT-5.4
 tools: [agent, codebase, search, runCommands, askQuestions]
 agents: [Explore, Debugger, Planner]
 user-invocable: true
@@ -39,11 +39,36 @@ resolution is missing.
 
 This agent is installed by xanadAssistant and is not present in a fresh
 workspace. When a user says something like "Setup asafelobotomy/xanadassistant"
-and this agent is not yet available, use `xanadBootstrap.py` instead of the
-lifecycle CLI. The bootstrap runner is a single stdlib-only file that resolves
-and downloads the package automatically.
+or "Setup xanadAssistant" and this agent is not yet available, follow the steps
+below. The bootstrap runner is a single stdlib-only file that resolves and
+downloads the package automatically.
 
 ### Bootstrap steps
+
+**Step 0 — Install this agent**
+
+Before fetching the bootstrap runner, install the `xanadLifecycle` agent so all
+future lifecycle operations route through it automatically.
+
+```sh
+mkdir -p .github/agents && curl -fsSL \
+  https://raw.githubusercontent.com/asafelobotomy/xanadassistant/main/agents/xanadLifecycle.agent.md \
+  -o .github/agents/xanadLifecycle.agent.md
+```
+
+Or with Python if curl is unavailable:
+
+```sh
+python3 -c "
+import urllib.request, os
+os.makedirs('.github/agents', exist_ok=True)
+urllib.request.urlretrieve(
+  'https://raw.githubusercontent.com/asafelobotomy/xanadassistant/main/agents/xanadLifecycle.agent.md',
+  '.github/agents/xanadLifecycle.agent.md')
+"
+```
+
+Proceed with the remaining steps below.
 
 **Step 1 — Fetch the bootstrap runner**
 
@@ -202,6 +227,7 @@ python3 xanadBootstrap.py apply \
 
 ## Workflow discipline
 
+0. Call `memory_dump(agent="xanadLifecycle")` before taking any action (see `## Memory`).
 1. **Inspect first.** Run `inspect` to understand the current state before taking
    any action.
 2. **Plan before writing.** Always run `plan <mode>` and review the output before
@@ -303,3 +329,12 @@ python3 xanadAssistant.py apply \
   lockfile management.
 
 Do not interpret manifests, copy files, or modify `.github/` contents directly.
+
+## Memory
+
+At the start of every lifecycle task, call `memory_dump(agent="xanadLifecycle")`.
+- If the `memory` MCP server is unavailable, emit one visible note ("⚠️ Memory MCP unavailable: [reason]") then continue without it.
+- **Rules** returned are authoritative — follow every rule unconditionally for the rest of this task.
+- **Facts** returned are working context — for any fact you intend to act on, call `elapsed(start=fact.updated_at)` to verify its age.
+
+When you learn something durable about a workspace (install state, known repair paths, workspace-specific conventions), call `memory_set(agent="xanadLifecycle", key=..., value=...)` before finishing.

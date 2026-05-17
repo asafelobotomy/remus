@@ -1,25 +1,9 @@
 #!/usr/bin/env python3
-"""GitHub MCP — GitHub REST API via GITHUB_TOKEN.
+"""GitHub MCP via the GitHub REST API.
 
-Provides tools for repositories, issues, pull requests, releases, Actions
-workflow runs, code search, and file contents.  All operations use the
-GitHub REST API — no GraphQL required for this tool set.
-
-Authentication
---------------
-Set the GITHUB_TOKEN environment variable to a Personal Access Token (classic
-or fine-grained) with the scopes required for the operations you need:
-  - Contents (read)    → get_repo, get_file_contents, search_code
-  - Issues (read)      → list_issues, get_issue
-  - Issues (write)     → create_issue_comment
-  - Pull requests (read/write) → list_pull_requests, get_pull_request,
-                                  create_pull_request
-  - Actions (read)     → list_workflow_runs
-  - Metadata (read)    → list_releases
-
-In GitHub Codespaces, GITHUB_TOKEN is pre-populated automatically.
-
-Transport: stdio  |  Run: uvx --from "mcp[cli]" mcp run <this-file>
+Requires `GITHUB_TOKEN` or `GH_TOKEN` and exposes repository, issue, pull
+request, release, Actions, code-search, and file-content tools over stdio.
+Run with: `uvx --from "mcp[cli]" mcp run <this-file>`.
 """
 from __future__ import annotations
 
@@ -49,6 +33,10 @@ mcp = FastMCP("xanadGitHub")
 _API = "https://api.github.com"
 _SAFE_NAME = re.compile(r"^[A-Za-z0-9._-]+$")
 _ALLOWED_STATES = {"open", "closed", "all"}
+
+_REPO_FIELDS = ("full_name", "description", "default_branch", "stargazers_count", "forks_count", "open_issues_count", "license", "visibility", "html_url", "pushed_at")
+_ISSUE_FIELDS = ("number", "title", "state", "body", "html_url", "user", "labels", "assignees", "created_at", "updated_at")
+_PULL_FIELDS = ("number", "title", "state", "body", "html_url", "draft", "head", "base", "user", "mergeable", "created_at", "updated_at")
 
 
 def _validate_owner_repo(owner: str, repo: str) -> None:
@@ -86,9 +74,15 @@ def _validate_workflow_id(workflow_id: str | int) -> str:
     return value
 
 
-# ---------------------------------------------------------------------------
-# Auth + HTTP helpers
-# ---------------------------------------------------------------------------
+def _dump_fields(payload: dict[str, Any], fields: tuple[str, ...]) -> str:
+    return json.dumps({field: payload.get(field) for field in fields}, indent=2)
+
+
+def _render_lines(items: list[Any], empty_message: str, render_item) -> str:
+    if not items:
+        return empty_message
+    return "\n".join(render_item(item) for item in items)
+
 
 def _gh_cli_token() -> str:
     """Return the token from the GitHub CLI (``gh auth token``), or '' if unavailable."""
@@ -186,20 +180,11 @@ def _post(path: str, body: dict) -> Any:
     return _req("POST", path, body=body)
 
 
-# ---------------------------------------------------------------------------
-# Repository
-# ---------------------------------------------------------------------------
-
 @mcp.tool()
 def get_repo(owner: str, repo: str) -> str:
     """Return key metadata for a GitHub repository."""
     _validate_owner_repo(owner, repo)
-    d = _get(f"/repos/{owner}/{repo}")
-    return json.dumps({k: d.get(k) for k in (
-        "full_name", "description", "default_branch", "stargazers_count",
-        "forks_count", "open_issues_count", "license", "visibility",
-        "html_url", "pushed_at",
-    )}, indent=2)
+    return _dump_fields(_get(f"/repos/{owner}/{repo}"), _REPO_FIELDS)
 
 
 @mcp.tool()
@@ -245,10 +230,6 @@ def search_code(query: str, per_page: int = 10) -> str:
     return "\n".join(lines)
 
 
-# ---------------------------------------------------------------------------
-# Issues
-# ---------------------------------------------------------------------------
-
 @mcp.tool()
 def list_issues(owner: str, repo: str, state: str = "open",
                 per_page: int = 20) -> str:
@@ -265,11 +246,12 @@ def list_issues(owner: str, repo: str, state: str = "open",
     items = _get(f"/repos/{owner}/{repo}/issues",
                  {"state": state, "per_page": _normalize_per_page(per_page, 50)})
     issues = [i for i in items if "pull_request" not in i]
-    if not issues:
-        return f"No {state} issues in {owner}/{repo}."
-    return "\n".join(
-        f"#{i['number']} [{i['state']}] {i['title']} ({i['html_url']})"
-        for i in issues
+    return _render_lines(
+        issues,
+        f"No {state} issues in {owner}/{repo}.",
+        lambda issue: (
+            f"#{issue['number']} [{issue['state']}] {issue['title']} ({issue['html_url']})"
+        ),
     )
 
 
@@ -283,11 +265,7 @@ def get_issue(owner: str, repo: str, issue_number: int) -> str:
         issue_number: Issue number.
     """
     _validate_owner_repo(owner, repo)
-    i = _get(f"/repos/{owner}/{repo}/issues/{issue_number}")
-    return json.dumps({k: i.get(k) for k in (
-        "number", "title", "state", "body", "html_url",
-        "user", "labels", "assignees", "created_at", "updated_at",
-    )}, indent=2)
+    return _dump_fields(_get(f"/repos/{owner}/{repo}/issues/{issue_number}"), _ISSUE_FIELDS)
 
 
 @mcp.tool()
@@ -306,10 +284,6 @@ def create_issue_comment(owner: str, repo: str,
     return f"Comment created: {r.get('html_url')}"
 
 
-# ---------------------------------------------------------------------------
-# Pull requests
-# ---------------------------------------------------------------------------
-
 @mcp.tool()
 def list_pull_requests(owner: str, repo: str, state: str = "open",
                        per_page: int = 20) -> str:
@@ -325,12 +299,13 @@ def list_pull_requests(owner: str, repo: str, state: str = "open",
     _validate_state(state)
     items = _get(f"/repos/{owner}/{repo}/pulls",
                  {"state": state, "per_page": _normalize_per_page(per_page, 50)})
-    if not items:
-        return f"No {state} pull requests in {owner}/{repo}."
-    return "\n".join(
-        f"#{i['number']} [{i['state']}] {i['title']} "
-        f"({i['head']['ref']}→{i['base']['ref']}) {i['html_url']}"
-        for i in items
+    return _render_lines(
+        items,
+        f"No {state} pull requests in {owner}/{repo}.",
+        lambda pull: (
+            f"#{pull['number']} [{pull['state']}] {pull['title']} "
+            f"({pull['head']['ref']}→{pull['base']['ref']}) {pull['html_url']}"
+        ),
     )
 
 
@@ -346,11 +321,7 @@ def get_pull_request(owner: str, repo: str, pull_number: int) -> str:
                      returns 404 for issue numbers that are not pull requests.
     """
     _validate_owner_repo(owner, repo)
-    p = _get(f"/repos/{owner}/{repo}/pulls/{pull_number}")
-    return json.dumps({k: p.get(k) for k in (
-        "number", "title", "state", "body", "html_url", "draft",
-        "head", "base", "user", "mergeable", "created_at", "updated_at",
-    )}, indent=2)
+    return _dump_fields(_get(f"/repos/{owner}/{repo}/pulls/{pull_number}"), _PULL_FIELDS)
 
 
 @mcp.tool()
@@ -375,10 +346,6 @@ def create_pull_request(owner: str, repo: str, title: str, head: str,
     return f"Pull request created: #{r['number']} {r['html_url']}"
 
 
-# ---------------------------------------------------------------------------
-# Releases
-# ---------------------------------------------------------------------------
-
 @mcp.tool()
 def list_releases(owner: str, repo: str, per_page: int = 10) -> str:
     """List releases for a repository.
@@ -393,19 +360,16 @@ def list_releases(owner: str, repo: str, per_page: int = 10) -> str:
         f"/repos/{owner}/{repo}/releases",
         {"per_page": _normalize_per_page(per_page, 30)},
     )
-    if not items:
-        return f"No releases found for {owner}/{repo}."
-    return "\n".join(
-        f"{r['tag_name']} — {r['name']} "
-        f"({'draft' if r['draft'] else 'pre-release' if r['prerelease'] else 'stable'}) "
-        f"{r.get('published_at', r.get('created_at', '?'))}"
-        for r in items
+    return _render_lines(
+        items,
+        f"No releases found for {owner}/{repo}.",
+        lambda release: (
+            f"{release['tag_name']} — {release['name']} "
+            f"({'draft' if release['draft'] else 'pre-release' if release['prerelease'] else 'stable'}) "
+            f"{release.get('published_at', release.get('created_at', '?'))}"
+        ),
     )
 
-
-# ---------------------------------------------------------------------------
-# Actions
-# ---------------------------------------------------------------------------
 
 @mcp.tool()
 def list_workflow_runs(owner: str, repo: str, workflow_id: str = "",
@@ -431,18 +395,15 @@ def list_workflow_runs(owner: str, repo: str, workflow_id: str = "",
         params["status"] = status
     d = _get(path, params)
     runs = d.get("workflow_runs", [])
-    if not runs:
-        return "No workflow runs found."
-    return "\n".join(
-        f"#{r['id']} {r['name']} [{r['status']}/{r.get('conclusion', '—')}] "
-        f"{r['head_branch']} {r['created_at']} {r['html_url']}"
-        for r in runs
+    return _render_lines(
+        runs,
+        "No workflow runs found.",
+        lambda run: (
+            f"#{run['id']} {run['name']} [{run['status']}/{run.get('conclusion', '—')}] "
+            f"{run['head_branch']} {run['created_at']} {run['html_url']}"
+        ),
     )
 
-
-# ---------------------------------------------------------------------------
-# Entry point
-# ---------------------------------------------------------------------------
 
 if __name__ == "__main__":  # pragma: no cover
     mcp.run()

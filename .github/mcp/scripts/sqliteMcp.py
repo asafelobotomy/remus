@@ -1,20 +1,20 @@
 #!/usr/bin/env python3
-"""SQLite MCP — query and inspect local SQLite databases.
+"""SQLite MCP — query and inspect workspace-local SQLite databases.
 
 Tools
 -----
 execute_query  : Run a SQL statement and return results as a formatted table.
-                 Read-only by default; pass allow_writes=True to enable writes.
+                                 Read-only only; write mode is rejected.
 list_tables    : List all tables and views in a database file.
 describe_table : Return the CREATE statement for a table or view.
 
 Security
 --------
-- ``db_path`` is unrestricted: any readable filesystem path is accepted; trust
-  is placed in the agent to supply a safe path. No additional path sandboxing
-  is performed by this server.
+- ``db_path`` must resolve to a file within the current workspace root.
 - Read-only connections use SQLite's URI mode (mode=ro) enforced at the driver
-  level — no write operation can succeed regardless of the SQL sent.
+    level — no write operation can succeed regardless of the SQL sent.
+- ``allow_writes`` is intentionally unsupported; callers must use a different
+    tool or direct local workflow for modifications.
 - User-supplied values should be passed via the params list (? placeholders)
   rather than interpolated into the query string.
 - Row output is capped at max_rows (default 100) to prevent runaway results.
@@ -43,12 +43,35 @@ mcp = FastMCP("xanadSQLite")
 # Helpers
 # ---------------------------------------------------------------------------
 
-def _connect(db_path: str, allow_writes: bool) -> sqlite3.Connection:
-    path = Path(db_path).resolve()
+def discover_workspace_root(script_path: Path) -> Path:
+    resolved = script_path.resolve()
+    for candidate in resolved.parents:
+        if (candidate / ".github").is_dir():
+            return candidate
+    fallback_index = min(3, len(resolved.parents) - 1)
+    return resolved.parents[fallback_index]
+
+
+WORKSPACE_ROOT = discover_workspace_root(Path(__file__))
+
+
+def _resolve_db_path(db_path: str) -> Path:
+    path = Path(db_path).expanduser().resolve()
     if not path.exists():
         raise FileNotFoundError(f"Database file not found: {db_path!r}")
-    if allow_writes:
-        return sqlite3.connect(str(path))
+    if not path.is_file():
+        raise ValueError(f"Database path must point to a file: {db_path!r}")
+    try:
+        path.relative_to(WORKSPACE_ROOT)
+    except ValueError as exc:
+        raise ValueError(
+            f"Database path must stay within the workspace root: {WORKSPACE_ROOT}"
+        ) from exc
+    return path
+
+
+def _connect(db_path: str) -> sqlite3.Connection:
+    path = _resolve_db_path(db_path)
     return sqlite3.connect(f"file:{path}?mode=ro", uri=True)
 
 
@@ -93,19 +116,21 @@ def execute_query(
     """Execute a SQL statement and return results as a formatted table.
 
     Args:
-        db_path: Absolute or relative path to the SQLite database file.
+        db_path: Absolute or relative path to a SQLite database file within the workspace root.
         query: SQL statement to execute.
         params: Positional parameters for ? placeholders in the query.
                 Always use this instead of string-interpolating user values.
-        allow_writes: Open in read-write mode. Default False enforces a
-                      read-only connection at the driver level.
+        allow_writes: Unsupported. This server is read-only.
         max_rows: Maximum rows to return (default 100).
     """
-    conn = _connect(db_path, allow_writes)
+    if allow_writes:
+        raise ValueError(
+            "allow_writes=True is not supported by xanadSQLite. "
+            "This server is restricted to read-only workspace-local inspection."
+        )
+    conn = _connect(db_path)
     try:
         cur = conn.execute(query, params or [])
-        if allow_writes:
-            conn.commit()
         return _fmt(cur, max_rows)
     except sqlite3.Error as exc:
         raise RuntimeError(str(exc)) from exc
@@ -118,9 +143,9 @@ def list_tables(db_path: str) -> str:
     """List all tables and views in a SQLite database file.
 
     Args:
-        db_path: Absolute or relative path to the SQLite database file.
+        db_path: Absolute or relative path to a SQLite database file within the workspace root.
     """
-    conn = _connect(db_path, allow_writes=False)
+    conn = _connect(db_path)
     try:
         cur = conn.execute(
             "SELECT type, name FROM sqlite_master "
@@ -139,10 +164,10 @@ def describe_table(db_path: str, table: str) -> str:
     """Return the CREATE statement for a table or view.
 
     Args:
-        db_path: Absolute or relative path to the SQLite database file.
+        db_path: Absolute or relative path to a SQLite database file within the workspace root.
         table: Name of the table or view to describe.
     """
-    conn = _connect(db_path, allow_writes=False)
+    conn = _connect(db_path)
     try:
         cur = conn.execute(
             "SELECT sql FROM sqlite_master WHERE name = ?", (table,)

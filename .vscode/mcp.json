@@ -56,7 +56,7 @@
         "mcp[cli]",
         "mcp",
         "run",
-        "${workspaceFolder}/.github/hooks/scripts/gitMcp.py"
+        "${workspaceFolder}/.github/mcp/scripts/gitMcp.py"
       ]
     },
     "github": {
@@ -77,65 +77,10 @@
         "mcp[cli]",
         "mcp",
         "run",
-        "${workspaceFolder}/.github/hooks/scripts/githubMcp.py"
+        "${workspaceFolder}/.github/mcp/scripts/githubMcp.py"
       ]
     },
-    "fetch": {
-      "type": "stdio",
-      "command": "uvx",
-      "env": {
-        "CLAUDE_TMPDIR": "${userHome}/.cache/uv",
-        "TMPDIR": "${userHome}/.cache/uv"
-      },
-      "args": [
-        "--from",
-        "mcp[cli]",
-        "--with",
-        "httpx==0.28.1",
-        "--with",
-        "beautifulsoup4==4.14.3",
-        "mcp",
-        "run",
-        "${workspaceFolder}/.github/hooks/scripts/mcp-fetch-server.py"
-      ],
-      "disabled": true
-    },
-    "heartbeat": {
-      "type": "stdio",
-      "command": "uvx",
-      "env": {
-        "HEARTBEAT_WORKSPACE": "${workspaceFolder}",
-        "CLAUDE_TMPDIR": "${userHome}/.cache/uv/.copilot-tmp",
-        "TMPDIR": "${userHome}/.cache/uv/.copilot-tmp"
-      },
-      "args": [
-        "--from",
-        "mcp[cli]",
-        "mcp",
-        "run",
-        "${workspaceFolder}/.github/hooks/scripts/mcp-heartbeat-server.py"
-      ]
-    },
-    "docs": {
-      "type": "stdio",
-      "command": "uvx",
-      "env": {
-        "CLAUDE_TMPDIR": "${userHome}/.cache/uv",
-        "TMPDIR": "${userHome}/.cache/uv"
-      },
-      "args": [
-        "--from",
-        "mcp[cli]",
-        "--with",
-        "httpx==0.28.1",
-        "--with",
-        "beautifulsoup4==4.14.3",
-        "mcp",
-        "run",
-        "${workspaceFolder}/.github/hooks/scripts/mcp-docs-server.py"
-      ],
-      "disabled": true
-    },
+
     "sequential-thinking": {
       "type": "stdio",
       "command": "uvx",
@@ -148,30 +93,24 @@
         "mcp[cli]",
         "mcp",
         "run",
-        "${workspaceFolder}/.github/hooks/scripts/mcpSequentialThinkingServer.py"
-      ],
-      "disabled": true
-    },
-    "duckduckgo": {
-      "type": "stdio",
-      "command": "uvx",
-      "args": [
-        "--from",
-        "mcp[cli]",
-        "--with",
-        "httpx==0.28.1",
-        "--with",
-        "beautifulsoup4==4.14.3",
-        "mcp",
-        "run",
-        "${workspaceFolder}/.github/hooks/scripts/mcp-duckduckgo-server.py"
+        "${workspaceFolder}/.github/mcp/scripts/sequentialThinkingMcp.py"
       ],
       "disabled": true
     },
     "xanadTools": {
       "type": "stdio",
-      "command": "${workspaceFolder}/.github/hooks/scripts/xanadWorkspaceMcp.py",
-      "args": []
+      "command": "uvx",
+      "args": [
+        "--from",
+        "mcp[cli]",
+        "mcp",
+        "run",
+        "${workspaceFolder}/.github/mcp/scripts/xanadWorkspaceMcp.py"
+      ],
+      "env": {
+        "CLAUDE_TMPDIR": "${userHome}/.cache/uv",
+        "TMPDIR": "${userHome}/.cache/uv"
+      }
     },
     "web": {
       "type": "stdio",
@@ -191,7 +130,7 @@
         "mcp[cli]",
         "mcp",
         "run",
-        "${workspaceFolder}/.github/hooks/scripts/webMcp.py"
+        "${workspaceFolder}/.github/mcp/scripts/webMcp.py"
       ]
     },
     "time": {
@@ -206,7 +145,7 @@
         "mcp[cli]",
         "mcp",
         "run",
-        "${workspaceFolder}/.github/hooks/scripts/timeMcp.py"
+        "${workspaceFolder}/.github/mcp/scripts/timeMcp.py"
       ]
     },
     "security": {
@@ -221,7 +160,7 @@
         "mcp[cli]",
         "mcp",
         "run",
-        "${workspaceFolder}/.github/hooks/scripts/securityMcp.py"
+        "${workspaceFolder}/.github/mcp/scripts/securityMcp.py"
       ]
     },
     "sqlite": {
@@ -236,9 +175,25 @@
         "mcp[cli]",
         "mcp",
         "run",
-        "${workspaceFolder}/.github/hooks/scripts/sqliteMcp.py"
+        "${workspaceFolder}/.github/mcp/scripts/sqliteMcp.py"
       ],
       "disabled": true
+    },
+    "memory": {
+      "type": "stdio",
+      "command": "uvx",
+      "env": {
+        "CLAUDE_TMPDIR": "${userHome}/.cache/uv",
+        "TMPDIR": "${userHome}/.cache/uv",
+        "WORKSPACE_ROOT": "${workspaceFolder}"
+      },
+      "args": [
+        "--from",
+        "mcp[cli]",
+        "mcp",
+        "run",
+        "${workspaceFolder}/.github/mcp/scripts/memoryMcp.py"
+      ]
     }
   }
 }
