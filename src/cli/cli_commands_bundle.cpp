@@ -55,8 +55,8 @@ int handleArtworkCommand(CliContext &ctx)
             continue;
         }
         QUrl url(metadata.boxArtUrl);
-        if (!url.isValid()) {
-            qInfo() << "  ✗ Invalid URL" << metadata.boxArtUrl;
+        if (!ArtworkDownloader::isSupportedRemoteUrl(url)) {
+            qInfo() << "  \u2717 Unsupported or unsafe artwork URL" << metadata.boxArtUrl;
             failedCount++;
             continue;
         }
@@ -187,17 +187,14 @@ int handleBundleCommand(CliContext &ctx)
         // 1. Check process-run artwork cache (populated by earlier system batches;
         //    avoids duplicate provider round-trips within a single --process run)
         if (artworkPath.isEmpty() && !ctx.processArtworkCacheDir.isEmpty()) {
-            const QString cached = ctx.processArtworkCacheDir + "/" + QString::number(file.id) + ".jpg";
-            if (QFile::exists(cached))
-                artworkPath = cached;
+            artworkPath = findExistingArtworkPath(
+                ctx.processArtworkCacheDir + "/" + QString::number(file.id));
         }
         // 2. Check explicit --bundle-art-dir
         if (!artworkPath.isEmpty()) {
         } else if (!artworkDir.isEmpty()) {
-            const QString candidate = artworkDir + "/" +
-                QFileInfo(file.filename).completeBaseName() + ".jpg";
-            if (QFile::exists(candidate))
-                artworkPath = candidate;
+            artworkPath = findExistingArtworkPath(
+                artworkDir + "/" + QFileInfo(file.filename).completeBaseName());
         }
 
         // If no pre-downloaded art, try providers to get a box art URL
@@ -212,7 +209,7 @@ int handleBundleCommand(CliContext &ctx)
 
             if (!providerMeta.boxArtUrl.isEmpty()) {
                 const QUrl boxArtUrl(providerMeta.boxArtUrl);
-                if (boxArtUrl.isValid()) {
+                if (ArtworkDownloader::isSupportedRemoteUrl(boxArtUrl)) {
                     const QString ext = QFileInfo(boxArtUrl.path()).suffix().isEmpty()
                         ? QStringLiteral("jpg")
                         : QFileInfo(boxArtUrl.path()).suffix().toLower();

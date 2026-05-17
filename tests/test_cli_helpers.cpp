@@ -22,6 +22,7 @@ private slots:
     void testSelectBestHashCrc32Only();
     void testSelectBestHashPrefersHasheous();
     void testSelectBestHashEmptyWhenNoHashes();
+    void testFindExistingArtworkPathProbesSupportedExtensions();
     void testResolveCliOptionValueUsesPresetWhenOptionUnset();
     void testResolveCliOptionValuePrefersExplicitOption();
     void testResolveCliOptionValueFallsBackToParserDefault();
@@ -176,6 +177,28 @@ void CliHelpersTest::testSelectBestHashEmptyWhenNoHashes()
     fr.hashCalculated = false;
     QString hash = selectBestHash(fr);
     QVERIFY(hash.isEmpty());
+}
+
+void CliHelpersTest::testFindExistingArtworkPathProbesSupportedExtensions()
+{
+    QTemporaryDir tmpDir;
+    QVERIFY(tmpDir.isValid());
+
+    const QString basePath = tmpDir.filePath(QStringLiteral("artwork_42"));
+    QVERIFY(findExistingArtworkPath(basePath).isEmpty());
+
+    QFile png(basePath + QStringLiteral(".png"));
+    QVERIFY(png.open(QIODevice::WriteOnly));
+    QVERIFY(png.write("png") == 3);
+    png.close();
+    QCOMPARE(findExistingArtworkPath(basePath), basePath + QStringLiteral(".png"));
+
+    QVERIFY(png.remove());
+    QFile webp(basePath + QStringLiteral(".webp"));
+    QVERIFY(webp.open(QIODevice::WriteOnly));
+    QVERIFY(webp.write("webp") == 4);
+    webp.close();
+    QCOMPARE(findExistingArtworkPath(basePath), basePath + QStringLiteral(".webp"));
 }
 
 void CliHelpersTest::testResolveCliOptionValueUsesPresetWhenOptionUnset()

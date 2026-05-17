@@ -19,6 +19,21 @@ inline constexpr const char* IGDB_CLIENT_SECRET = "igdb/client_secret";
 inline constexpr const char* HASHEOUS_CLIENT_API_KEY = "hasheous/client_api_key";
 inline constexpr const char* RETROACHIEVEMENTS_USERNAME = "retroachievements/username";
 inline constexpr const char* RETROACHIEVEMENTS_API_KEY = "retroachievements/api_key";
+
+/// Authoritative list of every secret-bearing settings key.
+/// Use this for reset, export redaction, and migration paths so no key is silently omitted.
+inline constexpr std::array<const char*, 10> ALL_SECRET_KEYS = {{
+    SCREENSCRAPER_USERNAME,
+    SCREENSCRAPER_PASSWORD,
+    SCREENSCRAPER_DEVID,
+    SCREENSCRAPER_DEVPASSWORD,
+    THEGAMESDB_API_KEY,
+    IGDB_CLIENT_ID,
+    IGDB_CLIENT_SECRET,
+    HASHEOUS_CLIENT_API_KEY,
+    RETROACHIEVEMENTS_USERNAME,
+    RETROACHIEVEMENTS_API_KEY,
+}};
 }
 
 namespace Metadata {

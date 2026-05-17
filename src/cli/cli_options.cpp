@@ -38,15 +38,15 @@ void registerAllOptions(QCommandLineParser &parser, QSet<QString> &actionOptions
     const QString providerHelp = QString("Metadata provider (%1, %2, %3, auto)")
         .arg(Providers::SCREENSCRAPER).arg(Providers::THEGAMESDB).arg(Providers::IGDB);
     addOption(QCommandLineOption(Constants::Cli::Options::PROVIDER, providerHelp, "provider", Constants::Cli::Defaults::PROVIDER));
-    addOption(QCommandLineOption("tgdb-api-key", "TheGamesDB API key", "apiKey"));
-    addOption(QCommandLineOption("ss-user",    "ScreenScraper username",      "username"));
-    addOption(QCommandLineOption("ss-pass",    "ScreenScraper password",      "password"));
-    addOption(QCommandLineOption("ss-devid",   "ScreenScraper dev ID",        "devid"));
-    addOption(QCommandLineOption("ss-devpass", "ScreenScraper dev password",  "devpassword"));
-    addOption(QCommandLineOption("igdb-client-id", "IGDB client ID", "clientId"));
-    addOption(QCommandLineOption("igdb-client-secret", "IGDB client secret", "clientSecret"));
-    addOption(QCommandLineOption("ra-user",    "RetroAchievements username",  "username"));
-    addOption(QCommandLineOption("ra-api-key", "RetroAchievements web API key", "apiKey"));
+    addOption(QCommandLineOption("tgdb-api-key", "TheGamesDB API key (env: REMUS_TGDB_API_KEY)", "apiKey"));
+    addOption(QCommandLineOption("ss-user",    "ScreenScraper username (env: REMUS_SS_USER)",      "username"));
+    addOption(QCommandLineOption("ss-pass",    "ScreenScraper password (env: REMUS_SS_PASS)",      "password"));
+    addOption(QCommandLineOption("ss-devid",   "ScreenScraper dev ID (env: REMUS_SS_DEVID)",       "devid"));
+    addOption(QCommandLineOption("ss-devpass", "ScreenScraper dev password (env: REMUS_SS_DEVPASS)", "devpassword"));
+    addOption(QCommandLineOption("igdb-client-id", "IGDB client ID (env: REMUS_IGDB_CLIENT_ID)", "clientId"));
+    addOption(QCommandLineOption("igdb-client-secret", "IGDB client secret (env: REMUS_IGDB_CLIENT_SECRET)", "clientSecret"));
+    addOption(QCommandLineOption("ra-user",    "RetroAchievements username (env: REMUS_RA_USER)",  "username"));
+    addOption(QCommandLineOption("ra-api-key", "RetroAchievements web API key (env: REMUS_RA_API_KEY)", "apiKey"));
 
     addActionOption(QCommandLineOption("match", "Match scanned files with metadata (M3 intelligent matching)"));
     addOption(QCommandLineOption(Constants::Cli::Options::MIN_CONFIDENCE, "Minimum confidence threshold for matches (0-100)", "confidence", QString::number(static_cast<int>(Constants::Confidence::Thresholds::DEFAULT_MINIMUM))));

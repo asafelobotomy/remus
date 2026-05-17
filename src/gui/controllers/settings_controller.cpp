@@ -159,13 +159,11 @@ void SettingsController::setValue(const QString &key, const QVariant &value)
 
 void SettingsController::resetToDefaults()
 {
-    const QStringList keys = {
-        QString::fromLatin1(Constants::Settings::Providers::SCREENSCRAPER_USERNAME),
-        QString::fromLatin1(Constants::Settings::Providers::SCREENSCRAPER_PASSWORD),
-        QString::fromLatin1(Constants::Settings::Providers::THEGAMESDB_API_KEY),
-        QString::fromLatin1(Constants::Settings::Providers::IGDB_CLIENT_ID),
-        QString::fromLatin1(Constants::Settings::Providers::IGDB_CLIENT_SECRET),
-        QString::fromLatin1(Constants::Settings::Providers::HASHEOUS_CLIENT_API_KEY),
+    // Build key list from the authoritative secret-keys array so no secret is silently omitted.
+    QStringList keys;
+    for (const char *k : Constants::Settings::Providers::ALL_SECRET_KEYS)
+        keys.append(QString::fromLatin1(k));
+    keys.append({
         QString::fromLatin1(GuiSettings::CHDMAN_PATH),
         QString::fromLatin1(GuiSettings::DOLPHIN_TOOL_PATH),
         QString::fromLatin1(GuiSettings::MAXCSO_PATH),
@@ -177,7 +175,7 @@ void SettingsController::resetToDefaults()
         QString::fromLatin1(GuiSettings::DEFAULT_LIBRARY_PATH),
         QString::fromLatin1(GuiSettings::ARTWORK_CACHE_DIR),
         QString::fromLatin1(GuiSettings::MOD_CATALOG_URL),
-    };
+    });
 
     for (const QString &key : keys) {
         m_settings.remove(key);

@@ -15,7 +15,6 @@ REQUIRED_FILES = [
     ROOT / ".github" / "copilot-instructions.md",
     ROOT / ".github" / "copilot-version.md",
     ROOT / "AGENTS.md",
-    ROOT / ".copilot" / "workspace" / "workspace-index.json",
 ]
 
 

@@ -152,6 +152,8 @@ QJsonObject RetroAchievementsProvider::fetchGameJson(int gameId)
     query.addQueryItem(QStringLiteral("i"), QString::number(gameId));
     query.addQueryItem(QStringLiteral("y"), m_apiKey);
     url.setQuery(query);
+    // NOTE: RetroAchievements API requires the key as a query parameter.
+    // Do not log or print `url` after this point — it contains a plaintext API key.
 
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::UserAgentHeader,

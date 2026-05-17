@@ -398,6 +398,17 @@ add_remus_test(test_rvz_converter RvzConverterTest
     LIBS Qt6::Test Qt6::Core remus-core
 )
 
+# ── Recovered manual test: metadata cache deserialization ────────────────────
+# This test uses a plain main() with exit-code semantics rather than the Qt
+# Test framework, so it is registered directly instead of via add_remus_test.
+add_executable(test_cache_deserialization test_cache_deserialization.cpp)
+target_link_libraries(test_cache_deserialization PRIVATE Qt6::Core Qt6::Sql remus-metadata remus-core)
+add_test(NAME CacheDeserializationTest COMMAND test_cache_deserialization)
+set_tests_properties(CacheDeserializationTest PROPERTIES
+    ENVIRONMENT "QT_QPA_PLATFORM=offscreen"
+)
+list(APPEND REMUS_TEST_TARGETS test_cache_deserialization)
+
 add_custom_target(run_tests
     COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure
     DEPENDS ${REMUS_TEST_TARGETS}

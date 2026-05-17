@@ -196,6 +196,18 @@ HashResult hashFileRecord(const FileRecord &file, Hasher &hasher)
 QString findDataSubdir(const QString &subdir)
 ;
 
+QString findExistingArtworkPath(const QString &basePath)
+{
+    for (const char *ext : {".png", ".jpg", ".jpeg", ".webp"}) {
+        const QString candidate = basePath + QLatin1String(ext);
+        if (QFileInfo::exists(candidate)) {
+            return candidate;
+        }
+    }
+
+    return QString();
+}
+
 QString resolveCliOptionValue(const QCommandLineParser &parser,
                               const QString &optionName,
                               const QString &presetValue)

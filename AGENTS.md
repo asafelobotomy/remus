@@ -12,27 +12,24 @@
 
 | Agent | File | Model (primary) | Role | Allow-list |
 |-------|------|-----------------|------|------------|
-| **Code** | `coding.agent.md` | GPT-5.3-Codex / Claude Sonnet 4.6 | Implement features, refactor, multi-step coding tasks | Review, Audit, Researcher, Explore, Commit, Organise, Planner, Docs, Debugger, Cleaner |
-| **Review** | `review.agent.md` | GPT-5.4 / Claude Sonnet 4.6 | Deep code review and architectural analysis with Lean/Kaizen critique | Code, Audit, Organise, Docs, Debugger, Cleaner |
-| **Audit** | `audit.agent.md` | GPT-5.4 / Claude Sonnet 4.6 | Read-only health check and security audit — structural validation, upstream comparison, OWASP, secrets | Code, Setup, Researcher, Extensions, Organise, Planner, Cleaner |
-| **Setup** | `setup.agent.md` | Claude Sonnet 4.6 | Template lifecycle — first-time setup, upstream updates, backup restore, and factory restore | Audit, Extensions, Organise, Researcher |
-| **Researcher** | `researcher.agent.md` | Claude Sonnet 4.6 | Online and offline research — fetch docs, track URLs, structured output | Code, Audit, Explore, Docs, Planner |
-| **Fast** | `fast.agent.md` | Claude Haiku 4.5 | Quick questions, syntax lookups, and lightweight single-file edits | Code, Explore, Commit |
-| **Explore** | `explore.agent.md` | Claude Haiku 4.5 | Fast read-only codebase exploration and Q&A subagent | Researcher |
-| **Extensions** | `extensions.agent.md` | Claude Sonnet 4.6 | VS Code extension management, profiles, and workspace configuration | Code, Audit, Organise, Researcher |
-| **Commit** | `commit.agent.md` | GPT-5.2 / Claude Sonnet 4.6 | Full git lifecycle — stage, commit, push, pull, rebase, merge, branch, stash, tag, release, PR creation | Code, Review, Audit, Debugger, Organise, Cleaner |
-| **Debugger** | `debugger.agent.md` | GPT-5.4 / Claude Sonnet 4.6 | Diagnose failures, isolate root causes, triage regressions, and propose minimal fix paths | Code, Researcher, Audit, Planner |
-| **Docs** | `docs.agent.md` | Claude Sonnet 4.6 | Draft and update project documentation, walkthroughs, migration notes, README sections | Code, Researcher, Review, Explore |
-| **Organise** | `organise.agent.md` | GPT-5.3-Codex / Claude Sonnet 4.6 | Subagent-only structural worker — organise directories, move files, fix broken pathing | Code, Explore, Docs |
-| **Planner** | `planner.agent.md` | GPT-5.4 / Claude Sonnet 4.6 | Break down complex work into scoped execution plans, file lists, risks, verification steps | Code, Explore, Researcher, Debugger, Docs |
-| **Cleaner** | `cleaner.agent.md` | GPT-5.3-Codex / Claude Sonnet 4.6 | Repository hygiene — prune stale artefacts, caches, archives, and dead files | Code, Audit, Organise, Docs, Commit |
-| ~~Doctor~~ | `doctor.agent.md` | — | *Deprecated: replaced by the Audit agent. Kept for reference.* | — |
+| **Cleaner** | `cleaner.agent.md` | Claude Sonnet 4.6 | Repository hygiene — prune stale artefacts, caches, archives, and dead files | Review, Organise, Docs, Commit |
+| **Commit** | `commit.agent.md` | Claude Sonnet 4.6 | Full git lifecycle — stage, commit, push, pull, rebase, merge, branch, stash, tag, release, PR creation | Explore, Review, Debugger |
+| **Debugger** | `debugger.agent.md` | GPT-5.4 / Claude Sonnet 4.6 | Diagnose failures, isolate root causes, triage regressions, and propose minimal fix paths | Explore, Review, Planner, Researcher |
+| **Deps** | `deps.agent.md` | Claude Sonnet 4.6 | Scan dependencies, audit packages, check for vulnerabilities, install/update/remove | Explore, Researcher, Review |
+| **Docs** | `docs.agent.md` | Claude Sonnet 4.6 | Draft and update project documentation, walkthroughs, migration notes, README sections | Researcher, Review, Explore, Planner |
+| **Explore** | `explore.agent.md` | GPT-5.4 mini / Claude Haiku 4.5 | Fast read-only codebase exploration and Q&A subagent | *(none)* |
+| **Organise** | `organise.agent.md` | Claude Sonnet 4.6 | Subagent-only structural worker — organise directories, move files, fix broken pathing | Explore, Docs |
+| **Planner** | `planner.agent.md` | GPT-5.4 / Claude Sonnet 4.6 | Break down complex work into scoped execution plans, file lists, risks, and verification steps | Explore, Debugger, Review, Researcher, Docs |
+| **Researcher** | `researcher.agent.md` | Claude Sonnet 4.6 | Online and offline research — fetch docs, track URLs, structured output | Explore, Planner, Review, Docs |
+| **Review** | `review.agent.md` | GPT-5.4 / Claude Sonnet 4.6 | Deep code review and architectural analysis with Lean/Kaizen critique | Explore, Debugger, Planner, Researcher |
+| **Triage** | `triage.agent.md` | Claude Haiku 4.5 | First-pass complexity assessment before choosing execution path | Planner |
+| **xanadLifecycle** | `xanadLifecycle.agent.md` | Claude Sonnet 4.6 | Handles all inspect, check, plan, apply, update, repair, factory-restore requests | Explore, Debugger, Planner |
 
 ---
 
 ## Canonical Triggers
 
-### Setup agent (update mode)
+### xanadLifecycle agent
 
 | Trigger phrase | Behaviour |
 |----------------|-----------|
@@ -47,19 +44,18 @@
 | `Roll back the instructions update` | Same as above |
 | `List instruction backups` | List available backups in `.github/archive/` |
 
-### Audit agent
+### Health checks and security audit (via Review agent)
 
 | Trigger phrase | Behaviour |
 |----------------|-----------|
 | `Health check` | Run D1–D14 checks across all instruction infrastructure |
 | `Security audit` | Run S1–S10 security checks (OWASP, secrets, injection, supply-chain) |
 | `Full audit` | Run both D1–D14 health checks and S1–S10 security checks |
-| `Check your heartbeat` | Fire heartbeat protocol (see `.copilot/workspace/HEARTBEAT.md`) |
 | `Check attention budget` | D1 only — count lines in copilot-instructions.md |
 | `Check agent files` | D4 only — validate all `.github/agents/` frontmatter |
 | `Check MCP config` | D5 only — validate `.vscode/mcp.json` |
 
-### Setup agent (setup mode)
+### xanadLifecycle agent (setup mode)
 
 | Trigger phrase | Behaviour |
 |----------------|-----------|
@@ -70,23 +66,25 @@
 
 ## Canonical Protocol Sources
 
-- First-time setup: [SETUP.md](SETUP.md)
-- Update, backup restore, and factory restore: [UPDATE.md](UPDATE.md)
-- Canonical inventory and counts: `.copilot/workspace/workspace-index.json`
-- Canonical managed-file manifest: `.github/copilot-version.md`
+- Canonical inventory and counts: `.github/xanadAssistant-lock.json` (per-file hash inventory)
+- Canonical managed-file manifest: `.github/copilot-version.md` (version and profile)
 
 ## Skill Inventory
 
 Project skills live under `.github/skills/`.
-Use `.github/copilot-version.md` as the canonical inventory during audits.
+For audits, use `.github/xanadAssistant-lock.json` as the canonical managed-file manifest.
 
 Installed skills:
-- `accessibility-review`, `agentic-workflows`, `api-design`, `audit-procedures`, `changelog-entry`, `commit-preflight`, `compress-prose`, `conventional-commit`, `create-adr`, `dependency-update`, `docker-scaffold`, `env-config`, `extension-review`, `fix-ci-failure`, `git-workflows`, `issue-triage`, `lean-pr-review`, `mcp-builder`, `mcp-management`, `onboarding-docs`, `performance-profiling`, `plugin-management`, `refactor-extract`, `security-audit`, `skill-creator`, `skill-management`, `tech-debt-audit`, `test-coverage-review`, `tool-protocol`, `webapp-testing`
+
+- `ciPreflight`, `lifecycleAudit`
 
 ## Compatibility Notes
 
-`doctor.agent.md` is retained as a compatibility-only reference during the Audit-agent transition.
-`security.agent.md` is intentionally absent because upstream merged that role into `audit.agent.md` plus the `security-audit` skill.
+The Audit, Code, Setup, Fast, and Extensions agent roles from an earlier template version have been consolidated:
+
+- Health-check and security-audit work is handled by the **Review** agent.
+- Template lifecycle (setup, update, repair) is handled by the **xanadLifecycle** agent.
+- Extension and workspace config work is handled directly through VS Code or the **xanadLifecycle** agent.
 
 ---
 
@@ -101,23 +99,18 @@ Installed skills:
 
 ## Handoff Chains
 
-```
-User → Code → Review → Code (iterate)
-             ↘ Audit (health check or security scan before done)
-             ↘ Commit (stage and publish changes)
-User → Audit → Code (apply fixes)
-             ↘ Setup (version behind)
-User → Setup → Audit (post-update health check)
-User → Researcher → Code (implement findings)
-                  ↘ Audit (verify written files)
-User → Fast → Code (escalate large tasks)
-            ↘ Commit (stage and publish)
-User → Commit → Review (review before commit)
-              ↘ Audit (post-commit security scan)
-User → Extensions → Audit (post-config health check)
-User → Debugger → Code (implement the fix)
-User → Planner → Code (implement the plan)
+```text
+User → Review → Commit (apply fixes, then stage and publish)
+User → Debugger → (implement fix)
+              ↘ Review (verify the fix)
+User → Planner → (implement the plan)
+User → Researcher → (implement findings)
+                  ↘ Review (verify written files)
+User → Commit → Review (review before committing)
 User → Docs → Review (review written docs)
+User → Deps → Review (verify dependency changes)
+User → xanadLifecycle → Review (post-lifecycle health check)
+User → Cleaner → Commit (stage cleaned files)
 ```
 
 ---

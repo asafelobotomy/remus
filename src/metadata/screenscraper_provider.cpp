@@ -62,6 +62,9 @@ QList<SearchResult> ScreenScraperProvider::searchByName(const QString &title,
     query.addQueryItem("sspassword", m_password);
     query.addQueryItem("recherche", title);
     
+    // NOTE: ScreenScraper API requires credentials as query parameters.
+    // Do not log or print `url` after this point — it contains plaintext secrets.
+    
     if (!system.isEmpty()) {
         QString ssSystem = mapSystemToScreenScraper(system);
         if (!ssSystem.isEmpty()) {

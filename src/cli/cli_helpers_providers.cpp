@@ -39,6 +39,23 @@ QString parserOrSetting(const QCommandLineParser &parser,
     return settings.value(QString::fromLatin1(settingKey)).toString().trimmed();
 }
 
+/// Resolve a provider secret: CLI flag → environment variable → QSettings.
+/// Prefer environment variables over flags in automated / non-interactive flows
+/// to avoid exposing secrets in shell history and process listings.
+static QString resolveSecret(const QCommandLineParser &parser,
+                             const QString &optionName,
+                             const char *envVar,
+                             const char *settingKey)
+{
+    if (parser.isSet(optionName))
+        return parser.value(optionName).trimmed();
+    const QByteArray env = qgetenv(envVar);
+    if (!env.isEmpty())
+        return QString::fromLocal8Bit(env).trimmed();
+    QSettings settings = remusSettings();
+    return settings.value(QString::fromLatin1(settingKey)).toString().trimmed();
+}
+
 }
 
 QString findDataSubdir(const QString &subdir)
@@ -94,11 +111,19 @@ std::unique_ptr<ProviderOrchestrator> buildOrchestrator(const QCommandLineParser
                               hasheousInfo ? hasheousInfo->priority : 80);
     hasheousProvider.release();
 
-    if (parser.isSet("ss-user") && parser.isSet("ss-pass")) {
+    const QString ssUser = resolveSecret(parser, QStringLiteral("ss-user"),
+                                         "REMUS_SS_USER", Settings::Providers::SCREENSCRAPER_USERNAME);
+    const QString ssPass = resolveSecret(parser, QStringLiteral("ss-pass"),
+                                         "REMUS_SS_PASS", Settings::Providers::SCREENSCRAPER_PASSWORD);
+    if (!ssUser.isEmpty() && !ssPass.isEmpty()) {
         auto ssProvider = std::make_unique<ScreenScraperProvider>();
-        ssProvider->setCredentials(parser.value("ss-user"), parser.value("ss-pass"));
-        if (parser.isSet("ss-devid") && parser.isSet("ss-devpass")) {
-            ssProvider->setDeveloperCredentials(parser.value("ss-devid"), parser.value("ss-devpass"));
+        ssProvider->setCredentials(ssUser, ssPass);
+        const QString ssDevId = resolveSecret(parser, QStringLiteral("ss-devid"),
+                                              "REMUS_SS_DEVID", Settings::Providers::SCREENSCRAPER_DEVID);
+        const QString ssDevPass = resolveSecret(parser, QStringLiteral("ss-devpass"),
+                                                "REMUS_SS_DEVPASS", Settings::Providers::SCREENSCRAPER_DEVPASSWORD);
+        if (!ssDevId.isEmpty() && !ssDevPass.isEmpty()) {
+            ssProvider->setDeveloperCredentials(ssDevId, ssDevPass);
         }
         const auto ssInfo = Providers::getProviderInfo(Providers::SCREENSCRAPER);
         orchestrator->addProvider(Providers::SCREENSCRAPER, ssProvider.get(),
@@ -118,9 +143,9 @@ std::unique_ptr<ProviderOrchestrator> buildOrchestrator(const QCommandLineParser
         }
     }
 
-    const QString tgdbApiKey = parserOrSetting(parser,
-                                               QStringLiteral("tgdb-api-key"),
-                                               Settings::Providers::THEGAMESDB_API_KEY);
+    const QString tgdbApiKey = resolveSecret(parser, QStringLiteral("tgdb-api-key"),
+                                              "REMUS_TGDB_API_KEY",
+                                              Settings::Providers::THEGAMESDB_API_KEY);
     if (!tgdbApiKey.isEmpty()) {
         auto tgdbProvider = std::make_unique<TheGamesDBProvider>();
         tgdbProvider->setApiKey(tgdbApiKey);
@@ -132,12 +157,12 @@ std::unique_ptr<ProviderOrchestrator> buildOrchestrator(const QCommandLineParser
         qInfo() << "TheGamesDB: skipped (no API key configured)";
     }
 
-    const QString igdbClientId = parserOrSetting(parser,
-                                                 QStringLiteral("igdb-client-id"),
-                                                 Settings::Providers::IGDB_CLIENT_ID);
-    const QString igdbClientSecret = parserOrSetting(parser,
-                                                     QStringLiteral("igdb-client-secret"),
-                                                     Settings::Providers::IGDB_CLIENT_SECRET);
+    const QString igdbClientId = resolveSecret(parser, QStringLiteral("igdb-client-id"),
+                                               "REMUS_IGDB_CLIENT_ID",
+                                               Settings::Providers::IGDB_CLIENT_ID);
+    const QString igdbClientSecret = resolveSecret(parser, QStringLiteral("igdb-client-secret"),
+                                                   "REMUS_IGDB_CLIENT_SECRET",
+                                                   Settings::Providers::IGDB_CLIENT_SECRET);
     if (!igdbClientId.isEmpty() && !igdbClientSecret.isEmpty()) {
         auto igdbProvider = std::make_unique<IGDBProvider>();
         igdbProvider->setCredentials(igdbClientId, igdbClientSecret);
@@ -147,12 +172,12 @@ std::unique_ptr<ProviderOrchestrator> buildOrchestrator(const QCommandLineParser
         igdbProvider.release();
     }
 
-    const QString raUsername = parserOrSetting(parser,
-                                               QStringLiteral("ra-user"),
-                                               Settings::Providers::RETROACHIEVEMENTS_USERNAME);
-    const QString raApiKey = parserOrSetting(parser,
-                                             QStringLiteral("ra-api-key"),
-                                             Settings::Providers::RETROACHIEVEMENTS_API_KEY);
+    const QString raUsername = resolveSecret(parser, QStringLiteral("ra-user"),
+                                             "REMUS_RA_USER",
+                                             Settings::Providers::RETROACHIEVEMENTS_USERNAME);
+    const QString raApiKey = resolveSecret(parser, QStringLiteral("ra-api-key"),
+                                           "REMUS_RA_API_KEY",
+                                           Settings::Providers::RETROACHIEVEMENTS_API_KEY);
     if (!raUsername.isEmpty() && !raApiKey.isEmpty()) {
         auto raProvider = std::make_unique<RetroAchievementsProvider>();
         raProvider->setCredentials(raUsername, raApiKey);

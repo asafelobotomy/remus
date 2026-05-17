@@ -18,15 +18,33 @@ IGDBProvider::IGDBProvider(QObject *parent)
 
 void IGDBProvider::setCredentials(const QString &clientId, const QString &clientSecret)
 {
-    m_clientId = clientId;
-    m_clientSecret = clientSecret;
-    m_authenticated = !clientId.isEmpty() && !clientSecret.isEmpty();
+    const QString trimmedClientId = clientId.trimmed();
+    const QString trimmedClientSecret = clientSecret.trimmed();
+    const bool credentialsChanged = m_clientId != trimmedClientId
+        || m_clientSecret != trimmedClientSecret;
+
+    m_clientId = trimmedClientId;
+    m_clientSecret = trimmedClientSecret;
+
+    // Credentials being configured is not the same thing as being authenticated.
+    // Force the next IGDB request to acquire or refresh a bearer token.
+    if (credentialsChanged || m_clientId.isEmpty() || m_clientSecret.isEmpty()) {
+        m_accessToken.clear();
+        m_tokenExpiry = QDateTime();
+    }
+    m_authenticated = false;
 }
 
 bool IGDBProvider::authenticate()
 {
+    if (m_clientId.isEmpty() || m_clientSecret.isEmpty()) {
+        m_authenticated = false;
+        return false;
+    }
+
     // Check if token is still valid with proactive refresh buffer
     if (!m_accessToken.isEmpty() && QDateTime::currentDateTime() < m_tokenExpiry.addSecs(-Constants::Network::IGDB_TOKEN_REFRESH_BUFFER_SECS)) {
+        m_authenticated = true;
         return true;
     }
 
@@ -48,6 +66,7 @@ bool IGDBProvider::authenticate()
     ApiResponse response = waitForReply(reply, Constants::Network::IGDB_TIMEOUT_MS);
 
     if (!response.success) {
+        m_authenticated = false;
         qWarning() << "IGDB: authentication request failed:" << response.error;
         return false;
     }
@@ -55,6 +74,7 @@ bool IGDBProvider::authenticate()
     QJsonParseError parseError;
     QJsonDocument doc = QJsonDocument::fromJson(response.data, &parseError);
     if (parseError.error != QJsonParseError::NoError) {
+        m_authenticated = false;
         qWarning() << "IGDB auth JSON parse error:" << parseError.errorString();
         return false;
     }
@@ -65,7 +85,8 @@ bool IGDBProvider::authenticate()
     int expiresIn = obj["expires_in"].toInt();
     m_tokenExpiry = QDateTime::currentDateTime().addSecs(expiresIn);
 
-    return true;
+    m_authenticated = !m_accessToken.isEmpty();
+    return m_authenticated;
 }
 
 QList<SearchResult> IGDBProvider::searchByName(const QString &title,
@@ -74,16 +95,21 @@ QList<SearchResult> IGDBProvider::searchByName(const QString &title,
 {
     QList<SearchResult> results;
 
-    if (!m_authenticated || !authenticate()) {
+    if (!authenticate()) {
         emit errorOccurred("IGDB authentication failed");
         return results;
     }
 
     m_rateLimiter->waitIfNeeded();
 
-    // Build IGDB query (using Apicalypse query language)
+    // Build IGDB query (using Apicalypse query language).
+    // Escape backslashes and quotes so that a title like 'Mario "Bros"' cannot
+    // break out of the string literal and alter the query structure.
+    QString safeTitle = title;
+    safeTitle.replace(QLatin1Char('\\'), QStringLiteral("\\\\"));
+    safeTitle.replace(QLatin1Char('"'), QStringLiteral("\\\""));
     QString body = QString("search \"%1\"; fields name,first_release_date,platforms; limit 10;")
-                       .arg(title);
+                       .arg(safeTitle);
 
     ApiResponse response = makeRequest("/games", body);
     if (!response.success) {
@@ -135,7 +161,7 @@ GameMetadata IGDBProvider::getById(const QString &id)
 {
     GameMetadata metadata;
 
-    if (!m_authenticated || !authenticate()) {
+    if (!authenticate()) {
         emit errorOccurred("IGDB authentication failed");
         return metadata;
     }
@@ -175,7 +201,7 @@ ArtworkUrls IGDBProvider::getArtwork(const QString &id)
 {
     ArtworkUrls artwork;
 
-    if (!m_authenticated || !authenticate()) {
+    if (!authenticate()) {
         return artwork;
     }
 
@@ -310,15 +336,17 @@ QString IGDBProvider::mapSystemToIGDB(const QString &system)
 
 bool IGDBProvider::isAvailable()
 {
-    return m_authenticated && !m_clientId.isEmpty();
+    return !m_clientId.isEmpty() && !m_clientSecret.isEmpty();
 }
 
 QList<GameMetadata> IGDBProvider::fetchGamesByPlatformSlug(
     const QString &platformSlug, int offset, int limit)
 {
     QList<GameMetadata> results;
-    if (!m_authenticated && !authenticate())
+    if (!authenticate()) {
+        emit errorOccurred(QStringLiteral("IGDB authentication failed"));
         return results;
+    }
 
     m_rateLimiter->waitIfNeeded();
 

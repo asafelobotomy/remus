@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QString>
 #include <QUrl>
+#include <QHostAddress>
 #include <QNetworkAccessManager>
 
 namespace Remus {
@@ -18,15 +19,17 @@ public:
     explicit ArtworkDownloader(QObject *parent = nullptr);
 
     static bool isSupportedUrl(const QUrl &url);
+    static bool isSupportedRemoteUrl(const QUrl &url);
+    static bool areResolvedRemoteAddressesAllowed(const QList<QHostAddress> &addresses);
 
     /**
      * @brief Download artwork to file
      * @param url Source URL
      * @param destPath Destination file path
-        * @param savedPath Optional output for the final on-disk path after any format correction
+      * @param savedPath Optional output for the final on-disk path after any format correction
      * @return True if successful
      */
-        bool download(const QUrl &url, const QString &destPath, QString *savedPath = nullptr);
+     bool download(const QUrl &url, const QString &destPath, QString *savedPath = nullptr);
 
     /**
      * @brief Download artwork to memory

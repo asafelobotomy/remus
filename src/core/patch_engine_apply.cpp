@@ -121,9 +121,20 @@ PatchResult PatchEngine::applyIPSBuiltin(const QString &basePath, const QString 
         if (size == 0) {
             // RLE record
             QByteArray rleSizeBytes = patchFile.read(2);
+            if (rleSizeBytes.size() < 2) {
+                result.error = "Truncated patch file (RLE size)";
+                patchFile.close();
+                return result;
+            }
             int rleSize = (static_cast<unsigned char>(rleSizeBytes[0]) << 8) |
                           static_cast<unsigned char>(rleSizeBytes[1]);
-            char rleByte = patchFile.read(1)[0];
+            QByteArray rleBuf = patchFile.read(1);
+            if (rleBuf.isEmpty()) {
+                result.error = "Truncated patch file (RLE byte)";
+                patchFile.close();
+                return result;
+            }
+            char rleByte = rleBuf[0];
 
             for (int i = 0; i < rleSize; i++) {
                 romData[offset + i] = rleByte;
@@ -131,7 +142,12 @@ PatchResult PatchEngine::applyIPSBuiltin(const QString &basePath, const QString 
         } else {
             // Normal record
             QByteArray data = patchFile.read(size);
-            for (int i = 0; i < data.size(); i++) {
+            if (data.size() != size) {
+                result.error = "Truncated patch file (record data)";
+                patchFile.close();
+                return result;
+            }
+            for (int i = 0; i < size; i++) {
                 romData[offset + i] = data[i];
             }
         }

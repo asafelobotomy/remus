@@ -46,6 +46,10 @@ inline QString findOpenVGDBPath() {
     return dir.isEmpty() ? QString() : dir + QStringLiteral("/openvgdb.sqlite");
 }
 
+// Probe for artwork that may have been renamed to match the detected image
+// format after download. Expects a path without an extension.
+QString findExistingArtworkPath(const QString &basePath);
+
 // Resolve an option value when presets are acting as defaults.
 // Explicit CLI values win, then preset values, then parser defaults.
 QString resolveCliOptionValue(const QCommandLineParser &parser,

@@ -7,12 +7,20 @@
 
 using namespace Remus;
 
+class InspectableIGDBProvider : public IGDBProvider {
+public:
+    using IGDBProvider::IGDBProvider;
+
+    bool authenticatedForTest() const { return m_authenticated; }
+};
+
 class ProvidersMinimalTest : public QObject {
     Q_OBJECT
 
 private slots:
     void hasheousIdLookupUnsupported();
     void igdbHashUnsupported();
+    void igdbCredentialsDoNotPreAuthenticate();
     void screenscraperRequiresAuth();
     void thegamesdbHashUnsupported();
 };
@@ -34,6 +42,17 @@ void ProvidersMinimalTest::igdbHashUnsupported()
     QVERIFY(md.title.isEmpty());
     QVERIFY(!spy.isEmpty());
     QVERIFY(!provider.isAvailable());
+}
+
+void ProvidersMinimalTest::igdbCredentialsDoNotPreAuthenticate()
+{
+    InspectableIGDBProvider provider;
+    provider.setCredentials(QStringLiteral("client"), QStringLiteral("secret"));
+
+    // Setting credentials should make the provider configurable/available,
+    // but it must not mark the bearer-token auth state as already satisfied.
+    QVERIFY(provider.isAvailable());
+    QVERIFY(!provider.authenticatedForTest());
 }
 
 void ProvidersMinimalTest::screenscraperRequiresAuth()

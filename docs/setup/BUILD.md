@@ -4,7 +4,7 @@
 
 ### Required Dependencies
 - **CMake** >= 3.16
-- **Qt 6 development files** (Core, Gui, Sql, Network, Concurrent, Quick, QML, Quick Controls 2, Quick Layouts)
+- **Qt 6 development files** (Core, Gui, Sql, Network, Concurrent, Quick, QML, Quick Controls 2, Quick Layouts, Quick Dialogs 2)
 - **C++17** compatible compiler (GCC 7+, Clang 5+, MSVC 2017+)
 - **zlib** (for CRC32 calculation)
 
@@ -101,7 +101,7 @@ cmake --build . -j$(nproc)
 Expected output:
 
 ```text
-remus-cli 0.1.0
+remus-cli 0.10.1
 ```
 
 The GUI launches the Qt Quick shell with views for library browsing, scan/hash workflows, metadata matching, artwork, DAT management, verification, organization, conversion, patching, mods, and settings.
@@ -111,10 +111,10 @@ The GUI launches the Qt Quick shell with views for library browsing, scan/hash w
 Create a distributable CLI archive from the current build:
 
 ```bash
-./scripts/package_cli_archive.sh
+../scripts/package_cli_archive.sh
 ```
 
-The script writes a versioned tarball and SHA256 file to `dist/`.
+The script writes a versioned tarball and SHA256 file to the repository root `dist/` directory.
 
 ## Running the CLI
 
@@ -226,20 +226,16 @@ Done!
 
 ```
 remus/
-├── CMakeLists.txt          # Main CMake configuration
+├── CMakeLists.txt          # Top-level build configuration
 ├── src/
-│   ├── core/               # Core scanning engine
-│   │   ├── scanner.h/cpp   # File scanner
-│   │   ├── system_detector.h/cpp  # System detection
-│   │   ├── hasher.h/cpp    # Hash calculation
-│   │   ├── database.h/cpp  # SQLite database
-│   │   └── CMakeLists.txt
-│   └── cli/
-│       └── main.cpp        # CLI entry point
-├── tests/
-│   └── CMakeLists.txt
-└── docs/
-    └── [documentation]
+│   ├── cli/                # CLI entry point and commands
+│   ├── core/               # Scanning, hashing, database, patching, bundling
+│   ├── gui/                # Qt Quick desktop application
+│   ├── metadata/           # Provider clients, cache, and enrichment logic
+│   └── services/           # Shared application services
+├── tests/                  # Unit and integration tests registered with CTest
+├── scripts/                # Packaging, audit, and pipeline helpers
+└── docs/                   # Setup guides, architecture notes, plans, and reports
 ```
 
 ## Database Schema
@@ -274,7 +270,10 @@ cmake -DCMAKE_PREFIX_PATH=/path/to/qt6 ..
 sudo apt install zlib1g-dev
 
 # Fedora
-sudMetadata Providers
+sudo dnf install zlib-devel
+```
+
+## Metadata Providers
 
 ### ScreenScraper (Recommended)
 - **Hash-based matching**: ✅ (CRC32, MD5, SHA1)
@@ -299,9 +298,9 @@ sudMetadata Providers
 
 ## Delivery Focus
 
-- Ship and verify the CLI by default.
-- Keep GUI and TUI code in `archive/gui-tui/`, out of the default build and release path.
-- Use simple release archives until the CLI workflow is stable.
+- Ship and verify both the CLI (`remus-cli`) and GUI (`remus-gui`) by default — both are part of the standard build at 0.10.1.
+- Use simple release archives until the full GUI workflow is stable.
+- The GUI shell launches a Qt Quick interface with views for library browsing, scan/hash workflows, metadata matching, artwork, DAT management, verification, organisation, conversion, patching, mods, and settings.
 
 ## Testing
 

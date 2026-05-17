@@ -311,7 +311,11 @@ bool ArtworkController::refreshArtworkForFile(int fileId, bool requireDownloadab
         return false;
     }
 
-    m_previewUrl = QUrl(enriched.boxArtUrl);
+    const QUrl remoteArtUrl(enriched.boxArtUrl);
+    if (!ArtworkDownloader::isSupportedRemoteUrl(remoteArtUrl)) {
+        return false;
+    }
+    m_previewUrl = remoteArtUrl;
     m_localArtworkPath.clear();
     if (!m_batchDownloading) emit previewChanged();
     return true;

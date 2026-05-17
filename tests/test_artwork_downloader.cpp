@@ -2,6 +2,7 @@
 #include <QTemporaryDir>
 #include <QFile>
 #include <QImage>
+#include <QHostAddress>
 #include <QSignalSpy>
 #include "metadata/artwork_downloader.h"
 
@@ -15,6 +16,9 @@ private slots:
     void returnsCorrectedFormatPath();
     void invalidUrlFails();
     void httpUrlFails();
+    void fileUrlRejectedAsRemote();
+    void localhostAndPrivateHostsRejectedAsRemote();
+    void resolvedPrivateAddressesRejected();
 };
 
 void ArtworkDownloaderTest::downloadsLocalFile()
@@ -80,6 +84,42 @@ void ArtworkDownloaderTest::httpUrlFails()
                                         QStringLiteral("/tmp/nowhere.bin"));
     QVERIFY(!ok);
     QCOMPARE(failSpy.count(), 1);
+}
+
+void ArtworkDownloaderTest::fileUrlRejectedAsRemote()
+{
+    // file:// URLs must be rejected by isSupportedRemoteUrl so that a malicious
+    // provider response cannot coerce local-file reads via the artwork path.
+    QVERIFY(!ArtworkDownloader::isSupportedRemoteUrl(QUrl::fromLocalFile(QStringLiteral("/etc/passwd"))));
+    QVERIFY(!ArtworkDownloader::isSupportedRemoteUrl(QUrl(QStringLiteral("http://example.com/art.jpg"))));
+    QVERIFY(ArtworkDownloader::isSupportedRemoteUrl(QUrl(QStringLiteral("https://media.example.com/cover.jpg"))));
+    QVERIFY(!ArtworkDownloader::isSupportedRemoteUrl(QUrl(QStringLiteral("https://"))));
+}
+
+void ArtworkDownloaderTest::localhostAndPrivateHostsRejectedAsRemote()
+{
+    QVERIFY(!ArtworkDownloader::isSupportedRemoteUrl(QUrl(QStringLiteral("https://localhost/cover.jpg"))));
+    QVERIFY(!ArtworkDownloader::isSupportedRemoteUrl(QUrl(QStringLiteral("https://127.0.0.1/cover.jpg"))));
+    QVERIFY(!ArtworkDownloader::isSupportedRemoteUrl(QUrl(QStringLiteral("https://192.168.1.5/cover.jpg"))));
+    QVERIFY(!ArtworkDownloader::isSupportedRemoteUrl(QUrl(QStringLiteral("https://[::1]/cover.jpg"))));
+    QVERIFY(ArtworkDownloader::isSupportedRemoteUrl(QUrl(QStringLiteral("https://cdn.example.com/cover.jpg"))));
+}
+
+void ArtworkDownloaderTest::resolvedPrivateAddressesRejected()
+{
+    QVERIFY(!ArtworkDownloader::areResolvedRemoteAddressesAllowed({}));
+    QVERIFY(!ArtworkDownloader::areResolvedRemoteAddressesAllowed({
+        QHostAddress(QStringLiteral("127.0.0.1"))
+    }));
+    QVERIFY(!ArtworkDownloader::areResolvedRemoteAddressesAllowed({
+        QHostAddress(QStringLiteral("192.168.1.5"))
+    }));
+    QVERIFY(!ArtworkDownloader::areResolvedRemoteAddressesAllowed({
+        QHostAddress(QStringLiteral("::1"))
+    }));
+    QVERIFY(ArtworkDownloader::areResolvedRemoteAddressesAllowed({
+        QHostAddress(QStringLiteral("93.184.216.34"))
+    }));
 }
 
 QTEST_MAIN(ArtworkDownloaderTest)
