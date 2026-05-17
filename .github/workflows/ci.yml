@@ -28,14 +28,17 @@ jobs:
             cmake \
             qt6-base-dev \
             qt6-base-dev-tools \
+            qt6-declarative-dev \
+            qt6-declarative-dev-tools \
             libqt6sql6-sqlite \
+            libgl1-mesa-dev \
             zlib1g-dev
 
       - name: Capture dependency versions
         run: |
           mkdir -p build
           dpkg-query -W -f='${Package}==${Version}\n' \
-            build-essential cmake qt6-base-dev qt6-base-dev-tools libqt6sql6-sqlite zlib1g-dev \
+            build-essential cmake qt6-base-dev qt6-base-dev-tools qt6-declarative-dev qt6-declarative-dev-tools libqt6sql6-sqlite libgl1-mesa-dev zlib1g-dev \
             > build/dependency-manifest.txt
           echo "--- cmake version ---" >> build/dependency-manifest.txt
           cmake --version >> build/dependency-manifest.txt
