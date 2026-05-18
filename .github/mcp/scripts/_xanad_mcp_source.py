@@ -3,11 +3,24 @@
 Installed alongside xanadWorkspaceMcp.py in .github/mcp/scripts/.
 """
 from __future__ import annotations
+import hashlib
 import re
+import shutil
 import subprocess
 from pathlib import Path
 
 SAFE_GITHUB_NAME = re.compile(r"^[A-Za-z0-9._-]+$")
+
+
+def _cache_key(raw: str) -> str:
+    """Return a filesystem-safe, collision-free key for a version or ref string.
+
+    Combines a sanitised readable prefix with a short SHA-256 digest so that
+    values like 'feature/x' and 'feature-x' cannot map to the same directory.
+    """
+    digest = hashlib.sha256(raw.encode()).hexdigest()[:12]
+    safe_prefix = re.sub(r"[^A-Za-z0-9._-]", "-", raw)[:40]
+    return f"{safe_prefix}-{digest}"
 
 
 def parse_github_source(source: str) -> tuple[str, str]:
@@ -26,10 +39,12 @@ def resolve_github_release(owner: str, repo: str, version: str, cache_root: Path
     import tempfile as _tempfile
     import urllib.request as _urllib_request
     safe_version = re.sub(r"[^A-Za-z0-9._-]", "-", version)
-    cache_dir = cache_root / "github" / f"{owner}-{repo}" / f"release-{safe_version}"
+    cache_dir = cache_root / "github" / f"{owner}-{repo}" / f"release-{_cache_key(version)}"
     sentinel = cache_dir / ".complete"
     if sentinel.exists():
         return cache_dir
+    if cache_dir.exists():
+        shutil.rmtree(cache_dir)
     url = f"https://github.com/{owner}/{repo}/archive/refs/tags/{version}.tar.gz"
     cache_dir.mkdir(parents=True, exist_ok=True)
     tmp_path: Path | None = None
@@ -55,6 +70,9 @@ def resolve_github_release(owner: str, repo: str, version: str, cache_root: Path
                     if (file_obj := tar.extractfile(member)) is not None:
                         dest.write_bytes(file_obj.read())
         sentinel.write_text("ok\n", encoding="utf-8")
+    except Exception:
+        shutil.rmtree(cache_dir, ignore_errors=True)
+        raise
     finally:
         if tmp_path is not None and tmp_path.exists():
             tmp_path.unlink(missing_ok=True)
@@ -65,12 +83,20 @@ def resolve_github_ref(owner: str, repo: str, ref: str, cache_root: Path) -> Pat
     if not re.match(r"^[A-Za-z0-9._/-]+$", ref):
         raise ValueError(f"ref contains invalid characters: {ref!r}")
     safe_ref = re.sub(r"[^A-Za-z0-9._-]", "-", ref)
-    cache_dir = cache_root / "github" / f"{owner}-{repo}" / f"ref-{safe_ref}"
+    cache_dir = cache_root / "github" / f"{owner}-{repo}" / f"ref-{_cache_key(ref)}"
     clone_url = f"https://github.com/{owner}/{repo}.git"
-    if (cache_dir / ".git").exists():
+    clone_required = not (cache_dir / ".git").exists()
+    if not clone_required:
         for argv in (["git", "-C", str(cache_dir), "fetch", "--depth", "1", "origin", ref], ["git", "-C", str(cache_dir), "checkout", "FETCH_HEAD"]):
             subprocess.run(argv, check=True, capture_output=True)
         return cache_dir
+    if cache_dir.exists():
+        shutil.rmtree(cache_dir)
     cache_dir.parent.mkdir(parents=True, exist_ok=True)
-    subprocess.run(["git", "clone", "--depth", "1", "--branch", ref, clone_url, str(cache_dir)], check=True, capture_output=True)
+    try:
+        subprocess.run(["git", "clone", "--depth", "1", "--branch", ref, clone_url, str(cache_dir)], check=True, capture_output=True)
+    except subprocess.CalledProcessError:
+        if clone_required:
+            shutil.rmtree(cache_dir, ignore_errors=True)
+        raise
     return cache_dir

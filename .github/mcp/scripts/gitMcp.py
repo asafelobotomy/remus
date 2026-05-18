@@ -14,6 +14,8 @@ All flag-like behaviour (force, rebase, prune, etc.) is expressed as typed
 boolean or enum parameters.  Raw user strings are NEVER interpolated into the
 git argument list as flags.  The _run helper validates that no caller-supplied
 string argument starts with '-' before passing it to subprocess.
+Every call site also validates that repo_path resolves to an existing
+directory before any subprocess call is made.
 
 Transport: stdio  |  Run: uvx --from "mcp[cli]" mcp run <this-file>
 """
@@ -21,6 +23,7 @@ from __future__ import annotations
 
 import subprocess
 import sys
+from pathlib import Path
 from typing import Literal
 
 try:
@@ -44,6 +47,23 @@ def _reject_flag_like(arg: str) -> str:
         )
     return arg
 
+
+def _validate_repo_path(repo_path: str) -> str:
+    """Resolve repo_path and verify it is an existing directory.
+
+    Returns the resolved absolute path string used as cwd for subprocess calls.
+    Raises ValueError for empty, non-existent, or non-directory paths.
+    """
+    if not repo_path or not repo_path.strip():
+        raise ValueError("repo_path must not be empty.")
+    resolved = Path(repo_path).resolve()
+    if not resolved.is_dir():
+        raise ValueError(
+            f"repo_path {repo_path!r} does not exist or is not a directory."
+        )
+    return str(resolved)
+
+
 def _run_flags(repo_path: str, base_args: list[str], flags: list[str],
                tail: list[str], timeout: int = 30) -> str:
     """Run git with pre-validated literal flags and caller-supplied tail args.
@@ -51,6 +71,7 @@ def _run_flags(repo_path: str, base_args: list[str], flags: list[str],
     Tail args that start with '-' are rejected to prevent flag injection.
     Flags must be hardcoded literals assembled by the calling tool function.
     """
+    repo_path = _validate_repo_path(repo_path)
     for arg in tail:
         _reject_flag_like(arg)
     cmd = ["git", *base_args, *flags, *tail]

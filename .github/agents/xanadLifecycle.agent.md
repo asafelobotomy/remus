@@ -1,7 +1,7 @@
 ---
 name: xanadLifecycle
-description: "Use when: set up xanadAssistant, inspect workspace, run lifecycle check, interview, plan setup, apply setup, update xanadAssistant, repair install, factory restore, or coordinate any lifecycle command in a consumer workspace."
-argument-hint: "Describe the lifecycle task: inspect, check, interview, plan setup, apply, update, repair, or factory restore."
+description: "Use when: set up xanadAssistant, inspect workspace, run lifecycle check, interview, plan setup, apply setup, update xanadAssistant, repair install, factory restore, run health check, submit health check report, or coordinate any lifecycle command in a consumer workspace."
+argument-hint: "Describe the lifecycle task: inspect, check, interview, plan setup, apply, update, repair, factory restore, or health check."
 model:
   - Claude Sonnet 4.6
   - GPT-5.4
@@ -33,6 +33,7 @@ resolution is missing.
 - Repair a broken or incomplete install → run `repair`
 - Restore to factory defaults → run `factory-restore`
 - Check current workspace state → run `inspect` or `check`
+- Run a lifecycle **health check** / submit a health check report → run the `health-check` command (see `## Health check workflow`)
 - Natural-language requests to add a convention or preference to instructions are not lifecycle operations; do not invoke this agent for phrases like `Remember this for next time` or `Add this to your instructions`.
 
 ## Cold-start (blank workspace)
@@ -308,6 +309,12 @@ python3 xanadAssistant.py factory-restore \
   --package-root <xanadAssistant-checkout> \
   --non-interactive --ui agent --json-lines
 
+# Collect a workspace health check report (read-only)
+python3 xanadAssistant.py health-check \
+  --workspace <consumer-repo-path> \
+  --package-root <xanadAssistant-checkout> \
+  [--label <workspace-alias>] --json
+
 # Preview any write-capable command without making changes
 python3 xanadAssistant.py apply \
   --workspace <consumer-repo-path> \
@@ -321,6 +328,19 @@ python3 xanadAssistant.py apply \
   --version v1.0.0 \
   --non-interactive --ui agent --json-lines
 ```
+
+## Health check workflow
+
+The `health-check` command collects xanadAssistant-only lifecycle state — no workspace
+file contents, project names, or secrets are included.
+
+1. **Collect** — run `health-check --json` and parse `result.issueTitle`, `result.issueBody`, and `result.issueLabels`.
+2. **Preview** — show the user exactly what will be submitted. Require explicit confirmation before any write.
+3. **Submit** (on confirmation only) — call `github.create_issue` with `owner="asafelobotomy"`, `repo="xanadassistant"`, `title=result.issueTitle`, `body=result.issueBody`, `labels=result.issueLabels`.
+4. **Report** the created issue URL to the user.
+
+Never submit without user approval. Never include workspace file paths, project
+names, git remote URLs, or absolute filesystem paths in the submission.
 
 ## Responsibility boundary
 

@@ -62,12 +62,12 @@
     {
       "name": "Compendium DB",
       "driver": "SQLite",
-      "database": "/mnt/SteamLibrary/git/remus/data/compendium/remus_compendium.db"
+      "database": "/home/solon/Documents/git/repos/remus/data/compendium/remus_compendium.db"
     },
     {
       "name": "Library DB",
       "driver": "SQLite",
-      "database": "/mnt/SteamLibrary/git/remus/remus.db"
+      "database": "/home/solon/Documents/git/repos/remus/remus.db"
     }
   ],
 

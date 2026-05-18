@@ -33,6 +33,7 @@ Each question also carries a `batch` field:
 - `simple` — always shown
 - `advanced` — shown when `setup.depth` is `advanced` or `full`
 - `full` — shown only when `setup.depth` is `full`
+- `agent` — emitted later by `plan setup` for locally installed configurable agents
 
 Use the user's `setup.depth` answer to decide which later questions to show.
 
@@ -100,10 +101,17 @@ python3 xanadBootstrap.py plan setup \
 If `approvalRequired` is `true`, summarise the planned writes and confirm with
 the user before proceeding.
 
-### 4 — Apply
+Inspect `result.questions` in the plan payload before proceeding. If it includes
+any entries with `batch: "agent"`, present those follow-up questions to the user.
+If the user wants to override any of those agent defaults, add the answers to
+`.xanadAssistant/tmp/setup-answers.json` and rerun `plan setup` so the serialized
+plan captures the final agent-customization answers. If the user accepts the
+defaults, you can proceed without changing the answers file.
+
+### 4 — Setup
 
 ```sh
-python3 xanadBootstrap.py apply \
+python3 xanadBootstrap.py setup \
   --workspace . \
   --plan .xanadAssistant/tmp/setup-plan.json \
   --json

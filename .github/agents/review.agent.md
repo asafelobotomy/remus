@@ -1,7 +1,7 @@
 ---
 name: Review
-description: "Use when: code review, PR review, diff review, architecture review, security review, maintainability review, correctness review, regression-risk review, or test coverage review."
-argument-hint: "Describe the review scope: file path, PR, diff, or review focus."
+description: "Use when: code review, PR review, diff review, architecture review, security review, maintainability review, correctness review, regression-risk review, test coverage review, or a bare codebase audit (without the word 'lifecycle')."
+argument-hint: "Describe the review scope: file path, PR, diff, audit focus, or review focus."
 model:
   - GPT-5.4
   - Claude Sonnet 4.6

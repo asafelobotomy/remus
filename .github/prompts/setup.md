@@ -18,7 +18,7 @@ lifecycle tools over shelling out directly:
 - `lifecycle_inspect`
 - `lifecycle_interview`
 - `lifecycle_plan_setup`
-- `lifecycle_apply`
+- `lifecycle_setup`
 - `lifecycle_check`
 
 For a first-time local install, pass the checkout path as `packageRoot` to the
@@ -72,6 +72,7 @@ Each question also carries a `batch` field:
 - `simple` — always shown
 - `advanced` — shown when `setup.depth` is `advanced` or `full`
 - `full` — shown only when `setup.depth` is `full`
+- `agent` — emitted later by `plan setup` for locally installed configurable agents
 
 Use the user's `setup.depth` answer to decide which later questions to show.
 
@@ -138,28 +139,35 @@ python3 xanadAssistant.py plan setup \
 For predecessor-managed installs, replace `plan setup`
 with `plan repair`.
 
+Inspect `result.questions` in the plan payload before proceeding. If it includes
+any entries with `batch: "agent"`, present those follow-up questions to the user.
+If the user wants to override any of those agent defaults, add the answers to
+`.xanadAssistant/tmp/setup-answers.json` and rerun `plan setup` so the serialized
+plan captures the final agent-customization answers. If the user accepts the
+defaults, you can proceed without changing the answers file.
+
 If `approvalRequired` is true in the plan payload, summarise the planned writes
 and retired files for the user and ask for approval before proceeding.
 
 To preview what would be written without making any changes, pass `--dry-run` to
-the `plan` command and inspect the serialized plan instead of running `apply`.
+the `plan` command and inspect the serialized plan instead of running `setup`.
 
-### 4. Apply
+### 4. Setup
 
 Once the user approves (or `approvalRequired` is false):
 
 ```sh
-python3 xanadAssistant.py apply \
+python3 xanadAssistant.py setup \
   --workspace . \
   --package-root <path-to-xanadAssistant-checkout> \
   --plan .xanadAssistant/tmp/setup-plan.json \
   --ui agent --json-lines
 ```
 
-For predecessor-managed installs, replace `apply` with
+For predecessor-managed installs, replace `setup` with
 `repair`.
 
-Check the `validation.status` in the apply result. If it is not `passed`,
+Check the `validation.status` in the setup result. If it is not `passed`,
 report the error and the `backupPath` to the user.
 
 ### 5. Confirm and clean up
@@ -169,7 +177,7 @@ Show the user the Receipt phase output and the path to the generated
 
 When MCP is available, prefer `lifecycle_check` for the final confirmation step.
 
-After a successful apply, remove the temporary answers file:
+After a successful setup, remove the temporary answers file:
 
 ```sh
 rm -rf .xanadAssistant/tmp

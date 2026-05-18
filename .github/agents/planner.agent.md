@@ -35,7 +35,7 @@ Your role: turn medium or large requests into scoped execution plans before impl
 
 ## Plan format
 
-Structure plans as numbered phases. For each phase, state: name, affected files, ordered steps, stop condition, and risks. End with the narrowest falsifying check — the command or test that would catch a regression. State assumptions up-front before the phases.
+Produce full step-by-step plans: numbered phases, goal per phase, files in scope, specific changes, risks, assumptions, and a verification command for each phase.
 
 ## Memory
 

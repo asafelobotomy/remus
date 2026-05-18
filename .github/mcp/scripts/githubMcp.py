@@ -8,15 +8,9 @@ Run with: `uvx --from "mcp[cli]" mcp run <this-file>`.
 from __future__ import annotations
 
 import base64
-import json
 import os
-import re
-import subprocess
 import sys
-import urllib.error
 import urllib.parse
-import urllib.request
-from typing import Any
 
 try:
     from mcp.server.fastmcp import FastMCP
@@ -30,79 +24,29 @@ except ImportError as _exc:  # pragma: no cover
 
 mcp = FastMCP("xanadGitHub")
 
-_API = "https://api.github.com"
-_SAFE_NAME = re.compile(r"^[A-Za-z0-9._-]+$")
-_ALLOWED_STATES = {"open", "closed", "all"}
+import _github_mcp_shared as _shared
 
-_REPO_FIELDS = ("full_name", "description", "default_branch", "stargazers_count", "forks_count", "open_issues_count", "license", "visibility", "html_url", "pushed_at")
-_ISSUE_FIELDS = ("number", "title", "state", "body", "html_url", "user", "labels", "assignees", "created_at", "updated_at")
-_PULL_FIELDS = ("number", "title", "state", "body", "html_url", "draft", "head", "base", "user", "mergeable", "created_at", "updated_at")
-
-
-def _validate_owner_repo(owner: str, repo: str) -> None:
-    """Raise ValueError if owner or repo contain non-safe characters."""
-    if not _SAFE_NAME.match(owner):
-        raise ValueError(f"Invalid owner name: {owner!r}")
-    if not _SAFE_NAME.match(repo):
-        raise ValueError(f"Invalid repo name: {repo!r}")
-
-
-def _normalize_per_page(per_page: int, maximum: int) -> int:
-    """Clamp GitHub list sizes to the documented inclusive range."""
-    return max(1, min(maximum, per_page))
-
-
-def _validate_state(state: str) -> None:
-    """Raise ValueError when a list endpoint receives an unsupported state."""
-    if state not in _ALLOWED_STATES:
-        allowed = ", ".join(sorted(_ALLOWED_STATES))
-        raise ValueError(f"Invalid state: {state!r}. Expected one of: {allowed}.")
-
-
-def _validate_workflow_id(workflow_id: str | int) -> str:
-    """Return a validated workflow id or filename suitable for a path segment."""
-    from pathlib import PurePosixPath
-
-    value = str(workflow_id).strip()
-    if not value:
-        return ""
-    path = PurePosixPath(value)
-    if len(path.parts) == 3 and path.parts[:2] == (".github", "workflows"):
-        value = path.name
-    if not _SAFE_NAME.match(value):
-        raise ValueError(f"Invalid workflow_id: {workflow_id!r}")
-    return value
-
-
-def _dump_fields(payload: dict[str, Any], fields: tuple[str, ...]) -> str:
-    return json.dumps({field: payload.get(field) for field in fields}, indent=2)
-
-
-def _render_lines(items: list[Any], empty_message: str, render_item) -> str:
-    if not items:
-        return empty_message
-    return "\n".join(render_item(item) for item in items)
+from _github_mcp_shared import (
+    ISSUE_FIELDS as _ISSUE_FIELDS,
+    PULL_FIELDS as _PULL_FIELDS,
+    REPO_FIELDS as _REPO_FIELDS,
+    decode_json_response as _decode_json_response,
+    dump_fields as _dump_fields,
+    format_http_error as _format_http_error,
+    normalize_per_page as _normalize_per_page,
+    render_lines as _render_lines,
+    validate_owner_repo as _validate_owner_repo,
+    validate_state as _validate_state,
+    validate_workflow_id as _validate_workflow_id,
+)
 
 
 def _gh_cli_token() -> str:
-    """Return the token from the GitHub CLI (``gh auth token``), or '' if unavailable."""
-    try:
-        result = subprocess.run(
-            ["gh", "auth", "token"],
-            capture_output=True, text=True, timeout=5,
-        )
-        if result.returncode == 0:
-            return result.stdout.strip()
-    except (FileNotFoundError, subprocess.TimeoutExpired, OSError):
-        pass
-    return ""
+    return _shared.gh_cli_token()
 
 
 def _token() -> str:
-    tok = (
-        os.environ.get("GITHUB_TOKEN", "").strip()
-        or os.environ.get("GH_TOKEN", "").strip()
-    )
+    tok = os.environ.get("GITHUB_TOKEN", "").strip() or os.environ.get("GH_TOKEN", "").strip()
     if not tok:
         tok = _gh_cli_token()
     if not tok:
@@ -115,69 +59,12 @@ def _token() -> str:
     return tok
 
 
-def _decode_json_response(raw_body: bytes, path: str) -> Any:
-    """Decode a GitHub API JSON response or raise a structured RuntimeError."""
-    if not raw_body.strip():
-        raise RuntimeError(f"GitHub API returned an empty response for {path}.")
-    try:
-        return json.loads(raw_body)
-    except json.JSONDecodeError as exc:
-        preview = raw_body.decode("utf-8", errors="replace").strip()
-        raise RuntimeError(
-            f"GitHub API returned a non-JSON response for {path}: {preview[:200]}"
-        ) from exc
+def _get(path: str, params: dict | None = None):
+    return _shared.get(path, params=params, token_provider=_token)
 
 
-def _format_http_error(path: str, code: int, body_text: str) -> str:
-    """Return a GitHub-specific error message with actionable hints."""
-    details = body_text.strip() or "request failed"
-    message = f"GitHub API {code}: {details}"
-    hints: list[str] = []
-    if code == 404:
-        if "/pulls/" in path:
-            hints.append(
-                "If this number refers to an issue rather than a pull request, use get_issue instead."
-            )
-        if path.startswith("/repos/"):
-            hints.append(
-                "GitHub also returns 404 when the repository or item does not exist or your token cannot access it."
-            )
-    if hints:
-        return f"{message} {' '.join(hints)}"
-    return message
-
-
-def _req(method: str, path: str, body: dict | None = None,
-         params: dict | None = None) -> Any:
-    url = f"{_API}{path}"
-    if params:
-        filtered = {k: v for k, v in params.items() if v is not None}
-        if filtered:
-            url += "?" + urllib.parse.urlencode(filtered)
-    data = json.dumps(body).encode() if body else None
-    req = urllib.request.Request(
-        url, data=data, method=method,
-        headers={
-            "Authorization": f"Bearer {_token()}",
-            "Accept": "application/vnd.github+json",
-            "X-GitHub-Api-Version": "2022-11-28",
-            "Content-Type": "application/json",
-        },
-    )
-    try:
-        with urllib.request.urlopen(req, timeout=30) as resp:
-            return _decode_json_response(resp.read(), path)
-    except urllib.error.HTTPError as exc:
-        body_text = exc.read().decode("utf-8", errors="replace")
-        raise RuntimeError(_format_http_error(path, exc.code, body_text)) from exc
-
-
-def _get(path: str, params: dict | None = None) -> Any:
-    return _req("GET", path, params=params)
-
-
-def _post(path: str, body: dict) -> Any:
-    return _req("POST", path, body=body)
+def _post(path: str, body: dict):
+    return _shared.post(path, body=body, token_provider=_token)
 
 
 @mcp.tool()
@@ -266,6 +153,28 @@ def get_issue(owner: str, repo: str, issue_number: int) -> str:
     """
     _validate_owner_repo(owner, repo)
     return _dump_fields(_get(f"/repos/{owner}/{repo}/issues/{issue_number}"), _ISSUE_FIELDS)
+
+
+@mcp.tool()
+def create_issue(owner: str, repo: str, title: str, body: str,
+                labels: list[str] | None = None) -> str:
+    """Create a new issue in a repository.
+
+    Args:
+        owner: Repository owner.
+        repo: Repository name.
+        title: Issue title.
+        body: Issue body text (Markdown supported).
+        labels: Optional list of label names to apply.
+    """
+    _validate_owner_repo(owner, repo)
+    if not title.strip():
+        raise ValueError("Issue title cannot be empty.")
+    issue_body: dict[str, object] = {"title": title, "body": body}
+    if labels:
+        issue_body["labels"] = labels
+    r = _post(f"/repos/{owner}/{repo}/issues", issue_body)
+    return f"Issue #{r['number']} created: {r['html_url']}"
 
 
 @mcp.tool()

@@ -1,9 +1,9 @@
 ---
 name: lifecycleAudit
-description: Audit xanadAssistant workspace lifecycle state — inspect install status, surface repair reasons, and validate the lockfile before proposing install, update, repair, or restore operations
+description: Check xanadAssistant workspace health — inspect install status, surface repair reasons, and validate the lockfile before proposing install, update, repair, or restore operations
 ---
 
-# Lifecycle Audit
+# Lifecycle Health Check
 
 > Skill metadata: version "1.0"; license MIT; tags [xanadAssistant, lifecycle, inspect, repair, lockfile]; recommended tools [codebase, runCommands].
 
