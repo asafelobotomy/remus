@@ -166,7 +166,7 @@ int handleBuildCompendiumCommand(CliContext &ctx)
         }
         checkDb = QSqlDatabase();
         QSqlDatabase::removeDatabase(checkConn);
-        if (manifestMatches) {
+        if (manifestMatches && QFileInfo::exists(finalReportPath)) {
             qInfo() << "[build-compendium] Existing DB already matches the requested manifest — skipping rebuild.";
             qInfo() << "[build-compendium] Change the manifest or delete the DB to force a full rebuild.";
             return 0;
@@ -465,6 +465,11 @@ int handleBuildCompendiumCommand(CliContext &ctx)
     if (!promoteStagedFile(stagedReportPath, finalReportPath, error)) {
         qCritical().noquote() << QStringLiteral("✗ %1").arg(error);
         QFile::remove(stagedReportPath);
+        // Roll back the DB promotion so the next invocation is forced to rebuild.
+        if (!QFile::rename(finalOutputPath, stagedOutputPath)) {
+            qCritical() << "[build-compendium] Could not roll back DB promotion —"
+                        << "delete" << finalOutputPath << "and rerun to recover.";
+        }
         return 1;
     }
 

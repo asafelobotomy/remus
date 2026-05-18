@@ -12,6 +12,7 @@ set -euo pipefail
 #   data/databases/           ← libretro dat/ (curated, GameTDB-style)
 #   data/databases/no-intro/  ← metadat/no-intro/ (No-Intro full catalogs)
 #   data/databases/redump/    ← metadat/redump/   (Redump full catalogs)
+#   data/databases/mame/      ← Pleasuredome MAME DAT (arcade ROMs)
 #
 # Storing the three sources in separate subdirectories avoids filename
 # collisions (e.g. Sega - Saturn.dat exists in both dat/ and redump/)
@@ -25,6 +26,7 @@ PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 TARGET_DIR="$PROJECT_ROOT/data/databases"
 NO_INTRO_DIR="$TARGET_DIR/no-intro"
 REDUMP_DIR="$TARGET_DIR/redump"
+MAME_DIR="$TARGET_DIR/mame"
 CLONE_DIR="$(mktemp -d)"
 trap 'rm -rf "$CLONE_DIR"' EXIT
 REPO_URL="https://github.com/libretro/libretro-database.git"
@@ -171,7 +173,82 @@ if [[ -d "$CLONE_DIR/dat" ]]; then
     done
 fi
 
-# 4. Metadata DATs (genre, developer, publisher, maxusers, releaseyear)
+# 4. Redump DATs not included in libretro-database — downloaded directly from
+#    redump.org (public downloads, ZIP-compressed).  Each entry is:
+#    "url_slug|dest_filename"
+#    The slug is the URL path component after /datfile/.
+#    redump.org ships a ZIP; we extract the first .dat inside it.
+REDUMP_DIRECT_DBS=(
+    "arch|Acorn - Archimedes.dat"
+    "mac|Apple - Macintosh.dat"
+    "qis|Bandai - Playdia Quick Interactive System.dat"
+    "acd|Commodore - Amiga CD.dat"
+    "fmt|Fujitsu - FM-Towns.dat"
+    "pc-88|NEC - PC-88 series.dat"
+    "chihiro|Arcade - Sega - Chihiro.dat"
+    "lindbergh|Arcade - Sega - Lindbergh.dat"
+    "trf|Arcade - Namco - Sega - Nintendo - Triforce.dat"
+    "vis|Memorex - Visual Information System.dat"
+)
+
+echo ""
+echo "Downloading Redump DATs (direct from redump.org)..."
+redump_direct_tmp="$(mktemp -d)"
+trap 'rm -rf "$redump_direct_tmp"' RETURN
+
+for entry in "${REDUMP_DIRECT_DBS[@]}"; do
+    IFS='|' read -r slug destname <<< "$entry"
+    url="http://redump.org/datfile/${slug}/"
+    zippath="$redump_direct_tmp/${slug}.zip"
+
+    echo "  Fetching ${destname}..."
+    if curl -fsSL -o "$zippath" --max-time 60 "$url"; then
+        extracted=$(unzip -l "$zippath" 2>/dev/null | grep -o '[^ ]*\.dat$' | head -1)
+        if [[ -n "$extracted" ]]; then
+            if unzip -o -q "$zippath" "$extracted" -d "$redump_direct_tmp" 2>/dev/null; then
+                mv "$redump_direct_tmp/$extracted" "$REDUMP_DIR/$destname"
+                copied=$((copied + 1))
+            else
+                echo "    Warning: failed to extract DAT from $slug zip"
+            fi
+        else
+            echo "    Warning: no .dat file found in $slug zip"
+        fi
+        rm -f "$zippath"
+    else
+        echo "    Warning: failed to download $slug from redump.org"
+    fi
+done
+
+# 4b. MAME DAT from Pleasuredome (publicly hosted on GitHub gh-pages).
+# Update MAME_VERSION when Pleasuredome publishes a new release.
+MAME_VERSION="0.287"
+MAME_DAT_NAME="MAME ${MAME_VERSION} ROMs (merged).dat"
+MAME_URL="https://github.com/pleasuredome/pleasuredome/raw/gh-pages/mame/MAME%20${MAME_VERSION}%20ROMs%20(merged).zip"
+
+mkdir -p "$MAME_DIR"
+echo ""
+echo "Downloading MAME ${MAME_VERSION} DAT from Pleasuredome..."
+mame_tmp="$(mktemp /tmp/mame_dat_XXXXXX.zip)"
+if curl -fsSL -o "$mame_tmp" --max-time 120 "$MAME_URL"; then
+    extracted=$(unzip -l "$mame_tmp" 2>/dev/null | grep -o '[^ ]*\.xml$' | head -1)
+    if [[ -n "$extracted" ]]; then
+        if unzip -p "$mame_tmp" "$extracted" > "$MAME_DIR/$MAME_DAT_NAME" 2>/dev/null; then
+            echo "  MAME ${MAME_VERSION} DAT written: $MAME_DIR/$MAME_DAT_NAME"
+            copied=$((copied + 1))
+        else
+            echo "  Warning: failed to extract MAME DAT from zip"
+        fi
+    else
+        echo "  Warning: no .xml file found in MAME zip"
+    fi
+    rm -f "$mame_tmp"
+else
+    echo "  Warning: failed to download MAME DAT from Pleasuredome"
+    rm -f "$mame_tmp"
+fi
+
+# 5. Metadata DATs (genre, developer, publisher, maxusers, releaseyear)
 METADATA_DIR="$PROJECT_ROOT/data/metadata"
 METADAT_TYPES=("genre" "developer" "publisher" "maxusers" "releaseyear")
 meta_copied=0
@@ -193,7 +270,7 @@ for meta_type in "${METADAT_TYPES[@]}"; do
     done
 done
 
-# 5. GameTDB XML databases (Wii/GameCube, DS, 3DS, WiiU, Switch, PS3)
+# 6. GameTDB XML databases (Wii/GameCube, DS, 3DS, WiiU, Switch, PS3)
 GAMETDB_DIR="$PROJECT_ROOT/data/gametdb"
 GAMETDB_BASE="https://www.gametdb.com"
 gametdb_copied=0
@@ -263,6 +340,7 @@ echo "DAT file locations:"
 find "$TARGET_DIR" -maxdepth 1 -name '*.dat' 2>/dev/null | wc -l | xargs -I{} echo "  dat/ (curated):     {} files in $TARGET_DIR"
 find "$NO_INTRO_DIR" -maxdepth 1 -name '*.dat' 2>/dev/null | wc -l | xargs -I{} echo "  no-intro/:          {} files in $NO_INTRO_DIR"
 find "$REDUMP_DIR" -maxdepth 1 -name '*.dat' 2>/dev/null | wc -l | xargs -I{} echo "  redump/:            {} files in $REDUMP_DIR"
+find "$MAME_DIR" -maxdepth 1 -name '*.dat' 2>/dev/null | wc -l | xargs -I{} echo "  mame/:              {} files in $MAME_DIR"
 if [[ -d "$METADATA_DIR" ]]; then
     find "$METADATA_DIR" -name '*.dat' | wc -l | xargs -I{} echo "  metadata DATs:      {} files"
 fi

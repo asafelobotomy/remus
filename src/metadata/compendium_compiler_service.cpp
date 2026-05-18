@@ -130,9 +130,9 @@ CompilerStats CompendiumCompilerService::run(const CompendiumBuildConfig &config
         }
 
         if (src.sourceType != QStringLiteral("dat")) {
-            qWarning() << "[CompendiumCompilerService] Unsupported source type:"
-                       << src.sourceType << "— skipped";
-            continue;
+            error = QStringLiteral("Source '%1' has unsupported source_type '%2' — only 'dat' is supported")
+                        .arg(src.sourceId, src.sourceType);
+            return stats;
         }
 
         // ── Extract ───────────────────────────────────────────────────────────

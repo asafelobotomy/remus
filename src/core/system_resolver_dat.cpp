@@ -70,6 +70,7 @@ int SystemResolver::systemIdByDatName(const QString &datName)
         {QStringLiteral("SNK - Neo Geo Pocket Color"), ID_NGP},
         {QStringLiteral("Bandai - WonderSwan"), ID_WONDERSWAN},
         {QStringLiteral("Bandai - WonderSwan Color"), ID_WONDERSWAN},
+        {QStringLiteral("Bandai - Playdia Quick Interactive System"), ID_PLAYDIA},
         {QStringLiteral("Commodore - 64"), ID_C64},
         {QStringLiteral("Commodore - Amiga"), ID_AMIGA},
         {QStringLiteral("Commodore - CD32"), ID_CD32},
@@ -123,6 +124,7 @@ int SystemResolver::systemIdByDatName(const QString &datName)
         {QStringLiteral("Sony - PlayStation Portable (PSX2PSP)"), ID_PSP},
         {QStringLiteral("Sony - PlayStation Vita (PSN)"), ID_PSVITA},
         {QStringLiteral("Commodore - Amiga - WHDLoad"), ID_AMIGA},
+        {QStringLiteral("Commodore - Amiga CD"), ID_AMIGA_CD},
         // New systems (IDs 58-82)
         {QStringLiteral("Amstrad - CPC"), ID_AMSTRAD_CPC},
         {QStringLiteral("Amstrad - CPC - clean-cpc-db"), ID_AMSTRAD_CPC},
@@ -140,6 +142,7 @@ int SystemResolver::systemIdByDatName(const QString &datName)
         {QStringLiteral("Benesse - Pocket Challenge V2"), ID_POCKET_CHALLENGE_V2},
         {QStringLiteral("NEC - PC-98"), ID_PC98},
         {QStringLiteral("NEC - PC98"), ID_PC98},
+        {QStringLiteral("NEC - PC-88 series"), ID_PC88},
         {QStringLiteral("Interton - VC 4000"), ID_INTERTON_VC4000},
         {QStringLiteral("Emerson - Arcadia 2001"), ID_ARCADIA_2001},
         {QStringLiteral("GCE - Vectrex"), ID_VECTREX},
@@ -151,11 +154,26 @@ int SystemResolver::systemIdByDatName(const QString &datName)
         {QStringLiteral("RCA - Studio II"), ID_STUDIO_II},
         {QStringLiteral("Atomiswave"), ID_ATOMISWAVE},
         {QStringLiteral("Sammy - Atomiswave"), ID_ATOMISWAVE},
+        {QStringLiteral("Arcade - Sega - Chihiro"), ID_CHIHIRO},
+        {QStringLiteral("Arcade - Sega - Lindbergh"), ID_LINDBERGH},
+        {QStringLiteral("Arcade - Namco - Sega - Nintendo - Triforce"), ID_TRIFORCE},
+        // MAME (Pleasuredome) — merged, non-merged, and split sets all map to Arcade
+        {QStringLiteral("MAME ROMs (merged)"), ID_ARCADE},
+        {QStringLiteral("MAME ROMs (non-merged)"), ID_ARCADE},
+        {QStringLiteral("MAME ROMs (split)"), ID_ARCADE},
         {QStringLiteral("Casio - PV-1000"), ID_CASIO_PV1000},
         {QStringLiteral("Funtech - Super Acan"), ID_SUPER_ACAN},
         {QStringLiteral("Casio - Loopy"), ID_CASIO_LOOPY},
         {QStringLiteral("Sharp - X1"), ID_SHARP_X1},
         {QStringLiteral("Sharp - X68000"), ID_X68000},
+        // Fujitsu
+        {QStringLiteral("Fujitsu - FM-Towns"), ID_FM_TOWNS},
+        // Acorn
+        {QStringLiteral("Acorn - Archimedes"), ID_ARCHIMEDES},
+        // Apple
+        {QStringLiteral("Apple - Macintosh"), ID_MAC},
+        // Tandy / Memorex
+        {QStringLiteral("Memorex - Visual Information System"), ID_TANDY_VIS},
         // IBM PC / DOS
         {QStringLiteral("DOS"), ID_IBM_PC},
         // Mobile

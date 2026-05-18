@@ -740,6 +740,95 @@ private slots:
         QVERIFY(imported.contains("Nintendo DS"));
         QVERIFY(!imported.contains("test"));
     }
+
+    void testBuildCompendiumSkipRequiresReportPresent() {
+        QTemporaryDir dir;
+        QVERIFY(dir.isValid());
+
+        const QString sourcePath = fixturePath("test_compendium_source.dat");
+        QVERIFY2(!sourcePath.isEmpty(), "Fixture test_compendium_source.dat not found");
+
+        const QString manifestPath = dir.filePath("manifest_sidecar.json");
+        {
+            QFile manifestFile(manifestPath);
+            QVERIFY(manifestFile.open(QIODevice::WriteOnly | QIODevice::Text));
+
+            QJsonObject sourceObject;
+            sourceObject.insert("source_id", "test-source");
+            sourceObject.insert("display_name", "Test Source");
+            sourceObject.insert("source_type", "dat");
+            sourceObject.insert("snapshot_id", "snapshot-001");
+            sourceObject.insert("snapshot_label", "Snapshot 001");
+            sourceObject.insert("snapshot_ref", "test-ref");
+            sourceObject.insert("path", sourcePath);
+            sourceObject.insert("checksum_sha256", "abc123");
+            sourceObject.insert("enabled", true);
+            sourceObject.insert("priority", 10);
+
+            QJsonObject manifestObject;
+            manifestObject.insert("build_id", "test-build-sidecar");
+            manifestObject.insert("schema_version", 1);
+            manifestObject.insert("sources", QJsonArray{sourceObject});
+
+            const QByteArray manifestJson = QJsonDocument(manifestObject).toJson(QJsonDocument::Indented);
+            QVERIFY(manifestFile.write(manifestJson) == manifestJson.size());
+        }
+
+        const QString outputDbPath = dir.filePath("remus_compendium_sidecar.db");
+        const QString reportPath   = dir.filePath("remus_compendium_sidecar.report.json");
+
+        // First build — must produce both DB and report.
+        runCli({"--build-compendium", "--compendium-manifest", manifestPath, "--compendium-output", outputDbPath});
+        QVERIFY2(QFile::exists(outputDbPath), "First build did not create the DB");
+        QVERIFY2(QFile::exists(reportPath),   "First build did not create the report");
+
+        // Delete only the report sidecar.
+        QVERIFY(QFile::remove(reportPath));
+
+        // Second build — must NOT skip (report missing), and must regenerate the report.
+        QString secondOutput;
+        runCliCapture({"--build-compendium", "--compendium-manifest", manifestPath, "--compendium-output", outputDbPath},
+                      secondOutput);
+        QVERIFY2(!secondOutput.contains("matches the requested manifest", Qt::CaseInsensitive),
+                 qPrintable(QStringLiteral("Expected rebuild but got skip: %1").arg(secondOutput)));
+        QVERIFY2(QFile::exists(reportPath),
+                 qPrintable(QStringLiteral("Report not regenerated: %1").arg(secondOutput)));
+    }
+
+    void testBuildCompendiumRejectsInvalidSourceType() {
+        QTemporaryDir dir;
+        QVERIFY(dir.isValid());
+
+        const QString manifestPath = dir.filePath("manifest_invalid_type.json");
+        {
+            QFile manifestFile(manifestPath);
+            QVERIFY(manifestFile.open(QIODevice::WriteOnly | QIODevice::Text));
+
+            QJsonObject sourceObject;
+            sourceObject.insert("source_id",      "bad-source");
+            sourceObject.insert("display_name",   "Bad Source");
+            sourceObject.insert("source_type",    "csv");  // not in the allowed list
+            sourceObject.insert("snapshot_id",    "snapshot-001");
+            sourceObject.insert("snapshot_label", "Snapshot 001");
+            sourceObject.insert("path",           "/nonexistent/path.csv");
+            sourceObject.insert("enabled",        true);
+            sourceObject.insert("priority",       5);
+
+            QJsonObject manifestObject;
+            manifestObject.insert("build_id",       "test-invalid-type");
+            manifestObject.insert("schema_version", 1);
+            manifestObject.insert("sources",        QJsonArray{sourceObject});
+
+            const QByteArray manifestJson = QJsonDocument(manifestObject).toJson(QJsonDocument::Indented);
+            QVERIFY(manifestFile.write(manifestJson) == manifestJson.size());
+        }
+
+        const QString outputDbPath = dir.filePath("remus_compendium_invalid.db");
+
+        // Parser must reject the unrecognised source_type before any DB is created.
+        runCli({"--build-compendium", "--compendium-manifest", manifestPath, "--compendium-output", outputDbPath}, 1);
+        QVERIFY2(!QFile::exists(outputDbPath), "DB should not be created when source_type is invalid");
+    }
 };
 
 QTEST_MAIN(CliSmokeTest)

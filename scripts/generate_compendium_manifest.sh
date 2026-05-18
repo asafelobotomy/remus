@@ -5,6 +5,7 @@
 # outputs: JSON manifest file with one dat source entry per DAT file.
 # risk: safe
 # source: original
+# platform: Linux/macOS; requires bash 4+, sha256sum or shasum, and python3 (for portable relative paths)
 
 set -euo pipefail
 
@@ -44,6 +45,31 @@ slugify() {
     printf '%s' "$value" \
         | tr '[:upper:]' '[:lower:]' \
         | sed -E 's/[^a-z0-9]+/-/g; s/^-+//; s/-+$//'
+}
+
+# Compute the SHA-256 hex digest of a file.
+# Uses sha256sum (GNU/Linux) or falls back to shasum (macOS/BSD).
+sha256_of() {
+    local file="$1"
+    if command -v sha256sum &>/dev/null; then
+        sha256sum "$file" | awk '{print $1}'
+    elif command -v shasum &>/dev/null; then
+        shasum -a 256 "$file" | awk '{print $1}'
+    else
+        echo "error: no sha256 utility (sha256sum or shasum) found" >&2
+        exit 1
+    fi
+}
+
+# Compute the path of $1 relative to $2.
+# Uses python3 for portability (Linux and macOS); falls back to GNU realpath.
+compute_relative_path() {
+    local target="$1" base="$2"
+    if command -v python3 &>/dev/null; then
+        python3 -c "import os,sys; print(os.path.relpath(sys.argv[1],sys.argv[2]))" "$target" "$base"
+    else
+        realpath --relative-to="$base" "$target"
+    fi
 }
 
 while [[ $# -gt 0 ]]; do
@@ -140,6 +166,7 @@ is_excluded() {
 mapfile -d '' DAT_FILES < <(find "$DAT_DIR" -maxdepth 1 -type f -name '*.dat' -print0 | sort -z)
 mapfile -d '' NO_INTRO_FILES < <(find "$DAT_DIR/no-intro" -maxdepth 1 -type f -name '*.dat' -print0 2>/dev/null | sort -z)
 mapfile -d '' REDUMP_FILES < <(find "$DAT_DIR/redump" -maxdepth 1 -type f -name '*.dat' -print0 2>/dev/null | sort -z)
+mapfile -d '' MAME_FILES < <(find "$DAT_DIR/mame" -maxdepth 1 -type f -name '*.dat' -print0 2>/dev/null | sort -z)
 
 ALL_FILES=()
 ALL_PREFIXES=()
@@ -154,6 +181,11 @@ for f in "${NO_INTRO_FILES[@]}"; do
     ALL_FILES+=("$f")
     ALL_PREFIXES+=("libretro-nointro")
     ALL_PRIORITIES+=("20")
+done
+for f in "${MAME_FILES[@]}"; do
+    ALL_FILES+=("$f")
+    ALL_PREFIXES+=("pleasuredome-mame")
+    ALL_PRIORITIES+=("25")
 done
 for f in "${REDUMP_FILES[@]}"; do
     ALL_FILES+=("$f")
@@ -186,9 +218,9 @@ OUTPUT_PATH="$OUTPUT_DIR/$(basename "$OUTPUT_PATH")"
 
         source_id="${dat_prefix}-${slug}"
         snapshot_id="${source_id}-${DATE_STAMP}"
-        checksum_sha256="$(sha256sum "$dat_file" | awk '{print $1}')"
+        checksum_sha256="$(sha256_of "$dat_file")"
 
-        rel_path="$(realpath --relative-to="$OUTPUT_DIR" "$dat_file")"
+        rel_path="$(compute_relative_path "$dat_file" "$OUTPUT_DIR")"
 
         printf '    {\n'
         printf '      "source_id": "%s",\n' "$(json_escape "$source_id")"
@@ -222,4 +254,4 @@ OUTPUT_PATH="$OUTPUT_DIR/$(basename "$OUTPUT_PATH")"
 } > "$OUTPUT_PATH"
 
 echo "Manifest written: $OUTPUT_PATH"
-echo "Sources: ${#ALL_FILES[@]} total (${#DAT_FILES[@]} curated, ${#NO_INTRO_FILES[@]} no-intro, ${#REDUMP_FILES[@]} redump)"
+echo "Sources: ${#ALL_FILES[@]} total (${#DAT_FILES[@]} curated, ${#NO_INTRO_FILES[@]} no-intro, ${#MAME_FILES[@]} mame, ${#REDUMP_FILES[@]} redump)"

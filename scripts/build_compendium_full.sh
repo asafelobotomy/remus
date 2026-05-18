@@ -155,13 +155,6 @@ mkdir -p "$(dirname "$MANIFEST_PATH")"
 mkdir -p "$(dirname "$OUTPUT_DB")"
 mkdir -p "$(dirname "$COVERAGE_REPORT")"
 
-mapfile -t active_other_builds < <(pgrep -f "remus-cli --build-compendium" || true)
-
-if (( ${#active_other_builds[@]} > 0 )); then
-    echo "error: another compendium compiler process is already running (pids: ${active_other_builds[*]})" >&2
-    exit 1
-fi
-
 exec 9>"$LOCK_PATH"
 if ! flock -n 9; then
     echo "error: another full compendium build is already running (lock: $LOCK_PATH)" >&2
@@ -261,3 +254,4 @@ if [ -n "$empty_systems" ]; then
 fi
 
 echo "==> Build log: $BUILD_LOG"
+exit "$build_rc"

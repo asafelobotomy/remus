@@ -7,6 +7,8 @@
 #include <QJsonParseError>
 #include <QJsonValue>
 
+#include <cmath>
+
 namespace Remus {
 
 bool readTextFile(const QString &path, QString &content, QString &error)
@@ -41,6 +43,22 @@ bool requireString(const QJsonObject &object,
     return true;
 }
 
+static bool optionalString(const QJsonObject &object,
+                            const QString &fieldName,
+                            QString &value,
+                            QString &error)
+{
+    if (!object.contains(fieldName)) {
+        return true; // absent is fine — caller can use any default
+    }
+    if (!object.value(fieldName).isString()) {
+        error = QStringLiteral("Manifest field '%1' must be a string").arg(fieldName);
+        return false;
+    }
+    value = object.value(fieldName).toString().trimmed();
+    return true;
+}
+
 QString resolveManifestRelativePath(const QString &manifestPath, const QString &sourcePath)
 {
     const QFileInfo sourceInfo(sourcePath);
@@ -63,6 +81,15 @@ bool parseSourceDescriptor(const QJsonObject &object,
     if (!requireString(object, QStringLiteral("source_type"), descriptor.sourceType, error)) {
         return false;
     }
+    if (descriptor.sourceType != QStringLiteral("dat") &&
+        descriptor.sourceType != QStringLiteral("xml") &&
+        descriptor.sourceType != QStringLiteral("json") &&
+        descriptor.sourceType != QStringLiteral("api-export")) {
+        error = QStringLiteral("Source '%1' has unrecognised source_type '%2'; "
+                               "expected one of: dat, xml, json, api-export")
+                    .arg(descriptor.sourceId, descriptor.sourceType);
+        return false;
+    }
     if (!requireString(object, QStringLiteral("snapshot_id"), descriptor.snapshotId, error)) {
         return false;
     }
@@ -74,16 +101,28 @@ bool parseSourceDescriptor(const QJsonObject &object,
     }
     descriptor.path = resolveManifestRelativePath(manifestPath, descriptor.path);
 
-    descriptor.displayName = object.value(QStringLiteral("display_name")).toString().trimmed();
+    if (!optionalString(object, QStringLiteral("display_name"), descriptor.displayName, error)) {
+        return false;
+    }
     if (descriptor.displayName.isEmpty()) {
         descriptor.displayName = descriptor.sourceId;
     }
 
-    descriptor.snapshotRef = object.value(QStringLiteral("snapshot_ref")).toString().trimmed();
-    descriptor.checksumSha256 = object.value(QStringLiteral("checksum_sha256")).toString().trimmed();
-    descriptor.licenseId = object.value(QStringLiteral("license_id")).toString().trimmed();
-    descriptor.licenseUrl = object.value(QStringLiteral("license_url")).toString().trimmed();
-    descriptor.fetchedAt = object.value(QStringLiteral("fetched_at")).toString().trimmed();
+    if (!optionalString(object, QStringLiteral("snapshot_ref"), descriptor.snapshotRef, error)) {
+        return false;
+    }
+    if (!optionalString(object, QStringLiteral("checksum_sha256"), descriptor.checksumSha256, error)) {
+        return false;
+    }
+    if (!optionalString(object, QStringLiteral("license_id"), descriptor.licenseId, error)) {
+        return false;
+    }
+    if (!optionalString(object, QStringLiteral("license_url"), descriptor.licenseUrl, error)) {
+        return false;
+    }
+    if (!optionalString(object, QStringLiteral("fetched_at"), descriptor.fetchedAt, error)) {
+        return false;
+    }
 
     if (!object.contains(QStringLiteral("enabled")) || !object.value(QStringLiteral("enabled")).isBool()) {
         error = QStringLiteral("Source '%1' field 'enabled' must be a boolean").arg(descriptor.sourceId);
@@ -95,7 +134,15 @@ bool parseSourceDescriptor(const QJsonObject &object,
         error = QStringLiteral("Source '%1' field 'priority' must be an integer").arg(descriptor.sourceId);
         return false;
     }
-    descriptor.priority = object.value(QStringLiteral("priority")).toInt();
+    {
+        const double priorityDouble = object.value(QStringLiteral("priority")).toDouble();
+        if (priorityDouble != std::floor(priorityDouble)) {
+            error = QStringLiteral("Source '%1' field 'priority' must be an integer (got floating-point value)")
+                        .arg(descriptor.sourceId);
+            return false;
+        }
+        descriptor.priority = static_cast<int>(priorityDouble);
+    }
 
     if (object.contains(QStringLiteral("attribution_required"))) {
         if (!object.value(QStringLiteral("attribution_required")).isBool()) {

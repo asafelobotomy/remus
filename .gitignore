@@ -41,6 +41,7 @@ Makefile
 *.db
 *.db-shm
 *.db-wal
+*.db.staged-*
 *.sqlite
 *.sqlite3
 
