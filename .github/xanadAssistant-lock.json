@@ -11,8 +11,8 @@
     "hash": "sha256:5c10c9043152bc11a830996b5d90d97533a6b73f80f9ef1d06f16e737c356b53"
   },
   "timestamps": {
-    "appliedAt": "2026-05-18T16:23:32Z",
-    "updatedAt": "2026-05-18T16:23:32Z"
+    "appliedAt": "2026-05-19T07:01:13Z",
+    "updatedAt": "2026-05-19T07:01:13Z"
   },
   "selectedPacks": [],
   "profile": "balanced",
@@ -47,128 +47,7 @@
     "mcpAvailable": true,
     "mcpEnabled": true
   },
-  "files": [
-    {
-      "id": "agents.docs.agent.md",
-      "target": ".github/agents/docs.agent.md",
-      "sourceHash": "sha256:1287ecf7e8cf04816ac99b6863f0fae6bab88d350036ab7348db3f5a4c004618",
-      "installedHash": "sha256:2d59ff636ff47b4cb2ad5866bc8551b3d65019e798151be30b115994abb0625c",
-      "ownershipMode": "local",
-      "status": "applied"
-    },
-    {
-      "id": "agents.planner.agent.md",
-      "target": ".github/agents/planner.agent.md",
-      "sourceHash": "sha256:22ad6fd59ae945269e7fc0b803a1c9b27bc531ee2e46bea77a7743f5861d5f5f",
-      "installedHash": "sha256:fa70eb6bebc7a6b26d3c20a87589dc3b22a1071acfed40545a726616f24e5768",
-      "ownershipMode": "local",
-      "status": "applied"
-    },
-    {
-      "id": "agents.review.agent.md",
-      "target": ".github/agents/review.agent.md",
-      "sourceHash": "sha256:f9840d83b6ca5cb5c8b6646b620343631f08ea01c5e4719e2ab8e844d401413a",
-      "installedHash": "sha256:430df418879c120c080a2d48bb6ac665d9789f468294bfead9ca8693997020ff",
-      "ownershipMode": "local",
-      "status": "applied"
-    },
-    {
-      "id": "agents.xanadLifecycle.agent.md",
-      "target": ".github/agents/xanadLifecycle.agent.md",
-      "sourceHash": "sha256:bc78d5bbaccc9553017e31389735656e38d347c37060344b33d4fec8cc8306ae",
-      "installedHash": "sha256:bc78d5bbaccc9553017e31389735656e38d347c37060344b33d4fec8cc8306ae",
-      "ownershipMode": "local",
-      "status": "applied"
-    },
-    {
-      "id": "core-instructions.copilot-instructions.md",
-      "target": ".github/copilot-instructions.md",
-      "sourceHash": "sha256:eebb9efe01cfd4078728dc87b04ec05b088569eebe0cb3e605ce17384a80c815",
-      "installedHash": "sha256:64c82beba331a1644b6e4c8dc7daeb9648357c7769b4595f38150c3090a6234a",
-      "ownershipMode": "local",
-      "status": "applied"
-    },
-    {
-      "id": "hook-scripts._github_mcp_shared.py",
-      "target": ".github/mcp/scripts/_github_mcp_shared.py",
-      "sourceHash": "sha256:98edb3760f40d3749b98e0718f5ca7546426c3017ea41ce9de1bcca6e0e9f6e8",
-      "installedHash": "sha256:98edb3760f40d3749b98e0718f5ca7546426c3017ea41ce9de1bcca6e0e9f6e8",
-      "ownershipMode": "local",
-      "status": "applied"
-    },
-    {
-      "id": "hook-scripts._memory_mcp_shared.py",
-      "target": ".github/mcp/scripts/_memory_mcp_shared.py",
-      "sourceHash": "sha256:4ba65a01027b1582fc1e525f030fb476b8ea30882e77286c046d38d42fbb1860",
-      "installedHash": "sha256:4ba65a01027b1582fc1e525f030fb476b8ea30882e77286c046d38d42fbb1860",
-      "ownershipMode": "local",
-      "status": "applied"
-    },
-    {
-      "id": "hook-scripts._xanad_mcp_source.py",
-      "target": ".github/mcp/scripts/_xanad_mcp_source.py",
-      "sourceHash": "sha256:f7114c23196895e7833d52a652bd62a3e1bcc92d9da72850e96a2dc8a369111d",
-      "installedHash": "sha256:f7114c23196895e7833d52a652bd62a3e1bcc92d9da72850e96a2dc8a369111d",
-      "ownershipMode": "local",
-      "status": "applied"
-    },
-    {
-      "id": "hook-scripts.gitMcp.py",
-      "target": ".github/mcp/scripts/gitMcp.py",
-      "sourceHash": "sha256:02181555c1868209e1e0ebefe227819bb2c3298a0fcc88bcaa7c7c3df009c682",
-      "installedHash": "sha256:02181555c1868209e1e0ebefe227819bb2c3298a0fcc88bcaa7c7c3df009c682",
-      "ownershipMode": "local",
-      "status": "applied"
-    },
-    {
-      "id": "hook-scripts.githubMcp.py",
-      "target": ".github/mcp/scripts/githubMcp.py",
-      "sourceHash": "sha256:3b2ed50ebd04bf4640518c1c513469c9c1579578195cb47232762b3aba3873b3",
-      "installedHash": "sha256:3b2ed50ebd04bf4640518c1c513469c9c1579578195cb47232762b3aba3873b3",
-      "ownershipMode": "local",
-      "status": "applied"
-    },
-    {
-      "id": "hook-scripts.memoryMcp.py",
-      "target": ".github/mcp/scripts/memoryMcp.py",
-      "sourceHash": "sha256:0a2c9743523af81841d5db7a0fb92c4fb9bb789654287899210addb232cfce94",
-      "installedHash": "sha256:0a2c9743523af81841d5db7a0fb92c4fb9bb789654287899210addb232cfce94",
-      "ownershipMode": "local",
-      "status": "applied"
-    },
-    {
-      "id": "hook-scripts.xanadWorkspaceMcp.py",
-      "target": ".github/mcp/scripts/xanadWorkspaceMcp.py",
-      "sourceHash": "sha256:5f4ea843df7ba960320d36b872ca5fe685184b0fc7507c57646ced40071da0e0",
-      "installedHash": "sha256:5f4ea843df7ba960320d36b872ca5fe685184b0fc7507c57646ced40071da0e0",
-      "ownershipMode": "local",
-      "status": "applied"
-    },
-    {
-      "id": "prompts.bootstrap.md",
-      "target": ".github/prompts/bootstrap.md",
-      "sourceHash": "sha256:d0338f94dfabc626f8f3b5cdf26199e99f1d1fa10f457ea857b4cfacfaff71c3",
-      "installedHash": "sha256:d0338f94dfabc626f8f3b5cdf26199e99f1d1fa10f457ea857b4cfacfaff71c3",
-      "ownershipMode": "local",
-      "status": "applied"
-    },
-    {
-      "id": "prompts.setup.md",
-      "target": ".github/prompts/setup.md",
-      "sourceHash": "sha256:a3035fae38c0bd8deec8cf4671e24a7d51b2d23282a1e8f9b6937d0fa61a283d",
-      "installedHash": "sha256:612e36d919f6084c477d5cfeb0f74fe1c577ab2ddeda1540f16390ad4fc4bccd",
-      "ownershipMode": "local",
-      "status": "applied"
-    },
-    {
-      "id": "skills.lifecycleAudit.SKILL.md",
-      "target": ".github/skills/lifecycleAudit/SKILL.md",
-      "sourceHash": "sha256:5b194927dd73d9e611e683f034bbb9dcc2424efba2bb70c6adf3a0850a1900a4",
-      "installedHash": "sha256:5b194927dd73d9e611e683f034bbb9dcc2424efba2bb70c6adf3a0850a1900a4",
-      "ownershipMode": "local",
-      "status": "applied"
-    }
-  ],
+  "files": [],
   "skippedManagedFiles": [
     ".github/mcp/scripts/devopsEnvCheck.py",
     ".github/mcp/scripts/docsLinkCheck.py",
@@ -244,6 +123,6 @@
   },
   "unknownValues": {},
   "lastBackup": {
-    "path": ".xanadAssistant/backups/2026-05-18T16-23-32Z"
+    "path": ".xanadAssistant/backups/2026-05-19T07-01-13Z"
   }
 }
