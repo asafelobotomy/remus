@@ -31,11 +31,10 @@ _LEGACY_LOCKFILE = WORKSPACE_ROOT / ".github" / "xanad-assistant-lock.json"
 WORKSPACE_LOCKFILE_PATH = _NEW_LOCKFILE if _NEW_LOCKFILE.exists() else _LEGACY_LOCKFILE
 SHELL_METACHARACTERS = ["|", "&", ";", ">", "<", "\n", "\r", "`", "$((", "$(", "${"]
 UNRESOLVED_COMMAND_VALUES = frozenset({"(not detected)", "not detected"})
+DEFAULT_KEY_COMMANDS = {"LOC gate": "python3 scripts/check_loc.py"}
 _ALLOWED_RUNNER_EXECUTABLES = frozenset({
-    "python", "python3",
-    "pytest", "py.test",
-    "npm", "npx", "yarn", "pnpm",
-    "cargo", "go",
+    "python", "python3", "pytest", "py.test",
+    "npm", "npx", "yarn", "pnpm", "cargo", "go",
 })
 def _check_executable_allowed(command: str) -> str | None:
     """Return a rejection reason if the command's executable is not in the runner allowlist."""
@@ -77,7 +76,27 @@ def is_unresolved_command(command: str | None) -> bool:
     return command is None or not command.strip() or command.strip().lower() in UNRESOLVED_COMMAND_VALUES
 def resolve_key_command(label: str) -> str | None:
     command = next((entry["command"] for entry in parse_key_commands(WORKSPACE_INSTRUCTIONS_PATH) if entry["label"] == label), None)
-    return None if is_unresolved_command(command) else command
+    if not is_unresolved_command(command):
+        return command
+    fallback = DEFAULT_KEY_COMMANDS.get(label)
+    return None if is_unresolved_command(fallback) else fallback
+def prefer_workspace_python(command: str) -> str:
+    try:
+        argv = shlex.split(command)
+    except ValueError:
+        return command
+    if not argv:
+        return command
+    executable = Path(argv[0]).name
+    if executable not in {"python", "python3"}:
+        prefix, _, suffix = executable.partition(".")
+        if prefix not in {"python", "python3"} or not suffix.isdigit():
+            return command
+    workspace_python = WORKSPACE_ROOT / ".venv" / "bin" / "python"
+    if not workspace_python.is_file():
+        return command
+    argv[0] = str(workspace_python)
+    return shlex.join(argv)
 def read_lockfile() -> dict | None:
     if not WORKSPACE_LOCKFILE_PATH.exists():
         return None
@@ -254,6 +273,7 @@ def tool_workspace_run_tests(arguments: dict) -> dict:
     command = resolve_key_command("Run tests")
     if command is None:
         return build_tool_result(status="unavailable", summary="No Run tests command is declared in .github/copilot-instructions.md.")
+    command = prefer_workspace_python(command)
     reason = reject_shell_metacharacters(command)
     if reason is not None:
         return {"status": "unavailable", "summary": reason, "command": command}
@@ -269,6 +289,7 @@ def tool_workspace_run_check_loc(arguments: dict) -> dict:
     command = resolve_key_command("LOC gate")
     if command is None:
         return build_tool_result(status="unavailable", summary="No LOC gate command is declared in .github/copilot-instructions.md.")
+    command = prefer_workspace_python(command)
     reason = reject_shell_metacharacters(command)
     if reason is not None:
         return {"status": "unavailable", "summary": reason, "command": command}
@@ -307,50 +328,61 @@ mcp = FastMCP("xanadTools")
 
 @mcp.tool()
 def workspace_show_key_commands() -> ToolResult:
+    """List the workspace key commands declared in .github/copilot-instructions.md."""
     return _tool_result(tool_workspace_show_key_commands({}))
 
 @mcp.tool()
 def workspace_run_tests(scope: str = "default", extraArgs: list[str] | None = None) -> ToolResult:
+    """Run the workspace's declared test command, optionally appending extra arguments."""
     return _tool_result(tool_workspace_run_tests({"scope": scope, "extraArgs": extraArgs or []}))
 
 @mcp.tool()
 def workspace_run_check_loc() -> ToolResult:
+    """Run the workspace LOC gate command using the declared or default check_loc entry."""
     return _tool_result(tool_workspace_run_check_loc({}))
 
 @mcp.tool()
 def workspace_validate_lockfile() -> ToolResult:
+    """Validate that the xanadAssistant workspace lockfile is present and structurally sound."""
     return _tool_result(tool_workspace_validate_lockfile({}))
 
 @mcp.tool()
 def workspace_show_install_state() -> ToolResult:
+    """Show the current install and drift state for this workspace's managed surfaces."""
     return _tool_result(tool_workspace_show_install_state({}))
 
 _LIFECYCLE_MODES, _INVALID_MODE_MSG = frozenset(["setup", "update", "repair", "factory-restore"]), "mode must be one of setup, update, repair, or factory-restore."
 
 @mcp.tool()
 def lifecycle_inspect(packageRoot: str | None = None, source: str | None = None, version: str | None = None, ref: str | None = None) -> ToolResult:
+    """Inspect the target workspace and report install state, findings, and repair reasons."""
     return _lifecycle_tool("inspect", package_root_arg=packageRoot, source_arg=source, version_arg=version, ref_arg=ref)
 
 @mcp.tool()
 def lifecycle_check(packageRoot: str | None = None, source: str | None = None, version: str | None = None, ref: str | None = None) -> ToolResult:
+    """Check managed files in the target workspace and classify drift or damage."""
     return _lifecycle_tool("check", package_root_arg=packageRoot, source_arg=source, version_arg=version, ref_arg=ref)
 
 @mcp.tool()
 def lifecycle_interview(packageRoot: str | None = None, source: str | None = None, version: str | None = None, ref: str | None = None, mode: str = "setup") -> ToolResult:
+    """Emit the structured interview questions needed for a lifecycle mode."""
     if mode not in _LIFECYCLE_MODES:
         return _tool_result(build_tool_result(status="unavailable", summary=_INVALID_MODE_MSG))
     return _lifecycle_tool("interview", package_root_arg=packageRoot, source_arg=source, version_arg=version, ref_arg=ref, mode=mode, mode_as_flag=True)
 
 @mcp.tool()
 def lifecycle_plan_setup(packageRoot: str | None = None, source: str | None = None, version: str | None = None, ref: str | None = None, answersPath: str | None = None, nonInteractive: bool | None = None) -> ToolResult:
+    """Plan a first-time setup without writing files to the target workspace."""
     return _lifecycle_tool("plan", package_root_arg=packageRoot, source_arg=source, version_arg=version, ref_arg=ref, mode="setup", answers_path=answersPath, non_interactive=nonInteractive)
 
 @mcp.tool()
 def lifecycle_setup(packageRoot: str | None = None, source: str | None = None, version: str | None = None, ref: str | None = None, planPath: str | None = None, dryRun: bool | None = None) -> ToolResult:
+    """Apply a serialized setup plan to install xanadAssistant into the target workspace."""
     return _lifecycle_tool("setup", package_root_arg=packageRoot, source_arg=source, version_arg=version, ref_arg=ref, plan_path=planPath, dry_run=dryRun)
 
 @mcp.tool()
 def lifecycle_apply(packageRoot: str | None = None, source: str | None = None, version: str | None = None, ref: str | None = None, planPath: str | None = None, dryRun: bool | None = None) -> ToolResult:
+    """Report that lifecycle_apply is retired and direct callers to the supported replacements."""
     del packageRoot, source, version, ref, planPath, dryRun
     return _tool_result(
         build_tool_result(
@@ -362,14 +394,17 @@ def lifecycle_apply(packageRoot: str | None = None, source: str | None = None, v
 
 @mcp.tool()
 def lifecycle_update(packageRoot: str | None = None, source: str | None = None, version: str | None = None, ref: str | None = None, answersPath: str | None = None, nonInteractive: bool | None = None, dryRun: bool | None = None) -> ToolResult:
+    """Update an installed workspace to the current package state."""
     return _lifecycle_tool("update", package_root_arg=packageRoot, source_arg=source, version_arg=version, ref_arg=ref, answers_path=answersPath, non_interactive=nonInteractive, dry_run=dryRun)
 
 @mcp.tool()
 def lifecycle_repair(packageRoot: str | None = None, source: str | None = None, version: str | None = None, ref: str | None = None, answersPath: str | None = None, nonInteractive: bool | None = None) -> ToolResult:
+    """Repair a damaged or drifted xanadAssistant install in the target workspace."""
     return _lifecycle_tool("repair", package_root_arg=packageRoot, source_arg=source, version_arg=version, ref_arg=ref, answers_path=answersPath, non_interactive=nonInteractive)
 
 @mcp.tool()
 def lifecycle_factory_restore(packageRoot: str | None = None, source: str | None = None, version: str | None = None, ref: str | None = None, nonInteractive: bool | None = None) -> ToolResult:
+    """Reinstall the managed surfaces from scratch using the workspace's recorded answers."""
     return _lifecycle_tool("factory-restore", package_root_arg=packageRoot, source_arg=source, version_arg=version, ref_arg=ref, non_interactive=nonInteractive)
 
 

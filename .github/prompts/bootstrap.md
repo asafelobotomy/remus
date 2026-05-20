@@ -15,7 +15,9 @@ to obtain `xanadBootstrap.py` first.
 python3 xanadBootstrap.py inspect --workspace . --json
 ```
 
-Confirm `installState` is `not-installed` before continuing.
+Confirm `installState` is `not-installed` before continuing. If `installState`
+is anything other than `not-installed`, halt and direct the user to `/setup`
+instead.
 
 ### 2 — Interview
 
@@ -71,10 +73,11 @@ mkdir -p .xanadAssistant/tmp
 Inspect `result.existingFiles` from the interview response.
 If the array is non-empty, present each entry to the user:
 
-- `type: "collision"` — xanadAssistant would overwrite this file.
-  Decisions: `keep`, `replace`, or `merge` (if `mergeSupported` is true).
-- `type: "unmanaged"` — a file in a managed directory not owned by xanadAssistant.
-  Decisions: `keep` or `remove`.
+- `type: "collision"` — a file that xanadAssistant would overwrite.
+  Available decisions: `keep` (preserve the user's file), `replace` (xanadAssistant wins),
+  `merge` (if `mergeSupported` is true).
+- `type: "unmanaged"` — a file in a managed directory that xanadAssistant does not own.
+  Available decisions: `keep`, `remove`.
 
 Collect decisions and write to `.xanadAssistant/tmp/conflict-resolutions.json`:
 
@@ -121,6 +124,9 @@ Check `validation.status`. If it is not `passed`, report the error and
 `backupPath` to the user.
 
 ### 5 — Clean up
+
+Confirm with the user that the install succeeded before proceeding. Then
+remove the bootstrap runner and the temporary working directory:
 
 ```sh
 rm xanadBootstrap.py

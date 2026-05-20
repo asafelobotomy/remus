@@ -1,17 +1,17 @@
 # xanadAssistant Installed Summary
 
-Version: 0.3.1
+Version: 0.3.6
 Profile: balanced
 Selected packs: none
-Applied at: 2026-05-19T07:01:13Z
+Applied at: 2026-05-20T20:39:41Z
 Lockfile: .github/xanadAssistant-lock.json
 
 ```json
 {
-  "version": "0.3.1",
+  "version": "0.3.6",
   "profile": "balanced",
   "selectedPacks": [],
-  "manifestHash": "sha256:5c10c9043152bc11a830996b5d90d97533a6b73f80f9ef1d06f16e737c356b53",
-  "appliedAt": "2026-05-19T07:01:13Z"
+  "manifestHash": "sha256:39b02cbdad8d959a555ef3ebfb83997ff20aaa479ccf72e97c8a601178f3251e",
+  "appliedAt": "2026-05-20T20:39:41Z"
 }
 ```

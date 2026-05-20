@@ -17,7 +17,7 @@ knowledge of the project's specific tooling or conventions.
 - When the project's CI checks are unknown, vary by workspace, or may have changed
 - When the workspace may use any language, framework, or build system
 
-## When not to use
+## When NOT to use
 
 - When the workspace has a project-specific preflight skill — prefer that skill
   over this generic one (it will know the project's exact commands and repair
@@ -58,6 +58,9 @@ invocation that operates on local files (e.g. `python3 ...`, `npm test`,
 
 ### 2. Scope to staged changes
 
+If Step 1 found no usable run steps, skip this step and proceed directly to
+Step 3.
+
 Run `git diff --cached --name-only` with a terminal tool to get the staged file
 list.
 
@@ -74,7 +77,7 @@ excluded), detect the verification command from workspace files using workspace
 search and file-reading tools:
 
 | Signal file or folder | Inferred command |
-|---|---|
+| --- | --- |
 | `tests/` with `test_*.py` files | `python3 -m unittest discover -s tests -p 'test_*.py'` |
 | `pytest.ini`, `pyproject.toml` with `[tool.pytest]` | `python3 -m pytest` |
 | `package.json` with a `test` script | `npm test` |
@@ -106,10 +109,10 @@ workflow file — the project author likely ordered them by cost already.
 Run each command with a terminal tool. For each result:
 
 | Outcome | Action |
-|---|---|
+| --- | --- |
 | Exit 0 | Continue to the next check |
-| Stale generated artifact (exit nonzero + recognisable regen command in output) | Re-run the generator, explicitly `git add` regenerated outputs, then re-run the check |
-| Unit or lint failure | Delegate to `Debugger` with the exact failure output and staged file list; apply the minimal fix returned; re-run the failing check |
+| Stale generated artifact (exit nonzero and the output includes an explicit invocation of the form `python3 …generate`, `npm run generate`, or a similar regen tool) | Re-run the generator, explicitly `git add` regenerated outputs, then re-run the check |
+| Unit or lint failure | Delegate to `Debugger` with the exact failure output and staged file list; apply the minimal fix returned; re-run the failing check. If `Debugger` cannot isolate a fix, surface the raw failure output to the user and ask whether to block the commit or accept residual risk. |
 | Budget / LOC / format violation | Surface the exact violation output to the user; ask whether to fix now or accept residual risk before proceeding |
 | Template-safety violation (unresolved `{{}}` tokens in a template file) | Block — do not commit until resolved |
 | Step requires secrets or infra (detected mid-run) | Skip; note in summary — not a blocker |

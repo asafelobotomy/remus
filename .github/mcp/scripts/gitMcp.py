@@ -71,23 +71,55 @@ def _run_flags(repo_path: str, base_args: list[str], flags: list[str],
     Tail args that start with '-' are rejected to prevent flag injection.
     Flags must be hardcoded literals assembled by the calling tool function.
     """
-    repo_path = _validate_repo_path(repo_path)
-    for arg in tail:
-        _reject_flag_like(arg)
-    cmd = ["git", *base_args, *flags, *tail]
-    result = subprocess.run(
-        cmd,
-        cwd=repo_path,
-        capture_output=True,
-        text=True,
-        timeout=timeout,
-    )
+    result = _run_flags_completed(repo_path, base_args, flags, tail, timeout=timeout)
     if result.returncode != 0:
         raise RuntimeError(
             (result.stderr.strip() or result.stdout.strip())
             or f"git exited with code {result.returncode}"
         )
     return result.stdout.strip()
+
+
+def _run_flags_completed(
+    repo_path: str,
+    base_args: list[str],
+    flags: list[str],
+    tail: list[str],
+    timeout: int = 30,
+) -> subprocess.CompletedProcess[str]:
+    """Run git and return the completed process without raising on exit code."""
+    repo_path = _validate_repo_path(repo_path)
+    for arg in tail:
+        _reject_flag_like(arg)
+    cmd = ["git", *base_args, *flags, *tail]
+    return subprocess.run(
+        cmd,
+        cwd=repo_path,
+        capture_output=True,
+        text=True,
+        timeout=timeout,
+    )
+
+
+def _mutation_result(
+    operation: str,
+    result: subprocess.CompletedProcess[str],
+    command: list[str],
+    **fields: object,
+) -> dict[str, object]:
+    """Build a structured envelope for mutating git operations."""
+    status = "ok" if result.returncode == 0 else "failed"
+    envelope: dict[str, object] = {
+        "ok": result.returncode == 0,
+        "status": status,
+        "operation": operation,
+        "command": command,
+        "exitCode": result.returncode,
+        "stdout": result.stdout.strip(),
+        "stderr": result.stderr.strip(),
+    }
+    envelope.update(fields)
+    return envelope
 
 
 def _run(repo_path: str, *args: str, timeout: int = 30) -> str:
@@ -106,6 +138,18 @@ def git_status(repo_path: str) -> str:
 
 
 @mcp.tool()
+def git_diff_unstaged_stat(repo_path: str) -> str:
+    """Return unstaged changes as a diff stat summary."""
+    return _run_flags(repo_path, ["diff"], ["--stat"], [])
+
+
+@mcp.tool()
+def git_diff_staged_stat(repo_path: str) -> str:
+    """Return staged changes as a diff stat summary."""
+    return _run_flags(repo_path, ["diff"], ["--cached", "--stat"], [])
+
+
+@mcp.tool()
 def git_diff_unstaged(repo_path: str, context_lines: int = 3) -> str:
     """Return unstaged changes as a unified diff."""
     return _run_flags(repo_path, ["diff"], [f"-U{context_lines}"], [])
@@ -120,7 +164,7 @@ def git_diff_staged(repo_path: str, context_lines: int = 3) -> str:
 @mcp.tool()
 def git_diff(repo_path: str, target: str, context_lines: int = 3) -> str:
     """Return diff between HEAD and target (branch, tag, or commit SHA)."""
-    return _run_flags(repo_path, ["diff"], [f"-U{context_lines}"], [target])
+    return _run_flags(repo_path, ["diff"], [f"-U{context_lines}"], ["HEAD", target])
 
 
 @mcp.tool()
@@ -212,13 +256,21 @@ def git_add(repo_path: str, files: list[str]) -> str:
 
 
 @mcp.tool()
-def git_reset(repo_path: str) -> str:
-    """Unstage all staged changes (mixed reset to HEAD)."""
+def git_reset(repo_path: str, files: list[str] | None = None) -> str:
+    """Unstage staged changes.
+
+    Args:
+        repo_path: Absolute path to the git repository.
+        files: Optional file paths to unstage. When omitted, unstages all
+            staged changes with a mixed reset to HEAD.
+    """
+    if files:
+        return _run_flags(repo_path, ["reset"], ["HEAD", "--"], files)
     return _run_flags(repo_path, ["reset"], ["HEAD"], [])
 
 
 @mcp.tool()
-def git_commit(repo_path: str, message: str) -> str:
+def git_commit(repo_path: str, message: str) -> dict[str, object]:
     """Record staged changes as a new commit.
 
     The message string is passed directly to subprocess (not via a shell), so
@@ -231,7 +283,15 @@ def git_commit(repo_path: str, message: str) -> str:
                  for multi-paragraph messages (e.g. "subject\\n\\nbody").
     """
     if not message.strip(): raise ValueError("Commit message must not be empty.")
-    return _run_flags(repo_path, ["commit"], ["-m", message], [])
+    command = ["git", "commit", "-m", message]
+    result = _run_flags_completed(repo_path, ["commit"], ["-m", message], [])
+    return _mutation_result(
+        "git_commit",
+        result,
+        command,
+        message=message,
+        summary=f"git commit {'succeeded' if result.returncode == 0 else 'failed'}",
+    )
 
 
 @mcp.tool()
@@ -250,6 +310,48 @@ def git_stash(repo_path: str, message: str = "") -> str:
 def git_stash_pop(repo_path: str) -> str:
     """Apply and remove the most recent stash entry."""
     return _run(repo_path, "stash", "pop")
+
+
+@mcp.tool()
+def git_stash_apply(repo_path: str, stash_ref: str = "") -> dict[str, object]:
+    """Apply a stash entry without dropping it.
+
+    Args:
+        repo_path: Absolute path to the git repository.
+        stash_ref: Optional stash reference such as ``stash@{1}``; defaults to
+            the most recent stash when omitted.
+    """
+    tail = [stash_ref] if stash_ref else []
+    command = ["git", "stash", "apply", *tail]
+    result = _run_flags_completed(repo_path, ["stash", "apply"], [], tail)
+    return _mutation_result(
+        "git_stash_apply",
+        result,
+        command,
+        stashRef=stash_ref,
+        summary=f"git stash apply {'succeeded' if result.returncode == 0 else 'failed'}",
+    )
+
+
+@mcp.tool()
+def git_stash_drop(repo_path: str, stash_ref: str = "") -> dict[str, object]:
+    """Drop a stash entry.
+
+    Args:
+        repo_path: Absolute path to the git repository.
+        stash_ref: Optional stash reference such as ``stash@{1}``; defaults to
+            the most recent stash when omitted.
+    """
+    tail = [stash_ref] if stash_ref else []
+    command = ["git", "stash", "drop", *tail]
+    result = _run_flags_completed(repo_path, ["stash", "drop"], [], tail)
+    return _mutation_result(
+        "git_stash_drop",
+        result,
+        command,
+        stashRef=stash_ref,
+        summary=f"git stash drop {'succeeded' if result.returncode == 0 else 'failed'}",
+    )
 
 
 @mcp.tool()
@@ -286,11 +388,29 @@ def git_tag_list(repo_path: str) -> str:
 
 
 @mcp.tool()
+def git_push_tag(
+    repo_path: str,
+    tag_name: str,
+    remote: str = "origin",
+) -> str:
+    """Push exactly one tag to a remote.
+
+    Args:
+        repo_path: Absolute path to the git repository.
+        tag_name: Tag name to push (e.g. 'v1.2.3').
+        remote: Remote name; defaults to 'origin'.
+    """
+    tag_name = _validate_user_arg(tag_name)
+    refspec = f"refs/tags/{tag_name}:refs/tags/{tag_name}"
+    return _run_flags(repo_path, ["push"], [], [remote, refspec])
+
+
+@mcp.tool()
 def git_rebase(
     repo_path: str,
     onto: str = "",
     action: Literal["start", "continue", "abort", "skip"] = "start",
-) -> str:
+) -> dict[str, object]:
     """Rebase the current branch.
 
     Args:
@@ -300,8 +420,19 @@ def git_rebase(
     """
     if action == "start":
         if not onto: raise ValueError("'onto' is required when action='start'.")
-        return _run(repo_path, "rebase", onto)
-    return _run_flags(repo_path, ["rebase"], [f"--{action}"], [])
+        command = ["git", "rebase", onto]
+        result = _run_flags_completed(repo_path, ["rebase"], [], [onto])
+    else:
+        command = ["git", "rebase", f"--{action}"]
+        result = _run_flags_completed(repo_path, ["rebase"], [f"--{action}"], [])
+    return _mutation_result(
+        "git_rebase",
+        result,
+        command,
+        action=action,
+        onto=onto,
+        summary=f"git rebase {action} {'succeeded' if result.returncode == 0 else 'failed'}",
+    )
 
 
 @mcp.tool()
@@ -326,17 +457,33 @@ def git_pull(
     remote: str = "origin",
     branch: str = "",
     rebase: bool = False,
-) -> str:  # pragma: no cover
+) -> dict[str, object]:  # pragma: no cover
     """Fetch and integrate changes from a remote branch.
 
     Args:
         repo_path: Absolute path to the git repository.
-        remote: Remote name; defaults to 'origin'.
-        branch: Remote branch to pull; defaults to the tracking branch.
+        remote: Remote name; defaults to 'origin'.  Ignored when branch is
+            omitted — git uses the branch's configured upstream instead.
+        branch: Remote branch to pull.  When omitted, git uses the current
+            branch's configured upstream (i.e. ``git pull`` with no args).
         rebase: When True, rebases local commits on top of the fetched branch.
     """
-    return _run_flags(repo_path, ["pull"], ["--rebase"] if rebase else [],
-                       [remote] + ([branch] if branch else []))
+    flags = ["--rebase"] if rebase else []
+    # When no explicit branch is given, omit remote too so that git resolves
+    # the tracking upstream from config rather than using FETCH_HEAD.
+    tail = [remote, branch] if branch else []
+    command = ["git", "pull", *flags, *tail]
+    result = _run_flags_completed(repo_path, ["pull"], flags, tail)
+    branch_summary = f"{remote}/{branch}" if branch else "configured upstream"
+    return _mutation_result(
+        "git_pull",
+        result,
+        command,
+        remote=remote,
+        branch=branch,
+        rebase=rebase,
+        summary=f"git pull from {branch_summary} {'succeeded' if result.returncode == 0 else 'failed'}",
+    )
 
 
 @mcp.tool()
@@ -348,13 +495,14 @@ def git_push(
     force: bool = False,
     set_upstream: bool = False,
     tags: bool = False,
-) -> str:  # pragma: no cover
+) -> dict[str, object]:  # pragma: no cover
     """Push commits to a remote repository.
 
     Args:
         repo_path: Absolute path to the git repository.
         remote: Remote name; defaults to 'origin'.
-        branch: Branch to push; defaults to the current tracking branch.
+        branch: Branch to push.  When omitted, git resolves the target via
+            push.default (typically the current branch's tracking ref).
         force_with_lease: Safer force-push — fails if the remote has new
             commits since the last fetch.  Preferred over force=True.
         force: Unconditional force-push.  Ignored when force_with_lease=True.
@@ -366,7 +514,22 @@ def git_push(
     if force_with_lease: flags.append("--force-with-lease")
     elif force: flags.append("--force")
     if tags: flags.append("--tags")
-    return _run_flags(repo_path, ["push"], flags, [remote] + ([branch] if branch else []))
+    tail = [remote] + ([branch] if branch else [])
+    command = ["git", "push", *flags, *tail]
+    result = _run_flags_completed(repo_path, ["push"], flags, tail)
+    branch_summary = branch or "current tracking branch"
+    return _mutation_result(
+        "git_push",
+        result,
+        command,
+        remote=remote,
+        branch=branch,
+        forceWithLease=force_with_lease,
+        force=force and not force_with_lease,
+        setUpstream=set_upstream,
+        tags=tags,
+        summary=f"git push to {remote} {branch_summary} {'succeeded' if result.returncode == 0 else 'failed'}",
+    )
 
 
 if __name__ == "__main__":  # pragma: no cover

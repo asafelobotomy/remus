@@ -28,8 +28,8 @@ python3 xanadAssistant.py inspect \
   --ui agent --json-lines
 ```
 
-Review `installState`. If it is `not-installed`, redirect to the setup workflow
-(`/setup` or `/bootstrap`) instead.
+Review `installState`. If it is `not-installed`, halt and inform the user that
+xanadAssistant is not installed; offer to run `/setup` or `/bootstrap` instead.
 
 ### 2. Re-interview (optional)
 
@@ -56,6 +56,21 @@ python3 xanadAssistant.py update \
   --workspace . \
   --package-root <path-to-xanadAssistant-checkout> \
   --non-interactive --ui agent --json-lines
+```
+
+### 4. Confirm result
+
+Check `validation.status` in the update result.
+
+- If `passed`: show the user the summary from `.github/copilot-version.md` and
+  list the files that were updated or retired.
+- If not `passed`: report the error and `backupPath` to the user so they can
+  restore the previous state if needed.
+
+If Step 2 ran (re-interview), remove the temporary directory:
+
+```sh
+rm -rf .xanadAssistant/tmp
 ```
 
 If a re-interview was run, add

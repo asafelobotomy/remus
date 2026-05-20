@@ -5,7 +5,7 @@ argument-hint: "Describe what to reorganise — e.g. move scripts into logical d
 model:
   - Claude Sonnet 4.6
   - GPT-5.4
-tools: [agent, editFiles, runCommands, codebase, search]
+tools: [agent, editFiles, runCommands, codebase, search, read_file, list_directory, search_files, file_info, write_file, create_directory, move_file, delete_file]
 agents: [Explore, Docs]
 user-invocable: false
 ---
@@ -44,6 +44,7 @@ Do not use this agent for:
   clusters before moving files.
 - Use `Docs` when file moves require updating documentation, migration guides,
   or user-facing references beyond inline path fixes.
+- When the `filesystem` server is connected, prefer `move_file` for renames and moves, `create_directory` to make parent trees, and `list_directory` or `search_files` for inventory — these tools enforce the workspace path boundary and produce cleaner output than shell equivalents.
 - Update every direct caller in the same pass so the tree stays runnable.
 - Prefer direct path retargeting over temporary wrappers.
 - Validate with targeted checks first. Run the repo test suite once before task
@@ -61,6 +62,6 @@ Report each file move as: `old/path → new/path`. List all caller path updates 
 At the start of every task, call `memory_dump(agent="organise")`.
 - If the `memory` MCP server is unavailable, emit one visible note ("⚠️ Memory MCP unavailable: [reason]") then continue without it.
 - **Rules** returned are authoritative — follow every rule unconditionally for the rest of this task.
-- **Facts** returned are working context — for any fact you intend to act on, call `elapsed(start=fact.updated_at)` to verify its age.
+- **Facts** returned are working context — for any fact you intend to act on, call `elapsed(start=fact.updated_at)` (via the `time` MCP server) to verify its age.
 
 When you learn something durable about the workspace (conventions, commands, tool versions, paths), call `memory_set(agent="organise", key=..., value=...)` before finishing.

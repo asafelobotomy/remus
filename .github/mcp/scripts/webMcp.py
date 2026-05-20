@@ -26,10 +26,12 @@ from __future__ import annotations
 
 import concurrent.futures
 import ipaddress
+import re
 import socket
 import sys
 import threading
 import time
+from urllib import robotparser
 from urllib.parse import parse_qs, unquote, urlparse
 
 try:
@@ -162,6 +164,18 @@ _DDG_HEADERS = {
 }
 
 
+def _collapse_whitespace(text: str) -> str:
+    return re.sub(r"\s+", " ", text).strip()
+
+
+def _format_search_result(index: int, title: str, url: str, snippet: str) -> str:
+    lines = [f"{index}. {_collapse_whitespace(title)}", f"   {url}"]
+    cleaned_snippet = _collapse_whitespace(snippet)
+    if cleaned_snippet:
+        lines.append(f"   {cleaned_snippet}")
+    return "\n".join(lines)
+
+
 def _extract_ddg_url(el) -> str:
     """Extract the real destination URL from a DuckDuckGo result element.
 
@@ -217,7 +231,7 @@ def web_search(
         url   = _extract_ddg_url(el)
         snip  = (el.select_one(".result__snippet") or el).get_text(strip=True)
         if title or url:
-            items.append(f"{len(items) + 1}. {title}\n   {url}\n   {snip}")
+            items.append(_format_search_result(len(items) + 1, title, url, snip))
 
     if not items:
         return f"No results found for: {query!r}"
@@ -233,6 +247,36 @@ _FETCH_HEADERS = {
     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
 }
 _MAX_DOWNLOAD_BYTES = 10_000_000  # 10 MB hard cap — body is capped before decode/conversion
+_TEXTUAL_CONTENT_MARKERS = ("json", "xml", "javascript", "x-www-form-urlencoded")
+_FETCH_RETRY_STATUS_CODES = {429, 502, 503, 504}
+_FETCH_MAX_ATTEMPTS = 3
+_FETCH_RETRY_BASE_DELAY_SECONDS = 0.25
+_BLOCK_PREVIEW_BYTES = 32_768
+_ROBOTS_CACHE_TTL_SECONDS = 300.0
+_ROBOTS_CACHE: dict[tuple[str, str], tuple[float, object | None]] = {}
+
+
+def _normalize_fetch_url(url: str) -> str:
+    candidate = url.strip()
+    if not candidate:
+        raise ValueError("url must not be empty.")
+
+    if candidate.startswith("//"):
+        candidate = f"https:{candidate}"
+
+    parsed = urlparse(candidate)
+    if parsed.scheme in ("http", "https"):
+        if not parsed.hostname:
+            raise ValueError(f"Cannot parse hostname from URL: {url!r}")
+        return candidate
+    if parsed.scheme:
+        raise ValueError(f"Only http and https URLs are supported; got: {url!r}")
+
+    normalized = f"https://{candidate}"
+    parsed = urlparse(normalized)
+    if not parsed.hostname:
+        raise ValueError(f"Cannot parse hostname from URL: {url!r}")
+    return normalized
 
 
 def _to_markdown(html: str) -> str:
@@ -240,6 +284,152 @@ def _to_markdown(html: str) -> str:
     for tag in soup(["script", "style", "nav", "header", "footer", "aside"]):
         tag.decompose()
     return md(str(soup), heading_style="ATX").strip()
+
+
+def _append_truncation_hint(chunk: str, remaining: int, next_index: int) -> str:
+    return (
+        f"{chunk}\n\n"
+        f"Continue with start_index={next_index} to read the next {remaining} character(s).\n"
+        f"<!-- xanad:truncation remaining={remaining} next_start_index={next_index} -->"
+    )
+
+
+def _is_textual_content_type(content_type: str) -> bool:
+    media_type = content_type.split(";", 1)[0].strip().lower()
+    if not media_type:
+        return True
+    if media_type.startswith("text/"):
+        return True
+    return any(marker in media_type for marker in _TEXTUAL_CONTENT_MARKERS)
+
+
+def _format_non_text_response(url: str, content_type: str, byte_count: int) -> str:
+    display_type = content_type.split(";", 1)[0].strip() or "application/octet-stream"
+    return (
+        "Non-text content fetched; returning metadata only.\n"
+        f"URL: {url}\n"
+        f"Content-Type: {display_type}\n"
+        f"Downloaded bytes: {byte_count}"
+    )
+
+
+def _robots_url_for(url: str) -> str:
+    parsed = urlparse(url)
+    return f"{parsed.scheme}://{parsed.netloc}/robots.txt"
+
+
+def _read_robots_policy(url: str, client: "httpx.Client") -> object | None:
+    robots_url = _robots_url_for(url)
+    cache_key = (urlparse(url).scheme, urlparse(url).netloc)
+    now = time.monotonic()
+    cached = _ROBOTS_CACHE.get(cache_key)
+    if cached and now - cached[0] < _ROBOTS_CACHE_TTL_SECONDS:
+        return cached[1]
+
+    try:
+        response = client.get(robots_url)
+    except httpx.HTTPError:
+        policy = None
+    else:
+        if response.status_code in (401, 403):
+            policy = "disallow_all"
+        elif response.status_code != 200 or not _is_textual_content_type(response.headers.get("content-type", "text/plain")):
+            policy = None
+        else:
+            parser = robotparser.RobotFileParser()
+            parser.parse(response.text.splitlines())
+            policy = parser
+
+    _ROBOTS_CACHE[cache_key] = (now, policy)
+    return policy
+
+
+def _format_robots_blocked_response(url: str, robots_url: str) -> str:
+    return (
+        "Fetch disallowed by robots.txt.\n"
+        f"URL: {url}\n"
+        f"Robots: {robots_url}\n"
+        f"User-Agent: {_FETCH_HEADERS['User-Agent']}"
+    )
+
+
+def _check_robots_allowed(url: str, client: "httpx.Client") -> str | None:
+    policy = _read_robots_policy(url, client)
+    if policy == "disallow_all":
+        return _format_robots_blocked_response(url, _robots_url_for(url))
+    if policy is None:
+        return None
+    if not policy.can_fetch(_FETCH_HEADERS["User-Agent"], url):
+        return _format_robots_blocked_response(url, _robots_url_for(url))
+    return None
+
+
+def _format_blocked_fetch_response(url: str, category: str, status_code: int, detail: str) -> str:
+    return (
+        "Fetch blocked by remote site.\n"
+        f"URL: {url}\n"
+        f"Category: {category}\n"
+        f"HTTP status: {status_code}\n"
+        f"Detail: {detail}"
+    )
+
+
+def _classify_blocked_fetch(url: str, status_code: int, headers: dict[str, str], text: str) -> str | None:
+    lowered = text.lower()
+    server = headers.get("server", "").lower()
+    has_cloudflare = "cloudflare" in server or bool(headers.get("cf-ray"))
+    if status_code == 429:
+        return _format_blocked_fetch_response(url, "rate_limited", status_code, "Remote site rate-limited the request.")
+    if "captcha" in lowered or "recaptcha" in lowered or "hcaptcha" in lowered:
+        return _format_blocked_fetch_response(url, "captcha_required", status_code, "Captcha or human verification page detected.")
+    if has_cloudflare or "attention required" in lowered or "verify you are human" in lowered or "/cdn-cgi/challenge-platform/" in lowered:
+        return _format_blocked_fetch_response(url, "blocked_by_waf", status_code, "Cloudflare or WAF challenge detected.")
+    if status_code in (401, 407) or (status_code == 403 and "login" in lowered):
+        return _format_blocked_fetch_response(url, "login_required", status_code, "Remote site requires authentication.")
+    if status_code == 403 and "access denied" in lowered:
+        return _format_blocked_fetch_response(url, "blocked_by_waf", status_code, "Access denied page detected.")
+    return None
+
+
+def _sleep_before_retry(attempt: int) -> None:
+    time.sleep(_FETCH_RETRY_BASE_DELAY_SECONDS * attempt)
+
+
+def _fetch_response_bytes(client: "httpx.Client", normalized_url: str) -> tuple[str, bytes] | str:
+    for attempt in range(1, _FETCH_MAX_ATTEMPTS + 1):
+        try:
+            with client.stream("GET", normalized_url) as resp:
+                status_code = resp.status_code
+                content_type = resp.headers.get("content-type", "")
+
+                if status_code in _FETCH_RETRY_STATUS_CODES and attempt < _FETCH_MAX_ATTEMPTS:
+                    _sleep_before_retry(attempt)
+                    continue
+
+                parts: list[bytes] = []
+                downloaded = 0
+                byte_cap = _BLOCK_PREVIEW_BYTES if status_code >= 400 else _MAX_DOWNLOAD_BYTES
+                for part in resp.iter_bytes(chunk_size=65536):
+                    parts.append(part)
+                    downloaded += len(part)
+                    if downloaded >= byte_cap:
+                        break
+
+                raw_bytes = b"".join(parts)
+                if status_code >= 400:
+                    preview = raw_bytes.decode("utf-8", errors="replace")
+                    classified = _classify_blocked_fetch(normalized_url, status_code, dict(resp.headers), preview)
+                    if classified:
+                        return classified
+                    resp.raise_for_status()
+
+                return content_type, raw_bytes
+        except httpx.TransportError:
+            if attempt >= _FETCH_MAX_ATTEMPTS:
+                raise
+            _sleep_before_retry(attempt)
+
+    raise RuntimeError(f"Failed to fetch {normalized_url!r} after {_FETCH_MAX_ATTEMPTS} attempts.")
 
 
 @mcp.tool()
@@ -262,26 +452,25 @@ def fetch(
         start_index: Character offset for pagination (default 0, clamped to >= 0).
         raw: When True, skip HTML-to-Markdown conversion (default False).
     """
-    if urlparse(url).scheme not in ("http", "https"):
-        raise ValueError(f"Only http and https URLs are supported; got: {url!r}")
-    _guard_ssrf(url)
+    normalized_url = _normalize_fetch_url(url)
+    _guard_ssrf(normalized_url)
     max_length = max(1, min(1_000_000, max_length))
     start_index = max(0, start_index)
 
-    parts: list[bytes] = []
-    downloaded = 0
     with httpx.Client(headers=_FETCH_HEADERS, follow_redirects=True, timeout=30,
                        event_hooks={"response": [_ssrf_redirect_hook]}) as client:
-        with client.stream("GET", url) as resp:
-            resp.raise_for_status()
-            content_type = resp.headers.get("content-type", "")
-            for part in resp.iter_bytes(chunk_size=65536):
-                parts.append(part)
-                downloaded += len(part)
-                if downloaded >= _MAX_DOWNLOAD_BYTES:
-                    break
+        robots_blocked = _check_robots_allowed(normalized_url, client)
+        if robots_blocked:
+            return robots_blocked
+        response_payload = _fetch_response_bytes(client, normalized_url)
 
-    raw_bytes = b"".join(parts)
+    if isinstance(response_payload, str):
+        return response_payload
+
+    content_type, raw_bytes = response_payload
+    if not _is_textual_content_type(content_type):
+        return _format_non_text_response(normalized_url, content_type, len(raw_bytes))
+
     charset = "utf-8"
     if "charset=" in content_type:
         charset = content_type.split("charset=")[-1].split(";")[0].strip() or "utf-8"
@@ -294,7 +483,7 @@ def fetch(
     remaining = len(content) - start_index - len(chunk)
     if remaining > 0:
         next_idx = start_index + len(chunk)
-        chunk += f"\n<!-- xanad:truncation remaining={remaining} next_start_index={next_idx} -->"
+        chunk = _append_truncation_hint(chunk, remaining, next_idx)
     return chunk
 
 

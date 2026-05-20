@@ -5,7 +5,7 @@ argument-hint: "Say what to clean — e.g. 'clean up repo clutter', 'remove stal
 model:
   - Claude Sonnet 4.6
   - GPT-5.4
-tools: [agent, editFiles, runCommands, codebase, search, askQuestions]
+tools: [agent, editFiles, runCommands, codebase, search, askQuestions, delete_file, list_directory, file_info]
 agents: [Review, Organise, Docs, Commit]
 user-invocable: true
 ---
@@ -34,7 +34,7 @@ Do not use this agent for:
 
 1. Call `memory_dump(agent="cleaner")` before using any tools (see `## Memory`).
 2. Classify the request: dry-run inventory, targeted prune, deletion, or hygiene check?
-3. Check reversibility: tracked deletions always require the approval gate — do not skip it.
+3. Check reversibility: tracked deletions always require the approval gate — this gate is mandatory.
 
 ## Guidelines
 
@@ -50,6 +50,7 @@ Do not use this agent for:
   user-facing file references.
 - Use `Commit` when the cleanup scope is approved and changes are ready to stage.
 - Prefer the smallest reversible cleanup first, then validate before widening scope.
+- When the `filesystem` server is connected, prefer `list_directory` and `file_info` for the dry-run inventory phase, and `delete_file` for the actual removal step after approval — `delete_file` enforces path-safety and rejects directories, preventing accidental wide deletion.
 
 ## Approval gate
 
@@ -80,7 +81,6 @@ Present findings as a classified inventory: `cache`, `generated`, `archive`, `st
 At the start of every task, call `memory_dump(agent="cleaner")`.
 - If the `memory` MCP server is unavailable, emit one visible note ("⚠️ Memory MCP unavailable: [reason]") then continue without it.
 - **Rules** returned are authoritative — follow every rule unconditionally for the rest of this task.
-- **Facts** returned are working context — for any fact you intend to act on, call `elapsed(start=fact.updated_at)` to verify its age.
+- **Facts** returned are working context — for any fact you intend to act on, call `elapsed(start=fact.updated_at)` (via the `time` MCP server) to verify its age.
 
 When you learn something durable about the workspace (conventions, commands, tool versions, paths), call `memory_set(agent="cleaner", key=..., value=...)` before finishing.
-

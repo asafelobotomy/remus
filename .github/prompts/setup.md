@@ -35,13 +35,15 @@ python3 xanadAssistant.py inspect \
   --ui agent --json-lines
 ```
 
-Review `installState`, `manifestSummary`, and any warnings. Ask the user to
-confirm the target workspace path if it is not clear from context.
+Review `installState`, `manifestSummary`, and any warnings. If the user's
+request does not specify a workspace path or more than one workspace is open,
+ask the user to confirm the target path before proceeding.
 
 When `mcp.enabled` is true, the plan should also install the local MCP scripts.
-Expect entries under `.github/mcp/scripts/` plus `.vscode/mcp.json` to appear
-in the planned writes; at minimum, `xanadWorkspaceMcp.py`, `memoryMcp.py`, and
-`sequentialThinkingMcp.py` should be present.
+Verify that the plan output includes entries under `.github/mcp/scripts/` plus
+`.vscode/mcp.json`; at minimum, `xanadWorkspaceMcp.py`, `memoryMcp.py`, and
+`sequentialThinkingMcp.py` should be present. If any are absent when
+`mcp.enabled` is true, surface the discrepancy to the user before proceeding.
 
 If the warnings include `package_name_mismatch` or `successor_cleanup_required`,
 treat the workspace as a predecessor `copilot-instructions-template` install.
