@@ -6,13 +6,14 @@
 #include <QString>
 #include <QList>
 
+#include "../core/hasher.h"  // HashResult
+
 namespace Remus {
 
 class Database;
 class Hasher;
 class SystemDetector;
 struct FileRecord;
-struct HashResult;
 
 /**
  * @brief Shared hashing service (non-QObject, callback-based)
@@ -57,6 +58,23 @@ public:
      * Does NOT persist to database — caller decides what to do with the result.
      */
     HashResult hashRecord(const FileRecord &file);
+
+    /**
+     * @brief Compute hashes for a list of files without touching the database.
+     *
+     * Safe to call from a worker thread — no DB access occurs here.
+     * The caller is responsible for writing results to the DB.
+     */
+    struct HashBatchResult {
+        int     fileId  = 0;
+        QString filename;
+        HashResult result;
+        bool    skipped = false;
+    };
+
+    QList<HashBatchResult> computeHashes(const QList<FileRecord> &files,
+                                          ProgressCallback progressCb = nullptr,
+                                          const std::atomic<bool> *cancelled = nullptr);
 
 private:
     std::unique_ptr<Hasher> m_hasher;

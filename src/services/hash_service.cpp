@@ -133,6 +133,33 @@ int HashService::hashAll(Database *db,
         return 0;
     }
 
+    const QList<HashBatchResult> taskResults = computeHashes(files, progressCb, cancelled);
+
+    int hashed = 0;
+    for (const HashBatchResult &task : taskResults) {
+        if (task.skipped) continue;
+        if (task.result.success) {
+            db->updateFileHashes(task.fileId,
+                                 task.result.crc32,
+                                 task.result.md5,
+                                 task.result.sha1);
+            hashed++;
+        } else if (logCb) {
+            logCb(QString("Hash failed for %1: %2").arg(task.filename, task.result.error));
+        }
+    }
+
+    if (logCb) logCb(QString("Hashing complete: %1/%2").arg(hashed).arg(total));
+    return hashed;
+}
+
+QList<HashService::HashBatchResult> HashService::computeHashes(const QList<FileRecord> &files,
+                                                                ProgressCallback progressCb,
+                                                                const std::atomic<bool> *cancelled)
+{
+    const int total = files.size();
+    if (total == 0) return {};
+
     const int idealThreads = QThread::idealThreadCount();
     const int maxThreads = qMax(1, qMin(idealThreads > 0 ? idealThreads : 1, 8));
 
@@ -140,12 +167,11 @@ int HashService::hashAll(Database *db,
     const int originalMaxThreads = pool->maxThreadCount();
     pool->setMaxThreadCount(maxThreads);
 
-    QList<HashTaskResult> taskResults = QtConcurrent::blockingMapped(files,
+    QList<HashBatchResult> taskResults = QtConcurrent::blockingMapped(files,
         [cancelled](const FileRecord &file) {
-            HashTaskResult task;
-            task.fileId = file.id;
+            HashBatchResult task;
+            task.fileId   = file.id;
             task.filename = file.filename;
-            task.currentPath = file.currentPath;
 
             if (cancelled && cancelled->load()) {
                 task.skipped = true;
@@ -159,32 +185,14 @@ int HashService::hashAll(Database *db,
 
     pool->setMaxThreadCount(originalMaxThreads);
 
-    int hashed = 0;
-    int done = 0;
-    for (const HashTaskResult &task : taskResults) {
-        if (task.skipped) {
-            done++;
-            if (progressCb) progressCb(done, total, task.currentPath);
-            continue;
+    if (progressCb) {
+        int done = 0;
+        for (const HashBatchResult &task : taskResults) {
+            progressCb(++done, total, task.filename);
         }
-
-        if (task.result.success) {
-            db->updateFileHashes(task.fileId,
-                                 task.result.crc32,
-                                 task.result.md5,
-                                 task.result.sha1);
-            hashed++;
-        } else if (logCb) {
-            logCb(QString("Hash failed for %1: %2").arg(task.filename, task.result.error));
-        }
-
-        done++;
-        if (progressCb) progressCb(done, total, task.currentPath);
     }
 
-    if (progressCb) progressCb(total, total, {});
-    if (logCb) logCb(QString("Hashing complete: %1/%2").arg(hashed).arg(total));
-    return hashed;
+    return taskResults;
 }
 
 bool HashService::hashFile(Database *db, int fileId)

@@ -8,7 +8,6 @@
 
 #include <QFileInfo>
 #include <QHash>
-#include <QTemporaryDir>
 
 #include <algorithm>
 
@@ -212,22 +211,17 @@ int LibraryService::persistScanResults(const QList<ScanResult> &results,
             : sr.path;
         QString systemName = m_detector->detectSystem(sr.extension, systemDetectPath);
 
-        // For compressed disc images with ambiguous detection, extract and probe magic bytes
+        // For compressed disc images, stream the first 64 KB for magic-byte
+        // detection. No temp directory or full extraction is needed, even for
+        // large disc images.
         if (sr.isCompressed && !sr.archivePath.isEmpty()
             && DiscMagicDetector::isDiscImageExtension(sr.extension)) {
-            QTemporaryDir tempDir;
-            if (tempDir.isValid()) {
-                ArchiveExtractor extractor;
-                const QString memberPath = sr.archiveInternalPath.isEmpty()
-                    ? sr.filename : sr.archiveInternalPath;
-                ExtractionResult ex = extractor.extractFile(
-                    sr.archivePath, memberPath, tempDir.path());
-                if (ex.success && !ex.extractedFiles.isEmpty()) {
-                    DiscHeaderInfo discInfo = DiscMagicDetector::detect(ex.extractedFiles.first());
-                    if (discInfo.detected && !discInfo.systemName.isEmpty()) {
-                        systemName = discInfo.systemName;
-                    }
-                }
+            const QString memberPath = sr.archiveInternalPath.isEmpty()
+                ? sr.filename : sr.archiveInternalPath;
+            const DiscHeaderInfo discInfo = DiscMagicDetector::detectFromArchive(
+                sr.archivePath, memberPath, sr.fileSize);
+            if (discInfo.detected && !discInfo.systemName.isEmpty()) {
+                systemName = discInfo.systemName;
             }
         }
 

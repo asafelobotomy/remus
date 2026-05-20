@@ -13,6 +13,7 @@
 
 #include "app_controller.h"
 #include "settings_controller.h"
+#include "../../core/archive_creator.h"
 #include "../../core/constants/constants.h"
 
 namespace Remus {
@@ -43,6 +44,17 @@ bool trashOriginalEnabled()
     QSettings settings(QString::fromLatin1(Constants::SETTINGS_ORGANIZATION),
                        QString::fromLatin1(Constants::SETTINGS_APPLICATION));
     return settings.value(QStringLiteral("gui/trash_original_after_bundle"), false).toBool();
+}
+
+/// Prefer ZIP; fall back to 7z. Returns Unknown if neither tool is available.
+ArchiveFormat pickBestFormat()
+{
+    ArchiveCreator probe;
+    if (probe.canCompress(ArchiveFormat::ZIP))
+        return ArchiveFormat::ZIP;
+    if (probe.canCompress(ArchiveFormat::SevenZip))
+        return ArchiveFormat::SevenZip;
+    return ArchiveFormat::Unknown;
 }
 
 /// Move @p filePath to {scanDir}/original_roms/ before bundling.
@@ -136,6 +148,14 @@ void ExportController::bundleSelected(const QString &scanDir, const QString &nam
 
     const bool trashOriginal = trashOriginalEnabled();
 
+    const ArchiveFormat fmt = pickBestFormat();
+    if (fmt == ArchiveFormat::Unknown) {
+        m_exporting = false;
+        emit exportingChanged();
+        setLastMessage(QStringLiteral("No archive tool found — install 'zip' or '7z' to create bundles."));
+        return;
+    }
+
     if (!trashOriginal) {
         // Move original to original_roms/ before placing the bundle so it can
         // take its canonical name.  Fall back to the ROM's own directory when
@@ -153,6 +173,7 @@ void ExportController::bundleSelected(const QString &scanDir, const QString &nam
     }
 
     RomBundler::BundleConfig config;
+    config.outputFormat   = fmt;
     config.namingTemplate = namingTemplate;
     const QString cachedArt = artworkPathForFile(fileId);
     if (QFileInfo::exists(cachedArt))
@@ -220,6 +241,15 @@ void ExportController::bundleAll(const QString &scanDir, const QString &namingTe
     QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
 
     const bool trashOriginal = trashOriginalEnabled();
+
+    const ArchiveFormat fmt = pickBestFormat();
+    if (fmt == ArchiveFormat::Unknown) {
+        m_exporting = false;
+        emit exportingChanged();
+        setLastMessage(QStringLiteral("No archive tool found — install 'zip' or '7z' to create bundles."));
+        return;
+    }
+
     int bundled = 0;
     int failed  = 0;
 
@@ -269,6 +299,7 @@ void ExportController::bundleAll(const QString &scanDir, const QString &namingTe
         }
 
         RomBundler::BundleConfig config;
+        config.outputFormat   = fmt;
         config.namingTemplate = namingTemplate;
         const QString cachedArt = artworkPathForFile(it.key());
         if (QFileInfo::exists(cachedArt))

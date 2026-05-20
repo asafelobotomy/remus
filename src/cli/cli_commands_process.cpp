@@ -181,26 +181,13 @@ int handleScanCommand(CliContext &ctx)
 
         if (result.isCompressed && !result.archivePath.isEmpty() &&
             DiscMagicDetector::isDiscImageExtension(result.extension)) {
-            // Use REMUS_TMPDIR if set; fall back to system temp.
-            const QString tmpBase = qEnvironmentVariable("REMUS_TMPDIR",
-                                                         QDir::tempPath());
-            QTemporaryDir tempDir(tmpBase + QStringLiteral("/remus-discmagic-XXXXXX"));
-            if (tempDir.isValid()) {
-                ArchiveExtractor extractor;
-                const QString memberPath = result.archiveInternalPath.isEmpty() ? result.filename : result.archiveInternalPath;
-                const ExtractionResult extraction = extractor.extractFile(result.archivePath, memberPath, tempDir.path());
-                if (extraction.success && !extraction.extractedFiles.isEmpty()) {
-                    const DiscHeaderInfo discInfo = DiscMagicDetector::detect(extraction.extractedFiles.first());
-                    if (discInfo.detected && !discInfo.systemName.isEmpty()) {
-                        systemName = discInfo.systemName;
-                        qInfo() << "  Disc magic:" << systemName << "(from" << result.filename << ")";
-                    }
-                } else {
-                    qWarning() << "  Disc magic detection failed for" << result.filename
-                               << "(extraction error:" << extraction.error.simplified() << ")"
-                               << "— falling back to extension-based system detection:"
-                               << systemName;
-                }
+            const QString memberPath = result.archiveInternalPath.isEmpty()
+                ? result.filename : result.archiveInternalPath;
+            const DiscHeaderInfo discInfo = DiscMagicDetector::detectFromArchive(
+                result.archivePath, memberPath, result.fileSize);
+            if (discInfo.detected && !discInfo.systemName.isEmpty()) {
+                systemName = discInfo.systemName;
+                qInfo() << "  Disc magic:" << systemName << "(from" << result.filename << ")";
             }
         }
 

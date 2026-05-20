@@ -1,5 +1,10 @@
 #include <QtTest/QtTest>
+#include <QFile>
+#include <QProcess>
+#include <QStandardPaths>
+#include <QTemporaryDir>
 #include "../src/core/disc_magic_detector.h"
+#include "../src/core/archive_extractor.h"
 #include "../src/core/constants/systems.h"
 
 using namespace Remus;
@@ -24,6 +29,7 @@ private slots:
     void testEmptyDataReturnsNotDetected();
     void testTooSmallDataReturnsNotDetected();
     void testDreamcastSerialExtraction();
+    void testDetectFromArchive();
 };
 
 void DiscMagicDetectorTest::testIsDiscImageExtension()
@@ -205,6 +211,44 @@ void DiscMagicDetectorTest::testDreamcastSerialExtraction()
     QCOMPARE(info.systemId, ID_DREAMCAST);
     QCOMPARE(info.serial, QStringLiteral("HDR-0176"));
     QCOMPARE(info.title, QStringLiteral("SONIC ADVENTURE"));
+}
+
+void DiscMagicDetectorTest::testDetectFromArchive()
+{
+    // Requires 7z to pack a fake disc image.
+    if (QStandardPaths::findExecutable(QStringLiteral("7z")).isEmpty()) {
+        QSKIP("7z not available — skipping detectFromArchive test");
+    }
+
+    QTemporaryDir dir;
+    QVERIFY(dir.isValid());
+
+    // Build a 64 KB fake PS2 disc image: PLAYSTATION magic at 0x8008.
+    QByteArray isoData(0x10000, '\0');
+    const QByteArray magic("PLAYSTATION", 11);
+    isoData.replace(0x8008, magic.size(), magic);
+
+    const QString isoName = QStringLiteral("fake.iso");
+    QFile isoFile(dir.filePath(isoName));
+    QVERIFY(isoFile.open(QIODevice::WriteOnly));
+    isoFile.write(isoData);
+    isoFile.close();
+
+    // Pack into a 7z archive and remove the original.
+    const QString archivePath = dir.filePath(QStringLiteral("test.7z"));
+    QProcess packer;
+    packer.setWorkingDirectory(dir.path());
+    packer.start(QStringLiteral("7z"), {QStringLiteral("a"), archivePath, isoName});
+    QVERIFY(packer.waitForFinished(15000) && packer.exitCode() == 0);
+    QFile::remove(dir.filePath(isoName));
+
+    // memberSize > 800 MB forces PS2 (not PS1) classification.
+    const DiscHeaderInfo info = DiscMagicDetector::detectFromArchive(
+        archivePath, isoName, 1LL * 1024 * 1024 * 1024);
+
+    QVERIFY(info.detected);
+    QCOMPARE(info.systemId, ID_PS2);
+    QCOMPARE(info.systemName, QStringLiteral("PlayStation 2"));
 }
 
 QTEST_MAIN(DiscMagicDetectorTest)

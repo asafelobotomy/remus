@@ -67,6 +67,27 @@ public:
      */
     static bool isDiscImageExtension(const QString &extension);
 
+    /**
+     * @brief Detect system and disc serial from an archive member without full extraction.
+     *
+     * Streams only the first 64 KB from the compressed member via the
+     * system extraction tool, then calls detectFromData(). Vastly faster
+     * than full extraction for large disc images — a 4 GB ISO inside a .7z
+     * is handled in the same time as a 64 KB read.
+     *
+     * Dreamcast CDI deep-scan fallback is not available via this path; CDI
+     * data tracks may not appear within the first 64 KB of the stream.
+     *
+     * @param archivePath Path to archive file (.zip, .7z, .rar, …)
+     * @param memberPath  Relative path of the disc image within the archive
+     * @param memberSize  Known uncompressed file size, or -1 if unknown
+     *                    (used for PS1/PS2 disambiguation)
+     * @return Detection result; detected == false if streaming failed
+     */
+    static DiscHeaderInfo detectFromArchive(const QString &archivePath,
+                                             const QString &memberPath,
+                                             qint64 memberSize = -1);
+
 private:
     struct MagicEntry {
         int systemId;

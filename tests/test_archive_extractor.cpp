@@ -1,6 +1,7 @@
 #include <QtTest/QtTest>
 #include <QTemporaryDir>
 #include <QFile>
+#include <QProcess>
 #include "../src/core/archive_extractor.h"
 
 using namespace Remus;
@@ -77,6 +78,7 @@ private slots:
     void testExtractRejectsUnsafeArchiveEntries();
     void testBatchExtractCanBeCancelledAfterFirstItem();
     void testExtractUnsupported();
+    void testReadMemberPrefix();
 };
 
 void ArchiveExtractorTest::testDetectFormat()
@@ -629,6 +631,43 @@ void ArchiveExtractorTest::testExtractUnsupported()
     ExtractionResult result = extractor.extract(archivePath, dir.path(), false);
     QVERIFY(!result.success);
     QVERIFY(result.error.contains("Unsupported archive format"));
+}
+
+void ArchiveExtractorTest::testReadMemberPrefix()
+{
+    ArchiveExtractor extractor;
+    if (!extractor.canExtract(ArchiveFormat::SevenZip) && !extractor.canExtract(ArchiveFormat::ZIP)) {
+        QSKIP("No archive extraction tool available");
+    }
+
+    QTemporaryDir dir;
+    QVERIFY(dir.isValid());
+
+    // Create a 200-byte member with a known repeating pattern.
+    const int fileSize = 200;
+    QByteArray memberData(fileSize, '\0');
+    for (int i = 0; i < fileSize; ++i)
+        memberData[i] = static_cast<char>(i & 0xFF);
+
+    const QString memberName = QStringLiteral("probe.bin");
+    QFile memberFile(dir.filePath(memberName));
+    QVERIFY(memberFile.open(QIODevice::WriteOnly));
+    memberFile.write(memberData);
+    memberFile.close();
+
+    // Pack into a 7z archive.
+    const QString archivePath = dir.filePath(QStringLiteral("test.7z"));
+    QProcess packer;
+    packer.setWorkingDirectory(dir.path());
+    packer.start(QStringLiteral("7z"), {QStringLiteral("a"), archivePath, memberName});
+    QVERIFY(packer.waitForFinished(15000) && packer.exitCode() == 0);
+    QFile::remove(dir.filePath(memberName)); // remove the original so only the archive remains
+
+    // Read fewer bytes than the full member; verify only the prefix is returned.
+    const qint64 prefixLen = 100;
+    const QByteArray prefix = extractor.readMemberPrefix(archivePath, memberName, prefixLen);
+    QCOMPARE(prefix.size(), static_cast<qsizetype>(prefixLen));
+    QCOMPARE(prefix, memberData.left(static_cast<int>(prefixLen)));
 }
 
 QTEST_MAIN(ArchiveExtractorTest)

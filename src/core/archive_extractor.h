@@ -132,6 +132,25 @@ public:
                                           const QString &outputDir = QString(),
                                           bool createSubfolders = true);
 
+    /**
+     * @brief Stream the first maxBytes bytes from an archive member without full extraction.
+     *
+     * Starts the appropriate extraction tool with stdout output (7z -so, unzip -p),
+     * reads up to maxBytes from the stream, then kills the process. Safe for very
+     * large members — only the requested prefix is decompressed.
+     *
+     * Intended for disc magic-byte detection, which requires at most 64 KB of
+     * the disc image regardless of its compressed size.
+     *
+     * @param archivePath Path to archive file
+     * @param memberPath  Member path within the archive
+     * @param maxBytes    Maximum number of bytes to read
+     * @return Raw bytes from the start of the member, empty on failure
+     */
+    QByteArray readMemberPrefix(const QString &archivePath,
+                                 const QString &memberPath,
+                                 qint64 maxBytes);
+
 
 
 signals:

@@ -3,11 +3,9 @@
 #include <QDateTime>
 #include <QFile>
 #include <QTextStream>
-#include <QTemporaryDir>
 #include "../metadata/provider_orchestrator.h"
 #include "../core/constants/constants.h"
 #include "../core/disc_magic_detector.h"
-#include "../core/archive_extractor.h"
 #include "cli_logging.h"
 
 using namespace Remus;
@@ -62,31 +60,28 @@ int handleMatchCommand(CliContext &ctx)
         // Extract disc serial for disc image files (CDI, GDI, ISO, etc.)
         QString discSerial;
         if (DiscMagicDetector::isDiscImageExtension(file.extension)) {
-            QString probePath = file.currentPath;
+            DiscHeaderInfo discInfo;
 
-            // For archive members, extract to temp for probing
-            QTemporaryDir tempDir;
-            if (file.isCompressed && !file.archivePath.isEmpty() && tempDir.isValid()) {
-                ArchiveExtractor extractor;
+            if (file.isCompressed && !file.archivePath.isEmpty()) {
+                // Stream the first 64 KB from the compressed member — no temp
+                // dir or full extraction required, even for multi-GB disc images.
                 const QString memberPath = file.archiveInternalPath.isEmpty()
                     ? file.filename : file.archiveInternalPath;
-                ExtractionResult ex = extractor.extractFile(
-                    file.archivePath, memberPath, tempDir.path());
-                if (ex.success && !ex.extractedFiles.isEmpty()) {
-                    probePath = ex.extractedFiles.first();
+                discInfo = DiscMagicDetector::detectFromArchive(
+                    file.archivePath, memberPath, file.fileSize);
+            } else {
+                discInfo = DiscMagicDetector::detect(file.currentPath);
+                if (!discInfo.detected || discInfo.serial.isEmpty()) {
+                    // CDI files embed data at unpredictable offsets — the 64KB
+                    // probe in detect() may miss the magic. Fall back to the
+                    // Dreamcast deep scanner that searches up to 16MB.
+                    DiscHeaderInfo dcInfo = DiscMagicDetector::extractDreamcastHeader(file.currentPath);
+                    if (dcInfo.detected && !dcInfo.serial.isEmpty()) {
+                        discInfo = dcInfo;
+                    }
                 }
             }
 
-            DiscHeaderInfo discInfo = DiscMagicDetector::detect(probePath);
-            if (!discInfo.detected || discInfo.serial.isEmpty()) {
-                // CDI files embed data at unpredictable offsets — the 64KB
-                // probe in detect() may miss the magic. Fall back to the
-                // Dreamcast deep scanner that searches up to 16MB.
-                DiscHeaderInfo dcInfo = DiscMagicDetector::extractDreamcastHeader(probePath);
-                if (dcInfo.detected && !dcInfo.serial.isEmpty()) {
-                    discInfo = dcInfo;
-                }
-            }
             if (discInfo.detected && !discInfo.serial.isEmpty()) {
                 discSerial = discInfo.serial;
                 qInfo() << "  Disc serial:" << discSerial

@@ -3,6 +3,7 @@
 #include <QDebug>
 #include <QDir>
 #include <QFileInfo>
+#include <QProcess>
 
 namespace Remus {
 
@@ -285,6 +286,84 @@ ExtractionResult ArchiveExtractor::extractRar(const QString &archivePath, const 
     }
 
     return result;
+}
+
+QByteArray ArchiveExtractor::readMemberPrefix(const QString &archivePath,
+                                               const QString &memberPath,
+                                               qint64 maxBytes)
+{
+    if (maxBytes <= 0) return {};
+
+    const QString normalizedMember = normalizeArchiveMemberPath(memberPath);
+    if (normalizedMember.isEmpty()) return {};
+
+    QString program;
+    QStringList args;
+
+    switch (detectFormat(archivePath)) {
+    case ArchiveFormat::ZIP:
+        if (!m_unzipPath.isEmpty()) {
+            program = m_unzipPath;
+            args = {"-p", archivePath, normalizedMember};
+        } else if (!m_sevenZipPath.isEmpty()) {
+            program = m_sevenZipPath;
+            args = {"e", archivePath, normalizedMember, "-so", "-y"};
+        }
+        break;
+    case ArchiveFormat::SevenZip:
+    case ArchiveFormat::GZip:
+    case ArchiveFormat::TarGz:
+    case ArchiveFormat::TarBz2:
+        if (!m_sevenZipPath.isEmpty()) {
+            program = m_sevenZipPath;
+            args = {"e", archivePath, normalizedMember, "-so", "-y"};
+        }
+        break;
+    case ArchiveFormat::RAR:
+        if (!m_unrarPath.isEmpty()) {
+            program = m_unrarPath;
+            args = {"p", archivePath, normalizedMember};
+        } else if (!m_sevenZipPath.isEmpty()) {
+            program = m_sevenZipPath;
+            args = {"e", archivePath, normalizedMember, "-so", "-y"};
+        }
+        break;
+    default:
+        return {};
+    }
+
+    if (program.isEmpty()) return {};
+
+    QProcess proc;
+    // Keep stdout and stderr separate; we only read stdout.
+    proc.setReadChannel(QProcess::StandardOutput);
+    proc.start(program, args);
+    if (!proc.waitForStarted(5000)) return {};
+
+    QByteArray data;
+    data.reserve(static_cast<int>(maxBytes));
+
+    while (data.size() < maxBytes) {
+        if (proc.bytesAvailable() > 0) {
+            data.append(proc.read(maxBytes - data.size()));
+            continue;
+        }
+        if (proc.state() == QProcess::NotRunning) {
+            // Process finished cleanly — drain any remaining bytes.
+            const QByteArray tail = proc.readAll();
+            if (!tail.isEmpty())
+                data.append(tail.left(static_cast<int>(maxBytes - data.size())));
+            break;
+        }
+        if (!proc.waitForReadyRead(5000)) break;
+    }
+
+    if (proc.state() != QProcess::NotRunning) {
+        proc.kill();
+        proc.waitForFinished(3000);
+    }
+
+    return data;
 }
 
 } // namespace Remus

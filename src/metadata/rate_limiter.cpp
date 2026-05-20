@@ -1,4 +1,7 @@
 #include "rate_limiter.h"
+#include <QCoreApplication>
+#include <QEventLoop>
+#include <QTimer>
 #include <QThread>
 #include <QDebug>
 
@@ -30,7 +33,14 @@ void RateLimiter::waitIfNeeded()
         int sleepTime = m_intervalMs - elapsed;
         qDebug() << "Rate limiter: waiting" << sleepTime << "ms";
         locker.unlock();  // Unlock during sleep
-        QThread::msleep(sleepTime);
+        if (QThread::currentThread() == qApp->thread()) {
+            // Main/GUI thread: pump the event loop so the UI stays responsive.
+            QEventLoop loop;
+            QTimer::singleShot(sleepTime, &loop, &QEventLoop::quit);
+            loop.exec();
+        } else {
+            QThread::msleep(sleepTime);
+        }
         locker.relock();
     }
 

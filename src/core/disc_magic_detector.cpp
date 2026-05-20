@@ -1,4 +1,5 @@
 #include "disc_magic_detector.h"
+#include "archive_extractor.h"
 #include "constants/systems.h"
 #include <QFile>
 #include <QFileInfo>
@@ -222,6 +223,19 @@ DiscHeaderInfo DiscMagicDetector::scanForDreamcastHeader(const QByteArray &data)
     }
 
     return info;
+}
+
+DiscHeaderInfo DiscMagicDetector::detectFromArchive(const QString &archivePath,
+                                                     const QString &memberPath,
+                                                     qint64 memberSize)
+{
+    // 64 KB covers the deepest known magic offset (PS2 at 0x9320 + 11 ≈ 37.6 KB).
+    // Reading more wastes I/O; reading less would miss PS1/PS2 signatures.
+    static constexpr qint64 PROBE_SIZE = 0x10000;
+    ArchiveExtractor extractor;
+    const QByteArray data = extractor.readMemberPrefix(archivePath, memberPath, PROBE_SIZE);
+    if (data.isEmpty()) return {};
+    return detectFromData(data, memberSize);
 }
 
 } // namespace Remus
