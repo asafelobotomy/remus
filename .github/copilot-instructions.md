@@ -12,7 +12,7 @@ I work **in** remus — implementing features, reviewing code, running tests, an
 | Task | Command |
 | ------ | --------- |
 | Run tests | `(not detected)` |
-| Drift preflight | `python3 scripts/drift_preflight.py` |
+| Drift preflight | `python3 scripts/copilot_audit.py` |
 | LOC gate | `python3 scripts/check_loc.py` |
 | Inspect Copilot install state | `python3 <xanad-root>/xanadAssistant.py inspect --workspace . --package-root <xanad-root> --json` |
 | Check for repair needs | `python3 <xanad-root>/xanadAssistant.py health-check --workspace . --package-root <xanad-root> --json` |
@@ -66,7 +66,7 @@ Route specialist work to the matching agent before acting directly. If a task in
 
 Plan → Do → Check → Act on every non-trivial change.
 
-- Before commit, merge, or push in this repository, run `python3 scripts/drift_preflight.py`.
+- Before commit, merge, or push in this repository, run `python3 scripts/copilot_audit.py`.
 - Default: run the narrowest test suite covering changed paths
 - Broaden to the full suite at task completion and before merging
 
