@@ -44,6 +44,7 @@ public:
 
 signals:
     void settingsChanged();
+    void settingsError(const QString &message);
 
 private:
     QSettings m_settings;

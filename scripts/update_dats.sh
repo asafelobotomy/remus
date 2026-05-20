@@ -28,7 +28,7 @@ NO_INTRO_DIR="$TARGET_DIR/no-intro"
 REDUMP_DIR="$TARGET_DIR/redump"
 MAME_DIR="$TARGET_DIR/mame"
 CLONE_DIR="$(mktemp -d)"
-trap 'rm -rf "$CLONE_DIR"' EXIT
+trap 'rm -rf "${CLONE_DIR:-}" "${redump_direct_tmp:-}" "${mame_tmp:-}"' EXIT
 REPO_URL="https://github.com/libretro/libretro-database.git"
 
 # Core systems to include by default (filename stems as they appear in the repo)
@@ -194,11 +194,10 @@ REDUMP_DIRECT_DBS=(
 echo ""
 echo "Downloading Redump DATs (direct from redump.org)..."
 redump_direct_tmp="$(mktemp -d)"
-trap 'rm -rf "$redump_direct_tmp"' RETURN
 
 for entry in "${REDUMP_DIRECT_DBS[@]}"; do
     IFS='|' read -r slug destname <<< "$entry"
-    url="http://redump.org/datfile/${slug}/"
+    url="https://redump.org/datfile/${slug}/"
     zippath="$redump_direct_tmp/${slug}.zip"
 
     echo "  Fetching ${destname}..."
@@ -229,7 +228,7 @@ MAME_URL="https://github.com/pleasuredome/pleasuredome/raw/gh-pages/mame/MAME%20
 mkdir -p "$MAME_DIR"
 echo ""
 echo "Downloading MAME ${MAME_VERSION} DAT from Pleasuredome..."
-mame_tmp="$(mktemp /tmp/mame_dat_XXXXXX.zip)"
+mame_tmp="$(mktemp "${TMPDIR:-/tmp}/mame_dat_XXXXXX.zip")"
 if curl -fsSL -o "$mame_tmp" --max-time 120 "$MAME_URL"; then
     extracted=$(unzip -l "$mame_tmp" 2>/dev/null | grep -o '[^ ]*\.xml$' | head -1)
     if [[ -n "$extracted" ]]; then

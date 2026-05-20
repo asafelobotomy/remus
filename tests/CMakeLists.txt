@@ -213,8 +213,8 @@ add_remus_test(test_metadata_cache MetadataCacheTest
 )
 
 add_remus_test(test_app_controller_reopen AppControllerReopenTest
-    SOURCES test_app_controller_reopen.cpp ../src/gui/controllers/app_controller.cpp ../src/gui/controllers/app_controller_orchestrator.cpp
-    LIBS Qt6::Test Qt6::Core Qt6::Sql remus-metadata remus-core
+    SOURCES test_app_controller_reopen.cpp
+    LIBS Qt6::Test Qt6::Core Qt6::Sql remus-metadata remus-core remus-gui-controllers
 )
 target_include_directories(test_app_controller_reopen PRIVATE
     ${CMAKE_SOURCE_DIR}/src/gui
@@ -223,19 +223,7 @@ target_include_directories(test_app_controller_reopen PRIVATE
 add_remus_test(test_workflow_controller WorkflowControllerTest
     SOURCES
         test_workflow_controller.cpp
-        ../src/gui/controllers/workflow_controller.cpp
-        ../src/gui/controllers/workflow_controller_run.cpp
-        ../src/gui/controllers/app_controller.cpp
-        ../src/gui/controllers/app_controller_orchestrator.cpp
-        ../src/gui/controllers/hash_controller.cpp
-        ../src/gui/controllers/match_controller.cpp
-        ../src/gui/models/match_list_model.cpp
-        ../src/gui/controllers/artwork_controller.cpp
-        ../src/gui/controllers/conversion_controller.cpp
-        ../src/gui/controllers/conversion_controller_tools.cpp
-        ../src/gui/controllers/organize_controller.cpp
-        ../src/gui/controllers/export_controller.cpp
-    LIBS Qt6::Test Qt6::Core Qt6::Sql Qt6::Network remus-metadata remus-core remus-services
+    LIBS Qt6::Test Qt6::Core Qt6::Sql Qt6::Network remus-metadata remus-core remus-services remus-gui-controllers
 )
 target_include_directories(test_workflow_controller PRIVATE
     ${CMAKE_SOURCE_DIR}/src/gui

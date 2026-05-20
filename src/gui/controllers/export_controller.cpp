@@ -59,7 +59,10 @@ QString moveToOriginalRoms(const QString &filePath, const QString &scanDir)
         QString::fromLatin1(Constants::Settings::Files::MARKER_SKIP_SCAN));
     if (!QFileInfo::exists(markerPath)) {
         QFile marker(markerPath);
-        marker.open(QIODevice::WriteOnly);
+        if (!marker.open(QIODevice::WriteOnly)) {
+            qWarning() << "export_controller: failed to write scan-skip marker at" << markerPath
+                       << "-" << marker.errorString();
+        }
     }
 
     const QString destPath = QDir(origRomsDir).filePath(QFileInfo(filePath).fileName());

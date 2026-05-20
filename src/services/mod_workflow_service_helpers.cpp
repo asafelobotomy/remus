@@ -4,6 +4,7 @@
 #include <QEventLoop>
 #include <QFile>
 #include <QFileInfo>
+#include <QHostAddress>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QNetworkRequest>
@@ -11,6 +12,47 @@
 #include <QUrl>
 
 #include "../core/constants/constants.h"
+
+namespace {
+/// Reject loopback, private, link-local, and CGNAT hosts to prevent SSRF
+/// via a compromised remote mod catalog directing patch downloads to internal
+/// addresses.
+static bool isPatchHostAllowed(const QString &host)
+{
+    const QString h = host.trimmed().toLower();
+    if (h.isEmpty() || h == QLatin1String("localhost")
+            || h.endsWith(QLatin1String(".localhost")))
+        return false;
+
+    QHostAddress addr;
+    if (!addr.setAddress(h))
+        return true; // hostname — rely on OS resolver; DNS rebinding is out of scope here
+
+    if (addr.isLoopback() || addr.isNull())
+        return false;
+
+    if (addr.protocol() == QAbstractSocket::IPv4Protocol) {
+        const quint32 ip = addr.toIPv4Address();
+        const quint8 a = static_cast<quint8>((ip >> 24) & 0xFF);
+        const quint8 b = static_cast<quint8>((ip >> 16) & 0xFF);
+        return !(a == 0 || a == 10 || a == 127
+                || (a == 100 && b >= 64 && b <= 127)
+                || (a == 169 && b == 254)
+                || (a == 172 && b >= 16 && b <= 31)
+                || (a == 192 && b == 168));
+    }
+
+    if (addr.protocol() == QAbstractSocket::IPv6Protocol) {
+        const Q_IPV6ADDR ip = addr.toIPv6Address();
+        bool unspec = true;
+        for (quint8 byte : ip.c) { if (byte) { unspec = false; break; } }
+        return !unspec
+            && !((ip.c[0] & 0xFE) == 0xFC)           // fc00::/7 unique-local
+            && !((ip.c[0] == 0xFE && (ip.c[1] & 0xC0) == 0x80)); // fe80::/10 link-local
+    }
+    return true;
+}
+} // namespace
 
 namespace Remus {
 
@@ -25,6 +67,10 @@ QString ModWorkflowService::resolvePatchPath(const QString &patchUrl,
 
     const QUrl url(patchUrl);
     if (url.scheme() == QStringLiteral("file")) {
+        if (m_catalogIsRemote) {
+            error = "Local file patch sources are not permitted when catalog is remote";
+            return {};
+        }
         const QString localPath = url.toLocalFile();
         if (!QFile::exists(localPath)) {
             error = "Local patch file not found: " + localPath;
@@ -34,6 +80,10 @@ QString ModWorkflowService::resolvePatchPath(const QString &patchUrl,
     }
 
     if (url.scheme().isEmpty() || url.isRelative()) {
+        if (m_catalogIsRemote) {
+            error = "Relative patch sources are not permitted when catalog is remote";
+            return {};
+        }
         if (!QFile::exists(patchUrl)) {
             error = "Patch file not found: " + patchUrl;
             return {};
@@ -42,6 +92,16 @@ QString ModWorkflowService::resolvePatchPath(const QString &patchUrl,
     }
 
     if (url.scheme() == QStringLiteral("http") || url.scheme() == QStringLiteral("https")) {
+        if (url.scheme() == QStringLiteral("http")) {
+            error = "Insecure HTTP patch sources are not permitted; use HTTPS";
+            return {};
+        }
+        // Reject private/loopback/link-local targets to prevent SSRF via
+        // a compromised remote catalog directing downloads to internal hosts.
+        if (!isPatchHostAllowed(url.host())) {
+            error = "Patch URL targets a disallowed host or scheme";
+            return {};
+        }
         return downloadPatch(url, error, cb);
     }
 

@@ -48,6 +48,9 @@ void ModController::loadCatalog(const QString &url, bool forceRefresh)
     }
 
     setCatalogUrl(resolvedUrl);
+    const bool isRemote = resolvedUrl.startsWith(QStringLiteral("http://")) ||
+                          resolvedUrl.startsWith(QStringLiteral("https://"));
+    m_workflow->setCatalogIsRemote(isRemote);
     loadForSelectedFile();
 }
 

@@ -154,6 +154,7 @@ echo ""
 # ── Track overall timing ─────────────────────────────────────────────
 PIPELINE_START=$(date +%s)
 STEP_RESULTS=()
+SOFT_FAIL_DETECTED=false
 
 run_step() {
     local name="$1"
@@ -259,7 +260,7 @@ if step_enabled "verify"; then
         done <<< "$SCANNED_SYSTEMS"
         if [[ "$matched_system" == true ]]; then
             run_step "verify [$(basename "$dat_file")]" "$CLI" --verify "$dat_file" \
-                --db "$DB_FILE" --verify-report || true
+                --db "$DB_FILE" --verify-report || SOFT_FAIL_DETECTED=true
             VERIFIED_ANY=true
         fi
     done
@@ -269,7 +270,7 @@ if step_enabled "verify"; then
         for dat_file in "$DAT_DIR"/*.dat; do
             [[ -f "$dat_file" ]] || continue
             run_step "verify [$(basename "$dat_file")]" "$CLI" --verify "$dat_file" \
-                --db "$DB_FILE" --verify-report || true
+                --db "$DB_FILE" --verify-report || SOFT_FAIL_DETECTED=true
         done
     fi
 fi
@@ -290,7 +291,7 @@ if step_enabled "extract"; then
     if [[ -n "$FIRST_ARCHIVE" ]]; then
         mkdir -p "$EXTRACT_DIR"
         run_step "extract-archive" "$CLI" --extract-archive "$FIRST_ARCHIVE" \
-            --output-dir "$EXTRACT_DIR" || true
+            --output-dir "$EXTRACT_DIR" || SOFT_FAIL_DETECTED=true
     else
         echo "  ⚠ No archives found — skipping extract step"
     fi
@@ -298,7 +299,7 @@ fi
 
 # ── Step: space-report ───────────────────────────────────────────────
 if step_enabled "space-report"; then
-    run_step "space-report" "$CLI" --space-report "$INPUT_DIR" --db "$DB_FILE" || true
+    run_step "space-report" "$CLI" --space-report "$INPUT_DIR" --db "$DB_FILE" || SOFT_FAIL_DETECTED=true
 fi
 
 # ── Step: organize ───────────────────────────────────────────────────
@@ -319,7 +320,7 @@ if step_enabled "m3u"; then
         exit 1
     fi
     mkdir -p "$M3U_DIR"
-    run_step "generate-m3u" "$CLI" --generate-m3u --m3u-dir "$M3U_DIR" --db "$DB_FILE" || true
+    run_step "generate-m3u" "$CLI" --generate-m3u --m3u-dir "$M3U_DIR" --db "$DB_FILE" || SOFT_FAIL_DETECTED=true
 fi
 
 # ── Generate summary ─────────────────────────────────────────────────
@@ -453,9 +454,14 @@ echo ""
 OLD_RUNS=$(find "$ROOT_DIR/test_output" -maxdepth 1 -type d -name "full_test_*" | sort -r | tail -n +6)
 if [[ -n "$OLD_RUNS" ]]; then
     echo "  Pruning old test runs (keeping 5 most recent):"
-    echo "$OLD_RUNS" | while read -r dir; do
+    echo "$OLD_RUNS" | while IFS= read -r dir; do
         echo "    Removing: $(basename "$dir")"
         rm -rf "$dir"
     done
     echo ""
+fi
+
+if [[ "$SOFT_FAIL_DETECTED" == "true" ]]; then
+    echo "  ⚠ One or more optional steps failed — see step results above" >&2
+    exit 1
 fi

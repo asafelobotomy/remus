@@ -84,6 +84,7 @@ int handleModCommands(CliContext &ctx)
 
         PatchService patchSvc;
         ModWorkflowService workflow(ctx.db, patchSvc);
+        workflow.setCatalogIsRemote(ctx.parser.isSet("mod-catalog-url"));
         if (workflow.uninstall(installId)) {
             qInfo() << "✓ Mod uninstalled (installation" << installId << ")";
         } else {
@@ -265,6 +266,7 @@ int handleModCommands(CliContext &ctx)
 
         PatchService patchSvc;
         ModWorkflowService workflow(ctx.db, patchSvc);
+        workflow.setCatalogIsRemote(ctx.parser.isSet("mod-catalog-url"));
 
         if (ctx.dryRunAll) {
             qInfo() << "[DRY-RUN] Would install mod" << modOpt->title

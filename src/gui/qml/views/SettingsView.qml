@@ -29,6 +29,27 @@ ScrollView {
         }
     }
 
+    // Surface credential-save failures to the user without exposing raw key names.
+    Connections {
+        target: settingsController
+        function onSettingsError(message) {
+            saveErrorPopup.open()
+        }
+    }
+
+    Dialog {
+        id: saveErrorPopup
+        title: "Settings Error"
+        modal: true
+        standardButtons: Dialog.Ok
+        anchors.centerIn: parent
+        Label {
+            text: "A credential could not be saved securely. Check that your system keychain is available."
+            wrapMode: Text.WordWrap
+            width: 340
+        }
+    }
+
     ColumnLayout {
         width: parent.width
         spacing: 18

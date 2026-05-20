@@ -1,5 +1,8 @@
-qt_add_executable(remus-gui
-    main.cpp
+# ── Reusable GUI controller/model library ───────────────────────────────────
+# Compiling these sources into a separate linkable target lets both the GUI
+# executable and the test suite link the same translation unit, eliminating
+# duplicate builds and preventing compile-definition drift.
+add_library(remus-gui-controllers STATIC
     controllers/app_controller.cpp
     controllers/app_controller_orchestrator.cpp
     controllers/scan_controller.cpp
@@ -18,10 +21,33 @@ qt_add_executable(remus-gui
     controllers/settings_controller.cpp
     controllers/workflow_controller.cpp
     controllers/workflow_controller_run.cpp
+    controllers/secret_store.cpp
     models/file_list_model.cpp
     models/match_list_model.cpp
     models/verification_result_model.cpp
     models/mod_list_model.cpp
+)
+
+target_include_directories(remus-gui-controllers PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}
+)
+
+target_link_libraries(remus-gui-controllers PUBLIC
+    remus-core
+    remus-metadata
+    remus-services
+    Qt6::Core
+    Qt6::Gui
+    Qt6::Sql
+    Qt6::Network
+)
+
+target_link_libraries(remus-gui-controllers PRIVATE
+    Qt6Keychain::Qt6Keychain
+)
+
+qt_add_executable(remus-gui
+    main.cpp
 )
 
 set_source_files_properties(
@@ -63,6 +89,7 @@ target_include_directories(remus-gui PRIVATE
 )
 
 target_link_libraries(remus-gui PRIVATE
+    remus-gui-controllers
     remus-core
     remus-metadata
     remus-services

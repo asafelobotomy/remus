@@ -1,8 +1,20 @@
 #include "settings_controller.h"
 
 #include "../../core/constants/constants.h"
+#include "secret_store.h"
 
 namespace Remus {
+
+namespace {
+static bool isSecretKey(const QString &key)
+{
+    for (const char *k : Constants::Settings::Providers::ALL_SECRET_KEYS) {
+        if (key == QString::fromLatin1(k))
+            return true;
+    }
+    return false;
+}
+} // namespace
 
 SettingsController::SettingsController(QObject *parent)
     : QObject(parent)
@@ -124,7 +136,7 @@ QString SettingsController::authenticateProvider(const QString &groupKey)
     }
 
     for (const QString &key : requiredKeys) {
-        if (m_settings.value(key).toString().trimmed().isEmpty())
+        if (stringValue(key).trimmed().isEmpty())
             return QStringLiteral("Missing credentials — fill in all fields first.");
     }
 
@@ -133,6 +145,11 @@ QString SettingsController::authenticateProvider(const QString &groupKey)
 
 QString SettingsController::stringValue(const QString &key, const QString &defaultValue) const
 {
+    if (isSecretKey(key)) {
+        const QString secret = SecretStore::read(key);
+        // Fall back to legacy plain-settings value for backward compat
+        return secret.isEmpty() ? m_settings.value(key, defaultValue).toString() : secret;
+    }
     return m_settings.value(key, defaultValue).toString();
 }
 
@@ -147,11 +164,31 @@ bool SettingsController::boolValue(const QString &key, bool defaultValue) const
 
 QVariant SettingsController::value(const QString &key, const QVariant &defaultValue) const
 {
+    if (isSecretKey(key)) {
+        const QString secret = SecretStore::read(key);
+        return secret.isEmpty() ? m_settings.value(key, defaultValue) : QVariant(secret);
+    }
     return m_settings.value(key, defaultValue);
 }
 
 void SettingsController::setValue(const QString &key, const QVariant &value)
 {
+    if (isSecretKey(key)) {
+        const bool ok = SecretStore::write(key, value.toString());
+        if (!ok) {
+            // Keychain write failed — preserve the existing value and signal an
+            // error to the caller.  Do NOT silently discard the credential.
+            emit settingsError(QStringLiteral("Failed to save credential to OS keychain for key: ") + key);
+            return;
+        }
+        // Remove any legacy plain-text copy that may have existed before migration
+        if (m_settings.contains(key)) {
+            m_settings.remove(key);
+            m_settings.sync();
+        }
+        emit settingsChanged();
+        return;
+    }
     m_settings.setValue(key, value);
     m_settings.sync();
     emit settingsChanged();
@@ -179,6 +216,11 @@ void SettingsController::resetToDefaults()
 
     for (const QString &key : keys) {
         m_settings.remove(key);
+    }
+
+    // Also remove secrets from the OS keychain
+    for (const char *k : Constants::Settings::Providers::ALL_SECRET_KEYS) {
+        SecretStore::remove(QString::fromLatin1(k));
     }
 
     m_settings.setValue(QString::fromLatin1(Constants::Settings::Organize::NAMING_TEMPLATE),

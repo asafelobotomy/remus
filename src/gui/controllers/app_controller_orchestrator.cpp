@@ -1,5 +1,7 @@
 #include "app_controller.h"
 
+#include "secret_store.h"
+
 #include <QCoreApplication>
 #include <QDir>
 #include <QFileInfo>
@@ -96,16 +98,25 @@ void AppController::rebuildOrchestrator()
         new HasheousProvider(m_orchestrator.get()),
         providerPriorityOrDefault(Constants::Providers::HASHEOUS, Constants::Providers::Priority::HASHEOUS));
 
-    QSettings settings = remusSettings();
+    // Read provider credentials through SecretStore so secrets are not
+    // fetched from plaintext QSettings now that the keychain migration is live.
+    auto secretValue = [](const char *key) -> QString {
+        const QString v = SecretStore::read(QString::fromLatin1(key));
+        if (!v.isEmpty())
+            return v;
+        // Legacy fallback: key may still live in plain QSettings on systems that
+        // haven't migrated yet.  Read-then-migrate on first successful secret write.
+        return remusSettings().value(QString::fromLatin1(key)).toString().trimmed();
+    };
 
-    const QString ssUser = settings.value(QString::fromLatin1(Constants::Settings::Providers::SCREENSCRAPER_USERNAME)).toString().trimmed();
-    const QString ssPass = settings.value(QString::fromLatin1(Constants::Settings::Providers::SCREENSCRAPER_PASSWORD)).toString().trimmed();
+    const QString ssUser = secretValue(Constants::Settings::Providers::SCREENSCRAPER_USERNAME);
+    const QString ssPass = secretValue(Constants::Settings::Providers::SCREENSCRAPER_PASSWORD);
     if (!ssUser.isEmpty() && !ssPass.isEmpty()) {
         auto *provider = new ScreenScraperProvider(m_orchestrator.get());
         provider->setCredentials(ssUser, ssPass);
 
-        const QString ssDevId = settings.value(QString::fromLatin1(Constants::Settings::Providers::SCREENSCRAPER_DEVID)).toString().trimmed();
-        const QString ssDevPass = settings.value(QString::fromLatin1(Constants::Settings::Providers::SCREENSCRAPER_DEVPASSWORD)).toString().trimmed();
+        const QString ssDevId = secretValue(Constants::Settings::Providers::SCREENSCRAPER_DEVID);
+        const QString ssDevPass = secretValue(Constants::Settings::Providers::SCREENSCRAPER_DEVPASSWORD);
         if (!ssDevId.isEmpty() && !ssDevPass.isEmpty()) {
             provider->setDeveloperCredentials(ssDevId, ssDevPass);
         }
@@ -129,7 +140,7 @@ void AppController::rebuildOrchestrator()
         }
     }
 
-    const QString tgdbApiKey = settings.value(QString::fromLatin1(Constants::Settings::Providers::THEGAMESDB_API_KEY)).toString().trimmed();
+    const QString tgdbApiKey = secretValue(Constants::Settings::Providers::THEGAMESDB_API_KEY);
     if (!tgdbApiKey.isEmpty()) {
         auto *tgdbProvider = new TheGamesDBProvider(m_orchestrator.get());
         tgdbProvider->setApiKey(tgdbApiKey);
@@ -141,8 +152,8 @@ void AppController::rebuildOrchestrator()
         qInfo() << "TheGamesDB: skipped (no API key configured)";
     }
 
-    const QString igdbClientId = settings.value(QString::fromLatin1(Constants::Settings::Providers::IGDB_CLIENT_ID)).toString().trimmed();
-    const QString igdbClientSecret = settings.value(QString::fromLatin1(Constants::Settings::Providers::IGDB_CLIENT_SECRET)).toString().trimmed();
+    const QString igdbClientId = secretValue(Constants::Settings::Providers::IGDB_CLIENT_ID);
+    const QString igdbClientSecret = secretValue(Constants::Settings::Providers::IGDB_CLIENT_SECRET);
     if (!igdbClientId.isEmpty() && !igdbClientSecret.isEmpty()) {
         auto *igdbProvider = new IGDBProvider(m_orchestrator.get());
         igdbProvider->setCredentials(igdbClientId, igdbClientSecret);
@@ -152,8 +163,8 @@ void AppController::rebuildOrchestrator()
             providerPriorityOrDefault(Constants::Providers::IGDB, Constants::Providers::Priority::IGDB));
     }
 
-    const QString raUser = settings.value(QString::fromLatin1(Constants::Settings::Providers::RETROACHIEVEMENTS_USERNAME)).toString().trimmed();
-    const QString raApiKey = settings.value(QString::fromLatin1(Constants::Settings::Providers::RETROACHIEVEMENTS_API_KEY)).toString().trimmed();
+    const QString raUser = secretValue(Constants::Settings::Providers::RETROACHIEVEMENTS_USERNAME);
+    const QString raApiKey = secretValue(Constants::Settings::Providers::RETROACHIEVEMENTS_API_KEY);
     if (!raUser.isEmpty() && !raApiKey.isEmpty()) {
         auto *provider = new RetroAchievementsProvider(m_orchestrator.get());
         provider->setCredentials(raUser, raApiKey);

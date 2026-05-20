@@ -49,6 +49,7 @@ bool Database::initialize(const QString &dbPath, const QString &connectionName)
     query.addBindValue(QString::fromLatin1(Constants::DatabaseSchema::Tables::SYSTEMS));
     if (!query.exec()) {
         logError(QString("Failed to query database schema: %1").arg(query.lastError().text()));
+        close();
         return false;
     }
 

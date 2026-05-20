@@ -61,6 +61,9 @@ endif()
 # Find Qt6
 find_package(Qt6 REQUIRED COMPONENTS Core Sql Network Concurrent Gui Quick Qml QuickControls2 QuickLayouts QuickDialogs2)
 
+# OS-backed credential store (Secret Service on Linux, Keychain on macOS)
+find_package(Qt6Keychain REQUIRED)
+
 # Find zlib for CRC32 hashing
 find_package(ZLIB REQUIRED)
 

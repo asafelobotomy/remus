@@ -98,7 +98,6 @@ See `## Agent Routing` for the authoritative routing table; this section is a qu
 ### Skills
 
 - `lifecycleAudit` — loaded on demand; run before any lifecycle operation
-- `promptReview` — loaded on demand; evaluate or improve Copilot surface files
 - `ciPreflight` — loaded on demand; run CI-equivalent checks before push
 
 ### Agents

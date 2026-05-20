@@ -125,6 +125,82 @@ void ModWorkflowTest::resolvePatchPath_fileUrl_resolves()
     db.close();
 }
 
+void ModWorkflowTest::resolvePatchPath_fileUrl_rejectedFromRemoteCatalog()
+{
+    QTemporaryDir dir;
+    QVERIFY(dir.isValid());
+
+    const QString patchPath = dir.path() + "/patch.ips";
+    QFile pf(patchPath);
+    QVERIFY(pf.open(QIODevice::WriteOnly));
+    pf.close();
+
+    Database db;
+    QVERIFY(db.initialize(dir.path() + "/test.db", "reject_file_remote_test"));
+
+    PatchService patchSvc;
+    ModWorkflowService workflow(db, patchSvc);
+    workflow.setCatalogIsRemote(true);  // simulate remote catalog
+
+    ModEntry mod;
+    mod.type     = "hack";
+    mod.patchUrl = QUrl::fromLocalFile(patchPath).toString();  // file:// URL
+
+    ModInstallResult result = workflow.install(FileRecord{}, mod, dir.path() + "/out");
+    QVERIFY(!result.success);
+    QVERIFY2(result.error.contains("not permitted"),
+             qPrintable(result.error));
+
+    db.close();
+}
+
+void ModWorkflowTest::resolvePatchPath_relativeUrl_rejectedFromRemoteCatalog()
+{
+    QTemporaryDir dir;
+    QVERIFY(dir.isValid());
+
+    Database db;
+    QVERIFY(db.initialize(dir.path() + "/test.db", "reject_relative_remote_test"));
+
+    PatchService patchSvc;
+    ModWorkflowService workflow(db, patchSvc);
+    workflow.setCatalogIsRemote(true);  // simulate remote catalog
+
+    ModEntry mod;
+    mod.type     = "hack";
+    mod.patchUrl = "relative/path/patch.ips";  // relative path
+
+    ModInstallResult result = workflow.install(FileRecord{}, mod, dir.path() + "/out");
+    QVERIFY(!result.success);
+    QVERIFY2(result.error.contains("not permitted"),
+             qPrintable(result.error));
+
+    db.close();
+}
+
+void ModWorkflowTest::resolvePatchPath_httpUrl_rejected()
+{
+    QTemporaryDir dir;
+    QVERIFY(dir.isValid());
+
+    Database db;
+    QVERIFY(db.initialize(dir.path() + "/test.db", "reject_http_test"));
+
+    PatchService patchSvc;
+    ModWorkflowService workflow(db, patchSvc);
+
+    ModEntry mod;
+    mod.type     = "hack";
+    mod.patchUrl = "http://example.com/patch.ips";  // plain HTTP — should be rejected
+
+    ModInstallResult result = workflow.install(FileRecord{}, mod, dir.path() + "/out");
+    QVERIFY(!result.success);
+    QVERIFY2(result.error.contains("HTTPS") || result.error.contains("Insecure"),
+             qPrintable(result.error));
+
+    db.close();
+}
+
 void ModWorkflowTest::resolvePatchPath_emptyUrl_fails()
 {
     QTemporaryDir dir;

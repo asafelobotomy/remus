@@ -79,6 +79,9 @@ private slots:
     void cacheFileForUrl_deterministicHash();
     // ── Phase 3: Patch download + integrity verification ──
     void resolvePatchPath_fileUrl_resolves();
+    void resolvePatchPath_fileUrl_rejectedFromRemoteCatalog();
+    void resolvePatchPath_relativeUrl_rejectedFromRemoteCatalog();
+    void resolvePatchPath_httpUrl_rejected();
     void resolvePatchPath_emptyUrl_fails();
     void resolvePatchPath_unsupportedScheme_fails();
     void verifySha1_correctHash();

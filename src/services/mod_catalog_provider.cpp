@@ -36,6 +36,13 @@ bool ModCatalogProvider::loadFromUrl(const QUrl &url, bool forceRefresh)
     m_mods.clear();
     m_lastError.clear();
 
+    // Reject plain HTTP before any cache read — a previously cached insecure
+    // response must not be served on subsequent calls to avoid bypassing the guard.
+    if (url.scheme().compare(QLatin1String("http"), Qt::CaseInsensitive) == 0) {
+        m_lastError = QStringLiteral("Insecure HTTP catalog URL is not permitted; use HTTPS");
+        return false;
+    }
+
     const QString cachePath = cacheFileForUrl(url);
     QFileInfo cacheInfo(cachePath);
 

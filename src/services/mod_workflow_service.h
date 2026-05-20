@@ -24,6 +24,10 @@ public:
 
     ModWorkflowService(Database &db, PatchService &patchService);
 
+    /// Mark that the active catalog was loaded from a remote URL.
+    /// When set, file:// and relative patch sources are rejected.
+    void setCatalogIsRemote(bool isRemote) { m_catalogIsRemote = isRemote; }
+
     /// Install a mod for a matched file.
     ///
     /// Steps:
@@ -56,6 +60,7 @@ private:
     Database     &m_db;
     PatchService &m_patchSvc;
     std::unique_ptr<QTemporaryDir> m_downloadDir;
+    bool m_catalogIsRemote = false;
 };
 
 } // namespace Remus
