@@ -243,6 +243,9 @@ GameMetadata LocalDatabaseProvider::datEntryToMetadata(const ClrMameProEntry &en
     if (!entry.sha1.isEmpty()) {
         metadata.externalIds["sha1"] = entry.sha1;
     }
+    if (!entry.sha256.isEmpty()) {
+        metadata.externalIds["sha256"] = entry.sha256;
+    }
     if (!entry.serial.isEmpty()) {
         metadata.externalIds["serial"] = entry.serial;
     }

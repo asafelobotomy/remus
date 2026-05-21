@@ -200,6 +200,7 @@ bool DatParser::parseGame(QXmlStreamReader &xml, QList<DatRomEntry> &entries)
                 romEntry.crc32 = normalizeHash(romAttrs.value("crc").toString());
                 romEntry.md5 = normalizeHash(romAttrs.value("md5").toString());
                 romEntry.sha1 = normalizeHash(romAttrs.value("sha1").toString());
+                romEntry.sha256 = normalizeHash(romAttrs.value("sha256").toString());
                 romEntry.status = romAttrs.value("status").toString();
                 romEntry.serial = romAttrs.value("serial").toString();
                 if (romEntry.baseTitle.isEmpty()) {
@@ -251,6 +252,8 @@ QMap<QString, DatRomEntry> DatParser::indexByHash(
             hash = entry.md5;
         } else if (hashType == "sha1") {
             hash = entry.sha1;
+        } else if (hashType == "sha256") {
+            hash = entry.sha256;
         }
 
         if (!hash.isEmpty()) {

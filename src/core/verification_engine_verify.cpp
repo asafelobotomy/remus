@@ -155,6 +155,7 @@ VerificationResult VerificationEngine::verifyFile(int fileId)
                                  crc32,
                                  md5,
                                  sha1,
+                                 QStringLiteral(""),
                                  matchedEntry,
                                  matchedHash,
                                  matchedHashType)) {
@@ -174,6 +175,7 @@ VerificationResult VerificationEngine::verifyFile(int fileId)
     QString matchedHash;
     QString matchedHashType;
     if (hasPatchCatalog && findPatchCatalogMatch(result.system, crc32, md5, sha1,
+                                                 QStringLiteral(""),
                                                  patchEntry, matchedHash, matchedHashType)) {
         result.status = VerificationStatus::Verified;
         result.datName = patchEntry.gameName;
@@ -198,6 +200,7 @@ bool VerificationEngine::findPatchCatalogMatch(const QString &systemName,
                                                const QString &crc32,
                                                const QString &md5,
                                                const QString &sha1,
+                                               const QString &sha256,
                                                DatRomEntry &matchedEntry,
                                                QString &matchedHash,
                                                QString &matchedHashType)
@@ -214,6 +217,7 @@ bool VerificationEngine::findPatchCatalogMatch(const QString &systemName,
         QString value;
     };
     const QList<CandidateHash> candidates = {
+        {QStringLiteral("sha256"), sha256.toLower()},
         {QStringLiteral("sha1"), sha1.toLower()},
         {QStringLiteral("md5"), md5.toLower()},
         {QStringLiteral("crc32"), crc32.toLower()}

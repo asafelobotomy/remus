@@ -91,6 +91,7 @@ bool VerificationEngine::createVerificationSchema()
             crc32 TEXT,
             md5 TEXT,
             sha1 TEXT,
+            sha256 TEXT,
             description TEXT,
             status TEXT,
             FOREIGN KEY (dat_id) REFERENCES verification_dats(id) ON DELETE CASCADE
@@ -105,6 +106,7 @@ bool VerificationEngine::createVerificationSchema()
     query.exec("CREATE INDEX IF NOT EXISTS idx_dat_entries_crc32 ON dat_entries(crc32)");
     query.exec("CREATE INDEX IF NOT EXISTS idx_dat_entries_md5 ON dat_entries(md5)");
     query.exec("CREATE INDEX IF NOT EXISTS idx_dat_entries_sha1 ON dat_entries(sha1)");
+    query.exec("CREATE INDEX IF NOT EXISTS idx_dat_entries_sha256 ON dat_entries(sha256)");
     query.exec("CREATE INDEX IF NOT EXISTS idx_dat_entries_dat_id ON dat_entries(dat_id)");
 
     // Create verification_results table
@@ -162,6 +164,7 @@ bool VerificationEngine::createVerificationSchema()
             crc32 TEXT,
             md5 TEXT,
             sha1 TEXT,
+            sha256 TEXT,
             description TEXT,
             status TEXT,
             base_title TEXT,
@@ -178,6 +181,7 @@ bool VerificationEngine::createVerificationSchema()
     query.exec("CREATE INDEX IF NOT EXISTS idx_patch_dat_entries_crc32 ON patch_dat_entries(crc32)");
     query.exec("CREATE INDEX IF NOT EXISTS idx_patch_dat_entries_md5 ON patch_dat_entries(md5)");
     query.exec("CREATE INDEX IF NOT EXISTS idx_patch_dat_entries_sha1 ON patch_dat_entries(sha1)");
+    query.exec("CREATE INDEX IF NOT EXISTS idx_patch_dat_entries_sha256 ON patch_dat_entries(sha256)");
     query.exec("CREATE INDEX IF NOT EXISTS idx_patch_dat_entries_dat_id ON patch_dat_entries(dat_id)");
     query.exec("CREATE INDEX IF NOT EXISTS idx_patch_verification_dats_system ON patch_verification_dats(system_name)");
 

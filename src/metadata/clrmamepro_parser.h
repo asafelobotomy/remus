@@ -19,6 +19,7 @@ struct ClrMameProEntry {
     QString crc32;          // CRC32 hash
     QString md5;            // MD5 hash
     QString sha1;           // SHA1 hash
+    QString sha256;         // SHA256 hash
     QString serial;         // Serial number
 
     // Inline metadata (present in Redump/GameTDB DATs)

@@ -55,7 +55,9 @@ bool IdentityLinker::loadFromDatabase(QSqlDatabase &db, QString &error)
             const QString type  = q.value(0).toString();
             const QString value = q.value(1).toString();
             const QString id    = q.value(2).toString();
-            if (type == QLatin1String("sha1")) {
+            if (type == QLatin1String("sha256")) {
+                m_sha256ToId.insert(value, id);
+            } else if (type == QLatin1String("sha1")) {
                 m_sha1ToId.insert(value, id);
             } else if (type == QLatin1String("md5")) {
                 m_md5ToId.insert(value, id);
@@ -128,8 +130,16 @@ int IdentityLinker::link(QList<SourceRecordEnvelope> &records)
         QString assignedId;
         int confidence = 0;
 
+        // Pass 0 — sha256 (highest hash strength)
+        if (!rec.hashes.sha256.isEmpty()) {
+            if (m_sha256ToId.contains(rec.hashes.sha256)) {
+                assignedId = m_sha256ToId.value(rec.hashes.sha256);
+                confidence = 100;
+            }
+        }
+
         // Pass 1a — sha1
-        if (!rec.hashes.sha1.isEmpty()) {
+        if (assignedId.isEmpty() && !rec.hashes.sha1.isEmpty()) {
             if (m_sha1ToId.contains(rec.hashes.sha1)) {
                 assignedId = m_sha1ToId.value(rec.hashes.sha1);
                 confidence = 100;

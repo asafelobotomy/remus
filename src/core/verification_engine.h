@@ -223,6 +223,7 @@ private:
                                const QString &crc32,
                                const QString &md5,
                                const QString &sha1,
+                               const QString &sha256,
                                DatRomEntry &matchedEntry,
                                QString &matchedHash,
                                QString &matchedHashType);

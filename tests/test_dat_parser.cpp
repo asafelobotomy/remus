@@ -25,8 +25,11 @@ private slots:
     void testIndexByCrc32();
     void testIndexByMd5();
     void testIndexBySha1();
+    void testIndexBySha256();
     void testIndexEmptyList();
     void testIndexDuplicateHashes();
+
+    void testParseSha256();
 
     void testDetectSourceNoIntro();
     void testDetectSourceRedump();
@@ -333,6 +336,47 @@ void DatParserTest::testIndexBySha1() {
 
     QCOMPARE(index.size(), 1);
     QVERIFY(index.contains("da39a3ee5e6b4b0d3255bfef95601890afd80709"));
+}
+
+void DatParserTest::testIndexBySha256() {
+    QList<DatRomEntry> entries;
+    DatRomEntry entry;
+    entry.romName = "test.rom";
+    entry.sha256 = "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855";
+    entries.append(entry);
+
+    QMap<QString, DatRomEntry> index = DatParser::indexByHash(entries, "sha256");
+
+    QCOMPARE(index.size(), 1);
+    QVERIFY(index.contains("e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"));
+    QCOMPARE(index["e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"].romName,
+             QString("test.rom"));
+}
+
+void DatParserTest::testParseSha256() {
+    const QString xmlContent =
+        "<?xml version=\"1.0\"?>\n"
+        "<datafile>\n"
+        "    <header><name>No-Intro SHA256 Test</name></header>\n"
+        "    <game name=\"Test Game (USA)\">\n"
+        "        <rom name=\"test.rom\" size=\"1024\""
+        " crc=\"aaaaaaaa\""
+        " md5=\"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\""
+        " sha1=\"cccccccccccccccccccccccccccccccccccccccc\""
+        " sha256=\"dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd\"/>"
+        "    </game>\n"
+        "</datafile>";
+
+    DatParser parser;
+    DatParseResult result = parser.parseContent(xmlContent);
+
+    QVERIFY(result.success);
+    QCOMPARE(result.entries.size(), 1);
+    const DatRomEntry &entry = result.entries.first();
+    QCOMPARE(entry.crc32,  QString("aaaaaaaa"));
+    QCOMPARE(entry.md5,    QString("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"));
+    QCOMPARE(entry.sha1,   QString("cccccccccccccccccccccccccccccccccccccccc"));
+    QCOMPARE(entry.sha256, QString("dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"));
 }
 
 void DatParserTest::testIndexEmptyList() {

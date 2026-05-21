@@ -177,13 +177,15 @@ QList<ClrMameProEntry> ClrMameProParser::parseGameBlocks(const QString &content)
             entry.crc32   = romData.value(QStringLiteral("crc")).toUpper();
             entry.md5     = romData.value(QStringLiteral("md5")).toLower();
             entry.sha1    = romData.value(QStringLiteral("sha1")).toLower();
+            entry.sha256  = romData.value(QStringLiteral("sha256")).toLower();
 
             if (entry.serial.isEmpty())
                 entry.serial = romData.value(QStringLiteral("serial"));
 
             const bool hasHash   = !entry.crc32.isEmpty()
                                    || !entry.md5.isEmpty()
-                                   || !entry.sha1.isEmpty();
+                                   || !entry.sha1.isEmpty()
+                                   || !entry.sha256.isEmpty();
             const bool hasSerial = !entry.serial.isEmpty();
             if (!entry.gameName.isEmpty() && (hasHash || hasSerial))
                 entries.append(entry);

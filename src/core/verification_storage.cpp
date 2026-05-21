@@ -34,13 +34,14 @@ void VerificationEngine::loadDatCache(const QString &systemName)
             SELECT g.canonical_title,
                    MAX(CASE WHEN gs.hash_type='crc32' THEN gs.hash_value ELSE NULL END) AS crc32,
                    MAX(CASE WHEN gs.hash_type='md5'   THEN gs.hash_value ELSE NULL END) AS md5,
-                   MAX(CASE WHEN gs.hash_type='sha1'  THEN gs.hash_value ELSE NULL END) AS sha1
+                   MAX(CASE WHEN gs.hash_type='sha1'  THEN gs.hash_value ELSE NULL END) AS sha1,
+                   MAX(CASE WHEN gs.hash_type='sha256' THEN gs.hash_value ELSE NULL END) AS sha256
             FROM games g
             JOIN systems s ON g.system_id = s.system_id
             JOIN game_signatures gs ON gs.game_id = g.game_id
             WHERE s.internal_name = ?
             GROUP BY g.game_id
-        )");
+        )");;
         q.addBindValue(systemName);
 
         if (q.exec()) {
@@ -50,7 +51,10 @@ void VerificationEngine::loadDatCache(const QString &systemName)
                 entry.crc32    = q.value(1).toString();
                 entry.md5      = q.value(2).toString();
                 entry.sha1     = q.value(3).toString();
+                entry.sha256   = q.value(4).toString();
 
+                if (!entry.sha256.isEmpty())
+                    entries.insert(entry.sha256.toLower(), entry);
                 if (!entry.sha1.isEmpty())
                     entries.insert(entry.sha1.toLower(), entry);
                 if (!entry.md5.isEmpty())
@@ -73,7 +77,7 @@ void VerificationEngine::loadDatCache(const QString &systemName)
     hashType = getPreferredHashType(systemName);
     QSqlQuery query(m_database->database());
     query.prepare(R"(
-        SELECT e.game_name, e.rom_name, e.rom_size, e.crc32, e.md5, e.sha1, e.description, e.status
+        SELECT e.game_name, e.rom_name, e.rom_size, e.crc32, e.md5, e.sha1, e.sha256, e.description, e.status
         FROM dat_entries e
         JOIN verification_dats d ON e.dat_id = d.id
         WHERE d.system_name = ?
@@ -93,9 +97,13 @@ void VerificationEngine::loadDatCache(const QString &systemName)
         entry.crc32 = query.value(3).toString();
         entry.md5 = query.value(4).toString();
         entry.sha1 = query.value(5).toString();
-        entry.description = query.value(6).toString();
-        entry.status = query.value(7).toString();
+        entry.sha256 = query.value(6).toString();
+        entry.description = query.value(7).toString();
+        entry.status = query.value(8).toString();
 
+        if (!entry.sha256.isEmpty()) {
+            entries.insert(entry.sha256.toLower(), entry);
+        }
         if (!entry.sha1.isEmpty()) {
             entries.insert(entry.sha1.toLower(), entry);
         }
@@ -126,7 +134,7 @@ void VerificationEngine::loadPatchDatCache(const QString &systemName)
         QSqlDatabase cdb = QSqlDatabase::database(m_compendiumConnectionName);
         QSqlQuery q(cdb);
         q.prepare(R"(
-            SELECT pe.game_name, pe.rom_name, pe.rom_size, pe.crc32, pe.md5, pe.sha1,
+            SELECT pe.game_name, pe.rom_name, pe.rom_size, pe.crc32, pe.md5, pe.sha1, pe.sha256,
                    pe.description, pe.status, pe.base_title, pe.patch_name, pe.file_type
             FROM patch_entries pe
             JOIN patch_catalog_sources pcs ON pe.source_id = pcs.source_id
@@ -143,12 +151,15 @@ void VerificationEngine::loadPatchDatCache(const QString &systemName)
                 entry.crc32     = q.value(3).toString();
                 entry.md5       = q.value(4).toString();
                 entry.sha1      = q.value(5).toString();
-                entry.description = q.value(6).toString();
-                entry.status    = q.value(7).toString();
-                entry.baseTitle = q.value(8).toString();
-                entry.patchName = q.value(9).toString();
-                entry.fileType  = q.value(10).toString();
+                entry.sha256    = q.value(6).toString();
+                entry.description = q.value(7).toString();
+                entry.status    = q.value(8).toString();
+                entry.baseTitle = q.value(9).toString();
+                entry.patchName = q.value(10).toString();
+                entry.fileType  = q.value(11).toString();
 
+                if (!entry.sha256.isEmpty())
+                    entries.insert(entry.sha256.toLower(), entry);
                 if (!entry.sha1.isEmpty())
                     entries.insert(entry.sha1.toLower(), entry);
                 if (!entry.md5.isEmpty())
@@ -168,7 +179,7 @@ void VerificationEngine::loadPatchDatCache(const QString &systemName)
     // ── Runtime-import fallback ────────────────────────────────────────────
     QSqlQuery query(m_database->database());
     query.prepare(R"(
-        SELECT e.game_name, e.rom_name, e.rom_size, e.crc32, e.md5, e.sha1,
+        SELECT e.game_name, e.rom_name, e.rom_size, e.crc32, e.md5, e.sha1, e.sha256,
                e.description, e.status, e.base_title, e.patch_name, e.file_type
         FROM patch_dat_entries e
         JOIN patch_verification_dats d ON e.dat_id = d.id
@@ -189,12 +200,16 @@ void VerificationEngine::loadPatchDatCache(const QString &systemName)
         entry.crc32 = query.value(3).toString();
         entry.md5 = query.value(4).toString();
         entry.sha1 = query.value(5).toString();
-        entry.description = query.value(6).toString();
-        entry.status = query.value(7).toString();
-        entry.baseTitle = query.value(8).toString();
-        entry.patchName = query.value(9).toString();
-        entry.fileType = query.value(10).toString();
+        entry.sha256 = query.value(6).toString();
+        entry.description = query.value(7).toString();
+        entry.status = query.value(8).toString();
+        entry.baseTitle = query.value(9).toString();
+        entry.patchName = query.value(10).toString();
+        entry.fileType = query.value(11).toString();
 
+        if (!entry.sha256.isEmpty()) {
+            entries.insert(entry.sha256.toLower(), entry);
+        }
         if (!entry.sha1.isEmpty()) {
             entries.insert(entry.sha1.toLower(), entry);
         }

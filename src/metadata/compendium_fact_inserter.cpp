@@ -129,6 +129,7 @@ bool FactInserter::insertSignatures(const SourceRecordEnvelope &rec,
         const char *type;
         QString     value;
     } hashes[] = {
+        {"sha256", rec.hashes.sha256},
         {"sha1",  rec.hashes.sha1},
         {"md5",   rec.hashes.md5},
         {"crc32", rec.hashes.crc32},

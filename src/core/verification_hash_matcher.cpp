@@ -13,6 +13,7 @@ QList<QString> orderedOfficialHashTypes(const QString &preferredHashType)
         }
     };
 
+    appendType(QStringLiteral("sha256"));
     appendType(preferredHashType);
     appendType(QStringLiteral("sha1"));
     appendType(QStringLiteral("md5"));
@@ -25,13 +26,16 @@ bool findOfficialDatMatch(const QMap<QString, DatRomEntry> &datEntries,
                           const QString &crc32,
                           const QString &md5,
                           const QString &sha1,
+                          const QString &sha256,
                           DatRomEntry &matchedEntry,
                           QString &matchedHash,
                           QString &matchedHashType)
 {
     for (const QString &hashType : orderedOfficialHashTypes(preferredHashType)) {
         QString candidateHash;
-        if (hashType == QStringLiteral("sha1")) {
+        if (hashType == QStringLiteral("sha256")) {
+            candidateHash = sha256.toLower();
+        } else if (hashType == QStringLiteral("sha1")) {
             candidateHash = sha1.toLower();
         } else if (hashType == QStringLiteral("md5")) {
             candidateHash = md5.toLower();

@@ -16,10 +16,11 @@ struct NormalizedHashes {
     QString crc32;   // uppercase, no spaces (e.g. "F9394E97")
     QString md5;     // lowercase hex
     QString sha1;    // lowercase hex
+    QString sha256;  // lowercase hex
 
     bool hasAny() const
     {
-        return !crc32.isEmpty() || !md5.isEmpty() || !sha1.isEmpty();
+        return !crc32.isEmpty() || !md5.isEmpty() || !sha1.isEmpty() || !sha256.isEmpty();
     }
 };
 

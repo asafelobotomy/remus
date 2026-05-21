@@ -54,8 +54,8 @@ int VerificationEngine::importDat(const DatParseResult &parseResult, const QStri
     for (const DatRomEntry &entry : parseResult.entries) {
         query.prepare(R"(
             INSERT INTO dat_entries
-            (dat_id, game_name, rom_name, rom_size, crc32, md5, sha1, description, status)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            (dat_id, game_name, rom_name, rom_size, crc32, md5, sha1, sha256, description, status)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         )");
         query.addBindValue(datId);
         query.addBindValue(entry.gameName);
@@ -64,6 +64,7 @@ int VerificationEngine::importDat(const DatParseResult &parseResult, const QStri
         query.addBindValue(entry.crc32);
         query.addBindValue(entry.md5);
         query.addBindValue(entry.sha1);
+        query.addBindValue(entry.sha256);
         query.addBindValue(entry.description);
         query.addBindValue(entry.status);
 
@@ -128,9 +129,9 @@ int VerificationEngine::importPatchDat(const QString &datFilePath, const QString
     for (const DatRomEntry &entry : parseResult.entries) {
         query.prepare(R"(
             INSERT INTO patch_dat_entries
-            (dat_id, game_name, rom_name, rom_size, crc32, md5, sha1,
+            (dat_id, game_name, rom_name, rom_size, crc32, md5, sha1, sha256,
              description, status, base_title, patch_name, file_type)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         )");
         query.addBindValue(datId);
         query.addBindValue(entry.gameName);
@@ -139,6 +140,7 @@ int VerificationEngine::importPatchDat(const QString &datFilePath, const QString
         query.addBindValue(entry.crc32);
         query.addBindValue(entry.md5);
         query.addBindValue(entry.sha1);
+        query.addBindValue(entry.sha256);
         query.addBindValue(entry.description);
         query.addBindValue(entry.status);
         query.addBindValue(entry.baseTitle);

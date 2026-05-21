@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<!DOCTYPE datafile PUBLIC "-//Logiqx//DTD ROM Management Datafile//EN" "http://www.logiqx.com/Dats/datafile.dtd">
+<datafile>
+    <header>
+        <name>No-Intro SHA256 Test DAT</name>
+        <description>No-Intro | 2024-06-01</description>
+        <version>20240601</version>
+        <date>2024-06-01</date>
+        <author>No-Intro</author>
+    </header>
+    <game name="Test Game With SHA256 (USA)">
+        <description>Test Game With SHA256 (USA)</description>
+        <rom name="Test Game With SHA256 (USA).nes" size="40960"
+             crc="aaaaaaaa"
+             md5="bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+             sha1="cccccccccccccccccccccccccccccccccccccccc"
+             sha256="dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"/>
+    </game>
+    <game name="Test Game No SHA256 (USA)">
+        <description>Test Game No SHA256 (USA)</description>
+        <rom name="Test Game No SHA256 (USA).nes" size="32768"
+             crc="11223344"
+             md5="aabbccddaabbccddaabbccddaabbccdd"
+             sha1="aabbccddaabbccddaabbccddaabbccddaabbccdd"/>
+    </game>
+</datafile>

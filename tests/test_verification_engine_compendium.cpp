@@ -114,6 +114,7 @@ bool buildMinimalCompendium(const QString &path)
             crc32     TEXT,
             md5       TEXT,
             sha1      TEXT,
+            sha256    TEXT,
             description TEXT,
             status    TEXT,
             base_title TEXT,

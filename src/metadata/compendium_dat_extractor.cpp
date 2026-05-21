@@ -62,6 +62,7 @@ static ClrMameProEntry datRomEntryToClrMame(const Remus::DatRomEntry &src)
     entry.crc32      = src.crc32.toUpper();
     entry.md5        = src.md5.toLower();
     entry.sha1       = src.sha1.toLower();
+    entry.sha256     = src.sha256.toLower();
     entry.serial     = src.serial;
     return entry;
 }
@@ -95,6 +96,9 @@ QString DatExtractor::entryToPayloadJson(const QString &systemHint,
     }
     if (!entry.sha1.isEmpty()) {
         obj.insert(QStringLiteral("sha1"), entry.sha1);
+    }
+    if (!entry.sha256.isEmpty()) {
+        obj.insert(QStringLiteral("sha256"), entry.sha256);
     }
     if (!entry.serial.isEmpty()) {
         obj.insert(QStringLiteral("serial"), entry.serial);
@@ -191,6 +195,7 @@ QList<SourceRecordEnvelope> DatExtractor::extract(const QString &filePath,
         rec.hashes.crc32 = normalizeHash(entry.crc32);
         rec.hashes.md5   = entry.md5.trimmed().toLower();
         rec.hashes.sha1  = entry.sha1.trimmed().toLower();
+        rec.hashes.sha256 = entry.sha256.trimmed().toLower();
 
         // Normalized serials
         if (!entry.serial.isEmpty()) {

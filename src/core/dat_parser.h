@@ -34,6 +34,7 @@ struct DatRomEntry {
     QString crc32;          // CRC32 hash (lowercase hex)
     QString md5;            // MD5 hash (lowercase hex)
     QString sha1;           // SHA1 hash (lowercase hex)
+    QString sha256;         // SHA256 hash (lowercase hex)
     QString status;         // "verified", "good", "bad", etc.
     QString serial;         // Game serial number (if available)
     QString baseTitle;      // Base title for patched ROM catalogs
@@ -83,7 +84,7 @@ public:
     /**
      * @brief Get entries by hash (for verification lookup)
      * @param entries List of DAT entries
-     * @param hashType "crc32", "md5", or "sha1"
+     * @param hashType "crc32", "md5", "sha1", or "sha256"
      * @return Map of hash value to entry
      */
     static QMap<QString, DatRomEntry> indexByHash(

@@ -1,0 +1,18 @@
+clrmamepro (
+	name "ClrMamePro SHA256 Test"
+	description "ClrMamePro SHA256 Test"
+	version "20240601"
+	comment "Test fixture for SHA256 parsing"
+)
+
+game (
+	name "Test Game With SHA256 (USA)"
+	description "Test Game With SHA256 (USA)"
+	rom ( name "Test Game With SHA256 (USA).sfc" size 524288 crc AAAAAAAA md5 bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb sha1 cccccccccccccccccccccccccccccccccccccccc sha256 dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd )
+)
+
+game (
+	name "Test Game No SHA256 (USA)"
+	description "Test Game No SHA256 (USA)"
+	rom ( name "Test Game No SHA256 (USA).sfc" size 262144 crc 11223344 md5 aabbccddaabbccddaabbccddaabbccdd sha1 aabbccddaabbccddaabbccddaabbccddaabbccdd )
+)

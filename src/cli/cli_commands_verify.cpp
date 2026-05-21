@@ -48,6 +48,7 @@ DatParseResult parseClrMameProAsDat(const QString &filePath)
         entry.crc32       = ce.crc32.toLower();
         entry.md5         = ce.md5.toLower();
         entry.sha1        = ce.sha1.toLower();
+        entry.sha256      = ce.sha256.toLower();
         entry.serial      = ce.serial;
         result.entries.append(entry);
     }
