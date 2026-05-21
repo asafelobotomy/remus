@@ -419,4 +419,30 @@ void ModWorkflowTest::loadFromUrl_networkErrorNoCache()
     QVERIFY(!provider.lastError().isEmpty());
 }
 
+void ModWorkflowTest::loadFromUrl_privateIpHostRejected()
+{
+    // Finding #2: catalog URLs targeting private / loopback IP literals must be
+    // rejected before any network connection is made.
+    const QStringList privateUrls = {
+        QStringLiteral("https://10.0.0.1/catalog.json"),
+        QStringLiteral("https://192.168.1.1/catalog.json"),
+        QStringLiteral("https://172.16.0.1/catalog.json"),
+        QStringLiteral("https://127.0.0.1/catalog.json"),
+    };
+
+    for (const QString &urlStr : privateUrls) {
+        const QUrl url(urlStr);
+        // Ensure no stale cache influences the result
+        QVERIFY(removeIfExists(ModCatalogProvider::cacheFileForUrl(url)));
+
+        ModCatalogProvider provider;
+        QVERIFY2(!provider.loadFromUrl(url, true),
+                 qPrintable(QStringLiteral("Expected rejection for %1").arg(urlStr)));
+        QVERIFY2(provider.lastError().contains("disallowed", Qt::CaseInsensitive)
+                     || provider.lastError().contains("host", Qt::CaseInsensitive),
+                 qPrintable(QStringLiteral("Unexpected error for %1: %2")
+                                .arg(urlStr, provider.lastError())));
+    }
+}
+
 QTEST_MAIN(ModWorkflowTest)

@@ -141,13 +141,6 @@ public:
     virtual ArtworkUrls getArtwork(const QString &id) = 0;
 
     /**
-     * @brief Download image from URL
-     * @param url Image URL
-     * @return Downloaded image data
-     */
-    QByteArray downloadImage(const QUrl &url);
-
-    /**
      * @brief Check if provider is available/online
      */
     virtual bool isAvailable();

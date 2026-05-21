@@ -72,6 +72,7 @@ private slots:
     void loadFromUrl_usesCacheWhenFresh();
     void loadFromUrl_networkErrorFallsBackToCache();
     void loadFromUrl_networkErrorNoCache();
+    void loadFromUrl_privateIpHostRejected();
     // ── Phase 2: DB catalog cache CRUD ──
     void dbCatalogCache_upsertAndQuery();
     void dbCatalogCache_queryMissing();
@@ -84,6 +85,7 @@ private slots:
     void resolvePatchPath_httpUrl_rejected();
     void resolvePatchPath_emptyUrl_fails();
     void resolvePatchPath_unsupportedScheme_fails();
+    void resolvePatchPath_privateIpHostRejected();
     void verifySha1_correctHash();
     void downloadPatch_unreachableUrl_fails();
     void install_progressCallbackFires();

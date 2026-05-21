@@ -11,9 +11,65 @@
 #include <QNetworkReply>
 #include <QNetworkRequest>
 #include <QEventLoop>
+#include <QHostAddress>
+#include <QHostInfo>
 #include <QStandardPaths>
 #include <QTimer>
 #include "../core/constants/constants.h"
+
+namespace {
+
+// Returns false if addr is loopback, private, link-local, or CGNAT.
+static bool isCatalogAddressAllowed(const QHostAddress &addr)
+{
+    if (addr.isLoopback() || addr.isNull())
+        return false;
+    if (addr.protocol() == QAbstractSocket::IPv4Protocol) {
+        const quint32 ip = addr.toIPv4Address();
+        const quint8 a = static_cast<quint8>((ip >> 24) & 0xFF);
+        const quint8 b = static_cast<quint8>((ip >> 16) & 0xFF);
+        return !(a == 0 || a == 10 || a == 127
+                || (a == 100 && b >= 64 && b <= 127)
+                || (a == 169 && b == 254)
+                || (a == 172 && b >= 16 && b <= 31)
+                || (a == 192 && b == 168));
+    }
+    if (addr.protocol() == QAbstractSocket::IPv6Protocol) {
+        const Q_IPV6ADDR ip = addr.toIPv6Address();
+        bool unspec = true;
+        for (quint8 byte : ip.c) { if (byte) { unspec = false; break; } }
+        return !unspec
+            && !((ip.c[0] & 0xFE) == 0xFC)
+            && !((ip.c[0] == 0xFE && (ip.c[1] & 0xC0) == 0x80));
+    }
+    return true;
+}
+
+// Reject loopback, private, link-local, and CGNAT catalog hosts.
+// For hostnames every resolved address is checked (DNS rebinding defence).
+static bool isCatalogHostAllowed(const QString &host)
+{
+    const QString h = host.trimmed().toLower();
+    if (h.isEmpty() || h == QLatin1String("localhost")
+            || h.endsWith(QLatin1String(".localhost")))
+        return false;
+
+    QHostAddress addr;
+    if (!addr.setAddress(h)) {
+        const QHostInfo info = QHostInfo::fromName(h);
+        if (info.error() != QHostInfo::NoError || info.addresses().isEmpty())
+            return false;
+        for (const QHostAddress &a : info.addresses()) {
+            if (!isCatalogAddressAllowed(a)) return false;
+        }
+        return true;
+    }
+    return isCatalogAddressAllowed(addr);
+}
+
+constexpr int MAX_CATALOG_REDIRECTS = 5;
+
+} // namespace
 
 namespace Remus {
 
@@ -60,87 +116,112 @@ bool ModCatalogProvider::loadFromUrl(const QUrl &url, bool forceRefresh)
         }
     }
 
-    // Download from network
+    // Download from network with manual redirect handling so each hop's resolved
+    // address is revalidated against private/loopback rules (DNS rebinding defence).
     QNetworkAccessManager manager;
-    QNetworkRequest request(url);
-    request.setHeader(QNetworkRequest::UserAgentHeader, Constants::API::USER_AGENT);
-    request.setAttribute(QNetworkRequest::RedirectPolicyAttribute,
-                         QNetworkRequest::NoLessSafeRedirectPolicy);
+    QUrl currentUrl = url;
 
-    // Send ETag / If-Modified-Since if we have a cached copy
-    if (cacheInfo.exists()) {
-        request.setRawHeader("If-Modified-Since",
-                             cacheInfo.lastModified().toUTC()
-                                 .toString(Qt::RFC2822Date).toUtf8());
-    }
-
-    QNetworkReply *reply = manager.get(request);
-
-    QEventLoop loop;
-    QTimer timeout;
-    timeout.setSingleShot(true);
-    timeout.setInterval(Constants::Network::ARTWORK_TIMEOUT_MS);
-    QObject::connect(reply, &QNetworkReply::finished, &loop, &QEventLoop::quit);
-    QObject::connect(&timeout, &QTimer::timeout, &loop, &QEventLoop::quit);
-    timeout.start();
-    loop.exec();
-
-    if (!timeout.isActive()) {
-        // Abort the in-flight request on timeout before falling back to cache
-        reply->abort();
-        reply->deleteLater();
-        // Timeout — fall back to stale cache if available
-        if (cacheInfo.exists()) {
-            QFile cacheFile(cachePath);
-            if (cacheFile.open(QIODevice::ReadOnly) && loadFromJson(cacheFile.readAll())) {
-                return true;
+    for (int redirectCount = 0; redirectCount <= MAX_CATALOG_REDIRECTS; ++redirectCount) {
+        if (!isCatalogHostAllowed(currentUrl.host())) {
+            if (cacheInfo.exists()) {
+                QFile cacheFile(cachePath);
+                if (cacheFile.open(QIODevice::ReadOnly) && loadFromJson(cacheFile.readAll()))
+                    return true;
             }
+            m_lastError = QStringLiteral("Catalog URL targets a disallowed host: ")
+                          + currentUrl.host();
+            return false;
         }
-        m_lastError = QStringLiteral("Catalog download timed out: ") + url.toString();
-        return false;
-    }
-    timeout.stop();
 
-    // 304 Not Modified — cache is still valid
-    if (reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() == 304) {
+        QNetworkRequest request(currentUrl);
+        request.setHeader(QNetworkRequest::UserAgentHeader, Constants::API::USER_AGENT);
+        request.setAttribute(QNetworkRequest::RedirectPolicyAttribute,
+                             QNetworkRequest::ManualRedirectPolicy);
+
+        // Send ETag / If-Modified-Since only on the first hop (original URL)
+        if (redirectCount == 0 && cacheInfo.exists()) {
+            request.setRawHeader("If-Modified-Since",
+                                 cacheInfo.lastModified().toUTC()
+                                     .toString(Qt::RFC2822Date).toUtf8());
+        }
+
+        QNetworkReply *reply = manager.get(request);
+
+        QEventLoop loop;
+        QTimer timeout;
+        timeout.setSingleShot(true);
+        timeout.setInterval(Constants::Network::ARTWORK_TIMEOUT_MS);
+        QObject::connect(reply, &QNetworkReply::finished, &loop, &QEventLoop::quit);
+        QObject::connect(&timeout, &QTimer::timeout, &loop, &QEventLoop::quit);
+        timeout.start();
+        loop.exec();
+
+        if (!timeout.isActive()) {
+            reply->abort();
+            reply->deleteLater();
+            if (cacheInfo.exists()) {
+                QFile cacheFile(cachePath);
+                if (cacheFile.open(QIODevice::ReadOnly) && loadFromJson(cacheFile.readAll()))
+                    return true;
+            }
+            m_lastError = QStringLiteral("Catalog download timed out: ") + url.toString();
+            return false;
+        }
+        timeout.stop();
+
+        const QVariant redirectTarget = reply->attribute(QNetworkRequest::RedirectionTargetAttribute);
+        if (redirectTarget.isValid()) {
+            const QUrl redirectedUrl = currentUrl.resolved(redirectTarget.toUrl());
+            reply->deleteLater();
+            if (redirectedUrl.scheme().compare(QStringLiteral("https"), Qt::CaseInsensitive) != 0) {
+                m_lastError = QStringLiteral("Catalog redirect to non-HTTPS URL is not permitted");
+                return false;
+            }
+            currentUrl = redirectedUrl;
+            continue;
+        }
+
+        // 304 Not Modified — cache is still valid (meaningful only on first hop)
+        if (reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() == 304) {
+            reply->deleteLater();
+            QFile cacheFile(cachePath);
+            if (cacheFile.open(QIODevice::ReadOnly) && loadFromJson(cacheFile.readAll()))
+                return true;
+            m_lastError = QStringLiteral("304 received but cache file unreadable");
+            return false;
+        }
+
+        if (reply->error() != QNetworkReply::NoError) {
+            const QString netErr = reply->errorString();
+            reply->deleteLater();
+            if (cacheInfo.exists()) {
+                QFile cacheFile(cachePath);
+                if (cacheFile.open(QIODevice::ReadOnly) && loadFromJson(cacheFile.readAll()))
+                    return true;
+            }
+            m_lastError = QStringLiteral("Catalog download failed: ") + netErr;
+            return false;
+        }
+
+        const QByteArray data = reply->readAll();
         reply->deleteLater();
+
+        if (!loadFromJson(data)) {
+            return false;
+        }
+
+        // Write cache
+        QDir().mkpath(cacheDir());
         QFile cacheFile(cachePath);
-        if (cacheFile.open(QIODevice::ReadOnly) && loadFromJson(cacheFile.readAll())) {
-            return true;
+        if (cacheFile.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+            cacheFile.write(data);
         }
-        m_lastError = QStringLiteral("304 received but cache file unreadable");
-        return false;
+
+        return true;
     }
 
-    if (reply->error() != QNetworkReply::NoError) {
-        const QString netErr = reply->errorString();
-        reply->deleteLater();
-        // Network error — fall back to stale cache
-        if (cacheInfo.exists()) {
-            QFile cacheFile(cachePath);
-            if (cacheFile.open(QIODevice::ReadOnly) && loadFromJson(cacheFile.readAll())) {
-                return true;
-            }
-        }
-        m_lastError = QStringLiteral("Catalog download failed: ") + netErr;
-        return false;
-    }
-
-    const QByteArray data = reply->readAll();
-    reply->deleteLater();
-
-    if (!loadFromJson(data)) {
-        return false;
-    }
-
-    // Write cache
-    QDir().mkpath(cacheDir());
-    QFile cacheFile(cachePath);
-    if (cacheFile.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
-        cacheFile.write(data);
-    }
-
-    return true;
+    m_lastError = QStringLiteral("Too many redirects fetching catalog: ") + url.toString();
+    return false;
 }
 
 QList<ModEntry> ModCatalogProvider::findModsForRom(const QString &crc32,

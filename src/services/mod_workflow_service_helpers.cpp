@@ -5,6 +5,7 @@
 #include <QFile>
 #include <QFileInfo>
 #include <QHostAddress>
+#include <QHostInfo>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QNetworkRequest>
@@ -14,23 +15,12 @@
 #include "../core/constants/constants.h"
 
 namespace {
-/// Reject loopback, private, link-local, and CGNAT hosts to prevent SSRF
-/// via a compromised remote mod catalog directing patch downloads to internal
-/// addresses.
-static bool isPatchHostAllowed(const QString &host)
+
+// Returns false if addr is loopback, private, link-local, or CGNAT.
+static bool isPatchAddressAllowed(const QHostAddress &addr)
 {
-    const QString h = host.trimmed().toLower();
-    if (h.isEmpty() || h == QLatin1String("localhost")
-            || h.endsWith(QLatin1String(".localhost")))
-        return false;
-
-    QHostAddress addr;
-    if (!addr.setAddress(h))
-        return true; // hostname — rely on OS resolver; DNS rebinding is out of scope here
-
     if (addr.isLoopback() || addr.isNull())
         return false;
-
     if (addr.protocol() == QAbstractSocket::IPv4Protocol) {
         const quint32 ip = addr.toIPv4Address();
         const quint8 a = static_cast<quint8>((ip >> 24) & 0xFF);
@@ -41,7 +31,6 @@ static bool isPatchHostAllowed(const QString &host)
                 || (a == 172 && b >= 16 && b <= 31)
                 || (a == 192 && b == 168));
     }
-
     if (addr.protocol() == QAbstractSocket::IPv6Protocol) {
         const Q_IPV6ADDR ip = addr.toIPv6Address();
         bool unspec = true;
@@ -52,6 +41,36 @@ static bool isPatchHostAllowed(const QString &host)
     }
     return true;
 }
+
+/// Reject loopback, private, link-local, and CGNAT hosts to prevent SSRF
+/// via a compromised remote mod catalog directing patch downloads to internal
+/// addresses. For hostnames every resolved address is checked (DNS rebinding
+/// defence).
+static bool isPatchHostAllowed(const QString &host)
+{
+    const QString h = host.trimmed().toLower();
+    if (h.isEmpty() || h == QLatin1String("localhost")
+            || h.endsWith(QLatin1String(".localhost")))
+        return false;
+
+    QHostAddress addr;
+    if (!addr.setAddress(h)) {
+        // Hostname: resolve and validate every returned address to prevent
+        // DNS rebinding attacks that map a hostname to a private IP.
+        const QHostInfo info = QHostInfo::fromName(h);
+        if (info.error() != QHostInfo::NoError || info.addresses().isEmpty())
+            return false;
+        for (const QHostAddress &a : info.addresses()) {
+            if (!isPatchAddressAllowed(a)) return false;
+        }
+        return true;
+    }
+
+    return isPatchAddressAllowed(addr);
+}
+
+constexpr int MAX_PATCH_REDIRECTS = 5;
+
 } // namespace
 
 namespace Remus {
@@ -130,62 +149,87 @@ QString ModWorkflowService::downloadPatch(const QUrl &url,
     const QString destPath = m_downloadDir->path() + QStringLiteral("/") + filename;
 
     QNetworkAccessManager manager;
-    QNetworkRequest request(url);
-    request.setHeader(QNetworkRequest::UserAgentHeader, Constants::API::USER_AGENT);
-    request.setAttribute(QNetworkRequest::RedirectPolicyAttribute,
-                         QNetworkRequest::NoLessSafeRedirectPolicy);
+    QUrl currentUrl = url;
 
-    QNetworkReply *reply = manager.get(request);
-    if (cb) {
-        QObject::connect(reply, &QNetworkReply::downloadProgress,
-            [&cb](qint64 received, qint64 total) {
-                if (total > 0) {
-                    const int pct = 2 + static_cast<int>(received * 10 / total);
-                    cb("downloading", pct);
-                }
-            });
-    }
+    for (int redirectCount = 0; redirectCount <= MAX_PATCH_REDIRECTS; ++redirectCount) {
+        // Validate host on every hop — covers both initial URL and redirect targets.
+        if (!isPatchHostAllowed(currentUrl.host())) {
+            error = "Patch URL targets a disallowed host";
+            return {};
+        }
 
-    QEventLoop loop;
-    QTimer timeout;
-    timeout.setSingleShot(true);
-    timeout.setInterval(Constants::Network::ARTWORK_TIMEOUT_MS);
-    QObject::connect(reply, &QNetworkReply::finished, &loop, &QEventLoop::quit);
-    QObject::connect(&timeout, &QTimer::timeout, &loop, &QEventLoop::quit);
-    timeout.start();
-    loop.exec();
+        QNetworkRequest request(currentUrl);
+        request.setHeader(QNetworkRequest::UserAgentHeader, Constants::API::USER_AGENT);
+        request.setAttribute(QNetworkRequest::RedirectPolicyAttribute,
+                             QNetworkRequest::ManualRedirectPolicy);
 
-    if (!timeout.isActive()) {
-        reply->abort();
+        QNetworkReply *reply = manager.get(request);
+        if (cb) {
+            QObject::connect(reply, &QNetworkReply::downloadProgress,
+                [&cb](qint64 received, qint64 total) {
+                    if (total > 0) {
+                        const int pct = 2 + static_cast<int>(received * 10 / total);
+                        cb("downloading", pct);
+                    }
+                });
+        }
+
+        QEventLoop loop;
+        QTimer timeout;
+        timeout.setSingleShot(true);
+        timeout.setInterval(Constants::Network::ARTWORK_TIMEOUT_MS);
+        QObject::connect(reply, &QNetworkReply::finished, &loop, &QEventLoop::quit);
+        QObject::connect(&timeout, &QTimer::timeout, &loop, &QEventLoop::quit);
+        timeout.start();
+        loop.exec();
+
+        if (!timeout.isActive()) {
+            reply->abort();
+            reply->deleteLater();
+            error = "Patch download timed out: " + currentUrl.toString();
+            return {};
+        }
+        timeout.stop();
+
+        const QVariant redirectTarget = reply->attribute(QNetworkRequest::RedirectionTargetAttribute);
+        if (redirectTarget.isValid()) {
+            const QUrl redirectedUrl = currentUrl.resolved(redirectTarget.toUrl());
+            reply->deleteLater();
+            if (redirectedUrl.scheme().compare(QStringLiteral("https"), Qt::CaseInsensitive) != 0) {
+                error = "Patch redirect to non-HTTPS URL is not permitted";
+                return {};
+            }
+            currentUrl = redirectedUrl;
+            continue;
+        }
+
+        if (reply->error() != QNetworkReply::NoError) {
+            error = "Patch download failed: " + reply->errorString();
+            reply->deleteLater();
+            return {};
+        }
+
+        const QByteArray data = reply->readAll();
         reply->deleteLater();
-        error = "Patch download timed out: " + url.toString();
-        return {};
-    }
-    timeout.stop();
+        if (data.isEmpty()) {
+            error = "Downloaded patch file is empty";
+            return {};
+        }
 
-    if (reply->error() != QNetworkReply::NoError) {
-        error = "Patch download failed: " + reply->errorString();
-        reply->deleteLater();
-        return {};
+        QFile file(destPath);
+        if (!file.open(QIODevice::WriteOnly)) {
+            error = "Failed to write downloaded patch: " + destPath;
+            return {};
+        }
+        file.write(data);
+        file.close();
+
+        if (cb) cb("downloaded", 12);
+        return destPath;
     }
 
-    const QByteArray data = reply->readAll();
-    reply->deleteLater();
-    if (data.isEmpty()) {
-        error = "Downloaded patch file is empty";
-        return {};
-    }
-
-    QFile file(destPath);
-    if (!file.open(QIODevice::WriteOnly)) {
-        error = "Failed to write downloaded patch: " + destPath;
-        return {};
-    }
-    file.write(data);
-    file.close();
-
-    if (cb) cb("downloaded", 12);
-    return destPath;
+    error = "Too many redirects downloading patch";
+    return {};
 }
 
 bool ModWorkflowService::verifySha1(const QString &filePath, const QString &expectedSha1)

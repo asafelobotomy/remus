@@ -425,3 +425,40 @@ void ModWorkflowTest::downloadDir_cleanedOnDestruction()
     // No crash, no leak — test passes if we get here
     QVERIFY(true);
 }
+
+void ModWorkflowTest::resolvePatchPath_privateIpHostRejected()
+{
+    // Finding #1: patch URLs targeting private / loopback IP literals must be
+    // rejected before any network connection is made. This covers the DNS-
+    // rebinding fix: IP-literal private addresses are caught by isPatchHostAllowed
+    // without requiring a live DNS call.
+    QTemporaryDir dir;
+    QVERIFY(dir.isValid());
+
+    Database db;
+    QVERIFY(db.initialize(dir.path() + "/test.db", "private_ip_test"));
+
+    PatchService patchSvc;
+    ModWorkflowService workflow(db, patchSvc);
+
+    const QStringList privateUrls = {
+        QStringLiteral("https://10.0.0.1/patch.ips"),
+        QStringLiteral("https://192.168.1.100/patch.ips"),
+        QStringLiteral("https://172.16.0.1/patch.ips"),
+        QStringLiteral("https://127.0.0.1/patch.ips"),
+    };
+
+    for (const QString &url : privateUrls) {
+        ModEntry mod;
+        mod.type     = "hack";
+        mod.patchUrl = url;
+
+        ModInstallResult result = workflow.install(FileRecord{}, mod, dir.path() + "/out");
+        QVERIFY2(!result.success,
+                 qPrintable(QStringLiteral("Expected rejection for %1 but got success").arg(url)));
+        QVERIFY2(!result.error.isEmpty(),
+                 qPrintable(QStringLiteral("Expected non-empty error for %1").arg(url)));
+    }
+
+    db.close();
+}

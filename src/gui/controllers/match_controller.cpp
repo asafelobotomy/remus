@@ -312,7 +312,7 @@ bool MatchController::matchFileRecord(const FileRecord &file)
         return false;
     }
 
-    if (!db->insertMatch(file.id, gameId, confidence, method, confidence)) {
+    if (!db->insertMatch(file.id, gameId, confidence, method, confidence / 100.0f)) {
         return false;
     }
 

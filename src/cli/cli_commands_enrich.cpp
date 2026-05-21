@@ -50,7 +50,6 @@ int handleEnrichCommand(CliContext &ctx)
     for (auto it = matches.constBegin(); it != matches.constEnd(); ++it) {
         const Database::MatchResult &m = it.value();
         if (seenGames.contains(m.gameId)) continue;
-        seenGames.insert(m.gameId);
         if (!fileMap.contains(m.fileId)) continue;
         if (!fileMatchesProcessScope(fileMap.value(m.fileId), ctx.processFileScopeIds)) {
             continue;
@@ -58,6 +57,7 @@ int handleEnrichCommand(CliContext &ctx)
         if (!fileMatchesSystemFilter(fileMap.value(m.fileId), ctx.processSystemIdFilter, &m)) {
             continue;
         }
+        seenGames.insert(m.gameId);
 
         const bool sparse = m.publisher.isEmpty() || m.developer.isEmpty()
                           || m.genre.isEmpty() || m.players.isEmpty()
