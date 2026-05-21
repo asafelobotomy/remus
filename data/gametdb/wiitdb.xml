@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <datafile xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="wiitdb.xsd">
-	<WiiTDB version="20260510004122" filter="EN_wiiware_gamecube" games="10157"/>
+	<WiiTDB version="20260521143618" filter="EN_wiiware_gamecube" games="10158"/>
 	<!--
  GameTDB: Wii, Database started by Lustar in 2009 (https://www.gametdb.com)
  Never modify this file manually, it will get overwritten when you update. You can add games and fixes on the website.
@@ -188516,14 +188516,47 @@ This game was released exclusively in Japan, but was patched and translated to E
 			<title>Super Smash Bros. Melee: Akaneia Build</title>
 			<synopsis>The Akaneia Build is a ground-breaking Melee mod that adds new viable and authentic content to the game such as costumes, stages, and more. The mod is powered by m-ex, our own system that allows for streamlined expansion of content in Melee.</synopsis>
 		</locale>
-		<publisher/>
+		<developer>HAL Laboratory / Akaneia Team</developer>
+		<publisher>Akaneia Team</publisher>
 		<date year="2021" month="12" day="25"/>
-		<rating type="ESRB" value=""/>
+		<genre>fighting,2d fighting</genre>
+		<rating type="ESRB" value="T">
+			<descriptor>comic mischief</descriptor>
+			<descriptor>mild violence</descriptor>
+		</rating>
 		<wi-fi players="0"/>
 		<input players="4">
 			<control type="gamecube" required="true"/>
 		</input>
 		<rom version="" name="Super Smash Bros. Melee: Akaneia Build (USA) (EN).iso" size="1459978240"/>
+		<case color="000000"/>
+	</game>
+	<game name="Super Smash Bros. Melee: ACE Build (USA) (EN)">
+		<id>GACE0A</id>
+		<type>CUSTOM</type>
+		<region>NTSC-U</region>
+		<languages>EN</languages>
+		<locale lang="EN">
+			<title>Super Smash Bros. Melee: ACE Build</title>
+			<synopsis>A add-on to the Base Akaneia Mod Which Aims to Includes Every currently Released characters and Some Newcomers making there first Public Debut In ACE in one big melee Build for Fun.
+
+Credits:https://docs.google.com/document/d/1Gf4D1QfHeXMQQrJpcbCatRuUmxijvP8ON1clqmF6uEU/edit?pli=1&amp;tab=t.0
+
+(PS we are not part or affiliated with the official Akaneia Team this mod is just a free fun build for those who want all there characters in one place)</synopsis>
+		</locale>
+		<developer>HAL Laboratory / Akaneia Team / Team ACE</developer>
+		<publisher>Team ACE</publisher>
+		<date year="2026" month="5" day="11"/>
+		<genre>fighting,2d fighting</genre>
+		<rating type="ESRB" value="T">
+			<descriptor>comic mischief</descriptor>
+			<descriptor>mild violence</descriptor>
+		</rating>
+		<wi-fi players="0"/>
+		<input players="4">
+			<control type="gamecube" required="true"/>
+		</input>
+		<rom version="" name="Super Smash Bros. Melee: ACE Build (USA) (EN).iso" size="1459978240"/>
 		<case color="000000"/>
 	</game>
 	<game name="Animal Forest e+ (USA) (EN)">
@@ -364499,9 +364532,21 @@ An alternate soundtrack, &quot;S2MIX&quot;, is also available. The original soun
 		<languages>EN,FR,DE,ES,IT</languages>
 		<locale lang="EN">
 			<title>Viewtiful Joe 2</title>
-			<synopsis>Joe and Silvia are back in this sequel to Viewtiful Joe. This time you have more style, new special moves, and more than 40 new enemies to defeat. Now Joe's trusty aircraft transforms into various shapes to support his activities throughout the game's many stages. In addition to Joe, you can play as Silva, Joe's girlfriend. Call upon the powers of Joe and Silvia, and get ready to both solve new puzzles and save the day</synopsis>
+			<synopsis>Joe and Silvia are back in this sequel to Viewtiful Joe. This time you have more style, new special moves, and more than 40 new enemies to defeat. Now Joe's trusty aircraft transforms into various shapes to support his activities throughout the game's many stages. In addition to Joe, you can play as Silva, Joe's girlfriend. Call upon the powers of Joe and Silvia, and get ready to both solve new puzzles and save the day!</synopsis>
 		</locale>
 		<locale lang="DE">
+			<title>Viewtiful Joe 2</title>
+			<synopsis/>
+		</locale>
+		<locale lang="SE">
+			<title>Viewtiful Joe 2</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DK">
+			<title>Viewtiful Joe 2</title>
+			<synopsis/>
+		</locale>
+		<locale lang="NO">
 			<title>Viewtiful Joe 2</title>
 			<synopsis/>
 		</locale>
@@ -366367,6 +366412,10 @@ The Sims Bustin' Out also features new integrated two-player gameplay and memory
 		</locale>
 		<locale lang="NL">
 			<title>De Sims: Erop uit!</title>
+			<synopsis/>
+		</locale>
+		<locale lang="SE">
+			<title>The Sims: Bustin' Out</title>
 			<synopsis/>
 		</locale>
 		<locale lang="DK">
@@ -375981,21 +376030,25 @@ This action-packed slopes experience offers an easy-to-use control scheme for sn
 		<rom version="0" name="007: Everything or Nothing (Japan) (JA).iso" size="1459978240" crc="6e9a34b3" md5="703522b936e28c37b964e27feec79a01" sha1="4e198b8dd28d2d9fa4167e084db9c815d8095b4d"/>
 		<case color="000000"/>
 	</game>
-	<game name="007: Everything or Nothing (Europe) (EN,IT,NL,SE)">
+	<game name="James Bond 007: Everything or Nothing (Europe) (EN,IT,NL,SE)">
 		<id>GENP69</id>
 		<type>GameCube</type>
 		<region>PAL</region>
 		<languages>EN,IT,NL,SE</languages>
 		<locale lang="EN">
-			<title>007: Everything or Nothing</title>
+			<title>James Bond 007: Everything or Nothing</title>
 			<synopsis>Think like Bond, act like Bond, and experience an entirely new Bond adventure. James Bond, the world's greatest secret agent, returns in Everything or Nothing with new guns and gadgets, combat skills, and clever tricks--and it's up to you to put them to good use. Travel through four exciting continents including the Valley of the Kings in Egypt and the French Quarter in New Orleans. The game also features two-player co-op missions and four-player multiplayer arena modes.</synopsis>
 		</locale>
 		<locale lang="DE">
-			<title>007: Alles Oder Nichts</title>
+			<title>James Bond 007: Alles Oder Nichts</title>
 			<synopsis/>
 		</locale>
 		<locale lang="PT">
-			<title>007: Everything Or Nothing</title>
+			<title>James Bond 007: Everything Or Nothing</title>
+			<synopsis/>
+		</locale>
+		<locale lang="SE">
+			<title>James Bond 007: Everything or Nothing</title>
 			<synopsis/>
 		</locale>
 		<locale lang="KO">
@@ -376013,7 +376066,7 @@ This action-packed slopes experience offers an easy-to-use control scheme for sn
 		<input players="4">
 			<control type="gamecube" required="true"/>
 		</input>
-		<rom version="0" name="007: Everything or Nothing (Europe) (EN,IT,NL,SE).iso" size="1459978240" crc="f0356f22" md5="69789ca120bb6951bddbdb857d65e723" sha1="9830e960506ade0cec2fda35b215308b3af60f72"/>
+		<rom version="0" name="James Bond 007: Everything or Nothing (Europe) (EN,IT,NL,SE).iso" size="1459978240" crc="f0356f22" md5="69789ca120bb6951bddbdb857d65e723" sha1="9830e960506ade0cec2fda35b215308b3af60f72"/>
 		<case color="000000" versions="2"/>
 	</game>
 	<game name="007: Todo o Nada (Europe) (ES)">
@@ -391161,9 +391214,27 @@ By simply sampling some DNA, the doctor will be able to morph into a spider, mou
 		<languages>EN</languages>
 		<locale lang="EN">
 			<title>Need for Speed: Underground</title>
-			<synopsis>Electronic Arts' Need for Speed series takes a note from the Fast and Furious handbook with its latest release entitled Need For Speed Underground. Purchase, race, and customize 20 different licensed cars from major manufacturers such as Honda, Mitsubishi, Toyota, Volkswagen, Nissan, and more. Race other customized cars through a detailed nighttime cityscape, dodging city traffic and navigating shortcuts all the while. Customize vehicle performance as well as your car's physical appearance, changing rims, stickers, paintjob, spoilers and more. Multiple racing modes range from drift competitions, street racing, and drag racing</synopsis>
+			<synopsis>Electronic Arts' Need for Speed series takes a note from the Fast and Furious handbook with its latest release entitled Need For Speed Underground.
+Purchase, race, and customize 20 different licensed cars from major manufacturers such as Honda, Mitsubishi, Toyota, Volkswagen, Nissan, and more. Race other customized cars through a detailed nighttime cityscape, dodging city traffic and navigating shortcuts all the while.
+Customize vehicle performance as well as your car's physical appearance, changing rims, stickers, paintjob, spoilers and more. Multiple racing modes range from drift competitions, street racing, and drag racing.
+
+• Twenty of the world's hottest licenced tuner cars.
+• Unlock hundreds of after market parts.
+• All out, fuel-injected Drift, Drag and Circuit racing modes.</synopsis>
 		</locale>
 		<locale lang="PT">
+			<title>Need for Speed: Underground</title>
+			<synopsis/>
+		</locale>
+		<locale lang="SE">
+			<title>Need for Speed: Underground</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DK">
+			<title>Need for Speed: Underground</title>
+			<synopsis/>
+		</locale>
+		<locale lang="NO">
 			<title>Need for Speed: Underground</title>
 			<synopsis/>
 		</locale>
@@ -397970,14 +398041,14 @@ It features simulation rally racing with arcade elements, six different rallies 
 		<rom version="1.00" name="R-Racing Evolution: Life in the Fast Lane (Japan) (JA) (v1.00).iso" size="1459978240" crc="b4d639f9" md5="ea37d996d705cef9e9bb2099e3f8c86e" sha1="6d1af5e03faf84bddd77703f29bd03e38336c08e"/>
 		<case color="000000"/>
 	</game>
-	<game name="R-Racing (Europe) (EN,FR,DE,ES,IT)">
+	<game name="R: Racing (Europe) (EN,FR,DE,ES,IT)">
 		<id>GRJP69</id>
 		<type>GameCube</type>
 		<region>PAL</region>
 		<languages>EN,FR,DE,ES,IT</languages>
 		<locale lang="EN">
-			<title>R-Racing</title>
-			<synopsis>Not your ordinary racer, R: Racing Evolution features a story mode, in-game radio communications, and authentic licensed cars. R: Racing Evolution chronicles the intense competition and deep rivalries found only within the professional racing circuit. Upgrade and modify your vehicle to compete in five game modes, including Racing Life, Event Challenge, Time Attack, Arcade, and Versus. New features such as the Interactive Driver AI System and in-game radio communications bring players close to the racing action.</synopsis>
+			<title>R: Racing</title>
+			<synopsis>Not your ordinary racer, R: Racing Evolution features a story mode, in-game radio communications, and authentic licensed cars. R: Racing Evolution chronicles the intense competition and deep rivalries found only within the professional racing circuit. Upgrade and modify your vehicle to compete in five game modes, including Racing Life, Event Challenge, Time Attack, Arcade, and Versus. New features such as the Interactive Driver AI System and in-game radio communications bring players close to the racing action. Bonus Disc Inside (requires Game Boy Advance and cable).</synopsis>
 		</locale>
 		<locale lang="KO">
 			<title>R: 레이싱</title>
@@ -397994,7 +398065,7 @@ It features simulation rally racing with arcade elements, six different rallies 
 		<input players="2">
 			<control type="gamecube" required="true"/>
 		</input>
-		<rom version="1.00" name="R-Racing (Europe) (EN,FR,DE,ES,IT) (v1.00).iso" size="1459978240" crc="cff4d68a" md5="664039ddb018164fdbc6ba190a85c020" sha1="f2088d61a683569281bc2374db6a6733ddb4340b"/>
+		<rom version="1.00" name="R: Racing (Europe) (EN,FR,DE,ES,IT) (v1.00).iso" size="1459978240" crc="cff4d68a" md5="664039ddb018164fdbc6ba190a85c020" sha1="f2088d61a683569281bc2374db6a6733ddb4340b"/>
 		<case color="000000"/>
 	</game>
 	<game name="Rocky (USA) (EN)">
@@ -401775,7 +401846,21 @@ Given its rule-bending recipe, Soccer Slam is an exciting and original game, in 
 		<languages>EN</languages>
 		<locale lang="EN">
 			<title>Tiger Woods PGA Tour 2003</title>
-			<synopsis>From towering drives to picture-perfect putts, the essence of golf has been captured in Tiger Woods PGA Tour 2003. The game features plenty of challenging courses such as Pebble Beach Golf Links and Royal Birkdale. Plus, you can choose from a variety of professional golfers, each with their own strengths and weaknesses. Hit the course as Tiger Woods or put your skills up against his in a one-on-one showdown, but either way, be prepared to bring your best game</synopsis>
+			<synopsis>Be him or beat him! From towering drives to picture-perfect putts, the essence of golf has been captured in Tiger Woods PGA Tour 2003.
+The game features plenty of challenging courses such as Pebble Beach Golf Links, St. Andrews Golf Links and Royal Birkdale. Plus, you can choose from a variety of professional golfers, each with their own strengths and weaknesses.
+Hit the course as Tiger Woods or put your skills up against his in a one-on-one showdown, but either way, be prepared to bring your best game.</synopsis>
+		</locale>
+		<locale lang="SE">
+			<title>Tiger Woods PGA Tour 2003</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DK">
+			<title>Tiger Woods PGA Tour 2003</title>
+			<synopsis/>
+		</locale>
+		<locale lang="NO">
+			<title>Tiger Woods PGA Tour 2003</title>
+			<synopsis/>
 		</locale>
 		<locale lang="KO">
 			<title>타이거 우즈 PGA 투어 2003</title>
@@ -403097,7 +403182,17 @@ Gameplay is spread across 15 different levels where the player must save animals
 		<languages>EN</languages>
 		<locale lang="EN">
 			<title>Need for Speed: Underground 2</title>
-			<synopsis>Need for Speed: Underground 2 will challenge gamers to immerse themselves in the tuner culture, exploring an expansive, free-roaming city divided into five distinct neighborhoods. Gamers will encounter rival racers who will initiate events, tip players off to the hottest racing spots, and show them where to buy the most sought-after licensed aftermarket upgrades. The game will feature new game modes, deep new performance customization and tuning, and more than 30 licensed cars. The game also delivers twice the visual customization upgrades as the original game, providing a staggering 70 billion possible car combinations for total automotive self-expression.</synopsis>
+			<synopsis>Need for Speed: Underground 2 will challenge gamers to immerse themselves in the tuner culture, exploring an expansive, free-roaming city divided into five distinct neighborhoods.
+Gamers will encounter rival racers who will initiate events, tip players off to the hottest racing spots, and show them where to buy the most sought-after licensed aftermarket upgrades.
+The game will feature new game modes, deep new performance customization and tuning, and more than 30 licensed cars. The game also delivers twice the visual customization upgrades as the original game, providing a staggering 70 billion possible car combinations for total automotive self-expression.
+
+• Race or roam on more than 125 miles of open road.
+• Encounter underground races, secret shops and unexpected challengers.
+• 8 exciting game modes, including all-new Downhill Drift, Street-X and Showcase.</synopsis>
+		</locale>
+		<locale lang="SE">
+			<title>Need for Speed: Underground 2</title>
+			<synopsis/>
 		</locale>
 		<locale lang="FI">
 			<title>Need for Speed: Underground 2</title>

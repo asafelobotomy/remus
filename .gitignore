@@ -79,6 +79,11 @@ test_output/
 temp_*/
 current_run_dir.txt
 
+# Patch artefacts
+*.orig
+*.rej
+*.patch
+
 # Temporary task working directories (agent scratch space)
 tmp_task/
 

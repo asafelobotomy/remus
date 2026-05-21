@@ -12,7 +12,7 @@ set -euo pipefail
 #   data/databases/           ← libretro dat/ (curated, GameTDB-style)
 #   data/databases/no-intro/  ← metadat/no-intro/ (No-Intro full catalogs)
 #   data/databases/redump/    ← metadat/redump/   (Redump full catalogs)
-#   data/databases/mame/      ← Pleasuredome MAME DAT (arcade ROMs)
+#   data/databases/mame/      ← MAME ROMs DAT (local binary or mamedev/mame release)
 #
 # Storing the three sources in separate subdirectories avoids filename
 # collisions (e.g. Sega - Saturn.dat exists in both dat/ and redump/)
@@ -28,7 +28,9 @@ NO_INTRO_DIR="$TARGET_DIR/no-intro"
 REDUMP_DIR="$TARGET_DIR/redump"
 MAME_DIR="$TARGET_DIR/mame"
 CLONE_DIR="$(mktemp -d)"
-trap 'rm -rf "${CLONE_DIR:-}" "${redump_direct_tmp:-}" "${mame_tmp:-}"' EXIT
+mame_xml_tmp=""
+mame_bin_tmp=""
+trap 'rm -rf "${CLONE_DIR:-}" "${redump_direct_tmp:-}" "${mame_xml_tmp:-}" "${mame_bin_tmp:-}"' EXIT
 REPO_URL="https://github.com/libretro/libretro-database.git"
 
 # Core systems to include by default (filename stems as they appear in the repo)
@@ -219,32 +221,166 @@ for entry in "${REDUMP_DIRECT_DBS[@]}"; do
     fi
 done
 
-# 4b. MAME DAT from Pleasuredome (publicly hosted on GitHub gh-pages).
-# Update MAME_VERSION when Pleasuredome publishes a new release.
-MAME_VERSION="0.287"
-MAME_DAT_NAME="MAME ${MAME_VERSION} ROMs (merged).dat"
-MAME_URL="https://github.com/pleasuredome/pleasuredome/raw/gh-pages/mame/MAME%20${MAME_VERSION}%20ROMs%20(merged).zip"
+# 4b. MAME DAT — generated from a MAME binary via -listxml, then converted to
+#     Logiqx XML (the format Remus's DatParser expects).  Two sources tried in
+#     order:
+#       1. A locally installed mame/mame64/mame-arcade binary (fastest, no
+#          extra download — install via "pacman -S mame" or "apt install mame").
+#       2. The official Linux release binary from mamedev/mame GitHub releases
+#          (~19 MB download, extracted to a temp dir and removed afterwards).
+#     Pleasuredome requires torrent/membership access and is not used here.
+#     Requires: python3  (for listxml → Logiqx XML conversion)
 
 mkdir -p "$MAME_DIR"
+# Remove any empty/corrupt DAT files left by previous failed runs
+find "$MAME_DIR" -maxdepth 1 -name "*.dat" -empty -delete 2>/dev/null || true
+
 echo ""
-echo "Downloading MAME ${MAME_VERSION} DAT from Pleasuredome..."
-mame_tmp="$(mktemp "${TMPDIR:-/tmp}/mame_dat_XXXXXX.zip")"
-if curl -fsSL -o "$mame_tmp" --max-time 120 "$MAME_URL"; then
-    extracted=$(unzip -l "$mame_tmp" 2>/dev/null | grep -o '[^ ]*\.xml$' | head -1)
-    if [[ -n "$extracted" ]]; then
-        if unzip -p "$mame_tmp" "$extracted" > "$MAME_DIR/$MAME_DAT_NAME" 2>/dev/null; then
-            echo "  MAME ${MAME_VERSION} DAT written: $MAME_DIR/$MAME_DAT_NAME"
-            copied=$((copied + 1))
+echo "Fetching MAME DAT..."
+
+mame_bin=""
+
+# Step 1: look for a locally installed MAME binary
+for mame_candidate in mame mame64 mame-arcade; do
+    if command -v "$mame_candidate" &>/dev/null; then
+        mame_bin="$(command -v "$mame_candidate")"
+        echo "  Found local MAME: $mame_bin"
+        break
+    fi
+done
+
+# Step 2: no local binary — download the Linux release from mamedev/mame
+if [[ -z "$mame_bin" ]]; then
+    echo "  No local MAME binary — fetching from mamedev/mame GitHub releases..."
+    mame_lx_url=$(curl -fsSL --max-time 30 \
+        "https://api.github.com/repos/mamedev/mame/releases/latest" 2>/dev/null \
+        | python3 -c "
+import sys, json
+d = json.load(sys.stdin)
+url = next((a['browser_download_url'] for a in d.get('assets', [])
+            if a['name'].endswith('lx.zip')), '')
+print(url)
+" 2>/dev/null || true)
+
+    if [[ -n "$mame_lx_url" ]]; then
+        mame_bin_tmp="$(mktemp -d)"
+        mame_lx_zip="$mame_bin_tmp/mame_lx.zip"
+        echo "  Downloading $(basename "$mame_lx_url") (~19 MB)..."
+        if curl -fsSL -o "$mame_lx_zip" --max-time 300 "$mame_lx_url"; then
+            mame_inner=$(unzip -l "$mame_lx_zip" 2>/dev/null \
+                | awk '/[[:space:]]mame[^\/]*$/ { print $NF; exit }')
+            if [[ -n "$mame_inner" ]] \
+               && unzip -o -q "$mame_lx_zip" "$mame_inner" -d "$mame_bin_tmp"; then
+                chmod +x "$mame_bin_tmp/$mame_inner"
+                mame_bin="$mame_bin_tmp/$mame_inner"
+                echo "  Extracted: $mame_inner"
+            else
+                echo "  Warning: could not extract MAME binary from zip"
+            fi
         else
-            echo "  Warning: failed to extract MAME DAT from zip"
+            echo "  Warning: failed to download MAME Linux release"
         fi
     else
-        echo "  Warning: no .xml file found in MAME zip"
+        echo "  Warning: could not resolve MAME release asset URL via GitHub API"
     fi
-    rm -f "$mame_tmp"
+fi
+
+if [[ -n "$mame_bin" && -x "$mame_bin" ]]; then
+    mame_detected_ver=$("$mame_bin" -version 2>/dev/null \
+        | head -1 | grep -oE '[0-9]+\.[0-9]+' | head -1 || echo "")
+    echo "  MAME version: ${mame_detected_ver:-unknown}"
+    mame_out_dat="$MAME_DIR/MAME${mame_detected_ver:+ $mame_detected_ver} ROMs.dat"
+
+    echo "  Running: mame -listxml  (may take ~30 s, uses ~400 MB temp space)..."
+    mame_xml_tmp="$(mktemp -t mame_listxml_XXXXXX.xml)"
+    if "$mame_bin" -listxml > "$mame_xml_tmp" 2>/dev/null \
+       && [[ -s "$mame_xml_tmp" ]]; then
+        echo "  Converting listxml → Logiqx XML DAT..."
+        if python3 - "$mame_xml_tmp" "$mame_out_dat" <<'PYEOF'
+import sys
+import xml.etree.ElementTree as ET
+
+def esc(s):
+    """XML-escape a string for use in text content and attribute values."""
+    return (s or "").replace("&", "&amp;").replace("<", "&lt;") \
+                    .replace(">", "&gt;").replace('"', "&quot;")
+
+src, dst = sys.argv[1], sys.argv[2]
+root_elem = None
+version   = ""
+count     = 0
+
+with open(dst, "w", encoding="utf-8") as f:
+    for event, elem in ET.iterparse(src, events=("start", "end")):
+        # Capture root <mame build="..."> on first start event
+        if event == "start" and elem.tag == "mame" and root_elem is None:
+            root_elem = elem
+            build     = elem.get("build", "")
+            version   = build.split("(")[0].strip() if build else ""
+            f.write("<?xml version='1.0' encoding='utf-8'?>\n<datafile>\n")
+            f.write("  <header>\n")
+            f.write(f"    <name>MAME {esc(version)}</name>\n")
+            f.write(f"    <description>MAME {esc(version)}</description>\n")
+            f.write( "    <category>Standard DatFile</category>\n")
+            f.write(f"    <version>{esc(version)}</version>\n")
+            f.write( "    <author>MAME team</author>\n")
+            f.write( "    <url>https://www.mamedev.org</url>\n")
+            f.write( "  </header>\n")
+            continue
+        # Process each <machine> once all its children are available
+        if event != "end" or elem.tag != "machine":
+            continue
+        if (elem.get("isdevice") == "yes"
+                or elem.get("isbios")   == "yes"
+                or elem.get("runnable") == "no"):
+            if root_elem is not None:
+                root_elem.clear()
+            continue
+        name  = esc(elem.get("name", ""))
+        clone = elem.get("cloneof", "")
+        ca    = f' cloneof="{esc(clone)}"' if clone else ""
+        f.write(f'  <machine name="{name}"{ca}>\n')
+        for tag in ("description", "year", "manufacturer"):
+            el = elem.find(tag)
+            if el is not None and el.text:
+                f.write(f"    <{tag}>{esc(el.text)}</{tag}>\n")
+        for rom in elem.findall("rom"):
+            if rom.get("status") == "nodump":
+                continue
+            parts = [f'{a}="{esc(rom.get(a))}"'
+                     for a in ("name", "size", "crc", "sha1", "md5")
+                     if rom.get(a)]
+            if parts:
+                f.write(f'    <rom {" ".join(parts)}/>\n')
+        f.write("  </machine>\n")
+        count += 1
+        if root_elem is not None:
+            root_elem.clear()
+    f.write("</datafile>\n")
+
+print(f"  MAME DAT: {dst} ({count} machines)")
+PYEOF
+        then
+            copied=$((copied + 1))
+        else
+            echo "  Warning: listxml → DAT conversion failed"
+            rm -f "$mame_out_dat"
+        fi
+    else
+        echo "  Warning: mame -listxml produced no output"
+    fi
+    rm -f "$mame_xml_tmp"
+    mame_xml_tmp=""
+    if [[ -n "$mame_bin_tmp" ]]; then
+        rm -rf "$mame_bin_tmp"
+        mame_bin_tmp=""
+    fi
 else
-    echo "  Warning: failed to download MAME DAT from Pleasuredome"
-    rm -f "$mame_tmp"
+    echo "  Warning: no usable MAME binary found."
+    echo "  To add arcade/MAME coverage, either:"
+    echo "    1. Install MAME and re-run:  pacman -S mame       (Arch/Manjaro)"
+    echo "                                 apt install mame     (Debian/Ubuntu)"
+    echo "    2. Place a merged MAME .dat file manually in: $MAME_DIR/"
 fi
 
 # 5. Metadata DATs (genre, developer, publisher, maxusers, releaseyear)

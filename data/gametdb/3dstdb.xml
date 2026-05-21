@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <datafile xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="3dstdb.xsd">
-	<TDB3DS version="20260510013132" filter="EN" games="4785"/>
+	<TDB3DS version="20260521143646" filter="EN" games="4785"/>
 	<!--
  GameTDB: 3DS, Database started in 2015 (https://www.gametdb.com)
  Never modify this file manually, it will get overwritten when you update. You can add games and fixes on the website.
@@ -7178,10 +7178,14 @@ Eleven GO: Shadow today – game on!</synopsis>
 			<title>Regular Show: Mordecai &amp; Rigby in 8-Bit Land</title>
 			<synopsis>Mordecai and Rigby are trapped inside a video game and must travel through the pixilated land of 8-Bit to find their way out. This hijinx-filled adventure is packed with platforming, space shooting, and old-school top down video game mania, and comes fully loaded with tons of Regular Show characters and jokes.</synopsis>
 		</locale>
+		<locale lang="ES">
+			<title>Regular Show: Mordecai &amp; Rigby in 8-Bit Land</title>
+			<synopsis/>
+		</locale>
 		<developer>WayForward</developer>
 		<publisher>Namco Bandai Games</publisher>
 		<date year="2013" month="11" day="8"/>
-		<genre>action,adventure</genre>
+		<genre>action,adventure,arcade,shooter</genre>
 		<rating type="PEGI" value="7">
 			<descriptor>violence</descriptor>
 		</rating>
@@ -23315,46 +23319,59 @@ ultimate case!</synopsis>
 		<languages>EN</languages>
 		<locale lang="EN">
 			<title>Carnival Games: Wild West 3D</title>
-			<synopsis/>
+			<synopsis>Howdy partner! Its time to switch on your swagger and step right up to Carnival Games Wild West 3D! Youre in for a rootin tootin good time as 25 Wild West games and attractions, built from the ground up for the Nintendo 3DS, come to life in eye poppin 3D and take full advantage of the motion sensor and gyro sensor system capabilities.</synopsis>
 		</locale>
-		<publisher>2K Play</publisher>
-		<date year="2011" month="" day=""/>
-		<rating type="ESRB" value=""/>
+		<developer>2K Play</developer>
+		<publisher>Take-Two Interactive / GameTek / Rockstar Games / Global Star Software</publisher>
+		<date year="2011" month="11" day="21"/>
+		<genre>action,party</genre>
+		<rating type="ESRB" value="E10+">
+			<descriptor>mild cartoon violence</descriptor>
+			<descriptor>simulated gambling</descriptor>
+		</rating>
 		<wi-fi players="0"/>
 		<input players="1"/>
 		<rom version="0" name="Carnival Games: Wild West 3D (USA) (EN).3ds" size="268435456" crc="b31072eb" md5="2af6cd3e31b41da3a6ad75a3cebfdcfa" sha1="78bad6e0bc135e957e9a48ac4f569f2537b78b24"/>
 	</game>
-	<game name="Carnival Games: Wild West 3D (Europe) (EN,FR,DE,ES,IT,NL)">
+	<game name="Carnival Games Wild West 3D (Europe) (EN,FR,DE,ES,IT,NL)">
 		<id>AW2P</id>
 		<type>3DS</type>
 		<region>PAL</region>
 		<languages>EN,FR,DE,ES,IT,NL</languages>
 		<locale lang="EN">
-			<title>Carnival Games: Wild West 3D</title>
-			<synopsis/>
+			<title>Carnival Games Wild West 3D</title>
+			<synopsis>Wanted! One sharp-shootin', rootin', tootin' gunslinger ready to earn their spurs in a host of fairground favourites, all rendered in eye-popping 3D.
+
+In Carnival Games Wild West 3D, you'll saddle up and shake off the tumbleweeds as you take on all comers in challenges ranging from shooting galleries to bicep-bulging bouts of arm-wrestling. There are 25 games and attractions to enjoy as the Wild West comes to life, utilising the motion and gyro sensor capabilities of Nintendo 3DS to the max - and with games like Ricochet, Git the Gold and Blind Man's Bluff, you'll be kept on your toes! There'll be no let up in the excitement as you prove you're quick on the draw in trigger-twitching gunfights, or round up no-good varmint outlaws to claim your reward.</synopsis>
 		</locale>
 		<locale lang="FR">
-			<title>Carnival - Far West 3D</title>
+			<title>Carnival Far West 3D</title>
 			<synopsis/>
 		</locale>
 		<locale lang="DE">
-			<title>Carnival - Wilder Westen 3D</title>
+			<title>Carnival Wilder Westen 3D</title>
 			<synopsis/>
 		</locale>
 		<locale lang="ES">
-			<title>Carnival - Salvaje Oeste 3D</title>
+			<title>Carnival Salvaje Oeste 3D</title>
+			<synopsis/>
+		</locale>
+		<locale lang="IT">
+			<title>Carnival Wild West 3D</title>
 			<synopsis/>
 		</locale>
 		<locale lang="NL">
-			<title>Carnival - Wilde Westen 3D</title>
+			<title>Carnival Wilde Westen 3D</title>
 			<synopsis/>
 		</locale>
-		<publisher>2K Play</publisher>
-		<date year="2011" month="1" day="1"/>
+		<developer>2K Play</developer>
+		<publisher>Take-Two Interactive / GameTek / Rockstar Games / Global Star Software</publisher>
+		<date year="2012" month="3" day="2"/>
+		<genre>action,party</genre>
 		<rating type="PEGI" value="3"/>
 		<wi-fi players="0"/>
 		<input players="1"/>
-		<rom version="0" name="Carnival Games: Wild West 3D (Europe) (EN,FR,DE,ES,IT,NL).3ds" size="268435456" crc="e9aa44c2" md5="fc1bc83077742d5c8f9c09d75c14ca2a" sha1="9d3cd0fd7c303a66244afad8c01e6932aadde3d2"/>
+		<rom version="0" name="Carnival Games Wild West 3D (Europe) (EN,FR,DE,ES,IT,NL).3ds" size="268435456" crc="e9aa44c2" md5="fc1bc83077742d5c8f9c09d75c14ca2a" sha1="9d3cd0fd7c303a66244afad8c01e6932aadde3d2"/>
 	</game>
 	<game name="Wipeout 3 (USA) (EN)">
 		<id>AW3E</id>
@@ -55399,21 +55416,27 @@ Tap in their corresponding compatible Fire Emblem amiibo™ figures and Marth, I
 		<input players="1"/>
 		<rom version="" name="Attack on Titan - Humanity in Chains (USA) (EN).3ds"/>
 	</game>
-	<game name="Shingeki no Kyojin - Humanity in Chains (Europe) (EN)">
+	<game name="Shingeki no Kyojin: Humanity in Chains (Europe) (EN)">
 		<id>BG2P</id>
 		<type>3DSWare</type>
 		<region>PAL</region>
 		<languages>EN</languages>
 		<locale lang="EN">
-			<title>Shingeki no Kyojin - Humanity in Chains</title>
+			<title>Shingeki no Kyojin: Humanity in Chains</title>
 			<synopsis/>
 		</locale>
-		<publisher>Spike Chunsoft</publisher>
-		<date year="2014" month="" day=""/>
-		<rating type="PEGI" value=""/>
-		<wi-fi players="0"/>
-		<input players="1"/>
-		<rom version="" name="Shingeki no Kyojin - Humanity in Chains (Europe) (EN).3ds"/>
+		<developer>Spike Chunsoft</developer>
+		<publisher>Atlus</publisher>
+		<date year="2015" month="7" day="2"/>
+		<genre>action</genre>
+		<rating type="PEGI" value="16">
+			<descriptor>violence</descriptor>
+		</rating>
+		<wi-fi players="4">
+			<feature>online</feature>
+		</wi-fi>
+		<input players="4"/>
+		<rom version="" name="Shingeki no Kyojin: Humanity in Chains (Europe) (EN).3ds"/>
 	</game>
 	<game name="Shin Megami Tensei IV: Apocalypse (USA) (EN)">
 		<id>BG4E</id>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <datafile xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="wiiutdb.xsd">
-	<WiiUTDB version="20260510013140" filter="EN" games="2860"/>
+	<WiiUTDB version="20260521143653" filter="EN" games="2860"/>
 	<!--
  GameTDB: WiiU, Database started in 2012 (https://www.gametdb.com)
  Never modify this file manually, it will get overwritten when you update. You can add games and fixes on the website.
@@ -11961,7 +11961,7 @@ Feel closer to the action than ever before with the first entry in the Mario &am
 			<synopsis/>
 		</locale>
 		<locale lang="ES">
-			<title>Mario &amp; Sonic en Juegos Olímpicos de Invierno Sochi 2014</title>
+			<title>Mario &amp; Sonic en los Juegos Olímpicos de Invierno - Sochi 2014</title>
 			<synopsis/>
 		</locale>
 		<locale lang="IT">

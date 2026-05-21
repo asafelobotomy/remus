@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <datafile xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="dstdb.xsd">
-	<DSTDB version="20260510013117" filter="EN" games="8460"/>
+	<DSTDB version="20260521143637" filter="EN" games="8460"/>
 	<!--
  GameTDB: DS, Database started in 2015 (https://www.gametdb.com)
  Never modify this file manually, it will get overwritten when you update. You can add games and fixes on the website.
@@ -86703,22 +86703,45 @@ Domina el vocabulario Alemán y mejora tu nivel de comprensión practicando con 
 		<rom version="0" name="Mushroom Men: Rise of the Fungi (USA) (EN).ds" size="33554432" crc="062fc7ff" md5="d6738ec70152cc742087348e240e4892" sha1="ffb61637dd36ff2341bcbdddf14a424217a27c3a"/>
 		<case color="000000"/>
 	</game>
-	<game name="Mushroom Men: Rise of the Fungi (Europe) (EN)">
+	<game name="Mushroom Men: Rise of the Fungi (Europe) (EN,FR,DE,ES,IT)">
 		<id>CMRP</id>
 		<type>DS</type>
 		<region>PAL</region>
-		<languages>EN</languages>
+		<languages>EN,FR,DE,ES,IT</languages>
 		<locale lang="EN">
 			<title>Mushroom Men: Rise of the Fungi</title>
 			<synopsis>As night falls, a strange green glow can be seen in the skies. Larger and larger it grows, until the full extent of its source becomes apparent – an intergalactic meteor, spewing noxious green gas, and plummeting towards the earth’s surface!</synopsis>
 		</locale>
-		<publisher/>
+		<locale lang="FR">
+			<title>Mushroom Men – Les Premiers Champignhommes</title>
+			<synopsis/>
+		</locale>
+		<locale lang="DE">
+			<title>Mushroom Men - Aufstand der Pilze</title>
+			<synopsis/>
+		</locale>
+		<locale lang="ES">
+			<title>Mushroom Men: La rebelión de los hongos</title>
+			<synopsis/>
+		</locale>
+		<locale lang="IT">
+			<title>Mushroom Men - L'Ascesa dei Funghi</title>
+			<synopsis/>
+		</locale>
+		<locale lang="NL">
+			<title>Mushroom Men - Rise of the Fungi</title>
+			<synopsis/>
+		</locale>
+		<developer>Red Fly Studio</developer>
+		<publisher>Gamecock Media Group</publisher>
 		<date year="2009" month="3" day="20"/>
 		<genre>action,adventure</genre>
-		<rating type="PEGI" value="7"/>
+		<rating type="PEGI" value="7">
+			<descriptor>violence</descriptor>
+		</rating>
 		<wi-fi players="0"/>
-		<input players-multi-cart="1" players-single-cart="1"/>
-		<rom version="0" name="Mushroom Men: Rise of the Fungi (Europe) (EN).ds" size="33554432" crc="18720ac1" md5="0576a91cd110ee0dd9587fb746a98117" sha1="fc87060d544eeb3d4dde2bf94dc2a1337e3b7a05"/>
+		<input players-multi-cart="2" players-single-cart="1"/>
+		<rom version="0" name="Mushroom Men: Rise of the Fungi (Europe) (EN,FR,DE,ES,IT).ds" size="33554432" crc="18720ac1" md5="0576a91cd110ee0dd9587fb746a98117" sha1="fc87060d544eeb3d4dde2bf94dc2a1337e3b7a05"/>
 	</game>
 	<game name="MySims Party (USA) (EN,FR,ES)">
 		<id>CMSE</id>
@@ -93648,13 +93671,17 @@ For becoming an &quot;expert&quot;, it is better to go for it while having fun. 
 		<languages>EN</languages>
 		<locale lang="EN">
 			<title>Tecmo Bowl: Kickoff</title>
-			<synopsis/>
+			<synopsis>Based on the most popular Tecmo Super Bowl, Tecmo Bowl: Kickoff delivers to long time fans and newcomers easy to employ controls, fun, huge plays and exciting cut-scenes. The classic, over-the-top, all-American football game enables players of all levels to engage in a fun filled, fast paced, arcade style of football.</synopsis>
 		</locale>
-		<publisher/>
-		<date year="" month="" day=""/>
-		<rating type="ESRB" value=""/>
-		<wi-fi players="0"/>
-		<input players-multi-cart="1" players-single-cart="1"/>
+		<developer>Polygon Magic</developer>
+		<publisher>Tecmo</publisher>
+		<date year="2008" month="11" day="18"/>
+		<genre>sports,arcade,football</genre>
+		<rating type="ESRB" value="E"/>
+		<wi-fi players="2">
+			<feature>online</feature>
+		</wi-fi>
+		<input players-multi-cart="2" players-single-cart="1"/>
 		<rom version="0" name="Tecmo Bowl: Kickoff (USA) (EN).ds" size="134217728" crc="85d2de20" md5="31551719ceea35ff1892b734c892a392" sha1="4bb75b5ec47f0f3d272af8259c43009f0b9e70c4"/>
 		<case color="000000"/>
 	</game>
@@ -105226,21 +105253,21 @@ Choose from 15 action-packed games and activities including Sam's Fire Fight, Co
 		<input players-multi-cart="1" players-single-cart="1"/>
 		<rom version="0" name="Le Aventures de T'choupi a l'Ecoles (Europe) (FR).ds" size="8388608" crc="f822acaa" md5="b5e3f6a608b700f193d2d29bcbd276a9" sha1="3529ab9f74b80332fb5e318461b89e8252662c96"/>
 	</game>
-	<game name="The Combo Pack Madagascar 3: Europe's Most Wanted + The Croods: Prehistoric Party! (Europe) (EN,FR,DE,ES,IT)">
+	<game name="The Combo Pack: Madagascar 3: Europe's Most Wanted + The Croods: Prehistoric Party! (Europe) (EN,FR,DE,ES,IT)">
 		<id>TRCP</id>
 		<type>DS</type>
 		<region>PAL</region>
 		<languages>EN,FR,DE,ES,IT</languages>
 		<locale lang="EN">
-			<title>The Combo Pack Madagascar 3: Europe's Most Wanted + The Croods: Prehistoric Party!</title>
+			<title>The Combo Pack: Madagascar 3: Europe's Most Wanted + The Croods: Prehistoric Party!</title>
 			<synopsis>This combo pack contains the full versions of both Madagascar 3: The Video Game and The Croods: Prehistoric Party. It is loaded with action and adventure featuring your favorite DreamWorks Animation characters and is sure to provide hours of fun for kids of all ages. In Madagascar 3: The Video Game, adventure across Europe as Alex the Lion, Marty the Zebra, Gloria the Hippo and Melman the Giraffe while you find a way home under the perfect cover: a traveling circus. The Croods: Prehistoric Party. combines the ultimate fun of a family party game with Croods style action as you journey through 30 unique and addictive mini games.</synopsis>
 		</locale>
 		<locale lang="ES">
-			<title>Combo Pack Madagacar 3: De Marcha por Europa + Los Croods ¡Fiesta prehistórica!</title>
+			<title>Combo Pack: Madagacar 3: De Marcha por Europa + Los Croods ¡Fiesta prehistórica!</title>
 			<synopsis/>
 		</locale>
 		<locale lang="FI">
-			<title>The Combo Pack Madagascar 3: Europe's Most Wanted + Croods Prehistoric Party!</title>
+			<title>The Combo Pack: Madagascar 3: Europe's Most Wanted + Croods Prehistoric Party!</title>
 			<synopsis/>
 		</locale>
 		<developer>Torus Games</developer>
@@ -105252,7 +105279,7 @@ Choose from 15 action-packed games and activities including Sam's Fire Fight, Co
 		</rating>
 		<wi-fi players="0"/>
 		<input players-multi-cart="1" players-single-cart="1"/>
-		<rom version="0" name="The Combo Pack Madagascar 3: Europe's Most Wanted + The Croods: Prehistoric Party! (Europe) (EN,FR,DE,ES,IT).ds" size="67108864" crc="0e775ecc" md5="300a8e43fbb644968ebd0c68b83f656e" sha1="096db4cf49c58bed3abbfe388e5f3c832ef13be3"/>
+		<rom version="0" name="The Combo Pack: Madagascar 3: Europe's Most Wanted + The Croods: Prehistoric Party! (Europe) (EN,FR,DE,ES,IT).ds" size="67108864" crc="0e775ecc" md5="300a8e43fbb644968ebd0c68b83f656e" sha1="096db4cf49c58bed3abbfe388e5f3c832ef13be3"/>
 	</game>
 	<game name="eSMART 2.0 (Japan) (JA)">
 		<id>TREJ</id>
@@ -114148,13 +114175,19 @@ friends or family members to help prepare it. 300 recipes have been tested and p
 		<languages>EN</languages>
 		<locale lang="EN">
 			<title>Contra 4</title>
-			<synopsis/>
+			<synopsis>The action franchise that started it all is celebrating its 20th anniversary with an all-new adventure on Nintendo DS! Set after the events of Contra III: Alien Wars, the game follows mercenaries Bill Rizer and Lance Bean as they battle to save the world from a new extraterrestrial threat.</synopsis>
 		</locale>
-		<publisher/>
-		<date year="" month="" day=""/>
-		<rating type="ESRB" value=""/>
+		<developer>WayForward</developer>
+		<publisher>Konami</publisher>
+		<date year="2007" month="11" day="13"/>
+		<genre>action,platformer</genre>
+		<rating type="ESRB" value="T">
+			<descriptor>blood and gore</descriptor>
+			<descriptor>fantasy violence</descriptor>
+			<descriptor>language</descriptor>
+		</rating>
 		<wi-fi players="0"/>
-		<input players-multi-cart="1" players-single-cart="1"/>
+		<input players-multi-cart="2" players-single-cart="1"/>
 		<rom version="" name="Contra 4 (USA) (EN).ds"/>
 		<case color="000000"/>
 	</game>
