@@ -76,6 +76,7 @@ QMap<int, Database::MatchResult> Database::getAllMatches()
         QString releaseDate = query.value(10).toString();
         if (!releaseDate.isEmpty()) {
             result.releaseYear = releaseDate.left(4).toInt();
+            result.releaseDate = releaseDate;
         }
         
         // Populate remaining metadata fields
@@ -142,6 +143,7 @@ Database::MatchResult Database::getMatchForFile(int fileId)
         QString releaseDate = query.value(11).toString();
         if (!releaseDate.isEmpty()) {
             result.releaseYear = releaseDate.left(4).toInt();
+            result.releaseDate = releaseDate;
         }
         
         result.description = query.value(12).toString();

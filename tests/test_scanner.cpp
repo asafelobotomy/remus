@@ -21,6 +21,7 @@ private slots:
     void compressedArchiveMultiFileLinking();
     void markdownDocumentsAreSkippedButGenesisRomFilesRemain();
     void exclusionMarkerChangesAreRespectedAcrossScans();
+    void concurrentScanNoDuplicates();
 };
 
 static QString writeFile(const QString &path, const QByteArray &data = QByteArray("data"))
@@ -293,6 +294,58 @@ void ScannerTest::exclusionMarkerChangesAreRespectedAcrossScans()
 
     QList<ScanResult> excludedResults = scanner.scan(dir.path());
     QCOMPARE(excludedResults.size(), 0);
+}
+
+void ScannerTest::concurrentScanNoDuplicates()
+{
+    const QString sevenZip = findSevenZip();
+    if (sevenZip.isEmpty()) {
+        QSKIP("7z not available");
+    }
+
+    QTemporaryDir dir;
+    QVERIFY(dir.isValid());
+
+    QTemporaryDir sourceDir;
+    QVERIFY(sourceDir.isValid());
+
+    // Plain ROM files — processed sequentially in Phase 1
+    const int plainFileCount = 10;
+    for (int i = 0; i < plainFileCount; ++i) {
+        QVERIFY(!writeFile(dir.filePath(QString("plain_%1.nes").arg(i))).isEmpty());
+    }
+
+    // Archives each containing two ROM files — processed concurrently in Phase 2
+    const int archiveCount = 4;
+    const int filesPerArchive = 2;
+    for (int a = 0; a < archiveCount; ++a) {
+        const QString srcSubDir = QString("arc_%1").arg(a);
+        QVERIFY(QDir().mkpath(sourceDir.filePath(srcSubDir)));
+        for (int f = 0; f < filesPerArchive; ++f) {
+            QVERIFY(!writeFile(sourceDir.filePath(
+                srcSubDir + QString("/rom_%1_%2.nes").arg(a).arg(f))).isEmpty());
+        }
+        const QString archivePath = dir.filePath(QString("archive_%1.7z").arg(a));
+        QVERIFY(createArchive(sevenZip, sourceDir.path(), archivePath, {srcSubDir}));
+    }
+
+    Scanner scanner;
+    scanner.setExtensions({".nes"});
+
+    const QList<ScanResult> results = scanner.scan(dir.path());
+
+    const int expectedCount = plainFileCount + archiveCount * filesPerArchive;
+    QCOMPARE(results.size(), expectedCount);
+
+    // No duplicate entries — each path+internal combination must appear exactly once
+    QSet<QString> seen;
+    for (const ScanResult &r : results) {
+        const QString key = r.isCompressed
+            ? r.archivePath + QLatin1String("::") + r.archiveInternalPath
+            : r.path;
+        QVERIFY2(!seen.contains(key), qPrintable(QLatin1String("Duplicate result: ") + key));
+        seen.insert(key);
+    }
 }
 
 QTEST_MAIN(ScannerTest)

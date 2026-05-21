@@ -48,11 +48,13 @@ public:
     GameMetadata getByHash(const QString &hash, const QString &system) override;
     GameMetadata getById(const QString &id) override;
     ArtworkUrls getArtwork(const QString &id) override;
+    int igdbSkippedCount() const { return m_igdbSkippedCount; }
 
 protected:
     QString m_clientApiKey;
     QMap<int, QString> m_companyCache;
     bool m_metadataProxyDisabled = false;
+    int m_igdbSkippedCount = 0;
 
     /**
      * @brief Detect hash type from hash string length

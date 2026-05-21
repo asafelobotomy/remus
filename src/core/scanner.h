@@ -7,6 +7,7 @@
 #include <QFileInfo>
 #include <QSet>
 #include <functional>
+#include <atomic>
 #include "archive_extractor.h"
 
 namespace Remus {
@@ -91,6 +92,7 @@ private:
     bool isLikelyTextFile(const QString &path) const;
     ScanResult createScanResult(const QFileInfo &fileInfo);
     void processArchive(const QString &archivePath, QList<ScanResult> &results);
+    QList<ScanResult> processArchiveWithExtractor(const QString &archivePath, ArchiveExtractor &extractor);
     void detectMultiFileSets(QList<ScanResult> &results);
     void linkBinToCue(QList<ScanResult> &results);
     void linkGdiToTracks(QList<ScanResult> &results);
@@ -100,8 +102,8 @@ private:
     QStringList m_extensions;
     bool m_multiFileDetection = true;
     bool m_archiveScanning = true;
-    int m_filesProcessed = 0;
-    bool m_cancelRequested = false;
+    std::atomic<int> m_filesProcessed{0};
+    std::atomic<bool> m_cancelRequested{false};
     bool m_cancelled = false;
     mutable QSet<QString> m_excludedDirs;
     mutable QSet<QString> m_checkedDirs;

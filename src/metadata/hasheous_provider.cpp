@@ -252,6 +252,7 @@ GameMetadata HasheousProvider::getByHashes(const QString &crc32,
                 << metadata.externalIds["igdb"]
                 << ") but MetadataProxy is disabled."
                 << "Set hasheous_client_api_key in settings for richer metadata.";
+        m_igdbSkippedCount++;
     }
 
     metadata.providerId = Constants::Providers::HASHEOUS;

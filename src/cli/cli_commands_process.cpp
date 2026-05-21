@@ -9,6 +9,7 @@
 
 #include "../core/archive_extractor.h"
 #include "../core/chd_converter.h"
+#include "../services/hash_service.h"
 #include "../core/cso_converter.h"
 #include "../core/disc_magic_detector.h"
 #include "../core/hasher.h"
@@ -235,7 +236,6 @@ int handleScanCommand(CliContext &ctx)
 
         const bool hasOutput = !ctx.processOutputPath.isEmpty();
         const QList<int> systemIds = orderedProcessSystemIds(ctx.db, ctx.processFileScopeIds);
-        Hasher hasher;
 
         // Tool availability pre-flight — warn early if converters are missing
         if (hasOutput) {
@@ -271,17 +271,26 @@ int handleScanCommand(CliContext &ctx)
 
             qInfo() << "Hashing" << totalForSystem << "file(s)...";
             int hashedCount = 0;
-            for (const FileRecord &file : filesToHash) {
-                if (!fileMatchesProcessScope(file, ctx.processFileScopeIds) || !fileMatchesSystemFilter(file, systemId)) {
-                    continue;
-                }
 
-                const HashResult hashResult = hashFileRecord(file, hasher);
-                if (hashResult.success) {
-                    ctx.db.updateFileHashes(file.id, hashResult.crc32, hashResult.md5, hashResult.sha1);
+            // Build the per-system subset and route through the parallel batch API.
+            QList<FileRecord> systemBatch;
+            for (const FileRecord &file : filesToHash) {
+                if (fileMatchesProcessScope(file, ctx.processFileScopeIds)
+                        && fileMatchesSystemFilter(file, systemId))
+                    systemBatch.append(file);
+            }
+
+            HashService svc;
+            const QList<HashService::HashBatchResult> taskResults =
+                svc.computeHashes(systemBatch);
+
+            for (const HashService::HashBatchResult &task : taskResults) {
+                if (!task.skipped && task.result.success) {
+                    ctx.db.updateFileHashes(task.fileId, task.result.crc32,
+                                            task.result.md5, task.result.sha1);
                     hashedCount++;
                 } else {
-                    qWarning() << "  Hash failed for" << file.filename << ":" << hashResult.error;
+                    qWarning() << "  Hash failed for" << task.filename << ":" << task.result.error;
                 }
             }
             qInfo() << "Hash calculation complete:" << hashedCount << "files hashed";
@@ -320,23 +329,55 @@ int handleScanCommand(CliContext &ctx)
         qInfo() << "";
         qInfo() << "Calculating hashes...";
 
-        Hasher hasher;
         const QList<FileRecord> filesToHash = ctx.db.getFilesWithoutHashes();
-        int hashedCount = 0;
-        for (const FileRecord &file : filesToHash) {
-            const HashResult hashResult = hashFileRecord(file, hasher);
-            if (hashResult.success) {
-                ctx.db.updateFileHashes(file.id, hashResult.crc32, hashResult.md5, hashResult.sha1);
+        int hashedCount  = 0;
+        int skippedCount = 0;
+
+        HashService svc;
+        const QList<HashService::HashBatchResult> taskResults =
+            svc.computeHashes(filesToHash);
+
+        for (const HashService::HashBatchResult &task : taskResults) {
+            if (!task.skipped && task.result.success) {
+                ctx.db.updateFileHashes(task.fileId, task.result.crc32,
+                                        task.result.md5, task.result.sha1);
                 hashedCount++;
                 if (hashedCount % 10 == 0) {
                     qInfo() << "  Hashed" << hashedCount << "of" << filesToHash.size() << "files...";
                 }
             } else {
-                qWarning() << "  Hash failed for" << file.filename << ":" << hashResult.error;
+                skippedCount++;
+                qWarning() << "  Skipped" << task.filename << ":" << task.result.error;
             }
         }
-        qInfo() << "Hash calculation complete:" << hashedCount << "files hashed";
+        if (skippedCount > 0)
+            qInfo() << "Hash calculation complete:" << hashedCount << "hashed," << skippedCount << "skipped";
+        else
+            qInfo() << "Hash calculation complete:" << hashedCount << "files hashed";
     }
 
+    return 0;
+}
+
+int handleCheckToolsCommand(CliContext &ctx)
+{
+    if (!ctx.parser.isSet("check-tools")) return 0;
+
+    CHDConverter chd;
+    RVZConverter rvz;
+    CSOConverter cso;
+
+    const auto printTool = [](bool available, const char *name, const QString &version) {
+        const QString pad = QString(name).leftJustified(14);
+        if (available)
+            qInfo().noquote() << QString("  \u2713 %1 %2").arg(pad, version);
+        else
+            qInfo().noquote() << QString("  \u2717 %1 not found").arg(pad);
+    };
+
+    qInfo().noquote() << "Tool availability (all tools are optional):";
+    printTool(chd.isChdmanAvailable(),      "chdman",       chd.getChdmanVersion());
+    printTool(rvz.isDolphinToolAvailable(), "dolphin-tool", rvz.getDolphinToolVersion());
+    printTool(cso.isMaxcsoAvailable(),      "maxcso",       cso.getMaxcsoVersion());
     return 0;
 }

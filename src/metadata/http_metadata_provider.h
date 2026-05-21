@@ -13,6 +13,13 @@ namespace Remus {
  * Owns a QNetworkAccessManager and a RateLimiter, and provides the
  * shared request/reply/timeout boilerplate so concrete providers only
  * need to build the QNetworkRequest and call waitForReply().
+ *
+ * Thread-safety audit (P2): m_networkManager is a child QObject bound to the
+ * thread that creates the HttpMetadataProvider instance.  Qt requires QNAM to
+ * be used only from its owning thread.  Concurrent match/enrich pipelines must
+ * therefore keep all HTTP provider calls on the provider-owning (main) thread;
+ * only CPU/IO-bound steps (disc serial detection, DB-only lookups) may be
+ * dispatched to worker threads.
  */
 class HttpMetadataProvider : public MetadataProvider {
     Q_OBJECT

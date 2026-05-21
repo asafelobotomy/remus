@@ -283,6 +283,88 @@ private slots:
         int hashed = svc.hashAll(nullptr);
         QCOMPARE(hashed, 0);
     }
+
+    // H1: failures must be counted as skipped and surfaced in the log
+    void testHashAllReportsSkippedFilesWithReason()
+    {
+        QTemporaryDir tmp;
+        QVERIFY(tmp.isValid());
+
+        Database db;
+        QVERIFY(db.initialize(tmp.path() + "/skip_test.db"));
+
+        int libId = db.insertLibrary(tmp.path(), "Skip Test");
+        int sysId = db.getSystemId("NES");
+
+        // Insert a record whose currentPath does not exist — hash will fail.
+        const QString missingPath = tmp.path() + "/missing.nes";
+        insertTestFile(db, libId, missingPath, "missing.nes", ".nes", sysId);
+
+        QStringList logLines;
+        HashService svc;
+        int hashed = svc.hashAll(&db, nullptr, [&](const QString &msg) {
+            logLines << msg;
+        });
+
+        QCOMPARE(hashed, 0);
+
+        bool hasSkipLine = false;
+        for (const QString &line : logLines) {
+            if (line.contains("missing.nes")
+                    || line.contains("skipped", Qt::CaseInsensitive)) {
+                hasSkipLine = true;
+                break;
+            }
+        }
+        QVERIFY2(hasSkipLine,
+                 qPrintable("Expected a skip message in log but got: " + logLines.join("; ")));
+    }
+
+    // P4 — Batch API must produce the same hashes as single-file hashRecord()
+    void testComputeHashesMatchesSingleFileResults()
+    {
+        QTemporaryDir tmp;
+        QVERIFY(tmp.isValid());
+
+        constexpr int FILE_COUNT = 4;
+        QList<FileRecord> records;
+        QList<QString> expectedCrc32s;
+
+        HashService refSvc;
+        for (int i = 0; i < FILE_COUNT; ++i) {
+            QByteArray data = QString("batch_hash_test_data_%1").arg(i).toUtf8();
+            const QString name = QString("rom%1.nes").arg(i);
+            QString path = writeTestFile(tmp.path(), name, data);
+            QVERIFY(!path.isEmpty());
+
+            FileRecord fr;
+            fr.id          = i + 1;  // synthetic id for comparison
+            fr.currentPath = path;
+            fr.filename    = name;
+            fr.extension   = QStringLiteral(".nes");
+            records.append(fr);
+
+            // Reference: single-file result
+            HashResult ref = refSvc.hashRecord(fr);
+            QVERIFY(ref.success);
+            expectedCrc32s.append(ref.crc32);
+        }
+
+        // Batch via computeHashes()
+        HashService batchSvc;
+        const QList<HashService::HashBatchResult> results =
+            batchSvc.computeHashes(records);
+
+        QCOMPARE(results.size(), FILE_COUNT);
+        for (int i = 0; i < FILE_COUNT; ++i) {
+            const HashService::HashBatchResult &task = results[i];
+            QVERIFY2(!task.skipped,
+                     qPrintable(QString("File %1 unexpectedly skipped: %2")
+                                    .arg(i).arg(task.skipReason)));
+            QVERIFY(task.result.success);
+            QCOMPARE(task.result.crc32, expectedCrc32s[i]);
+        }
+    }
 };
 
 int main(int argc, char *argv[])

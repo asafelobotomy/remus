@@ -17,6 +17,7 @@ class ArtworkDownloader : public QObject {
 
 public:
     explicit ArtworkDownloader(QObject *parent = nullptr);
+    explicit ArtworkDownloader(QNetworkAccessManager *mgr, QObject *parent = nullptr);
 
     static bool isSupportedUrl(const QUrl &url);
     static bool isSupportedRemoteUrl(const QUrl &url);

@@ -74,6 +74,7 @@ target_link_libraries(remus-core PUBLIC
     Qt6::Core
     Qt6::Sql
     Qt6::Gui
+    Qt6::Concurrent
     ZLIB::ZLIB
     remus-constants
 )

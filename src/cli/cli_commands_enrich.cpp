@@ -1,7 +1,9 @@
 #include "cli_commands.h"
 #include "cli_helpers.h"
 #include <QMap>
+#include <QtConcurrent>
 #include "../metadata/provider_orchestrator.h"
+#include "../metadata/hasheous_provider.h"
 #include "../core/constants/constants.h"
 #include "cli_logging.h"
 
@@ -88,36 +90,56 @@ int handleEnrichCommand(CliContext &ctx)
 
     int enriched = 0, failed = 0;
 
-    for (const auto &c : candidates) {
+    // Phase 1 — Parallel metadata-stub and field-gap preparation.
+    // computeFieldGap() and GameMetadata construction are pure in-memory
+    // operations with no shared mutable state; safe for concurrent execution.
+    struct PreparedEnrichTask {
+        EnrichCandidate candidate;
+        GameMetadata    existing;
+        ProviderOrchestrator::FieldSet gap;
+        bool alreadyComplete = false;
+    };
+
+    const QList<PreparedEnrichTask> tasks = QtConcurrent::blockingMapped(
+        candidates,
+        [](const EnrichCandidate &c) -> PreparedEnrichTask {
+            PreparedEnrichTask t;
+            t.candidate        = c;
+            t.existing.title       = c.title;
+            t.existing.system      = c.system;
+            t.existing.publisher   = c.publisher;
+            t.existing.developer   = c.developer;
+            t.existing.releaseDate = c.releaseYear > 0
+                ? QString::number(c.releaseYear) : QString();
+            t.existing.description = c.description;
+            t.existing.genres      = c.genres.isEmpty()
+                ? QStringList() : c.genres.split(QStringLiteral(", "));
+            t.existing.players     = c.players.toInt();
+            t.gap = ProviderOrchestrator::computeFieldGap(t.existing);
+            t.alreadyComplete = t.gap.isEmpty();
+            return t;
+        });
+
+    // Phase 2 — Serial provider enrichment and DB writes.
+    // QNetworkAccessManager inside HttpMetadataProvider has thread affinity to
+    // its owning (main) thread; enrichMissingFields() and db.updateGame() must
+    // not be dispatched to worker threads.
+    for (const PreparedEnrichTask &task : tasks) {
+        const auto &c = task.candidate;
         qInfo() << "Enriching:" << c.title << "(" << c.system << ")";
 
-        // Build an existing metadata stub from what we already know so
-        // enrichMissingFields can compute the field gap and skip providers
-        // that cannot supply anything new.
-        GameMetadata existing;
-        existing.title       = c.title;
-        existing.system      = c.system;
-        existing.publisher   = c.publisher;
-        existing.developer   = c.developer;
-        existing.releaseDate = c.releaseYear > 0 ? QString::number(c.releaseYear) : QString();
-        existing.description = c.description;
-        existing.genres      = c.genres.isEmpty() ? QStringList() : c.genres.split(", ");
-        existing.players     = c.players.toInt();
+        if (task.alreadyComplete) {
+            qInfo() << "  Already complete — skipping";
+            continue;
+        }
 
         const QString bestHash = !c.sha1.isEmpty() ? c.sha1 :
                                  !c.md5.isEmpty()  ? c.md5  :
                                  c.crc32;
 
-        const ProviderOrchestrator::FieldSet gap =
-            ProviderOrchestrator::computeFieldGap(existing);
-
-        if (gap.isEmpty()) {
-            qInfo() << "  Already complete — skipping";
-            continue;
-        }
-
         GameMetadata metadata = orchestrator->enrichMissingFields(
-            gap, existing, bestHash, c.title, c.system, c.crc32, c.md5, c.sha1);
+            task.gap, task.existing, bestHash, c.title, c.system,
+            c.crc32, c.md5, c.sha1);
 
         if (metadata.title.isEmpty()) {
             qInfo() << "  ✗ No metadata found";
@@ -156,5 +178,14 @@ int handleEnrichCommand(CliContext &ctx)
     qInfo() << "=== Enrichment Complete ===";
     qInfo() << "Enriched:" << enriched;
     qInfo() << "Failed:"   << failed;
+
+    auto *hasheous = dynamic_cast<HasheousProvider*>(
+        orchestrator->getProvider(Constants::Providers::HASHEOUS));
+    if (hasheous && hasheous->igdbSkippedCount() > 0) {
+        qInfo() << "";
+        qInfo().noquote() << QString("%1 title(s) had IGDB data available — "
+                                     "set hasheous_client_api_key for richer metadata.")
+                                 .arg(hasheous->igdbSkippedCount());
+    }
     return 0;
 }

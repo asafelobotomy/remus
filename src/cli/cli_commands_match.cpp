@@ -3,6 +3,7 @@
 #include <QDateTime>
 #include <QFile>
 #include <QTextStream>
+#include <QtConcurrent>
 #include "../metadata/provider_orchestrator.h"
 #include "../core/constants/constants.h"
 #include "../core/disc_magic_detector.h"
@@ -10,6 +11,46 @@
 
 using namespace Remus;
 using namespace Remus::Constants;
+
+namespace {
+
+// Carries a file record together with its pre-detected disc serial.
+struct MatchTask {
+    FileRecord file;
+    QString discSerial;
+};
+
+// Thread-safe: all DiscMagicDetector methods are static and create their own
+// worker-local ArchiveExtractor instances.  No shared mutable state.
+MatchTask buildMatchTask(const FileRecord &file)
+{
+    MatchTask task;
+    task.file = file;
+    if (!DiscMagicDetector::isDiscImageExtension(file.extension))
+        return task;
+
+    DiscHeaderInfo discInfo;
+    if (file.isCompressed && !file.archivePath.isEmpty()) {
+        const QString memberPath = file.archiveInternalPath.isEmpty()
+            ? file.filename : file.archiveInternalPath;
+        discInfo = DiscMagicDetector::detectFromArchive(
+            file.archivePath, memberPath, file.fileSize);
+    } else {
+        discInfo = DiscMagicDetector::detect(file.currentPath);
+        if (!discInfo.detected || discInfo.serial.isEmpty()) {
+            // CDI files: fall back to the Dreamcast deep scanner.
+            DiscHeaderInfo dcInfo = DiscMagicDetector::extractDreamcastHeader(file.currentPath);
+            if (dcInfo.detected && !dcInfo.serial.isEmpty())
+                discInfo = dcInfo;
+        }
+    }
+
+    if (discInfo.detected && !discInfo.serial.isEmpty())
+        task.discSerial = discInfo.serial;
+    return task;
+}
+
+} // namespace
 
 int handleMatchCommand(CliContext &ctx)
 {
@@ -46,52 +87,43 @@ int handleMatchCommand(CliContext &ctx)
     }
     qInfo() << "";
 
-    int matched = 0, failed = 0;
-
+    // Pre-filter: collect files that still need matching (serial DB checks must
+    // stay on the main thread — the Database connection is not thread-safe).
+    QList<FileRecord> pendingFiles;
     for (const FileRecord &file : files) {
         if (!fileMatchesSystemFilter(file, ctx.processSystemIdFilter)) continue;
         if (ctx.db.getMatchForFile(file.id).matchId != 0) continue;
+        pendingFiles.append(file);
+    }
+    qInfo() << "Files pending match:" << pendingFiles.size();
+    qInfo() << "";
 
+    // Phase 1 — Parallel disc serial detection.
+    // DiscMagicDetector methods are static and worker-local; safe for concurrent
+    // use.  HttpMetadataProvider instances (QNAM thread affinity) are NOT touched
+    // here — network provider calls remain serial in Phase 2.
+    const QList<MatchTask> tasks = QtConcurrent::blockingMapped(
+        pendingFiles,
+        [](const FileRecord &f) { return buildMatchTask(f); });
+
+    // Phase 2 — Serial provider matching and DB writes.
+    // QNetworkAccessManager inside HttpMetadataProvider has thread affinity to
+    // its owning (main) thread; searchWithFallback() and persistMetadata() must
+    // not be dispatched to worker threads.
+    int matched = 0, failed = 0;
+
+    for (const MatchTask &task : tasks) {
+        const FileRecord &file = task.file;
         const QString displayName = getMatchingDisplayName(file);
         const QString systemName = getMatchingSystemName(file);
 
         qInfo() << "Matching:" << displayName;
-
-        // Extract disc serial for disc image files (CDI, GDI, ISO, etc.)
-        QString discSerial;
-        if (DiscMagicDetector::isDiscImageExtension(file.extension)) {
-            DiscHeaderInfo discInfo;
-
-            if (file.isCompressed && !file.archivePath.isEmpty()) {
-                // Stream the first 64 KB from the compressed member — no temp
-                // dir or full extraction required, even for multi-GB disc images.
-                const QString memberPath = file.archiveInternalPath.isEmpty()
-                    ? file.filename : file.archiveInternalPath;
-                discInfo = DiscMagicDetector::detectFromArchive(
-                    file.archivePath, memberPath, file.fileSize);
-            } else {
-                discInfo = DiscMagicDetector::detect(file.currentPath);
-                if (!discInfo.detected || discInfo.serial.isEmpty()) {
-                    // CDI files embed data at unpredictable offsets — the 64KB
-                    // probe in detect() may miss the magic. Fall back to the
-                    // Dreamcast deep scanner that searches up to 16MB.
-                    DiscHeaderInfo dcInfo = DiscMagicDetector::extractDreamcastHeader(file.currentPath);
-                    if (dcInfo.detected && !dcInfo.serial.isEmpty()) {
-                        discInfo = dcInfo;
-                    }
-                }
-            }
-
-            if (discInfo.detected && !discInfo.serial.isEmpty()) {
-                discSerial = discInfo.serial;
-                qInfo() << "  Disc serial:" << discSerial
-                        << "(" << discInfo.systemName << ")";
-            }
-        }
+        if (!task.discSerial.isEmpty())
+            qInfo() << "  Disc serial:" << task.discSerial;
 
         GameMetadata metadata = orchestrator->searchWithFallback(
             selectBestHash(file), displayName, systemName,
-            file.crc32, file.md5, file.sha1, discSerial);
+            file.crc32, file.md5, file.sha1, task.discSerial);
 
         if (!metadata.title.isEmpty()) {
             const int confidence = metadata.matchScore > 0

@@ -6,6 +6,7 @@
 #include <QTextStream>
 #include <QDebug>
 #include <QSet>
+#include <QtConcurrent/QtConcurrentMap>
 #include "logging_categories.h"
 #include "constants/files.h"
 #include "constants/settings.h"
@@ -116,44 +117,60 @@ QList<ScanResult> Scanner::scan(const QString &libraryPath)
 
 void Scanner::scanDirectory(const QString &dirPath, QList<ScanResult> &results)
 {
+    QStringList archivePaths;
+
+    // Phase 1: Walk the directory tree sequentially.
+    // Plain ROM files are processed immediately; archives are queued for Phase 2.
+    // isInExcludedDirectory() modifies mutable caches — must run on the main thread.
     QDirIterator it(dirPath, QDir::Files | QDir::Dirs | QDir::NoDotAndDotDot,
                     QDirIterator::Subdirectories);
 
     while (it.hasNext()) {
-        if (m_cancelRequested) {
-            return;
-        }
+        if (m_cancelRequested.load(std::memory_order_relaxed)) return;
 
-        QString path = it.next();
-        QFileInfo fileInfo(path);
-        
-        // Skip files in directories marked with .remusdir
-        if (isInExcludedDirectory(fileInfo.absolutePath())) {
-            continue;
-        }
+        const QString path = it.next();
+        const QFileInfo fileInfo(path);
 
-        if (fileInfo.isFile()) {
-            QString extension = "." + fileInfo.suffix().toLower();
-            
-            // Check if it's an archive and archive scanning is enabled
-            if (m_archiveScanning && isArchiveExtension(extension)) {
-                processArchive(path, results);
-                m_filesProcessed++;
-                emit fileFound(path);
-            }
-            // Check if it's a regular ROM file
-            else if (shouldScanFile(fileInfo)) {
-                ScanResult result = createScanResult(fileInfo);
-                results.append(result);
-                
-                m_filesProcessed++;
-                emit fileFound(path);
-                
-                if (m_filesProcessed % 100 == 0) {
-                    emit scanProgress(m_filesProcessed, -1);
-                }
+        if (isInExcludedDirectory(fileInfo.absolutePath())) continue;
+
+        if (!fileInfo.isFile()) continue;
+
+        const QString extension = "." + fileInfo.suffix().toLower();
+        if (m_archiveScanning && isArchiveExtension(extension)) {
+            archivePaths.append(path);
+        } else if (shouldScanFile(fileInfo)) {
+            results.append(createScanResult(fileInfo));
+            const int count = ++m_filesProcessed;
+            emit fileFound(path);
+            if (count % 100 == 0) {
+                emit scanProgress(count, -1);
             }
         }
+    }
+
+    if (archivePaths.isEmpty() || m_cancelRequested.load(std::memory_order_relaxed)) return;
+
+    // Phase 2: Process archives concurrently, each worker using its own ArchiveExtractor.
+    // Emitting Qt signals from worker threads is safe: cross-thread connections are
+    // automatically queued. shouldScanArchiveEntry() is const and reads only m_extensions,
+    // which is not modified after scan() begins.
+    const QList<QList<ScanResult>> parallelResults = QtConcurrent::blockingMapped(
+        archivePaths,
+        [this](const QString &path) -> QList<ScanResult> {
+            if (m_cancelRequested.load(std::memory_order_relaxed)) return {};
+            ArchiveExtractor localExtractor;
+            return processArchiveWithExtractor(path, localExtractor);
+        });
+
+    // Phase 3: Merge archive results into the main list (back on calling thread).
+    for (const QList<ScanResult> &partial : parallelResults) {
+        m_filesProcessed.fetch_add(static_cast<int>(partial.size()), std::memory_order_relaxed);
+        results.append(partial);
+    }
+
+    const int total = m_filesProcessed.load(std::memory_order_relaxed);
+    if (total > 0) {
+        emit scanProgress(total, -1);
     }
 }
 
@@ -273,27 +290,33 @@ bool Scanner::isLikelyTextFile(const QString &path) const
 
 void Scanner::processArchive(const QString &archivePath, QList<ScanResult> &results)
 {
-    ArchiveInfo archiveInfo = m_archiveExtractor.getArchiveInfo(archivePath);
-    
+    const QList<ScanResult> local = processArchiveWithExtractor(archivePath, m_archiveExtractor);
+    results.append(local);
+}
+
+QList<ScanResult> Scanner::processArchiveWithExtractor(const QString &archivePath,
+                                                        ArchiveExtractor &extractor)
+{
+    QList<ScanResult> results;
+
+    ArchiveInfo archiveInfo = extractor.getArchiveInfo(archivePath);
+
     if (archiveInfo.format == ArchiveFormat::Unknown) {
         qWarning() << "Unknown archive format:" << archivePath;
-        return;
-    }
-    
-    // Check if we can extract this format
-    if (!m_archiveExtractor.canExtract(archiveInfo.format)) {
-        qWarning() << "Cannot extract archive (missing tool):" << archivePath 
-                   << "- Format:" << static_cast<int>(archiveInfo.format);
-        return;
-    }
-    
-    // Warn if archive appears empty (tool may have failed)
-    if (archiveInfo.contents.isEmpty()) {
-        qWarning() << "Archive appears empty or tool failed:" << archivePath;
-        return;
+        return results;
     }
 
-    // Process each file in the archive
+    if (!extractor.canExtract(archiveInfo.format)) {
+        qWarning() << "Cannot extract archive (missing tool):" << archivePath
+                   << "- Format:" << static_cast<int>(archiveInfo.format);
+        return results;
+    }
+
+    if (archiveInfo.contents.isEmpty()) {
+        qWarning() << "Archive appears empty or tool failed:" << archivePath;
+        return results;
+    }
+
     for (const QString &internalPath : archiveInfo.contents) {
         const QString normalizedInternalPath = ArchiveExtractor::normalizeArchiveMemberPath(internalPath);
         if (normalizedInternalPath.isEmpty()) {
@@ -301,15 +324,14 @@ void Scanner::processArchive(const QString &archivePath, QList<ScanResult> &resu
             continue;
         }
 
-        const QString extension = "." + QFileInfo(normalizedInternalPath).suffix().toLower();
-
-        // Skip if it's not a ROM file we care about.
         if (!shouldScanArchiveEntry(normalizedInternalPath)) {
             continue;
         }
 
+        const QString extension = "." + QFileInfo(normalizedInternalPath).suffix().toLower();
+
         ScanResult result;
-        result.path = archivePath;  // Archive path is the main file
+        result.path = archivePath;
         result.filename = QFileInfo(normalizedInternalPath).fileName();
         result.extension = extension;
         result.fileSize = archiveInfo.entrySizes.value(normalizedInternalPath, 0);
@@ -317,14 +339,12 @@ void Scanner::processArchive(const QString &archivePath, QList<ScanResult> &resu
         result.isCompressed = true;
         result.archivePath = archivePath;
         result.archiveInternalPath = normalizedInternalPath;
-        
+
         results.append(result);
         emit fileFound(archivePath + "::" + normalizedInternalPath);
-        
-        if (m_filesProcessed % 100 == 0) {
-            emit scanProgress(m_filesProcessed, -1);
-        }
     }
+
+    return results;
 }
 
 ScanResult Scanner::createScanResult(const QFileInfo &fileInfo)

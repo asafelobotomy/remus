@@ -138,6 +138,16 @@ private slots:
         runCli({"--stats"});
     }
 
+    void testCheckToolsExitsZeroAndListsAllTools() {
+        QString output;
+        runCliCapture({"--check-tools"}, output, 0);
+        QVERIFY2(output.contains("chdman"),       "output should mention chdman");
+        QVERIFY2(output.contains("dolphin-tool"), "output should mention dolphin-tool");
+        QVERIFY2(output.contains("maxcso"),       "output should mention maxcso");
+        QVERIFY2(!output.contains("not found") || output.contains("Tool availability"),
+                 "header line should always appear");
+    }
+
     void testExportDryRun() {
         QTemporaryDir dir;
         QString outPath = dir.filePath("export.csv");
@@ -828,6 +838,84 @@ private slots:
         // Parser must reject the unrecognised source_type before any DB is created.
         runCli({"--build-compendium", "--compendium-manifest", manifestPath, "--compendium-output", outputDbPath}, 1);
         QVERIFY2(!QFile::exists(outputDbPath), "DB should not be created when source_type is invalid");
+    }
+
+    // X1: passing a directory to --export-path must create a file inside it
+    void testExportPathDirectoryProducesFileInsideDirectory()
+    {
+        QTemporaryDir dir;
+        QVERIFY(dir.isValid());
+
+        const QString dbPath  = dir.filePath("test.db");
+        const QString romDir  = dir.filePath("roms");
+        QVERIFY(QDir().mkpath(romDir));
+        {
+            QFile f(romDir + "/TestGame (USA).nes");
+            QVERIFY(f.open(QIODevice::WriteOnly));
+            f.write("NESDATA");
+        }
+
+        runCli({"--db", dbPath, "--scan", romDir});
+
+        // Insert a game and a match directly so the exporter has something to write.
+        {
+            Remus::Database db;
+            QVERIFY(db.initialize(dbPath));
+            const QList<Remus::FileRecord> files = db.getExistingFiles();
+            QVERIFY(!files.isEmpty());
+            const int sysId  = db.getSystemId("NES");
+            const int gameId = db.insertGame("TestGame", sysId, "USA");
+            QVERIFY(gameId > 0);
+            QVERIFY(db.insertMatch(files.first().id, gameId, 100.0f, "test"));
+        }
+
+        QTemporaryDir exportDir;
+        QVERIFY(exportDir.isValid());
+        runCli({"--db", dbPath, "--export", "csv", "--export-path", exportDir.path()});
+
+        const QStringList created = QDir(exportDir.path()).entryList(QDir::Files);
+        QVERIFY2(!created.isEmpty(),
+                 "Expected a file to be created inside the export directory");
+    }
+
+    void testEsExportIncludesPublisherAndReleasedate()
+    {
+        QTemporaryDir dir;
+        QVERIFY(dir.isValid());
+
+        const QString dbPath = dir.filePath("test.db");
+        const QString romDir = dir.filePath("roms");
+        QVERIFY(QDir().mkpath(romDir));
+        {
+            QFile f(romDir + "/TestGame (USA).nes");
+            QVERIFY(f.open(QIODevice::WriteOnly));
+            f.write("NESDATA");
+        }
+
+        runCli({"--db", dbPath, "--scan", romDir});
+
+        {
+            Remus::Database db;
+            QVERIFY(db.initialize(dbPath));
+            const QList<Remus::FileRecord> files = db.getExistingFiles();
+            QVERIFY(!files.isEmpty());
+            const int sysId  = db.getSystemId("NES");
+            const int gameId = db.insertGame("TestGame", sysId, "USA",
+                                              "Acme Corp", QString(), "2005-04-26");
+            QVERIFY(gameId > 0);
+            QVERIFY(db.insertMatch(files.first().id, gameId, 100.0f, "test"));
+        }
+
+        const QString outFile = dir.filePath("gamelist.xml");
+        runCli({"--db", dbPath, "--export", "emustation", "--export-path", outFile});
+
+        QFile f(outFile);
+        QVERIFY(f.open(QIODevice::ReadOnly));
+        const QString xml = QString::fromUtf8(f.readAll());
+        QVERIFY2(xml.contains("<publisher>Acme Corp</publisher>"),
+                 "ES export should include <publisher>");
+        QVERIFY2(xml.contains("<releasedate>20050426T000000</releasedate>"),
+                 "ES export should include <releasedate> in YYYYMMDDTXXXXXX format");
     }
 };
 

@@ -66,10 +66,11 @@ public:
      * The caller is responsible for writing results to the DB.
      */
     struct HashBatchResult {
-        int     fileId  = 0;
+        int     fileId     = 0;
         QString filename;
         HashResult result;
-        bool    skipped = false;
+        bool    skipped    = false;
+        QString skipReason;
     };
 
     QList<HashBatchResult> computeHashes(const QList<FileRecord> &files,

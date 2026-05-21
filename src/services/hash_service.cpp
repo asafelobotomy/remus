@@ -135,21 +135,32 @@ int HashService::hashAll(Database *db,
 
     const QList<HashBatchResult> taskResults = computeHashes(files, progressCb, cancelled);
 
-    int hashed = 0;
+    int hashed  = 0;
+    int skipped = 0;
     for (const HashBatchResult &task : taskResults) {
-        if (task.skipped) continue;
+        if (task.skipped) {
+            skipped++;
+            continue;
+        }
         if (task.result.success) {
             db->updateFileHashes(task.fileId,
                                  task.result.crc32,
                                  task.result.md5,
                                  task.result.sha1);
             hashed++;
-        } else if (logCb) {
-            logCb(QString("Hash failed for %1: %2").arg(task.filename, task.result.error));
+        } else {
+            skipped++;
+            if (logCb)
+                logCb(QString("Skipped %1: %2").arg(task.filename, task.result.error));
         }
     }
 
-    if (logCb) logCb(QString("Hashing complete: %1/%2").arg(hashed).arg(total));
+    if (logCb) {
+        if (skipped > 0)
+            logCb(QString("Hashing complete: %1 hashed, %2 skipped").arg(hashed).arg(skipped));
+        else
+            logCb(QString("Hashing complete: %1/%2").arg(hashed).arg(total));
+    }
     return hashed;
 }
 
@@ -174,7 +185,8 @@ QList<HashService::HashBatchResult> HashService::computeHashes(const QList<FileR
             task.filename = file.filename;
 
             if (cancelled && cancelled->load()) {
-                task.skipped = true;
+                task.skipped     = true;
+                task.skipReason  = QStringLiteral("cancelled");
                 return task;
             }
 

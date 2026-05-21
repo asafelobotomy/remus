@@ -45,6 +45,7 @@ int handleScanCommand(CliContext &ctx);
 int handleListCommand(CliContext &ctx);
 int handleHashAllCommand(CliContext &ctx);
 int handleReclassifyIsoCommand(CliContext &ctx);
+int handleCheckToolsCommand(CliContext &ctx);
 
 // ── Metadata ──────────────────────────────────────────────────────────────────
 // --metadata, --search, --enrich

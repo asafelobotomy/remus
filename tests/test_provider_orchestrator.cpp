@@ -1,10 +1,14 @@
 #include <QtTest>
 #include <QSignalSpy>
+#include <QMutex>
+#include <QMutexLocker>
 #include <QSqlDatabase>
 #include <QSqlQuery>
 #include <QSqlError>
+#include <QtConcurrent>
 #include "metadata/provider_orchestrator.h"
 #include "metadata/metadata_cache.h"
+#include "metadata/hasheous_provider.h"
 #include "core/constants/match_methods.h"
 
 using namespace Remus;
@@ -38,8 +42,29 @@ private:
     QString m_id;
 };
 
-static QSqlDatabase createTestCacheDb()
-{
+// Stub that returns a fake Hasheous response with an IGDB external ID.
+class StubHasheousProvider : public HasheousProvider {
+    Q_OBJECT
+public:
+    explicit StubHasheousProvider(QObject *parent = nullptr) : HasheousProvider(parent) {}
+protected:
+    QJsonObject makePostRequest(const QString &, const QJsonObject &,
+                                const QUrlQuery & = QUrlQuery()) override
+    {
+        QJsonObject response;
+        response["id"]   = 42;
+        response["name"] = QStringLiteral("Test Game");
+        QJsonArray metadata;
+        QJsonObject igdbEntry;
+        igdbEntry["source"]      = QStringLiteral("IGDB");
+        igdbEntry["immutableId"] = QStringLiteral("12345");
+        metadata.append(igdbEntry);
+        response["metadata"] = metadata;
+        return response;
+    }
+};
+
+static QSqlDatabase createTestCacheDb(){
     const QString connectionName = QStringLiteral("orch-cache-%1")
         .arg(QDateTime::currentMSecsSinceEpoch());
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE", connectionName);
@@ -78,6 +103,16 @@ private slots:
     void cacheHitSkipsProviders();
     void cacheMissStoresResult();
     void artworkCacheHitSkipsProviders();
+
+    // M1 — Hasheous IGDB proxy-disabled skip count
+    void testIgdbSkippedCountWhenProxyDisabled();
+    void testGetProviderReturnsCorrectType();
+
+    // P2 — Concurrent match correctness
+    void testConcurrentMatchResultsNoDuplicates();
+
+    // P3 — Concurrent field-gap computation correctness
+    void testComputeFieldGapConcurrentlyConsistent();
 };
 
 void ProviderOrchestratorTest::hashProviderPriority()
@@ -487,6 +522,119 @@ void ProviderOrchestratorTest::hashMatchWithRequireArtworkContinuesForArtwork()
     QCOMPARE(result.title, QStringLiteral("Chrono Trigger"));
     // Artwork should have been fetched from the second provider.
     QVERIFY(!result.boxArtUrl.isEmpty());
+}
+
+void ProviderOrchestratorTest::testIgdbSkippedCountWhenProxyDisabled()
+{
+    // No API key → metadataProxyEnabled() returns false → IGDB enrichment skipped
+    StubHasheousProvider provider;
+    QCOMPARE(provider.igdbSkippedCount(), 0);
+
+    // Each call with an IGDB-identified result should increment the counter
+    provider.getByHashes(QStringLiteral("aabbcc00"), QString(), QString(), QString());
+    QCOMPARE(provider.igdbSkippedCount(), 1);
+
+    provider.getByHashes(QStringLiteral("ddeeff11"), QString(), QString(), QString());
+    QCOMPARE(provider.igdbSkippedCount(), 2);
+}
+
+void ProviderOrchestratorTest::testGetProviderReturnsCorrectType()
+{
+    ProviderOrchestrator orchestrator;
+    auto *hasheous = new StubHasheousProvider();
+    orchestrator.addProvider("hasheous", hasheous, 80);
+
+    MetadataProvider *raw = orchestrator.getProvider("hasheous");
+    QVERIFY(raw != nullptr);
+    QVERIFY(dynamic_cast<HasheousProvider*>(raw) != nullptr);
+    QVERIFY(orchestrator.getProvider("nonexistent") == nullptr);
+}
+
+void ProviderOrchestratorTest::testConcurrentMatchResultsNoDuplicates()
+{
+    // P2 acceptance: collecting results from N concurrent match tasks into a
+    // shared list must yield exactly N distinct entries — no duplicates.
+    //
+    // Each worker gets its own ProviderOrchestrator + StubProvider so that no
+    // QObject state (including QNetworkAccessManager) is shared across threads.
+    // This is the safe concurrency model for HTTP providers documented in
+    // HttpMetadataProvider's thread-safety audit comment.
+
+    constexpr int N = 8;
+    QList<GameMetadata> collectedResults;
+    QMutex resultsMutex;
+
+    QList<int> taskIds;
+    taskIds.reserve(N);
+    for (int i = 0; i < N; ++i)
+        taskIds.append(i);
+
+    QtConcurrent::blockingMap(taskIds, [&](int id) {
+        // Worker-local orchestrator + stub — no shared QObject state.
+        // Use name-search path (hash lookup is gated on known provider names).
+        ProviderOrchestrator localOrch;
+        const QString providerName = QStringLiteral("stub-%1").arg(id);
+        auto *stub = new StubProvider(providerName);
+        const QString title = QStringLiteral("Title-%1").arg(id);
+        stub->m_searchResults = { SearchResult{ QStringLiteral("id-%1").arg(id), title, {}, {}, 0, 1.0f } };
+        stub->m_idMetadata.title = title;
+        stub->m_idMetadata.matchScore = 1.0f;
+        localOrch.addProvider(providerName, stub, 100);
+
+        GameMetadata result = localOrch.searchWithFallback(
+            QStringLiteral("hash-%1").arg(id),
+            QStringLiteral("Game %1").arg(id),
+            QStringLiteral("SNES"));
+
+        QMutexLocker lock(&resultsMutex);
+        collectedResults.append(result);
+    });
+
+    QCOMPARE(collectedResults.size(), N);
+
+    // All titles must be distinct — no duplicate results written.
+    QSet<QString> titles;
+    for (const GameMetadata &m : collectedResults)
+        titles.insert(m.title);
+    QCOMPARE(titles.size(), N);
+}
+
+void ProviderOrchestratorTest::testComputeFieldGapConcurrentlyConsistent()
+{
+    // P3 acceptance: computing the field gap for the same metadata stub from
+    // N concurrent threads must always yield an identical result — no data
+    // races in computeFieldGap (which is a pure const static-style function).
+
+    GameMetadata partial;
+    partial.title       = QStringLiteral("Sonic");
+    partial.publisher   = QStringLiteral("Sega");
+    // developer, releaseDate, genres, players, description are all empty
+
+    const ProviderOrchestrator::FieldSet expected =
+        ProviderOrchestrator::computeFieldGap(partial);
+    QVERIFY(expected.contains(QStringLiteral("developer")));
+    QVERIFY(!expected.contains(QStringLiteral("publisher")));
+
+    constexpr int N = 32;
+    QList<ProviderOrchestrator::FieldSet> results;
+    results.resize(N);
+    QMutex mu;
+
+    QList<int> ids;
+    ids.reserve(N);
+    for (int i = 0; i < N; ++i) ids.append(i);
+
+    QtConcurrent::blockingMap(ids, [&](int i) {
+        // Each worker computes the gap independently — no shared mutable state.
+        const ProviderOrchestrator::FieldSet gap =
+            ProviderOrchestrator::computeFieldGap(partial);
+        QMutexLocker lock(&mu);
+        results[i] = gap;
+    });
+
+    for (int i = 0; i < N; ++i) {
+        QCOMPARE(results[i], expected);
+    }
 }
 
 QTEST_MAIN(ProviderOrchestratorTest)

@@ -3,10 +3,43 @@
 #include <QFile>
 #include <QImage>
 #include <QHostAddress>
+#include <QHostInfo>
+#include <QNetworkReply>
 #include <QSignalSpy>
 #include "metadata/artwork_downloader.h"
 
 using namespace Remus;
+
+// ── C2 helpers: fake network reply with closed device ────────────────────────
+
+class ClosedDeviceReply : public QNetworkReply {
+    Q_OBJECT
+public:
+    explicit ClosedDeviceReply(QObject *parent = nullptr) : QNetworkReply(parent)
+    {
+        // Default error is NoError. Device is never opened, so isOpen() == false.
+        QMetaObject::invokeMethod(this, [this]() { emit finished(); },
+                                  Qt::QueuedConnection);
+    }
+    void abort() override {}
+protected:
+    qint64 readData(char *, qint64) override { return -1; }
+};
+
+class FakeNetworkAccessManager : public QNetworkAccessManager {
+    Q_OBJECT
+public:
+    explicit FakeNetworkAccessManager(QObject *parent = nullptr)
+        : QNetworkAccessManager(parent) {}
+protected:
+    QNetworkReply *createRequest(Operation, const QNetworkRequest &,
+                                  QIODevice *) override
+    {
+        return new ClosedDeviceReply(this);
+    }
+};
+
+// ────────────────────────────────────────────────────────────────────────────
 
 class ArtworkDownloaderTest : public QObject {
     Q_OBJECT
@@ -19,6 +52,7 @@ private slots:
     void fileUrlRejectedAsRemote();
     void localhostAndPrivateHostsRejectedAsRemote();
     void resolvedPrivateAddressesRejected();
+    void downloadFromClosedDeviceReturnsEmpty();
 };
 
 void ArtworkDownloaderTest::downloadsLocalFile()
@@ -120,6 +154,25 @@ void ArtworkDownloaderTest::resolvedPrivateAddressesRejected()
     QVERIFY(ArtworkDownloader::areResolvedRemoteAddressesAllowed({
         QHostAddress(QStringLiteral("93.184.216.34"))
     }));
+}
+
+void ArtworkDownloaderTest::downloadFromClosedDeviceReturnsEmpty()
+{
+    // Exercises the isOpen() guard added for C2. Requires DNS resolution for
+    // example.com to pass the SSRF security check; skip in offline environments.
+    const QHostInfo hostInfo = QHostInfo::fromName(QStringLiteral("example.com"));
+    if (hostInfo.error() != QHostInfo::NoError
+            || !ArtworkDownloader::areResolvedRemoteAddressesAllowed(hostInfo.addresses())) {
+        QSKIP("DNS resolution for example.com failed or returned a disallowed address");
+    }
+
+    FakeNetworkAccessManager mgr;
+    ArtworkDownloader downloader(&mgr);
+
+    const QByteArray data = downloader.downloadToMemory(
+        QUrl(QStringLiteral("https://example.com/img.png")));
+
+    QVERIFY(data.isEmpty());
 }
 
 QTEST_MAIN(ArtworkDownloaderTest)

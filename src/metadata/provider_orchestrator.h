@@ -139,6 +139,11 @@ public:
      * @return List of provider names
      */
     QStringList getEnabledProviders() const;
+
+    /**
+     * @brief Return the raw provider pointer registered under @p name, or nullptr.
+     */
+    MetadataProvider* getProvider(const QString &name) const;
     
     /**
      * @brief Check if a provider supports hash-based matching

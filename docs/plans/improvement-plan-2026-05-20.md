@@ -42,45 +42,66 @@ GTA San Andreas was silently excluded from downstream match and enrich stages; t
 summary read as complete when it was not. There is no per-file skip reason surfaced to the
 operator, and `--process` / `--hash-all` do not emit a skipped count.
 
+**Implementation note.**
+`--hash-all` (in `cli_commands_info.cpp`) and `--process` (in `cli_commands_process.cpp`)
+both call `hashFileRecord()` from `src/cli/cli_helpers.cpp` directly, bypassing `HashService`.
+Skip-reason tracking must be added to this shared helper, not only to `HashService`, otherwise
+the CLI paths remain unaccounted. The `HashBatchResult::skipped` field in `hash_service.h`
+is currently a plain `bool` with no reason payload; both that struct and `hashFileRecord()`
+need a reason string.
+
 **Files / estimated LOC.**
 
 | File | Change scope |
 |------|-------------|
-| `src/services/hash_service.cpp` / `.h` | Add skip-reason enum and accumulator — ~30 LOC |
-| `src/cli/cli_commands_info.cpp` | Surface hashed count, skipped count, and per-file reason in summary — ~20 LOC |
-| `src/cli/cli_commands_process.cpp` | Propagate skip reason from service into summary output — ~15 LOC |
+| `src/services/hash_service.h` | Add skip-reason string to `HashBatchResult` — ~5 LOC |
+| `src/services/hash_service.cpp` | Populate skip reason in `computeHashes()` accumulator — ~25 LOC |
+| `src/cli/cli_helpers.cpp` | Add skip-reason output to `hashFileRecord()` and its callers — ~25 LOC |
+| `src/cli/cli_commands_info.cpp` | Surface hashed count, skipped count, and per-file reason in `--hash-all` summary — ~20 LOC |
+| `src/cli/cli_commands_process.cpp` | Propagate skip reason in `--process` hash step summary — ~15 LOC |
 | `tests/test_hash_service.cpp` | Add fixture covering skip path and reason string — ~25 LOC |
 
 **Acceptance criterion.**
 Running `remus-cli --hash-all` on a library that includes at least one unextractable archive
 member prints: hashed count, skipped count, and one reason line per skipped file. No skipped
-file is silently folded into a success-only summary.
+file is silently folded into a success-only summary. The same accounting applies when hashing
+runs through `--process`.
 
-**Dependencies.** None; this is self-contained within `HashService` and the two CLI command
-files.
+**Dependencies.** `cli_helpers.cpp` is a shared dependency with P4; changes here should be
+coordinated so both items leave the hashing helper in a consistent state.
 
 ---
 
 ### C2 — Artwork downloader teardown warning
 
 **Problem.**
-`ArtworkDownloader` reads from a `QNetworkReply` after the request loop returns. The 2026-05-20
-E2E run produced `QIODevice::read (QSslSocket): device not open` during bundle-time artwork
-fetch. The bundle succeeds, but the warning indicates reply/socket lifecycle is not clean and
-will erode operator trust in batch runs. Unchecked, this pattern risks reading from a closed
-device in a future Qt version or on slower network paths.
+`ArtworkDownloader::downloadToMemory()` calls `reply->readAll()` after `loop.exec()` returns
+under `reply->error() == QNetworkReply::NoError`. The 2026-05-20 E2E run produced
+`QIODevice::read (QSslSocket): device not open` during bundle-time artwork fetch, indicating
+the underlying SSL socket was not in an open state at the point of the read. The exact trigger
+(race in the SSL layer, partial TLS teardown on slow paths, or a Qt-version-specific behaviour)
+has not been isolated; the root cause should be treated as "closed SSL socket read after
+event-loop exit" rather than a confirmed `deleteLater()` ordering bug. The bundle succeeds,
+but the warning erodes operator trust and risks a read-on-closed-device failure on slower
+networks or future Qt versions.
+
+**Implementation note.**
+`tests/test_artwork_downloader.cpp` currently has no injectable network manager or fake-reply
+fixture, so the original ~20 LOC test estimate is optimistic. Reproducing the teardown
+condition requires either a mock `QNetworkReply` subclass or an injectable seam. Budget for
+~35–45 LOC for the test including the fake-reply infrastructure.
 
 **Files / estimated LOC.**
 
 | File | Change scope |
 |------|-------------|
-| `src/metadata/artwork_downloader.cpp` | Guard reply read behind `isOpen()` check; ensure `reply->deleteLater()` order is correct — ~15 LOC |
-| `tests/test_artwork_downloader.cpp` | Add test that simulates `QIODevice::read (QSslSocket): device not open` under the same network teardown scenario — ~20 LOC |
+| `src/metadata/artwork_downloader.cpp` | Guard `reply->readAll()` behind an `isOpen()` / `isReadable()` check; add a `qWarning()` if the guard fires — ~20 LOC |
+| `tests/test_artwork_downloader.cpp` | Add fake-reply infrastructure and a test confirming no read is attempted from a closed device and the download returns an empty result rather than crashing — ~40 LOC |
 
 **Acceptance criterion.**
 No `QIODevice::read (QSslSocket): device not open` warning appears in `--bundle` runs. The
-test exercises a reply that is closed before the read path and confirms no read is attempted
-from a closed device.
+test injects a reply that is closed before the read path and confirms no read is attempted
+from a closed device and the download returns an empty result rather than crashing.
 
 **Dependencies.** None.
 
@@ -120,26 +141,39 @@ a file is created beneath that directory. No new product code is required.
 **Problem.**
 Region is currently extracted from the filename at export time via `FilenameNormalizer` as a
 fallback. It is not stored as a library attribute during scan or match, so match, enrich,
-bundle naming, and report surfaces all lack persistent region data. The export fallback added
-in the March plan is present in `src/cli/cli_commands_export.cpp`, but region should become
-stored metadata visible before export time.
+bundle naming, and report surfaces all lack persistent region data. A secondary filename-based
+fallback also exists in `src/cli/cli_helpers.cpp` during match persistence. Neither fallback
+is visible to the operator.
+
+**Data-model prerequisite (must be decided first).**
+Neither `ScanResult` (`src/core/scanner.h`) nor `FileRecord` (`src/core/database_types.h`)
+has a `region` field today. Before any scanner or persistence changes, decide where region
+lives: file-level (extracted from filename at scan time, stored on the file row) or
+match/game-level (stored on the match/metadata row after enrichment). The choice determines
+which DB table gets the column, which insert/update paths change, and whether export can read
+region before a match exists. This decision must be captured in a short ADR before work begins.
 
 **Files / estimated LOC.**
 
 | File | Change scope |
 |------|-------------|
-| `src/metadata/filename_normalizer.cpp` / `.h` | Confirm `parseRegion()` is public and handles mixed tags like `(USA) (En,Fr,De)` and multi-region tags like `(Japan, Europe)` — ~20 LOC if fixes needed |
-| `src/core/scanner.cpp` | Call `FilenameNormalizer::parseRegion()` on discovered files and persist result — ~20 LOC |
+| `src/core/scanner.h` / `database_types.h` | Add `region` field to `ScanResult` and/or `FileRecord` per the data-model decision — ~10 LOC |
+| DB schema (migration) | Add `region` column to the appropriate table with a backward-compatible `ALTER TABLE` — ~10–20 LOC |
+| `src/core/scanner.cpp` | Call `FilenameNormalizer::parseRegion()` / `extractRegion()` on discovered files and populate the new field — ~20 LOC |
+| `src/metadata/filename_normalizer.cpp` / `.h` | Confirm `parseRegion()` handles mixed tags like `(USA) (En,Fr,De)` and multi-region tags like `(Japan, Europe)` — ~20 LOC if fixes needed |
+| DB insert/update paths | Write region through the scan-insert and match-update paths — ~20–30 LOC |
 | `src/cli/cli_commands_export.cpp` | Remove or demote the export-time fallback once region is reliably persisted upstream — ~10 LOC |
-| DB persistence layer (existing schema) | Store region field alongside existing scan-stage attributes — ~20–50 LOC depending on schema delta |
+| `src/cli/cli_helpers.cpp` | Remove or demote the match-persistence-time region fallback — ~10 LOC |
+| `tests/` (scanner, filename-normalizer, db-fixture) | Cover mixed/multi-region parsing, scan-time persistence, and schema backward compat — ~40 LOC |
 
 **Acceptance criterion.**
-After `--scan`, `remus-cli --info` for a ROM with a recognizable region tag reports a
-non-empty region value. The export-time fallback is either removed or relegated to a genuine
-last-resort with a visible diagnostic rather than a silent default.
+After `--scan` (with no match step), `remus-cli --info` for a ROM with a recognizable region
+tag reports a non-empty region value from the file row. The export-time and match-time
+fallbacks are either removed or relegated to genuine last-resorts with visible diagnostics.
+Existing DB fixture tests pass without modification after the schema migration.
 
-**Dependencies.** None blocking, but region parsing fixes should include fixture-backed tests
-for mixed and multi-region tags before persisting values upstream.
+**Dependencies.** Data-model ADR must be written and agreed before any code changes. Region
+parsing fixture tests must pass before the field is persisted upstream.
 
 ---
 
@@ -173,7 +207,14 @@ No second "see supported formats" line appears separately.
 Users currently have no dedicated command to inspect archive/converter readiness before a long
 batch run. Tool availability (chdman, maxcso, dolphin-tool) is validated at use time and
 surfaced via fallback messages only. The `--patch-tools` path in `src/cli/cli_commands_export.cpp`
-performs similar checks but is scoped to patching, not general preflight inspection.
+performs similar checks but is scoped to patching, not general preflight inspection. Similar
+readiness text exists in `src/cli/cli_commands_process.cpp` preflight output.
+
+**Scope decision required.**
+Before implementing, define whether `--check-tools` reports only required tools (chdman,
+maxcso, dolphin-tool), optional tools, or both, and what the exit-code contract is (non-zero
+only when a *required* tool is absent vs. any tool absent). This affects both the output format
+and the test assertions.
 
 **Files / estimated LOC.**
 
@@ -207,60 +248,83 @@ degraded behavior is confirmed not to hide failures behind noisier logs.
 **Problem.**
 `HashService` currently uses temp extraction for archive members, with a conservative free-space
 estimate and a full-extract fallback. For multi-GB archived ISOs (such as GTA San Andreas on PS2),
-this means the full decompressed image must fit in temp storage before hashing can proceed. When
-temp space is insufficient, the file is silently skipped (addressed in H1 for reporting, but
-not for capability). The fix is to generalize the streaming/chunked path already used for
-magic-byte prefix reads so that hashing can consume an archive member in bounded chunks without
-requiring the full decompressed size in temp.
+there are two distinct failure modes:
+
+1. **Temp space exhausted** — the decompressed file does not fit on disk before hashing begins.
+2. **Memory exhausted** — `Hasher::readFileData()` loads the extracted file entirely into a
+   `QByteArray` via `file.readAll()`, so even after successful extraction the full image must
+   fit in RAM. This is a separate and additional constraint not addressed by extractor streaming
+   alone.
+
+The fix requires two sub-deliverables, both required before H2 is considered complete.
+
+**Sub-deliverables.**
+
+1. **Incremental hash API for `Hasher`** — replace `readAll()` with a chunked feed loop that
+   updates the CRC32/MD5/SHA1 digests incrementally without holding the full file in memory.
+2. **Streaming archive member reader for `ArchiveExtractor`** — the existing `readMemberPrefix()`
+   path reads only a header prefix; a general incremental read interface is needed so
+   `HashService` can feed archive member data chunk-by-chunk without fully decompressing to
+   temp storage first.
 
 **Files / estimated LOC.**
 
 | File | Change scope |
 |------|-------------|
-| `src/services/hash_service.cpp` / `.h` | Add chunked/streaming member hash path; gate on available temp size — ~30–80 LOC |
-| `src/core/archive_extractor.cpp` / `.h` | Expose incremental read interface if not already present from streaming work — ~20–40 LOC |
-| `src/core/archive_extractor_extract.cpp` | Adapt extraction path to support bounded chunked reads — ~20 LOC |
-| `src/core/archive_extractor_info.cpp` | Verify member size reporting is accurate for planning purposes — ~5–10 LOC |
-| `src/core/hasher.cpp` / `.h` | Confirm incremental digest interface supports streaming feed — ~10 LOC |
-| `tests/test_hash_service.cpp` | Add fixture-backed characterization test for large member that exceeds conservative temp estimate — ~30 LOC |
+| `src/core/hasher.cpp` / `.h` | Replace `readAll()` with an incremental digest loop; add `hashStream(QIODevice*)` or equivalent — ~40–60 LOC |
+| `src/core/archive_extractor.cpp` / `.h` | Expose an incremental member-read interface (callback or iterator yielding fixed-size chunks) — ~40–70 LOC |
+| `src/core/archive_extractor_extract.cpp` | Adapt extraction path to support bounded chunked reads — ~20–30 LOC |
+| `src/core/archive_extractor_info.cpp` | Verify member size reporting is accurate for temp-space planning — ~5–10 LOC |
+| `src/services/hash_service.cpp` / `.h` | Wire chunked member read into the hash path; gate on available temp size with streaming fallback — ~40–80 LOC |
+| `tests/test_hash_service.cpp` | Fixtures: member exceeds temp estimate (streaming path used), member fits temp (existing path unchanged), member too large for `readAll()` in-memory path — ~50 LOC |
+| `tests/test_archive_extractor.cpp` | Cover incremental read interface: partial reads, boundary chunks, error mid-stream — ~30 LOC |
 
 **Acceptance criterion.**
 `--hash-all` on a library containing a multi-GB archived ISO completes without skipping the
-member when the streaming path is available. If temp space is genuinely exhausted, a clear skip
-reason is reported (per H1) rather than a silent omission. The existing test suite continues to
-pass with the new chunked path enabled.
+member when the streaming path is available and temp space is insufficient for full extraction.
+In-memory load is bounded to the configured chunk size regardless of member size. If temp
+space and the streaming path are both unavailable, a clear skip reason is reported (per H1)
+rather than a silent omission. The existing test suite continues to pass with the new chunked
+path enabled.
 
-**Dependencies.** H1 (skip reporting) should land first so the streaming path can report
-meaningful diagnostics while it is being validated.
+**Dependencies.** H1 must land first. Sub-deliverable 1 (incremental Hasher API) should be
+reviewed and merged before sub-deliverable 2 (streaming extractor) to keep the diff reviewable.
 
 ---
 
-### M1 — Hasheous MetadataProxy enrichment for sparse titles
+### M1 — Surface Hasheous MetadataProxy enrichment state in the CLI summary
 
 **Problem.**
-`hasheous_client_api_key` configuration is absent in common operator setups. The 2026-05-20 E2E
-run showed good identity matches via Hasheous but thin metadata (missing release dates,
-descriptions, publisher) because the enrichment proxy path was not reachable. There is no
-explicit CLI diagnostic when enrichment is skipped due to missing configuration, and the fallback
-story for release dates and descriptions without proxy enrichment is undocumented.
+`hasheous_client_api_key` configuration is absent in common operator setups, producing thin
+metadata (missing release dates, descriptions, publisher) after enrichment because the proxy
+path is not reachable. The 2026-05-20 E2E run showed this silently: matches were found via
+Hasheous but the `--enrich` summary gave no indication that IGDB enrichment was available but
+not enabled.
+
+**Implementation note.**
+The provider-level diagnostic already exists: `hasheous_provider.cpp` emits a `qInfo()` message
+("IGDB enrichment available … but MetadataProxy is disabled. Set hasheous_client_api_key …")
+when a title has an IGDB ID but the proxy is off. The real gap is that this message appears at
+the individual-title level during enrichment and is not aggregated into the `--enrich` command
+summary. This item is therefore primarily a **CLI-summary surfacing task**, not a new provider
+diagnostic. Provider-layer changes should be limited to exposing a count that the CLI can
+aggregate; no new enrichment path or provider contract is required.
 
 **Files / estimated LOC.**
 
 | File | Change scope |
 |------|-------------|
-| `src/metadata/hasheous_provider.cpp` | Emit a diagnostic when API key is absent and enrichment is skipped — ~10–15 LOC |
-| `src/metadata/hasheous_provider_enrichment.cpp` | Add test coverage for partial enrichment path (identity matched, metadata fields skipped) — ~20 LOC |
-| `src/cli/cli_commands_enrich.cpp` | Surface "enrichment skipped: missing API key" in `--enrich` summary — ~10 LOC |
-| `src/cli/cli_helpers_providers.cpp` | Document provider setup and key requirements as inline diagnostic hints — ~10 LOC |
-| `tests/test_hasheous_parsing.cpp` | Add fixture verifying non-empty publisher for representative IGDB-backed titles — ~20 LOC |
-| `tests/test_provider_orchestrator.cpp` | Add test that verifies partial enrichment when proxy is disabled — ~20 LOC |
+| `src/metadata/hasheous_provider.cpp` | Expose the proxy-disabled count (titles with IGDB ID skipped) as a return value or signal rather than only a log line — ~15 LOC |
+| `src/cli/cli_commands_enrich.cpp` | Aggregate and surface "N titles had IGDB data available but MetadataProxy is disabled" in the `--enrich` summary — ~15 LOC |
+| `tests/test_provider_orchestrator.cpp` | Add test that verifies the proxy-disabled count is correct when enrichment runs without a key — ~20 LOC |
 | `docs/` (metadata-providers.md or equivalent) | Document the proxy-disabled partial enrichment scenario and configuration steps — ~20 LOC |
 
 **Acceptance criterion.**
-`remus-cli --enrich` with no API key configured emits an explicit "earned sparse data"
-diagnostic rather than silently producing thin metadata. When a key is configured, publisher and
-release date are non-empty for representative IGDB-backed titles already identified by Hasheous.
-The sparse path is covered by at least one provider-orchestrator fixture test.
+`remus-cli --enrich` with no API key configured and at least one IGDB-identified title emits a
+summary line such as "N titles have IGDB data available — set hasheous_client_api_key for richer
+metadata." The message is counted and de-duplicated, not repeated per title. The sparse path is
+covered by at least one provider-orchestrator fixture test. CI acceptance criteria must not
+require live external metadata quality; use seeded fixtures only.
 
 **Dependencies.** None blocking; can proceed in parallel with H2.
 
@@ -269,29 +333,38 @@ The sparse path is covered by at least one provider-orchestrator fixture test.
 ### E1 — EmulationStation export completeness from existing metadata
 
 **Problem.**
-The EmulationStation exporter fields (`<releasedate>`, `<publisher>`, `<genre>`, `<players>`,
-`<desc>`, `<region>`) are already present in `src/cli/cli_commands_export.cpp` as confirmed by
-March plan review. Export field completeness is therefore only as good as upstream persistence and
-provider enrichment. The export-time region fallback (March fix) is present, but region and other
-fields read as empty for titles where match/enrich did not fully persist their values.
+The current EmulationStation exporter writes `<desc>`, `<genre>`, `<players>`, and `<region>`
+but does **not** write `<releasedate>` or `<publisher>`. The March plan review noted these
+fields as present, but inspection of `src/cli/cli_commands_export.cpp` confirms they are absent
+from the ES block. This item has two distinct scopes:
+
+1. **Add `<releasedate>` and `<publisher>` to the ES exporter** — these require explicit
+   product-code work in the exporter and confirmation that the corresponding fields are
+   persisted through the match/enrich pipeline.
+2. **Validate completeness of existing fields** — for the fields already in the exporter
+   (`desc`, `genre`, `players`, `region`), confirm they are populated end-to-end and not
+   silently empty due to missing persistence steps.
 
 **Files / estimated LOC.**
 
 | File | Change scope |
 |------|-------------|
-| `src/cli/cli_commands_export.cpp` | Audit which fields have fallback logic vs. hard DB reads; add fallback or warning for fields that are missing due to incomplete enrichment rather than absent source data — ~20–50 LOC |
-| `src/cli/cli_commands_enrich.cpp` | Ensure genre, players, and desc are persisted from enrichment results — ~20 LOC |
-| DB/match persistence layer | Verify region, genre, players fields exist as storable columns — ~0–20 LOC depending on schema state |
-| `tests/test_cli_smoke.cpp` | Add assertion that export for a title with known DB values produces non-empty region, genre, players, and desc fields — ~20 LOC |
+| `src/cli/cli_commands_export.cpp` | Add `<releasedate>` and `<publisher>` fields to the ES exporter; audit existing fields for fallback vs. hard DB read — ~30–60 LOC |
+| `src/cli/cli_commands_enrich.cpp` | Verify genre, players, desc, releasedate, and publisher are persisted from enrichment results — ~20 LOC |
+| DB/match persistence layer | Confirm releasedate and publisher fields exist as storable columns; add if missing — ~10–30 LOC depending on schema state |
+| `tests/test_cli_smoke.cpp` | Add assertion that ES export for a title with known DB values produces non-empty region, genre, players, desc, releasedate, and publisher — ~25 LOC |
 
 **Acceptance criterion.**
-For a title with a complete DB row (populated by scan + match + enrich), the EmulationStation
-`<gamelist.xml>` export contains non-empty values for `region`, `genre`, `players`, and `desc`.
-Any remaining empty field is attributable to missing provider configuration or absent source
-data, not silent blanks from a missing persistence step.
+For a title with a complete DB row (populated by scan + match + enrich using seeded fixture
+data), the EmulationStation `<gamelist.xml>` export contains non-empty values for `region`,
+`genre`, `players`, `desc`, `releasedate`, and `publisher`. Any remaining empty field is
+attributable to missing provider configuration or absent source data, not silent blanks from a
+missing persistence or exporter step.
 
-**Dependencies.** R1 (region persistence) and M1 (enrichment completeness) are soft
+**Dependencies.** R1 (region persistence) and M1 (enrichment summary surfacing) are soft
 prerequisites; this item provides the integration test that confirms both are wired end-to-end.
+The `releasedate`/`publisher` scope may reveal schema additions that block this item until they
+land.
 
 ---
 
@@ -315,17 +388,25 @@ work reduced per-file latency, but the overall scan remains sequential.
 
 | File | Change scope |
 |------|-------------|
-| `src/core/scanner.cpp` / `.h` | Introduce file-level concurrency using `QThreadPool` or a worker queue; ensure duplicate row protection — ~40–80 LOC |
-| Archive/disc helper files (`archive_extractor.cpp`, `archive_extractor_info.cpp`) | Verify thread-safety or add worker-local instances — ~10–20 LOC |
-| `tests/test_scanner.cpp` | Add concurrent scan test asserting no duplicate rows and no broken multi-file set linking — ~30 LOC |
+| `src/core/scanner.cpp` / `.h` | Introduce file-level concurrency using `QThreadPool` or a worker queue; ensure duplicate row protection — ~50–90 LOC |
+| Archive/disc helper files (`archive_extractor.cpp`, `archive_extractor_info.cpp`) | Verify thread-safety; use worker-local instances rather than shared state — ~15–25 LOC |
+| `tests/test_scanner.cpp` | Add concurrent scan tests covering correctness invariants (see below) — ~50 LOC |
 
 **Acceptance criterion.**
-`--scan` on a library of 50+ files executes faster on multi-core hardware without introducing
-duplicate rows or broken multi-file set links. Concurrent scans do not hide failures behind
-noisier logs.
+Correctness invariants (verified by the test suite before any throughput measurement):
+
+- No duplicate file rows are inserted when two worker threads discover the same path.
+- Multi-file set links (primary/companion `.bin` to `.cue`, etc.) are intact in the DB after
+  a concurrent scan.
+- Per-file skip reasons from H1 are reported correctly under concurrent execution.
+
+Throughput (informational only, not a CI gate): `--scan` on a fixed library of 50+ plain files
+runs measurably faster on multi-core hardware. Document the baseline and result in a comment or
+commit message; do not gate merges on wall-clock time.
 
 **Dependencies.** Phase 0 complete; H1 skip accounting must be in place before increasing
-parallelism.
+parallelism. `ArchiveExtractor` thread-safety audit must be completed and documented before
+concurrent scan is enabled.
 
 ---
 
@@ -338,22 +419,37 @@ all final matches resolve at the compendium step, meaning the current scheduling
 unnecessary latency on large batches. Safe overlap across different games or different provider
 classes is possible provided the existing 1 req/s rate limiter is respected per provider.
 
+**Hard prerequisites before parallelism is enabled.**
+Provider objects must be confirmed safe for concurrent calls. The primary risks are:
+
+- Shared `QNetworkAccessManager` — Qt requires this to be used from a single thread or with
+  an explicit thread-hop; per-worker-thread instances may be required.
+- Rate-limiter shared state — the existing limiter must be moved to per-provider ownership
+  so concurrent file tasks contend on the correct budget.
+- DB write ordering — concurrent match results must be collected and written in a deterministic
+  order to avoid non-reproducible row states.
+
 **Files / estimated LOC.**
 
 | File | Change scope |
 |------|-------------|
-| `src/cli/cli_commands_match.cpp` | Dispatch per-file match tasks to a worker pool; collect results preserving stable persistence semantics — ~30–60 LOC |
-| `src/metadata/provider_orchestrator_fallback.cpp` | Move rate-limiter ownership to per-provider budget so concurrent file tasks share the limiter correctly — ~20–80 LOC |
-| Provider orchestrator headers | Expose thread-safe match interface — ~10–20 LOC |
-| `tests/test_provider_orchestrator.cpp` | Add fixture verifying that concurrent match calls respect rate limits and do not duplicate DB rows — ~25 LOC |
+| `src/cli/cli_commands_match.cpp` | Dispatch per-file match tasks to a worker pool; collect results and write to DB in deterministic order — ~30–60 LOC |
+| `src/metadata/provider_orchestrator_fallback.cpp` | Move rate-limiter ownership to per-provider budget; audit `QNetworkAccessManager` thread affinity — ~30–90 LOC |
+| Provider headers / implementations | Expose thread-safe match interface; document whether provider instances are worker-local or shared — ~15–25 LOC |
+| `tests/test_provider_orchestrator.cpp` | Fixtures: concurrent match calls respect rate limits; no duplicate DB rows; DB write order is deterministic — ~40 LOC |
 
 **Acceptance criterion.**
-`--match` on a 50-file library with a mock provider runs measurably faster than sequential
-baseline. Remote latency no longer dominates already-resolved items. The existing rate limit
-contract per provider is preserved and verified by the new test. Output is not unreadable due
-to interleaved concurrent logging.
+Correctness invariants (verified by tests before benchmarking):
 
-**Dependencies.** P1 recommended first; Phase 0 skip accounting mandatory.
+- No duplicate match rows are written when concurrent tasks resolve the same file.
+- Rate limit contract (1 req/s per provider) is not violated under concurrent load.
+- DB result ordering is deterministic across runs.
+
+Throughput (informational): `--match` on a 50-file library with a mock provider runs faster
+than the sequential baseline; log output remains readable (no interleaved per-title lines).
+
+**Dependencies.** P1 recommended first to establish the worker-pool pattern; Phase 0 skip
+accounting mandatory. Provider thread-safety audit must complete before this item merges.
 
 ---
 
@@ -365,22 +461,33 @@ sequential. The 1 req/s limiter is correct for individual providers, but the pip
 the whole title queue rather than allowing safe overlap across different games or different
 provider classes.
 
+The same hard prerequisites from P2 apply here — `QNetworkAccessManager` thread affinity,
+rate-limiter ownership, and deterministic result persistence. Enrichment additionally involves
+result *merging* (multiple providers contribute fields to one title row), so deterministic
+merge semantics must be defined before concurrent dispatch is safe.
+
 **Files / estimated LOC.**
 
 | File | Change scope |
 |------|-------------|
-| `src/cli/cli_commands_enrich.cpp` | Dispatch per-title enrich tasks to a worker pool — ~30–50 LOC |
-| `src/metadata/provider_orchestrator_enrich.cpp` | Centralize per-provider throttle ownership — ~20–60 LOC |
-| Provider files (hasheous, gametdb, compendium providers) | Confirm thread-safe use under concurrent calls — ~10–20 LOC |
-| `tests/test_provider_orchestrator.cpp` | Extend fixture to cover concurrent enrich calls with throttle verification — ~20 LOC |
+| `src/cli/cli_commands_enrich.cpp` | Dispatch per-title enrich tasks to a worker pool; collect and merge results in deterministic order — ~35–55 LOC |
+| `src/metadata/provider_orchestrator_enrich.cpp` | Centralize per-provider throttle ownership; define deterministic field-merge order — ~30–70 LOC |
+| Provider files (hasheous, gametdb, compendium providers) | Confirm thread-safe use under concurrent calls; document any worker-local instance requirements — ~15–25 LOC |
+| `tests/test_provider_orchestrator.cpp` | Extend fixture: concurrent enrich calls respect throttle; merged result is identical to sequential result for the same title — ~30 LOC |
 
 **Acceptance criterion.**
-`--enrich` on a 50-title library with a mock provider runs faster than the sequential baseline
-while respecting the existing rate limit contract per provider. Enrichment completeness is
-unchanged (same fields populated for the same titles).
+Correctness invariants (verified by tests before benchmarking):
 
-**Dependencies.** P2 recommended first to establish the worker-pool pattern; Phase 0 skip
-accounting mandatory.
+- Enrichment completeness is unchanged: the same fields are populated for the same titles as
+  under sequential execution.
+- Field-merge order is deterministic across concurrent runs.
+- Rate limit contract per provider is not violated.
+
+Throughput (informational): `--enrich` on a 50-title library with a mock provider runs faster
+than the sequential baseline.
+
+**Dependencies.** P2 recommended first to establish the worker-pool and thread-safety pattern;
+Phase 0 skip accounting mandatory.
 
 ---
 
@@ -389,20 +496,21 @@ accounting mandatory.
 **Problem.**
 `HashService::computeHashes()` already uses `QThreadPool` for digest calculation, but the
 2026-05-20 E2E measurement still appeared effectively single-threaded at the pipeline level.
-The bottleneck is archive extraction into temp storage, not the digest itself. `--hash-all` and
-`--process` do not fully exploit the existing service batch path consistently, and
-archive extraction can dominate. This phase aligns CLI entry points with the existing worker-pool
-implementation and characterizes extraction as the remaining bottleneck before adding more raw
-threads.
+The root cause is that `--hash-all` (in `cli_commands_info.cpp`) and `--process` (in
+`cli_commands_process.cpp`) call `hashFileRecord()` from `src/cli/cli_helpers.cpp` in a serial
+loop rather than routing through the `HashService::computeHashes()` batch API. This item closes
+that gap and characterizes archive extraction as the remaining bottleneck before adding more
+raw threads.
 
 **Files / estimated LOC.**
 
 | File | Change scope |
 |------|-------------|
-| `src/cli/cli_commands_info.cpp` | Ensure `--hash-all` paths through the batch API rather than single-file loops — ~10–20 LOC |
-| `src/cli/cli_commands_process.cpp` | Same alignment for `--process` hash step — ~10–20 LOC |
-| `src/services/hash_service.cpp` | Profile extraction-vs-digest split; add instrumentation or comment noting where temp I/O dominates — ~10–20 LOC |
-| `tests/test_hash_service.cpp` | Add performance-characterization fixture noting baseline before and after alignment — ~20 LOC |
+| `src/cli/cli_helpers.cpp` | Consolidate or eliminate the duplicated `hashFileRecord()` helper in favour of routing callers to `HashService` — ~20–40 LOC (coordinate with H1 which also touches this file) |
+| `src/cli/cli_commands_info.cpp` | Route `--hash-all` through `HashService::computeHashes()` batch API instead of single-file helper loop — ~15–25 LOC |
+| `src/cli/cli_commands_process.cpp` | Same routing change for the `--process` hash step — ~15–25 LOC |
+| `src/services/hash_service.cpp` | Add instrumentation or comment noting where temp I/O dominates vs. the digest worker pool — ~10–15 LOC |
+| `tests/test_hash_service.cpp` | Add correctness fixture verifying batch-API results match single-file results for the same inputs — ~20 LOC |
 
 **Acceptance criterion.**
 After alignment, `--hash-all` throughput on a library of plain (non-archived) ROMs scales with
@@ -434,8 +542,11 @@ extraction to temp storage if H2 is about to replace it.
 
 ### Phase 2
 
-1. **M1** (Hasheous enrichment diagnostics) — unblocks E1 enrichment assertions.
-2. **H2** (streaming/chunked hashing) — unblocks GTA San Andreas end-to-end and P4.
+1. **H2** (streaming/chunked hashing) — closes the remaining E2E functional gap (GTA San
+   Andreas). Must land before E1 can pass end-to-end. M1 can begin in parallel once H2
+   sub-deliverable 1 (incremental hash API) is in review.
+2. **M1** (Hasheous enrichment diagnostics) — unblocks E1 enrichment assertions; can proceed
+   in parallel with H2 after sub-deliverable 1 is stable.
 3. **E1** (ES export completeness) — depends on R1 (Phase 1) and M1; final integration gate.
 
 ### Phase 3
@@ -457,6 +568,10 @@ extraction to temp storage if H2 is about to replace it.
 | R3 | Concurrent scanner or match stage introduces duplicate rows or broken multi-file set links | Medium | High — corrupts library DB; hard to detect without explicit tests | Write the duplicate-row and set-link tests (P1 / P2 acceptance criteria) before enabling concurrency in CI |
 | R4 | Hasheous API key requirement is not documented before M1 lands, leading to operator confusion about "sparse data" messages | Low | Medium — erodes trust in the enrichment pipeline | Ship the `docs/` portion of M1 simultaneously with the diagnostic code change; do not land the diagnostic without the documentation |
 | R5 | Phase 3 parallelism work begins before Phase 0 skip accounting is stable, hiding failures in noisy concurrent logs | Medium | Medium — makes regressions hard to diagnose | Enforce Phase 0 completion as a hard gate for Phase 3; add a CI check that the H1 skip-accounting test passes before Phase 3 branches are merged |
+| R6 | `Hasher::readFileData()` loads extracted files into RAM via `readAll()`, causing OOM for large ISOs even after temp-space extraction succeeds (H2 in-memory failure mode) | High | High — hashing silently fails or crashes for large titles; GTA San Andreas is a confirmed example | Both H2 sub-deliverables are required before closing H2; do not mark H2 done at sub-deliverable 1 alone |
+| R7 | `hashFileRecord()` in `cli_helpers.cpp` and the `HashService` batch path diverge during H1/P4 development, causing `--hash-all` and `--process` to report inconsistent skip reasons | Medium | Medium — skip accounting is wrong for one of the two entry points; hard to notice without explicit pairwise tests | Coordinate H1 (skip-reason field) and P4 (routing) in the same branch; add a CI fixture testing both `--hash-all` and `--process` skip reporting against the same inputs |
+| R8 | Enabling P2/P3 concurrency violates Qt `QNetworkAccessManager` thread affinity, causing non-deterministic crashes or silent data loss in provider calls | High | High — corrupts match/enrich results; may not be reproducible under low load | Complete the provider thread-safety audit (worker-local manager or thread-hop pattern) before any concurrent dispatch is merged; add a targeted concurrency test that exercises the network path under multi-thread conditions |
+| R9 | Performance acceptance criteria for P1–P4 use wall-clock comparisons on non-fixed fixtures, producing flaky CI gates and masking real regressions | Medium | Low–Medium — CI instability erodes confidence in the test suite | Separate correctness invariant tests (duplicate rows, stable links, rate limits — CI gate) from throughput notes (informational only, documented in commit messages); never block a merge on wall-clock time alone |
 
 ---
 

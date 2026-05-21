@@ -202,6 +202,12 @@ QStringList ProviderOrchestrator::getEnabledProviders() const
     return getSortedProviders(false);
 }
 
+MetadataProvider* ProviderOrchestrator::getProvider(const QString &name) const
+{
+    auto it = m_providers.constFind(name);
+    return (it != m_providers.constEnd()) ? it->provider : nullptr;
+}
+
 QStringList ProviderOrchestrator::getSortedLocalProviders() const
 {
     QList<QPair<QString, int>> result;

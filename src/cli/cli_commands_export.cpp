@@ -83,9 +83,6 @@ static QList<ExportRow> buildExportRows(CliContext &ctx, const QString &systemsA
         const QString systemName = ctx.db.getSystemDisplayName(file.systemId);
         if (!systemFilters.isEmpty() && !systemFilters.contains(systemName)) continue;
         ExportRow row{file, matches.value(file.id)};
-        if (row.match.region.isEmpty()) {
-            row.match.region = Remus::Metadata::FilenameNormalizer::extractRegion(file.filename);
-        }
         rows.append(row);
     }
     return rows;
@@ -150,6 +147,14 @@ int handleExportCommand(CliContext &ctx)
         QFile f(outputPath); if (!openFile(f)) return 1;
         QTextStream out(&f);
         out << "<gameList>\n";
+        // ES <releasedate> format: YYYYMMDDTXXXXXX
+        const auto esDate = [](const QString &iso) -> QString {
+            // Accept "YYYY-MM-DD", "YYYY-MM", or bare "YYYY"
+            const QString d = iso.trimmed().remove(QLatin1Char('-'));
+            if (d.length() >= 8) return d.left(8) + QStringLiteral("T000000");
+            if (d.length() == 4) return d + QStringLiteral("0101T000000");
+            return QString();
+        };
         for (const auto &row : rows) {
             const QString name = (!row.match.gameTitle.isEmpty() ? row.match.gameTitle : row.file.filename).toHtmlEscaped();
             out << "  <game>\n";
@@ -159,6 +164,11 @@ int handleExportCommand(CliContext &ctx)
             out << "    <genre>"   << row.match.genre.toHtmlEscaped() << "</genre>\n";
             out << "    <players>" << row.match.players << "</players>\n";
             out << "    <region>"  << row.match.region.toHtmlEscaped() << "</region>\n";
+            if (!row.match.publisher.isEmpty())
+                out << "    <publisher>" << row.match.publisher.toHtmlEscaped() << "</publisher>\n";
+            const QString esd = esDate(row.match.releaseDate);
+            if (!esd.isEmpty())
+                out << "    <releasedate>" << esd << "</releasedate>\n";
             out << "  </game>\n";
         }
         out << "</gameList>\n";

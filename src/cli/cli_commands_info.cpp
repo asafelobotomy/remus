@@ -13,6 +13,7 @@
 #include "../core/scanner.h"
 #include "../core/hasher.h"
 #include "../core/header_detector.h"
+#include "../services/hash_service.h"
 #include "../core/disc_magic_detector.h"
 #include "../core/archive_extractor.h"
 #include "../core/constants/constants.h"
@@ -146,8 +147,9 @@ int handleInspectCommands(CliContext &ctx)
         HeaderDetector hd;
         HeaderInfo info = hd.detect(path);
         if (!info.valid) {
-            qWarning() << "No copier header detected.";
-            qWarning() << "Supported formats: iNES, NES 2.0, SMC/SWC, Lynx, FDS, A78";
+            qWarning() << QString("No copier header detected in '%1' "
+                                  "(detection covers: iNES, NES 2.0, SMC/SWC, Lynx, FDS, A78 only).")
+                              .arg(QFileInfo(path).fileName());
         } else {
             qInfo() << "=== Header Info ===";
             qInfo() << "Has header:" << info.hasHeader;
@@ -215,7 +217,6 @@ int handleHashAllCommand(CliContext &ctx)
 
     qInfo() << "";
     qInfo() << "Hashing files without hashes...";
-    Hasher hasher;
     QList<FileRecord> filesToHash = ctx.db.getFilesWithoutHashes();
 
     // Respect --file-id scope when provided
@@ -233,20 +234,33 @@ int handleHashAllCommand(CliContext &ctx)
         return 0;
     }
 
-    int hashedCount = 0;
+    int hashedCount  = 0;
+    int skippedCount = 0;
 
-    for (const FileRecord &file : filesToHash) {
-        HashResult hashResult = hashFileRecord(file, hasher);
-        if (hashResult.success) {
-            ctx.db.updateFileHashes(file.id, hashResult.crc32, hashResult.md5, hashResult.sha1);
+    // Route through HashService::computeHashes() so that plain-file hashing
+    // scales with available CPU cores via the existing QThreadPool worker pool.
+    HashService svc;
+    const QList<HashService::HashBatchResult> taskResults =
+        svc.computeHashes(filesToHash);
+
+    int done = 0;
+    for (const HashService::HashBatchResult &task : taskResults) {
+        ++done;
+        if (!task.skipped && task.result.success) {
+            ctx.db.updateFileHashes(task.fileId, task.result.crc32,
+                                    task.result.md5, task.result.sha1);
             hashedCount++;
             if (hashedCount % 10 == 0)
                 qInfo() << "  Hashed" << hashedCount << "of" << filesToHash.size() << "files...";
         } else {
-            qWarning() << "  Hash failed for" << file.filename << ":" << hashResult.error;
+            skippedCount++;
+            qWarning() << "  Skipped" << task.filename << ":" << task.result.error;
         }
     }
-    qInfo() << "Hashing complete:" << hashedCount << "files hashed";
+    if (skippedCount > 0)
+        qInfo() << "Hashing complete:" << hashedCount << "hashed," << skippedCount << "skipped";
+    else
+        qInfo() << "Hashing complete:" << hashedCount << "files hashed";
     return 0;
 }
 

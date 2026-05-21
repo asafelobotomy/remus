@@ -94,6 +94,7 @@ struct MatchResult {
     QString publisher;
     QString developer;
     int releaseYear = 0;
+    QString releaseDate;
     QString description;
     QString genre;
     QString players;

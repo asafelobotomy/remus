@@ -84,6 +84,12 @@ ArtworkDownloader::ArtworkDownloader(QObject *parent)
 {
 }
 
+ArtworkDownloader::ArtworkDownloader(QNetworkAccessManager *mgr, QObject *parent)
+    : QObject(parent)
+    , m_networkManager(mgr)
+{
+}
+
 bool ArtworkDownloader::isSupportedUrl(const QUrl &url)
 {
     if (!url.isValid()) {
@@ -251,6 +257,12 @@ QByteArray ArtworkDownloader::downloadToMemory(const QUrl &url)
         }
 
         if (reply->error() == QNetworkReply::NoError) {
+            if (!reply->isOpen()) {
+                qWarning() << "remus.artwork: device not open after download from"
+                           << currentUrl.toString();
+                reply->deleteLater();
+                return {};
+            }
             const QByteArray data = reply->readAll();
             reply->deleteLater();
             return data;

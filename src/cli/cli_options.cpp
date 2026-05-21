@@ -31,6 +31,7 @@ void registerAllOptions(QCommandLineParser &parser, QSet<QString> &actionOptions
     addActionOption(QCommandLineOption("info", "Show detailed info for a file id", "fileId"));
     addActionOption(QCommandLineOption("header-info", "Inspect ROM header for a file", "file"));
     addActionOption(QCommandLineOption("show-art", "Display an image in terminal (path to image)", "image"));
+    addActionOption(QCommandLineOption("check-tools", "Show availability of optional external tools (chdman, dolphin-tool, maxcso)"));
 
     addActionOption({{"m", "metadata"}, "Fetch metadata by file hash", "hash"});
     addActionOption(QCommandLineOption("search", "Search for game by name", "title"));

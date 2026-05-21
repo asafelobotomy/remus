@@ -221,6 +221,7 @@ int main(int argc, char *argv[])
     if (int rc = handleStatsCommand(ctx))          return rc;
     if (int rc = handleInfoCommand(ctx))           return rc;
     if (int rc = handleInspectCommands(ctx))       return rc;
+    if (int rc = handleCheckToolsCommand(ctx))     return rc;
     if (int rc = handleScanCommand(ctx))           return rc;
     if (int rc = handleListCommand(ctx))           return rc;
     if (int rc = handleHashAllCommand(ctx))        return rc;
