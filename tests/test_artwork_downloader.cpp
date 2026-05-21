@@ -39,6 +39,40 @@ protected:
     }
 };
 
+// ── Finding #4 helpers: fake redirect to private IP ─────────────────────────
+
+class RedirectReply : public QNetworkReply {
+    Q_OBJECT
+public:
+    explicit RedirectReply(const QUrl &redirectTo, QObject *parent = nullptr)
+        : QNetworkReply(parent)
+    {
+        // Signal a redirect to the target URL before finishing.
+        setAttribute(QNetworkRequest::RedirectionTargetAttribute, redirectTo);
+        setAttribute(QNetworkRequest::HttpStatusCodeAttribute, 301);
+        QMetaObject::invokeMethod(this, [this]() { emit finished(); },
+                                  Qt::QueuedConnection);
+    }
+    void abort() override {}
+protected:
+    qint64 readData(char *, qint64) override { return -1; }
+};
+
+class RedirectingFakeManager : public QNetworkAccessManager {
+    Q_OBJECT
+public:
+    explicit RedirectingFakeManager(const QUrl &redirectTo, QObject *parent = nullptr)
+        : QNetworkAccessManager(parent), m_redirectTo(redirectTo) {}
+protected:
+    QNetworkReply *createRequest(Operation, const QNetworkRequest &,
+                                  QIODevice *) override
+    {
+        return new RedirectReply(m_redirectTo, this);
+    }
+private:
+    QUrl m_redirectTo;
+};
+
 // ────────────────────────────────────────────────────────────────────────────
 
 class ArtworkDownloaderTest : public QObject {
@@ -53,6 +87,7 @@ private slots:
     void localhostAndPrivateHostsRejectedAsRemote();
     void resolvedPrivateAddressesRejected();
     void downloadFromClosedDeviceReturnsEmpty();
+    void redirectToPrivateHostRejected();
 };
 
 void ArtworkDownloaderTest::downloadsLocalFile()
@@ -173,6 +208,32 @@ void ArtworkDownloaderTest::downloadFromClosedDeviceReturnsEmpty()
         QUrl(QStringLiteral("https://example.com/img.png")));
 
     QVERIFY(data.isEmpty());
+}
+
+void ArtworkDownloaderTest::redirectToPrivateHostRejected()
+{
+    // Finding #4 — A redirect pointing to a private-IP literal must be rejected
+    // via the URL check before making another network connection. This exercises
+    // the redirect guard path and confirms private-address redirects are blocked.
+    //
+    // Starting URL is an IP-literal public address (8.8.8.8) so QHostInfo::fromName
+    // resolves it without a live DNS lookup. The fake manager then redirects to the
+    // private address 192.168.0.1, which isSupportedRemoteUrl must reject.
+    //
+    // Note: DNS-rebinding (non-IP-literal hostname that resolves to a private address)
+    // is covered by the new QHostInfo re-resolution guard but requires DNS injection
+    // to test at the unit level; see areResolvedRemoteAddressesAllowed() tests above.
+    RedirectingFakeManager mgr(QUrl(QStringLiteral("https://192.168.0.1/pwned.png")));
+    ArtworkDownloader downloader(&mgr);
+    QSignalSpy failSpy(&downloader, &ArtworkDownloader::downloadFailed);
+
+    // 8.8.8.8 is a public IP — isSupportedRemoteUrl accepts it and
+    // QHostInfo::fromName resolves the numeric literal without a network call.
+    const QByteArray data = downloader.downloadToMemory(
+        QUrl(QStringLiteral("https://8.8.8.8/cover.png")));
+
+    QVERIFY(data.isEmpty());
+    QCOMPARE(failSpy.count(), 1);
 }
 
 QTEST_MAIN(ArtworkDownloaderTest)

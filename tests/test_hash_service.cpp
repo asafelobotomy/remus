@@ -320,6 +320,44 @@ private slots:
                  qPrintable("Expected a skip message in log but got: " + logLines.join("; ")));
     }
 
+    // P4/Finding #3 — Progress must be fired once per file, during hashing (not in a post-hoc burst)
+    void testComputeHashesProgressFiredDuringWork()
+    {
+        QTemporaryDir tmp;
+        QVERIFY(tmp.isValid());
+
+        constexpr int FILE_COUNT = 4;
+        QList<FileRecord> records;
+        for (int i = 0; i < FILE_COUNT; ++i) {
+            QByteArray data = QString("progress_test_%1").arg(i).toUtf8();
+            const QString name = QString("prog%1.nes").arg(i);
+            QString path = writeTestFile(tmp.path(), name, data);
+            QVERIFY(!path.isEmpty());
+            FileRecord fr;
+            fr.id          = i + 1;
+            fr.currentPath = path;
+            fr.filename    = name;
+            fr.extension   = QStringLiteral(".nes");
+            records.append(fr);
+        }
+
+        QMutex mu;
+        QList<int> doneValues;
+
+        HashService svc;
+        svc.computeHashes(records,
+            [&mu, &doneValues](int done, int /*total*/, const QString &) {
+                QMutexLocker lock(&mu);
+                doneValues.append(done);
+            });
+
+        // Exactly one callback per file, each with a unique done value 1..N
+        QCOMPARE(doneValues.size(), FILE_COUNT);
+        std::sort(doneValues.begin(), doneValues.end());
+        for (int i = 0; i < FILE_COUNT; ++i)
+            QCOMPARE(doneValues[i], i + 1);
+    }
+
     // P4 — Batch API must produce the same hashes as single-file hashRecord()
     void testComputeHashesMatchesSingleFileResults()
     {

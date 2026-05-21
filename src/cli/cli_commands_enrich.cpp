@@ -39,6 +39,7 @@ int handleEnrichCommand(CliContext &ctx)
         QString publisher;
         QString developer;
         int releaseYear = 0;
+        QString releaseDate;   // full ISO date if available, e.g. "2005-04-26"
         QString description;
         QString genres;
         QString players;
@@ -60,7 +61,8 @@ int handleEnrichCommand(CliContext &ctx)
 
         const bool sparse = m.publisher.isEmpty() || m.developer.isEmpty()
                           || m.genre.isEmpty() || m.players.isEmpty()
-                          || m.description.isEmpty() || m.releaseYear == 0;
+                          || m.description.isEmpty()
+                          || (m.releaseDate.isEmpty() && m.releaseYear == 0);
         if (!sparse) continue;
 
         const QString system = fileMap.contains(m.fileId)
@@ -75,7 +77,8 @@ int handleEnrichCommand(CliContext &ctx)
             sha1 = f.sha1;
         }
         candidates.append({m.gameId, m.fileId, m.gameTitle, system, crc32, md5, sha1,
-                            m.publisher, m.developer, m.releaseYear, m.description, m.genre, m.players});
+                            m.publisher, m.developer, m.releaseYear, m.releaseDate,
+                            m.description, m.genre, m.players});
     }
 
     if (candidates.isEmpty()) {
@@ -109,8 +112,12 @@ int handleEnrichCommand(CliContext &ctx)
             t.existing.system      = c.system;
             t.existing.publisher   = c.publisher;
             t.existing.developer   = c.developer;
-            t.existing.releaseDate = c.releaseYear > 0
-                ? QString::number(c.releaseYear) : QString();
+            // Preserve the full stored date (e.g. "2005-04-26") when available;
+            // only synthesize a year-only string as a last resort so that a
+            // subsequent enrich run does not degrade an already-complete date.
+            t.existing.releaseDate = !c.releaseDate.isEmpty()
+                ? c.releaseDate
+                : (c.releaseYear > 0 ? QString::number(c.releaseYear) : QString());
             t.existing.description = c.description;
             t.existing.genres      = c.genres.isEmpty()
                 ? QStringList() : c.genres.split(QStringLiteral(", "));

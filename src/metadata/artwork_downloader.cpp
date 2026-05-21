@@ -252,6 +252,17 @@ QByteArray ArtworkDownloader::downloadToMemory(const QUrl &url)
                 return {};
             }
 
+            // Re-resolve the redirect target's hostname to prevent DNS-rebinding:
+            // the initial URL validation checked the original host, but the redirect
+            // may point to a different host (or the same host may now resolve to a
+            // private/loopback address via TTL expiry). Validate before following.
+            const QHostInfo redirectHostInfo = QHostInfo::fromName(redirectedUrl.host());
+            if (redirectHostInfo.error() != QHostInfo::NoError
+                || !areResolvedRemoteAddressesAllowed(redirectHostInfo.addresses())) {
+                emit downloadFailed(redirectedUrl, "Resolved redirect host is not allowed");
+                return {};
+            }
+
             currentUrl = redirectedUrl;
             continue;
         }

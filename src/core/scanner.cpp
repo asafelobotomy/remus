@@ -318,6 +318,8 @@ QList<ScanResult> Scanner::processArchiveWithExtractor(const QString &archivePat
     }
 
     for (const QString &internalPath : archiveInfo.contents) {
+        if (m_cancelRequested.load(std::memory_order_relaxed)) break;
+
         const QString normalizedInternalPath = ArchiveExtractor::normalizeArchiveMemberPath(internalPath);
         if (normalizedInternalPath.isEmpty()) {
             qWarning() << "Skipping unsafe archive entry:" << internalPath;

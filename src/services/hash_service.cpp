@@ -12,18 +12,14 @@
 #include <QThreadPool>
 #include <QTemporaryDir>
 #include <QtConcurrent/QtConcurrentMap>
+#include <atomic>
+#include <memory>
 
 namespace Remus {
 
 namespace {
 
-struct HashTaskResult {
-    int fileId = 0;
-    QString filename;
-    QString currentPath;
-    HashResult result;
-    bool skipped = false;
-};
+
 
 // Return a temp-dir base path that has at least estimatedBytes free.
 // Search order: REMUS_TMPDIR env var → system temp → archive parent dir.
@@ -178,8 +174,13 @@ QList<HashService::HashBatchResult> HashService::computeHashes(const QList<FileR
     const int originalMaxThreads = pool->maxThreadCount();
     pool->setMaxThreadCount(maxThreads);
 
+    // Share an atomic completion counter so workers can emit live progress rather
+    // than delivering all updates in a burst after blockingMapped() returns.
+    auto doneCount = std::make_shared<std::atomic<int>>(0);
+    ProgressCallback cbCopy = progressCb;
+
     QList<HashBatchResult> taskResults = QtConcurrent::blockingMapped(files,
-        [cancelled](const FileRecord &file) {
+        [total, doneCount, cbCopy, cancelled](const FileRecord &file) {
             HashBatchResult task;
             task.fileId   = file.id;
             task.filename = file.filename;
@@ -187,23 +188,20 @@ QList<HashService::HashBatchResult> HashService::computeHashes(const QList<FileR
             if (cancelled && cancelled->load()) {
                 task.skipped     = true;
                 task.skipReason  = QStringLiteral("cancelled");
-                return task;
+            } else {
+                HashService worker;
+                task.result = worker.hashRecord(file);
             }
 
-            HashService worker;
-            task.result = worker.hashRecord(file);
+            if (cbCopy) {
+                const int done = ++(*doneCount);
+                cbCopy(done, total, task.filename);
+            }
+
             return task;
         });
 
     pool->setMaxThreadCount(originalMaxThreads);
-
-    if (progressCb) {
-        int done = 0;
-        for (const HashBatchResult &task : taskResults) {
-            progressCb(++done, total, task.filename);
-        }
-    }
-
     return taskResults;
 }
 

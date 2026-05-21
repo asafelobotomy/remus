@@ -38,6 +38,7 @@ private slots:
     void testBuildOrchestratorSkipsIgdbWithoutCredentials();
     void testBuildOrchestratorLoadsCompendiumProviderFromDataDir();
     void testPersistMetadataInsertsGame();
+    void testPersistMetadataNameMatchScoreRoundTrips();
     void testPersistMetadataDuplicateGame();
     void testHashFileRecordRealFile();
     void testHashFileRecordGdiUsesReferencedTrackPayload();
@@ -438,6 +439,33 @@ void CliHelpersTest::testPersistMetadataInsertsGame()
     Database::MatchResult match = db.getMatchForFile(fileId);
     QCOMPARE(match.gameId, gameId);
     QVERIFY(match.confidence >= 90.0f);  // Hash match → high confidence
+}
+
+void CliHelpersTest::testPersistMetadataNameMatchScoreRoundTrips()
+{
+    // Finding #5 — persistMetadata() must pass matchScore through to insertMatch()
+    // as nameMatchScore so that fuzzy/name-match scores survive a DB round-trip.
+    Database db;
+    QVERIFY(db.initialize(":memory:"));
+
+    int libId = db.insertLibrary("/roms", "Test");
+    int sysId = db.getSystemId("NES");
+    FileRecord fr = makeRecord(libId, sysId, "sonic.nes", "CCDD", "md5s", "sha1s");
+    int fileId = db.insertFile(fr);
+    fr.id = fileId;
+
+    GameMetadata meta = makeMetadata("Sonic The Hedgehog", "Mega Drive");
+    meta.matchScore  = 0.87f;
+    meta.matchMethod = QStringLiteral("fuzzy");
+
+    int gameId = persistMetadata(db, fr, meta);
+    QVERIFY(gameId > 0);
+
+    Database::MatchResult match = db.getMatchForFile(fileId);
+    QVERIFY(match.matchId > 0);
+    // nameMatchScore must reflect matchScore (0.87), not the default 0.0
+    QVERIFY2(match.nameMatchScore >= 0.86f && match.nameMatchScore <= 0.88f,
+             qPrintable(QString("nameMatchScore = %1").arg(match.nameMatchScore)));
 }
 
 void CliHelpersTest::testPersistMetadataDuplicateGame()

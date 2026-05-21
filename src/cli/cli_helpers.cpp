@@ -312,7 +312,7 @@ int persistMetadata(Database &db, const FileRecord &file, const GameMetadata &me
 
     const int confidence = metadata.matchScore > 0 ? static_cast<int>(metadata.matchScore * 100) : 0;
     const QString method = metadata.matchMethod.isEmpty() ? QStringLiteral("auto") : metadata.matchMethod;
-    db.insertMatch(file.id, gameId, confidence, method);
+    db.insertMatch(file.id, gameId, confidence, method, metadata.matchScore);
     return gameId;
 }
 

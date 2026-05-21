@@ -16,6 +16,7 @@ class ScannerTest : public QObject {
 private slots:
     void missingDirectoryEmitsError();
     void cancelStopsScan();
+    void cancelDuringArchivePhaseReturnsPartialResults();
     void archiveFilePathScansArchiveContents();
     void multiFileLinking();
     void compressedArchiveMultiFileLinking();
@@ -294,6 +295,44 @@ void ScannerTest::exclusionMarkerChangesAreRespectedAcrossScans()
 
     QList<ScanResult> excludedResults = scanner.scan(dir.path());
     QCOMPARE(excludedResults.size(), 0);
+}
+
+void ScannerTest::cancelDuringArchivePhaseReturnsPartialResults()
+{
+    // Finding #2 — cancellation should stop archive member iteration mid-archive,
+    // not only between archive files. After requestCancel() fires on the first
+    // fileFound signal, subsequent members of the same archive must not be returned.
+    const QString sevenZip = findSevenZip();
+    if (sevenZip.isEmpty()) {
+        QSKIP("7z not available");
+    }
+
+    QTemporaryDir dir;
+    QTemporaryDir sourceDir;
+    QVERIFY(dir.isValid() && sourceDir.isValid());
+
+    // One archive containing many ROM entries so cancellation has entries to skip.
+    const int entryCount = 50;
+    QStringList inputs;
+    for (int i = 0; i < entryCount; ++i) {
+        QVERIFY(!writeFile(sourceDir.filePath(QString("rom_%1.nes").arg(i))).isEmpty());
+        inputs << QString("rom_%1.nes").arg(i);
+    }
+    const QString archivePath = dir.filePath("big.7z");
+    QVERIFY(createArchive(sevenZip, sourceDir.path(), archivePath, inputs));
+
+    Scanner scanner;
+    scanner.setExtensions({".nes"});
+
+    // Cancel on the very first discovered entry; the loop check inside
+    // processArchiveWithExtractor should then break before appending the rest.
+    connect(&scanner, &Scanner::fileFound, &scanner, [&scanner]() {
+        scanner.requestCancel();
+    }, Qt::DirectConnection);
+
+    const QList<ScanResult> results = scanner.scan(dir.path());
+    QVERIFY(scanner.wasCancelled());
+    QVERIFY(results.size() < entryCount);
 }
 
 void ScannerTest::concurrentScanNoDuplicates()
