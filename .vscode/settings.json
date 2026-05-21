@@ -58,18 +58,7 @@
 
   // ── SQLTools ────────────────────────────────────────────────
   "sqltools.autoOpenSessionFiles": false,
-  "sqltools.connections": [
-    {
-      "name": "Compendium DB",
-      "driver": "SQLite",
-      "database": "${workspaceFolder}/data/compendium/remus_compendium.db"
-    },
-    {
-      "name": "Library DB",
-      "driver": "SQLite",
-      "database": "${workspaceFolder}/remus.db"
-    }
-  ],
+  "sqltools.connections": [],
 
   // ── Git ─────────────────────────────────────────────────────
   "git.autofetch": true,
