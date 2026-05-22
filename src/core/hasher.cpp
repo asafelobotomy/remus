@@ -15,18 +15,43 @@ HashResult Hasher::calculateHashes(const QString &filePath, bool stripHeader, in
 {
     HashResult result;
 
-    QByteArray data = readFileData(filePath, stripHeader, headerSize);
-    if (data.isEmpty()) {
+    QFile file(filePath);
+    if (!file.open(QIODevice::ReadOnly)) {
         result.success = false;
-        result.error = "Failed to read file or file is empty";
+        result.error = QStringLiteral("Failed to open file: ") + filePath;
         return result;
     }
 
-    result.crc32 = calculateCRC32(data);
-    result.md5 = calculateMD5(data);
-    result.sha1 = calculateSHA1(data);
-    result.success = true;
+    if (stripHeader && headerSize > 0)
+        file.seek(headerSize);
 
+    uLong crc = crc32(0L, Z_NULL, 0);
+    QCryptographicHash md5Hash(QCryptographicHash::Md5);
+    QCryptographicHash sha1Hash(QCryptographicHash::Sha1);
+
+    static constexpr qint64 kChunkSize = 65536; // 64 KB read buffer
+    QByteArray chunk(kChunkSize, Qt::Uninitialized);
+
+    while (!file.atEnd()) {
+        const qint64 bytesRead = file.read(chunk.data(), kChunkSize);
+        if (bytesRead < 0) {
+            result.success = false;
+            result.error = QStringLiteral("Read error on: ") + filePath;
+            return result;
+        }
+        if (bytesRead == 0)
+            break;
+        crc = crc32(crc, reinterpret_cast<const Bytef *>(chunk.constData()),
+                    static_cast<uInt>(bytesRead));
+        const QByteArrayView view(chunk.constData(), bytesRead);
+        md5Hash.addData(view);
+        sha1Hash.addData(view);
+    }
+
+    result.crc32    = QString("%1").arg(crc, 8, 16, QChar('0')).toLower();
+    result.md5      = QString(md5Hash.result().toHex()).toLower();
+    result.sha1     = QString(sha1Hash.result().toHex()).toLower();
+    result.success  = true;
     return result;
 }
 

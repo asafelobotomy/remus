@@ -382,6 +382,8 @@ signals:
 private:
     bool executeSqlFile(const QString &filePath);
     void logError(const QString &message);
+    /// SELECT full file records with an optional WHERE clause (literal string only, no user input).
+    QList<FileRecord> queryFiles(const QString &whereClause = {});
 
     QSqlDatabase m_db;
     QString m_dbPath;

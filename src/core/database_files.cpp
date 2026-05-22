@@ -268,9 +268,17 @@ FileRecord Database::getFileById(int fileId)
 
 QList<FileRecord> Database::getAllFiles()
 {
+    return queryFiles();
+}
+
+QList<FileRecord> Database::queryFiles(const QString &whereClause)
+{
+    const QString sql = whereClause.isEmpty()
+        ? QString("SELECT %1 FROM files").arg(QLatin1String(kFileSelectColumns))
+        : QString("SELECT %1 FROM files WHERE %2").arg(QLatin1String(kFileSelectColumns), whereClause);
     QSqlQuery query(m_db);
-    if (!query.exec(QString("SELECT %1 FROM files").arg(QLatin1String(kFileSelectColumns)))) {
-        logError("Failed to get all files: " + query.lastError().text());
+    if (!query.exec(sql)) {
+        logError("Failed to query files: " + query.lastError().text());
         return {};
     }
     QList<FileRecord> files;

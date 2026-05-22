@@ -7,6 +7,8 @@
 
 #include <QDir>
 #include <QFileInfo>
+#include <QSqlDatabase>
+#include <QSqlDriver>
 #include <QStorageInfo>
 #include <QThread>
 #include <QThreadPool>
@@ -133,6 +135,12 @@ int HashService::hashAll(Database *db,
 
     int hashed  = 0;
     int skipped = 0;
+
+    QSqlDatabase sqlDb = db->database();
+    const bool useTransaction = sqlDb.driver()->hasFeature(QSqlDriver::Transactions);
+    if (useTransaction)
+        sqlDb.transaction();
+
     for (const HashBatchResult &task : taskResults) {
         if (task.skipped) {
             skipped++;
@@ -150,6 +158,9 @@ int HashService::hashAll(Database *db,
                 logCb(QString("Skipped %1: %2").arg(task.filename, task.result.error));
         }
     }
+
+    if (useTransaction)
+        sqlDb.commit();
 
     if (logCb) {
         if (skipped > 0)

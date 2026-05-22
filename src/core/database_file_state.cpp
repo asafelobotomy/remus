@@ -124,44 +124,12 @@ bool Database::markFileUnprocessed(int fileId)
 
 QList<FileRecord> Database::getProcessedFiles()
 {
-    QList<FileRecord> files;
-
-    QSqlQuery query(m_db);
-    if (!query.exec("SELECT id FROM files WHERE is_primary = 1 AND is_processed = 1")) {
-        logError("Failed to get processed files: " + query.lastError().text());
-        return files;
-    }
-
-    while (query.next()) {
-        const int fileId = query.value(0).toInt();
-        FileRecord record = getFileById(fileId);
-        if (record.id > 0) {
-            files.append(record);
-        }
-    }
-
-    return files;
+    return queryFiles(QStringLiteral("is_primary = 1 AND is_processed = 1"));
 }
 
 QList<FileRecord> Database::getUnprocessedFiles()
 {
-    QList<FileRecord> files;
-
-    QSqlQuery query(m_db);
-    if (!query.exec("SELECT id FROM files WHERE is_primary = 1 AND is_processed = 0")) {
-        logError("Failed to get unprocessed files: " + query.lastError().text());
-        return files;
-    }
-
-    while (query.next()) {
-        const int fileId = query.value(0).toInt();
-        FileRecord record = getFileById(fileId);
-        if (record.id > 0) {
-            files.append(record);
-        }
-    }
-
-    return files;
+    return queryFiles(QStringLiteral("is_primary = 1 AND is_processed = 0"));
 }
 
 } // namespace Remus

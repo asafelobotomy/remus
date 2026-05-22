@@ -41,6 +41,19 @@ bool Database::initialize(const QString &dbPath, const QString &connectionName)
         return false;
     }
 
+    // Performance tuning — non-fatal; a warning is emitted for each failed PRAGMA.
+    for (const char *pragma : {
+             "PRAGMA journal_mode = WAL",
+             "PRAGMA synchronous = NORMAL",
+             "PRAGMA cache_size = -65536",    // 64 MB page cache
+             "PRAGMA temp_store = MEMORY",
+             "PRAGMA mmap_size = 268435456",  // 256 MB mmap window
+         }) {
+        if (!pragmaQuery.exec(QString::fromLatin1(pragma)))
+            qWarning() << "Database PRAGMA failed (non-fatal):" << pragma
+                       << pragmaQuery.lastError().text();
+    }
+
     qInfo() << "Database opened:" << dbPath;
 
     // Check if schema exists

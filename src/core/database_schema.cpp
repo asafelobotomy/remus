@@ -213,6 +213,8 @@ bool Database::createSchema()
     
     query.exec("CREATE INDEX IF NOT EXISTS idx_games_title ON games(title)");
     query.exec("CREATE INDEX IF NOT EXISTS idx_games_system ON games(system_id)");
+    // Composite indexes for hot query paths
+    query.exec("CREATE INDEX IF NOT EXISTS idx_games_title_system ON games(title, system_id)");
 
     // Create matches table for file-to-game matching
     QString createMatches = R"(
@@ -238,6 +240,10 @@ bool Database::createSchema()
     query.exec("CREATE INDEX IF NOT EXISTS idx_matches_file ON matches(file_id)");
     query.exec("CREATE INDEX IF NOT EXISTS idx_matches_game ON matches(game_id)");
     query.exec("CREATE INDEX IF NOT EXISTS idx_matches_confidence ON matches(confidence)");
+    // Composite indexes for hot query paths
+    query.exec("CREATE INDEX IF NOT EXISTS idx_files_hash_primary ON files(hash_calculated, is_primary)");
+    query.exec("CREATE INDEX IF NOT EXISTS idx_files_primary_processed ON files(is_primary, is_processed)");
+    query.exec("CREATE INDEX IF NOT EXISTS idx_matches_file_status ON matches(file_id, is_confirmed, is_rejected)");
 
     qInfo() << "Database schema created successfully";
     return true;

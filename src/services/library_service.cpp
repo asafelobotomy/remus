@@ -8,6 +8,8 @@
 
 #include <QFileInfo>
 #include <QHash>
+#include <QSqlDatabase>
+#include <QSqlDriver>
 
 #include <algorithm>
 
@@ -204,6 +206,11 @@ int LibraryService::persistScanResults(const QList<ScanResult> &results,
         return static_cast<int>(!left.isPrimary) < static_cast<int>(!right.isPrimary);
     });
 
+    QSqlDatabase sqlDb = db->database();
+    const bool useTransaction = sqlDb.driver()->hasFeature(QSqlDriver::Transactions);
+    if (useTransaction)
+        sqlDb.transaction();
+
     for (const ScanResult &sr : orderedResults) {
         // Detect system — use internal archive path for compressed files
         const QString systemDetectPath = sr.isCompressed && !sr.archiveInternalPath.isEmpty()
@@ -253,6 +260,10 @@ int LibraryService::persistScanResults(const QList<ScanResult> &results,
         if (progressCb)
             progressCb(inserted, orderedResults.size(), {});
     }
+
+    if (useTransaction)
+        sqlDb.commit();
+
     return inserted;
 }
 

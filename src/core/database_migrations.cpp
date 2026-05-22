@@ -344,6 +344,12 @@ bool Database::runMigrations()
         return false;
     }
 
+    // Composite performance indexes — idempotent; safe to add for existing databases.
+    query.exec(QStringLiteral("CREATE INDEX IF NOT EXISTS idx_files_hash_primary ON files(hash_calculated, is_primary)"));
+    query.exec(QStringLiteral("CREATE INDEX IF NOT EXISTS idx_files_primary_processed ON files(is_primary, is_processed)"));
+    query.exec(QStringLiteral("CREATE INDEX IF NOT EXISTS idx_games_title_system ON games(title, system_id)"));
+    query.exec(QStringLiteral("CREATE INDEX IF NOT EXISTS idx_matches_file_status ON matches(file_id, is_confirmed, is_rejected)"));
+
     if (useTransaction && !m_db.commit()) {
         logError("Migration: Failed to commit transaction: " + m_db.lastError().text());
         if (!m_db.rollback()) {
