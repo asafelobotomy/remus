@@ -17,7 +17,9 @@ enum class ArchiveFormat {
     RAR,
     GZip,
     TarGz,
-    TarBz2
+    TarBz2,
+    Tar,
+    TarXz
 };
 
 /**
@@ -49,7 +51,8 @@ struct ExtractionResult {
 };
 
 /**
- * @brief Archive extractor supporting ZIP, 7z, RAR, gzip, and tar formats.
+ * @brief Archive extractor supporting all formats provided by libarchive
+ *        (ZIP, 7z, RAR, tar, gzip, bzip2, xz, and compound variants).
  *
  * Uses libarchive for all extraction — no external tools required.
  */

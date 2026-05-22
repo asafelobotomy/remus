@@ -13,12 +13,14 @@ ArchiveExtractor::ArchiveExtractor(QObject *parent)
 QMap<ArchiveFormat, bool> ArchiveExtractor::getAvailableTools() const
 {
     QMap<ArchiveFormat, bool> available;
-    available[ArchiveFormat::ZIP]    = true;
+    available[ArchiveFormat::ZIP]      = true;
     available[ArchiveFormat::SevenZip] = true;
-    available[ArchiveFormat::RAR]    = true;
-    available[ArchiveFormat::GZip]   = true;
-    available[ArchiveFormat::TarGz]  = true;
-    available[ArchiveFormat::TarBz2] = true;
+    available[ArchiveFormat::RAR]      = true;
+    available[ArchiveFormat::GZip]     = true;
+    available[ArchiveFormat::TarGz]    = true;
+    available[ArchiveFormat::TarBz2]   = true;
+    available[ArchiveFormat::Tar]      = true;
+    available[ArchiveFormat::TarXz]    = true;
     return available;
 }
 
@@ -31,6 +33,8 @@ bool ArchiveExtractor::canExtract(ArchiveFormat format) const
     case ArchiveFormat::GZip:
     case ArchiveFormat::TarGz:
     case ArchiveFormat::TarBz2:
+    case ArchiveFormat::Tar:
+    case ArchiveFormat::TarXz:
         return true;
     default:
         return false;
@@ -46,12 +50,15 @@ ArchiveFormat ArchiveExtractor::detectFormat(const QString &path)
 {
     const QString ext = QFileInfo(path).suffix().toLower();
 
-    if (ext == QLatin1String("zip")) return ArchiveFormat::ZIP;
-    if (ext == QLatin1String("7z"))  return ArchiveFormat::SevenZip;
-    if (ext == QLatin1String("rar")) return ArchiveFormat::RAR;
-    if (ext == QLatin1String("tgz")) return ArchiveFormat::TarGz;
-    if (ext == QLatin1String("gz"))  return ArchiveFormat::GZip;
-    if (ext == QLatin1String("bz2")) return ArchiveFormat::TarBz2;
+    if (ext == QLatin1String("zip"))  return ArchiveFormat::ZIP;
+    if (ext == QLatin1String("7z"))   return ArchiveFormat::SevenZip;
+    if (ext == QLatin1String("rar"))  return ArchiveFormat::RAR;
+    if (ext == QLatin1String("tgz"))  return ArchiveFormat::TarGz;
+    if (ext == QLatin1String("gz"))   return ArchiveFormat::GZip;
+    if (ext == QLatin1String("bz2"))  return ArchiveFormat::TarBz2;
+    if (ext == QLatin1String("tbz2")) return ArchiveFormat::TarBz2;
+    if (ext == QLatin1String("tar"))  return ArchiveFormat::Tar;
+    if (ext == QLatin1String("xz"))   return ArchiveFormat::TarXz;
 
     return ArchiveFormat::Unknown;
 }

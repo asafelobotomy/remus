@@ -132,6 +132,9 @@ void ArchiveExtractorTest::testDetectFormat()
     QCOMPARE(ArchiveExtractor::detectFormat("game.tgz"),  ArchiveFormat::TarGz);
     QCOMPARE(ArchiveExtractor::detectFormat("game.gz"),   ArchiveFormat::GZip);
     QCOMPARE(ArchiveExtractor::detectFormat("game.bz2"),  ArchiveFormat::TarBz2);
+    QCOMPARE(ArchiveExtractor::detectFormat("game.tbz2"), ArchiveFormat::TarBz2);
+    QCOMPARE(ArchiveExtractor::detectFormat("game.tar"),  ArchiveFormat::Tar);
+    QCOMPARE(ArchiveExtractor::detectFormat("game.xz"),   ArchiveFormat::TarXz);
     QCOMPARE(ArchiveExtractor::detectFormat("game.bin"),  ArchiveFormat::Unknown);
     QCOMPARE(ArchiveExtractor::detectFormat("game"),      ArchiveFormat::Unknown);
 }
@@ -158,6 +161,8 @@ void ArchiveExtractorTest::testCanExtractAllSupportedFormats()
     QVERIFY(extractor.canExtract(ArchiveFormat::GZip));
     QVERIFY(extractor.canExtract(ArchiveFormat::TarGz));
     QVERIFY(extractor.canExtract(ArchiveFormat::TarBz2));
+    QVERIFY(extractor.canExtract(ArchiveFormat::Tar));
+    QVERIFY(extractor.canExtract(ArchiveFormat::TarXz));
     QVERIFY(!extractor.canExtract(ArchiveFormat::Unknown));
 }
 

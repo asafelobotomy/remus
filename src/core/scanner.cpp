@@ -63,11 +63,8 @@ QList<ScanResult> Scanner::scan(const QString &libraryPath)
 
     // Log available archive tools
     if (m_archiveScanning) {
-        auto tools = m_archiveExtractor.getAvailableTools();
-        qInfo() << "Archive scanning enabled. Available tools:";
-        qInfo() << "  ZIP:" << (tools[ArchiveFormat::ZIP] ? "yes" : "NO (install unzip or 7z)");
-        qInfo() << "  7z:" << (tools[ArchiveFormat::SevenZip] ? "yes" : "NO (install p7zip/7z)");
-        qInfo() << "  RAR:" << (tools[ArchiveFormat::RAR] ? "yes" : "NO (install unrar or 7z)");
+        qInfo() << "Archive scanning enabled. Available formats (via libarchive):";
+        qInfo() << "  ZIP, 7z, RAR, tar, gz, bz2, xz — all natively supported";
     }
 
     emit scanStarted(libraryPath);
