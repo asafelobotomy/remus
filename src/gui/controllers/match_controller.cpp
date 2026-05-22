@@ -2,6 +2,7 @@
 
 #include <QCoreApplication>
 #include <QFileInfo>
+#include <QSqlError>
 #include <QSqlQuery>
 #include <QVector>
 
@@ -190,16 +191,34 @@ void MatchController::updateUnconfirmedCount()
 void MatchController::confirmAll()
 {
     if (m_appController == nullptr || !m_appController->isLibraryOpen()) return;
-    QSqlQuery q(m_appController->database()->database());
-    q.exec(QStringLiteral("UPDATE matches SET is_confirmed = 1 WHERE is_confirmed = 0 AND is_rejected = 0"));
+    QSqlDatabase db = m_appController->database()->database();
+    if (!db.transaction()) {
+        emit matchError(QStringLiteral("Failed to start transaction."));
+        return;
+    }
+    QSqlQuery q(db);
+    if (!q.exec(QStringLiteral("UPDATE matches SET is_confirmed = 1 WHERE is_confirmed = 0 AND is_rejected = 0"))) {
+        db.rollback();
+        emit matchError(QStringLiteral("Failed to confirm matches: %1").arg(q.lastError().text()));
+        return;
+    }
     // Propagate confirmed game titles to files.base_title so the queue shows the game name.
-    q.exec(QStringLiteral(
-        "UPDATE files SET base_title = ("
-        "  SELECT g.title FROM games g"
-        "  JOIN matches m ON m.game_id = g.id"
-        "  WHERE m.file_id = files.id AND m.is_confirmed = 1"
-        "  LIMIT 1"
-        ") WHERE id IN (SELECT file_id FROM matches WHERE is_confirmed = 1)"));
+    if (!q.exec(QStringLiteral(
+            "UPDATE files SET base_title = ("
+            "  SELECT g.title FROM games g"
+            "  JOIN matches m ON m.game_id = g.id"
+            "  WHERE m.file_id = files.id AND m.is_confirmed = 1"
+            "  LIMIT 1"
+            ") WHERE id IN (SELECT file_id FROM matches WHERE is_confirmed = 1)"))) {
+        db.rollback();
+        emit matchError(QStringLiteral("Failed to propagate titles: %1").arg(q.lastError().text()));
+        return;
+    }
+    if (!db.commit()) {
+        db.rollback();
+        emit matchError(QStringLiteral("Failed to commit confirmAll transaction."));
+        return;
+    }
     updateUnconfirmedCount();
     refreshModel();
     emit libraryChanged();

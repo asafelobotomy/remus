@@ -3,6 +3,7 @@
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
+#include <QSqlError>
 #include <QSqlQuery>
 #include <QStandardPaths>
 
@@ -100,32 +101,63 @@ bool AppController::eraseLibraryDatabase(bool eraseFiles,
         return false;
     }
 
-    QSqlQuery q(m_database.database());
+    QSqlDatabase db = m_database.database();
+    if (!db.transaction()) {
+        setStatusMessage(QStringLiteral("Failed to start database transaction."));
+        return false;
+    }
+
+    QSqlQuery q(db);
     QStringList erased;
 
     if (eraseFiles) {
         // Deleting libraries cascades to files → matches, undo_queue (FK SET NULL).
         // Games and applied_patches are not cascade-linked so we remove them explicitly.
-        q.exec(QStringLiteral("DELETE FROM applied_patches"));
-        q.exec(QStringLiteral("DELETE FROM libraries")); // cascade: files → matches; undo_queue FK SET NULL
-        q.exec(QStringLiteral("DELETE FROM undo_queue"));
-        q.exec(QStringLiteral("DELETE FROM games"));
+        if (!q.exec(QStringLiteral("DELETE FROM applied_patches")) ||
+            !q.exec(QStringLiteral("DELETE FROM libraries")) || // cascade: files → matches; undo_queue FK SET NULL
+            !q.exec(QStringLiteral("DELETE FROM undo_queue")) ||
+            !q.exec(QStringLiteral("DELETE FROM games"))) {
+            db.rollback();
+            setStatusMessage(QStringLiteral("Erase failed: %1").arg(q.lastError().text()));
+            return false;
+        }
         erased << QStringLiteral("file records");
-        emit libraryDatabaseErased();
     } else if (eraseMatchData) {
         // Keep file records but strip match results and game metadata.
-        q.exec(QStringLiteral("DELETE FROM matches"));
-        q.exec(QStringLiteral("DELETE FROM games"));
+        if (!q.exec(QStringLiteral("DELETE FROM matches")) ||
+            !q.exec(QStringLiteral("DELETE FROM games"))) {
+            db.rollback();
+            setStatusMessage(QStringLiteral("Erase failed: %1").arg(q.lastError().text()));
+            return false;
+        }
         erased << QStringLiteral("match results");
     }
 
     if (eraseApiCache) {
-        q.exec(QStringLiteral("DELETE FROM cache"));
+        if (!q.exec(QStringLiteral("DELETE FROM cache"))) {
+            db.rollback();
+            setStatusMessage(QStringLiteral("Erase failed: %1").arg(q.lastError().text()));
+            return false;
+        }
+        erased << QStringLiteral("API cache");
+    }
+
+    if (!db.commit()) {
+        db.rollback();
+        setStatusMessage(QStringLiteral("Failed to commit erase transaction."));
+        return false;
+    }
+
+    // Post-commit side effects — these cannot be rolled back, so they run only after a successful commit.
+    if (eraseFiles) {
+        emit libraryDatabaseErased();
+    }
+
+    if (eraseApiCache) {
         const QString modCacheDir = QDir(
             QStandardPaths::writableLocation(QStandardPaths::AppDataLocation))
             .filePath(QStringLiteral("mod_catalog_cache"));
         QDir(modCacheDir).removeRecursively();
-        erased << QStringLiteral("API cache");
     }
 
     if (eraseArtwork) {

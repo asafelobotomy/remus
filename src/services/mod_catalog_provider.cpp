@@ -99,6 +99,26 @@ bool ModCatalogProvider::loadFromUrl(const QUrl &url, bool forceRefresh)
         return false;
     }
 
+    // file:// URLs — read directly from disk and write a cache entry so that
+    // subsequent non-forced calls can use it.  The network path is not used
+    // because file:// has no host and would be rejected by isCatalogHostAllowed.
+    if (url.isLocalFile()) {
+        const QString localCachePath = cacheFileForUrl(url);
+        QFile localFile(url.toLocalFile());
+        if (!localFile.open(QIODevice::ReadOnly)) {
+            m_lastError = QStringLiteral("Cannot open catalog file: ") + url.toLocalFile();
+            return false;
+        }
+        const QByteArray data = localFile.readAll();
+        if (!loadFromJson(data))
+            return false;
+        QDir().mkpath(cacheDir());
+        QFile cache(localCachePath);
+        if (cache.open(QIODevice::WriteOnly | QIODevice::Truncate))
+            cache.write(data);
+        return true;
+    }
+
     const QString cachePath = cacheFileForUrl(url);
     QFileInfo cacheInfo(cachePath);
 

@@ -170,16 +170,15 @@ QList<HashService::HashBatchResult> HashService::computeHashes(const QList<FileR
     const int idealThreads = QThread::idealThreadCount();
     const int maxThreads = qMax(1, qMin(idealThreads > 0 ? idealThreads : 1, 8));
 
-    QThreadPool *pool = QThreadPool::globalInstance();
-    const int originalMaxThreads = pool->maxThreadCount();
-    pool->setMaxThreadCount(maxThreads);
+    QThreadPool localPool;
+    localPool.setMaxThreadCount(maxThreads);
 
     // Share an atomic completion counter so workers can emit live progress rather
     // than delivering all updates in a burst after blockingMapped() returns.
     auto doneCount = std::make_shared<std::atomic<int>>(0);
     ProgressCallback cbCopy = progressCb;
 
-    QList<HashBatchResult> taskResults = QtConcurrent::blockingMapped(files,
+    QList<HashBatchResult> taskResults = QtConcurrent::blockingMapped(&localPool, files,
         [total, doneCount, cbCopy, cancelled](const FileRecord &file) {
             HashBatchResult task;
             task.fileId   = file.id;
@@ -201,7 +200,6 @@ QList<HashService::HashBatchResult> HashService::computeHashes(const QList<FileR
             return task;
         });
 
-    pool->setMaxThreadCount(originalMaxThreads);
     return taskResults;
 }
 

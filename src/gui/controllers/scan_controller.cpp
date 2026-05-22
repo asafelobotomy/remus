@@ -22,6 +22,14 @@ ScanController::ScanController(AppController *appController, QObject *parent)
     m_lastDirectory = settings.value(QStringLiteral("scan/last_directory")).toString();
 }
 
+ScanController::~ScanController()
+{
+    if (m_thread && m_thread->isRunning()) {
+        m_libraryService.cancelScan();
+        m_thread->wait();
+    }
+}
+
 void ScanController::startScan(const QString &directory)
 {
     if (m_scanning) {

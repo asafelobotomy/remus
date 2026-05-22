@@ -1,6 +1,8 @@
 #include "mod_controller.h"
 
+#include <QPointer>
 #include <QSettings>
+#include <QThread>
 #include <QUrl>
 
 #include "app_controller.h"
@@ -32,30 +34,33 @@ void ModController::loadCatalog(const QString &url, bool forceRefresh)
     m_loadingCatalog = true;
     emit loadingCatalogChanged();
 
-    bool loaded = false;
-    if (resolvedUrl.startsWith(QStringLiteral("http://")) || resolvedUrl.startsWith(QStringLiteral("https://"))) {
-        loaded = m_provider.loadFromUrl(QUrl(resolvedUrl), forceRefresh);
-    } else {
-        loaded = m_provider.loadFromFile(resolvedUrl);
-    }
+    const bool isRemote = resolvedUrl.startsWith(QStringLiteral("https://"));
 
-    m_loadingCatalog = false;
-    emit loadingCatalogChanged();
+    QThread *thread = QThread::create([this, resolvedUrl, isRemote, forceRefresh]() {
+        const bool loaded = isRemote
+            ? m_provider.loadFromUrl(QUrl(resolvedUrl), forceRefresh)
+            : m_provider.loadFromFile(resolvedUrl);
 
-    if (!loaded) {
-        setLastError(m_provider.lastError());
-        return;
-    }
-
-    setCatalogUrl(resolvedUrl);
-    const bool isRemote = resolvedUrl.startsWith(QStringLiteral("http://")) ||
-                          resolvedUrl.startsWith(QStringLiteral("https://"));
-    m_workflow->setCatalogIsRemote(isRemote);
-    loadForSelectedFile();
+        QMetaObject::invokeMethod(this, [this, loaded, resolvedUrl, isRemote]() {
+            m_loadingCatalog = false;
+            emit loadingCatalogChanged();
+            if (!loaded) {
+                setLastError(m_provider.lastError());
+                return;
+            }
+            setCatalogUrl(resolvedUrl);
+            const bool remote = resolvedUrl.startsWith(QStringLiteral("https://"));
+            m_workflow->setCatalogIsRemote(remote);
+            loadForSelectedFile();
+        }, Qt::QueuedConnection);
+    });
+    connect(thread, &QThread::finished, thread, &QThread::deleteLater);
+    thread->start();
 }
 
 void ModController::loadForSelectedFile()
 {
+    if (m_loadingCatalog) return; // provider data is being written on the worker thread
     if (m_appController == nullptr || !m_appController->isLibraryOpen()) {
         if (m_model != nullptr) {
             m_model->clear();

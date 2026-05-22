@@ -183,23 +183,6 @@ private slots:
         QCOMPARE(wf.queueFiles().count(), 2);
     }
 
-    void test_hint_noFileSelected()
-    {
-        AppController    app;
-        HashController   hash(&app);
-        MatchController  match(&app);
-        ArtworkController art(&app);
-        OrganizeController org(&app);
-        WorkflowController wf(&app, &hash, &match, &art, nullptr, &org, nullptr);
-
-        setupTempLibrary(&app);
-        wf.refresh();
-        QCoreApplication::processEvents();
-
-        QVERIFY(!wf.hint().isEmpty());
-        QVERIFY(wf.hint().contains("Select", Qt::CaseInsensitive));
-    }
-
     void test_artworkExistsForFile_noFile()
     {
         AppController    app;

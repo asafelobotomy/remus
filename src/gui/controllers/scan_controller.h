@@ -21,6 +21,7 @@ class ScanController : public QObject {
 
 public:
     explicit ScanController(AppController *appController, QObject *parent = nullptr);
+    ~ScanController();
 
     bool isScanning() const { return m_scanning; }
     int scannedFiles() const { return m_scannedFiles; }

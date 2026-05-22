@@ -55,6 +55,11 @@ bool isChdCanonicalSystem(int systemId)
     case Systems::ID_DREAMCAST:
     case Systems::ID_3DO:
     case Systems::ID_NEO_GEO_CD:
+    case Systems::ID_PC_FX:
+    case Systems::ID_CDI:
+    case Systems::ID_CD32:
+    case Systems::ID_NAOMI:
+    case Systems::ID_ATARI_JAGUAR_CD:
         return true;
     default:
         return false;
@@ -93,6 +98,40 @@ bool isArchiveOnlySystem(int systemId)
     case Systems::ID_AMIGA:
     case Systems::ID_ZX_SPECTRUM:
     case Systems::ID_SUPERGRAFX:
+    case Systems::ID_FDS:
+    case Systems::ID_ATARI_5200:
+    case Systems::ID_ATARI_8BIT:
+    case Systems::ID_ATARI_ST:
+    case Systems::ID_COLECOVISION:
+    case Systems::ID_INTELLIVISION:
+    case Systems::ID_MSX:
+    case Systems::ID_MSX2:
+    case Systems::ID_SG1000:
+    case Systems::ID_AMSTRAD_CPC:
+    case Systems::ID_ENTERPRISE_128:
+    case Systems::ID_ZX81:
+    case Systems::ID_VIDEOTON_TVC:
+    case Systems::ID_SEGA_PICO:
+    case Systems::ID_VIC20:
+    case Systems::ID_ODYSSEY2:
+    case Systems::ID_SUPERVISION:
+    case Systems::ID_POCKET_CHALLENGE_V2:
+    case Systems::ID_PC98:
+    case Systems::ID_INTERTON_VC4000:
+    case Systems::ID_ARCADIA_2001:
+    case Systems::ID_VECTREX:
+    case Systems::ID_POKEMON_MINI:
+    case Systems::ID_CHANNEL_F:
+    case Systems::ID_SCV:
+    case Systems::ID_GP32:
+    case Systems::ID_GAMECOM:
+    case Systems::ID_STUDIO_II:
+    case Systems::ID_ATOMISWAVE:
+    case Systems::ID_CASIO_PV1000:
+    case Systems::ID_SUPER_ACAN:
+    case Systems::ID_CASIO_LOOPY:
+    case Systems::ID_SHARP_X1:
+    case Systems::ID_X68000:
         return true;
     default:
         return false;
@@ -108,6 +147,8 @@ bool isDeferredSystem(int systemId)
     case Systems::ID_XBOX:
     case Systems::ID_XBOX360:
     case Systems::ID_ARCADE:
+    case Systems::ID_WIIU:
+    case Systems::ID_PS3:
         return true;
     default:
         return false;
