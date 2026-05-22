@@ -1,201 +1,68 @@
 #include "archive_creator.h"
 
+#include <archive.h>
+#include <archive_entry.h>
+#include <memory>
+#include <QDir>
 #include <QFile>
 #include <QFileInfo>
 
 namespace Remus {
 
-CompressionResult ArchiveCreator::compressZip(const QStringList &inputPaths,
-                                              const QString &outputArchive)
+CompressionResult ArchiveCreator::compressFiles(const QList<ArchiveInputEntry> &entries,
+                                                 const QString &outputArchive)
 {
     CompressionResult result;
-    result.inputFiles = inputPaths;
     result.outputPath = outputArchive;
-    result.originalSize = calculateTotalSize(inputPaths);
 
-    if (QFile::exists(outputArchive)) {
+    if (QFile::exists(outputArchive))
         QFile::remove(outputArchive);
-    }
 
-    QStringList args;
-    args << QStringLiteral("-j") << outputArchive;
+    using ArchivePtr = std::unique_ptr<archive, decltype(&archive_write_free)>;
+    ArchivePtr a(archive_write_new(), archive_write_free);
+    archive_write_set_format_zip(a.get());
 
-    bool allSameDir = true;
-    QString commonDir;
-    for (const QString &path : inputPaths) {
-        const QFileInfo fileInfo(path);
-        if (fileInfo.isDir()) {
-            allSameDir = false;
-            break;
-        }
-
-        const QString dir = fileInfo.absolutePath();
-        if (commonDir.isEmpty()) {
-            commonDir = dir;
-        } else if (dir != commonDir) {
-            allSameDir = false;
-        }
-    }
-
-    if (!allSameDir || inputPaths.size() == 1) {
-        args.clear();
-        args << QStringLiteral("-j") << outputArchive;
-        for (const QString &path : inputPaths) {
-            if (m_cancelled) {
-                result.error = QStringLiteral("Cancelled");
-                return result;
-            }
-            args << path;
-        }
-    } else {
-        for (const QString &path : inputPaths) {
-            args << path;
-        }
-    }
-
-    emit compressionProgress(0, QStringLiteral("Compressing to ZIP..."));
-
-    const ProcessResult proc = runProcess(m_zipPath, args);
-    if (m_cancelled) {
-        result.error = QStringLiteral("Cancelled");
+    const QByteArray outBytes = outputArchive.toUtf8();
+    if (archive_write_open_filename(a.get(), outBytes.constData()) != ARCHIVE_OK) {
+        result.error = QStringLiteral("Failed to create archive: %1")
+            .arg(QString::fromUtf8(archive_error_string(a.get())));
         return result;
     }
 
-    if (proc.exitCode != 0) {
-        result.error = QStringLiteral("zip failed (exit %1): %2")
-                           .arg(proc.exitCode)
-                           .arg(proc.stdErr.trimmed());
-        return result;
-    }
+    using EntryPtr = std::unique_ptr<archive_entry, decltype(&archive_entry_free)>;
 
-    const QFileInfo outInfo(outputArchive);
-    if (outInfo.exists()) {
-        result.success = true;
-        result.compressedSize = outInfo.size();
-        result.filesCompressed = inputPaths.size();
-    } else {
-        result.error = QStringLiteral("Output archive not created");
-    }
-
-    emit compressionProgress(100, QStringLiteral("ZIP compression complete"));
-    return result;
-}
-
-CompressionResult ArchiveCreator::compress7z(const QStringList &inputPaths,
-                                             const QString &outputArchive)
-{
-    CompressionResult result;
-    result.inputFiles = inputPaths;
-    result.outputPath = outputArchive;
-    result.originalSize = calculateTotalSize(inputPaths);
-
-    if (QFile::exists(outputArchive)) {
-        QFile::remove(outputArchive);
-    }
-
-    QStringList args;
-    args << QStringLiteral("a") << outputArchive;
-
-    for (const QString &path : inputPaths) {
+    for (const ArchiveInputEntry &input : entries) {
         if (m_cancelled) {
             result.error = QStringLiteral("Cancelled");
             return result;
         }
-        args << path;
+
+        const QFileInfo fi(input.sourcePath);
+        if (!fi.isFile())
+            continue;
+
+        QFile inputFile(input.sourcePath);
+        if (!inputFile.open(QIODevice::ReadOnly))
+            continue;
+
+        EntryPtr entry(archive_entry_new(), archive_entry_free);
+        const QByteArray archivePathBytes = QDir::fromNativeSeparators(input.archivePath).toUtf8();
+        archive_entry_set_pathname(entry.get(), archivePathBytes.constData());
+        archive_entry_set_size(entry.get(), fi.size());
+        archive_entry_set_filetype(entry.get(), AE_IFREG);
+        archive_entry_set_perm(entry.get(), 0644);
+        archive_entry_set_mtime(entry.get(), fi.lastModified().toSecsSinceEpoch(), 0);
+        archive_write_header(a.get(), entry.get());
+
+        char buf[65536];
+        qint64 bytesRead;
+        while ((bytesRead = inputFile.read(buf, sizeof(buf))) > 0)
+            archive_write_data(a.get(), buf, static_cast<size_t>(bytesRead));
+
+        result.filesCompressed++;
     }
 
-    emit compressionProgress(0, QStringLiteral("Compressing to 7z..."));
-
-    const ProcessResult proc = runProcess(m_sevenZipPath, args);
-    if (m_cancelled) {
-        result.error = QStringLiteral("Cancelled");
-        return result;
-    }
-
-    if (proc.exitCode != 0) {
-        result.error = QStringLiteral("7z failed (exit %1): %2")
-                           .arg(proc.exitCode)
-                           .arg(proc.stdErr.trimmed());
-        return result;
-    }
-
-    const QFileInfo outInfo(outputArchive);
-    if (outInfo.exists()) {
-        result.success = true;
-        result.compressedSize = outInfo.size();
-        result.filesCompressed = inputPaths.size();
-    } else {
-        result.error = QStringLiteral("Output archive not created");
-    }
-
-    emit compressionProgress(100, QStringLiteral("7z compression complete"));
-    return result;
-}
-
-CompressionResult ArchiveCreator::compressRelativePaths(const QStringList &relativePaths,
-                                                        const QString &rootDir,
-                                                        const QString &outputArchive,
-                                                        ArchiveFormat format)
-{
-    CompressionResult result;
-    result.inputFiles = relativePaths;
-    result.outputPath = outputArchive;
-    result.originalSize = calculateTotalSize({rootDir});
-
-    if (QFile::exists(outputArchive)) {
-        QFile::remove(outputArchive);
-    }
-
-    QStringList args;
-    ProcessResult proc;
-
-    switch (format) {
-    case ArchiveFormat::ZIP:
-        args << outputArchive;
-        for (const QString &path : relativePaths) {
-            if (m_cancelled) {
-                result.error = QStringLiteral("Cancelled");
-                return result;
-            }
-            args << path;
-        }
-
-        emit compressionProgress(0, QStringLiteral("Compressing directory contents to ZIP..."));
-        proc = runProcessInDirectory(m_zipPath, args, rootDir);
-        if (proc.exitCode != 0) {
-            result.error = QStringLiteral("zip failed (exit %1): %2")
-                               .arg(proc.exitCode)
-                               .arg(proc.stdErr.trimmed());
-            return result;
-        }
-        emit compressionProgress(100, QStringLiteral("ZIP compression complete"));
-        break;
-
-    case ArchiveFormat::SevenZip:
-        args << QStringLiteral("a") << outputArchive;
-        for (const QString &path : relativePaths) {
-            if (m_cancelled) {
-                result.error = QStringLiteral("Cancelled");
-                return result;
-            }
-            args << path;
-        }
-
-        emit compressionProgress(0, QStringLiteral("Compressing directory contents to 7z..."));
-        proc = runProcessInDirectory(m_sevenZipPath, args, rootDir);
-        if (proc.exitCode != 0) {
-            result.error = QStringLiteral("7z failed (exit %1): %2")
-                               .arg(proc.exitCode)
-                               .arg(proc.stdErr.trimmed());
-            return result;
-        }
-        emit compressionProgress(100, QStringLiteral("7z compression complete"));
-        break;
-
-    default:
-        result.error = QStringLiteral("Unsupported compression format");
-        return result;
-    }
+    archive_write_close(a.get());
 
     if (m_cancelled) {
         result.error = QStringLiteral("Cancelled");
@@ -210,7 +77,6 @@ CompressionResult ArchiveCreator::compressRelativePaths(const QStringList &relat
 
     result.success = true;
     result.compressedSize = outInfo.size();
-    result.filesCompressed = relativePaths.size();
     return result;
 }
 

@@ -5,60 +5,27 @@
 #include <QDir>
 #include <QDirIterator>
 #include <QFileInfo>
-#include <QProcess>
-#include <QStandardPaths>
+#include <QSet>
 
 namespace Remus {
-
-// ════════════════════════════════════════════════════════════
-// Construction
-// ════════════════════════════════════════════════════════════
 
 ArchiveCreator::ArchiveCreator(QObject *parent)
     : QObject(parent)
 {
-    // Auto-detect tool paths
-    m_zipPath = findTool({QStringLiteral("zip")});
-    m_sevenZipPath = findTool({QStringLiteral("7z"), QStringLiteral("7za"), QStringLiteral("7zz")});
 }
-
-// ════════════════════════════════════════════════════════════
-// Tool Detection
-// ════════════════════════════════════════════════════════════
 
 QMap<ArchiveFormat, bool> ArchiveCreator::getAvailableTools() const
 {
     QMap<ArchiveFormat, bool> tools;
-    tools[ArchiveFormat::ZIP] = isToolAvailable(m_zipPath);
-    tools[ArchiveFormat::SevenZip] = isToolAvailable(m_sevenZipPath);
+    tools[ArchiveFormat::ZIP] = true;
+    tools[ArchiveFormat::SevenZip] = false;
     return tools;
 }
 
 bool ArchiveCreator::canCompress(ArchiveFormat format) const
 {
-    switch (format) {
-    case ArchiveFormat::ZIP:
-        return isToolAvailable(m_zipPath);
-    case ArchiveFormat::SevenZip:
-        return isToolAvailable(m_sevenZipPath);
-    default:
-        return false;
-    }
+    return format == ArchiveFormat::ZIP;
 }
-
-void ArchiveCreator::setZipPath(const QString &path)
-{
-    m_zipPath = path;
-}
-
-void ArchiveCreator::setSevenZipPath(const QString &path)
-{
-    m_sevenZipPath = path;
-}
-
-// ════════════════════════════════════════════════════════════
-// Compression
-// ════════════════════════════════════════════════════════════
 
 CompressionResult ArchiveCreator::compress(const QStringList &inputPaths,
                                            const QString &outputArchive,
@@ -66,82 +33,86 @@ CompressionResult ArchiveCreator::compress(const QStringList &inputPaths,
 {
     CompressionResult result;
     result.inputFiles = inputPaths;
+    result.outputPath = outputArchive;
 
     if (inputPaths.isEmpty()) {
         result.error = QStringLiteral("No input files specified");
         emit errorOccurred(result.error);
         return result;
     }
-
     if (outputArchive.isEmpty()) {
         result.error = QStringLiteral("No output path specified");
         emit errorOccurred(result.error);
         return result;
     }
-
     if (!canCompress(format)) {
-        QString fmtName = (format == ArchiveFormat::SevenZip) ? QStringLiteral("7z") : QStringLiteral("zip");
-        result.error = QStringLiteral("No tool available for %1 compression").arg(fmtName);
+        result.error = QStringLiteral("Unsupported compression format");
         emit errorOccurred(result.error);
         return result;
     }
 
     m_cancelled = false;
     m_running = true;
-
     result.originalSize = calculateTotalSize(inputPaths);
-    result.outputPath = outputArchive;
-
     emit compressionStarted(outputArchive);
 
-    switch (format) {
-    case ArchiveFormat::ZIP:
-        result = compressZip(inputPaths, outputArchive);
-        break;
-    case ArchiveFormat::SevenZip:
-        result = compress7z(inputPaths, outputArchive);
-        break;
-    default:
-        result.error = QStringLiteral("Unsupported compression format");
-        break;
+    QList<ArchiveInputEntry> entries;
+    QSet<QString> archivePaths;
+    for (const QString &path : inputPaths) {
+        const QFileInfo fi(path);
+        if (!fi.isFile())
+            continue;
+
+        const QString archivePath = fi.fileName();
+        if (archivePaths.contains(archivePath)) {
+            result.error = QStringLiteral("Duplicate archive entry name: %1").arg(archivePath);
+            m_running = false;
+            emit errorOccurred(result.error);
+            emit compressionCompleted(result);
+            return result;
+        }
+
+        archivePaths.insert(archivePath);
+        entries.append({fi.absoluteFilePath(), archivePath});
     }
+
+    if (entries.isEmpty()) {
+        result.error = QStringLiteral("No input files found");
+        m_running = false;
+        emit errorOccurred(result.error);
+        emit compressionCompleted(result);
+        return result;
+    }
+
+    result = compressFiles(entries, outputArchive);
 
     m_running = false;
-
-    if (!result.error.isEmpty()) {
+    if (!result.error.isEmpty())
         emit errorOccurred(result.error);
-    }
-
     emit compressionCompleted(result);
     return result;
 }
 
 CompressionResult ArchiveCreator::compressDirectoryContents(const QString &rootDir,
-                                                            const QString &outputArchive,
-                                                            ArchiveFormat format)
+                                                             const QString &outputArchive,
+                                                             ArchiveFormat format)
 {
     CompressionResult result;
     result.inputFiles = {rootDir};
     result.outputPath = outputArchive;
 
-    const QFileInfo rootInfo(rootDir);
-    if (!rootInfo.exists() || !rootInfo.isDir()) {
+    if (!QFileInfo(rootDir).isDir()) {
         result.error = QStringLiteral("Directory not found: %1").arg(rootDir);
         emit errorOccurred(result.error);
         return result;
     }
-
     if (outputArchive.isEmpty()) {
         result.error = QStringLiteral("No output path specified");
         emit errorOccurred(result.error);
         return result;
     }
-
     if (!canCompress(format)) {
-        const QString fmtName = (format == ArchiveFormat::SevenZip)
-            ? QStringLiteral("7z")
-            : QStringLiteral("zip");
-        result.error = QStringLiteral("No tool available for %1 compression").arg(fmtName);
+        result.error = QStringLiteral("Unsupported compression format");
         emit errorOccurred(result.error);
         return result;
     }
@@ -155,16 +126,20 @@ CompressionResult ArchiveCreator::compressDirectoryContents(const QString &rootD
 
     m_cancelled = false;
     m_running = true;
-
+    result.originalSize = calculateTotalSize({rootDir});
     emit compressionStarted(outputArchive);
-    result = compressRelativePaths(relativePaths, rootDir, outputArchive, format);
 
-    m_running = false;
-
-    if (!result.error.isEmpty()) {
-        emit errorOccurred(result.error);
+    QList<ArchiveInputEntry> entries;
+    entries.reserve(relativePaths.size());
+    for (const QString &relativePath : relativePaths) {
+        entries.append({QDir(rootDir).filePath(relativePath), relativePath});
     }
 
+    result = compressFiles(entries, outputArchive);
+
+    m_running = false;
+    if (!result.error.isEmpty())
+        emit errorOccurred(result.error);
     emit compressionCompleted(result);
     return result;
 }
@@ -176,26 +151,24 @@ QList<CompressionResult> ArchiveCreator::batchCompress(const QStringList &dirs,
     QList<CompressionResult> results;
     m_cancelled = false;
 
-    // Ensure output dir exists
+    if (!canCompress(format)) {
+        emit errorOccurred(QStringLiteral("Unsupported compression format"));
+        return results;
+    }
+
     QDir().mkpath(outputDir);
+    const QString ext = Constants::Files::ZIP;
+    const int total = dirs.size();
 
-    QString ext = (format == ArchiveFormat::SevenZip) ? Constants::Files::SEVEN_Z : Constants::Files::ZIP;
-
-    int total = dirs.size();
     for (int i = 0; i < total; ++i) {
         if (m_cancelled) break;
-
-        QFileInfo dirInfo(dirs[i]);
-        QString archiveName = dirInfo.fileName() + ext;
-        QString outputPath = outputDir + QStringLiteral("/") + archiveName;
-
+        const QFileInfo dirInfo(dirs[i]);
+        const QString outputPath = outputDir + QStringLiteral("/") + dirInfo.fileName() + ext;
         emit batchProgress(i + 1, total, dirInfo.fileName());
-
-        if (dirInfo.isDir()) {
+        if (dirInfo.isDir())
             results.append(compressDirectoryContents(dirs[i], outputPath, format));
-        } else {
+        else
             results.append(compress({dirs[i]}, outputPath, format));
-        }
     }
 
     return results;
@@ -204,79 +177,6 @@ QList<CompressionResult> ArchiveCreator::batchCompress(const QStringList &dirs,
 void ArchiveCreator::cancel()
 {
     m_cancelled = true;
-    if (m_currentProcess) {
-        m_currentProcess->terminate();
-        if (!m_currentProcess->waitForFinished(3000)) {
-            m_currentProcess->kill();
-        }
-    }
-}
-
-// ════════════════════════════════════════════════════════════
-// Format-Specific Compression
-// ════════════════════════════════════════════════════════════
-
-// ════════════════════════════════════════════════════════════
-// Helpers
-// ════════════════════════════════════════════════════════════
-
-QString ArchiveCreator::findTool(const QStringList &candidates) const
-{
-    for (const QString &name : candidates) {
-        QString path = QStandardPaths::findExecutable(name);
-        if (!path.isEmpty())
-            return path;
-    }
-    return {};
-}
-
-bool ArchiveCreator::isToolAvailable(const QString &path) const
-{
-    return !path.isEmpty() && QFileInfo::exists(path);
-}
-
-ArchiveCreator::ProcessResult ArchiveCreator::runProcess(const QString &program,
-                                                          const QStringList &args,
-                                                          int timeoutMs)
-{
-    return runProcessInDirectory(program, args, QString(), timeoutMs);
-}
-
-ArchiveCreator::ProcessResult ArchiveCreator::runProcessInDirectory(const QString &program,
-                                                                   const QStringList &args,
-                                                                   const QString &workingDirectory,
-                                                                   int timeoutMs)
-{
-    ProcessResult result;
-    QProcess process;
-    m_currentProcess = &process;
-
-    if (!workingDirectory.isEmpty()) {
-        process.setWorkingDirectory(workingDirectory);
-    }
-
-    process.start(program, args);
-    if (!process.waitForStarted(5000)) {
-        result.exitCode = -1;
-        result.stdErr = QStringLiteral("Failed to start: ") + program;
-        m_currentProcess = nullptr;
-        return result;
-    }
-
-    if (!process.waitForFinished(timeoutMs)) {
-        result.timedOut = true;
-        result.stdErr = QStringLiteral("Process timed out");
-        process.kill();
-        m_currentProcess = nullptr;
-        return result;
-    }
-
-    result.exitCode = process.exitCode();
-    result.stdOut = QString::fromLocal8Bit(process.readAllStandardOutput());
-    result.stdErr = QString::fromLocal8Bit(process.readAllStandardError());
-
-    m_currentProcess = nullptr;
-    return result;
 }
 
 QStringList ArchiveCreator::collectRelativeFilePaths(const QString &rootDir) const
@@ -296,7 +196,7 @@ qint64 ArchiveCreator::calculateTotalSize(const QStringList &paths) const
 {
     qint64 total = 0;
     for (const QString &path : paths) {
-        QFileInfo fi(path);
+        const QFileInfo fi(path);
         if (fi.isDir()) {
             QDirIterator it(path, QDir::Files, QDirIterator::Subdirectories);
             while (it.hasNext()) {

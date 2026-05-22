@@ -1,672 +1,306 @@
 #include <QtTest/QtTest>
 #include <QTemporaryDir>
+#include <QDir>
 #include <QFile>
-#include <QProcess>
-#include "../src/core/archive_extractor.h"
+#include <QFileInfo>
+
+#include <archive.h>
+#include <archive_entry.h>
+
+#include "archive_extractor.h"
 
 using namespace Remus;
 
-class FakeArchiveExtractor : public ArchiveExtractor
+// ─────────────────────────────────────────────────────────────────────────────
+// Test archive helpers
+// ─────────────────────────────────────────────────────────────────────────────
+
+static bool createTestArchive(const QString &path,
+                               const QMap<QString, QByteArray> &files,
+                               ArchiveFormat fmt = ArchiveFormat::ZIP)
 {
-public:
-    using ProcessResult = ExternalToolRunner::ProcessResult;
+    struct archive *a = archive_write_new();
+    if (fmt == ArchiveFormat::SevenZip)
+        archive_write_set_format_7zip(a);
+    else
+        archive_write_set_format_zip(a);
 
-    QList<ProcessResult> queuedResults;
-    QStringList fakeFiles;
-    QString lastProgram;
-    QStringList lastArgs;
-
-    void enqueueResult(const ProcessResult &result)
-    {
-        queuedResults.append(result);
+    if (archive_write_open_filename(a, path.toUtf8().constData()) != ARCHIVE_OK) {
+        archive_write_free(a);
+        return false;
     }
 
-protected:
-    ProcessResult runProcess(const QString &program, const QStringList &args, int) override
-    {
-        lastProgram = program;
-        lastArgs = args;
-        if (queuedResults.isEmpty()) {
-            return {};
-        }
-
-        const ProcessResult result = queuedResults.takeFirst();
-        return result;
+    for (auto it = files.constBegin(); it != files.constEnd(); ++it) {
+        struct archive_entry *entry = archive_entry_new();
+        archive_entry_set_pathname(entry, it.key().toUtf8().constData());
+        archive_entry_set_size(entry, it.value().size());
+        archive_entry_set_filetype(entry, AE_IFREG);
+        archive_entry_set_perm(entry, 0644);
+        archive_write_header(a, entry);
+        archive_write_data(a, it.value().constData(), static_cast<size_t>(it.value().size()));
+        archive_entry_free(entry);
     }
 
-    ProcessResult runProcessTracked(const QString &program, const QStringList &args, int) override
-    {
-        lastProgram = program;
-        lastArgs = args;
-        if (queuedResults.isEmpty()) {
-            return {};
-        }
+    archive_write_close(a);
+    archive_write_free(a);
+    return QFileInfo::exists(path);
+}
 
-        const ProcessResult result = queuedResults.takeFirst();
-        return result;
-    }
-
-    QStringList listFiles(const QString &dirPath) const override
-    {
-        QStringList result;
-        for (const QString &f : fakeFiles)
-            result.append(QDir(dirPath).absoluteFilePath(f));
-        return result;
-    }
-};
-
-using FakeProcessResult = FakeArchiveExtractor::ProcessResult;
-
-class ArchiveExtractorTest : public QObject
+static bool createArchiveWithUnsafePath(const QString &path)
 {
+    struct archive *a = archive_write_new();
+    archive_write_set_format_zip(a);
+    if (archive_write_open_filename(a, path.toUtf8().constData()) != ARCHIVE_OK) {
+        archive_write_free(a);
+        return false;
+    }
+
+    struct archive_entry *entry = archive_entry_new();
+    archive_entry_set_pathname(entry, "../evil.bin");
+    archive_entry_set_size(entry, 4);
+    archive_entry_set_filetype(entry, AE_IFREG);
+    archive_entry_set_perm(entry, 0644);
+    archive_write_header(a, entry);
+    archive_write_data(a, "evil", 4);
+    archive_entry_free(entry);
+
+    archive_write_close(a);
+    archive_write_free(a);
+    return QFileInfo::exists(path);
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Test class
+// ─────────────────────────────────────────────────────────────────────────────
+
+class ArchiveExtractorTest : public QObject {
     Q_OBJECT
 
 private slots:
     void testDetectFormat();
     void testNormalizeArchiveMemberPath();
-    void testToolAvailabilityReflectsConfiguredPaths();
+    void testCanExtractAllSupportedFormats();
     void testGetArchiveInfoZip();
-    void testGetArchiveInfoZipViaSevenZipFallback();
     void testGetArchiveInfo7z();
-    void testGetArchiveInfo7zWrappedFilename();
-    void testGetArchiveInfo7zNoDateEntries();
-    void testGetArchiveInfoRar();
     void testExtractZip();
-    void testExtract7zCreatesSubfolderAndTracksFiles();
-    void testExtractRarFallsBackToSevenZip();
-    void testExtractFileZipPreservesNestedRelativePath();
+    void testExtract7zCreatesSubfolder();
+    void testExtractFilePreservesNestedRelativePath();
     void testExtractRejectsUnsafeArchiveEntries();
     void testBatchExtractCanBeCancelledAfterFirstItem();
     void testExtractUnsupported();
     void testReadMemberPrefix();
 };
 
+// ─────────────────────────────────────────────────────────────────────────────
+// Tests
+// ─────────────────────────────────────────────────────────────────────────────
+
 void ArchiveExtractorTest::testDetectFormat()
 {
-    QCOMPARE(ArchiveExtractor::detectFormat("file.zip"), ArchiveFormat::ZIP);
-    QCOMPARE(ArchiveExtractor::detectFormat("file.7z"), ArchiveFormat::SevenZip);
-    QCOMPARE(ArchiveExtractor::detectFormat("file.rar"), ArchiveFormat::RAR);
-    QCOMPARE(ArchiveExtractor::detectFormat("file.tgz"), ArchiveFormat::TarGz);
-    QCOMPARE(ArchiveExtractor::detectFormat("file.tar.gz"), ArchiveFormat::GZip);
-    QCOMPARE(ArchiveExtractor::detectFormat("file.unknown"), ArchiveFormat::Unknown);
+    QCOMPARE(ArchiveExtractor::detectFormat("game.zip"),  ArchiveFormat::ZIP);
+    QCOMPARE(ArchiveExtractor::detectFormat("game.7z"),   ArchiveFormat::SevenZip);
+    QCOMPARE(ArchiveExtractor::detectFormat("game.rar"),  ArchiveFormat::RAR);
+    QCOMPARE(ArchiveExtractor::detectFormat("game.tgz"),  ArchiveFormat::TarGz);
+    QCOMPARE(ArchiveExtractor::detectFormat("game.gz"),   ArchiveFormat::GZip);
+    QCOMPARE(ArchiveExtractor::detectFormat("game.bz2"),  ArchiveFormat::TarBz2);
+    QCOMPARE(ArchiveExtractor::detectFormat("game.bin"),  ArchiveFormat::Unknown);
+    QCOMPARE(ArchiveExtractor::detectFormat("game"),      ArchiveFormat::Unknown);
 }
 
 void ArchiveExtractorTest::testNormalizeArchiveMemberPath()
 {
-    QCOMPARE(ArchiveExtractor::normalizeArchiveMemberPath(QStringLiteral("roms/game.nes")),
-             QStringLiteral("roms/game.nes"));
-    QCOMPARE(ArchiveExtractor::normalizeArchiveMemberPath(QStringLiteral("nested\\game.nes")),
-             QStringLiteral("nested/game.nes"));
-    QVERIFY(ArchiveExtractor::normalizeArchiveMemberPath(QStringLiteral("../game.nes")).isEmpty());
-    QVERIFY(ArchiveExtractor::normalizeArchiveMemberPath(QStringLiteral("/etc/passwd")).isEmpty());
+    QCOMPARE(ArchiveExtractor::normalizeArchiveMemberPath("game.bin"),          QStringLiteral("game.bin"));
+    QCOMPARE(ArchiveExtractor::normalizeArchiveMemberPath("subdir/game.bin"),   QStringLiteral("subdir/game.bin"));
+    QCOMPARE(ArchiveExtractor::normalizeArchiveMemberPath("./subdir/game.bin"), QStringLiteral("subdir/game.bin"));
+    QCOMPARE(ArchiveExtractor::normalizeArchiveMemberPath("../evil"),           QString());
+    QCOMPARE(ArchiveExtractor::normalizeArchiveMemberPath("/absolute"),         QString());
+    QCOMPARE(ArchiveExtractor::normalizeArchiveMemberPath(""),                  QString());
+    QCOMPARE(ArchiveExtractor::normalizeArchiveMemberPath("."),                 QString());
+    QCOMPARE(ArchiveExtractor::normalizeArchiveMemberPath("a/../../b"),         QString());
+    QCOMPARE(ArchiveExtractor::normalizeArchiveMemberPath("back\\slash"),       QStringLiteral("back/slash"));
 }
 
-void ArchiveExtractorTest::testToolAvailabilityReflectsConfiguredPaths()
+void ArchiveExtractorTest::testCanExtractAllSupportedFormats()
 {
-    FakeArchiveExtractor extractor;
-    FakeProcessResult versionResult;
-    versionResult.started = true;
-    versionResult.exitStatus = QProcess::NormalExit;
-    for (int i = 0; i < 24; ++i) {
-        extractor.enqueueResult(versionResult);
-    }
-
-    extractor.setUnzipPath("/bin/sh");
-    extractor.setSevenZipPath("/bin/sh");
-    extractor.setUnrarPath("/bin/sh");
-
-    const QMap<ArchiveFormat, bool> tools = extractor.getAvailableTools();
-    QVERIFY(tools.value(ArchiveFormat::ZIP));
-    QVERIFY(tools.value(ArchiveFormat::SevenZip));
-    QVERIFY(tools.value(ArchiveFormat::RAR));
-    QVERIFY(tools.value(ArchiveFormat::GZip));
-
+    ArchiveExtractor extractor;
     QVERIFY(extractor.canExtract(ArchiveFormat::ZIP));
-    QVERIFY(extractor.canExtract(QStringLiteral("game.zip")));
-    QVERIFY(extractor.canExtract(QStringLiteral("game.7z")));
-    QVERIFY(extractor.canExtract(QStringLiteral("game.rar")));
-    QVERIFY(!extractor.canExtract(QStringLiteral("game.unknown")));
+    QVERIFY(extractor.canExtract(ArchiveFormat::SevenZip));
+    QVERIFY(extractor.canExtract(ArchiveFormat::RAR));
+    QVERIFY(extractor.canExtract(ArchiveFormat::GZip));
+    QVERIFY(extractor.canExtract(ArchiveFormat::TarGz));
+    QVERIFY(extractor.canExtract(ArchiveFormat::TarBz2));
+    QVERIFY(!extractor.canExtract(ArchiveFormat::Unknown));
 }
 
 void ArchiveExtractorTest::testGetArchiveInfoZip()
 {
-    FakeArchiveExtractor extractor;
-    FakeProcessResult versionResult;
-    versionResult.started = true;
-    versionResult.exitStatus = QProcess::NormalExit;
-    extractor.enqueueResult(versionResult);
+    QTemporaryDir tmp;
+    QVERIFY(tmp.isValid());
 
-    FakeProcessResult result;
-    result.started = true;
-    result.exitCode = 0;
-    result.stdOutput =
-        "Archive: test.zip\n"
-        "  Length      Date    Time    Name\n"
-        "---------  ---------- -----   ----\n"
-        "   10  2020-01-01 00:00   file1.bin\n"
-        "---------                     -------\n"
-        "   10                     1 file\n";
-    extractor.enqueueResult(result);
-    extractor.setUnzipPath("/bin/sh");
-    extractor.setSevenZipPath(QString());
+    const QString archivePath = tmp.filePath("test.zip");
+    QMap<QString, QByteArray> files;
+    files["game.bin"] = QByteArray(256, 'A');
+    files["subdir/readme.txt"] = QByteArray("hello");
+    QVERIFY(createTestArchive(archivePath, files, ArchiveFormat::ZIP));
 
-    ArchiveInfo info = extractor.getArchiveInfo("test.zip");
-    QCOMPARE(info.format, ArchiveFormat::ZIP);
-    QCOMPARE(info.fileCount, 1);
-    QCOMPARE(info.contents.first(), QStringLiteral("file1.bin"));
-    QCOMPARE(info.entrySizes.value(QStringLiteral("file1.bin")), static_cast<qint64>(10));
-    QCOMPARE(info.uncompressedSize, static_cast<qint64>(10));
-}
+    ArchiveExtractor extractor;
+    const ArchiveInfo info = extractor.getArchiveInfo(archivePath);
 
-void ArchiveExtractorTest::testGetArchiveInfoZipViaSevenZipFallback()
-{
-    FakeArchiveExtractor extractor;
-    FakeProcessResult versionResult;
-    versionResult.started = true;
-    versionResult.exitStatus = QProcess::NormalExit;
-    extractor.enqueueResult(versionResult);
-
-    FakeProcessResult result;
-    result.started = true;
-    result.exitCode = 0;
-    result.stdOutput =
-        "7-Zip 26.00 (x64)\n"
-        " 64-bit locale=en_US.UTF-8 Threads:4 OPEN_MAX:524288, ASM\n"
-        "\n"
-        "Scanning the drive for archives:\n"
-        "1 file, 812128 bytes (794 KiB)\n"
-        "\n"
-        "Listing archive: test.zip\n"
-        "\n"
-        "--\n"
-        "Path = test.zip\n"
-        "Type = zip\n"
-        "Physical Size = 812128\n"
-        "\n"
-        "   Date      Time    Attr         Size   Compressed  Name\n"
-        "------------------- ----- ------------ ------------  ------------------------\n"
-        "2026-02-05 18:40:00 .....       812000       400000  nested/file.nes\n"
-        "2026-02-05 18:40:00 .....          128           64  .remus.md\n"
-        "------------------- ----- ------------ ------------  ------------------------\n"
-        "2026-02-05 18:40:00              812128       400064  2 files\n";
-    extractor.enqueueResult(result);
-
-    extractor.setUnzipPath(QString());
-    extractor.setSevenZipPath("/bin/sh");
-
-    ArchiveInfo info = extractor.getArchiveInfo("test.zip");
-    QCOMPARE(info.format, ArchiveFormat::ZIP);
     QCOMPARE(info.fileCount, 2);
-    QCOMPARE(info.contents.at(0), QStringLiteral("nested/file.nes"));
-    QCOMPARE(info.contents.at(1), QStringLiteral(".remus.md"));
-    QCOMPARE(info.entrySizes.value(QStringLiteral("nested/file.nes")), static_cast<qint64>(812000));
-    QCOMPARE(info.entrySizes.value(QStringLiteral(".remus.md")), static_cast<qint64>(128));
-    QCOMPARE(info.uncompressedSize, static_cast<qint64>(812128));
-    QCOMPARE(extractor.lastProgram, QStringLiteral("/bin/sh"));
-    QCOMPARE(extractor.lastArgs, QStringList({QStringLiteral("l"), QStringLiteral("test.zip")}));
+    QVERIFY(info.contents.contains(QStringLiteral("game.bin")));
+    QVERIFY(info.contents.contains(QStringLiteral("subdir/readme.txt")));
+    QCOMPARE(info.uncompressedSize, static_cast<qint64>(256 + 5));
+    QVERIFY(info.unsafeEntries.isEmpty());
 }
 
 void ArchiveExtractorTest::testGetArchiveInfo7z()
 {
-    FakeArchiveExtractor extractor;
-    FakeProcessResult versionResult;
-    versionResult.started = true;
-    versionResult.exitStatus = QProcess::NormalExit;
-    extractor.enqueueResult(versionResult);
+    QTemporaryDir tmp;
+    QVERIFY(tmp.isValid());
 
-    FakeProcessResult result;
-    result.started = true;
-    result.exitCode = 0;
-    result.stdOutput =
-        "   Date      Time    Attr         Size   Compressed  Name\n"
-        "------------------- ----- ------------ ------------  ------------------------\n"
-        "2026-02-05 18:40:00 .....       812000       400000  file.nes\n"
-        "------------------- ----- ------------ ------------  ------------------------\n"
-        "2026-02-05 18:40:00              812000       400000  1 files\n";
-    extractor.enqueueResult(result);
+    const QString archivePath = tmp.filePath("test.7z");
+    QMap<QString, QByteArray> files;
+    files["disc.iso"] = QByteArray(512, 'B');
+    QVERIFY(createTestArchive(archivePath, files, ArchiveFormat::SevenZip));
 
-    ArchiveInfo info = extractor.getArchiveInfo("test.7z");
-    QCOMPARE(info.format, ArchiveFormat::SevenZip);
+    ArchiveExtractor extractor;
+    const ArchiveInfo info = extractor.getArchiveInfo(archivePath);
+
     QCOMPARE(info.fileCount, 1);
-    QCOMPARE(info.contents.first(), QStringLiteral("file.nes"));
-    QCOMPARE(info.entrySizes.value(QStringLiteral("file.nes")), static_cast<qint64>(812000));
-    QCOMPARE(info.uncompressedSize, static_cast<qint64>(812000));
-}
-
-void ArchiveExtractorTest::testGetArchiveInfo7zWrappedFilename()
-{
-    FakeArchiveExtractor extractor;
-    FakeProcessResult versionResult;
-    versionResult.started = true;
-    versionResult.exitStatus = QProcess::NormalExit;
-    extractor.enqueueResult(versionResult);
-
-    FakeProcessResult result;
-    result.started = true;
-    result.exitCode = 0;
-    // Simulate real 7z output with a filename that wraps to a second line.
-    // The word "Time" in the game title previously triggered a false-positive
-    // header filter (contains("Time")).
-    result.stdOutput =
-        "7-Zip [64] 17.05 : Copyright (c) 1999-2021 Igor Pavlov : 2017-08-28\n"
-        "\n"
-        "Path = test.7z\n"
-        "Type = 7z\n"
-        "Physical Size = 23009755\n"
-        "Headers Size = 258\n"
-        "Method = LZMA2:48m\n"
-        "Solid = +\n"
-        "Blocks = 1\n"
-        "\n"
-        "   Date      Time    Attr         Size   Compressed  Name\n"
-        "------------------- ----- ------------ ------------  ------------------------\n"
-        "2020-07-21 16:10:39 ....A          112     23009497  CDRomance.url\n"
-        "2017-06-30 14:59:08 ....A     33554432               Legend of Zelda, The - Ocar\n"
-        "ina of Time (USA) (Rev 2).z64\n"
-        "------------------- ----- ------------ ------------  ------------------------\n"
-        "2020-07-21 16:10:39           33554544     23009497  2 files\n";
-    extractor.enqueueResult(result);
-
-    ArchiveInfo info = extractor.getArchiveInfo("test.7z");
-    QCOMPARE(info.format, ArchiveFormat::SevenZip);
-    QCOMPARE(info.fileCount, 2);
-
-    // CDRomance.url should be parsed
-    QVERIFY(info.contents.contains(QStringLiteral("CDRomance.url")));
-    QCOMPARE(info.entrySizes.value(QStringLiteral("CDRomance.url")), static_cast<qint64>(112));
-
-    // The wrapped filename must be reassembled correctly
-    const QString expectedName = QStringLiteral("Legend of Zelda, The - Ocarina of Time (USA) (Rev 2).z64");
-    QVERIFY2(info.contents.contains(expectedName),
-             qPrintable("Expected '" + expectedName + "' in contents: " + info.contents.join(", ")));
-    QCOMPARE(info.entrySizes.value(expectedName), static_cast<qint64>(33554432));
-}
-
-void ArchiveExtractorTest::testGetArchiveInfo7zNoDateEntries()
-{
-    FakeArchiveExtractor extractor;
-    FakeProcessResult versionResult;
-    versionResult.started = true;
-    versionResult.exitStatus = QProcess::NormalExit;
-    extractor.enqueueResult(versionResult);
-
-    FakeProcessResult result;
-    result.started = true;
-    result.exitCode = 0;
-    // Some 7z archives have entries without date/time fields.
-    // Also tests that WARNINGS metadata doesn't interfere.
-    result.stdOutput =
-        "7-Zip [64] 17.05 : Copyright (c) 1999-2021 Igor Pavlov : 2017-08-28\n"
-        "\n"
-        "Path = test.7z\n"
-        "Type = 7z\n"
-        "WARNINGS:\n"
-        "There are data after the end of archive\n"
-        "Physical Size = 252257749\n"
-        "Tail Size = 38\n"
-        "Headers Size = 176\n"
-        "Method = LZMA:96m\n"
-        "Solid = +\n"
-        "Blocks = 1\n"
-        "\n"
-        "   Date      Time    Attr         Size   Compressed  Name\n"
-        "------------------- ----- ------------ ------------  ------------------------\n"
-        "                    .....    616494480    252257573  Silent Hill (USA).bin\n"
-        "                    .....           83               Silent Hill (USA).cue\n"
-        "------------------- ----- ------------ ------------  ------------------------\n"
-        "                             616494563    252257573  2 files\n"
-        "\n"
-        "Warnings: 1\n";
-    extractor.enqueueResult(result);
-
-    ArchiveInfo info = extractor.getArchiveInfo("test.7z");
-    QCOMPARE(info.format, ArchiveFormat::SevenZip);
-    QCOMPARE(info.fileCount, 2);
-    QVERIFY(info.contents.contains(QStringLiteral("Silent Hill (USA).bin")));
-    QVERIFY(info.contents.contains(QStringLiteral("Silent Hill (USA).cue")));
-    QCOMPARE(info.entrySizes.value(QStringLiteral("Silent Hill (USA).bin")), static_cast<qint64>(616494480));
-    QCOMPARE(info.entrySizes.value(QStringLiteral("Silent Hill (USA).cue")), static_cast<qint64>(83));
-}
-
-void ArchiveExtractorTest::testGetArchiveInfoRar()
-{
-    FakeArchiveExtractor extractor;
-    FakeProcessResult versionResult;
-    versionResult.started = true;
-    versionResult.exitStatus = QProcess::NormalExit;
-    extractor.enqueueResult(versionResult);
-
-    FakeProcessResult result;
-    result.started = true;
-    result.exitCode = 0;
-    result.stdOutput =
-        "Name             Size   Packed Ratio  Date    Time   Attr CRC\n"
-        "file.nes        812000  400000  49%  02-05-26 18:40  -rw- 12AB34CD\n";
-    extractor.enqueueResult(result);
-    extractor.setUnrarPath("/bin/sh");
-    extractor.setSevenZipPath(QString());
-
-    ArchiveInfo info = extractor.getArchiveInfo("test.rar");
-    QCOMPARE(info.format, ArchiveFormat::RAR);
-    QCOMPARE(info.fileCount, 1);
-    QCOMPARE(info.contents.first(), QStringLiteral("file.nes"));
-    QCOMPARE(info.entrySizes.value(QStringLiteral("file.nes")), static_cast<qint64>(812000));
-    QCOMPARE(info.uncompressedSize, static_cast<qint64>(812000));
+    QVERIFY(info.contents.contains(QStringLiteral("disc.iso")));
+    QCOMPARE(info.uncompressedSize, static_cast<qint64>(512));
 }
 
 void ArchiveExtractorTest::testExtractZip()
 {
-    FakeArchiveExtractor extractor;
-    FakeProcessResult versionResult;
-    versionResult.started = true;
-    versionResult.exitStatus = QProcess::NormalExit;
-    extractor.enqueueResult(versionResult);
-    extractor.enqueueResult(versionResult);
+    QTemporaryDir tmp;
+    QVERIFY(tmp.isValid());
 
-    FakeProcessResult listResult;
-    listResult.started = true;
-    listResult.exitCode = 0;
-    listResult.stdOutput =
-        "Archive: test.zip\n"
-        "  Length      Date    Time    Name\n"
-        "---------  ---------- -----   ----\n"
-        "   10  2020-01-01 00:00   a.bin\n"
-        "   10  2020-01-01 00:00   b.bin\n"
-        "---------                     -------\n"
-        "   20                     2 files\n";
-    extractor.enqueueResult(listResult);
+    const QString archivePath = tmp.filePath("game.zip");
+    const QByteArray payload(128, 'X');
+    QMap<QString, QByteArray> files;
+    files["game.bin"] = payload;
+    QVERIFY(createTestArchive(archivePath, files, ArchiveFormat::ZIP));
 
-    FakeProcessResult extractResult;
-    extractResult.started = true;
-    extractResult.exitCode = 0;
-    extractResult.exitStatus = QProcess::NormalExit;
-    extractor.enqueueResult(extractResult);
-    extractor.fakeFiles = {"a.bin", "b.bin"};
-    extractor.setUnzipPath("/bin/sh");
+    ArchiveExtractor extractor;
+    const QString outDir = tmp.filePath("out");
+    const ExtractionResult result = extractor.extract(archivePath, outDir, false);
 
-    QTemporaryDir dir;
-    QVERIFY(dir.isValid());
-    const QString archivePath = dir.path() + "/test.zip";
-    QFile archive(archivePath);
-    QVERIFY(archive.open(QIODevice::WriteOnly));
-    QVERIFY(archive.write("zip") == 3);
-    archive.close();
-
-    ExtractionResult result = extractor.extract(archivePath, dir.path(), false);
     QVERIFY(result.success);
-    QCOMPARE(result.filesExtracted, 2);
-    QCOMPARE(extractor.lastProgram, QStringLiteral("/bin/sh"));
-    QCOMPARE(extractor.lastArgs, QStringList({QStringLiteral("-o"), archivePath, QStringLiteral("-d"), dir.path()}));
-}
-
-void ArchiveExtractorTest::testExtract7zCreatesSubfolderAndTracksFiles()
-{
-    FakeArchiveExtractor extractor;
-    FakeProcessResult versionResult;
-    versionResult.started = true;
-    versionResult.exitStatus = QProcess::NormalExit;
-    extractor.enqueueResult(versionResult);
-    extractor.enqueueResult(versionResult);
-    extractor.enqueueResult(versionResult);
-
-    FakeProcessResult listResult;
-    listResult.started = true;
-    listResult.exitCode = 0;
-    listResult.stdOutput =
-        "2026-02-05 18:40  .....       812000       400000  disc.chd\n"
-        "2026-02-05 18:40  .....          128           64  .remus.md\n";
-    extractor.enqueueResult(listResult);
-
-    FakeProcessResult extractResult;
-    extractResult.started = true;
-    extractResult.exitCode = 0;
-    extractResult.exitStatus = QProcess::NormalExit;
-    extractor.enqueueResult(extractResult);
-    extractor.fakeFiles = {"disc.chd", ".remus.md"};
-    extractor.setSevenZipPath("/bin/sh");
-
-    QTemporaryDir dir;
-    QVERIFY(dir.isValid());
-
-    const QString archivePath = dir.path() + "/bundle.7z";
-    QFile archive(archivePath);
-    QVERIFY(archive.open(QIODevice::WriteOnly));
-    QVERIFY(archive.write("7z") == 2);
-    archive.close();
-
-    ExtractionResult result = extractor.extract(archivePath, dir.path(), true);
-    QVERIFY(result.success);
-    QCOMPARE(result.outputDir, dir.path() + "/bundle");
-    QCOMPARE(result.filesExtracted, 2);
-    QVERIFY(result.extractedFiles.contains(result.outputDir + "/disc.chd"));
-    QVERIFY(result.extractedFiles.contains(result.outputDir + "/.remus.md"));
-    QCOMPARE(extractor.lastArgs, QStringList({QStringLiteral("x"), archivePath, QStringLiteral("-o") + result.outputDir, QStringLiteral("-y")}));
-}
-
-void ArchiveExtractorTest::testExtractRarFallsBackToSevenZip()
-{
-    FakeArchiveExtractor extractor;
-    FakeProcessResult versionResult;
-    versionResult.started = true;
-    versionResult.exitStatus = QProcess::NormalExit;
-    extractor.enqueueResult(versionResult);
-
-    FakeProcessResult listResult;
-    listResult.started = true;
-    listResult.exitCode = 0;
-    listResult.stdOutput =
-        "Name             Size   Packed Ratio  Date    Time   Attr CRC\n"
-        "file.nes        812000  400000  49%  02-05-26 18:40  -rw- 12AB34CD\n";
-    extractor.enqueueResult(listResult);
-
-    extractor.enqueueResult(versionResult);
-
-    FakeProcessResult extractResult;
-    extractResult.started = true;
-    extractResult.exitCode = 0;
-    extractResult.exitStatus = QProcess::NormalExit;
-    extractor.enqueueResult(extractResult);
-    extractor.fakeFiles = {"file.nes"};
-    extractor.setUnrarPath(QString());
-    extractor.setSevenZipPath("/bin/sh");
-
-    QTemporaryDir dir;
-    QVERIFY(dir.isValid());
-
-    const QString archivePath = dir.path() + "/test.rar";
-    QFile archive(archivePath);
-    QVERIFY(archive.open(QIODevice::WriteOnly));
-    QVERIFY(archive.write("rar") == 3);
-    archive.close();
-
-    ExtractionResult result = extractor.extract(archivePath, dir.path(), false);
-    QVERIFY(result.success);
+    QVERIFY(result.error.isEmpty());
     QCOMPARE(result.filesExtracted, 1);
-    QCOMPARE(extractor.lastArgs, QStringList({QStringLiteral("x"), archivePath, QStringLiteral("-o") + dir.path(), QStringLiteral("-y")}));
+    QVERIFY(QFileInfo::exists(outDir + "/game.bin"));
+    QCOMPARE(QFile(outDir + "/game.bin").size(), static_cast<qint64>(128));
 }
 
-void ArchiveExtractorTest::testExtractFileZipPreservesNestedRelativePath()
+void ArchiveExtractorTest::testExtract7zCreatesSubfolder()
 {
-    FakeArchiveExtractor extractor;
-    FakeProcessResult versionResult;
-    versionResult.started = true;
-    versionResult.exitStatus = QProcess::NormalExit;
-    extractor.enqueueResult(versionResult);
+    QTemporaryDir tmp;
+    QVERIFY(tmp.isValid());
 
-    FakeProcessResult extractResult;
-    extractResult.started = true;
-    extractResult.exitCode = 0;
-    extractResult.exitStatus = QProcess::NormalExit;
-    extractor.enqueueResult(extractResult);
-    extractor.setUnzipPath("/bin/sh");
+    const QString archivePath = tmp.filePath("mygame.7z");
+    QMap<QString, QByteArray> files;
+    files["disc.iso"] = QByteArray(64, 'Y');
+    QVERIFY(createTestArchive(archivePath, files, ArchiveFormat::SevenZip));
 
-    QTemporaryDir dir;
-    QVERIFY(dir.isValid());
+    ArchiveExtractor extractor;
+    const QString baseOut = tmp.filePath("roms");
+    const ExtractionResult result = extractor.extract(archivePath, baseOut, /*createSubfolder=*/true);
 
-    const QString archivePath = dir.path() + "/test.zip";
-    QFile archive(archivePath);
-    QVERIFY(archive.open(QIODevice::WriteOnly));
-    QVERIFY(archive.write("zip") == 3);
-    archive.close();
+    QVERIFY(result.success);
+    // File should be inside <baseOut>/mygame/
+    const QString expectedPath = baseOut + "/mygame/disc.iso";
+    QVERIFY(QFileInfo::exists(expectedPath));
+}
 
-    ExtractionResult result = extractor.extractFile(archivePath, "nested/file.bin", dir.path());
+void ArchiveExtractorTest::testExtractFilePreservesNestedRelativePath()
+{
+    QTemporaryDir tmp;
+    QVERIFY(tmp.isValid());
 
-    // The extractFile code verifies the file exists; create it so the check passes.
-    {
-        QVERIFY(QDir().mkpath(dir.path() + "/nested"));
-        QFile f(dir.path() + "/nested/file.bin");
-        QVERIFY(f.open(QIODevice::WriteOnly));
-        f.write("x");
-        f.close();
-    }
-    extractor.enqueueResult(versionResult);
-    extractor.enqueueResult(extractResult);
-    result = extractor.extractFile(archivePath, "nested/file.bin", dir.path());
+    const QString archivePath = tmp.filePath("multi.zip");
+    QMap<QString, QByteArray> files;
+    files["a.bin"] = QByteArray("aaa");
+    files["sub/b.bin"] = QByteArray("bbb");
+    QVERIFY(createTestArchive(archivePath, files, ArchiveFormat::ZIP));
+
+    ArchiveExtractor extractor;
+    const QString outDir = tmp.filePath("single_out");
+    const ExtractionResult result = extractor.extractFile(archivePath, "sub/b.bin", outDir);
 
     QVERIFY(result.success);
     QCOMPARE(result.filesExtracted, 1);
-    QCOMPARE(result.extractedFiles.first(), dir.path() + "/nested/file.bin");
-    QCOMPARE(extractor.lastArgs, QStringList({archivePath, QStringLiteral("nested/file.bin"), QStringLiteral("-d"), dir.path()}));
+    QVERIFY(QFileInfo::exists(outDir + "/sub/b.bin"));
 }
 
 void ArchiveExtractorTest::testExtractRejectsUnsafeArchiveEntries()
 {
-    FakeArchiveExtractor extractor;
-    FakeProcessResult versionResult;
-    versionResult.started = true;
-    versionResult.exitStatus = QProcess::NormalExit;
-    extractor.enqueueResult(versionResult);
+    QTemporaryDir tmp;
+    QVERIFY(tmp.isValid());
 
-    FakeProcessResult listResult;
-    listResult.started = true;
-    listResult.exitCode = 0;
-    listResult.stdOutput =
-        "Archive: test.zip\n"
-        "  Length      Date    Time    Name\n"
-        "---------  ---------- -----   ----\n"
-        "   10  2020-01-01 00:00   ../evil.bin\n"
-        "---------                     -------\n"
-        "   10                     1 file\n";
-    extractor.enqueueResult(listResult);
-    extractor.setUnzipPath("/bin/sh");
+    const QString archivePath = tmp.filePath("unsafe.zip");
+    QVERIFY(createArchiveWithUnsafePath(archivePath));
 
-    QTemporaryDir dir;
-    QVERIFY(dir.isValid());
+    ArchiveExtractor extractor;
+    const ExtractionResult result = extractor.extract(archivePath, tmp.filePath("out"), false);
 
-    const QString archivePath = dir.path() + "/test.zip";
-    QFile archive(archivePath);
-    QVERIFY(archive.open(QIODevice::WriteOnly));
-    QVERIFY(archive.write("zip") == 3);
-    archive.close();
-
-    const ExtractionResult result = extractor.extract(archivePath, dir.path(), false);
     QVERIFY(!result.success);
-    QVERIFY(result.error.contains(QStringLiteral("unsafe path entries")));
+    QVERIFY(result.error.contains("unsafe", Qt::CaseInsensitive));
 }
 
 void ArchiveExtractorTest::testBatchExtractCanBeCancelledAfterFirstItem()
 {
-    FakeArchiveExtractor extractor;
-    FakeProcessResult versionResult;
-    versionResult.started = true;
-    versionResult.exitStatus = QProcess::NormalExit;
-    extractor.enqueueResult(versionResult);
-    extractor.enqueueResult(versionResult);
+    QTemporaryDir tmp;
+    QVERIFY(tmp.isValid());
 
-    FakeProcessResult listResult;
-    listResult.started = true;
-    listResult.exitCode = 0;
-    listResult.stdOutput =
-        "Archive: one.zip\n"
-        "  Length      Date    Time    Name\n"
-        "---------  ---------- -----   ----\n"
-        "   10  2020-01-01 00:00   file.bin\n"
-        "---------                     -------\n"
-        "   10                     1 file\n";
-    extractor.enqueueResult(listResult);
+    // Create two archives
+    QMap<QString, QByteArray> files;
+    files["x.bin"] = QByteArray("data");
+    const QString arch1 = tmp.filePath("a1.zip");
+    const QString arch2 = tmp.filePath("a2.zip");
+    QVERIFY(createTestArchive(arch1, files, ArchiveFormat::ZIP));
+    QVERIFY(createTestArchive(arch2, files, ArchiveFormat::ZIP));
 
-    FakeProcessResult extractResult;
-    extractResult.started = true;
-    extractResult.exitCode = 0;
-    extractResult.exitStatus = QProcess::NormalExit;
-    extractor.enqueueResult(extractResult);
-    extractor.fakeFiles = {"file.bin"};
-    extractor.setUnzipPath("/bin/sh");
+    ArchiveExtractor extractor;
+    const QString outDir = tmp.filePath("batch");
 
-    QTemporaryDir dir;
-    QVERIFY(dir.isValid());
-
-    const QString firstArchive = dir.path() + "/one.zip";
-    const QString secondArchive = dir.path() + "/two.zip";
-    for (const QString &archivePath : {firstArchive, secondArchive}) {
-        QFile archive(archivePath);
-        QVERIFY(archive.open(QIODevice::WriteOnly));
-        QVERIFY(archive.write("zip") == 3);
-        archive.close();
-    }
-
-    QObject::connect(&extractor, &ArchiveExtractor::batchProgress, &extractor,
-                     [&extractor](int completed, int) {
-                         if (completed == 1) {
+    // Connect to batchProgress and cancel after the first item
+    QObject::connect(&extractor, &ArchiveExtractor::batchProgress,
+                     [&](int completed, int /*total*/) {
+                         if (completed == 1)
                              extractor.cancel();
-                         }
                      });
 
-    const QList<ExtractionResult> results = extractor.batchExtract({firstArchive, secondArchive}, dir.path(), true);
-    QCOMPARE(results.size(), 1);
-    QVERIFY(results.first().success);
+    const QList<ExtractionResult> results =
+        extractor.batchExtract({arch1, arch2}, outDir, false);
+
+    QCOMPARE(results.size(), 1);  // Second item was skipped due to cancel
 }
 
 void ArchiveExtractorTest::testExtractUnsupported()
 {
-    FakeArchiveExtractor extractor;
-    QTemporaryDir dir;
-    QVERIFY(dir.isValid());
-    const QString archivePath = dir.path() + "/test.unknown";
-    QFile archive(archivePath);
-    QVERIFY(archive.open(QIODevice::WriteOnly));
-    QVERIFY(archive.write("data") == 4);
-    archive.close();
-
-    ExtractionResult result = extractor.extract(archivePath, dir.path(), false);
+    ArchiveExtractor extractor;
+    const ExtractionResult result = extractor.extract("/tmp/foo.xyz", "/tmp/out", false);
     QVERIFY(!result.success);
-    QVERIFY(result.error.contains("Unsupported archive format"));
+    QVERIFY(!result.error.isEmpty());
 }
 
 void ArchiveExtractorTest::testReadMemberPrefix()
 {
+    QTemporaryDir tmp;
+    QVERIFY(tmp.isValid());
+
+    const QString archivePath = tmp.filePath("prefix.zip");
+    const QByteArray memberData(512, 'P');
+    QMap<QString, QByteArray> files;
+    files["data.bin"] = memberData;
+    QVERIFY(createTestArchive(archivePath, files, ArchiveFormat::ZIP));
+
     ArchiveExtractor extractor;
-    if (!extractor.canExtract(ArchiveFormat::SevenZip) && !extractor.canExtract(ArchiveFormat::ZIP)) {
-        QSKIP("No archive extraction tool available");
-    }
+    const qint64 prefixLen = 128;
+    const QByteArray prefix = extractor.readMemberPrefix(archivePath, "data.bin", prefixLen);
 
-    QTemporaryDir dir;
-    QVERIFY(dir.isValid());
-
-    // Create a 200-byte member with a known repeating pattern.
-    const int fileSize = 200;
-    QByteArray memberData(fileSize, '\0');
-    for (int i = 0; i < fileSize; ++i)
-        memberData[i] = static_cast<char>(i & 0xFF);
-
-    const QString memberName = QStringLiteral("probe.bin");
-    QFile memberFile(dir.filePath(memberName));
-    QVERIFY(memberFile.open(QIODevice::WriteOnly));
-    memberFile.write(memberData);
-    memberFile.close();
-
-    // Pack into a 7z archive.
-    const QString archivePath = dir.filePath(QStringLiteral("test.7z"));
-    QProcess packer;
-    packer.setWorkingDirectory(dir.path());
-    packer.start(QStringLiteral("7z"), {QStringLiteral("a"), archivePath, memberName});
-    QVERIFY(packer.waitForFinished(15000) && packer.exitCode() == 0);
-    QFile::remove(dir.filePath(memberName)); // remove the original so only the archive remains
-
-    // Read fewer bytes than the full member; verify only the prefix is returned.
-    const qint64 prefixLen = 100;
-    const QByteArray prefix = extractor.readMemberPrefix(archivePath, memberName, prefixLen);
-    QCOMPARE(prefix.size(), static_cast<qsizetype>(prefixLen));
+    QCOMPARE(prefix.size(), static_cast<int>(prefixLen));
     QCOMPARE(prefix, memberData.left(static_cast<int>(prefixLen)));
 }
 

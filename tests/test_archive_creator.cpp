@@ -1,77 +1,15 @@
 #include <QtTest/QtTest>
 #include <QTemporaryDir>
+#include <QDir>
 #include <QFile>
 #include <QFileInfo>
-#include "../src/core/archive_creator.h"
-#include "../src/core/archive_extractor.h"
+
+#include "archive_creator.h"
+#include "archive_extractor.h"
 
 using namespace Remus;
 
-namespace {
-bool writeAll(QFile &file, const QByteArray &data)
-{
-    return file.write(data) == data.size();
-}
-}
-
-// ── Fake subclass that intercepts runProcess ──────────────────────────────
-
-class FakeArchiveCreator : public ArchiveCreator
-{
-public:
-    int  exitCode  = 0;
-    bool started   = true;
-    QString stdOut;
-    QString stdErr;
-    QStringList lastArgs;
-    QString lastWorkingDirectory;
-
-protected:
-    ProcessResult runProcess(const QString &, const QStringList &args, int) override
-    {
-        lastArgs = args;
-        lastWorkingDirectory.clear();
-        return makeResult(args);
-    }
-
-    ProcessResult runProcessInDirectory(const QString &,
-                                        const QStringList &args,
-                                        const QString &workingDirectory,
-                                        int) override
-    {
-        lastArgs = args;
-        lastWorkingDirectory = workingDirectory;
-        return makeResult(args);
-    }
-
-private:
-    ProcessResult makeResult(const QStringList &args)
-    {
-        ProcessResult r;
-        r.exitCode = exitCode;
-        r.stdOut   = stdOut;
-        r.stdErr   = stdErr;
-        int outputIndex = 0;
-        if (!args.isEmpty() && (args.first() == "-j" || args.first() == "-r" || args.first() == "a")) {
-            outputIndex = 1;
-        }
-        if (exitCode == 0 && args.size() > outputIndex) {
-            QFile f(args[outputIndex]);
-            if (!f.open(QIODevice::WriteOnly))
-                qFatal("FakeArchiveCreator: cannot create %s", qPrintable(args[outputIndex]));
-            QByteArray payload("PK\x05\x06", 4);
-            payload.append(QByteArray(18, '\0'));
-            if (!writeAll(f, payload))
-                qFatal("FakeArchiveCreator: write failed");
-        }
-        return r;
-    }
-};
-
-// ── Test class ────────────────────────────────────────────────────────────
-
-class ArchiveCreatorTest : public QObject
-{
+class ArchiveCreatorTest : public QObject {
     Q_OBJECT
 
 private slots:
@@ -80,177 +18,175 @@ private slots:
     void testBatchCompressResultCount();
     void testCanCompressQueryWithFakePaths();
     void testCompressDirectoryContentsPreservesRelativePaths();
+    void testCompressMixedInputFilesFromDifferentDirectories();
     void testRoundTripZip();
 };
 
-// ── Tests ─────────────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
 
 void ArchiveCreatorTest::testCompressSuccessReturnsOutputPath()
 {
-    QTemporaryDir dir;
-    QVERIFY(dir.isValid());
+    QTemporaryDir tmp;
+    QVERIFY(tmp.isValid());
 
-    // Create a dummy input file so calculateTotalSize doesn't fail
-    const QString inputFile = dir.path() + "/rom.nes";
+    // Write a small file to compress
+    const QString inputFile = tmp.filePath("input.bin");
     {
         QFile f(inputFile);
         QVERIFY(f.open(QIODevice::WriteOnly));
-        QVERIFY(writeAll(f, QByteArrayLiteral("FAKE ROM")));
+        f.write(QByteArray(128, 'A'));
     }
-    const QString outputZip = dir.path() + "/rom.zip";
 
-    FakeArchiveCreator creator;
-    creator.exitCode = 0;
+    ArchiveCreator creator;
+    const QString outputPath = tmp.filePath("out.zip");
+    const CompressionResult result = creator.compress({inputFile}, outputPath, ArchiveFormat::ZIP);
 
-    // Point to a real executable so canCompress() passes the isToolAvailable
-    // check.  runProcess() is overridden, so the actual binary is never run.
-    creator.setZipPath("/bin/sh");
-
-    CompressionResult result = creator.compress({inputFile}, outputZip, ArchiveFormat::ZIP);
-    // Since runProcess returns exitCode=0, compress should report success
     QVERIFY(result.success);
-    QCOMPARE(result.outputPath, outputZip);
+    QCOMPARE(result.outputPath, outputPath);
+    QVERIFY(QFileInfo::exists(outputPath));
+    QCOMPARE(result.filesCompressed, 1);
 }
 
 void ArchiveCreatorTest::testCompressFailureReturnsError()
 {
-    QTemporaryDir dir;
-    QVERIFY(dir.isValid());
+    ArchiveCreator creator;
+    // Use an empty output path — should fail validation
+    const CompressionResult result = creator.compress({"/nonexistent/path.bin"}, QString(), ArchiveFormat::ZIP);
 
-    const QString inputFile = dir.path() + "/rom.nes";
-    {
-        QFile f(inputFile);
-        QVERIFY(f.open(QIODevice::WriteOnly));
-        QVERIFY(writeAll(f, QByteArrayLiteral("FAKE ROM")));
-    }
-
-    FakeArchiveCreator creator;
-    creator.exitCode = 1;  // Non-zero → failure
-    creator.stdErr   = "zip: permission denied";
-    creator.setZipPath("/usr/bin/zip");
-
-    CompressionResult result = creator.compress({dir.path() + "/rom.nes"},
-                                                dir.path() + "/out.zip",
-                                                ArchiveFormat::ZIP);
     QVERIFY(!result.success);
     QVERIFY(!result.error.isEmpty());
 }
 
 void ArchiveCreatorTest::testBatchCompressResultCount()
 {
-    QTemporaryDir dir;
-    QVERIFY(dir.isValid());
+    QTemporaryDir tmp;
+    QVERIFY(tmp.isValid());
 
-    // Create two subdirectories to compress individually
-    const QStringList dirs = {dir.path() + "/a", dir.path() + "/b"};
-    for (const QString &d : dirs) {
-        QVERIFY(QDir().mkpath(d));
-        QFile f(d + "/rom.nes");
+    // Create two source directories, each containing one file
+    for (const QString &name : {QStringLiteral("dir1"), QStringLiteral("dir2")}) {
+        const QString dirPath = tmp.filePath(name);
+        QDir().mkpath(dirPath);
+        QFile f(dirPath + "/file.bin");
         QVERIFY(f.open(QIODevice::WriteOnly));
-        QVERIFY(writeAll(f, QByteArrayLiteral("DATA")));
+        f.write("data");
     }
 
-    FakeArchiveCreator creator;
-    creator.exitCode = 0;
-    creator.setZipPath("/usr/bin/zip");
-
-    QList<CompressionResult> results =
-        creator.batchCompress(dirs, dir.path(), ArchiveFormat::ZIP);
+    ArchiveCreator creator;
+    const QString outputDir = tmp.filePath("archives");
+    const QList<CompressionResult> results = creator.batchCompress(
+        {tmp.filePath("dir1"), tmp.filePath("dir2")},
+        outputDir, ArchiveFormat::ZIP);
 
     QCOMPARE(results.size(), 2);
+    QVERIFY(results[0].success);
+    QVERIFY(results[1].success);
 }
 
 void ArchiveCreatorTest::testCanCompressQueryWithFakePaths()
 {
     ArchiveCreator creator;
-    // With a non-existent tool path, canCompress should return false for ZIP
-    creator.setZipPath("/nonexistent/zip");
-    // canCompress checks tool availability; with a fake path it may still
-    // report true if system zip is on PATH, so we just verify the method runs.
-    (void)creator.canCompress(ArchiveFormat::ZIP);
-    (void)creator.canCompress(ArchiveFormat::SevenZip);
-    QVERIFY(true);  // Guard — test that no crash occurs
+    QVERIFY(creator.canCompress(ArchiveFormat::ZIP));
+    QVERIFY(!creator.canCompress(ArchiveFormat::SevenZip));
+    QVERIFY(!creator.canCompress(ArchiveFormat::RAR));
+    QVERIFY(!creator.canCompress(ArchiveFormat::Unknown));
 }
 
 void ArchiveCreatorTest::testCompressDirectoryContentsPreservesRelativePaths()
 {
-    QTemporaryDir dir;
-    QVERIFY(dir.isValid());
+    QTemporaryDir tmp;
+    QVERIFY(tmp.isValid());
 
-    const QString rootDir = dir.path() + "/bundle";
-    QVERIFY(QDir().mkpath(rootDir + "/artwork"));
+    // Create a directory tree
+    const QString rootDir = tmp.filePath("srcdir");
+    QDir().mkpath(rootDir + "/sub");
+    {
+        QFile f1(rootDir + "/top.txt");
+        QVERIFY(f1.open(QIODevice::WriteOnly));
+        f1.write("top");
 
-    {
-        QFile f(rootDir + "/game.nes");
-        QVERIFY(f.open(QIODevice::WriteOnly));
-        QVERIFY(writeAll(f, QByteArrayLiteral("ROM")));
-    }
-    {
-        QFile f(rootDir + "/.remus.md");
-        QVERIFY(f.open(QIODevice::WriteOnly));
-        QVERIFY(writeAll(f, QByteArrayLiteral("marker")));
-    }
-    {
-        QFile f(rootDir + "/artwork/boxfront.jpg");
-        QVERIFY(f.open(QIODevice::WriteOnly));
-        QVERIFY(writeAll(f, QByteArrayLiteral("art")));
+        QFile f2(rootDir + "/sub/nested.txt");
+        QVERIFY(f2.open(QIODevice::WriteOnly));
+        f2.write("nested");
     }
 
-    FakeArchiveCreator creator;
-    creator.setZipPath("/bin/sh");
-
-    CompressionResult result = creator.compressDirectoryContents(rootDir,
-                                                                 dir.path() + "/bundle.zip",
-                                                                 ArchiveFormat::ZIP);
+    ArchiveCreator creator;
+    const QString outputPath = tmp.filePath("result.zip");
+    const CompressionResult result = creator.compressDirectoryContents(rootDir, outputPath, ArchiveFormat::ZIP);
 
     QVERIFY(result.success);
-    QCOMPARE(creator.lastWorkingDirectory, rootDir);
-    QVERIFY(creator.lastArgs.contains("game.nes"));
-    QVERIFY(creator.lastArgs.contains(".remus.md"));
-    QVERIFY(creator.lastArgs.contains("artwork/boxfront.jpg"));
-    QVERIFY(!creator.lastArgs.contains(rootDir + "/artwork/boxfront.jpg"));
+
+    // Verify archive contents using ArchiveExtractor::getArchiveInfo
+    ArchiveExtractor extractor;
+    const ArchiveInfo info = extractor.getArchiveInfo(outputPath);
+    QCOMPARE(info.fileCount, 2);
+    QVERIFY(info.contents.contains(QStringLiteral("top.txt")));
+    QVERIFY(info.contents.contains(QStringLiteral("sub/nested.txt")));
+}
+
+void ArchiveCreatorTest::testCompressMixedInputFilesFromDifferentDirectories()
+{
+    QTemporaryDir tmp;
+    QVERIFY(tmp.isValid());
+
+    const QString dirA = tmp.filePath("dir_a");
+    const QString dirB = tmp.filePath("dir_b");
+    QDir().mkpath(dirA);
+    QDir().mkpath(dirB);
+
+    const QString fileA = dirA + "/alpha.bin";
+    const QString fileB = dirB + "/beta.bin";
+    {
+        QFile alpha(fileA);
+        QVERIFY(alpha.open(QIODevice::WriteOnly));
+        alpha.write("alpha");
+
+        QFile beta(fileB);
+        QVERIFY(beta.open(QIODevice::WriteOnly));
+        beta.write("beta");
+    }
+
+    ArchiveCreator creator;
+    const QString outputPath = tmp.filePath("multi.zip");
+    const CompressionResult result = creator.compress({fileA, fileB}, outputPath, ArchiveFormat::ZIP);
+
+    QVERIFY(result.success);
+    QCOMPARE(result.filesCompressed, 2);
+
+    ArchiveExtractor extractor;
+    const ArchiveInfo info = extractor.getArchiveInfo(outputPath);
+    QCOMPARE(info.fileCount, 2);
+    QVERIFY(info.contents.contains(QStringLiteral("alpha.bin")));
+    QVERIFY(info.contents.contains(QStringLiteral("beta.bin")));
 }
 
 void ArchiveCreatorTest::testRoundTripZip()
 {
-    // This test requires the system `zip` and `unzip` tools.
-    ArchiveCreator creator;
-    ArchiveExtractor extractor;
+    QTemporaryDir tmp;
+    QVERIFY(tmp.isValid());
 
-    if (!creator.canCompress(ArchiveFormat::ZIP)) {
-        QSKIP("zip tool not available — skipping round-trip test");
-    }
-    if (!extractor.canExtract(ArchiveFormat::ZIP)) {
-        QSKIP("unzip tool not available — skipping round-trip test");
-    }
-
-    QTemporaryDir srcDir, dstDir;
-    QVERIFY(srcDir.isValid() && dstDir.isValid());
-
-    // Write a small file
-    const QByteArray payload = "Round-trip ROM payload";
-    const QString srcFile    = srcDir.path() + "/game.nes";
+    // Create source file
+    const QByteArray payload(256, 'Z');
+    const QString srcFile = tmp.filePath("data.bin");
     {
         QFile f(srcFile);
         QVERIFY(f.open(QIODevice::WriteOnly));
-        QVERIFY(writeAll(f, payload));
+        f.write(payload);
     }
 
     // Compress
-    const QString zipPath = srcDir.path() + "/game.zip";
-    CompressionResult cr = creator.compress({srcFile}, zipPath, ArchiveFormat::ZIP);
-    QVERIFY2(cr.success, qPrintable(cr.error));
-    QVERIFY(QFile::exists(zipPath));
-    QVERIFY(cr.compressedSize > 0);
-    QCOMPARE(cr.filesCompressed, 1);
+    ArchiveCreator creator;
+    const QString archivePath = tmp.filePath("roundtrip.zip");
+    const CompressionResult compResult = creator.compress({srcFile}, archivePath, ArchiveFormat::ZIP);
+    QVERIFY(compResult.success);
 
     // Extract
-    ExtractionResult er = extractor.extract(zipPath, dstDir.path());
-    QVERIFY2(er.success, qPrintable(er.error));
-    QCOMPARE(er.filesExtracted, 1);
+    ArchiveExtractor extractor;
+    const QString outDir = tmp.filePath("extracted");
+    const ExtractionResult exResult = extractor.extract(archivePath, outDir, false);
+    QVERIFY(exResult.success);
 
-    // Verify content identity
-    QFile out(dstDir.path() + "/game.nes");
+    // Verify extracted file content
+    QFile out(outDir + "/data.bin");
     QVERIFY(out.open(QIODevice::ReadOnly));
     QCOMPARE(out.readAll(), payload);
 }

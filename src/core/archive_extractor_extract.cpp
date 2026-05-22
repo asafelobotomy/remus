@@ -1,167 +1,108 @@
 #include "archive_extractor.h"
 
+#include <archive.h>
+#include <archive_entry.h>
+#include <memory>
 #include <QDebug>
 #include <QDir>
+#include <QFile>
 #include <QFileInfo>
-#include <QProcess>
 
 namespace Remus {
 
+// ─────────────────────────────────────────────────────────────────────────────
+// Internal helpers
+// ─────────────────────────────────────────────────────────────────────────────
+
 namespace {
 
-QString relativeExtractedPath(const QString &outputDir, const QString &path)
+// Streams all data blocks from archive reader |ar| into a QFile.
+// Returns true on success (EOF reached without error).
+bool copyEntryToFile(archive *ar, QFile &out)
 {
-    return QDir(outputDir).relativeFilePath(path).replace('\\', '/');
+    const void *buff;
+    size_t size;
+    la_int64_t offset;
+    for (;;) {
+        const int r = archive_read_data_block(ar, &buff, &size, &offset);
+        if (r == ARCHIVE_EOF) return true;
+        if (r < ARCHIVE_OK) return false;
+        if (out.write(static_cast<const char *>(buff), static_cast<qint64>(size)) < 0)
+            return false;
+    }
 }
 
-}
+} // anonymous namespace
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Public API
+// ─────────────────────────────────────────────────────────────────────────────
 
 ExtractionResult ArchiveExtractor::extract(const QString &archivePath,
-                                          const QString &outputDir,
-                                          bool createSubfolder)
+                                           const QString &outputDir,
+                                           bool createSubfolder)
 {
     ExtractionResult result;
     result.archivePath = archivePath;
 
-    QFileInfo archiveInfo(archivePath);
-    if (!archiveInfo.exists()) {
-        result.success = false;
-        result.error = "Archive file not found";
+    if (!QFileInfo::exists(archivePath)) {
+        result.error = QStringLiteral("Archive file not found");
+        return result;
+    }
+
+    if (detectFormat(archivePath) == ArchiveFormat::Unknown) {
+        result.error = QStringLiteral("Unsupported archive format");
         return result;
     }
 
     QString targetDir = outputDir;
-    if (targetDir.isEmpty()) {
-        targetDir = archiveInfo.absolutePath();
-    }
-    if (createSubfolder) {
-        targetDir = QDir(targetDir).filePath(archiveInfo.completeBaseName());
-    }
+    if (targetDir.isEmpty())
+        targetDir = QFileInfo(archivePath).absolutePath();
+    if (createSubfolder)
+        targetDir = QDir(targetDir).filePath(QFileInfo(archivePath).completeBaseName());
 
     result.outputDir = targetDir;
-    const ArchiveInfo preflightInfo = getArchiveInfo(archivePath);
-    if (const QString validationError = validateArchiveEntries(preflightInfo); !validationError.isEmpty()) {
-        result.success = false;
-        result.error = validationError;
-        return result;
-    }
-
     QDir().mkpath(targetDir);
+
     emit extractionStarted(archivePath, targetDir);
-
-    switch (detectFormat(archivePath)) {
-    case ArchiveFormat::ZIP:
-        result = extractZip(archivePath, targetDir);
-        break;
-    case ArchiveFormat::SevenZip:
-    case ArchiveFormat::GZip:
-    case ArchiveFormat::TarGz:
-    case ArchiveFormat::TarBz2:
-        result = extract7z(archivePath, targetDir);
-        break;
-    case ArchiveFormat::RAR:
-        result = extractRar(archivePath, targetDir);
-        break;
-    default:
-        result.success = false;
-        result.error = "Unsupported archive format";
-        break;
-    }
-
-    if (result.success) {
-        if (const QString validationError = validateExtractedFiles(result.outputDir, result.extractedFiles);
-            !validationError.isEmpty()) {
-            result.success = false;
-            result.error = validationError;
-        }
-    }
+    result = extractToDir(archivePath, targetDir);
+    result.archivePath = archivePath;
+    result.outputDir = targetDir;
 
     emit extractionCompleted(result);
     return result;
 }
 
 ExtractionResult ArchiveExtractor::extractFile(const QString &archivePath,
-                                              const QString &fileName,
-                                              const QString &outputDir)
+                                               const QString &fileName,
+                                               const QString &outputDir)
 {
     ExtractionResult result;
     result.archivePath = archivePath;
     result.outputDir = outputDir;
 
-    const QString normalizedFileName = normalizeArchiveMemberPath(fileName);
-    if (normalizedFileName.isEmpty()) {
-        result.error = "Unsafe archive member path";
+    const QString normalized = normalizeArchiveMemberPath(fileName);
+    if (normalized.isEmpty()) {
+        result.error = QStringLiteral("Unsafe archive member path");
         return result;
     }
 
-    QStringList args;
-    ProcessResult processResult;
+    QDir().mkpath(outputDir);
+    result = extractToDir(archivePath, outputDir, normalized);
+    result.archivePath = archivePath;
+    result.outputDir = outputDir;
 
-    switch (detectFormat(archivePath)) {
-    case ArchiveFormat::ZIP:
-        if (isToolAvailable(m_unzipPath)) {
-            args << archivePath << normalizedFileName << "-d" << outputDir;
-            processResult = runProcess(m_unzipPath, args, 120000);
-        }
-        break;
-    case ArchiveFormat::SevenZip:
-        if (isToolAvailable(m_sevenZipPath)) {
-            args << "e" << archivePath << "-o" + outputDir << normalizedFileName << "-y";
-            processResult = runProcess(m_sevenZipPath, args, 120000);
-        }
-        break;
-    case ArchiveFormat::RAR:
-        if (isToolAvailable(m_unrarPath)) {
-            args << "e" << archivePath << normalizedFileName << outputDir;
-            processResult = runProcess(m_unrarPath, args, 120000);
-        }
-        break;
-    default:
-        result.error = "Unsupported format for single file extraction";
-        return result;
-    }
-
-    result.success = (processResult.exitCode == 0 && processResult.started);
-    if (result.success) {
-        const QString exactPath = QDir(outputDir).filePath(normalizedFileName);
-        const QString basenamePath = QDir(outputDir).filePath(QFileInfo(normalizedFileName).fileName());
-        QString resolvedPath;
-
-        if (QFileInfo::exists(exactPath)) {
-            resolvedPath = exactPath;
-        } else if (QFileInfo::exists(basenamePath)) {
-            resolvedPath = basenamePath;
-        } else {
-            const QStringList extractedPaths = listFiles(outputDir);
-            for (const QString &path : extractedPaths) {
-                if (relativeExtractedPath(outputDir, path) == normalizedFileName) {
-                    resolvedPath = path;
-                    break;
-                }
-            }
-        }
-
-        if (!resolvedPath.isEmpty()) {
-            result.filesExtracted = 1;
-            result.extractedFiles.append(resolvedPath);
-            if (!isPathWithinDirectory(outputDir, resolvedPath)) {
-                result.success = false;
-                result.error = QStringLiteral("Extraction escaped output directory: ") + resolvedPath;
-            }
-        } else {
-            result.success = false;
-            result.error = QStringLiteral("Extracted file not found for archive member: ") + normalizedFileName;
-        }
-    } else {
-        result.error = processResult.stdError;
+    if (result.success && result.filesExtracted == 0) {
+        result.success = false;
+        result.error = QStringLiteral("Archive member not found: %1").arg(normalized);
     }
 
     return result;
 }
 
 QList<ExtractionResult> ArchiveExtractor::batchExtract(const QStringList &archivePaths,
-                                                      const QString &outputDir,
-                                                      bool createSubfolders)
+                                                       const QString &outputDir,
+                                                       bool createSubfolders)
 {
     QList<ExtractionResult> results;
     m_cancelled = false;
@@ -169,123 +110,12 @@ QList<ExtractionResult> ArchiveExtractor::batchExtract(const QStringList &archiv
     const int total = archivePaths.size();
     int completed = 0;
     for (const QString &archivePath : archivePaths) {
-        if (m_cancelled) {
-            break;
-        }
-
+        if (m_cancelled) break;
         results.append(extract(archivePath, outputDir, createSubfolders));
-        completed++;
-        emit batchProgress(completed, total);
+        emit batchProgress(++completed, total);
     }
 
     return results;
-}
-
-ExtractionResult ArchiveExtractor::extractZip(const QString &archivePath, const QString &outputDir)
-{
-    ExtractionResult result;
-    result.archivePath = archivePath;
-    result.outputDir = outputDir;
-
-    QStringList args;
-    ProcessResult processResult;
-    if (isToolAvailable(m_unzipPath)) {
-        args << "-o" << archivePath << "-d" << outputDir;
-        qInfo() << "Extracting with unzip:" << archivePath;
-        processResult = runProcessTracked(m_unzipPath, args, 600000);
-    } else if (isToolAvailable(m_sevenZipPath)) {
-        args << "x" << archivePath << "-o" + outputDir << "-y";
-        qInfo() << "Extracting with 7z:" << archivePath;
-        processResult = runProcessTracked(m_sevenZipPath, args, 600000);
-    } else {
-        result.error = "No ZIP extraction tool available (install unzip or 7z)";
-        return result;
-    }
-
-    result.success = (processResult.exitCode == 0 && processResult.started);
-    if (result.success) {
-        result.extractedFiles = listFiles(outputDir);
-        result.filesExtracted = result.extractedFiles.count();
-        if (const QString validationError = validateExtractedFiles(outputDir, result.extractedFiles);
-            !validationError.isEmpty()) {
-            result.success = false;
-            result.error = validationError;
-        }
-        qInfo() << "Extraction successful:" << result.filesExtracted << "items";
-    } else {
-        result.error = processResult.stdError;
-        qWarning() << "Extraction failed:" << result.error;
-    }
-
-    return result;
-}
-
-ExtractionResult ArchiveExtractor::extract7z(const QString &archivePath, const QString &outputDir)
-{
-    ExtractionResult result;
-    result.archivePath = archivePath;
-    result.outputDir = outputDir;
-
-    if (!isToolAvailable(m_sevenZipPath)) {
-        result.error = "7z not available (install p7zip)";
-        return result;
-    }
-
-    const QStringList args = {QStringLiteral("x"), archivePath, QStringLiteral("-o") + outputDir, QStringLiteral("-y")};
-    qInfo() << "Extracting with 7z:" << archivePath;
-    const ProcessResult processResult = runProcessTracked(m_sevenZipPath, args, 600000);
-    result.success = (processResult.exitCode == 0 && processResult.started);
-
-    if (result.success) {
-        result.extractedFiles = listFiles(outputDir);
-        result.filesExtracted = result.extractedFiles.count();
-        if (const QString validationError = validateExtractedFiles(outputDir, result.extractedFiles);
-            !validationError.isEmpty()) {
-            result.success = false;
-            result.error = validationError;
-        }
-    } else {
-        result.error = processResult.stdError;
-    }
-
-    return result;
-}
-
-ExtractionResult ArchiveExtractor::extractRar(const QString &archivePath, const QString &outputDir)
-{
-    ExtractionResult result;
-    result.archivePath = archivePath;
-    result.outputDir = outputDir;
-
-    QStringList args;
-    ProcessResult processResult;
-    if (isToolAvailable(m_unrarPath)) {
-        args << "x" << "-y" << archivePath << outputDir + "/";
-        qInfo() << "Extracting with unrar:" << archivePath;
-        processResult = runProcessTracked(m_unrarPath, args, 600000);
-    } else if (isToolAvailable(m_sevenZipPath)) {
-        args << "x" << archivePath << "-o" + outputDir << "-y";
-        qInfo() << "Extracting with 7z:" << archivePath;
-        processResult = runProcessTracked(m_sevenZipPath, args, 600000);
-    } else {
-        result.error = "No RAR extraction tool available (install unrar or 7z)";
-        return result;
-    }
-
-    result.success = (processResult.exitCode == 0 && processResult.started);
-    if (result.success) {
-        result.extractedFiles = listFiles(outputDir);
-        result.filesExtracted = result.extractedFiles.count();
-        if (const QString validationError = validateExtractedFiles(outputDir, result.extractedFiles);
-            !validationError.isEmpty()) {
-            result.success = false;
-            result.error = validationError;
-        }
-    } else {
-        result.error = processResult.stdError;
-    }
-
-    return result;
 }
 
 QByteArray ArchiveExtractor::readMemberPrefix(const QString &archivePath,
@@ -294,76 +124,121 @@ QByteArray ArchiveExtractor::readMemberPrefix(const QString &archivePath,
 {
     if (maxBytes <= 0) return {};
 
-    const QString normalizedMember = normalizeArchiveMemberPath(memberPath);
-    if (normalizedMember.isEmpty()) return {};
+    const QString normalized = normalizeArchiveMemberPath(memberPath);
+    if (normalized.isEmpty()) return {};
 
-    QString program;
-    QStringList args;
+    using ArchivePtr = std::unique_ptr<archive, decltype(&archive_read_free)>;
+    ArchivePtr a(archive_read_new(), archive_read_free);
+    archive_read_support_filter_all(a.get());
+    archive_read_support_format_all(a.get());
 
-    switch (detectFormat(archivePath)) {
-    case ArchiveFormat::ZIP:
-        if (!m_unzipPath.isEmpty()) {
-            program = m_unzipPath;
-            args = {"-p", archivePath, normalizedMember};
-        } else if (!m_sevenZipPath.isEmpty()) {
-            program = m_sevenZipPath;
-            args = {"e", archivePath, normalizedMember, "-so", "-y"};
-        }
-        break;
-    case ArchiveFormat::SevenZip:
-    case ArchiveFormat::GZip:
-    case ArchiveFormat::TarGz:
-    case ArchiveFormat::TarBz2:
-        if (!m_sevenZipPath.isEmpty()) {
-            program = m_sevenZipPath;
-            args = {"e", archivePath, normalizedMember, "-so", "-y"};
-        }
-        break;
-    case ArchiveFormat::RAR:
-        if (!m_unrarPath.isEmpty()) {
-            program = m_unrarPath;
-            args = {"p", archivePath, normalizedMember};
-        } else if (!m_sevenZipPath.isEmpty()) {
-            program = m_sevenZipPath;
-            args = {"e", archivePath, normalizedMember, "-so", "-y"};
-        }
-        break;
-    default:
+    const QByteArray pathBytes = archivePath.toUtf8();
+    if (archive_read_open_filename(a.get(), pathBytes.constData(), 65536) != ARCHIVE_OK)
         return {};
-    }
 
-    if (program.isEmpty()) return {};
-
-    QProcess proc;
-    // Keep stdout and stderr separate; we only read stdout.
-    proc.setReadChannel(QProcess::StandardOutput);
-    proc.start(program, args);
-    if (!proc.waitForStarted(5000)) return {};
-
-    QByteArray data;
-    data.reserve(static_cast<int>(maxBytes));
-
-    while (data.size() < maxBytes) {
-        if (proc.bytesAvailable() > 0) {
-            data.append(proc.read(maxBytes - data.size()));
+    archive_entry *entry = nullptr;
+    while (archive_read_next_header(a.get(), &entry) == ARCHIVE_OK) {
+        const QString entryNorm = normalizeArchiveMemberPath(
+            QString::fromUtf8(archive_entry_pathname(entry)));
+        if (entryNorm != normalized) {
+            archive_read_data_skip(a.get());
             continue;
         }
-        if (proc.state() == QProcess::NotRunning) {
-            // Process finished cleanly — drain any remaining bytes.
-            const QByteArray tail = proc.readAll();
-            if (!tail.isEmpty())
-                data.append(tail.left(static_cast<int>(maxBytes - data.size())));
-            break;
+
+        QByteArray data;
+        data.reserve(static_cast<int>(maxBytes));
+        char buf[65536];
+        qint64 remaining = maxBytes;
+        la_ssize_t n;
+        while (remaining > 0) {
+            const la_ssize_t toRead = static_cast<la_ssize_t>(
+                qMin<qint64>(remaining, static_cast<qint64>(sizeof(buf))));
+            n = archive_read_data(a.get(), buf, static_cast<size_t>(toRead));
+            if (n <= 0) break;
+            data.append(buf, static_cast<int>(n));
+            remaining -= n;
         }
-        if (!proc.waitForReadyRead(5000)) break;
+        return data;
     }
 
-    if (proc.state() != QProcess::NotRunning) {
-        proc.kill();
-        proc.waitForFinished(3000);
+    return {};
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Private extraction core
+// ─────────────────────────────────────────────────────────────────────────────
+
+ExtractionResult ArchiveExtractor::extractToDir(const QString &archivePath,
+                                                 const QString &outputDir,
+                                                 const QString &singleMember)
+{
+    ExtractionResult result;
+    result.archivePath = archivePath;
+    result.outputDir = outputDir;
+
+    using ArchivePtr = std::unique_ptr<archive, decltype(&archive_read_free)>;
+    ArchivePtr a(archive_read_new(), archive_read_free);
+    archive_read_support_filter_all(a.get());
+    archive_read_support_format_all(a.get());
+
+    const QByteArray pathBytes = archivePath.toUtf8();
+    if (archive_read_open_filename(a.get(), pathBytes.constData(), 65536) != ARCHIVE_OK) {
+        result.error = QString::fromUtf8(archive_error_string(a.get()));
+        if (result.error.isEmpty())
+            result.error = QStringLiteral("Failed to open archive");
+        return result;
     }
 
-    return data;
+    archive_entry *entry = nullptr;
+    while (archive_read_next_header(a.get(), &entry) == ARCHIVE_OK) {
+        const unsigned ae_type = archive_entry_filetype(entry);
+
+        // Skip directories and symlinks — only extract regular files
+        if (ae_type == AE_IFDIR || ae_type == AE_IFLNK) {
+            archive_read_data_skip(a.get());
+            continue;
+        }
+
+        const QString rawPath = QString::fromUtf8(archive_entry_pathname(entry));
+        const QString normalized = normalizeArchiveMemberPath(rawPath);
+
+        if (normalized.isEmpty()) {
+            // Unsafe path detected — abort the entire extraction
+            result.success = false;
+            result.error = QStringLiteral("Archive contains unsafe path entries: %1").arg(rawPath);
+            return result;
+        }
+
+        // When extracting a single named member, skip non-matching entries
+        if (!singleMember.isEmpty() && normalized != singleMember) {
+            archive_read_data_skip(a.get());
+            continue;
+        }
+
+        const QString destPath = QDir(outputDir).filePath(normalized);
+        QDir().mkpath(QFileInfo(destPath).absolutePath());
+
+        QFile outFile(destPath);
+        if (!outFile.open(QIODevice::WriteOnly)) {
+            qWarning() << "extractToDir: cannot open for write:" << destPath;
+            archive_read_data_skip(a.get());
+            continue;
+        }
+
+        if (!copyEntryToFile(a.get(), outFile)) {
+            qWarning() << "extractToDir: data error for entry:" << normalized;
+        }
+        outFile.close();
+
+        result.extractedFiles.append(destPath);
+        result.bytesExtracted += qMax<qint64>(0, archive_entry_size(entry));
+        result.filesExtracted++;
+
+        emit extractionProgress(0, normalized);
+    }
+
+    result.success = true;
+    return result;
 }
 
 } // namespace Remus

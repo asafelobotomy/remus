@@ -67,6 +67,9 @@ find_package(Qt6Keychain REQUIRED)
 # Find zlib for CRC32 hashing
 find_package(ZLIB REQUIRED)
 
+# Find libarchive for ZIP/7z/RAR support
+find_package(LibArchive REQUIRED)
+
 # Core library
 add_subdirectory(src/core)
 

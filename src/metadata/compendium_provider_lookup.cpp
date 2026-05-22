@@ -56,9 +56,11 @@ QList<SearchResult> CompendiumProvider::searchByName(const QString &title,
     QSqlQuery query(db);
     bool usedFts = false;
     query.prepare(QStringLiteral(
-        "SELECT DISTINCT f.game_id "
-        "FROM games_fts f "
-        "JOIN games g ON g.game_id = f.game_id "
+        "SELECT g.game_id, g.canonical_title, g.primary_region_code, "
+        "       g.release_date, g.release_year, s.internal_name "
+        "FROM games_fts "
+        "JOIN games g ON g.game_id = games_fts.game_id "
+        "JOIN systems s ON s.system_id = g.system_id "
         "WHERE games_fts MATCH ? "
         "AND (? = 0 OR g.system_id = ?) "
         "AND (? = '' OR UPPER(COALESCE(g.primary_region_code, '')) = ?) "
@@ -75,8 +77,10 @@ QList<SearchResult> CompendiumProvider::searchByName(const QString &title,
         // Fallback to LIKE for DBs without FTS5 or malformed queries
         const QString likePattern = QStringLiteral("%%1%").arg(searchTerm);
         query.prepare(QStringLiteral(
-            "SELECT DISTINCT g.game_id "
+            "SELECT g.game_id, g.canonical_title, g.primary_region_code, "
+            "       g.release_date, g.release_year, s.internal_name "
             "FROM games g "
+            "JOIN systems s ON s.system_id = g.system_id "
             "WHERE (? = 0 OR g.system_id = ?) "
             "AND (? = '' OR UPPER(COALESCE(g.primary_region_code, '')) = ?) "
             "AND ("
@@ -86,7 +90,7 @@ QList<SearchResult> CompendiumProvider::searchByName(const QString &title,
             "        WHERE gn.game_id = g.game_id AND LOWER(gn.name_text) LIKE LOWER(?)"
             "    )"
             ") "
-            "ORDER BY LOWER(g.canonical_title) "
+            "ORDER BY LOWER(g.canonical_title), g.game_id "
             "LIMIT 10"));
         query.addBindValue(systemId);
         query.addBindValue(systemId);
@@ -100,52 +104,22 @@ QList<SearchResult> CompendiumProvider::searchByName(const QString &title,
         }
     }
 
-    // Collect result IDs first, then batch-fetch all game data in a single
-    // JOIN query instead of calling fetchGameMetadata() per row (N+1).
-    QStringList ids;
-    while (query.next())
-        ids.append(query.value(0).toString());
-
-    if (ids.isEmpty())
-        return results;
-
-    QStringList placeholders;
-    placeholders.reserve(ids.size());
-    for (int i = 0; i < ids.size(); ++i)
-        placeholders.append(QStringLiteral("?"));
-
-    QSqlQuery batchQuery(db);
-    batchQuery.prepare(QStringLiteral(
-        "SELECT g.game_id, g.canonical_title, g.primary_region_code, "
-        "       g.release_date, g.release_year, s.internal_name "
-        "FROM games g JOIN systems s ON s.system_id = g.system_id "
-        "WHERE g.game_id IN (%1)").arg(placeholders.join(QLatin1Char(',')))
-    );
-    for (const QString &id : ids)
-        batchQuery.addBindValue(id);
-
-    if (!batchQuery.exec()) {
-        qWarning() << "CompendiumProvider::searchByName batch query failed:"
-                   << batchQuery.lastError().text();
-        return results;
-    }
-
     const QString loweredSearch = searchTerm.toLower();
-    while (batchQuery.next()) {
-        const QString gameId = batchQuery.value(0).toString();
-        const QString title  = batchQuery.value(1).toString();
+    while (query.next()) {
+        const QString gameId = query.value(0).toString();
+        const QString title  = query.value(1).toString();
         if (gameId.isEmpty() || title.isEmpty())
             continue;
 
         SearchResult result;
         result.id     = gameId;
         result.title  = title;
-        result.region = batchQuery.value(2).toString();
-        const QString releaseDate = batchQuery.value(3).toString();
+        result.region = query.value(2).toString();
+        const QString releaseDate = query.value(3).toString();
         result.releaseYear = !releaseDate.isEmpty()
             ? releaseYearFromDate(releaseDate)
-            : batchQuery.value(4).toInt();
-        result.system = batchQuery.value(5).toString();
+            : query.value(4).toInt();
+        result.system = query.value(5).toString();
 
         const QString loweredTitle = title.toLower();
         if (loweredTitle == loweredSearch)

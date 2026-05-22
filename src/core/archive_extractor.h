@@ -1,6 +1,6 @@
 #pragma once
 
-#include "external_tool_runner.h"
+#include <QObject>
 #include <QString>
 #include <QStringList>
 #include <QMap>
@@ -48,16 +48,11 @@ struct ExtractionResult {
 };
 
 /**
- * @brief Archive extractor supporting ZIP, 7z, and RAR formats
- * 
- * Uses external tools for extraction:
- * - ZIP: unzip (standard on most systems)
- * - 7z: 7z or 7za (7-zip command line)
- * - RAR: unrar or rar
- * 
- * Automatically detects format from file extension.
+ * @brief Archive extractor supporting ZIP, 7z, RAR, gzip, and tar formats.
+ *
+ * Uses libarchive for all extraction — no external tools required.
  */
-class ArchiveExtractor : public ExternalToolRunner {
+class ArchiveExtractor : public QObject {
     Q_OBJECT
 
 public:
@@ -65,23 +60,17 @@ public:
     ~ArchiveExtractor() = default;
 
     /**
-     * @brief Check which extraction tools are available
-     * @return Map of format -> available
+     * @brief Check which extraction formats are available (always all supported formats).
      */
     QMap<ArchiveFormat, bool> getAvailableTools() const;
 
-    /**
-     * @brief Check if a specific format can be extracted
-     */
     bool canExtract(ArchiveFormat format) const;
     bool canExtract(const QString &path) const;
 
-    /**
-     * @brief Set custom path for extraction tools
-     */
-    void setUnzipPath(const QString &path);
-    void setSevenZipPath(const QString &path);
-    void setUnrarPath(const QString &path);
+    // No-op setters kept for API compatibility
+    void setUnzipPath(const QString &) {}
+    void setSevenZipPath(const QString &) {}
+    void setUnrarPath(const QString &) {}
 
     /**
      * @brief Get information about an archive without extracting
@@ -89,7 +78,7 @@ public:
     ArchiveInfo getArchiveInfo(const QString &path);
 
     /**
-     * @brief Detect archive format from file path
+     * @brief Detect archive format from file extension
      */
     static ArchiveFormat detectFormat(const QString &path);
 
@@ -101,57 +90,40 @@ public:
 
     /**
      * @brief Extract archive to directory
-     * @param archivePath Path to archive file
-     * @param outputDir Output directory (optional, uses archive directory)
-     * @param createSubfolder Create subfolder with archive name
-     * @return Extraction result
+     * @param archivePath   Path to archive file
+     * @param outputDir     Output directory (defaults to archive's directory)
+     * @param createSubfolder Create subfolder named after the archive stem
      */
     ExtractionResult extract(const QString &archivePath,
                              const QString &outputDir = QString(),
                              bool createSubfolder = false);
 
     /**
-     * @brief Extract specific file from archive
-     * @param archivePath Path to archive
-     * @param fileName File to extract (relative path within archive)
-     * @param outputDir Output directory
-     * @return Extraction result
+     * @brief Extract a single named member from an archive
      */
     ExtractionResult extractFile(const QString &archivePath,
-                                  const QString &fileName,
-                                  const QString &outputDir);
+                                 const QString &fileName,
+                                 const QString &outputDir);
 
     /**
      * @brief Batch extract multiple archives
-     * @param archivePaths List of archive paths
-     * @param outputDir Output directory for all
-     * @param createSubfolders Create subfolder for each archive
-     * @return List of extraction results
      */
     QList<ExtractionResult> batchExtract(const QStringList &archivePaths,
-                                          const QString &outputDir = QString(),
-                                          bool createSubfolders = true);
+                                         const QString &outputDir = QString(),
+                                         bool createSubfolders = true);
 
     /**
-     * @brief Stream the first maxBytes bytes from an archive member without full extraction.
+     * @brief Stream the first maxBytes bytes from an archive member.
      *
-     * Starts the appropriate extraction tool with stdout output (7z -so, unzip -p),
-     * reads up to maxBytes from the stream, then kills the process. Safe for very
-     * large members — only the requested prefix is decompressed.
-     *
-     * Intended for disc magic-byte detection, which requires at most 64 KB of
-     * the disc image regardless of its compressed size.
-     *
-     * @param archivePath Path to archive file
-     * @param memberPath  Member path within the archive
-     * @param maxBytes    Maximum number of bytes to read
-     * @return Raw bytes from the start of the member, empty on failure
+     * Decompresses only the requested prefix — suitable for disc magic-byte
+     * detection without extracting the full member.
      */
     QByteArray readMemberPrefix(const QString &archivePath,
-                                 const QString &memberPath,
-                                 qint64 maxBytes);
+                                const QString &memberPath,
+                                qint64 maxBytes);
 
-
+    void cancel() { m_cancelled = true; }
+    bool isRunning() const { return false; }  // extraction is synchronous
 
 signals:
     void extractionStarted(const QString &archivePath, const QString &outputDir);
@@ -160,25 +132,12 @@ signals:
     void batchProgress(int completed, int total);
     void errorOccurred(const QString &error);
 
-protected:
-    virtual QStringList listFiles(const QString &dirPath) const;
-
 private:
-    static bool isPathWithinDirectory(const QString &rootPath, const QString &candidatePath);
-    static QString validateArchiveEntries(const ArchiveInfo &info);
-    static QString validateExtractedFiles(const QString &outputDir, const QStringList &files);
+    bool m_cancelled = false;
 
-    ExtractionResult extractZip(const QString &archivePath, const QString &outputDir);
-    ExtractionResult extract7z(const QString &archivePath, const QString &outputDir);
-    ExtractionResult extractRar(const QString &archivePath, const QString &outputDir);
-    
-    bool isToolAvailable(const QString &tool) const;
-    QString findTool(const QStringList &candidates) const;
-    
-    QString m_unzipPath;
-    QString m_sevenZipPath;
-    QString m_unrarPath;
-    
+    ExtractionResult extractToDir(const QString &archivePath,
+                                  const QString &outputDir,
+                                  const QString &singleMember = QString());
 };
 
 } // namespace Remus

@@ -71,10 +71,16 @@ bool seedCompendium(QSqlDatabase &db)
     if (!execSql(db, QStringLiteral("INSERT INTO games (game_id, system_id, canonical_title, primary_region_code, release_year, canonical_confidence) VALUES ('game-1', 4, 'Paper Mario: The Thousand-Year Door', 'USA', 2004, 0.95)"))) {
         return false;
     }
+    if (!execSql(db, QStringLiteral("INSERT INTO games (game_id, system_id, canonical_title, primary_region_code, release_year, canonical_confidence) VALUES ('game-2', 4, 'Paper Mario', 'USA', 2001, 0.93)"))) {
+        return false;
+    }
     if (!execSql(db, QStringLiteral("INSERT INTO game_names (game_id, name_text, alias_type, confidence) VALUES ('game-1', 'TTYD', 'alt_name', 0.95)"))) {
         return false;
     }
     if (!execSql(db, QStringLiteral("INSERT INTO game_names (game_id, name_text, alias_type, confidence) VALUES ('game-1', 'Paper Mario: The Thousand-Year Door', 'official', 1.0)"))) {
+        return false;
+    }
+    if (!execSql(db, QStringLiteral("INSERT INTO game_names (game_id, name_text, alias_type, confidence) VALUES ('game-2', 'Paper Mario', 'official', 1.0)"))) {
         return false;
     }
     if (!execSql(db, QStringLiteral("INSERT INTO game_signatures (game_id, hash_type, hash_value, confidence, is_primary) VALUES ('game-1', 'md5', '0123456789abcdef0123456789abcdef', 1.0, 1)"))) {
@@ -149,6 +155,7 @@ private slots:
     void getByHashReturnsCanonicalMetadata();
     void searchByNameUsesAliasAndFilters();
     void searchByNameWithOfficialTitleReturnsSameGame();
+    void searchByNameKeepsBestMatchFirst();
     void getBySerialReturnsCanonicalMetadata();
     void getByIdReturnsExternalIds();
     void getArtworkBuildsLibretroThumbnailUrls();
@@ -251,6 +258,33 @@ void CompendiumProviderTest::searchByNameWithOfficialTitleReturnsSameGame()
 
     // Both search paths must yield the same canonical game id.
     QCOMPARE(byTitle.first().id, byAlias.first().id);
+}
+
+void CompendiumProviderTest::searchByNameKeepsBestMatchFirst()
+{
+    const QString dbPath = createFixtureDatabase();
+    QVERIFY(!dbPath.isEmpty());
+
+    CompendiumProvider provider;
+    QVERIFY(provider.openDatabase(dbPath));
+
+    const QList<SearchResult> results = provider.searchByName(
+        QStringLiteral("Paper Mario"),
+        QStringLiteral("GameCube"),
+        QStringLiteral("USA"));
+
+    QVERIFY(results.size() >= 2);
+    QCOMPARE(results.first().id, QStringLiteral("game-2"));
+    QCOMPARE(results.first().title, QStringLiteral("Paper Mario"));
+
+    bool foundLongTitle = false;
+    for (const SearchResult &result : results) {
+        if (result.id == QStringLiteral("game-1")) {
+            foundLongTitle = true;
+            break;
+        }
+    }
+    QVERIFY(foundLongTitle);
 }
 
 void CompendiumProviderTest::getBySerialReturnsCanonicalMetadata()
