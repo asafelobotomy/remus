@@ -249,7 +249,10 @@ for mame_candidate in mame mame64 mame-arcade; do
     fi
 done
 
-# Step 2: no local binary — download the Linux release from mamedev/mame
+# Step 2: no local binary — download the Linux release from mamedev/mame.
+#   Strategy A: the release zip bundles a pre-built mame*.xml listing — use it
+#               directly (no binary execution required).
+#   Strategy B: extract the MAME binary from the zip and run -listxml.
 if [[ -z "$mame_bin" ]]; then
     echo "  No local MAME binary — fetching from mamedev/mame GitHub releases..."
     mame_lx_url=$(curl -fsSL --max-time 30 \
@@ -265,17 +268,28 @@ print(url)
     if [[ -n "$mame_lx_url" ]]; then
         mame_bin_tmp="$(mktemp -d)"
         mame_lx_zip="$mame_bin_tmp/mame_lx.zip"
-        echo "  Downloading $(basename "$mame_lx_url") (~19 MB)..."
-        if curl -fsSL -o "$mame_lx_zip" --max-time 300 "$mame_lx_url"; then
-            mame_inner=$(unzip -l "$mame_lx_zip" 2>/dev/null \
-                | awk '/[[:space:]]mame[^\/]*$/ { print $NF; exit }')
-            if [[ -n "$mame_inner" ]] \
-               && unzip -o -q "$mame_lx_zip" "$mame_inner" -d "$mame_bin_tmp"; then
-                chmod +x "$mame_bin_tmp/$mame_inner"
-                mame_bin="$mame_bin_tmp/$mame_inner"
-                echo "  Extracted: $mame_inner"
+        echo "  Downloading $(basename "$mame_lx_url")..."
+        if curl -fsSL -o "$mame_lx_zip" --max-time 600 "$mame_lx_url"; then
+            # Strategy A: prefer a pre-built XML bundled in the release zip
+            mame_xml_inner=$(unzip -l "$mame_lx_zip" 2>/dev/null \
+                | awk '/[[:space:]]mame[^\/]*\.xml$/ { print $NF; exit }')
+            if [[ -n "$mame_xml_inner" ]] \
+               && unzip -o -q "$mame_lx_zip" "$mame_xml_inner" -d "$mame_bin_tmp"; then
+                mame_xml_tmp="$mame_bin_tmp/$mame_xml_inner"
+                echo "  Using bundled XML: $mame_xml_inner"
             else
-                echo "  Warning: could not extract MAME binary from zip"
+                # Strategy B: extract and run the MAME binary
+                # Explicitly exclude .xml files so we match only the binary.
+                mame_inner=$(unzip -l "$mame_lx_zip" 2>/dev/null \
+                    | awk '!/\.xml$/ && /[[:space:]]mame[^\/]*$/ { print $NF; exit }')
+                if [[ -n "$mame_inner" ]] \
+                   && unzip -o -q "$mame_lx_zip" "$mame_inner" -d "$mame_bin_tmp"; then
+                    chmod +x "$mame_bin_tmp/$mame_inner"
+                    mame_bin="$mame_bin_tmp/$mame_inner"
+                    echo "  Extracted binary: $mame_inner"
+                else
+                    echo "  Warning: could not extract MAME binary or XML from zip"
+                fi
             fi
         else
             echo "  Warning: failed to download MAME Linux release"
@@ -285,18 +299,32 @@ print(url)
     fi
 fi
 
-if [[ -n "$mame_bin" && -x "$mame_bin" ]]; then
+# If we have a binary but no pre-built XML, run -listxml to produce the XML.
+mame_detected_ver=""
+if [[ -z "$mame_xml_tmp" ]] && [[ -n "$mame_bin" && -x "$mame_bin" ]]; then
     mame_detected_ver=$("$mame_bin" -version 2>/dev/null \
         | head -1 | grep -oE '[0-9]+\.[0-9]+' | head -1 || echo "")
     echo "  MAME version: ${mame_detected_ver:-unknown}"
-    mame_out_dat="$MAME_DIR/MAME${mame_detected_ver:+ $mame_detected_ver} ROMs.dat"
-
     echo "  Running: mame -listxml  (may take ~30 s, uses ~400 MB temp space)..."
     mame_xml_tmp="$(mktemp -t mame_listxml_XXXXXX.xml)"
-    if "$mame_bin" -listxml > "$mame_xml_tmp" 2>/dev/null \
-       && [[ -s "$mame_xml_tmp" ]]; then
-        echo "  Converting listxml → Logiqx XML DAT..."
-        if python3 - "$mame_xml_tmp" "$mame_out_dat" <<'PYEOF'
+    if ! "$mame_bin" -listxml > "$mame_xml_tmp" 2>/dev/null \
+       || [[ ! -s "$mame_xml_tmp" ]]; then
+        echo "  Warning: mame -listxml produced no output"
+        rm -f "$mame_xml_tmp"
+        mame_xml_tmp=""
+    fi
+fi
+
+if [[ -n "$mame_xml_tmp" && -s "$mame_xml_tmp" ]]; then
+    # Version for the output filename: prefer the value obtained from -version;
+    # fall back to the number embedded in the XML filename (e.g. mame0287.xml → 0287).
+    if [[ -z "$mame_detected_ver" ]]; then
+        mame_detected_ver=$(basename "$mame_xml_tmp" .xml \
+            | grep -oE '[0-9]+' | head -1 || echo "")
+    fi
+    mame_out_dat="$MAME_DIR/MAME${mame_detected_ver:+ $mame_detected_ver} ROMs.dat"
+    echo "  Converting MAME XML → Logiqx XML DAT..."
+    if python3 - "$mame_xml_tmp" "$mame_out_dat" <<'PYEOF'
 import sys
 import xml.etree.ElementTree as ET
 
@@ -360,14 +388,11 @@ with open(dst, "w", encoding="utf-8") as f:
 
 print(f"  MAME DAT: {dst} ({count} machines)")
 PYEOF
-        then
-            copied=$((copied + 1))
-        else
-            echo "  Warning: listxml → DAT conversion failed"
-            rm -f "$mame_out_dat"
-        fi
+    then
+        copied=$((copied + 1))
     else
-        echo "  Warning: mame -listxml produced no output"
+        echo "  Warning: MAME XML → DAT conversion failed"
+        rm -f "$mame_out_dat"
     fi
     rm -f "$mame_xml_tmp"
     mame_xml_tmp=""
@@ -376,7 +401,7 @@ PYEOF
         mame_bin_tmp=""
     fi
 else
-    echo "  Warning: no usable MAME binary found."
+    echo "  Warning: no usable MAME binary or bundled XML found."
     echo "  To add arcade/MAME coverage, either:"
     echo "    1. Install MAME and re-run:  pacman -S mame       (Arch/Manjaro)"
     echo "                                 apt install mame     (Debian/Ubuntu)"
