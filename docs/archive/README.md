@@ -12,7 +12,7 @@ This folder contains documentation from completed, superseded, or historical wor
 
 ### TUI Retrospectives
 - **TUIRetrospective.md** - Post-mortem on the ncurses TUI approach
-- **tui-retrospective.md** - Supplemental TUI retrospective notes
+- **tui-retrospective-supplemental.md** - Supplemental TUI retrospective notes
 
 ### Historical Design Documents
 - **UNIFIED-WORKFLOW-DESIGN.md** - Early unified workflow design (superseded)

@@ -23,8 +23,8 @@ Documentation index for Remus.
 - [architecture/README.md](architecture/README.md) - Architecture and design docs
 - [data-model.md](data-model.md) - SQLite data model
 - [requirements.md](requirements.md) - Requirements and scope
-- [plan.md](plan.md) - Roadmap and milestone plan
-- [plans/archive-format-backlog.md](plans/archive-format-backlog.md) - Concrete backlog for CSO, WBFS normalization, and PBP export
+- [plan.md](plan.md) - High-level product strategy and roadmap (stable reference)
+- [plans/](plans/) - Execution plans for specific features and time periods (active, time-stamped)
 - [adr/adr-0002-use-system-specific-canonical-archive-formats.md](adr/adr-0002-use-system-specific-canonical-archive-formats.md) - Locked archive policy for future format work
 - [metadata-providers.md](metadata-providers.md) - Metadata provider details
 - [cli/README.md](cli/README.md) - CLI implementation docs
