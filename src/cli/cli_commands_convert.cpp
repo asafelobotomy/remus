@@ -51,7 +51,7 @@ int handleConvertRvzCommand(CliContext &ctx)
     qInfo() << "Compression:" << compressionStr;
     qInfo() << "";
 
-    if (ctx.dryRunAll) {
+    if (ctx.dryRunAll || ctx.parser.isSet(QStringLiteral("dry-run"))) {
         qInfo() << "[DRY-RUN] Would convert" << inputPath << "to" << outputPath;
         return 0;
     }
@@ -84,7 +84,7 @@ int handleRvzExtractCommand(CliContext &ctx)
     qInfo() << "Output:" << outputPath;
     qInfo() << "";
 
-    if (ctx.dryRunAll) {
+    if (ctx.dryRunAll || ctx.parser.isSet(QStringLiteral("dry-run"))) {
         qInfo() << "[DRY-RUN] Would extract" << rvzPath << "to" << outputPath;
         return 0;
     }
@@ -159,7 +159,7 @@ int handleConvertCsoCommand(CliContext &ctx)
     qInfo() << "Output:" << outputPath;
     qInfo() << "";
 
-    if (ctx.dryRunAll) {
+    if (ctx.dryRunAll || ctx.parser.isSet(QStringLiteral("dry-run"))) {
         qInfo() << "[DRY-RUN] Would convert" << inputPath << "to" << outputPath;
         return 0;
     }
@@ -192,7 +192,7 @@ int handleCsoExtractCommand(CliContext &ctx)
     qInfo() << "Output:" << outputPath;
     qInfo() << "";
 
-    if (ctx.dryRunAll) {
+    if (ctx.dryRunAll || ctx.parser.isSet(QStringLiteral("dry-run"))) {
         qInfo() << "[DRY-RUN] Would extract" << csoPath << "to" << outputPath;
         return 0;
     }
@@ -239,7 +239,7 @@ int handleConvertWbfsCommand(CliContext &ctx)
     qInfo() << "Output:" << outputPath;
     qInfo() << "";
 
-    if (ctx.dryRunAll) {
+    if (ctx.dryRunAll || ctx.parser.isSet(QStringLiteral("dry-run"))) {
         qInfo() << "[DRY-RUN] Would convert" << inputPath << "to" << outputPath;
         return 0;
     }
@@ -272,7 +272,7 @@ int handleWbfsExtractCommand(CliContext &ctx)
     qInfo() << "Output:" << outputPath;
     qInfo() << "";
 
-    if (ctx.dryRunAll) {
+    if (ctx.dryRunAll || ctx.parser.isSet(QStringLiteral("dry-run"))) {
         qInfo() << "[DRY-RUN] Would extract" << wbfsPath << "to" << outputPath;
         return 0;
     }
@@ -321,7 +321,7 @@ int handleExportPBPCommand(CliContext &ctx)
     qInfo() << "Output:" << outputPath;
     qInfo() << "";
 
-    if (ctx.dryRunAll) {
+    if (ctx.dryRunAll || ctx.parser.isSet(QStringLiteral("dry-run"))) {
         qInfo() << "[DRY-RUN] Would export" << inputPath << "to" << outputPath;
         return 0;
     }

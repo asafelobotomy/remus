@@ -204,6 +204,8 @@ int main(int argc, char *argv[])
         if (ctx.presetDiscFormat.isEmpty())    ctx.presetDiscFormat    = QStringLiteral("chd");
         if (ctx.presetFolderNaming.isEmpty())  ctx.presetFolderNaming  = QStringLiteral("default");
         if (ctx.presetDisplayName.isEmpty())   ctx.presetDisplayName   = QStringLiteral("library");
+        if (ctx.processOutputPath.isEmpty())
+            qWarning() << "remus: --library used without --output; bundling and organizing will be skipped";
     }
 
     // --file-id: populate processFileScopeIds so all scope-aware commands

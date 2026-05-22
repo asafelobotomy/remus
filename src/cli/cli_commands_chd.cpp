@@ -41,7 +41,7 @@ int handleConvertChdCommand(CliContext &ctx)
     qInfo() << "Codec:"  << codecStr;
     qInfo() << "";
 
-    if (ctx.dryRunAll) {
+    if (ctx.dryRunAll || ctx.parser.isSet(QStringLiteral("dry-run"))) {
         qInfo() << "[DRY-RUN] Would convert" << inputPath << "to" << outputPath << "using" << codecStr;
         return 0;
     }
@@ -85,7 +85,7 @@ int handleChdExtractCommand(CliContext &ctx)
     qInfo() << "Output:" << outputPath;
     qInfo() << "";
 
-    if (ctx.dryRunAll) {
+    if (ctx.dryRunAll || ctx.parser.isSet(QStringLiteral("dry-run"))) {
         qInfo() << "[DRY-RUN] Would extract" << chdPath << "to" << outputPath;
         return 0;
     }
@@ -169,17 +169,7 @@ int handleExtractArchiveCommand(CliContext &ctx)
     qInfo() << "Archive:" << archivePath;
 
     ArchiveExtractor extractor;
-    QMap<ArchiveFormat, bool> tools = extractor.getAvailableTools();
-    QStringList available;
-    if (tools.value(ArchiveFormat::ZIP))     available << "unzip";
-    if (tools.value(ArchiveFormat::SevenZip)) available << "7z";
-    if (tools.value(ArchiveFormat::RAR))     available << "unrar";
-
-    if (available.isEmpty()) {
-        qCritical() << "✗ No extraction tools found (need unzip, 7z, or unrar)";
-        return 1;
-    }
-    qInfo() << "Available tools:" << available.join(", ");
+    qInfo() << "Backend: libarchive (built-in)";
 
     ArchiveFormat format = extractor.detectFormat(archivePath);
     if (format == ArchiveFormat::Unknown) { qCritical() << "✗ Unknown archive format"; return 1; }
@@ -193,7 +183,7 @@ int handleExtractArchiveCommand(CliContext &ctx)
     qInfo() << "Output:" << outputDir;
     qInfo() << "";
 
-    if (ctx.dryRunAll) {
+    if (ctx.dryRunAll || ctx.parser.isSet(QStringLiteral("dry-run"))) {
         qInfo() << "[DRY-RUN] Would extract" << archivePath << "to" << outputDir;
         return 0;
     }

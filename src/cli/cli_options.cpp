@@ -56,7 +56,7 @@ void registerAllOptions(QCommandLineParser &parser, QSet<QString> &actionOptions
     addActionOption(QCommandLineOption("enrich", "Enrich matched games with metadata from providers (fills empty description, genre, players)"));
 
     addActionOption(QCommandLineOption("verify",        "Verify files against DAT file",          "dat-file"));
-    addActionOption(QCommandLineOption("verify-report", "Generate detailed verification report"));
+    addOption(QCommandLineOption("verify-report", "Generate detailed verification report"));
     addActionOption(QCommandLineOption("patch-dat-import", "Deprecated no-op: manual patch catalog import has been replaced by bundled compendium data", "dat-file"));
     addOption(QCommandLineOption("patch-dat-system", "Legacy system name argument for deprecated patch catalog import", "system"));
     addActionOption(QCommandLineOption("patch-dat-list", "List patch catalogs available from the bundled compendium when present"));
@@ -79,7 +79,7 @@ void registerAllOptions(QCommandLineParser &parser, QSet<QString> &actionOptions
     addOption(QCommandLineOption("dry-run-all", "Preview file outputs for all file-writing actions"));
 
     addActionOption(QCommandLineOption("bundle",        "Fetch metadata, download box art, and repack matched ROMs into self-contained archives", "destination"));
-    addOption(QCommandLineOption("bundle-format", "Output archive format for bundles (zip, default: zip)", "format", Constants::Cli::Defaults::BUNDLE_FORMAT));
+    addOption(QCommandLineOption("bundle-format", "Output archive format for bundles (zip|7z, default: zip)", "format", Constants::Cli::Defaults::BUNDLE_FORMAT));
     addOption(QCommandLineOption("bundle-art-dir","Optional pre-downloaded artwork directory (avoids re-downloading box art)", "directory"));
     addOption(QCommandLineOption("bundle-disc-format", "Disc media packaging inside bundles (original|chd|rvz, default: chd). When chd is requested, the planner auto-selects: RVZ for GameCube/Wii, CSO for PSP, CHD for all other disc formats.", "format", Constants::Cli::Defaults::BUNDLE_DISC_FORMAT));
 
@@ -164,7 +164,7 @@ void registerAllOptions(QCommandLineParser &parser, QSet<QString> &actionOptions
     addActionOption(QCommandLineOption("chd-extract",     "Extract CHD back to BIN/CUE",                         "chdfile"));
     addActionOption(QCommandLineOption("chd-verify",      "Verify CHD file integrity",                           "chdfile"));
     addActionOption(QCommandLineOption("chd-info",        "Show CHD file information",                           "chdfile"));
-    addActionOption(QCommandLineOption("extract-archive", "Extract archive (ZIP/7z/RAR)",                        "path"));
+    addActionOption(QCommandLineOption("extract-archive", "Extract archive (ZIP/7z/RAR/tar/gz/xz via libarchive)", "path"));
     addActionOption(QCommandLineOption("space-report",    "Show potential CHD conversion savings",               "directory"));
     addActionOption(QCommandLineOption("convert-rvz",     "Convert GameCube/Wii ISO to RVZ format",              "path"));
     addOption(QCommandLineOption("rvz-compression", "RVZ compression (zstd, bzip2, lzma, lzma2, none, auto)", "compression", "auto"));
