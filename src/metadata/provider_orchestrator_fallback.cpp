@@ -156,6 +156,10 @@ GameMetadata ProviderOrchestrator::getByHashWithFallback(const QString &hash,
 
     if (m_cache) {
         const GameMetadata cached = m_cache->getByHash(hash, system);
+        if (cached.id == QLatin1String("__miss__")) {
+            qInfo() << "Cached negative miss for hash:" << hash;
+            return {};
+        }
         if (!cached.title.isEmpty()) {
             qInfo() << "Cache hit for hash:" << hash << "-" << cached.title;
             return cached;
@@ -203,6 +207,8 @@ GameMetadata ProviderOrchestrator::getByHashWithFallback(const QString &hash,
     }
 
     qDebug() << "No hash match from" << hashProviders.size() << "providers for:" << hash;
+    if (m_cache)
+        m_cache->storeNegativeMiss(hash, system);
     emit allProvidersFailed();
     return GameMetadata();
 }

@@ -223,6 +223,27 @@ bool MetadataCache::store(const GameMetadata &metadata, const QString &hash, con
     return true;
 }
 
+bool MetadataCache::storeNegativeMiss(const QString &hash, const QString &system)
+{
+    if (hash.isEmpty() || system.isEmpty())
+        return false;
+
+    static const QByteArray kMissPayload = QByteArrayLiteral("{\"id\":\"__miss__\"}");
+    QSqlQuery query(m_db);
+    query.prepare(R"(
+        INSERT OR REPLACE INTO cache (cache_key, cache_value, expiry)
+        VALUES (?, ?, datetime('now', '+7 days'))
+    )");
+    query.addBindValue(QString("metadata:hash:%1:%2").arg(system, hash));
+    query.addBindValue(kMissPayload);
+    if (!query.exec()) {
+        qCWarning(logMetadata) << "Failed to store negative miss for hash:" << hash
+                               << query.lastError().text();
+        return false;
+    }
+    return true;
+}
+
 bool MetadataCache::storeArtwork(const QString &gameId, const ArtworkUrls &artwork)
 {
     QJsonObject json;

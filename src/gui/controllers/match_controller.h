@@ -1,5 +1,6 @@
 #pragma once
 
+#include <QList>
 #include <QObject>
 #include <QPointer>
 
@@ -56,6 +57,7 @@ private:
     float calculateNameSimilarity(const QString &left, const QString &right) const;
     void setLastMessage(const QString &message);
     void updateUnconfirmedCount();
+    void doMatchNext();
 
     AppController *m_appController;
     MatchListModel *m_model = nullptr;
@@ -67,6 +69,10 @@ private:
     QString m_currentProvider;
     QString m_lastMessage;
     int m_unconfirmedMatchCount = 0;
+    // State for the event-loop-friendly matchAll() pass
+    QList<FileRecord> m_matchAllFiles;
+    int m_matchAllIndex = 0;
+    int m_matchAllCount = 0;
 };
 
 } // namespace Remus

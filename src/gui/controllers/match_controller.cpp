@@ -2,6 +2,7 @@
 
 #include <QCoreApplication>
 #include <QFileInfo>
+#include <QMetaObject>
 #include <QSqlError>
 #include <QSqlQuery>
 #include <QVector>
@@ -123,34 +124,58 @@ void MatchController::matchAll()
     m_matching = true;
     m_matchedFiles    = 0;
     m_totalMatchFiles = 0;
+    m_matchAllIndex   = 0;
+    m_matchAllCount   = 0;
     m_progressMessage = QStringLiteral("Matching files\u2026");
     emit matchingChanged();
     emit matchProgressChanged();
     emit progressMessageChanged();
 
-    int matchedCount = 0;
-    const QList<FileRecord> files = m_appController->database()->getExistingFiles();
-    m_totalMatchFiles = files.size();
+    m_matchAllFiles = m_appController->database()->getExistingFiles();
+    m_totalMatchFiles = m_matchAllFiles.size();
     emit matchProgressChanged();
 
-    for (const FileRecord &file : files) {
-        m_progressMessage = QStringLiteral("Matching %1 / %2\u2026").arg(m_matchedFiles + 1).arg(m_totalMatchFiles);
+    // Process one file per event-loop iteration so the UI stays live and
+    // the event loop can deliver network replies between files without
+    // needing processEvents().
+    QMetaObject::invokeMethod(this, &MatchController::doMatchNext, Qt::QueuedConnection);
+}
+
+void MatchController::doMatchNext()
+{
+    if (m_matchAllIndex >= m_matchAllFiles.size()) {
+        const int total = m_matchAllFiles.size();
+        m_matching = false;
+        m_progressMessage = QStringLiteral("Matched %1 of %2 files.").arg(m_matchAllCount).arg(total);
+        emit matchingChanged();
         emit progressMessageChanged();
-        if (matchFileRecord(file)) {
-            matchedCount++;
-        }
-        m_matchedFiles++;
-        emit matchProgressChanged();
-        QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
+        setLastMessage(m_progressMessage);
+        m_matchAllFiles.clear();
+        refreshModel();
+        emit libraryChanged();
+        return;
     }
 
-    m_matching = false;
-    m_progressMessage = QStringLiteral("Matched %1 of %2 files.").arg(matchedCount).arg(files.size());
-    emit matchingChanged();
+    // Guard: library may have been closed between iterations.
+    if (m_appController == nullptr || !m_appController->isLibraryOpen()) {
+        m_matching = false;
+        m_matchAllFiles.clear();
+        emit matchingChanged();
+        return;
+    }
+
+    const FileRecord file = m_matchAllFiles.at(m_matchAllIndex);
+    m_progressMessage = QStringLiteral("Matching %1 / %2\u2026")
+                            .arg(m_matchAllIndex + 1)
+                            .arg(m_matchAllFiles.size());
     emit progressMessageChanged();
-    setLastMessage(QStringLiteral("Matched %1 of %2 files.").arg(matchedCount).arg(files.size()));
-    refreshModel();
-    emit libraryChanged();
+
+    if (matchFileRecord(file))
+        m_matchAllCount++;
+    m_matchedFiles = ++m_matchAllIndex;
+    emit matchProgressChanged();
+
+    QMetaObject::invokeMethod(this, &MatchController::doMatchNext, Qt::QueuedConnection);
 }
 
 void MatchController::confirmSelected()
@@ -365,6 +390,13 @@ void MatchController::clearState()
     if (!m_currentProvider.isEmpty()) {
         m_currentProvider.clear();
         emit currentProviderChanged();
+    }
+    // Stop any in-progress matchAll() pass.
+    m_matchAllFiles.clear();
+    m_matchAllIndex = 0;
+    if (m_matching) {
+        m_matching = false;
+        emit matchingChanged();
     }
 }
 

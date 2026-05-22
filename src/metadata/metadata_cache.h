@@ -59,6 +59,12 @@ public:
     ArtworkUrls getArtwork(const QString &gameId);
 
     /**
+     * @brief Record a negative lookup result so the same hash is not
+     *        re-queried until the entry expires (7 days).
+     */
+    bool storeNegativeMiss(const QString &hash, const QString &system);
+
+    /**
      * @brief Clear cache older than specified days
      * @param days Age threshold
      * @return Number of entries deleted

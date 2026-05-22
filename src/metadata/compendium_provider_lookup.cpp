@@ -100,28 +100,60 @@ QList<SearchResult> CompendiumProvider::searchByName(const QString &title,
         }
     }
 
+    // Collect result IDs first, then batch-fetch all game data in a single
+    // JOIN query instead of calling fetchGameMetadata() per row (N+1).
+    QStringList ids;
+    while (query.next())
+        ids.append(query.value(0).toString());
+
+    if (ids.isEmpty())
+        return results;
+
+    QStringList placeholders;
+    placeholders.reserve(ids.size());
+    for (int i = 0; i < ids.size(); ++i)
+        placeholders.append(QStringLiteral("?"));
+
+    QSqlQuery batchQuery(db);
+    batchQuery.prepare(QStringLiteral(
+        "SELECT g.game_id, g.canonical_title, g.primary_region_code, "
+        "       g.release_date, g.release_year, s.internal_name "
+        "FROM games g JOIN systems s ON s.system_id = g.system_id "
+        "WHERE g.game_id IN (%1)").arg(placeholders.join(QLatin1Char(',')))
+    );
+    for (const QString &id : ids)
+        batchQuery.addBindValue(id);
+
+    if (!batchQuery.exec()) {
+        qWarning() << "CompendiumProvider::searchByName batch query failed:"
+                   << batchQuery.lastError().text();
+        return results;
+    }
+
     const QString loweredSearch = searchTerm.toLower();
-    while (query.next()) {
-        const QString gameId = query.value(0).toString();
-        const GameMetadata metadata = fetchGameMetadata(gameId);
-        if (metadata.id.isEmpty())
+    while (batchQuery.next()) {
+        const QString gameId = batchQuery.value(0).toString();
+        const QString title  = batchQuery.value(1).toString();
+        if (gameId.isEmpty() || title.isEmpty())
             continue;
 
         SearchResult result;
-        result.id = metadata.id;
-        result.title = metadata.title;
-        result.system = metadata.system;
-        result.region = metadata.region;
-        result.releaseYear = releaseYearFromDate(metadata.releaseDate);
+        result.id     = gameId;
+        result.title  = title;
+        result.region = batchQuery.value(2).toString();
+        const QString releaseDate = batchQuery.value(3).toString();
+        result.releaseYear = !releaseDate.isEmpty()
+            ? releaseYearFromDate(releaseDate)
+            : batchQuery.value(4).toInt();
+        result.system = batchQuery.value(5).toString();
 
-        const QString loweredTitle = metadata.title.toLower();
-        if (loweredTitle == loweredSearch) {
+        const QString loweredTitle = title.toLower();
+        if (loweredTitle == loweredSearch)
             result.matchScore = 1.0f;
-        } else if (loweredTitle.startsWith(loweredSearch)) {
+        else if (loweredTitle.startsWith(loweredSearch))
             result.matchScore = 0.9f;
-        } else {
+        else
             result.matchScore = 0.7f;
-        }
 
         results.append(result);
     }
