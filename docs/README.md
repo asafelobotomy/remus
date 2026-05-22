@@ -33,19 +33,19 @@ Documentation index for Remus.
 
 - [guides/TESTING-GUIDE.md](guides/TESTING-GUIDE.md) - Testing guide
 - [reports/README.md](reports/README.md) - Test and implementation reports
-- [milestones/README.md](milestones/README.md) - Milestone completion docs
+- [archive/milestones/README.md](archive/milestones/README.md) - Milestone completion docs *(archived)*
 
 ## Historical Material
 
 - [archive/README.md](archive/README.md) - Archived design/theming docs
-- [reports/legacy/](reports/legacy/) - Legacy implementation and audit reports moved from docs root
+- [archive/reports/legacy/](archive/reports/legacy/) - Legacy implementation and audit reports *(archived)*
 
 ## Documentation Placement Rules
 
 1. User-facing guides: `docs/` root
 2. Architecture/design docs: `docs/architecture/`
-3. Milestone completion docs: `docs/milestones/`
+3. Milestone completion docs: `docs/archive/milestones/` *(archived)*
 4. Test and implementation reports: `docs/reports/`
-5. Historical/legacy documents: `docs/archive/` or `docs/reports/legacy/`
+5. Historical/legacy documents: `docs/archive/` or `docs/archive/reports/legacy/`
 
 See also: [CONTRIBUTING.md](CONTRIBUTING.md) for documentation contribution workflow.

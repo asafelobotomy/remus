@@ -1,10 +1,12 @@
 # Constants Library Implementation Guide
 
+> **Status: COMPLETE** — The constants library described in this document is fully implemented in `src/core/constants/`. This document is retained as an implementation reference; the code is authoritative.
+
 ## File Structure
 
 ```
 src/core/constants/
-├── CMakeLists.txt              # New - Add constants as library
+├── CMakeLists.txt              # constants library target
 ├── constants.h                 # Main header (includes all modules)
 ├── providers.h                 # Provider definitions
 ├── systems.h                   # Gaming system definitions  

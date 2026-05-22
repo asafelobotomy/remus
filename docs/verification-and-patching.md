@@ -147,9 +147,10 @@ Remus will verify each track individually when using Redump DAT files.
 **Database Schema**: See `verification_dats` and `verification_results` tables in [data-model.md](data-model.md)
 
 **Hash Priority**:
-1. SHA1 (strongest, preferred for disc systems)
-2. MD5 (fallback for disc systems)
-3. CRC32 (sufficient for cartridge systems, faster)
+1. SHA256 (Pass 0, highest priority — implemented 2026-05-21)
+2. SHA1 (strongest legacy hash, preferred for disc systems)
+3. MD5 (fallback for disc systems)
+4. CRC32 (sufficient for cartridge systems, faster)
 
 **Performance**: Verification is parallelized with progress tracking for large libraries.
 
@@ -565,10 +566,13 @@ remus patch --unapply --file "/path/to/Super Mario Bros. (USA) [Deluxe].nes"
 ## 7. Implementation Roadmap
 
 ### M8.1: Verification Foundation (Week 14)
-- [ ] Database schema: add verification tables
-- [ ] DAT file parser (XML format)
+
+**SHA256 support — P1: ✅ COMPLETE (2026-05-21)** — SHA256 field added to `DatRomEntry` and `ClrMameProEntry` parsers; stored in `dat_entries` and `patch_dat_entries` schema; propagated through compendium pipeline (extractor, fact inserter, identity linker); added to hash matcher as Pass 0 (highest priority); present in all 4 verification cache load paths.
+
+- [x] Database schema: add verification tables (SHA256 fields in dat_entries, patch_dat_entries)
+- [x] DAT file parser (XML format) (SHA256 parsed from DatRomEntry, ClrMameProEntry)
 - [ ] Header detection and stripping (NES, Lynx)
-- [ ] Verification engine (hash comparison)
+- [x] Verification engine (hash comparison) (SHA256 in hash matcher Pass 0; all cache load paths)
 - [ ] CLI commands: `--verify <dat-file>`, `--verify-report`
 - [ ] Verification status UI in library view
 

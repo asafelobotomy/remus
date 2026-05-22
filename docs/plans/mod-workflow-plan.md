@@ -356,11 +356,10 @@ This tracks when each catalog source was last fetched, enabling smart refresh.
 
 ---
 
-## ~~Phase 4 — GUI and TUI Integration~~ *(Archived)*
+## ~~Phase 4 — GUI and TUI Integration~~ *(Partially archived)*
 
-> **Status**: This phase is **not applicable** — the project is now CLI-only.
-> GUI/TUI code has been archived to `archive/gui-tui/`.
-> Mod browsing and installation are exposed via CLI commands in Phases 1–3.
+> **Status**: The TUI portion of this phase is **not applicable** — ncurses/TUI code has been archived to `archive/gui-tui/`. The Qt6 GUI (`src/gui/`) is active; GUI integration for mod browsing can be addressed there when the CLI phases (1–3) are complete.
+> CLI mod commands are exposed in Phases 1–3.
 
 ---
 
@@ -415,9 +414,9 @@ This decouples the scraping cadence from Remus releases.
 | `src/cli/cli_commands_mods.cpp` | 1 | CLI handlers for mod commands | 150 |
 | `tests/test_mod_workflow.cpp` | 1 | Unit tests for catalog + workflow | 250 |
 | `tests/fixtures/test_mod_catalog.json` | 1 | Sample catalog for tests | 30 |
-| `src/ui/controllers/mod_controller.h` | 4 | QML mod controller | 60 |
-| `src/ui/controllers/mod_controller.cpp` | 4 | QML mod controller impl | 150 |
-| `src/tui/mod_screen.cpp` | 4 | TUI mod browser | 120 |
+| `src/gui/controllers/mod_controller.h` | 4 | Qt6 GUI mod controller | 60 |
+| `src/gui/controllers/mod_controller.cpp` | 4 | Qt6 GUI mod controller impl | 150 |
+| ~~`src/tui/mod_screen.cpp`~~ | 4 | *(archived — TUI is retired; see `archive/gui-tui/`)* | — |
 | `src/metadata/romhacking_scraper.h` | 5 | Scraper interface | 30 |
 | `src/metadata/romhacking_scraper.cpp` | 5 | Scraper implementation | 250 |
 

@@ -4,13 +4,14 @@ Test results, implementation reports, and verification documentation.
 
 ## Active Reports
 
-- **PHASE3-TEST-RESULTS.md** - Phase 3 testing results and metrics
 - **METADATA-VERIFICATION-REPORT.md** - Metadata verification and validation report
-- **TEST-OUTPUT-VALIDATION-SUMMARY-2026-04-05.md** - Final validation findings distilled from transient `test_output/` runs
 
-## Legacy Reports
+## Archived Reports
 
-- **[legacy/](legacy/)** - Historical implementation/audit reports moved from `docs/` root
+- **[../archive/reports/PHASE3-TEST-RESULTS.md](../archive/reports/PHASE3-TEST-RESULTS.md)** - Phase 3 testing results and metrics *(archived)*
+- **[../archive/reports/TEST-OUTPUT-VALIDATION-SUMMARY-2026-04-05.md](../archive/reports/TEST-OUTPUT-VALIDATION-SUMMARY-2026-04-05.md)** - Final validation findings distilled from transient `test_output/` runs *(archived)*
+- **[../archive/reports/provider-api-research.md](../archive/reports/provider-api-research.md)** - Provider API research *(archived)*
+- **[../archive/reports/legacy/](../archive/reports/legacy/)** - Historical implementation/audit reports *(archived)*
 - Includes constants audit/implementation reports, metadata and pipeline analyses, Phase 1+2/QML cleanup reports, and GUI metadata display reports.
 
 ## Testing

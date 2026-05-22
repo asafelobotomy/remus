@@ -66,7 +66,7 @@ Use these repo documents with this matrix:
 
 - [chd-conversion.md](chd-conversion.md) for CHD-specific workflow and system savings.
 - [emulator-frontend-compatibility.md](emulator-frontend-compatibility.md) for frontend-facing CHD guidance.
-- [reports/TEST-OUTPUT-VALIDATION-SUMMARY-2026-04-05.md](reports/TEST-OUTPUT-VALIDATION-SUMMARY-2026-04-05.md) for the validated RVZ conversion example used in this matrix.
+- [archive/reports/TEST-OUTPUT-VALIDATION-SUMMARY-2026-04-05.md](archive/reports/TEST-OUTPUT-VALIDATION-SUMMARY-2026-04-05.md) for the validated RVZ conversion example used in this matrix.
 - [requirements.md](requirements.md) for current scope and extension inventory.
 - [plans/archive-format-backlog.md](plans/archive-format-backlog.md) for the concrete workstream backlog.
 - [adr/adr-0002-use-system-specific-canonical-archive-formats.md](adr/adr-0002-use-system-specific-canonical-archive-formats.md) for the locked archive policy.

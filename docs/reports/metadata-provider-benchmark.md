@@ -295,4 +295,4 @@ TheGamesDB and Wikidata are now registered only in low-credential scenarios (whe
 - [Wikidata SPARQL endpoint](https://query.wikidata.org/)
 - Remus provider capability map: [`src/core/constants/provider_fields.h`](../../src/core/constants/provider_fields.h)
 - Remus provider priorities: [`src/core/constants/providers.h`](../../src/core/constants/providers.h)
-- Related report: [`provider-api-research.md`](provider-api-research.md)
+- Related report: [`provider-api-research.md`](../archive/reports/provider-api-research.md)

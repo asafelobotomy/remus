@@ -25,7 +25,7 @@ Delivered capabilities in the active codebase:
 - CHD conversion, verification, patch application, and mod installation flows.
 - Artwork download, local cache reuse, and bundle generation.
 
-Historical milestone reports remain in [milestones/README.md](milestones/README.md). Treat them as implementation history, not as the source of truth for the current build surface.
+Historical milestone reports remain in [archive/milestones/README.md](archive/milestones/README.md). Treat them as implementation history, not as the source of truth for the current build surface.
 
 ## Focus the next iterations
 

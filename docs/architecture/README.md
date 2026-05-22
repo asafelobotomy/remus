@@ -6,13 +6,13 @@ This directory contains architectural design documents, implementation reviews, 
 
 ### Design & Architecture
 
-- **[ARCHITECTURE-REVIEW.md](ARCHITECTURE-REVIEW.md)** - Constants library architecture analysis and design decisions (M6)
 - **[CONSTANTS-IMPLEMENTATION.md](CONSTANTS-IMPLEMENTATION.md)** - Implementation plan and specification for the constants library
 - **[FULL-PIPELINE-DIAGRAM.md](FULL-PIPELINE-DIAGRAM.md)** - End-to-end Mermaid flowchart for the CLI scan, hash, match, and organize pipeline
 
-### Executive Summary
+### Archived Pre-Proposal Documents
 
-- **[EXECUTIVE-SUMMARY.md](EXECUTIVE-SUMMARY.md)** - High-level project overview for stakeholders
+- **[../archive/ARCHITECTURE-REVIEW.md](../archive/ARCHITECTURE-REVIEW.md)** - Constants library architecture analysis and design decisions (M6) *(archived)*
+- **[../archive/EXECUTIVE-SUMMARY.md](../archive/EXECUTIVE-SUMMARY.md)** - High-level project overview for stakeholders *(archived)*
 
 ## Related Documentation
 
