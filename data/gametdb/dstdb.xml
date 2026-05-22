@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <datafile xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="dstdb.xsd">
-	<DSTDB version="20260521143637" filter="EN" games="8460"/>
+	<DSTDB version="20260522220922" filter="EN" games="8460"/>
 	<!--
  GameTDB: DS, Database started in 2015 (https://www.gametdb.com)
  Never modify this file manually, it will get overwritten when you update. You can add games and fixes on the website.
@@ -117019,11 +117019,11 @@ Con unos 20 minutos al día de entrenamiento manejarás unas 150 palabras diaria
 		<rom version="0" name="Imagine: Fashion Designer (USA) (EN).ds" size="67108864" crc="9c9ea5e3" md5="f0d15152c4ea7672688099b65347e77e" sha1="a03f62502c410b6de9084243b14eea91e07d3411"/>
 		<case color="000000" versions="3"/>
 	</game>
-	<game name="Imagine Fashion Designer (Europe) (EN,FR,DE,ES,IT,NL,PT,SE,DK,NO)">
+	<game name="Imagine Fashion Designer (Europe) (EN,FR,DE,ES,IT,NL,SE,DK,NO)">
 		<id>YFHP</id>
 		<type>DS</type>
 		<region>PAL</region>
-		<languages>EN,FR,DE,ES,IT,NL,PT,SE,DK,NO</languages>
+		<languages>EN,FR,DE,ES,IT,NL,SE,DK,NO</languages>
 		<locale lang="EN">
 			<title>Imagine Fashion Designer</title>
 			<synopsis>Get your hands on a game with style! With Imagine Fashion Designer, you’ll explore the glamorous world of fashion and work to become a big name in the industry.</synopsis>
@@ -117044,14 +117044,18 @@ Con unos 20 minutos al día de entrenamiento manejarás unas 150 palabras diaria
 			<title>Giulia passione Stilista</title>
 			<synopsis/>
 		</locale>
+		<locale lang="NL">
+			<title>Laura’s Passie: Mode verken </title>
+			<synopsis/>
+		</locale>
 		<developer>Virtual Toys</developer>
 		<publisher>Ubisoft</publisher>
 		<date year="2007" month="10" day="11"/>
 		<genre>simulation,business simulation</genre>
 		<rating type="PEGI" value="3"/>
 		<wi-fi players="0"/>
-		<input players-multi-cart="1" players-single-cart="1"/>
-		<rom version="0" name="Imagine Fashion Designer (Europe) (EN,FR,DE,ES,IT,NL,PT,SE,DK,NO).ds" size="67108864" crc="e90b79cb" md5="24f860b2494e09e456580576e7b4b0f8" sha1="9b785a466c443a79c1e2c58a07cb2aa9fe862320"/>
+		<input players-multi-cart="2" players-single-cart="1"/>
+		<rom version="0" name="Imagine Fashion Designer (Europe) (EN,FR,DE,ES,IT,NL,SE,DK,NO).ds" size="67108864" crc="e90b79cb" md5="24f860b2494e09e456580576e7b4b0f8" sha1="9b785a466c443a79c1e2c58a07cb2aa9fe862320"/>
 		<case versions="2"/>
 	</game>
 	<game name="Foster's Home for Imaginary Friends: Imagination Invaders (USA) (EN)">

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <datafile xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="3dstdb.xsd">
-	<TDB3DS version="20260521143646" filter="EN" games="4785"/>
+	<TDB3DS version="20260522220935" filter="EN" games="4785"/>
 	<!--
  GameTDB: 3DS, Database started in 2015 (https://www.gametdb.com)
  Never modify this file manually, it will get overwritten when you update. You can add games and fixes on the website.

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <datafile xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="wiitdb.xsd">
-	<WiiTDB version="20260521143618" filter="EN_wiiware_gamecube" games="10158"/>
+	<WiiTDB version="20260522213248" filter="EN_wiiware_gamecube" games="10158"/>
 	<!--
  GameTDB: Wii, Database started by Lustar in 2009 (https://www.gametdb.com)
  Never modify this file manually, it will get overwritten when you update. You can add games and fixes on the website.
