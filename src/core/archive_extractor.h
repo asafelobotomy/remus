@@ -42,6 +42,7 @@ struct ExtractionResult {
     QString archivePath;
     QString outputDir;
     int filesExtracted = 0;
+    int failedFiles = 0;
     qint64 bytesExtracted = 0;
     QString error;
     QStringList extractedFiles;    // List of extracted file paths

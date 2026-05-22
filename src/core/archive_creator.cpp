@@ -58,18 +58,18 @@ CompressionResult ArchiveCreator::compress(const QStringList &inputPaths,
 
     QList<ArchiveInputEntry> entries;
     QSet<QString> archivePaths;
+    int failedInputs = 0;
     for (const QString &path : inputPaths) {
         const QFileInfo fi(path);
-        if (!fi.isFile())
+        if (!fi.isFile()) {
+            failedInputs++;
             continue;
+        }
 
         const QString archivePath = fi.fileName();
         if (archivePaths.contains(archivePath)) {
-            result.error = QStringLiteral("Duplicate archive entry name: %1").arg(archivePath);
-            m_running = false;
-            emit errorOccurred(result.error);
-            emit compressionCompleted(result);
-            return result;
+            failedInputs++;
+            continue;
         }
 
         archivePaths.insert(archivePath);
@@ -85,6 +85,15 @@ CompressionResult ArchiveCreator::compress(const QStringList &inputPaths,
     }
 
     result = compressFiles(entries, outputArchive);
+    result.failedFiles += failedInputs;
+    if (result.failedFiles >= 3 && result.failedFiles >= (result.filesCompressed * 3)) {
+        result.success = false;
+        result.error = QStringLiteral("Compression aborted after too many file failures (%1 failed files)")
+            .arg(result.failedFiles);
+    } else if (result.failedFiles > 0 && result.success) {
+        result.error = QStringLiteral("Compression completed with skipped files (%1 failed files)")
+            .arg(result.failedFiles);
+    }
 
     m_running = false;
     if (!result.error.isEmpty())

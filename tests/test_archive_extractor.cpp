@@ -69,6 +69,32 @@ static bool createArchiveWithUnsafePath(const QString &path)
     return QFileInfo::exists(path);
 }
 
+static bool createArchiveWithOrderedEntries(const QString &path,
+                                            const QList<QPair<QString, QByteArray>> &files)
+{
+    struct archive *a = archive_write_new();
+    archive_write_set_format_zip(a);
+    if (archive_write_open_filename(a, path.toUtf8().constData()) != ARCHIVE_OK) {
+        archive_write_free(a);
+        return false;
+    }
+
+    for (const auto &file : files) {
+        struct archive_entry *entry = archive_entry_new();
+        archive_entry_set_pathname(entry, file.first.toUtf8().constData());
+        archive_entry_set_size(entry, file.second.size());
+        archive_entry_set_filetype(entry, AE_IFREG);
+        archive_entry_set_perm(entry, 0644);
+        archive_write_header(a, entry);
+        archive_write_data(a, file.second.constData(), static_cast<size_t>(file.second.size()));
+        archive_entry_free(entry);
+    }
+
+    archive_write_close(a);
+    archive_write_free(a);
+    return QFileInfo::exists(path);
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 // Test class
 // ─────────────────────────────────────────────────────────────────────────────
@@ -86,6 +112,9 @@ private slots:
     void testExtract7zCreatesSubfolder();
     void testExtractFilePreservesNestedRelativePath();
     void testExtractRejectsUnsafeArchiveEntries();
+    void testExtractRejectsMixedUnsafeArchiveWithoutWritingFiles();
+    void testExtractContinuesBelowFailureThreshold();
+    void testExtractFailsAtOneToThreeFailureRatio();
     void testBatchExtractCanBeCancelledAfterFirstItem();
     void testExtractUnsupported();
     void testReadMemberPrefix();
@@ -246,6 +275,79 @@ void ArchiveExtractorTest::testExtractRejectsUnsafeArchiveEntries()
 
     QVERIFY(!result.success);
     QVERIFY(result.error.contains("unsafe", Qt::CaseInsensitive));
+}
+
+void ArchiveExtractorTest::testExtractRejectsMixedUnsafeArchiveWithoutWritingFiles()
+{
+    QTemporaryDir tmp;
+    QVERIFY(tmp.isValid());
+
+    const QString archivePath = tmp.filePath("mixed-unsafe.zip");
+    QVERIFY(createArchiveWithOrderedEntries(archivePath, {
+        {QStringLiteral("safe.bin"), QByteArray("safe")},
+        {QStringLiteral("../evil.bin"), QByteArray("evil")}
+    }));
+
+    ArchiveExtractor extractor;
+    const QString outDir = tmp.filePath("out");
+    const ExtractionResult result = extractor.extract(archivePath, outDir, false);
+
+    QVERIFY(!result.success);
+    QCOMPARE(result.filesExtracted, 0);
+    QCOMPARE(result.failedFiles, 0);
+    QVERIFY(!QFileInfo::exists(outDir + "/safe.bin"));
+}
+
+void ArchiveExtractorTest::testExtractContinuesBelowFailureThreshold()
+{
+    QTemporaryDir tmp;
+    QVERIFY(tmp.isValid());
+
+    const QString archivePath = tmp.filePath("partial.zip");
+    QVERIFY(createArchiveWithOrderedEntries(archivePath, {
+        {QStringLiteral("ok.bin"), QByteArray("ok")},
+        {QStringLiteral("bad1.bin"), QByteArray("bad1")},
+        {QStringLiteral("bad2.bin"), QByteArray("bad2")}
+    }));
+
+    const QString outDir = tmp.filePath("out");
+    QDir().mkpath(outDir + "/bad1.bin");
+    QDir().mkpath(outDir + "/bad2.bin");
+
+    ArchiveExtractor extractor;
+    const ExtractionResult result = extractor.extract(archivePath, outDir, false);
+
+    QVERIFY(result.success);
+    QCOMPARE(result.filesExtracted, 1);
+    QCOMPARE(result.failedFiles, 2);
+    QVERIFY(QFileInfo::exists(outDir + "/ok.bin"));
+}
+
+void ArchiveExtractorTest::testExtractFailsAtOneToThreeFailureRatio()
+{
+    QTemporaryDir tmp;
+    QVERIFY(tmp.isValid());
+
+    const QString archivePath = tmp.filePath("ratio.zip");
+    QVERIFY(createArchiveWithOrderedEntries(archivePath, {
+        {QStringLiteral("ok.bin"), QByteArray("ok")},
+        {QStringLiteral("bad1.bin"), QByteArray("bad1")},
+        {QStringLiteral("bad2.bin"), QByteArray("bad2")},
+        {QStringLiteral("bad3.bin"), QByteArray("bad3")}
+    }));
+
+    const QString outDir = tmp.filePath("out");
+    QDir().mkpath(outDir + "/bad1.bin");
+    QDir().mkpath(outDir + "/bad2.bin");
+    QDir().mkpath(outDir + "/bad3.bin");
+
+    ArchiveExtractor extractor;
+    const ExtractionResult result = extractor.extract(archivePath, outDir, false);
+
+    QVERIFY(!result.success);
+    QCOMPARE(result.filesExtracted, 1);
+    QCOMPARE(result.failedFiles, 3);
+    QVERIFY(QFileInfo::exists(outDir + "/ok.bin"));
 }
 
 void ArchiveExtractorTest::testBatchExtractCanBeCancelledAfterFirstItem()

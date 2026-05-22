@@ -19,6 +19,8 @@ private slots:
     void testCanCompressQueryWithFakePaths();
     void testCompressDirectoryContentsPreservesRelativePaths();
     void testCompressMixedInputFilesFromDifferentDirectories();
+    void testCompressContinuesBelowFailureThreshold();
+    void testCompressFailsAtOneToThreeFailureRatio();
     void testRoundTripZip();
 };
 
@@ -157,6 +159,64 @@ void ArchiveCreatorTest::testCompressMixedInputFilesFromDifferentDirectories()
     QCOMPARE(info.fileCount, 2);
     QVERIFY(info.contents.contains(QStringLiteral("alpha.bin")));
     QVERIFY(info.contents.contains(QStringLiteral("beta.bin")));
+}
+
+void ArchiveCreatorTest::testCompressContinuesBelowFailureThreshold()
+{
+    QTemporaryDir tmp;
+    QVERIFY(tmp.isValid());
+
+    const QString validFile = tmp.filePath("valid.bin");
+    {
+        QFile file(validFile);
+        QVERIFY(file.open(QIODevice::WriteOnly));
+        file.write("valid");
+    }
+
+    ArchiveCreator creator;
+    const QString outputPath = tmp.filePath("partial.zip");
+    const CompressionResult result = creator.compress(
+        {validFile, tmp.filePath("missing1.bin"), tmp.filePath("missing2.bin")},
+        outputPath,
+        ArchiveFormat::ZIP);
+
+    QVERIFY(result.success);
+    QCOMPARE(result.filesCompressed, 1);
+    QCOMPARE(result.failedFiles, 2);
+
+    ArchiveExtractor extractor;
+    const ArchiveInfo info = extractor.getArchiveInfo(outputPath);
+    QCOMPARE(info.fileCount, 1);
+    QVERIFY(info.contents.contains(QStringLiteral("valid.bin")));
+}
+
+void ArchiveCreatorTest::testCompressFailsAtOneToThreeFailureRatio()
+{
+    QTemporaryDir tmp;
+    QVERIFY(tmp.isValid());
+
+    const QString validFile = tmp.filePath("valid.bin");
+    {
+        QFile file(validFile);
+        QVERIFY(file.open(QIODevice::WriteOnly));
+        file.write("valid");
+    }
+
+    ArchiveCreator creator;
+    const QString outputPath = tmp.filePath("ratio.zip");
+    const CompressionResult result = creator.compress(
+        {
+            validFile,
+            tmp.filePath("missing1.bin"),
+            tmp.filePath("missing2.bin"),
+            tmp.filePath("missing3.bin")
+        },
+        outputPath,
+        ArchiveFormat::ZIP);
+
+    QVERIFY(!result.success);
+    QCOMPARE(result.filesCompressed, 1);
+    QCOMPARE(result.failedFiles, 3);
 }
 
 void ArchiveCreatorTest::testRoundTripZip()

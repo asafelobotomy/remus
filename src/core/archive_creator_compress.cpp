@@ -9,6 +9,23 @@
 
 namespace Remus {
 
+namespace {
+
+bool failureRatioExceeded(int successes, int failures)
+{
+    return failures >= 3 && failures >= (successes * 3);
+}
+
+QString summarizeFailures(const QString &prefix, int failedFiles)
+{
+    return QStringLiteral("%1 (%2 failed file%3)")
+        .arg(prefix)
+        .arg(failedFiles)
+        .arg(failedFiles == 1 ? QString() : QStringLiteral("s"));
+}
+
+} // namespace
+
 CompressionResult ArchiveCreator::compressFiles(const QList<ArchiveInputEntry> &entries,
                                                  const QString &outputArchive)
 {
@@ -38,12 +55,26 @@ CompressionResult ArchiveCreator::compressFiles(const QList<ArchiveInputEntry> &
         }
 
         const QFileInfo fi(input.sourcePath);
-        if (!fi.isFile())
+        if (!fi.isFile()) {
+            result.failedFiles++;
+            if (failureRatioExceeded(result.filesCompressed, result.failedFiles)) {
+                result.error = summarizeFailures(QStringLiteral("Compression aborted after too many file failures"),
+                                                 result.failedFiles);
+                return result;
+            }
             continue;
+        }
 
         QFile inputFile(input.sourcePath);
-        if (!inputFile.open(QIODevice::ReadOnly))
+        if (!inputFile.open(QIODevice::ReadOnly)) {
+            result.failedFiles++;
+            if (failureRatioExceeded(result.filesCompressed, result.failedFiles)) {
+                result.error = summarizeFailures(QStringLiteral("Compression aborted after too many file failures"),
+                                                 result.failedFiles);
+                return result;
+            }
             continue;
+        }
 
         EntryPtr entry(archive_entry_new(), archive_entry_free);
         const QByteArray archivePathBytes = QDir::fromNativeSeparators(input.archivePath).toUtf8();
@@ -52,12 +83,39 @@ CompressionResult ArchiveCreator::compressFiles(const QList<ArchiveInputEntry> &
         archive_entry_set_filetype(entry.get(), AE_IFREG);
         archive_entry_set_perm(entry.get(), 0644);
         archive_entry_set_mtime(entry.get(), fi.lastModified().toSecsSinceEpoch(), 0);
-        archive_write_header(a.get(), entry.get());
+        if (archive_write_header(a.get(), entry.get()) != ARCHIVE_OK) {
+            result.failedFiles++;
+            if (failureRatioExceeded(result.filesCompressed, result.failedFiles)) {
+                result.error = summarizeFailures(QStringLiteral("Compression aborted after too many file failures"),
+                                                 result.failedFiles);
+                return result;
+            }
+            continue;
+        }
 
         char buf[65536];
         qint64 bytesRead;
-        while ((bytesRead = inputFile.read(buf, sizeof(buf))) > 0)
-            archive_write_data(a.get(), buf, static_cast<size_t>(bytesRead));
+        bool entryOk = true;
+        while ((bytesRead = inputFile.read(buf, sizeof(buf))) > 0) {
+            const la_ssize_t written = archive_write_data(a.get(), buf, static_cast<size_t>(bytesRead));
+            if (written < 0 || written != bytesRead) {
+                entryOk = false;
+                break;
+            }
+        }
+
+        if (bytesRead < 0)
+            entryOk = false;
+
+        if (!entryOk) {
+            result.failedFiles++;
+            if (failureRatioExceeded(result.filesCompressed, result.failedFiles)) {
+                result.error = summarizeFailures(QStringLiteral("Compression aborted after too many file failures"),
+                                                 result.failedFiles);
+                return result;
+            }
+            continue;
+        }
 
         result.filesCompressed++;
     }
@@ -75,7 +133,14 @@ CompressionResult ArchiveCreator::compressFiles(const QList<ArchiveInputEntry> &
         return result;
     }
 
-    result.success = true;
+    result.success = (result.filesCompressed > 0);
+    if (result.failedFiles > 0 && result.success) {
+        result.error = summarizeFailures(QStringLiteral("Compression completed with skipped files"),
+                                         result.failedFiles);
+    } else if (!result.success && result.error.isEmpty()) {
+        result.error = summarizeFailures(QStringLiteral("Compression completed without any successful files"),
+                                         result.failedFiles);
+    }
     result.compressedSize = outInfo.size();
     return result;
 }

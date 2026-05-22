@@ -17,6 +17,7 @@ struct CompressionResult {
     qint64 originalSize = 0;
     qint64 compressedSize = 0;
     int filesCompressed = 0;
+    int failedFiles = 0;
     QStringList inputFiles;
 };
 

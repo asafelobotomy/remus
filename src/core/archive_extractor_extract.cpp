@@ -16,6 +16,19 @@ namespace Remus {
 
 namespace {
 
+bool failureRatioExceeded(int successes, int failures)
+{
+    return failures >= 3 && failures >= (successes * 3);
+}
+
+QString summarizeFailures(const QString &prefix, int failedFiles)
+{
+    return QStringLiteral("%1 (%2 failed file%3)")
+        .arg(prefix)
+        .arg(failedFiles)
+        .arg(failedFiles == 1 ? QString() : QStringLiteral("s"));
+}
+
 // Streams all data blocks from archive reader |ar| into a QFile.
 // Returns true on success (EOF reached without error).
 bool copyEntryToFile(archive *ar, QFile &out)
@@ -176,6 +189,13 @@ ExtractionResult ArchiveExtractor::extractToDir(const QString &archivePath,
     result.archivePath = archivePath;
     result.outputDir = outputDir;
 
+    const ArchiveInfo info = getArchiveInfo(archivePath);
+    if (!info.unsafeEntries.isEmpty()) {
+        result.error = QStringLiteral("Archive contains unsafe path entries: %1")
+            .arg(info.unsafeEntries.first());
+        return result;
+    }
+
     using ArchivePtr = std::unique_ptr<archive, decltype(&archive_read_free)>;
     ArchivePtr a(archive_read_new(), archive_read_free);
     archive_read_support_filter_all(a.get());
@@ -190,7 +210,8 @@ ExtractionResult ArchiveExtractor::extractToDir(const QString &archivePath,
     }
 
     archive_entry *entry = nullptr;
-    while (archive_read_next_header(a.get(), &entry) == ARCHIVE_OK) {
+    int readStatus = ARCHIVE_OK;
+    while ((readStatus = archive_read_next_header(a.get(), &entry)) == ARCHIVE_OK) {
         const unsigned ae_type = archive_entry_filetype(entry);
 
         // Skip directories and symlinks — only extract regular files
@@ -201,13 +222,6 @@ ExtractionResult ArchiveExtractor::extractToDir(const QString &archivePath,
 
         const QString rawPath = QString::fromUtf8(archive_entry_pathname(entry));
         const QString normalized = normalizeArchiveMemberPath(rawPath);
-
-        if (normalized.isEmpty()) {
-            // Unsafe path detected — abort the entire extraction
-            result.success = false;
-            result.error = QStringLiteral("Archive contains unsafe path entries: %1").arg(rawPath);
-            return result;
-        }
 
         // When extracting a single named member, skip non-matching entries
         if (!singleMember.isEmpty() && normalized != singleMember) {
@@ -221,23 +235,52 @@ ExtractionResult ArchiveExtractor::extractToDir(const QString &archivePath,
         QFile outFile(destPath);
         if (!outFile.open(QIODevice::WriteOnly)) {
             qWarning() << "extractToDir: cannot open for write:" << destPath;
+            result.failedFiles++;
             archive_read_data_skip(a.get());
+            if (failureRatioExceeded(result.filesExtracted, result.failedFiles)) {
+                result.error = summarizeFailures(QStringLiteral("Extraction aborted after too many file failures"),
+                                                 result.failedFiles);
+                return result;
+            }
             continue;
         }
 
         if (!copyEntryToFile(a.get(), outFile)) {
             qWarning() << "extractToDir: data error for entry:" << normalized;
+            outFile.close();
+            outFile.remove();
+            result.failedFiles++;
+            if (failureRatioExceeded(result.filesExtracted, result.failedFiles)) {
+                result.error = summarizeFailures(QStringLiteral("Extraction aborted after too many file failures"),
+                                                 result.failedFiles);
+                return result;
+            }
+            continue;
         }
         outFile.close();
 
         result.extractedFiles.append(destPath);
-        result.bytesExtracted += qMax<qint64>(0, archive_entry_size(entry));
+        result.bytesExtracted += outFile.size();
         result.filesExtracted++;
 
         emit extractionProgress(0, normalized);
     }
 
-    result.success = true;
+    if (readStatus != ARCHIVE_EOF) {
+        result.failedFiles++;
+        result.error = QStringLiteral("Archive read failed: %1")
+            .arg(QString::fromUtf8(archive_error_string(a.get())));
+        return result;
+    }
+
+    result.success = (result.filesExtracted > 0);
+    if (result.failedFiles > 0 && result.success) {
+        result.error = summarizeFailures(QStringLiteral("Extraction completed with skipped files"),
+                                         result.failedFiles);
+    } else if (!result.success && result.error.isEmpty()) {
+        result.error = summarizeFailures(QStringLiteral("Extraction completed without any successful files"),
+                                         result.failedFiles);
+    }
     return result;
 }
 
