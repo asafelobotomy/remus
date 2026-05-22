@@ -50,20 +50,13 @@ qt_add_executable(remus-gui
     main.cpp
 )
 
-set_source_files_properties(
-    qml/Theme.qml
-    PROPERTIES QT_QML_SINGLETON_TYPE TRUE
-)
-
 qt_add_qml_module(remus-gui
     URI Remus.Gui
     VERSION 1.0
     QML_FILES
-        qml/Theme.qml
         qml/Main.qml
         qml/Sidebar.qml
         qml/components/ProgressCard.qml
-        qml/components/StatusBadge.qml
         qml/components/MetadataEditor.qml
         qml/components/StageCard.qml
         qml/components/QueueSidebar.qml

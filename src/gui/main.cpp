@@ -85,9 +85,6 @@ int main(int argc, char *argv[])
     QObject::connect(&matchController, &Remus::MatchController::libraryChanged, &app, refreshLibraryModels);
     QObject::connect(&matchController, &Remus::MatchController::libraryChanged, &workflowController, [&workflowController]() { workflowController.refresh(); });
     QObject::connect(&metadataEditorController, &Remus::MetadataEditorController::libraryChanged, &app, refreshLibraryModels);
-    QObject::connect(&verificationController, &Remus::VerificationController::summaryChanged, &app, [&verificationResultModel]() {
-        Q_UNUSED(verificationResultModel);
-    });
     QObject::connect(&organizeController, &Remus::OrganizeController::libraryChanged, &app, refreshLibraryModels);
     QObject::connect(&conversionController, &Remus::ConversionController::libraryChanged, &app, refreshLibraryModels);
     QObject::connect(&exportController, &Remus::ExportController::libraryChanged, &app, refreshLibraryModels);

@@ -118,11 +118,11 @@ Three critical improvements to offline ROM identification:
 #### Task 3: DAT Management UI
 
 - **DatManagerController**: New controller bridging LocalDatabaseProvider and QML
-  - Q_PROPERTY: `loadedDats` (reactive list of DAT metadata)
-  - Q_INVOKABLE: `loadDat()`, `checkForUpdate()`, `reloadDat()`
-  - Signals: `datsChanged`, `datLoaded`, `updateAvailable`
+  - Q_PROPERTY: `loadedDats`, `importing`, `progress`, `total`, `lastError`
+  - Q_INVOKABLE: `importDat(path, systemName)`, `removeDat(systemName)`, `refresh()`
+  - Signals: `loadedDatsChanged`, `importingChanged`, `progressChanged`, `lastErrorChanged`
 
-- **SettingsView Integration**: New "Local DAT Databases" section
+- **DatView**: Dedicated view for DAT management
   - Lists all loaded DAT files with metadata
   - Shows name, version, entry count, load timestamp, file path
   - Automatically updates when DATs are loaded
@@ -132,7 +132,7 @@ Three critical improvements to offline ROM identification:
 
 - **ClrMamePro Parser**: Switched from regex to state machine for ROM block parsing
 - **LocalDatabaseProvider**: Now stores DatMetadata for each loaded DAT
-- **Settings Page**: Added DAT management section after Organization
+- **DatView**: DAT management exposed as a dedicated view in the sidebar
 
 ### Fixed in 0.10.1
 
@@ -147,7 +147,7 @@ Three critical improvements to offline ROM identification:
 
 ### Documentation for 0.10.1
 
-- `docs/milestones/M10.1-COMPLETION.md`: Complete implementation report
+- `docs/archive/milestones/M10.1-COMPLETION.md`: Complete implementation report
 - `tests/test_dat_parser.cpp`: Added tests for inline attribute parsing
 - Build time: ~4 hours, 11 files changed, ~650 lines added
 
@@ -227,7 +227,7 @@ Phase 2: Optional ScreenScraper free-tier integration with first-run wizard
 
 ### Documentation for 0.10.0
 
-- `docs/milestones/M10-COMPLETION.md`: Complete M10 implementation report
+- `docs/archive/milestones/M10-COMPLETION.md`: Complete M10 implementation report
 - `docs/data-model.md`: Updated with `dat_sources`, `dat_games`, `dat_roms` tables
 - Performance benchmarks: Hash lookup ~1-3ms per ROM (1000x faster than network)
 

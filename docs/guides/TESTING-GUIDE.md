@@ -4,7 +4,7 @@ Use the canonical repository-local paths from [TEST-DATA-POLICY.md](TEST-DATA-PO
 
 ## Verify the supported build
 
-Remus is tested as a CLI-first application. Both `src/cli/` (CLI) and `src/gui/` (Qt6 Widgets GUI) are active and are part of the supported build. The legacy TUI is archived under `archive/gui-tui/` and is not part of the default verification path.
+Remus is tested as a CLI-first application. Both `src/cli/` (CLI) and `src/gui/` (Qt Quick GUI) are active and are part of the supported build. The legacy TUI is archived under `archive/gui-tui/` and is not part of the default verification path.
 
 Build the workspace:
 

@@ -1,6 +1,8 @@
-# Frontend Status
+# Frontend Status (Historical)
 
-Remus is developed as a CLI-only product. GUI and TUI code has been physically archived.
+> **HISTORICAL DOCUMENT** — This file describes the state as of 2026-03-26 before the Qt Quick GUI (`src/gui/`) was built. It does not reflect the current codebase. See `src/gui/` for the active frontend.
+
+Remus was briefly developed as a CLI-only product after the original Qt Widgets/TUI frontends were archived. A new Qt Quick GUI has since been introduced under `src/gui/`.
 
 ## Archived code
 

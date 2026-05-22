@@ -5,9 +5,7 @@
 
 #include <QCoreApplication>
 #include <QDebug>
-#include <QFile>
 #include <QFileInfo>
-#include <QCryptographicHash>
 #include <QTemporaryDir>
 #include <QTemporaryFile>
 #include "../src/metadata/local_database_provider.h"
@@ -17,30 +15,10 @@
 using namespace Remus;
 
 /**
- * @brief Calculate file hash
+ * @brief Calculate file hash using the project hasher
  */
 QString calculateHash(const QString &filePath, const QString &algorithm) {
-    QFile file(filePath);
-    if (!file.open(QIODevice::ReadOnly)) {
-        qWarning() << "Failed to open file:" << filePath;
-        return QString();
-    }
-    
-    QCryptographicHash::Algorithm algo;
-    if (algorithm == "CRC32") {
-        // CRC32 not in Qt's QCryptographicHash, use placeholder
-        return QString();
-    } else if (algorithm == "MD5") {
-        algo = QCryptographicHash::Md5;
-    } else if (algorithm == "SHA1") {
-        algo = QCryptographicHash::Sha1;
-    } else {
-        return QString();
-    }
-    
-    QByteArray data = file.readAll();
-    QByteArray hash = QCryptographicHash::hash(data, algo);
-    return hash.toHex();
+    return Remus::Hasher().calculateHash(filePath, algorithm);
 }
 
 /**

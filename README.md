@@ -42,7 +42,7 @@ Current delivery focus:
 - verification, patching, and mod support
 - documentation and build hygiene
 
-Historical milestone reports remain in [docs/milestones/](docs/milestones/).
+Historical milestone reports remain in [docs/archive/milestones/](docs/archive/milestones/).
 
 ## Documentation
 
@@ -67,7 +67,7 @@ Historical milestone reports remain in [docs/milestones/](docs/milestones/).
 ### Development
 
 - **[Architecture Docs](docs/architecture/)** - Design documents and implementation plans
-- **[Milestone Reports](docs/milestones/)** - Detailed completion reports and phase summaries
+- **[Milestone Reports](docs/archive/milestones/)** - Detailed completion reports and phase summaries
 
 ## Quick Start
 

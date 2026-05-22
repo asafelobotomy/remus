@@ -45,14 +45,11 @@ WorkflowController::WorkflowController(AppController   *app,
     connect(m_refreshTimer, &QTimer::timeout, this, [this]() {
         refreshCounts();
         refreshQueueFiles();
-        refreshHint();
     });
     connect(app, &AppController::libraryOpened,
             this, &WorkflowController::refresh);
     connect(app, &AppController::libraryClosed,
             this, &WorkflowController::refresh);
-    connect(app, &AppController::selectedFileChanged,
-            this, &WorkflowController::onSelectedFileChanged);
     connect(hash,  &HashController::libraryChanged,
             this, &WorkflowController::refresh);
     connect(match, &MatchController::libraryChanged,
@@ -293,44 +290,6 @@ void WorkflowController::refreshQueueFiles()
     }
 
     emit queueFilesChanged();
-}
-
-void WorkflowController::refreshHint()
-{
-    if (!m_appController || !m_appController->isLibraryOpen()) {
-        if (!m_hint.isEmpty()) { m_hint.clear(); emit hintChanged(); }
-        return;
-    }
-
-    const int fid = m_appController->selectedFileId();
-    QString   hint;
-
-    if (fid <= 0) {
-        hint = QStringLiteral("Select a file from the queue to continue.");
-    } else {
-        const QVariantMap file  = m_appController->selectedFile();
-        const QVariantMap match = m_appController->selectedMatch();
-
-        if (file.value(QStringLiteral("md5")).toString().isEmpty()) {
-            hint = QStringLiteral("Hash this file to identify it.");
-        } else if (match.isEmpty() || !match.value(QStringLiteral("confirmed")).toBool()) {
-            hint = QStringLiteral("Run matching to identify this file.");
-        } else if (!artworkExistsForFile(fid)) {
-            hint = QStringLiteral("Download artwork for this file.");
-        } else {
-            hint = QStringLiteral("Ready to package and organize.");
-        }
-    }
-
-    if (m_hint != hint) {
-        m_hint = hint;
-        emit hintChanged();
-    }
-}
-
-void WorkflowController::onSelectedFileChanged()
-{
-    refreshHint();
 }
 
 } // namespace Remus

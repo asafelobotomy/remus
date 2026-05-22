@@ -353,7 +353,7 @@ No duplicate definitions across files:
 ```cpp
 // Instead of maintaining lists in:
 // - src/cli/main.cpp
-// - src/ui/qml/LibraryView.qml
+// - src/gui/qml/views/LibraryView.qml
 // - docs/requirements.md
 
 // Single definition in systems.h used everywhere

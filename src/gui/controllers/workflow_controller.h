@@ -22,7 +22,6 @@ class WorkflowController : public QObject {
     Q_PROPERTY(int enrichCount    READ enrichCount    NOTIFY stageCountsChanged)
     Q_PROPERTY(int doneCount      READ doneCount      NOTIFY stageCountsChanged)
     Q_PROPERTY(bool running       READ isRunning      NOTIFY runningChanged)
-    Q_PROPERTY(QString hint       READ hint           NOTIFY hintChanged)
     Q_PROPERTY(int queueStage     READ queueStage     WRITE setQueueStage NOTIFY queueStageChanged)
     Q_PROPERTY(QVariantList queueFiles READ queueFiles NOTIFY queueFilesChanged)
     Q_PROPERTY(int activeStage    READ activeStage    NOTIFY activeStageChanged)
@@ -47,7 +46,6 @@ public:
     int          enrichCount()   const { return m_enrichCount;   }
     int          doneCount()     const { return m_doneCount;     }
     bool         isRunning()     const { return m_running;       }
-    QString      hint()          const { return m_hint;          }
     int          queueStage()    const { return m_queueStage;    }
     QVariantList queueFiles()    const { return m_queueFiles;    }
     int          activeStage()   const { return m_activeStage;   }
@@ -65,18 +63,13 @@ public:
 signals:
     void stageCountsChanged();
     void runningChanged();
-    void hintChanged();
     void queueStageChanged();
     void queueFilesChanged();
     void activeStageChanged();
 
-private slots:
-    void onSelectedFileChanged();
-
 private:
     void refreshCounts();
     void refreshQueueFiles();
-    void refreshHint();
     void advanceRunAll();
     void cancelRunAll();
     void setActiveStage(int stage);
@@ -96,7 +89,6 @@ private:
     int          m_enrichCount   = 0;
     int          m_doneCount     = 0;
     bool         m_running       = false;
-    QString      m_hint;
     int          m_queueStage    = 0;
     QVariantList m_queueFiles;
     int          m_runStep       = 0;

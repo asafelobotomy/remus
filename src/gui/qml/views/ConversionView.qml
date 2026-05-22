@@ -35,6 +35,10 @@ Item {
                 enabled: !conversionController.converting && appController.selectedFileId > 0
                 onClicked: conversionController.convertSelected(formatBox.currentText, conversionOutputField.text)
             }
+            Button {
+                text: "Refresh Tool Status"
+                onClicked: conversionController.refreshToolStatus()
+            }
         }
 
         ProgressCard {

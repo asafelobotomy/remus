@@ -6,7 +6,7 @@ This guide defines where to place documentation in the Remus repository.
 
 - Put user-facing guides in `docs/` root.
 - Put architecture/design content in `docs/architecture/`.
-- Put milestone completion/progress items in `docs/milestones/`.
+- Put milestone completion/progress items in `docs/archive/milestones/`.
 - Put test results and implementation reports in `docs/reports/`.
 - Put superseded historical reports in `docs/archive/reports/legacy/`.
 - Put setup/build/install material in `docs/setup/`.
