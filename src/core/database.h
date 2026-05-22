@@ -257,7 +257,8 @@ public:
      */
     bool updateGame(int gameId, const QString &publisher = QString(), const QString &developer = QString(),
                     const QString &releaseDate = QString(), const QString &description = QString(),
-                    const QString &genres = QString(), const QString &players = QString(), float rating = -1.0f);
+                    const QString &genres = QString(), const QString &players = QString(), float rating = -1.0f,
+                    const QString &title = QString(), const QString &region = QString());
     
     /**
      * @brief Insert or update a metadata match

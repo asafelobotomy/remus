@@ -79,7 +79,7 @@ void registerAllOptions(QCommandLineParser &parser, QSet<QString> &actionOptions
     addOption(QCommandLineOption("dry-run-all", "Preview file outputs for all file-writing actions"));
 
     addActionOption(QCommandLineOption("bundle",        "Fetch metadata, download box art, and repack matched ROMs into self-contained archives", "destination"));
-    addOption(QCommandLineOption("bundle-format", "Output archive format for bundles (zip|7z, default: 7z)", "format", Constants::Cli::Defaults::BUNDLE_FORMAT));
+    addOption(QCommandLineOption("bundle-format", "Output archive format for bundles (zip, default: zip)", "format", Constants::Cli::Defaults::BUNDLE_FORMAT));
     addOption(QCommandLineOption("bundle-art-dir","Optional pre-downloaded artwork directory (avoids re-downloading box art)", "directory"));
     addOption(QCommandLineOption("bundle-disc-format", "Disc media packaging inside bundles (original|chd|rvz, default: chd). When chd is requested, the planner auto-selects: RVZ for GameCube/Wii, CSO for PSP, CHD for all other disc formats.", "format", Constants::Cli::Defaults::BUNDLE_DISC_FORMAT));
 
@@ -111,7 +111,6 @@ void registerAllOptions(QCommandLineParser &parser, QSet<QString> &actionOptions
     addActionOption(QCommandLineOption("mod-install",    "Install a mod by catalog ID",        "modId"));
     addOption(QCommandLineOption("mod-file",       "Base file ID to apply the mod to",   "fileId"));
     addOption(QCommandLineOption("mod-output",     "Output directory for patched ROM",   "directory"));
-    addOption(QCommandLineOption("mod-no-bundle",  "Skip bundling the patched ROM"));
     addActionOption(QCommandLineOption("mod-installed",  "List installed mods"));
     addActionOption(QCommandLineOption("mod-uninstall",  "Remove an installed mod by ID",      "installId"));
     addActionOption(QCommandLineOption("mod-catalog-build",  "Build mod catalog JSON from a local RAPatches clone", "repoPath"));
@@ -124,7 +123,7 @@ void registerAllOptions(QCommandLineParser &parser, QSet<QString> &actionOptions
 
     addActionOption(QCommandLineOption("library",
         "Full pipeline: scan→hash→match→enrich→bundle→organize on a ROM directory. "
-        "Defaults: 7z bundles, CHD disc conversion, system subfolders. "
+        "Defaults: zip bundles, CHD disc conversion, system subfolders. "
         "Use --output to specify the destination.",
         "path"));
     addOption(QCommandLineOption("output",
@@ -180,7 +179,7 @@ void registerAllOptions(QCommandLineParser &parser, QSet<QString> &actionOptions
 
     addOption(QCommandLineOption(Constants::Cli::Options::NO_INTERACTIVE, "Accepted for backwards compatibility (this is a CLI-only build)"));
     addOption(QCommandLineOption(QStringLiteral("log-file"),
-                                 QStringLiteral("Write full CLI output to a log file (auto-enabled for scan/process/match/enrich/bundle/convert commands)"),
+                                 QStringLiteral("Write full CLI output to a log file (opt-in; specify a path to enable tee logging)"),
                                  QStringLiteral("path")));
     addOption(QCommandLineOption(QStringLiteral("file-id"),
                                  QStringLiteral("Scope hash/match/enrich/bundle/organize/artwork to a specific database file ID (repeatable: --file-id 1 --file-id 2)"),

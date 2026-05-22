@@ -210,14 +210,15 @@ int handleEditMetadataCommand(CliContext &ctx)
         return 0;
     }
 
-    // updateGame signature: (gameId, publisher, developer, releaseDate, description, genres, players, rating)
-    // We only update the fields the user specified; empty strings are kept existing
+    // updateGame: only the fields the user specified are written; empty strings keep existing values
     if (!ctx.db.updateGame(match.gameId, publisher, developer,
                             /*releaseDate*/ QString(),
                             /*description*/ QString(),
                             genre,
                             /*players*/ QString(),
-                            /*rating*/ -1.0f)) {
+                            /*rating*/ -1.0f,
+                            title,
+                            region)) {
         qCritical() << "✗ Failed to update game metadata";
         return 1;
     }

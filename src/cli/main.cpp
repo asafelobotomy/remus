@@ -200,7 +200,7 @@ int main(int argc, char *argv[])
         ctx.processSourcePath = parser.value("library");
         ctx.processOutputPath = parser.value("output");
         // Apply consumer-friendly defaults when not already set by a preset or explicit flags
-        if (ctx.presetBundleFormat.isEmpty())  ctx.presetBundleFormat  = QStringLiteral("7z");
+        if (ctx.presetBundleFormat.isEmpty())  ctx.presetBundleFormat  = QStringLiteral("zip");
         if (ctx.presetDiscFormat.isEmpty())    ctx.presetDiscFormat    = QStringLiteral("chd");
         if (ctx.presetFolderNaming.isEmpty())  ctx.presetFolderNaming  = QStringLiteral("default");
         if (ctx.presetDisplayName.isEmpty())   ctx.presetDisplayName   = QStringLiteral("library");

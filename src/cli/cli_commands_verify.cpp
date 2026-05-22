@@ -345,7 +345,7 @@ int handlePatchDatCommand(CliContext &ctx)
         qInfo() << "=== Imported Patch Catalogs ===";
 
         if (patchDats.isEmpty()) {
-            qInfo() << "No patch catalogs imported.";
+            qInfo() << "No patch catalogs found in the bundled compendium.";
             return 0;
         }
 

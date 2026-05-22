@@ -201,9 +201,12 @@ bool Database::updateGame(int gameId,
                           const QString &publisher, const QString &developer,
                           const QString &releaseDate, const QString &description,
                           const QString &genres, const QString &players,
-                          float rating)
+                          float rating,
+                          const QString &title, const QString &region)
 {
     static const QSet<QString> kAllowedUpdateColumns = {
+        QStringLiteral("title"),
+        QStringLiteral("region"),
         QStringLiteral("publisher"),
         QStringLiteral("developer"),
         QStringLiteral("release_date"),
@@ -228,6 +231,8 @@ bool Database::updateGame(int gameId,
         }
     };
 
+    addIfSet("title",        title);
+    addIfSet("region",       region);
     addIfSet("publisher",    publisher);
     addIfSet("developer",    developer);
     addIfSet("release_date", releaseDate);
