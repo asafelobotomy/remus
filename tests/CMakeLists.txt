@@ -272,7 +272,7 @@ target_compile_definitions(test_cli_smoke PRIVATE
     REMUS_SOURCE_DIR="${CMAKE_SOURCE_DIR}"
 )
 
-# ── Service layer tests (Phase 6.4) ───────────────────────────────
+# ── Service layer tests ────────────────────────────────────────────
 add_remus_test(test_library_service LibraryServiceTest
     SOURCES test_library_service.cpp
     LIBS Qt6::Test Qt6::Sql remus-services remus-core
@@ -306,7 +306,7 @@ target_compile_definitions(test_mod_workflow PRIVATE
     REMUS_SOURCE_DIR="${CMAKE_SOURCE_DIR}"
 )
 
-# ── New coverage tests (2026-02-20) ───────────────────────────────────────
+# ── Coverage tests ──────────────────────────────────────────────────────────
 
 add_remus_test(test_database DatabaseTest
     SOURCES test_database.cpp test_database_files.cpp test_database_relations.cpp test_database_fixture.h
@@ -359,7 +359,7 @@ add_remus_test(test_rapatches_catalog RAPatchesCatalogTest
 )
 
 
-# ── Orphaned test recovered 2026-05-04 ───────────────────────────────────────
+# ── Additional unit tests ───────────────────────────────────────────────────
 add_remus_test(test_metadata_field_gap MetadataFieldGapTest
     SOURCES test_metadata_field_gap.cpp
     LIBS Qt6::Test Qt6::Core remus-metadata remus-core
@@ -391,9 +391,8 @@ add_remus_test(test_rvz_converter RvzConverterTest
     LIBS Qt6::Test Qt6::Core remus-core
 )
 
-# ── Recovered manual test: metadata cache deserialization ────────────────────
-# This test uses a plain main() with exit-code semantics rather than the Qt
-# Test framework, so it is registered directly instead of via add_remus_test.
+# ── Non-standard test: uses plain main() with exit-code semantics rather than
+# the Qt Test framework, so registered directly instead of via add_remus_test.
 add_executable(test_cache_deserialization test_cache_deserialization.cpp)
 target_link_libraries(test_cache_deserialization PRIVATE Qt6::Core Qt6::Sql remus-metadata remus-core)
 add_test(NAME CacheDeserializationTest COMMAND test_cache_deserialization)

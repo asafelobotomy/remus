@@ -32,6 +32,7 @@ export VERSION
 
 # ── Prepare AppDir layout ───────────────────────────────────────────────────
 APPDIR="$BUILD_DIR/AppDir"
+trap 'rm -rf "${APPDIR:-}"' EXIT
 rm -rf "$APPDIR"
 mkdir -p "$APPDIR/usr/bin"
 mkdir -p "$APPDIR/usr/share/applications"

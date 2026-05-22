@@ -82,7 +82,7 @@ Options:
   --manifest <path>         Manifest output/input path
   --output-db <path>        Compendium SQLite output path
   --coverage-report <path>  TSV coverage report path
-    --heartbeat-seconds <n>   Wrapper progress heartbeat interval in seconds (default: 600)
+  --heartbeat-seconds <n>   Wrapper progress heartbeat interval in seconds (default: 600)
   -h, --help                Show this help
 USAGE
 }
