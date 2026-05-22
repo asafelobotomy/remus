@@ -12,6 +12,7 @@
 #include "../../core/constants/confidence.h"
 #include "../../core/constants/match_methods.h"
 #include "../../core/database.h"
+#include "../../core/disc_magic_detector.h"
 #include "../../core/match_utils.h"
 #include "../../core/matching_engine.h"
 #include "../../metadata/metadata_provider.h"
@@ -324,13 +325,40 @@ bool MatchController::matchFileRecord(const FileRecord &file)
     }
 
     if (metadata.title.isEmpty()) {
+        // Detect disc serial to enable serial-based cascade when hash matching fails.
+        QString discSerial;
+        if (DiscMagicDetector::isDiscImageExtension(file.extension)) {
+            DiscHeaderInfo discInfo;
+            if (file.isCompressed && !file.archivePath.isEmpty()) {
+                const QString memberPath = file.archiveInternalPath.isEmpty()
+                    ? file.filename : file.archiveInternalPath;
+                discInfo = DiscMagicDetector::detectFromArchive(
+                    file.archivePath, memberPath, file.fileSize);
+            } else {
+                discInfo = DiscMagicDetector::detect(file.currentPath);
+                if (!discInfo.detected || discInfo.serial.isEmpty()) {
+                    const DiscHeaderInfo dcInfo = DiscMagicDetector::extractDreamcastHeader(file.currentPath);
+                    if (dcInfo.detected && !dcInfo.serial.isEmpty())
+                        discInfo = dcInfo;
+                }
+            }
+            if (discInfo.detected && !discInfo.serial.isEmpty())
+                discSerial = discInfo.serial;
+        }
+
         const QString displayName = deriveMatchingDisplayName(file);
-        metadata = orchestrator->searchWithFallback(hash, displayName, systemName, file.crc32, file.md5, file.sha1);
+        metadata = orchestrator->searchWithFallback(hash, displayName, systemName,
+                                                    file.crc32, file.md5, file.sha1, discSerial);
         if (!metadata.title.isEmpty()) {
-            confidence = calculateNameSimilarity(displayName, metadata.title);
-            method = confidence >= Constants::Confidence::Thresholds::EXACT_NAME
-                ? QString::fromLatin1(Constants::MatchMethods::NAME)
-                : QString::fromLatin1(Constants::MatchMethods::FUZZY);
+            if (metadata.matchScore > 0.0f && !metadata.matchMethod.isEmpty()) {
+                confidence = metadata.matchScore * 100.0f;
+                method = metadata.matchMethod;
+            } else {
+                confidence = calculateNameSimilarity(displayName, metadata.title);
+                method = confidence >= Constants::Confidence::Thresholds::EXACT_NAME
+                    ? QString::fromLatin1(Constants::MatchMethods::NAME)
+                    : QString::fromLatin1(Constants::MatchMethods::FUZZY);
+            }
         }
     }
 

@@ -28,15 +28,18 @@ public:
     }
 
     GameMetadata getByHash(const QString &, const QString &) override { ++m_hashCallCount; return m_hashMetadata; }
+    GameMetadata getBySerial(const QString &, const QString &) override { ++m_serialCallCount; return m_serialMetadata; }
     GameMetadata getById(const QString &) override { return m_idMetadata; }
     ArtworkUrls getArtwork(const QString &) override { return m_artwork; }
 
     GameMetadata m_hashMetadata;
+    GameMetadata m_serialMetadata;
     GameMetadata m_idMetadata;
     QList<SearchResult> m_searchResults;
     ArtworkUrls m_artwork;
     QString m_lastSearchName;
     int m_hashCallCount = 0;
+    int m_serialCallCount = 0;
 
 private:
     QString m_id;
@@ -113,6 +116,10 @@ private slots:
 
     // P3 — Concurrent field-gap computation correctness
     void testComputeFieldGapConcurrentlyConsistent();
+
+    // Cascade: hash miss → serial → name
+    void serialCascadeWhenHashMisses();
+    void nameCascadeWhenHashAndSerialMiss();
 };
 
 void ProviderOrchestratorTest::hashProviderPriority()
@@ -635,6 +642,66 @@ void ProviderOrchestratorTest::testComputeFieldGapConcurrentlyConsistent()
     for (int i = 0; i < N; ++i) {
         QCOMPARE(results[i], expected);
     }
+}
+
+// Cascade: hash miss → serial → name
+
+void ProviderOrchestratorTest::serialCascadeWhenHashMisses()
+{
+    // Arrange: provider returns empty on hash, a result on serial.
+    ProviderOrchestrator orchestrator;
+
+    auto *provider = new StubProvider("compendium");
+    // hash returns nothing
+    GameMetadata serialHit;
+    serialHit.id = "wup-a-baae";
+    serialHit.title = "Mario Kart 8";
+    serialHit.matchScore = 0.9f;
+    serialHit.matchMethod = QStringLiteral("serial");
+    provider->m_serialMetadata = serialHit;
+
+    orchestrator.addProvider("compendium", provider, 100);
+
+    // Act: supply a serial; hash is empty so only serial/name paths run.
+    GameMetadata result = orchestrator.searchWithFallback(
+        QString(), QString(), QStringLiteral("Wii U"),
+        QString(), QString(), QString(), QStringLiteral("WUP-A-BAAE"));
+
+    // Assert: matched via serial, hash never called, serial called once.
+    QCOMPARE(result.title, QStringLiteral("Mario Kart 8"));
+    QCOMPARE(result.matchMethod, QStringLiteral("serial"));
+    QCOMPARE(provider->m_hashCallCount, 0);
+    QCOMPARE(provider->m_serialCallCount, 1);
+}
+
+void ProviderOrchestratorTest::nameCascadeWhenHashAndSerialMiss()
+{
+    // Arrange: provider returns empty on both hash and serial, a result on name.
+    ProviderOrchestrator orchestrator;
+
+    auto *provider = new StubProvider("compendium");
+    // hash and serial return nothing; name search succeeds.
+    SearchResult sr;
+    sr.id = "wup-a-baae";
+    sr.title = "Mario Kart 8";
+    sr.matchScore = 0.99f;
+    provider->m_searchResults = {sr};
+    GameMetadata idResult;
+    idResult.id = "wup-a-baae";
+    idResult.title = "Mario Kart 8";
+    provider->m_idMetadata = idResult;
+
+    orchestrator.addProvider("compendium", provider, 100);
+
+    // Act: supply name but no hash or serial.
+    GameMetadata result = orchestrator.searchWithFallback(
+        QString(), QStringLiteral("Mario Kart 8"), QStringLiteral("Wii U"));
+
+    // Assert: matched via name, hash and serial never called.
+    QCOMPARE(result.title, QStringLiteral("Mario Kart 8"));
+    QCOMPARE(provider->m_hashCallCount, 0);
+    QCOMPARE(provider->m_serialCallCount, 0);
+    QVERIFY(!result.matchMethod.isEmpty());
 }
 
 QTEST_MAIN(ProviderOrchestratorTest)
