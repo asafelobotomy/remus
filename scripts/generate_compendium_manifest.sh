@@ -184,7 +184,7 @@ for f in "${NO_INTRO_FILES[@]}"; do
 done
 for f in "${MAME_FILES[@]}"; do
     ALL_FILES+=("$f")
-    ALL_PREFIXES+=("pleasuredome-mame")
+    ALL_PREFIXES+=("mame-official")
     ALL_PRIORITIES+=("25")
 done
 for f in "${REDUMP_FILES[@]}"; do
@@ -224,7 +224,13 @@ OUTPUT_PATH="$OUTPUT_DIR/$(basename "$OUTPUT_PATH")"
 
         printf '    {\n'
         printf '      "source_id": "%s",\n' "$(json_escape "$source_id")"
-        printf '      "display_name": "%s",\n' "$(json_escape "Libretro DAT: $dat_stem")"
+        case "$dat_prefix" in
+            mame-official)    display_prefix="MAME DAT" ;;
+            libretro-redump)  display_prefix="Redump DAT" ;;
+            libretro-nointro) display_prefix="No-Intro DAT" ;;
+            *)                display_prefix="Libretro DAT" ;;
+        esac
+        printf '      "display_name": "%s",\n' "$(json_escape "$display_prefix: $dat_stem")"
         printf '      "source_type": "dat",\n'
         printf '      "snapshot_id": "%s",\n' "$(json_escape "$snapshot_id")"
         printf '      "snapshot_label": "%s",\n' "$(json_escape "$SNAPSHOT_LABEL")"

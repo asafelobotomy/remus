@@ -157,7 +157,10 @@ int SystemResolver::systemIdByDatName(const QString &datName)
         {QStringLiteral("Arcade - Sega - Chihiro"), ID_CHIHIRO},
         {QStringLiteral("Arcade - Sega - Lindbergh"), ID_LINDBERGH},
         {QStringLiteral("Arcade - Namco - Sega - Nintendo - Triforce"), ID_TRIFORCE},
-        // MAME (Pleasuredome) — merged, non-merged, and split sets all map to Arcade
+        // MAME — any DAT whose name starts with / contains "MAME" maps to Arcade.
+        // Covers the official mamedev release XML ("MAME 0.287") as well as
+        // Pleasuredome merged/non-merged/split sets.
+        {QStringLiteral("MAME"), ID_ARCADE},
         {QStringLiteral("MAME ROMs (merged)"), ID_ARCADE},
         {QStringLiteral("MAME ROMs (non-merged)"), ID_ARCADE},
         {QStringLiteral("MAME ROMs (split)"), ID_ARCADE},
