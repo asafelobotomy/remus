@@ -162,6 +162,15 @@ EXCLUDED_SOURCE_IDS=(
     "libretro-dat-sony-playstation-3"                   # 12% match; redump: 99%
     "libretro-dat-nintendo-gamecube"                    # 49% match; redump: 97%
     "libretro-dat-microsoft-xbox-360"                   # 52% match; nointro: 100%
+    # Superseded: nointro/dat counterpart has much higher match rate
+    "libretro-nointro-sega-32x"                         # 43% match; dat: 98%
+    "libretro-redump-microsoft-xbox-360"                # 51% match; nointro: 100%
+    # Zero-item sources (no content in libretro-database)
+    "libretro-dat-lutro"                                # 0 items; Lutro is a scripting framework
+    "libretro-dat-mobile-zeebo"                         # 0 items
+    "libretro-nointro-mobile-zeebo"                     # 0 items
+    "libretro-dat-microsoft-xbox-360-games-on-demand"   # 0 items
+    "libretro-nointro-microsoft-xbox-360-games-on-demand" # 0 items
 )
 
 is_excluded() {
