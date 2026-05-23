@@ -12,6 +12,8 @@ add_library(remus-services STATIC
     rapatches_catalog_builder.cpp
     rapatches_catalog_builder_parse.cpp
     retroachievements_enricher.cpp
+    secret_store.cpp
+    credential_manager.cpp
 )
 
 target_include_directories(remus-services PUBLIC
@@ -25,6 +27,10 @@ target_link_libraries(remus-services PUBLIC
     Qt6::Concurrent
     Qt6::Network
     Qt6::Sql
+)
+
+target_link_libraries(remus-services PRIVATE
+    Qt6Keychain::Qt6Keychain
 )
 
 if(REMUS_ENABLE_PCH)

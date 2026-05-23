@@ -432,6 +432,8 @@ int handleBuildCompendiumCommand(CliContext &ctx)
     report.insert(QStringLiteral("openvgdb_facts_inserted"), enrichStats.openvgdbFactsInserted);
     report.insert(QStringLiteral("igdb_games_enriched"),     enrichStats.igdbGamesEnriched);
     report.insert(QStringLiteral("igdb_facts_inserted"),     enrichStats.igdbFactsInserted);
+    report.insert(QStringLiteral("ra_games_enriched"),       enrichStats.raGamesEnriched);
+    report.insert(QStringLiteral("ra_facts_inserted"),       enrichStats.raFactsInserted);
     report.insert(QStringLiteral("post_enrich_resolved_fields"), enrichStats.resolvedFields);
     report.insert(QStringLiteral("duration_ms"), static_cast<qint64>(timer.elapsed()));
 

@@ -2,14 +2,12 @@
 #include "../metadata/igdb_provider.h"
 #include "../core/system_resolver.h"
 #include "../core/constants/providers.h"
+#include "../services/credential_manager.h"
 
 #include <QDate>
 #include <QDateTime>
 #include <QDebug>
-#include <QFile>
 #include <QHash>
-#include <QJsonDocument>
-#include <QJsonObject>
 #include <QSqlDatabase>
 #include <QSqlError>
 #include <QSqlQuery>
@@ -91,27 +89,9 @@ bool enrichFromIGDB(QSqlDatabase &database,
     gamesEnriched = 0;
     factsInserted = 0;
 
-    // Load credentials; silently skip if file is absent or credentials empty
-    if (!QFile::exists(credentialsPath)) {
-        qInfo().noquote() << QStringLiteral("[IGDB] Credentials file not found (%1) — enrichment skipped")
-            .arg(credentialsPath);
-        return true;
-    }
-    QFile credFile(credentialsPath);
-    if (!credFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        error = QStringLiteral("Cannot open credentials file: %1").arg(credentialsPath);
-        return false;
-    }
-    QJsonParseError credErr;
-    const QJsonDocument credDoc = QJsonDocument::fromJson(credFile.readAll(), &credErr);
-    credFile.close();
-    if (credErr.error != QJsonParseError::NoError) {
-        error = QStringLiteral("Credentials JSON parse error: %1").arg(credErr.errorString());
-        return false;
-    }
-    const QJsonObject igdbObj  = credDoc.object().value(QStringLiteral("igdb")).toObject();
-    const QString clientId     = igdbObj.value(QStringLiteral("client_id")).toString().trimmed();
-    const QString clientSecret = igdbObj.value(QStringLiteral("client_secret")).toString().trimmed();
+    // Load credentials via CredentialManager (JSON file → env var → QSettings → keychain)
+    const QString clientId     = CredentialManager::get(QStringLiteral("igdb/client_id"),     credentialsPath);
+    const QString clientSecret = CredentialManager::get(QStringLiteral("igdb/client_secret"), credentialsPath);
     if (clientId.isEmpty() || clientSecret.isEmpty()) {
         qInfo() << "[IGDB] Credentials not configured — enrichment skipped";
         return true;

@@ -1,7 +1,7 @@
 #include "settings_controller.h"
 
 #include "../../core/constants/constants.h"
-#include "secret_store.h"
+#include "services/secret_store.h"
 
 namespace Remus {
 
@@ -88,11 +88,14 @@ QVariantList SettingsController::providerGroups() const
     //  3 IGDB_CLIENT_ID
     //  4 IGDB_CLIENT_SECRET
     //  5 HASHEOUS_CLIENT_API_KEY
+    //  6 RETROACHIEVEMENTS_USERNAME
+    //  7 RETROACHIEVEMENTS_API_KEY
     const struct { const char *groupKey; const char *groupName; int from; int to; } groups[] = {
-        {"screenscraper", "ScreenScraper",  0, 1},
-        {"thegamesdb",    "TheGamesDB",     2, 2},
-        {"igdb",          "IGDB",           3, 4},
-        {"hasheous",      "Hasheous",       5, 5},
+        {"screenscraper",    "ScreenScraper",       0, 1},
+        {"thegamesdb",       "TheGamesDB",          2, 2},
+        {"igdb",             "IGDB",                3, 4},
+        {"hasheous",         "Hasheous",            5, 5},
+        {"retroachievements","RetroAchievements",   6, 7},
     };
 
     QVariantList result;
@@ -131,6 +134,9 @@ QString SettingsController::authenticateProvider(const QString &groupKey)
                      << QString::fromLatin1(Constants::Settings::Providers::IGDB_CLIENT_SECRET);
     } else if (groupKey == QLatin1String("hasheous")) {
         requiredKeys << QString::fromLatin1(Constants::Settings::Providers::HASHEOUS_CLIENT_API_KEY);
+    } else if (groupKey == QLatin1String("retroachievements")) {
+        requiredKeys << QString::fromLatin1(Constants::Settings::Providers::RETROACHIEVEMENTS_USERNAME)
+                     << QString::fromLatin1(Constants::Settings::Providers::RETROACHIEVEMENTS_API_KEY);
     } else {
         return QStringLiteral("Unknown provider.");
     }

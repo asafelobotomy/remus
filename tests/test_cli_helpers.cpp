@@ -43,6 +43,7 @@ private slots:
     void testHashFileRecordRealFile();
     void testHashFileRecordGdiUsesReferencedTrackPayload();
     void testPrintFileInfoDoesNotCrash();
+    void testBuildOrchestratorWithArgvFlagEmitsSecurityWarning();
 };
 
 // ── Helpers ───────────────────────────────────────────────────────────────
@@ -589,6 +590,34 @@ void CliHelpersTest::testPrintFileInfoDoesNotCrash()
     // Should not throw or abort; output goes to logging category
     printFileInfo(fr);
     QVERIFY(true);
+}
+
+void CliHelpersTest::testBuildOrchestratorWithArgvFlagEmitsSecurityWarning()
+{
+    // resolveSecret() must emit a security warning whenever a secret is supplied
+    // via argv (visible in process listings).  Declare the two expected warnings
+    // so Qt Test verifies they are emitted (Qt >= 6.3 fails the test if a
+    // registered ignoreMessage is never triggered).
+    QTest::ignoreMessage(QtWarningMsg,
+        QRegularExpression(QStringLiteral("Security: --igdb-client-id.*argv")));
+    QTest::ignoreMessage(QtWarningMsg,
+        QRegularExpression(QStringLiteral("Security: --igdb-client-secret.*argv")));
+
+    QCommandLineParser parser;
+    parser.addOption(QCommandLineOption(QStringLiteral("ss-user"), QString(), QStringLiteral("username")));
+    parser.addOption(QCommandLineOption(QStringLiteral("ss-pass"), QString(), QStringLiteral("password")));
+    parser.addOption(QCommandLineOption(QStringLiteral("igdb-client-id"), QString(), QStringLiteral("clientId")));
+    parser.addOption(QCommandLineOption(QStringLiteral("igdb-client-secret"), QString(), QStringLiteral("clientSecret")));
+    parser.process(QStringList{
+        QStringLiteral("test"),
+        QStringLiteral("--igdb-client-id=id_from_argv"),
+        QStringLiteral("--igdb-client-secret=secret_from_argv")
+    });
+
+    auto orchestrator = buildOrchestrator(parser);
+
+    // IGDB must be enabled because both credentials were supplied.
+    QVERIFY(orchestrator->getEnabledProviders().contains(QStringLiteral("igdb")));
 }
 
 QTEST_MAIN(CliHelpersTest)

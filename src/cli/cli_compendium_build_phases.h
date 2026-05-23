@@ -22,6 +22,8 @@ struct EnrichmentStats {
     int openvgdbFactsInserted = 0;
     int igdbGamesEnriched     = 0;
     int igdbFactsInserted     = 0;
+    int raGamesEnriched       = 0;
+    int raFactsInserted       = 0;
     int resolvedFields        = 0;
 };
 

@@ -50,6 +50,8 @@ public:
     ArtworkUrls getArtwork(const QString &id) override;
     int igdbSkippedCount() const { return m_igdbSkippedCount; }
 
+    void setApiKey(const QString &key) { m_clientApiKey = key.trimmed(); }
+
 protected:
     QString m_clientApiKey;
     QMap<int, QString> m_companyCache;

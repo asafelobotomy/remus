@@ -37,6 +37,31 @@ public:
     GameMetadata getById(const QString &id) override;
     ArtworkUrls getArtwork(const QString &id) override;
 
+    /**
+     * @brief One entry from a bulk game-list API response.
+     *
+     * Returned by fetchGameListBySystemId().  The @p md5Hashes list is
+     * populated only when the API supports the @c h=1 parameter.
+     */
+    struct RAGameListEntry {
+        int         gameId          = 0;
+        QString     title;
+        int         achievementCount = 0;
+        QStringList md5Hashes;   ///< lower-case MD5 hashes
+    };
+
+    /**
+     * @brief Bulk-fetch all games for a RetroAchievements console.
+     *
+     * Calls @c API_GetGameList.php?i=raSystemId&h=1 to obtain the full game
+     * list with MD5 hashes in a single request.  Entries without hashes are
+     * omitted from the result.
+     *
+     * @param raSystemId  Numeric RetroAchievements console ID.
+     * @return            Populated list, or empty on failure / no games.
+     */
+    QList<RAGameListEntry> fetchGameListBySystemId(int raSystemId);
+
 private:
     static constexpr const char *API_BASE = "https://retroachievements.org/API";
     static constexpr const char *MEDIA_BASE = "https://media.retroachievements.org";

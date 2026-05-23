@@ -52,9 +52,6 @@ int handleModCatalogBuildCommand(CliContext &ctx)
         // Optionally enrich before writing
         if (hasEnrich) {
             Remus::RetroAchievementsEnricher enricher;
-            if (ctx.parser.isSet("ra-api-key"))
-                enricher.setApiKey(ctx.parser.value("ra-user"),
-                                    ctx.parser.value("ra-api-key"));
 
             if (enricher.hasApiKey()) {
                 qInfo() << "Enriching catalog with RetroAchievements data...";
@@ -92,10 +89,6 @@ int handleModCatalogBuildCommand(CliContext &ctx)
         }
 
         Remus::RetroAchievementsEnricher enricher;
-        if (ctx.parser.isSet("ra-api-key"))
-            enricher.setApiKey(ctx.parser.value("ra-user"),
-                                ctx.parser.value("ra-api-key"));
-
         if (!enricher.hasApiKey()) {
             qInfo() << "No RA API key available — enrichment skipped";
             qInfo() << "Set REMUS_RA_API_KEY and REMUS_RA_USERNAME env vars, or pass --ra-api-key and --ra-user";

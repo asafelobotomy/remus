@@ -58,6 +58,12 @@ QString resolveCliOptionValue(const QCommandLineParser &parser,
 
 // Return only files that have at least one computed hash value.
 QList<FileRecord> getHashedFiles(Database &db);
+
+// Resolve a provider secret: CLI flag → CredentialManager (env var → OS keychain → legacy QSettings).
+// Emits a security warning when the secret arrives via argv.
+QString resolveSecret(const QCommandLineParser &parser,
+                      const QString &optionName,
+                      const char *settingKey);
 QList<FileRecord> getHashedFiles(Database &db, const QSet<int> &fileScopeIds);
 bool fileMatchesProcessScope(const FileRecord &file, const QSet<int> &fileScopeIds);
 

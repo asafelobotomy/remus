@@ -98,6 +98,18 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db,
         }
     }
 
+    // ── Enrichment pass 5: RetroAchievements (manages its own per-system transactions) ──
+    if (!credPath.isEmpty() && QFile::exists(credPath)) {
+        if (!CompendiumEnrichment::enrichFromRetroAchievements(db,
+                                                               credPath,
+                                                               stats.raGamesEnriched,
+                                                               stats.raFactsInserted,
+                                                               error)) {
+            error = QStringLiteral("RetroAchievements enrichment failed: %1").arg(error);
+            return false;
+        }
+    }
+
     // ── Post-enrichment: re-run merge resolution to pick up newly-written facts ─
     {
         Remus::Compendium::CompilerStats resolveStats;

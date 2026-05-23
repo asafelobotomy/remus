@@ -2,6 +2,7 @@
 #include <QCommandLineParser>
 #include <QDebug>
 #include <QFile>
+#include <QStandardPaths>
 #include <QMessageLogContext>
 #include <QSet>
 #include <QStringList>
@@ -107,6 +108,15 @@ int main(int argc, char *argv[])
     QCoreApplication::setApplicationName(Constants::Cli::APPLICATION_NAME);
     QCoreApplication::setOrganizationName(Constants::SETTINGS_ORGANIZATION);
     QCoreApplication::setApplicationVersion(Constants::APP_VERSION);
+
+    // Tighten config-directory permissions (defence in depth — credentials live in
+    // the OS keychain, but the config dir should not be world-readable).
+    {
+        const QString cfgDir = QStandardPaths::writableLocation(QStandardPaths::GenericConfigLocation)
+                                + QStringLiteral("/") + QString::fromLatin1(Constants::SETTINGS_ORGANIZATION);
+        QFile::setPermissions(cfgDir,
+            QFileDevice::ReadOwner | QFileDevice::WriteOwner | QFileDevice::ExeOwner);
+    }
 
     QCommandLineParser parser;
     parser.setApplicationDescription("Remus CLI - Scan and catalog retro game ROMs");

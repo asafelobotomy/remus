@@ -1,6 +1,6 @@
 #include "app_controller.h"
 
-#include "secret_store.h"
+#include "services/secret_store.h"
 
 #include <QCoreApplication>
 #include <QDir>
@@ -93,11 +93,6 @@ void AppController::rebuildOrchestrator()
         }
     }
 
-    m_orchestrator->addProvider(
-        Constants::Providers::HASHEOUS,
-        new HasheousProvider(m_orchestrator.get()),
-        providerPriorityOrDefault(Constants::Providers::HASHEOUS, Constants::Providers::Priority::HASHEOUS));
-
     // Read provider credentials through SecretStore so secrets are not
     // fetched from plaintext QSettings now that the keychain migration is live.
     auto secretValue = [](const char *key) -> QString {
@@ -108,6 +103,17 @@ void AppController::rebuildOrchestrator()
         // haven't migrated yet.  Read-then-migrate on first successful secret write.
         return remusSettings().value(QString::fromLatin1(key)).toString().trimmed();
     };
+
+    {
+        auto *hasheousProvider = new HasheousProvider(m_orchestrator.get());
+        const QString hasheousKey = secretValue(Constants::Settings::Providers::HASHEOUS_CLIENT_API_KEY);
+        if (!hasheousKey.isEmpty())
+            hasheousProvider->setApiKey(hasheousKey);
+        m_orchestrator->addProvider(
+            Constants::Providers::HASHEOUS,
+            hasheousProvider,
+            providerPriorityOrDefault(Constants::Providers::HASHEOUS, Constants::Providers::Priority::HASHEOUS));
+    }
 
     const QString ssUser = secretValue(Constants::Settings::Providers::SCREENSCRAPER_USERNAME);
     const QString ssPass = secretValue(Constants::Settings::Providers::SCREENSCRAPER_PASSWORD);

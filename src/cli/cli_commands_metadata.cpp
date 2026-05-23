@@ -3,7 +3,6 @@
 #include <memory>
 #include <QDir>
 #include <QFileInfo>
-#include <QSettings>
 #include "../metadata/metadata_provider.h"
 #include "../metadata/provider_orchestrator.h"
 #include "../metadata/screenscraper_provider.h"
@@ -21,28 +20,6 @@
 using namespace Remus;
 using namespace Remus::Constants;
 
-namespace {
-
-QSettings remusSettings()
-{
-    return QSettings(QString::fromLatin1(Constants::SETTINGS_ORGANIZATION),
-                     QString::fromLatin1(Constants::SETTINGS_APPLICATION));
-}
-
-QString parserOrSetting(const QCommandLineParser &parser,
-                        const QString &optionName,
-                        const char *settingKey)
-{
-    if (parser.isSet(optionName)) {
-        return parser.value(optionName).trimmed();
-    }
-
-    QSettings settings = remusSettings();
-    return settings.value(QString::fromLatin1(settingKey)).toString().trimmed();
-}
-
-}
-
 /// Build a single provider from parser credentials.
 /// Returns nullptr when providerName is "auto" or unrecognised.
 static std::unique_ptr<MetadataProvider> buildSingleProvider(const QCommandLineParser &parser)
@@ -59,9 +36,9 @@ static std::unique_ptr<MetadataProvider> buildSingleProvider(const QCommandLineP
     }
     if (providerName == Providers::THEGAMESDB) {
         auto p = std::make_unique<TheGamesDBProvider>();
-        const QString tgdbApiKey = parserOrSetting(parser,
-                                                   QStringLiteral("tgdb-api-key"),
-                                                   Settings::Providers::THEGAMESDB_API_KEY);
+        const QString tgdbApiKey = resolveSecret(parser,
+                                                         QStringLiteral("tgdb-api-key"),
+                                                         Settings::Providers::THEGAMESDB_API_KEY);
         if (!tgdbApiKey.isEmpty()) {
             p->setApiKey(tgdbApiKey);
         }
@@ -69,12 +46,12 @@ static std::unique_ptr<MetadataProvider> buildSingleProvider(const QCommandLineP
     }
     if (providerName == Providers::IGDB) {
         auto p = std::make_unique<IGDBProvider>();
-        const QString clientId = parserOrSetting(parser,
-                                                 QStringLiteral("igdb-client-id"),
-                                                 Settings::Providers::IGDB_CLIENT_ID);
-        const QString clientSecret = parserOrSetting(parser,
-                                                     QStringLiteral("igdb-client-secret"),
-                                                     Settings::Providers::IGDB_CLIENT_SECRET);
+        const QString clientId = resolveSecret(parser,
+                                                       QStringLiteral("igdb-client-id"),
+                                                       Settings::Providers::IGDB_CLIENT_ID);
+        const QString clientSecret = resolveSecret(parser,
+                                                           QStringLiteral("igdb-client-secret"),
+                                                           Settings::Providers::IGDB_CLIENT_SECRET);
         if (!clientId.isEmpty() && !clientSecret.isEmpty()) {
             p->setCredentials(clientId, clientSecret);
         }
@@ -115,12 +92,12 @@ static std::unique_ptr<MetadataProvider> buildSingleProvider(const QCommandLineP
     }
     if (providerName == Providers::RETROACHIEVEMENTS) {
         auto p = std::make_unique<RetroAchievementsProvider>();
-        const QString raUser = parserOrSetting(parser,
-                                               QStringLiteral("ra-user"),
-                                               Settings::Providers::RETROACHIEVEMENTS_USERNAME);
-        const QString raKey = parserOrSetting(parser,
-                                              QStringLiteral("ra-api-key"),
-                                              Settings::Providers::RETROACHIEVEMENTS_API_KEY);
+        const QString raUser = resolveSecret(parser,
+                                                     QStringLiteral("ra-user"),
+                                                     Settings::Providers::RETROACHIEVEMENTS_USERNAME);
+        const QString raKey  = resolveSecret(parser,
+                                                     QStringLiteral("ra-api-key"),
+                                                     Settings::Providers::RETROACHIEVEMENTS_API_KEY);
         if (!raUser.isEmpty() && !raKey.isEmpty())
             p->setCredentials(raUser, raKey);
         return p;
@@ -239,9 +216,9 @@ int handleSearchCommand(CliContext &ctx)
         qInfo() << "No results found for:" << title;
         const QString provName = ctx.parser.value("provider");
         if (provName == Providers::THEGAMESDB) {
-            const QString key = parserOrSetting(ctx.parser,
-                                                QStringLiteral("tgdb-api-key"),
-                                                Settings::Providers::THEGAMESDB_API_KEY);
+            const QString key = resolveSecret(ctx.parser,
+                                                      QStringLiteral("tgdb-api-key"),
+                                                      Settings::Providers::THEGAMESDB_API_KEY);
             if (key.isEmpty())
                 qInfo() << "Hint: No API key configured for TheGamesDB. Set with --tgdb-api-key or in settings.";
         }

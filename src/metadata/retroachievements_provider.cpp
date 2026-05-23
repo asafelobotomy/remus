@@ -143,6 +143,70 @@ int RetroAchievementsProvider::resolveHashToGameId(const QString &md5Hash)
     return gameId;
 }
 
+QList<RetroAchievementsProvider::RAGameListEntry>
+RetroAchievementsProvider::fetchGameListBySystemId(int raSystemId)
+{
+    if (!m_authenticated || raSystemId <= 0)
+        return {};
+
+    throttle();
+
+    QUrl url(QString::fromLatin1(API_BASE) + QStringLiteral("/API_GetGameList.php"));
+    QUrlQuery query;
+    query.addQueryItem(QStringLiteral("i"), QString::number(raSystemId));
+    query.addQueryItem(QStringLiteral("y"), m_apiKey);
+    query.addQueryItem(QStringLiteral("h"), QStringLiteral("1")); // include MD5 hashes
+    url.setQuery(query);
+    // NOTE: Do not log `url` — it contains a plaintext API key.
+
+    QNetworkRequest request(url);
+    request.setHeader(QNetworkRequest::UserAgentHeader,
+                      QStringLiteral("Remus/1.0 (https://github.com/asafelobotomy/remus)"));
+
+    QNetworkReply *reply = m_networkManager->get(request);
+    ApiResponse response = waitForReply(reply, REQUEST_TIMEOUT_MS);
+
+    if (!response.success || response.data.isEmpty())
+        return {};
+
+    QJsonParseError parseError;
+    QJsonDocument doc = QJsonDocument::fromJson(response.data, &parseError);
+    if (parseError.error != QJsonParseError::NoError || !doc.isArray())
+        return {};
+
+    QList<RAGameListEntry> entries;
+    const QJsonArray arr = doc.array();
+    entries.reserve(arr.size());
+
+    for (const QJsonValue &val : arr) {
+        const QJsonObject obj = val.toObject();
+        const int gameId = obj.value(QStringLiteral("ID")).toInt(0);
+        if (gameId <= 0) continue;
+
+        RAGameListEntry entry;
+        entry.gameId          = gameId;
+        entry.title           = obj.value(QStringLiteral("Title")).toString();
+        entry.achievementCount = obj.value(QStringLiteral("NumAchievements")).toInt(0);
+
+        // "Hashes" is an array of MD5 strings present when the API supports h=1.
+        const QJsonValue hashesVal = obj.value(QStringLiteral("Hashes"));
+        if (hashesVal.isArray()) {
+            const QJsonArray hashArr = hashesVal.toArray();
+            entry.md5Hashes.reserve(hashArr.size());
+            for (const QJsonValue &h : hashArr) {
+                const QString hash = h.toString().trimmed().toLower();
+                if (!hash.isEmpty())
+                    entry.md5Hashes.append(hash);
+            }
+        }
+
+        if (!entry.md5Hashes.isEmpty())
+            entries.append(entry);
+    }
+
+    return entries;
+}
+
 QJsonObject RetroAchievementsProvider::fetchGameJson(int gameId)
 {
     throttle();

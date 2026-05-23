@@ -101,4 +101,40 @@ bool enrichFromIGDB(QSqlDatabase &database,
                     int &factsInserted,
                     QString &error);
 
+/**
+ * @brief Enrich games using the RetroAchievements online API (hash-based matching).
+ *
+ * For each system that has a RetroAchievements system-ID mapping, bulk-fetches
+ * the full game list with MD5 hashes (one API call per system), matches the
+ * hashes against @c game_signatures, and then:
+ *  - Writes @c ra_game_id and @c achievement_count facts for every hash match.
+ *  - For matched games that are still missing a description, calls
+ *    @c API_GetGame.php to retrieve and apply description, genre, developer,
+ *    publisher, and release year (COALESCE — existing values are never
+ *    overwritten).
+ *
+ * This function manages its own per-system transactions internally.
+ * Do NOT wrap it in an external transaction.
+ *
+ * Credentials are read from the @c retroachievements block of the shared
+ * @p credentialsPath JSON file:
+ * @code
+ * { "retroachievements": { "username": "...", "api_key": "..." } }
+ * @endcode
+ * Silently skipped if the file is absent or the credentials block is empty.
+ *
+ * @param database         Open SQLite connection (no active transaction required).
+ * @param credentialsPath  Path to enrichment-credentials.json.
+ * @param gamesEnriched    [out] Number of game rows updated with full metadata.
+ * @param factsInserted    [out] Number of new game_facts rows inserted
+ *                              (includes ra_game_id and achievement_count rows).
+ * @param error            [out] Human-readable error message on failure.
+ * @return true on success (or silently skipped), false on error.
+ */
+bool enrichFromRetroAchievements(QSqlDatabase &database,
+                                  const QString &credentialsPath,
+                                  int &gamesEnriched,
+                                  int &factsInserted,
+                                  QString &error);
+
 } // namespace CompendiumEnrichment

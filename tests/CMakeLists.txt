@@ -251,7 +251,12 @@ add_remus_test(test_artwork_downloader ArtworkDownloaderTest
 
 add_remus_test(test_providers_minimal ProvidersMinimalTest
     SOURCES test_providers_minimal.cpp
-    LIBS Qt6::Test Qt6::Core remus-metadata remus-core
+    LIBS Qt6::Test Qt6::Core remus-metadata remus-core remus-services
+)
+
+add_remus_test(test_credential_manager CredentialManagerTest
+    SOURCES test_credential_manager.cpp
+    LIBS Qt6::Test Qt6::Core remus-services
 )
 
 add_remus_test(test_wikidata_provider WikidataProviderTest
@@ -345,7 +350,7 @@ add_remus_test(test_rom_bundler RomBundlerTest
 
 add_remus_test(test_cli_helpers CliHelpersTest
     SOURCES test_cli_helpers.cpp ../src/cli/cli_helpers.cpp ../src/cli/cli_helpers_providers.cpp
-    LIBS Qt6::Test Qt6::Core Qt6::Sql Qt6::Network remus-core remus-metadata remus-constants
+    LIBS Qt6::Test Qt6::Core Qt6::Sql Qt6::Network remus-core remus-metadata remus-constants remus-services
 )
 
 add_remus_test(test_cli_mod_support CliModSupportTest
@@ -384,6 +389,12 @@ add_remus_test(test_compendium_normalizer CompendiumNormalizerTest
 add_remus_test(test_compendium_identity_linker CompendiumIdentityLinkerTest
     SOURCES test_compendium_identity_linker.cpp
     LIBS Qt6::Test Qt6::Core remus-metadata
+)
+
+add_remus_test(test_compendium_ra_enrichment CompendiumRaEnrichmentTest
+    SOURCES test_compendium_ra_enrichment.cpp
+            ../src/cli/compendium_enrichment_ra.cpp
+    LIBS Qt6::Test Qt6::Core Qt6::Sql remus-metadata remus-core remus-services
 )
 
 add_remus_test(test_rvz_converter RvzConverterTest

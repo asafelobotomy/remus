@@ -1,6 +1,8 @@
 #include <QCoreApplication>
+#include <QFile>
 #include <QGuiApplication>
 #include <QQuickStyle>
+#include <QStandardPaths>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 
@@ -32,6 +34,15 @@ int main(int argc, char *argv[])
     QQuickStyle::setStyle(QStringLiteral("Fusion"));
     QCoreApplication::setOrganizationName(QString::fromLatin1(Remus::Constants::SETTINGS_ORGANIZATION));
     QCoreApplication::setApplicationName(QString::fromLatin1(Remus::Constants::SETTINGS_APPLICATION));
+
+    // Tighten config-directory permissions (defence in depth — credentials live in
+    // the OS keychain, but the config dir should not be world-readable).
+    {
+        const QString cfgDir = QStandardPaths::writableLocation(QStandardPaths::GenericConfigLocation)
+                                + QStringLiteral("/") + QString::fromLatin1(Remus::Constants::SETTINGS_ORGANIZATION);
+        QFile::setPermissions(cfgDir,
+            QFileDevice::ReadOwner | QFileDevice::WriteOwner | QFileDevice::ExeOwner);
+    }
 
     Remus::AppController appController;
     Remus::SettingsController settingsController;

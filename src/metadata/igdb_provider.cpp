@@ -7,6 +7,7 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QDebug>
+#include <QRegularExpression>
 #include "../core/constants/constants.h"
 
 namespace Remus {
@@ -161,6 +162,13 @@ GameMetadata IGDBProvider::getById(const QString &id)
 {
     GameMetadata metadata;
 
+    bool ok = false;
+    const qlonglong numericId = id.toLongLong(&ok);
+    if (!ok || numericId <= 0) {
+        qWarning() << "IGDB::getById: rejected non-numeric id" << id;
+        return metadata;
+    }
+
     if (!authenticate()) {
         emit errorOccurred("IGDB authentication failed");
         return metadata;
@@ -172,7 +180,7 @@ GameMetadata IGDBProvider::getById(const QString &id)
                            "involved_companies.company.name,involved_companies.developer,"
                            "involved_companies.publisher,aggregated_rating,"
                            "multiplayer_modes.offlinemax; where id = %1;")
-                       .arg(id);
+                       .arg(numericId);
 
     ApiResponse response = makeRequest("/games", body);
     if (!response.success) {
@@ -201,13 +209,20 @@ ArtworkUrls IGDBProvider::getArtwork(const QString &id)
 {
     ArtworkUrls artwork;
 
+    bool ok = false;
+    const qlonglong numericId = id.toLongLong(&ok);
+    if (!ok || numericId <= 0) {
+        qWarning() << "IGDB::getArtwork: rejected non-numeric id" << id;
+        return artwork;
+    }
+
     if (!authenticate()) {
         return artwork;
     }
 
     m_rateLimiter->waitIfNeeded();
 
-    QString body = QString("fields cover.url,screenshots.url,artworks.url; where id = %1;").arg(id);
+    QString body = QString("fields cover.url,screenshots.url,artworks.url; where id = %1;").arg(numericId);
 
     ApiResponse response = makeRequest("/games", body);
     if (!response.success) {
@@ -343,6 +358,15 @@ QList<GameMetadata> IGDBProvider::fetchGamesByPlatformSlug(
     const QString &platformSlug, int offset, int limit)
 {
     QList<GameMetadata> results;
+
+    // Platform slugs must be lowercase alphanumeric + hyphens (IGDB convention).
+    // Reject anything outside that alphabet to prevent Apicalypse injection.
+    static const QRegularExpression kSlugRe(QStringLiteral("^[a-z0-9][a-z0-9\\-]*$"));
+    if (!kSlugRe.match(platformSlug).hasMatch()) {
+        qWarning() << "IGDB::fetchGamesByPlatformSlug: rejected invalid slug" << platformSlug;
+        return results;
+    }
+
     if (!authenticate()) {
         emit errorOccurred(QStringLiteral("IGDB authentication failed"));
         return results;

@@ -36,10 +36,6 @@ bool isMetadataProxyEndpoint(const QString &path)
 HasheousProvider::HasheousProvider(QObject *parent)
     : HttpMetadataProvider(Constants::Network::HASHEOUS_RATE_LIMIT_MS, parent)
 {
-    QSettings settings;
-    m_clientApiKey = settings.value(Constants::Settings::Providers::HASHEOUS_CLIENT_API_KEY)
-                         .toString().trimmed();
-
     qInfo() << "Hasheous provider initialized (hash lookup enabled; MetadataProxy"
             << (metadataProxyEnabled() ? "enabled" : "disabled") << ")";
 }

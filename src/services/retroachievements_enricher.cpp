@@ -1,5 +1,6 @@
 #include "retroachievements_enricher.h"
 
+#include "credential_manager.h"
 #include "../core/constants/api.h"
 #include "../core/constants/network.h"
 
@@ -38,14 +39,14 @@ QString RetroAchievementsEnricher::effectiveApiKey() const
 {
     if (!m_apiKey.isEmpty())
         return m_apiKey;
-    return QString::fromLocal8Bit(qgetenv(Constants::API::RA_API_KEY_ENV));
+    return CredentialManager::get(QStringLiteral("retroachievements/api_key"));
 }
 
 QString RetroAchievementsEnricher::effectiveUsername() const
 {
     if (!m_username.isEmpty())
         return m_username;
-    return QString::fromLocal8Bit(qgetenv(Constants::API::RA_USERNAME_ENV));
+    return CredentialManager::get(QStringLiteral("retroachievements/username"));
 }
 
 // ---------------------------------------------------------------------------

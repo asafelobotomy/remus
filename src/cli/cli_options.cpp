@@ -40,13 +40,14 @@ void registerAllOptions(QCommandLineParser &parser, QSet<QString> &actionOptions
         .arg(Providers::SCREENSCRAPER).arg(Providers::THEGAMESDB).arg(Providers::IGDB);
     addOption(QCommandLineOption(Constants::Cli::Options::PROVIDER, providerHelp, "provider", Constants::Cli::Defaults::PROVIDER));
     addOption(QCommandLineOption("tgdb-api-key", "TheGamesDB API key (env: REMUS_TGDB_API_KEY)", "apiKey"));
+    addOption(QCommandLineOption("hasheous-api-key", "Hasheous client API key (env: REMUS_HASHEOUS_API_KEY)", "apiKey"));
     addOption(QCommandLineOption("ss-user",    "ScreenScraper username (env: REMUS_SS_USER)",      "username"));
     addOption(QCommandLineOption("ss-pass",    "ScreenScraper password (env: REMUS_SS_PASS)",      "password"));
     addOption(QCommandLineOption("ss-devid",   "ScreenScraper dev ID (env: REMUS_SS_DEVID)",       "devid"));
     addOption(QCommandLineOption("ss-devpass", "ScreenScraper dev password (env: REMUS_SS_DEVPASS)", "devpassword"));
     addOption(QCommandLineOption("igdb-client-id", "IGDB client ID (env: REMUS_IGDB_CLIENT_ID)", "clientId"));
     addOption(QCommandLineOption("igdb-client-secret", "IGDB client secret (env: REMUS_IGDB_CLIENT_SECRET)", "clientSecret"));
-    addOption(QCommandLineOption("ra-user",    "RetroAchievements username (env: REMUS_RA_USER)",  "username"));
+    addOption(QCommandLineOption("ra-user",    "RetroAchievements username (env: REMUS_RA_USERNAME)",  "username"));
     addOption(QCommandLineOption("ra-api-key", "RetroAchievements web API key (env: REMUS_RA_API_KEY)", "apiKey"));
 
     addActionOption(QCommandLineOption("match", "Match scanned files with metadata (M3 intelligent matching)"));

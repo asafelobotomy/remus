@@ -21,7 +21,6 @@ add_library(remus-gui-controllers STATIC
     controllers/settings_controller.cpp
     controllers/workflow_controller.cpp
     controllers/workflow_controller_run.cpp
-    controllers/secret_store.cpp
     models/file_list_model.cpp
     models/match_list_model.cpp
     models/verification_result_model.cpp
@@ -40,10 +39,6 @@ target_link_libraries(remus-gui-controllers PUBLIC
     Qt6::Gui
     Qt6::Sql
     Qt6::Network
-)
-
-target_link_libraries(remus-gui-controllers PRIVATE
-    Qt6Keychain::Qt6Keychain
 )
 
 qt_add_executable(remus-gui

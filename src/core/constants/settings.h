@@ -114,13 +114,15 @@ struct ProviderSettingField {
  * Excludes developer-only keys (DEVID, DEVPASSWORD).
  * UI code can iterate this instead of hardcoding each field.
  */
-inline constexpr std::array<ProviderSettingField, 6> ALL_PROVIDER_FIELDS = {{
+inline constexpr std::array<ProviderSettingField, 8> ALL_PROVIDER_FIELDS = {{
     { Settings::Providers::SCREENSCRAPER_USERNAME,   "ScreenScraper Username", false },
     { Settings::Providers::SCREENSCRAPER_PASSWORD,   "ScreenScraper Password", true  },
     { Settings::Providers::THEGAMESDB_API_KEY,       "TheGamesDB API Key",     false },
     { Settings::Providers::IGDB_CLIENT_ID,           "IGDB Client ID",         false },
     { Settings::Providers::IGDB_CLIENT_SECRET,       "IGDB Client Secret",     true  },
     { Settings::Providers::HASHEOUS_CLIENT_API_KEY,  "Hasheous API Key",       false },
+    { Settings::Providers::RETROACHIEVEMENTS_USERNAME, "RetroAchievements Username", false },
+    { Settings::Providers::RETROACHIEVEMENTS_API_KEY,  "RetroAchievements API Key",  true  },
 }};
 
 } // Constants

@@ -15,6 +15,7 @@
 #include "../metadata/screenscraper_provider.h"
 #include "../metadata/thegamesdb_provider.h"
 #include "../metadata/wikidata_provider.h"
+#include "../services/credential_manager.h"
 
 using namespace Remus;
 using namespace Remus::Constants;
@@ -39,23 +40,22 @@ QString parserOrSetting(const QCommandLineParser &parser,
     return settings.value(QString::fromLatin1(settingKey)).toString().trimmed();
 }
 
-/// Resolve a provider secret: CLI flag → environment variable → QSettings.
-/// Prefer environment variables over flags in automated / non-interactive flows
-/// to avoid exposing secrets in shell history and process listings.
-static QString resolveSecret(const QCommandLineParser &parser,
-                             const QString &optionName,
-                             const char *envVar,
-                             const char *settingKey)
-{
-    if (parser.isSet(optionName))
-        return parser.value(optionName).trimmed();
-    const QByteArray env = qgetenv(envVar);
-    if (!env.isEmpty())
-        return QString::fromLocal8Bit(env).trimmed();
-    QSettings settings = remusSettings();
-    return settings.value(QString::fromLatin1(settingKey)).toString().trimmed();
 }
 
+/// Resolve a provider secret: CLI flag → CredentialManager (env var → OS keychain → legacy QSettings).
+/// Emits a security warning when the secret arrives via argv, which is visible
+/// in shell history and process listings.
+QString resolveSecret(const QCommandLineParser &parser,
+                      const QString &optionName,
+                      const char *settingKey)
+{
+    if (parser.isSet(optionName)) {
+        qWarning().noquote() << QStringLiteral(
+            "Security: --%1 passes a secret via argv (visible in process listings). "
+            "Use the corresponding env var or the OS keychain instead.").arg(optionName);
+        return parser.value(optionName).trimmed();
+    }
+    return CredentialManager::get(QString::fromLatin1(settingKey));
 }
 
 QString findDataSubdir(const QString &subdir)
@@ -106,22 +106,28 @@ std::unique_ptr<ProviderOrchestrator> buildOrchestrator(const QCommandLineParser
     }
 
     auto hasheousProvider = std::make_unique<HasheousProvider>();
+    {
+        const QString hasheousKey = resolveSecret(parser, QStringLiteral("hasheous-api-key"),
+                                                  Settings::Providers::HASHEOUS_CLIENT_API_KEY);
+        if (!hasheousKey.isEmpty())
+            hasheousProvider->setApiKey(hasheousKey);
+    }
     const auto hasheousInfo = Providers::getProviderInfo(Providers::HASHEOUS);
     orchestrator->addProvider(Providers::HASHEOUS, hasheousProvider.get(),
                               hasheousInfo ? hasheousInfo->priority : 80);
     hasheousProvider.release();
 
     const QString ssUser = resolveSecret(parser, QStringLiteral("ss-user"),
-                                         "REMUS_SS_USER", Settings::Providers::SCREENSCRAPER_USERNAME);
+                                         Settings::Providers::SCREENSCRAPER_USERNAME);
     const QString ssPass = resolveSecret(parser, QStringLiteral("ss-pass"),
-                                         "REMUS_SS_PASS", Settings::Providers::SCREENSCRAPER_PASSWORD);
+                                         Settings::Providers::SCREENSCRAPER_PASSWORD);
     if (!ssUser.isEmpty() && !ssPass.isEmpty()) {
         auto ssProvider = std::make_unique<ScreenScraperProvider>();
         ssProvider->setCredentials(ssUser, ssPass);
         const QString ssDevId = resolveSecret(parser, QStringLiteral("ss-devid"),
-                                              "REMUS_SS_DEVID", Settings::Providers::SCREENSCRAPER_DEVID);
+                                              Settings::Providers::SCREENSCRAPER_DEVID);
         const QString ssDevPass = resolveSecret(parser, QStringLiteral("ss-devpass"),
-                                                "REMUS_SS_DEVPASS", Settings::Providers::SCREENSCRAPER_DEVPASSWORD);
+                                                Settings::Providers::SCREENSCRAPER_DEVPASSWORD);
         if (!ssDevId.isEmpty() && !ssDevPass.isEmpty()) {
             ssProvider->setDeveloperCredentials(ssDevId, ssDevPass);
         }
@@ -144,7 +150,6 @@ std::unique_ptr<ProviderOrchestrator> buildOrchestrator(const QCommandLineParser
     }
 
     const QString tgdbApiKey = resolveSecret(parser, QStringLiteral("tgdb-api-key"),
-                                              "REMUS_TGDB_API_KEY",
                                               Settings::Providers::THEGAMESDB_API_KEY);
     if (!tgdbApiKey.isEmpty()) {
         auto tgdbProvider = std::make_unique<TheGamesDBProvider>();
@@ -158,10 +163,8 @@ std::unique_ptr<ProviderOrchestrator> buildOrchestrator(const QCommandLineParser
     }
 
     const QString igdbClientId = resolveSecret(parser, QStringLiteral("igdb-client-id"),
-                                               "REMUS_IGDB_CLIENT_ID",
                                                Settings::Providers::IGDB_CLIENT_ID);
     const QString igdbClientSecret = resolveSecret(parser, QStringLiteral("igdb-client-secret"),
-                                                   "REMUS_IGDB_CLIENT_SECRET",
                                                    Settings::Providers::IGDB_CLIENT_SECRET);
     if (!igdbClientId.isEmpty() && !igdbClientSecret.isEmpty()) {
         auto igdbProvider = std::make_unique<IGDBProvider>();
@@ -173,10 +176,8 @@ std::unique_ptr<ProviderOrchestrator> buildOrchestrator(const QCommandLineParser
     }
 
     const QString raUsername = resolveSecret(parser, QStringLiteral("ra-user"),
-                                             "REMUS_RA_USER",
                                              Settings::Providers::RETROACHIEVEMENTS_USERNAME);
     const QString raApiKey = resolveSecret(parser, QStringLiteral("ra-api-key"),
-                                           "REMUS_RA_API_KEY",
                                            Settings::Providers::RETROACHIEVEMENTS_API_KEY);
     if (!raUsername.isEmpty() && !raApiKey.isEmpty()) {
         auto raProvider = std::make_unique<RetroAchievementsProvider>();

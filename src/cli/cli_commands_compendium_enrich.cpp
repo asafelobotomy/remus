@@ -85,11 +85,22 @@ int handleEnrichCompendiumCommand(CliContext &ctx)
         return 1;
     }
 
+    const int existingRA = CompendiumSqlUtilities::scalarCount(database,
+        QStringLiteral("SELECT COUNT(*) FROM sources WHERE source_id = 'retroachievements'"),
+        checkError);
+    if (existingRA < 0) {
+        qCritical().noquote() << "✗ Could not query sources table:" << checkError;
+        database.close();
+        QSqlDatabase::removeDatabase(connectionName);
+        return 1;
+    }
+
     const QString credPath = outputInfo.dir().filePath(QStringLiteral("enrichment-credentials.json"));
     const bool needsGameTDB = (existingGameTDB == 0);
     const bool needsIGDB    = (existingIGDB == 0) && QFile::exists(credPath);
+    const bool needsRA      = (existingRA == 0)   && QFile::exists(credPath);
 
-    if (!needsGameTDB && !needsIGDB) {
+    if (!needsGameTDB && !needsIGDB && !needsRA) {
         qInfo() << "All enrichments already applied — nothing to do.";
         database.close();
         QSqlDatabase::removeDatabase(connectionName);
@@ -140,6 +151,19 @@ int handleEnrichCompendiumCommand(CliContext &ctx)
         }
     }
 
+    // ── Enrichment pass: RetroAchievements (manages its own per-system transactions) ──
+    int raGamesEnriched = 0, raFactsInserted = 0;
+    if (needsRA) {
+        QString error;
+        if (!CompendiumEnrichment::enrichFromRetroAchievements(database, credPath,
+                                                               raGamesEnriched, raFactsInserted, error)) {
+            qCritical().noquote() << QStringLiteral("✗ RetroAchievements enrichment failed: %1").arg(error);
+            database.close();
+            QSqlDatabase::removeDatabase(connectionName);
+            return 1;
+        }
+    }
+
     // Re-run merge resolution to pick up facts written by enrichment passes.
     {
         Remus::Compendium::CompilerStats resolveStats;
@@ -175,6 +199,8 @@ int handleEnrichCompendiumCommand(CliContext &ctx)
     report.insert(QStringLiteral("gametdb_facts_inserted"), gametdbFactsInserted);
     report.insert(QStringLiteral("igdb_games_enriched"), igdbGamesEnriched);
     report.insert(QStringLiteral("igdb_facts_inserted"), igdbFactsInserted);
+    report.insert(QStringLiteral("ra_games_enriched"), raGamesEnriched);
+    report.insert(QStringLiteral("ra_facts_inserted"), raFactsInserted);
     report.insert(QStringLiteral("enrich_compendium_duration_ms"), static_cast<qint64>(timer.elapsed()));
 
     QString reportError;
@@ -192,6 +218,8 @@ int handleEnrichCompendiumCommand(CliContext &ctx)
     qInfo() << "GameTDB facts inserted:" << gametdbFactsInserted;
     qInfo() << "IGDB games enriched:" << igdbGamesEnriched;
     qInfo() << "IGDB facts inserted:" << igdbFactsInserted;
+    qInfo() << "RA games enriched:" << raGamesEnriched;
+    qInfo() << "RA facts inserted:" << raFactsInserted;
     qInfo().nospace() << "Duration: " << timer.elapsed() << " ms";
 
     database.close();

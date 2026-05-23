@@ -112,6 +112,7 @@ set(REMUS_CLI_SOURCES
     src/cli/compendium_enrichment.cpp
     src/cli/compendium_enrichment_gametdb.cpp
     src/cli/compendium_enrichment_igdb.cpp
+    src/cli/compendium_enrichment_ra.cpp
     src/cli/compendium_enrichment_openvgdb.cpp
 )
 
