@@ -158,8 +158,11 @@ QString writeCredentials(const QDir &dir, const QString &username, const QString
     QJsonObject root;
     root.insert(QStringLiteral("retroachievements"), raObj);
     QFile f(path);
-    f.open(QIODevice::WriteOnly | QIODevice::Text);
-    f.write(QJsonDocument(root).toJson());
+    if (!f.open(QIODevice::WriteOnly | QIODevice::Text))
+        return {};
+    const QByteArray payload = QJsonDocument(root).toJson();
+    if (f.write(payload) != payload.size())
+        return {};
     return path;
 }
 
@@ -221,7 +224,8 @@ void CompendiumRaEnrichmentTest::credentialsBlockMissing_skipsGracefully()
     const QString credPath = tmp.filePath(QStringLiteral("enrichment-credentials.json"));
     QFile f(credPath);
     QVERIFY(f.open(QIODevice::WriteOnly | QIODevice::Text));
-    f.write(R"({"igdb":{"client_id":"x","client_secret":"y"}})");
+    const QByteArray payload = R"({"igdb":{"client_id":"x","client_secret":"y"}})";
+    QCOMPARE(f.write(payload), payload.size());
     f.close();
 
     const QString connName = QStringLiteral("ra_test_missing_block");
@@ -255,6 +259,7 @@ void CompendiumRaEnrichmentTest::noMd5Signatures_returnsEarlyWithNoWrite()
     const QString credPath = writeCredentials(tmp.filePath(QString()),
                                               QStringLiteral("user"),
                                               QStringLiteral("key"));
+    QVERIFY(!credPath.isEmpty());
 
     const QString connName = QStringLiteral("ra_test_no_sigs");
     QSqlDatabase db = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), connName);
