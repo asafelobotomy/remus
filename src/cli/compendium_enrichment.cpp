@@ -12,6 +12,8 @@
 namespace {
 
 using CompendiumEnrichmentSql::execPrepared;
+using CompendiumEnrichmentSql::FactInsertSpec;
+using CompendiumEnrichmentSql::insertGameFact;
 using CompendiumEnrichmentSql::SnapshotSpec;
 using CompendiumEnrichmentSql::SourceSpec;
 using CompendiumEnrichmentSql::upsertEnrichmentSource;
@@ -108,23 +110,29 @@ bool enrichFromLibretroMetadata(QSqlDatabase &database,
         "(game_id, field_name, field_value, value_type, source_id, snapshot_id, source_priority, confidence) "
         "VALUES (?, ?, ?, ?, ?, ?, ?, ?)"));
 
+    const FactInsertSpec factSpec{
+        sourceId,
+        snapshotId,
+        30,
+        0.85,
+    };
+
     auto insertFact = [&](const QString &gameId,
                           const QString &field,
                           const QString &value,
                           const QString &valueType) -> bool {
-        if (value.isEmpty()) return true;
-        factQuery.bindValue(0, gameId);
-        factQuery.bindValue(1, field);
-        factQuery.bindValue(2, value);
-        factQuery.bindValue(3, valueType);
-        factQuery.bindValue(4, sourceId);
-        factQuery.bindValue(5, snapshotId);
-        factQuery.bindValue(6, 30);
-        factQuery.bindValue(7, 0.85);
-        if (!execPrepared(factQuery, error,
-                          QStringLiteral("Insert libretro fact %1").arg(field)))
+        bool inserted = false;
+        if (!insertGameFact(factQuery,
+                            factSpec,
+                            gameId,
+                            field,
+                            value,
+                            valueType,
+                            error,
+                            QStringLiteral("libretro"),
+                            &inserted))
             return false;
-        if (factQuery.numRowsAffected() > 0) ++factsInserted;
+        if (inserted) ++factsInserted;
         return true;
     };
 

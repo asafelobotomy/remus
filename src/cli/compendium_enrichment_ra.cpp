@@ -235,6 +235,13 @@ bool enrichFromRetroAchievements(QSqlDatabase &database,
             "source_priority, confidence) "
             "VALUES (?, ?, ?, ?, ?, ?, ?, ?)"));
 
+        const FactInsertSpec factSpec{
+            QStringLiteral("retroachievements"),
+            snapshotId,
+            60,
+            0.75,
+        };
+
         auto nullStr = [](const QString &s) -> QVariant {
             return s.isEmpty() ? QVariant(QMetaType(QMetaType::QString)) : QVariant(s);
         };
@@ -242,17 +249,17 @@ bool enrichFromRetroAchievements(QSqlDatabase &database,
         auto insertFact = [&](const QString &gameId, const QString &field,
                                const QString &value,
                                const QString &type = QStringLiteral("text")) -> bool {
-            if (value.isEmpty()) return true;
-            factQ.bindValue(0, gameId);
-            factQ.bindValue(1, field);
-            factQ.bindValue(2, value);
-            factQ.bindValue(3, type);
-            factQ.bindValue(4, QStringLiteral("retroachievements"));
-            factQ.bindValue(5, snapshotId);
-            factQ.bindValue(6, 60);    // source_priority
-            factQ.bindValue(7, 0.75);  // confidence
-            if (!execPrepared(factQ, error, QStringLiteral("Insert RA fact"))) return false;
-            if (factQ.numRowsAffected() > 0) ++factsInserted;
+            bool inserted = false;
+            if (!insertGameFact(factQ,
+                                factSpec,
+                                gameId,
+                                field,
+                                value,
+                                type,
+                                error,
+                                QStringLiteral("retroachievements"),
+                                &inserted)) return false;
+            if (inserted) ++factsInserted;
             return true;
         };
 

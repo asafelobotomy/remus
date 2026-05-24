@@ -243,25 +243,33 @@ bool enrichFromOpenVGDB(QSqlDatabase &database,
         "(game_id, field_name, field_value, value_type, source_id, snapshot_id, source_priority, confidence) "
         "VALUES (?, ?, ?, ?, ?, ?, ?, ?)"));
 
+    const FactInsertSpec factSpec{
+        sourceId,
+        snapshotId,
+        25,
+        0.0,
+    };
+
     auto insertFact = [&](const QString &gameId,
                           const QString &field,
                           const QString &value,
                           const QString &valueType,
                           double confidence,
                           const QString &contextPrefix) -> bool {
-        if (value.isEmpty()) return true;
-        factQuery.bindValue(0, gameId);
-        factQuery.bindValue(1, field);
-        factQuery.bindValue(2, value);
-        factQuery.bindValue(3, valueType);
-        factQuery.bindValue(4, sourceId);
-        factQuery.bindValue(5, snapshotId);
-        factQuery.bindValue(6, 25);
-        factQuery.bindValue(7, confidence);
-        if (!execPrepared(factQuery, error,
-                          QStringLiteral("Insert %1 fact %2").arg(contextPrefix, field)))
+        FactInsertSpec scopedFactSpec = factSpec;
+        scopedFactSpec.confidence = confidence;
+        bool inserted = false;
+        if (!insertGameFact(factQuery,
+                            scopedFactSpec,
+                            gameId,
+                            field,
+                            value,
+                            valueType,
+                            error,
+                            contextPrefix,
+                            &inserted))
             return false;
-        if (factQuery.numRowsAffected() > 0) ++factsInserted;
+        if (inserted) ++factsInserted;
         return true;
     };
 

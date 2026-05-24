@@ -107,6 +107,13 @@ bool enrichFromMameCatver(QSqlDatabase &database,
         "source_priority, confidence) "
         "VALUES (?, ?, ?, ?, ?, ?, ?, ?)"));
 
+    const FactInsertSpec factSpec{
+        QStringLiteral("mame-catver"),
+        snapshotId,
+        50,
+        0.90,
+    };
+
     QSqlQuery gamesQ(database);
     gamesQ.prepare(QStringLiteral(
         "SELECT game_id, canonical_title FROM games "
@@ -132,17 +139,18 @@ bool enrichFromMameCatver(QSqlDatabase &database,
         if (updateQ.numRowsAffected() > 0)
             ++gamesEnriched;
 
-        factQ.bindValue(0, gameId);
-        factQ.bindValue(1, QStringLiteral("genre"));
-        factQ.bindValue(2, genre);
-        factQ.bindValue(3, QStringLiteral("text"));
-        factQ.bindValue(4, QStringLiteral("mame-catver"));
-        factQ.bindValue(5, snapshotId);
-        factQ.bindValue(6, 50);
-        factQ.bindValue(7, 0.90);
-        if (!execPrepared(factQ, error, QStringLiteral("Insert MAME genre fact")))
+        bool inserted = false;
+        if (!insertGameFact(factQ,
+                            factSpec,
+                            gameId,
+                            QStringLiteral("genre"),
+                            genre,
+                            QStringLiteral("text"),
+                            error,
+                            QStringLiteral("mame-catver"),
+                            &inserted))
             return false;
-        if (factQ.numRowsAffected() > 0)
+        if (inserted)
             ++factsInserted;
     }
 

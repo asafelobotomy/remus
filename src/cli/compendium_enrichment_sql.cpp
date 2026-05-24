@@ -60,6 +60,39 @@ bool upsertEnrichmentSource(QSqlDatabase &db,
                         QStringLiteral("Upsert snapshot %1").arg(snapshot.snapshotId));
 }
 
+bool insertGameFact(QSqlQuery &factQuery,
+                    const FactInsertSpec &spec,
+                    const QString &gameId,
+                    const QString &fieldName,
+                    const QString &fieldValue,
+                    const QString &valueType,
+                    QString &error,
+                    const QString &contextPrefix,
+                    bool *inserted)
+{
+    if (inserted)
+        *inserted = false;
+    if (fieldValue.isEmpty())
+        return true;
+
+    factQuery.bindValue(0, gameId);
+    factQuery.bindValue(1, fieldName);
+    factQuery.bindValue(2, fieldValue);
+    factQuery.bindValue(3, valueType);
+    factQuery.bindValue(4, spec.sourceId);
+    factQuery.bindValue(5, spec.snapshotId);
+    factQuery.bindValue(6, spec.sourcePriority);
+    factQuery.bindValue(7, spec.confidence);
+    if (!execPrepared(factQuery, error,
+                      QStringLiteral("Insert %1 fact %2").arg(contextPrefix, fieldName))) {
+        return false;
+    }
+
+    if (inserted)
+        *inserted = factQuery.numRowsAffected() > 0;
+    return true;
+}
+
 QString normalizeMetadataTitle(const QString &title)
 {
     QString s = title.trimmed();

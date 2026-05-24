@@ -156,24 +156,30 @@ bool enrichFromZXInfo(QSqlDatabase &database,
     static constexpr double CONFIDENCE = 0.80;
     static constexpr int    PRIORITY   = 65;
 
+    const FactInsertSpec factSpec{
+        QStringLiteral("zxinfo"),
+        snapshotId,
+        PRIORITY,
+        CONFIDENCE,
+    };
+
     auto insertFact = [&](const QString &gameId,
                           const QString &field,
                           const QString &value,
                           const QString &type) -> bool {
-        if (value.isEmpty())
-            return true;
-        factQ.bindValue(0, gameId);
-        factQ.bindValue(1, field);
-        factQ.bindValue(2, value);
-        factQ.bindValue(3, type);
-        factQ.bindValue(4, QStringLiteral("zxinfo"));
-        factQ.bindValue(5, snapshotId);
-        factQ.bindValue(6, PRIORITY);
-        factQ.bindValue(7, CONFIDENCE);
-        if (!factQ.exec()) {
+        bool inserted = false;
+        if (!insertGameFact(factQ,
+                            factSpec,
+                            gameId,
+                            field,
+                            value,
+                            type,
+                            error,
+                            QStringLiteral("zxinfo"),
+                            &inserted)) {
             return false;
         }
-        if (factQ.numRowsAffected() > 0)
+        if (inserted)
             ++factsInserted;
         return true;
     };
@@ -206,8 +212,10 @@ bool enrichFromZXInfo(QSqlDatabase &database,
          || !insertFact(m.gameId, QStringLiteral("developer"),    m.developer,  QStringLiteral("text"))
          || !insertFact(m.gameId, QStringLiteral("publisher"),    m.publisher,  QStringLiteral("text"))
          || !insertFact(m.gameId, QStringLiteral("release_year"), yearStr,      QStringLiteral("integer"))) {
-            error = QStringLiteral("Insert ZXInfo fact for game %1: %2")
-                        .arg(m.gameId, factQ.lastError().text());
+            if (error.isEmpty()) {
+                error = QStringLiteral("Insert ZXInfo fact for game %1 failed")
+                            .arg(m.gameId);
+            }
             database.rollback();
             return false;
         }

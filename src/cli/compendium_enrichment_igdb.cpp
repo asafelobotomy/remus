@@ -147,6 +147,13 @@ bool enrichFromIGDB(QSqlDatabase &database,
             "source_priority, confidence) "
             "VALUES (?, ?, ?, ?, ?, ?, ?, ?)"));
 
+        const FactInsertSpec factSpec{
+            QStringLiteral("igdb"),
+            snapshotId,
+            70,
+            0.80,
+        };
+
         auto nullStr = [](const QString &s) -> QVariant {
             return s.isEmpty() ? QVariant(QMetaType(QMetaType::QString)) : QVariant(s);
         };
@@ -154,17 +161,17 @@ bool enrichFromIGDB(QSqlDatabase &database,
         auto insertFact = [&](const QString &gameId, const QString &field,
                                const QString &value,
                                const QString &type = QStringLiteral("text")) -> bool {
-            if (value.isEmpty()) return true;
-            factQ.bindValue(0, gameId);
-            factQ.bindValue(1, field);
-            factQ.bindValue(2, value);
-            factQ.bindValue(3, type);
-            factQ.bindValue(4, QStringLiteral("igdb"));
-            factQ.bindValue(5, snapshotId);
-            factQ.bindValue(6, 70);
-            factQ.bindValue(7, 0.80);
-            if (!execPrepared(factQ, error, QStringLiteral("Insert igdb fact"))) return false;
-            if (factQ.numRowsAffected() > 0) ++factsInserted;
+            bool inserted = false;
+            if (!insertGameFact(factQ,
+                                factSpec,
+                                gameId,
+                                field,
+                                value,
+                                type,
+                                error,
+                                QStringLiteral("igdb"),
+                                &inserted)) return false;
+            if (inserted) ++factsInserted;
             return true;
         };
 

@@ -35,6 +35,13 @@ struct SnapshotSpec {
     QString snapshotLabel;
 };
 
+struct FactInsertSpec {
+    QString sourceId;
+    QString snapshotId;
+    int sourcePriority = 0;
+    double confidence = 0.0;
+};
+
 /**
  * @brief Execute a prepared QSqlQuery and populate @p error on failure.
  */
@@ -61,6 +68,22 @@ bool upsertEnrichmentSource(QSqlDatabase &db,
                             const SourceSpec &source,
                             const SnapshotSpec &snapshot,
                             QString &error);
+
+/**
+ * @brief Insert a single game_facts row using the shared enrichment metadata.
+ *
+ * Empty @p fieldValue is treated as a no-op and returns true.
+ * When @p inserted is provided it is set to true if a new row was inserted.
+ */
+bool insertGameFact(QSqlQuery &factQuery,
+                    const FactInsertSpec &spec,
+                    const QString &gameId,
+                    const QString &fieldName,
+                    const QString &fieldValue,
+                    const QString &valueType,
+                    QString &error,
+                    const QString &contextPrefix,
+                    bool *inserted = nullptr);
 
 /**
  * @brief Normalise a game title for fuzzy provider matching.
