@@ -241,7 +241,9 @@ bool enrichFromOpenVGDB(QSqlDatabase &database,
     auto insertFact = [&](const QString &gameId,
                           const QString &field,
                           const QString &value,
-                          const QString &valueType) -> bool {
+                          const QString &valueType,
+                          double confidence,
+                          const QString &contextPrefix) -> bool {
         if (value.isEmpty()) return true;
         factQuery.bindValue(0, gameId);
         factQuery.bindValue(1, field);
@@ -250,9 +252,9 @@ bool enrichFromOpenVGDB(QSqlDatabase &database,
         factQuery.bindValue(4, sourceId);
         factQuery.bindValue(5, snapshotId);
         factQuery.bindValue(6, 25);
-        factQuery.bindValue(7, 0.80);
+        factQuery.bindValue(7, confidence);
         if (!execPrepared(factQuery, error,
-                          QStringLiteral("Insert openvgdb fact %1").arg(field)))
+                          QStringLiteral("Insert %1 fact %2").arg(contextPrefix, field)))
             return false;
         if (factQuery.numRowsAffected() > 0) ++factsInserted;
         return true;
@@ -265,17 +267,17 @@ bool enrichFromOpenVGDB(QSqlDatabase &database,
         return v > 0 ? QVariant(v) : QVariant(QMetaType(QMetaType::Int));
     };
 
-    for (auto it = gameIdByCrc.cbegin(); it != gameIdByCrc.cend(); ++it) {
-        const QString &crc32  = it.key();
-        const QString &gameId = it.value();
-
-        auto entryIt = crcIndex.constFind(crc32);
-        if (entryIt == crcIndex.cend()) continue;
-        const OpenVGDBEntry &e = *entryIt;
-
-        const bool hasData = !e.description.isEmpty() || !e.genre.isEmpty()
+    auto hasData = [](const OpenVGDBEntry &e) {
+        return !e.description.isEmpty() || !e.genre.isEmpty()
             || !e.developer.isEmpty() || !e.publisher.isEmpty() || e.releaseYear > 0;
-        if (!hasData) continue;
+    };
+
+    auto applyEntryToGame = [&](const QString &gameId,
+                                const OpenVGDBEntry &e,
+                                double confidence,
+                                const QString &contextPrefix,
+                                const QString &releaseYearType) -> bool {
+        if (!hasData(e)) return true;
 
         updateQuery.bindValue(0, nullStr(e.genre));
         updateQuery.bindValue(1, nullStr(e.developer));
@@ -284,17 +286,44 @@ bool enrichFromOpenVGDB(QSqlDatabase &database,
         updateQuery.bindValue(4, nullStr(e.description));
         updateQuery.bindValue(5, gameId);
         if (!execPrepared(updateQuery, error,
-                          QStringLiteral("Update game openvgdb")))
+                          QStringLiteral("Update game %1").arg(contextPrefix))) {
             return false;
+        }
         if (updateQuery.numRowsAffected() > 0) ++gamesEnriched;
 
-        if (!insertFact(gameId, QStringLiteral("genre"),       e.genre,        QStringLiteral("text"))) return false;
-        if (!insertFact(gameId, QStringLiteral("developer"),   e.developer,    QStringLiteral("text"))) return false;
-        if (!insertFact(gameId, QStringLiteral("publisher"),   e.publisher,    QStringLiteral("text"))) return false;
-        if (!insertFact(gameId, QStringLiteral("description"), e.description,  QStringLiteral("text"))) return false;
+        if (!insertFact(gameId, QStringLiteral("genre"),
+                        e.genre, QStringLiteral("text"), confidence, contextPrefix)) return false;
+        if (!insertFact(gameId, QStringLiteral("developer"),
+                        e.developer, QStringLiteral("text"), confidence, contextPrefix)) return false;
+        if (!insertFact(gameId, QStringLiteral("publisher"),
+                        e.publisher, QStringLiteral("text"), confidence, contextPrefix)) return false;
+        if (!insertFact(gameId, QStringLiteral("description"),
+                        e.description, QStringLiteral("text"), confidence, contextPrefix)) return false;
         if (e.releaseYear > 0
-            && !insertFact(gameId, QStringLiteral("release_year"),
-                           QString::number(e.releaseYear),     QStringLiteral("int"))) return false;
+            && !insertFact(gameId,
+                           QStringLiteral("release_year"),
+                           QString::number(e.releaseYear),
+                           releaseYearType,
+                           confidence,
+                           contextPrefix)) return false;
+        return true;
+    };
+
+    for (auto it = gameIdByCrc.cbegin(); it != gameIdByCrc.cend(); ++it) {
+        const QString &crc32  = it.key();
+        const QString &gameId = it.value();
+
+        auto entryIt = crcIndex.constFind(crc32);
+        if (entryIt == crcIndex.cend()) continue;
+        const OpenVGDBEntry &e = *entryIt;
+
+        if (!applyEntryToGame(gameId,
+                              e,
+                              0.80,
+                              QStringLiteral("openvgdb"),
+                              QStringLiteral("int"))) {
+            return false;
+        }
     }
 
     // MD5 pass — enriches disc-based systems (GCN, Saturn, PSX, Dreamcast, N64)
@@ -308,28 +337,13 @@ bool enrichFromOpenVGDB(QSqlDatabase &database,
         if (entryIt == md5Index.cend()) continue;
         const OpenVGDBEntry &e = *entryIt;
 
-        const bool hasData = !e.description.isEmpty() || !e.genre.isEmpty()
-            || !e.developer.isEmpty() || !e.publisher.isEmpty() || e.releaseYear > 0;
-        if (!hasData) continue;
-
-        updateQuery.bindValue(0, nullStr(e.genre));
-        updateQuery.bindValue(1, nullStr(e.developer));
-        updateQuery.bindValue(2, nullStr(e.publisher));
-        updateQuery.bindValue(3, nullInt(e.releaseYear));
-        updateQuery.bindValue(4, nullStr(e.description));
-        updateQuery.bindValue(5, gameId);
-        if (!execPrepared(updateQuery, error,
-                          QStringLiteral("Update game openvgdb MD5")))
+        if (!applyEntryToGame(gameId,
+                              e,
+                              0.80,
+                              QStringLiteral("openvgdb MD5"),
+                              QStringLiteral("int"))) {
             return false;
-        if (updateQuery.numRowsAffected() > 0) ++gamesEnriched;
-
-        if (!insertFact(gameId, QStringLiteral("genre"),       e.genre,        QStringLiteral("text"))) return false;
-        if (!insertFact(gameId, QStringLiteral("developer"),   e.developer,    QStringLiteral("text"))) return false;
-        if (!insertFact(gameId, QStringLiteral("publisher"),   e.publisher,    QStringLiteral("text"))) return false;
-        if (!insertFact(gameId, QStringLiteral("description"), e.description,  QStringLiteral("text"))) return false;
-        if (e.releaseYear > 0
-            && !insertFact(gameId, QStringLiteral("release_year"),
-                           QString::number(e.releaseYear),     QStringLiteral("int"))) return false;
+        }
     }
 
     // Title-based fallback pass — for games still without a description after both
@@ -354,32 +368,6 @@ bool enrichFromOpenVGDB(QSqlDatabase &database,
                                           {q.value(1).toString(), q.value(2).toString()});
         }
 
-        QSqlQuery titleFactQuery(database);
-        titleFactQuery.prepare(QStringLiteral(
-            "INSERT OR IGNORE INTO game_facts "
-            "(game_id, field_name, field_value, value_type, source_id, snapshot_id, source_priority, confidence) "
-            "VALUES (?, ?, ?, ?, ?, ?, ?, ?)"));
-
-        auto insertTitleFact = [&](const QString &gameId,
-                                   const QString &field,
-                                   const QString &value,
-                                   const QString &valueType) -> bool {
-            if (value.isEmpty()) return true;
-            titleFactQuery.bindValue(0, gameId);
-            titleFactQuery.bindValue(1, field);
-            titleFactQuery.bindValue(2, value);
-            titleFactQuery.bindValue(3, valueType);
-            titleFactQuery.bindValue(4, sourceId);
-            titleFactQuery.bindValue(5, snapshotId);
-            titleFactQuery.bindValue(6, 25);
-            titleFactQuery.bindValue(7, 0.60);
-            if (!execPrepared(titleFactQuery, error,
-                              QStringLiteral("Insert openvgdb title fact %1").arg(field)))
-                return false;
-            if (titleFactQuery.numRowsAffected() > 0) ++factsInserted;
-            return true;
-        };
-
         for (auto it = gamesForTitleMatch.cbegin(); it != gamesForTitleMatch.cend(); ++it) {
             const QString &gameId       = it.key();
             const QString &title        = it.value().first;
@@ -390,28 +378,13 @@ bool enrichFromOpenVGDB(QSqlDatabase &database,
             if (entryIt == titleIndex.cend()) continue;
             const OpenVGDBEntry &e = *entryIt;
 
-            const bool hasData = !e.description.isEmpty() || !e.genre.isEmpty()
-                || !e.developer.isEmpty() || !e.publisher.isEmpty() || e.releaseYear > 0;
-            if (!hasData) continue;
-
-            updateQuery.bindValue(0, nullStr(e.genre));
-            updateQuery.bindValue(1, nullStr(e.developer));
-            updateQuery.bindValue(2, nullStr(e.publisher));
-            updateQuery.bindValue(3, nullInt(e.releaseYear));
-            updateQuery.bindValue(4, nullStr(e.description));
-            updateQuery.bindValue(5, gameId);
-            if (!execPrepared(updateQuery, error,
-                              QStringLiteral("Update game openvgdb title")))
+            if (!applyEntryToGame(gameId,
+                                  e,
+                                  0.60,
+                                  QStringLiteral("openvgdb title"),
+                                  QStringLiteral("int"))) {
                 return false;
-            if (updateQuery.numRowsAffected() > 0) ++gamesEnriched;
-
-            if (!insertTitleFact(gameId, QStringLiteral("genre"),       e.genre,        QStringLiteral("text"))) return false;
-            if (!insertTitleFact(gameId, QStringLiteral("developer"),   e.developer,    QStringLiteral("text"))) return false;
-            if (!insertTitleFact(gameId, QStringLiteral("publisher"),   e.publisher,    QStringLiteral("text"))) return false;
-            if (!insertTitleFact(gameId, QStringLiteral("description"), e.description,  QStringLiteral("text"))) return false;
-            if (e.releaseYear > 0
-                && !insertTitleFact(gameId, QStringLiteral("release_year"),
-                                    QString::number(e.releaseYear),     QStringLiteral("int"))) return false;
+            }
         }
     }
 

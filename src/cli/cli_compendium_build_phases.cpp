@@ -6,9 +6,12 @@
 
 #include <QFile>
 #include <QJsonObject>
+#include <QList>
 #include <QSqlDatabase>
 #include <QSqlError>
 #include <QSqlQuery>
+
+#include <functional>
 
 void insertEnrichmentStatsReportFields(QJsonObject &report,
                                        const EnrichmentStats &stats,
@@ -67,92 +70,121 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db,
         return true;
     };
 
-    // ── Enrichment pass 1: Libretro metadata DATs ─────────────────────────────
-    if (!metadataDir.isEmpty()) {
-        if (!runTransactionalPass(QStringLiteral("Libretro metadata enrichment"), [&] {
+    enum class TransactionMode {
+        CallerWrapped,
+        SelfManaged,
+    };
+
+    struct EnrichmentPassSpec {
+        QString name;
+        TransactionMode mode;
+        std::function<bool()> isEnabled;
+        std::function<bool()> run;
+    };
+
+    const bool hasMetadataDir = !metadataDir.isEmpty();
+    const bool hasGametdbDir = !gametdbDir.isEmpty();
+    const bool hasOpenvgdbPath = !openvgdbPath.isEmpty() && QFile::exists(openvgdbPath);
+    const bool hasCredPath = !credPath.isEmpty() && QFile::exists(credPath);
+    const bool hasMameCatverPath = !mameCatverPath.isEmpty() && QFile::exists(mameCatverPath);
+
+    const QList<EnrichmentPassSpec> passes{
+        {
+            QStringLiteral("Libretro metadata enrichment"),
+            TransactionMode::CallerWrapped,
+            [&] { return hasMetadataDir; },
+            [&] {
                 return CompendiumEnrichment::enrichFromLibretroMetadata(db,
                                                                         metadataDir,
                                                                         stats.metadataGamesEnriched,
                                                                         stats.metadataFactsInserted,
                                                                         error);
-            })) {
-            return false;
-        }
-    }
-
-    // ── Enrichment pass 2: GameTDB XML databases ───────────────────────────────
-    if (!gametdbDir.isEmpty()) {
-        if (!runTransactionalPass(QStringLiteral("GameTDB enrichment"), [&] {
+            },
+        },
+        {
+            QStringLiteral("GameTDB enrichment"),
+            TransactionMode::CallerWrapped,
+            [&] { return hasGametdbDir; },
+            [&] {
                 return CompendiumEnrichment::enrichFromGameTDB(db,
                                                                gametdbDir,
                                                                stats.gametdbGamesEnriched,
                                                                stats.gametdbFactsInserted,
                                                                error);
-            })) {
-            return false;
-        }
-    }
-
-    // ── Enrichment pass 3: OpenVGDB ───────────────────────────────────────────
-    if (!openvgdbPath.isEmpty() && QFile::exists(openvgdbPath)) {
-        if (!runTransactionalPass(QStringLiteral("OpenVGDB enrichment"), [&] {
+            },
+        },
+        {
+            QStringLiteral("OpenVGDB enrichment"),
+            TransactionMode::CallerWrapped,
+            [&] { return hasOpenvgdbPath; },
+            [&] {
                 return CompendiumEnrichment::enrichFromOpenVGDB(db,
                                                                 openvgdbPath,
                                                                 stats.openvgdbGamesEnriched,
                                                                 stats.openvgdbFactsInserted,
                                                                 error);
-            })) {
-            return false;
-        }
-    }
-
-    // ── Enrichment pass 4: IGDB (manages its own per-system transactions) ─────
-    if (!credPath.isEmpty() && QFile::exists(credPath)) {
-        if (!runSelfManagedPass(QStringLiteral("IGDB enrichment"), [&] {
+            },
+        },
+        {
+            QStringLiteral("IGDB enrichment"),
+            TransactionMode::SelfManaged,
+            [&] { return hasCredPath; },
+            [&] {
                 return CompendiumEnrichment::enrichFromIGDB(db,
                                                             credPath,
                                                             stats.igdbGamesEnriched,
                                                             stats.igdbFactsInserted,
                                                             error);
-            })) {
-            return false;
-        }
-    }
-
-    // ── Enrichment pass 5: RetroAchievements (manages its own per-system transactions) ──
-    if (!credPath.isEmpty() && QFile::exists(credPath)) {
-        if (!runSelfManagedPass(QStringLiteral("RetroAchievements enrichment"), [&] {
+            },
+        },
+        {
+            QStringLiteral("RetroAchievements enrichment"),
+            TransactionMode::SelfManaged,
+            [&] { return hasCredPath; },
+            [&] {
                 return CompendiumEnrichment::enrichFromRetroAchievements(db,
                                                                          credPath,
                                                                          stats.raGamesEnriched,
                                                                          stats.raFactsInserted,
                                                                          error);
-            })) {
-            return false;
-        }
-    }
-
-    // ── Enrichment pass 6: MAME catver.ini (caller-wrapped transaction) ────────
-    if (!mameCatverPath.isEmpty() && QFile::exists(mameCatverPath)) {
-        if (!runTransactionalPass(QStringLiteral("MAME catver enrichment"), [&] {
+            },
+        },
+        {
+            QStringLiteral("MAME catver enrichment"),
+            TransactionMode::CallerWrapped,
+            [&] { return hasMameCatverPath; },
+            [&] {
                 return CompendiumEnrichment::enrichFromMameCatver(db,
                                                                   mameCatverPath,
                                                                   stats.mameGamesEnriched,
                                                                   stats.mameFactsInserted,
                                                                   error);
-            })) {
+            },
+        },
+        {
+            QStringLiteral("ZXInfo enrichment"),
+            TransactionMode::SelfManaged,
+            [] { return true; },
+            [&] {
+                return CompendiumEnrichment::enrichFromZXInfo(db,
+                                                              stats.zxinfoGamesEnriched,
+                                                              stats.zxinfoFactsInserted,
+                                                              error);
+            },
+        },
+    };
+
+    for (const EnrichmentPassSpec &pass : passes) {
+        if (!pass.isEnabled()) {
+            continue;
+        }
+
+        const bool ok = pass.mode == TransactionMode::CallerWrapped
+            ? runTransactionalPass(pass.name, pass.run)
+            : runSelfManagedPass(pass.name, pass.run);
+        if (!ok) {
             return false;
         }
-    }
-
-    // ── Enrichment pass 7: ZXInfo (manages its own transaction) ──────────────
-    if (!runSelfManagedPass(QStringLiteral("ZXInfo enrichment"), [&] {
-            return CompendiumEnrichment::enrichFromZXInfo(db,
-                                                          stats.zxinfoGamesEnriched,
-                                                          stats.zxinfoFactsInserted,
-                                                          error);
-        })) {
-        return false;
     }
 
     // ── Post-enrichment: re-run merge resolution to pick up newly-written facts ─
