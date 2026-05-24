@@ -116,21 +116,7 @@ int handleEnrichCompendiumCommand(CliContext &ctx)
             report = doc.object();
     }
 
-    report.insert(QStringLiteral("metadata_games_enriched"),  stats.metadataGamesEnriched);
-    report.insert(QStringLiteral("metadata_facts_inserted"),   stats.metadataFactsInserted);
-    report.insert(QStringLiteral("gametdb_games_enriched"),    stats.gametdbGamesEnriched);
-    report.insert(QStringLiteral("gametdb_facts_inserted"),    stats.gametdbFactsInserted);
-    report.insert(QStringLiteral("openvgdb_games_enriched"),   stats.openvgdbGamesEnriched);
-    report.insert(QStringLiteral("openvgdb_facts_inserted"),   stats.openvgdbFactsInserted);
-    report.insert(QStringLiteral("igdb_games_enriched"),       stats.igdbGamesEnriched);
-    report.insert(QStringLiteral("igdb_facts_inserted"),       stats.igdbFactsInserted);
-    report.insert(QStringLiteral("ra_games_enriched"),         stats.raGamesEnriched);
-    report.insert(QStringLiteral("ra_facts_inserted"),         stats.raFactsInserted);
-    report.insert(QStringLiteral("mame_games_enriched"),       stats.mameGamesEnriched);
-    report.insert(QStringLiteral("mame_facts_inserted"),       stats.mameFactsInserted);
-    report.insert(QStringLiteral("zxinfo_games_enriched"),     stats.zxinfoGamesEnriched);
-    report.insert(QStringLiteral("zxinfo_facts_inserted"),     stats.zxinfoFactsInserted);
-    report.insert(QStringLiteral("resolved_fields"),           stats.resolvedFields);
+    insertEnrichmentStatsReportFields(report, stats, QStringLiteral("resolved_fields"));
     report.insert(QStringLiteral("enrich_compendium_duration_ms"), static_cast<qint64>(timer.elapsed()));
 
     QString reportError;

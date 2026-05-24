@@ -54,6 +54,21 @@ bool upsertEnrichmentSource(QSqlDatabase &db,
                             QString &error);
 
 /**
+ * @brief Overload that allows explicitly setting sources.license_id.
+ */
+bool upsertEnrichmentSource(QSqlDatabase &db,
+                            const QString &sourceId,
+                            const QString &displayName,
+                            const QString &sourceType,
+                            const QString &licenseUrl,
+                            bool attributionRequired,
+                            int priority,
+                            const QString &snapshotId,
+                            const QString &snapshotLabel,
+                            const QString &licenseId,
+                            QString &error);
+
+/**
  * @brief Normalise a game title for fuzzy provider matching.
  *
  * Strips a trailing parenthetical suffix (e.g. "(USA)", "(128K)"),

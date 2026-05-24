@@ -394,7 +394,15 @@ add_remus_test(test_compendium_identity_linker CompendiumIdentityLinkerTest
 add_remus_test(test_compendium_ra_enrichment CompendiumRaEnrichmentTest
     SOURCES test_compendium_ra_enrichment.cpp
             ../src/cli/compendium_enrichment_ra.cpp
+            ../src/cli/compendium_enrichment_sql.cpp
     LIBS Qt6::Test Qt6::Core Qt6::Sql remus-metadata remus-core remus-services
+)
+
+add_remus_test(test_compendium_zxinfo_enrichment CompendiumZxInfoEnrichmentTest
+    SOURCES test_compendium_zxinfo_enrichment.cpp
+            ../src/cli/compendium_enrichment_zxinfo.cpp
+            ../src/cli/compendium_enrichment_sql.cpp
+    LIBS Qt6::Test Qt6::Core Qt6::Sql Qt6::Network remus-metadata remus-core
 )
 
 add_remus_test(test_rvz_converter RvzConverterTest

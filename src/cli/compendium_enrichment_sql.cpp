@@ -29,6 +29,31 @@ bool upsertEnrichmentSource(QSqlDatabase &db,
                             const QString &snapshotLabel,
                             QString &error)
 {
+    return upsertEnrichmentSource(db,
+                                  sourceId,
+                                  displayName,
+                                  sourceType,
+                                  licenseUrl,
+                                  attributionRequired,
+                                  priority,
+                                  snapshotId,
+                                  snapshotLabel,
+                                  QString(),
+                                  error);
+}
+
+bool upsertEnrichmentSource(QSqlDatabase &db,
+                            const QString &sourceId,
+                            const QString &displayName,
+                            const QString &sourceType,
+                            const QString &licenseUrl,
+                            bool attributionRequired,
+                            int priority,
+                            const QString &snapshotId,
+                            const QString &snapshotLabel,
+                            const QString &licenseId,
+                            QString &error)
+{
     QSqlQuery srcQ(db);
     srcQ.prepare(QStringLiteral(
         "INSERT OR IGNORE INTO sources "
@@ -38,7 +63,9 @@ bool upsertEnrichmentSource(QSqlDatabase &db,
     srcQ.addBindValue(sourceId);
     srcQ.addBindValue(displayName);
     srcQ.addBindValue(sourceType);
-    srcQ.addBindValue(QVariant(QMetaType(QMetaType::QString)));  // license_id (NULL)
+    srcQ.addBindValue(licenseId.isEmpty()
+                          ? QVariant(QMetaType(QMetaType::QString))
+                          : QVariant(licenseId));
     srcQ.addBindValue(licenseUrl.isEmpty()
                           ? QVariant(QMetaType(QMetaType::QString))
                           : QVariant(licenseUrl));

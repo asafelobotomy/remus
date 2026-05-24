@@ -3,6 +3,7 @@
 #include <QString>
 
 class QSqlDatabase;
+class QJsonObject;
 
 /**
  * @brief Post-build enrichment and FTS index population phases for --build-compendium.
@@ -66,3 +67,14 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db,
  * @param db Open SQLite connection (no active transaction required).
  */
 void populateCompendiumFtsIndex(QSqlDatabase &db);
+
+/**
+ * @brief Insert enrichment stat fields into a report JSON object.
+ *
+ * @param report Report JSON object to mutate.
+ * @param stats  Enrichment stats source.
+ * @param resolvedFieldsKey JSON key name to use for stats.resolvedFields.
+ */
+void insertEnrichmentStatsReportFields(QJsonObject &report,
+                                       const EnrichmentStats &stats,
+                                       const QString &resolvedFieldsKey);

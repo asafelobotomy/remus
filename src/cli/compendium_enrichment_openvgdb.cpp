@@ -1,94 +1,16 @@
 #include "compendium_enrichment.h"
+#include "compendium_enrichment_sql.h"
 
 #include <QDate>
-#include <QDateTime>
 #include <QFile>
 #include <QHash>
 #include <QSqlDatabase>
 #include <QSqlError>
 #include <QSqlQuery>
 
+using namespace CompendiumEnrichmentSql;
+
 namespace {
-
-bool execPrepared(QSqlQuery &query, QString &error, const QString &context)
-{
-    if (!query.exec()) {
-        error = QStringLiteral("%1 failed: %2").arg(context, query.lastError().text());
-        return false;
-    }
-    return true;
-}
-
-bool upsertEnrichmentSource(QSqlDatabase &database,
-                            const QString &sourceId,
-                            const QString &displayName,
-                            const QString &sourceType,
-                            const QString &licenseUrl,
-                            int priority,
-                            const QString &snapshotId,
-                            const QString &snapshotLabel,
-                            QString &error)
-{
-    QSqlQuery srcQ(database);
-    srcQ.prepare(QStringLiteral(
-        "INSERT OR IGNORE INTO sources "
-        "(source_id, display_name, source_type, license_id, license_url, attribution_required, priority, enabled) "
-        "VALUES (?, ?, ?, ?, ?, ?, ?, ?)"));
-    srcQ.addBindValue(sourceId);
-    srcQ.addBindValue(displayName);
-    srcQ.addBindValue(sourceType);
-    srcQ.addBindValue(QStringLiteral("MIT"));
-    srcQ.addBindValue(licenseUrl);
-    srcQ.addBindValue(0);
-    srcQ.addBindValue(priority);
-    srcQ.addBindValue(1);
-    if (!execPrepared(srcQ, error, QStringLiteral("Insert source %1").arg(sourceId)))
-        return false;
-
-    QSqlQuery snapQ(database);
-    snapQ.prepare(QStringLiteral(
-        "INSERT OR IGNORE INTO source_snapshots "
-        "(snapshot_id, source_id, snapshot_label, snapshot_ref, fetched_at, checksum_sha256) "
-        "VALUES (?, ?, ?, ?, ?, ?)"));
-    snapQ.addBindValue(snapshotId);
-    snapQ.addBindValue(sourceId);
-    snapQ.addBindValue(snapshotLabel);
-    snapQ.addBindValue(QVariant());
-    snapQ.addBindValue(QDateTime::currentDateTimeUtc().toString(Qt::ISODate));
-    snapQ.addBindValue(QVariant());
-    return execPrepared(snapQ, error, QStringLiteral("Insert snapshot %1").arg(snapshotId));
-}
-
-// Normalise a game title for fuzzy fallback matching:
-// strip parenthetical region/revision tags, drop leading articles,
-// then keep only letters and digits (lowercase).
-// e.g. "Super Mario Bros. (World)" → "supermariorpg"
-//      "The Legend of Zelda (USA)" → "legendofzelda"
-QString normalizeTitle(const QString &raw)
-{
-    QString s = raw;
-    // Strip parenthetical suffix ("(USA)", "(Rev 1)", etc.)
-    const int paren = s.indexOf(QLatin1Char('('));
-    if (paren > 0)
-        s = s.left(paren);
-    s = s.toLower().trimmed();
-    // Strip leading English article
-    for (QLatin1String article :
-         {QLatin1String("the "), QLatin1String("a "), QLatin1String("an ")}) {
-        if (s.startsWith(article)) {
-            s = s.mid(article.size());
-            break;
-        }
-    }
-    // Keep only letters and digits
-    QString result;
-    result.reserve(s.size());
-    for (const QChar c : std::as_const(s)) {
-        if (c.isLetterOrNumber())
-            result += c;
-    }
-    return result;
-}
 
 struct OpenVGDBEntry {
     QString description;
@@ -210,7 +132,7 @@ bool enrichFromOpenVGDB(QSqlDatabase &database,
             }
             while (q.next()) {
                 const QString systemShort = q.value(0).toString();
-                const QString normTitle   = normalizeTitle(q.value(1).toString());
+                const QString normTitle   = normalizeMetadataTitle(q.value(1).toString());
                 if (normTitle.isEmpty()) continue;
                 const QString key = systemShort + QLatin1Char(':') + normTitle;
                 if (titleIndex.contains(key)) continue;
@@ -266,9 +188,11 @@ bool enrichFromOpenVGDB(QSqlDatabase &database,
                                 QStringLiteral("OpenVGDB"),
                                 QStringLiteral("openvgdb"),
                                 QStringLiteral("https://github.com/OpenVGDB/OpenVGDB"),
+                                /*attributionRequired=*/false,
                                 25,
                                 snapshotId,
                                 QStringLiteral("OpenVGDB v29.0"),
+                                QStringLiteral("MIT"),
                                 error))
         return false;
 
@@ -461,7 +385,7 @@ bool enrichFromOpenVGDB(QSqlDatabase &database,
             const QString &title        = it.value().first;
             const QString &internalName = it.value().second;
 
-            const QString key = internalName + QLatin1Char(':') + normalizeTitle(title);
+            const QString key = internalName + QLatin1Char(':') + normalizeMetadataTitle(title);
             auto entryIt = titleIndex.constFind(key);
             if (entryIt == titleIndex.cend()) continue;
             const OpenVGDBEntry &e = *entryIt;
