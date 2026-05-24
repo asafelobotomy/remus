@@ -12,7 +12,7 @@ I work **in** remus — implementing features, reviewing code, running tests, an
 | Task | Command |
 | ------ | --------- |
 | Run tests | `(not detected)` |
-| Drift preflight | `python3 scripts/drift_preflight.py` |
+| Drift preflight | `python3 scripts/copilot_audit.py` |
 | LOC gate | `python3 scripts/check_loc.py` |
 | Inspect Copilot install state | `python3 <xanad-root>/xanadAssistant.py inspect --workspace . --package-root <xanad-root> --json` |
 | Check for repair needs | `python3 <xanad-root>/xanadAssistant.py health-check --workspace . --package-root <xanad-root> --json` |
@@ -58,7 +58,7 @@ Route specialist work to the matching agent before acting directly. If a task in
 ## Coding Conventions
 
 - Language: **(not detected)** · Package manager: **(not detected)**
-- **Testing**: Write tests alongside every code change.
+- **Testing**: Always — write tests alongside every code change.
 - Read before modifying — never edit a file whose current content you have not read in this task
 - No silent error swallowing
 
@@ -66,8 +66,8 @@ Route specialist work to the matching agent before acting directly. If a task in
 
 Plan → Do → Check → Act on every non-trivial change.
 
-- Before commit, merge, or push in this repository, run `python3 scripts/drift_preflight.py`.
-- Default: run the single test module or test class that directly covers the changed code (see `tests.instructions.md` for the full test-scope policy)
+- Before commit, merge, or push in this repository, run `python3 scripts/copilot_audit.py`.
+- Default: run the narrowest test suite covering changed paths
 - Broaden to the full suite at task completion and before merging
 
 ## Operating Modes
@@ -98,7 +98,6 @@ See `## Agent Routing` for the authoritative routing table; this section is a qu
 ### Skills
 
 - `lifecycleAudit` — loaded on demand; run before any lifecycle operation
-- `promptReview` — loaded on demand; evaluate or improve Copilot surface files
 - `ciPreflight` — loaded on demand; run CI-equivalent checks before push
 
 ### Agents

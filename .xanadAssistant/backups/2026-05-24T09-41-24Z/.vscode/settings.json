@@ -1,0 +1,82 @@
+{
+  // ── C++ / IntelliSense ──────────────────────────────────────
+  "C_Cpp.default.cppStandard": "c++17",
+  "C_Cpp.default.compileCommands": "${workspaceFolder}/build/compile_commands.json",
+  "C_Cpp.codeAnalysis.runAutomatically": true,
+  "C_Cpp.errorSquiggles": "enabled",
+
+  // ── CMake ───────────────────────────────────────────────────
+  "cmake.useCMakePresets": "always",
+  "cmake.configureOnOpen": true,
+
+  // ── Copilot MCP ─────────────────────────────────────────────
+  "chat.mcp.autostart": "newAndOutdated",
+
+  // ── Editor defaults ─────────────────────────────────────────
+  "editor.formatOnSave": false,
+  "editor.tabSize": 4,
+  "editor.insertSpaces": true,
+  "editor.rulers": [100],
+  "editor.renderWhitespace": "trailing",
+
+  // ── File associations ───────────────────────────────────────
+  "files.associations": {
+    "CMakeLists.txt": "cmake",
+    "*.cmake": "cmake",
+    "*.h": "cpp",
+    "*.hpp": "cpp"
+  },
+
+  // ── File exclusions (reduce clutter) ────────────────────────
+  "files.exclude": {
+    "**/build/**": true,
+    "**/*.o": true,
+    "**/*.a": true,
+    "**/*.so": true,
+    "**/moc_*": true,
+    "**/qrc_*": true,
+    "**/ui_*": true
+  },
+  "search.exclude": {
+    "**/build/**": true,
+    "**/archive/**": true,
+    "**/data/gametdb/**": true
+  },
+
+  // ── Testing ─────────────────────────────────────────────────
+  "cmake.ctest.testExplorerIntegrationEnabled": true,
+
+  // ── Markdown ────────────────────────────────────────────────
+  "markdownlint.config": {
+    "MD013": false,
+    "MD033": false
+  },
+
+  // ── ShellCheck ──────────────────────────────────────────────
+  "shellcheck.enable": true,
+  "shellcheck.run": "onSave",
+
+  // ── SQLTools ────────────────────────────────────────────────
+  "sqltools.autoOpenSessionFiles": false,
+  "sqltools.connections": [],
+
+  // ── Git ─────────────────────────────────────────────────────
+  "git.autofetch": true,
+
+  // ── Copilot agent terminal ────────────────────────────────────
+  // Allow standard build/dev commands; require confirmation for destructive ops.
+  // guard-destructive.sh provides a secondary hook-layer guard.
+  "github.copilot.chat.agent.terminal.allowList": [
+    "cmake*", "ctest*", "make*", "ninja*",
+    "git diff*", "git log*", "git status*", "git add*", "git commit*",
+    "git stash*", "git checkout*", "git branch*", "git fetch*",
+    "git pull*", "git push*", "git tag*",
+    "find*", "grep*", "ls*", "cat*", "head*", "tail*", "wc*",
+    "echo*", "printf*", "sed*", "awk*", "sort*", "uniq*",
+    "python3*", "env -i*", "which*", "pwd", "uname*",
+    "mkdir -p*", "cp*", "mv*", "touch*", "chmod*",
+    "bash .github/hooks/scripts/*", "bash scripts/*",
+    "sh .github/hooks/scripts/*"
+  ],
+  "sqltools.useNodeRuntime": true
+}

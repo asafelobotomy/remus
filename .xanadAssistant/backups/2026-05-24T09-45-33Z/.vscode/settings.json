@@ -87,8 +87,5 @@
     "bash scripts/*",
     "sh .github/hooks/scripts/*"
   ],
-  "sqltools.useNodeRuntime": true,
-  "chat.useAgentsMdFile": true,
-  "chat.useCustomAgentHooks": true,
-  "chat.agent.maxRequests": 128
+  "sqltools.useNodeRuntime": true
 }
