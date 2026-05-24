@@ -20,6 +20,21 @@ class QSqlQuery;
 
 namespace CompendiumEnrichmentSql {
 
+struct SourceSpec {
+    QString sourceId;
+    QString displayName;
+    QString sourceType;
+    QString licenseUrl;
+    bool attributionRequired = false;
+    int priority = 0;
+    QString licenseId;
+};
+
+struct SnapshotSpec {
+    QString snapshotId;
+    QString snapshotLabel;
+};
+
 /**
  * @brief Execute a prepared QSqlQuery and populate @p error on failure.
  */
@@ -43,29 +58,8 @@ bool execPrepared(QSqlQuery &query, QString &error, const QString &context);
  * @return true on success, false on error.
  */
 bool upsertEnrichmentSource(QSqlDatabase &db,
-                            const QString &sourceId,
-                            const QString &displayName,
-                            const QString &sourceType,
-                            const QString &licenseUrl,
-                            bool attributionRequired,
-                            int priority,
-                            const QString &snapshotId,
-                            const QString &snapshotLabel,
-                            QString &error);
-
-/**
- * @brief Overload that allows explicitly setting sources.license_id.
- */
-bool upsertEnrichmentSource(QSqlDatabase &db,
-                            const QString &sourceId,
-                            const QString &displayName,
-                            const QString &sourceType,
-                            const QString &licenseUrl,
-                            bool attributionRequired,
-                            int priority,
-                            const QString &snapshotId,
-                            const QString &snapshotLabel,
-                            const QString &licenseId,
+                            const SourceSpec &source,
+                            const SnapshotSpec &snapshot,
                             QString &error);
 
 /**

@@ -78,16 +78,22 @@ bool enrichFromMameCatver(QSqlDatabase &database,
 
     const QString snapshotId = QStringLiteral("mame-catver-")
                              + QDate::currentDate().toString(QStringLiteral("yyyy-MM"));
-    if (!upsertEnrichmentSource(database,
-                                 QStringLiteral("mame-catver"),
-                                 QStringLiteral("MAME catver.ini"),
-                                 QStringLiteral("static-file"),
-                                 QStringLiteral("https://github.com/AntoPISA/MAME_SupportFiles"),
-                                 /*attributionRequired=*/false,
-                                 /*priority=*/50,
-                                 snapshotId,
-                                 QStringLiteral("MAME catver.ini genre enrichment"),
-                                 error))
+    if (!upsertEnrichmentSource(
+            database,
+            SourceSpec{
+                QStringLiteral("mame-catver"),
+                QStringLiteral("MAME catver.ini"),
+                QStringLiteral("static-file"),
+                QStringLiteral("https://github.com/AntoPISA/MAME_SupportFiles"),
+                /*attributionRequired=*/false,
+                /*priority=*/50,
+                QString(),
+            },
+            SnapshotSpec{
+                snapshotId,
+                QStringLiteral("MAME catver.ini genre enrichment"),
+            },
+            error))
         return false;
 
     QSqlQuery updateQ(database);

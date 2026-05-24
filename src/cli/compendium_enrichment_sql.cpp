@@ -19,39 +19,8 @@ bool execPrepared(QSqlQuery &query, QString &error, const QString &context)
 }
 
 bool upsertEnrichmentSource(QSqlDatabase &db,
-                            const QString &sourceId,
-                            const QString &displayName,
-                            const QString &sourceType,
-                            const QString &licenseUrl,
-                            bool attributionRequired,
-                            int priority,
-                            const QString &snapshotId,
-                            const QString &snapshotLabel,
-                            QString &error)
-{
-    return upsertEnrichmentSource(db,
-                                  sourceId,
-                                  displayName,
-                                  sourceType,
-                                  licenseUrl,
-                                  attributionRequired,
-                                  priority,
-                                  snapshotId,
-                                  snapshotLabel,
-                                  QString(),
-                                  error);
-}
-
-bool upsertEnrichmentSource(QSqlDatabase &db,
-                            const QString &sourceId,
-                            const QString &displayName,
-                            const QString &sourceType,
-                            const QString &licenseUrl,
-                            bool attributionRequired,
-                            int priority,
-                            const QString &snapshotId,
-                            const QString &snapshotLabel,
-                            const QString &licenseId,
+                            const SourceSpec &source,
+                            const SnapshotSpec &snapshot,
                             QString &error)
 {
     QSqlQuery srcQ(db);
@@ -60,20 +29,20 @@ bool upsertEnrichmentSource(QSqlDatabase &db,
         "(source_id, display_name, source_type, license_id, license_url, "
         "attribution_required, priority, enabled) "
         "VALUES (?, ?, ?, ?, ?, ?, ?, ?)"));
-    srcQ.addBindValue(sourceId);
-    srcQ.addBindValue(displayName);
-    srcQ.addBindValue(sourceType);
-    srcQ.addBindValue(licenseId.isEmpty()
+    srcQ.addBindValue(source.sourceId);
+    srcQ.addBindValue(source.displayName);
+    srcQ.addBindValue(source.sourceType);
+    srcQ.addBindValue(source.licenseId.isEmpty()
                           ? QVariant(QMetaType(QMetaType::QString))
-                          : QVariant(licenseId));
-    srcQ.addBindValue(licenseUrl.isEmpty()
+                          : QVariant(source.licenseId));
+    srcQ.addBindValue(source.licenseUrl.isEmpty()
                           ? QVariant(QMetaType(QMetaType::QString))
-                          : QVariant(licenseUrl));
-    srcQ.addBindValue(attributionRequired ? 1 : 0);
-    srcQ.addBindValue(priority);
+                          : QVariant(source.licenseUrl));
+    srcQ.addBindValue(source.attributionRequired ? 1 : 0);
+    srcQ.addBindValue(source.priority);
     srcQ.addBindValue(1);  // enabled
     if (!execPrepared(srcQ, error,
-                      QStringLiteral("Upsert source %1").arg(sourceId)))
+                      QStringLiteral("Upsert source %1").arg(source.sourceId)))
         return false;
 
     QSqlQuery snapQ(db);
@@ -81,14 +50,14 @@ bool upsertEnrichmentSource(QSqlDatabase &db,
         "INSERT OR IGNORE INTO source_snapshots "
         "(snapshot_id, source_id, snapshot_label, snapshot_ref, fetched_at, checksum_sha256) "
         "VALUES (?, ?, ?, ?, ?, ?)"));
-    snapQ.addBindValue(snapshotId);
-    snapQ.addBindValue(sourceId);
-    snapQ.addBindValue(snapshotLabel);
+    snapQ.addBindValue(snapshot.snapshotId);
+    snapQ.addBindValue(source.sourceId);
+    snapQ.addBindValue(snapshot.snapshotLabel);
     snapQ.addBindValue(QVariant(QMetaType(QMetaType::QString)));  // snapshot_ref (NULL)
     snapQ.addBindValue(QDateTime::currentDateTimeUtc().toString(Qt::ISODate));
     snapQ.addBindValue(QVariant(QMetaType(QMetaType::QString)));  // checksum_sha256 (NULL)
     return execPrepared(snapQ, error,
-                        QStringLiteral("Upsert snapshot %1").arg(snapshotId));
+                        QStringLiteral("Upsert snapshot %1").arg(snapshot.snapshotId));
 }
 
 QString normalizeMetadataTitle(const QString &title)

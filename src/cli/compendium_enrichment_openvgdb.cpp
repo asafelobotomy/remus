@@ -183,17 +183,22 @@ bool enrichFromOpenVGDB(QSqlDatabase &database,
     const QString sourceId   = QStringLiteral("openvgdb");
     const QString snapshotId = QStringLiteral("openvgdb-v29.0");
 
-    if (!upsertEnrichmentSource(database,
-                                sourceId,
-                                QStringLiteral("OpenVGDB"),
-                                QStringLiteral("openvgdb"),
-                                QStringLiteral("https://github.com/OpenVGDB/OpenVGDB"),
-                                /*attributionRequired=*/false,
-                                25,
-                                snapshotId,
-                                QStringLiteral("OpenVGDB v29.0"),
-                                QStringLiteral("MIT"),
-                                error))
+    if (!upsertEnrichmentSource(
+            database,
+            SourceSpec{
+                sourceId,
+                QStringLiteral("OpenVGDB"),
+                QStringLiteral("openvgdb"),
+                QStringLiteral("https://github.com/OpenVGDB/OpenVGDB"),
+                /*attributionRequired=*/false,
+                /*priority=*/25,
+                QStringLiteral("MIT"),
+            },
+            SnapshotSpec{
+                snapshotId,
+                QStringLiteral("OpenVGDB v29.0"),
+            },
+            error))
         return false;
 
     // Preload CRC32 → gameId from compendium signatures

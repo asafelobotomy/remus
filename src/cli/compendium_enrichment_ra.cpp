@@ -198,16 +198,22 @@ bool enrichFromRetroAchievements(QSqlDatabase &database,
             return false;
         }
 
-        if (!upsertEnrichmentSource(database,
-                                     QStringLiteral("retroachievements"),
-                                     QStringLiteral("RetroAchievements"),
-                                     QStringLiteral("online-api"),
-                                     QStringLiteral("https://retroachievements.org"),
-                                     /*attributionRequired=*/true,
-                                     /*priority=*/60,
-                                     snapshotId,
-                                     QStringLiteral("RetroAchievements hash enrichment"),
-                                     error)) {
+        if (!upsertEnrichmentSource(
+                database,
+                SourceSpec{
+                    QStringLiteral("retroachievements"),
+                    QStringLiteral("RetroAchievements"),
+                    QStringLiteral("online-api"),
+                    QStringLiteral("https://retroachievements.org"),
+                    /*attributionRequired=*/true,
+                    /*priority=*/60,
+                    QString(),
+                },
+                SnapshotSpec{
+                    snapshotId,
+                    QStringLiteral("RetroAchievements hash enrichment"),
+                },
+                error)) {
             database.rollback();
             return false;
         }

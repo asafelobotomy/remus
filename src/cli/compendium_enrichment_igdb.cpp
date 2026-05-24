@@ -108,16 +108,22 @@ bool enrichFromIGDB(QSqlDatabase &database,
             return false;
         }
 
-        if (!upsertEnrichmentSource(database,
-                                     QStringLiteral("igdb"),
-                                     QStringLiteral("IGDB"),
-                                     QStringLiteral("online-api"),
-                                     QStringLiteral("https://www.igdb.com"),
-                                     /*attributionRequired=*/true,
-                                     /*priority=*/70,
-                                     snapshotId,
-                                     QStringLiteral("IGDB bulk enrichment"),
-                                     error)) {
+        if (!upsertEnrichmentSource(
+                database,
+                SourceSpec{
+                    QStringLiteral("igdb"),
+                    QStringLiteral("IGDB"),
+                    QStringLiteral("online-api"),
+                    QStringLiteral("https://www.igdb.com"),
+                    /*attributionRequired=*/true,
+                    /*priority=*/70,
+                    QString(),
+                },
+                SnapshotSpec{
+                    snapshotId,
+                    QStringLiteral("IGDB bulk enrichment"),
+                },
+                error)) {
             database.rollback();
             return false;
         }

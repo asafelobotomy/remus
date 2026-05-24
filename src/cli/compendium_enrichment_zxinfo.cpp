@@ -117,16 +117,22 @@ bool enrichFromZXInfo(QSqlDatabase &database,
 
     const QString snapshotId = QStringLiteral("zxinfo-")
                              + QDate::currentDate().toString(QStringLiteral("yyyy-MM"));
-    if (!upsertEnrichmentSource(database,
-                                 QStringLiteral("zxinfo"),
-                                 QStringLiteral("ZXInfo / ZXDB"),
-                                 QStringLiteral("online-api"),
-                                 QStringLiteral("https://api.zxinfo.dk/v3/"),
-                                 /*attributionRequired=*/true,
-                                 /*priority=*/65,
-                                 snapshotId,
-                                 QStringLiteral("ZXInfo API enrichment"),
-                                 error)) {
+    if (!upsertEnrichmentSource(
+            database,
+            SourceSpec{
+                QStringLiteral("zxinfo"),
+                QStringLiteral("ZXInfo / ZXDB"),
+                QStringLiteral("online-api"),
+                QStringLiteral("https://api.zxinfo.dk/v3/"),
+                /*attributionRequired=*/true,
+                /*priority=*/65,
+                QString(),
+            },
+            SnapshotSpec{
+                snapshotId,
+                QStringLiteral("ZXInfo API enrichment"),
+            },
+            error)) {
         database.rollback();
         return false;
     }
