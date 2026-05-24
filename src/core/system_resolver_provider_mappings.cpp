@@ -50,6 +50,9 @@ QMap<int, QMap<QString, QString>> SystemResolver::providerMappings()
         {ID_ZX_SPECTRUM,  {{THEGAMESDB, QStringLiteral("4918")}, {SCREENSCRAPER, QStringLiteral("76")},  {IGDB, QStringLiteral("zxspectrum")}}},
         {ID_XBOX,         {{THEGAMESDB, QStringLiteral("14")},   {SCREENSCRAPER, QStringLiteral("32")},  {IGDB, QStringLiteral("xbox")}}},
         {ID_XBOX360,      {{THEGAMESDB, QStringLiteral("15")},   {SCREENSCRAPER, QStringLiteral("33")},  {IGDB, QStringLiteral("xbox360")}}},
+        {ID_PS3,          {{IGDB, QStringLiteral("ps3")}}},
+        {ID_WIIU,         {{IGDB, QStringLiteral("wiiu")}}},
+        {ID_AMSTRAD_CPC,  {{IGDB, QStringLiteral("cpc")}}},
     };
 }
 

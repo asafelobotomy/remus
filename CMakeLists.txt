@@ -124,6 +124,9 @@ set(REMUS_CLI_SOURCES
     src/cli/compendium_enrichment_igdb.cpp
     src/cli/compendium_enrichment_ra.cpp
     src/cli/compendium_enrichment_openvgdb.cpp
+    src/cli/compendium_enrichment_mame.cpp
+    src/cli/compendium_enrichment_sql.cpp
+    src/cli/compendium_enrichment_zxinfo.cpp
 )
 
 add_executable(remus-cli ${REMUS_CLI_SOURCES})

@@ -8,6 +8,7 @@
 #include <QStringList>
 #include <QTextStream>
 #include <memory>
+#include <csignal>
 #include "cli_commands.h"
 #include "cli_helpers.h"
 #include "cli_options.h"
@@ -105,6 +106,16 @@ static void logFileTeeMessageHandler(QtMsgType type,
 int main(int argc, char *argv[])
 {
     QCoreApplication app(argc, argv);
+
+    // Ignore SIGPIPE so that broken SSL/TCP connections from QNetworkAccessManager
+    // return EPIPE to Qt instead of terminating the process silently (Linux default).
+    // Set AFTER QCoreApplication construction (which may touch signal state).
+    // Use sigaction rather than std::signal for reliable SA_RESTART semantics.
+    struct sigaction sa {};
+    sa.sa_handler = SIG_IGN;
+    sigemptyset(&sa.sa_mask);
+    sa.sa_flags = SA_RESTART;
+    sigaction(SIGPIPE, &sa, nullptr);
     QCoreApplication::setApplicationName(Constants::Cli::APPLICATION_NAME);
     QCoreApplication::setOrganizationName(Constants::SETTINGS_ORGANIZATION);
     QCoreApplication::setApplicationVersion(Constants::APP_VERSION);

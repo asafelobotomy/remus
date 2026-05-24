@@ -6,6 +6,7 @@ add_library(remus-metadata STATIC
     screenscraper_provider_parse.cpp
     thegamesdb_provider.cpp
     igdb_provider.cpp
+    zxinfo_provider.cpp
     hasheous_provider.cpp
     hasheous_provider_enrichment.cpp
     clrmamepro_parser.cpp

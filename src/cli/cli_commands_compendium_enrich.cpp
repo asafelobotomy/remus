@@ -1,12 +1,8 @@
 #include "cli_commands.h"
 #include "cli_compendium_build_phases.h"
 #include "cli_helpers.h"
-#include "compendium_enrichment.h"
 #include "compendium_sql_utilities.h"
-#include "../metadata/compendium_merge_resolver.h"
-#include "../metadata/compendium_types.h"
 
-#include <QDateTime>
 #include <QDebug>
 #include <QElapsedTimer>
 #include <QFile>
@@ -19,8 +15,9 @@
 #include <QUuid>
 
 // ── --enrich-compendium ────────────────────────────────────────────────────────
-// Opens an existing compendium DB and runs any missing enrichment passes
-// (currently GameTDB) without touching the previously ingested DAT data.
+// Opens an existing compendium DB and runs all enrichment passes that have data
+// available, filling only fields that are still missing (COALESCE semantics).
+// Passes are idempotent: already-filled fields are never overwritten.
 int handleEnrichCompendiumCommand(CliContext &ctx)
 {
     if (!ctx.parser.isSet("enrich-compendium")) return 0;
@@ -37,11 +34,23 @@ int handleEnrichCompendiumCommand(CliContext &ctx)
         return 1;
     }
 
-    const QString gametdbDir = findDataSubdir(QStringLiteral("gametdb"));
-    if (gametdbDir.isEmpty()) {
-        qCritical() << "✗ Could not locate data/gametdb directory";
-        return 1;
-    }
+    // Locate data directories — absent directories are skipped, not fatal.
+    const QString metadataDir  = findMetadataDir();
+    const QString gametdbDir   = findGameTDBDir();
+    const QString openvgdbPath = findOpenVGDBPath();
+    const QString mameCatverPath = findMameCatverPath();
+    const QString credPath     = outputInfo.dir().filePath(QStringLiteral("enrichment-credentials.json"));
+
+    if (metadataDir.isEmpty())
+        qInfo() << "[enrich] data/metadata/ not found — Libretro metadata pass skipped";
+    if (gametdbDir.isEmpty())
+        qInfo() << "[enrich] data/gametdb/ not found — GameTDB pass skipped";
+    if (openvgdbPath.isEmpty())
+        qInfo() << "[enrich] data/openvgdb/openvgdb.sqlite not found — OpenVGDB pass skipped";
+    if (!QFile::exists(credPath))
+        qInfo() << "[enrich] enrichment-credentials.json not found — IGDB and RA passes skipped";
+    if (mameCatverPath.isEmpty())
+        qInfo() << "[enrich] data/mame/catver.ini not found — MAME catver pass skipped";
 
     const QString connectionName = QStringLiteral("compendium-enrich-") + QUuid::createUuid().toString(QUuid::WithoutBraces);
     QElapsedTimer timer;
@@ -56,6 +65,11 @@ int handleEnrichCompendiumCommand(CliContext &ctx)
     }
 
     QSqlQuery pragmaQuery(database);
+    // WAL mode allows concurrent readers + one writer; prevents SQLITE_LOCKED
+    // when the nested QEventLoop in waitForReply() re-enters the event loop.
+    pragmaQuery.exec(QStringLiteral("PRAGMA journal_mode = WAL"));
+    // Retry for up to 5 s on transient lock contention instead of failing immediately.
+    pragmaQuery.exec(QStringLiteral("PRAGMA busy_timeout = 5000"));
     if (!pragmaQuery.exec(QStringLiteral("PRAGMA foreign_keys = ON"))) {
         qCritical() << "✗ Failed to enable foreign keys:" << pragmaQuery.lastError().text();
         database.close();
@@ -63,128 +77,35 @@ int handleEnrichCompendiumCommand(CliContext &ctx)
         return 1;
     }
 
-    // Check which enrichments have already been applied
-    QString checkError;
-    const int existingGameTDB = CompendiumSqlUtilities::scalarCount(database,
-        QStringLiteral("SELECT COUNT(*) FROM sources WHERE source_id = 'gametdb'"),
-        checkError);
-    if (existingGameTDB < 0) {
-        qCritical().noquote() << "✗ Could not query sources table:" << checkError;
-        database.close();
-        QSqlDatabase::removeDatabase(connectionName);
-        return 1;
-    }
-
-    const int existingIGDB = CompendiumSqlUtilities::scalarCount(database,
-        QStringLiteral("SELECT COUNT(*) FROM sources WHERE source_id = 'igdb'"),
-        checkError);
-    if (existingIGDB < 0) {
-        qCritical().noquote() << "✗ Could not query sources table:" << checkError;
-        database.close();
-        QSqlDatabase::removeDatabase(connectionName);
-        return 1;
-    }
-
-    const int existingRA = CompendiumSqlUtilities::scalarCount(database,
-        QStringLiteral("SELECT COUNT(*) FROM sources WHERE source_id = 'retroachievements'"),
-        checkError);
-    if (existingRA < 0) {
-        qCritical().noquote() << "✗ Could not query sources table:" << checkError;
-        database.close();
-        QSqlDatabase::removeDatabase(connectionName);
-        return 1;
-    }
-
-    const QString credPath = outputInfo.dir().filePath(QStringLiteral("enrichment-credentials.json"));
-    const bool needsGameTDB = (existingGameTDB == 0);
-    const bool needsIGDB    = (existingIGDB == 0) && QFile::exists(credPath);
-    const bool needsRA      = (existingRA == 0)   && QFile::exists(credPath);
-
-    if (!needsGameTDB && !needsIGDB && !needsRA) {
-        qInfo() << "All enrichments already applied — nothing to do.";
-        database.close();
-        QSqlDatabase::removeDatabase(connectionName);
-        return 0;
-    }
-
     qInfo() << "Running enrichment on" << outputInfo.absoluteFilePath();
 
-    // ── Enrichment pass: GameTDB ──────────────────────────────────────────────
-    int gametdbGamesEnriched = 0, gametdbFactsInserted = 0;
-    if (needsGameTDB) {
-        if (!database.transaction()) {
-            qCritical() << "✗ Failed to start GameTDB enrichment transaction:" << database.lastError().text();
-            database.close();
-            QSqlDatabase::removeDatabase(connectionName);
-            return 1;
-        }
-        QString error;
-        if (!CompendiumEnrichment::enrichFromGameTDB(database,
-                                                     gametdbDir,
-                                                     gametdbGamesEnriched,
-                                                     gametdbFactsInserted,
-                                                     error)) {
-            database.rollback();
-            qCritical().noquote() << QStringLiteral("✗ GameTDB enrichment failed: %1").arg(error);
-            database.close();
-            QSqlDatabase::removeDatabase(connectionName);
-            return 1;
-        }
-        if (!database.commit()) {
-            qCritical() << "✗ Failed to commit GameTDB enrichment transaction:" << database.lastError().text();
-            database.close();
-            QSqlDatabase::removeDatabase(connectionName);
-            return 1;
-        }
-    }
-
-    // ── Enrichment pass: IGDB (manages its own per-system transactions) ───────
-    int igdbGamesEnriched = 0, igdbFactsInserted = 0;
-    if (needsIGDB) {
-        QString error;
-        if (!CompendiumEnrichment::enrichFromIGDB(database, credPath,
-                                                  igdbGamesEnriched, igdbFactsInserted, error)) {
-            qCritical().noquote() << QStringLiteral("✗ IGDB enrichment failed: %1").arg(error);
-            database.close();
-            QSqlDatabase::removeDatabase(connectionName);
-            return 1;
-        }
-    }
-
-    // ── Enrichment pass: RetroAchievements (manages its own per-system transactions) ──
-    int raGamesEnriched = 0, raFactsInserted = 0;
-    if (needsRA) {
-        QString error;
-        if (!CompendiumEnrichment::enrichFromRetroAchievements(database, credPath,
-                                                               raGamesEnriched, raFactsInserted, error)) {
-            qCritical().noquote() << QStringLiteral("✗ RetroAchievements enrichment failed: %1").arg(error);
-            database.close();
-            QSqlDatabase::removeDatabase(connectionName);
-            return 1;
-        }
-    }
-
-    // Re-run merge resolution to pick up facts written by enrichment passes.
+    // ── Run all enrichment passes and merge resolution ───────────────────────
+    EnrichmentStats stats;
     {
-        Remus::Compendium::CompilerStats resolveStats;
-        QString resolveError;
-        const Remus::Compendium::MergeResolver resolver;
-        if (!resolver.resolve(database, resolveStats, resolveError)) {
-            qWarning() << "[enrich-compendium] Merge resolution failed (non-fatal):" << resolveError;
-        } else if (resolveStats.resolvedFields > 0) {
-            qInfo().noquote() << QStringLiteral("[enrich-compendium] Merge resolved %1 fields.")
-                                     .arg(resolveStats.resolvedFields);
+        QString enrichError;
+        if (!runCompendiumEnrichmentPasses(database,
+                                          metadataDir,
+                                          gametdbDir,
+                                          openvgdbPath,
+                                          credPath,
+                                          mameCatverPath,
+                                          stats,
+                                          enrichError)) {
+            qCritical().noquote() << QStringLiteral("✗ %1").arg(enrichError);
+            database.close();
+            QSqlDatabase::removeDatabase(connectionName);
+            return 1;
         }
     }
 
-    // Rebuild FTS index to pick up new descriptions
+    // Rebuild FTS index to pick up new descriptions.
     populateCompendiumFtsIndex(database);
 
-    // Update (or create) the report JSON alongside the DB
+    // Update (or create) the report JSON alongside the DB.
     const QString reportPath = CompendiumSqlUtilities::reportPathForDatabase(outputInfo.absoluteFilePath());
     QJsonObject report;
 
-    // Preserve existing report fields if the file exists
+    // Preserve existing report fields if the file exists.
     QFile existingReport(reportPath);
     if (existingReport.open(QIODevice::ReadOnly | QIODevice::Text)) {
         const QByteArray existing = existingReport.readAll();
@@ -195,12 +116,21 @@ int handleEnrichCompendiumCommand(CliContext &ctx)
             report = doc.object();
     }
 
-    report.insert(QStringLiteral("gametdb_games_enriched"), gametdbGamesEnriched);
-    report.insert(QStringLiteral("gametdb_facts_inserted"), gametdbFactsInserted);
-    report.insert(QStringLiteral("igdb_games_enriched"), igdbGamesEnriched);
-    report.insert(QStringLiteral("igdb_facts_inserted"), igdbFactsInserted);
-    report.insert(QStringLiteral("ra_games_enriched"), raGamesEnriched);
-    report.insert(QStringLiteral("ra_facts_inserted"), raFactsInserted);
+    report.insert(QStringLiteral("metadata_games_enriched"),  stats.metadataGamesEnriched);
+    report.insert(QStringLiteral("metadata_facts_inserted"),   stats.metadataFactsInserted);
+    report.insert(QStringLiteral("gametdb_games_enriched"),    stats.gametdbGamesEnriched);
+    report.insert(QStringLiteral("gametdb_facts_inserted"),    stats.gametdbFactsInserted);
+    report.insert(QStringLiteral("openvgdb_games_enriched"),   stats.openvgdbGamesEnriched);
+    report.insert(QStringLiteral("openvgdb_facts_inserted"),   stats.openvgdbFactsInserted);
+    report.insert(QStringLiteral("igdb_games_enriched"),       stats.igdbGamesEnriched);
+    report.insert(QStringLiteral("igdb_facts_inserted"),       stats.igdbFactsInserted);
+    report.insert(QStringLiteral("ra_games_enriched"),         stats.raGamesEnriched);
+    report.insert(QStringLiteral("ra_facts_inserted"),         stats.raFactsInserted);
+    report.insert(QStringLiteral("mame_games_enriched"),       stats.mameGamesEnriched);
+    report.insert(QStringLiteral("mame_facts_inserted"),       stats.mameFactsInserted);
+    report.insert(QStringLiteral("zxinfo_games_enriched"),     stats.zxinfoGamesEnriched);
+    report.insert(QStringLiteral("zxinfo_facts_inserted"),     stats.zxinfoFactsInserted);
+    report.insert(QStringLiteral("resolved_fields"),           stats.resolvedFields);
     report.insert(QStringLiteral("enrich_compendium_duration_ms"), static_cast<qint64>(timer.elapsed()));
 
     QString reportError;
@@ -214,12 +144,37 @@ int handleEnrichCompendiumCommand(CliContext &ctx)
     qInfo() << "";
     qInfo() << "=== Enrich Compendium ===";
     qInfo() << "Database:" << outputInfo.absoluteFilePath();
-    qInfo() << "GameTDB games enriched:" << gametdbGamesEnriched;
-    qInfo() << "GameTDB facts inserted:" << gametdbFactsInserted;
-    qInfo() << "IGDB games enriched:" << igdbGamesEnriched;
-    qInfo() << "IGDB facts inserted:" << igdbFactsInserted;
-    qInfo() << "RA games enriched:" << raGamesEnriched;
-    qInfo() << "RA facts inserted:" << raFactsInserted;
+    if (stats.metadataGamesEnriched > 0 || stats.metadataFactsInserted > 0) {
+        qInfo() << "Libretro metadata games enriched:" << stats.metadataGamesEnriched;
+        qInfo() << "Libretro metadata facts inserted:" << stats.metadataFactsInserted;
+    }
+    if (stats.gametdbGamesEnriched > 0 || stats.gametdbFactsInserted > 0) {
+        qInfo() << "GameTDB games enriched:" << stats.gametdbGamesEnriched;
+        qInfo() << "GameTDB facts inserted:" << stats.gametdbFactsInserted;
+    }
+    if (stats.openvgdbGamesEnriched > 0 || stats.openvgdbFactsInserted > 0) {
+        qInfo() << "OpenVGDB games enriched:" << stats.openvgdbGamesEnriched;
+        qInfo() << "OpenVGDB facts inserted:" << stats.openvgdbFactsInserted;
+    }
+    if (stats.igdbGamesEnriched > 0 || stats.igdbFactsInserted > 0) {
+        qInfo() << "IGDB games enriched:" << stats.igdbGamesEnriched;
+        qInfo() << "IGDB facts inserted:" << stats.igdbFactsInserted;
+    }
+    if (stats.raGamesEnriched > 0 || stats.raFactsInserted > 0) {
+        qInfo() << "RA games enriched:" << stats.raGamesEnriched;
+        qInfo() << "RA facts inserted:" << stats.raFactsInserted;
+    }
+    if (stats.mameGamesEnriched > 0 || stats.mameFactsInserted > 0) {
+        qInfo() << "MAME games enriched:" << stats.mameGamesEnriched;
+        qInfo() << "MAME facts inserted:" << stats.mameFactsInserted;
+    }
+    if (stats.zxinfoGamesEnriched > 0 || stats.zxinfoFactsInserted > 0) {
+        qInfo() << "ZXInfo games enriched:" << stats.zxinfoGamesEnriched;
+        qInfo() << "ZXInfo facts inserted:" << stats.zxinfoFactsInserted;
+    }
+    if (stats.resolvedFields > 0) {
+        qInfo() << "Resolved fields:" << stats.resolvedFields;
+    }
     qInfo().nospace() << "Duration: " << timer.elapsed() << " ms";
 
     database.close();

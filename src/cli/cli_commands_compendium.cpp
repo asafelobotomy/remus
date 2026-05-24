@@ -370,13 +370,15 @@ int handleBuildCompendiumCommand(CliContext &ctx)
     // ── Enrichment passes (Libretro, GameTDB, OpenVGDB, IGDB) + merge resolve ──
     EnrichmentStats enrichStats;
     {
-        const QString metadataDir  = findDataSubdir(QStringLiteral("metadata"));
-        const QString gametdbDir   = findDataSubdir(QStringLiteral("gametdb"));
-        const QString openvgdbPath = findOpenVGDBPath();
-        const QString credPath     = outputInfo.dir().filePath(
-                                         QStringLiteral("enrichment-credentials.json"));
+        const QString metadataDir   = findDataSubdir(QStringLiteral("metadata"));
+        const QString gametdbDir    = findDataSubdir(QStringLiteral("gametdb"));
+        const QString openvgdbPath  = findOpenVGDBPath();
+        const QString mameCatverPath = findMameCatverPath();
+        const QString credPath      = outputInfo.dir().filePath(
+                                          QStringLiteral("enrichment-credentials.json"));
         if (!runCompendiumEnrichmentPasses(database, metadataDir, gametdbDir,
-                                          openvgdbPath, credPath, enrichStats, error)) {
+                                          openvgdbPath, credPath, mameCatverPath,
+                                          enrichStats, error)) {
             qCritical().noquote() << QStringLiteral("✗ %1").arg(error);
             database.close();
             QSqlDatabase::removeDatabase(connectionName);

@@ -1,5 +1,7 @@
 #include "compendium_enrichment.h"
+#include "compendium_enrichment_sql.h"
 #include "../metadata/igdb_provider.h"
+#include "../metadata/http_metadata_provider.h"
 #include "../core/system_resolver.h"
 #include "../core/constants/providers.h"
 #include "../services/credential_manager.h"
@@ -13,70 +15,7 @@
 #include <QSqlQuery>
 
 using namespace Remus;
-
-namespace {
-
-bool execPrepared(QSqlQuery &query, QString &error, const QString &context)
-{
-    if (!query.exec()) {
-        error = QStringLiteral("%1 failed: %2").arg(context, query.lastError().text());
-        return false;
-    }
-    return true;
-}
-
-bool upsertIgdbSource(QSqlDatabase &database, const QString &snapshotId, QString &error)
-{
-    QSqlQuery srcQ(database);
-    srcQ.prepare(QStringLiteral(
-        "INSERT OR IGNORE INTO sources "
-        "(source_id, display_name, source_type, license_id, license_url, "
-        "attribution_required, priority, enabled) "
-        "VALUES (?, ?, ?, ?, ?, ?, ?, ?)"));
-    srcQ.addBindValue(QStringLiteral("igdb"));
-    srcQ.addBindValue(QStringLiteral("IGDB"));
-    srcQ.addBindValue(QStringLiteral("online-api"));
-    srcQ.addBindValue(QVariant(QMetaType(QMetaType::QString)));
-    srcQ.addBindValue(QStringLiteral("https://www.igdb.com"));
-    srcQ.addBindValue(1);
-    srcQ.addBindValue(70);
-    srcQ.addBindValue(1);
-    if (!execPrepared(srcQ, error, QStringLiteral("Upsert igdb source")))
-        return false;
-
-    QSqlQuery snapQ(database);
-    snapQ.prepare(QStringLiteral(
-        "INSERT OR IGNORE INTO source_snapshots "
-        "(snapshot_id, source_id, snapshot_label, snapshot_ref, fetched_at, checksum_sha256) "
-        "VALUES (?, ?, ?, ?, ?, ?)"));
-    snapQ.addBindValue(snapshotId);
-    snapQ.addBindValue(QStringLiteral("igdb"));
-    snapQ.addBindValue(QStringLiteral("IGDB bulk enrichment"));
-    snapQ.addBindValue(QVariant(QMetaType(QMetaType::QString)));
-    snapQ.addBindValue(QDateTime::currentDateTimeUtc().toString(Qt::ISODate));
-    snapQ.addBindValue(QVariant(QMetaType(QMetaType::QString)));
-    return execPrepared(snapQ, error, QStringLiteral("Upsert igdb snapshot"));
-}
-
-// Lowercase, strip leading articles, keep only letters/digits/spaces.
-QString normalizeTitle(const QString &title)
-{
-    QString s = title.toLower().trimmed();
-    static const QStringList articles{
-        QStringLiteral("the "), QStringLiteral("a "), QStringLiteral("an ")
-    };
-    for (const QString &art : articles) {
-        if (s.startsWith(art)) { s = s.mid(art.size()); break; }
-    }
-    QString out;
-    out.reserve(s.size());
-    for (const QChar &c : s) {
-        if (c.isLetterOrNumber() || c.isSpace()) out += c;
-    }
-    return out.simplified();
-}
-
-} // namespace
+using namespace CompendiumEnrichmentSql;
 
 namespace CompendiumEnrichment {
 
@@ -97,15 +36,18 @@ bool enrichFromIGDB(QSqlDatabase &database,
         return true;
     }
 
-    IGDBProvider provider;
-    provider.setCredentials(clientId, clientSecret);
-
-    // Systems that still have games with no description
+    // Systems that still have games missing any enrichable field
     QSqlQuery sysQ(database);
     if (!sysQ.exec(QStringLiteral(
             "SELECT DISTINCT g.system_id, s.display_name FROM games g "
             "JOIN systems s ON s.system_id = g.system_id "
             "WHERE g.description IS NULL OR g.description = '' "
+            "   OR g.genre IS NULL OR g.genre = '' "
+            "   OR g.developer IS NULL OR g.developer = '' "
+            "   OR g.publisher IS NULL OR g.publisher = '' "
+            "   OR g.release_year IS NULL "
+            "   OR g.rating IS NULL "
+            "   OR g.players_max IS NULL "
             "ORDER BY s.display_name"))) {
         error = QStringLiteral("Query systems: %1").arg(sysQ.lastError().text());
         return false;
@@ -114,14 +56,31 @@ bool enrichFromIGDB(QSqlDatabase &database,
     QList<SysInfo> systems;
     while (sysQ.next())
         systems.append({sysQ.value(0).toInt(), sysQ.value(1).toString()});
+    // Release the cursor/prepared-statement before starting per-system write
+    // transactions — an open cursor can cause SQLITE_LOCKED in some SQLite
+    // journal modes when the nested QEventLoop (waitForReply) re-enters.
+    sysQ.finish();
 
     if (systems.isEmpty())
         return true;
+
+    // Single provider (and therefore single QNAM) shared across all systems.
+    // A per-system QNAM caused crashes during QNAM destruction because Qt's SSL
+    // teardown is asynchronous; tearing it down at the end of every loop iteration
+    // races with background socket cleanup. Instead, we flush all pending
+    // deleteLater() calls at the START of each iteration (while the QNAM is still
+    // alive) so reply cleanup happens before new requests are issued.
+    IGDBProvider provider;
+    provider.setCredentials(clientId, clientSecret);
 
     const QString snapshotId   = QStringLiteral("igdb-") + QDate::currentDate().toString(QStringLiteral("yyyy-MM"));
     static const int PAGE_SIZE = 500;
 
     for (const SysInfo &sys : systems) {
+        // Flush any deleteLater() events posted by the previous system's network
+        // replies before issuing new requests on the shared QNAM.
+        HttpMetadataProvider::processNetworkEvents();
+
         const QString igdbSlug = SystemResolver::providerName(sys.id, Constants::Providers::IGDB);
         if (igdbSlug.isEmpty()) continue;
 
@@ -131,8 +90,8 @@ bool enrichFromIGDB(QSqlDatabase &database,
         while (true) {
             const QList<GameMetadata> page = provider.fetchGamesByPlatformSlug(igdbSlug, offset, PAGE_SIZE);
             for (const GameMetadata &gm : page) {
-                if (!gm.description.isEmpty())
-                    igdbIndex[normalizeTitle(gm.title)] = gm;
+                if (!gm.title.isEmpty())
+                    igdbIndex[normalizeMetadataTitle(gm.title)] = gm;
             }
             if (page.size() < PAGE_SIZE) break;
             offset += PAGE_SIZE;
@@ -149,7 +108,16 @@ bool enrichFromIGDB(QSqlDatabase &database,
             return false;
         }
 
-        if (!upsertIgdbSource(database, snapshotId, error)) {
+        if (!upsertEnrichmentSource(database,
+                                     QStringLiteral("igdb"),
+                                     QStringLiteral("IGDB"),
+                                     QStringLiteral("online-api"),
+                                     QStringLiteral("https://www.igdb.com"),
+                                     /*attributionRequired=*/true,
+                                     /*priority=*/70,
+                                     snapshotId,
+                                     QStringLiteral("IGDB bulk enrichment"),
+                                     error)) {
             database.rollback();
             return false;
         }
@@ -161,7 +129,9 @@ bool enrichFromIGDB(QSqlDatabase &database,
             "genre        = COALESCE(genre, ?), "
             "developer    = COALESCE(developer, ?), "
             "publisher    = COALESCE(publisher, ?), "
-            "release_year = COALESCE(release_year, ?) "
+            "release_year = COALESCE(release_year, ?), "
+            "rating       = COALESCE(rating, ?), "
+            "players_max  = COALESCE(players_max, ?) "
             "WHERE game_id = ?"));
 
         QSqlQuery factQ(database);
@@ -176,12 +146,13 @@ bool enrichFromIGDB(QSqlDatabase &database,
         };
 
         auto insertFact = [&](const QString &gameId, const QString &field,
-                               const QString &value) -> bool {
+                               const QString &value,
+                               const QString &type = QStringLiteral("text")) -> bool {
             if (value.isEmpty()) return true;
             factQ.bindValue(0, gameId);
             factQ.bindValue(1, field);
             factQ.bindValue(2, value);
-            factQ.bindValue(3, QStringLiteral("text"));
+            factQ.bindValue(3, type);
             factQ.bindValue(4, QStringLiteral("igdb"));
             factQ.bindValue(5, snapshotId);
             factQ.bindValue(6, 70);
@@ -194,7 +165,14 @@ bool enrichFromIGDB(QSqlDatabase &database,
         QSqlQuery gamesQ(database);
         gamesQ.prepare(QStringLiteral(
             "SELECT game_id, canonical_title FROM games "
-            "WHERE system_id = ? AND (description IS NULL OR description = '')"));
+            "WHERE system_id = ? "
+            "  AND (description IS NULL OR description = '' "
+            "    OR genre IS NULL OR genre = '' "
+            "    OR developer IS NULL OR developer = '' "
+            "    OR publisher IS NULL OR publisher = '' "
+            "    OR release_year IS NULL "
+            "    OR rating IS NULL "
+            "    OR players_max IS NULL)"));
         gamesQ.addBindValue(sys.id);
         if (!gamesQ.exec()) {
             database.rollback();
@@ -206,7 +184,7 @@ bool enrichFromIGDB(QSqlDatabase &database,
         int sysEnriched = 0;
         while (gamesQ.next()) {
             const QString gameId = gamesQ.value(0).toString();
-            const QString norm   = normalizeTitle(gamesQ.value(1).toString());
+            const QString norm   = normalizeMetadataTitle(gamesQ.value(1).toString());
             const auto it        = igdbIndex.constFind(norm);
             if (it == igdbIndex.cend()) continue;
             const GameMetadata &gm = it.value();
@@ -225,18 +203,31 @@ bool enrichFromIGDB(QSqlDatabase &database,
             updateQ.bindValue(4, releaseYear > 0
                                  ? QVariant(releaseYear)
                                  : QVariant(QMetaType(QMetaType::Int)));
-            updateQ.bindValue(5, gameId);
+            updateQ.bindValue(5, gm.rating > 0.0f
+                                 ? QVariant(static_cast<double>(gm.rating))
+                                 : QVariant(QMetaType(QMetaType::Double)));
+            updateQ.bindValue(6, gm.players > 0
+                                 ? QVariant(gm.players)
+                                 : QVariant(QMetaType(QMetaType::Int)));
+            updateQ.bindValue(7, gameId);
             if (!execPrepared(updateQ, error, QStringLiteral("Update game igdb"))) {
                 database.rollback();
                 return false;
             }
             if (updateQ.numRowsAffected() > 0) { ++gamesEnriched; ++sysEnriched; }
 
-            const QString genreStr = gm.genres.isEmpty() ? QString() : gm.genres.first();
+            const QString genreStr   = gm.genres.isEmpty() ? QString() : gm.genres.first();
+            const QString yearStr    = releaseYear > 0 ? QString::number(releaseYear) : QString();
+            const QString ratingStr  = gm.rating > 0.0f
+                ? QString::number(static_cast<double>(gm.rating), 'f', 2) : QString();
+            const QString playersStr = gm.players > 0 ? QString::number(gm.players) : QString();
             if (!insertFact(gameId, QStringLiteral("description"), gm.description)
                 || !insertFact(gameId, QStringLiteral("genre"),        genreStr)
                 || !insertFact(gameId, QStringLiteral("developer"),    gm.developer)
-                || !insertFact(gameId, QStringLiteral("publisher"),    gm.publisher)) {
+                || !insertFact(gameId, QStringLiteral("publisher"),    gm.publisher)
+                || !insertFact(gameId, QStringLiteral("release_year"), yearStr, QStringLiteral("integer"))
+                || !insertFact(gameId, QStringLiteral("rating"),       ratingStr, QStringLiteral("decimal"))
+                || !insertFact(gameId, QStringLiteral("players_max"),  playersStr, QStringLiteral("integer"))) {
                 database.rollback();
                 return false;
             }
@@ -250,6 +241,10 @@ bool enrichFromIGDB(QSqlDatabase &database,
 
         qInfo().noquote() << QStringLiteral("[IGDB] %1: +%2 games enriched").arg(sys.name).arg(sysEnriched);
     }
+
+    // Flush any pending deleteLater() events from the last system's replies before
+    // the single shared IGDBProvider (and its QNAM) goes out of scope at function return.
+    HttpMetadataProvider::processNetworkEvents();
 
     return true;
 }

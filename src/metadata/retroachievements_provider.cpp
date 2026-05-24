@@ -9,7 +9,7 @@
 namespace Remus {
 
 RetroAchievementsProvider::RetroAchievementsProvider(QObject *parent)
-    : HttpMetadataProvider(500, parent)  // 2 req/sec max — be polite
+    : HttpMetadataProvider(250, parent)  // 4 req/sec — RA requests ≤1/s but bulk tools safely use 4/s
 {
 }
 

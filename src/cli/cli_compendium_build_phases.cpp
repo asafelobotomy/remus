@@ -14,6 +14,7 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db,
                                    const QString &gametdbDir,
                                    const QString &openvgdbPath,
                                    const QString &credPath,
+                                   const QString &mameCatverPath,
                                    EnrichmentStats &stats,
                                    QString &error)
 {
@@ -108,6 +109,38 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db,
             error = QStringLiteral("RetroAchievements enrichment failed: %1").arg(error);
             return false;
         }
+    }
+
+    // ── Enrichment pass 6: MAME catver.ini (caller-wrapped transaction) ────────
+    if (!mameCatverPath.isEmpty() && QFile::exists(mameCatverPath)) {
+        if (!db.transaction()) {
+            error = QStringLiteral("Failed to start MAME catver enrichment transaction: %1")
+                        .arg(db.lastError().text());
+            return false;
+        }
+        if (!CompendiumEnrichment::enrichFromMameCatver(db,
+                                                        mameCatverPath,
+                                                        stats.mameGamesEnriched,
+                                                        stats.mameFactsInserted,
+                                                        error)) {
+            db.rollback();
+            error = QStringLiteral("MAME catver enrichment failed: %1").arg(error);
+            return false;
+        }
+        if (!db.commit()) {
+            error = QStringLiteral("Failed to commit MAME catver enrichment transaction: %1")
+                        .arg(db.lastError().text());
+            return false;
+        }
+    }
+
+    // ── Enrichment pass 7: ZXInfo (manages its own transaction) ──────────────
+    if (!CompendiumEnrichment::enrichFromZXInfo(db,
+                                                stats.zxinfoGamesEnriched,
+                                                stats.zxinfoFactsInserted,
+                                                error)) {
+        error = QStringLiteral("ZXInfo enrichment failed: %1").arg(error);
+        return false;
     }
 
     // ── Post-enrichment: re-run merge resolution to pick up newly-written facts ─

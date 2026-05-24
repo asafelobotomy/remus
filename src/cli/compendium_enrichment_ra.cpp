@@ -1,5 +1,7 @@
 #include "compendium_enrichment.h"
+#include "compendium_enrichment_sql.h"
 #include "../metadata/retroachievements_provider.h"
+#include "../metadata/http_metadata_provider.h"
 #include "../core/system_resolver.h"
 #include "../core/constants/providers.h"
 #include "../services/credential_manager.h"
@@ -13,52 +15,7 @@
 #include <QSqlQuery>
 
 using namespace Remus;
-
-namespace {
-
-bool execPrepared(QSqlQuery &query, QString &error, const QString &context)
-{
-    if (!query.exec()) {
-        error = QStringLiteral("%1 failed: %2").arg(context, query.lastError().text());
-        return false;
-    }
-    return true;
-}
-
-bool upsertRaSource(QSqlDatabase &database, const QString &snapshotId, QString &error)
-{
-    QSqlQuery srcQ(database);
-    srcQ.prepare(QStringLiteral(
-        "INSERT OR IGNORE INTO sources "
-        "(source_id, display_name, source_type, license_id, license_url, "
-        "attribution_required, priority, enabled) "
-        "VALUES (?, ?, ?, ?, ?, ?, ?, ?)"));
-    srcQ.addBindValue(QStringLiteral("retroachievements"));
-    srcQ.addBindValue(QStringLiteral("RetroAchievements"));
-    srcQ.addBindValue(QStringLiteral("online-api"));
-    srcQ.addBindValue(QVariant(QMetaType(QMetaType::QString)));
-    srcQ.addBindValue(QStringLiteral("https://retroachievements.org"));
-    srcQ.addBindValue(1);   // attribution_required
-    srcQ.addBindValue(60);  // priority (Constants::Priority::RETROACHIEVEMENTS)
-    srcQ.addBindValue(1);   // enabled
-    if (!execPrepared(srcQ, error, QStringLiteral("Upsert retroachievements source")))
-        return false;
-
-    QSqlQuery snapQ(database);
-    snapQ.prepare(QStringLiteral(
-        "INSERT OR IGNORE INTO source_snapshots "
-        "(snapshot_id, source_id, snapshot_label, snapshot_ref, fetched_at, checksum_sha256) "
-        "VALUES (?, ?, ?, ?, ?, ?)"));
-    snapQ.addBindValue(snapshotId);
-    snapQ.addBindValue(QStringLiteral("retroachievements"));
-    snapQ.addBindValue(QStringLiteral("RetroAchievements hash enrichment"));
-    snapQ.addBindValue(QVariant(QMetaType(QMetaType::QString)));
-    snapQ.addBindValue(QDateTime::currentDateTimeUtc().toString(Qt::ISODate));
-    snapQ.addBindValue(QVariant(QMetaType(QMetaType::QString)));
-    return execPrepared(snapQ, error, QStringLiteral("Upsert retroachievements snapshot"));
-}
-
-} // namespace
+using namespace CompendiumEnrichmentSql;
 
 namespace CompendiumEnrichment {
 
@@ -79,9 +36,6 @@ bool enrichFromRetroAchievements(QSqlDatabase &database,
         return true;
     }
 
-    RetroAchievementsProvider provider;
-    provider.setCredentials(username, apiKey);
-
     // Query all systems that have games with at least one MD5 signature
     QSqlQuery sysQ(database);
     if (!sysQ.exec(QStringLiteral(
@@ -98,6 +52,8 @@ bool enrichFromRetroAchievements(QSqlDatabase &database,
     QList<SysInfo> systems;
     while (sysQ.next())
         systems.append({sysQ.value(0).toInt(), sysQ.value(1).toString()});
+    // Release cursor before per-system write transactions (same reason as IGDB).
+    sysQ.finish();
 
     if (systems.isEmpty())
         return true;
@@ -106,6 +62,20 @@ bool enrichFromRetroAchievements(QSqlDatabase &database,
                                QDate::currentDate().toString(QStringLiteral("yyyy-MM"));
 
     for (const SysInfo &sys : systems) {
+        // Fresh provider (and therefore fresh QNetworkAccessManager) per system.
+        // This prevents QNAM internal-state accumulation from crashing the
+        // process silently when processing large systems (e.g. SNES).
+        RetroAchievementsProvider provider;
+        provider.setCredentials(username, apiKey);
+
+        // RAII guard: calls HttpMetadataProvider::processNetworkEvents() before the
+        // provider (and its QNAM) destructs at end of scope. Declared after `provider`
+        // so it destructs first in C++ LIFO order. Without this, `continue` branches
+        // (e.g. "no games", "no hash matches") exit the loop body before any per-50
+        // flush, leaving deferred-delete events that fire after QNAM has already freed
+        // those reply objects → use-after-free crash.
+        HttpMetadataProvider::DeferredDeleteFlushGuard flushGuard;
+
         const QString raSystemIdStr = SystemResolver::providerName(
             sys.id, QString::fromLatin1(Constants::Providers::RETROACHIEVEMENTS));
         if (raSystemIdStr.isEmpty()) continue;
@@ -145,10 +115,11 @@ bool enrichFromRetroAchievements(QSqlDatabase &database,
             .arg(sys.name).arg(raSystemId).arg(raGames.size()).arg(md5Map.size());
 
         // Find compendium games for this system that have MD5 signatures.
-        // Capture whether the description is already filled to avoid unnecessary API calls.
+        // Capture all enrichable fields to gate the per-game metadata API call.
         QSqlQuery hashQ(database);
         hashQ.prepare(QStringLiteral(
-            "SELECT gs.hash_value, gs.game_id, g.description FROM game_signatures gs "
+            "SELECT gs.hash_value, gs.game_id, g.description, g.genre, g.developer, "
+            "       g.publisher, g.release_year FROM game_signatures gs "
             "JOIN games g ON g.game_id = gs.game_id "
             "WHERE gs.hash_type = 'md5' AND g.system_id = ?"));
         hashQ.addBindValue(sys.id);
@@ -161,21 +132,28 @@ bool enrichFromRetroAchievements(QSqlDatabase &database,
         struct MatchInfo {
             int raGameId         = 0;
             int achievementCount = 0;
-            bool descMissing     = false;
+            bool metaMissing     = false;
         };
         QHash<QString, MatchInfo> matches; // compendiumGameId → MatchInfo
         while (hashQ.next()) {
             const QString hash   = hashQ.value(0).toString().toLower();
             const QString gameId = hashQ.value(1).toString();
-            const bool descMissing =
-                hashQ.value(2).isNull() || hashQ.value(2).toString().isEmpty();
+            // Fetch full metadata if any enrichable field is absent.
+            auto isBlank = [&](int col) {
+                return hashQ.value(col).isNull() || hashQ.value(col).toString().isEmpty();
+            };
+            const bool metaMissing = isBlank(2)          // description
+                                  || isBlank(3)          // genre
+                                  || isBlank(4)          // developer
+                                  || isBlank(5)          // publisher
+                                  || hashQ.value(6).isNull(); // release_year
 
             const auto it = md5Map.constFind(hash);
             if (it == md5Map.cend()) continue;
 
             // First matching hash wins; don't overwrite an existing match.
             if (!matches.contains(gameId))
-                matches.insert(gameId, {it->raGameId, it->achievementCount, descMissing});
+                matches.insert(gameId, {it->raGameId, it->achievementCount, metaMissing});
         }
 
         if (matches.isEmpty()) {
@@ -183,13 +161,33 @@ bool enrichFromRetroAchievements(QSqlDatabase &database,
             continue;
         }
 
-        // For games missing descriptions, fetch full metadata via API_GetGame.php.
+        // For games missing any enrichable field, fetch full metadata via API_GetGame.php.
         // Network calls are done outside the transaction to keep the write lock brief.
+        // Gate on title (not description) — RA's API doesn't return narrative descriptions;
+        // a non-empty title confirms the call succeeded and the metadata is usable.
+        int apiCallsNeeded = 0;
+        for (auto it = matches.constBegin(); it != matches.constEnd(); ++it)
+            if (it->metaMissing) ++apiCallsNeeded;
+        if (apiCallsNeeded > 0)
+            qInfo().noquote() << QStringLiteral("[RA] %1: %2 hash matches, %3 need API calls")
+                .arg(sys.name).arg(matches.size()).arg(apiCallsNeeded);
+
         QHash<QString, GameMetadata> fullMetadata; // compendiumGameId → metadata
+        int apiCallsDone = 0;
         for (auto it = matches.constBegin(); it != matches.constEnd(); ++it) {
-            if (!it->descMissing) continue;
+            if (!it->metaMissing) continue;
+            ++apiCallsDone;
+            if (apiCallsDone % 100 == 0)
+                qInfo().noquote() << QStringLiteral("[RA] %1: API call %2/%3 ...")
+                    .arg(sys.name).arg(apiCallsDone).arg(apiCallsNeeded);
+            // Flush pending deleteLater() events from previous replies every 50 calls.
+            // This prevents deferred-delete accumulation from triggering a use-after-free
+            // in Qt's SSL background workers when making many sequential API calls on
+            // the same QNAM (e.g. Game Boy: 373 calls, GBA: 232 calls).
+            if (apiCallsDone % 50 == 0)
+                HttpMetadataProvider::processNetworkEvents();
             const GameMetadata gm = provider.getById(QString::number(it->raGameId));
-            if (!gm.description.isEmpty())
+            if (!gm.title.isEmpty())
                 fullMetadata.insert(it.key(), gm);
         }
 
@@ -200,7 +198,16 @@ bool enrichFromRetroAchievements(QSqlDatabase &database,
             return false;
         }
 
-        if (!upsertRaSource(database, snapshotId, error)) {
+        if (!upsertEnrichmentSource(database,
+                                     QStringLiteral("retroachievements"),
+                                     QStringLiteral("RetroAchievements"),
+                                     QStringLiteral("online-api"),
+                                     QStringLiteral("https://retroachievements.org"),
+                                     /*attributionRequired=*/true,
+                                     /*priority=*/60,
+                                     snapshotId,
+                                     QStringLiteral("RetroAchievements hash enrichment"),
+                                     error)) {
             database.rollback();
             return false;
         }
@@ -257,7 +264,7 @@ bool enrichFromRetroAchievements(QSqlDatabase &database,
                 return false;
             }
 
-            // Write full metadata for games that needed description fill-in.
+            // Write full metadata for games missing any enrichable field.
             const auto metaIt = fullMetadata.constFind(gameId);
             if (metaIt != fullMetadata.cend()) {
                 const GameMetadata &gm = metaIt.value();
@@ -284,10 +291,12 @@ bool enrichFromRetroAchievements(QSqlDatabase &database,
                 if (updateQ.numRowsAffected() > 0) { ++gamesEnriched; ++sysEnriched; }
 
                 const QString genreStr = gm.genres.isEmpty() ? QString() : gm.genres.first();
-                if (!insertFact(gameId, QStringLiteral("description"), gm.description)
-                    || !insertFact(gameId, QStringLiteral("genre"),     genreStr)
-                    || !insertFact(gameId, QStringLiteral("developer"), gm.developer)
-                    || !insertFact(gameId, QStringLiteral("publisher"), gm.publisher)) {
+                const QString yearFactStr = releaseYear > 0 ? QString::number(releaseYear) : QString();
+                if (!insertFact(gameId, QStringLiteral("description"),  gm.description)
+                    || !insertFact(gameId, QStringLiteral("genre"),        genreStr)
+                    || !insertFact(gameId, QStringLiteral("developer"),    gm.developer)
+                    || !insertFact(gameId, QStringLiteral("publisher"),    gm.publisher)
+                    || !insertFact(gameId, QStringLiteral("release_year"), yearFactStr, QStringLiteral("integer"))) {
                     database.rollback();
                     return false;
                 }
@@ -302,6 +311,11 @@ bool enrichFromRetroAchievements(QSqlDatabase &database,
 
         qInfo().noquote() << QStringLiteral("[RA] %1: +%2 metadata updated, %3 hash matches")
             .arg(sys.name).arg(sysEnriched).arg(matches.size());
+
+        // Flush all pending deleteLater() calls for this system's QNetworkReply
+        // objects before the RetroAchievementsProvider (and its QNAM) goes out of
+        // scope. (DeferredDeleteFlushGuard above also handles early-exit paths.)
+        HttpMetadataProvider::processNetworkEvents();
     }
 
     return true;

@@ -45,6 +45,10 @@ inline QString findOpenVGDBPath() {
     const QString dir = findDataSubdir(QStringLiteral("openvgdb"));
     return dir.isEmpty() ? QString() : dir + QStringLiteral("/openvgdb.sqlite");
 }
+inline QString findMameCatverPath() {
+    const QString dir = findDataSubdir(QStringLiteral("mame"));
+    return dir.isEmpty() ? QString() : dir + QStringLiteral("/catver.ini");
+}
 
 // Probe for artwork that may have been renamed to match the detected image
 // format after download. Expects a path without an extension.

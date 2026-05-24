@@ -377,7 +377,7 @@ QList<GameMetadata> IGDBProvider::fetchGamesByPlatformSlug(
     const QString body = QStringLiteral(
         "fields name,summary,genres.name,first_release_date,"
         "involved_companies.company.name,involved_companies.developer,"
-        "involved_companies.publisher; "
+        "involved_companies.publisher,aggregated_rating,multiplayer_modes.offlinemax; "
         "where platforms.slug = \"%1\"; "
         "limit %2; offset %3;")
         .arg(platformSlug)

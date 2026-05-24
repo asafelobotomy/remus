@@ -233,6 +233,28 @@ bool enrichFromOpenVGDB(QSqlDatabase &database,
     }
     QSqlDatabase::removeDatabase(connName);
 
+    // Filter boilerplate descriptions: text appearing in more than 30 distinct
+    // ROM entries is a genre-level placeholder (e.g. "Mahjong is a game for four
+    // players..."), not a game-specific synopsis. Clear it so the field stays
+    // available for a higher-quality source or a per-game lookup.
+    {
+        QHash<QString, int> descFreq;
+        for (const auto &e : std::as_const(crcIndex))
+            if (!e.description.isEmpty()) ++descFreq[e.description];
+        for (const auto &e : std::as_const(md5Index))
+            if (!e.description.isEmpty()) ++descFreq[e.description];
+        constexpr int kBoilerplateThreshold = 30;
+        for (auto &e : crcIndex)
+            if (!e.description.isEmpty() && descFreq.value(e.description) > kBoilerplateThreshold)
+                e.description.clear();
+        for (auto &e : md5Index)
+            if (!e.description.isEmpty() && descFreq.value(e.description) > kBoilerplateThreshold)
+                e.description.clear();
+        for (auto &e : titleIndex)
+            if (!e.description.isEmpty() && descFreq.value(e.description) > kBoilerplateThreshold)
+                e.description.clear();
+    }
+
     if (crcIndex.isEmpty() && md5Index.isEmpty() && titleIndex.isEmpty())
         return true;
 

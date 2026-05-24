@@ -27,6 +27,36 @@ class HttpMetadataProvider : public MetadataProvider {
 public:
     explicit HttpMetadataProvider(int rateLimitMs, QObject *parent = nullptr);
 
+    /**
+     * @brief Flush all pending deferred-delete events from Qt's network layer.
+     *
+     * Call this periodically when making many sequential HTTP requests on a shared
+     * QNetworkAccessManager to drain deleteLater() events before they accumulate.
+     * Also call it before a provider goes out of scope to ensure all pending reply
+     * cleanups complete before the QNAM destructs.
+     *
+     * Centralises the QCoreApplication::sendPostedEvents(nullptr, QEvent::DeferredDelete)
+     * pattern so enrichers don't need to reference QCoreApplication directly.
+     */
+    static void processNetworkEvents();
+
+    /**
+     * @brief RAII guard that calls processNetworkEvents() on destruction.
+     *
+     * Declare one of these at the top of a scope (e.g. a per-system loop body)
+     * to guarantee a flush on all exit paths, including early `continue` / `return`.
+     *
+     * @code
+     *   for (const auto &sys : systems) {
+     *       HttpMetadataProvider::DeferredDeleteFlushGuard guard;
+     *       // ... network calls ...
+     *   } // guard destructs → processNetworkEvents() called
+     * @endcode
+     */
+    struct DeferredDeleteFlushGuard {
+        ~DeferredDeleteFlushGuard() { HttpMetadataProvider::processNetworkEvents(); }
+    };
+
 protected:
     struct ApiResponse {
         bool success = false;

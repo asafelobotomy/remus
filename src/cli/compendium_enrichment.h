@@ -137,4 +137,47 @@ bool enrichFromRetroAchievements(QSqlDatabase &database,
                                   int &factsInserted,
                                   QString &error);
 
+/**
+ * @brief Enrich Arcade/MAME games using the MAME catver.ini category database.
+ *
+ * Reads the `[Category]` section of a local catver.ini file and writes genre
+ * strings for Arcade games whose @c canonical_title matches a catver ROM name.
+ * Uses COALESCE semantics (existing genre values are never overwritten).
+ *
+ * Callers are responsible for wrapping calls in a database transaction.
+ *
+ * @param database    Open SQLite connection (must be in a transaction).
+ * @param catverPath  Path to catver.ini (skipped if file absent).
+ * @param gamesEnriched [out] Number of game rows updated.
+ * @param factsInserted [out] Number of new game_facts rows inserted.
+ * @param error       [out] Human-readable error message on failure.
+ * @return true on success, false on error.
+ */
+bool enrichFromMameCatver(QSqlDatabase &database,
+                          const QString &catverPath,
+                          int &gamesEnriched,
+                          int &factsInserted,
+                          QString &error);
+
+/**
+ * @brief Enrich ZX Spectrum games using the ZXInfo online API.
+ *
+ * Searches each ZX Spectrum game by title against the ZXInfo/ZXDB search API
+ * and writes genre, release year, publisher, and developer (when available)
+ * using COALESCE semantics.
+ *
+ * This function manages its own transaction internally.
+ * Do NOT wrap it in an external transaction.
+ *
+ * @param database      Open SQLite connection (no active transaction required).
+ * @param gamesEnriched [out] Number of game rows updated.
+ * @param factsInserted [out] Number of new game_facts rows inserted.
+ * @param error         [out] Human-readable error message on failure.
+ * @return true on success, false on error.
+ */
+bool enrichFromZXInfo(QSqlDatabase &database,
+                      int &gamesEnriched,
+                      int &factsInserted,
+                      QString &error);
+
 } // namespace CompendiumEnrichment

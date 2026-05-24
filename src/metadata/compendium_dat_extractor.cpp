@@ -223,8 +223,11 @@ QList<SourceRecordEnvelope> DatExtractor::extract(const QString &filePath,
             rec.fields.insert(QStringLiteral("players_max"),
                               QString::number(entry.users));
         }
+        // Require a minimum length to filter out machine-type codes (e.g. MAME
+        // driver labels like "PC", "XT") that are too short to be useful descriptions.
         if (!entry.description.isEmpty()
-                && entry.description != entry.gameName) {
+                && entry.description != entry.gameName
+                && entry.description.length() >= 20) {
             rec.fields.insert(QStringLiteral("description"), entry.description);
         }
 

@@ -1,5 +1,6 @@
 #include "http_metadata_provider.h"
 #include "../core/constants/constants.h"
+#include <QCoreApplication>
 #include <QEventLoop>
 #include <QTimer>
 
@@ -11,6 +12,11 @@ HttpMetadataProvider::HttpMetadataProvider(int rateLimitMs, QObject *parent)
     , m_rateLimiter(new RateLimiter(this))
 {
     m_rateLimiter->setInterval(rateLimitMs);
+}
+
+void HttpMetadataProvider::processNetworkEvents()
+{
+    QCoreApplication::sendPostedEvents(nullptr, QEvent::DeferredDelete);
 }
 
 void HttpMetadataProvider::throttle()
@@ -54,6 +60,13 @@ HttpMetadataProvider::waitForReply(QNetworkReply *reply, int timeoutMs)
         response.error = Constants::Errors::MetadataProvider::REQUEST_TIMEOUT;
     }
 
+    // deleteLater() is required — not delete reply — because Qt's QNAM uses thread-pool
+    // workers for SSL operations. Even after the finished signal fires, background SSL
+    // cleanup may still hold a pointer to the reply's underlying socket. Immediate
+    // deletion causes a use-after-free. deleteLater() defers destruction until all
+    // posted events (including SSL cleanup) have been processed by the event loop.
+    // Callers responsible for many sequential requests must flush the deferred-delete
+    // queue periodically using QCoreApplication::sendPostedEvents(nullptr, QEvent::DeferredDelete).
     reply->deleteLater();
     return response;
 }
