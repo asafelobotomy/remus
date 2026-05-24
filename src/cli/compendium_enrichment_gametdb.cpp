@@ -1,66 +1,19 @@
 #include "compendium_enrichment.h"
+#include "compendium_enrichment_sql.h"
 
 #include "../metadata/gametdb_provider.h"
 
 #include <QDate>
-#include <QDateTime>
 #include <QHash>
 #include <QSqlError>
 #include <QSqlQuery>
 
 namespace {
 
-bool execPrepared(QSqlQuery &query, QString &error, const QString &context)
-{
-    if (!query.exec()) {
-        error = QStringLiteral("%1 failed: %2").arg(context, query.lastError().text());
-        return false;
-    }
-    return true;
-}
-
-bool upsertEnrichmentSource(QSqlDatabase &database,
-                            const QString &sourceId,
-                            const QString &displayName,
-                            const QString &sourceType,
-                            const QString &licenseUrl,
-                            int priority,
-                            const QString &snapshotId,
-                            const QString &snapshotLabel,
-                            QString &error)
-{
-    QSqlQuery srcQ(database);
-    srcQ.prepare(QStringLiteral(
-        "INSERT OR IGNORE INTO sources "
-        "(source_id, display_name, source_type, license_id, license_url, attribution_required, priority, enabled) "
-        "VALUES (?, ?, ?, ?, ?, ?, ?, ?)"));
-    srcQ.addBindValue(sourceId);
-    srcQ.addBindValue(displayName);
-    srcQ.addBindValue(sourceType);
-    srcQ.addBindValue(QStringLiteral("CC-BY-SA-4.0"));
-    srcQ.addBindValue(licenseUrl);
-    srcQ.addBindValue(1);
-    srcQ.addBindValue(priority);
-    srcQ.addBindValue(1);
-    if (!execPrepared(srcQ, error, QStringLiteral("Insert source %1").arg(sourceId)))
-        return false;
-
-    QSqlQuery snapQ(database);
-    snapQ.prepare(QStringLiteral(
-        "INSERT OR IGNORE INTO source_snapshots "
-        "(snapshot_id, source_id, snapshot_label, snapshot_ref, fetched_at, checksum_sha256) "
-        "VALUES (?, ?, ?, ?, ?, ?)"));
-    snapQ.addBindValue(snapshotId);
-    snapQ.addBindValue(sourceId);
-    snapQ.addBindValue(snapshotLabel);
-    snapQ.addBindValue(QVariant());
-    snapQ.addBindValue(QDateTime::currentDateTimeUtc().toString(Qt::ISODate));
-    snapQ.addBindValue(QVariant());
-    if (!execPrepared(snapQ, error, QStringLiteral("Insert snapshot %1").arg(snapshotId)))
-        return false;
-
-    return true;
-}
+using CompendiumEnrichmentSql::execPrepared;
+using CompendiumEnrichmentSql::SnapshotSpec;
+using CompendiumEnrichmentSql::SourceSpec;
+using CompendiumEnrichmentSql::upsertEnrichmentSource;
 
 } // namespace
 
@@ -85,15 +38,22 @@ bool enrichFromGameTDB(QSqlDatabase &database,
     const QString snapshotId = QStringLiteral("gametdb-")
         + QDate::currentDate().toString(QStringLiteral("yyyy-MM-dd"));
 
-    if (!upsertEnrichmentSource(database,
-                                sourceId,
-                                QStringLiteral("GameTDB"),
-                                QStringLiteral("gametdb"),
-                                QStringLiteral("https://www.gametdb.com/"),
-                                40,
-                                snapshotId,
-                                QStringLiteral("GameTDB XML snapshot"),
-                                error)) {
+    if (!upsertEnrichmentSource(
+            database,
+            SourceSpec{
+                sourceId,
+                QStringLiteral("GameTDB"),
+                QStringLiteral("gametdb"),
+                QStringLiteral("https://www.gametdb.com/"),
+                /*attributionRequired=*/true,
+                /*priority=*/40,
+                QStringLiteral("CC-BY-SA-4.0"),
+            },
+            SnapshotSpec{
+                snapshotId,
+                QStringLiteral("GameTDB XML snapshot"),
+            },
+            error)) {
         return false;
     }
 
