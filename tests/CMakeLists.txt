@@ -192,6 +192,22 @@ add_remus_test(test_compendium_sql_utilities CompendiumSqlUtilitiesTest
     LIBS Qt6::Test Qt6::Core Qt6::Sql
 )
 
+add_remus_test(test_compendium_enrichment_sql_helpers CompendiumEnrichmentSqlHelpersTest
+    SOURCES test_compendium_enrichment_sql_helpers.cpp
+            ../src/cli/compendium_enrichment_sql.cpp
+    LIBS Qt6::Test Qt6::Core Qt6::Sql
+)
+
+add_remus_test(test_compendium_enrichment_local_smoke CompendiumEnrichmentLocalSmokeTest
+    SOURCES test_compendium_enrichment_local_smoke.cpp
+            ../src/cli/compendium_enrichment.cpp
+            ../src/cli/compendium_enrichment_gametdb.cpp
+            ../src/cli/compendium_enrichment_mame.cpp
+            ../src/cli/compendium_enrichment_openvgdb.cpp
+            ../src/cli/compendium_enrichment_sql.cpp
+    LIBS Qt6::Test Qt6::Core Qt6::Sql remus-metadata remus-core
+)
+
 add_remus_test(test_thumbnail_urls ThumbnailUrlTest
     SOURCES test_thumbnail_urls.cpp
     LIBS Qt6::Test Qt6::Core remus-metadata remus-core
