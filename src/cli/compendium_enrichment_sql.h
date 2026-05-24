@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QString>
+#include <QVariant>
 
 class QSqlDatabase;
 class QSqlQuery;
@@ -84,6 +85,13 @@ bool insertGameFact(QSqlQuery &factQuery,
                     QString &error,
                     const QString &contextPrefix,
                     bool *inserted = nullptr);
+
+/**
+ * @brief Helpers for binding nullable values in UPDATE statements.
+ */
+QVariant nullableText(const QString &value);
+QVariant nullableInt(int value);
+QVariant nullableDouble(double value);
 
 /**
  * @brief Normalise a game title for fuzzy provider matching.

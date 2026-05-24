@@ -187,16 +187,10 @@ bool enrichFromZXInfo(QSqlDatabase &database,
     for (const ZXMatch &m : matches) {
         const QString yearStr = m.releaseYear > 0 ? QString::number(m.releaseYear) : QString();
 
-        auto nullStr = [](const QString &s) -> QVariant {
-            return s.isEmpty() ? QVariant(QMetaType(QMetaType::QString)) : QVariant(s);
-        };
-
-        updateQ.bindValue(0, nullStr(m.genre));
-        updateQ.bindValue(1, nullStr(m.developer));
-        updateQ.bindValue(2, nullStr(m.publisher));
-        updateQ.bindValue(3, m.releaseYear > 0
-                              ? QVariant(m.releaseYear)
-                              : QVariant(QMetaType(QMetaType::Int)));
+        updateQ.bindValue(0, nullableText(m.genre));
+        updateQ.bindValue(1, nullableText(m.developer));
+        updateQ.bindValue(2, nullableText(m.publisher));
+        updateQ.bindValue(3, nullableInt(m.releaseYear));
         updateQ.bindValue(4, m.gameId);
 
         if (!updateQ.exec()) {

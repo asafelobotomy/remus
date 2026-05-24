@@ -13,6 +13,8 @@ namespace {
 using CompendiumEnrichmentSql::execPrepared;
 using CompendiumEnrichmentSql::FactInsertSpec;
 using CompendiumEnrichmentSql::insertGameFact;
+using CompendiumEnrichmentSql::nullableInt;
+using CompendiumEnrichmentSql::nullableText;
 using CompendiumEnrichmentSql::SnapshotSpec;
 using CompendiumEnrichmentSql::SourceSpec;
 using CompendiumEnrichmentSql::upsertEnrichmentSource;
@@ -171,19 +173,12 @@ bool enrichFromGameTDB(QSqlDatabase &database,
             if (d.isValid()) releaseYear = d.year();
         }
 
-        auto nullStr = [](const QString &s) {
-            return s.isEmpty() ? QVariant(QMetaType(QMetaType::QString)) : QVariant(s);
-        };
-        auto nullInt = [](int v) {
-            return v > 0 ? QVariant(v) : QVariant(QMetaType(QMetaType::Int));
-        };
-
-        updateQuery.bindValue(0, nullStr(genre));
-        updateQuery.bindValue(1, nullStr(meta.developer));
-        updateQuery.bindValue(2, nullStr(meta.publisher));
-        updateQuery.bindValue(3, nullInt(meta.players));
-        updateQuery.bindValue(4, nullInt(releaseYear));
-        updateQuery.bindValue(5, nullStr(meta.description));
+        updateQuery.bindValue(0, nullableText(genre));
+        updateQuery.bindValue(1, nullableText(meta.developer));
+        updateQuery.bindValue(2, nullableText(meta.publisher));
+        updateQuery.bindValue(3, nullableInt(meta.players));
+        updateQuery.bindValue(4, nullableInt(releaseYear));
+        updateQuery.bindValue(5, nullableText(meta.description));
         updateQuery.bindValue(6, gameId);
         if (!execPrepared(updateQuery, error, QStringLiteral("Update game GameTDB metadata")))
             return false;

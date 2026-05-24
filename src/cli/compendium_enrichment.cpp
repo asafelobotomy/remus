@@ -14,6 +14,8 @@ namespace {
 using CompendiumEnrichmentSql::execPrepared;
 using CompendiumEnrichmentSql::FactInsertSpec;
 using CompendiumEnrichmentSql::insertGameFact;
+using CompendiumEnrichmentSql::nullableInt;
+using CompendiumEnrichmentSql::nullableText;
 using CompendiumEnrichmentSql::SnapshotSpec;
 using CompendiumEnrichmentSql::SourceSpec;
 using CompendiumEnrichmentSql::upsertEnrichmentSource;
@@ -159,19 +161,12 @@ bool enrichFromLibretroMetadata(QSqlDatabase &database,
             || !meta.description.isEmpty();
         if (!hasData) continue;
 
-        auto nullStr = [](const QString &s) {
-            return s.isEmpty() ? QVariant(QMetaType(QMetaType::QString)) : QVariant(s);
-        };
-        auto nullInt = [](int v) {
-            return v > 0 ? QVariant(v) : QVariant(QMetaType(QMetaType::Int));
-        };
-
-        updateQuery.bindValue(0, nullStr(meta.genre));
-        updateQuery.bindValue(1, nullStr(meta.developer));
-        updateQuery.bindValue(2, nullStr(meta.publisher));
-        updateQuery.bindValue(3, nullInt(meta.maxUsers));
-        updateQuery.bindValue(4, nullInt(meta.releaseYear));
-        updateQuery.bindValue(5, nullStr(meta.description));
+        updateQuery.bindValue(0, nullableText(meta.genre));
+        updateQuery.bindValue(1, nullableText(meta.developer));
+        updateQuery.bindValue(2, nullableText(meta.publisher));
+        updateQuery.bindValue(3, nullableInt(meta.maxUsers));
+        updateQuery.bindValue(4, nullableInt(meta.releaseYear));
+        updateQuery.bindValue(5, nullableText(meta.description));
         updateQuery.bindValue(6, gameId);
         if (!execPrepared(updateQuery, error, QStringLiteral("Update game libretro metadata")))
             return false;

@@ -242,10 +242,6 @@ bool enrichFromRetroAchievements(QSqlDatabase &database,
             0.75,
         };
 
-        auto nullStr = [](const QString &s) -> QVariant {
-            return s.isEmpty() ? QVariant(QMetaType(QMetaType::QString)) : QVariant(s);
-        };
-
         auto insertFact = [&](const QString &gameId, const QString &field,
                                const QString &value,
                                const QString &type = QStringLiteral("text")) -> bool {
@@ -289,13 +285,11 @@ bool enrichFromRetroAchievements(QSqlDatabase &database,
                     if (okYear && y > 1970 && y < 2030) releaseYear = y;
                 }
 
-                updateQ.bindValue(0, nullStr(gm.description));
-                updateQ.bindValue(1, gm.genres.isEmpty() ? nullStr({}) : QVariant(gm.genres.first()));
-                updateQ.bindValue(2, nullStr(gm.developer));
-                updateQ.bindValue(3, nullStr(gm.publisher));
-                updateQ.bindValue(4, releaseYear > 0
-                                     ? QVariant(releaseYear)
-                                     : QVariant(QMetaType(QMetaType::Int)));
+                updateQ.bindValue(0, nullableText(gm.description));
+                updateQ.bindValue(1, gm.genres.isEmpty() ? nullableText(QString()) : QVariant(gm.genres.first()));
+                updateQ.bindValue(2, nullableText(gm.developer));
+                updateQ.bindValue(3, nullableText(gm.publisher));
+                updateQ.bindValue(4, nullableInt(releaseYear));
                 updateQ.bindValue(5, gameId);
                 if (!execPrepared(updateQ, error, QStringLiteral("Update game RA"))) {
                     database.rollback();

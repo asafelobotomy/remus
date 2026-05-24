@@ -93,6 +93,27 @@ bool insertGameFact(QSqlQuery &factQuery,
     return true;
 }
 
+QVariant nullableText(const QString &value)
+{
+    return value.isEmpty()
+               ? QVariant(QMetaType(QMetaType::QString))
+               : QVariant(value);
+}
+
+QVariant nullableInt(int value)
+{
+    return value > 0
+               ? QVariant(value)
+               : QVariant(QMetaType(QMetaType::Int));
+}
+
+QVariant nullableDouble(double value)
+{
+    return value > 0.0
+               ? QVariant(value)
+               : QVariant(QMetaType(QMetaType::Double));
+}
+
 QString normalizeMetadataTitle(const QString &title)
 {
     QString s = title.trimmed();

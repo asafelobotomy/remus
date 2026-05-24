@@ -273,13 +273,6 @@ bool enrichFromOpenVGDB(QSqlDatabase &database,
         return true;
     };
 
-    auto nullStr = [](const QString &s) {
-        return s.isEmpty() ? QVariant(QMetaType(QMetaType::QString)) : QVariant(s);
-    };
-    auto nullInt = [](int v) {
-        return v > 0 ? QVariant(v) : QVariant(QMetaType(QMetaType::Int));
-    };
-
     auto hasData = [](const OpenVGDBEntry &e) {
         return !e.description.isEmpty() || !e.genre.isEmpty()
             || !e.developer.isEmpty() || !e.publisher.isEmpty() || e.releaseYear > 0;
@@ -292,11 +285,11 @@ bool enrichFromOpenVGDB(QSqlDatabase &database,
                                 const QString &releaseYearType) -> bool {
         if (!hasData(e)) return true;
 
-        updateQuery.bindValue(0, nullStr(e.genre));
-        updateQuery.bindValue(1, nullStr(e.developer));
-        updateQuery.bindValue(2, nullStr(e.publisher));
-        updateQuery.bindValue(3, nullInt(e.releaseYear));
-        updateQuery.bindValue(4, nullStr(e.description));
+        updateQuery.bindValue(0, nullableText(e.genre));
+        updateQuery.bindValue(1, nullableText(e.developer));
+        updateQuery.bindValue(2, nullableText(e.publisher));
+        updateQuery.bindValue(3, nullableInt(e.releaseYear));
+        updateQuery.bindValue(4, nullableText(e.description));
         updateQuery.bindValue(5, gameId);
         if (!execPrepared(updateQuery, error,
                           QStringLiteral("Update game %1").arg(contextPrefix))) {
