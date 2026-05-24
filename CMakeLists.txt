@@ -41,6 +41,16 @@ if(ENABLE_COVERAGE)
     endif()
 endif()
 
+option(REMUS_ENABLE_WARNINGS "Enable -Wall -Wextra compiler warnings (recommended for dev/CI builds)" OFF)
+if(REMUS_ENABLE_WARNINGS)
+    if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+        # -Wno-unused-parameter: Qt signal/slot signatures legitimately omit names.
+        add_compile_options(-Wall -Wextra -Wpedantic -Wno-unused-parameter)
+    elseif(MSVC)
+        add_compile_options(/W3)
+    endif()
+endif()
+
 
 # Avoid noisy Qt optional Vulkan header lookup when Vulkan headers are not installed.
 find_package(Vulkan QUIET)

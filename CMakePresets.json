@@ -35,7 +35,8 @@
         "REMUS_ENABLE_CCACHE": "ON",
         "REMUS_ENABLE_UNITY_BUILD": "OFF",
         "REMUS_ENABLE_PCH": "OFF",
-        "ENABLE_COVERAGE": "OFF"
+        "ENABLE_COVERAGE": "OFF",
+        "REMUS_ENABLE_WARNINGS": "ON"
       }
     },
     {
@@ -52,6 +53,7 @@
         "REMUS_ENABLE_UNITY_BUILD": "OFF",
         "REMUS_ENABLE_PCH": "OFF",
         "ENABLE_COVERAGE": "OFF",
+        "REMUS_ENABLE_WARNINGS": "ON",
         "CMAKE_CXX_FLAGS": "-fsanitize=address,undefined -fno-omit-frame-pointer",
         "CMAKE_EXE_LINKER_FLAGS": "-fsanitize=address,undefined"
       }

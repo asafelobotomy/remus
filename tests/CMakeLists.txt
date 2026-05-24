@@ -214,7 +214,7 @@ add_remus_test(test_metadata_cache MetadataCacheTest
 
 add_remus_test(test_app_controller_reopen AppControllerReopenTest
     SOURCES test_app_controller_reopen.cpp
-    LIBS Qt6::Test Qt6::Core Qt6::Sql remus-metadata remus-core remus-gui-controllers
+    LIBS Qt6::Test Qt6::Core Qt6::Sql remus-metadata remus-core remus-services remus-gui-controllers
 )
 target_include_directories(test_app_controller_reopen PRIVATE
     ${CMAKE_SOURCE_DIR}/src/gui

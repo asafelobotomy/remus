@@ -7,7 +7,6 @@
 #include <QJsonObject>
 #include <QUrlQuery>
 #include <QMap>
-#include <QSettings>
 
 namespace Remus {
 

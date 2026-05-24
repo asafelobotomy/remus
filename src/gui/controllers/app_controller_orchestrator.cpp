@@ -95,12 +95,17 @@ void AppController::rebuildOrchestrator()
 
     // Read provider credentials through SecretStore so secrets are not
     // fetched from plaintext QSettings now that the keychain migration is live.
+    // On BackendError the chain is halted — credentials are NOT silently
+    // downgraded to plaintext storage.  Only an explicit NotFound falls through
+    // to legacy QSettings (systems that haven't migrated yet).
     auto secretValue = [](const char *key) -> QString {
-        const QString v = SecretStore::read(QString::fromLatin1(key));
-        if (!v.isEmpty())
-            return v;
-        // Legacy fallback: key may still live in plain QSettings on systems that
-        // haven't migrated yet.  Read-then-migrate on first successful secret write.
+        const SecretStore::ReadResult kr =
+            SecretStore::readWithStatus(QString::fromLatin1(key));
+        if (kr.status == SecretStore::ReadResult::Status::Found)
+            return kr.value;
+        if (kr.status == SecretStore::ReadResult::Status::BackendError)
+            return {}; // logged by SecretStore; do NOT fall back to plaintext
+        // NotFound: key may still live in plain QSettings (legacy migration path).
         return remusSettings().value(QString::fromLatin1(key)).toString().trimmed();
     };
 

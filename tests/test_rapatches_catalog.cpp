@@ -5,6 +5,8 @@
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QProcess>
+#include <QStandardPaths>
 
 #include "../src/services/rapatches_catalog_builder.h"
 #include "../src/services/retroachievements_enricher.h"
@@ -45,6 +47,8 @@ private slots:
     void buildFromDirectory_emptyDir();
     void buildFromDirectory_patchFiles();
     void buildFromDirectory_skippedDirs();
+    void buildFromDirectory_zipNoPatchMember();
+    void buildFromDirectory_zipWithPatchInside();
 
     // ── RetroAchievementsEnricher credential logic ────────────────
     void enricher_noApiKey_gracefulSkip();
@@ -431,6 +435,89 @@ void RAPatchesCatalogTest::enricher_enrichCatalog_noKey()
     auto result = enricher.enrichCatalog(empty);
     QVERIFY(result.skippedNoApiKey);
     QCOMPARE(result.enrichedCount, 0);
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// buildFromDirectory zip-branch tests
+// ═══════════════════════════════════════════════════════════════════
+
+/// A .zip file whose contents can't be listed (invalid/empty zip) must produce
+/// a fallback entry with an EMPTY patchUrl — not a fabricated wrong URL.
+void RAPatchesCatalogTest::buildFromDirectory_zipNoPatchMember()
+{
+    QTemporaryDir dir;
+    QVERIFY(dir.isValid());
+    QDir root(dir.path());
+    root.mkpath("SNES/Hacks");
+
+    // A file with .zip extension that is not a valid zip archive.
+    // listZipContents() will return empty, exercising the no-patch-member branch.
+    QFile fakeZip(root.filePath("SNES/Hacks/Fake Hack (USA) (v1.0) (author99).zip"));
+    QVERIFY(fakeZip.open(QIODevice::WriteOnly));
+    fakeZip.write("not a zip archive");
+    fakeZip.close();
+
+    RAPatchesCatalogBuilder builder;
+    const auto result = builder.buildFromDirectory(dir.path());
+
+    QVERIFY(result.error.isEmpty());
+    QCOMPARE(result.filesScanned, 1);
+    QCOMPARE(result.mods.size(), 1);
+
+    const ModEntry &entry = result.mods.first();
+    QCOMPARE(entry.system, QStringLiteral("Super Nintendo"));
+    QCOMPARE(entry.type, QStringLiteral("hack"));
+    // Must be empty — not a wrong URL built from dirname.
+    QVERIFY2(entry.patchUrl.isEmpty(),
+             "patchUrl must be empty when no patch member is found in zip");
+    QVERIFY(!entry.sourceUrl.isEmpty());
+}
+
+/// A .zip that contains a recognizable patch file must produce a fully
+/// populated entry.  Skipped if the `zip` command is not available on PATH.
+void RAPatchesCatalogTest::buildFromDirectory_zipWithPatchInside()
+{
+    // Require the `zip` tool at runtime to create the test archive.
+    const QString zipTool = QStandardPaths::findExecutable(QStringLiteral("zip"));
+    if (zipTool.isEmpty())
+        QSKIP("zip tool not found on PATH; skipping zip-with-patch test");
+
+    QTemporaryDir dir;
+    QVERIFY(dir.isValid());
+    QDir root(dir.path());
+    root.mkpath("GBA/Translation");
+
+    // Create the patch file that will go inside the zip.
+    const QString patchName =
+        QStringLiteral("My Game (Japan) (En) (v1.2) (AuthorName).bps");
+    QTemporaryDir patchSrc;
+    QVERIFY(patchSrc.isValid());
+    QFile pf(QDir(patchSrc.path()).filePath(patchName));
+    QVERIFY(pf.open(QIODevice::WriteOnly));
+    pf.write("BPS1");
+    pf.close();
+
+    // Build the zip inside the mock repo tree.
+    const QString zipPath =
+        root.filePath(QStringLiteral("GBA/Translation/My Game Translation.zip"));
+    QProcess proc;
+    proc.setWorkingDirectory(patchSrc.path());
+    proc.start(zipTool, {zipPath, patchName});
+    QVERIFY(proc.waitForFinished(5000));
+    QVERIFY2(proc.exitCode() == 0, "Failed to create test zip");
+
+    RAPatchesCatalogBuilder builder;
+    const auto result = builder.buildFromDirectory(dir.path());
+
+    QVERIFY(result.error.isEmpty());
+    QCOMPARE(result.filesScanned, 1);
+    QCOMPARE(result.mods.size(), 1);
+
+    const ModEntry &entry = result.mods.first();
+    QCOMPARE(entry.system, QStringLiteral("Game Boy Advance"));
+    QCOMPARE(entry.type, QStringLiteral("translation"));
+    QCOMPARE(entry.format, QStringLiteral("bps"));
+    QVERIFY(!entry.title.isEmpty());
 }
 
 QTEST_MAIN(RAPatchesCatalogTest)

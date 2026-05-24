@@ -218,14 +218,14 @@ ModEntry RAPatchesCatalogBuilder::buildEntryFromZip(const QString &zipPath,
     }
 
     if (patchFileName.isEmpty()) {
-        // No patch file found inside zip — skip but still generate a basic entry
-        // from the zip filename if it follows the GAMEID-Title pattern
+        // No patch file found inside zip — emit a basic entry from the zip
+        // filename if it follows the GAMEID-Title pattern.  patchUrl is left
+        // empty: building a correct URL requires the repo-relative path which
+        // is not available here without threading repoPath through.
         entry.id = generateId(system, type, fi.fileName());
         entry.title = zipName;
         entry.system = system;
         entry.type = type;
-        entry.patchUrl = Constants::API::RAPATCHES_RAW_BASE + QStringLiteral("/")
-                       + QDir(zipPath).dirName(); // Approximate — will need path relative to repo
         entry.sourceUrl = QStringLiteral("https://github.com/RetroAchievements/RAPatches");
         return entry;
     }
