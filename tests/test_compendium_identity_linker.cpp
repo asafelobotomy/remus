@@ -1,5 +1,7 @@
 #include <QtTest/QtTest>
 #include <QList>
+#include <QSqlDatabase>
+#include <QSqlQuery>
 
 #include "../src/metadata/compendium_identity_linker.h"
 #include "../src/metadata/compendium_types.h"
@@ -23,6 +25,7 @@ private slots:
     void titleNormalization_stripsLeadingA_links();
     void titleNormalization_differentRegion_notLinked();
     void emptyRecordList_returnsZero();
+    void loadFromDatabase_populatesMapsFromExistingDb();
 };
 
 // Helper to make a minimal envelope
@@ -284,6 +287,68 @@ void CompendiumIdentityLinkerTest::emptyRecordList_returnsZero()
     IdentityLinker linker;
     QList<SourceRecordEnvelope> records;
     QCOMPARE(linker.link(records), 0);
+}
+
+void CompendiumIdentityLinkerTest::loadFromDatabase_populatesMapsFromExistingDb()
+{
+    // Create an in-memory database seeded with one game so that the linker
+    // will link new records to the existing game rather than minting a fresh id.
+    const QString connName = QStringLiteral("linker_test_%1")
+        .arg(QDateTime::currentMSecsSinceEpoch());
+    QSqlDatabase db = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), connName);
+    db.setDatabaseName(QStringLiteral(":memory:"));
+    QVERIFY(db.open());
+
+    auto exec = [&](const QString &sql) {
+        QSqlQuery q(db);
+        return q.exec(sql);
+    };
+
+    QVERIFY(exec(QStringLiteral(
+        "CREATE TABLE games ("
+        "game_id TEXT PRIMARY KEY, system_id INTEGER NOT NULL,"
+        " canonical_title TEXT NOT NULL, primary_region_code TEXT)")));
+    QVERIFY(exec(QStringLiteral(
+        "CREATE TABLE game_signatures ("
+        "signature_id INTEGER PRIMARY KEY AUTOINCREMENT, game_id TEXT NOT NULL,"
+        " hash_type TEXT NOT NULL, hash_value TEXT NOT NULL)")));
+    QVERIFY(exec(QStringLiteral(
+        "CREATE TABLE game_serials ("
+        "serial_id INTEGER PRIMARY KEY AUTOINCREMENT, game_id TEXT NOT NULL,"
+        " serial_value TEXT NOT NULL)")));
+    QVERIFY(exec(QStringLiteral(
+        "CREATE TABLE game_names ("
+        "game_name_id INTEGER PRIMARY KEY AUTOINCREMENT, game_id TEXT NOT NULL,"
+        " name_text TEXT NOT NULL)")));
+
+    QVERIFY(exec(QStringLiteral(
+        "INSERT INTO games (game_id, system_id, canonical_title, primary_region_code)"
+        " VALUES ('existing-1', 1, 'Test Game', 'USA')")));
+    QVERIFY(exec(QStringLiteral(
+        "INSERT INTO game_signatures (game_id, hash_type, hash_value)"
+        " VALUES ('existing-1', 'md5', 'testmd5hashvalue')")));
+    QVERIFY(exec(QStringLiteral(
+        "INSERT INTO game_names (game_id, name_text)"
+        " VALUES ('existing-1', 'Test Game')")));
+
+    IdentityLinker linker;
+    QString error;
+    QVERIFY(linker.loadFromDatabase(db, error));
+    QVERIFY(error.isEmpty());
+
+    db.close();
+    QSqlDatabase::removeDatabase(connName);
+
+    // A new envelope whose md5 matches the seeded signature should link to the existing game.
+    QList<SourceRecordEnvelope> records;
+    SourceRecordEnvelope r;
+    r.externalKey = QStringLiteral("new-key-1");
+    r.hashes.md5  = QStringLiteral("testmd5hashvalue");
+    records.append(r);
+
+    const int created = linker.link(records);
+    QCOMPARE(created, 0);  // No new game minted; linked to existing
+    QCOMPARE(records.first().linkedGameId, QStringLiteral("existing-1"));
 }
 
 QTEST_MAIN(CompendiumIdentityLinkerTest)

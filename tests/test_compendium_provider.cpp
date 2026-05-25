@@ -89,6 +89,9 @@ bool seedCompendium(QSqlDatabase &db)
     if (!execSql(db, QStringLiteral("INSERT INTO game_serials (game_id, serial_value, confidence) VALUES ('game-1', 'G8ME01', 1.0)"))) {
         return false;
     }
+    if (!execSql(db, QStringLiteral("INSERT INTO game_serials (game_id, serial_value, confidence) VALUES ('game-1', 'G8ME01-2', 1.0)"))) {
+        return false;
+    }
 
     const int titleFact = insertFact(db, QStringLiteral("game-1"), QStringLiteral("title"), QStringLiteral("Paper Mario: The Thousand-Year Door"));
     const int publisherFact = insertFact(db, QStringLiteral("game-1"), QStringLiteral("publisher"), QStringLiteral("Nintendo"));
@@ -158,6 +161,9 @@ private slots:
     void searchByNameKeepsBestMatchFirst();
     void getBySerialReturnsCanonicalMetadata();
     void getByIdReturnsExternalIds();
+    void getByIdSetsMatchFields();
+    void openDatabaseFailureReturnsFalse();
+    void getByHashReturnsAllSerials();
     void getArtworkBuildsLibretroThumbnailUrls();
     void compendiumPriorityExceedsLocalDatabase();
 };
@@ -229,8 +235,7 @@ void CompendiumProviderTest::getByIdReturnsExternalIds()
     QCOMPARE(metadata.id, QStringLiteral("game-1"));
     QCOMPARE(metadata.externalIds.value(QStringLiteral("md5")),
              QStringLiteral("0123456789abcdef0123456789abcdef"));
-    QCOMPARE(metadata.externalIds.value(QStringLiteral("serial")),
-             QStringLiteral("G8ME01"));
+    QVERIFY(metadata.serials.contains(QStringLiteral("G8ME01")));
 }
 
 void CompendiumProviderTest::searchByNameWithOfficialTitleReturnsSameGame()
@@ -323,6 +328,44 @@ void CompendiumProviderTest::getArtworkBuildsLibretroThumbnailUrls()
              QStringLiteral("https://thumbnails.libretro.com/Nintendo - Nintendo GameCube/Named_Snaps/Paper Mario_ The Thousand-Year Door.png"));
     QCOMPARE(artwork.titleScreen.toString(),
              QStringLiteral("https://thumbnails.libretro.com/Nintendo - Nintendo GameCube/Named_Titles/Paper Mario_ The Thousand-Year Door.png"));
+}
+
+void CompendiumProviderTest::getByIdSetsMatchFields()
+{
+    const QString dbPath = createFixtureDatabase();
+    QVERIFY(!dbPath.isEmpty());
+
+    CompendiumProvider provider;
+    QVERIFY(provider.openDatabase(dbPath));
+
+    const GameMetadata metadata = provider.getById(QStringLiteral("game-1"));
+    QCOMPARE(metadata.matchScore, 1.0f);
+    QCOMPARE(metadata.matchMethod, QStringLiteral("id"));
+}
+
+void CompendiumProviderTest::openDatabaseFailureReturnsFalse()
+{
+    CompendiumProvider provider;
+    QVERIFY(!provider.openDatabase(QStringLiteral("/nonexistent/path/remus_test.db")));
+    QVERIFY(!provider.isAvailable());
+}
+
+void CompendiumProviderTest::getByHashReturnsAllSerials()
+{
+    const QString dbPath = createFixtureDatabase();
+    QVERIFY(!dbPath.isEmpty());
+
+    CompendiumProvider provider;
+    QVERIFY(provider.openDatabase(dbPath));
+
+    const GameMetadata metadata = provider.getByHash(
+        QStringLiteral("0123456789ABCDEF0123456789ABCDEF"),
+        QStringLiteral("GameCube"));
+
+    QCOMPARE(metadata.id, QStringLiteral("game-1"));
+    QCOMPARE(metadata.serials.size(), 2);
+    QVERIFY(metadata.serials.contains(QStringLiteral("G8ME01")));
+    QVERIFY(metadata.serials.contains(QStringLiteral("G8ME01-2")));
 }
 
 void CompendiumProviderTest::compendiumPriorityExceedsLocalDatabase()

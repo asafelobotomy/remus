@@ -404,7 +404,12 @@ add_remus_test(test_compendium_normalizer CompendiumNormalizerTest
 
 add_remus_test(test_compendium_identity_linker CompendiumIdentityLinkerTest
     SOURCES test_compendium_identity_linker.cpp
-    LIBS Qt6::Test Qt6::Core remus-metadata
+    LIBS Qt6::Test Qt6::Core Qt6::Sql remus-metadata
+)
+
+add_remus_test(test_compendium_dedup CompendiumDedupTest
+    SOURCES test_compendium_dedup.cpp
+    LIBS Qt6::Test Qt6::Core Qt6::Sql remus-metadata
 )
 
 add_remus_test(test_compendium_ra_enrichment CompendiumRaEnrichmentTest
