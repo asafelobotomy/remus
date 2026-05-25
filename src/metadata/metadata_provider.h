@@ -32,6 +32,7 @@ struct GameMetadata {
     
     // External IDs for cross-referencing
     QMap<QString, QString> externalIds;  // e.g., {"igdb": "1234", "retroachievements": "5678"}
+    QStringList serials;                 // All disc/cartridge serials for this game
     
     // Provider info
     QString providerId;          // "screenscraper", "thegamesdb", "igdb", "hasheous"

@@ -49,29 +49,33 @@ void CompendiumProvider::ensureFts5Index()
     if (!db.isOpen())
         return;
 
-    // Create FTS5 virtual table if not present (handles existing DBs without rebuild)
+    // Create trigram FTS5 virtual table if not present (handles existing DBs without rebuild)
     QSqlQuery create(db);
     create.exec(QStringLiteral(
-        "CREATE VIRTUAL TABLE IF NOT EXISTS games_fts USING fts5("
+        "CREATE VIRTUAL TABLE IF NOT EXISTS games_search USING fts5("
+        "    title,"
         "    game_id UNINDEXED,"
         "    system_id UNINDEXED,"
-        "    title_text,"
-        "    tokenize='unicode61 remove_diacritics 1'"
+        "    region_code UNINDEXED,"
+        "    tokenize='trigram'"
         ")"));
 
     // Populate only when the table is empty (first time or after wipe)
     QSqlQuery countQ(db);
-    countQ.exec(QStringLiteral("SELECT COUNT(*) FROM games_fts"));
+    countQ.exec(QStringLiteral("SELECT COUNT(*) FROM games_search"));
     if (countQ.next() && countQ.value(0).toInt() > 0)
         return;
 
     QSqlQuery populate(db);
     populate.exec(QStringLiteral(
-        "INSERT INTO games_fts(game_id, system_id, title_text) "
-        "SELECT game_id, system_id, canonical_title FROM games "
+        "INSERT INTO games_search(title, game_id, system_id, region_code) "
+        "SELECT canonical_title, game_id, system_id, COALESCE(primary_region_code, '') FROM games "
         "UNION ALL "
-        "SELECT gn.game_id, g.system_id, gn.name_text "
+        "SELECT gn.name_text, gn.game_id, g.system_id, COALESCE(g.primary_region_code, '') "
         "FROM game_names gn JOIN games g ON gn.game_id = g.game_id"));
+
+    QSqlQuery optimize(db);
+    optimize.exec(QStringLiteral("INSERT INTO games_search(games_search) VALUES('optimize')"));
 }
 
 bool CompendiumProvider::isAvailable()

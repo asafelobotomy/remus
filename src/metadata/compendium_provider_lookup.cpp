@@ -58,10 +58,10 @@ QList<SearchResult> CompendiumProvider::searchByName(const QString &title,
     query.prepare(QStringLiteral(
         "SELECT g.game_id, g.canonical_title, g.primary_region_code, "
         "       g.release_date, g.release_year, s.internal_name "
-        "FROM games_fts "
-        "JOIN games g ON g.game_id = games_fts.game_id "
+        "FROM games_search "
+        "JOIN games g ON g.game_id = games_search.game_id "
         "JOIN systems s ON s.system_id = g.system_id "
-        "WHERE games_fts MATCH ? "
+        "WHERE games_search MATCH ? "
         "AND (? = 0 OR g.system_id = ?) "
         "AND (? = '' OR UPPER(COALESCE(g.primary_region_code, '')) = ?) "
         "ORDER BY rank "
@@ -247,7 +247,12 @@ GameMetadata CompendiumProvider::getBySerial(const QString &serial, const QStrin
 
 GameMetadata CompendiumProvider::getById(const QString &id)
 {
-    return fetchGameMetadata(id);
+    GameMetadata m = fetchGameMetadata(id);
+    if (!m.id.isEmpty()) {
+        m.matchScore  = 1.0f;
+        m.matchMethod = QStringLiteral("id");
+    }
+    return m;
 }
 
 ArtworkUrls CompendiumProvider::getArtwork(const QString &id)

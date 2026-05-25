@@ -176,10 +176,14 @@ void CompendiumProvider::populateExternalIds(GameMetadata &metadata, const QStri
 
     QSqlQuery serials(db);
     serials.prepare(QStringLiteral(
-        "SELECT serial_value FROM game_serials WHERE game_id = ? ORDER BY serial_id LIMIT 1"));
+        "SELECT serial_value FROM game_serials WHERE game_id = ? ORDER BY serial_id"));
     serials.addBindValue(gameId);
-    if (serials.exec() && serials.next()) {
-        metadata.externalIds.insert(QStringLiteral("serial"), serials.value(0).toString());
+    if (serials.exec()) {
+        while (serials.next()) {
+            const QString sv = serials.value(0).toString();
+            if (!sv.isEmpty())
+                metadata.serials.append(sv);
+        }
     }
 }
 
