@@ -181,6 +181,9 @@ private slots:
     void hashMatch_writesRaGameIdFact();
     void hashMatch_writesAchievementCountFact();
     void existingDescription_notOverwritten();
+    // Regression tests for the ra_game_id retry-suppression bug (ca7341a)
+    void raGapQuery_existingRaGameId_stillReportedAsGap();
+    void raGapQuery_completeMetadata_notReportedAsGap();
 };
 
 // ── Test implementations ──────────────────────────────────────────────────
@@ -395,6 +398,93 @@ void CompendiumRaEnrichmentTest::existingDescription_notOverwritten()
     QCOMPARE(scalarStr(db, QStringLiteral(
         "SELECT description FROM games WHERE game_id='g3'")),
         originalDesc);
+
+    db.close();
+    QSqlDatabase::removeDatabase(connName);
+}
+
+/// Regression test: a game that has an existing ra_game_id fact but is still
+/// missing enrichable metadata (genre/developer/publisher/release_year) must
+/// be reported as a gap by the hasAnyRaGaps() query.
+///
+/// Before the fix the query included NOT EXISTS (ra_game_id), so once
+/// ra_game_id was written (even on a partial run) the game was permanently
+/// excluded and its metadata was never completed.
+void CompendiumRaEnrichmentTest::raGapQuery_existingRaGameId_stillReportedAsGap()
+{
+    const QString connName = QStringLiteral("ra_test_gap_with_existing_id");
+    QSqlDatabase db = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), connName);
+    db.setDatabaseName(QStringLiteral(":memory:"));
+    QVERIFY(db.open());
+    QVERIFY(createSchema(db));
+    QVERIFY(seedSystem(db, 7, QStringLiteral("NES")));
+    QVERIFY(seedGame(db, QStringLiteral("g1"), 7, QStringLiteral("Mega Man")));
+    QVERIFY(seedHash(db, QStringLiteral("g1"), QStringLiteral("aabbccdd11223344")));
+
+    // Simulate a prior partial run that wrote ra_game_id but not the metadata.
+    QVERIFY(execSql(db, QStringLiteral(
+        "INSERT OR IGNORE INTO sources (source_id, display_name, priority) "
+        "VALUES ('retroachievements', 'RetroAchievements', 60)")));
+    QVERIFY(execSql(db, QStringLiteral(
+        "INSERT OR IGNORE INTO game_facts "
+        "(game_id, field_name, field_value, value_type, source_id, "
+        " snapshot_id, source_priority, confidence) "
+        "VALUES ('g1', 'ra_game_id', '1234', 'text', 'retroachievements', "
+        "        'snap1', 60, 0.75)")));
+    // genre / developer / publisher / release_year remain NULL
+
+    // The corrected hasAnyRaGaps() query — no NOT EXISTS clause.
+    const int gapCount = scalarInt(db, QStringLiteral(
+        "SELECT COUNT(*) FROM ("
+        "SELECT 1 FROM games g "
+        "JOIN game_signatures gs ON gs.game_id = g.game_id AND gs.hash_type = 'md5' "
+        "WHERE (g.genre IS NULL OR TRIM(g.genre) = '' "
+        "    OR g.developer IS NULL OR TRIM(g.developer) = '' "
+        "    OR g.publisher IS NULL OR TRIM(g.publisher) = '' "
+        "    OR g.release_year IS NULL) "
+        "LIMIT 1)"));
+    QCOMPARE(gapCount, 1); // must detect the gap and allow retry
+
+    db.close();
+    QSqlDatabase::removeDatabase(connName);
+}
+
+/// Companion test: a game whose enrichable fields are all populated must NOT
+/// be reported as a gap, even when it already has an ra_game_id fact.
+void CompendiumRaEnrichmentTest::raGapQuery_completeMetadata_notReportedAsGap()
+{
+    const QString connName = QStringLiteral("ra_test_no_gap_complete");
+    QSqlDatabase db = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), connName);
+    db.setDatabaseName(QStringLiteral(":memory:"));
+    QVERIFY(db.open());
+    QVERIFY(createSchema(db));
+    QVERIFY(seedSystem(db, 7, QStringLiteral("NES")));
+    // Seed game with all enrichable fields populated.
+    QVERIFY(execSql(db, QStringLiteral(
+        "INSERT INTO games "
+        "(game_id, system_id, canonical_title, genre, developer, publisher, release_year) "
+        "VALUES ('g1', 7, 'Mega Man', 'Action', 'Capcom', 'Capcom', 1987)")));
+    QVERIFY(seedHash(db, QStringLiteral("g1"), QStringLiteral("aabbccdd11223344")));
+    QVERIFY(execSql(db, QStringLiteral(
+        "INSERT OR IGNORE INTO sources (source_id, display_name, priority) "
+        "VALUES ('retroachievements', 'RetroAchievements', 60)")));
+    QVERIFY(execSql(db, QStringLiteral(
+        "INSERT OR IGNORE INTO game_facts "
+        "(game_id, field_name, field_value, value_type, source_id, "
+        " snapshot_id, source_priority, confidence) "
+        "VALUES ('g1', 'ra_game_id', '1234', 'text', 'retroachievements', "
+        "        'snap1', 60, 0.75)")));
+
+    const int gapCount = scalarInt(db, QStringLiteral(
+        "SELECT COUNT(*) FROM ("
+        "SELECT 1 FROM games g "
+        "JOIN game_signatures gs ON gs.game_id = g.game_id AND gs.hash_type = 'md5' "
+        "WHERE (g.genre IS NULL OR TRIM(g.genre) = '' "
+        "    OR g.developer IS NULL OR TRIM(g.developer) = '' "
+        "    OR g.publisher IS NULL OR TRIM(g.publisher) = '' "
+        "    OR g.release_year IS NULL) "
+        "LIMIT 1)"));
+    QCOMPARE(gapCount, 0); // no gap — enrichment should be skipped
 
     db.close();
     QSqlDatabase::removeDatabase(connName);
