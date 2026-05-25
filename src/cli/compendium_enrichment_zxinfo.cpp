@@ -115,8 +115,7 @@ bool enrichFromZXInfo(QSqlDatabase &database,
         return false;
     }
 
-    const QString snapshotId = QStringLiteral("zxinfo-")
-                             + QDate::currentDate().toString(QStringLiteral("yyyy-MM"));
+    const QString snapshotId = QStringLiteral("zxinfo-bulk");
     if (!upsertEnrichmentSource(
             database,
             SourceSpec{

@@ -4,7 +4,6 @@
 #include "../metadata/gametdb_provider.h"
 #include "../metadata/libretro_metadata_parser.h"
 
-#include <QDate>
 #include <QHash>
 #include <QSqlError>
 #include <QSqlQuery>
@@ -40,8 +39,7 @@ bool enrichFromLibretroMetadata(QSqlDatabase &database,
     }
 
     const QString sourceId   = QStringLiteral("libretro-metadata");
-    const QString snapshotId = QStringLiteral("libretro-metadata-")
-        + QDate::currentDate().toString(QStringLiteral("yyyy-MM-dd"));
+    const QString snapshotId = QStringLiteral("libretro-metadata-bulk");
 
     if (!upsertEnrichmentSource(
             database,

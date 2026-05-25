@@ -19,6 +19,35 @@ using namespace CompendiumEnrichmentSql;
 
 namespace CompendiumEnrichment {
 
+namespace {
+
+// Returns the candidate with the greatest number of non-empty enrichable fields.
+// Used to resolve title-collision ties in the IGDB index (multiple entries with
+// the same normalized title, e.g. different regional variants of the same game).
+const GameMetadata &bestCandidate(const QList<GameMetadata> &candidates)
+{
+    Q_ASSERT(!candidates.isEmpty());
+    int bestScore = -1;
+    int bestIdx   = 0;
+    for (int i = 0; i < candidates.size(); ++i) {
+        const GameMetadata &c = candidates.at(i);
+        const int score = (!c.description.isEmpty()   ? 1 : 0)
+                        + (!c.developer.isEmpty()     ? 1 : 0)
+                        + (!c.publisher.isEmpty()     ? 1 : 0)
+                        + (!c.genres.isEmpty()        ? 1 : 0)
+                        + (c.releaseDate.size() >= 4  ? 1 : 0)
+                        + (c.rating > 0.0f            ? 1 : 0)
+                        + (c.players > 0              ? 1 : 0);
+        if (score > bestScore) {
+            bestScore = score;
+            bestIdx   = i;
+        }
+    }
+    return candidates.at(bestIdx);
+}
+
+} // anonymous namespace
+
 bool enrichFromIGDB(QSqlDatabase &database,
                     const QString &credentialsPath,
                     int &gamesEnriched,
@@ -73,7 +102,7 @@ bool enrichFromIGDB(QSqlDatabase &database,
     IGDBProvider provider;
     provider.setCredentials(clientId, clientSecret);
 
-    const QString snapshotId   = QStringLiteral("igdb-") + QDate::currentDate().toString(QStringLiteral("yyyy-MM"));
+    const QString snapshotId   = QStringLiteral("igdb-bulk");
     static const int PAGE_SIZE = 500;
 
     for (const SysInfo &sys : systems) {
@@ -85,13 +114,13 @@ bool enrichFromIGDB(QSqlDatabase &database,
         if (igdbSlug.isEmpty()) continue;
 
         // Bulk-fetch all IGDB games for this platform
-        QHash<QString, GameMetadata> igdbIndex;
+        QHash<QString, QList<GameMetadata>> igdbIndex;
         int offset = 0;
         while (true) {
             const QList<GameMetadata> page = provider.fetchGamesByPlatformSlug(igdbSlug, offset, PAGE_SIZE);
             for (const GameMetadata &gm : page) {
                 if (!gm.title.isEmpty())
-                    igdbIndex[normalizeMetadataTitle(gm.title)] = gm;
+                    igdbIndex[normalizeMetadataTitle(gm.title)].append(gm);
             }
             if (page.size() < PAGE_SIZE) break;
             offset += PAGE_SIZE;
@@ -196,7 +225,7 @@ bool enrichFromIGDB(QSqlDatabase &database,
             const QString norm   = normalizeMetadataTitle(gamesQ.value(1).toString());
             const auto it        = igdbIndex.constFind(norm);
             if (it == igdbIndex.cend()) continue;
-            const GameMetadata &gm = it.value();
+            const GameMetadata &gm = bestCandidate(it.value());
 
             int releaseYear = 0;
             if (gm.releaseDate.size() >= 4) {

@@ -34,6 +34,7 @@ struct EnrichmentStats {
     int passesExecuted         = 0;
     int passesSkippedNoInput   = 0;
     int passesSkippedNoGaps    = 0;
+    int passesFailedWithError  = 0;  // non-fatal pass failures; pipeline continues
     int mergeRuns              = 0;
     int raApiCallsNeeded       = 0;
     int raApiCallsPerformed    = 0;

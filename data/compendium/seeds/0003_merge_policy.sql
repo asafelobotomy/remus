@@ -2,7 +2,7 @@ BEGIN TRANSACTION;
 
 INSERT OR REPLACE INTO merge_policy (field_name, rule_order, rule_key, rule_description, active) VALUES
 ('canonical_title', 1, 'exact_hash_source_priority', 'If title comes from an exact hash-identified record, pick highest source priority.', 1),
-('canonical_title', 2, 'normalized_name_similarity', 'If no exact hash title exists, pick highest normalized similarity to canonical alias set.', 1),
+('canonical_title', 2, 'normalized_name_similarity', 'If no exact hash title exists, pick highest normalized similarity to canonical alias set. [deferred: requires string distance UDF not available in SQLite]', 0),
 ('canonical_title', 3, 'shortest_stable_title', 'If still tied, pick shortest non-empty stable title variant.', 1),
 
 ('primary_region_code', 1, 'explicit_region_codes', 'Prefer explicit normalized region codes from source over parsed title tokens.', 1),
@@ -10,7 +10,7 @@ INSERT OR REPLACE INTO merge_policy (field_name, rule_order, rule_key, rule_desc
 
 ('release_date', 1, 'full_date_preferred', 'Prefer full YYYY-MM-DD values over year-only values.', 1),
 ('release_date', 2, 'higher_priority_source', 'Tie-break release_date by source priority.', 1),
-('release_date', 3, 'newer_snapshot', 'If still tied, prefer newest snapshot.', 1),
+('release_date', 3, 'newer_snapshot', 'If still tied, prefer newest snapshot. [deferred: requires snapshot creation timestamp join]', 0),
 
 ('release_year', 1, 'derive_from_release_date', 'If canonical release_date exists, derive release_year from it.', 1),
 ('release_year', 2, 'max_confidence_year', 'Otherwise, pick highest-confidence release_year fact.', 1),

@@ -39,8 +39,7 @@ bool enrichFromGameTDB(QSqlDatabase &database,
     }
 
     const QString sourceId   = QStringLiteral("gametdb");
-    const QString snapshotId = QStringLiteral("gametdb-")
-        + QDate::currentDate().toString(QStringLiteral("yyyy-MM-dd"));
+    const QString snapshotId = QStringLiteral("gametdb-bulk");
 
     if (!upsertEnrichmentSource(
             database,

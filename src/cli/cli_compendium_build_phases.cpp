@@ -4,6 +4,7 @@
 #include "../metadata/compendium_merge_resolver.h"
 #include "../metadata/compendium_types.h"
 
+#include <QDebug>
 #include <QFile>
 #include <QJsonObject>
 #include <QList>
@@ -140,6 +141,7 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db,
         std::function<bool()> isEnabled;
         std::function<bool()> hasWork;
         std::function<bool()> run;
+        bool critical = false;  // if true, a failure aborts the pipeline; otherwise log and continue
     };
 
     const bool hasMetadataDir = !metadataDir.isEmpty();
@@ -264,7 +266,14 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db,
             ? runTransactionalPass(pass.name, pass.run)
             : runSelfManagedPass(pass.name, pass.run);
         if (!ok) {
-            return false;
+            if (pass.critical) {
+                return false;
+            }
+            qWarning().noquote() << QStringLiteral("[ENRICH] %1 failed (non-fatal): %2")
+                                        .arg(pass.name, error);
+            error.clear();
+            ++stats.passesFailedWithError;
+            continue;
         }
         ++stats.passesExecuted;
     }

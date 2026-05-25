@@ -2,7 +2,6 @@
 #include "compendium_enrichment_sql.h"
 #include "../core/constants/system_ids.h"
 
-#include <QDate>
 #include <QDebug>
 #include <QFile>
 #include <QHash>
@@ -76,8 +75,7 @@ bool enrichFromMameCatver(QSqlDatabase &database,
     qInfo().noquote() << QStringLiteral("[MAME-catver] Parsed %1 entries from catver.ini")
                              .arg(catver.size());
 
-    const QString snapshotId = QStringLiteral("mame-catver-")
-                             + QDate::currentDate().toString(QStringLiteral("yyyy-MM"));
+    const QString snapshotId = QStringLiteral("mame-catver-bulk");
     if (!upsertEnrichmentSource(
             database,
             SourceSpec{

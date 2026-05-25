@@ -27,15 +27,19 @@ static int runInsert(QSqlDatabase &db, const QString &sql, QString &error)
 //
 // Rules implemented per field:
 //   canonical_title   exact_hash_source_priority (confidence DESC) + shortest_stable_title
+//                     [normalized_name_similarity: deferred — requires string distance UDF]
 //   developer         most_frequent_value via frequency CTE; tiebreak confidence
 //   publisher         same as developer
 //   release_date      full_date_preferred (LENGTH DESC) + higher_priority_source
+//                     [newer_snapshot: deferred — requires snapshot timestamp join]
 //   release_year      derive_from_release_date (join canonical release_date);
 //                     fallback max_confidence_year
 //   players_max       numeric_valid_range filter (1..16); fallback highest_confidence
 //   description       longest_non_boilerplate (LENGTH DESC) + higher_priority_source
 //   all others        highest_priority (source_priority DESC, confidence DESC)
-//                     covers: genre, rating, primary_region_code, and any future fields
+//                     covers: genre, rating (normalized_rating_scale approximated
+//                     by source_priority), primary_region_code (explicit_region_codes
+//                     approximated by source_priority), and any future fields
 
 bool MergeResolver::resolve(QSqlDatabase &db,
                              CompilerStats &stats,

@@ -27,6 +27,8 @@ private slots:
     void titleNormalization_differentRegion_notLinked();
     void emptyRecordList_returnsZero();
     void loadFromDatabase_populatesMapsFromExistingDb();
+    void multiDisc_discSuffix_sameGame();
+    void multiDisc_cdSuffix_sameGame();
 };
 
 // Helper to make a minimal envelope
@@ -378,4 +380,58 @@ void CompendiumIdentityLinkerTest::loadFromDatabase_populatesMapsFromExistingDb(
 }
 
 QTEST_MAIN(CompendiumIdentityLinkerTest)
+
+void CompendiumIdentityLinkerTest::multiDisc_discSuffix_sameGame()
+{
+    // "Game (Disc 1)" and "Game (Disc 2)" should normalize to the same key and
+    // therefore share a game_id.
+    IdentityLinker linker;
+    QList<SourceRecordEnvelope> records;
+
+    SourceRecordEnvelope r1;
+    r1.externalKey        = QStringLiteral("disc-key-1");
+    r1.titleRaw           = QStringLiteral("Final Fantasy VIII (Disc 1)");
+    r1.resolvedSystemId   = 5;
+    r1.resolvedRegionCode = QStringLiteral("USA");
+
+    SourceRecordEnvelope r2;
+    r2.externalKey        = QStringLiteral("disc-key-2");
+    r2.titleRaw           = QStringLiteral("Final Fantasy VIII (Disc 2)");
+    r2.resolvedSystemId   = 5;
+    r2.resolvedRegionCode = QStringLiteral("USA");
+
+    records.append(r1);
+    records.append(r2);
+
+    const int created = linker.link(records);
+    QCOMPARE(created, 1);
+    QCOMPARE(records[0].linkedGameId, records[1].linkedGameId);
+}
+
+void CompendiumIdentityLinkerTest::multiDisc_cdSuffix_sameGame()
+{
+    // "Game CD 1" and "Game CD 2" should normalize to the same key.
+    IdentityLinker linker;
+    QList<SourceRecordEnvelope> records;
+
+    SourceRecordEnvelope r1;
+    r1.externalKey        = QStringLiteral("cd-key-1");
+    r1.titleRaw           = QStringLiteral("Baldur's Gate CD 1");
+    r1.resolvedSystemId   = 3;
+    r1.resolvedRegionCode = QStringLiteral("USA");
+
+    SourceRecordEnvelope r2;
+    r2.externalKey        = QStringLiteral("cd-key-2");
+    r2.titleRaw           = QStringLiteral("Baldur's Gate CD 2");
+    r2.resolvedSystemId   = 3;
+    r2.resolvedRegionCode = QStringLiteral("USA");
+
+    records.append(r1);
+    records.append(r2);
+
+    const int created = linker.link(records);
+    QCOMPARE(created, 1);
+    QCOMPARE(records[0].linkedGameId, records[1].linkedGameId);
+}
+
 #include "test_compendium_identity_linker.moc"

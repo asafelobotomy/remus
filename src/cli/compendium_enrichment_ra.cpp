@@ -64,8 +64,7 @@ bool enrichFromRetroAchievements(QSqlDatabase &database,
     if (systems.isEmpty())
         return true;
 
-    const QString snapshotId = QStringLiteral("retroachievements-") +
-                               QDate::currentDate().toString(QStringLiteral("yyyy-MM"));
+const QString snapshotId = QStringLiteral("retroachievements-bulk");
 
     for (const SysInfo &sys : systems) {
         // Fresh provider (and therefore fresh QNetworkAccessManager) per system.

@@ -37,6 +37,14 @@ QString IdentityLinker::normalizeTitle(const QString &raw)
         s = s.mid(2);
     }
 
+    // Strip trailing disc/disk/cd indicators so multi-disc entries share a
+    // common normalized key (e.g. "final fantasy viii disc 2" → "final fantasy
+    // viii").  The pattern handles "disc N", "disc N of M", "cd N", "cd N of M".
+    static const QRegularExpression reDisc(
+        QStringLiteral("\\b(?:disc|disk)\\s*[a-z0-9]+(?:\\s+of\\s+[a-z0-9]+)?\\s*$"
+                       "|\\bcd\\s*\\d+(?:\\s+of\\s+\\d+)?\\s*$"));
+    s.remove(reDisc);
+
     return s.trimmed();
 }
 
