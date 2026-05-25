@@ -4,6 +4,7 @@
 #include <QTemporaryDir>
 #include <QFile>
 #include <QFileInfo>
+#include <QSqlDatabase>
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QSqlDriver>
@@ -276,7 +277,7 @@ bool ModWorkflowService::uninstall(int modInstallationId)
 
     const int patchedFileId = query.value(0).toInt();
 
-    // Delete the patched file from disk
+    // Delete the patched file from disk first (filesystem ops cannot be transacted).
     if (patchedFileId > 0) {
         FileRecord patchedFile = m_db.getFileById(patchedFileId);
         if (!patchedFile.currentPath.isEmpty() && QFile::exists(patchedFile.currentPath)) {
@@ -285,14 +286,28 @@ bool ModWorkflowService::uninstall(int modInstallationId)
                 return false;
             }
         }
-        if (!m_db.removeFile(patchedFileId)) {
-            qWarning() << "Failed to delete patched file record for ID:" << patchedFileId;
-            return false;
-        }
     }
 
-    // Remove the mod_installations record
-    return m_db.removeModInstallation(modInstallationId);
+    // Wrap both DB deletes in a transaction so neither row can be left stranded
+    // if the other delete fails.
+    QSqlDatabase sqlDb = m_db.database();
+    if (!sqlDb.transaction()) {
+        qWarning() << "ModWorkflowService::uninstall: failed to start transaction";
+        return false;
+    }
+
+    if (patchedFileId > 0 && !m_db.removeFile(patchedFileId)) {
+        qWarning() << "Failed to delete patched file record for ID:" << patchedFileId;
+        sqlDb.rollback();
+        return false;
+    }
+
+    if (!m_db.removeModInstallation(modInstallationId)) {
+        sqlDb.rollback();
+        return false;
+    }
+
+    return sqlDb.commit();
 }
 
 } // namespace Remus

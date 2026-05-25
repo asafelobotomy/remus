@@ -103,6 +103,11 @@ OrganizeResult OrganizeEngine::organizeFile(int fileId,
 
     // Generate destination path
     QString newPath = generateDestinationPath(fileRecord, metadata, destinationDir);
+    if (newPath.isEmpty()) {
+        result.error = QStringLiteral("Unsafe destination path rejected");
+        emit operationCompleted(fileId, false, result.error);
+        return result;
+    }
     result.newPath = newPath;
 
     // If source and destination resolve to the same file, no move is needed.
@@ -375,6 +380,11 @@ QString OrganizeEngine::generateDestinationPath(const FileRecord &fileRecord,
     // Apply template
     QString filename = m_templateEngine->applyTemplate(m_template, metadata, variables);
 
+    // Sanitize: the template result is a filename component. Path separators
+    // injected via metadata values must not allow escaping the destination root.
+    filename.replace(QLatin1Char('/'), QLatin1Char('_'));
+    filename.replace(QLatin1Char('\\'), QLatin1Char('_'));
+
     // Build destination: optionally add system subfolder
     QDir destDir(destinationDir);
     if (m_folderNaming != Constants::FolderNaming::Scheme::None) {
@@ -385,7 +395,14 @@ QString OrganizeEngine::generateDestinationPath(const FileRecord &fileRecord,
         }
     }
 
-    return destDir.filePath(filename);
+    const QString resolved = destDir.absoluteFilePath(filename);
+    // Belt-and-suspenders containment check against the caller-supplied root.
+    const QString root = QDir(destinationDir).absolutePath();
+    if (!resolved.startsWith(root + QLatin1Char('/'))) {
+        qWarning() << "OrganizeEngine: destination path escapes root, rejecting:" << resolved;
+        return QString();
+    }
+    return resolved;
 }
 
 } // namespace Remus

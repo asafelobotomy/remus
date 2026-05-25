@@ -137,9 +137,11 @@ int HashService::hashAll(Database *db,
     int skipped = 0;
 
     QSqlDatabase sqlDb = db->database();
-    const bool useTransaction = sqlDb.driver()->hasFeature(QSqlDriver::Transactions);
-    if (useTransaction)
-        sqlDb.transaction();
+    bool useTransaction = sqlDb.driver()->hasFeature(QSqlDriver::Transactions);
+    if (useTransaction && !sqlDb.transaction()) {
+        qWarning() << "HashService::hashAll: failed to start transaction, proceeding without";
+        useTransaction = false;
+    }
 
     for (const HashBatchResult &task : taskResults) {
         if (task.skipped) {
@@ -147,11 +149,16 @@ int HashService::hashAll(Database *db,
             continue;
         }
         if (task.result.success) {
-            db->updateFileHashes(task.fileId,
-                                 task.result.crc32,
-                                 task.result.md5,
-                                 task.result.sha1);
-            hashed++;
+            if (db->updateFileHashes(task.fileId,
+                                     task.result.crc32,
+                                     task.result.md5,
+                                     task.result.sha1)) {
+                hashed++;
+            } else {
+                skipped++;
+                if (logCb)
+                    logCb(QString("Skipped %1: failed to persist hashes").arg(task.filename));
+            }
         } else {
             skipped++;
             if (logCb)
@@ -159,8 +166,13 @@ int HashService::hashAll(Database *db,
         }
     }
 
-    if (useTransaction)
-        sqlDb.commit();
+    if (useTransaction) {
+        if (!sqlDb.commit()) {
+            qWarning() << "HashService::hashAll: commit failed, rolling back";
+            sqlDb.rollback();
+            return 0;
+        }
+    }
 
     if (logCb) {
         if (skipped > 0)

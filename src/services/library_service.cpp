@@ -207,9 +207,11 @@ int LibraryService::persistScanResults(const QList<ScanResult> &results,
     });
 
     QSqlDatabase sqlDb = db->database();
-    const bool useTransaction = sqlDb.driver()->hasFeature(QSqlDriver::Transactions);
-    if (useTransaction)
-        sqlDb.transaction();
+    bool useTransaction = sqlDb.driver()->hasFeature(QSqlDriver::Transactions);
+    if (useTransaction && !sqlDb.transaction()) {
+        qWarning() << "LibraryService::persistScanResults: failed to start transaction, proceeding without";
+        useTransaction = false;
+    }
 
     for (const ScanResult &sr : orderedResults) {
         // Detect system — use internal archive path for compressed files
@@ -261,8 +263,13 @@ int LibraryService::persistScanResults(const QList<ScanResult> &results,
             progressCb(inserted, orderedResults.size(), {});
     }
 
-    if (useTransaction)
-        sqlDb.commit();
+    if (useTransaction) {
+        if (!sqlDb.commit()) {
+            qWarning() << "LibraryService::persistScanResults: commit failed, rolling back";
+            sqlDb.rollback();
+            return 0;
+        }
+    }
 
     return inserted;
 }
