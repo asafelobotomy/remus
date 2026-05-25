@@ -27,10 +27,13 @@ TARGET_DIR="$PROJECT_ROOT/data/databases"
 NO_INTRO_DIR="$TARGET_DIR/no-intro"
 REDUMP_DIR="$TARGET_DIR/redump"
 MAME_DIR="$TARGET_DIR/mame"
-CLONE_DIR="$(mktemp -d)"
+UPDATE_DATS_CACHE_DIR="${UPDATE_DATS_CACHE_DIR:-${XDG_CACHE_HOME:-$PROJECT_ROOT/.cache}/remus/update_dats}"
+DOWNLOAD_CACHE_DIR="$UPDATE_DATS_CACHE_DIR/downloads"
+CLONE_DIR="$UPDATE_DATS_CACHE_DIR/libretro-database"
+CACHE_TTL_SECONDS="${UPDATE_DATS_CACHE_TTL_SECONDS:-86400}"
 mame_xml_tmp=""
 mame_bin_tmp=""
-trap 'rm -rf "${CLONE_DIR:-}" "${redump_direct_tmp:-}" "${mame_xml_tmp:-}" "${mame_bin_tmp:-}"' EXIT
+trap 'rm -rf "${redump_direct_tmp:-}" "${mame_xml_tmp:-}" "${mame_bin_tmp:-}" "${openvgdb_tmp:-}"' EXIT
 REPO_URL="https://github.com/libretro/libretro-database.git"
 
 # Core systems to include by default (filename stems as they appear in the repo)
@@ -81,20 +84,52 @@ echo "Target: $TARGET_DIR"
 echo "  dat/       → $TARGET_DIR"
 echo "  no-intro/  → $NO_INTRO_DIR"
 echo "  redump/    → $REDUMP_DIR"
+echo "  cache/     → $UPDATE_DATS_CACHE_DIR"
+
+mkdir -p "$TARGET_DIR" "$NO_INTRO_DIR" "$REDUMP_DIR" "$DOWNLOAD_CACHE_DIR"
+
+is_cache_fresh() {
+    local file_path="$1"
+    [[ -f "$file_path" ]] || return 1
+    [[ "$CACHE_TTL_SECONDS" =~ ^[0-9]+$ ]] || return 1
+    local file_mtime now age
+    file_mtime=$(stat -c %Y "$file_path" 2>/dev/null || return 1)
+    now=$(date +%s)
+    age=$((now - file_mtime))
+    [[ "$age" -lt "$CACHE_TTL_SECONDS" ]]
+}
+
+download_with_cache() {
+    local url="$1"
+    local cache_path="$2"
+    local max_time="$3"
+    local label="$4"
+    local -a curl_args=()
+    shift 4
+    if is_cache_fresh "$cache_path"; then
+        echo "  Using cached $label: $(basename "$cache_path")" >&2
+        return 0
+    fi
+
+    mkdir -p "$(dirname "$cache_path")"
+    curl_args=( -fsSL --retry 2 --retry-delay 1 --max-time "$max_time" -o "$cache_path" )
+    if [[ "$#" -gt 0 ]]; then
+        curl_args+=( "$@" )
+    fi
+    curl_args+=( "$url" )
+    curl "${curl_args[@]}"
+}
 
 # Clone or update the repo (shallow clone to save bandwidth)
 if [[ -d "$CLONE_DIR/.git" ]]; then
-    echo "Updating existing clone..."
+    echo "Updating cached libretro-database clone..."
     git -C "$CLONE_DIR" pull --ff-only --depth=1 2>/dev/null || \
         git -C "$CLONE_DIR" fetch --depth=1 origin master && \
         git -C "$CLONE_DIR" reset --hard origin/master
 else
-    echo "Cloning libretro-database (shallow)..."
-    rm -rf "$CLONE_DIR"
+    echo "Cloning libretro-database into cache (shallow)..."
     git clone --depth=1 "$REPO_URL" "$CLONE_DIR"
 fi
-
-mkdir -p "$TARGET_DIR" "$NO_INTRO_DIR" "$REDUMP_DIR"
 
 copied=0
 skipped=0
@@ -208,17 +243,34 @@ REDUMP_DIRECT_BASE_URLS=(
 download_redump_zip_for_slug() {
     local slug="$1"
     local out_zip="$2"
-    local base url
+    local cache_zip="$DOWNLOAD_CACHE_DIR/redump/${slug}.zip"
+    local cache_source="$DOWNLOAD_CACHE_DIR/redump/${slug}.source"
+    local base url source_url
+
+    if is_cache_fresh "$cache_zip" \
+        && unzip -Z -1 "$cache_zip" 2>/dev/null | grep -E '\.dat$' >/dev/null; then
+        cp "$cache_zip" "$out_zip"
+        if [[ -f "$cache_source" ]]; then
+            source_url="$(<"$cache_source")"
+        else
+            source_url="unknown mirror"
+        fi
+        printf 'cached|%s\n' "$source_url"
+        return 0
+    fi
 
     for base in "${REDUMP_DIRECT_BASE_URLS[@]}"; do
         url="${base%/}/${slug}/"
-        if curl -fsSL --retry 2 --retry-delay 1 --max-time 60 -o "$out_zip" "$url"; then
+        if download_with_cache "$url" "$cache_zip" 60 "Redump $slug ZIP"; then
             # Require at least one .dat entry to guard against HTML/error payloads.
-            if unzip -Z -1 "$out_zip" 2>/dev/null | grep -E '\.dat$' >/dev/null; then
-                echo "$url"
+            if unzip -Z -1 "$cache_zip" 2>/dev/null | grep -E '\.dat$' >/dev/null; then
+                cp "$cache_zip" "$out_zip"
+                printf '%s\n' "$url" > "$cache_source"
+                printf 'downloaded|%s\n' "$url"
                 return 0
             fi
         fi
+        rm -f "$cache_zip"
         rm -f "$out_zip"
     done
 
@@ -245,13 +297,18 @@ for entry in "${REDUMP_DIRECT_DBS[@]}"; do
     zippath="$redump_direct_tmp/${slug}.zip"
 
     echo "  Fetching ${destname}..."
-    if source_url="$(download_redump_zip_for_slug "$slug" "$zippath")"; then
+    if source_result="$(download_redump_zip_for_slug "$slug" "$zippath")"; then
+        IFS='|' read -r source_kind source_url <<< "$source_result"
         extracted=$(unzip -Z -1 "$zippath" 2>/dev/null | grep -E '\.dat$' | head -1)
         if [[ -n "$extracted" ]]; then
             if unzip -o -q "$zippath" "$extracted" -d "$redump_direct_tmp" 2>/dev/null; then
                 mv "$redump_direct_tmp/$extracted" "$REDUMP_DIR/$destname"
                 copied=$((copied + 1))
-                echo "    Added from $source_url"
+                if [[ "$source_kind" == "cached" ]]; then
+                    echo "    Added from cached ZIP ($source_url)"
+                else
+                    echo "    Added from $source_url"
+                fi
             else
                 echo "    Warning: failed to extract DAT from $slug zip"
             fi
@@ -283,14 +340,17 @@ if [[ ! -f "$wiiu_redump_dest" ]]; then
     for wiiu_url in "${wiiu_urls[@]}"; do
         [[ -n "$wiiu_url" ]] || continue
         wiiu_zip="$redump_direct_tmp/wiiu-redump.zip"
+        wiiu_cache_zip="$DOWNLOAD_CACHE_DIR/redump/wiiu.zip"
         rm -f "$wiiu_zip"
 
-        if ! curl -fsSL -o "$wiiu_zip" --max-time 120 "$wiiu_url"; then
+        if ! download_with_cache "$wiiu_url" "$wiiu_cache_zip" 120 "Wii U Redump ZIP"; then
             continue
         fi
+        cp "$wiiu_cache_zip" "$wiiu_zip"
 
         wiiu_extracted=$(unzip -Z -1 "$wiiu_zip" 2>/dev/null | grep -E '\.dat$' | head -1)
         if [[ -z "$wiiu_extracted" ]]; then
+            rm -f "$wiiu_cache_zip"
             continue
         fi
 
@@ -364,8 +424,10 @@ print(url)
     if [[ -n "$mame_lx_url" ]]; then
         mame_bin_tmp="$(mktemp -d)"
         mame_lx_zip="$mame_bin_tmp/mame_lx.zip"
+        mame_cache_zip="$DOWNLOAD_CACHE_DIR/mame/$(basename "$mame_lx_url")"
         echo "  Downloading $(basename "$mame_lx_url")..."
-        if curl -fsSL -o "$mame_lx_zip" --max-time 600 "$mame_lx_url"; then
+        if download_with_cache "$mame_lx_url" "$mame_cache_zip" 600 "MAME release ZIP"; then
+            cp "$mame_cache_zip" "$mame_lx_zip"
             # Strategy A: prefer a pre-built XML bundled in the release zip
             mame_xml_inner=$(unzip -l "$mame_lx_zip" 2>/dev/null \
                 | awk '/[[:space:]]mame[^\/]*\.xml$/ { print $NF; exit }')
@@ -548,16 +610,14 @@ mkdir -p "$GAMETDB_DIR"
 for entry in "${GAMETDB_DBS[@]}"; do
     IFS='|' read -r zipname params xmlname <<< "$entry"
     url="$GAMETDB_BASE/$zipname?$params"
-    zippath="$GAMETDB_DIR/$zipname"
+    zippath="$DOWNLOAD_CACHE_DIR/gametdb/$zipname"
 
     echo "  Fetching $zipname..."
-    if curl -fsSL -o "$zippath" "$url"; then
+    if download_with_cache "$url" "$zippath" 300 "$zipname"; then
         if unzip -o -q "$zippath" "$xmlname" -d "$GAMETDB_DIR" 2>/dev/null; then
             gametdb_copied=$((gametdb_copied + 1))
-            rm -f "$zippath"
         else
             echo "    Warning: failed to extract $xmlname from $zipname"
-            rm -f "$zippath"
         fi
     else
         echo "    Warning: failed to download $zipname"
@@ -579,8 +639,9 @@ mkdir -p "$OPENVGDB_DIR"
 echo ""
 echo "Updating OpenVGDB..."
 openvgdb_tmp="$(mktemp -d)"
-trap 'rm -rf "$openvgdb_tmp"' RETURN
-if curl -fsSL -o "$openvgdb_tmp/openvgdb.zip" "$OPENVGDB_URL"; then
+openvgdb_cache_zip="$DOWNLOAD_CACHE_DIR/openvgdb/openvgdb.zip"
+if download_with_cache "$OPENVGDB_URL" "$openvgdb_cache_zip" 300 "OpenVGDB ZIP"; then
+    cp "$openvgdb_cache_zip" "$openvgdb_tmp/openvgdb.zip"
     if unzip -o -q "$openvgdb_tmp/openvgdb.zip" "openvgdb.sqlite" -d "$openvgdb_tmp" 2>/dev/null; then
         mv "$openvgdb_tmp/openvgdb.sqlite" "$OPENVGDB_DEST"
         echo "  OpenVGDB updated: $OPENVGDB_DEST"
