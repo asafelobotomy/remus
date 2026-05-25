@@ -33,6 +33,7 @@ private slots:
     void testFolderNamingNeoGeoCD();
     void testFolderNamingExtendedSystems();
     void testFolderNamingSchemeFromString();
+    void testOrganizeFile_traversalTitleContained();
 
 private:
     // Write a small ROM file into dir and register it in db.
@@ -557,6 +558,47 @@ void OrganizeEngineTest::testFolderNamingSchemeFromString()
     QCOMPARE(schemeFromString("emudeck"), Scheme::EmuDeck);
     QCOMPARE(schemeFromString("romm"), Scheme::RomM);
     QCOMPARE(schemeFromString("unknown"), Scheme::None);
+}
+
+// C1 — regression: metadata titles containing path separators must not allow
+// the organize engine to write files outside the destination root.
+void OrganizeEngineTest::testOrganizeFile_traversalTitleContained()
+{
+    QTemporaryDir srcDir, dstDir;
+    QVERIFY(srcDir.isValid() && dstDir.isValid());
+
+    Database db;
+    QVERIFY(db.initialize(":memory:"));
+    int fileId = makeRomFile(srcDir, db);
+    QVERIFY(fileId > 0);
+
+    const QStringList evilTitles = {
+        QStringLiteral("../../../escape"),
+        QStringLiteral("subdir/nested"),
+        QStringLiteral("/absolute/path"),
+    };
+
+    const QString dstRoot = QDir(dstDir.path()).absolutePath();
+
+    for (const QString &title : evilTitles) {
+        GameMetadata meta = makeMetadata();
+        meta.title = title;
+
+        OrganizeEngine engine(db);
+        engine.setTemplate(QStringLiteral("{title}{ext}"));
+        engine.setDryRun(false);
+        engine.setFolderNaming(Constants::FolderNaming::Scheme::None);
+
+        OrganizeResult result = engine.organizeFile(fileId, meta, dstDir.path(), FileOperation::Copy);
+
+        if (result.success) {
+            QVERIFY2(
+                result.newPath.startsWith(dstRoot + QLatin1Char('/')),
+                qPrintable(QStringLiteral("Title '%1' escaped destination root: %2")
+                               .arg(title, result.newPath)));
+        }
+        // success==false (unsafe path rejected) is also acceptable
+    }
 }
 
 QTEST_MAIN(OrganizeEngineTest)

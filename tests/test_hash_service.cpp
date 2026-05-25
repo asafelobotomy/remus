@@ -403,6 +403,38 @@ private slots:
             QCOMPARE(task.result.crc32, expectedCrc32s[i]);
         }
     }
+
+    // C2 — regression: when updateFileHashes returns false (DB write rejected),
+    // the file must NOT be counted as hashed and the method returns 0.
+    void testHashAllDbWriteFailure_returnsZeroHashed()
+    {
+        QTemporaryDir tmp;
+        QVERIFY(tmp.isValid());
+
+        Database db;
+        QVERIFY(db.initialize(tmp.path() + "/hash_fail.db"));
+
+        int libId = db.insertLibrary(tmp.path(), "DB Fail Test");
+        QVERIFY(libId > 0);
+        int sysId = db.getSystemId("NES");
+        QVERIFY(sysId > 0);
+
+        QByteArray content("Hello Remus Fault Injection");
+        QString path = writeTestFile(tmp.path() + "/roms", "test.nes", content);
+        QVERIFY(!path.isEmpty());
+        insertTestFile(db, libId, path, "test.nes", ".nes", sysId);
+
+        // Switch to read-only mode so all DB writes (updateFileHashes) fail.
+        QSqlQuery pragma(db.database());
+        QVERIFY2(pragma.exec("PRAGMA query_only = 1"),
+                 qPrintable(pragma.lastError().text()));
+
+        HashService svc;
+        int hashed = svc.hashAll(&db);
+
+        // Nothing should be counted as hashed when DB writes are rejected.
+        QCOMPARE(hashed, 0);
+    }
 };
 
 int main(int argc, char *argv[])
