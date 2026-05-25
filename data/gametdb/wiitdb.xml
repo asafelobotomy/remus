@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <datafile xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="wiitdb.xsd">
-	<WiiTDB version="20260522213248" filter="EN_wiiware_gamecube" games="10158"/>
+	<WiiTDB version="20260525012745" filter="EN_wiiware_gamecube" games="10160"/>
 	<!--
  GameTDB: Wii, Database started by Lustar in 2009 (https://www.gametdb.com)
  Never modify this file manually, it will get overwritten when you update. You can add games and fixes on the website.
@@ -194118,6 +194118,25 @@ translation by Brand Newman</synopsis>
 		</input>
 		<rom version="" name="Super Paper Isaiah (USA) (EN).iso" size="4699979776"/>
 	</game>
+	<game name="Guitar Hero Rocks the 90s (Europe) (EN)">
+		<id>R90S52</id>
+		<type>CUSTOM</type>
+		<region>PAL</region>
+		<languages>EN</languages>
+		<locale lang="EN">
+			<title>Guitar Hero Rocks the 90s</title>
+			<synopsis></synopsis>
+		</locale>
+		<publisher/>
+		<date year="2026" month="" day=""/>
+		<rating type="PEGI" value=""/>
+		<wi-fi players="0"/>
+		<input players="1">
+			<control type="wiimote" required="true"/>
+			<control type="nunchuk" required="false"/>
+		</input>
+		<rom version="" name="Guitar Hero Rocks the 90s (Europe) (EN).iso" size="4699979776"/>
+	</game>
 	<game name="New Super Mario Bros. Wii 0-6 Radiance (Europe) (EN)">
 		<id>RADP01</id>
 		<type>CUSTOM</type>
@@ -217742,6 +217761,25 @@ On some stages, Mario can pair up with his dinosaur buddy Yoshi and use his tong
 		</input>
 		<rom version="" name="Super Mario Galaxy 2.5 (USA) (EN,FR,ES).iso" size="4699979776"/>
 		<case versions="2"/>
+	</game>
+	<game name="Super Mario Galaxy 63 (USA) (EN)">
+		<id>SB4E63</id>
+		<type>CUSTOM</type>
+		<region>NTSC-U</region>
+		<languages>EN</languages>
+		<locale lang="EN">
+			<title>Super Mario Galaxy 63</title>
+			<synopsis></synopsis>
+		</locale>
+		<publisher/>
+		<date year="2026" month="" day=""/>
+		<rating type="ESRB" value=""/>
+		<wi-fi players="0"/>
+		<input players="1">
+			<control type="wiimote" required="true"/>
+			<control type="nunchuk" required="false"/>
+		</input>
+		<rom version="" name="Super Mario Galaxy 63 (USA) (EN).iso" size="4699979776"/>
 	</game>
 	<game name="Super Mario Galaxy 69 (USA) (EN)">
 		<id>SB4E69</id>

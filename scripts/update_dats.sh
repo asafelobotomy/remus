@@ -179,7 +179,8 @@ fi
 #    redump.org (public downloads, ZIP-compressed).  Each entry is:
 #    "url_slug|dest_filename"
 #    The slug is the URL path component after /datfile/.
-#    redump.org ships a ZIP; we extract the first .dat inside it.
+#    Endpoints may be intermittently unavailable; we try an ordered mirror list
+#    and keep the first valid ZIP payload containing a .dat file.
 REDUMP_DIRECT_DBS=(
     "arch|Acorn - Archimedes.dat"
     "mac|Apple - Macintosh.dat"
@@ -193,22 +194,64 @@ REDUMP_DIRECT_DBS=(
     "vis|Memorex - Visual Information System.dat"
 )
 
+# Ordered Redump DAT mirror/base URLs.
+# Priority order is based on observed availability and latency.
+REDUMP_DIRECT_BASE_URLS=(
+    "https://old.redump.info/datfile"
+    "http://old.redump.info/datfile"
+    "http://redump.org/datfile"
+    "https://redump.org/datfile"
+)
+
+# Helper: download a Redump ZIP for a slug from the first reachable mirror.
+# Prints the successful URL to stdout on success.
+download_redump_zip_for_slug() {
+    local slug="$1"
+    local out_zip="$2"
+    local base url
+
+    for base in "${REDUMP_DIRECT_BASE_URLS[@]}"; do
+        url="${base%/}/${slug}/"
+        if curl -fsSL --retry 2 --retry-delay 1 --max-time 60 -o "$out_zip" "$url"; then
+            # Require at least one .dat entry to guard against HTML/error payloads.
+            if unzip -Z -1 "$out_zip" 2>/dev/null | grep -E '\.dat$' >/dev/null; then
+                echo "$url"
+                return 0
+            fi
+        fi
+        rm -f "$out_zip"
+    done
+
+    return 1
+}
+
+# Optional Wii U Redump source support.
+# Primary mechanism: set REDUMP_WIIU_DAT_URL to a ZIP URL containing a DAT.
+# Fallback: try known/likely Redump endpoints and keep the first valid DAT.
+REDUMP_WIIU_FALLBACK_URLS=(
+    "http://old.redump.info/datfile/wiiu/"
+    "https://old.redump.info/datfile/wiiu/"
+    "https://redump.org/datfile/wiiu/"
+    "https://redump.org/datfile/wii-u/"
+    "https://redump.org/datfile/nintendo-wii-u/"
+)
+
 echo ""
-echo "Downloading Redump DATs (direct from redump.org)..."
+echo "Downloading Redump DATs (direct with mirror fallback)..."
 redump_direct_tmp="$(mktemp -d)"
 
 for entry in "${REDUMP_DIRECT_DBS[@]}"; do
     IFS='|' read -r slug destname <<< "$entry"
-    url="https://redump.org/datfile/${slug}/"
     zippath="$redump_direct_tmp/${slug}.zip"
 
     echo "  Fetching ${destname}..."
-    if curl -fsSL -o "$zippath" --max-time 60 "$url"; then
-        extracted=$(unzip -l "$zippath" 2>/dev/null | grep -o '[^ ]*\.dat$' | head -1)
+    if source_url="$(download_redump_zip_for_slug "$slug" "$zippath")"; then
+        extracted=$(unzip -Z -1 "$zippath" 2>/dev/null | grep -E '\.dat$' | head -1)
         if [[ -n "$extracted" ]]; then
             if unzip -o -q "$zippath" "$extracted" -d "$redump_direct_tmp" 2>/dev/null; then
                 mv "$redump_direct_tmp/$extracted" "$REDUMP_DIR/$destname"
                 copied=$((copied + 1))
+                echo "    Added from $source_url"
             else
                 echo "    Warning: failed to extract DAT from $slug zip"
             fi
@@ -217,9 +260,53 @@ for entry in "${REDUMP_DIRECT_DBS[@]}"; do
         fi
         rm -f "$zippath"
     else
-        echo "    Warning: failed to download $slug from redump.org"
+        echo "    Warning: failed to download $slug from all configured Redump mirrors"
     fi
 done
+
+# 4a. Wii U Redump DAT (signature-rich source for physical Wii U dumps).
+# If already present, keep the local file.
+wiiu_redump_dest="$REDUMP_DIR/Nintendo - Wii U.dat"
+if [[ ! -f "$wiiu_redump_dest" ]]; then
+    echo ""
+    echo "Attempting Wii U Redump DAT..."
+
+    wiiu_urls=()
+    if [[ -n "${REDUMP_WIIU_DAT_URL:-}" ]]; then
+        wiiu_urls+=("$REDUMP_WIIU_DAT_URL")
+    fi
+    for candidate in "${REDUMP_WIIU_FALLBACK_URLS[@]}"; do
+        wiiu_urls+=("$candidate")
+    done
+
+    wiiu_added=0
+    for wiiu_url in "${wiiu_urls[@]}"; do
+        [[ -n "$wiiu_url" ]] || continue
+        wiiu_zip="$redump_direct_tmp/wiiu-redump.zip"
+        rm -f "$wiiu_zip"
+
+        if ! curl -fsSL -o "$wiiu_zip" --max-time 120 "$wiiu_url"; then
+            continue
+        fi
+
+        wiiu_extracted=$(unzip -Z -1 "$wiiu_zip" 2>/dev/null | grep -E '\.dat$' | head -1)
+        if [[ -z "$wiiu_extracted" ]]; then
+            continue
+        fi
+
+        if unzip -o -q "$wiiu_zip" "$wiiu_extracted" -d "$redump_direct_tmp" 2>/dev/null; then
+            mv "$redump_direct_tmp/$wiiu_extracted" "$wiiu_redump_dest"
+            copied=$((copied + 1))
+            wiiu_added=1
+            echo "  Added Wii U Redump DAT from $wiiu_url"
+            break
+        fi
+    done
+
+    if [[ "$wiiu_added" -eq 0 ]]; then
+        echo "  Warning: failed to acquire Wii U Redump DAT (set REDUMP_WIIU_DAT_URL to provide a direct ZIP URL)."
+    fi
+fi
 
 # 4b. MAME DAT — generated from a MAME binary via -listxml, then converted to
 #     Logiqx XML (the format Remus's DatParser expects).  Two sources tried in
@@ -255,8 +342,17 @@ done
 #   Strategy B: extract the MAME binary from the zip and run -listxml.
 if [[ -z "$mame_bin" ]]; then
     echo "  No local MAME binary — fetching from mamedev/mame GitHub releases..."
+    mame_api_url="https://api.github.com/repos/mamedev/mame/releases/latest"
+    mame_api_headers=(
+        -H "Accept: application/vnd.github+json"
+    )
+    if [[ -n "${GITHUB_TOKEN:-}" ]]; then
+        mame_api_headers+=( -H "Authorization: Bearer ${GITHUB_TOKEN}" )
+    fi
+
     mame_lx_url=$(curl -fsSL --max-time 30 \
-        "https://api.github.com/repos/mamedev/mame/releases/latest" 2>/dev/null \
+        "${mame_api_headers[@]}" \
+        "$mame_api_url" 2>/dev/null \
         | python3 -c "
 import sys, json
 d = json.load(sys.stdin)

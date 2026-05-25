@@ -252,14 +252,23 @@ bool MergeResolver::resolve(QSqlDatabase &db,
     stats.resolvedFields = total;
 
     // ── Record merge conflicts ────────────────────────────────────────────────
-    // Insert one row per (game_id, field_name) that has competing distinct values.
-    // Fields already resolved by canonical_resolution are marked 'auto_resolved';
-    // any others are left as 'unresolved' for manual review.
-    n = runInsert(db, QStringLiteral("DELETE FROM merge_conflicts"), error);
+    // Build current conflict state in a temp table, then apply a differential
+    // update to merge_conflicts to avoid full delete+reinsert churn.
+    n = runInsert(db, QStringLiteral(
+        "CREATE TEMP TABLE IF NOT EXISTS _current_merge_conflicts ("
+        "game_id TEXT NOT NULL, "
+        "field_name TEXT NOT NULL, "
+        "fact_ids_json TEXT NOT NULL, "
+        "resolution_status TEXT NOT NULL, "
+        "chosen_fact_id INTEGER, "
+        "PRIMARY KEY (game_id, field_name))"), error);
+    if (n < 0) return false;
+
+    n = runInsert(db, QStringLiteral("DELETE FROM _current_merge_conflicts"), error);
     if (n < 0) return false;
 
     n = runInsert(db, QStringLiteral(
-        "INSERT INTO merge_conflicts "
+        "INSERT INTO _current_merge_conflicts "
         "    (game_id, field_name, fact_ids_json, resolution_status, chosen_fact_id) "
         "SELECT "
         "    gf.game_id, "
@@ -273,6 +282,53 @@ bool MergeResolver::resolve(QSqlDatabase &db,
         "    ON cr.game_id = gf.game_id AND cr.field_name = gf.field_name "
         "GROUP BY gf.game_id, gf.field_name "
         "HAVING COUNT(DISTINCT gf.field_value) > 1"), error);
+    if (n < 0) return false;
+
+    n = runInsert(db, QStringLiteral(
+        "DELETE FROM merge_conflicts "
+        "WHERE NOT EXISTS ("
+        "    SELECT 1 FROM _current_merge_conflicts cur "
+        "    WHERE cur.game_id = merge_conflicts.game_id "
+        "      AND cur.field_name = merge_conflicts.field_name)"), error);
+    if (n < 0) return false;
+
+    n = runInsert(db, QStringLiteral(
+        "UPDATE merge_conflicts "
+        "SET fact_ids_json = ("
+        "        SELECT cur.fact_ids_json FROM _current_merge_conflicts cur "
+        "        WHERE cur.game_id = merge_conflicts.game_id "
+        "          AND cur.field_name = merge_conflicts.field_name), "
+        "    resolution_status = ("
+        "        SELECT cur.resolution_status FROM _current_merge_conflicts cur "
+        "        WHERE cur.game_id = merge_conflicts.game_id "
+        "          AND cur.field_name = merge_conflicts.field_name), "
+        "    chosen_fact_id = ("
+        "        SELECT cur.chosen_fact_id FROM _current_merge_conflicts cur "
+        "        WHERE cur.game_id = merge_conflicts.game_id "
+        "          AND cur.field_name = merge_conflicts.field_name), "
+        "    resolved_at = CASE "
+        "        WHEN (SELECT cur.resolution_status FROM _current_merge_conflicts cur "
+        "              WHERE cur.game_id = merge_conflicts.game_id "
+        "                AND cur.field_name = merge_conflicts.field_name) = 'unresolved' "
+        "        THEN NULL "
+        "        ELSE COALESCE(merge_conflicts.resolved_at, CURRENT_TIMESTAMP) "
+        "    END "
+        "WHERE EXISTS ("
+        "    SELECT 1 FROM _current_merge_conflicts cur "
+        "    WHERE cur.game_id = merge_conflicts.game_id "
+        "      AND cur.field_name = merge_conflicts.field_name)"), error);
+    if (n < 0) return false;
+
+    n = runInsert(db, QStringLiteral(
+        "INSERT INTO merge_conflicts "
+        "    (game_id, field_name, fact_ids_json, resolution_status, chosen_fact_id, resolved_at) "
+        "SELECT cur.game_id, cur.field_name, cur.fact_ids_json, cur.resolution_status, "
+        "       cur.chosen_fact_id, "
+        "       CASE WHEN cur.resolution_status = 'unresolved' THEN NULL ELSE CURRENT_TIMESTAMP END "
+        "FROM _current_merge_conflicts cur "
+        "WHERE NOT EXISTS ("
+        "    SELECT 1 FROM merge_conflicts mc "
+        "    WHERE mc.game_id = cur.game_id AND mc.field_name = cur.field_name)"), error);
     if (n < 0) return false;
 
     // Update unresolved conflict count for the build report.

@@ -60,21 +60,25 @@ int handleEnrichCompendiumCommand(CliContext &ctx)
     database.setDatabaseName(outputInfo.absoluteFilePath());
     if (!database.open()) {
         qCritical() << "✗ Failed to open database:" << database.lastError().text();
+        database = QSqlDatabase();
         QSqlDatabase::removeDatabase(connectionName);
         return 1;
     }
 
-    QSqlQuery pragmaQuery(database);
-    // WAL mode allows concurrent readers + one writer; prevents SQLITE_LOCKED
-    // when the nested QEventLoop in waitForReply() re-enters the event loop.
-    pragmaQuery.exec(QStringLiteral("PRAGMA journal_mode = WAL"));
-    // Retry for up to 5 s on transient lock contention instead of failing immediately.
-    pragmaQuery.exec(QStringLiteral("PRAGMA busy_timeout = 5000"));
-    if (!pragmaQuery.exec(QStringLiteral("PRAGMA foreign_keys = ON"))) {
-        qCritical() << "✗ Failed to enable foreign keys:" << pragmaQuery.lastError().text();
-        database.close();
-        QSqlDatabase::removeDatabase(connectionName);
-        return 1;
+    {
+        QSqlQuery pragmaQuery(database);
+        // WAL mode allows concurrent readers + one writer; prevents SQLITE_LOCKED
+        // when the nested QEventLoop in waitForReply() re-enters the event loop.
+        pragmaQuery.exec(QStringLiteral("PRAGMA journal_mode = WAL"));
+        // Retry for up to 5 s on transient lock contention instead of failing immediately.
+        pragmaQuery.exec(QStringLiteral("PRAGMA busy_timeout = 5000"));
+        if (!pragmaQuery.exec(QStringLiteral("PRAGMA foreign_keys = ON"))) {
+            qCritical() << "✗ Failed to enable foreign keys:" << pragmaQuery.lastError().text();
+            database.close();
+            database = QSqlDatabase();
+            QSqlDatabase::removeDatabase(connectionName);
+            return 1;
+        }
     }
 
     qInfo() << "Running enrichment on" << outputInfo.absoluteFilePath();
@@ -93,13 +97,23 @@ int handleEnrichCompendiumCommand(CliContext &ctx)
                                           enrichError)) {
             qCritical().noquote() << QStringLiteral("✗ %1").arg(enrichError);
             database.close();
+            database = QSqlDatabase();
             QSqlDatabase::removeDatabase(connectionName);
             return 1;
         }
     }
 
     // Rebuild FTS index to pick up new descriptions.
-    populateCompendiumFtsIndex(database);
+    {
+        QString ftsError;
+        if (!populateCompendiumFtsIndex(database, stats.ftsRowsIndexed, ftsError)) {
+            qCritical().noquote() << QStringLiteral("✗ FTS rebuild failed: %1").arg(ftsError);
+            database.close();
+            database = QSqlDatabase();
+            QSqlDatabase::removeDatabase(connectionName);
+            return 1;
+        }
+    }
 
     // Update (or create) the report JSON alongside the DB.
     const QString reportPath = CompendiumSqlUtilities::reportPathForDatabase(outputInfo.absoluteFilePath());
@@ -123,6 +137,7 @@ int handleEnrichCompendiumCommand(CliContext &ctx)
     if (!CompendiumSqlUtilities::writeReport(reportPath, report, reportError)) {
         qCritical().noquote() << QStringLiteral("✗ %1").arg(reportError);
         database.close();
+        database = QSqlDatabase();
         QSqlDatabase::removeDatabase(connectionName);
         return 1;
     }
@@ -164,6 +179,7 @@ int handleEnrichCompendiumCommand(CliContext &ctx)
     qInfo().nospace() << "Duration: " << timer.elapsed() << " ms";
 
     database.close();
+    database = QSqlDatabase();
     QSqlDatabase::removeDatabase(connectionName);
     return 0;
 }

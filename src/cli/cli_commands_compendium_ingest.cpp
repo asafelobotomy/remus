@@ -267,7 +267,15 @@ int handleIngestSourceCommand(CliContext &ctx)
     }
 
     // Rebuild FTS index (idempotent: clears previous content before repopulating)
-    populateCompendiumFtsIndex(database);
+    {
+        int ftsRowsIndexed = 0;
+        QString ftsError;
+        if (!populateCompendiumFtsIndex(database, ftsRowsIndexed, ftsError)) {
+            qCritical() << "✗ FTS rebuild failed:" << ftsError;
+            cleanup();
+            return 1;
+        }
+    }
 
     qInfo() << "";
     qInfo() << "=== Ingest Source Complete ===";

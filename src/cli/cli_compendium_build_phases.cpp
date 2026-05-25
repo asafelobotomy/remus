@@ -13,6 +13,56 @@
 
 #include <functional>
 
+namespace {
+
+bool queryHasRows(QSqlDatabase &db, const QString &sql, QString &error)
+{
+    QSqlQuery q(db);
+    if (!q.exec(sql)) {
+        error = q.lastError().text();
+        return false;
+    }
+    return q.next();
+}
+
+bool hasAnyMetadataGaps(QSqlDatabase &db, QString &error)
+{
+    return queryHasRows(
+        db,
+        QStringLiteral(
+            "SELECT 1 FROM games "
+            "WHERE genre IS NULL OR TRIM(genre) = '' "
+            "   OR developer IS NULL OR TRIM(developer) = '' "
+            "   OR publisher IS NULL OR TRIM(publisher) = '' "
+            "   OR release_year IS NULL "
+            "   OR description IS NULL OR TRIM(description) = '' "
+            "   OR players_max IS NULL "
+            "LIMIT 1"),
+        error);
+}
+
+bool hasAnyRaGaps(QSqlDatabase &db, QString &error)
+{
+    return queryHasRows(
+        db,
+        QStringLiteral(
+            "SELECT 1 FROM games g "
+            "JOIN game_signatures gs ON gs.game_id = g.game_id AND gs.hash_type = 'md5' "
+            "WHERE (g.genre IS NULL OR TRIM(g.genre) = '' "
+            "    OR g.developer IS NULL OR TRIM(g.developer) = '' "
+            "    OR g.publisher IS NULL OR TRIM(g.publisher) = '' "
+            "    OR g.release_year IS NULL) "
+            "  AND NOT EXISTS ("
+            "      SELECT 1 FROM game_facts gf "
+            "      WHERE gf.game_id = g.game_id "
+            "        AND gf.source_id = 'retroachievements' "
+            "        AND gf.field_name = 'ra_game_id') "
+            "LIMIT 1"),
+        error);
+}
+
+} // namespace
+
 void insertEnrichmentStatsReportFields(QJsonObject &report,
                                        const EnrichmentStats &stats,
                                        const QString &resolvedFieldsKey)
@@ -32,6 +82,15 @@ void insertEnrichmentStatsReportFields(QJsonObject &report,
     report.insert(QStringLiteral("zxinfo_games_enriched"),    stats.zxinfoGamesEnriched);
     report.insert(QStringLiteral("zxinfo_facts_inserted"),    stats.zxinfoFactsInserted);
     report.insert(resolvedFieldsKey,                           stats.resolvedFields);
+    report.insert(QStringLiteral("post_enrich_unresolved_conflicts"), stats.unresolvedConflicts);
+    report.insert(QStringLiteral("enrichment_passes_executed"), stats.passesExecuted);
+    report.insert(QStringLiteral("enrichment_passes_skipped_no_input"), stats.passesSkippedNoInput);
+    report.insert(QStringLiteral("enrichment_passes_skipped_no_gaps"), stats.passesSkippedNoGaps);
+    report.insert(QStringLiteral("post_enrich_merge_runs"), stats.mergeRuns);
+    report.insert(QStringLiteral("ra_api_calls_needed"), stats.raApiCallsNeeded);
+    report.insert(QStringLiteral("ra_api_calls_performed"), stats.raApiCallsPerformed);
+    report.insert(QStringLiteral("ra_api_calls_suppressed"), stats.raApiCallsSuppressed);
+    report.insert(QStringLiteral("post_enrich_fts_rows_indexed"), stats.ftsRowsIndexed);
 }
 
 bool runCompendiumEnrichmentPasses(QSqlDatabase &db,
@@ -79,6 +138,7 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db,
         QString name;
         TransactionMode mode;
         std::function<bool()> isEnabled;
+        std::function<bool()> hasWork;
         std::function<bool()> run;
     };
 
@@ -93,6 +153,7 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db,
             QStringLiteral("Libretro metadata enrichment"),
             TransactionMode::CallerWrapped,
             [&] { return hasMetadataDir; },
+            [&] { return hasAnyMetadataGaps(db, error); },
             [&] {
                 return CompendiumEnrichment::enrichFromLibretroMetadata(db,
                                                                         metadataDir,
@@ -105,6 +166,7 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db,
             QStringLiteral("GameTDB enrichment"),
             TransactionMode::CallerWrapped,
             [&] { return hasGametdbDir; },
+            [&] { return hasAnyMetadataGaps(db, error); },
             [&] {
                 return CompendiumEnrichment::enrichFromGameTDB(db,
                                                                gametdbDir,
@@ -117,6 +179,7 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db,
             QStringLiteral("OpenVGDB enrichment"),
             TransactionMode::CallerWrapped,
             [&] { return hasOpenvgdbPath; },
+            [&] { return hasAnyMetadataGaps(db, error); },
             [&] {
                 return CompendiumEnrichment::enrichFromOpenVGDB(db,
                                                                 openvgdbPath,
@@ -129,6 +192,7 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db,
             QStringLiteral("IGDB enrichment"),
             TransactionMode::SelfManaged,
             [&] { return hasCredPath; },
+            [&] { return hasAnyMetadataGaps(db, error); },
             [&] {
                 return CompendiumEnrichment::enrichFromIGDB(db,
                                                             credPath,
@@ -141,18 +205,23 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db,
             QStringLiteral("RetroAchievements enrichment"),
             TransactionMode::SelfManaged,
             [&] { return hasCredPath; },
+            [&] { return hasAnyRaGaps(db, error); },
             [&] {
                 return CompendiumEnrichment::enrichFromRetroAchievements(db,
                                                                          credPath,
                                                                          stats.raGamesEnriched,
                                                                          stats.raFactsInserted,
-                                                                         error);
+                                                                         error,
+                                                                         &stats.raApiCallsNeeded,
+                                                                         &stats.raApiCallsPerformed,
+                                                                         &stats.raApiCallsSuppressed);
             },
         },
         {
             QStringLiteral("MAME catver enrichment"),
             TransactionMode::CallerWrapped,
             [&] { return hasMameCatverPath; },
+            [&] { return hasAnyMetadataGaps(db, error); },
             [&] {
                 return CompendiumEnrichment::enrichFromMameCatver(db,
                                                                   mameCatverPath,
@@ -165,6 +234,7 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db,
             QStringLiteral("ZXInfo enrichment"),
             TransactionMode::SelfManaged,
             [] { return true; },
+            [&] { return hasAnyMetadataGaps(db, error); },
             [&] {
                 return CompendiumEnrichment::enrichFromZXInfo(db,
                                                               stats.zxinfoGamesEnriched,
@@ -176,6 +246,17 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db,
 
     for (const EnrichmentPassSpec &pass : passes) {
         if (!pass.isEnabled()) {
+            ++stats.passesSkippedNoInput;
+            continue;
+        }
+
+        error.clear();
+        if (!pass.hasWork()) {
+            if (!error.isEmpty()) {
+                error = QStringLiteral("%1 pre-check failed: %2").arg(pass.name, error);
+                return false;
+            }
+            ++stats.passesSkippedNoGaps;
             continue;
         }
 
@@ -185,10 +266,14 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db,
         if (!ok) {
             return false;
         }
+        ++stats.passesExecuted;
     }
 
-    // ── Post-enrichment: re-run merge resolution to pick up newly-written facts ─
-    {
+    const int factsInsertedTotal = stats.metadataFactsInserted + stats.gametdbFactsInserted
+        + stats.openvgdbFactsInserted + stats.igdbFactsInserted + stats.raFactsInserted
+        + stats.mameFactsInserted + stats.zxinfoFactsInserted;
+
+    if (factsInsertedTotal > 0) {
         Remus::Compendium::CompilerStats resolveStats;
         const Remus::Compendium::MergeResolver resolver;
         if (!resolver.resolve(db, resolveStats, error)) {
@@ -196,17 +281,20 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db,
             return false;
         }
         stats.resolvedFields = resolveStats.resolvedFields;
+        stats.unresolvedConflicts = resolveStats.unresolvedConflicts;
+        stats.mergeRuns = 1;
     }
 
     return true;
 }
 
-void populateCompendiumFtsIndex(QSqlDatabase &db)
+bool populateCompendiumFtsIndex(QSqlDatabase &db, int &rowsIndexed, QString &error)
 {
+    rowsIndexed = 0;
     qInfo() << "[buildCompendium] Rebuilding FTS search index (clearing previous content)...";
     if (!db.transaction()) {
-        qWarning() << "[buildCompendium] Could not start FTS transaction (non-fatal)";
-        return;
+        error = QStringLiteral("Could not start FTS transaction: %1").arg(db.lastError().text());
+        return false;
     }
 
     QSqlQuery ftsQ(db);
@@ -215,12 +303,14 @@ void populateCompendiumFtsIndex(QSqlDatabase &db)
     // are contentful FTS5 tables, so a normal DELETE avoids unsupported
     // 'delete-all' warnings from SQLite on rebuilds.
     if (!ftsQ.exec(QStringLiteral("DELETE FROM games_search"))) {
-        qWarning() << "[buildCompendium] games_search clear failed (non-fatal):"
-                   << ftsQ.lastError().text();
+        error = QStringLiteral("games_search clear failed: %1").arg(ftsQ.lastError().text());
+        db.rollback();
+        return false;
     }
     if (!ftsQ.exec(QStringLiteral("DELETE FROM games_fts"))) {
-        qWarning() << "[buildCompendium] games_fts clear failed (non-fatal):"
-                   << ftsQ.lastError().text();
+        error = QStringLiteral("games_fts clear failed: %1").arg(ftsQ.lastError().text());
+        db.rollback();
+        return false;
     }
 
     // ── games_search (trigram, columns: title / game_id / system_id / region_code) ──
@@ -229,11 +319,12 @@ void populateCompendiumFtsIndex(QSqlDatabase &db)
         "SELECT canonical_title, game_id, system_id, "
         "       COALESCE(primary_region_code, '') FROM games"));
     if (!ok1) {
-        qWarning() << "[buildCompendium] games_search canonical title insert failed (non-fatal):"
-                   << ftsQ.lastError().text();
+        error = QStringLiteral("games_search canonical title insert failed: %1")
+            .arg(ftsQ.lastError().text());
         db.rollback();
-        return;
+        return false;
     }
+    rowsIndexed += ftsQ.numRowsAffected();
 
     const bool ok2 = ftsQ.exec(QStringLiteral(
         "INSERT INTO games_search(title, game_id, system_id, region_code) "
@@ -241,11 +332,12 @@ void populateCompendiumFtsIndex(QSqlDatabase &db)
         "       COALESCE(g.primary_region_code, '') "
         "FROM game_names gn JOIN games g ON g.game_id = gn.game_id"));
     if (!ok2) {
-        qWarning() << "[buildCompendium] games_search alias insert failed (non-fatal):"
-                   << ftsQ.lastError().text();
+        error = QStringLiteral("games_search alias insert failed: %1")
+            .arg(ftsQ.lastError().text());
         db.rollback();
-        return;
+        return false;
     }
+    rowsIndexed += ftsQ.numRowsAffected();
 
     // ── games_fts (unicode61, columns: game_id / system_id / title_text) ─────────
     // Populated here so the provider does not perform a slow lazy-populate on first
@@ -257,14 +349,25 @@ void populateCompendiumFtsIndex(QSqlDatabase &db)
         "SELECT gn.game_id, g.system_id, gn.name_text "
         "FROM game_names gn JOIN games g ON gn.game_id = g.game_id"));
     if (!ok3) {
-        qWarning() << "[buildCompendium] games_fts insert failed (non-fatal):"
-                   << ftsQ.lastError().text();
+        error = QStringLiteral("games_fts insert failed: %1")
+            .arg(ftsQ.lastError().text());
         db.rollback();
-        return;
+        return false;
     }
+    rowsIndexed += ftsQ.numRowsAffected();
 
-    db.commit();
-    ftsQ.exec(QStringLiteral("INSERT INTO games_search(games_search) VALUES('optimize')"));
-    ftsQ.exec(QStringLiteral("INSERT INTO games_fts(games_fts) VALUES('optimize')"));
+    if (!db.commit()) {
+        error = QStringLiteral("FTS transaction commit failed: %1").arg(db.lastError().text());
+        return false;
+    }
+    if (!ftsQ.exec(QStringLiteral("INSERT INTO games_search(games_search) VALUES('optimize')"))) {
+        error = QStringLiteral("games_search optimize failed: %1").arg(ftsQ.lastError().text());
+        return false;
+    }
+    if (!ftsQ.exec(QStringLiteral("INSERT INTO games_fts(games_fts) VALUES('optimize')"))) {
+        error = QStringLiteral("games_fts optimize failed: %1").arg(ftsQ.lastError().text());
+        return false;
+    }
     qInfo() << "[buildCompendium] FTS index rebuilt and optimized.";
+    return true;
 }

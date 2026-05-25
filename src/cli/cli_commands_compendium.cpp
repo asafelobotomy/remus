@@ -386,7 +386,15 @@ int handleBuildCompendiumCommand(CliContext &ctx)
         }
     }
 
-    populateCompendiumFtsIndex(database);
+    {
+        QString ftsError;
+        if (!populateCompendiumFtsIndex(database, enrichStats.ftsRowsIndexed, ftsError)) {
+            qCritical().noquote() << QStringLiteral("✗ FTS rebuild failed: %1").arg(ftsError);
+            database.close();
+            QSqlDatabase::removeDatabase(connectionName);
+            return 1;
+        }
+    }
 
     int systemsCount = scalarCount(database, QStringLiteral("SELECT COUNT(*) FROM systems"), error);
     if (systemsCount < 0) {

@@ -85,7 +85,14 @@ bool enrichFromGameTDB(QSqlDatabase &database,
     }
 
     QSqlQuery gameQuery(database);
-    if (!gameQuery.exec(QStringLiteral("SELECT game_id, canonical_title FROM games"))) {
+    if (!gameQuery.exec(QStringLiteral(
+            "SELECT game_id, canonical_title FROM games "
+            "WHERE genre IS NULL OR TRIM(genre) = '' "
+            "   OR developer IS NULL OR TRIM(developer) = '' "
+            "   OR publisher IS NULL OR TRIM(publisher) = '' "
+            "   OR players_max IS NULL "
+            "   OR release_year IS NULL "
+            "   OR description IS NULL OR TRIM(description) = ''"))) {
         error = QStringLiteral("Load games for GameTDB enrichment: %1")
             .arg(gameQuery.lastError().text());
         return false;

@@ -108,10 +108,10 @@ bool enrichFromIGDB(QSqlDatabase &database,
  * the full game list with MD5 hashes (one API call per system), matches the
  * hashes against @c game_signatures, and then:
  *  - Writes @c ra_game_id and @c achievement_count facts for every hash match.
- *  - For matched games that are still missing a description, calls
- *    @c API_GetGame.php to retrieve and apply description, genre, developer,
- *    publisher, and release year (COALESCE — existing values are never
- *    overwritten).
+ *  - For matched games still missing genre/developer/publisher/release year,
+ *    calls @c API_GetGame.php to retrieve metadata and apply COALESCE updates
+ *    (existing values are never overwritten). Games already stamped with a
+ *    prior @c ra_game_id fact suppress repeated no-op metadata retries.
  *
  * This function manages its own per-system transactions internally.
  * Do NOT wrap it in an external transaction.
@@ -135,7 +135,10 @@ bool enrichFromRetroAchievements(QSqlDatabase &database,
                                   const QString &credentialsPath,
                                   int &gamesEnriched,
                                   int &factsInserted,
-                                  QString &error);
+                                  QString &error,
+                                  int *apiCallsNeededOut = nullptr,
+                                  int *apiCallsPerformedOut = nullptr,
+                                  int *apiCallsSuppressedOut = nullptr);
 
 /**
  * @brief Enrich Arcade/MAME games using the MAME catver.ini category database.

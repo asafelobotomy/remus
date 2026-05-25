@@ -81,12 +81,9 @@ bool parseSourceDescriptor(const QJsonObject &object,
     if (!requireString(object, QStringLiteral("source_type"), descriptor.sourceType, error)) {
         return false;
     }
-    if (descriptor.sourceType != QStringLiteral("dat") &&
-        descriptor.sourceType != QStringLiteral("xml") &&
-        descriptor.sourceType != QStringLiteral("json") &&
-        descriptor.sourceType != QStringLiteral("api-export")) {
+    if (descriptor.sourceType != QStringLiteral("dat")) {
         error = QStringLiteral("Source '%1' has unrecognised source_type '%2'; "
-                               "expected one of: dat, xml, json, api-export")
+                               "expected: dat")
                     .arg(descriptor.sourceId, descriptor.sourceType);
         return false;
     }

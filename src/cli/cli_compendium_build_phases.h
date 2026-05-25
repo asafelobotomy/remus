@@ -30,6 +30,15 @@ struct EnrichmentStats {
     int zxinfoGamesEnriched    = 0;
     int zxinfoFactsInserted    = 0;
     int resolvedFields         = 0;
+    int unresolvedConflicts    = 0;
+    int passesExecuted         = 0;
+    int passesSkippedNoInput   = 0;
+    int passesSkippedNoGaps    = 0;
+    int mergeRuns              = 0;
+    int raApiCallsNeeded       = 0;
+    int raApiCallsPerformed    = 0;
+    int raApiCallsSuppressed   = 0;
+    int ftsRowsIndexed         = 0;
 };
 
 /**
@@ -61,12 +70,15 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db,
 /**
  * @brief Populate the FTS search index tables from the games/game_names rows.
  *
- * Non-fatal: any failure is logged as a warning only. The function manages its
- * own transaction internally.
+ * Failures are fatal for the current command and surfaced to the caller.
+ * The function manages its own transaction internally.
  *
  * @param db Open SQLite connection (no active transaction required).
+ * @param rowsIndexed [out] Number of rows inserted into FTS tables.
+ * @param error [out] Human-readable error on failure.
+ * @return true on success, false on failure.
  */
-void populateCompendiumFtsIndex(QSqlDatabase &db);
+bool populateCompendiumFtsIndex(QSqlDatabase &db, int &rowsIndexed, QString &error);
 
 /**
  * @brief Insert enrichment stat fields into a report JSON object.

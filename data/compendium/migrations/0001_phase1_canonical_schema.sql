@@ -209,6 +209,15 @@ CREATE INDEX IF NOT EXISTS idx_game_names_lookup
 CREATE INDEX IF NOT EXISTS idx_game_facts_field
     ON game_facts(game_id, field_name, source_priority DESC, confidence DESC);
 
+CREATE INDEX IF NOT EXISTS idx_game_facts_field_resolve
+    ON game_facts(field_name, game_id, source_priority DESC, confidence DESC, fact_id);
+
+CREATE INDEX IF NOT EXISTS idx_game_facts_conflict_group
+    ON game_facts(game_id, field_name, field_value, fact_id);
+
+CREATE UNIQUE INDEX IF NOT EXISTS idx_merge_conflicts_game_field
+    ON merge_conflicts(game_id, field_name);
+
 CREATE INDEX IF NOT EXISTS idx_source_items_source
     ON source_items(source_id, external_key);
 

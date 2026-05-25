@@ -31,6 +31,7 @@ private slots:
     void parseManifest_missingBuildId();
     void parseManifest_noSources();
     void parseSourceDescriptor_unsupportedSourceType();
+    void parseSourceDescriptor_rejectsJsonSourceType();
     void parseSourceDescriptor_nonStringOptionalField();
     void parseSourceDescriptor_nonIntegerPriority();
 };
@@ -343,6 +344,23 @@ void CompendiumManifestParserTest::parseSourceDescriptor_unsupportedSourceType()
     QVERIFY(!parseSourceDescriptor(obj, QStringLiteral("/tmp/manifest.json"), descriptor, error));
     QVERIFY(!error.isEmpty());
     QVERIFY2(error.contains(QStringLiteral("csv")), qPrintable(error));
+}
+
+void CompendiumManifestParserTest::parseSourceDescriptor_rejectsJsonSourceType()
+{
+    QJsonObject obj;
+    obj.insert(QStringLiteral("source_id"),      QStringLiteral("json-src"));
+    obj.insert(QStringLiteral("source_type"),    QStringLiteral("json"));
+    obj.insert(QStringLiteral("snapshot_id"),    QStringLiteral("snap-001"));
+    obj.insert(QStringLiteral("snapshot_label"), QStringLiteral("Snap 1"));
+    obj.insert(QStringLiteral("path"),           QStringLiteral("/fake/path.json"));
+    obj.insert(QStringLiteral("priority"),       5);
+    obj.insert(QStringLiteral("enabled"),        false);
+
+    CompendiumSourceDescriptor descriptor;
+    QString error;
+    QVERIFY(!parseSourceDescriptor(obj, QStringLiteral("/tmp/manifest.json"), descriptor, error));
+    QVERIFY2(error.contains(QStringLiteral("expected: dat")), qPrintable(error));
 }
 
 void CompendiumManifestParserTest::parseSourceDescriptor_nonStringOptionalField()

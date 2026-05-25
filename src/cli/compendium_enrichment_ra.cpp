@@ -23,10 +23,16 @@ bool enrichFromRetroAchievements(QSqlDatabase &database,
                                   const QString &credentialsPath,
                                   int &gamesEnriched,
                                   int &factsInserted,
-                                  QString &error)
+                                  QString &error,
+                                  int *apiCallsNeededOut,
+                                  int *apiCallsPerformedOut,
+                                  int *apiCallsSuppressedOut)
 {
     gamesEnriched = 0;
     factsInserted = 0;
+    int totalApiCallsNeeded = 0;
+    int totalApiCallsPerformed = 0;
+    int totalApiCallsSuppressed = 0;
 
     // Load credentials via CredentialManager (JSON file → env var → QSettings → keychain)
     const QString username = CredentialManager::get(QStringLiteral("retroachievements/username"), credentialsPath);
@@ -118,8 +124,13 @@ bool enrichFromRetroAchievements(QSqlDatabase &database,
         // Capture all enrichable fields to gate the per-game metadata API call.
         QSqlQuery hashQ(database);
         hashQ.prepare(QStringLiteral(
-            "SELECT gs.hash_value, gs.game_id, g.description, g.genre, g.developer, "
-            "       g.publisher, g.release_year FROM game_signatures gs "
+            "SELECT gs.hash_value, gs.game_id, g.genre, g.developer, g.publisher, "
+            "       g.release_year, "
+            "       EXISTS(SELECT 1 FROM game_facts gf "
+            "              WHERE gf.game_id = g.game_id "
+            "                AND gf.source_id = 'retroachievements' "
+            "                AND gf.field_name = 'ra_game_id') "
+            "FROM game_signatures gs "
             "JOIN games g ON g.game_id = gs.game_id "
             "WHERE gs.hash_type = 'md5' AND g.system_id = ?"));
         hashQ.addBindValue(sys.id);
@@ -138,15 +149,19 @@ bool enrichFromRetroAchievements(QSqlDatabase &database,
         while (hashQ.next()) {
             const QString hash   = hashQ.value(0).toString().toLower();
             const QString gameId = hashQ.value(1).toString();
+            const bool alreadyProcessed = hashQ.value(6).toInt() != 0;
             // Fetch full metadata if any enrichable field is absent.
             auto isBlank = [&](int col) {
                 return hashQ.value(col).isNull() || hashQ.value(col).toString().isEmpty();
             };
-            const bool metaMissing = isBlank(2)          // description
-                                  || isBlank(3)          // genre
-                                  || isBlank(4)          // developer
-                                  || isBlank(5)          // publisher
-                                  || hashQ.value(6).isNull(); // release_year
+            bool metaMissing = isBlank(2)          // genre
+                            || isBlank(3)          // developer
+                            || isBlank(4)          // publisher
+                            || hashQ.value(5).isNull(); // release_year
+            if (alreadyProcessed && metaMissing) {
+                ++totalApiCallsSuppressed;
+                metaMissing = false;
+            }
 
             const auto it = md5Map.constFind(hash);
             if (it == md5Map.cend()) continue;
@@ -168,6 +183,7 @@ bool enrichFromRetroAchievements(QSqlDatabase &database,
         int apiCallsNeeded = 0;
         for (auto it = matches.constBegin(); it != matches.constEnd(); ++it)
             if (it->metaMissing) ++apiCallsNeeded;
+        totalApiCallsNeeded += apiCallsNeeded;
         if (apiCallsNeeded > 0)
             qInfo().noquote() << QStringLiteral("[RA] %1: %2 hash matches, %3 need API calls")
                 .arg(sys.name).arg(matches.size()).arg(apiCallsNeeded);
@@ -187,6 +203,7 @@ bool enrichFromRetroAchievements(QSqlDatabase &database,
             if (apiCallsDone % 50 == 0)
                 HttpMetadataProvider::processNetworkEvents();
             const GameMetadata gm = provider.getById(QString::number(it->raGameId));
+            ++totalApiCallsPerformed;
             if (!gm.title.isEmpty())
                 fullMetadata.insert(it.key(), gm);
         }
@@ -324,6 +341,10 @@ bool enrichFromRetroAchievements(QSqlDatabase &database,
         // scope. (DeferredDeleteFlushGuard above also handles early-exit paths.)
         HttpMetadataProvider::processNetworkEvents();
     }
+
+    if (apiCallsNeededOut) *apiCallsNeededOut = totalApiCallsNeeded;
+    if (apiCallsPerformedOut) *apiCallsPerformedOut = totalApiCallsPerformed;
+    if (apiCallsSuppressedOut) *apiCallsSuppressedOut = totalApiCallsSuppressed;
 
     return true;
 }
