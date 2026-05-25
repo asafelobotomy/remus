@@ -111,13 +111,20 @@ download_with_cache() {
         return 0
     fi
 
+    local cache_tmp
     mkdir -p "$(dirname "$cache_path")"
-    curl_args=( -fsSL --retry 2 --retry-delay 1 --max-time "$max_time" -o "$cache_path" )
+    cache_tmp="$(dirname "$cache_path")/.tmp.$$.$(basename "$cache_path")"
+    curl_args=( -fsSL --retry 2 --retry-delay 1 --max-time "$max_time" -o "$cache_tmp" )
     if [[ "$#" -gt 0 ]]; then
         curl_args+=( "$@" )
     fi
     curl_args+=( "$url" )
-    curl "${curl_args[@]}"
+    if curl "${curl_args[@]}"; then
+        mv "$cache_tmp" "$cache_path"
+    else
+        rm -f "$cache_tmp"
+        return 1
+    fi
 }
 
 gametdb_payload_matches() {
@@ -314,8 +321,9 @@ download_redump_zip_for_slug() {
                 printf 'downloaded|%s\n' "$url"
                 return 0
             fi
+            # Downloaded but invalid payload — evict so next run redownloads.
+            rm -f "$cache_zip"
         fi
-        rm -f "$cache_zip"
         rm -f "$out_zip"
     done
 
@@ -696,7 +704,9 @@ if download_with_cache "$OPENVGDB_URL" "$openvgdb_cache_zip" 300 "OpenVGDB ZIP";
         mv "$openvgdb_tmp/openvgdb.sqlite" "$OPENVGDB_DEST"
         echo "  OpenVGDB updated: $OPENVGDB_DEST"
     else
-        echo "  Warning: failed to extract openvgdb.sqlite from zip"
+        # Extraction failed — evict the cached ZIP so next run redownloads.
+        rm -f "$openvgdb_cache_zip"
+        echo "  Warning: failed to extract openvgdb.sqlite from zip (cache evicted)"
     fi
 else
     echo "  Warning: failed to download OpenVGDB from $OPENVGDB_URL"
