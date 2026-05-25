@@ -120,6 +120,51 @@ download_with_cache() {
     curl "${curl_args[@]}"
 }
 
+gametdb_payload_matches() {
+    local existing_path="$1"
+    local extracted_path="$2"
+    [[ -f "$existing_path" && -f "$extracted_path" ]] || return 1
+
+    python3 - "$existing_path" "$extracted_path" <<'PYEOF' >/dev/null
+import pathlib
+import re
+import sys
+
+ROOT_VERSION_RE = re.compile(r'\bversion="[^"]*"', re.IGNORECASE)
+
+def normalized_text(path_str: str) -> str:
+    text = pathlib.Path(path_str).read_text(encoding="utf-8")
+    return ROOT_VERSION_RE.sub('version="__IGNORED__"', text)
+
+sys.exit(0 if normalized_text(sys.argv[1]) == normalized_text(sys.argv[2]) else 1)
+PYEOF
+}
+
+install_gametdb_xml() {
+    local zip_path="$1"
+    local xml_name="$2"
+    local dest_path="$3"
+    local tmp_dir tmp_path
+
+    tmp_dir="$(mktemp -d)"
+    if ! unzip -o -q "$zip_path" "$xml_name" -d "$tmp_dir" 2>/dev/null; then
+        rm -rf "$tmp_dir"
+        return 1
+    fi
+
+    tmp_path="$tmp_dir/$xml_name"
+    if gametdb_payload_matches "$dest_path" "$tmp_path"; then
+        rm -rf "$tmp_dir"
+        printf 'unchanged\n'
+        return 0
+    fi
+
+    mkdir -p "$(dirname "$dest_path")"
+    mv "$tmp_path" "$dest_path"
+    rm -rf "$tmp_dir"
+    printf 'updated\n'
+}
+
 # Clone or update the repo (shallow clone to save bandwidth)
 if [[ -d "$CLONE_DIR/.git" ]]; then
     echo "Updating cached libretro-database clone..."
@@ -611,11 +656,16 @@ for entry in "${GAMETDB_DBS[@]}"; do
     IFS='|' read -r zipname params xmlname <<< "$entry"
     url="$GAMETDB_BASE/$zipname?$params"
     zippath="$DOWNLOAD_CACHE_DIR/gametdb/$zipname"
+    destpath="$GAMETDB_DIR/$xmlname"
 
     echo "  Fetching $zipname..."
     if download_with_cache "$url" "$zippath" 300 "$zipname"; then
-        if unzip -o -q "$zippath" "$xmlname" -d "$GAMETDB_DIR" 2>/dev/null; then
-            gametdb_copied=$((gametdb_copied + 1))
+        if gametdb_result="$(install_gametdb_xml "$zippath" "$xmlname" "$destpath")"; then
+            if [[ "$gametdb_result" == "updated" ]]; then
+                gametdb_copied=$((gametdb_copied + 1))
+            else
+                echo "    Unchanged payload: $xmlname"
+            fi
         else
             echo "    Warning: failed to extract $xmlname from $zipname"
         fi
