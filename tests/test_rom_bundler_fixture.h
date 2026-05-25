@@ -137,6 +137,7 @@ private slots:
     void testBundle_multiTrackGdiCanBePackagedAsChd();
     void testBundle_gameCubeIsoPrefersRvzWhenDiscOptimizationRequested();
     void testBundle_discConversionFailsWhenReferencedTrackIsMissing();
+    void testBundle_discManifestWithTraversalReference_failsSafely();
     // ── struct defaults ──
     void testBundleConfig_defaults();
     void testBundleResult_defaults();

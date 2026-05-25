@@ -917,6 +917,87 @@ private slots:
         QVERIFY2(xml.contains("<releasedate>20050426T000000</releasedate>"),
                  "ES export should include <releasedate> in YYYYMMDDTXXXXXX format");
     }
+
+    void testIngestSource_extractionFailure_noOrphanRows()
+    {
+        QTemporaryDir dir;
+        QVERIFY(dir.isValid());
+
+        // 1. Build a minimal compendium to obtain an initialised schema.
+        const QString sourcePath = fixturePath("test_compendium_source.dat");
+        QVERIFY2(!sourcePath.isEmpty(), "Fixture test_compendium_source.dat not found");
+
+        const QString manifestPath = dir.filePath("manifest.json");
+        {
+            QFile manifestFile(manifestPath);
+            QVERIFY(manifestFile.open(QIODevice::WriteOnly | QIODevice::Text));
+            QJsonObject sourceObject;
+            sourceObject.insert("source_id",      "seed-source");
+            sourceObject.insert("display_name",   "Seed Source");
+            sourceObject.insert("source_type",    "dat");
+            sourceObject.insert("snapshot_id",    "snapshot-001");
+            sourceObject.insert("snapshot_label", "Snapshot 001");
+            sourceObject.insert("snapshot_ref",   "seed-ref");
+            sourceObject.insert("path",           sourcePath);
+            sourceObject.insert("checksum_sha256", "seed123");
+            sourceObject.insert("enabled",        true);
+            sourceObject.insert("priority",       10);
+            QJsonObject manifestObject;
+            manifestObject.insert("build_id",       "seed-build");
+            manifestObject.insert("schema_version", 1);
+            manifestObject.insert("sources",        QJsonArray{sourceObject});
+            const QByteArray json = QJsonDocument(manifestObject).toJson(QJsonDocument::Indented);
+            QVERIFY(manifestFile.write(json) == json.size());
+        }
+
+        const QString outputDbPath = dir.filePath("remus_compendium_test.db");
+        runCli({"--build-compendium",
+                "--compendium-manifest", manifestPath,
+                "--compendium-output",   outputDbPath});
+        QVERIFY2(QFile::exists(outputDbPath), "Seed --build-compendium step failed");
+
+        // 2. Write a zero-record DAT so DatExtractor produces no records.
+        const QString emptyDatPath = dir.filePath("empty.dat");
+        {
+            QFile datFile(emptyDatPath);
+            QVERIFY(datFile.open(QIODevice::WriteOnly | QIODevice::Text));
+            const QByteArray content =
+                QByteArrayLiteral("<?xml version=\"1.0\"?><datafile></datafile>");
+            QVERIFY(datFile.write(content) == content.size());
+        }
+
+        // 3. Attempt ingest — must fail (no records extracted).
+        const QString sourceId = QStringLiteral("test-ingest-rollback");
+        runCli({"--ingest-source",     emptyDatPath,
+                "--compendium-output", outputDbPath,
+                "--source-id",         sourceId}, 1);
+
+        // 4. Verify the failed ingest left no orphan rows.
+        const QString connName = uniqueConnectionName(QStringLiteral("ingest_rollback_"));
+        {
+            QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE", connName);
+            db.setDatabaseName(outputDbPath);
+            QVERIFY2(db.open(), qPrintable(db.lastError().text()));
+
+            QSqlQuery q(db);
+            q.prepare(QStringLiteral(
+                "SELECT COUNT(*) FROM sources WHERE source_id = ?"));
+            q.addBindValue(sourceId);
+            QVERIFY2(q.exec(), qPrintable(q.lastError().text()));
+            QVERIFY(q.next());
+            QCOMPARE(q.value(0).toInt(), 0);
+
+            q.prepare(QStringLiteral(
+                "SELECT COUNT(*) FROM source_snapshots WHERE source_id = ?"));
+            q.addBindValue(sourceId);
+            QVERIFY2(q.exec(), qPrintable(q.lastError().text()));
+            QVERIFY(q.next());
+            QCOMPARE(q.value(0).toInt(), 0);
+
+            db.close();
+        }
+        QSqlDatabase::removeDatabase(connName);
+    }
 };
 
 QTEST_MAIN(CliSmokeTest)

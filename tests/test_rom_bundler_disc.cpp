@@ -320,6 +320,50 @@ void RomBundlerTest::testBundle_gameCubeIsoPrefersRvzWhenDiscOptimizationRequest
 
 // ── struct defaults ──────────────────────────────────────────────────────
 
+void RomBundlerTest::testBundle_discManifestWithTraversalReference_failsSafely()
+{
+    QTemporaryDir tmp;
+    QVERIFY(tmp.isValid());
+
+    // Place the manifest inside a subdirectory so "../" points within tmp —
+    // a classic path-traversal attempt embedded in a disc manifest.
+    QVERIFY(QDir(tmp.path()).mkpath("game"));
+    const QString cuePath       = tmp.filePath("game/disc.cue");
+    const QString outsideBinPath = tmp.filePath("sneaky.bin");
+
+    QFile cueFile(cuePath);
+    QVERIFY(cueFile.open(QIODevice::WriteOnly | QIODevice::Text));
+    const QByteArray cueContents = QByteArrayLiteral(
+        "FILE \"../sneaky.bin\" BINARY\n  TRACK 01 MODE1/2352\n    INDEX 01 00:00:00\n");
+    QVERIFY(romBundlerWriteAll(cueFile, cueContents));
+    cueFile.close();
+
+    // Create the target one level above game/ — proves it's reachable without the guard.
+    QVERIFY(writeFile(outsideBinPath, QByteArray(2352 * 4, '\x00')));
+
+    Database db;
+    QVERIFY(db.initialize(tmp.filePath("test.db")));
+
+    FileRecord cue = makeFileRecord(0, cuePath, "disc.cue");
+    cue.id = insertTestFile(db, cue);
+    QVERIFY(cue.id > 0);
+
+    RomBundler bundler(db);
+
+    RomBundler::BundleConfig cfg;
+    cfg.includeBoxArt = false;
+    cfg.outputFormat  = ArchiveFormat::ZIP;
+    cfg.discOutputFormat = RomBundler::DiscOutputFormat::Original;
+
+    const RomBundler::BundleResult result = bundler.bundle(
+        cue, makeMatch("Traversal Game"), makeMetadata("Traversal Game"),
+        tmp.filePath("bundles"), cfg);
+
+    QVERIFY(!result.success);
+    QVERIFY2(result.error.contains(QStringLiteral("unsafe"), Qt::CaseInsensitive),
+             qPrintable(result.error));
+}
+
 void RomBundlerTest::testBundleConfig_defaults()
 {
     RomBundler::BundleConfig cfg;
