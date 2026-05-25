@@ -142,6 +142,14 @@ int handleIngestSourceCommand(CliContext &ctx)
     // Snapshot ID is content-addressable (checksum prefix) for stable re-runs.
     const QString snapshotId = sourceId + QLatin1Char('-') + datChecksum.left(8);
 
+    // Open transaction early so source/snapshot inserts roll back on any
+    // downstream failure — prevents orphan rows when extraction produces nothing.
+    if (!database.transaction()) {
+        qCritical() << "✗ Failed to start ingestion transaction:" << database.lastError().text();
+        cleanup();
+        return 1;
+    }
+
     // Upsert source row (OR IGNORE: may already exist from a prior ingest of the same source)
     {
         QSqlQuery q(database);
@@ -155,6 +163,7 @@ int handleIngestSourceCommand(CliContext &ctx)
         QString err;
         if (!execPrepared(q, err, QStringLiteral("Upsert source"))) {
             qCritical() << "✗" << err;
+            database.rollback();
             cleanup();
             return 1;
         }
@@ -175,6 +184,7 @@ int handleIngestSourceCommand(CliContext &ctx)
         QString err;
         if (!execPrepared(q, err, QStringLiteral("Insert snapshot"))) {
             qCritical() << "✗" << err;
+            database.rollback();
             cleanup();
             return 1;
         }
@@ -188,6 +198,7 @@ int handleIngestSourceCommand(CliContext &ctx)
         QString linkErr;
         if (!linker.loadFromDatabase(database, linkErr)) {
             qCritical() << "✗ Failed to bootstrap identity linker:" << linkErr;
+            database.rollback();
             cleanup();
             return 1;
         }
@@ -201,6 +212,7 @@ int handleIngestSourceCommand(CliContext &ctx)
             datInfo.absoluteFilePath(), sourceId, snapshotId, extractError);
     if (records.isEmpty()) {
         qCritical() << "✗ Extraction produced no records:" << extractError;
+        database.rollback();
         cleanup();
         return 1;
     }
@@ -218,12 +230,7 @@ int handleIngestSourceCommand(CliContext &ctx)
         << QStringLiteral("[ingest-source] Linked: %1 new games, %2 merged to existing.")
                .arg(newGames).arg(records.size() - newGames);
 
-    // Persist inside a transaction
-    if (!database.transaction()) {
-        qCritical() << "✗ Failed to start ingestion transaction:" << database.lastError().text();
-        cleanup();
-        return 1;
-    }
+    // Persist linked records
     Remus::Compendium::CompilerStats stats;
     QString insertError;
     const Remus::Compendium::FactInserter inserter;

@@ -140,8 +140,18 @@ ModInstallResult ModWorkflowService::install(const FileRecord  &baseFile,
 
     const QString baseName = QFileInfo(baseFile.filename).completeBaseName();
     const QString ext      = QFileInfo(baseFile.filename).suffix();
-    const QString patchedName = QString("%1 [%2].%3").arg(baseName, mod.title, ext);
+    // Strip path separators from the remote-sourced title before embedding it
+    // in a filename — prevents path traversal via a crafted mod title.
+    QString safeTitle = mod.title;
+    safeTitle.remove(QLatin1Char('/'));
+    safeTitle.remove(QLatin1Char('\\'));
+    const QString patchedName = QString("%1 [%2].%3").arg(baseName, safeTitle, ext);
     const QString patchedPath = outDir.absoluteFilePath(patchedName);
+    // Defense-in-depth: verify the resolved path stays inside the output directory.
+    if (!patchedPath.startsWith(outDir.absolutePath() + QLatin1Char('/'))) {
+        result.error = QStringLiteral("Patched output path escapes output directory");
+        return result;
+    }
 
     // ── 5. Apply patch ───────────────────────────────────────────────────────
     if (cb) cb("patching", 40);

@@ -99,7 +99,10 @@ static QString resolveHashSourcePath(const QString &path)
     QString bestPath;
     qint64 bestSize = -1;
     for (const QString &relativePath : referencedFiles) {
-        const QString candidatePath = manifestDir.filePath(relativePath);
+        // Reject absolute paths and directory-traversal references (e.g. ../evil).
+        const QString safeRelPath = ArchiveExtractor::normalizeArchiveMemberPath(relativePath);
+        if (safeRelPath.isEmpty()) continue;
+        const QString candidatePath = manifestDir.filePath(safeRelPath);
         const QFileInfo candidateInfo(candidatePath);
         if (!candidateInfo.exists() || !candidateInfo.isFile()) {
             continue;

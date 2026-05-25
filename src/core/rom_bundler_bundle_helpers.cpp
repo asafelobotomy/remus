@@ -148,8 +148,14 @@ bool stageReferencedDiscFiles(const QString &manifestPath,
     const QDir manifestDir = manifestInfo.dir();
     const QStringList referencedFiles = getReferencedDiscFiles(manifestPath);
     for (const QString &relativePath : referencedFiles) {
-        const QString sourcePath = manifestDir.filePath(relativePath);
-        if (!copyFileIntoDirectory(sourcePath, destinationDir, error, QFileInfo(relativePath).fileName())) {
+        // Reject absolute paths and directory-traversal references (e.g. ../evil).
+        const QString safeRelPath = ArchiveExtractor::normalizeArchiveMemberPath(relativePath);
+        if (safeRelPath.isEmpty()) {
+            if (error) *error = QStringLiteral("Unsafe disc manifest reference: %1").arg(relativePath);
+            return false;
+        }
+        const QString sourcePath = manifestDir.filePath(safeRelPath);
+        if (!copyFileIntoDirectory(sourcePath, destinationDir, error, QFileInfo(safeRelPath).fileName())) {
             return false;
         }
     }

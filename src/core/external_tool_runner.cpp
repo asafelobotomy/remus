@@ -63,6 +63,9 @@ ExternalToolRunner::ProcessResult ExternalToolRunner::runProcessTracked(const QS
                                                                         const QStringList &args,
                                                                         int timeoutMs)
 {
+    // Reset cancellation state so a previous cancel() call does not suppress
+    // the timeout-kill path on the next tracked run.
+    m_cancelled = false;
     ProcessResult result;
     QProcess process;
     m_process = &process;
