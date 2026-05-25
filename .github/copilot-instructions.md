@@ -11,7 +11,7 @@ I work **in** remus — implementing features, reviewing code, running tests, an
 
 | Task | Command |
 | ------ | --------- |
-| Run tests | `(not detected)` |
+| Run tests | `cmake --build build --target run_tests -- -j$(nproc)` then `cd build && ctest --output-on-failure` |
 | Drift preflight | `python3 scripts/drift_preflight.py` |
 | LOC gate | `python3 scripts/check_loc.py` |
 | Inspect Copilot install state | `python3 <xanad-root>/xanadAssistant.py inspect --workspace . --package-root <xanad-root> --json` |
