@@ -43,6 +43,11 @@ bool hasAnyMetadataGaps(QSqlDatabase &db, QString &error)
 
 bool hasAnyRaGaps(QSqlDatabase &db, QString &error)
 {
+    // Check for any game that has an MD5 signature but is still missing enrichable
+    // metadata.  Intentionally does NOT exclude games that already have ra_game_id:
+    // a prior run may have written ra_game_id while the metadata API call failed,
+    // leaving genre/developer/publisher/release_year blank.  The enrichment pass
+    // is idempotent (INSERT OR IGNORE / COALESCE), so re-running is always safe.
     return queryHasRows(
         db,
         QStringLiteral(
@@ -52,11 +57,6 @@ bool hasAnyRaGaps(QSqlDatabase &db, QString &error)
             "    OR g.developer IS NULL OR TRIM(g.developer) = '' "
             "    OR g.publisher IS NULL OR TRIM(g.publisher) = '' "
             "    OR g.release_year IS NULL) "
-            "  AND NOT EXISTS ("
-            "      SELECT 1 FROM game_facts gf "
-            "      WHERE gf.game_id = g.game_id "
-            "        AND gf.source_id = 'retroachievements' "
-            "        AND gf.field_name = 'ra_game_id') "
             "LIMIT 1"),
         error);
 }

@@ -158,10 +158,11 @@ bool enrichFromRetroAchievements(QSqlDatabase &database,
                             || isBlank(3)          // developer
                             || isBlank(4)          // publisher
                             || hashQ.value(5).isNull(); // release_year
-            if (alreadyProcessed && metaMissing) {
+            // Do NOT suppress retries for already-processed games: ra_game_id may have
+            // been written while the metadata API call failed, leaving enrichable fields
+            // blank.  Let metaMissing stand so the API call is attempted again.
+            if (alreadyProcessed && !metaMissing)
                 ++totalApiCallsSuppressed;
-                metaMissing = false;
-            }
 
             const auto it = md5Map.constFind(hash);
             if (it == md5Map.cend()) continue;
