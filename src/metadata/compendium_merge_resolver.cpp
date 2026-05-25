@@ -62,7 +62,7 @@ bool MergeResolver::resolve(QSqlDatabase &db,
         "               ORDER BY confidence DESC, source_priority DESC, "
         "                        LENGTH(field_value) ASC, fact_id ASC "
         "           ) AS rn "
-        "    FROM game_facts WHERE field_name = 'canonical_title' "
+        "    FROM game_facts WHERE field_name = 'title' "
         ") WHERE rn = 1"), error);
     if (n < 0) return false;
     total += n;
@@ -347,7 +347,7 @@ bool MergeResolver::resolve(QSqlDatabase &db,
     // games columns so that CompendiumProvider queries read resolved data.
     // field_name in game_facts → column name in games (most are identical).
     static constexpr struct { const char *factName; const char *column; } kFields[] = {
-        {"canonical_title",  "canonical_title"},
+        {"title",            "canonical_title"},
         {"developer",        "developer"},
         {"publisher",        "publisher"},
         {"release_date",     "release_date"},
@@ -384,11 +384,11 @@ bool MergeResolver::resolve(QSqlDatabase &db,
             "    SELECT gf.confidence "
             "    FROM canonical_resolution cr "
             "    JOIN game_facts gf ON gf.fact_id = cr.selected_fact_id "
-            "    WHERE cr.game_id = games.game_id AND cr.field_name = 'canonical_title'"
+            "    WHERE cr.game_id = games.game_id AND cr.field_name = 'title'"
             ") "
             "WHERE EXISTS ("
             "    SELECT 1 FROM canonical_resolution "
-            "    WHERE game_id = games.game_id AND field_name = 'canonical_title'"
+            "    WHERE game_id = games.game_id AND field_name = 'title'"
             ")"), error) < 0) {
         return false;
     }

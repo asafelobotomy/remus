@@ -55,23 +55,31 @@ QList<SearchResult> CompendiumProvider::searchByName(const QString &title,
 
     QSqlQuery query(db);
     bool usedFts = false;
-    query.prepare(QStringLiteral(
-        "SELECT g.game_id, g.canonical_title, g.primary_region_code, "
-        "       g.release_date, g.release_year, s.internal_name "
-        "FROM games_search "
-        "JOIN games g ON g.game_id = games_search.game_id "
-        "JOIN systems s ON s.system_id = g.system_id "
-        "WHERE games_search MATCH ? "
-        "AND (? = 0 OR g.system_id = ?) "
-        "AND (? = '' OR UPPER(COALESCE(g.primary_region_code, '')) = ?) "
-        "ORDER BY rank "
-        "LIMIT 10"));
-    query.addBindValue(ftsExpr);
-    query.addBindValue(systemId);
-    query.addBindValue(systemId);
-    query.addBindValue(regionCode);
-    query.addBindValue(regionCode);
-    usedFts = query.exec();
+    // Trigram FTS requires >= 3 characters; short queries fall through to LIKE.
+    if (searchTerm.length() >= 3) {
+        // Dedupe via subquery: each game_id appears once (best-ranked alias wins).
+        query.prepare(QStringLiteral(
+            "SELECT g.game_id, g.canonical_title, g.primary_region_code, "
+            "       g.release_date, g.release_year, s.internal_name "
+            "FROM ("
+            "    SELECT game_id, MIN(rank) AS best_rank "
+            "    FROM games_search "
+            "    WHERE games_search MATCH ? "
+            "    GROUP BY game_id"
+            ") fts "
+            "JOIN games g ON g.game_id = fts.game_id "
+            "JOIN systems s ON s.system_id = g.system_id "
+            "WHERE (? = 0 OR g.system_id = ?) "
+            "AND (? = '' OR UPPER(COALESCE(g.primary_region_code, '')) = ?) "
+            "ORDER BY fts.best_rank "
+            "LIMIT 10"));
+        query.addBindValue(ftsExpr);
+        query.addBindValue(systemId);
+        query.addBindValue(systemId);
+        query.addBindValue(regionCode);
+        query.addBindValue(regionCode);
+        usedFts = query.exec();
+    }
 
     if (!usedFts) {
         // Fallback to LIKE for DBs without FTS5 or malformed queries

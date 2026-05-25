@@ -211,6 +211,9 @@ int IdentityLinker::link(QList<SourceRecordEnvelope> &records)
         if (!rec.hashes.crc32.isEmpty()) {
             m_crc32ToId.insert(rec.hashes.crc32, assignedId);
         }
+        if (!rec.hashes.sha256.isEmpty()) {
+            m_sha256ToId.insert(rec.hashes.sha256, assignedId);
+        }
         if (rec.resolvedSystemId > 0) {
             for (const QString &serial : std::as_const(rec.serials)) {
                 if (!serial.isEmpty()) {

@@ -166,6 +166,8 @@ private slots:
     void getByHashReturnsAllSerials();
     void getArtworkBuildsLibretroThumbnailUrls();
     void compendiumPriorityExceedsLocalDatabase();
+    void searchByName_shortQuery_usesLikeFallback();
+    void searchByName_returnsNoDuplicateGameIds();
 };
 
 void CompendiumProviderTest::getByHashReturnsCanonicalMetadata()
@@ -374,6 +376,54 @@ void CompendiumProviderTest::compendiumPriorityExceedsLocalDatabase()
     // is second. Verify the constants enforce this ordering.
     QVERIFY(Constants::Providers::Priority::COMPENDIUM
             > Constants::Providers::Priority::LOCAL_DATABASE);
+}
+
+void CompendiumProviderTest::searchByName_shortQuery_usesLikeFallback()
+{
+    // Queries shorter than 3 characters must still return results via the LIKE
+    // fallback (trigram FTS is skipped since it requires >= 3 characters).
+    const QString dbPath = createFixtureDatabase();
+    QVERIFY(!dbPath.isEmpty());
+
+    CompendiumProvider provider;
+    QVERIFY(provider.openDatabase(dbPath));
+
+    // "Pa" is a 2-character query — both Paper Mario games should match.
+    const QList<SearchResult> results = provider.searchByName(
+        QStringLiteral("Pa"),
+        QStringLiteral("GameCube"),
+        QStringLiteral(""));
+
+    QVERIFY2(!results.isEmpty(), "Short query must return results via LIKE fallback");
+    // Verify both seeded games are found.
+    QStringList ids;
+    for (const SearchResult &r : results)
+        ids.append(r.id);
+    QVERIFY(ids.contains(QStringLiteral("game-1")));
+    QVERIFY(ids.contains(QStringLiteral("game-2")));
+}
+
+void CompendiumProviderTest::searchByName_returnsNoDuplicateGameIds()
+{
+    // A game with multiple aliases must appear at most once in results.
+    // (game-1 has both "TTYD" and "Paper Mario: The Thousand-Year Door" in game_names.)
+    const QString dbPath = createFixtureDatabase();
+    QVERIFY(!dbPath.isEmpty());
+
+    CompendiumProvider provider;
+    QVERIFY(provider.openDatabase(dbPath));
+
+    const QList<SearchResult> results = provider.searchByName(
+        QStringLiteral("Paper Mario"),
+        QStringLiteral("GameCube"),
+        QStringLiteral(""));
+
+    QSet<QString> seen;
+    for (const SearchResult &r : results) {
+        QVERIFY2(!seen.contains(r.id),
+                 qPrintable(QStringLiteral("Duplicate game_id in results: %1").arg(r.id)));
+        seen.insert(r.id);
+    }
 }
 
 QTEST_MAIN(CompendiumProviderTest)

@@ -17,6 +17,7 @@ private slots:
     void twoRecords_sameSha1_linked();
     void twoRecords_sameMd5_linked();
     void twoRecords_sameCrc32_linked();
+    void twoRecords_sameSha256_linked();
     void twoRecords_sameSerial_linked();
     void twoRecords_sameTitleSystemRegion_linked();
     void twoUnrelatedRecords_separateIds();
@@ -107,6 +108,31 @@ void CompendiumIdentityLinkerTest::twoRecords_sameCrc32_linked()
     QCOMPARE(created, 1);
     QCOMPARE(records[0].linkedGameId, records[1].linkedGameId);
     QCOMPARE(records[1].linkedConfidencePercent, 90);
+}
+
+void CompendiumIdentityLinkerTest::twoRecords_sameSha256_linked()
+{
+    // SHA-256 must be registered in the in-memory map after a game is minted
+    // so that a subsequent record in the same batch can link via SHA-256.
+    IdentityLinker linker;
+    QList<SourceRecordEnvelope> records;
+
+    SourceRecordEnvelope r1;
+    r1.externalKey       = QStringLiteral("sha256key-1");
+    r1.hashes.sha256     = QStringLiteral("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+
+    SourceRecordEnvelope r2;
+    r2.externalKey       = QStringLiteral("sha256key-2");
+    r2.hashes.sha256     = QStringLiteral("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+
+    records.append(r1);
+    records.append(r2);
+
+    const int created = linker.link(records);
+
+    QCOMPARE(created, 1);
+    QCOMPARE(records[0].linkedGameId, records[1].linkedGameId);
+    QCOMPARE(records[1].linkedConfidencePercent, 100);
 }
 
 void CompendiumIdentityLinkerTest::twoRecords_sameSerial_linked()
