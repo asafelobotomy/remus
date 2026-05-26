@@ -127,11 +127,16 @@ QVariant nullableDouble(double value)
 QString normalizeMetadataTitle(const QString &title)
 {
     QString s = title.trimmed();
-    // Strip trailing parenthetical suffix: "(USA)", "(128K)", "(Rev 1)", etc.
-    // Only strip if a matching ')' closes the expression at the very end.
-    const int paren = s.lastIndexOf(QLatin1Char('('));
-    if (paren > 0 && s.endsWith(QLatin1Char(')')))
+    // Strip all trailing parenthetical groups, e.g.
+    // "Foo Game (Europe) (En,Fr,De) (Rev 1)" → "Foo Game".
+    // DAT titles routinely carry 2–4 stacked region/language/revision
+    // suffixes that metadata sources (IGDB, OpenVGDB) don't include.
+    while (s.endsWith(QLatin1Char(')'))) {
+        const int paren = s.lastIndexOf(QLatin1Char('('));
+        if (paren <= 0)
+            break;
         s = s.left(paren).trimmed();
+    }
     s = s.toLower();
     static const QStringList articles{
         QStringLiteral("the "), QStringLiteral("a "), QStringLiteral("an ")

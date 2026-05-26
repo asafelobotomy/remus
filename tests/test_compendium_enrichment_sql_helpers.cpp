@@ -46,6 +46,7 @@ private slots:
     void insertGameFact_insertsRowAndReportsInserted();
     void insertGameFact_emptyValueNoop();
     void insertGameFact_replacesPriorFactFromSameSource();
+    void normalizeMetadataTitle_stripsStackedSuffixes();
 };
 
 void CompendiumEnrichmentSqlHelpersTest::nullableHelpers_returnNullOrValue()
@@ -221,6 +222,26 @@ void CompendiumEnrichmentSqlHelpersTest::insertGameFact_replacesPriorFactFromSam
         db.close();
     }
     QSqlDatabase::removeDatabase(connectionName);
+}
+
+void CompendiumEnrichmentSqlHelpersTest::normalizeMetadataTitle_stripsStackedSuffixes()
+{
+    // A title with no suffixes must normalize identically to the same title
+    // with any number of stacked trailing parenthetical groups.
+    const QString bare = normalizeMetadataTitle(QStringLiteral("Foo Game"));
+    QCOMPARE(normalizeMetadataTitle(QStringLiteral("Foo Game (Europe)")), bare);
+    QCOMPARE(normalizeMetadataTitle(QStringLiteral("Foo Game (Europe) (En,Fr,De)")), bare);
+    QCOMPARE(normalizeMetadataTitle(QStringLiteral("Foo Game (Europe) (En,Fr,De) (Rev 1)")), bare);
+    QCOMPARE(normalizeMetadataTitle(QStringLiteral("Foo Game (USA) (Beta 3) (Unl)")), bare);
+
+    // Leading article is still stripped after suffix removal.
+    const QString bareThe = normalizeMetadataTitle(QStringLiteral("Legend of Foo"));
+    QCOMPARE(normalizeMetadataTitle(QStringLiteral("The Legend of Foo (Europe) (En,De)")),
+             bareThe);
+
+    // A title whose only content is inside parentheses must not be reduced to empty.
+    const QString onlyParens = normalizeMetadataTitle(QStringLiteral("(Test)"));
+    QVERIFY(!onlyParens.isEmpty());
 }
 
 QTEST_MAIN(CompendiumEnrichmentSqlHelpersTest)
