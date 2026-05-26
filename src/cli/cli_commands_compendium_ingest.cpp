@@ -144,8 +144,13 @@ int handleIngestSourceCommand(CliContext &ctx)
     // across large DAT libraries from the same source.
     const QString snapshotId = sourceId + QLatin1Char('-') + datChecksum.left(16);
 
-    // Open transaction early so source/snapshot inserts roll back on any
-    // downstream failure — prevents orphan rows when extraction produces nothing.
+    // Single transaction covering source/snapshot inserts, fact insertion,
+    // post-ingest dedup, and merge resolution so the snapshot row is only
+    // committed once the compendium is in a fully-integrated state.  This
+    // prevents the idempotency guard (checksum lookup above) from treating a
+    // partially-integrated ingest as complete on retry.
+    // FTS rebuild is excluded: it manages its own transaction and is a derived
+    // index that can always be rebuilt idempotently.
     if (!database.transaction()) {
         qCritical() << "✗ Failed to start ingestion transaction:" << database.lastError().text();
         cleanup();
@@ -242,18 +247,14 @@ int handleIngestSourceCommand(CliContext &ctx)
         cleanup();
         return 1;
     }
-    if (!database.commit()) {
-        qCritical() << "✗ Failed to commit ingestion transaction:" << database.lastError().text();
-        cleanup();
-        return 1;
-    }
-
-    // Post-ingest dedup
+    // Post-ingest dedup — runs inside the main transaction so a failure rolls
+    // back all inserted facts and the snapshot row together.
     {
         QString dedupError;
         const int merged = Remus::Compendium::deduplicateGames(database, dedupError);
         if (merged < 0) {
             qCritical() << "✗ Post-ingest dedup failed:" << dedupError;
+            database.rollback();
             cleanup();
             return 1;
         }
@@ -264,15 +265,25 @@ int handleIngestSourceCommand(CliContext &ctx)
         }
     }
 
-    // Merge resolution: full pass re-resolves all game_facts with current policy
+    // Merge resolution — also inside the main transaction.
     {
         const Remus::Compendium::MergeResolver resolver;
         QString resolveError;
         if (!resolver.resolve(database, stats, resolveError)) {
             qCritical() << "✗ Merge resolution failed:" << resolveError;
+            database.rollback();
             cleanup();
             return 1;
         }
+    }
+
+    // Commit the main transaction: source row, snapshot row, game facts, dedup,
+    // and merge resolution are now an atomic unit.  The idempotency guard
+    // (checksum lookup) will only find this snapshot after a clean commit.
+    if (!database.commit()) {
+        qCritical() << "✗ Failed to commit ingestion transaction:" << database.lastError().text();
+        cleanup();
+        return 1;
     }
 
     // Rebuild FTS index (idempotent: clears previous content before repopulating)
