@@ -203,6 +203,7 @@ add_remus_test(test_compendium_enrichment_local_smoke CompendiumEnrichmentLocalS
             ../src/cli/compendium_enrichment.cpp
             ../src/cli/compendium_enrichment_gametdb.cpp
             ../src/cli/compendium_enrichment_mame.cpp
+            ../src/cli/compendium_enrichment_mame_listxml.cpp
             ../src/cli/compendium_enrichment_openvgdb.cpp
             ../src/cli/compendium_enrichment_sql.cpp
     LIBS Qt6::Test Qt6::Core Qt6::Sql remus-metadata remus-core

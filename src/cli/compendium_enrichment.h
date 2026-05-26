@@ -163,6 +163,33 @@ bool enrichFromMameCatver(QSqlDatabase &database,
                           QString &error);
 
 /**
+ * @brief Enrich Arcade/MAME games using a MAME listxml XML database.
+ *
+ * Reads machine entries from a local `mame -listxml` XML export and writes
+ * developer, publisher, release_year, and players_max for Arcade games whose
+ * @c canonical_title matches a machine @c name attribute.
+ * Uses COALESCE semantics (existing values are never overwritten).
+ *
+ * Only non-device, runnable machines are processed. Clones are included.
+ * The @c <description> field is intentionally ignored — it contains the
+ * display name, not a synopsis.
+ *
+ * Callers are responsible for wrapping calls in a database transaction.
+ *
+ * @param database      Open SQLite connection (must be in a transaction).
+ * @param listxmlPath   Path to listxml.xml (skipped if file absent).
+ * @param gamesEnriched [out] Number of game rows updated.
+ * @param factsInserted [out] Number of new game_facts rows inserted.
+ * @param error         [out] Human-readable error message on failure.
+ * @return true on success, false on error.
+ */
+bool enrichFromMameListXml(QSqlDatabase &database,
+                            const QString &listxmlPath,
+                            int &gamesEnriched,
+                            int &factsInserted,
+                            QString &error);
+
+/**
  * @brief Enrich ZX Spectrum games using the ZXInfo online API.
  *
  * Searches each ZX Spectrum game by title against the ZXInfo/ZXDB search API

@@ -39,6 +39,7 @@ int handleEnrichCompendiumCommand(CliContext &ctx)
     const QString gametdbDir   = findGameTDBDir();
     const QString openvgdbPath = findOpenVGDBPath();
     const QString mameCatverPath = findMameCatverPath();
+    const QString mameListXmlPath = findMameListXmlPath();
     const QString credPath     = outputInfo.dir().filePath(QStringLiteral("enrichment-credentials.json"));
 
     if (metadataDir.isEmpty())
@@ -51,6 +52,8 @@ int handleEnrichCompendiumCommand(CliContext &ctx)
         qInfo() << "[enrich] enrichment-credentials.json not found — IGDB and RA passes skipped";
     if (mameCatverPath.isEmpty())
         qInfo() << "[enrich] data/mame/catver.ini not found — MAME catver pass skipped";
+    if (mameListXmlPath.isEmpty())
+        qInfo() << "[enrich] data/mame/listxml.xml not found — MAME listxml pass skipped";
 
     const QString connectionName = QStringLiteral("compendium-enrich-") + QUuid::createUuid().toString(QUuid::WithoutBraces);
     QElapsedTimer timer;
@@ -93,6 +96,7 @@ int handleEnrichCompendiumCommand(CliContext &ctx)
                                           openvgdbPath,
                                           credPath,
                                           mameCatverPath,
+                                          mameListXmlPath,
                                           stats,
                                           enrichError)) {
             qCritical().noquote() << QStringLiteral("✗ %1").arg(enrichError);

@@ -49,6 +49,10 @@ inline QString findMameCatverPath() {
     const QString dir = findDataSubdir(QStringLiteral("mame"));
     return dir.isEmpty() ? QString() : dir + QStringLiteral("/catver.ini");
 }
+inline QString findMameListXmlPath() {
+    const QString dir = findDataSubdir(QStringLiteral("mame"));
+    return dir.isEmpty() ? QString() : dir + QStringLiteral("/listxml.xml");
+}
 
 // Probe for artwork that may have been renamed to match the detected image
 // format after download. Expects a path without an extension.

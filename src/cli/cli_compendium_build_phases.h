@@ -27,6 +27,8 @@ struct EnrichmentStats {
     int raFactsInserted        = 0;
     int mameGamesEnriched      = 0;
     int mameFactsInserted      = 0;
+    int mameListXmlGamesEnriched = 0;
+    int mameListXmlFactsInserted = 0;
     int zxinfoGamesEnriched    = 0;
     int zxinfoFactsInserted    = 0;
     int resolvedFields         = 0;
@@ -65,6 +67,7 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db,
                                    const QString &openvgdbPath,
                                    const QString &credPath,
                                    const QString &mameCatverPath,
+                                   const QString &mameListXmlPath,
                                    EnrichmentStats &stats,
                                    QString &error);
 

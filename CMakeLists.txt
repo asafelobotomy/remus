@@ -125,6 +125,7 @@ set(REMUS_CLI_SOURCES
     src/cli/compendium_enrichment_ra.cpp
     src/cli/compendium_enrichment_openvgdb.cpp
     src/cli/compendium_enrichment_mame.cpp
+    src/cli/compendium_enrichment_mame_listxml.cpp
     src/cli/compendium_enrichment_sql.cpp
     src/cli/compendium_enrichment_zxinfo.cpp
 )

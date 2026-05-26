@@ -94,6 +94,7 @@ private slots:
     void gametdbMissingDir_skipsWithoutWrites();
     void openvgdbMissingFile_skipsWithoutWrites();
     void mameCatverParsedWithoutArcadeRows_upsertsSourceOnly();
+    void mameListXmlParsedWithoutArcadeRows_upsertsSourceOnly();
 };
 
 void CompendiumEnrichmentLocalSmokeTest::libretroMissingDir_skipsWithoutWrites()
@@ -233,6 +234,63 @@ void CompendiumEnrichmentLocalSmokeTest::mameCatverParsedWithoutArcadeRows_upser
         QCOMPARE(facts, 0);
         QCOMPARE(scalarInt(db, QStringLiteral("SELECT COUNT(*) FROM sources WHERE source_id = 'mame-catver'")), 1);
         QCOMPARE(scalarInt(db, QStringLiteral("SELECT COUNT(*) FROM source_snapshots WHERE source_id = 'mame-catver'")), 1);
+        QCOMPARE(scalarInt(db, QStringLiteral("SELECT COUNT(*) FROM game_facts")), 0);
+
+        db.close();
+    }
+    QSqlDatabase::removeDatabase(connectionName);
+}
+
+void CompendiumEnrichmentLocalSmokeTest::mameListXmlParsedWithoutArcadeRows_upsertsSourceOnly()
+{
+    QTemporaryDir tempDir;
+    QVERIFY(tempDir.isValid());
+    const QString listxmlPath = tempDir.filePath(QStringLiteral("listxml.xml"));
+
+    // Write a minimal but valid MAME listxml with one runnable machine.
+    QFile xmlFile(listxmlPath);
+    QVERIFY(xmlFile.open(QIODevice::WriteOnly | QIODevice::Text));
+    QTextStream out(&xmlFile);
+    out << "<?xml version=\"1.0\"?>\n"
+        << "<mame build=\"0.258\">\n"
+        << "<machine name=\"sf2\" isdevice=\"no\" runnable=\"yes\">\n"
+        << "<description>Street Fighter II: The World Warrior (World 910522)</description>\n"
+        << "<year>1991</year>\n"
+        << "<manufacturer>Capcom</manufacturer>\n"
+        << "<input players=\"2\" coins=\"2\"/>\n"
+        << "</machine>\n"
+        << "</mame>\n";
+    xmlFile.close();
+
+    const QString connectionName = QStringLiteral("compendium_local_smoke_mame_listxml");
+    {
+        QSqlDatabase db = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), connectionName);
+        db.setDatabaseName(QStringLiteral(":memory:"));
+        QVERIFY2(db.open(), qPrintable(db.lastError().text()));
+        QVERIFY(createSchema(db));
+
+        // Non-arcade game row (system_id = 1): the listxml enricher only touches
+        // system_id = ID_ARCADE (39), so this row must remain untouched.
+        QVERIFY(execSql(db, QStringLiteral(
+            "INSERT INTO games (game_id, system_id, canonical_title) VALUES ('g1', 1, 'sf2')")));
+
+        QVERIFY(db.transaction());
+        int games = 0;
+        int facts = 0;
+        QString error;
+        const bool ok = CompendiumEnrichment::enrichFromMameListXml(
+            db,
+            listxmlPath,
+            games,
+            facts,
+            error);
+        QVERIFY2(ok, qPrintable(error));
+        QVERIFY(db.commit());
+
+        QCOMPARE(games, 0);
+        QCOMPARE(facts, 0);
+        QCOMPARE(scalarInt(db, QStringLiteral("SELECT COUNT(*) FROM sources WHERE source_id = 'mame-listxml'")), 1);
+        QCOMPARE(scalarInt(db, QStringLiteral("SELECT COUNT(*) FROM source_snapshots WHERE source_id = 'mame-listxml'")), 1);
         QCOMPARE(scalarInt(db, QStringLiteral("SELECT COUNT(*) FROM game_facts")), 0);
 
         db.close();

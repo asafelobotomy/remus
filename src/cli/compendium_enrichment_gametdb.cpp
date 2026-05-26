@@ -49,7 +49,7 @@ bool enrichFromGameTDB(QSqlDatabase &database,
                 QStringLiteral("gametdb"),
                 QStringLiteral("https://www.gametdb.com/"),
                 /*attributionRequired=*/true,
-                /*priority=*/40,
+                /*priority=*/55,
                 QStringLiteral("CC-BY-SA-4.0"),
             },
             SnapshotSpec{
@@ -121,7 +121,7 @@ bool enrichFromGameTDB(QSqlDatabase &database,
     const FactInsertSpec factSpec{
         sourceId,
         snapshotId,
-        40,
+        55,
         0.90,
     };
 

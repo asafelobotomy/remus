@@ -229,7 +229,7 @@ const QString snapshotId = QStringLiteral("retroachievements-bulk");
                     QStringLiteral("online-api"),
                     QStringLiteral("https://retroachievements.org"),
                     /*attributionRequired=*/true,
-                    /*priority=*/60,
+                    /*priority=*/45,
                     QString(),
                 },
                 SnapshotSpec{
@@ -265,7 +265,7 @@ const QString snapshotId = QStringLiteral("retroachievements-bulk");
         const FactInsertSpec factSpec{
             QStringLiteral("retroachievements"),
             snapshotId,
-            60,
+            45,
             0.75,
         };
 

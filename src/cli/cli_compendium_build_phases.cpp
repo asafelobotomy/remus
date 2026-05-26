@@ -1,6 +1,7 @@
 #include "cli_compendium_build_phases.h"
 
 #include "compendium_enrichment.h"
+#include "../core/constants/system_ids.h"
 #include "../metadata/compendium_merge_resolver.h"
 #include "../metadata/compendium_types.h"
 
@@ -26,6 +27,7 @@ bool queryHasRows(QSqlDatabase &db, const QString &sql, QString &error)
     return q.next();
 }
 
+// Checks all fields IGDB can fill — the broadest predicate, used only for IGDB.
 bool hasAnyMetadataGaps(QSqlDatabase &db, QString &error)
 {
     return queryHasRows(
@@ -40,6 +42,90 @@ bool hasAnyMetadataGaps(QSqlDatabase &db, QString &error)
             "   OR players_max IS NULL "
             "   OR rating IS NULL "
             "LIMIT 1"),
+        error);
+}
+
+// Fields that general file-based sources (Libretro, GameTDB) can fill.
+// Excludes rating — none of these sources provide it.
+bool hasAnyGeneralGaps(QSqlDatabase &db, QString &error)
+{
+    return queryHasRows(
+        db,
+        QStringLiteral(
+            "SELECT 1 FROM games "
+            "WHERE genre IS NULL OR TRIM(genre) = '' "
+            "   OR developer IS NULL OR TRIM(developer) = '' "
+            "   OR publisher IS NULL OR TRIM(publisher) = '' "
+            "   OR release_year IS NULL "
+            "   OR description IS NULL OR TRIM(description) = '' "
+            "   OR players_max IS NULL "
+            "LIMIT 1"),
+        error);
+}
+
+// OpenVGDB does not provide players_max or rating.
+bool hasAnyOpenVgdbGaps(QSqlDatabase &db, QString &error)
+{
+    return queryHasRows(
+        db,
+        QStringLiteral(
+            "SELECT 1 FROM games "
+            "WHERE genre IS NULL OR TRIM(genre) = '' "
+            "   OR developer IS NULL OR TRIM(developer) = '' "
+            "   OR publisher IS NULL OR TRIM(publisher) = '' "
+            "   OR release_year IS NULL "
+            "   OR description IS NULL OR TRIM(description) = '' "
+            "LIMIT 1"),
+        error);
+}
+
+// MAME catver only provides genre, and only for arcade machines.
+bool hasArcadeCatverGaps(QSqlDatabase &db, QString &error)
+{
+    return queryHasRows(
+        db,
+        QStringLiteral(
+            "SELECT 1 FROM games "
+            "WHERE system_id = %1 "
+            "  AND (genre IS NULL OR TRIM(genre) = '') "
+            "LIMIT 1")
+            .arg(Remus::Constants::Systems::ID_ARCADE),
+        error);
+}
+
+// MAME listxml provides developer, publisher, release_year, players_max for arcade machines.
+// It does not provide genre, description, or rating.
+bool hasArcadeListxmlGaps(QSqlDatabase &db, QString &error)
+{
+    return queryHasRows(
+        db,
+        QStringLiteral(
+            "SELECT 1 FROM games "
+            "WHERE system_id = %1 "
+            "  AND (developer IS NULL OR TRIM(developer) = '' "
+            "    OR publisher IS NULL OR TRIM(publisher) = '' "
+            "    OR release_year IS NULL "
+            "    OR players_max IS NULL) "
+            "LIMIT 1")
+            .arg(Remus::Constants::Systems::ID_ARCADE),
+        error);
+}
+
+// ZXInfo provides genre, developer, publisher, release_year for ZX Spectrum.
+// It does not provide description, players_max, or rating.
+bool hasZxSpectrumGaps(QSqlDatabase &db, QString &error)
+{
+    return queryHasRows(
+        db,
+        QStringLiteral(
+            "SELECT 1 FROM games "
+            "WHERE system_id = %1 "
+            "  AND (genre IS NULL OR TRIM(genre) = '' "
+            "    OR developer IS NULL OR TRIM(developer) = '' "
+            "    OR publisher IS NULL OR TRIM(publisher) = '' "
+            "    OR release_year IS NULL) "
+            "LIMIT 1")
+            .arg(Remus::Constants::Systems::ID_ZX_SPECTRUM),
         error);
 }
 
@@ -81,6 +167,8 @@ void insertEnrichmentStatsReportFields(QJsonObject &report,
     report.insert(QStringLiteral("ra_facts_inserted"),        stats.raFactsInserted);
     report.insert(QStringLiteral("mame_games_enriched"),      stats.mameGamesEnriched);
     report.insert(QStringLiteral("mame_facts_inserted"),      stats.mameFactsInserted);
+    report.insert(QStringLiteral("mame_listxml_games_enriched"), stats.mameListXmlGamesEnriched);
+    report.insert(QStringLiteral("mame_listxml_facts_inserted"), stats.mameListXmlFactsInserted);
     report.insert(QStringLiteral("zxinfo_games_enriched"),    stats.zxinfoGamesEnriched);
     report.insert(QStringLiteral("zxinfo_facts_inserted"),    stats.zxinfoFactsInserted);
     report.insert(resolvedFieldsKey,                           stats.resolvedFields);
@@ -101,6 +189,7 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db,
                                    const QString &openvgdbPath,
                                    const QString &credPath,
                                    const QString &mameCatverPath,
+                                   const QString &mameListXmlPath,
                                    EnrichmentStats &stats,
                                    QString &error)
 {
@@ -150,13 +239,14 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db,
     const bool hasOpenvgdbPath = !openvgdbPath.isEmpty() && QFile::exists(openvgdbPath);
     const bool hasCredPath = !credPath.isEmpty() && QFile::exists(credPath);
     const bool hasMameCatverPath = !mameCatverPath.isEmpty() && QFile::exists(mameCatverPath);
+    const bool hasMameListXmlPath = !mameListXmlPath.isEmpty() && QFile::exists(mameListXmlPath);
 
     const QList<EnrichmentPassSpec> passes{
         {
             QStringLiteral("Libretro metadata enrichment"),
             TransactionMode::CallerWrapped,
             [&] { return hasMetadataDir; },
-            [&] { return hasAnyMetadataGaps(db, error); },
+            [&] { return hasAnyGeneralGaps(db, error); },
             [&] {
                 return CompendiumEnrichment::enrichFromLibretroMetadata(db,
                                                                         metadataDir,
@@ -169,7 +259,7 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db,
             QStringLiteral("GameTDB enrichment"),
             TransactionMode::CallerWrapped,
             [&] { return hasGametdbDir; },
-            [&] { return hasAnyMetadataGaps(db, error); },
+            [&] { return hasAnyGeneralGaps(db, error); },
             [&] {
                 return CompendiumEnrichment::enrichFromGameTDB(db,
                                                                gametdbDir,
@@ -182,7 +272,7 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db,
             QStringLiteral("OpenVGDB enrichment"),
             TransactionMode::CallerWrapped,
             [&] { return hasOpenvgdbPath; },
-            [&] { return hasAnyMetadataGaps(db, error); },
+            [&] { return hasAnyOpenVgdbGaps(db, error); },
             [&] {
                 return CompendiumEnrichment::enrichFromOpenVGDB(db,
                                                                 openvgdbPath,
@@ -195,7 +285,7 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db,
             QStringLiteral("IGDB enrichment"),
             TransactionMode::SelfManaged,
             [&] { return hasCredPath; },
-            [&] { return hasAnyMetadataGaps(db, error); },
+            [&] { return hasAnyMetadataGaps(db, error); }, // only pass that fills rating
             [&] {
                 return CompendiumEnrichment::enrichFromIGDB(db,
                                                             credPath,
@@ -224,7 +314,7 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db,
             QStringLiteral("MAME catver enrichment"),
             TransactionMode::CallerWrapped,
             [&] { return hasMameCatverPath; },
-            [&] { return hasAnyMetadataGaps(db, error); },
+            [&] { return hasArcadeCatverGaps(db, error); },
             [&] {
                 return CompendiumEnrichment::enrichFromMameCatver(db,
                                                                   mameCatverPath,
@@ -234,10 +324,23 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db,
             },
         },
         {
+            QStringLiteral("MAME listxml enrichment"),
+            TransactionMode::CallerWrapped,
+            [&] { return hasMameListXmlPath; },
+            [&] { return hasArcadeListxmlGaps(db, error); },
+            [&] {
+                return CompendiumEnrichment::enrichFromMameListXml(db,
+                                                                   mameListXmlPath,
+                                                                   stats.mameListXmlGamesEnriched,
+                                                                   stats.mameListXmlFactsInserted,
+                                                                   error);
+            },
+        },
+        {
             QStringLiteral("ZXInfo enrichment"),
             TransactionMode::SelfManaged,
             [] { return true; },
-            [&] { return hasAnyMetadataGaps(db, error); },
+            [&] { return hasZxSpectrumGaps(db, error); },
             [&] {
                 return CompendiumEnrichment::enrichFromZXInfo(db,
                                                               stats.zxinfoGamesEnriched,
@@ -281,7 +384,7 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db,
 
     const int factsInsertedTotal = stats.metadataFactsInserted + stats.gametdbFactsInserted
         + stats.openvgdbFactsInserted + stats.igdbFactsInserted + stats.raFactsInserted
-        + stats.mameFactsInserted + stats.zxinfoFactsInserted;
+        + stats.mameFactsInserted + stats.mameListXmlFactsInserted + stats.zxinfoFactsInserted;
 
     if (factsInsertedTotal > 0) {
         // Wrap merge resolution in its own transaction so a failure does not leave

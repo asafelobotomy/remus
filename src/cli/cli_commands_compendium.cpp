@@ -374,10 +374,12 @@ int handleBuildCompendiumCommand(CliContext &ctx)
         const QString gametdbDir    = findDataSubdir(QStringLiteral("gametdb"));
         const QString openvgdbPath  = findOpenVGDBPath();
         const QString mameCatverPath = findMameCatverPath();
+        const QString mameListXmlPath = findMameListXmlPath();
         const QString credPath      = outputInfo.dir().filePath(
                                           QStringLiteral("enrichment-credentials.json"));
         if (!runCompendiumEnrichmentPasses(database, metadataDir, gametdbDir,
                                           openvgdbPath, credPath, mameCatverPath,
+                                          mameListXmlPath,
                                           enrichStats, error)) {
             qCritical().noquote() << QStringLiteral("✗ %1").arg(error);
             database.close();
