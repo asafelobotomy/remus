@@ -157,13 +157,15 @@ int handleIngestSourceCommand(CliContext &ctx)
         return 1;
     }
 
-    // Upsert source row (OR IGNORE: may already exist from a prior ingest of the same source)
+    // Upsert source row — insert on first ingest, update priority on subsequent ingests
+    // so that a changed --source-priority flag takes effect immediately.
     {
         QSqlQuery q(database);
         q.prepare(QStringLiteral(
-            "INSERT OR IGNORE INTO sources "
+            "INSERT INTO sources "
             "    (source_id, display_name, source_type, priority, enabled) "
-            "VALUES (?, ?, 'dat', ?, 1)"));
+            "VALUES (?, ?, 'dat', ?, 1) "
+            "ON CONFLICT(source_id) DO UPDATE SET priority = excluded.priority"));
         q.addBindValue(sourceId);
         q.addBindValue(datInfo.completeBaseName());
         q.addBindValue(priority);

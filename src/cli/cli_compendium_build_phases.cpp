@@ -284,10 +284,23 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db,
         + stats.mameFactsInserted + stats.zxinfoFactsInserted;
 
     if (factsInsertedTotal > 0) {
+        // Wrap merge resolution in its own transaction so a failure does not leave
+        // the games table stale against already-committed enrichment facts.
+        if (!db.transaction()) {
+            error = QStringLiteral("Failed to start post-enrichment merge transaction: %1")
+                        .arg(db.lastError().text());
+            return false;
+        }
         Remus::Compendium::CompilerStats resolveStats;
         const Remus::Compendium::MergeResolver resolver;
         if (!resolver.resolve(db, resolveStats, error)) {
+            db.rollback();
             error = QStringLiteral("Post-enrichment merge resolution failed: %1").arg(error);
+            return false;
+        }
+        if (!db.commit()) {
+            error = QStringLiteral("Failed to commit post-enrichment merge transaction: %1")
+                        .arg(db.lastError().text());
             return false;
         }
         stats.resolvedFields = resolveStats.resolvedFields;

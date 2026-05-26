@@ -357,7 +357,7 @@ bool enrichFromOpenVGDB(QSqlDatabase &database,
     // equals our systems.internal_name for NES, N64, SNES, GBA, etc.).
     // Confidence is 0.60 (vs 0.80 for hash) since title matching is less precise.
     if (!titleIndex.isEmpty()) {
-        // Games that still lack a description after hash matching
+        // Games that still lack a description after hash matching (NULL or empty string)
         QHash<QString, QPair<QString, QString>> gamesForTitleMatch; // gameId → (title, internalName)
         {
             QSqlQuery q(database);
@@ -365,7 +365,7 @@ bool enrichFromOpenVGDB(QSqlDatabase &database,
                     "SELECT g.game_id, g.canonical_title, sys.internal_name "
                     "FROM games g "
                     "JOIN systems sys ON sys.system_id = g.system_id "
-                    "WHERE g.description IS NULL"))) {
+                    "WHERE g.description IS NULL OR g.description = ''"))) {
                 error = QStringLiteral("Load games for title match: %1").arg(q.lastError().text());
                 return false;
             }

@@ -143,6 +143,7 @@ const QString snapshotId = QStringLiteral("retroachievements-bulk");
             int raGameId         = 0;
             int achievementCount = 0;
             bool metaMissing     = false;
+            bool conflicted      = false; // true if multiple hashes map to different RA IDs
         };
         QHash<QString, MatchInfo> matches; // compendiumGameId → MatchInfo
         while (hashQ.next()) {
@@ -166,9 +167,14 @@ const QString snapshotId = QStringLiteral("retroachievements-bulk");
             const auto it = md5Map.constFind(hash);
             if (it == md5Map.cend()) continue;
 
-            // First matching hash wins; don't overwrite an existing match.
-            if (!matches.contains(gameId))
-                matches.insert(gameId, {it->raGameId, it->achievementCount, metaMissing});
+            auto existingIt = matches.find(gameId);
+            if (existingIt == matches.end()) {
+                matches.insert(gameId, {it->raGameId, it->achievementCount, metaMissing, false});
+            } else if (existingIt->raGameId != it->raGameId) {
+                // Same canonical game owns hashes that map to different RA games —
+                // mark as conflicted so we don't write an arbitrary ra_game_id.
+                existingIt->conflicted = true;
+            }
         }
 
         if (matches.isEmpty()) {
@@ -277,8 +283,17 @@ const QString snapshotId = QStringLiteral("retroachievements-bulk");
         };
 
         int sysEnriched = 0;
+        int sysConflicts = 0;
         for (auto it = matches.constBegin(); it != matches.constEnd(); ++it) {
             const QString &gameId = it.key();
+
+            if (it->conflicted) {
+                ++sysConflicts;
+                qWarning().noquote()
+                    << QStringLiteral("[RA] %1: skipping game %2 — conflicting RA hash matches")
+                           .arg(sys.name, gameId);
+                continue;
+            }
 
             // Always write ra_game_id and achievement_count from the bulk list.
             if (!insertFact(gameId, QStringLiteral("ra_game_id"),
