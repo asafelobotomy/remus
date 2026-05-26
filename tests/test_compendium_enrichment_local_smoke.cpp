@@ -95,6 +95,7 @@ private slots:
     void openvgdbMissingFile_skipsWithoutWrites();
     void mameCatverParsedWithoutArcadeRows_upsertsSourceOnly();
     void mameListXmlParsedWithoutArcadeRows_upsertsSourceOnly();
+    void gametdbTitleStripMatches_enrichesGame();
 };
 
 void CompendiumEnrichmentLocalSmokeTest::libretroMissingDir_skipsWithoutWrites()
@@ -292,6 +293,73 @@ void CompendiumEnrichmentLocalSmokeTest::mameListXmlParsedWithoutArcadeRows_upse
         QCOMPARE(scalarInt(db, QStringLiteral("SELECT COUNT(*) FROM sources WHERE source_id = 'mame-listxml'")), 1);
         QCOMPARE(scalarInt(db, QStringLiteral("SELECT COUNT(*) FROM source_snapshots WHERE source_id = 'mame-listxml'")), 1);
         QCOMPARE(scalarInt(db, QStringLiteral("SELECT COUNT(*) FROM game_facts")), 0);
+
+        db.close();
+    }
+    QSqlDatabase::removeDatabase(connectionName);
+}
+
+// Verify that the GameTDB enricher's title fallback strips trailing parenthetical
+// groups so that a DAT title like "Foo Game (Europe) (En,Fr) (Rev 1)" matches
+// the GameTDB entry whose stored title is just "Foo Game".
+void CompendiumEnrichmentLocalSmokeTest::gametdbTitleStripMatches_enrichesGame()
+{
+    QTemporaryDir tempDir;
+    QVERIFY(tempDir.isValid());
+
+    // Write a minimal GameTDB XML.  The filename must match a known prefix so
+    // GameTDBProvider::loadDatabases() assigns a platform type.
+    const QString xmlPath = tempDir.filePath(QStringLiteral("wiitdb.xml"));
+    QFile xmlFile(xmlPath);
+    QVERIFY(xmlFile.open(QIODevice::WriteOnly | QIODevice::Text));
+    QTextStream out(&xmlFile);
+    out << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+        << "<datafile>\n"
+        << "<game name=\"Foo Game (USA) (EN)\">\n"
+        << "  <id>FGME</id>\n"
+        << "  <type>WiiU</type>\n"
+        << "  <region>NTSC-U</region>\n"
+        << "  <locale lang=\"EN\"><title>Foo Game</title></locale>\n"
+        << "  <developer>Foo Dev</developer>\n"
+        << "  <publisher>Foo Pub</publisher>\n"
+        << "  <date year=\"2020\" month=\"6\" day=\"1\"/>\n"
+        << "  <genre>action</genre>\n"
+        << "</game>\n"
+        << "</datafile>\n";
+    xmlFile.close();
+
+    const QString connectionName = QStringLiteral("compendium_local_smoke_gametdb_strip");
+    {
+        QSqlDatabase db = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), connectionName);
+        db.setDatabaseName(QStringLiteral(":memory:"));
+        QVERIFY2(db.open(), qPrintable(db.lastError().text()));
+        QVERIFY(createSchema(db));
+
+        // A game whose title has trailing parenthetical groups that prevent a
+        // direct title lookup — only the strip fallback can match "Foo Game".
+        QVERIFY(execSql(db, QStringLiteral(
+            "INSERT INTO games (game_id, system_id, canonical_title) "
+            "VALUES ('g1', 56, 'Foo Game (Europe) (En,Fr) (Rev 1)')")));
+
+        QVERIFY(db.transaction());
+        int games = 0;
+        int facts = 0;
+        QString error;
+        const bool ok = CompendiumEnrichment::enrichFromGameTDB(
+            db, tempDir.path(), games, facts, error);
+        QVERIFY2(ok, qPrintable(error));
+        QVERIFY(db.commit());
+
+        QVERIFY2(games >= 1,
+                 qPrintable(QStringLiteral("Expected at least 1 enriched game, got %1").arg(games)));
+
+        QSqlQuery q(db);
+        QVERIFY(q.exec(QStringLiteral("SELECT developer, publisher, release_year, genre FROM games WHERE game_id = 'g1'")));
+        QVERIFY(q.next());
+        QCOMPARE(q.value(0).toString(), QStringLiteral("Foo Dev"));
+        QCOMPARE(q.value(1).toString(), QStringLiteral("Foo Pub"));
+        QCOMPARE(q.value(2).toInt(), 2020);
+        QCOMPARE(q.value(3).toString(), QStringLiteral("action"));
 
         db.close();
     }

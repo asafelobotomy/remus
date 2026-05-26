@@ -167,8 +167,23 @@ bool enrichFromGameTDB(QSqlDatabase &database,
         if (meta.title.isEmpty()) {
             const QString title = gameQuery.value(1).toString();
             if (!title.isEmpty()) {
-                const QString gid = provider.gameIdByNormalizedTitle(
-                    title.trimmed().toLower());
+                // Direct lookup.
+                QString gid = provider.gameIdByNormalizedTitle(title.trimmed().toLower());
+                // Strip trailing parenthetical groups and retry.
+                // DAT titles often carry region/language/revision suffixes that
+                // GameTDB omits, e.g. "Mario Kart 8 (Europe) (En,Fr,De) (Rev 1)"
+                // vs GameTDB's stored title "Mario Kart 8".
+                if (gid.isEmpty()) {
+                    QString stripped = title.trimmed();
+                    while (stripped.endsWith(QLatin1Char(')'))) {
+                        const int pos = stripped.lastIndexOf(QLatin1Char('('));
+                        if (pos <= 0)
+                            break;
+                        stripped = stripped.left(pos).trimmed();
+                    }
+                    if (!stripped.isEmpty() && stripped != title.trimmed())
+                        gid = provider.gameIdByNormalizedTitle(stripped.toLower());
+                }
                 if (!gid.isEmpty())
                     meta = provider.getById(gid);
             }
