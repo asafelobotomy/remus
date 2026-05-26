@@ -140,7 +140,9 @@ int handleIngestSourceCommand(CliContext &ctx)
     }
 
     // Snapshot ID is content-addressable (checksum prefix) for stable re-runs.
-    const QString snapshotId = sourceId + QLatin1Char('-') + datChecksum.left(8);
+    // 16 hex chars = 64 bits of checksum, keeping collision risk negligible even
+    // across large DAT libraries from the same source.
+    const QString snapshotId = sourceId + QLatin1Char('-') + datChecksum.left(16);
 
     // Open transaction early so source/snapshot inserts roll back on any
     // downstream failure — prevents orphan rows when extraction produces nothing.

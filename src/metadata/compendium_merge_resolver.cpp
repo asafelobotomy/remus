@@ -187,6 +187,7 @@ bool MergeResolver::resolve(QSqlDatabase &db,
         "    FROM game_facts "
         "    WHERE field_name = 'players_max' "
         "      AND CAST(field_value AS INTEGER) BETWEEN 1 AND 16 "
+        "      AND CAST(CAST(field_value AS INTEGER) AS TEXT) = field_value "
         ") WHERE rn = 1"), error);
     if (n < 0) return false;
     total += n;
@@ -247,7 +248,7 @@ bool MergeResolver::resolve(QSqlDatabase &db,
         "           ) AS rn "
         "    FROM game_facts "
         "    WHERE field_name NOT IN ( "
-        "        'canonical_title', 'developer', 'publisher', "
+        "        'title', 'canonical_title', 'developer', 'publisher', "
         "        'release_date', 'release_year', 'players_max', 'description') "
         ") WHERE rn = 1"), error);
     if (n < 0) return false;
@@ -394,6 +395,21 @@ bool MergeResolver::resolve(QSqlDatabase &db,
             "    SELECT 1 FROM canonical_resolution "
             "    WHERE game_id = games.game_id AND field_name = 'title'"
             ")"), error) < 0) {
+        return false;
+    }
+
+    // ── R2 fallback: derive release_year from release_date ────────────────────
+    // The canonical_resolution system (step 3) can only resolve release_year
+    // when a matching game_facts row with field_name='release_year' exists.
+    // If an enricher wrote only a release_date fact (no separate release_year),
+    // the steps above leave release_year NULL.  Derive it directly here so the
+    // games.release_year column is never blank when release_date is available.
+    if (runInsert(db, QStringLiteral(
+            "UPDATE games "
+            "SET release_year = SUBSTR(release_date, 1, 4) "
+            "WHERE release_year IS NULL "
+            "  AND release_date IS NOT NULL "
+            "  AND LENGTH(release_date) >= 4"), error) < 0) {
         return false;
     }
 

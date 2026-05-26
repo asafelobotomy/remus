@@ -160,10 +160,10 @@ bool enrichFromIGDB(QSqlDatabase &database,
         QSqlQuery updateQ(database);
         updateQ.prepare(QStringLiteral(
             "UPDATE games SET "
-            "description  = COALESCE(description, ?), "
-            "genre        = COALESCE(genre, ?), "
-            "developer    = COALESCE(developer, ?), "
-            "publisher    = COALESCE(publisher, ?), "
+            "description  = COALESCE(NULLIF(description, ''), ?), "
+            "genre        = COALESCE(NULLIF(genre, ''), ?), "
+            "developer    = COALESCE(NULLIF(developer, ''), ?), "
+            "publisher    = COALESCE(NULLIF(publisher, ''), ?), "
             "release_year = COALESCE(release_year, ?), "
             "rating       = COALESCE(rating, ?), "
             "players_max  = COALESCE(players_max, ?) "

@@ -230,11 +230,11 @@ bool enrichFromOpenVGDB(QSqlDatabase &database,
     QSqlQuery updateQuery(database);
     updateQuery.prepare(QStringLiteral(
         "UPDATE games SET "
-        "genre        = COALESCE(genre, ?), "
-        "developer    = COALESCE(developer, ?), "
-        "publisher    = COALESCE(publisher, ?), "
+        "genre        = COALESCE(NULLIF(genre, ''), ?), "
+        "developer    = COALESCE(NULLIF(developer, ''), ?), "
+        "publisher    = COALESCE(NULLIF(publisher, ''), ?), "
         "release_year = COALESCE(release_year, ?), "
-        "description  = COALESCE(description, ?) "
+        "description  = COALESCE(NULLIF(description, ''), ?) "
         "WHERE game_id = ?"));
 
     QSqlQuery factQuery(database);

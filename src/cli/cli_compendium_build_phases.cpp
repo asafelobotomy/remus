@@ -38,6 +38,7 @@ bool hasAnyMetadataGaps(QSqlDatabase &db, QString &error)
             "   OR release_year IS NULL "
             "   OR description IS NULL OR TRIM(description) = '' "
             "   OR players_max IS NULL "
+            "   OR rating IS NULL "
             "LIMIT 1"),
         error);
 }
