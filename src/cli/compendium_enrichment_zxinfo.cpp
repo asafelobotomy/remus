@@ -78,7 +78,9 @@ bool enrichFromZXInfo(QSqlDatabase &database,
     for (const GameEntry &entry : pending) {
         ++searched;
         if (searched % 200 == 0)
-            qInfo().noquote() << QStringLiteral("[ZXInfo] %1 / %2 …").arg(searched).arg(pending.size());
+            qInfo().noquote() << QStringLiteral("[ZXInfo] %1 / %2 (%3%) …")
+                                     .arg(searched).arg(pending.size())
+                                     .arg(searched * 100 / pending.size());
 
         const QList<GameMetadata> results = provider.searchAndFetch(entry.title, 3);
         const QString normQuery = normalizeMetadataTitle(entry.title);

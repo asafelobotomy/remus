@@ -325,12 +325,17 @@ int handleBuildCompendiumCommand(CliContext &ctx)
     for (const auto &s : std::as_const(buildConfig.sources)) { if (s.enabled) ++totalEnabled; }
 
     auto writeProgress = [&](const QString &status, int current,
-                              const QString &srcId, const Remus::Compendium::CompilerStats &s) {
+                              const QString &srcId, const Remus::Compendium::CompilerStats &s,
+                              int overallPct = -1) {
+        // Default: scale ingest progress over 0-10% of the full pipeline.
+        const int pct = overallPct >= 0 ? overallPct
+                                        : (totalEnabled > 0 ? current * 10 / totalEnabled : 0);
         const QJsonObject obj {
             {QStringLiteral("status"),           status},
             {QStringLiteral("current"),          current},
             {QStringLiteral("total"),            totalEnabled},
             {QStringLiteral("current_source"),   srcId},
+            {QStringLiteral("overall_pct"),      pct},
             {QStringLiteral("records_ingested"), s.recordsIngested},
             {QStringLiteral("games_created"),    s.gamesCreated},
             {QStringLiteral("elapsed_ms"),       static_cast<qint64>(timer.elapsed())},
@@ -365,7 +370,32 @@ int handleBuildCompendiumCommand(CliContext &ctx)
         QSqlDatabase::removeDatabase(connectionName);
         return 1;
     }
-    writeProgress(QStringLiteral("enriching"), totalEnabled, {}, stats);
+    writeProgress(QStringLiteral("enriching"), totalEnabled, {}, stats, /*overallPct=*/10);
+
+    // ── Enrichment passes (Libretro, GameTDB, OpenVGDB, IGDB) + merge resolve ──
+    // Fires before each pass to keep progress.json live during the long enrichment phase.
+    // overall_pct model: DAT ingest = 0-10%, enrichment passes = 10-95%, FTS = 95-99%, done = 100%.
+    EnrichmentProgressCallback onEnrichProgress = [&](int passIdx, int totalPasses, const QString &passName) {
+        const int pct = 10 + (passIdx - 1) * 85 / (totalPasses > 0 ? totalPasses : 1);
+        const QJsonObject obj {
+            {QStringLiteral("status"),                    QStringLiteral("enriching")},
+            {QStringLiteral("current"),                   totalEnabled},
+            {QStringLiteral("total"),                     totalEnabled},
+            {QStringLiteral("current_source"),            QString()},
+            {QStringLiteral("enrichment_pass_current"),   passIdx},
+            {QStringLiteral("enrichment_pass_total"),     totalPasses},
+            {QStringLiteral("enrichment_pass_name"),      passName},
+            {QStringLiteral("overall_pct"),               pct},
+            {QStringLiteral("records_ingested"),          stats.recordsIngested},
+            {QStringLiteral("games_created"),             stats.gamesCreated},
+            {QStringLiteral("elapsed_ms"),                static_cast<qint64>(timer.elapsed())},
+            {QStringLiteral("started_at"),                startedAt.toString(Qt::ISODate)},
+            {QStringLiteral("updated_at"),                QDateTime::currentDateTimeUtc().toString(Qt::ISODate)},
+        };
+        QFile pf(progressPath);
+        if (pf.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text))
+            pf.write(QJsonDocument(obj).toJson());
+    };
 
     // ── Enrichment passes (Libretro, GameTDB, OpenVGDB, IGDB) + merge resolve ──
     EnrichmentStats enrichStats;
@@ -380,7 +410,7 @@ int handleBuildCompendiumCommand(CliContext &ctx)
         if (!runCompendiumEnrichmentPasses(database, metadataDir, gametdbDir,
                                           openvgdbPath, credPath, mameCatverPath,
                                           mameListXmlPath,
-                                          enrichStats, error)) {
+                                          enrichStats, error, onEnrichProgress)) {
             qCritical().noquote() << QStringLiteral("✗ %1").arg(error);
             database.close();
             QSqlDatabase::removeDatabase(connectionName);
@@ -456,7 +486,7 @@ int handleBuildCompendiumCommand(CliContext &ctx)
     qInfo() << "Seeded systems:" << systemsCount;
     qInfo() << "Unresolved conflicts:" << conflictsCount;
 
-    writeProgress(QStringLiteral("complete"), totalEnabled, {}, stats);
+    writeProgress(QStringLiteral("complete"), totalEnabled, {}, stats, /*overallPct=*/100);
 
     releaseDatabase(database, connectionName);
 

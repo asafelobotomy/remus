@@ -191,7 +191,8 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db,
                                    const QString &mameCatverPath,
                                    const QString &mameListXmlPath,
                                    EnrichmentStats &stats,
-                                   QString &error)
+                                   QString &error,
+                                   EnrichmentProgressCallback onProgress)
 {
     auto runTransactionalPass = [&](const QString &passName, auto &&passFn) -> bool {
         if (!db.transaction()) {
@@ -350,11 +351,21 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db,
         },
     };
 
+    int passIdx = 0;
+    const int totalPasses = passes.size();
     for (const EnrichmentPassSpec &pass : passes) {
+        ++passIdx;
         if (!pass.isEnabled()) {
+            qInfo().noquote() << QStringLiteral("[ENRICH] Pass %1/%2: %3 — skipped (no data source)")
+                                     .arg(passIdx).arg(totalPasses).arg(pass.name);
             ++stats.passesSkippedNoInput;
             continue;
         }
+
+        if (onProgress)
+            onProgress(passIdx, totalPasses, pass.name);
+        qInfo().noquote() << QStringLiteral("[ENRICH] Pass %1/%2: %3 …")
+                                 .arg(passIdx).arg(totalPasses).arg(pass.name);
 
         error.clear();
         if (!pass.hasWork()) {
@@ -362,6 +373,8 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db,
                 error = QStringLiteral("%1 pre-check failed: %2").arg(pass.name, error);
                 return false;
             }
+            qInfo().noquote() << QStringLiteral("[ENRICH] Pass %1/%2: %3 — skipped (no gaps to fill)")
+                                     .arg(passIdx).arg(totalPasses).arg(pass.name);
             ++stats.passesSkippedNoGaps;
             continue;
         }
@@ -373,8 +386,8 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db,
             if (pass.critical) {
                 return false;
             }
-            qWarning().noquote() << QStringLiteral("[ENRICH] %1 failed (non-fatal): %2")
-                                        .arg(pass.name, error);
+            qWarning().noquote() << QStringLiteral("[ENRICH] Pass %1/%2: %3 failed (non-fatal): %4")
+                                        .arg(passIdx).arg(totalPasses).arg(pass.name, error);
             error.clear();
             ++stats.passesFailedWithError;
             continue;

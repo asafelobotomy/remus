@@ -46,26 +46,35 @@ emit_build_heartbeat() {
             break
         fi
 
-        local now elapsed_seconds log_size marker
+        local now elapsed_seconds pct marker
         now=$(date +%s)
         elapsed_seconds=$((now - started_at))
-        log_size=$(stat -c '%s' "$BUILD_LOG" 2>/dev/null || echo 0)
 
         # Read structured progress from the JSON file written by remus-cli.
         # Query manually: cat "${OUTPUT_DB}.progress.json" (or pipe to jq)
+        pct="?"
+        marker="(progress file not yet written — starting up)"
         if [[ -f "$PROGRESS_FILE" ]]; then
             if command -v jq &>/dev/null; then
-                marker=$(jq -r '"[\(.current)/\(.total)] \(.status) \(.current_source) (\(.records_ingested // 0) records)"' \
-                    "$PROGRESS_FILE" 2>/dev/null || cat "$PROGRESS_FILE")
+                pct=$(jq -r '"\(.overall_pct // "?")%"' "$PROGRESS_FILE" 2>/dev/null || echo "?%")
+                marker=$(jq -r '
+                    if .enrichment_pass_name != null and .enrichment_pass_name != "" then
+                        "[\(.current)/\(.total)] enriching pass \(.enrichment_pass_current)/\(.enrichment_pass_total): \(.enrichment_pass_name)"
+                    else
+                        "[\(.current)/\(.total)] \(.status) \(.current_source) (\(.records_ingested // 0) records)"
+                    end' "$PROGRESS_FILE" 2>/dev/null || cat "$PROGRESS_FILE")
             else
+                pct="?"
                 marker=$(cat "$PROGRESS_FILE")
             fi
-        else
-            marker="(progress file not yet written — starting up)"
         fi
 
-        echo "==> Build heartbeat: elapsed=${elapsed_seconds}s log_size=${log_size}"
+        echo "==> Build heartbeat: elapsed=${elapsed_seconds}s [${pct}]"
         echo "    $marker"
+        if [[ -f "$BUILD_LOG" ]]; then
+            echo "    Recent log:"
+            tail -5 "$BUILD_LOG" | while IFS= read -r line; do echo "      $line"; done
+        fi
     done
 }
 

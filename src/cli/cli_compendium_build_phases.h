@@ -1,9 +1,16 @@
 #pragma once
 
 #include <QString>
+#include <functional>
 
 class QSqlDatabase;
 class QJsonObject;
+
+// Progress callback fired before each enrichment pass begins.
+// passIdx:    1-based index of the pass about to run.
+// totalPasses: total number of configured passes (including skipped ones).
+// passName:   human-readable name of the pass.
+using EnrichmentProgressCallback = std::function<void(int passIdx, int totalPasses, const QString &passName)>;
 
 /**
  * @brief Post-build enrichment and FTS index population phases for --build-compendium.
@@ -69,7 +76,8 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db,
                                    const QString &mameCatverPath,
                                    const QString &mameListXmlPath,
                                    EnrichmentStats &stats,
-                                   QString &error);
+                                   QString &error,
+                                   EnrichmentProgressCallback onProgress = nullptr);
 
 /**
  * @brief Populate the FTS search index tables from the games/game_names rows.
