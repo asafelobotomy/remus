@@ -147,10 +147,14 @@ bool enrichFromZXInfo(QSqlDatabase &database,
 
     QSqlQuery factQ(database);
     factQ.prepare(QStringLiteral(
-        "INSERT OR IGNORE INTO game_facts "
+        "INSERT INTO game_facts "
         "(game_id, field_name, field_value, value_type, source_id, snapshot_id, "
         "source_priority, confidence) "
         "VALUES (?, ?, ?, ?, ?, ?, ?, ?)"));
+
+    QSqlQuery delQ(database);
+    delQ.prepare(QStringLiteral(
+        "DELETE FROM game_facts WHERE game_id = ? AND field_name = ? AND source_id = ?"));
 
     static constexpr double CONFIDENCE = 0.80;
     static constexpr int    PRIORITY   = 65;
@@ -167,7 +171,8 @@ bool enrichFromZXInfo(QSqlDatabase &database,
                           const QString &value,
                           const QString &type) -> bool {
         bool inserted = false;
-        if (!insertGameFact(factQ,
+        if (!insertGameFact(delQ,
+                            factQ,
                             factSpec,
                             gameId,
                             field,

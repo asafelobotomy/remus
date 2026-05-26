@@ -45,7 +45,7 @@ private slots:
     void nullableHelpers_returnNullOrValue();
     void insertGameFact_insertsRowAndReportsInserted();
     void insertGameFact_emptyValueNoop();
-    void insertGameFact_duplicateReturnsInsertedFalse();
+    void insertGameFact_replacesPriorFactFromSameSource();
 };
 
 void CompendiumEnrichmentSqlHelpersTest::nullableHelpers_returnNullOrValue()
@@ -79,9 +79,13 @@ void CompendiumEnrichmentSqlHelpersTest::insertGameFact_insertsRowAndReportsInse
 
         QSqlQuery factQ(db);
         factQ.prepare(QStringLiteral(
-            "INSERT OR IGNORE INTO game_facts "
+            "INSERT INTO game_facts "
             "(game_id, field_name, field_value, value_type, source_id, snapshot_id, source_priority, confidence) "
             "VALUES (?, ?, ?, ?, ?, ?, ?, ?)"));
+
+        QSqlQuery delQ(db);
+        delQ.prepare(QStringLiteral(
+            "DELETE FROM game_facts WHERE game_id = ? AND field_name = ? AND source_id = ?"));
 
         const FactInsertSpec spec{
             QStringLiteral("test-source"),
@@ -92,7 +96,8 @@ void CompendiumEnrichmentSqlHelpersTest::insertGameFact_insertsRowAndReportsInse
 
         QString error;
         bool inserted = false;
-        QVERIFY(insertGameFact(factQ,
+        QVERIFY(insertGameFact(delQ,
+                               factQ,
                                spec,
                                QStringLiteral("g1"),
                                QStringLiteral("genre"),
@@ -124,9 +129,13 @@ void CompendiumEnrichmentSqlHelpersTest::insertGameFact_emptyValueNoop()
 
         QSqlQuery factQ(db);
         factQ.prepare(QStringLiteral(
-            "INSERT OR IGNORE INTO game_facts "
+            "INSERT INTO game_facts "
             "(game_id, field_name, field_value, value_type, source_id, snapshot_id, source_priority, confidence) "
             "VALUES (?, ?, ?, ?, ?, ?, ?, ?)"));
+
+        QSqlQuery delQ(db);
+        delQ.prepare(QStringLiteral(
+            "DELETE FROM game_facts WHERE game_id = ? AND field_name = ? AND source_id = ?"));
 
         const FactInsertSpec spec{
             QStringLiteral("test-source"),
@@ -137,7 +146,8 @@ void CompendiumEnrichmentSqlHelpersTest::insertGameFact_emptyValueNoop()
 
         QString error;
         bool inserted = true;
-        QVERIFY(insertGameFact(factQ,
+        QVERIFY(insertGameFact(delQ,
+                               factQ,
                                spec,
                                QStringLiteral("g1"),
                                QStringLiteral("genre"),
@@ -159,9 +169,9 @@ void CompendiumEnrichmentSqlHelpersTest::insertGameFact_emptyValueNoop()
     QSqlDatabase::removeDatabase(connectionName);
 }
 
-void CompendiumEnrichmentSqlHelpersTest::insertGameFact_duplicateReturnsInsertedFalse()
+void CompendiumEnrichmentSqlHelpersTest::insertGameFact_replacesPriorFactFromSameSource()
 {
-    const QString connectionName = QStringLiteral("enrichment_sql_helpers_duplicate");
+    const QString connectionName = QStringLiteral("enrichment_sql_helpers_replace");
     {
         QSqlDatabase db = openMemoryDb(connectionName);
         QVERIFY2(db.open(), qPrintable(db.lastError().text()));
@@ -169,9 +179,13 @@ void CompendiumEnrichmentSqlHelpersTest::insertGameFact_duplicateReturnsInserted
 
         QSqlQuery factQ(db);
         factQ.prepare(QStringLiteral(
-            "INSERT OR IGNORE INTO game_facts "
+            "INSERT INTO game_facts "
             "(game_id, field_name, field_value, value_type, source_id, snapshot_id, source_priority, confidence) "
             "VALUES (?, ?, ?, ?, ?, ?, ?, ?)"));
+
+        QSqlQuery delQ(db);
+        delQ.prepare(QStringLiteral(
+            "DELETE FROM game_facts WHERE game_id = ? AND field_name = ? AND source_id = ?"));
 
         const FactInsertSpec spec{
             QStringLiteral("test-source"),
@@ -182,33 +196,27 @@ void CompendiumEnrichmentSqlHelpersTest::insertGameFact_duplicateReturnsInserted
 
         QString error;
         bool inserted = false;
-        QVERIFY(insertGameFact(factQ,
-                               spec,
-                               QStringLiteral("g1"),
-                               QStringLiteral("genre"),
-                               QStringLiteral("Action"),
-                               QStringLiteral("text"),
-                               error,
-                               QStringLiteral("test"),
-                               &inserted));
+        // First insert: 'Action'
+        QVERIFY(insertGameFact(delQ, factQ, spec,
+                               QStringLiteral("g1"), QStringLiteral("genre"),
+                               QStringLiteral("Action"), QStringLiteral("text"),
+                               error, QStringLiteral("test"), &inserted));
         QVERIFY(inserted);
 
-        inserted = true;
-        QVERIFY(insertGameFact(factQ,
-                               spec,
-                               QStringLiteral("g1"),
-                               QStringLiteral("genre"),
-                               QStringLiteral("Action"),
-                               QStringLiteral("text"),
-                               error,
-                               QStringLiteral("test"),
-                               &inserted));
-        QVERIFY(!inserted);
+        inserted = false;
+        // Second insert with a different value: 'RPG' should replace 'Action'.
+        QVERIFY(insertGameFact(delQ, factQ, spec,
+                               QStringLiteral("g1"), QStringLiteral("genre"),
+                               QStringLiteral("RPG"), QStringLiteral("text"),
+                               error, QStringLiteral("test"), &inserted));
+        QVERIFY(inserted);
 
-        QSqlQuery countQ(db);
-        QVERIFY(countQ.exec(QStringLiteral("SELECT COUNT(*) FROM game_facts")));
-        QVERIFY(countQ.next());
-        QCOMPARE(countQ.value(0).toInt(), 1);
+        // Only one row should exist and it must hold the newer value.
+        QSqlQuery checkQ(db);
+        QVERIFY(checkQ.exec(QStringLiteral("SELECT COUNT(*), field_value FROM game_facts")));
+        QVERIFY(checkQ.next());
+        QCOMPARE(checkQ.value(0).toInt(), 1);
+        QCOMPARE(checkQ.value(1).toString(), QStringLiteral("RPG"));
 
         db.close();
     }

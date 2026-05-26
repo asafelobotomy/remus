@@ -253,10 +253,14 @@ const QString snapshotId = QStringLiteral("retroachievements-bulk");
 
         QSqlQuery factQ(database);
         factQ.prepare(QStringLiteral(
-            "INSERT OR IGNORE INTO game_facts "
+            "INSERT INTO game_facts "
             "(game_id, field_name, field_value, value_type, source_id, snapshot_id, "
             "source_priority, confidence) "
             "VALUES (?, ?, ?, ?, ?, ?, ?, ?)"));
+
+        QSqlQuery delQ(database);
+        delQ.prepare(QStringLiteral(
+            "DELETE FROM game_facts WHERE game_id = ? AND field_name = ? AND source_id = ?"));
 
         const FactInsertSpec factSpec{
             QStringLiteral("retroachievements"),
@@ -269,7 +273,8 @@ const QString snapshotId = QStringLiteral("retroachievements-bulk");
                                const QString &value,
                                const QString &type = QStringLiteral("text")) -> bool {
             bool inserted = false;
-            if (!insertGameFact(factQ,
+            if (!insertGameFact(delQ,
+                                factQ,
                                 factSpec,
                                 gameId,
                                 field,

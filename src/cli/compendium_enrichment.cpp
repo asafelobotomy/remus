@@ -113,9 +113,13 @@ bool enrichFromLibretroMetadata(QSqlDatabase &database,
 
     QSqlQuery factQuery(database);
     factQuery.prepare(QStringLiteral(
-        "INSERT OR IGNORE INTO game_facts "
+        "INSERT INTO game_facts "
         "(game_id, field_name, field_value, value_type, source_id, snapshot_id, source_priority, confidence) "
         "VALUES (?, ?, ?, ?, ?, ?, ?, ?)"));
+
+    QSqlQuery delQuery(database);
+    delQuery.prepare(QStringLiteral(
+        "DELETE FROM game_facts WHERE game_id = ? AND field_name = ? AND source_id = ?"));
 
     const FactInsertSpec factSpec{
         sourceId,
@@ -129,7 +133,8 @@ bool enrichFromLibretroMetadata(QSqlDatabase &database,
                           const QString &value,
                           const QString &valueType) -> bool {
         bool inserted = false;
-        if (!insertGameFact(factQuery,
+        if (!insertGameFact(delQuery,
+                            factQuery,
                             factSpec,
                             gameId,
                             field,

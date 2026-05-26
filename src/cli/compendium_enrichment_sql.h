@@ -71,12 +71,19 @@ bool upsertEnrichmentSource(QSqlDatabase &db,
                             QString &error);
 
 /**
- * @brief Insert a single game_facts row using the shared enrichment metadata.
+ * @brief Replace the fact for (game_id, field_name) from this source, then
+ * insert the new value. Any prior row for the same source is deleted first so
+ * that re-runs never accumulate stale upstream values alongside fresh ones.
+ *
+ * @p delQuery must be prepared as:
+ *   DELETE FROM game_facts WHERE game_id=? AND field_name=? AND source_id=?
+ * @p factQuery must be prepared as a plain INSERT INTO game_facts.
  *
  * Empty @p fieldValue is treated as a no-op and returns true.
- * When @p inserted is provided it is set to true if a new row was inserted.
+ * When @p inserted is provided it is set to true if the fact was (re-)inserted.
  */
-bool insertGameFact(QSqlQuery &factQuery,
+bool insertGameFact(QSqlQuery &delQuery,
+                    QSqlQuery &factQuery,
                     const FactInsertSpec &spec,
                     const QString &gameId,
                     const QString &fieldName,

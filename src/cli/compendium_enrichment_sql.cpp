@@ -60,7 +60,8 @@ bool upsertEnrichmentSource(QSqlDatabase &db,
                         QStringLiteral("Upsert snapshot %1").arg(snapshot.snapshotId));
 }
 
-bool insertGameFact(QSqlQuery &factQuery,
+bool insertGameFact(QSqlQuery &delQuery,
+                    QSqlQuery &factQuery,
                     const FactInsertSpec &spec,
                     const QString &gameId,
                     const QString &fieldName,
@@ -74,6 +75,15 @@ bool insertGameFact(QSqlQuery &factQuery,
         *inserted = false;
     if (fieldValue.isEmpty())
         return true;
+
+    // Remove any prior fact from this source for this game+field so that
+    // re-runs replace stale values rather than accumulating alongside them.
+    delQuery.bindValue(0, gameId);
+    delQuery.bindValue(1, fieldName);
+    delQuery.bindValue(2, spec.sourceId);
+    if (!execPrepared(delQuery, error,
+                      QStringLiteral("Replace %1 fact %2").arg(contextPrefix, fieldName)))
+        return false;
 
     factQuery.bindValue(0, gameId);
     factQuery.bindValue(1, fieldName);
