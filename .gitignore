@@ -150,6 +150,9 @@ data/metadata/
 # OpenVGDB SQLite (downloaded by update_dats.sh — large binary, not tracked)
 data/openvgdb/*.sqlite
 
+# MAME listxml (downloaded by update_dats.sh — 300+ MB, not tracked)
+data/mame/listxml.xml
+
 # Canonical local ROM storage (keep ROM payloads out of git)
 /roms/**
 !/roms/

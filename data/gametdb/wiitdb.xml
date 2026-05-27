@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <datafile xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="wiitdb.xsd">
-	<WiiTDB version="20260525012745" filter="EN_wiiware_gamecube" games="10160"/>
+	<WiiTDB version="20260527081846" filter="EN_wiiware_gamecube" games="10160"/>
 	<!--
  GameTDB: Wii, Database started by Lustar in 2009 (https://www.gametdb.com)
  Never modify this file manually, it will get overwritten when you update. You can add games and fixes on the website.
@@ -128324,7 +128324,9 @@ Includes official crossovers and minigames with Minecraft, Super Meat Boy, BIT.T
 		<publisher>Vblank Entertainment</publisher>
 		<date year="2020" month="7" day="9"/>
 		<genre>action,adventure,arcade</genre>
-		<rating type="PEGI" value="12"/>
+		<rating type="PEGI" value="12">
+			<descriptor>violence</descriptor>
+		</rating>
 		<wi-fi players="0"/>
 		<input players="1">
 			<control type="wiimote" required="true"/>
@@ -250458,7 +250460,6 @@ Note that the fifth court case will be available for download later in 2010 as a
 		<genre>adventure,simulation</genre>
 		<rating type="PEGI" value="6">
 			<descriptor>language</descriptor>
-			<descriptor>violence</descriptor>
 		</rating>
 		<wi-fi players="0">
 			<feature>online</feature>
@@ -250550,7 +250551,6 @@ Note that the fifth court case will be available for download later in 2010 as a
 		<genre>adventure,simulation</genre>
 		<rating type="PEGI" value="12">
 			<descriptor>language</descriptor>
-			<descriptor>violence</descriptor>
 		</rating>
 		<wi-fi players="0">
 			<feature>online</feature>
@@ -250681,7 +250681,6 @@ Note that the fifth court case will be available for download later in 2010 as a
 		<genre>adventure,simulation</genre>
 		<rating type="PEGI" value="12">
 			<descriptor>language</descriptor>
-			<descriptor>violence</descriptor>
 		</rating>
 		<wi-fi players="0">
 			<feature>online</feature>
@@ -250718,7 +250717,6 @@ Note that the fifth court case will be available for download later in 2010 as a
 		<genre>adventure,simulation</genre>
 		<rating type="PEGI" value="12">
 			<descriptor>language</descriptor>
-			<descriptor>violence</descriptor>
 		</rating>
 		<wi-fi players="0">
 			<feature>online</feature>
