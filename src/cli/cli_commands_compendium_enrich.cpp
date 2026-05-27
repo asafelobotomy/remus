@@ -29,6 +29,23 @@ int handleEnrichCompendiumCommand(CliContext &ctx)
         return 1;
     }
 
+    // Validate --enrich-source keys early so the warning is visible even when
+    // subsequent checks (DB not found, etc.) cause an early exit.
+    const QString sourceFilterArg = ctx.parser.value("enrich-source").trimmed();
+    const QStringList sourceFilter = sourceFilterArg.isEmpty()
+        ? QStringList{}
+        : sourceFilterArg.split(QLatin1Char(','), Qt::SkipEmptyParts);
+    {
+        const QStringList validKeys = knownEnrichmentSourceKeys();
+        for (const QString &key : sourceFilter) {
+            if (!validKeys.contains(key)) {
+                qWarning().noquote()
+                    << QStringLiteral("[enrich] Unknown --enrich-source key '%1' — will be ignored. "
+                                      "Valid keys: %2").arg(key, validKeys.join(", "));
+            }
+        }
+    }
+
     const QFileInfo outputInfo(outputPath);
     if (!outputInfo.exists()) {
         qCritical() << "✗ Database not found (run --build-compendium first):" << outputPath;
@@ -88,10 +105,6 @@ int handleEnrichCompendiumCommand(CliContext &ctx)
     qInfo() << "Running enrichment on" << outputInfo.absoluteFilePath();
 
     // ── Run all enrichment passes and merge resolution ───────────────────────
-    const QString sourceFilterArg = ctx.parser.value("enrich-source").trimmed();
-    const QStringList sourceFilter = sourceFilterArg.isEmpty()
-        ? QStringList{}
-        : sourceFilterArg.split(QLatin1Char(','), Qt::SkipEmptyParts);
     EnrichmentStats stats;
     {
         QString enrichError;

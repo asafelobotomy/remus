@@ -8,6 +8,7 @@
 #include <QTextStream>
 
 #include "../src/cli/compendium_enrichment.h"
+#include "../src/cli/cli_compendium_build_phases.h"
 #include "../src/core/constants/system_ids.h"
 
 namespace {
@@ -97,6 +98,8 @@ private slots:
     void mameCatverParsedWithoutArcadeRows_upsertsSourceOnly();
     void mameListXmlParsedWithoutArcadeRows_upsertsSourceOnly();
     void gametdbTitleStripMatches_enrichesGame();
+    void knownSourceKeys_noBlankNoDuplicates();
+    void knownSourceKeys_containsAllExpectedEnrichers();
 };
 
 void CompendiumEnrichmentLocalSmokeTest::libretroMissingDir_skipsWithoutWrites()
@@ -365,6 +368,51 @@ void CompendiumEnrichmentLocalSmokeTest::gametdbTitleStripMatches_enrichesGame()
         db.close();
     }
     QSqlDatabase::removeDatabase(connectionName);
+}
+
+// ── Source-key registry tests ────────────────────────────────────────────────
+// These tests guard against drift between the knownEnrichmentSourceKeys() list
+// and the EnrichmentPassSpec array.  If a new enricher is added to the pipeline
+// without also adding its source key to the list, the "containsAllExpected"
+// test fails immediately.
+
+void CompendiumEnrichmentLocalSmokeTest::knownSourceKeys_noBlankNoDuplicates()
+{
+    const QStringList keys = knownEnrichmentSourceKeys();
+
+    QVERIFY2(!keys.isEmpty(), "knownEnrichmentSourceKeys() returned an empty list");
+
+    // No blank entries.
+    for (const QString &k : keys)
+        QVERIFY2(!k.trimmed().isEmpty(), qPrintable("Blank source key found in knownEnrichmentSourceKeys()"));
+
+    // No duplicates.
+    const QSet<QString> unique(keys.cbegin(), keys.cend());
+    QCOMPARE(unique.size(), keys.size());
+}
+
+void CompendiumEnrichmentLocalSmokeTest::knownSourceKeys_containsAllExpectedEnrichers()
+{
+    // This list is the contract: one entry per enrichment pass in
+    // cli_compendium_build_phases.cpp.  Add a new entry here whenever a new
+    // enricher is added to the pipeline and the corresponding sourceKey is
+    // registered in knownEnrichmentSourceKeys().
+    const QStringList expected = {
+        QStringLiteral("libretro"),
+        QStringLiteral("gametdb"),
+        QStringLiteral("openvgdb"),
+        QStringLiteral("igdb"),
+        QStringLiteral("ra"),
+        QStringLiteral("mame-catver"),
+        QStringLiteral("mame-listxml"),
+        QStringLiteral("zxinfo"),
+    };
+
+    const QStringList actual = knownEnrichmentSourceKeys();
+
+    QCOMPARE(actual.size(), expected.size());
+    for (const QString &k : expected)
+        QVERIFY2(actual.contains(k), qPrintable(QStringLiteral("Missing expected key: ") + k));
 }
 
 QTEST_MAIN(CompendiumEnrichmentLocalSmokeTest)

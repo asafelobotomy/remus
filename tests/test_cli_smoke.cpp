@@ -17,6 +17,7 @@
 #include "../src/core/database.h"
 #include "../src/core/constants/systems.h"
 #include "../src/core/verification_engine.h"
+#include "../src/cli/cli_compendium_build_phases.h"
 
 class CliSmokeTest : public QObject {
     Q_OBJECT
@@ -997,6 +998,49 @@ private slots:
             db.close();
         }
         QSqlDatabase::removeDatabase(connName);
+    }
+
+    // ── --enrich-source tests ─────────────────────────────────────────────────
+
+    void testEnrichSourceFlagAppearsInHelp()
+    {
+        // --help must list --enrich-source so users can discover the option.
+        QString output;
+        runCliCapture({"--help"}, output, 0);
+        QVERIFY2(output.contains(QStringLiteral("enrich-source")),
+                 qPrintable(QStringLiteral("--help output did not mention --enrich-source:\n%1").arg(output)));
+    }
+
+    void testEnrichSourceHelpMentionsAllSourceKeys()
+    {
+        // --help should document every known source key so users know what to pass.
+        QString output;
+        runCliCapture({"--help"}, output, 0);
+        const QStringList keys = knownEnrichmentSourceKeys();
+        for (const QString &key : keys) {
+            QVERIFY2(output.contains(key),
+                     qPrintable(QStringLiteral("--help output is missing source key '%1':\n%2").arg(key, output)));
+        }
+    }
+
+    void testEnrichSourceUnknownKeyEmitsWarning()
+    {
+        // --enrich-compendium on a nonexistent DB always returns exit 1, but
+        // the warning about the unknown key must appear before the DB check.
+        QTemporaryDir dir;
+        QVERIFY(dir.isValid());
+        const QString missingDb = dir.filePath("nonexistent.db");
+
+        QString output;
+        runCliCapture({
+            "--enrich-compendium",
+            "--compendium-output", missingDb,
+            "--enrich-source", "totally-unknown-source-key"
+        }, output, 1);
+
+        QVERIFY2(output.contains(QStringLiteral("totally-unknown-source-key")),
+                 qPrintable(QStringLiteral(
+                     "Expected a warning mentioning the unknown key, got:\n%1").arg(output)));
     }
 };
 

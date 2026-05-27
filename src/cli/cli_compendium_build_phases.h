@@ -54,20 +54,27 @@ struct EnrichmentStats {
 };
 
 /**
- * @brief Run all enrichment passes (Libretro metadata, GameTDB, OpenVGDB, IGDB) and
- *        follow with a merge-resolution pass to materialise enriched facts.
+ * @brief Run all enrichment passes (Libretro metadata, GameTDB, OpenVGDB, IGDB,
+ *        RetroAchievements, MAME catver, MAME listxml, ZXInfo) and follow with a
+ *        merge-resolution pass to materialise enriched facts.
  *
- * Each transactional pass runs inside its own transaction. IGDB manages its own
- * per-system transactions internally.  On failure the current transaction is rolled
+ * Each transactional pass runs inside its own transaction. IGDB and RA manage their
+ * own per-system transactions internally.  On failure the current transaction is rolled
  * back, @p error is set, and the DB connection remains open for the caller to close.
  *
- * @param db          Open SQLite connection (no active transaction required).
- * @param metadataDir Path to data/metadata/  (empty → Libretro pass skipped).
- * @param gametdbDir  Path to data/gametdb/   (empty → GameTDB pass skipped).
- * @param openvgdbPath Path to openvgdb.sqlite (empty → OpenVGDB pass skipped).
- * @param credPath    Path to enrichment-credentials.json (empty → IGDB skipped).
- * @param stats       [out] Aggregated enrichment and merge-resolution counts.
- * @param error       [out] Human-readable error message on failure.
+ * @param db             Open SQLite connection (no active transaction required).
+ * @param metadataDir    Path to data/metadata/     (empty → Libretro pass skipped).
+ * @param gametdbDir     Path to data/gametdb/      (empty → GameTDB pass skipped).
+ * @param openvgdbPath   Path to openvgdb.sqlite     (empty → OpenVGDB pass skipped).
+ * @param credPath       Path to enrichment-credentials.json (empty → IGDB and RA skipped).
+ * @param mameCatverPath Path to data/mame/catver.ini (empty → MAME catver skipped).
+ * @param mameListXmlPath Path to data/mame/listxml.xml (empty → MAME listxml skipped).
+ * @param stats          [out] Aggregated enrichment and merge-resolution counts.
+ * @param error          [out] Human-readable error message on failure.
+ * @param onProgress     Optional callback fired before each pass begins.
+ * @param sourceFilter   Optional list of source keys; only matching passes run.
+ *                       Empty list (default) means run all passes.
+ *                       Valid keys: see knownEnrichmentSourceKeys().
  * @return true on success, false on error.
  */
 bool runCompendiumEnrichmentPasses(QSqlDatabase &db,
@@ -105,3 +112,27 @@ bool populateCompendiumFtsIndex(QSqlDatabase &db, int &rowsIndexed, QString &err
 void insertEnrichmentStatsReportFields(QJsonObject &report,
                                        const EnrichmentStats &stats,
                                        const QString &resolvedFieldsKey);
+
+/**
+ * @brief Returns the canonical set of source key strings accepted by the
+ *        @c --enrich-source CLI option and the @p sourceFilter parameter of
+ *        runCompendiumEnrichmentPasses().
+ *
+ * This list is the single source of truth: it must stay in sync with the
+ * @c sourceKey field of each EnrichmentPassSpec in cli_compendium_build_phases.cpp.
+ * Tests and CLI option-validation code should use this function rather than
+ * hard-coding the key strings.
+ */
+inline QStringList knownEnrichmentSourceKeys()
+{
+    return {
+        QStringLiteral("libretro"),
+        QStringLiteral("gametdb"),
+        QStringLiteral("openvgdb"),
+        QStringLiteral("igdb"),
+        QStringLiteral("ra"),
+        QStringLiteral("mame-catver"),
+        QStringLiteral("mame-listxml"),
+        QStringLiteral("zxinfo"),
+    };
+}

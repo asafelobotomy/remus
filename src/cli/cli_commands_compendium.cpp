@@ -95,6 +95,16 @@ int handleBuildCompendiumCommand(CliContext &ctx)
     const QStringList sourceFilter = sourceFilterArg.isEmpty()
         ? QStringList{}
         : sourceFilterArg.split(QLatin1Char(','), Qt::SkipEmptyParts);
+    {
+        const QStringList validKeys = knownEnrichmentSourceKeys();
+        for (const QString &key : sourceFilter) {
+            if (!validKeys.contains(key)) {
+                qWarning().noquote()
+                    << QStringLiteral("[enrich] Unknown --enrich-source key '%1' — will be ignored. "
+                                      "Valid keys: %2").arg(key, validKeys.join(", "));
+            }
+        }
+    }
     const QString outputPath = [&]() -> QString {
         if (!sourceFilter.isEmpty() && !ctx.parser.isSet("compendium-output")) {
             const QString suffix = sourceFilter.join(QLatin1Char('_')).toUpper()
