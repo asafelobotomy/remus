@@ -30,6 +30,7 @@ bool createSchema(QSqlDatabase &db)
                "developer TEXT, "
                "publisher TEXT, "
                "release_year INTEGER, "
+               "release_date TEXT, "
                "players_max INTEGER)"))
         && execSql(db, QStringLiteral(
                "CREATE TABLE game_signatures ("

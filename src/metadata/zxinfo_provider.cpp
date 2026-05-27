@@ -144,16 +144,20 @@ GameMetadata ZXInfoProvider::parseEntry(const QJsonObject &source) const
         m.publisher = pubs.first().toObject()
                          .value(QStringLiteral("name")).toString().trimmed();
 
-    // Developer: look for authors with labelType "Company" and type "Creator"
+    // Developer: look for authors with labelType starting with "Company" (e.g.
+    // "Company: Publisher/Manager", "Company: User group") and type "Creator"
     const QJsonArray authors = source.value(QStringLiteral("authors")).toArray();
     for (const QJsonValue &av : authors) {
         const QJsonObject a = av.toObject();
-        if (a.value(QStringLiteral("labelType")).toString() == QStringLiteral("Company")
-         && a.value(QStringLiteral("type")).toString()      == QStringLiteral("Creator")) {
+        if (a.value(QStringLiteral("labelType")).toString().startsWith(QStringLiteral("Company"))
+         && a.value(QStringLiteral("type")).toString() == QStringLiteral("Creator")) {
             m.developer = a.value(QStringLiteral("name")).toString().trimmed();
             break;
         }
     }
+
+    // Description: the remarks field (may be absent or null for many entries)
+    m.description = source.value(QStringLiteral("remarks")).toString().trimmed();
 
     return m;
 }

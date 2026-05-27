@@ -23,6 +23,7 @@ struct ZXMatch {
     QString publisher;
     QString developer;
     QString genre;
+    QString description;
 };
 
 } // namespace
@@ -51,7 +52,9 @@ bool enrichFromZXInfo(QSqlDatabase &database,
                 "WHERE system_id = %1 "
                 "  AND (genre IS NULL OR genre = '' "
                 "    OR publisher IS NULL OR publisher = '' "
-                "    OR release_year IS NULL)")
+                "    OR release_year IS NULL "
+                "    OR developer IS NULL OR developer = '' "
+                "    OR description IS NULL OR description = '')")
                 .arg(Constants::Systems::ID_ZX_SPECTRUM))) {
             error = QStringLiteral("Query ZX Spectrum games: %1")
                         .arg(gamesQ.lastError().text());
@@ -90,10 +93,11 @@ bool enrichFromZXInfo(QSqlDatabase &database,
                 continue;
 
             ZXMatch m;
-            m.gameId    = entry.id;
-            m.genre     = gm.genres.isEmpty() ? QString() : gm.genres.first();
-            m.publisher = gm.publisher;
-            m.developer = gm.developer;
+            m.gameId      = entry.id;
+            m.genre       = gm.genres.isEmpty() ? QString() : gm.genres.first();
+            m.publisher   = gm.publisher;
+            m.developer   = gm.developer;
+            m.description = gm.description;
 
             bool ok  = false;
             const int year = gm.releaseDate.toInt(&ok);
@@ -144,7 +148,8 @@ bool enrichFromZXInfo(QSqlDatabase &database,
         "genre        = COALESCE(genre, ?), "
         "developer    = COALESCE(developer, ?), "
         "publisher    = COALESCE(publisher, ?), "
-        "release_year = COALESCE(release_year, ?) "
+        "release_year = COALESCE(release_year, ?), "
+        "description  = COALESCE(description, ?) "
         "WHERE game_id = ?"));
 
     QSqlQuery factQ(database);
@@ -197,7 +202,8 @@ bool enrichFromZXInfo(QSqlDatabase &database,
         updateQ.bindValue(1, nullableText(m.developer));
         updateQ.bindValue(2, nullableText(m.publisher));
         updateQ.bindValue(3, nullableInt(m.releaseYear));
-        updateQ.bindValue(4, m.gameId);
+        updateQ.bindValue(4, nullableText(m.description));
+        updateQ.bindValue(5, m.gameId);
 
         if (!updateQ.exec()) {
             error = QStringLiteral("Update ZXInfo game %1: %2")
@@ -208,10 +214,11 @@ bool enrichFromZXInfo(QSqlDatabase &database,
         if (updateQ.numRowsAffected() > 0)
             ++gamesEnriched;
 
-        if (!insertFact(m.gameId, QStringLiteral("genre"),        m.genre,      QStringLiteral("text"))
-         || !insertFact(m.gameId, QStringLiteral("developer"),    m.developer,  QStringLiteral("text"))
-         || !insertFact(m.gameId, QStringLiteral("publisher"),    m.publisher,  QStringLiteral("text"))
-         || !insertFact(m.gameId, QStringLiteral("release_year"), yearStr,      QStringLiteral("integer"))) {
+        if (!insertFact(m.gameId, QStringLiteral("genre"),        m.genre,        QStringLiteral("text"))
+         || !insertFact(m.gameId, QStringLiteral("developer"),    m.developer,    QStringLiteral("text"))
+         || !insertFact(m.gameId, QStringLiteral("publisher"),    m.publisher,    QStringLiteral("text"))
+         || !insertFact(m.gameId, QStringLiteral("release_year"), yearStr,        QStringLiteral("integer"))
+         || !insertFact(m.gameId, QStringLiteral("description"),  m.description,  QStringLiteral("text"))) {
             if (error.isEmpty()) {
                 error = QStringLiteral("Insert ZXInfo fact for game %1 failed")
                             .arg(m.gameId);

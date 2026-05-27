@@ -17,7 +17,8 @@ struct OpenVGDBEntry {
     QString genre;
     QString developer;
     QString publisher;
-    int releaseYear = 0;
+    int     releaseYear = 0;
+    QString releaseDate;
 };
 
 } // namespace
@@ -69,6 +70,8 @@ bool enrichFromOpenVGDB(QSqlDatabase &database,
                 if (ok && y > 1970 && y < 2030)
                     e.releaseYear = y;
             }
+            if (dateStr.length() >= 10)
+                e.releaseDate = dateStr.left(10);
         };
 
         // CRC32 index
@@ -148,6 +151,8 @@ bool enrichFromOpenVGDB(QSqlDatabase &database,
                     if (ok && y > 1970 && y < 2030)
                         e.releaseYear = y;
                 }
+                if (dateStr.length() >= 10)
+                    e.releaseDate = dateStr.left(10);
             }
         }
 
@@ -234,6 +239,7 @@ bool enrichFromOpenVGDB(QSqlDatabase &database,
         "developer    = COALESCE(NULLIF(developer, ''), ?), "
         "publisher    = COALESCE(NULLIF(publisher, ''), ?), "
         "release_year = COALESCE(release_year, ?), "
+        "release_date = COALESCE(release_date, ?), "
         "description  = COALESCE(NULLIF(description, ''), ?) "
         "WHERE game_id = ?"));
 
@@ -294,8 +300,9 @@ bool enrichFromOpenVGDB(QSqlDatabase &database,
         updateQuery.bindValue(1, nullableText(e.developer));
         updateQuery.bindValue(2, nullableText(e.publisher));
         updateQuery.bindValue(3, nullableInt(e.releaseYear));
-        updateQuery.bindValue(4, nullableText(e.description));
-        updateQuery.bindValue(5, gameId);
+        updateQuery.bindValue(4, nullableText(e.releaseDate));
+        updateQuery.bindValue(5, nullableText(e.description));
+        updateQuery.bindValue(6, gameId);
         if (!execPrepared(updateQuery, error,
                           QStringLiteral("Update game %1").arg(contextPrefix))) {
             return false;
@@ -310,6 +317,13 @@ bool enrichFromOpenVGDB(QSqlDatabase &database,
                         e.publisher, QStringLiteral("text"), confidence, contextPrefix)) return false;
         if (!insertFact(gameId, QStringLiteral("description"),
                         e.description, QStringLiteral("text"), confidence, contextPrefix)) return false;
+        if (!e.releaseDate.isEmpty()
+            && !insertFact(gameId,
+                           QStringLiteral("release_date"),
+                           e.releaseDate,
+                           QStringLiteral("text"),
+                           confidence,
+                           contextPrefix)) return false;
         if (e.releaseYear > 0
             && !insertFact(gameId,
                            QStringLiteral("release_year"),
@@ -370,7 +384,10 @@ bool enrichFromOpenVGDB(QSqlDatabase &database,
                     "SELECT g.game_id, g.canonical_title, sys.internal_name "
                     "FROM games g "
                     "JOIN systems sys ON sys.system_id = g.system_id "
-                    "WHERE g.description IS NULL OR g.description = ''"))) {
+                    "WHERE g.description IS NULL OR g.description = '' "
+                    "   OR g.developer IS NULL OR g.developer = '' "
+                    "   OR g.publisher IS NULL OR g.publisher = '' "
+                    "   OR g.release_year IS NULL"))) {
                 error = QStringLiteral("Load games for title match: %1").arg(q.lastError().text());
                 return false;
             }

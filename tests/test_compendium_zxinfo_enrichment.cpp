@@ -25,6 +25,8 @@ bool createSchema(QSqlDatabase &db)
                       "system_id INTEGER NOT NULL, "
                       "canonical_title TEXT NOT NULL, "
                       "genre TEXT, "
+                      "developer TEXT, "
+                      "description TEXT, "
                       "publisher TEXT, "
                       "release_year INTEGER)"))
         && execSql(db, QStringLiteral(
@@ -65,18 +67,22 @@ bool seedGame(QSqlDatabase &db,
               const QString &title,
               const QVariant &genre,
               const QVariant &publisher,
-              const QVariant &releaseYear)
+              const QVariant &releaseYear,
+              const QVariant &developer = QVariant(),
+              const QVariant &description = QVariant())
 {
     QSqlQuery q(db);
     q.prepare(QStringLiteral(
-        "INSERT INTO games (game_id, system_id, canonical_title, genre, publisher, release_year) "
-        "VALUES (?, ?, ?, ?, ?, ?)"));
+        "INSERT INTO games (game_id, system_id, canonical_title, genre, publisher, release_year, developer, description) "
+        "VALUES (?, ?, ?, ?, ?, ?, ?, ?)"));
     q.addBindValue(gameId);
     q.addBindValue(systemId);
     q.addBindValue(title);
     q.addBindValue(genre);
     q.addBindValue(publisher);
     q.addBindValue(releaseYear);
+    q.addBindValue(developer);
+    q.addBindValue(description);
     return q.exec();
 }
 
@@ -147,7 +153,9 @@ void CompendiumZxInfoEnrichmentTest::zxRowsAlreadyComplete_returnsWithoutWrites(
                      QStringLiteral("Jet Set Willy"),
                      QVariant(QStringLiteral("Platform")),
                      QVariant(QStringLiteral("Software Projects")),
-                     QVariant(1984)));
+                     QVariant(1984),
+                     QVariant(QStringLiteral("Software Projects")),
+                     QVariant(QStringLiteral("A classic platform game"))));
 
     int games = 0;
     int facts = 0;

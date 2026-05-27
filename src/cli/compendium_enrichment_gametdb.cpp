@@ -105,6 +105,7 @@ bool enrichFromGameTDB(QSqlDatabase &database,
         "publisher    = COALESCE(publisher, ?), "
         "players_max  = COALESCE(players_max, ?), "
         "release_year = COALESCE(release_year, ?), "
+        "release_date = COALESCE(release_date, ?), "
         "description  = COALESCE(description, ?) "
         "WHERE game_id = ?"));
 
@@ -204,8 +205,9 @@ bool enrichFromGameTDB(QSqlDatabase &database,
         updateQuery.bindValue(2, nullableText(meta.publisher));
         updateQuery.bindValue(3, nullableInt(meta.players));
         updateQuery.bindValue(4, nullableInt(releaseYear));
-        updateQuery.bindValue(5, nullableText(meta.description));
-        updateQuery.bindValue(6, gameId);
+        updateQuery.bindValue(5, releaseYear > 0 ? QVariant(meta.releaseDate.left(10)) : QVariant());
+        updateQuery.bindValue(6, nullableText(meta.description));
+        updateQuery.bindValue(7, gameId);
         if (!execPrepared(updateQuery, error, QStringLiteral("Update game GameTDB metadata")))
             return false;
         if (updateQuery.numRowsAffected() > 0) ++gamesEnriched;
@@ -219,6 +221,9 @@ bool enrichFromGameTDB(QSqlDatabase &database,
         if (releaseYear > 0
             && !insertFact(gameId, QStringLiteral("release_year"),
                            QString::number(releaseYear),        QStringLiteral("int")))   return false;
+        if (releaseYear > 0
+            && !insertFact(gameId, QStringLiteral("release_date"),
+                           meta.releaseDate.left(10),           QStringLiteral("text")))  return false;
         if (!meta.description.isEmpty()
             && !insertFact(gameId, QStringLiteral("description"), meta.description,          QStringLiteral("text"))) return false;
     }

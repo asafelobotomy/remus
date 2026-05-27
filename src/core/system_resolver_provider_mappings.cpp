@@ -47,6 +47,7 @@ QMap<int, QMap<QString, QString>> SystemResolver::providerMappings()
         {ID_WONDERSWAN,   {{THEGAMESDB, QStringLiteral("4923")}, {SCREENSCRAPER, QStringLiteral("45")},  {IGDB, QStringLiteral("wonderswan")}}},
         {ID_C64,          {{THEGAMESDB, QStringLiteral("40")},   {SCREENSCRAPER, QStringLiteral("66")},  {IGDB, QStringLiteral("c64")}}},
         {ID_AMIGA,        {{THEGAMESDB, QStringLiteral("4916")}, {SCREENSCRAPER, QStringLiteral("64")},  {IGDB, QStringLiteral("amiga")}}},
+        {ID_IBM_PC,       {{THEGAMESDB, QStringLiteral("1")},    {SCREENSCRAPER, QStringLiteral("135")}, {IGDB, QStringLiteral("pc_dos")}}},
         {ID_ZX_SPECTRUM,  {{THEGAMESDB, QStringLiteral("4918")}, {SCREENSCRAPER, QStringLiteral("76")},  {IGDB, QStringLiteral("zxspectrum")}}},
         {ID_XBOX,         {{THEGAMESDB, QStringLiteral("14")},   {SCREENSCRAPER, QStringLiteral("32")},  {IGDB, QStringLiteral("xbox")}}},
         {ID_XBOX360,      {{THEGAMESDB, QStringLiteral("15")},   {SCREENSCRAPER, QStringLiteral("33")},  {IGDB, QStringLiteral("xbox360")}}},

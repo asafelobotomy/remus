@@ -165,6 +165,7 @@ bool enrichFromIGDB(QSqlDatabase &database,
             "developer    = COALESCE(NULLIF(developer, ''), ?), "
             "publisher    = COALESCE(NULLIF(publisher, ''), ?), "
             "release_year = COALESCE(release_year, ?), "
+            "release_date = COALESCE(release_date, ?), "
             "rating       = COALESCE(rating, ?), "
             "players_max  = COALESCE(players_max, ?) "
             "WHERE game_id = ?"));
@@ -238,15 +239,18 @@ bool enrichFromIGDB(QSqlDatabase &database,
                 const int y = gm.releaseDate.left(4).toInt(&ok);
                 if (ok && y > 1970 && y < 2030) releaseYear = y;
             }
+            const QString releaseDateStr = (gm.releaseDate.size() >= 10)
+                ? gm.releaseDate.left(10) : QString();
 
             updateQ.bindValue(0, nullableText(gm.description));
             updateQ.bindValue(1, gm.genres.isEmpty() ? nullableText(QString()) : QVariant(gm.genres.first()));
             updateQ.bindValue(2, nullableText(gm.developer));
             updateQ.bindValue(3, nullableText(gm.publisher));
             updateQ.bindValue(4, nullableInt(releaseYear));
-            updateQ.bindValue(5, nullableDouble(static_cast<double>(gm.rating)));
-            updateQ.bindValue(6, nullableInt(gm.players));
-            updateQ.bindValue(7, gameId);
+            updateQ.bindValue(5, nullableText(releaseDateStr));
+            updateQ.bindValue(6, nullableDouble(static_cast<double>(gm.rating)));
+            updateQ.bindValue(7, nullableInt(gm.players));
+            updateQ.bindValue(8, gameId);
             if (!execPrepared(updateQ, error, QStringLiteral("Update game igdb"))) {
                 database.rollback();
                 return false;
@@ -263,6 +267,7 @@ bool enrichFromIGDB(QSqlDatabase &database,
                 || !insertFact(gameId, QStringLiteral("developer"),    gm.developer)
                 || !insertFact(gameId, QStringLiteral("publisher"),    gm.publisher)
                 || !insertFact(gameId, QStringLiteral("release_year"), yearStr, QStringLiteral("integer"))
+                || !insertFact(gameId, QStringLiteral("release_date"), releaseDateStr)
                 || !insertFact(gameId, QStringLiteral("rating"),       ratingStr, QStringLiteral("decimal"))
                 || !insertFact(gameId, QStringLiteral("players_max"),  playersStr, QStringLiteral("integer"))) {
                 database.rollback();
