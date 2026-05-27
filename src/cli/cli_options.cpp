@@ -139,7 +139,8 @@ void registerAllOptions(QCommandLineParser &parser, QSet<QString> &actionOptions
         "preset"));
 
     addActionOption(QCommandLineOption("build-compendium", "Build a canonical compendium database from a manifest"));
-    addActionOption(QCommandLineOption("enrich-compendium", "Run enrichment passes (GameTDB) against an existing compendium database without rebuilding"));
+    addActionOption(QCommandLineOption("enrich-compendium", "Run all enrichment passes against an existing compendium database without rebuilding"));
+    addOption(QCommandLineOption("enrich-source", "Comma-separated list of enrichment source(s) to run (default: all). Valid keys: libretro, gametdb, openvgdb, igdb, ra, mame-catver, mame-listxml, zxinfo", "sources"));
     addActionOption(QCommandLineOption("ingest-source", "Incrementally ingest a single DAT file into an existing compendium database", "dat-file"));
     addOption(QCommandLineOption("source-id", "Source identifier for --ingest-source (default: derived from filename)", "id"));
     addOption(QCommandLineOption("source-priority", "Source priority for --ingest-source (default: 10; no-intro=20, redump=30)", "n", "10"));

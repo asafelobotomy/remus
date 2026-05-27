@@ -12,6 +12,7 @@
 #include <QSqlDatabase>
 #include <QSqlError>
 #include <QSqlQuery>
+#include <QStringList>
 #include <QUuid>
 
 // ── --enrich-compendium ────────────────────────────────────────────────────────
@@ -87,6 +88,10 @@ int handleEnrichCompendiumCommand(CliContext &ctx)
     qInfo() << "Running enrichment on" << outputInfo.absoluteFilePath();
 
     // ── Run all enrichment passes and merge resolution ───────────────────────
+    const QString sourceFilterArg = ctx.parser.value("enrich-source").trimmed();
+    const QStringList sourceFilter = sourceFilterArg.isEmpty()
+        ? QStringList{}
+        : sourceFilterArg.split(QLatin1Char(','), Qt::SkipEmptyParts);
     EnrichmentStats stats;
     {
         QString enrichError;
@@ -98,7 +103,9 @@ int handleEnrichCompendiumCommand(CliContext &ctx)
                                           mameCatverPath,
                                           mameListXmlPath,
                                           stats,
-                                          enrichError)) {
+                                          enrichError,
+                                          nullptr,
+                                          sourceFilter)) {
             qCritical().noquote() << QStringLiteral("✗ %1").arg(enrichError);
             database.close();
             database = QSqlDatabase();

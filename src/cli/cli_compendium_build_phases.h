@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QString>
+#include <QStringList>
 #include <functional>
 
 class QSqlDatabase;
@@ -40,10 +41,11 @@ struct EnrichmentStats {
     int zxinfoFactsInserted    = 0;
     int resolvedFields         = 0;
     int unresolvedConflicts    = 0;
-    int passesExecuted         = 0;
-    int passesSkippedNoInput   = 0;
-    int passesSkippedNoGaps    = 0;
-    int passesFailedWithError  = 0;  // non-fatal pass failures; pipeline continues
+    int passesExecuted           = 0;
+    int passesSkippedNoInput     = 0;
+    int passesSkippedNoGaps      = 0;
+    int passesSkippedFiltered    = 0;  // passes skipped by --enrich-source filter
+    int passesFailedWithError    = 0;  // non-fatal pass failures; pipeline continues
     int mergeRuns              = 0;
     int raApiCallsNeeded       = 0;
     int raApiCallsPerformed    = 0;
@@ -77,7 +79,8 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db,
                                    const QString &mameListXmlPath,
                                    EnrichmentStats &stats,
                                    QString &error,
-                                   EnrichmentProgressCallback onProgress = nullptr);
+                                   EnrichmentProgressCallback onProgress = nullptr,
+                                   QStringList sourceFilter = {});
 
 /**
  * @brief Populate the FTS search index tables from the games/game_names rows.

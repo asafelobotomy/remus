@@ -19,6 +19,7 @@
 #include <QSqlDatabase>
 #include <QSqlError>
 #include <QSqlQuery>
+#include <QStringList>
 #include <QUuid>
 
 using namespace CompendiumSqlUtilities;
@@ -87,7 +88,21 @@ int handleBuildCompendiumCommand(CliContext &ctx)
     if (!ctx.parser.isSet("build-compendium")) return 0;
 
     const QString manifestPath = ctx.parser.value("compendium-manifest").trimmed();
-    const QString outputPath = ctx.parser.value("compendium-output").trimmed();
+
+    // --enrich-source filters which enrichment pass(es) to run.
+    // When given without an explicit --compendium-output, auto-derive the output name from the key(s).
+    const QString sourceFilterArg = ctx.parser.value("enrich-source").trimmed();
+    const QStringList sourceFilter = sourceFilterArg.isEmpty()
+        ? QStringList{}
+        : sourceFilterArg.split(QLatin1Char(','), Qt::SkipEmptyParts);
+    const QString outputPath = [&]() -> QString {
+        if (!sourceFilter.isEmpty() && !ctx.parser.isSet("compendium-output")) {
+            const QString suffix = sourceFilter.join(QLatin1Char('_')).toUpper()
+                                       .replace(QLatin1Char('-'), QLatin1Char('_'));
+            return QStringLiteral("data/compendium/remus_compendium_%1.db").arg(suffix);
+        }
+        return ctx.parser.value("compendium-output").trimmed();
+    }();
 
     if (manifestPath.isEmpty()) {
         qCritical() << "✗ Missing required option: --compendium-manifest <path>";
@@ -410,7 +425,8 @@ int handleBuildCompendiumCommand(CliContext &ctx)
         if (!runCompendiumEnrichmentPasses(database, metadataDir, gametdbDir,
                                           openvgdbPath, credPath, mameCatverPath,
                                           mameListXmlPath,
-                                          enrichStats, error, onEnrichProgress)) {
+                                          enrichStats, error, onEnrichProgress,
+                                          sourceFilter)) {
             qCritical().noquote() << QStringLiteral("✗ %1").arg(error);
             database.close();
             QSqlDatabase::removeDatabase(connectionName);

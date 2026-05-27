@@ -605,6 +605,12 @@ PYEOF
         echo "  Warning: MAME XML → DAT conversion failed"
         rm -f "$mame_out_dat"
     fi
+    # Also keep the raw listxml for the MAME listxml enrichment pass.
+    mame_listxml_dest="$(dirname "$MAME_DIR")/mame/listxml.xml"
+    mkdir -p "$(dirname "$mame_listxml_dest")"
+    if cp "$mame_xml_tmp" "$mame_listxml_dest" 2>/dev/null; then
+        echo "  MAME listxml: $mame_listxml_dest ($(du -sh "$mame_listxml_dest" | cut -f1))"
+    fi
     rm -f "$mame_xml_tmp"
     mame_xml_tmp=""
     if [[ -n "$mame_bin_tmp" ]]; then

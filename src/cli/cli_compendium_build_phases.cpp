@@ -12,6 +12,7 @@
 #include <QSqlDatabase>
 #include <QSqlError>
 #include <QSqlQuery>
+#include <QStringList>
 
 #include <functional>
 
@@ -176,6 +177,7 @@ void insertEnrichmentStatsReportFields(QJsonObject &report,
     report.insert(QStringLiteral("enrichment_passes_executed"), stats.passesExecuted);
     report.insert(QStringLiteral("enrichment_passes_skipped_no_input"), stats.passesSkippedNoInput);
     report.insert(QStringLiteral("enrichment_passes_skipped_no_gaps"), stats.passesSkippedNoGaps);
+    report.insert(QStringLiteral("enrichment_passes_skipped_filtered"), stats.passesSkippedFiltered);
     report.insert(QStringLiteral("post_enrich_merge_runs"), stats.mergeRuns);
     report.insert(QStringLiteral("ra_api_calls_needed"), stats.raApiCallsNeeded);
     report.insert(QStringLiteral("ra_api_calls_performed"), stats.raApiCallsPerformed);
@@ -192,7 +194,8 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db,
                                    const QString &mameListXmlPath,
                                    EnrichmentStats &stats,
                                    QString &error,
-                                   EnrichmentProgressCallback onProgress)
+                                   EnrichmentProgressCallback onProgress,
+                                   QStringList sourceFilter)
 {
     auto runTransactionalPass = [&](const QString &passName, auto &&passFn) -> bool {
         if (!db.transaction()) {
@@ -228,6 +231,7 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db,
 
     struct EnrichmentPassSpec {
         QString name;
+        QString sourceKey;  // key used for --enrich-source filtering (e.g. "gametdb", "mame-listxml")
         TransactionMode mode;
         std::function<bool()> isEnabled;
         std::function<bool()> hasWork;
@@ -245,6 +249,7 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db,
     const QList<EnrichmentPassSpec> passes{
         {
             QStringLiteral("Libretro metadata enrichment"),
+            QStringLiteral("libretro"),
             TransactionMode::CallerWrapped,
             [&] { return hasMetadataDir; },
             [&] { return hasAnyGeneralGaps(db, error); },
@@ -258,6 +263,7 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db,
         },
         {
             QStringLiteral("GameTDB enrichment"),
+            QStringLiteral("gametdb"),
             TransactionMode::CallerWrapped,
             [&] { return hasGametdbDir; },
             [&] { return hasAnyGeneralGaps(db, error); },
@@ -271,6 +277,7 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db,
         },
         {
             QStringLiteral("OpenVGDB enrichment"),
+            QStringLiteral("openvgdb"),
             TransactionMode::CallerWrapped,
             [&] { return hasOpenvgdbPath; },
             [&] { return hasAnyOpenVgdbGaps(db, error); },
@@ -284,6 +291,7 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db,
         },
         {
             QStringLiteral("IGDB enrichment"),
+            QStringLiteral("igdb"),
             TransactionMode::SelfManaged,
             [&] { return hasCredPath; },
             [&] { return hasAnyMetadataGaps(db, error); }, // only pass that fills rating
@@ -297,6 +305,7 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db,
         },
         {
             QStringLiteral("RetroAchievements enrichment"),
+            QStringLiteral("ra"),
             TransactionMode::SelfManaged,
             [&] { return hasCredPath; },
             [&] { return hasAnyRaGaps(db, error); },
@@ -313,6 +322,7 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db,
         },
         {
             QStringLiteral("MAME catver enrichment"),
+            QStringLiteral("mame-catver"),
             TransactionMode::CallerWrapped,
             [&] { return hasMameCatverPath; },
             [&] { return hasArcadeCatverGaps(db, error); },
@@ -326,6 +336,7 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db,
         },
         {
             QStringLiteral("MAME listxml enrichment"),
+            QStringLiteral("mame-listxml"),
             TransactionMode::CallerWrapped,
             [&] { return hasMameListXmlPath; },
             [&] { return hasArcadeListxmlGaps(db, error); },
@@ -339,6 +350,7 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db,
         },
         {
             QStringLiteral("ZXInfo enrichment"),
+            QStringLiteral("zxinfo"),
             TransactionMode::SelfManaged,
             [] { return true; },
             [&] { return hasZxSpectrumGaps(db, error); },
@@ -355,6 +367,12 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db,
     const int totalPasses = passes.size();
     for (const EnrichmentPassSpec &pass : passes) {
         ++passIdx;
+        if (!sourceFilter.isEmpty() && !sourceFilter.contains(pass.sourceKey)) {
+            qInfo().noquote() << QStringLiteral("[ENRICH] Pass %1/%2: %3 — skipped (source filter)")
+                                     .arg(passIdx).arg(totalPasses).arg(pass.name);
+            ++stats.passesSkippedFiltered;
+            continue;
+        }
         if (!pass.isEnabled()) {
             qInfo().noquote() << QStringLiteral("[ENRICH] Pass %1/%2: %3 — skipped (no data source)")
                                      .arg(passIdx).arg(totalPasses).arg(pass.name);
