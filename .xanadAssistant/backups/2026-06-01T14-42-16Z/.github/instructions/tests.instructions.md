@@ -8,7 +8,7 @@ description: "Conventions for test files in this workspace — framework, fixtur
 
 ## Execution scope
 
-- Testing framework for this workspace: **(not detected)** — run tests with `(not detected)`
+- Testing framework for this workspace: **CTest / Qt Test (QTest)** — run tests with `cmake --build build --target run_tests -- -j$(nproc)` then `cd build && ctest --output-on-failure`
 - Run the single test module or test class that directly covers the changed code during intermediate work.
 - Run the full suite at task completion or when any file imported by more than one test module is modified.
 - Write tests alongside every code change.

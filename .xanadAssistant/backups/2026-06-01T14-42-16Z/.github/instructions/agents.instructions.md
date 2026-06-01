@@ -21,5 +21,5 @@ description: "Conventions for .agent.md files in this workspace — frontmatter 
 - Include a `Do not use this agent for:` section listing at least three out-of-scope scenarios.
 - Include an `On every invocation` section with numbered steps defining the agent's procedure.
 - For agents that perform destructive operations (e.g., file deletions, git reset --hard, force pushes), include a `Risk tiers` table covering every destructive operation mentioned in the body.
-- Call `memory_dump(agent="<name>")` as the first `On every invocation` step when the body references memory or workspace-specific cached facts (e.g., command paths, tool versions, or established project conventions). Any agent with a `## Memory` section qualifies.
+- Call `memory_dump(agent="<name>")` as the first `On every invocation` step when the body references memory or workspace-specific cached facts (e.g., command paths, tool versions, or established project conventions).
 - Document each handoff to a delegatee agent with a one-line rationale either inline or in a dedicated handoffs section.

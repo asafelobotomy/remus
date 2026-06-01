@@ -5,7 +5,7 @@ argument-hint: "Describe the planning target: rollout, refactor, migration, reme
 model:
   - GPT-5.4
   - Claude Sonnet 4.6
-tools: [agent, codebase, search, runCommands, read_file, list_directory, search_files, file_info, memory_dump, memory_set, elapsed]
+tools: [agent, codebase, search, runCommands]
 agents: [Explore, Debugger, Review, Researcher, Docs]
 user-invocable: false
 ---
@@ -32,7 +32,6 @@ Do not use this agent for:
 - Stay read-only. Do not modify files.
 - Frame the problem, identify in-scope files, estimate blast radius (all files, callers, and downstream consumers the change could affect), and list targeted verification.
 - Prefer concrete phases, file lists, stop conditions (states that make continued execution unsafe), and assumptions over generic advice.
-- When the `filesystem` server is connected, prefer `read_file`, `list_directory`, `search_files`, and `file_info` for read-only inspection before falling back to `runCommands`.
 - Use `Explore` when you need a broader read-only inventory before the plan is credible.
 - Use `Debugger` when existing failures or unclear broken state must be diagnosed before the plan is reliable.
 - Use `Researcher` when the plan depends on current external docs, upstream contracts, or version-specific behavior.

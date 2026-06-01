@@ -5,7 +5,7 @@ argument-hint: "Describe the debugging target: failing test, broken command, une
 model:
   - GPT-5.4
   - Claude Sonnet 4.6
-tools: [agent, codebase, search, runCommands, read_file, list_directory, search_files, file_info, memory_dump, memory_set, elapsed]
+tools: [agent, codebase, search, runCommands]
 agents: [Explore, Review, Planner, Researcher]
 user-invocable: false
 ---
@@ -31,7 +31,6 @@ Do not use this agent for:
 
 - Stay read-only and focus on reproduction, symptom isolation, root cause, and the smallest credible fix path.
 - Prefer targeted commands and tests over broad full-suite runs while triaging.
-- When the `filesystem` server is connected, prefer `read_file`, `list_directory`, `search_files`, and `file_info` for read-only inspection before falling back to `runCommands`.
 - Use `runCommands` for reproduction steps, failing tests, stack traces, and narrow diffs only. Do not run commands that write to the filesystem or mutate repository state (`git checkout`, `rm`, `pip install`, and similar are prohibited).
 - Use `Explore` when the failure spans unfamiliar files and you need a read-only inventory first.
 - Use `Review` when the likely cause involves contracts, security posture, or architecture boundaries.

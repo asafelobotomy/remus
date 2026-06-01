@@ -2,17 +2,17 @@
   "schemaVersion": "0.1.0",
   "package": {
     "name": "xanadAssistant",
-    "packageRoot": "/home/solon/Documents/git/repos/xanadassistant",
+    "packageRoot": "/mnt/SteamLibrary/git/xanadassistant",
     "source": "github:asafelobotomy/xanadassistant",
     "ref": "main"
   },
   "manifest": {
     "schemaVersion": "0.1.0",
-    "hash": "sha256:a21e91a2d2172bae1229b2812b432304694407066aade53289df3e3e139270bf"
+    "hash": "sha256:04ad40cb08df84b77c39183a8ce3e5812ce1c1d5a4ce09161b08a757325dd72a"
   },
   "timestamps": {
-    "appliedAt": "2026-05-24T09:45:33Z",
-    "updatedAt": "2026-05-24T09:45:33Z"
+    "appliedAt": "2026-06-01T14:42:16Z",
+    "updatedAt": "2026-06-01T14:42:16Z"
   },
   "selectedPacks": [],
   "profile": "balanced",
@@ -49,42 +49,74 @@
   },
   "files": [
     {
+      "id": "agents.debugger.agent.md",
+      "target": ".github/agents/debugger.agent.md",
+      "sourceHash": "sha256:fc07441834b9589b4024f988147da861d35172055f50dea3c54101ef1106eebe",
+      "installedHash": "sha256:fc07441834b9589b4024f988147da861d35172055f50dea3c54101ef1106eebe",
+      "ownershipMode": "local",
+      "status": "applied"
+    },
+    {
+      "id": "agents.deps.agent.md",
+      "target": ".github/agents/deps.agent.md",
+      "sourceHash": "sha256:a33064d523d84cba6433cbc3dc144faaef40d5baa5512875b2084af50623362b",
+      "installedHash": "sha256:a33064d523d84cba6433cbc3dc144faaef40d5baa5512875b2084af50623362b",
+      "ownershipMode": "local",
+      "status": "applied"
+    },
+    {
+      "id": "agents.docs.agent.md",
+      "target": ".github/agents/docs.agent.md",
+      "sourceHash": "sha256:423ff28934fe2d34b942a8d6ee76613414751502e7d3658538b3e016dc6e26c3",
+      "installedHash": "sha256:423ff28934fe2d34b942a8d6ee76613414751502e7d3658538b3e016dc6e26c3",
+      "ownershipMode": "local",
+      "status": "applied"
+    },
+    {
+      "id": "agents.planner.agent.md",
+      "target": ".github/agents/planner.agent.md",
+      "sourceHash": "sha256:4f4e1a62ef5d59512e749150168b9f495e3234eac6ade244b1f3993637ae8c18",
+      "installedHash": "sha256:4f4e1a62ef5d59512e749150168b9f495e3234eac6ade244b1f3993637ae8c18",
+      "ownershipMode": "local",
+      "status": "applied"
+    },
+    {
+      "id": "agents.researcher.agent.md",
+      "target": ".github/agents/researcher.agent.md",
+      "sourceHash": "sha256:d146487dab74dbafb7387aa67d3ba595a6b7e51544a96883a844d8ac65939b3c",
+      "installedHash": "sha256:d146487dab74dbafb7387aa67d3ba595a6b7e51544a96883a844d8ac65939b3c",
+      "ownershipMode": "local",
+      "status": "applied"
+    },
+    {
+      "id": "agents.review.agent.md",
+      "target": ".github/agents/review.agent.md",
+      "sourceHash": "sha256:1106e6eff0a5eed4fd3507a61b828b7cadcbe378a9ab065fc7d7ee6e31cfb8e0",
+      "installedHash": "sha256:1106e6eff0a5eed4fd3507a61b828b7cadcbe378a9ab065fc7d7ee6e31cfb8e0",
+      "ownershipMode": "local",
+      "status": "applied"
+    },
+    {
+      "id": "agents.xanadLifecycle.agent.md",
+      "target": ".github/agents/xanadLifecycle.agent.md",
+      "sourceHash": "sha256:36efc70835fe4b29cf33b901478c8188d0ddbc03ae72045bf4f03584bcaeb98a",
+      "installedHash": "sha256:36efc70835fe4b29cf33b901478c8188d0ddbc03ae72045bf4f03584bcaeb98a",
+      "ownershipMode": "local",
+      "status": "applied"
+    },
+    {
       "id": "core-instructions.copilot-instructions.md",
       "target": ".github/copilot-instructions.md",
-      "sourceHash": "sha256:00d0d2c73de643cd5b48c951258e61a17e90f0ffc91a1807ca2dc91d2a4b1d04",
-      "installedHash": "sha256:fe7aa1074d9ecc1048434c7b2d1589cb7d5ecd6dd11e5ec3b6a2b14c7734e55f",
+      "sourceHash": "sha256:19d63771b494a85dbf85154f901a5d3cd2a47d000983a93e25429d360e26bb35",
+      "installedHash": "sha256:63db1ba4dd742bb78dad345caf29c3bb40e522d6386e60f7b979986c92e3385b",
       "ownershipMode": "local",
       "status": "applied"
     },
     {
       "id": "instructions.agents.instructions.md",
       "target": ".github/instructions/agents.instructions.md",
-      "sourceHash": "sha256:f1947b1a581818c52c211a8853cdcf60c00c4d4277508a5aad87bc4ec725b2f4",
-      "installedHash": "sha256:f1947b1a581818c52c211a8853cdcf60c00c4d4277508a5aad87bc4ec725b2f4",
-      "ownershipMode": "local",
-      "status": "applied"
-    },
-    {
-      "id": "instructions.evals.instructions.md",
-      "target": ".github/instructions/evals.instructions.md",
-      "sourceHash": "sha256:a9dc6ce00e775fcd260d26d9693a5473143f735824043ddacefbd58f322900f4",
-      "installedHash": "sha256:a9dc6ce00e775fcd260d26d9693a5473143f735824043ddacefbd58f322900f4",
-      "ownershipMode": "local",
-      "status": "applied"
-    },
-    {
-      "id": "instructions.scripts.instructions.md",
-      "target": ".github/instructions/scripts.instructions.md",
-      "sourceHash": "sha256:f083b13358d3727989d6f99fce0ee45cd2a01e214df0a06c7db6ee54f0b70dd6",
-      "installedHash": "sha256:c7caa60ba40832b0c63bac04a001fad7a31ea05ee43fc93ae4213980601bb770",
-      "ownershipMode": "local",
-      "status": "applied"
-    },
-    {
-      "id": "instructions.skills.instructions.md",
-      "target": ".github/instructions/skills.instructions.md",
-      "sourceHash": "sha256:8b0af92c4758974bb4bc2e51e50697d85342da63e136735216a57e30cf7ea33e",
-      "installedHash": "sha256:8b0af92c4758974bb4bc2e51e50697d85342da63e136735216a57e30cf7ea33e",
+      "sourceHash": "sha256:1e33cc96984865a112d1f75f1e393f432bd7007a486ad3d80e12abe11abb029e",
+      "installedHash": "sha256:1e33cc96984865a112d1f75f1e393f432bd7007a486ad3d80e12abe11abb029e",
       "ownershipMode": "local",
       "status": "applied"
     },
@@ -97,18 +129,10 @@
       "status": "applied"
     },
     {
-      "id": "skills.promptReview.SKILL.md",
-      "target": ".github/skills/promptReview/SKILL.md",
-      "sourceHash": "sha256:0eaf6a146d837f7aa3d3734dbd95acf1cf92f3a667f0af5d02cdbda979e10e24",
-      "installedHash": "sha256:0eaf6a146d837f7aa3d3734dbd95acf1cf92f3a667f0af5d02cdbda979e10e24",
-      "ownershipMode": "local",
-      "status": "applied"
-    },
-    {
-      "id": "vscode-settings.settings.json",
-      "target": ".vscode/settings.json",
-      "sourceHash": "sha256:7ac819eceae50bbc25f6f77a9b784ba92e8869aa6d0ef0043ddbcb5e63969894",
-      "installedHash": "sha256:93309aee10458038e63a0595e323770bc663fd0b8f32d1df735a574b89c8f88d",
+      "id": "skills.lifecycleAudit.SKILL.md",
+      "target": ".github/skills/lifecycleAudit/SKILL.md",
+      "sourceHash": "sha256:401aaf48b32a0680eb5dc8bf108606f5fc88307733af876ae7dd944e5400c512",
+      "installedHash": "sha256:401aaf48b32a0680eb5dc8bf108606f5fc88307733af876ae7dd944e5400c512",
       "ownershipMode": "local",
       "status": "applied"
     }
@@ -178,6 +202,6 @@
   "consumerResolutions": {},
   "unknownValues": {},
   "lastBackup": {
-    "path": ".xanadAssistant/backups/2026-05-24T09-45-33Z"
+    "path": ".xanadAssistant/backups/2026-06-01T14-42-16Z"
   }
 }

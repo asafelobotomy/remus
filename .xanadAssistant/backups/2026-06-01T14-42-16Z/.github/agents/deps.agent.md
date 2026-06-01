@@ -5,7 +5,7 @@ argument-hint: "Describe the dep task: scan, audit, update, search, install, uni
 model:
   - Claude Sonnet 4.6
   - GPT-5.4
-tools: [agent, codebase, search, runCommands, askQuestions, query_osv, query_deps, memory_dump, memory_set, elapsed]
+tools: [agent, codebase, search, runCommands, askQuestions]
 agents: [Explore, Researcher, Review]
 user-invocable: true
 ---

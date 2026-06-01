@@ -5,7 +5,7 @@ argument-hint: "Describe the review scope: file path, PR, diff, audit focus, or 
 model:
   - GPT-5.4
   - Claude Sonnet 4.6
-tools: [agent, codebase, search, runCommands, read_file, list_directory, search_files, file_info, memory_dump, memory_set, elapsed]
+tools: [agent, codebase, search, runCommands]
 agents: [Explore, Debugger, Planner, Researcher]
 user-invocable: true
 ---
@@ -23,7 +23,6 @@ Do not use this agent for:
 
 ## On every invocation
 
-0. Call `memory_dump(agent="review")` before using any tools (see `## Memory`).
 1. **Read first** — open every file in scope before writing any finding. Do not review from memory or partial reads.
 2. **Stay read-only** — do not edit files during review. Produce findings; let the user or the main agent decide what to apply. When using `runCommands`, limit to read-only operations (test runs to confirm findings, `grep`, `cat`, narrow diffs); do not run commands that write to the filesystem, install packages, or mutate repository state.
 3. **Scope clearly** — if the request is broad ("review the codebase"), ask for a specific focus area before proceeding.
@@ -56,8 +55,6 @@ For each finding, report:
 ## Reporting threshold
 
 By default, report all findings at Advisory and above. Prioritise Critical and High. For broad-scope requests, ask the user to narrow the focus before proceeding.
-
-When the `filesystem` server is connected, prefer `read_file`, `list_directory`, `search_files`, and `file_info` for read-only inspection over `runCommands`.
 
 ## Architectural review
 

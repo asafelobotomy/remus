@@ -5,13 +5,13 @@
 
 ## My Role
 
-I work **in** remus — implementing features, reviewing code, running tests, and maintaining the project's Copilot surface via xanadAssistant. Changes to agents, skills, mcp, and prompts go through `xanadAssistant.py update` rather than direct file edits to `.github/`.
+I work **in** remus — implementing features, reviewing code, running tests, and maintaining the project's Copilot surface via xanadAssistant. Changes to agents, skills, hooks, and prompts go through `xanadAssistant.py update` rather than direct file edits to `.github/`.
 
 ## Key Commands
 
 | Task | Command |
 | ------ | --------- |
-| Run tests | `(not detected)` |
+| Run tests | `cmake --build build --target run_tests -- -j$(nproc)` then `cd build && ctest --output-on-failure` |
 | Drift preflight | `python3 scripts/drift_preflight.py` |
 | LOC gate | `python3 scripts/check_loc.py` |
 | Inspect Copilot install state | `python3 <xanad-root>/xanadAssistant.py inspect --workspace . --package-root <xanad-root> --json` |
@@ -35,7 +35,7 @@ Available prompts: `/setup` (install or refresh), `/bootstrap` (cold-start from 
 Do not edit files under `.github/agents/`, `.github/skills/`, `.github/mcp/`, or `.github/prompts/` directly — these are managed by xanadAssistant. Use the `lifecycleAudit` skill to review state before proposing any lifecycle operation.
 
 **Conditional behaviors:**
-- **If `xanadTools` MCP is available** and can resolve a local xanadAssistant package root or a supported remote source, setup-oriented lifecycle operations may use its `lifecycle_inspect`, `lifecycle_check`, `lifecycle_interview`, `lifecycle_plan_setup`, `lifecycle_setup`, `lifecycle_update`, `lifecycle_repair`, and `lifecycle_factory_restore` tools instead of shelling out directly. If `xanadTools` MCP is unavailable, fall back to `xanadAssistant.py` directly.
+- **If `xanadTools` MCP is available** and can resolve a local xanadAssistant package root or a supported remote source, setup-oriented lifecycle operations may use its `lifecycle.*` tools instead of shelling out directly. If `xanadTools` MCP is unavailable, fall back to `xanadAssistant.py` directly.
 - **If `inspect` or `health-check` reports `package_name_mismatch` or `successor_cleanup_required`**, the workspace is being migrated from `copilot-instructions-template`; use `repair` or `update` so xanadAssistant can archive predecessor-owned files and install the current bundle atomically.
 
 ## Agent Routing
@@ -112,4 +112,4 @@ See `## Agent Routing` for the authoritative routing table; this section is a qu
 - `Planner` — produce scoped execution plans for multi-step work before implementation
 - `Researcher` — gather source-backed external constraints before implementation or review
 - `Review` — code, architecture, security, and regression-risk review; handles codebase audits
-- `xanadLifecycle` — handles all `inspect`, `health-check`, `health-report`, `plan`, `update`, `repair`, `factory-restore`, and **health check** requests
+- `xanadLifecycle` — handles all `inspect`, `health-check`, `health-report`, `plan`, `apply`, `update`, `repair`, `factory-restore`, and **health check** requests

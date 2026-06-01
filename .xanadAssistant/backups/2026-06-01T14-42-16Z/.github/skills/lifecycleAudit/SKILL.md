@@ -5,7 +5,7 @@ description: Check xanadAssistant workspace health — inspect install status, s
 
 # Lifecycle Health Check
 
-> Skill metadata: version "1.1"; license MIT; tags [xanadAssistant, lifecycle, inspect, repair, lockfile]; recommended tools [codebase, runCommands].
+> Skill metadata: version "1.0"; license MIT; tags [xanadAssistant, lifecycle, inspect, repair, lockfile]; recommended tools [codebase, runCommands].
 
 Systematic lifecycle state review before any install, update, repair, or factory-restore operation.
 
@@ -37,7 +37,7 @@ Systematic lifecycle state review before any install, update, repair, or factory
    | `not-installed` | any | Run `setup` |
    | any + `needsMigration: true` | any | Run `repair` to migrate lockfile shape first |
 
-4. **Surface findings** — report `installState`, `selectedPacks`, `profile`, `health-check.status`, and any plan `repairReasons` before proposing the intended operation. Prefer `plan` output over ad-hoc file edits. If `warnings` contains memory health codes, classify them: `memory_db_missing` is first-run-safe (info only); `memory_mcp_missing` or `memory_mcp_unregistered` means the memory hook is not registered — propose a repair; `memory_db_schema_corrupt` means the DB is corrupted — propose immediate repair.
+4. **Surface findings** — report `installState`, `selectedPacks`, `profile`, `health-check.status`, and any plan `repairReasons` before proposing the intended operation. Prefer `plan` output over ad-hoc file edits.
 
 5. **Ownership** — keep managed vs skipped surfaces explicit. Do not edit files with `ownership: local` without first running `plan` and reviewing the output.
 
