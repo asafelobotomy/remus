@@ -10,15 +10,15 @@ namespace Remus {
 VerificationController::VerificationController(AppController *appController, QObject *parent)
     : QObject(parent)
     , m_appController(appController)
-    , m_engine(appController->database(), this)
-{
-    connect(&m_engine, &VerificationEngine::verificationProgress, this, [this](int current, int total, const QString &file) {
-        m_progress = current;
-        m_total = total;
-        m_currentFile = QFileInfo(file).fileName();
-        emit progressChanged();
-        emit currentFileChanged();
-    });
+    , m_engine(appController->database(), this) {
+    connect(&m_engine, &VerificationEngine::verificationProgress, this,
+        [this](int current, int total, const QString &file) {
+            m_progress = current;
+            m_total = total;
+            m_currentFile = QFileInfo(file).fileName();
+            emit progressChanged();
+            emit currentFileChanged();
+        });
     connect(&m_engine, &VerificationEngine::verificationComplete, this, [this](const VerificationSummary &summary) {
         m_summary.insert(QStringLiteral("totalFiles"), summary.totalFiles);
         m_summary.insert(QStringLiteral("verified"), summary.verified);
@@ -33,8 +33,7 @@ VerificationController::VerificationController(AppController *appController, QOb
     connect(appController, &AppController::libraryOpened, &m_engine, &VerificationEngine::createVerificationSchema);
 }
 
-void VerificationController::verifyAll()
-{
+void VerificationController::verifyAll() {
     if (m_verifying) {
         setLastError(QStringLiteral("Verification is already running."));
         return;
@@ -56,8 +55,7 @@ void VerificationController::verifyAll()
     emit verifyingChanged();
 }
 
-void VerificationController::verifySelected()
-{
+void VerificationController::verifySelected() {
     if (m_verifying) {
         setLastError(QStringLiteral("Verification is already running."));
         return;
@@ -75,14 +73,13 @@ void VerificationController::verifySelected()
     emit verifyingChanged();
     emit progressChanged();
 
-    populateResults(m_engine.verifyFiles({fileId}));
+    populateResults(m_engine.verifyFiles({ fileId }));
 
     m_verifying = false;
     emit verifyingChanged();
 }
 
-void VerificationController::clearResults()
-{
+void VerificationController::clearResults() {
     if (m_model != nullptr) {
         m_model->clear();
     }
@@ -90,8 +87,7 @@ void VerificationController::clearResults()
     emit summaryChanged();
 }
 
-void VerificationController::populateResults(const QList<VerificationResult> &results)
-{
+void VerificationController::populateResults(const QList<VerificationResult> &results) {
     QList<VerificationListEntry> entries;
     entries.reserve(results.size());
     for (const VerificationResult &result : results) {
@@ -112,8 +108,7 @@ void VerificationController::populateResults(const QList<VerificationResult> &re
     }
 }
 
-QString VerificationController::statusToString(VerificationStatus status)
-{
+QString VerificationController::statusToString(VerificationStatus status) {
     switch (status) {
     case VerificationStatus::Verified:
         return QStringLiteral("verified");
@@ -132,8 +127,7 @@ QString VerificationController::statusToString(VerificationStatus status)
     }
 }
 
-void VerificationController::setLastError(const QString &message)
-{
+void VerificationController::setLastError(const QString &message) {
     if (m_lastError == message) {
         return;
     }

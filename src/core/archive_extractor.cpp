@@ -6,26 +6,22 @@
 namespace Remus {
 
 ArchiveExtractor::ArchiveExtractor(QObject *parent)
-    : QObject(parent)
-{
-}
+    : QObject(parent) { }
 
-QMap<ArchiveFormat, bool> ArchiveExtractor::getAvailableTools() const
-{
+QMap<ArchiveFormat, bool> ArchiveExtractor::getAvailableTools() const {
     QMap<ArchiveFormat, bool> available;
-    available[ArchiveFormat::ZIP]      = true;
+    available[ArchiveFormat::ZIP] = true;
     available[ArchiveFormat::SevenZip] = true;
-    available[ArchiveFormat::RAR]      = true;
-    available[ArchiveFormat::GZip]     = true;
-    available[ArchiveFormat::TarGz]    = true;
-    available[ArchiveFormat::TarBz2]   = true;
-    available[ArchiveFormat::Tar]      = true;
-    available[ArchiveFormat::TarXz]    = true;
+    available[ArchiveFormat::RAR] = true;
+    available[ArchiveFormat::GZip] = true;
+    available[ArchiveFormat::TarGz] = true;
+    available[ArchiveFormat::TarBz2] = true;
+    available[ArchiveFormat::Tar] = true;
+    available[ArchiveFormat::TarXz] = true;
     return available;
 }
 
-bool ArchiveExtractor::canExtract(ArchiveFormat format) const
-{
+bool ArchiveExtractor::canExtract(ArchiveFormat format) const {
     switch (format) {
     case ArchiveFormat::ZIP:
     case ArchiveFormat::SevenZip:
@@ -41,55 +37,61 @@ bool ArchiveExtractor::canExtract(ArchiveFormat format) const
     }
 }
 
-bool ArchiveExtractor::canExtract(const QString &path) const
-{
+bool ArchiveExtractor::canExtract(const QString &path) const {
     return canExtract(detectFormat(path));
 }
 
-ArchiveFormat ArchiveExtractor::detectFormat(const QString &path)
-{
+ArchiveFormat ArchiveExtractor::detectFormat(const QString &path) {
     const QString ext = QFileInfo(path).suffix().toLower();
 
-    if (ext == QLatin1String("zip"))  return ArchiveFormat::ZIP;
-    if (ext == QLatin1String("7z"))   return ArchiveFormat::SevenZip;
-    if (ext == QLatin1String("rar"))  return ArchiveFormat::RAR;
-    if (ext == QLatin1String("tgz"))  return ArchiveFormat::TarGz;
-    if (ext == QLatin1String("gz"))   return ArchiveFormat::GZip;
-    if (ext == QLatin1String("bz2"))  return ArchiveFormat::TarBz2;
-    if (ext == QLatin1String("tbz2")) return ArchiveFormat::TarBz2;
-    if (ext == QLatin1String("tar"))  return ArchiveFormat::Tar;
-    if (ext == QLatin1String("xz"))   return ArchiveFormat::TarXz;
+    if (ext == QLatin1String("zip"))
+        return ArchiveFormat::ZIP;
+    if (ext == QLatin1String("7z"))
+        return ArchiveFormat::SevenZip;
+    if (ext == QLatin1String("rar"))
+        return ArchiveFormat::RAR;
+    if (ext == QLatin1String("tgz"))
+        return ArchiveFormat::TarGz;
+    if (ext == QLatin1String("gz"))
+        return ArchiveFormat::GZip;
+    if (ext == QLatin1String("bz2"))
+        return ArchiveFormat::TarBz2;
+    if (ext == QLatin1String("tbz2"))
+        return ArchiveFormat::TarBz2;
+    if (ext == QLatin1String("tar"))
+        return ArchiveFormat::Tar;
+    if (ext == QLatin1String("xz"))
+        return ArchiveFormat::TarXz;
 
     return ArchiveFormat::Unknown;
 }
 
-QString ArchiveExtractor::normalizeArchiveMemberPath(const QString &path)
-{
+QString ArchiveExtractor::normalizeArchiveMemberPath(const QString &path) {
     QString normalized = path;
     normalized.replace(QLatin1Char('\\'), QLatin1Char('/'));
     normalized = QDir::fromNativeSeparators(normalized).trimmed();
     if (normalized.isEmpty())
-        return {};
+        return { };
 
     while (normalized.startsWith(QStringLiteral("./")))
         normalized.remove(0, 2);
 
     if (normalized.isEmpty() || normalized == QStringLiteral(".") || normalized == QStringLiteral(".."))
-        return {};
+        return { };
 
     if (normalized.startsWith(QLatin1Char('/')) || normalized.startsWith(QLatin1Char('~')))
-        return {};
+        return { };
 
     if (QFileInfo(normalized).isAbsolute())
-        return {};
+        return { };
 
     const QStringList segments = normalized.split(QLatin1Char('/'), Qt::SkipEmptyParts);
     if (segments.isEmpty())
-        return {};
+        return { };
 
     for (const QString &segment : segments) {
         if (segment == QStringLiteral(".") || segment == QStringLiteral(".."))
-            return {};
+            return { };
     }
 
     return segments.join(QLatin1Char('/'));

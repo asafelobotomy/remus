@@ -3,12 +3,9 @@
 namespace Remus {
 
 VerificationResultModel::VerificationResultModel(QObject *parent)
-    : QAbstractListModel(parent)
-{
-}
+    : QAbstractListModel(parent) { }
 
-int VerificationResultModel::rowCount(const QModelIndex &parent) const
-{
+int VerificationResultModel::rowCount(const QModelIndex &parent) const {
     if (parent.isValid()) {
         return 0;
     }
@@ -16,8 +13,7 @@ int VerificationResultModel::rowCount(const QModelIndex &parent) const
     return m_entries.size();
 }
 
-QVariant VerificationResultModel::data(const QModelIndex &index, int role) const
-{
+QVariant VerificationResultModel::data(const QModelIndex &index, int role) const {
     if (!index.isValid() || index.row() < 0 || index.row() >= m_entries.size()) {
         return QVariant();
     }
@@ -45,29 +41,26 @@ QVariant VerificationResultModel::data(const QModelIndex &index, int role) const
     }
 }
 
-QHash<int, QByteArray> VerificationResultModel::roleNames() const
-{
+QHash<int, QByteArray> VerificationResultModel::roleNames() const {
     return {
-        {FileIdRole, "fileId"},
-        {FilenameRole, "filename"},
-        {SystemRole, "system"},
-        {StatusRole, "status"},
-        {FileHashRole, "fileHash"},
-        {DatHashRole, "datHash"},
-        {HashTypeRole, "hashType"},
-        {NotesRole, "notes"},
+        { FileIdRole, "fileId" },
+        { FilenameRole, "filename" },
+        { SystemRole, "system" },
+        { StatusRole, "status" },
+        { FileHashRole, "fileHash" },
+        { DatHashRole, "datHash" },
+        { HashTypeRole, "hashType" },
+        { NotesRole, "notes" },
     };
 }
 
-void VerificationResultModel::setEntries(const QList<VerificationListEntry> &entries)
-{
+void VerificationResultModel::setEntries(const QList<VerificationListEntry> &entries) {
     beginResetModel();
     m_entries = entries;
     endResetModel();
 }
 
-void VerificationResultModel::clear()
-{
+void VerificationResultModel::clear() {
     beginResetModel();
     m_entries.clear();
     endResetModel();

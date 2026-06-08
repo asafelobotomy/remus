@@ -66,6 +66,7 @@ Historical milestone reports remain in [docs/archive/milestones/](docs/archive/m
 
 ### Development
 
+- **[Contributing Guide](docs/CONTRIBUTING.md)** - Workflow, formatting, and PR expectations
 - **[Architecture Docs](docs/architecture/)** - Design documents and implementation plans
 - **[Milestone Reports](docs/archive/milestones/)** - Detailed completion reports and phase summaries
 
@@ -175,7 +176,7 @@ For major changes, please open an issue first to discuss the proposed changes.
 
 ## License
 
-MIT License.
+MIT License — see [LICENSE](LICENSE).
 
 ## Acknowledgments
 

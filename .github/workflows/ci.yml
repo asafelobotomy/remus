@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [main, develop]
+    branches: [main]
   pull_request:
     branches: [main]
 
@@ -15,30 +15,20 @@ jobs:
     strategy:
       matrix:
         build_type: [Debug, Release]
-    
+
     steps:
       - name: Checkout
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
       - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y \
-            build-essential \
-            cmake \
-            qt6-base-dev \
-            qt6-base-dev-tools \
-            qt6-declarative-dev \
-            qt6-declarative-dev-tools \
-            libqt6sql6-sqlite \
-            libgl1-mesa-dev \
-            zlib1g-dev
+        run: bash .github/scripts/install-build-deps.sh
 
       - name: Capture dependency versions
         run: |
           mkdir -p build
           dpkg-query -W -f='${Package}==${Version}\n' \
-            build-essential cmake qt6-base-dev qt6-base-dev-tools qt6-declarative-dev qt6-declarative-dev-tools libqt6sql6-sqlite libgl1-mesa-dev zlib1g-dev \
+            build-essential cmake qt6-base-dev qt6-base-dev-tools qt6-declarative-dev qt6-declarative-dev-tools \
+            libqt6sql6-sqlite libgl1-mesa-dev libxkbcommon-dev zlib1g-dev libarchive-dev qtkeychain-qt6-dev \
             > build/dependency-manifest.txt
           echo "--- cmake version ---" >> build/dependency-manifest.txt
           cmake --version >> build/dependency-manifest.txt
@@ -47,7 +37,12 @@ jobs:
           cat build/dependency-manifest.txt
 
       - name: Configure
-        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+        run: |
+          WARNINGS_FLAG=""
+          if [ "${{ matrix.build_type }}" = "Debug" ]; then
+            WARNINGS_FLAG="-DREMUS_ENABLE_WARNINGS=ON"
+          fi
+          cmake -S . -B build -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} ${WARNINGS_FLAG}
 
       - name: Build
         run: cmake --build build --config ${{ matrix.build_type }} -j$(nproc)
@@ -69,6 +64,44 @@ jobs:
           name: remus-cli-linux-x64
           path: build/remus-cli
 
+  coverage:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+
+      - name: Install dependencies
+        run: |
+          bash .github/scripts/install-build-deps.sh
+          sudo apt-get install -y lcov
+
+      - name: Configure
+        run: |
+          cmake -S . -B build \
+            -DCMAKE_BUILD_TYPE=Debug \
+            -DENABLE_COVERAGE=ON \
+            -DREMUS_ENABLE_WARNINGS=ON
+
+      - name: Build
+        run: cmake --build build -j$(nproc)
+
+      - name: Run Tests
+        run: ctest --test-dir build --output-on-failure
+
+      - name: Generate coverage report
+        run: |
+          lcov --capture --directory build --output-file build/coverage.info --rc lcov_branch_coverage=0
+          lcov --remove build/coverage.info '/usr/*' '*/tests/*' --output-file build/coverage.info
+          genhtml build/coverage.info --output-directory build/coverage-html
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: coverage-report
+          path: |
+            build/coverage.info
+            build/coverage-html
+
   lint:
     runs-on: ubuntu-22.04
     steps:
@@ -79,4 +112,35 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y clang-format
-          find src -name '*.cpp' -o -name '*.h' | head -20 | xargs clang-format --dry-run --Werror || echo "Formatting issues found (non-blocking)"
+          mapfile -t files < <(find src tests -type f \( -name '*.cpp' -o -name '*.h' \) | sort)
+          if [ "${#files[@]}" -eq 0 ]; then
+            echo "No C++ source files found to check."
+            exit 1
+          fi
+          clang-format --dry-run --Werror "${files[@]}"
+
+  sanitizer:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+
+      - name: Install dependencies
+        run: bash .github/scripts/install-build-deps.sh
+
+      - name: Configure
+        run: |
+          cmake -S . -B build \
+            -DCMAKE_BUILD_TYPE=Debug \
+            -DREMUS_ENABLE_WARNINGS=ON \
+            -DCMAKE_CXX_FLAGS="-fsanitize=address,undefined -fno-omit-frame-pointer" \
+            -DCMAKE_EXE_LINKER_FLAGS="-fsanitize=address,undefined"
+
+      - name: Build
+        run: cmake --build build -j$(nproc)
+
+      - name: Run Tests
+        env:
+          ASAN_OPTIONS: detect_leaks=0
+        run: ctest --test-dir build --output-on-failure

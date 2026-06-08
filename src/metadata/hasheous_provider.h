@@ -12,17 +12,17 @@ namespace Remus {
 
 /**
  * @brief Hasheous metadata provider
- * 
+ *
  * Hasheous is a FREE hash-based ROM matching service that requires no authentication.
  * It proxies IGDB metadata and provides RetroAchievements IDs.
- * 
+ *
  * Benefits:
  * - No API key required
  * - Fast hash-based matching (MD5, SHA1, CRC32)
  * - Community-voted corrections
  * - Proxies IGDB data automatically via MetadataProxy
  * - Returns DAT match info (No-Intro, Redump, TOSEC)
- * 
+ *
  * API: https://hasheous.org/api/v1/
  * Swagger: https://hasheous.org/swagger/index.html
  */
@@ -34,22 +34,26 @@ public:
     ~HasheousProvider() override = default;
 
     // MetadataProvider interface
-    QString name() const override { return Constants::Providers::DISPLAY_HASHEOUS; }
-    bool requiresAuth() const override { return false; }
-    
-    QList<SearchResult> searchByName(const QString &title, 
-                                     const QString &system = QString(),
-                                     const QString &region = QString()) override;
-    GameMetadata getByHashes(const QString &crc32,
-                             const QString &md5,
-                             const QString &sha1,
-                             const QString &system);
+    QString name() const override {
+        return Constants::Providers::DISPLAY_HASHEOUS;
+    }
+    bool requiresAuth() const override {
+        return false;
+    }
+
+    QList<SearchResult> searchByName(
+        const QString &title, const QString &system = QString(), const QString &region = QString()) override;
+    GameMetadata getByHashes(const QString &crc32, const QString &md5, const QString &sha1, const QString &system);
     GameMetadata getByHash(const QString &hash, const QString &system) override;
     GameMetadata getById(const QString &id) override;
     ArtworkUrls getArtwork(const QString &id) override;
-    int igdbSkippedCount() const { return m_igdbSkippedCount; }
+    int igdbSkippedCount() const {
+        return m_igdbSkippedCount;
+    }
 
-    void setApiKey(const QString &key) { m_clientApiKey = key.trimmed(); }
+    void setApiKey(const QString &key) {
+        m_clientApiKey = key.trimmed();
+    }
 
 protected:
     QString m_clientApiKey;
@@ -63,14 +67,14 @@ protected:
      * @return "md5", "sha1", "crc32", or empty if unknown
      */
     QString detectHashType(const QString &hash) const;
-    
+
     /**
      * @brief Parse Hasheous hash lookup response to GameMetadata
      * @param json The JSON response from Hasheous
      * @return Populated GameMetadata structure
      */
     GameMetadata parseGameJson(const QJsonObject &json) const;
-    
+
     /**
      * @brief Make GET request to Hasheous API
      * @param endpoint API endpoint
@@ -78,7 +82,7 @@ protected:
      * @return JSON response object
      */
     virtual QJsonObject makeRequest(const QString &endpoint, const QUrlQuery &params);
-    
+
     /**
      * @brief Make POST request with JSON body to Hasheous API
      * @param endpoint API endpoint (e.g., "/Lookup/ByHash")
@@ -86,7 +90,8 @@ protected:
      * @param params Optional URL query parameters
      * @return JSON response object
      */
-    virtual QJsonObject makePostRequest(const QString &endpoint, const QJsonObject &body, const QUrlQuery &params = QUrlQuery());
+    virtual QJsonObject makePostRequest(
+        const QString &endpoint, const QJsonObject &body, const QUrlQuery &params = QUrlQuery());
 
     /**
      * @brief Whether MetadataProxy enrichment is currently available.
@@ -95,7 +100,7 @@ protected:
      * runtime if the server returns an authorization failure.
      */
     virtual bool metadataProxyEnabled() const;
-    
+
     /**
      * @brief Fetch full IGDB metadata via Hasheous MetadataProxy
      * @param igdbId The IGDB game ID obtained from hash lookup

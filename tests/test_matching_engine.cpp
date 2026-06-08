@@ -7,7 +7,7 @@ using namespace Remus::Constants;
 
 /**
  * @brief Unit tests for MatchingEngine
- * 
+ *
  * Tests matching logic including:
  * - Confidence calculation for different match types
  * - Levenshtein distance edge cases
@@ -229,28 +229,24 @@ void MatchingEngineTest::testLevenshteinCaseInsensitive() {
 // ============================================================================
 
 void MatchingEngineTest::testNameSimilarityPerfectMatch() {
-    float similarity = MatchingEngine::calculateNameSimilarity(
-        "Super Mario Bros", "Super Mario Bros");
+    float similarity = MatchingEngine::calculateNameSimilarity("Super Mario Bros", "Super Mario Bros");
     QCOMPARE(similarity, 1.0f);
 }
 
 void MatchingEngineTest::testNameSimilarityCloseMatch() {
     // "Super Mario Bros." vs "Super Mario Bros 3"
-    float similarity = MatchingEngine::calculateNameSimilarity(
-        "Super Mario Bros", "Super Mario Bros 3");
+    float similarity = MatchingEngine::calculateNameSimilarity("Super Mario Bros", "Super Mario Bros 3");
     QVERIFY(similarity > 0.8f); // Very similar, just extra character
 }
 
 void MatchingEngineTest::testNameSimilarityPartialMatch() {
     // "Super Mario" vs "Super Mario World"
-    float similarity = MatchingEngine::calculateNameSimilarity(
-        "Super Mario", "Super Mario World");
+    float similarity = MatchingEngine::calculateNameSimilarity("Super Mario", "Super Mario World");
     QVERIFY(similarity > 0.6f && similarity < 0.9f);
 }
 
 void MatchingEngineTest::testNameSimilarityNoMatch() {
-    float similarity = MatchingEngine::calculateNameSimilarity(
-        "Zelda", "Metroid");
+    float similarity = MatchingEngine::calculateNameSimilarity("Zelda", "Metroid");
     QVERIFY(similarity < 0.3f);
 }
 
@@ -258,7 +254,7 @@ void MatchingEngineTest::testNameSimilarityEmptyStrings() {
     float similarity1 = MatchingEngine::calculateNameSimilarity("", "Mario");
     float similarity2 = MatchingEngine::calculateNameSimilarity("Mario", "");
     float similarity3 = MatchingEngine::calculateNameSimilarity("", "");
-    
+
     QCOMPARE(similarity1, 0.0f);
     QCOMPARE(similarity2, 0.0f);
     QCOMPARE(similarity3, 0.0f);

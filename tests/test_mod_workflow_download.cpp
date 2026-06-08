@@ -2,8 +2,7 @@
 
 // ── Phase 2: DB catalog cache CRUD ───────────────────────────────────────
 
-void ModWorkflowTest::dbCatalogCache_upsertAndQuery()
-{
+void ModWorkflowTest::dbCatalogCache_upsertAndQuery() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
@@ -12,8 +11,8 @@ void ModWorkflowTest::dbCatalogCache_upsertAndQuery()
 
     Database::ModCatalogCacheRecord rec;
     rec.sourceUrl = "https://example.com/mods.json";
-    rec.etag      = "\"abc123\"";
-    rec.modCount  = 42;
+    rec.etag = "\"abc123\"";
+    rec.modCount = 42;
 
     int id = db.upsertCatalogCache(rec);
     QVERIFY(id > 0);
@@ -25,7 +24,7 @@ void ModWorkflowTest::dbCatalogCache_upsertAndQuery()
     QCOMPARE(cached.modCount, 42);
 
     // Upsert again with updated values
-    rec.etag     = "\"def456\"";
+    rec.etag = "\"def456\"";
     rec.modCount = 50;
     db.upsertCatalogCache(rec);
 
@@ -36,8 +35,7 @@ void ModWorkflowTest::dbCatalogCache_upsertAndQuery()
     db.close();
 }
 
-void ModWorkflowTest::dbCatalogCache_queryMissing()
-{
+void ModWorkflowTest::dbCatalogCache_queryMissing() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
@@ -50,32 +48,27 @@ void ModWorkflowTest::dbCatalogCache_queryMissing()
     db.close();
 }
 
-void ModWorkflowTest::cacheDir_returnsValidPath()
-{
+void ModWorkflowTest::cacheDir_returnsValidPath() {
     const QString dir = ModCatalogProvider::cacheDir();
     QVERIFY(!dir.isEmpty());
     QVERIFY(dir.contains("mod_catalog_cache"));
 }
 
-void ModWorkflowTest::cacheFileForUrl_deterministicHash()
-{
+void ModWorkflowTest::cacheFileForUrl_deterministicHash() {
     const QUrl url1(QStringLiteral("https://example.com/mods.json"));
     const QUrl url2(QStringLiteral("https://example.com/mods.json"));
     const QUrl url3(QStringLiteral("https://other.com/mods.json"));
 
     // Same URL produces same cache path
-    QCOMPARE(ModCatalogProvider::cacheFileForUrl(url1),
-             ModCatalogProvider::cacheFileForUrl(url2));
+    QCOMPARE(ModCatalogProvider::cacheFileForUrl(url1), ModCatalogProvider::cacheFileForUrl(url2));
 
     // Different URL produces different cache path
-    QVERIFY(ModCatalogProvider::cacheFileForUrl(url1) !=
-            ModCatalogProvider::cacheFileForUrl(url3));
+    QVERIFY(ModCatalogProvider::cacheFileForUrl(url1) != ModCatalogProvider::cacheFileForUrl(url3));
 }
 
 // ── Phase 3: Patch download + integrity verification ─────────────────────
 
-void ModWorkflowTest::resolvePatchPath_fileUrl_resolves()
-{
+void ModWorkflowTest::resolvePatchPath_fileUrl_resolves() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
@@ -93,12 +86,12 @@ void ModWorkflowTest::resolvePatchPath_fileUrl_resolves()
     QVERIFY(libId > 0);
 
     FileRecord baseFile;
-    baseFile.libraryId    = libId;
-    baseFile.filename     = "rom.sfc";
+    baseFile.libraryId = libId;
+    baseFile.filename = "rom.sfc";
     baseFile.originalPath = dir.path() + "/rom.sfc";
-    baseFile.currentPath  = dir.path() + "/rom.sfc";
-    baseFile.extension    = "sfc";
-    baseFile.fileSize     = 1024;
+    baseFile.currentPath = dir.path() + "/rom.sfc";
+    baseFile.extension = "sfc";
+    baseFile.fileSize = 1024;
     QFile bf(baseFile.currentPath);
     QVERIFY(bf.open(QIODevice::WriteOnly));
     const QByteArray baseRom(1024, '\0');
@@ -109,11 +102,11 @@ void ModWorkflowTest::resolvePatchPath_fileUrl_resolves()
     // Use file:// URL for patch
     const QUrl fileUrl = QUrl::fromLocalFile(patchPath);
     ModEntry mod;
-    mod.id       = "file-url-test";
-    mod.title    = "File URL Test";
-    mod.type     = "hack";
+    mod.id = "file-url-test";
+    mod.title = "File URL Test";
+    mod.type = "hack";
     mod.patchUrl = fileUrl.toString();
-    mod.format   = "ips";
+    mod.format = "ips";
 
     PatchService patchSvc;
     ModWorkflowService workflow(db, patchSvc);
@@ -125,8 +118,7 @@ void ModWorkflowTest::resolvePatchPath_fileUrl_resolves()
     db.close();
 }
 
-void ModWorkflowTest::resolvePatchPath_fileUrl_rejectedFromRemoteCatalog()
-{
+void ModWorkflowTest::resolvePatchPath_fileUrl_rejectedFromRemoteCatalog() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
@@ -140,22 +132,20 @@ void ModWorkflowTest::resolvePatchPath_fileUrl_rejectedFromRemoteCatalog()
 
     PatchService patchSvc;
     ModWorkflowService workflow(db, patchSvc);
-    workflow.setCatalogIsRemote(true);  // simulate remote catalog
+    workflow.setCatalogIsRemote(true); // simulate remote catalog
 
     ModEntry mod;
-    mod.type     = "hack";
-    mod.patchUrl = QUrl::fromLocalFile(patchPath).toString();  // file:// URL
+    mod.type = "hack";
+    mod.patchUrl = QUrl::fromLocalFile(patchPath).toString(); // file:// URL
 
-    ModInstallResult result = workflow.install(FileRecord{}, mod, dir.path() + "/out");
+    ModInstallResult result = workflow.install(FileRecord { }, mod, dir.path() + "/out");
     QVERIFY(!result.success);
-    QVERIFY2(result.error.contains("not permitted"),
-             qPrintable(result.error));
+    QVERIFY2(result.error.contains("not permitted"), qPrintable(result.error));
 
     db.close();
 }
 
-void ModWorkflowTest::resolvePatchPath_relativeUrl_rejectedFromRemoteCatalog()
-{
+void ModWorkflowTest::resolvePatchPath_relativeUrl_rejectedFromRemoteCatalog() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
@@ -164,22 +154,20 @@ void ModWorkflowTest::resolvePatchPath_relativeUrl_rejectedFromRemoteCatalog()
 
     PatchService patchSvc;
     ModWorkflowService workflow(db, patchSvc);
-    workflow.setCatalogIsRemote(true);  // simulate remote catalog
+    workflow.setCatalogIsRemote(true); // simulate remote catalog
 
     ModEntry mod;
-    mod.type     = "hack";
-    mod.patchUrl = "relative/path/patch.ips";  // relative path
+    mod.type = "hack";
+    mod.patchUrl = "relative/path/patch.ips"; // relative path
 
-    ModInstallResult result = workflow.install(FileRecord{}, mod, dir.path() + "/out");
+    ModInstallResult result = workflow.install(FileRecord { }, mod, dir.path() + "/out");
     QVERIFY(!result.success);
-    QVERIFY2(result.error.contains("not permitted"),
-             qPrintable(result.error));
+    QVERIFY2(result.error.contains("not permitted"), qPrintable(result.error));
 
     db.close();
 }
 
-void ModWorkflowTest::resolvePatchPath_httpUrl_rejected()
-{
+void ModWorkflowTest::resolvePatchPath_httpUrl_rejected() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
@@ -190,19 +178,17 @@ void ModWorkflowTest::resolvePatchPath_httpUrl_rejected()
     ModWorkflowService workflow(db, patchSvc);
 
     ModEntry mod;
-    mod.type     = "hack";
-    mod.patchUrl = "http://example.com/patch.ips";  // plain HTTP — should be rejected
+    mod.type = "hack";
+    mod.patchUrl = "http://example.com/patch.ips"; // plain HTTP — should be rejected
 
-    ModInstallResult result = workflow.install(FileRecord{}, mod, dir.path() + "/out");
+    ModInstallResult result = workflow.install(FileRecord { }, mod, dir.path() + "/out");
     QVERIFY(!result.success);
-    QVERIFY2(result.error.contains("HTTPS") || result.error.contains("Insecure"),
-             qPrintable(result.error));
+    QVERIFY2(result.error.contains("HTTPS") || result.error.contains("Insecure"), qPrintable(result.error));
 
     db.close();
 }
 
-void ModWorkflowTest::resolvePatchPath_emptyUrl_fails()
-{
+void ModWorkflowTest::resolvePatchPath_emptyUrl_fails() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
@@ -216,15 +202,14 @@ void ModWorkflowTest::resolvePatchPath_emptyUrl_fails()
     mod.type = "hack";
     mod.patchUrl = "";
 
-    ModInstallResult result = workflow.install(FileRecord{}, mod, dir.path() + "/out");
+    ModInstallResult result = workflow.install(FileRecord { }, mod, dir.path() + "/out");
     QVERIFY(!result.success);
     QVERIFY(result.error.contains("resolve"));
 
     db.close();
 }
 
-void ModWorkflowTest::resolvePatchPath_unsupportedScheme_fails()
-{
+void ModWorkflowTest::resolvePatchPath_unsupportedScheme_fails() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
@@ -238,15 +223,14 @@ void ModWorkflowTest::resolvePatchPath_unsupportedScheme_fails()
     mod.type = "hack";
     mod.patchUrl = "ftp://example.com/patch.ips";
 
-    ModInstallResult result = workflow.install(FileRecord{}, mod, dir.path() + "/out");
+    ModInstallResult result = workflow.install(FileRecord { }, mod, dir.path() + "/out");
     QVERIFY(!result.success);
     QVERIFY(result.error.contains("Unsupported") || result.error.contains("resolve"));
 
     db.close();
 }
 
-void ModWorkflowTest::verifySha1_correctHash()
-{
+void ModWorkflowTest::verifySha1_correctHash() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
@@ -270,12 +254,12 @@ void ModWorkflowTest::verifySha1_correctHash()
     QVERIFY(libId > 0);
 
     FileRecord baseFile;
-    baseFile.libraryId    = libId;
-    baseFile.filename     = "rom.sfc";
+    baseFile.libraryId = libId;
+    baseFile.filename = "rom.sfc";
     baseFile.originalPath = dir.path() + "/rom.sfc";
-    baseFile.currentPath  = dir.path() + "/rom.sfc";
-    baseFile.extension    = "sfc";
-    baseFile.fileSize     = 1024;
+    baseFile.currentPath = dir.path() + "/rom.sfc";
+    baseFile.extension = "sfc";
+    baseFile.fileSize = 1024;
     QFile bf(baseFile.currentPath);
     QVERIFY(bf.open(QIODevice::WriteOnly));
     QVERIFY(writeAll(bf, QByteArrayLiteral("base rom data")));
@@ -283,12 +267,12 @@ void ModWorkflowTest::verifySha1_correctHash()
     baseFile.id = db.insertFile(baseFile);
 
     ModEntry mod;
-    mod.id        = "sha1-correct";
-    mod.title     = "SHA1 Correct";
-    mod.type      = "hack";
-    mod.patchUrl  = filePath;
+    mod.id = "sha1-correct";
+    mod.title = "SHA1 Correct";
+    mod.type = "hack";
+    mod.patchUrl = filePath;
     mod.patchSha1 = expectedSha1;
-    mod.format    = "ips";
+    mod.format = "ips";
 
     PatchService patchSvc;
     ModWorkflowService workflow(db, patchSvc);
@@ -299,8 +283,7 @@ void ModWorkflowTest::verifySha1_correctHash()
     db.close();
 }
 
-void ModWorkflowTest::downloadPatch_unreachableUrl_fails()
-{
+void ModWorkflowTest::downloadPatch_unreachableUrl_fails() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
@@ -310,12 +293,12 @@ void ModWorkflowTest::downloadPatch_unreachableUrl_fails()
     QVERIFY(libId > 0);
 
     FileRecord baseFile;
-    baseFile.libraryId    = libId;
-    baseFile.filename     = "rom.sfc";
+    baseFile.libraryId = libId;
+    baseFile.filename = "rom.sfc";
     baseFile.originalPath = dir.path() + "/rom.sfc";
-    baseFile.currentPath  = dir.path() + "/rom.sfc";
-    baseFile.extension    = "sfc";
-    baseFile.fileSize     = 1024;
+    baseFile.currentPath = dir.path() + "/rom.sfc";
+    baseFile.extension = "sfc";
+    baseFile.fileSize = 1024;
     QFile bf(baseFile.currentPath);
     QVERIFY(bf.open(QIODevice::WriteOnly));
     QVERIFY(writeAll(bf, QByteArrayLiteral("base rom data")));
@@ -323,25 +306,24 @@ void ModWorkflowTest::downloadPatch_unreachableUrl_fails()
     baseFile.id = db.insertFile(baseFile);
 
     ModEntry mod;
-    mod.id       = "dl-fail";
-    mod.title    = "Download Fail";
-    mod.type     = "hack";
+    mod.id = "dl-fail";
+    mod.title = "Download Fail";
+    mod.type = "hack";
     mod.patchUrl = "https://unreachable.invalid/patch.ips";
-    mod.format   = "ips";
+    mod.format = "ips";
 
     PatchService patchSvc;
     ModWorkflowService workflow(db, patchSvc);
     ModInstallResult result = workflow.install(baseFile, mod, dir.path() + "/out");
     QVERIFY(!result.success);
     // Should fail with download-related error
-    QVERIFY(result.error.contains("download") || result.error.contains("timed out")
-            || result.error.contains("resolve"));
+    QVERIFY(
+        result.error.contains("download") || result.error.contains("timed out") || result.error.contains("resolve"));
 
     db.close();
 }
 
-void ModWorkflowTest::install_progressCallbackFires()
-{
+void ModWorkflowTest::install_progressCallbackFires() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
@@ -349,8 +331,8 @@ void ModWorkflowTest::install_progressCallbackFires()
     const QString patchPath = dir.path() + "/patch.ips";
     QFile pf(patchPath);
     QVERIFY(pf.open(QIODevice::WriteOnly));
-    QVERIFY(writeAll(pf, QByteArrayLiteral("PATCH")));  // IPS header
-    QVERIFY(writeAll(pf, QByteArrayLiteral("EOF")));    // IPS end marker
+    QVERIFY(writeAll(pf, QByteArrayLiteral("PATCH"))); // IPS header
+    QVERIFY(writeAll(pf, QByteArrayLiteral("EOF"))); // IPS end marker
     pf.close();
 
     Database db;
@@ -359,25 +341,25 @@ void ModWorkflowTest::install_progressCallbackFires()
     QVERIFY(libId > 0);
 
     FileRecord baseFile;
-    baseFile.libraryId    = libId;
-    baseFile.filename     = "rom.sfc";
+    baseFile.libraryId = libId;
+    baseFile.filename = "rom.sfc";
     baseFile.originalPath = dir.path() + "/rom.sfc";
-    baseFile.currentPath  = dir.path() + "/rom.sfc";
-    baseFile.extension    = "sfc";
-    baseFile.fileSize     = 1024;
+    baseFile.currentPath = dir.path() + "/rom.sfc";
+    baseFile.extension = "sfc";
+    baseFile.fileSize = 1024;
     QFile bf(baseFile.currentPath);
     QVERIFY(bf.open(QIODevice::WriteOnly));
     const QByteArray baseRom(1024, '\0');
-    QVERIFY(writeAll(bf, baseRom));  // 1KB base ROM
+    QVERIFY(writeAll(bf, baseRom)); // 1KB base ROM
     bf.close();
     baseFile.id = db.insertFile(baseFile);
 
     ModEntry mod;
-    mod.id       = "progress-test";
-    mod.title    = "Progress Test";
-    mod.type     = "hack";
+    mod.id = "progress-test";
+    mod.title = "Progress Test";
+    mod.type = "hack";
     mod.patchUrl = patchPath;
-    mod.format   = "ips";
+    mod.format = "ips";
 
     QStringList stages;
     auto callback = [&stages](const QString &stage, int /*percent*/) {
@@ -396,8 +378,7 @@ void ModWorkflowTest::install_progressCallbackFires()
     db.close();
 }
 
-void ModWorkflowTest::downloadDir_cleanedOnDestruction()
-{
+void ModWorkflowTest::downloadDir_cleanedOnDestruction() {
     QString tempDirPath;
     {
         QTemporaryDir dir;
@@ -414,7 +395,7 @@ void ModWorkflowTest::downloadDir_cleanedOnDestruction()
             ModEntry mod;
             mod.type = "hack";
             mod.patchUrl = "https://unreachable.invalid/cleanup.ips";
-            workflow.install(FileRecord{}, mod, dir.path() + "/out");
+            workflow.install(FileRecord { }, mod, dir.path() + "/out");
             // Can't easily capture m_downloadDir path from outside,
             // but the smart pointer ensures cleanup on destruction
         }
@@ -426,8 +407,7 @@ void ModWorkflowTest::downloadDir_cleanedOnDestruction()
     QVERIFY(true);
 }
 
-void ModWorkflowTest::resolvePatchPath_privateIpHostRejected()
-{
+void ModWorkflowTest::resolvePatchPath_privateIpHostRejected() {
     // Finding #1: patch URLs targeting private / loopback IP literals must be
     // rejected before any network connection is made. This covers the DNS-
     // rebinding fix: IP-literal private addresses are caught by isPatchHostAllowed
@@ -450,14 +430,12 @@ void ModWorkflowTest::resolvePatchPath_privateIpHostRejected()
 
     for (const QString &url : privateUrls) {
         ModEntry mod;
-        mod.type     = "hack";
+        mod.type = "hack";
         mod.patchUrl = url;
 
-        ModInstallResult result = workflow.install(FileRecord{}, mod, dir.path() + "/out");
-        QVERIFY2(!result.success,
-                 qPrintable(QStringLiteral("Expected rejection for %1 but got success").arg(url)));
-        QVERIFY2(!result.error.isEmpty(),
-                 qPrintable(QStringLiteral("Expected non-empty error for %1").arg(url)));
+        ModInstallResult result = workflow.install(FileRecord { }, mod, dir.path() + "/out");
+        QVERIFY2(!result.success, qPrintable(QStringLiteral("Expected rejection for %1 but got success").arg(url)));
+        QVERIFY2(!result.error.isEmpty(), qPrintable(QStringLiteral("Expected non-empty error for %1").arg(url)));
     }
 
     db.close();

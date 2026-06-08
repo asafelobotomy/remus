@@ -653,8 +653,6 @@ install(
 - [ ] Update CMakeLists.txt to expose constants
 - [ ] Verify compilation (no errors)
 - [ ] Create unit tests for lookup functions
-- [ ] Update .github/copilot-instructions.md with constants reference
-
 **Test Cases**:
 ```cpp
 void test_system_lookup() {
@@ -890,44 +888,5 @@ namespace PatchFormat {
 
 ## Documentation Update
 
-Update `.github/copilot-instructions.md` to include:
-
-```markdown
-## Constants Library Reference
-
-All application-wide constants are centralized in `src/core/constants/`:
-
-- **Providers**: Metadata provider IDs, display names, priorities
-- **Systems**: 20+ gaming systems with metadata (extensions, hashes, etc.)
-- **Templates**: Named template variables, naming presets
-- **Confidence**: Match confidence thresholds and color mappings
-- **Settings**: QSettings key definitions with defaults
-- **UI Theme**: Color palette, typography, sizes
-
-### Usage Example
-
-```cpp
-#include "src/core/constants/constants.h"
-
-using namespace Remus::Constants;
-
-// Get system info
-const auto* system = Systems::getSystem(Systems::ID_NES);
-qDebug() << system->displayName;  // "Nintendo Entertainment System"
-
-// Access provider info
-auto providers = Providers::getEnabledProviders();
-
-// Settings key validation
-settings.setValue(Settings::Keys::NAMING_TEMPLATE, value);
-```
-
-### Adding New Constants
-
-1. Determine category (provider, system, UI, etc.)
-2. Add to appropriate header file (providers.h, systems.h, etc.)
-3. Create lookup helper function
-4. Update unit tests
-5. Reference in copilot-instructions.md
-```
+Document constants usage in `docs/architecture/` and `docs/guides/` when adding new categories or lookup helpers.
 

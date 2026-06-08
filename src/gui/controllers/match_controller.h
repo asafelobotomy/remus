@@ -24,15 +24,31 @@ class MatchController : public QObject {
 public:
     explicit MatchController(AppController *appController, QObject *parent = nullptr);
 
-    bool isMatching() const { return m_matching; }
-    int matchedFiles() const { return m_matchedFiles; }
-    int totalMatchFiles() const { return m_totalMatchFiles; }
-    QString progressMessage() const { return m_progressMessage; }
-    QString currentProvider() const { return m_currentProvider; }
-    QString lastMessage() const { return m_lastMessage; }
-    int unconfirmedMatchCount() const { return m_unconfirmedMatchCount; }
+    bool isMatching() const {
+        return m_matching;
+    }
+    int matchedFiles() const {
+        return m_matchedFiles;
+    }
+    int totalMatchFiles() const {
+        return m_totalMatchFiles;
+    }
+    QString progressMessage() const {
+        return m_progressMessage;
+    }
+    QString currentProvider() const {
+        return m_currentProvider;
+    }
+    QString lastMessage() const {
+        return m_lastMessage;
+    }
+    int unconfirmedMatchCount() const {
+        return m_unconfirmedMatchCount;
+    }
 
-    void setModel(MatchListModel *model) { m_model = model; }
+    void setModel(MatchListModel *model) {
+        m_model = model;
+    }
 
     Q_INVOKABLE void refreshModel();
     Q_INVOKABLE void matchSelected();

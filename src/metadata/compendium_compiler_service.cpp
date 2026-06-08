@@ -14,14 +14,13 @@
 namespace Remus {
 namespace Compendium {
 
-// ── Post-ingest dedup ─────────────────────────────────────────────────────────
-// See header for full documentation.
-int deduplicateGames(QSqlDatabase &db, QString &error)
-{
-    QSqlQuery q(db);
+    // ── Post-ingest dedup ─────────────────────────────────────────────────────────
+    // See header for full documentation.
+    int deduplicateGames(QSqlDatabase &db, QString &error) {
+        QSqlQuery q(db);
 
-    // Build winner→loser mapping using window functions (SQLite ≥3.25).
-    if (!q.exec(QStringLiteral(R"(
+        // Build winner→loser mapping using window functions (SQLite ≥3.25).
+        if (!q.exec(QStringLiteral(R"(
         CREATE TEMPORARY TABLE _dedup_map AS
         WITH sig_counts AS (
             SELECT g.game_id, g.system_id, g.canonical_title,
@@ -51,144 +50,142 @@ int deduplicateGames(QSqlDatabase &db, QString &error)
                           AND loser.canonical_title = winner.canonical_title
                           AND winner.rn = 1
         WHERE loser.rn > 1)"))) {
-        error = q.lastError().text();
-        return -1;
-    }
+            error = q.lastError().text();
+            return -1;
+        }
 
-    if (!q.exec(QStringLiteral("SELECT COUNT(*) FROM _dedup_map"))) {
-        error = q.lastError().text();
-        return -1;
-    }
-    q.next();
-    const int dupCount = q.value(0).toInt();
+        if (!q.exec(QStringLiteral("SELECT COUNT(*) FROM _dedup_map"))) {
+            error = q.lastError().text();
+            return -1;
+        }
+        q.next();
+        const int dupCount = q.value(0).toInt();
 
-    if (dupCount == 0) {
-        q.exec(QStringLiteral("DROP TABLE IF EXISTS _dedup_map"));
-        return 0;
-    }
+        if (dupCount == 0) {
+            q.exec(QStringLiteral("DROP TABLE IF EXISTS _dedup_map"));
+            return 0;
+        }
 
-    // Reassign child rows to winner; IGNORE on unique-constraint violations
-    // (those duplicates are already owned by the winner and will be cleaned up
-    // when the loser game row is deleted via ON DELETE CASCADE).
-    const QStringList updates = {
-        QStringLiteral("UPDATE OR IGNORE game_names"
-                       " SET game_id = (SELECT winner_id FROM _dedup_map WHERE loser_id = game_names.game_id)"
-                       " WHERE game_id IN (SELECT loser_id FROM _dedup_map)"),
-        QStringLiteral("UPDATE OR IGNORE game_signatures"
-                       " SET game_id = (SELECT winner_id FROM _dedup_map WHERE loser_id = game_signatures.game_id)"
-                       " WHERE game_id IN (SELECT loser_id FROM _dedup_map)"),
-        QStringLiteral("UPDATE OR IGNORE game_serials"
-                       " SET game_id = (SELECT winner_id FROM _dedup_map WHERE loser_id = game_serials.game_id)"
-                       " WHERE game_id IN (SELECT loser_id FROM _dedup_map)"),
-        QStringLiteral("UPDATE OR IGNORE game_facts"
-                       " SET game_id = (SELECT winner_id FROM _dedup_map WHERE loser_id = game_facts.game_id)"
-                       " WHERE game_id IN (SELECT loser_id FROM _dedup_map)"),
-    };
-    for (const QString &sql : updates) {
-        if (!q.exec(sql)) {
+        // Reassign child rows to winner; IGNORE on unique-constraint violations
+        // (those duplicates are already owned by the winner and will be cleaned up
+        // when the loser game row is deleted via ON DELETE CASCADE).
+        const QStringList updates = {
+            QStringLiteral("UPDATE OR IGNORE game_names"
+                           " SET game_id = (SELECT winner_id FROM _dedup_map WHERE loser_id = game_names.game_id)"
+                           " WHERE game_id IN (SELECT loser_id FROM _dedup_map)"),
+            QStringLiteral("UPDATE OR IGNORE game_signatures"
+                           " SET game_id = (SELECT winner_id FROM _dedup_map WHERE loser_id = game_signatures.game_id)"
+                           " WHERE game_id IN (SELECT loser_id FROM _dedup_map)"),
+            QStringLiteral("UPDATE OR IGNORE game_serials"
+                           " SET game_id = (SELECT winner_id FROM _dedup_map WHERE loser_id = game_serials.game_id)"
+                           " WHERE game_id IN (SELECT loser_id FROM _dedup_map)"),
+            QStringLiteral("UPDATE OR IGNORE game_facts"
+                           " SET game_id = (SELECT winner_id FROM _dedup_map WHERE loser_id = game_facts.game_id)"
+                           " WHERE game_id IN (SELECT loser_id FROM _dedup_map)"),
+        };
+        for (const QString &sql : updates) {
+            if (!q.exec(sql)) {
+                error = q.lastError().text();
+                q.exec(QStringLiteral("DROP TABLE IF EXISTS _dedup_map"));
+                return -1;
+            }
+        }
+
+        // Delete losers; ON DELETE CASCADE removes any remaining child rows that
+        // could not be reassigned (already covered by a winner row).
+        if (!q.exec(QStringLiteral("DELETE FROM games WHERE game_id IN (SELECT loser_id FROM _dedup_map)"))) {
             error = q.lastError().text();
             q.exec(QStringLiteral("DROP TABLE IF EXISTS _dedup_map"));
             return -1;
         }
-    }
 
-    // Delete losers; ON DELETE CASCADE removes any remaining child rows that
-    // could not be reassigned (already covered by a winner row).
-    if (!q.exec(QStringLiteral(
-            "DELETE FROM games WHERE game_id IN (SELECT loser_id FROM _dedup_map)"))) {
-        error = q.lastError().text();
         q.exec(QStringLiteral("DROP TABLE IF EXISTS _dedup_map"));
-        return -1;
+        return dupCount;
     }
 
-    q.exec(QStringLiteral("DROP TABLE IF EXISTS _dedup_map"));
-    return dupCount;
-}
+    // ── Compiler service ──────────────────────────────────────────────────────────
 
-// ── Compiler service ──────────────────────────────────────────────────────────
+    CompilerStats CompendiumCompilerService::run(
+        const CompendiumBuildConfig &config, QSqlDatabase &db, QString &error, ProgressCallback onProgress) {
+        CompilerStats stats;
+        const CompendiumNormalizer normalizer;
+        IdentityLinker linker; // stateful: accumulates maps across sources
+        const FactInserter inserter;
+        const MergeResolver resolver;
 
-CompilerStats CompendiumCompilerService::run(const CompendiumBuildConfig &config,
-                                              QSqlDatabase &db,
-                                              QString &error,
-                                              ProgressCallback onProgress)
-{
-    CompilerStats stats;
-    const CompendiumNormalizer normalizer;
-    IdentityLinker             linker;   // stateful: accumulates maps across sources
-    const FactInserter         inserter;
-    const MergeResolver        resolver;
-
-    // Count enabled sources once for accurate progress reporting.
-    int totalEnabled = 0;
-    for (const auto &s : config.sources) { if (s.enabled) ++totalEnabled; }
-    int processed = 0;
-
-    for (const CompendiumSourceConfig &src : config.sources) {
-        if (!src.enabled) {
-            ++stats.skippedDisabled;
-            continue;
+        // Count enabled sources once for accurate progress reporting.
+        int totalEnabled = 0;
+        for (const auto &s : config.sources) {
+            if (s.enabled)
+                ++totalEnabled;
         }
+        int processed = 0;
 
-        if (src.sourceType != QStringLiteral("dat")) {
-            error = QStringLiteral("Source '%1' has unsupported source_type '%2' — only 'dat' is supported")
-                        .arg(src.sourceId, src.sourceType);
-            return stats;
-        }
-
-        // ── Extract ───────────────────────────────────────────────────────────
-        QString extractError;
-        QList<SourceRecordEnvelope> records = DatExtractor::extract(
-            src.filePath, src.sourceId, src.snapshotId, extractError);
-
-        if (records.isEmpty()) {
-            if (!extractError.isEmpty()) {
-                qWarning() << "[CompendiumCompilerService] Extraction failed for"
-                           << src.sourceId << ":" << extractError;
+        for (const CompendiumSourceConfig &src : config.sources) {
+            if (!src.enabled) {
+                ++stats.skippedDisabled;
+                continue;
             }
-            continue;
+
+            if (src.sourceType != QStringLiteral("dat")) {
+                error = QStringLiteral("Source '%1' has unsupported source_type '%2' — only 'dat' is supported")
+                            .arg(src.sourceId, src.sourceType);
+                return stats;
+            }
+
+            // ── Extract ───────────────────────────────────────────────────────────
+            QString extractError;
+            QList<SourceRecordEnvelope> records
+                = DatExtractor::extract(src.filePath, src.sourceId, src.snapshotId, extractError);
+
+            if (records.isEmpty()) {
+                if (!extractError.isEmpty()) {
+                    qWarning() << "[CompendiumCompilerService] Extraction failed for" << src.sourceId << ":"
+                               << extractError;
+                }
+                continue;
+            }
+
+            // ── Normalize ─────────────────────────────────────────────────────────
+            for (SourceRecordEnvelope &rec : records) {
+                normalizer.normalize(rec);
+            }
+
+            // ── Link identities (stateful: cross-source maps persist) ─────────────
+            linker.link(records);
+
+            // ── Persist ───────────────────────────────────────────────────────────
+            if (!inserter.insert(records, db, stats, error)) {
+                return stats; // error is set
+            }
+
+            ++processed;
+            if (onProgress) {
+                onProgress(processed, totalEnabled, src.sourceId, stats);
+            }
         }
 
-        // ── Normalize ─────────────────────────────────────────────────────────
-        for (SourceRecordEnvelope &rec : records) {
-            normalizer.normalize(rec);
+        // ── Post-ingest dedup: merge game rows with same (system_id, title) ───────
+        {
+            QString dedupError;
+            const int merged = deduplicateGames(db, dedupError);
+            if (merged < 0) {
+                error = QStringLiteral("Post-ingest dedup failed: %1").arg(dedupError);
+                return stats;
+            }
+            stats.deduplicatedGames = merged;
+            if (merged > 0) {
+                qInfo() << "[CompendiumCompilerService] Merged" << merged << "duplicate game rows.";
+            }
         }
 
-        // ── Link identities (stateful: cross-source maps persist) ─────────────
-        linker.link(records);
-
-        // ── Persist ───────────────────────────────────────────────────────────
-        if (!inserter.insert(records, db, stats, error)) {
-            return stats; // error is set
-        }
-
-        ++processed;
-        if (onProgress) {
-            onProgress(processed, totalEnabled, src.sourceId, stats);
-        }
-    }
-
-    // ── Post-ingest dedup: merge game rows with same (system_id, title) ───────
-    {
-        QString dedupError;
-        const int merged = deduplicateGames(db, dedupError);
-        if (merged < 0) {
-            error = QStringLiteral("Post-ingest dedup failed: %1").arg(dedupError);
+        // ── Merge resolution (single pass over all accumulated facts) ─────────────
+        if (!resolver.resolve(db, stats, error)) {
             return stats;
         }
-        stats.deduplicatedGames = merged;
-        if (merged > 0) {
-            qInfo() << "[CompendiumCompilerService] Merged" << merged
-                    << "duplicate game rows.";
-        }
-    }
 
-    // ── Merge resolution (single pass over all accumulated facts) ─────────────
-    if (!resolver.resolve(db, stats, error)) {
         return stats;
     }
-
-    return stats;
-}
 
 } // namespace Compendium
 } // namespace Remus

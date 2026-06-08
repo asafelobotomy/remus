@@ -60,21 +60,14 @@ jobs:
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
       - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y \
-            build-essential \
-            cmake \
-            qt6-base-dev \
-            qt6-base-dev-tools \
-            libqt6sql6-sqlite \
-            zlib1g-dev
+        run: bash .github/scripts/install-build-deps.sh
 
       - name: Capture dependency versions
         run: |
           mkdir -p build dist
           dpkg-query -W -f='${Package}==${Version}\n' \
-            build-essential cmake qt6-base-dev qt6-base-dev-tools libqt6sql6-sqlite zlib1g-dev \
+            build-essential cmake qt6-base-dev qt6-base-dev-tools qt6-declarative-dev qt6-declarative-dev-tools \
+            libqt6sql6-sqlite libgl1-mesa-dev libxkbcommon-dev zlib1g-dev libarchive-dev qtkeychain-qt6-dev \
             > dist/dependency-manifest.txt
           echo "--- cmake version ---" >> dist/dependency-manifest.txt
           cmake --version >> dist/dependency-manifest.txt

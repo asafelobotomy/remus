@@ -10,48 +10,43 @@ namespace Remus {
 
 namespace {
 
-QString extractedRelativePath(const QString &outputDir, const QString &path)
-{
-    return QDir(outputDir).relativeFilePath(path).replace('\\', '/');
-}
+    QString extractedRelativePath(const QString &outputDir, const QString &path) {
+        return QDir(outputDir).relativeFilePath(path).replace('\\', '/');
+    }
 
-QString resolveExtractedPath(const QString &extractionRoot,
-                            const QStringList &extractedFiles,
-                            const FileRecord &file)
-{
-    const QString normalizedMember = ArchiveExtractor::normalizeArchiveMemberPath(file.archiveInternalPath);
-    if (!normalizedMember.isEmpty()) {
+    QString resolveExtractedPath(
+        const QString &extractionRoot, const QStringList &extractedFiles, const FileRecord &file) {
+        const QString normalizedMember = ArchiveExtractor::normalizeArchiveMemberPath(file.archiveInternalPath);
+        if (!normalizedMember.isEmpty()) {
+            for (const QString &path : extractedFiles) {
+                if (extractedRelativePath(extractionRoot, path) == normalizedMember) {
+                    return path;
+                }
+            }
+        }
+
+        QString matchedByName;
         for (const QString &path : extractedFiles) {
-            if (extractedRelativePath(extractionRoot, path) == normalizedMember) {
-                return path;
+            if (QFileInfo(path).fileName().compare(file.filename, Qt::CaseInsensitive) == 0) {
+                if (!matchedByName.isEmpty()) {
+                    return QString();
+                }
+                matchedByName = path;
             }
         }
-    }
 
-    QString matchedByName;
-    for (const QString &path : extractedFiles) {
-        if (QFileInfo(path).fileName().compare(file.filename, Qt::CaseInsensitive) == 0) {
-            if (!matchedByName.isEmpty()) {
-                return QString();
-            }
-            matchedByName = path;
+        if (!matchedByName.isEmpty()) {
+            return matchedByName;
         }
-    }
 
-    if (!matchedByName.isEmpty()) {
-        return matchedByName;
+        const QString basenamePath = QDir(extractionRoot).filePath(file.filename);
+        return QFileInfo::exists(basenamePath) ? basenamePath : QString();
     }
-
-    const QString basenamePath = QDir(extractionRoot).filePath(file.filename);
-    return QFileInfo::exists(basenamePath) ? basenamePath : QString();
-}
 
 } // namespace
 
-ExtractionResult ConversionService::extractArchive(const QString &archivePath,
-                                                   const QString &outputDir,
-                                                   ProgressCallback progressCb)
-{
+ExtractionResult ConversionService::extractArchive(
+    const QString &archivePath, const QString &outputDir, ProgressCallback progressCb) {
     QFileInfo fi(archivePath);
     if (!fi.exists()) {
         ExtractionResult r;
@@ -67,15 +62,13 @@ ExtractionResult ConversionService::extractArchive(const QString &archivePath,
 
     ExtractionResult result = m_archiveExtractor->extract(archivePath, outputDir, true);
 
-    if (conn) QObject::disconnect(conn);
+    if (conn)
+        QObject::disconnect(conn);
     return result;
 }
 
-ExtractionResult ConversionService::extractArchiveWithDbUpdate(const QString &archivePath,
-                                                               const QString &outputDir,
-                                                               Database *db,
-                                                               ProgressCallback progressCb)
-{
+ExtractionResult ConversionService::extractArchiveWithDbUpdate(
+    const QString &archivePath, const QString &outputDir, Database *db, ProgressCallback progressCb) {
     ExtractionResult result = extractArchive(archivePath, outputDir, progressCb);
 
     if (result.success && db) {
@@ -94,9 +87,8 @@ ExtractionResult ConversionService::extractArchiveWithDbUpdate(const QString &ar
             FileRecord updatedRecord = file;
             updatedRecord.currentPath = extractedPath;
             updatedRecord.filename = extractedInfo.fileName();
-            updatedRecord.extension = extractedInfo.suffix().isEmpty()
-                ? QString()
-                : QStringLiteral(".") + extractedInfo.suffix().toLower();
+            updatedRecord.extension
+                = extractedInfo.suffix().isEmpty() ? QString() : QStringLiteral(".") + extractedInfo.suffix().toLower();
             updatedRecord.fileSize = extractedInfo.size();
             updatedRecord.isCompressed = false;
             updatedRecord.archivePath.clear();
@@ -108,11 +100,8 @@ ExtractionResult ConversionService::extractArchiveWithDbUpdate(const QString &ar
     return result;
 }
 
-CompressionResult ConversionService::compressToArchive(const QStringList &inputPaths,
-                                                       const QString &outputArchive,
-                                                       ArchiveFormat format,
-                                                       ProgressCallback progressCb)
-{
+CompressionResult ConversionService::compressToArchive(
+    const QStringList &inputPaths, const QString &outputArchive, ArchiveFormat format, ProgressCallback progressCb) {
     QMetaObject::Connection conn;
     if (progressCb) {
         conn = QObject::connect(m_archiveCreator.get(), &ArchiveCreator::compressionProgress,
@@ -121,15 +110,13 @@ CompressionResult ConversionService::compressToArchive(const QStringList &inputP
 
     CompressionResult result = m_archiveCreator->compress(inputPaths, outputArchive, format);
 
-    if (conn) QObject::disconnect(conn);
+    if (conn)
+        QObject::disconnect(conn);
     return result;
 }
 
-QList<CompressionResult> ConversionService::batchCompressToArchive(const QStringList &dirs,
-                                                                   const QString &outputDir,
-                                                                   ArchiveFormat format,
-                                                                   ProgressCallback progressCb)
-{
+QList<CompressionResult> ConversionService::batchCompressToArchive(
+    const QStringList &dirs, const QString &outputDir, ArchiveFormat format, ProgressCallback progressCb) {
     QMetaObject::Connection conn;
     if (progressCb) {
         conn = QObject::connect(m_archiveCreator.get(), &ArchiveCreator::compressionProgress,
@@ -138,17 +125,16 @@ QList<CompressionResult> ConversionService::batchCompressToArchive(const QString
 
     QList<CompressionResult> results = m_archiveCreator->batchCompress(dirs, outputDir, format);
 
-    if (conn) QObject::disconnect(conn);
+    if (conn)
+        QObject::disconnect(conn);
     return results;
 }
 
-bool ConversionService::canCompress(ArchiveFormat format) const
-{
+bool ConversionService::canCompress(ArchiveFormat format) const {
     return m_archiveCreator->canCompress(format);
 }
 
-QMap<ArchiveFormat, bool> ConversionService::getArchiveCompressionToolStatus() const
-{
+QMap<ArchiveFormat, bool> ConversionService::getArchiveCompressionToolStatus() const {
     return m_archiveCreator->getAvailableTools();
 }
 

@@ -1,5 +1,7 @@
 # Archived GUI / TUI Code
 
+> **Historical reference only.** This tree is not built, tested, or supported in the active Remus workflow. Do not extend it unless you are explicitly restoring the legacy UI stack.
+
 This directory contains the archived Qt GUI, Notcurses TUI, and ncurses interactive CLI
 code that was removed from the active build on 2026-03-26. The CLI foundation is the
 current focus; GUI/TUI wiring will be restored once the CLI is confirmed working correctly.

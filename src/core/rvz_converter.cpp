@@ -8,21 +8,15 @@ namespace Remus {
 
 RVZConverter::RVZConverter(QObject *parent)
     : DiscConverter(parent)
-    , m_dolphinToolPath("dolphin-tool")
-{
-}
+    , m_dolphinToolPath("dolphin-tool") { }
 
-bool RVZConverter::isDolphinToolAvailable() const
-{
-    auto result = const_cast<RVZConverter*>(this)
-                      ->runProcess(m_dolphinToolPath, QStringList() << "--help", 5000);
+bool RVZConverter::isDolphinToolAvailable() const {
+    auto result = const_cast<RVZConverter *>(this)->runProcess(m_dolphinToolPath, QStringList() << "--help", 5000);
     return result.started;
 }
 
-QString RVZConverter::getDolphinToolVersion() const
-{
-    auto result = const_cast<RVZConverter*>(this)
-                      ->runProcess(m_dolphinToolPath, QStringList() << "--help", 5000);
+QString RVZConverter::getDolphinToolVersion() const {
+    auto result = const_cast<RVZConverter *>(this)->runProcess(m_dolphinToolPath, QStringList() << "--help", 5000);
     // dolphin-tool prints version info in help output
     QStringList lines = result.stdOutput.split('\n');
     for (const QString &line : lines) {
@@ -33,32 +27,26 @@ QString RVZConverter::getDolphinToolVersion() const
     return lines.isEmpty() ? QString() : lines.first().trimmed();
 }
 
-void RVZConverter::setDolphinToolPath(const QString &path)
-{
+void RVZConverter::setDolphinToolPath(const QString &path) {
     m_dolphinToolPath = path;
 }
 
-void RVZConverter::setCompression(RVZCompression compression)
-{
+void RVZConverter::setCompression(RVZCompression compression) {
     m_compression = compression;
 }
 
-void RVZConverter::setCompressionLevel(int level)
-{
+void RVZConverter::setCompressionLevel(int level) {
     m_compressionLevel = level;
 }
 
-ConversionResult RVZConverter::convertIsoToRVZ(const QString &isoPath,
-                                                const QString &outputPath)
-{
+ConversionResult RVZConverter::convertIsoToRVZ(const QString &isoPath, const QString &outputPath) {
     QString output = outputPath.isEmpty() ? getDefaultOutputPath(isoPath, "rvz") : outputPath;
 
     QStringList args;
     args << "convert"
          << "--format=rvz"
          << "--block_size=131072"
-         << "--input" << isoPath
-         << "--output" << output;
+         << "--input" << isoPath << "--output" << output;
 
     QString compression = getCompressionString();
     if (!compression.isEmpty()) {
@@ -69,44 +57,35 @@ ConversionResult RVZConverter::convertIsoToRVZ(const QString &isoPath,
     return runToolConversion(m_dolphinToolPath, args, "dolphin-tool", isoPath, output);
 }
 
-ConversionResult RVZConverter::extractRVZToIso(const QString &rvzPath,
-                                                const QString &outputPath)
-{
+ConversionResult RVZConverter::extractRVZToIso(const QString &rvzPath, const QString &outputPath) {
     QString output = outputPath.isEmpty() ? getDefaultOutputPath(rvzPath, "iso") : outputPath;
 
     QStringList args;
     args << "convert"
          << "--format=iso"
-         << "--input" << rvzPath
-         << "--output" << output;
+         << "--input" << rvzPath << "--output" << output;
 
     return runToolConversion(m_dolphinToolPath, args, "dolphin-tool", rvzPath, output);
 }
 
-VerifyResult RVZConverter::verifyRVZ(const QString &rvzPath)
-{
+VerifyResult RVZConverter::verifyRVZ(const QString &rvzPath) {
     VerifyResult result;
     result.path = rvzPath;
 
-    ProcessResult processResult = runProcess(m_dolphinToolPath,
-                                             QStringList() << "verify" << "--input" << rvzPath,
-                                             300000);
+    ProcessResult processResult
+        = runProcess(m_dolphinToolPath, QStringList() << "verify" << "--input" << rvzPath, 300000);
 
     result.valid = (processResult.exitCode == 0);
     result.details = processResult.stdOutput;
 
     if (!result.valid) {
-        result.error = processResult.stdError.isEmpty()
-                           ? "Verification failed"
-                           : processResult.stdError;
+        result.error = processResult.stdError.isEmpty() ? "Verification failed" : processResult.stdError;
     }
 
     return result;
 }
 
-QList<ConversionResult> RVZConverter::batchConvert(const QStringList &inputPaths,
-                                                    const QString &outputDir)
-{
+QList<ConversionResult> RVZConverter::batchConvert(const QStringList &inputPaths, const QString &outputDir) {
     QList<ConversionResult> results;
     m_cancelled = false;
 
@@ -135,16 +114,21 @@ QList<ConversionResult> RVZConverter::batchConvert(const QStringList &inputPaths
     return results;
 }
 
-QString RVZConverter::getCompressionString() const
-{
+QString RVZConverter::getCompressionString() const {
     switch (m_compression) {
-        case RVZCompression::Zstd:  return "zstd";
-        case RVZCompression::Bzip2: return "bzip2";
-        case RVZCompression::LZMA:  return "lzma";
-        case RVZCompression::LZMA2: return "lzma2";
-        case RVZCompression::None:  return "none";
-        case RVZCompression::Auto:
-        default:                    return "zstd";
+    case RVZCompression::Zstd:
+        return "zstd";
+    case RVZCompression::Bzip2:
+        return "bzip2";
+    case RVZCompression::LZMA:
+        return "lzma";
+    case RVZCompression::LZMA2:
+        return "lzma2";
+    case RVZCompression::None:
+        return "none";
+    case RVZCompression::Auto:
+    default:
+        return "zstd";
     }
 }
 

@@ -25,30 +25,18 @@ using namespace Constants;
 
 namespace {
 
-bool isSufficientlyEnriched(const GameMetadata &metadata, bool requireArtwork)
-{
-    const bool hasCoreMetadata = !metadata.title.isEmpty()
-        && !metadata.publisher.isEmpty()
-        && !metadata.developer.isEmpty()
-        && !metadata.releaseDate.isEmpty()
-        && !metadata.genres.isEmpty()
-        && !metadata.description.isEmpty()
-        && metadata.players != 0;
-    return hasCoreMetadata && (!requireArtwork || !metadata.boxArtUrl.isEmpty());
-}
+    bool isSufficientlyEnriched(const GameMetadata &metadata, bool requireArtwork) {
+        const bool hasCoreMetadata = !metadata.title.isEmpty() && !metadata.publisher.isEmpty()
+            && !metadata.developer.isEmpty() && !metadata.releaseDate.isEmpty() && !metadata.genres.isEmpty()
+            && !metadata.description.isEmpty() && metadata.players != 0;
+        return hasCoreMetadata && (!requireArtwork || !metadata.boxArtUrl.isEmpty());
+    }
 
 } // namespace
 
-void ProviderOrchestrator::queryProvider(GameMetadata &accumulator,
-                                         const QString &providerName,
-                                         const QString &hash,
-                                         const QString &name,
-                                         const QString &system,
-                                         const QString &crc32,
-                                         const QString &md5,
-                                         const QString &sha1,
-                                         const QString &serial)
-{
+void ProviderOrchestrator::queryProvider(GameMetadata &accumulator, const QString &providerName, const QString &hash,
+    const QString &name, const QString &system, const QString &crc32, const QString &md5, const QString &sha1,
+    const QString &serial) {
     if (!m_providers.contains(providerName)) {
         return;
     }
@@ -119,11 +107,12 @@ void ProviderOrchestrator::queryProvider(GameMetadata &accumulator,
                     if (!result.title.isEmpty()) {
                         result.matchScore = best.matchScore;
                         result.matchMethod = (best.matchScore >= 0.95f) ? MatchMethods::NAME : MatchMethods::FUZZY;
-                        qInfo() << "Name match via" << providerName << ":" << result.title << "(score:" << best.matchScore << ")";
+                        qInfo() << "Name match via" << providerName << ":" << result.title
+                                << "(score:" << best.matchScore << ")";
                         emit providerSucceeded(providerName, MatchMethods::NAME);
                     } else {
-                        const QString detailError = QStringLiteral("Detail fetch failed after search hit: %1 (%2)")
-                            .arg(best.title, best.id);
+                        const QString detailError
+                            = QStringLiteral("Detail fetch failed after search hit: %1 (%2)").arg(best.title, best.id);
                         qWarning() << "✗" << providerName << detailError;
                         emit providerFailed(providerName, detailError);
                     }
@@ -140,15 +129,10 @@ void ProviderOrchestrator::queryProvider(GameMetadata &accumulator,
     if (!result.title.isEmpty() || !result.publisher.isEmpty() || !result.developer.isEmpty()) {
         mergeMetadata(accumulator, result);
     }
-
 }
 
-GameMetadata ProviderOrchestrator::getByHashWithFallback(const QString &hash,
-                                                         const QString &system,
-                                                         const QString &crc32,
-                                                         const QString &md5,
-                                                         const QString &sha1)
-{
+GameMetadata ProviderOrchestrator::getByHashWithFallback(
+    const QString &hash, const QString &system, const QString &crc32, const QString &md5, const QString &sha1) {
     if (hash.isEmpty()) {
         qWarning() << "Cannot search by hash: hash is empty";
         return GameMetadata();
@@ -158,7 +142,7 @@ GameMetadata ProviderOrchestrator::getByHashWithFallback(const QString &hash,
         const GameMetadata cached = m_cache->getByHash(hash, system);
         if (cached.id == QLatin1String("__miss__")) {
             qInfo() << "Cached negative miss for hash:" << hash;
-            return {};
+            return { };
         }
         if (!cached.title.isEmpty()) {
             qInfo() << "Cache hit for hash:" << hash << "-" << cached.title;
@@ -213,11 +197,10 @@ GameMetadata ProviderOrchestrator::getByHashWithFallback(const QString &hash,
     return GameMetadata();
 }
 
-QList<SearchResult> ProviderOrchestrator::searchAllProviders(const QString &name, const QString &system)
-{
+QList<SearchResult> ProviderOrchestrator::searchAllProviders(const QString &name, const QString &system) {
     if (name.isEmpty()) {
         qWarning() << "Cannot search: name is empty";
-        return {};
+        return { };
     }
 
     const QStringList providers = getSortedProviders(false);
@@ -251,15 +234,8 @@ QList<SearchResult> ProviderOrchestrator::searchAllProviders(const QString &name
     return allResults;
 }
 
-GameMetadata ProviderOrchestrator::searchWithFallback(const QString &hash,
-                                                      const QString &name,
-                                                      const QString &system,
-                                                      const QString &crc32,
-                                                      const QString &md5,
-                                                      const QString &sha1,
-                                                      const QString &serial,
-                                                      bool requireArtwork)
-{
+GameMetadata ProviderOrchestrator::searchWithFallback(const QString &hash, const QString &name, const QString &system,
+    const QString &crc32, const QString &md5, const QString &sha1, const QString &serial, bool requireArtwork) {
     GameMetadata accumulator;
     if (!hash.isEmpty() && m_cache) {
         const GameMetadata cached = m_cache->getByHash(hash, system);
@@ -279,8 +255,7 @@ GameMetadata ProviderOrchestrator::searchWithFallback(const QString &hash,
     // queries are needed for identity — only continue when the caller has
     // explicitly requested artwork and it is still missing.
     const auto identityResolved = [&](const GameMetadata &m) -> bool {
-        if (m.matchScore >= 1.0f
-                && m.matchMethod == QLatin1String(Constants::MatchMethods::HASH)) {
+        if (m.matchScore >= 1.0f && m.matchMethod == QLatin1String(Constants::MatchMethods::HASH)) {
             return !(requireArtwork && m.boxArtUrl.isEmpty());
         }
         return false;
@@ -326,8 +301,8 @@ GameMetadata ProviderOrchestrator::searchWithFallback(const QString &hash,
     return accumulator;
 }
 
-ArtworkUrls ProviderOrchestrator::getArtworkWithFallback(const QString &id, const QString &system, const QString &providerName)
-{
+ArtworkUrls ProviderOrchestrator::getArtworkWithFallback(
+    const QString &id, const QString &system, const QString &providerName) {
     Q_UNUSED(system);
 
     if (m_cache) {
@@ -353,7 +328,8 @@ ArtworkUrls ProviderOrchestrator::getArtworkWithFallback(const QString &id, cons
     const QStringList providers = getSortedProviders(false);
     for (const QString &name : providers) {
         const ProviderInfo &info = m_providers[name];
-        if (!info.enabled) continue;
+        if (!info.enabled)
+            continue;
         qInfo() << "Trying artwork from:" << name;
         const ArtworkUrls artwork = info.provider->getArtwork(id);
         if (!artwork.boxFront.isEmpty()) {
@@ -366,7 +342,7 @@ ArtworkUrls ProviderOrchestrator::getArtworkWithFallback(const QString &id, cons
     }
 
     qWarning() << "No providers returned artwork for ID:" << id;
-    return {};
+    return { };
 }
 
 } // namespace Remus

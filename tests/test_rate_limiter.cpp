@@ -12,23 +12,21 @@ private slots:
     void resetClearsLastRequest();
 };
 
-void RateLimiterTest::respectsInterval()
-{
+void RateLimiterTest::respectsInterval() {
     RateLimiter limiter;
     limiter.setInterval(20);
 
     QElapsedTimer timer;
     timer.start();
 
-    limiter.waitIfNeeded();           // first call sets timestamp
-    limiter.waitIfNeeded();           // second call should sleep ~20ms
+    limiter.waitIfNeeded(); // first call sets timestamp
+    limiter.waitIfNeeded(); // second call should sleep ~20ms
 
     const qint64 elapsed = timer.elapsed();
     QVERIFY2(elapsed >= 15, "Rate limiter should delay subsequent calls");
 }
 
-void RateLimiterTest::resetClearsLastRequest()
-{
+void RateLimiterTest::resetClearsLastRequest() {
     RateLimiter limiter;
     limiter.setInterval(10);
 

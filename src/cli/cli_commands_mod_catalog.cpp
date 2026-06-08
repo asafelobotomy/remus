@@ -11,10 +11,9 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 
-int handleModCatalogBuildCommand(CliContext &ctx)
-{
-    const bool hasBuild   = ctx.parser.isSet("mod-catalog-build");
-    const bool hasEnrich  = ctx.parser.isSet("mod-enrich-ra");
+int handleModCatalogBuildCommand(CliContext &ctx) {
+    const bool hasBuild = ctx.parser.isSet("mod-catalog-build");
+    const bool hasEnrich = ctx.parser.isSet("mod-enrich-ra");
 
     if (!hasBuild && !hasEnrich)
         return 0;
@@ -40,9 +39,9 @@ int handleModCatalogBuildCommand(CliContext &ctx)
         }
 
         qInfo().noquote() << QString("Scanned %1 files (%2 skipped), found %3 mod entries")
-            .arg(result.filesScanned)
-            .arg(result.filesSkipped)
-            .arg(result.mods.size());
+                                 .arg(result.filesScanned)
+                                 .arg(result.filesSkipped)
+                                 .arg(result.mods.size());
 
         // Determine output path
         QString outputPath = ctx.parser.value("mod-catalog-output");
@@ -57,8 +56,8 @@ int handleModCatalogBuildCommand(CliContext &ctx)
                 qInfo() << "Enriching catalog with RetroAchievements data...";
                 auto enrichResult = enricher.enrichCatalog(result.mods);
                 qInfo().noquote() << QString("Enriched %1 entries (%2 skipped)")
-                    .arg(enrichResult.enrichedCount)
-                    .arg(enrichResult.skippedCount);
+                                         .arg(enrichResult.enrichedCount)
+                                         .arg(enrichResult.skippedCount);
             } else {
                 qInfo() << "No RA API key available — skipping enrichment";
             }
@@ -105,13 +104,13 @@ int handleModCatalogBuildCommand(CliContext &ctx)
         }
 
         qInfo().noquote() << QString("Enriched %1 entries (%2 skipped)")
-            .arg(enrichResult.enrichedCount)
-            .arg(enrichResult.skippedCount);
+                                 .arg(enrichResult.enrichedCount)
+                                 .arg(enrichResult.skippedCount);
 
         // Write enriched catalog back
         QString outputPath = ctx.parser.value("mod-catalog-output");
         if (outputPath.isEmpty())
-            outputPath = catalogPath;  // overwrite in-place
+            outputPath = catalogPath; // overwrite in-place
 
         Remus::RAPatchesCatalogBuilder builder;
         QString writeErr = builder.writeCatalogJson(mods, outputPath);

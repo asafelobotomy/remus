@@ -10,14 +10,12 @@
 using namespace Remus;
 
 namespace {
-bool writeAll(QFile &file, const QByteArray &data)
-{
+bool writeAll(QFile &file, const QByteArray &data) {
     return file.write(data) == data.size();
 }
 }
 
-class FakeCsoConverter : public CSOConverter
-{
+class FakeCsoConverter : public CSOConverter {
 public:
     using ProcessResult = ExternalToolRunner::ProcessResult;
     ProcessResult nextProcess;
@@ -27,15 +25,13 @@ public:
     bool autoCreateTrackedOutput = false;
 
 protected:
-    ProcessResult runProcess(const QString &program, const QStringList &args, int) override
-    {
+    ProcessResult runProcess(const QString &program, const QStringList &args, int) override {
         lastProgram = program;
         lastArgs = args;
         return nextProcess;
     }
 
-    ProcessResult runProcessTracked(const QString &program, const QStringList &args, int) override
-    {
+    ProcessResult runProcessTracked(const QString &program, const QStringList &args, int) override {
         lastProgram = program;
         lastArgs = args;
 
@@ -60,8 +56,7 @@ protected:
     }
 };
 
-class CsoConverterTest : public QObject
-{
+class CsoConverterTest : public QObject {
     Q_OBJECT
 
 private slots:
@@ -75,20 +70,18 @@ private slots:
     void testVerifyCsoFailsOnMissingFile();
 };
 
-void CsoConverterTest::testAvailabilityUsesConfiguredToolPath()
-{
+void CsoConverterTest::testAvailabilityUsesConfiguredToolPath() {
     FakeCsoConverter converter;
     converter.setMaxcsoPath(QStringLiteral("/custom/maxcso"));
     converter.nextProcess.started = true;
 
     QVERIFY(converter.isMaxcsoAvailable());
     QCOMPARE(converter.lastProgram, QStringLiteral("/custom/maxcso"));
-    const QStringList expectedArgs{QStringLiteral("--help")};
+    const QStringList expectedArgs { QStringLiteral("--help") };
     QCOMPARE(converter.lastArgs, expectedArgs);
 }
 
-void CsoConverterTest::testGetVersionPrefersStderrWhenStdoutMissing()
-{
+void CsoConverterTest::testGetVersionPrefersStderrWhenStdoutMissing() {
     FakeCsoConverter converter;
     converter.nextProcess.started = true;
     converter.nextProcess.stdError = QStringLiteral("maxcso 1.13.0\nusage");
@@ -96,8 +89,7 @@ void CsoConverterTest::testGetVersionPrefersStderrWhenStdoutMissing()
     QCOMPARE(converter.getMaxcsoVersion(), QStringLiteral("maxcso 1.13.0"));
 }
 
-void CsoConverterTest::testConvertIsoUsesDefaultOutputPath()
-{
+void CsoConverterTest::testConvertIsoUsesDefaultOutputPath() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
@@ -116,16 +108,11 @@ void CsoConverterTest::testConvertIsoUsesDefaultOutputPath()
     QVERIFY(result.success);
     QCOMPARE(result.outputPath, dir.path() + QStringLiteral("/game.cso"));
     QCOMPARE(converter.lastProgram, QStringLiteral("maxcso"));
-    const QStringList expectedArgs{
-        isoPath,
-        QStringLiteral("-o"),
-        dir.path() + QStringLiteral("/game.cso")
-    };
+    const QStringList expectedArgs { isoPath, QStringLiteral("-o"), dir.path() + QStringLiteral("/game.cso") };
     QCOMPARE(converter.lastArgs, expectedArgs);
 }
 
-void CsoConverterTest::testExtractCsoUsesDefaultIsoOutputPath()
-{
+void CsoConverterTest::testExtractCsoUsesDefaultIsoOutputPath() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
@@ -143,17 +130,12 @@ void CsoConverterTest::testExtractCsoUsesDefaultIsoOutputPath()
     const ConversionResult result = converter.extractCSOToIso(csoPath);
     QVERIFY(result.success);
     QCOMPARE(result.outputPath, dir.path() + QStringLiteral("/game.iso"));
-    const QStringList expectedArgs{
-        QStringLiteral("--decompress"),
-        csoPath,
-        QStringLiteral("-o"),
-        dir.path() + QStringLiteral("/game.iso")
-    };
+    const QStringList expectedArgs { QStringLiteral("--decompress"), csoPath, QStringLiteral("-o"),
+        dir.path() + QStringLiteral("/game.iso") };
     QCOMPARE(converter.lastArgs, expectedArgs);
 }
 
-void CsoConverterTest::testBatchConvertSupportedFormatsUsesOutputDirectory()
-{
+void CsoConverterTest::testBatchConvertSupportedFormatsUsesOutputDirectory() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
@@ -170,14 +152,13 @@ void CsoConverterTest::testBatchConvertSupportedFormatsUsesOutputDirectory()
     converter.nextTracked.exitCode = 0;
     converter.autoCreateTrackedOutput = true;
 
-    const QList<ConversionResult> results = converter.batchConvert({isoPath}, outputDir);
+    const QList<ConversionResult> results = converter.batchConvert({ isoPath }, outputDir);
     QCOMPARE(results.size(), 1);
     QVERIFY(results.first().success);
     QCOMPARE(results.first().outputPath, outputDir + QStringLiteral("/batch.cso"));
 }
 
-void CsoConverterTest::testBatchConvertUnsupportedFormat()
-{
+void CsoConverterTest::testBatchConvertUnsupportedFormat() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
@@ -189,14 +170,13 @@ void CsoConverterTest::testBatchConvertUnsupportedFormat()
 
     FakeCsoConverter converter;
 
-    const QList<ConversionResult> results = converter.batchConvert({textPath});
+    const QList<ConversionResult> results = converter.batchConvert({ textPath });
     QCOMPARE(results.size(), 1);
     QVERIFY(!results.first().success);
     QVERIFY(results.first().error.contains(QStringLiteral("Unsupported format")));
 }
 
-void CsoConverterTest::testVerifyCsoSuccessWhenExtractionSucceeds()
-{
+void CsoConverterTest::testVerifyCsoSuccessWhenExtractionSucceeds() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
@@ -219,8 +199,7 @@ void CsoConverterTest::testVerifyCsoSuccessWhenExtractionSucceeds()
     QVERIFY(result.isoSize > 0);
 }
 
-void CsoConverterTest::testVerifyCsoFailsOnMissingFile()
-{
+void CsoConverterTest::testVerifyCsoFailsOnMissingFile() {
     FakeCsoConverter converter;
     const CSOVerifyResult result = converter.verifyCSO(QStringLiteral("/no/such/file.cso"));
     QVERIFY(!result.valid);

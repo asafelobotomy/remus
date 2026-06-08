@@ -9,9 +9,9 @@ namespace Remus {
 
 /// Result of a CSO integrity verification.
 struct CSOVerifyResult {
-    bool valid = false;      ///< true if the CSO decompresses cleanly
-    qint64 isoSize = 0;     ///< size of the decompressed ISO in bytes
-    QString error;           ///< non-empty on failure
+    bool valid = false; ///< true if the CSO decompresses cleanly
+    qint64 isoSize = 0; ///< size of the decompressed ISO in bytes
+    QString error; ///< non-empty on failure
 };
 
 class CSOConverter : public DiscConverter {
@@ -25,11 +25,9 @@ public:
     QString getMaxcsoVersion() const;
     void setMaxcsoPath(const QString &path);
 
-    ConversionResult convertIsoToCSO(const QString &isoPath,
-                                      const QString &outputPath = QString());
+    ConversionResult convertIsoToCSO(const QString &isoPath, const QString &outputPath = QString());
 
-    ConversionResult extractCSOToIso(const QString &csoPath,
-                                      const QString &outputPath = QString());
+    ConversionResult extractCSOToIso(const QString &csoPath, const QString &outputPath = QString());
 
     /**
      * @brief Verify a CSO by decompressing it to a temp dir and checking the
@@ -40,8 +38,7 @@ public:
      */
     CSOVerifyResult verifyCSO(const QString &csoPath);
 
-    QList<ConversionResult> batchConvert(const QStringList &inputPaths,
-                                          const QString &outputDir = QString());
+    QList<ConversionResult> batchConvert(const QStringList &inputPaths, const QString &outputDir = QString());
 
 private:
     QString m_maxcsoPath;

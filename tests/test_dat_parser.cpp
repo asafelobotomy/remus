@@ -38,23 +38,25 @@ private slots:
 };
 
 void DatParserTest::testParseValidDat() {
-    QString xmlContent = 
-        "<?xml version=\"1.0\"?>\n"
-        "<!DOCTYPE datafile PUBLIC \"-//Logiqx//DTD ROM Management Datafile//EN\" \"http://www.logiqx.com/Dats/datafile.dtd\">\n"
-        "<datafile>\n"
-        "    <header>\n"
-        "        <name>Nintendo - Nintendo Entertainment System</name>\n"
-        "        <description>No-Intro | 2024-01-15</description>\n"
-        "        <version>20240115</version>\n"
-        "        <date>2024-01-15</date>\n"
-        "        <author>No-Intro</author>\n"
-        "        <category>Standard</category>\n"
-        "    </header>\n"
-        "    <game name=\"Super Mario Bros. (USA)\">\n"
-        "        <description>Super Mario Bros.</description>\n"
-        "        <rom name=\"Super Mario Bros. (USA).nes\" size=\"40976\" crc=\"3337ec46\" md5=\"811b027eaf99c2def7b933c5208636de\" sha1=\"ea343f4e445a9050d4b4fbac2c77d0693b1d0922\"/>\n"
-        "    </game>\n"
-        "</datafile>";
+    QString xmlContent
+        = "<?xml version=\"1.0\"?>\n"
+          "<!DOCTYPE datafile PUBLIC \"-//Logiqx//DTD ROM Management Datafile//EN\" "
+          "\"http://www.logiqx.com/Dats/datafile.dtd\">\n"
+          "<datafile>\n"
+          "    <header>\n"
+          "        <name>Nintendo - Nintendo Entertainment System</name>\n"
+          "        <description>No-Intro | 2024-01-15</description>\n"
+          "        <version>20240115</version>\n"
+          "        <date>2024-01-15</date>\n"
+          "        <author>No-Intro</author>\n"
+          "        <category>Standard</category>\n"
+          "    </header>\n"
+          "    <game name=\"Super Mario Bros. (USA)\">\n"
+          "        <description>Super Mario Bros.</description>\n"
+          "        <rom name=\"Super Mario Bros. (USA).nes\" size=\"40976\" crc=\"3337ec46\" "
+          "md5=\"811b027eaf99c2def7b933c5208636de\" sha1=\"ea343f4e445a9050d4b4fbac2c77d0693b1d0922\"/>\n"
+          "    </game>\n"
+          "</datafile>";
 
     QTemporaryFile tempFile;
     QVERIFY(tempFile.open());
@@ -71,7 +73,7 @@ void DatParserTest::testParseValidDat() {
     QCOMPARE(result.header.version, QString("20240115"));
     QCOMPARE(result.entryCount, 1);
     QCOMPARE(result.entries.size(), 1);
-    
+
     const DatRomEntry &entry = result.entries.first();
     QCOMPARE(entry.gameName, QString("Super Mario Bros. (USA)"));
     QCOMPARE(entry.romName, QString("Super Mario Bros. (USA).nes"));
@@ -81,18 +83,17 @@ void DatParserTest::testParseValidDat() {
 }
 
 void DatParserTest::testParseMultiRomGame() {
-    QString xmlContent = 
-        "<?xml version=\"1.0\"?>\n"
-        "<datafile>\n"
-        "    <header>\n"
-        "        <name>Test DAT</name>\n"
-        "    </header>\n"
-        "    <game name=\"Multi-ROM Game\">\n"
-        "        <description>Game with multiple ROMs</description>\n"
-        "        <rom name=\"rom1.bin\" size=\"1024\" crc=\"12345678\"/>\n"
-        "        <rom name=\"rom2.bin\" size=\"2048\" crc=\"87654321\"/>\n"
-        "    </game>\n"
-        "</datafile>";
+    QString xmlContent = "<?xml version=\"1.0\"?>\n"
+                         "<datafile>\n"
+                         "    <header>\n"
+                         "        <name>Test DAT</name>\n"
+                         "    </header>\n"
+                         "    <game name=\"Multi-ROM Game\">\n"
+                         "        <description>Game with multiple ROMs</description>\n"
+                         "        <rom name=\"rom1.bin\" size=\"1024\" crc=\"12345678\"/>\n"
+                         "        <rom name=\"rom2.bin\" size=\"2048\" crc=\"87654321\"/>\n"
+                         "    </game>\n"
+                         "</datafile>";
 
     DatParser parser;
     DatParseResult result = parser.parseContent(xmlContent);
@@ -106,14 +107,15 @@ void DatParserTest::testParseMultiRomGame() {
 }
 
 void DatParserTest::testParseWithAllHashes() {
-    QString xmlContent = 
-        "<?xml version=\"1.0\"?>\n"
-        "<datafile>\n"
-        "    <header><name>Test</name></header>\n"
-        "    <game name=\"Test Game\">\n"
-        "        <rom name=\"test.rom\" size=\"1000\" crc=\"aaaaaaaa\" md5=\"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\" sha1=\"cccccccccccccccccccccccccccccccccccccccc\"/>\n"
-        "    </game>\n"
-        "</datafile>";
+    QString xmlContent
+        = "<?xml version=\"1.0\"?>\n"
+          "<datafile>\n"
+          "    <header><name>Test</name></header>\n"
+          "    <game name=\"Test Game\">\n"
+          "        <rom name=\"test.rom\" size=\"1000\" crc=\"aaaaaaaa\" md5=\"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\" "
+          "sha1=\"cccccccccccccccccccccccccccccccccccccccc\"/>\n"
+          "    </game>\n"
+          "</datafile>";
 
     DatParser parser;
     DatParseResult result = parser.parseContent(xmlContent);
@@ -126,15 +128,17 @@ void DatParserTest::testParseWithAllHashes() {
 }
 
 void DatParserTest::testParsePatchCatalogMetadata() {
-    QString xmlContent =
-        "<?xml version=\"1.0\"?>\n"
-        "<datafile>\n"
-        "    <header><name>Patch Catalog</name></header>\n"
-        "    <game name=\"Dragon Quest III (English v2.0)\" base_title=\"Dragon Quest III\" patch_name=\"English v2.0\" file_type=\"translation\">\n"
-        "        <description>Verified translation patch output</description>\n"
-        "        <rom name=\"Dragon Quest III (English v2.0).sfc\" size=\"3145728\" crc=\"1234abcd\" md5=\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\" sha1=\"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"/>\n"
-        "    </game>\n"
-        "</datafile>";
+    QString xmlContent
+        = "<?xml version=\"1.0\"?>\n"
+          "<datafile>\n"
+          "    <header><name>Patch Catalog</name></header>\n"
+          "    <game name=\"Dragon Quest III (English v2.0)\" base_title=\"Dragon Quest III\" patch_name=\"English "
+          "v2.0\" file_type=\"translation\">\n"
+          "        <description>Verified translation patch output</description>\n"
+          "        <rom name=\"Dragon Quest III (English v2.0).sfc\" size=\"3145728\" crc=\"1234abcd\" "
+          "md5=\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\" sha1=\"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"/>\n"
+          "    </game>\n"
+          "</datafile>";
 
     DatParser parser;
     DatParseResult result = parser.parseContent(xmlContent);
@@ -148,18 +152,17 @@ void DatParserTest::testParsePatchCatalogMetadata() {
 }
 
 void DatParserTest::testParseNoIntroFormat() {
-    QString xmlContent = 
-        "<?xml version=\"1.0\"?>\n"
-        "<datafile>\n"
-        "    <header>\n"
-        "        <name>Nintendo - Game Boy</name>\n"
-        "        <description>No-Intro | 2024-01-15</description>\n"
-        "        <author>No-Intro</author>\n"
-        "    </header>\n"
-        "    <game name=\"Pokemon Red (USA)\">\n"
-        "        <rom name=\"Pokemon Red (USA).gb\" size=\"1048576\" crc=\"3d45c1ee\"/>\n"
-        "    </game>\n"
-        "</datafile>";
+    QString xmlContent = "<?xml version=\"1.0\"?>\n"
+                         "<datafile>\n"
+                         "    <header>\n"
+                         "        <name>Nintendo - Game Boy</name>\n"
+                         "        <description>No-Intro | 2024-01-15</description>\n"
+                         "        <author>No-Intro</author>\n"
+                         "    </header>\n"
+                         "    <game name=\"Pokemon Red (USA)\">\n"
+                         "        <rom name=\"Pokemon Red (USA).gb\" size=\"1048576\" crc=\"3d45c1ee\"/>\n"
+                         "    </game>\n"
+                         "</datafile>";
 
     DatParser parser;
     DatParseResult result = parser.parseContent(xmlContent);
@@ -170,18 +173,18 @@ void DatParserTest::testParseNoIntroFormat() {
 }
 
 void DatParserTest::testParseRedumpFormat() {
-    QString xmlContent = 
-        "<?xml version=\"1.0\"?>\n"
-        "<datafile>\n"
-        "    <header>\n"
-        "        <name>Sony - PlayStation</name>\n"
-        "        <description>Redump.org | 2024-01-15</description>\n"
-        "        <author>Redump</author>\n"
-        "    </header>\n"
-        "    <game name=\"Final Fantasy VII (USA) (Disc 1)\">\n"
-        "        <rom name=\"Final Fantasy VII (USA) (Disc 1).bin\" size=\"737280000\" md5=\"12345678901234567890123456789012\"/>\n"
-        "    </game>\n"
-        "</datafile>";
+    QString xmlContent = "<?xml version=\"1.0\"?>\n"
+                         "<datafile>\n"
+                         "    <header>\n"
+                         "        <name>Sony - PlayStation</name>\n"
+                         "        <description>Redump.org | 2024-01-15</description>\n"
+                         "        <author>Redump</author>\n"
+                         "    </header>\n"
+                         "    <game name=\"Final Fantasy VII (USA) (Disc 1)\">\n"
+                         "        <rom name=\"Final Fantasy VII (USA) (Disc 1).bin\" size=\"737280000\" "
+                         "md5=\"12345678901234567890123456789012\"/>\n"
+                         "    </game>\n"
+                         "</datafile>";
 
     DatParser parser;
     DatParseResult result = parser.parseContent(xmlContent);
@@ -192,15 +195,14 @@ void DatParserTest::testParseRedumpFormat() {
 }
 
 void DatParserTest::testParseMalformedXml() {
-    QString xmlContent = 
-        "<?xml version=\"1.0\"?>\n"
-        "<datafile>\n"
-        "    <header>\n"
-        "        <name>Test\n"
-        "    </header>\n"
-        "    <game name=\"Test\">\n"
-        "        <rom name=\"test.rom\"/>\n"
-        "    </game>\n"; // Missing closing tags
+    QString xmlContent = "<?xml version=\"1.0\"?>\n"
+                         "<datafile>\n"
+                         "    <header>\n"
+                         "        <name>Test\n"
+                         "    </header>\n"
+                         "    <game name=\"Test\">\n"
+                         "        <rom name=\"test.rom\"/>\n"
+                         "    </game>\n"; // Missing closing tags
 
     DatParser parser;
     DatParseResult result = parser.parseContent(xmlContent);
@@ -218,13 +220,12 @@ void DatParserTest::testParseEmptyFile() {
 }
 
 void DatParserTest::testParseMissingHeader() {
-    QString xmlContent = 
-        "<?xml version=\"1.0\"?>\n"
-        "<datafile>\n"
-        "    <game name=\"Test Game\">\n"
-        "        <rom name=\"test.rom\" size=\"1000\" crc=\"12345678\"/>\n"
-        "    </game>\n"
-        "</datafile>";
+    QString xmlContent = "<?xml version=\"1.0\"?>\n"
+                         "<datafile>\n"
+                         "    <game name=\"Test Game\">\n"
+                         "        <rom name=\"test.rom\" size=\"1000\" crc=\"12345678\"/>\n"
+                         "    </game>\n"
+                         "</datafile>";
 
     DatParser parser;
     DatParseResult result = parser.parseContent(xmlContent);
@@ -236,14 +237,13 @@ void DatParserTest::testParseMissingHeader() {
 }
 
 void DatParserTest::testParseMissingGameName() {
-    QString xmlContent = 
-        "<?xml version=\"1.0\"?>\n"
-        "<datafile>\n"
-        "    <header><name>Test</name></header>\n"
-        "    <game>\n"
-        "        <rom name=\"test.rom\" size=\"1000\" crc=\"12345678\"/>\n"
-        "    </game>\n"
-        "</datafile>";
+    QString xmlContent = "<?xml version=\"1.0\"?>\n"
+                         "<datafile>\n"
+                         "    <header><name>Test</name></header>\n"
+                         "    <game>\n"
+                         "        <rom name=\"test.rom\" size=\"1000\" crc=\"12345678\"/>\n"
+                         "    </game>\n"
+                         "</datafile>";
 
     DatParser parser;
     DatParseResult result = parser.parseContent(xmlContent);
@@ -256,14 +256,13 @@ void DatParserTest::testParseMissingGameName() {
 }
 
 void DatParserTest::testParseMissingRomName() {
-    QString xmlContent = 
-        "<?xml version=\"1.0\"?>\n"
-        "<datafile>\n"
-        "    <header><name>Test</name></header>\n"
-        "    <game name=\"Test Game\">\n"
-        "        <rom size=\"1000\" crc=\"12345678\"/>\n"
-        "    </game>\n"
-        "</datafile>";
+    QString xmlContent = "<?xml version=\"1.0\"?>\n"
+                         "<datafile>\n"
+                         "    <header><name>Test</name></header>\n"
+                         "    <game name=\"Test Game\">\n"
+                         "        <rom size=\"1000\" crc=\"12345678\"/>\n"
+                         "    </game>\n"
+                         "</datafile>";
 
     DatParser parser;
     DatParseResult result = parser.parseContent(xmlContent);
@@ -274,14 +273,13 @@ void DatParserTest::testParseMissingRomName() {
 }
 
 void DatParserTest::testParseInvalidHashFormat() {
-    QString xmlContent = 
-        "<?xml version=\"1.0\"?>\n"
-        "<datafile>\n"
-        "    <header><name>Test</name></header>\n"
-        "    <game name=\"Test\">\n"
-        "        <rom name=\"test.rom\" crc=\"invalid_hex_value\"/>\n"
-        "    </game>\n"
-        "</datafile>";
+    QString xmlContent = "<?xml version=\"1.0\"?>\n"
+                         "<datafile>\n"
+                         "    <header><name>Test</name></header>\n"
+                         "    <game name=\"Test\">\n"
+                         "        <rom name=\"test.rom\" crc=\"invalid_hex_value\"/>\n"
+                         "    </game>\n"
+                         "</datafile>";
 
     DatParser parser;
     DatParseResult result = parser.parseContent(xmlContent);
@@ -297,7 +295,7 @@ void DatParserTest::testIndexByCrc32() {
     entry1.romName = "game1.rom";
     entry1.crc32 = "12345678";
     entries.append(entry1);
-    
+
     DatRomEntry entry2;
     entry2.romName = "game2.rom";
     entry2.crc32 = "87654321";
@@ -349,23 +347,21 @@ void DatParserTest::testIndexBySha256() {
 
     QCOMPARE(index.size(), 1);
     QVERIFY(index.contains("e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"));
-    QCOMPARE(index["e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"].romName,
-             QString("test.rom"));
+    QCOMPARE(index["e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"].romName, QString("test.rom"));
 }
 
 void DatParserTest::testParseSha256() {
-    const QString xmlContent =
-        "<?xml version=\"1.0\"?>\n"
-        "<datafile>\n"
-        "    <header><name>No-Intro SHA256 Test</name></header>\n"
-        "    <game name=\"Test Game (USA)\">\n"
-        "        <rom name=\"test.rom\" size=\"1024\""
-        " crc=\"aaaaaaaa\""
-        " md5=\"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\""
-        " sha1=\"cccccccccccccccccccccccccccccccccccccccc\""
-        " sha256=\"dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd\"/>"
-        "    </game>\n"
-        "</datafile>";
+    const QString xmlContent = "<?xml version=\"1.0\"?>\n"
+                               "<datafile>\n"
+                               "    <header><name>No-Intro SHA256 Test</name></header>\n"
+                               "    <game name=\"Test Game (USA)\">\n"
+                               "        <rom name=\"test.rom\" size=\"1024\""
+                               " crc=\"aaaaaaaa\""
+                               " md5=\"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\""
+                               " sha1=\"cccccccccccccccccccccccccccccccccccccccc\""
+                               " sha256=\"dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd\"/>"
+                               "    </game>\n"
+                               "</datafile>";
 
     DatParser parser;
     DatParseResult result = parser.parseContent(xmlContent);
@@ -373,9 +369,9 @@ void DatParserTest::testParseSha256() {
     QVERIFY(result.success);
     QCOMPARE(result.entries.size(), 1);
     const DatRomEntry &entry = result.entries.first();
-    QCOMPARE(entry.crc32,  QString("aaaaaaaa"));
-    QCOMPARE(entry.md5,    QString("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"));
-    QCOMPARE(entry.sha1,   QString("cccccccccccccccccccccccccccccccccccccccc"));
+    QCOMPARE(entry.crc32, QString("aaaaaaaa"));
+    QCOMPARE(entry.md5, QString("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"));
+    QCOMPARE(entry.sha1, QString("cccccccccccccccccccccccccccccccccccccccc"));
     QCOMPARE(entry.sha256, QString("dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"));
 }
 
@@ -393,7 +389,7 @@ void DatParserTest::testIndexDuplicateHashes() {
     entry1.romName = "game1.rom";
     entry1.crc32 = "12345678";
     entries.append(entry1);
-    
+
     DatRomEntry entry2;
     entry2.romName = "game2.rom";
     entry2.crc32 = "12345678"; // Same CRC32

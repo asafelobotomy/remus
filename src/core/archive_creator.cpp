@@ -10,27 +10,21 @@
 namespace Remus {
 
 ArchiveCreator::ArchiveCreator(QObject *parent)
-    : QObject(parent)
-{
-}
+    : QObject(parent) { }
 
-QMap<ArchiveFormat, bool> ArchiveCreator::getAvailableTools() const
-{
+QMap<ArchiveFormat, bool> ArchiveCreator::getAvailableTools() const {
     QMap<ArchiveFormat, bool> tools;
     tools[ArchiveFormat::ZIP] = true;
     tools[ArchiveFormat::SevenZip] = false;
     return tools;
 }
 
-bool ArchiveCreator::canCompress(ArchiveFormat format) const
-{
+bool ArchiveCreator::canCompress(ArchiveFormat format) const {
     return format == ArchiveFormat::ZIP;
 }
 
-CompressionResult ArchiveCreator::compress(const QStringList &inputPaths,
-                                           const QString &outputArchive,
-                                           ArchiveFormat format)
-{
+CompressionResult ArchiveCreator::compress(
+    const QStringList &inputPaths, const QString &outputArchive, ArchiveFormat format) {
     CompressionResult result;
     result.inputFiles = inputPaths;
     result.outputPath = outputArchive;
@@ -73,7 +67,7 @@ CompressionResult ArchiveCreator::compress(const QStringList &inputPaths,
         }
 
         archivePaths.insert(archivePath);
-        entries.append({fi.absoluteFilePath(), archivePath});
+        entries.append({ fi.absoluteFilePath(), archivePath });
     }
 
     if (entries.isEmpty()) {
@@ -89,10 +83,10 @@ CompressionResult ArchiveCreator::compress(const QStringList &inputPaths,
     if (result.failedFiles >= 3 && result.failedFiles >= (result.filesCompressed * 3)) {
         result.success = false;
         result.error = QStringLiteral("Compression aborted after too many file failures (%1 failed files)")
-            .arg(result.failedFiles);
+                           .arg(result.failedFiles);
     } else if (result.failedFiles > 0 && result.success) {
-        result.error = QStringLiteral("Compression completed with skipped files (%1 failed files)")
-            .arg(result.failedFiles);
+        result.error
+            = QStringLiteral("Compression completed with skipped files (%1 failed files)").arg(result.failedFiles);
     }
 
     m_running = false;
@@ -102,12 +96,10 @@ CompressionResult ArchiveCreator::compress(const QStringList &inputPaths,
     return result;
 }
 
-CompressionResult ArchiveCreator::compressDirectoryContents(const QString &rootDir,
-                                                             const QString &outputArchive,
-                                                             ArchiveFormat format)
-{
+CompressionResult ArchiveCreator::compressDirectoryContents(
+    const QString &rootDir, const QString &outputArchive, ArchiveFormat format) {
     CompressionResult result;
-    result.inputFiles = {rootDir};
+    result.inputFiles = { rootDir };
     result.outputPath = outputArchive;
 
     if (!QFileInfo(rootDir).isDir()) {
@@ -135,13 +127,13 @@ CompressionResult ArchiveCreator::compressDirectoryContents(const QString &rootD
 
     m_cancelled = false;
     m_running = true;
-    result.originalSize = calculateTotalSize({rootDir});
+    result.originalSize = calculateTotalSize({ rootDir });
     emit compressionStarted(outputArchive);
 
     QList<ArchiveInputEntry> entries;
     entries.reserve(relativePaths.size());
     for (const QString &relativePath : relativePaths) {
-        entries.append({QDir(rootDir).filePath(relativePath), relativePath});
+        entries.append({ QDir(rootDir).filePath(relativePath), relativePath });
     }
 
     result = compressFiles(entries, outputArchive);
@@ -153,10 +145,8 @@ CompressionResult ArchiveCreator::compressDirectoryContents(const QString &rootD
     return result;
 }
 
-QList<CompressionResult> ArchiveCreator::batchCompress(const QStringList &dirs,
-                                                        const QString &outputDir,
-                                                        ArchiveFormat format)
-{
+QList<CompressionResult> ArchiveCreator::batchCompress(
+    const QStringList &dirs, const QString &outputDir, ArchiveFormat format) {
     QList<CompressionResult> results;
     m_cancelled = false;
 
@@ -170,26 +160,25 @@ QList<CompressionResult> ArchiveCreator::batchCompress(const QStringList &dirs,
     const int total = dirs.size();
 
     for (int i = 0; i < total; ++i) {
-        if (m_cancelled) break;
+        if (m_cancelled)
+            break;
         const QFileInfo dirInfo(dirs[i]);
         const QString outputPath = outputDir + QStringLiteral("/") + dirInfo.fileName() + ext;
         emit batchProgress(i + 1, total, dirInfo.fileName());
         if (dirInfo.isDir())
             results.append(compressDirectoryContents(dirs[i], outputPath, format));
         else
-            results.append(compress({dirs[i]}, outputPath, format));
+            results.append(compress({ dirs[i] }, outputPath, format));
     }
 
     return results;
 }
 
-void ArchiveCreator::cancel()
-{
+void ArchiveCreator::cancel() {
     m_cancelled = true;
 }
 
-QStringList ArchiveCreator::collectRelativeFilePaths(const QString &rootDir) const
-{
+QStringList ArchiveCreator::collectRelativeFilePaths(const QString &rootDir) const {
     QStringList files;
     QDir root(rootDir);
     QDirIterator it(rootDir, QDir::Files | QDir::Hidden, QDirIterator::Subdirectories);
@@ -201,8 +190,7 @@ QStringList ArchiveCreator::collectRelativeFilePaths(const QString &rootDir) con
     return files;
 }
 
-qint64 ArchiveCreator::calculateTotalSize(const QStringList &paths) const
-{
+qint64 ArchiveCreator::calculateTotalSize(const QStringList &paths) const {
     qint64 total = 0;
     for (const QString &path : paths) {
         const QFileInfo fi(path);

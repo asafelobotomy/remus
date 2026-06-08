@@ -7,71 +7,62 @@
 namespace Remus {
 
 TemplateEngine::TemplateEngine(QObject *parent)
-    : QObject(parent)
-{
-}
+    : QObject(parent) { }
 
-QString TemplateEngine::applyTemplate(const QString &templateStr,
-                                     const GameMetadata &metadata,
-                                     const QMap<QString, QString> &fileInfo)
-{
+QString TemplateEngine::applyTemplate(
+    const QString &templateStr, const GameMetadata &metadata, const QMap<QString, QString> &fileInfo) {
     QMap<QString, QString> variables = buildVariableMap(metadata, fileInfo);
     QString result = replaceVariables(templateStr, variables);
     result = cleanupEmptyGroups(result);
-    
+
     emit templateApplied(result);
     return result;
 }
 
-QString TemplateEngine::getNoIntroTemplate()
-{
+QString TemplateEngine::getNoIntroTemplate() {
     return Constants::Templates::DEFAULT_NO_INTRO;
 }
 
-QString TemplateEngine::getRedumpTemplate()
-{
+QString TemplateEngine::getRedumpTemplate() {
     return Constants::Templates::DEFAULT_REDUMP;
 }
 
-QString TemplateEngine::moveArticleToEnd(const QString &title)
-{
+QString TemplateEngine::moveArticleToEnd(const QString &title) {
     // List of articles to move
-    static const QStringList articles = {"The", "A", "An"};
-    
+    static const QStringList articles = { "The", "A", "An" };
+
     for (const QString &article : articles) {
         QString pattern = "^" + article + "\\s+(.+)$";
         QRegularExpression re(pattern, QRegularExpression::CaseInsensitiveOption);
         QRegularExpressionMatch match = re.match(title);
-        
+
         if (match.hasMatch()) {
             QString remainder = match.captured(1);
             return remainder + ", " + article;
         }
     }
-    
+
     return title;
 }
 
-int TemplateEngine::extractDiscNumber(const QString &filename)
-{
+int TemplateEngine::extractDiscNumber(const QString &filename) {
     // Match patterns like "Disc 1", "Disc 01", "(Disc 1)", etc.
     QRegularExpression re("\\b[Dd]isc\\s+(\\d+)", QRegularExpression::CaseInsensitiveOption);
     QRegularExpressionMatch match = re.match(filename);
-    
+
     if (match.hasMatch()) {
         return match.captured(1).toInt();
     }
-    
+
     return 0;
 }
 
-QString TemplateEngine::normalizeTitle(const QString &title)
-{
+QString TemplateEngine::normalizeTitle(const QString &title) {
     QString normalized = title.trimmed();
-    
+
     // Move articles to end
     normalized = moveArticleToEnd(normalized);
-    
+
     // Convert special characters to Low ASCII (basic implementation)
     normalized.replace("™", "");
     normalized.replace("®", "");
@@ -79,79 +70,74 @@ QString TemplateEngine::normalizeTitle(const QString &title)
     normalized.replace("'", "'");
     normalized.replace("\"", "\"");
     normalized.replace("\"", "\"");
-    
+
     return normalized;
 }
 
-bool TemplateEngine::validateTemplate(const QString &templateStr)
-{
+bool TemplateEngine::validateTemplate(const QString &templateStr) {
     // Check for balanced braces
     int openCount = templateStr.count('{');
     int closeCount = templateStr.count('}');
-    
+
     if (openCount != closeCount) {
         return false;
     }
-    
+
     // Check for valid variable names
     QRegularExpression re("\\{([a-zA-Z_][a-zA-Z0-9_]*)\\}");
     QRegularExpressionMatchIterator it = re.globalMatch(templateStr);
-    
+
     static const QStringList validVars = Constants::Templates::ALL_VARIABLES;
-    
+
     while (it.hasNext()) {
         QRegularExpressionMatch match = it.next();
         QString varName = match.captured(1);
-        
+
         if (!validVars.contains(varName)) {
             qWarning() << "Invalid template variable:" << varName;
             return false;
         }
     }
-    
+
     return true;
 }
 
-QString TemplateEngine::replaceVariables(const QString &templateStr, 
-                                        const QMap<QString, QString> &variables)
-{
+QString TemplateEngine::replaceVariables(const QString &templateStr, const QMap<QString, QString> &variables) {
     QString result = templateStr;
-    
+
     for (auto it = variables.constBegin(); it != variables.constEnd(); ++it) {
         QString placeholder = "{" + it.key() + "}";
         result.replace(placeholder, it.value());
     }
-    
+
     return result;
 }
 
-QString TemplateEngine::cleanupEmptyGroups(const QString &filename)
-{
+QString TemplateEngine::cleanupEmptyGroups(const QString &filename) {
     QString result = filename;
-    
+
     // Remove empty parentheses: () or ( )
     QRegularExpression emptyParens("\\(\\s*\\)");
     result.replace(emptyParens, "");
-    
+
     // Remove empty brackets: [] or [ ]
     QRegularExpression emptyBrackets("\\[\\s*\\]");
     result.replace(emptyBrackets, "");
-    
+
     // Clean up multiple spaces
     result.replace(QRegularExpression("\\s{2,}"), " ");
-    
+
     // Clean up space before extension
     result.replace(QRegularExpression("\\s+\\."), ".");
-    
+
     // Trim
     result = result.trimmed();
-    
+
     return result;
 }
 
-QMap<QString, QString> TemplateEngine::buildVariableMap(const GameMetadata &metadata,
-                                                        const QMap<QString, QString> &fileInfo)
-{
+QMap<QString, QString> TemplateEngine::buildVariableMap(
+    const GameMetadata &metadata, const QMap<QString, QString> &fileInfo) {
     QMap<QString, QString> variables;
 
     // Strip No-Intro / Redump trailing parenthetical tags from title,
@@ -163,18 +149,16 @@ QMap<QString, QString> TemplateEngine::buildVariableMap(const GameMetadata &meta
     QString extractedStatus;
 
     // Known region tokens
-    static const QStringList regionTokens = {
-        "USA", "Europe", "Japan", "World", "Australia", "Brazil",
-        "Canada", "China", "France", "Germany", "Italy", "Korea",
-        "Netherlands", "Russia", "Spain", "Sweden", "UK"
-    };
+    static const QStringList regionTokens = { "USA", "Europe", "Japan", "World", "Australia", "Brazil", "Canada",
+        "China", "France", "Germany", "Italy", "Korea", "Netherlands", "Russia", "Spain", "Sweden", "UK" };
 
     // Match trailing (Tag1) (Tag2) ... groups
     QRegularExpression tagPattern(R"(\s*\(([^)]+)\)\s*$)");
     bool stripping = true;
     while (stripping) {
         QRegularExpressionMatch m = tagPattern.match(cleanTitle);
-        if (!m.hasMatch()) break;
+        if (!m.hasMatch())
+            break;
 
         QString tag = m.captured(1).trimmed();
         bool recognized = false;
@@ -195,8 +179,7 @@ QMap<QString, QString> TemplateEngine::buildVariableMap(const GameMetadata &meta
 
         // Languages: "En", "En,Fr,De", "En,Ja", etc.
         if (!recognized) {
-            static const QRegularExpression langPattern(
-                R"(^[A-Z][a-z](?:,[A-Z][a-z])*$)");
+            static const QRegularExpression langPattern(R"(^[A-Z][a-z](?:,[A-Z][a-z])*$)");
             if (langPattern.match(tag).hasMatch()) {
                 extractedLanguages = tag;
                 recognized = true;
@@ -228,13 +211,13 @@ QMap<QString, QString> TemplateEngine::buildVariableMap(const GameMetadata &meta
         if (recognized) {
             cleanTitle = cleanTitle.left(m.capturedStart()).trimmed();
         } else {
-            stripping = false;  // Unrecognized tag — stop stripping
+            stripping = false; // Unrecognized tag — stop stripping
         }
     }
 
     // Title (normalized with articles moved)
     variables[Constants::Templates::Variables::TITLE] = normalizeTitle(cleanTitle);
-    
+
     // Region — prefer extracted (from title); only fall back to metadata.region if no region
     // is found anywhere in the title. This prevents double-adding when the stripping loop
     // stops early at an unrecognized tag and the region tag remains embedded in cleanTitle.
@@ -246,9 +229,15 @@ QMap<QString, QString> TemplateEngine::buildVariableMap(const GameMetadata &meta
             const QStringList parts = tag.split(QLatin1Char(','));
             bool allRegion = !parts.isEmpty();
             for (const QString &p : parts) {
-                if (!regionTokens.contains(p.trimmed(), Qt::CaseInsensitive)) { allRegion = false; break; }
+                if (!regionTokens.contains(p.trimmed(), Qt::CaseInsensitive)) {
+                    allRegion = false;
+                    break;
+                }
             }
-            if (allRegion) { extractedRegion = tag; break; }
+            if (allRegion) {
+                extractedRegion = tag;
+                break;
+            }
         }
     }
     // If a region was found in the title (stripped or embedded), use it.
@@ -258,35 +247,34 @@ QMap<QString, QString> TemplateEngine::buildVariableMap(const GameMetadata &meta
     QString finalRegion = extractedRegion;
     if (finalRegion.isEmpty() && !metadata.region.isEmpty()) {
         // Only add metadata region if it does not already appear in the title.
-        const bool alreadyInTitle = cleanTitle.contains(
-            QLatin1Char('(') + metadata.region, Qt::CaseInsensitive);
+        const bool alreadyInTitle = cleanTitle.contains(QLatin1Char('(') + metadata.region, Qt::CaseInsensitive);
         if (!alreadyInTitle)
             finalRegion = metadata.region;
     }
     variables[Constants::Templates::Variables::REGION] = finalRegion;
-    
+
     // Languages
     variables[Constants::Templates::Variables::LANGUAGES] = extractedLanguages;
-    
+
     // Version (only if specified in metadata)
     variables[Constants::Templates::Variables::VERSION] = extractedVersion;
-    
+
     // Status (Beta, Proto, Sample, etc.)
     variables[Constants::Templates::Variables::STATUS] = extractedStatus;
-    
+
     // Additional (Limited Edition, Greatest Hits, etc.)
     variables[Constants::Templates::Variables::ADDITIONAL] = "";
-    
+
     // Tags (verification/mod tags)
     variables[Constants::Templates::Variables::TAGS] = "";
-    
+
     // Disc number (from fileInfo or 0)
     if (fileInfo.contains("disc")) {
         variables[Constants::Templates::Variables::DISC] = fileInfo["disc"];
     } else {
         variables[Constants::Templates::Variables::DISC] = "";
     }
-    
+
     // Year (from releaseDate)
     if (!metadata.releaseDate.isEmpty()) {
         QDate date = QDate::fromString(metadata.releaseDate, Qt::ISODate);
@@ -294,13 +282,13 @@ QMap<QString, QString> TemplateEngine::buildVariableMap(const GameMetadata &meta
             variables[Constants::Templates::Variables::YEAR] = QString::number(date.year());
         }
     }
-    
+
     // Publisher
     variables[Constants::Templates::Variables::PUBLISHER] = metadata.publisher;
-    
+
     // System
     variables[Constants::Templates::Variables::SYSTEM] = metadata.system;
-    
+
     // Extension (from fileInfo)
     if (fileInfo.contains("ext")) {
         QString ext = fileInfo["ext"];
@@ -313,7 +301,7 @@ QMap<QString, QString> TemplateEngine::buildVariableMap(const GameMetadata &meta
     }
 
     variables[Constants::Templates::Variables::ID] = metadata.id;
-    
+
     return variables;
 }
 

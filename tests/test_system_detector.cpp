@@ -6,8 +6,7 @@
 
 using namespace Remus;
 
-class SystemDetectorTest : public QObject
-{
+class SystemDetectorTest : public QObject {
     Q_OBJECT
 
 private slots:
@@ -16,8 +15,7 @@ private slots:
     void testDetectIsoPs2ByBootSignature();
 };
 
-void SystemDetectorTest::testDetectIsoGameCubeByHeaderMagic()
-{
+void SystemDetectorTest::testDetectIsoGameCubeByHeaderMagic() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
@@ -38,8 +36,7 @@ void SystemDetectorTest::testDetectIsoGameCubeByHeaderMagic()
     QCOMPARE(detector.detectSystem(QStringLiteral(".iso"), isoPath), QStringLiteral("GameCube"));
 }
 
-void SystemDetectorTest::testDetectIsoWiiByHeaderMagic()
-{
+void SystemDetectorTest::testDetectIsoWiiByHeaderMagic() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
@@ -60,8 +57,7 @@ void SystemDetectorTest::testDetectIsoWiiByHeaderMagic()
     QCOMPARE(detector.detectSystem(QStringLiteral(".iso"), isoPath), QStringLiteral("Wii"));
 }
 
-void SystemDetectorTest::testDetectIsoPs2ByBootSignature()
-{
+void SystemDetectorTest::testDetectIsoPs2ByBootSignature() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 

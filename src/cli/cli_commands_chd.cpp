@@ -8,13 +8,13 @@
 #include "../core/space_calculator.h"
 #include "cli_logging.h"
 
-int handleConvertChdCommand(CliContext &ctx)
-{
-    if (!ctx.parser.isSet("convert-chd")) return 0;
+int handleConvertChdCommand(CliContext &ctx) {
+    if (!ctx.parser.isSet("convert-chd"))
+        return 0;
 
     const QString inputPath = ctx.parser.value("convert-chd");
     const QString outputDir = ctx.parser.value("output-dir");
-    const QString codecStr  = ctx.parser.value("chd-codec");
+    const QString codecStr = ctx.parser.value("chd-codec");
 
     qInfo() << "";
     qInfo() << "=== Convert Disc Image to CHD (M4.5) ===";
@@ -28,17 +28,21 @@ int handleConvertChdCommand(CliContext &ctx)
     qInfo() << "chdman version:" << converter.getChdmanVersion();
 
     CHDCodec codec = CHDCodec::Auto;
-    if      (codecStr == "lzma") codec = CHDCodec::LZMA;
-    else if (codecStr == "zlib") codec = CHDCodec::ZLIB;
-    else if (codecStr == "flac") codec = CHDCodec::FLAC;
-    else if (codecStr == "huff") codec = CHDCodec::Huffman;
+    if (codecStr == "lzma")
+        codec = CHDCodec::LZMA;
+    else if (codecStr == "zlib")
+        codec = CHDCodec::ZLIB;
+    else if (codecStr == "flac")
+        codec = CHDCodec::FLAC;
+    else if (codecStr == "huff")
+        codec = CHDCodec::Huffman;
     converter.setCodec(codec);
 
     QFileInfo info(inputPath);
     QString outputPath = buildOutputPath(inputPath, outputDir, "chd");
 
     qInfo() << "Output:" << outputPath;
-    qInfo() << "Codec:"  << codecStr;
+    qInfo() << "Codec:" << codecStr;
     qInfo() << "";
 
     if (ctx.dryRunAll || ctx.parser.isSet(QStringLiteral("dry-run"))) {
@@ -48,28 +52,29 @@ int handleConvertChdCommand(CliContext &ctx)
 
     const QString ext = QStringLiteral(".") + info.suffix().toLower();
     ConversionResult result;
-    if      (ext == Constants::Files::CUE)             result = converter.convertCueToCHD(inputPath, outputPath);
-    else if (ext == Constants::Files::ISO || ext == Constants::Files::IMG) result = converter.convertIsoToCHD(inputPath, outputPath);
-    else if (ext == Constants::Files::GDI)             result = converter.convertGdiToCHD(inputPath, outputPath);
+    if (ext == Constants::Files::CUE)
+        result = converter.convertCueToCHD(inputPath, outputPath);
+    else if (ext == Constants::Files::ISO || ext == Constants::Files::IMG)
+        result = converter.convertIsoToCHD(inputPath, outputPath);
+    else if (ext == Constants::Files::GDI)
+        result = converter.convertGdiToCHD(inputPath, outputPath);
     else {
         qCritical() << "✗ Unsupported format:" << ext;
-        qInfo() << "Supported formats:"
-                << Constants::Files::CUE << ","
-                << Constants::Files::ISO << ","
-                << Constants::Files::IMG << ","
-                << Constants::Files::GDI;
+        qInfo() << "Supported formats:" << Constants::Files::CUE << "," << Constants::Files::ISO << ","
+                << Constants::Files::IMG << "," << Constants::Files::GDI;
         return 1;
     }
 
-    if (!printConversionResult(result, "CHD")) return 1;
+    if (!printConversionResult(result, "CHD"))
+        return 1;
     return 0;
 }
 
-int handleChdExtractCommand(CliContext &ctx)
-{
-    if (!ctx.parser.isSet("chd-extract")) return 0;
+int handleChdExtractCommand(CliContext &ctx) {
+    if (!ctx.parser.isSet("chd-extract"))
+        return 0;
 
-    const QString chdPath  = ctx.parser.value("chd-extract");
+    const QString chdPath = ctx.parser.value("chd-extract");
     const QString outputDir = ctx.parser.value("output-dir");
 
     qInfo() << "";
@@ -77,7 +82,10 @@ int handleChdExtractCommand(CliContext &ctx)
     qInfo() << "Input:" << chdPath;
 
     CHDConverter converter;
-    if (!converter.isChdmanAvailable()) { qCritical() << "✗ chdman not found"; return 1; }
+    if (!converter.isChdmanAvailable()) {
+        qCritical() << "✗ chdman not found";
+        return 1;
+    }
 
     QFileInfo info(chdPath);
     QString outputPath = buildOutputPath(chdPath, outputDir, "cue");
@@ -101,9 +109,9 @@ int handleChdExtractCommand(CliContext &ctx)
     return 0;
 }
 
-int handleChdVerifyCommand(CliContext &ctx)
-{
-    if (!ctx.parser.isSet("chd-verify")) return 0;
+int handleChdVerifyCommand(CliContext &ctx) {
+    if (!ctx.parser.isSet("chd-verify"))
+        return 0;
 
     const QString chdPath = ctx.parser.value("chd-verify");
     qInfo() << "";
@@ -112,7 +120,10 @@ int handleChdVerifyCommand(CliContext &ctx)
     qInfo() << "";
 
     CHDConverter converter;
-    if (!converter.isChdmanAvailable()) { qCritical() << "✗ chdman not found"; return 1; }
+    if (!converter.isChdmanAvailable()) {
+        qCritical() << "✗ chdman not found";
+        return 1;
+    }
 
     VerifyResult result = converter.verifyCHD(chdPath);
     if (result.valid) {
@@ -126,9 +137,9 @@ int handleChdVerifyCommand(CliContext &ctx)
     return 0;
 }
 
-int handleChdInfoCommand(CliContext &ctx)
-{
-    if (!ctx.parser.isSet("chd-info")) return 0;
+int handleChdInfoCommand(CliContext &ctx) {
+    if (!ctx.parser.isSet("chd-info"))
+        return 0;
 
     const QString chdPath = ctx.parser.value("chd-info");
     qInfo() << "";
@@ -137,18 +148,21 @@ int handleChdInfoCommand(CliContext &ctx)
     qInfo() << "";
 
     CHDConverter converter;
-    if (!converter.isChdmanAvailable()) { qCritical() << "✗ chdman not found"; return 1; }
+    if (!converter.isChdmanAvailable()) {
+        qCritical() << "✗ chdman not found";
+        return 1;
+    }
 
     CHDInfo info = converter.getCHDInfo(chdPath);
     if (info.version > 0) {
-        qInfo() << "  CHD Version:"  << info.version;
-        qInfo() << "  Compression:"  << info.compression;
+        qInfo() << "  CHD Version:" << info.version;
+        qInfo() << "  Compression:" << info.compression;
         qInfo() << "  Logical Size:" << SpaceCalculator::formatBytes(info.logicalSize);
         qInfo() << "  Physical Size:" << SpaceCalculator::formatBytes(info.physicalSize);
         const double ratio = (info.logicalSize > 0)
-            ? static_cast<double>(info.physicalSize) / static_cast<double>(info.logicalSize) : 0.0;
-        qInfo() << "  Compression Ratio:"
-                << QString::number((1.0 - ratio) * 100, 'f', 1) << "%";
+            ? static_cast<double>(info.physicalSize) / static_cast<double>(info.logicalSize)
+            : 0.0;
+        qInfo() << "  Compression Ratio:" << QString::number((1.0 - ratio) * 100, 'f', 1) << "%";
         qInfo() << "  SHA1:" << info.sha1;
     } else {
         qCritical() << "✗ Failed to read CHD info";
@@ -157,12 +171,12 @@ int handleChdInfoCommand(CliContext &ctx)
     return 0;
 }
 
-int handleExtractArchiveCommand(CliContext &ctx)
-{
-    if (!ctx.parser.isSet("extract-archive")) return 0;
+int handleExtractArchiveCommand(CliContext &ctx) {
+    if (!ctx.parser.isSet("extract-archive"))
+        return 0;
 
     const QString archivePath = ctx.parser.value("extract-archive");
-    QString outputDir         = ctx.parser.value("output-dir");
+    QString outputDir = ctx.parser.value("output-dir");
 
     qInfo() << "";
     qInfo() << "=== Extract Archive (M4.5) ===";
@@ -172,7 +186,10 @@ int handleExtractArchiveCommand(CliContext &ctx)
     qInfo() << "Backend: libarchive (built-in)";
 
     ArchiveFormat format = extractor.detectFormat(archivePath);
-    if (format == ArchiveFormat::Unknown) { qCritical() << "✗ Unknown archive format"; return 1; }
+    if (format == ArchiveFormat::Unknown) {
+        qCritical() << "✗ Unknown archive format";
+        return 1;
+    }
 
     if (outputDir.isEmpty()) {
         QFileInfo info(archivePath);
@@ -192,7 +209,8 @@ int handleExtractArchiveCommand(CliContext &ctx)
     if (result.success) {
         qInfo() << "✓ Extraction successful!";
         qInfo() << "  Files extracted:" << result.filesExtracted;
-        for (const QString &path : result.extractedFiles) qInfo() << "    " << path;
+        for (const QString &path : result.extractedFiles)
+            qInfo() << "    " << path;
     } else {
         qCritical() << "✗ Extraction failed:" << result.error;
         return 1;
@@ -200,9 +218,9 @@ int handleExtractArchiveCommand(CliContext &ctx)
     return 0;
 }
 
-int handleSpaceReportCommand(CliContext &ctx)
-{
-    if (!ctx.parser.isSet("space-report")) return 0;
+int handleSpaceReportCommand(CliContext &ctx) {
+    if (!ctx.parser.isSet("space-report"))
+        return 0;
 
     const QString dirPath = ctx.parser.value("space-report");
     qInfo() << "";
@@ -210,10 +228,10 @@ int handleSpaceReportCommand(CliContext &ctx)
     qInfo() << "";
 
     SpaceCalculator calculator;
-    QObject::connect(&calculator, &SpaceCalculator::scanProgress,
-        [](int count, const QString &) {
-            if (count % 50 == 0) qInfo() << "  Scanned" << count << "files...";
-        });
+    QObject::connect(&calculator, &SpaceCalculator::scanProgress, [](int count, const QString &) {
+        if (count % 50 == 0)
+            qInfo() << "  Scanned" << count << "files...";
+    });
 
     qInfo() << "Scanning:" << dirPath;
     qInfo() << "";

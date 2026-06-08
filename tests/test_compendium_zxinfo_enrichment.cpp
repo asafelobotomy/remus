@@ -11,70 +11,61 @@
 
 namespace {
 
-bool execSql(QSqlDatabase &db, const QString &sql)
-{
+bool execSql(QSqlDatabase &db, const QString &sql) {
     QSqlQuery q(db);
     return q.exec(sql);
 }
 
-bool createSchema(QSqlDatabase &db)
-{
-    return execSql(db, QStringLiteral(
-                      "CREATE TABLE games ("
-                      "game_id TEXT PRIMARY KEY, "
-                      "system_id INTEGER NOT NULL, "
-                      "canonical_title TEXT NOT NULL, "
-                      "genre TEXT, "
-                      "developer TEXT, "
-                      "description TEXT, "
-                      "publisher TEXT, "
-                      "release_year INTEGER)"))
-        && execSql(db, QStringLiteral(
-                      "CREATE TABLE sources ("
-                      "source_id TEXT PRIMARY KEY, "
-                      "display_name TEXT, "
-                      "source_type TEXT, "
-                      "license_id TEXT, "
-                      "license_url TEXT, "
-                      "attribution_required INTEGER NOT NULL DEFAULT 0, "
-                      "priority INTEGER NOT NULL DEFAULT 100, "
-                      "enabled INTEGER NOT NULL DEFAULT 1)"))
-        && execSql(db, QStringLiteral(
-                      "CREATE TABLE source_snapshots ("
-                      "snapshot_id TEXT PRIMARY KEY, "
-                      "source_id TEXT NOT NULL, "
-                      "snapshot_label TEXT, "
-                      "snapshot_ref TEXT, "
-                      "fetched_at TEXT, "
-                      "checksum_sha256 TEXT)"))
-        && execSql(db, QStringLiteral(
-                      "CREATE TABLE game_facts ("
-                      "fact_id INTEGER PRIMARY KEY AUTOINCREMENT, "
-                      "game_id TEXT NOT NULL, "
-                      "field_name TEXT NOT NULL, "
-                      "field_value TEXT NOT NULL, "
-                      "value_type TEXT NOT NULL DEFAULT 'text', "
-                      "source_id TEXT NOT NULL, "
-                      "snapshot_id TEXT NOT NULL, "
-                      "source_priority INTEGER NOT NULL DEFAULT 100, "
-                      "confidence REAL NOT NULL DEFAULT 1.0, "
-                      "UNIQUE (game_id, field_name, source_id))"));
+bool createSchema(QSqlDatabase &db) {
+    return execSql(db,
+               QStringLiteral("CREATE TABLE games ("
+                              "game_id TEXT PRIMARY KEY, "
+                              "system_id INTEGER NOT NULL, "
+                              "canonical_title TEXT NOT NULL, "
+                              "genre TEXT, "
+                              "developer TEXT, "
+                              "description TEXT, "
+                              "publisher TEXT, "
+                              "release_year INTEGER)"))
+        && execSql(db,
+            QStringLiteral("CREATE TABLE sources ("
+                           "source_id TEXT PRIMARY KEY, "
+                           "display_name TEXT, "
+                           "source_type TEXT, "
+                           "license_id TEXT, "
+                           "license_url TEXT, "
+                           "attribution_required INTEGER NOT NULL DEFAULT 0, "
+                           "priority INTEGER NOT NULL DEFAULT 100, "
+                           "enabled INTEGER NOT NULL DEFAULT 1)"))
+        && execSql(db,
+            QStringLiteral("CREATE TABLE source_snapshots ("
+                           "snapshot_id TEXT PRIMARY KEY, "
+                           "source_id TEXT NOT NULL, "
+                           "snapshot_label TEXT, "
+                           "snapshot_ref TEXT, "
+                           "fetched_at TEXT, "
+                           "checksum_sha256 TEXT)"))
+        && execSql(db,
+            QStringLiteral("CREATE TABLE game_facts ("
+                           "fact_id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                           "game_id TEXT NOT NULL, "
+                           "field_name TEXT NOT NULL, "
+                           "field_value TEXT NOT NULL, "
+                           "value_type TEXT NOT NULL DEFAULT 'text', "
+                           "source_id TEXT NOT NULL, "
+                           "snapshot_id TEXT NOT NULL, "
+                           "source_priority INTEGER NOT NULL DEFAULT 100, "
+                           "confidence REAL NOT NULL DEFAULT 1.0, "
+                           "UNIQUE (game_id, field_name, source_id))"));
 }
 
-bool seedGame(QSqlDatabase &db,
-              const QString &gameId,
-              int systemId,
-              const QString &title,
-              const QVariant &genre,
-              const QVariant &publisher,
-              const QVariant &releaseYear,
-              const QVariant &developer = QVariant(),
-              const QVariant &description = QVariant())
-{
+bool seedGame(QSqlDatabase &db, const QString &gameId, int systemId, const QString &title, const QVariant &genre,
+    const QVariant &publisher, const QVariant &releaseYear, const QVariant &developer = QVariant(),
+    const QVariant &description = QVariant()) {
     QSqlQuery q(db);
-    q.prepare(QStringLiteral(
-        "INSERT INTO games (game_id, system_id, canonical_title, genre, publisher, release_year, developer, description) "
-        "VALUES (?, ?, ?, ?, ?, ?, ?, ?)"));
+    q.prepare(QStringLiteral("INSERT INTO games (game_id, system_id, canonical_title, genre, publisher, release_year, "
+                             "developer, description) "
+                             "VALUES (?, ?, ?, ?, ?, ?, ?, ?)"));
     q.addBindValue(gameId);
     q.addBindValue(systemId);
     q.addBindValue(title);
@@ -86,8 +77,7 @@ bool seedGame(QSqlDatabase &db,
     return q.exec();
 }
 
-int scalarInt(QSqlDatabase &db, const QString &sql)
-{
+int scalarInt(QSqlDatabase &db, const QString &sql) {
     QSqlQuery q(db);
     if (!q.exec(sql) || !q.next())
         return -1;
@@ -96,8 +86,7 @@ int scalarInt(QSqlDatabase &db, const QString &sql)
 
 } // namespace
 
-class CompendiumZxInfoEnrichmentTest : public QObject
-{
+class CompendiumZxInfoEnrichmentTest : public QObject {
     Q_OBJECT
 
 private slots:
@@ -105,8 +94,7 @@ private slots:
     void zxRowsAlreadyComplete_returnsWithoutWrites();
 };
 
-void CompendiumZxInfoEnrichmentTest::noZxSpectrumRows_returnsWithoutWrites()
-{
+void CompendiumZxInfoEnrichmentTest::noZxSpectrumRows_returnsWithoutWrites() {
     const QString connName = QStringLiteral("zxinfo_test_no_rows");
     QSqlDatabase db = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), connName);
     db.setDatabaseName(QStringLiteral(":memory:"));
@@ -114,13 +102,8 @@ void CompendiumZxInfoEnrichmentTest::noZxSpectrumRows_returnsWithoutWrites()
     QVERIFY(createSchema(db));
 
     // Non-ZX game only; ZXInfo pass should exit before network/provider work.
-    QVERIFY(seedGame(db,
-                     QStringLiteral("g1"),
-                     Remus::Constants::Systems::ID_NES,
-                     QStringLiteral("Some NES Game"),
-                     QVariant(),
-                     QVariant(),
-                     QVariant(QMetaType(QMetaType::Int))));
+    QVERIFY(seedGame(db, QStringLiteral("g1"), Remus::Constants::Systems::ID_NES, QStringLiteral("Some NES Game"),
+        QVariant(), QVariant(), QVariant(QMetaType(QMetaType::Int))));
 
     int games = 0;
     int facts = 0;
@@ -138,8 +121,7 @@ void CompendiumZxInfoEnrichmentTest::noZxSpectrumRows_returnsWithoutWrites()
     QSqlDatabase::removeDatabase(connName);
 }
 
-void CompendiumZxInfoEnrichmentTest::zxRowsAlreadyComplete_returnsWithoutWrites()
-{
+void CompendiumZxInfoEnrichmentTest::zxRowsAlreadyComplete_returnsWithoutWrites() {
     const QString connName = QStringLiteral("zxinfo_test_complete_rows");
     QSqlDatabase db = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), connName);
     db.setDatabaseName(QStringLiteral(":memory:"));
@@ -147,15 +129,10 @@ void CompendiumZxInfoEnrichmentTest::zxRowsAlreadyComplete_returnsWithoutWrites(
     QVERIFY(createSchema(db));
 
     // ZX row exists but all enrichable fields are already filled.
-    QVERIFY(seedGame(db,
-                     QStringLiteral("zx1"),
-                     Remus::Constants::Systems::ID_ZX_SPECTRUM,
-                     QStringLiteral("Jet Set Willy"),
-                     QVariant(QStringLiteral("Platform")),
-                     QVariant(QStringLiteral("Software Projects")),
-                     QVariant(1984),
-                     QVariant(QStringLiteral("Software Projects")),
-                     QVariant(QStringLiteral("A classic platform game"))));
+    QVERIFY(
+        seedGame(db, QStringLiteral("zx1"), Remus::Constants::Systems::ID_ZX_SPECTRUM, QStringLiteral("Jet Set Willy"),
+            QVariant(QStringLiteral("Platform")), QVariant(QStringLiteral("Software Projects")), QVariant(1984),
+            QVariant(QStringLiteral("Software Projects")), QVariant(QStringLiteral("A classic platform game"))));
 
     int games = 0;
     int facts = 0;

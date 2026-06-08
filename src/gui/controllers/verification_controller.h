@@ -22,14 +22,28 @@ class VerificationController : public QObject {
 public:
     explicit VerificationController(AppController *appController, QObject *parent = nullptr);
 
-    bool isVerifying() const { return m_verifying; }
-    int progress() const { return m_progress; }
-    int total() const { return m_total; }
-    QString currentFile() const { return m_currentFile; }
-    QVariantMap summary() const { return m_summary; }
-    QString lastError() const { return m_lastError; }
+    bool isVerifying() const {
+        return m_verifying;
+    }
+    int progress() const {
+        return m_progress;
+    }
+    int total() const {
+        return m_total;
+    }
+    QString currentFile() const {
+        return m_currentFile;
+    }
+    QVariantMap summary() const {
+        return m_summary;
+    }
+    QString lastError() const {
+        return m_lastError;
+    }
 
-    void setModel(VerificationResultModel *model) { m_model = model; }
+    void setModel(VerificationResultModel *model) {
+        m_model = model;
+    }
 
     Q_INVOKABLE void verifyAll();
     Q_INVOKABLE void verifySelected();

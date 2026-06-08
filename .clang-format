@@ -1,0 +1,9 @@
+---
+BasedOnStyle: WebKit
+IndentWidth: 4
+ColumnLimit: 120
+SortIncludes: false
+AllowShortFunctionsOnASingleLine: Empty
+BreakBeforeBraces: Attach
+PointerAlignment: Right
+SpaceBeforeParens: ControlStatements

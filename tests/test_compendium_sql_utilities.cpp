@@ -7,16 +7,14 @@
 
 #include "../src/cli/compendium_sql_utilities.h"
 
-class CompendiumSqlUtilitiesTest : public QObject
-{
+class CompendiumSqlUtilitiesTest : public QObject {
     Q_OBJECT
 
 private slots:
     void executeSqlScript_ignoresSemicolonInsideLineComments();
 };
 
-void CompendiumSqlUtilitiesTest::executeSqlScript_ignoresSemicolonInsideLineComments()
-{
+void CompendiumSqlUtilitiesTest::executeSqlScript_ignoresSemicolonInsideLineComments() {
     QTemporaryDir tempDir;
     QVERIFY(tempDir.isValid());
 

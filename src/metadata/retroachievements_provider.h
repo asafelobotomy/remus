@@ -25,14 +25,17 @@ public:
     explicit RetroAchievementsProvider(QObject *parent = nullptr);
     ~RetroAchievementsProvider() override = default;
 
-    QString name() const override { return Constants::Providers::DISPLAY_RETROACHIEVEMENTS; }
-    bool requiresAuth() const override { return true; }
+    QString name() const override {
+        return Constants::Providers::DISPLAY_RETROACHIEVEMENTS;
+    }
+    bool requiresAuth() const override {
+        return true;
+    }
 
     void setCredentials(const QString &username, const QString &apiKey) override;
 
-    QList<SearchResult> searchByName(const QString &title,
-                                     const QString &system = QString(),
-                                     const QString &region = QString()) override;
+    QList<SearchResult> searchByName(
+        const QString &title, const QString &system = QString(), const QString &region = QString()) override;
     GameMetadata getByHash(const QString &hash, const QString &system) override;
     GameMetadata getById(const QString &id) override;
     ArtworkUrls getArtwork(const QString &id) override;
@@ -44,10 +47,10 @@ public:
      * populated only when the API supports the @c h=1 parameter.
      */
     struct RAGameListEntry {
-        int         gameId          = 0;
-        QString     title;
-        int         achievementCount = 0;
-        QStringList md5Hashes;   ///< lower-case MD5 hashes
+        int gameId = 0;
+        QString title;
+        int achievementCount = 0;
+        QStringList md5Hashes; ///< lower-case MD5 hashes
     };
 
     /**

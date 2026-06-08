@@ -21,24 +21,22 @@ namespace Remus {
 
 namespace {
 
-QString dottedSuffix(const QString &path)
-{
-    const QString suffix = QFileInfo(path).suffix();
-    return suffix.isEmpty() ? QString() : QStringLiteral(".") + suffix.toLower();
-}
-
-bool restoreBackupPath(const QString &backupPath, const QString &destinationPath)
-{
-    if (!QFile::exists(backupPath)) {
-        return true;
+    QString dottedSuffix(const QString &path) {
+        const QString suffix = QFileInfo(path).suffix();
+        return suffix.isEmpty() ? QString() : QStringLiteral(".") + suffix.toLower();
     }
 
-    if (QFile::exists(destinationPath) && !QFile::remove(destinationPath)) {
-        return false;
-    }
+    bool restoreBackupPath(const QString &backupPath, const QString &destinationPath) {
+        if (!QFile::exists(backupPath)) {
+            return true;
+        }
 
-    return QFile::rename(backupPath, destinationPath);
-}
+        if (QFile::exists(destinationPath) && !QFile::remove(destinationPath)) {
+            return false;
+        }
+
+        return QFile::rename(backupPath, destinationPath);
+    }
 
 }
 
@@ -49,12 +47,9 @@ OrganizeEngine::OrganizeEngine(Database &db, QObject *parent)
     , m_template(TemplateEngine::getNoIntroTemplate())
     , m_collisionStrategy(CollisionStrategy::Rename)
     , m_dryRun(false)
-    , m_folderNaming(Constants::FolderNaming::Scheme::None)
-{
-}
+    , m_folderNaming(Constants::FolderNaming::Scheme::None) { }
 
-void OrganizeEngine::setTemplate(const QString &templateStr)
-{
+void OrganizeEngine::setTemplate(const QString &templateStr) {
     if (TemplateEngine::validateTemplate(templateStr)) {
         m_template = templateStr;
         qInfo() << "Template set to:" << templateStr;
@@ -64,28 +59,22 @@ void OrganizeEngine::setTemplate(const QString &templateStr)
     }
 }
 
-void OrganizeEngine::setCollisionStrategy(CollisionStrategy strategy)
-{
+void OrganizeEngine::setCollisionStrategy(CollisionStrategy strategy) {
     m_collisionStrategy = strategy;
 }
 
-void OrganizeEngine::setDryRun(bool enabled)
-{
+void OrganizeEngine::setDryRun(bool enabled) {
     m_dryRun = enabled;
     qInfo() << "Dry-run mode:" << (enabled ? "ENABLED" : "DISABLED");
 }
 
-void OrganizeEngine::setFolderNaming(Constants::FolderNaming::Scheme scheme)
-{
+void OrganizeEngine::setFolderNaming(Constants::FolderNaming::Scheme scheme) {
     m_folderNaming = scheme;
     qInfo() << "Folder naming scheme:" << Constants::FolderNaming::schemeDisplayName(scheme);
 }
 
-OrganizeResult OrganizeEngine::organizeFile(int fileId,
-                                            const GameMetadata &metadata,
-                                            const QString &destinationDir,
-                                            FileOperation operation)
-{
+OrganizeResult OrganizeEngine::organizeFile(
+    int fileId, const GameMetadata &metadata, const QString &destinationDir, FileOperation operation) {
     OrganizeResult result;
     result.success = false;
     result.operation = operation;
@@ -121,8 +110,7 @@ OrganizeResult OrganizeEngine::organizeFile(int fileId,
 
     emit operationStarted(fileId, result.oldPath, newPath);
 
-    const bool overwriteExisting = wouldCollide(newPath)
-        && m_collisionStrategy == CollisionStrategy::Overwrite;
+    const bool overwriteExisting = wouldCollide(newPath) && m_collisionStrategy == CollisionStrategy::Overwrite;
     QString backupPath;
 
     // Check for collision
@@ -142,16 +130,15 @@ OrganizeResult OrganizeEngine::organizeFile(int fileId,
     // Dry-run mode: preview only
     if (m_dryRun) {
         emit dryRunPreview(result.oldPath, newPath, operation);
-        qInfo() << "[DRY RUN]" << (operation == FileOperation::Move ? "MOVE" : "COPY") 
-                << result.oldPath << "->" << newPath;
+        qInfo() << "[DRY RUN]" << (operation == FileOperation::Move ? "MOVE" : "COPY") << result.oldPath << "->"
+                << newPath;
         result.success = true;
         return result;
     }
 
     if (overwriteExisting) {
         QFileInfo targetInfo(newPath);
-        backupPath = targetInfo.absoluteDir().filePath(
-            QStringLiteral(".%1.remus_backup_%2")
+        backupPath = targetInfo.absoluteDir().filePath(QStringLiteral(".%1.remus_backup_%2")
                 .arg(targetInfo.fileName(), QString::number(QDateTime::currentMSecsSinceEpoch())));
 
         if (!QFile::rename(newPath, backupPath)) {
@@ -165,8 +152,7 @@ OrganizeResult OrganizeEngine::organizeFile(int fileId,
     bool operationSucceeded = false;
     if (overwriteExisting && operation == FileOperation::Copy) {
         QFileInfo targetInfo(newPath);
-        const QString stagedCopyPath = targetInfo.absoluteDir().filePath(
-            QStringLiteral(".%1.remus_copy_%2")
+        const QString stagedCopyPath = targetInfo.absoluteDir().filePath(QStringLiteral(".%1.remus_copy_%2")
                 .arg(targetInfo.fileName(), QString::number(QDateTime::currentMSecsSinceEpoch())));
 
         if (QFile::copy(result.oldPath, stagedCopyPath) && QFile::rename(stagedCopyPath, newPath)) {
@@ -200,8 +186,7 @@ OrganizeResult OrganizeEngine::organizeFile(int fileId,
         }
         m_database.updateFileStorageState(updatedRecord);
 
-        qInfo() << "✓" << (operation == FileOperation::Move ? "Moved" : "Copied")
-                << result.oldPath << "->" << newPath;
+        qInfo() << "✓" << (operation == FileOperation::Move ? "Moved" : "Copied") << result.oldPath << "->" << newPath;
         emit operationCompleted(fileId, true, "");
     } else {
         if (!backupPath.isEmpty() && !restoreBackupPath(backupPath, newPath)) {
@@ -216,16 +201,12 @@ OrganizeResult OrganizeEngine::organizeFile(int fileId,
 }
 
 QList<OrganizeResult> OrganizeEngine::organizeFiles(const QList<int> &fileIds,
-                                                    const QMap<int, GameMetadata> &metadataMap,
-                                                    const QString &destinationDir,
-                                                    FileOperation operation)
-{
+    const QMap<int, GameMetadata> &metadataMap, const QString &destinationDir, FileOperation operation) {
     QList<OrganizeResult> results;
     int total = fileIds.size();
     int current = 0;
 
-    qInfo() << "Organizing" << total << "files to" << destinationDir 
-            << (m_dryRun ? "(DRY RUN)" : "");
+    qInfo() << "Organizing" << total << "files to" << destinationDir << (m_dryRun ? "(DRY RUN)" : "");
 
     for (int fileId : fileIds) {
         current++;
@@ -249,13 +230,11 @@ QList<OrganizeResult> OrganizeEngine::organizeFiles(const QList<int> &fileIds,
     return results;
 }
 
-bool OrganizeEngine::wouldCollide(const QString &path)
-{
+bool OrganizeEngine::wouldCollide(const QString &path) {
     return QFile::exists(path);
 }
 
-QString OrganizeEngine::resolveCollision(const QString &path, CollisionStrategy strategy)
-{
+QString OrganizeEngine::resolveCollision(const QString &path, CollisionStrategy strategy) {
     if (strategy == CollisionStrategy::Overwrite) {
         return path;
     }
@@ -284,8 +263,7 @@ QString OrganizeEngine::resolveCollision(const QString &path, CollisionStrategy 
     return newPath;
 }
 
-bool OrganizeEngine::executeOperation(const QString &oldPath, const QString &newPath, FileOperation operation)
-{
+bool OrganizeEngine::executeOperation(const QString &oldPath, const QString &newPath, FileOperation operation) {
     // Ensure destination directory exists
     QFileInfo destInfo(newPath);
     QDir destDir = destInfo.absoluteDir();
@@ -297,41 +275,40 @@ bool OrganizeEngine::executeOperation(const QString &oldPath, const QString &new
     }
 
     switch (operation) {
-        case FileOperation::Move:
-        case FileOperation::Rename:
-            return QFile::rename(oldPath, newPath);
+    case FileOperation::Move:
+    case FileOperation::Rename:
+        return QFile::rename(oldPath, newPath);
 
-        case FileOperation::Copy:
-            return QFile::copy(oldPath, newPath);
+    case FileOperation::Copy:
+        return QFile::copy(oldPath, newPath);
 
-        case FileOperation::Delete:
-            return QFile::remove(oldPath);
+    case FileOperation::Delete:
+        return QFile::remove(oldPath);
 
-        default:
-            qWarning() << "Unknown file operation";
-            return false;
+    default:
+        qWarning() << "Unknown file operation";
+        return false;
     }
 }
 
-int OrganizeEngine::recordUndo(const QString &oldPath, const QString &newPath, FileOperation operation)
-{
+int OrganizeEngine::recordUndo(const QString &oldPath, const QString &newPath, FileOperation operation) {
     QString operationType;
     switch (operation) {
-        case FileOperation::Move:
-            operationType = "move";
-            break;
-        case FileOperation::Copy:
-            operationType = "copy";
-            break;
-        case FileOperation::Rename:
-            operationType = "rename";
-            break;
-        case FileOperation::Delete:
-            operationType = "delete";
-            break;
-        default:
-            operationType = "unknown";
-            break;
+    case FileOperation::Move:
+        operationType = "move";
+        break;
+    case FileOperation::Copy:
+        operationType = "copy";
+        break;
+    case FileOperation::Rename:
+        operationType = "rename";
+        break;
+    case FileOperation::Delete:
+        operationType = "delete";
+        break;
+    default:
+        operationType = "unknown";
+        break;
     }
 
     int fileId = 0;
@@ -360,10 +337,8 @@ int OrganizeEngine::recordUndo(const QString &oldPath, const QString &newPath, F
     return query.lastInsertId().toInt();
 }
 
-QString OrganizeEngine::generateDestinationPath(const FileRecord &fileRecord,
-                                               const GameMetadata &metadata,
-                                               const QString &destinationDir)
-{
+QString OrganizeEngine::generateDestinationPath(
+    const FileRecord &fileRecord, const GameMetadata &metadata, const QString &destinationDir) {
     // Build variable map for template
     QMap<QString, QString> variables;
 
@@ -388,8 +363,7 @@ QString OrganizeEngine::generateDestinationPath(const FileRecord &fileRecord,
     // Build destination: optionally add system subfolder
     QDir destDir(destinationDir);
     if (m_folderNaming != Constants::FolderNaming::Scheme::None) {
-        QString systemFolder = Constants::FolderNaming::folderNameForSystemId(
-            fileRecord.systemId, m_folderNaming);
+        QString systemFolder = Constants::FolderNaming::folderNameForSystemId(fileRecord.systemId, m_folderNaming);
         if (!systemFolder.isEmpty()) {
             destDir = QDir(destDir.filePath(systemFolder));
         }

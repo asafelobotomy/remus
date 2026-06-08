@@ -24,33 +24,49 @@ class AppController : public QObject {
 
 public:
     enum View {
-        WorkflowView  = 0,
-        LibraryView   = 1,
+        WorkflowView = 0,
+        LibraryView = 1,
         UtilitiesView = 2,
-        SettingsView  = 3,
+        SettingsView = 3,
     };
     Q_ENUM(View)
 
     explicit AppController(QObject *parent = nullptr);
     ~AppController() override;
 
-    QString libraryPath() const { return m_libraryPath; }
-    bool isLibraryOpen() const { return m_libraryOpen; }
-    int currentView() const { return m_currentView; }
-    int selectedFileId() const { return m_selectedFileId; }
-    int selectedGameId() const { return m_selectedGameId; }
-    QString statusMessage() const { return m_statusMessage; }
+    QString libraryPath() const {
+        return m_libraryPath;
+    }
+    bool isLibraryOpen() const {
+        return m_libraryOpen;
+    }
+    int currentView() const {
+        return m_currentView;
+    }
+    int selectedFileId() const {
+        return m_selectedFileId;
+    }
+    int selectedGameId() const {
+        return m_selectedGameId;
+    }
+    QString statusMessage() const {
+        return m_statusMessage;
+    }
 
-    Database *database() { return &m_database; }
-    const Database *database() const { return &m_database; }
-    ProviderOrchestrator *orchestrator() const { return m_orchestrator.get(); }
+    Database *database() {
+        return &m_database;
+    }
+    const Database *database() const {
+        return &m_database;
+    }
+    ProviderOrchestrator *orchestrator() const {
+        return m_orchestrator.get();
+    }
 
     Q_INVOKABLE bool openLibrary(const QString &dbPath);
     Q_INVOKABLE void closeLibrary();
-    Q_INVOKABLE bool eraseLibraryDatabase(bool eraseFiles      = true,
-                                          bool eraseMatchData = true,
-                                          bool eraseApiCache  = true,
-                                          bool eraseArtwork   = true);
+    Q_INVOKABLE bool eraseLibraryDatabase(
+        bool eraseFiles = true, bool eraseMatchData = true, bool eraseApiCache = true, bool eraseArtwork = true);
     Q_INVOKABLE QString defaultLibraryPath() const;
     Q_INVOKABLE QVariantMap selectedFile();
     Q_INVOKABLE QVariantMap selectedMatch();

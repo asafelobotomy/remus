@@ -7,10 +7,8 @@
 
 namespace Remus {
 
-bool VerificationEngine::exportReport(const QList<VerificationResult> &results,
-                                       const QString &outputPath,
-                                       const QString &format)
-{
+bool VerificationEngine::exportReport(
+    const QList<VerificationResult> &results, const QString &outputPath, const QString &format) {
     QFile file(outputPath);
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
         emit error("Failed to create report file: " + outputPath);
@@ -25,15 +23,27 @@ bool VerificationEngine::exportReport(const QList<VerificationResult> &results,
             obj["filePath"] = r.filePath;
             obj["filename"] = r.filename;
             obj["system"] = r.system;
-            
+
             QString statusStr;
             switch (r.status) {
-                case VerificationStatus::Verified: statusStr = "verified"; break;
-                case VerificationStatus::Mismatch: statusStr = "mismatch"; break;
-                case VerificationStatus::NotInDat: statusStr = "not_in_dat"; break;
-                case VerificationStatus::HashMissing: statusStr = "hash_missing"; break;
-                case VerificationStatus::Corrupt: statusStr = "corrupt"; break;
-                default: statusStr = "unknown"; break;
+            case VerificationStatus::Verified:
+                statusStr = "verified";
+                break;
+            case VerificationStatus::Mismatch:
+                statusStr = "mismatch";
+                break;
+            case VerificationStatus::NotInDat:
+                statusStr = "not_in_dat";
+                break;
+            case VerificationStatus::HashMissing:
+                statusStr = "hash_missing";
+                break;
+            case VerificationStatus::Corrupt:
+                statusStr = "corrupt";
+                break;
+            default:
+                statusStr = "unknown";
+                break;
             }
             obj["status"] = statusStr;
             obj["datName"] = r.datName;
@@ -56,12 +66,24 @@ bool VerificationEngine::exportReport(const QList<VerificationResult> &results,
         for (const VerificationResult &r : results) {
             QString statusStr;
             switch (r.status) {
-                case VerificationStatus::Verified: statusStr = "Verified"; break;
-                case VerificationStatus::Mismatch: statusStr = "Mismatch"; break;
-                case VerificationStatus::NotInDat: statusStr = "Not in DAT"; break;
-                case VerificationStatus::HashMissing: statusStr = "Hash Missing"; break;
-                case VerificationStatus::Corrupt: statusStr = "Corrupt"; break;
-                default: statusStr = "Unknown"; break;
+            case VerificationStatus::Verified:
+                statusStr = "Verified";
+                break;
+            case VerificationStatus::Mismatch:
+                statusStr = "Mismatch";
+                break;
+            case VerificationStatus::NotInDat:
+                statusStr = "Not in DAT";
+                break;
+            case VerificationStatus::HashMissing:
+                statusStr = "Hash Missing";
+                break;
+            case VerificationStatus::Corrupt:
+                statusStr = "Corrupt";
+                break;
+            default:
+                statusStr = "Unknown";
+                break;
             }
 
             // Escape CSV fields
@@ -73,14 +95,8 @@ bool VerificationEngine::exportReport(const QList<VerificationResult> &results,
                 return s;
             };
 
-            out << r.fileId << ","
-                << escape(r.filename) << ","
-                << escape(r.system) << ","
-                << statusStr << ","
-                << escape(r.datName) << ","
-                << r.hashType << ","
-                << r.fileHash << ","
-                << r.datHash << ","
+            out << r.fileId << "," << escape(r.filename) << "," << escape(r.system) << "," << statusStr << ","
+                << escape(r.datName) << "," << r.hashType << "," << r.fileHash << "," << r.datHash << ","
                 << escape(r.notes) << "\n";
         }
     }

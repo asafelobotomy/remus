@@ -9,8 +9,7 @@ using namespace Remus::Compendium;
 
 namespace {
 
-bool execSql(QSqlDatabase &db, const QString &sql)
-{
+bool execSql(QSqlDatabase &db, const QString &sql) {
     QSqlQuery q(db);
     return q.exec(sql);
 }
@@ -18,49 +17,45 @@ bool execSql(QSqlDatabase &db, const QString &sql)
 // Creates a minimal in-memory database containing the tables used by
 // deduplicateGames.  Returns the open connection name so the caller can remove
 // it after the test.
-QString openDedupDb(QSqlDatabase &db)
-{
-    const QString name = QStringLiteral("dedup_test_%1")
-        .arg(QDateTime::currentMSecsSinceEpoch());
+QString openDedupDb(QSqlDatabase &db) {
+    const QString name = QStringLiteral("dedup_test_%1").arg(QDateTime::currentMSecsSinceEpoch());
     db = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), name);
     db.setDatabaseName(QStringLiteral(":memory:"));
     if (!db.open())
-        return {};
+        return { };
 
-    const bool ok =
-        execSql(db, QStringLiteral(
-            "CREATE TABLE games ("
-            "game_id TEXT PRIMARY KEY,"
-            " system_id INTEGER NOT NULL,"
-            " canonical_title TEXT NOT NULL)")) &&
-        execSql(db, QStringLiteral(
-            "CREATE TABLE game_names ("
-            "game_name_id INTEGER PRIMARY KEY AUTOINCREMENT,"
-            " game_id TEXT NOT NULL,"
-            " name_text TEXT NOT NULL)")) &&
-        execSql(db, QStringLiteral(
-            "CREATE TABLE game_signatures ("
-            "signature_id INTEGER PRIMARY KEY AUTOINCREMENT,"
-            " game_id TEXT NOT NULL,"
-            " hash_value TEXT NOT NULL)")) &&
-        execSql(db, QStringLiteral(
-            "CREATE TABLE game_serials ("
-            "serial_id INTEGER PRIMARY KEY AUTOINCREMENT,"
-            " game_id TEXT NOT NULL,"
-            " serial_value TEXT NOT NULL)")) &&
-        execSql(db, QStringLiteral(
-            "CREATE TABLE game_facts ("
-            "fact_id INTEGER PRIMARY KEY AUTOINCREMENT,"
-            " game_id TEXT NOT NULL,"
-            " field_name TEXT NOT NULL)"));
+    const bool ok = execSql(db,
+                        QStringLiteral("CREATE TABLE games ("
+                                       "game_id TEXT PRIMARY KEY,"
+                                       " system_id INTEGER NOT NULL,"
+                                       " canonical_title TEXT NOT NULL)"))
+        && execSql(db,
+            QStringLiteral("CREATE TABLE game_names ("
+                           "game_name_id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                           " game_id TEXT NOT NULL,"
+                           " name_text TEXT NOT NULL)"))
+        && execSql(db,
+            QStringLiteral("CREATE TABLE game_signatures ("
+                           "signature_id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                           " game_id TEXT NOT NULL,"
+                           " hash_value TEXT NOT NULL)"))
+        && execSql(db,
+            QStringLiteral("CREATE TABLE game_serials ("
+                           "serial_id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                           " game_id TEXT NOT NULL,"
+                           " serial_value TEXT NOT NULL)"))
+        && execSql(db,
+            QStringLiteral("CREATE TABLE game_facts ("
+                           "fact_id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                           " game_id TEXT NOT NULL,"
+                           " field_name TEXT NOT NULL)"));
 
-    return ok ? name : QString{};
+    return ok ? name : QString { };
 }
 
 } // namespace
 
-class CompendiumDedupTest : public QObject
-{
+class CompendiumDedupTest : public QObject {
     Q_OBJECT
 
 private slots:
@@ -69,8 +64,7 @@ private slots:
     void deduplicateGames_noOpWhenNoDuplicates();
 };
 
-void CompendiumDedupTest::deduplicateGames_mergesDuplicatePair()
-{
+void CompendiumDedupTest::deduplicateGames_mergesDuplicatePair() {
     QSqlDatabase db;
     const QString connName = openDedupDb(db);
     QVERIFY(!connName.isEmpty());
@@ -78,12 +72,10 @@ void CompendiumDedupTest::deduplicateGames_mergesDuplicatePair()
     // Two games with the same system + title → duplicates.
     // dup-2 has one signature so it wins (higher sig_count);
     // dup-1 has none and will be the loser.
-    QVERIFY(execSql(db, QStringLiteral(
-        "INSERT INTO games VALUES ('dup-1', 1, 'Duplicate Game')")));
-    QVERIFY(execSql(db, QStringLiteral(
-        "INSERT INTO games VALUES ('dup-2', 1, 'Duplicate Game')")));
-    QVERIFY(execSql(db, QStringLiteral(
-        "INSERT INTO game_signatures (game_id, hash_value) VALUES ('dup-2', 'abc123')")));
+    QVERIFY(execSql(db, QStringLiteral("INSERT INTO games VALUES ('dup-1', 1, 'Duplicate Game')")));
+    QVERIFY(execSql(db, QStringLiteral("INSERT INTO games VALUES ('dup-2', 1, 'Duplicate Game')")));
+    QVERIFY(
+        execSql(db, QStringLiteral("INSERT INTO game_signatures (game_id, hash_value) VALUES ('dup-2', 'abc123')")));
 
     QString error;
     const int merged = deduplicateGames(db, error);
@@ -106,22 +98,18 @@ void CompendiumDedupTest::deduplicateGames_mergesDuplicatePair()
     QSqlDatabase::removeDatabase(connName);
 }
 
-void CompendiumDedupTest::deduplicateGames_reassignsChildRows()
-{
+void CompendiumDedupTest::deduplicateGames_reassignsChildRows() {
     QSqlDatabase db;
     const QString connName = openDedupDb(db);
     QVERIFY(!connName.isEmpty());
 
     // dup-1 is the loser (no signatures); dup-2 is the winner (one signature).
-    QVERIFY(execSql(db, QStringLiteral(
-        "INSERT INTO games VALUES ('dup-1', 1, 'Duplicate Game')")));
-    QVERIFY(execSql(db, QStringLiteral(
-        "INSERT INTO games VALUES ('dup-2', 1, 'Duplicate Game')")));
-    QVERIFY(execSql(db, QStringLiteral(
-        "INSERT INTO game_signatures (game_id, hash_value) VALUES ('dup-2', 'abc123')")));
+    QVERIFY(execSql(db, QStringLiteral("INSERT INTO games VALUES ('dup-1', 1, 'Duplicate Game')")));
+    QVERIFY(execSql(db, QStringLiteral("INSERT INTO games VALUES ('dup-2', 1, 'Duplicate Game')")));
+    QVERIFY(
+        execSql(db, QStringLiteral("INSERT INTO game_signatures (game_id, hash_value) VALUES ('dup-2', 'abc123')")));
     // A name owned by the loser — should be reassigned to the winner.
-    QVERIFY(execSql(db, QStringLiteral(
-        "INSERT INTO game_names (game_id, name_text) VALUES ('dup-1', 'Alt Name')")));
+    QVERIFY(execSql(db, QStringLiteral("INSERT INTO game_names (game_id, name_text) VALUES ('dup-1', 'Alt Name')")));
 
     QString error;
     QCOMPARE(deduplicateGames(db, error), 1);
@@ -129,8 +117,7 @@ void CompendiumDedupTest::deduplicateGames_reassignsChildRows()
 
     // The name row must now belong to the winner.
     QSqlQuery q(db);
-    QVERIFY(q.exec(QStringLiteral(
-        "SELECT game_id FROM game_names WHERE name_text = 'Alt Name'")));
+    QVERIFY(q.exec(QStringLiteral("SELECT game_id FROM game_names WHERE name_text = 'Alt Name'")));
     QVERIFY(q.next());
     QCOMPARE(q.value(0).toString(), QStringLiteral("dup-2"));
 
@@ -138,17 +125,14 @@ void CompendiumDedupTest::deduplicateGames_reassignsChildRows()
     QSqlDatabase::removeDatabase(connName);
 }
 
-void CompendiumDedupTest::deduplicateGames_noOpWhenNoDuplicates()
-{
+void CompendiumDedupTest::deduplicateGames_noOpWhenNoDuplicates() {
     QSqlDatabase db;
     const QString connName = openDedupDb(db);
     QVERIFY(!connName.isEmpty());
 
     // Two games with distinct titles — nothing to merge.
-    QVERIFY(execSql(db, QStringLiteral(
-        "INSERT INTO games VALUES ('game-a', 1, 'Title Alpha')")));
-    QVERIFY(execSql(db, QStringLiteral(
-        "INSERT INTO games VALUES ('game-b', 1, 'Title Beta')")));
+    QVERIFY(execSql(db, QStringLiteral("INSERT INTO games VALUES ('game-a', 1, 'Title Alpha')")));
+    QVERIFY(execSql(db, QStringLiteral("INSERT INTO games VALUES ('game-b', 1, 'Title Beta')")));
 
     QString error;
     QCOMPARE(deduplicateGames(db, error), 0);

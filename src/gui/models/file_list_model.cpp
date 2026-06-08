@@ -8,12 +8,9 @@
 namespace Remus {
 
 FileListModel::FileListModel(QObject *parent)
-    : QAbstractListModel(parent)
-{
-}
+    : QAbstractListModel(parent) { }
 
-int FileListModel::rowCount(const QModelIndex &parent) const
-{
+int FileListModel::rowCount(const QModelIndex &parent) const {
     if (parent.isValid()) {
         return 0;
     }
@@ -21,8 +18,7 @@ int FileListModel::rowCount(const QModelIndex &parent) const
     return m_items.size();
 }
 
-QVariant FileListModel::data(const QModelIndex &index, int role) const
-{
+QVariant FileListModel::data(const QModelIndex &index, int role) const {
     if (!index.isValid() || index.row() < 0 || index.row() >= m_items.size()) {
         return QVariant();
     }
@@ -66,30 +62,28 @@ QVariant FileListModel::data(const QModelIndex &index, int role) const
     }
 }
 
-QHash<int, QByteArray> FileListModel::roleNames() const
-{
+QHash<int, QByteArray> FileListModel::roleNames() const {
     return {
-        {FileIdRole, "fileId"},
-        {GameIdRole, "gameId"},
-        {FilenameRole, "filename"},
-        {DisplayNameRole, "displayName"},
-        {PathRole, "path"},
-        {SystemNameRole, "systemName"},
-        {StatusRole, "status"},
-        {MatchedTitleRole, "matchedTitle"},
-        {Crc32Role, "crc32"},
-        {Md5Role, "md5"},
-        {Sha1Role, "sha1"},
-        {FileSizeRole, "fileSize"},
-        {ConfidenceRole, "confidence"},
-        {MatchedRole, "matched"},
-        {ConfirmedRole, "confirmed"},
-        {RejectedRole, "rejected"},
+        { FileIdRole, "fileId" },
+        { GameIdRole, "gameId" },
+        { FilenameRole, "filename" },
+        { DisplayNameRole, "displayName" },
+        { PathRole, "path" },
+        { SystemNameRole, "systemName" },
+        { StatusRole, "status" },
+        { MatchedTitleRole, "matchedTitle" },
+        { Crc32Role, "crc32" },
+        { Md5Role, "md5" },
+        { Sha1Role, "sha1" },
+        { FileSizeRole, "fileSize" },
+        { ConfidenceRole, "confidence" },
+        { MatchedRole, "matched" },
+        { ConfirmedRole, "confirmed" },
+        { RejectedRole, "rejected" },
     };
 }
 
-void FileListModel::setAppController(AppController *appController)
-{
+void FileListModel::setAppController(AppController *appController) {
     if (m_appController == appController) {
         return;
     }
@@ -107,8 +101,7 @@ void FileListModel::setAppController(AppController *appController)
     refresh();
 }
 
-void FileListModel::refresh()
-{
+void FileListModel::refresh() {
     beginResetModel();
     m_items.clear();
 
@@ -148,8 +141,7 @@ void FileListModel::refresh()
     emit countChanged();
 }
 
-void FileListModel::clear()
-{
+void FileListModel::clear() {
     beginResetModel();
     m_items.clear();
     endResetModel();

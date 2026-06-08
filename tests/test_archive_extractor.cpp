@@ -15,10 +15,8 @@ using namespace Remus;
 // Test archive helpers
 // ─────────────────────────────────────────────────────────────────────────────
 
-static bool createTestArchive(const QString &path,
-                               const QMap<QString, QByteArray> &files,
-                               ArchiveFormat fmt = ArchiveFormat::ZIP)
-{
+static bool createTestArchive(
+    const QString &path, const QMap<QString, QByteArray> &files, ArchiveFormat fmt = ArchiveFormat::ZIP) {
     struct archive *a = archive_write_new();
     if (fmt == ArchiveFormat::SevenZip)
         archive_write_set_format_7zip(a);
@@ -46,8 +44,7 @@ static bool createTestArchive(const QString &path,
     return QFileInfo::exists(path);
 }
 
-static bool createArchiveWithUnsafePath(const QString &path)
-{
+static bool createArchiveWithUnsafePath(const QString &path) {
     struct archive *a = archive_write_new();
     archive_write_set_format_zip(a);
     if (archive_write_open_filename(a, path.toUtf8().constData()) != ARCHIVE_OK) {
@@ -69,9 +66,7 @@ static bool createArchiveWithUnsafePath(const QString &path)
     return QFileInfo::exists(path);
 }
 
-static bool createArchiveWithOrderedEntries(const QString &path,
-                                            const QList<QPair<QString, QByteArray>> &files)
-{
+static bool createArchiveWithOrderedEntries(const QString &path, const QList<QPair<QString, QByteArray>> &files) {
     struct archive *a = archive_write_new();
     archive_write_set_format_zip(a);
     if (archive_write_open_filename(a, path.toUtf8().constData()) != ARCHIVE_OK) {
@@ -124,36 +119,33 @@ private slots:
 // Tests
 // ─────────────────────────────────────────────────────────────────────────────
 
-void ArchiveExtractorTest::testDetectFormat()
-{
-    QCOMPARE(ArchiveExtractor::detectFormat("game.zip"),  ArchiveFormat::ZIP);
-    QCOMPARE(ArchiveExtractor::detectFormat("game.7z"),   ArchiveFormat::SevenZip);
-    QCOMPARE(ArchiveExtractor::detectFormat("game.rar"),  ArchiveFormat::RAR);
-    QCOMPARE(ArchiveExtractor::detectFormat("game.tgz"),  ArchiveFormat::TarGz);
-    QCOMPARE(ArchiveExtractor::detectFormat("game.gz"),   ArchiveFormat::GZip);
-    QCOMPARE(ArchiveExtractor::detectFormat("game.bz2"),  ArchiveFormat::TarBz2);
+void ArchiveExtractorTest::testDetectFormat() {
+    QCOMPARE(ArchiveExtractor::detectFormat("game.zip"), ArchiveFormat::ZIP);
+    QCOMPARE(ArchiveExtractor::detectFormat("game.7z"), ArchiveFormat::SevenZip);
+    QCOMPARE(ArchiveExtractor::detectFormat("game.rar"), ArchiveFormat::RAR);
+    QCOMPARE(ArchiveExtractor::detectFormat("game.tgz"), ArchiveFormat::TarGz);
+    QCOMPARE(ArchiveExtractor::detectFormat("game.gz"), ArchiveFormat::GZip);
+    QCOMPARE(ArchiveExtractor::detectFormat("game.bz2"), ArchiveFormat::TarBz2);
     QCOMPARE(ArchiveExtractor::detectFormat("game.tbz2"), ArchiveFormat::TarBz2);
-    QCOMPARE(ArchiveExtractor::detectFormat("game.tar"),  ArchiveFormat::Tar);
-    QCOMPARE(ArchiveExtractor::detectFormat("game.xz"),   ArchiveFormat::TarXz);
-    QCOMPARE(ArchiveExtractor::detectFormat("game.bin"),  ArchiveFormat::Unknown);
-    QCOMPARE(ArchiveExtractor::detectFormat("game"),      ArchiveFormat::Unknown);
+    QCOMPARE(ArchiveExtractor::detectFormat("game.tar"), ArchiveFormat::Tar);
+    QCOMPARE(ArchiveExtractor::detectFormat("game.xz"), ArchiveFormat::TarXz);
+    QCOMPARE(ArchiveExtractor::detectFormat("game.bin"), ArchiveFormat::Unknown);
+    QCOMPARE(ArchiveExtractor::detectFormat("game"), ArchiveFormat::Unknown);
 }
 
-void ArchiveExtractorTest::testNormalizeArchiveMemberPath()
-{
-    QCOMPARE(ArchiveExtractor::normalizeArchiveMemberPath("game.bin"),          QStringLiteral("game.bin"));
-    QCOMPARE(ArchiveExtractor::normalizeArchiveMemberPath("subdir/game.bin"),   QStringLiteral("subdir/game.bin"));
+void ArchiveExtractorTest::testNormalizeArchiveMemberPath() {
+    QCOMPARE(ArchiveExtractor::normalizeArchiveMemberPath("game.bin"), QStringLiteral("game.bin"));
+    QCOMPARE(ArchiveExtractor::normalizeArchiveMemberPath("subdir/game.bin"), QStringLiteral("subdir/game.bin"));
     QCOMPARE(ArchiveExtractor::normalizeArchiveMemberPath("./subdir/game.bin"), QStringLiteral("subdir/game.bin"));
-    QCOMPARE(ArchiveExtractor::normalizeArchiveMemberPath("../evil"),           QString());
-    QCOMPARE(ArchiveExtractor::normalizeArchiveMemberPath("/absolute"),         QString());
-    QCOMPARE(ArchiveExtractor::normalizeArchiveMemberPath(""),                  QString());
-    QCOMPARE(ArchiveExtractor::normalizeArchiveMemberPath("."),                 QString());
-    QCOMPARE(ArchiveExtractor::normalizeArchiveMemberPath("a/../../b"),         QString());
-    QCOMPARE(ArchiveExtractor::normalizeArchiveMemberPath("back\\slash"),       QStringLiteral("back/slash"));
+    QCOMPARE(ArchiveExtractor::normalizeArchiveMemberPath("../evil"), QString());
+    QCOMPARE(ArchiveExtractor::normalizeArchiveMemberPath("/absolute"), QString());
+    QCOMPARE(ArchiveExtractor::normalizeArchiveMemberPath(""), QString());
+    QCOMPARE(ArchiveExtractor::normalizeArchiveMemberPath("."), QString());
+    QCOMPARE(ArchiveExtractor::normalizeArchiveMemberPath("a/../../b"), QString());
+    QCOMPARE(ArchiveExtractor::normalizeArchiveMemberPath("back\\slash"), QStringLiteral("back/slash"));
 }
 
-void ArchiveExtractorTest::testCanExtractAllSupportedFormats()
-{
+void ArchiveExtractorTest::testCanExtractAllSupportedFormats() {
     ArchiveExtractor extractor;
     QVERIFY(extractor.canExtract(ArchiveFormat::ZIP));
     QVERIFY(extractor.canExtract(ArchiveFormat::SevenZip));
@@ -166,8 +158,7 @@ void ArchiveExtractorTest::testCanExtractAllSupportedFormats()
     QVERIFY(!extractor.canExtract(ArchiveFormat::Unknown));
 }
 
-void ArchiveExtractorTest::testGetArchiveInfoZip()
-{
+void ArchiveExtractorTest::testGetArchiveInfoZip() {
     QTemporaryDir tmp;
     QVERIFY(tmp.isValid());
 
@@ -187,8 +178,7 @@ void ArchiveExtractorTest::testGetArchiveInfoZip()
     QVERIFY(info.unsafeEntries.isEmpty());
 }
 
-void ArchiveExtractorTest::testGetArchiveInfo7z()
-{
+void ArchiveExtractorTest::testGetArchiveInfo7z() {
     QTemporaryDir tmp;
     QVERIFY(tmp.isValid());
 
@@ -205,8 +195,7 @@ void ArchiveExtractorTest::testGetArchiveInfo7z()
     QCOMPARE(info.uncompressedSize, static_cast<qint64>(512));
 }
 
-void ArchiveExtractorTest::testExtractZip()
-{
+void ArchiveExtractorTest::testExtractZip() {
     QTemporaryDir tmp;
     QVERIFY(tmp.isValid());
 
@@ -227,8 +216,7 @@ void ArchiveExtractorTest::testExtractZip()
     QCOMPARE(QFile(outDir + "/game.bin").size(), static_cast<qint64>(128));
 }
 
-void ArchiveExtractorTest::testExtract7zCreatesSubfolder()
-{
+void ArchiveExtractorTest::testExtract7zCreatesSubfolder() {
     QTemporaryDir tmp;
     QVERIFY(tmp.isValid());
 
@@ -247,8 +235,7 @@ void ArchiveExtractorTest::testExtract7zCreatesSubfolder()
     QVERIFY(QFileInfo::exists(expectedPath));
 }
 
-void ArchiveExtractorTest::testExtractFilePreservesNestedRelativePath()
-{
+void ArchiveExtractorTest::testExtractFilePreservesNestedRelativePath() {
     QTemporaryDir tmp;
     QVERIFY(tmp.isValid());
 
@@ -267,8 +254,7 @@ void ArchiveExtractorTest::testExtractFilePreservesNestedRelativePath()
     QVERIFY(QFileInfo::exists(outDir + "/sub/b.bin"));
 }
 
-void ArchiveExtractorTest::testExtractRejectsUnsafeArchiveEntries()
-{
+void ArchiveExtractorTest::testExtractRejectsUnsafeArchiveEntries() {
     QTemporaryDir tmp;
     QVERIFY(tmp.isValid());
 
@@ -282,16 +268,13 @@ void ArchiveExtractorTest::testExtractRejectsUnsafeArchiveEntries()
     QVERIFY(result.error.contains("unsafe", Qt::CaseInsensitive));
 }
 
-void ArchiveExtractorTest::testExtractRejectsMixedUnsafeArchiveWithoutWritingFiles()
-{
+void ArchiveExtractorTest::testExtractRejectsMixedUnsafeArchiveWithoutWritingFiles() {
     QTemporaryDir tmp;
     QVERIFY(tmp.isValid());
 
     const QString archivePath = tmp.filePath("mixed-unsafe.zip");
-    QVERIFY(createArchiveWithOrderedEntries(archivePath, {
-        {QStringLiteral("safe.bin"), QByteArray("safe")},
-        {QStringLiteral("../evil.bin"), QByteArray("evil")}
-    }));
+    QVERIFY(createArchiveWithOrderedEntries(archivePath,
+        { { QStringLiteral("safe.bin"), QByteArray("safe") }, { QStringLiteral("../evil.bin"), QByteArray("evil") } }));
 
     ArchiveExtractor extractor;
     const QString outDir = tmp.filePath("out");
@@ -303,17 +286,14 @@ void ArchiveExtractorTest::testExtractRejectsMixedUnsafeArchiveWithoutWritingFil
     QVERIFY(!QFileInfo::exists(outDir + "/safe.bin"));
 }
 
-void ArchiveExtractorTest::testExtractContinuesBelowFailureThreshold()
-{
+void ArchiveExtractorTest::testExtractContinuesBelowFailureThreshold() {
     QTemporaryDir tmp;
     QVERIFY(tmp.isValid());
 
     const QString archivePath = tmp.filePath("partial.zip");
-    QVERIFY(createArchiveWithOrderedEntries(archivePath, {
-        {QStringLiteral("ok.bin"), QByteArray("ok")},
-        {QStringLiteral("bad1.bin"), QByteArray("bad1")},
-        {QStringLiteral("bad2.bin"), QByteArray("bad2")}
-    }));
+    QVERIFY(createArchiveWithOrderedEntries(archivePath,
+        { { QStringLiteral("ok.bin"), QByteArray("ok") }, { QStringLiteral("bad1.bin"), QByteArray("bad1") },
+            { QStringLiteral("bad2.bin"), QByteArray("bad2") } }));
 
     const QString outDir = tmp.filePath("out");
     QDir().mkpath(outDir + "/bad1.bin");
@@ -328,18 +308,14 @@ void ArchiveExtractorTest::testExtractContinuesBelowFailureThreshold()
     QVERIFY(QFileInfo::exists(outDir + "/ok.bin"));
 }
 
-void ArchiveExtractorTest::testExtractFailsAtOneToThreeFailureRatio()
-{
+void ArchiveExtractorTest::testExtractFailsAtOneToThreeFailureRatio() {
     QTemporaryDir tmp;
     QVERIFY(tmp.isValid());
 
     const QString archivePath = tmp.filePath("ratio.zip");
-    QVERIFY(createArchiveWithOrderedEntries(archivePath, {
-        {QStringLiteral("ok.bin"), QByteArray("ok")},
-        {QStringLiteral("bad1.bin"), QByteArray("bad1")},
-        {QStringLiteral("bad2.bin"), QByteArray("bad2")},
-        {QStringLiteral("bad3.bin"), QByteArray("bad3")}
-    }));
+    QVERIFY(createArchiveWithOrderedEntries(archivePath,
+        { { QStringLiteral("ok.bin"), QByteArray("ok") }, { QStringLiteral("bad1.bin"), QByteArray("bad1") },
+            { QStringLiteral("bad2.bin"), QByteArray("bad2") }, { QStringLiteral("bad3.bin"), QByteArray("bad3") } }));
 
     const QString outDir = tmp.filePath("out");
     QDir().mkpath(outDir + "/bad1.bin");
@@ -355,8 +331,7 @@ void ArchiveExtractorTest::testExtractFailsAtOneToThreeFailureRatio()
     QVERIFY(QFileInfo::exists(outDir + "/ok.bin"));
 }
 
-void ArchiveExtractorTest::testBatchExtractCanBeCancelledAfterFirstItem()
-{
+void ArchiveExtractorTest::testBatchExtractCanBeCancelledAfterFirstItem() {
     QTemporaryDir tmp;
     QVERIFY(tmp.isValid());
 
@@ -372,28 +347,24 @@ void ArchiveExtractorTest::testBatchExtractCanBeCancelledAfterFirstItem()
     const QString outDir = tmp.filePath("batch");
 
     // Connect to batchProgress and cancel after the first item
-    QObject::connect(&extractor, &ArchiveExtractor::batchProgress,
-                     [&](int completed, int /*total*/) {
-                         if (completed == 1)
-                             extractor.cancel();
-                     });
+    QObject::connect(&extractor, &ArchiveExtractor::batchProgress, [&](int completed, int /*total*/) {
+        if (completed == 1)
+            extractor.cancel();
+    });
 
-    const QList<ExtractionResult> results =
-        extractor.batchExtract({arch1, arch2}, outDir, false);
+    const QList<ExtractionResult> results = extractor.batchExtract({ arch1, arch2 }, outDir, false);
 
-    QCOMPARE(results.size(), 1);  // Second item was skipped due to cancel
+    QCOMPARE(results.size(), 1); // Second item was skipped due to cancel
 }
 
-void ArchiveExtractorTest::testExtractUnsupported()
-{
+void ArchiveExtractorTest::testExtractUnsupported() {
     ArchiveExtractor extractor;
     const ExtractionResult result = extractor.extract("/tmp/foo.xyz", "/tmp/out", false);
     QVERIFY(!result.success);
     QVERIFY(!result.error.isEmpty());
 }
 
-void ArchiveExtractorTest::testReadMemberPrefix()
-{
+void ArchiveExtractorTest::testReadMemberPrefix() {
     QTemporaryDir tmp;
     QVERIFY(tmp.isValid());
 

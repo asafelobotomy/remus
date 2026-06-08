@@ -18,23 +18,19 @@
 
 using namespace Remus;
 
-inline bool writeAll(QFile &file, const QByteArray &data)
-{
+inline bool writeAll(QFile &file, const QByteArray &data) {
     return file.write(data) == data.size();
 }
 
-inline bool removeIfExists(const QString &path)
-{
+inline bool removeIfExists(const QString &path) {
     return !QFile::exists(path) || QFile::remove(path);
 }
 
-class ModWorkflowTest : public QObject
-{
+class ModWorkflowTest : public QObject {
     Q_OBJECT
 
 protected:
-    QString catalogPath() const
-    {
+    QString catalogPath() const {
         const QStringList candidates = {
             QCoreApplication::applicationDirPath() + "/../../tests/fixtures/test_mod_catalog.json",
             QCoreApplication::applicationDirPath() + "/../tests/fixtures/test_mod_catalog.json",
@@ -47,7 +43,7 @@ protected:
             if (QFile::exists(path))
                 return QDir::cleanPath(path);
         }
-        return {};
+        return { };
     }
 
 private slots:

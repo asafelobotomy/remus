@@ -8,15 +8,14 @@
 
 namespace Remus {
 
-int LocalDatabaseProvider::loadDatabases(const QString &directory)
-{
+int LocalDatabaseProvider::loadDatabases(const QString &directory) {
     QDir dir(directory);
     if (!dir.exists()) {
         qWarning() << "LocalDatabaseProvider: Directory not found:" << directory;
         return 0;
     }
 
-    const QFileInfoList datFiles = dir.entryInfoList({QStringLiteral("*.dat")}, QDir::Files);
+    const QFileInfoList datFiles = dir.entryInfoList({ QStringLiteral("*.dat") }, QDir::Files);
     qDebug() << "LocalDatabaseProvider: Found" << datFiles.size() << "DAT files in" << directory;
 
     int totalLoaded = 0;
@@ -28,19 +27,18 @@ int LocalDatabaseProvider::loadDatabases(const QString &directory)
         totalLoaded += loadDatabase(fileInfo.absoluteFilePath());
     }
 
-    qDebug() << "LocalDatabaseProvider: Loaded" << totalLoaded << "total entries from" << datFiles.size() << "databases";
+    qDebug() << "LocalDatabaseProvider: Loaded" << totalLoaded << "total entries from" << datFiles.size()
+             << "databases";
     return totalLoaded;
 }
 
-int LocalDatabaseProvider::loadMetadata(const QString &metadataDir)
-{
+int LocalDatabaseProvider::loadMetadata(const QString &metadataDir) {
     const int loaded = m_metadataParser.loadAll(metadataDir);
     qDebug() << "LocalDatabaseProvider: Enrichment metadata loaded for" << loaded << "unique CRCs";
     return loaded;
 }
 
-int LocalDatabaseProvider::loadDatabase(const QString &filePath)
-{
+int LocalDatabaseProvider::loadDatabase(const QString &filePath) {
     const QFileInfo fileInfo(filePath);
     const QString systemName = fileInfo.baseName();
     qDebug() << "LocalDatabaseProvider: Loading" << systemName << "from" << filePath;
@@ -69,20 +67,18 @@ int LocalDatabaseProvider::loadDatabase(const QString &filePath)
     locker.unlock();
 
     emit databaseLoaded(systemName, entries.size());
-    qDebug() << "LocalDatabaseProvider: Indexed" << entries.size() << "entries for" << systemName << "(Version:" << metadata.version << ")";
+    qDebug() << "LocalDatabaseProvider: Indexed" << entries.size() << "entries for" << systemName
+             << "(Version:" << metadata.version << ")";
     return entries.size();
 }
 
-QMap<QString, int> LocalDatabaseProvider::getDatabaseStats() const
-{
+QMap<QString, int> LocalDatabaseProvider::getDatabaseStats() const {
     QMutexLocker locker(&m_mutex);
     return m_systemStats;
 }
 
-QList<SearchResult> LocalDatabaseProvider::searchByName(const QString &title,
-                                                        const QString &system,
-                                                        const QString &region)
-{
+QList<SearchResult> LocalDatabaseProvider::searchByName(
+    const QString &title, const QString &system, const QString &region) {
     QMutexLocker locker(&m_mutex);
     QList<SearchResult> results;
     const QString searchLower = title.toLower();
@@ -100,14 +96,12 @@ QList<SearchResult> LocalDatabaseProvider::searchByName(const QString &title,
         seenEntries.insert(entryKey);
 
         const QString entrySystem = systemForEntry(entry);
-        if (!system.isEmpty() && !entrySystem.isEmpty()
-            && !entrySystem.contains(system, Qt::CaseInsensitive)
+        if (!system.isEmpty() && !entrySystem.isEmpty() && !entrySystem.contains(system, Qt::CaseInsensitive)
             && !system.contains(entrySystem, Qt::CaseInsensitive)) {
             return;
         }
 
-        if (!region.isEmpty()
-            && !entry.region.contains(region, Qt::CaseInsensitive)
+        if (!region.isEmpty() && !entry.region.contains(region, Qt::CaseInsensitive)
             && !entry.gameName.contains(region, Qt::CaseInsensitive)) {
             return;
         }
@@ -144,16 +138,14 @@ QList<SearchResult> LocalDatabaseProvider::searchByName(const QString &title,
     }
 done:;
 
-    std::sort(results.begin(), results.end(), [](const SearchResult &left, const SearchResult &right) {
-        return left.matchScore > right.matchScore;
-    });
+    std::sort(results.begin(), results.end(),
+        [](const SearchResult &left, const SearchResult &right) { return left.matchScore > right.matchScore; });
 
     qDebug() << "LocalDatabaseProvider: Name search for" << title << "found" << results.size() << "results";
     return results;
 }
 
-GameMetadata LocalDatabaseProvider::getByHash(const QString &hash, const QString &system)
-{
+GameMetadata LocalDatabaseProvider::getByHash(const QString &hash, const QString &system) {
     Q_UNUSED(system);
 
     QMutexLocker locker(&m_mutex);
@@ -180,46 +172,48 @@ GameMetadata LocalDatabaseProvider::getByHash(const QString &hash, const QString
     }
 
     qDebug() << "LocalDatabaseProvider: No hash match for" << normalizedHash.left(8) << "...";
-    return {};
+    return { };
 }
 
-GameMetadata LocalDatabaseProvider::getById(const QString &id)
-{
+GameMetadata LocalDatabaseProvider::getById(const QString &id) {
     QMutexLocker locker(&m_mutex);
     ClrMameProEntry entry;
     if (!findEntryById(id, &entry)) {
-        return {};
+        return { };
     }
     return datEntryToMetadata(entry);
 }
 
-ArtworkUrls LocalDatabaseProvider::getArtwork(const QString &id)
-{
+ArtworkUrls LocalDatabaseProvider::getArtwork(const QString &id) {
     QMutexLocker locker(&m_mutex);
     ClrMameProEntry entry;
     QString systemName;
     if (!findEntryById(id, &entry, &systemName) || systemName.isEmpty()) {
-        return {};
+        return { };
     }
 
     ArtworkUrls artwork;
-    const QStringList boxCandidates = generateThumbnailCandidates(systemName, entry.gameName, QStringLiteral("Named_Boxarts"));
-    const QStringList snapCandidates = generateThumbnailCandidates(systemName, entry.gameName, QStringLiteral("Named_Snaps"));
-    const QStringList titleCandidates = generateThumbnailCandidates(systemName, entry.gameName, QStringLiteral("Named_Titles"));
-    if (!boxCandidates.isEmpty()) artwork.boxFront = QUrl(boxCandidates.first());
-    if (!snapCandidates.isEmpty()) artwork.screenshot = QUrl(snapCandidates.first());
-    if (!titleCandidates.isEmpty()) artwork.titleScreen = QUrl(titleCandidates.first());
+    const QStringList boxCandidates
+        = generateThumbnailCandidates(systemName, entry.gameName, QStringLiteral("Named_Boxarts"));
+    const QStringList snapCandidates
+        = generateThumbnailCandidates(systemName, entry.gameName, QStringLiteral("Named_Snaps"));
+    const QStringList titleCandidates
+        = generateThumbnailCandidates(systemName, entry.gameName, QStringLiteral("Named_Titles"));
+    if (!boxCandidates.isEmpty())
+        artwork.boxFront = QUrl(boxCandidates.first());
+    if (!snapCandidates.isEmpty())
+        artwork.screenshot = QUrl(snapCandidates.first());
+    if (!titleCandidates.isEmpty())
+        artwork.titleScreen = QUrl(titleCandidates.first());
     return artwork;
 }
 
-QList<DatMetadata> LocalDatabaseProvider::getLoadedDats() const
-{
+QList<DatMetadata> LocalDatabaseProvider::getLoadedDats() const {
     QMutexLocker locker(&m_mutex);
     return m_datMetadata.values();
 }
 
-bool LocalDatabaseProvider::isDatNewer(const QString &filePath) const
-{
+bool LocalDatabaseProvider::isDatNewer(const QString &filePath) const {
     const QFileInfo fileInfo(filePath);
     const QString systemName = fileInfo.baseName();
     const QMap<QString, QString> header = ClrMameProParser::parseHeader(filePath);
@@ -236,13 +230,13 @@ bool LocalDatabaseProvider::isDatNewer(const QString &filePath) const
     const QString currentVersion = m_datMetadata[systemName].version;
     const bool newer = newVersion > currentVersion;
     if (newer) {
-        qInfo() << "LocalDatabaseProvider: Update available for" << systemName << "- current:" << currentVersion << "new:" << newVersion;
+        qInfo() << "LocalDatabaseProvider: Update available for" << systemName << "- current:" << currentVersion
+                << "new:" << newVersion;
     }
     return newer;
 }
 
-int LocalDatabaseProvider::reloadDatabase(const QString &filePath)
-{
+int LocalDatabaseProvider::reloadDatabase(const QString &filePath) {
     const QFileInfo fileInfo(filePath);
     const QString systemName = fileInfo.baseName();
     qInfo() << "LocalDatabaseProvider: Reloading" << systemName << "from" << filePath;

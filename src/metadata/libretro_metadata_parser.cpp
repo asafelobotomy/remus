@@ -8,17 +8,14 @@
 
 namespace Remus {
 
-int LibretroMetadataParser::loadAll(const QString &metadataDir)
-{
+int LibretroMetadataParser::loadAll(const QString &metadataDir) {
     QDir dir(metadataDir);
     if (!dir.exists()) {
         qWarning() << "LibretroMetadataParser: Directory not found:" << metadataDir;
         return 0;
     }
 
-    static const QStringList types = {
-        "genre", "developer", "publisher", "maxusers", "releaseyear"
-    };
+    static const QStringList types = { "genre", "developer", "publisher", "maxusers", "releaseyear" };
 
     int totalParsed = 0;
     for (const QString &type : types) {
@@ -30,13 +27,12 @@ int LibretroMetadataParser::loadAll(const QString &metadataDir)
         }
     }
 
-    qDebug() << "LibretroMetadataParser: Loaded metadata for"
-             << m_index.size() << "unique CRCs from" << totalParsed << "entries";
+    qDebug() << "LibretroMetadataParser: Loaded metadata for" << m_index.size() << "unique CRCs from" << totalParsed
+             << "entries";
     return m_index.size();
 }
 
-int LibretroMetadataParser::loadType(const QString &dir, const QString &type)
-{
+int LibretroMetadataParser::loadType(const QString &dir, const QString &type) {
     QDir d(dir);
     QStringList filters;
     filters << "*.dat";
@@ -50,8 +46,7 @@ int LibretroMetadataParser::loadType(const QString &dir, const QString &type)
 }
 
 // Merge a single type's value from src into dst
-static void mergeField(LibretroMetadata &dst, const LibretroMetadata &src, const QString &type)
-{
+static void mergeField(LibretroMetadata &dst, const LibretroMetadata &src, const QString &type) {
     if (type == "genre" && dst.genre.isEmpty())
         dst.genre = src.genre;
     else if (type == "developer" && dst.developer.isEmpty())
@@ -65,8 +60,7 @@ static void mergeField(LibretroMetadata &dst, const LibretroMetadata &src, const
 }
 
 // Merge all fields from src into dst (fills gaps)
-static void mergeAllFields(LibretroMetadata &dst, const LibretroMetadata &src)
-{
+static void mergeAllFields(LibretroMetadata &dst, const LibretroMetadata &src) {
     if (dst.genre.isEmpty() && !src.genre.isEmpty())
         dst.genre = src.genre;
     if (dst.developer.isEmpty() && !src.developer.isEmpty())
@@ -81,8 +75,7 @@ static void mergeAllFields(LibretroMetadata &dst, const LibretroMetadata &src)
         dst.description = src.description;
 }
 
-int LibretroMetadataParser::parseFile(const QString &filePath, const QString &type)
-{
+int LibretroMetadataParser::parseFile(const QString &filePath, const QString &type) {
     QFile file(filePath);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         qWarning() << "LibretroMetadataParser: Cannot open" << filePath;
@@ -96,24 +89,19 @@ int LibretroMetadataParser::parseFile(const QString &filePath, const QString &ty
     // Match game blocks:  game ( ... )
     // Each block contains: comment, the metadata field, and rom ( crc XXXX )
     static const QRegularExpression gameRegex(
-        R"(game\s*\(([^{}]*?)\n\s*\))",
-        QRegularExpression::DotMatchesEverythingOption);
+        R"(game\s*\(([^{}]*?)\n\s*\))", QRegularExpression::DotMatchesEverythingOption);
 
     // Extract CRC from rom line:  rom ( crc ABCD1234 )
-    static const QRegularExpression crcRegex(
-        R"(rom\s*\(\s*crc\s+([0-9A-Fa-f]+)\s*\))");
+    static const QRegularExpression crcRegex(R"(rom\s*\(\s*crc\s+([0-9A-Fa-f]+)\s*\))");
 
     // Extract serial from rom line:  rom ( serial SLUS-01272 ... )
-    static const QRegularExpression romSerialRegex(
-        R"re(rom\s*\([^)]*serial\s+"([^"]+)")re");
+    static const QRegularExpression romSerialRegex(R"re(rom\s*\([^)]*serial\s+"([^"]+)")re");
 
     // Extract game-level serial:  serial "SLUS-01272"
-    static const QRegularExpression gameSerialRegex(
-        R"re(serial\s+"([^"]+)")re");
+    static const QRegularExpression gameSerialRegex(R"re(serial\s+"([^"]+)")re");
 
     // Extract game name:  name "Silent Hill (USA)"
-    static const QRegularExpression nameRegex(
-        R"re(name\s+"([^"]+)")re");
+    static const QRegularExpression nameRegex(R"re(name\s+"([^"]+)")re");
     // Value extractors per type — match: fieldname "value" or fieldname value
     static const QRegularExpression genreRegex(R"re(genre\s+"([^"]+)")re");
     static const QRegularExpression developerRegex(R"re(developer\s+"([^"]+)")re");
@@ -164,22 +152,40 @@ int LibretroMetadataParser::parseFile(const QString &filePath, const QString &ty
         bool found = false;
 
         auto gm = genreRegex.match(block);
-        if (gm.hasMatch()) { parsedMeta.genre = gm.captured(1); found = true; }
+        if (gm.hasMatch()) {
+            parsedMeta.genre = gm.captured(1);
+            found = true;
+        }
 
         auto dm = developerRegex.match(block);
-        if (dm.hasMatch()) { parsedMeta.developer = dm.captured(1); found = true; }
+        if (dm.hasMatch()) {
+            parsedMeta.developer = dm.captured(1);
+            found = true;
+        }
 
         auto pm = publisherRegex.match(block);
-        if (pm.hasMatch()) { parsedMeta.publisher = pm.captured(1); found = true; }
+        if (pm.hasMatch()) {
+            parsedMeta.publisher = pm.captured(1);
+            found = true;
+        }
 
         auto um = usersRegex.match(block);
-        if (um.hasMatch()) { parsedMeta.maxUsers = um.captured(1).toInt(); found = true; }
+        if (um.hasMatch()) {
+            parsedMeta.maxUsers = um.captured(1).toInt();
+            found = true;
+        }
 
         auto ym = yearRegex.match(block);
-        if (ym.hasMatch()) { parsedMeta.releaseYear = ym.captured(1).toInt(); found = true; }
+        if (ym.hasMatch()) {
+            parsedMeta.releaseYear = ym.captured(1).toInt();
+            found = true;
+        }
 
         auto desm = descriptionRegex.match(block);
-        if (desm.hasMatch()) { parsedMeta.description = desm.captured(1); found = true; }
+        if (desm.hasMatch()) {
+            parsedMeta.description = desm.captured(1);
+            found = true;
+        }
 
         if (!found)
             continue;
@@ -195,7 +201,8 @@ int LibretroMetadataParser::parseFile(const QString &filePath, const QString &ty
         if (!serial.isEmpty()) {
             LibretroMetadata &meta = m_serialIndex[serial];
             mergeAllFields(meta, parsedMeta);
-            if (crc.isEmpty()) parsed++; // count if not already counted via CRC
+            if (crc.isEmpty())
+                parsed++; // count if not already counted via CRC
         }
 
         // Merge into name index (ultimate fallback)
@@ -208,33 +215,27 @@ int LibretroMetadataParser::parseFile(const QString &filePath, const QString &ty
     return parsed;
 }
 
-LibretroMetadata LibretroMetadataParser::lookup(const QString &crc32) const
-{
+LibretroMetadata LibretroMetadataParser::lookup(const QString &crc32) const {
     return m_index.value(crc32.toUpper());
 }
 
-LibretroMetadata LibretroMetadataParser::lookupBySerial(const QString &serial) const
-{
+LibretroMetadata LibretroMetadataParser::lookupBySerial(const QString &serial) const {
     return m_serialIndex.value(serial.toUpper().trimmed());
 }
 
-LibretroMetadata LibretroMetadataParser::lookupByName(const QString &name) const
-{
+LibretroMetadata LibretroMetadataParser::lookupByName(const QString &name) const {
     return m_nameIndex.value(name);
 }
 
-bool LibretroMetadataParser::contains(const QString &crc32) const
-{
+bool LibretroMetadataParser::contains(const QString &crc32) const {
     return m_index.contains(crc32.toUpper());
 }
 
-int LibretroMetadataParser::size() const
-{
+int LibretroMetadataParser::size() const {
     return m_index.size();
 }
 
-void LibretroMetadataParser::clear()
-{
+void LibretroMetadataParser::clear() {
     m_index.clear();
     m_serialIndex.clear();
     m_nameIndex.clear();

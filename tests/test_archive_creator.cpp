@@ -26,8 +26,7 @@ private slots:
 
 // ─────────────────────────────────────────────────────────────────────────────
 
-void ArchiveCreatorTest::testCompressSuccessReturnsOutputPath()
-{
+void ArchiveCreatorTest::testCompressSuccessReturnsOutputPath() {
     QTemporaryDir tmp;
     QVERIFY(tmp.isValid());
 
@@ -41,7 +40,7 @@ void ArchiveCreatorTest::testCompressSuccessReturnsOutputPath()
 
     ArchiveCreator creator;
     const QString outputPath = tmp.filePath("out.zip");
-    const CompressionResult result = creator.compress({inputFile}, outputPath, ArchiveFormat::ZIP);
+    const CompressionResult result = creator.compress({ inputFile }, outputPath, ArchiveFormat::ZIP);
 
     QVERIFY(result.success);
     QCOMPARE(result.outputPath, outputPath);
@@ -49,23 +48,21 @@ void ArchiveCreatorTest::testCompressSuccessReturnsOutputPath()
     QCOMPARE(result.filesCompressed, 1);
 }
 
-void ArchiveCreatorTest::testCompressFailureReturnsError()
-{
+void ArchiveCreatorTest::testCompressFailureReturnsError() {
     ArchiveCreator creator;
     // Use an empty output path — should fail validation
-    const CompressionResult result = creator.compress({"/nonexistent/path.bin"}, QString(), ArchiveFormat::ZIP);
+    const CompressionResult result = creator.compress({ "/nonexistent/path.bin" }, QString(), ArchiveFormat::ZIP);
 
     QVERIFY(!result.success);
     QVERIFY(!result.error.isEmpty());
 }
 
-void ArchiveCreatorTest::testBatchCompressResultCount()
-{
+void ArchiveCreatorTest::testBatchCompressResultCount() {
     QTemporaryDir tmp;
     QVERIFY(tmp.isValid());
 
     // Create two source directories, each containing one file
-    for (const QString &name : {QStringLiteral("dir1"), QStringLiteral("dir2")}) {
+    for (const QString &name : { QStringLiteral("dir1"), QStringLiteral("dir2") }) {
         const QString dirPath = tmp.filePath(name);
         QDir().mkpath(dirPath);
         QFile f(dirPath + "/file.bin");
@@ -75,17 +72,15 @@ void ArchiveCreatorTest::testBatchCompressResultCount()
 
     ArchiveCreator creator;
     const QString outputDir = tmp.filePath("archives");
-    const QList<CompressionResult> results = creator.batchCompress(
-        {tmp.filePath("dir1"), tmp.filePath("dir2")},
-        outputDir, ArchiveFormat::ZIP);
+    const QList<CompressionResult> results
+        = creator.batchCompress({ tmp.filePath("dir1"), tmp.filePath("dir2") }, outputDir, ArchiveFormat::ZIP);
 
     QCOMPARE(results.size(), 2);
     QVERIFY(results[0].success);
     QVERIFY(results[1].success);
 }
 
-void ArchiveCreatorTest::testCanCompressQueryWithFakePaths()
-{
+void ArchiveCreatorTest::testCanCompressQueryWithFakePaths() {
     ArchiveCreator creator;
     QVERIFY(creator.canCompress(ArchiveFormat::ZIP));
     QVERIFY(!creator.canCompress(ArchiveFormat::SevenZip));
@@ -93,8 +88,7 @@ void ArchiveCreatorTest::testCanCompressQueryWithFakePaths()
     QVERIFY(!creator.canCompress(ArchiveFormat::Unknown));
 }
 
-void ArchiveCreatorTest::testCompressDirectoryContentsPreservesRelativePaths()
-{
+void ArchiveCreatorTest::testCompressDirectoryContentsPreservesRelativePaths() {
     QTemporaryDir tmp;
     QVERIFY(tmp.isValid());
 
@@ -125,8 +119,7 @@ void ArchiveCreatorTest::testCompressDirectoryContentsPreservesRelativePaths()
     QVERIFY(info.contents.contains(QStringLiteral("sub/nested.txt")));
 }
 
-void ArchiveCreatorTest::testCompressMixedInputFilesFromDifferentDirectories()
-{
+void ArchiveCreatorTest::testCompressMixedInputFilesFromDifferentDirectories() {
     QTemporaryDir tmp;
     QVERIFY(tmp.isValid());
 
@@ -149,7 +142,7 @@ void ArchiveCreatorTest::testCompressMixedInputFilesFromDifferentDirectories()
 
     ArchiveCreator creator;
     const QString outputPath = tmp.filePath("multi.zip");
-    const CompressionResult result = creator.compress({fileA, fileB}, outputPath, ArchiveFormat::ZIP);
+    const CompressionResult result = creator.compress({ fileA, fileB }, outputPath, ArchiveFormat::ZIP);
 
     QVERIFY(result.success);
     QCOMPARE(result.filesCompressed, 2);
@@ -161,8 +154,7 @@ void ArchiveCreatorTest::testCompressMixedInputFilesFromDifferentDirectories()
     QVERIFY(info.contents.contains(QStringLiteral("beta.bin")));
 }
 
-void ArchiveCreatorTest::testCompressContinuesBelowFailureThreshold()
-{
+void ArchiveCreatorTest::testCompressContinuesBelowFailureThreshold() {
     QTemporaryDir tmp;
     QVERIFY(tmp.isValid());
 
@@ -176,9 +168,7 @@ void ArchiveCreatorTest::testCompressContinuesBelowFailureThreshold()
     ArchiveCreator creator;
     const QString outputPath = tmp.filePath("partial.zip");
     const CompressionResult result = creator.compress(
-        {validFile, tmp.filePath("missing1.bin"), tmp.filePath("missing2.bin")},
-        outputPath,
-        ArchiveFormat::ZIP);
+        { validFile, tmp.filePath("missing1.bin"), tmp.filePath("missing2.bin") }, outputPath, ArchiveFormat::ZIP);
 
     QVERIFY(result.success);
     QCOMPARE(result.filesCompressed, 1);
@@ -190,8 +180,7 @@ void ArchiveCreatorTest::testCompressContinuesBelowFailureThreshold()
     QVERIFY(info.contents.contains(QStringLiteral("valid.bin")));
 }
 
-void ArchiveCreatorTest::testCompressFailsAtOneToThreeFailureRatio()
-{
+void ArchiveCreatorTest::testCompressFailsAtOneToThreeFailureRatio() {
     QTemporaryDir tmp;
     QVERIFY(tmp.isValid());
 
@@ -205,22 +194,15 @@ void ArchiveCreatorTest::testCompressFailsAtOneToThreeFailureRatio()
     ArchiveCreator creator;
     const QString outputPath = tmp.filePath("ratio.zip");
     const CompressionResult result = creator.compress(
-        {
-            validFile,
-            tmp.filePath("missing1.bin"),
-            tmp.filePath("missing2.bin"),
-            tmp.filePath("missing3.bin")
-        },
-        outputPath,
-        ArchiveFormat::ZIP);
+        { validFile, tmp.filePath("missing1.bin"), tmp.filePath("missing2.bin"), tmp.filePath("missing3.bin") },
+        outputPath, ArchiveFormat::ZIP);
 
     QVERIFY(!result.success);
     QCOMPARE(result.filesCompressed, 1);
     QCOMPARE(result.failedFiles, 3);
 }
 
-void ArchiveCreatorTest::testRoundTripZip()
-{
+void ArchiveCreatorTest::testRoundTripZip() {
     QTemporaryDir tmp;
     QVERIFY(tmp.isValid());
 
@@ -236,7 +218,7 @@ void ArchiveCreatorTest::testRoundTripZip()
     // Compress
     ArchiveCreator creator;
     const QString archivePath = tmp.filePath("roundtrip.zip");
-    const CompressionResult compResult = creator.compress({srcFile}, archivePath, ArchiveFormat::ZIP);
+    const CompressionResult compResult = creator.compress({ srcFile }, archivePath, ArchiveFormat::ZIP);
     QVERIFY(compResult.success);
 
     // Extract

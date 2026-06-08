@@ -9,59 +9,44 @@ namespace Remus {
 
 CSOConverter::CSOConverter(QObject *parent)
     : DiscConverter(parent)
-    , m_maxcsoPath("maxcso")
-{
-}
+    , m_maxcsoPath("maxcso") { }
 
-bool CSOConverter::isMaxcsoAvailable() const
-{
-    auto result = const_cast<CSOConverter*>(this)
-                      ->runProcess(m_maxcsoPath, QStringList() << "--help", 5000);
+bool CSOConverter::isMaxcsoAvailable() const {
+    auto result = const_cast<CSOConverter *>(this)->runProcess(m_maxcsoPath, QStringList() << "--help", 5000);
     return result.started;
 }
 
-QString CSOConverter::getMaxcsoVersion() const
-{
-    auto result = const_cast<CSOConverter*>(this)
-                      ->runProcess(m_maxcsoPath, QStringList() << "--version", 5000);
+QString CSOConverter::getMaxcsoVersion() const {
+    auto result = const_cast<CSOConverter *>(this)->runProcess(m_maxcsoPath, QStringList() << "--version", 5000);
     // maxcso may print version to stdout or stderr
     QString output = result.stdOutput.isEmpty() ? result.stdError : result.stdOutput;
     QStringList lines = output.split('\n');
     return lines.isEmpty() ? QString() : lines.first().trimmed();
 }
 
-void CSOConverter::setMaxcsoPath(const QString &path)
-{
+void CSOConverter::setMaxcsoPath(const QString &path) {
     m_maxcsoPath = path;
 }
 
-ConversionResult CSOConverter::convertIsoToCSO(const QString &isoPath,
-                                                const QString &outputPath)
-{
+ConversionResult CSOConverter::convertIsoToCSO(const QString &isoPath, const QString &outputPath) {
     QString output = outputPath.isEmpty() ? getDefaultOutputPath(isoPath, "cso") : outputPath;
 
     QStringList args;
-    args << isoPath
-         << "-o" << output;
+    args << isoPath << "-o" << output;
 
     return runToolConversion(m_maxcsoPath, args, "maxcso", isoPath, output);
 }
 
-ConversionResult CSOConverter::extractCSOToIso(const QString &csoPath,
-                                                const QString &outputPath)
-{
+ConversionResult CSOConverter::extractCSOToIso(const QString &csoPath, const QString &outputPath) {
     QString output = outputPath.isEmpty() ? getDefaultOutputPath(csoPath, "iso") : outputPath;
 
     QStringList args;
-    args << "--decompress"
-         << csoPath
-         << "-o" << output;
+    args << "--decompress" << csoPath << "-o" << output;
 
     return runToolConversion(m_maxcsoPath, args, "maxcso", csoPath, output);
 }
 
-CSOVerifyResult CSOConverter::verifyCSO(const QString &csoPath)
-{
+CSOVerifyResult CSOConverter::verifyCSO(const QString &csoPath) {
     CSOVerifyResult result;
 
     if (!QFileInfo::exists(csoPath)) {
@@ -95,9 +80,7 @@ CSOVerifyResult CSOConverter::verifyCSO(const QString &csoPath)
     return result;
 }
 
-QList<ConversionResult> CSOConverter::batchConvert(const QStringList &inputPaths,
-                                                    const QString &outputDir)
-{
+QList<ConversionResult> CSOConverter::batchConvert(const QStringList &inputPaths, const QString &outputDir) {
     QList<ConversionResult> results;
     m_cancelled = false;
 

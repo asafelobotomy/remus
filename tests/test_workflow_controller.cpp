@@ -25,13 +25,11 @@ class WorkflowControllerTest : public QObject {
 private:
     // Open a fresh temp library (unique file per call) and return the db path.
     // A library row is inserted and m_libraryId is cached for insertFile().
-    QString setupTempLibrary(AppController *app)
-    {
+    QString setupTempLibrary(AppController *app) {
         const QString dir = QStandardPaths::writableLocation(QStandardPaths::TempLocation);
         QDir().mkpath(dir);
         const QString path = dir + QStringLiteral("/remus_wf_test_")
-                             + QUuid::createUuid().toString(QUuid::WithoutBraces).left(8)
-                             + QStringLiteral(".db");
+            + QUuid::createUuid().toString(QUuid::WithoutBraces).left(8) + QStringLiteral(".db");
         QFile::remove(path); // ensure no stale file
         const bool ok = app->openLibrary(path);
         Q_ASSERT_X(ok, "setupTempLibrary", qPrintable(path));
@@ -45,26 +43,22 @@ private:
     }
 
     // Insert a minimal file row using the Database API (provides all NOT NULL fields).
-    int insertFile(AppController *app,
-                   const QString &filename,
-                   const QString &md5 = QString())
-    {
+    int insertFile(AppController *app, const QString &filename, const QString &md5 = QString()) {
         FileRecord rec;
-        rec.libraryId    = m_libraryId;
-        rec.filename     = filename;
+        rec.libraryId = m_libraryId;
+        rec.filename = filename;
         rec.originalPath = QStringLiteral("/tmp/") + filename;
-        rec.currentPath  = rec.originalPath;
-        rec.extension    = filename.contains('.') ? filename.mid(filename.lastIndexOf('.')) : QString();
-        rec.fileSize     = 0;
-        rec.md5          = md5;
+        rec.currentPath = rec.originalPath;
+        rec.extension = filename.contains('.') ? filename.mid(filename.lastIndexOf('.')) : QString();
+        rec.fileSize = 0;
+        rec.md5 = md5;
         const int id = app->database()->insertFile(rec);
         Q_ASSERT_X(id > 0, "insertFile", qPrintable("Failed to insert " + filename));
         return id;
     }
 
     // Insert a confirmed match for a file
-    void insertConfirmedMatch(AppController *app, int fileId, int gameId = -1)
-    {
+    void insertConfirmedMatch(AppController *app, int fileId, int gameId = -1) {
         QSqlDatabase db = app->database()->database();
 
         // If no game id supplied, insert a minimal game row and use its id
@@ -88,16 +82,15 @@ private:
         Q_ASSERT_X(ok, "insertConfirmedMatch", qPrintable(q.lastError().text()));
     }
 
-    QStringList m_dbPaths;   // for cleanup
-    int         m_libraryId = 0;
+    QStringList m_dbPaths; // for cleanup
+    int m_libraryId = 0;
 
 private slots:
 
-    void test_refreshCounts_emptyLibrary()
-    {
-        AppController    app;
-        HashController   hash(&app);
-        MatchController  match(&app);
+    void test_refreshCounts_emptyLibrary() {
+        AppController app;
+        HashController hash(&app);
+        MatchController match(&app);
         ArtworkController art(&app);
         OrganizeController org(&app);
         WorkflowController wf(&app, &hash, &match, &art, nullptr, &org, nullptr);
@@ -107,15 +100,14 @@ private slots:
         QCoreApplication::processEvents();
 
         QCOMPARE(wf.identityCount(), 0);
-        QCOMPARE(wf.enrichCount(),   0);
-        QCOMPARE(wf.doneCount(),     0);
+        QCOMPARE(wf.enrichCount(), 0);
+        QCOMPARE(wf.doneCount(), 0);
     }
 
-    void test_identityCount_noHash()
-    {
-        AppController    app;
-        HashController   hash(&app);
-        MatchController  match(&app);
+    void test_identityCount_noHash() {
+        AppController app;
+        HashController hash(&app);
+        MatchController match(&app);
         ArtworkController art(&app);
         OrganizeController org(&app);
         WorkflowController wf(&app, &hash, &match, &art, nullptr, &org, nullptr);
@@ -129,11 +121,10 @@ private slots:
         QCOMPARE(wf.identityCount(), 2);
     }
 
-    void test_identityCount_hashedButNoMatch()
-    {
-        AppController    app;
-        HashController   hash(&app);
-        MatchController  match(&app);
+    void test_identityCount_hashedButNoMatch() {
+        AppController app;
+        HashController hash(&app);
+        MatchController match(&app);
         ArtworkController art(&app);
         OrganizeController org(&app);
         WorkflowController wf(&app, &hash, &match, &art, nullptr, &org, nullptr);
@@ -146,11 +137,10 @@ private slots:
         QCOMPARE(wf.identityCount(), 1);
     }
 
-    void test_enrichCount_confirmedNoArtwork()
-    {
-        AppController    app;
-        HashController   hash(&app);
-        MatchController  match(&app);
+    void test_enrichCount_confirmedNoArtwork() {
+        AppController app;
+        HashController hash(&app);
+        MatchController match(&app);
         ArtworkController art(&app);
         OrganizeController org(&app);
         WorkflowController wf(&app, &hash, &match, &art, nullptr, &org, nullptr);
@@ -162,14 +152,13 @@ private slots:
         wf.refresh();
         QCoreApplication::processEvents();
         QCOMPARE(wf.identityCount(), 0); // matched → not identity
-        QCOMPARE(wf.enrichCount(),   1); // confirmed but no artwork
+        QCOMPARE(wf.enrichCount(), 1); // confirmed but no artwork
     }
 
-    void test_queueStage_all_returnsFiles()
-    {
-        AppController    app;
-        HashController   hash(&app);
-        MatchController  match(&app);
+    void test_queueStage_all_returnsFiles() {
+        AppController app;
+        HashController hash(&app);
+        MatchController match(&app);
         ArtworkController art(&app);
         OrganizeController org(&app);
         WorkflowController wf(&app, &hash, &match, &art, nullptr, &org, nullptr);
@@ -183,11 +172,10 @@ private slots:
         QCOMPARE(wf.queueFiles().count(), 2);
     }
 
-    void test_artworkExistsForFile_noFile()
-    {
-        AppController    app;
-        HashController   hash(&app);
-        MatchController  match(&app);
+    void test_artworkExistsForFile_noFile() {
+        AppController app;
+        HashController hash(&app);
+        MatchController match(&app);
         ArtworkController art(&app);
         OrganizeController org(&app);
         WorkflowController wf(&app, &hash, &match, &art, nullptr, &org, nullptr);

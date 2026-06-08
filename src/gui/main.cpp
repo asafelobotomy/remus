@@ -28,8 +28,7 @@
 
 #include "../core/constants/constants.h"
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
     QGuiApplication app(argc, argv);
     QQuickStyle::setStyle(QStringLiteral("Fusion"));
     QCoreApplication::setOrganizationName(QString::fromLatin1(Remus::Constants::SETTINGS_ORGANIZATION));
@@ -39,9 +38,8 @@ int main(int argc, char *argv[])
     // the OS keychain, but the config dir should not be world-readable).
     {
         const QString cfgDir = QStandardPaths::writableLocation(QStandardPaths::GenericConfigLocation)
-                                + QStringLiteral("/") + QString::fromLatin1(Remus::Constants::SETTINGS_ORGANIZATION);
-        QFile::setPermissions(cfgDir,
-            QFileDevice::ReadOwner | QFileDevice::WriteOwner | QFileDevice::ExeOwner);
+            + QStringLiteral("/") + QString::fromLatin1(Remus::Constants::SETTINGS_ORGANIZATION);
+        QFile::setPermissions(cfgDir, QFileDevice::ReadOwner | QFileDevice::WriteOwner | QFileDevice::ExeOwner);
     }
 
     Remus::AppController appController;
@@ -64,14 +62,8 @@ int main(int argc, char *argv[])
     Remus::PatchController patchController(&appController);
     Remus::ModController modController(&appController);
 
-    Remus::WorkflowController workflowController(
-        &appController,
-        &hashController,
-        &matchController,
-        &artworkController,
-        &conversionController,
-        &organizeController,
-        &exportController);
+    Remus::WorkflowController workflowController(&appController, &hashController, &matchController, &artworkController,
+        &conversionController, &organizeController, &exportController);
 
     // Note: exportController → workflowController::refresh is already wired
     // inside WorkflowController's constructor; no second connect needed here.
@@ -90,12 +82,16 @@ int main(int argc, char *argv[])
     };
 
     QObject::connect(&scanController, &Remus::ScanController::libraryChanged, &app, refreshLibraryModels);
-    QObject::connect(&scanController, &Remus::ScanController::libraryChanged, &workflowController, [&workflowController]() { workflowController.refresh(); });
+    QObject::connect(&scanController, &Remus::ScanController::libraryChanged, &workflowController,
+        [&workflowController]() { workflowController.refresh(); });
     QObject::connect(&hashController, &Remus::HashController::libraryChanged, &app, refreshLibraryModels);
-    QObject::connect(&hashController, &Remus::HashController::libraryChanged, &workflowController, [&workflowController]() { workflowController.refresh(); });
+    QObject::connect(&hashController, &Remus::HashController::libraryChanged, &workflowController,
+        [&workflowController]() { workflowController.refresh(); });
     QObject::connect(&matchController, &Remus::MatchController::libraryChanged, &app, refreshLibraryModels);
-    QObject::connect(&matchController, &Remus::MatchController::libraryChanged, &workflowController, [&workflowController]() { workflowController.refresh(); });
-    QObject::connect(&metadataEditorController, &Remus::MetadataEditorController::libraryChanged, &app, refreshLibraryModels);
+    QObject::connect(&matchController, &Remus::MatchController::libraryChanged, &workflowController,
+        [&workflowController]() { workflowController.refresh(); });
+    QObject::connect(
+        &metadataEditorController, &Remus::MetadataEditorController::libraryChanged, &app, refreshLibraryModels);
     QObject::connect(&organizeController, &Remus::OrganizeController::libraryChanged, &app, refreshLibraryModels);
     QObject::connect(&conversionController, &Remus::ConversionController::libraryChanged, &app, refreshLibraryModels);
     QObject::connect(&exportController, &Remus::ExportController::libraryChanged, &app, refreshLibraryModels);
@@ -123,12 +119,7 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty(QStringLiteral("workflowController"), &workflowController);
 
     QObject::connect(
-        &engine,
-        &QQmlApplicationEngine::objectCreationFailed,
-        &app,
-        []() {
-            QCoreApplication::exit(EXIT_FAILURE);
-        },
+        &engine, &QQmlApplicationEngine::objectCreationFailed, &app, []() { QCoreApplication::exit(EXIT_FAILURE); },
         Qt::QueuedConnection);
 
     engine.loadFromModule("Remus.Gui", "Main");

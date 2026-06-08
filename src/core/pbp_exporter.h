@@ -38,8 +38,7 @@ public:
      * @param sourcePath  .cue, .iso, or .m3u file
      * @param outputPath  Destination .pbp path; derived from sourcePath if empty
      */
-    ConversionResult exportToPBP(const QString &sourcePath,
-                                  const QString &outputPath = QString());
+    ConversionResult exportToPBP(const QString &sourcePath, const QString &outputPath = QString());
 
 private:
     QString m_psxPackagerPath;

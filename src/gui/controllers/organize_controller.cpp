@@ -11,34 +11,29 @@ namespace Remus {
 OrganizeController::OrganizeController(AppController *appController, QObject *parent)
     : QObject(parent)
     , m_appController(appController)
-    , m_engine(std::make_unique<OrganizeEngine>(*appController->database(), this))
-{
-    connect(this, &OrganizeController::libraryChanged,
-            m_appController, &AppController::refreshSelectedFile);
-    QSettings settings(QString::fromLatin1(Constants::SETTINGS_ORGANIZATION),
-                       QString::fromLatin1(Constants::SETTINGS_APPLICATION));
-    m_namingTemplate = settings.value(
-        QString::fromLatin1(Constants::Settings::Organize::NAMING_TEMPLATE),
-        Constants::Settings::Defaults::NAMING_TEMPLATE).toString();
+    , m_engine(std::make_unique<OrganizeEngine>(*appController->database(), this)) {
+    connect(this, &OrganizeController::libraryChanged, m_appController, &AppController::refreshSelectedFile);
+    QSettings settings(
+        QString::fromLatin1(Constants::SETTINGS_ORGANIZATION), QString::fromLatin1(Constants::SETTINGS_APPLICATION));
+    m_namingTemplate = settings
+                           .value(QString::fromLatin1(Constants::Settings::Organize::NAMING_TEMPLATE),
+                               Constants::Settings::Defaults::NAMING_TEMPLATE)
+                           .toString();
 }
 
-void OrganizeController::previewOrganize(const QString &destinationDir)
-{
+void OrganizeController::previewOrganize(const QString &destinationDir) {
     runOrganize(destinationDir, true);
 }
 
-void OrganizeController::applyOrganize(const QString &destinationDir)
-{
+void OrganizeController::applyOrganize(const QString &destinationDir) {
     runOrganize(destinationDir, false);
 }
 
-void OrganizeController::organizeAll(const QString &destinationDir)
-{
+void OrganizeController::organizeAll(const QString &destinationDir) {
     runOrganize(destinationDir, false, true);
 }
 
-void OrganizeController::undoLast()
-{
+void OrganizeController::undoLast() {
     if (m_lastUndoId <= 0 || !m_engine->undoOperation(m_lastUndoId)) {
         setLastError(QStringLiteral("Nothing is available to undo."));
         return;
@@ -47,36 +42,33 @@ void OrganizeController::undoLast()
     emit libraryChanged();
 }
 
-void OrganizeController::setNamingTemplate(const QString &value)
-{
+void OrganizeController::setNamingTemplate(const QString &value) {
     if (m_namingTemplate == value) {
         return;
     }
 
     m_namingTemplate = value;
-    QSettings settings(QString::fromLatin1(Constants::SETTINGS_ORGANIZATION),
-                       QString::fromLatin1(Constants::SETTINGS_APPLICATION));
+    QSettings settings(
+        QString::fromLatin1(Constants::SETTINGS_ORGANIZATION), QString::fromLatin1(Constants::SETTINGS_APPLICATION));
     settings.setValue(QString::fromLatin1(Constants::Settings::Organize::NAMING_TEMPLATE), value);
     emit namingTemplateChanged();
 }
 
-QList<int> OrganizeController::targetFileIds() const
-{
+QList<int> OrganizeController::targetFileIds() const {
     if (m_appController == nullptr || !m_appController->isLibraryOpen()) {
-        return {};
+        return { };
     }
 
     if (m_appController->selectedFileId() > 0) {
-        return {m_appController->selectedFileId()};
+        return { m_appController->selectedFileId() };
     }
 
     return bundledFileIds();
 }
 
-QList<int> OrganizeController::bundledFileIds() const
-{
+QList<int> OrganizeController::bundledFileIds() const {
     if (m_appController == nullptr || !m_appController->isLibraryOpen()) {
-        return {};
+        return { };
     }
 
     // Only files that have been bundled and have a confirmed match are eligible
@@ -85,13 +77,12 @@ QList<int> OrganizeController::bundledFileIds() const
     // (the new hash belongs to the converted payload) so requiring md5 would
     // silently exclude those files.
     QSqlQuery q(m_appController->database()->database());
-    q.prepare(QStringLiteral(
-        "SELECT DISTINCT f.id FROM files f "
-        "JOIN matches m ON m.file_id = f.id "
-        "WHERE f.is_bundled = 1 "
-        "  AND m.is_confirmed = 1 AND m.is_rejected = 0"));
+    q.prepare(QStringLiteral("SELECT DISTINCT f.id FROM files f "
+                             "JOIN matches m ON m.file_id = f.id "
+                             "WHERE f.is_bundled = 1 "
+                             "  AND m.is_confirmed = 1 AND m.is_rejected = 0"));
     if (!q.exec())
-        return {};
+        return { };
 
     QList<int> fileIds;
     while (q.next())
@@ -99,8 +90,7 @@ QList<int> OrganizeController::bundledFileIds() const
     return fileIds;
 }
 
-QMap<int, GameMetadata> OrganizeController::metadataForFiles(const QList<int> &fileIds) const
-{
+QMap<int, GameMetadata> OrganizeController::metadataForFiles(const QList<int> &fileIds) const {
     QMap<int, GameMetadata> metadata;
     if (m_appController == nullptr || !m_appController->isLibraryOpen()) {
         return metadata;
@@ -129,8 +119,7 @@ QMap<int, GameMetadata> OrganizeController::metadataForFiles(const QList<int> &f
     return metadata;
 }
 
-void OrganizeController::setLastError(const QString &message)
-{
+void OrganizeController::setLastError(const QString &message) {
     if (m_lastError == message) {
         return;
     }
@@ -139,8 +128,7 @@ void OrganizeController::setLastError(const QString &message)
     emit lastErrorChanged();
 }
 
-void OrganizeController::runOrganize(const QString &destinationDir, bool dryRun, bool allBundled)
-{
+void OrganizeController::runOrganize(const QString &destinationDir, bool dryRun, bool allBundled) {
     if (m_appController == nullptr || !m_appController->isLibraryOpen()) {
         setLastError(QStringLiteral("Open a library before organizing files."));
         return;
@@ -149,8 +137,8 @@ void OrganizeController::runOrganize(const QString &destinationDir, bool dryRun,
     const QList<int> fileIds = allBundled ? bundledFileIds() : targetFileIds();
     if (fileIds.isEmpty()) {
         setLastError(allBundled
-            ? QStringLiteral("No bundled ROMs found. Complete Stage 5 (Bundle & Rename) before organizing.")
-            : QStringLiteral("Select a matched file first, or create matches for your library."));
+                ? QStringLiteral("No bundled ROMs found. Complete Stage 5 (Bundle & Rename) before organizing.")
+                : QStringLiteral("Select a matched file first, or create matches for your library."));
         return;
     }
 
@@ -160,38 +148,35 @@ void OrganizeController::runOrganize(const QString &destinationDir, bool dryRun,
         return;
     }
 
-    QSettings settings(QString::fromLatin1(Constants::SETTINGS_ORGANIZATION),
-                       QString::fromLatin1(Constants::SETTINGS_APPLICATION));
-    const bool preserveOriginals = settings.value(
-        QString::fromLatin1(Constants::Settings::Organize::PRESERVE_ORIGINALS),
-        Constants::Settings::Defaults::PRESERVE_ORIGINALS).toBool();
+    QSettings settings(
+        QString::fromLatin1(Constants::SETTINGS_ORGANIZATION), QString::fromLatin1(Constants::SETTINGS_APPLICATION));
+    const bool preserveOriginals = settings
+                                       .value(QString::fromLatin1(Constants::Settings::Organize::PRESERVE_ORIGINALS),
+                                           Constants::Settings::Defaults::PRESERVE_ORIGINALS)
+                                       .toBool();
 
     m_organizing = true;
     m_organizedFiles = 0;
     m_totalOrganizeFiles = fileIds.size();
-    m_progressMessage = dryRun
-        ? QStringLiteral("Previewing %1 files\u2026").arg(fileIds.size())
-        : QStringLiteral("Organizing %1 files\u2026").arg(fileIds.size());
+    m_progressMessage = dryRun ? QStringLiteral("Previewing %1 files\u2026").arg(fileIds.size())
+                               : QStringLiteral("Organizing %1 files\u2026").arg(fileIds.size());
     emit organizingChanged();
     emit organizeProgressChanged();
     emit progressMessageChanged();
 
-    const bool bySystem = settings.value(
-        QString::fromLatin1(Constants::Settings::Organize::BY_SYSTEM),
-        Constants::Settings::Defaults::ORGANIZE_BY_SYSTEM).toBool();
+    const bool bySystem = settings
+                              .value(QString::fromLatin1(Constants::Settings::Organize::BY_SYSTEM),
+                                  Constants::Settings::Defaults::ORGANIZE_BY_SYSTEM)
+                              .toBool();
 
     m_engine->setTemplate(m_namingTemplate);
     m_engine->setCollisionStrategy(CollisionStrategy::Rename);
     m_engine->setDryRun(dryRun);
-    m_engine->setFolderNaming(bySystem
-        ? Constants::FolderNaming::Scheme::Default
-        : Constants::FolderNaming::Scheme::None);
+    m_engine->setFolderNaming(
+        bySystem ? Constants::FolderNaming::Scheme::Default : Constants::FolderNaming::Scheme::None);
 
     const QList<OrganizeResult> results = m_engine->organizeFiles(
-        fileIds,
-        metadata,
-        destinationDir.trimmed(),
-        preserveOriginals ? FileOperation::Copy : FileOperation::Move);
+        fileIds, metadata, destinationDir.trimmed(), preserveOriginals ? FileOperation::Copy : FileOperation::Move);
 
     QVariantList preview;
     m_lastUndoId = 0;
@@ -205,16 +190,18 @@ void OrganizeController::runOrganize(const QString &destinationDir, bool dryRun,
         item.insert(QStringLiteral("error"), result.error);
         preview.append(item);
         m_lastUndoId = qMax(m_lastUndoId, result.undoId);
-        if (result.success) ++orgSucceeded; else ++orgFailed;
+        if (result.success)
+            ++orgSucceeded;
+        else
+            ++orgFailed;
     }
     m_previewEntries = preview;
     emit previewEntriesChanged();
 
     m_organizedFiles = orgSucceeded;
     m_organizing = false;
-    m_progressMessage = dryRun
-        ? QStringLiteral("Preview: %1 / %2 files.").arg(orgSucceeded).arg(fileIds.size())
-        : QStringLiteral("Organized %1 / %2 files.").arg(orgSucceeded).arg(fileIds.size());
+    m_progressMessage = dryRun ? QStringLiteral("Preview: %1 / %2 files.").arg(orgSucceeded).arg(fileIds.size())
+                               : QStringLiteral("Organized %1 / %2 files.").arg(orgSucceeded).arg(fileIds.size());
     emit organizeProgressChanged();
     emit organizingChanged();
     emit progressMessageChanged();

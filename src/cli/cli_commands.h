@@ -13,34 +13,34 @@ using namespace Remus;
 
 struct CliContext {
     QCommandLineParser &parser;
-    Database           &db;
-    SystemDetector     &detector;
-    bool                dryRunAll;
-    bool                processRequested;
-    bool                processHandled;
-    int                 processSystemIdFilter;
-    QSet<int>           processFileScopeIds;
+    Database &db;
+    SystemDetector &detector;
+    bool dryRunAll;
+    bool processRequested;
+    bool processHandled;
+    int processSystemIdFilter;
+    QSet<int> processFileScopeIds;
     // Preset-resolved overrides (empty = use explicit CLI values)
-    QString             presetBundleFormat;
-    QString             presetDiscFormat;
-    QString             presetFolderNaming;
-    QString             presetDisplayName;
+    QString presetBundleFormat;
+    QString presetDiscFormat;
+    QString presetFolderNaming;
+    QString presetDisplayName;
     /// Persistent artwork cache dir for the process pipeline.
     /// Pre-populated during the enrich phase; the bundle phase checks here first
     /// to avoid duplicate provider round-trips across per-system batches.
-    QString             processArtworkCacheDir;
+    QString processArtworkCacheDir;
     /// Canonical source path resolved from --process or --library.
-    QString             processSourcePath;
+    QString processSourcePath;
     /// Canonical output path resolved from --process-output, --bundle, or --output.
     /// Empty means no output step (hash/match/enrich only).
-    QString             processOutputPath;
+    QString processOutputPath;
 };
 
 // ── Info / inspection ──────────────────────────────────────────────────────────
 // --stats, --info, --header-info, --show-art, --scan, --list, --hash-all
 int handleStatsCommand(CliContext &ctx);
 int handleInfoCommand(CliContext &ctx);
-int handleInspectCommands(CliContext &ctx);  // header-info + show-art
+int handleInspectCommands(CliContext &ctx); // header-info + show-art
 int handleScanCommand(CliContext &ctx);
 int handleListCommand(CliContext &ctx);
 int handleHashAllCommand(CliContext &ctx);

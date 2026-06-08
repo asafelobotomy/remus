@@ -7,8 +7,7 @@
 
 namespace Remus {
 
-bool Database::createSchema()
-{
+bool Database::createSchema() {
     QSqlQuery query(m_db);
 
     // Enable foreign keys
@@ -111,9 +110,8 @@ bool Database::createSchema()
     query.exec("CREATE INDEX IF NOT EXISTS idx_files_system_id ON files(system_id)");
     query.exec("CREATE INDEX IF NOT EXISTS idx_files_hashes ON files(crc32, md5, sha1)");
     query.exec("DROP INDEX IF EXISTS idx_files_original_path");
-    query.exec(
-        "CREATE UNIQUE INDEX IF NOT EXISTS idx_files_original_path "
-        "ON files(original_path, filename, COALESCE(archive_internal_path, ''))");
+    query.exec("CREATE UNIQUE INDEX IF NOT EXISTS idx_files_original_path "
+               "ON files(original_path, filename, COALESCE(archive_internal_path, ''))");
 
     // Create cache table for metadata
     QString createAppliedPatches = R"(
@@ -161,7 +159,7 @@ bool Database::createSchema()
         logError("Failed to create cache table: " + query.lastError().text());
         return false;
     }
-    
+
     query.exec("CREATE INDEX IF NOT EXISTS idx_cache_key ON cache(cache_key)");
     query.exec("CREATE INDEX IF NOT EXISTS idx_cache_expiry ON cache(expiry)");
 
@@ -183,7 +181,7 @@ bool Database::createSchema()
         logError("Failed to create undo_queue table: " + query.lastError().text());
         return false;
     }
-    
+
     query.exec("CREATE INDEX IF NOT EXISTS idx_undo_queue_file_id ON undo_queue(file_id)");
     query.exec("CREATE INDEX IF NOT EXISTS idx_undo_queue_undone ON undo_queue(undone)");
 
@@ -210,7 +208,7 @@ bool Database::createSchema()
         logError("Failed to create games table: " + query.lastError().text());
         return false;
     }
-    
+
     query.exec("CREATE INDEX IF NOT EXISTS idx_games_title ON games(title)");
     query.exec("CREATE INDEX IF NOT EXISTS idx_games_system ON games(system_id)");
     // Composite indexes for hot query paths
@@ -236,7 +234,7 @@ bool Database::createSchema()
         logError("Failed to create matches table: " + query.lastError().text());
         return false;
     }
-    
+
     query.exec("CREATE INDEX IF NOT EXISTS idx_matches_file ON matches(file_id)");
     query.exec("CREATE INDEX IF NOT EXISTS idx_matches_game ON matches(game_id)");
     query.exec("CREATE INDEX IF NOT EXISTS idx_matches_confidence ON matches(confidence)");
@@ -249,15 +247,14 @@ bool Database::createSchema()
     return true;
 }
 
-bool Database::populateDefaultSystems()
-{
+bool Database::populateDefaultSystems() {
     // Use SystemDetector to get all default systems
     SystemDetector detector;
-    
+
     // Get all system names from the constants
     using namespace Constants::Systems;
     int insertedCount = 0;
-    
+
     for (auto it = SYSTEMS.begin(); it != SYSTEMS.end(); ++it) {
         const auto &def = it.value();
         SystemInfo system;
@@ -267,12 +264,12 @@ bool Database::populateDefaultSystems()
         system.generation = def.generation;
         system.extensions = def.extensions;
         system.preferredHash = def.preferredHash;
-        
+
         if (insertSystem(system) > 0) {
             insertedCount++;
         }
     }
-    
+
     qInfo() << "Populated" << insertedCount << "default systems";
     return insertedCount > 0;
 }

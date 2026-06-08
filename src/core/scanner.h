@@ -23,15 +23,15 @@ struct ScanResult {
     QString detectedSystem;
     QDateTime lastModified;
     bool isPrimary = true;
-    QString parentFilePath;  // For .bin files in .cue+.bin sets
-    bool isCompressed = false;  // File is inside an archive
-    QString archivePath;  // Path to archive containing this file
-    QString archiveInternalPath;  // Path within archive (if compressed)
+    QString parentFilePath; // For .bin files in .cue+.bin sets
+    bool isCompressed = false; // File is inside an archive
+    QString archivePath; // Path to archive containing this file
+    QString archiveInternalPath; // Path within archive (if compressed)
 };
 
 /**
  * @brief File scanner for ROM libraries
- * 
+ *
  * Recursively scans directories for ROM files, filtering by extension
  * and grouping multi-file sets (e.g., .cue+.bin).
  */
@@ -57,22 +57,30 @@ public:
     /**
      * @brief Enable/disable multi-file detection (.cue+.bin, etc.)
      */
-    void setMultiFileDetection(bool enabled) { m_multiFileDetection = enabled; }
+    void setMultiFileDetection(bool enabled) {
+        m_multiFileDetection = enabled;
+    }
 
     /**
      * @brief Enable/disable archive scanning (.zip, .7z, .rar, etc.)
      */
-    void setArchiveScanning(bool enabled) { m_archiveScanning = enabled; }
+    void setArchiveScanning(bool enabled) {
+        m_archiveScanning = enabled;
+    }
 
     /**
      * @brief Request cancellation of an active scan
      */
-    void requestCancel() { m_cancelRequested = true; }
+    void requestCancel() {
+        m_cancelRequested = true;
+    }
 
     /**
      * @brief Check if the last scan was cancelled
      */
-    bool wasCancelled() const { return m_cancelled; }
+    bool wasCancelled() const {
+        return m_cancelled;
+    }
 
 signals:
     void scanStarted(const QString &path);
@@ -102,8 +110,8 @@ private:
     QStringList m_extensions;
     bool m_multiFileDetection = true;
     bool m_archiveScanning = true;
-    std::atomic<int> m_filesProcessed{0};
-    std::atomic<bool> m_cancelRequested{false};
+    std::atomic<int> m_filesProcessed { 0 };
+    std::atomic<bool> m_cancelRequested { false };
     bool m_cancelled = false;
     mutable QSet<QString> m_excludedDirs;
     mutable QSet<QString> m_checkedDirs;

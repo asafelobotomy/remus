@@ -54,7 +54,9 @@ public:
      * @endcode
      */
     struct DeferredDeleteFlushGuard {
-        ~DeferredDeleteFlushGuard() { HttpMetadataProvider::processNetworkEvents(); }
+        ~DeferredDeleteFlushGuard() {
+            HttpMetadataProvider::processNetworkEvents();
+        }
     };
 
 protected:

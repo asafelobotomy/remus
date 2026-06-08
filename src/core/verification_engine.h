@@ -14,13 +14,13 @@ namespace Remus {
  * @brief Verification status for a ROM
  */
 enum class VerificationStatus {
-    Unknown,        // Not yet verified
-    Verified,       // Hash matches DAT entry
-    Mismatch,       // Hash doesn't match any DAT entry
-    NotInDat,       // ROM not found in DAT file
-    HashMissing,    // ROM has no hash calculated yet
-    Corrupt,        // File cannot be read or is damaged
-    HeaderMismatch  // Header-stripped hash matches but raw doesn't (informational)
+    Unknown, // Not yet verified
+    Verified, // Hash matches DAT entry
+    Mismatch, // Hash doesn't match any DAT entry
+    NotInDat, // ROM not found in DAT file
+    HashMissing, // ROM has no hash calculated yet
+    Corrupt, // File cannot be read or is damaged
+    HeaderMismatch // Header-stripped hash matches but raw doesn't (informational)
 };
 
 /**
@@ -32,19 +32,19 @@ struct VerificationResult {
     QString filename;
     QString system;
     VerificationStatus status = VerificationStatus::Unknown;
-    
+
     // Matched DAT entry (if verified)
-    QString datName;           // Name from DAT
-    QString datRomName;        // Expected ROM filename
-    QString datDescription;    // Description from DAT
-    
+    QString datName; // Name from DAT
+    QString datRomName; // Expected ROM filename
+    QString datDescription; // Description from DAT
+
     // Hash comparison details
-    QString fileHash;          // Hash from file
-    QString datHash;           // Hash from DAT
-    QString hashType;          // "crc32", "md5", "sha1"
-    
-    bool headerStripped = false;  // Whether header was stripped for verification
-    QString notes;             // Additional notes
+    QString fileHash; // Hash from file
+    QString datHash; // Hash from DAT
+    QString hashType; // "crc32", "md5", "sha1"
+
+    bool headerStripped = false; // Whether header was stripped for verification
+    QString notes; // Additional notes
 };
 
 /**
@@ -59,12 +59,12 @@ struct VerificationSummary {
     int corrupt = 0;
     QString datName;
     QString datVersion;
-    QString datSource;         // "no-intro", "redump", etc.
+    QString datSource; // "no-intro", "redump", etc.
 };
 
 /**
  * @brief Verifies ROMs against No-Intro/Redump DAT files
- * 
+ *
  * Workflow:
  * 1. Import DAT file(s) via importDat()
  * 2. Run verification via verifyLibrary() or verifyFiles()
@@ -164,7 +164,9 @@ public:
      * @brief Get verification summary for last run
      * @return Summary statistics
      */
-    VerificationSummary getLastSummary() const { return m_lastSummary; }
+    VerificationSummary getLastSummary() const {
+        return m_lastSummary;
+    }
 
     /**
      * @brief Get missing games (in DAT but not in library)
@@ -180,9 +182,8 @@ public:
      * @param format "csv" or "json"
      * @return True if successful
      */
-    bool exportReport(const QList<VerificationResult> &results,
-                     const QString &outputPath,
-                     const QString &format = "csv");
+    bool exportReport(
+        const QList<VerificationResult> &results, const QString &outputPath, const QString &format = "csv");
 
     /**
      * @brief Check if system has imported DAT
@@ -210,23 +211,17 @@ private:
     Database *m_database;
     QString m_compendiumConnectionName; // empty = no compendium attached
     VerificationSummary m_lastSummary;
-    
+
     // In-memory cache of loaded DAT entries (indexed by hash)
-    QMap<QString, QMap<QString, DatRomEntry>> m_datCache;  // system -> (hash -> entry)
-    QMap<QString, QString> m_datHashTypes;                  // system -> preferred hash type
-    QMap<QString, QMap<QString, DatRomEntry>> m_patchDatCache;  // system -> (hash -> entry)
+    QMap<QString, QMap<QString, DatRomEntry>> m_datCache; // system -> (hash -> entry)
+    QMap<QString, QString> m_datHashTypes; // system -> preferred hash type
+    QMap<QString, QMap<QString, DatRomEntry>> m_patchDatCache; // system -> (hash -> entry)
 
     void loadDatCache(const QString &systemName);
     void loadPatchDatCache(const QString &systemName);
     QString getPreferredHashType(const QString &systemName);
-    bool findPatchCatalogMatch(const QString &systemName,
-                               const QString &crc32,
-                               const QString &md5,
-                               const QString &sha1,
-                               const QString &sha256,
-                               DatRomEntry &matchedEntry,
-                               QString &matchedHash,
-                               QString &matchedHashType);
+    bool findPatchCatalogMatch(const QString &systemName, const QString &crc32, const QString &md5, const QString &sha1,
+        const QString &sha256, DatRomEntry &matchedEntry, QString &matchedHash, QString &matchedHashType);
     void promotePatchMetadata(int fileId, const DatRomEntry &entry);
 };
 

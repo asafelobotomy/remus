@@ -7,19 +7,15 @@
 namespace Remus {
 
 LocalDatabaseProvider::LocalDatabaseProvider(QObject *parent)
-    : MetadataProvider(parent)
-{
+    : MetadataProvider(parent) {
     qDebug() << "LocalDatabaseProvider: Initialized";
 }
 
-LocalDatabaseProvider::~LocalDatabaseProvider()
-{
+LocalDatabaseProvider::~LocalDatabaseProvider() {
     qDebug() << "LocalDatabaseProvider: Total entries indexed:" << m_totalEntries;
 }
 
-
-QString LocalDatabaseProvider::identifierForEntry(const ClrMameProEntry &entry) const
-{
+QString LocalDatabaseProvider::identifierForEntry(const ClrMameProEntry &entry) const {
     if (!entry.crc32.isEmpty()) {
         return entry.crc32;
     }
@@ -32,8 +28,7 @@ QString LocalDatabaseProvider::identifierForEntry(const ClrMameProEntry &entry) 
     return entry.serial.toUpper().trimmed();
 }
 
-QString LocalDatabaseProvider::systemForEntry(const ClrMameProEntry &entry) const
-{
+QString LocalDatabaseProvider::systemForEntry(const ClrMameProEntry &entry) const {
     if (!entry.crc32.isEmpty()) {
         const QString normalized = normalizeHash(entry.crc32);
         if (m_hashToSystem.contains(normalized)) {
@@ -65,10 +60,7 @@ QString LocalDatabaseProvider::systemForEntry(const ClrMameProEntry &entry) cons
     return QString();
 }
 
-bool LocalDatabaseProvider::findEntryById(const QString &id,
-                                          ClrMameProEntry *entry,
-                                          QString *systemName) const
-{
+bool LocalDatabaseProvider::findEntryById(const QString &id, ClrMameProEntry *entry, QString *systemName) const {
     const QString normalizedHash = normalizeHash(id);
 
     if (m_crc32Index.contains(normalizedHash)) {
@@ -115,12 +107,11 @@ bool LocalDatabaseProvider::findEntryById(const QString &id,
     return false;
 }
 
-void LocalDatabaseProvider::indexEntries(const QList<ClrMameProEntry> &entries, const QString &systemName)
-{
+void LocalDatabaseProvider::indexEntries(const QList<ClrMameProEntry> &entries, const QString &systemName) {
     QMutexLocker locker(&m_mutex);
-    
+
     int crc32Count = 0, md5Count = 0, sha1Count = 0;
-    
+
     for (const ClrMameProEntry &entry : entries) {
         // Index by CRC32 (primary for cartridges)
         if (!entry.crc32.isEmpty()) {
@@ -129,7 +120,7 @@ void LocalDatabaseProvider::indexEntries(const QList<ClrMameProEntry> &entries, 
             m_hashToSystem[normalized] = systemName;
             crc32Count++;
         }
-        
+
         // Index by MD5 (discs)
         if (!entry.md5.isEmpty()) {
             QString normalized = normalizeHash(entry.md5);
@@ -137,7 +128,7 @@ void LocalDatabaseProvider::indexEntries(const QList<ClrMameProEntry> &entries, 
             m_hashToSystem[normalized] = systemName;
             md5Count++;
         }
-        
+
         // Index by SHA1 (discs)
         if (!entry.sha1.isEmpty()) {
             QString normalized = normalizeHash(entry.sha1);
@@ -159,23 +150,19 @@ void LocalDatabaseProvider::indexEntries(const QList<ClrMameProEntry> &entries, 
             m_nameIndex[entry.gameName.toLower()].append(entry);
         }
     }
-    
-    qDebug() << "LocalDatabaseProvider:" << systemName 
-             << "- CRC32:" << crc32Count 
-             << "MD5:" << md5Count 
+
+    qDebug() << "LocalDatabaseProvider:" << systemName << "- CRC32:" << crc32Count << "MD5:" << md5Count
              << "SHA1:" << sha1Count;
 }
 
-GameMetadata LocalDatabaseProvider::getMetadataForEntry(const MultiSignalMatch &match) const
-{
+GameMetadata LocalDatabaseProvider::getMetadataForEntry(const MultiSignalMatch &match) const {
     return datEntryToMetadata(match.entry);
 }
 
-void LocalDatabaseProvider::enrichFromLibretro(GameMetadata &metadata, const QString &crc32) const
-{
+void LocalDatabaseProvider::enrichFromLibretro(GameMetadata &metadata, const QString &crc32) const {
     auto apply = [&metadata](const LibretroMetadata &e) {
         if (!e.genre.isEmpty() && metadata.genres.isEmpty())
-            metadata.genres = QStringList{e.genre};
+            metadata.genres = QStringList { e.genre };
         if (!e.developer.isEmpty() && metadata.developer.isEmpty())
             metadata.developer = e.developer;
         if (!e.publisher.isEmpty() && metadata.publisher.isEmpty())
@@ -205,15 +192,14 @@ void LocalDatabaseProvider::enrichFromLibretro(GameMetadata &metadata, const QSt
     }
 }
 
-GameMetadata LocalDatabaseProvider::datEntryToMetadata(const ClrMameProEntry &entry) const
-{
+GameMetadata LocalDatabaseProvider::datEntryToMetadata(const ClrMameProEntry &entry) const {
     GameMetadata metadata;
     metadata.id = identifierForEntry(entry);
     metadata.providerId = QStringLiteral("localdatabase");
-    
+
     // Use gameName as title (parent game)
     metadata.title = entry.gameName;
-    
+
     // Try to extract region from gameName (e.g., "Sonic (USA, Europe)")
     QRegularExpression regionRegex("\\(([^)]+)\\)");
     QRegularExpressionMatch match = regionRegex.match(entry.gameName);
@@ -226,13 +212,13 @@ GameMetadata LocalDatabaseProvider::datEntryToMetadata(const ClrMameProEntry &en
             metadata.region = regionText.trimmed();
         }
     }
-    
+
     // Use DAT description only if present; leave empty so remote providers can supply
     // a real synopsis. ClrMamePro/No-Intro DATs rarely carry meaningful descriptions.
     if (!entry.description.isEmpty()) {
         metadata.description = entry.description;
     }
-    
+
     // External ID is the hash
     if (!entry.crc32.isEmpty()) {
         metadata.externalIds["crc32"] = entry.crc32;
@@ -250,11 +236,11 @@ GameMetadata LocalDatabaseProvider::datEntryToMetadata(const ClrMameProEntry &en
         metadata.externalIds["serial"] = entry.serial;
     }
     metadata.system = systemForEntry(entry);
-    
+
     // Match score and method
     metadata.matchScore = 1.0f; // Hash match is 100% confidence
     metadata.matchMethod = QString::fromLatin1(Remus::Constants::MatchMethods::HASH);
-    
+
     // Primary enrichment: inline DAT metadata (Redump/GameTDB DATs)
     if (!entry.publisher.isEmpty()) {
         metadata.publisher = entry.publisher;
@@ -278,17 +264,17 @@ GameMetadata LocalDatabaseProvider::datEntryToMetadata(const ClrMameProEntry &en
         metadata.system = systemName;
 
         // Box art: primary candidate first, then fallbacks
-        QStringList boxCandidates = generateThumbnailCandidates(
-            systemName, entry.gameName, QStringLiteral("Named_Boxarts"));
+        QStringList boxCandidates
+            = generateThumbnailCandidates(systemName, entry.gameName, QStringLiteral("Named_Boxarts"));
         if (!boxCandidates.isEmpty()) {
             metadata.boxArtUrl = boxCandidates.first();
         }
 
         // Screenshots: snap + title primary candidates, then all fallbacks
-        QStringList snapCandidates = generateThumbnailCandidates(
-            systemName, entry.gameName, QStringLiteral("Named_Snaps"));
-        QStringList titleCandidates = generateThumbnailCandidates(
-            systemName, entry.gameName, QStringLiteral("Named_Titles"));
+        QStringList snapCandidates
+            = generateThumbnailCandidates(systemName, entry.gameName, QStringLiteral("Named_Snaps"));
+        QStringList titleCandidates
+            = generateThumbnailCandidates(systemName, entry.gameName, QStringLiteral("Named_Titles"));
         if (!snapCandidates.isEmpty()) {
             metadata.screenshotUrls.append(snapCandidates.first());
         }
@@ -305,8 +291,7 @@ GameMetadata LocalDatabaseProvider::datEntryToMetadata(const ClrMameProEntry &en
     return metadata;
 }
 
-QString LocalDatabaseProvider::normalizeHash(const QString &hash) const
-{
+QString LocalDatabaseProvider::normalizeHash(const QString &hash) const {
     // Remove spaces, convert to uppercase
     return hash.trimmed().toUpper().remove(' ');
 }

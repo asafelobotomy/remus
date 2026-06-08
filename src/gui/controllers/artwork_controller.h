@@ -22,13 +22,27 @@ class ArtworkController : public QObject {
 public:
     explicit ArtworkController(AppController *appController, QObject *parent = nullptr);
 
-    bool isDownloading() const { return m_downloading; }
-    int downloadProgress() const { return m_downloadProgress; }
-    int downloadTotal() const { return m_downloadTotal; }
-    QString progressMessage() const { return m_progressMessage; }
-    QUrl previewUrl() const { return m_previewUrl; }
-    QString localArtworkPath() const { return m_localArtworkPath; }
-    QString lastError() const { return m_lastError; }
+    bool isDownloading() const {
+        return m_downloading;
+    }
+    int downloadProgress() const {
+        return m_downloadProgress;
+    }
+    int downloadTotal() const {
+        return m_downloadTotal;
+    }
+    QString progressMessage() const {
+        return m_progressMessage;
+    }
+    QUrl previewUrl() const {
+        return m_previewUrl;
+    }
+    QString localArtworkPath() const {
+        return m_localArtworkPath;
+    }
+    QString lastError() const {
+        return m_lastError;
+    }
 
     Q_INVOKABLE void refreshSelectedArtwork();
     Q_INVOKABLE bool downloadSelected();
@@ -52,7 +66,7 @@ private:
     AppController *m_appController;
     ArtworkDownloader m_downloader;
     bool m_downloading = false;
-    bool m_batchDownloading = false;  // suppresses previewChanged() during downloadAllMatched()
+    bool m_batchDownloading = false; // suppresses previewChanged() during downloadAllMatched()
     int m_downloadProgress = 0;
     int m_downloadTotal = 0;
     QString m_progressMessage;

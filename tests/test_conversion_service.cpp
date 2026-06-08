@@ -18,102 +18,88 @@
 
 using namespace Remus;
 
-class TestConversionService : public QObject
-{
+class TestConversionService : public QObject {
     Q_OBJECT
 
 private slots:
 
-    void testIsChdmanAvailableDoesNotCrash()
-    {
+    void testIsChdmanAvailableDoesNotCrash() {
         ConversionService svc;
         // Just verify the call doesn't crash — result depends on host
         bool avail = svc.isChdmanAvailable();
         Q_UNUSED(avail);
     }
 
-    void testGetChdmanVersionDoesNotCrash()
-    {
+    void testGetChdmanVersionDoesNotCrash() {
         ConversionService svc;
         QString ver = svc.getChdmanVersion();
         Q_UNUSED(ver);
     }
 
-    void testGetArchiveToolStatusReturnsMap()
-    {
+    void testGetArchiveToolStatusReturnsMap() {
         ConversionService svc;
         auto status = svc.getArchiveToolStatus();
         // Map should contain known formats
         QVERIFY2(!status.isEmpty(), "Tool status map should not be empty");
     }
 
-    void testGetArchiveCompressionToolStatusReturnsMap()
-    {
+    void testGetArchiveCompressionToolStatusReturnsMap() {
         ConversionService svc;
         auto status = svc.getArchiveCompressionToolStatus();
         QVERIFY2(!status.isEmpty(), "Compression tool status map should not be empty");
     }
 
-    void testCanExtractInvalidPath()
-    {
+    void testCanExtractInvalidPath() {
         ConversionService svc;
         bool result = svc.canExtract("/nonexistent/file.zip");
         Q_UNUSED(result);
         // Should not crash
     }
 
-    void testConvertToCHDMissingFile()
-    {
+    void testConvertToCHDMissingFile() {
         ConversionService svc;
         auto result = svc.convertToCHD("/nonexistent/game.cue");
         QVERIFY(!result.success);
     }
 
-    void testConvertToChdMissingImgUsesSupportedPath()
-    {
+    void testConvertToChdMissingImgUsesSupportedPath() {
         ConversionService svc;
         auto result = svc.convertToCHD("/nonexistent/game.img");
         QVERIFY(!result.success);
         QVERIFY(result.error.contains("File not found"));
     }
 
-    void testExtractCHDMissingFile()
-    {
+    void testExtractCHDMissingFile() {
         ConversionService svc;
         auto result = svc.extractCHD("/nonexistent/game.chd");
         QVERIFY(!result.success);
     }
 
-    void testSetChdmanPathDoesNotCrash()
-    {
+    void testSetChdmanPathDoesNotCrash() {
         ConversionService svc;
         svc.setChdmanPath("/usr/bin/chdman");
         // Just verify it doesn't crash
     }
 
-    void testIsMaxcsoAvailableDoesNotCrash()
-    {
+    void testIsMaxcsoAvailableDoesNotCrash() {
         ConversionService svc;
         bool avail = svc.isMaxcsoAvailable();
         Q_UNUSED(avail);
     }
 
-    void testGetMaxcsoVersionDoesNotCrash()
-    {
+    void testGetMaxcsoVersionDoesNotCrash() {
         ConversionService svc;
         QString ver = svc.getMaxcsoVersion();
         Q_UNUSED(ver);
     }
 
-    void testConvertToCSOMissingFile()
-    {
+    void testConvertToCSOMissingFile() {
         ConversionService svc;
         auto result = svc.convertToCSO("/nonexistent/game.iso");
         QVERIFY(!result.success);
     }
 
-    void testConvertToCSOUnsupportedFile()
-    {
+    void testConvertToCSOUnsupportedFile() {
         ConversionService svc;
         QTemporaryDir tmp;
         QVERIFY(tmp.isValid());
@@ -129,15 +115,13 @@ private slots:
         QVERIFY(result.error.contains("Unsupported file format"));
     }
 
-    void testExtractCSOMissingFile()
-    {
+    void testExtractCSOMissingFile() {
         ConversionService svc;
         auto result = svc.extractCSO("/nonexistent/game.cso");
         QVERIFY(!result.success);
     }
 
-    void testExtractCSOUnsupportedFile()
-    {
+    void testExtractCSOUnsupportedFile() {
         ConversionService svc;
         QTemporaryDir tmp;
         QVERIFY(tmp.isValid());
@@ -153,20 +137,17 @@ private slots:
         QVERIFY(result.error.contains("Unsupported file format"));
     }
 
-    void testSetMaxcsoPathDoesNotCrash()
-    {
+    void testSetMaxcsoPathDoesNotCrash() {
         ConversionService svc;
         svc.setMaxcsoPath("/usr/bin/maxcso");
     }
 
-    void testIsRunningInitiallyFalse()
-    {
+    void testIsRunningInitiallyFalse() {
         ConversionService svc;
         QVERIFY(!svc.isRunning());
     }
 
-    void testExtractArchiveMissingFile()
-    {
+    void testExtractArchiveMissingFile() {
         ConversionService svc;
         QTemporaryDir tmp;
         QVERIFY(tmp.isValid());
@@ -175,8 +156,7 @@ private slots:
         QVERIFY(!result.success);
     }
 
-    void testExtractArchiveWithDbUpdatePreservesNestedMemberPath()
-    {
+    void testExtractArchiveWithDbUpdatePreservesNestedMemberPath() {
         ArchiveCreator creator;
         ArchiveExtractor extractor;
         if (!creator.canCompress(ArchiveFormat::ZIP)) {
@@ -198,8 +178,8 @@ private slots:
         sourceFile.close();
 
         const QString archivePath = tmp.filePath("games.zip");
-        const CompressionResult compressed = creator.compressDirectoryContents(
-            sourceDir, archivePath, ArchiveFormat::ZIP);
+        const CompressionResult compressed
+            = creator.compressDirectoryContents(sourceDir, archivePath, ArchiveFormat::ZIP);
         QVERIFY2(compressed.success, qPrintable(compressed.error));
 
         Database db;
@@ -235,14 +215,12 @@ private slots:
         QVERIFY(extracted.archiveInternalPath.isEmpty());
     }
 
-    void testCompressToArchiveNoFiles()
-    {
+    void testCompressToArchiveNoFiles() {
         ConversionService svc;
         QTemporaryDir tmp;
         QVERIFY(tmp.isValid());
 
-        auto result = svc.compressToArchive(
-            {}, tmp.path() + "/empty.zip", ArchiveFormat::ZIP);
+        auto result = svc.compressToArchive({ }, tmp.path() + "/empty.zip", ArchiveFormat::ZIP);
         QVERIFY(!result.success);
     }
 };

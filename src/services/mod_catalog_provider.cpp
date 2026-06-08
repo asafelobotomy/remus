@@ -20,38 +20,35 @@
 namespace {
 
 // Returns false if addr is loopback, private, link-local, or CGNAT.
-static bool isCatalogAddressAllowed(const QHostAddress &addr)
-{
+static bool isCatalogAddressAllowed(const QHostAddress &addr) {
     if (addr.isLoopback() || addr.isNull())
         return false;
     if (addr.protocol() == QAbstractSocket::IPv4Protocol) {
         const quint32 ip = addr.toIPv4Address();
         const quint8 a = static_cast<quint8>((ip >> 24) & 0xFF);
         const quint8 b = static_cast<quint8>((ip >> 16) & 0xFF);
-        return !(a == 0 || a == 10 || a == 127
-                || (a == 100 && b >= 64 && b <= 127)
-                || (a == 169 && b == 254)
-                || (a == 172 && b >= 16 && b <= 31)
-                || (a == 192 && b == 168));
+        return !(a == 0 || a == 10 || a == 127 || (a == 100 && b >= 64 && b <= 127) || (a == 169 && b == 254)
+            || (a == 172 && b >= 16 && b <= 31) || (a == 192 && b == 168));
     }
     if (addr.protocol() == QAbstractSocket::IPv6Protocol) {
         const Q_IPV6ADDR ip = addr.toIPv6Address();
         bool unspec = true;
-        for (quint8 byte : ip.c) { if (byte) { unspec = false; break; } }
-        return !unspec
-            && !((ip.c[0] & 0xFE) == 0xFC)
-            && !((ip.c[0] == 0xFE && (ip.c[1] & 0xC0) == 0x80));
+        for (quint8 byte : ip.c) {
+            if (byte) {
+                unspec = false;
+                break;
+            }
+        }
+        return !unspec && !((ip.c[0] & 0xFE) == 0xFC) && !((ip.c[0] == 0xFE && (ip.c[1] & 0xC0) == 0x80));
     }
     return true;
 }
 
 // Reject loopback, private, link-local, and CGNAT catalog hosts.
 // For hostnames every resolved address is checked (DNS rebinding defence).
-static bool isCatalogHostAllowed(const QString &host)
-{
+static bool isCatalogHostAllowed(const QString &host) {
     const QString h = host.trimmed().toLower();
-    if (h.isEmpty() || h == QLatin1String("localhost")
-            || h.endsWith(QLatin1String(".localhost")))
+    if (h.isEmpty() || h == QLatin1String("localhost") || h.endsWith(QLatin1String(".localhost")))
         return false;
 
     QHostAddress addr;
@@ -60,7 +57,8 @@ static bool isCatalogHostAllowed(const QString &host)
         if (info.error() != QHostInfo::NoError || info.addresses().isEmpty())
             return false;
         for (const QHostAddress &a : info.addresses()) {
-            if (!isCatalogAddressAllowed(a)) return false;
+            if (!isCatalogAddressAllowed(a))
+                return false;
         }
         return true;
     }
@@ -73,8 +71,7 @@ constexpr int MAX_CATALOG_REDIRECTS = 5;
 
 namespace Remus {
 
-bool ModCatalogProvider::loadFromFile(const QString &path)
-{
+bool ModCatalogProvider::loadFromFile(const QString &path) {
     m_mods.clear();
     m_lastError.clear();
 
@@ -87,8 +84,7 @@ bool ModCatalogProvider::loadFromFile(const QString &path)
     return loadFromJson(file.readAll());
 }
 
-bool ModCatalogProvider::loadFromUrl(const QUrl &url, bool forceRefresh)
-{
+bool ModCatalogProvider::loadFromUrl(const QUrl &url, bool forceRefresh) {
     m_mods.clear();
     m_lastError.clear();
 
@@ -148,21 +144,18 @@ bool ModCatalogProvider::loadFromUrl(const QUrl &url, bool forceRefresh)
                 if (cacheFile.open(QIODevice::ReadOnly) && loadFromJson(cacheFile.readAll()))
                     return true;
             }
-            m_lastError = QStringLiteral("Catalog URL targets a disallowed host: ")
-                          + currentUrl.host();
+            m_lastError = QStringLiteral("Catalog URL targets a disallowed host: ") + currentUrl.host();
             return false;
         }
 
         QNetworkRequest request(currentUrl);
         request.setHeader(QNetworkRequest::UserAgentHeader, Constants::API::USER_AGENT);
-        request.setAttribute(QNetworkRequest::RedirectPolicyAttribute,
-                             QNetworkRequest::ManualRedirectPolicy);
+        request.setAttribute(QNetworkRequest::RedirectPolicyAttribute, QNetworkRequest::ManualRedirectPolicy);
 
         // Send ETag / If-Modified-Since only on the first hop (original URL)
         if (redirectCount == 0 && cacheInfo.exists()) {
-            request.setRawHeader("If-Modified-Since",
-                                 cacheInfo.lastModified().toUTC()
-                                     .toString(Qt::RFC2822Date).toUtf8());
+            request.setRawHeader(
+                "If-Modified-Since", cacheInfo.lastModified().toUTC().toString(Qt::RFC2822Date).toUtf8());
         }
 
         QNetworkReply *reply = manager.get(request);
@@ -244,25 +237,20 @@ bool ModCatalogProvider::loadFromUrl(const QUrl &url, bool forceRefresh)
     return false;
 }
 
-QList<ModEntry> ModCatalogProvider::findModsForRom(const QString &crc32,
-                                                    const QString &md5,
-                                                    const QString &sha1) const
-{
+QList<ModEntry> ModCatalogProvider::findModsForRom(
+    const QString &crc32, const QString &md5, const QString &sha1) const {
     QList<ModEntry> results;
     for (const ModEntry &mod : m_mods) {
         // Match by SHA1 first (strongest), then MD5, then CRC32
-        if (!sha1.isEmpty() && !mod.baseSha1.isEmpty() &&
-            sha1.compare(mod.baseSha1, Qt::CaseInsensitive) == 0) {
+        if (!sha1.isEmpty() && !mod.baseSha1.isEmpty() && sha1.compare(mod.baseSha1, Qt::CaseInsensitive) == 0) {
             results.append(mod);
             continue;
         }
-        if (!md5.isEmpty() && !mod.baseMd5.isEmpty() &&
-            md5.compare(mod.baseMd5, Qt::CaseInsensitive) == 0) {
+        if (!md5.isEmpty() && !mod.baseMd5.isEmpty() && md5.compare(mod.baseMd5, Qt::CaseInsensitive) == 0) {
             results.append(mod);
             continue;
         }
-        if (!crc32.isEmpty() && !mod.baseCrc32.isEmpty() &&
-            crc32.compare(mod.baseCrc32, Qt::CaseInsensitive) == 0) {
+        if (!crc32.isEmpty() && !mod.baseCrc32.isEmpty() && crc32.compare(mod.baseCrc32, Qt::CaseInsensitive) == 0) {
             results.append(mod);
             continue;
         }
@@ -270,8 +258,7 @@ QList<ModEntry> ModCatalogProvider::findModsForRom(const QString &crc32,
     return results;
 }
 
-QList<ModEntry> ModCatalogProvider::findModsBySystem(const QString &system) const
-{
+QList<ModEntry> ModCatalogProvider::findModsBySystem(const QString &system) const {
     QList<ModEntry> results;
     for (const ModEntry &mod : m_mods) {
         if (mod.system.compare(system, Qt::CaseInsensitive) == 0) {
@@ -281,8 +268,7 @@ QList<ModEntry> ModCatalogProvider::findModsBySystem(const QString &system) cons
     return results;
 }
 
-std::optional<ModEntry> ModCatalogProvider::getModById(const QString &id) const
-{
+std::optional<ModEntry> ModCatalogProvider::getModById(const QString &id) const {
     for (const ModEntry &mod : m_mods) {
         if (mod.id == id) {
             return mod;
@@ -291,18 +277,15 @@ std::optional<ModEntry> ModCatalogProvider::getModById(const QString &id) const
     return std::nullopt;
 }
 
-const QList<ModEntry> &ModCatalogProvider::allMods() const
-{
+const QList<ModEntry> &ModCatalogProvider::allMods() const {
     return m_mods;
 }
 
-QString ModCatalogProvider::lastError() const
-{
+QString ModCatalogProvider::lastError() const {
     return m_lastError;
 }
 
-bool ModCatalogProvider::loadFromJson(const QByteArray &data)
-{
+bool ModCatalogProvider::loadFromJson(const QByteArray &data) {
     m_mods.clear();
 
     QJsonParseError parseError;
@@ -327,25 +310,25 @@ bool ModCatalogProvider::loadFromJson(const QByteArray &data)
         const QJsonObject obj = val.toObject();
 
         ModEntry entry;
-        entry.id          = obj.value(QStringLiteral("id")).toString();
-        entry.title       = obj.value(QStringLiteral("title")).toString();
-        entry.author      = obj.value(QStringLiteral("author")).toString();
-        entry.version     = obj.value(QStringLiteral("version")).toString();
+        entry.id = obj.value(QStringLiteral("id")).toString();
+        entry.title = obj.value(QStringLiteral("title")).toString();
+        entry.author = obj.value(QStringLiteral("author")).toString();
+        entry.version = obj.value(QStringLiteral("version")).toString();
         entry.description = obj.value(QStringLiteral("description")).toString();
-        entry.type        = obj.value(QStringLiteral("type")).toString(Constants::FileTypes::HACK);
-        entry.system      = obj.value(QStringLiteral("system")).toString();
-        entry.format      = obj.value(QStringLiteral("format")).toString();
-        entry.patchUrl    = obj.value(QStringLiteral("patch_url")).toString();
-        entry.patchSha1   = obj.value(QStringLiteral("patch_sha1")).toString();
-        entry.patchSize   = obj.value(QStringLiteral("patch_size")).toInteger(0);
-        entry.sourceUrl   = obj.value(QStringLiteral("source_url")).toString();
-        entry.rating      = obj.value(QStringLiteral("rating")).toDouble(0.0);
-        entry.downloads   = obj.value(QStringLiteral("downloads")).toInt(0);
+        entry.type = obj.value(QStringLiteral("type")).toString(Constants::FileTypes::HACK);
+        entry.system = obj.value(QStringLiteral("system")).toString();
+        entry.format = obj.value(QStringLiteral("format")).toString();
+        entry.patchUrl = obj.value(QStringLiteral("patch_url")).toString();
+        entry.patchSha1 = obj.value(QStringLiteral("patch_sha1")).toString();
+        entry.patchSize = obj.value(QStringLiteral("patch_size")).toInteger(0);
+        entry.sourceUrl = obj.value(QStringLiteral("source_url")).toString();
+        entry.rating = obj.value(QStringLiteral("rating")).toDouble(0.0);
+        entry.downloads = obj.value(QStringLiteral("downloads")).toInt(0);
 
         const QJsonObject hashes = obj.value(QStringLiteral("base_rom_hashes")).toObject();
         entry.baseCrc32 = hashes.value(QStringLiteral("crc32")).toString();
-        entry.baseMd5   = hashes.value(QStringLiteral("md5")).toString();
-        entry.baseSha1  = hashes.value(QStringLiteral("sha1")).toString();
+        entry.baseMd5 = hashes.value(QStringLiteral("md5")).toString();
+        entry.baseSha1 = hashes.value(QStringLiteral("sha1")).toString();
 
         if (entry.id.isEmpty() || entry.title.isEmpty()) {
             continue;
@@ -357,16 +340,12 @@ bool ModCatalogProvider::loadFromJson(const QByteArray &data)
     return true;
 }
 
-QString ModCatalogProvider::cacheDir()
-{
-    return QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)
-           + QStringLiteral("/mod_catalog_cache");
+QString ModCatalogProvider::cacheDir() {
+    return QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + QStringLiteral("/mod_catalog_cache");
 }
 
-QString ModCatalogProvider::cacheFileForUrl(const QUrl &url)
-{
-    const QByteArray hash = QCryptographicHash::hash(
-        url.toString().toUtf8(), QCryptographicHash::Sha1);
+QString ModCatalogProvider::cacheFileForUrl(const QUrl &url) {
+    const QByteArray hash = QCryptographicHash::hash(url.toString().toUtf8(), QCryptographicHash::Sha1);
     return cacheDir() + QStringLiteral("/") + hash.toHex() + QStringLiteral(".json");
 }
 

@@ -16,82 +16,71 @@ namespace Remus {
 
 namespace {
 
-constexpr int MAX_REMOTE_REDIRECTS = 5;
+    constexpr int MAX_REMOTE_REDIRECTS = 5;
 
-bool isDisallowedRemoteAddress(const QHostAddress &address)
-{
-    if (address.isLoopback() || address.isNull()) {
-        return true;
-    }
-
-    if (address.protocol() == QAbstractSocket::IPv4Protocol) {
-        const quint32 ipv4 = address.toIPv4Address();
-        const quint8 firstOctet = static_cast<quint8>((ipv4 >> 24) & 0xFF);
-        const quint8 secondOctet = static_cast<quint8>((ipv4 >> 16) & 0xFF);
-
-        return firstOctet == 0
-            || firstOctet == 10
-            || firstOctet == 127
-            || (firstOctet == 100 && secondOctet >= 64 && secondOctet <= 127)
-            || (firstOctet == 169 && secondOctet == 254)
-            || (firstOctet == 172 && secondOctet >= 16 && secondOctet <= 31)
-            || (firstOctet == 192 && secondOctet == 168);
-    }
-
-    if (address.protocol() == QAbstractSocket::IPv6Protocol) {
-        const Q_IPV6ADDR ipv6 = address.toIPv6Address();
-        bool unspecified = true;
-        for (quint8 byte : ipv6.c) {
-            if (byte != 0) {
-                unspecified = false;
-                break;
-            }
+    bool isDisallowedRemoteAddress(const QHostAddress &address) {
+        if (address.isLoopback() || address.isNull()) {
+            return true;
         }
 
-        return unspecified
-            || ((ipv6.c[0] & 0xFE) == 0xFC) // fc00::/7 unique local
-            || (ipv6.c[0] == 0xFE && (ipv6.c[1] & 0xC0) == 0x80); // fe80::/10 link-local
-    }
+        if (address.protocol() == QAbstractSocket::IPv4Protocol) {
+            const quint32 ipv4 = address.toIPv4Address();
+            const quint8 firstOctet = static_cast<quint8>((ipv4 >> 24) & 0xFF);
+            const quint8 secondOctet = static_cast<quint8>((ipv4 >> 16) & 0xFF);
 
-    return false;
-}
+            return firstOctet == 0 || firstOctet == 10 || firstOctet == 127
+                || (firstOctet == 100 && secondOctet >= 64 && secondOctet <= 127)
+                || (firstOctet == 169 && secondOctet == 254)
+                || (firstOctet == 172 && secondOctet >= 16 && secondOctet <= 31)
+                || (firstOctet == 192 && secondOctet == 168);
+        }
 
-bool isDisallowedRemoteHost(const QString &host)
-{
-    const QString normalizedHost = host.trimmed().toLower();
-    if (normalizedHost.isEmpty()) {
-        return true;
-    }
+        if (address.protocol() == QAbstractSocket::IPv6Protocol) {
+            const Q_IPV6ADDR ipv6 = address.toIPv6Address();
+            bool unspecified = true;
+            for (quint8 byte : ipv6.c) {
+                if (byte != 0) {
+                    unspecified = false;
+                    break;
+                }
+            }
 
-    if (normalizedHost == QStringLiteral("localhost")
-        || normalizedHost.endsWith(QStringLiteral(".localhost"))) {
-        return true;
-    }
+            return unspecified || ((ipv6.c[0] & 0xFE) == 0xFC) // fc00::/7 unique local
+                || (ipv6.c[0] == 0xFE && (ipv6.c[1] & 0xC0) == 0x80); // fe80::/10 link-local
+        }
 
-    QHostAddress address;
-    if (!address.setAddress(normalizedHost)) {
         return false;
     }
 
-    return isDisallowedRemoteAddress(address);
-}
+    bool isDisallowedRemoteHost(const QString &host) {
+        const QString normalizedHost = host.trimmed().toLower();
+        if (normalizedHost.isEmpty()) {
+            return true;
+        }
+
+        if (normalizedHost == QStringLiteral("localhost") || normalizedHost.endsWith(QStringLiteral(".localhost"))) {
+            return true;
+        }
+
+        QHostAddress address;
+        if (!address.setAddress(normalizedHost)) {
+            return false;
+        }
+
+        return isDisallowedRemoteAddress(address);
+    }
 
 } // namespace
 
 ArtworkDownloader::ArtworkDownloader(QObject *parent)
     : QObject(parent)
-    , m_networkManager(new QNetworkAccessManager(this))
-{
-}
+    , m_networkManager(new QNetworkAccessManager(this)) { }
 
 ArtworkDownloader::ArtworkDownloader(QNetworkAccessManager *mgr, QObject *parent)
     : QObject(parent)
-    , m_networkManager(mgr)
-{
-}
+    , m_networkManager(mgr) { }
 
-bool ArtworkDownloader::isSupportedUrl(const QUrl &url)
-{
+bool ArtworkDownloader::isSupportedUrl(const QUrl &url) {
     if (!url.isValid()) {
         return false;
     }
@@ -100,23 +89,19 @@ bool ArtworkDownloader::isSupportedUrl(const QUrl &url)
         return true;
     }
 
-    return url.scheme().compare(QStringLiteral("https"), Qt::CaseInsensitive) == 0 &&
-        !url.host().trimmed().isEmpty();
+    return url.scheme().compare(QStringLiteral("https"), Qt::CaseInsensitive) == 0 && !url.host().trimmed().isEmpty();
 }
 
-bool ArtworkDownloader::isSupportedRemoteUrl(const QUrl &url)
-{
+bool ArtworkDownloader::isSupportedRemoteUrl(const QUrl &url) {
     // Only HTTPS is permitted for remote/provider-sourced artwork URLs.
     // file://, loopback, and private-network targets are intentionally rejected
     // to prevent local-file or local-network access via a compromised provider
     // response.
-    return url.isValid()
-        && url.scheme().compare(QStringLiteral("https"), Qt::CaseInsensitive) == 0
+    return url.isValid() && url.scheme().compare(QStringLiteral("https"), Qt::CaseInsensitive) == 0
         && !isDisallowedRemoteHost(url.host());
 }
 
-bool ArtworkDownloader::areResolvedRemoteAddressesAllowed(const QList<QHostAddress> &addresses)
-{
+bool ArtworkDownloader::areResolvedRemoteAddressesAllowed(const QList<QHostAddress> &addresses) {
     if (addresses.isEmpty()) {
         return false;
     }
@@ -130,8 +115,7 @@ bool ArtworkDownloader::areResolvedRemoteAddressesAllowed(const QList<QHostAddre
     return true;
 }
 
-bool ArtworkDownloader::download(const QUrl &url, const QString &destPath, QString *savedPath)
-{
+bool ArtworkDownloader::download(const QUrl &url, const QString &destPath, QString *savedPath) {
     if (!isSupportedUrl(url)) {
         emit downloadFailed(url, "Unsupported artwork URL");
         return false;
@@ -166,8 +150,10 @@ bool ArtworkDownloader::download(const QUrl &url, const QString &destPath, QStri
         QString correctExt = QLatin1Char('.') + QString::fromLatin1(detectedFormat);
         QString currentExt = QFileInfo(destPath).suffix().toLower();
         // Normalize jpeg → jpg for comparison
-        if (correctExt == QLatin1String(".jpeg")) correctExt = QStringLiteral(".jpg");
-        if (currentExt == QLatin1String("jpeg")) currentExt = QStringLiteral("jpg");
+        if (correctExt == QLatin1String(".jpeg"))
+            correctExt = QStringLiteral(".jpg");
+        if (currentExt == QLatin1String("jpeg"))
+            currentExt = QStringLiteral("jpg");
 
         if (!currentExt.isEmpty() && correctExt != (QLatin1Char('.') + currentExt)) {
             finalPath = destPath.left(destPath.lastIndexOf(QLatin1Char('.'))) + correctExt;
@@ -187,11 +173,10 @@ bool ArtworkDownloader::download(const QUrl &url, const QString &destPath, QStri
     return true;
 }
 
-QByteArray ArtworkDownloader::downloadToMemory(const QUrl &url)
-{
+QByteArray ArtworkDownloader::downloadToMemory(const QUrl &url) {
     if (!isSupportedUrl(url)) {
         emit downloadFailed(url, "Unsupported artwork URL");
-        return {};
+        return { };
     }
 
     QUrl currentUrl = url;
@@ -199,28 +184,26 @@ QByteArray ArtworkDownloader::downloadToMemory(const QUrl &url)
         if (!currentUrl.isLocalFile()) {
             if (!isSupportedRemoteUrl(currentUrl)) {
                 emit downloadFailed(currentUrl, "Unsupported artwork URL");
-                return {};
+                return { };
             }
 
             const QHostInfo hostInfo = QHostInfo::fromName(currentUrl.host());
-            if (hostInfo.error() != QHostInfo::NoError
-                || !areResolvedRemoteAddressesAllowed(hostInfo.addresses())) {
+            if (hostInfo.error() != QHostInfo::NoError || !areResolvedRemoteAddressesAllowed(hostInfo.addresses())) {
                 emit downloadFailed(currentUrl, "Resolved artwork host is not allowed");
-                return {};
+                return { };
             }
         }
 
         QNetworkRequest request(currentUrl);
         request.setHeader(QNetworkRequest::UserAgentHeader, Constants::API::USER_AGENT);
-        request.setAttribute(QNetworkRequest::RedirectPolicyAttribute,
-                             QNetworkRequest::ManualRedirectPolicy);
+        request.setAttribute(QNetworkRequest::RedirectPolicyAttribute, QNetworkRequest::ManualRedirectPolicy);
 
         QNetworkReply *reply = m_networkManager->get(request);
 
-        connect(reply, &QNetworkReply::downloadProgress, this,
-                [this, currentUrl](qint64 bytesReceived, qint64 bytesTotal) {
-                    emit downloadProgress(currentUrl, bytesReceived, bytesTotal);
-                });
+        connect(
+            reply, &QNetworkReply::downloadProgress, this, [this, currentUrl](qint64 bytesReceived, qint64 bytesTotal) {
+                emit downloadProgress(currentUrl, bytesReceived, bytesTotal);
+            });
 
         QEventLoop loop;
         QTimer timeout;
@@ -237,7 +220,7 @@ QByteArray ArtworkDownloader::downloadToMemory(const QUrl &url)
             reply->abort();
             reply->deleteLater();
             emit downloadFailed(currentUrl, "Download timeout");
-            return {};
+            return { };
         }
 
         timeout.stop();
@@ -249,7 +232,7 @@ QByteArray ArtworkDownloader::downloadToMemory(const QUrl &url)
 
             if (!isSupportedRemoteUrl(redirectedUrl)) {
                 emit downloadFailed(redirectedUrl, "Redirected artwork URL is not allowed");
-                return {};
+                return { };
             }
 
             // Re-resolve the redirect target's hostname to prevent DNS-rebinding:
@@ -260,7 +243,7 @@ QByteArray ArtworkDownloader::downloadToMemory(const QUrl &url)
             if (redirectHostInfo.error() != QHostInfo::NoError
                 || !areResolvedRemoteAddressesAllowed(redirectHostInfo.addresses())) {
                 emit downloadFailed(redirectedUrl, "Resolved redirect host is not allowed");
-                return {};
+                return { };
             }
 
             currentUrl = redirectedUrl;
@@ -269,10 +252,9 @@ QByteArray ArtworkDownloader::downloadToMemory(const QUrl &url)
 
         if (reply->error() == QNetworkReply::NoError) {
             if (!reply->isOpen()) {
-                qWarning() << "remus.artwork: device not open after download from"
-                           << currentUrl.toString();
+                qWarning() << "remus.artwork: device not open after download from" << currentUrl.toString();
                 reply->deleteLater();
-                return {};
+                return { };
             }
             const QByteArray data = reply->readAll();
             reply->deleteLater();
@@ -282,11 +264,11 @@ QByteArray ArtworkDownloader::downloadToMemory(const QUrl &url)
         const QString errorString = reply->errorString();
         reply->deleteLater();
         emit downloadFailed(currentUrl, errorString);
-        return {};
+        return { };
     }
 
     emit downloadFailed(currentUrl, "Too many artwork redirects");
-    return {};
+    return { };
 }
 
 } // namespace Remus

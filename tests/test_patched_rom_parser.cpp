@@ -4,8 +4,7 @@
 
 using namespace Remus;
 
-class PatchedRomParserTest : public QObject
-{
+class PatchedRomParserTest : public QObject {
     Q_OBJECT
 
 private slots:
@@ -15,11 +14,8 @@ private slots:
     void detectsPrototypeTags();
 };
 
-void PatchedRomParserTest::detectsTranslationTags()
-{
-    const PatchedRomInfo info = PatchedRomParser::parse(
-        "Dragon Quest III (English v2.0)[Addendum].sfc"
-    );
+void PatchedRomParserTest::detectsTranslationTags() {
+    const PatchedRomInfo info = PatchedRomParser::parse("Dragon Quest III (English v2.0)[Addendum].sfc");
 
     QCOMPARE(info.baseTitle, QStringLiteral("Dragon Quest III"));
     QCOMPARE(info.fileType, QStringLiteral("translation"));
@@ -27,11 +23,8 @@ void PatchedRomParserTest::detectsTranslationTags()
     QCOMPARE(info.patchName, QStringLiteral("English v2.0 Addendum"));
 }
 
-void PatchedRomParserTest::detectsHackTags()
-{
-    const PatchedRomInfo info = PatchedRomParser::parse(
-        "Final Fantasy VI (USA) [BNW v2.1].sfc"
-    );
+void PatchedRomParserTest::detectsHackTags() {
+    const PatchedRomInfo info = PatchedRomParser::parse("Final Fantasy VI (USA) [BNW v2.1].sfc");
 
     QCOMPARE(info.baseTitle, QStringLiteral("Final Fantasy VI"));
     QCOMPARE(info.fileType, QStringLiteral("hack"));
@@ -39,11 +32,8 @@ void PatchedRomParserTest::detectsHackTags()
     QCOMPARE(info.patchName, QStringLiteral("BNW v2.1"));
 }
 
-void PatchedRomParserTest::preservesOfficialReleaseNames()
-{
-    const PatchedRomInfo info = PatchedRomParser::parse(
-        "Sonic The Hedgehog (USA, Europe).md"
-    );
+void PatchedRomParserTest::preservesOfficialReleaseNames() {
+    const PatchedRomInfo info = PatchedRomParser::parse("Sonic The Hedgehog (USA, Europe).md");
 
     QCOMPARE(info.baseTitle, QStringLiteral("Sonic The Hedgehog"));
     QCOMPARE(info.fileType, QStringLiteral("official"));
@@ -51,11 +41,8 @@ void PatchedRomParserTest::preservesOfficialReleaseNames()
     QVERIFY(info.patchName.isEmpty());
 }
 
-void PatchedRomParserTest::detectsPrototypeTags()
-{
-    const PatchedRomInfo info = PatchedRomParser::parse(
-        "Star Fox 2 (Proto).sfc"
-    );
+void PatchedRomParserTest::detectsPrototypeTags() {
+    const PatchedRomInfo info = PatchedRomParser::parse("Star Fox 2 (Proto).sfc");
 
     QCOMPARE(info.baseTitle, QStringLiteral("Star Fox 2"));
     QCOMPARE(info.fileType, QStringLiteral("prototype"));

@@ -23,12 +23,15 @@ public:
     explicit WikidataProvider(QObject *parent = nullptr);
     ~WikidataProvider() override = default;
 
-    QString name() const override { return Constants::Providers::DISPLAY_WIKIDATA; }
-    bool requiresAuth() const override { return false; }
+    QString name() const override {
+        return Constants::Providers::DISPLAY_WIKIDATA;
+    }
+    bool requiresAuth() const override {
+        return false;
+    }
 
-    QList<SearchResult> searchByName(const QString &title,
-                                     const QString &system = QString(),
-                                     const QString &region = QString()) override;
+    QList<SearchResult> searchByName(
+        const QString &title, const QString &system = QString(), const QString &region = QString()) override;
     GameMetadata getByHash(const QString &hash, const QString &system) override;
     GameMetadata getById(const QString &id) override;
     ArtworkUrls getArtwork(const QString &id) override;

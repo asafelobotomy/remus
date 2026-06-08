@@ -5,8 +5,7 @@
 
 namespace Remus {
 
-class ConversionPlanner
-{
+class ConversionPlanner {
 public:
     enum class PlanningIntent {
         AutoProcess,

@@ -12,13 +12,11 @@ namespace Remus {
 
 HashController::HashController(AppController *appController, QObject *parent)
     : QObject(parent)
-    , m_appController(appController)
-{
+    , m_appController(appController) {
     connect(this, &HashController::libraryChanged, m_appController, &AppController::refreshSelectedFile);
 }
 
-void HashController::startHashAll()
-{
+void HashController::startHashAll() {
     if (m_hashing) {
         emit hashError(QStringLiteral("Hashing is already running."));
         return;
@@ -60,8 +58,7 @@ void HashController::startHashAll()
     using BatchResult = HashService::HashBatchResult;
     auto *watcher = new QFutureWatcher<QList<BatchResult>>(this);
 
-    connect(watcher, &QFutureWatcher<QList<BatchResult>>::finished,
-            this, [this, watcher, workerPool]() {
+    connect(watcher, &QFutureWatcher<QList<BatchResult>>::finished, this, [this, watcher, workerPool]() {
         const QList<BatchResult> results = watcher->result();
         watcher->deleteLater();
         workerPool->deleteLater();
@@ -86,24 +83,24 @@ void HashController::startHashAll()
     });
 
     watcher->setFuture(QtConcurrent::run(workerPool, [this, files]() -> QList<BatchResult> {
-        return m_hashService.computeHashes(
-            files,
-            [this](int done, int total, const QString &path) {
-                // Marshal progress updates back to the GUI thread.
-                QMetaObject::invokeMethod(this, [this, done, total]() {
+        return m_hashService.computeHashes(files, [this](int done, int total, const QString &path) {
+            // Marshal progress updates back to the GUI thread.
+            QMetaObject::invokeMethod(
+                this,
+                [this, done, total]() {
                     m_hashedFiles = done;
-                    m_totalFiles  = total;
+                    m_totalFiles = total;
                     m_progressMessage = QStringLiteral("Hashing files\u2026 %1 / %2").arg(done).arg(total);
                     emit progressChanged();
                     emit progressMessageChanged();
-                }, Qt::QueuedConnection);
-                Q_UNUSED(path)
-            });
+                },
+                Qt::QueuedConnection);
+            Q_UNUSED(path)
+        });
     }));
 }
 
-void HashController::hashSelected()
-{
+void HashController::hashSelected() {
     if (m_hashing) {
         emit hashError(QStringLiteral("Hashing is already running."));
         return;

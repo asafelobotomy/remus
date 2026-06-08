@@ -13,24 +13,21 @@ namespace Remus {
 
 namespace {
 
-int releaseYearFromDate(const QString &releaseDate)
-{
-    if (releaseDate.size() == 4) {
-        bool ok = false;
-        const int year = releaseDate.toInt(&ok);
-        return ok ? year : 0;
-    }
+    int releaseYearFromDate(const QString &releaseDate) {
+        if (releaseDate.size() == 4) {
+            bool ok = false;
+            const int year = releaseDate.toInt(&ok);
+            return ok ? year : 0;
+        }
 
-    const QDate parsed = QDate::fromString(releaseDate, Qt::ISODate);
-    return parsed.isValid() ? parsed.year() : 0;
-}
+        const QDate parsed = QDate::fromString(releaseDate, Qt::ISODate);
+        return parsed.isValid() ? parsed.year() : 0;
+    }
 
 } // namespace
 
-QList<SearchResult> CompendiumProvider::searchByName(const QString &title,
-                                                     const QString &system,
-                                                     const QString &region)
-{
+QList<SearchResult> CompendiumProvider::searchByName(
+    const QString &title, const QString &system, const QString &region) {
     QList<SearchResult> results;
     const QString searchTerm = title.trimmed();
     if (searchTerm.isEmpty())
@@ -58,21 +55,20 @@ QList<SearchResult> CompendiumProvider::searchByName(const QString &title,
     // Trigram FTS requires >= 3 characters; short queries fall through to LIKE.
     if (searchTerm.length() >= 3) {
         // Dedupe via subquery: each game_id appears once (best-ranked alias wins).
-        query.prepare(QStringLiteral(
-            "SELECT g.game_id, g.canonical_title, g.primary_region_code, "
-            "       g.release_date, g.release_year, s.internal_name "
-            "FROM ("
-            "    SELECT game_id, MIN(rank) AS best_rank "
-            "    FROM games_search "
-            "    WHERE games_search MATCH ? "
-            "    GROUP BY game_id"
-            ") fts "
-            "JOIN games g ON g.game_id = fts.game_id "
-            "JOIN systems s ON s.system_id = g.system_id "
-            "WHERE (? = 0 OR g.system_id = ?) "
-            "AND (? = '' OR UPPER(COALESCE(g.primary_region_code, '')) = ?) "
-            "ORDER BY fts.best_rank "
-            "LIMIT 10"));
+        query.prepare(QStringLiteral("SELECT g.game_id, g.canonical_title, g.primary_region_code, "
+                                     "       g.release_date, g.release_year, s.internal_name "
+                                     "FROM ("
+                                     "    SELECT game_id, MIN(rank) AS best_rank "
+                                     "    FROM games_search "
+                                     "    WHERE games_search MATCH ? "
+                                     "    GROUP BY game_id"
+                                     ") fts "
+                                     "JOIN games g ON g.game_id = fts.game_id "
+                                     "JOIN systems s ON s.system_id = g.system_id "
+                                     "WHERE (? = 0 OR g.system_id = ?) "
+                                     "AND (? = '' OR UPPER(COALESCE(g.primary_region_code, '')) = ?) "
+                                     "ORDER BY fts.best_rank "
+                                     "LIMIT 10"));
         query.addBindValue(ftsExpr);
         query.addBindValue(systemId);
         query.addBindValue(systemId);
@@ -84,22 +80,21 @@ QList<SearchResult> CompendiumProvider::searchByName(const QString &title,
     if (!usedFts) {
         // Fallback to LIKE for DBs without FTS5 or malformed queries
         const QString likePattern = QStringLiteral("%%1%").arg(searchTerm);
-        query.prepare(QStringLiteral(
-            "SELECT g.game_id, g.canonical_title, g.primary_region_code, "
-            "       g.release_date, g.release_year, s.internal_name "
-            "FROM games g "
-            "JOIN systems s ON s.system_id = g.system_id "
-            "WHERE (? = 0 OR g.system_id = ?) "
-            "AND (? = '' OR UPPER(COALESCE(g.primary_region_code, '')) = ?) "
-            "AND ("
-            "    LOWER(g.canonical_title) LIKE LOWER(?) "
-            "    OR EXISTS ("
-            "        SELECT 1 FROM game_names gn "
-            "        WHERE gn.game_id = g.game_id AND LOWER(gn.name_text) LIKE LOWER(?)"
-            "    )"
-            ") "
-            "ORDER BY LOWER(g.canonical_title), g.game_id "
-            "LIMIT 10"));
+        query.prepare(QStringLiteral("SELECT g.game_id, g.canonical_title, g.primary_region_code, "
+                                     "       g.release_date, g.release_year, s.internal_name "
+                                     "FROM games g "
+                                     "JOIN systems s ON s.system_id = g.system_id "
+                                     "WHERE (? = 0 OR g.system_id = ?) "
+                                     "AND (? = '' OR UPPER(COALESCE(g.primary_region_code, '')) = ?) "
+                                     "AND ("
+                                     "    LOWER(g.canonical_title) LIKE LOWER(?) "
+                                     "    OR EXISTS ("
+                                     "        SELECT 1 FROM game_names gn "
+                                     "        WHERE gn.game_id = g.game_id AND LOWER(gn.name_text) LIKE LOWER(?)"
+                                     "    )"
+                                     ") "
+                                     "ORDER BY LOWER(g.canonical_title), g.game_id "
+                                     "LIMIT 10"));
         query.addBindValue(systemId);
         query.addBindValue(systemId);
         query.addBindValue(regionCode);
@@ -115,18 +110,16 @@ QList<SearchResult> CompendiumProvider::searchByName(const QString &title,
     const QString loweredSearch = searchTerm.toLower();
     while (query.next()) {
         const QString gameId = query.value(0).toString();
-        const QString title  = query.value(1).toString();
+        const QString title = query.value(1).toString();
         if (gameId.isEmpty() || title.isEmpty())
             continue;
 
         SearchResult result;
-        result.id     = gameId;
-        result.title  = title;
+        result.id = gameId;
+        result.title = title;
         result.region = query.value(2).toString();
         const QString releaseDate = query.value(3).toString();
-        result.releaseYear = !releaseDate.isEmpty()
-            ? releaseYearFromDate(releaseDate)
-            : query.value(4).toInt();
+        result.releaseYear = !releaseDate.isEmpty() ? releaseYearFromDate(releaseDate) : query.value(4).toInt();
         result.system = query.value(5).toString();
 
         const QString loweredTitle = title.toLower();
@@ -143,39 +136,37 @@ QList<SearchResult> CompendiumProvider::searchByName(const QString &title,
     return results;
 }
 
-GameMetadata CompendiumProvider::getByHash(const QString &hash, const QString &system)
-{
+GameMetadata CompendiumProvider::getByHash(const QString &hash, const QString &system) {
     QString normalizedHash;
     const QString hashType = detectHashType(hash, normalizedHash);
     if (hashType.isEmpty()) {
-        return {};
+        return { };
     }
 
     QSqlDatabase db = database();
     if (!db.isOpen()) {
-        return {};
+        return { };
     }
 
     const int systemId = resolveSystemId(system);
 
     QSqlQuery query(db);
-    query.prepare(QStringLiteral(
-        "SELECT gs.game_id, gs.source_entry_key "
-        "FROM game_signatures gs "
-        "JOIN games g ON g.game_id = gs.game_id "
-        "WHERE gs.hash_type = ? AND gs.hash_value = ? "
-        "AND (? = 0 OR g.system_id = ?) "
-        "LIMIT 1"));
+    query.prepare(QStringLiteral("SELECT gs.game_id, gs.source_entry_key "
+                                 "FROM game_signatures gs "
+                                 "JOIN games g ON g.game_id = gs.game_id "
+                                 "WHERE gs.hash_type = ? AND gs.hash_value = ? "
+                                 "AND (? = 0 OR g.system_id = ?) "
+                                 "LIMIT 1"));
     query.addBindValue(hashType);
     query.addBindValue(normalizedHash);
     query.addBindValue(systemId);
     query.addBindValue(systemId);
     if (!query.exec()) {
         qWarning() << "CompendiumProvider::getByHash query failed:" << query.lastError().text();
-        return {};
+        return { };
     }
     if (!query.next()) {
-        return {};
+        return { };
     }
 
     const QString gameId = query.value(0).toString();
@@ -201,37 +192,35 @@ GameMetadata CompendiumProvider::getByHash(const QString &hash, const QString &s
     return metadata;
 }
 
-GameMetadata CompendiumProvider::getBySerial(const QString &serial, const QString &system)
-{
+GameMetadata CompendiumProvider::getBySerial(const QString &serial, const QString &system) {
     const QString trimmedSerial = serial.trimmed();
     if (trimmedSerial.isEmpty()) {
-        return {};
+        return { };
     }
 
     QSqlDatabase db = database();
     if (!db.isOpen()) {
-        return {};
+        return { };
     }
 
     const int systemId = resolveSystemId(system);
 
     QSqlQuery query(db);
-    query.prepare(QStringLiteral(
-        "SELECT gs.game_id, gs.source_entry_key "
-        "FROM game_serials gs "
-        "JOIN games g ON g.game_id = gs.game_id "
-        "WHERE gs.serial_value = ? "
-        "AND (? = 0 OR g.system_id = ?) "
-        "LIMIT 1"));
+    query.prepare(QStringLiteral("SELECT gs.game_id, gs.source_entry_key "
+                                 "FROM game_serials gs "
+                                 "JOIN games g ON g.game_id = gs.game_id "
+                                 "WHERE gs.serial_value = ? "
+                                 "AND (? = 0 OR g.system_id = ?) "
+                                 "LIMIT 1"));
     query.addBindValue(trimmedSerial);
     query.addBindValue(systemId);
     query.addBindValue(systemId);
     if (!query.exec()) {
         qWarning() << "CompendiumProvider::getBySerial query failed:" << query.lastError().text();
-        return {};
+        return { };
     }
     if (!query.next()) {
-        return {};
+        return { };
     }
 
     const QString gameId = query.value(0).toString();
@@ -253,54 +242,48 @@ GameMetadata CompendiumProvider::getBySerial(const QString &serial, const QStrin
     return metadata;
 }
 
-GameMetadata CompendiumProvider::getById(const QString &id)
-{
+GameMetadata CompendiumProvider::getById(const QString &id) {
     GameMetadata m = fetchGameMetadata(id);
     if (!m.id.isEmpty()) {
-        m.matchScore  = 1.0f;
+        m.matchScore = 1.0f;
         m.matchMethod = QStringLiteral("id");
     }
     return m;
 }
 
-ArtworkUrls CompendiumProvider::getArtwork(const QString &id)
-{
+ArtworkUrls CompendiumProvider::getArtwork(const QString &id) {
     if (id.isEmpty()) {
-        return {};
+        return { };
     }
 
     QSqlDatabase db = database();
     if (!db.isOpen()) {
-        return {};
+        return { };
     }
 
     QSqlQuery query(db);
-    query.prepare(QStringLiteral(
-        "SELECT g.canonical_title, s.libretro_name "
-        "FROM games g "
-        "JOIN systems s ON s.system_id = g.system_id "
-        "WHERE g.game_id = ?"));
+    query.prepare(QStringLiteral("SELECT g.canonical_title, s.libretro_name "
+                                 "FROM games g "
+                                 "JOIN systems s ON s.system_id = g.system_id "
+                                 "WHERE g.game_id = ?"));
     query.addBindValue(id);
     if (!query.exec() || !query.next()) {
-        return {};
+        return { };
     }
 
     const QString title = query.value(0).toString();
     const QString libretroName = query.value(1).toString();
     if (title.isEmpty() || libretroName.isEmpty()) {
-        return {};
+        return { };
     }
 
     ArtworkUrls artwork;
-    const QStringList boxCandidates =
-        Metadata::ThumbnailUrlHelper::generateThumbnailCandidates(
-            libretroName, title, QStringLiteral("Named_Boxarts"));
-    const QStringList snapCandidates =
-        Metadata::ThumbnailUrlHelper::generateThumbnailCandidates(
-            libretroName, title, QStringLiteral("Named_Snaps"));
-    const QStringList titleCandidates =
-        Metadata::ThumbnailUrlHelper::generateThumbnailCandidates(
-            libretroName, title, QStringLiteral("Named_Titles"));
+    const QStringList boxCandidates = Metadata::ThumbnailUrlHelper::generateThumbnailCandidates(
+        libretroName, title, QStringLiteral("Named_Boxarts"));
+    const QStringList snapCandidates
+        = Metadata::ThumbnailUrlHelper::generateThumbnailCandidates(libretroName, title, QStringLiteral("Named_Snaps"));
+    const QStringList titleCandidates = Metadata::ThumbnailUrlHelper::generateThumbnailCandidates(
+        libretroName, title, QStringLiteral("Named_Titles"));
     if (!boxCandidates.isEmpty()) {
         artwork.boxFront = QUrl(boxCandidates.first());
     }

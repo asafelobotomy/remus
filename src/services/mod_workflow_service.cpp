@@ -20,39 +20,33 @@ namespace Remus {
 
 namespace {
 
-bool shouldTreatAsArchive(const FileRecord &file)
-{
-    const QString archiveCandidate = file.archivePath.isEmpty() ? file.currentPath : file.archivePath;
-    const QString lower = archiveCandidate.toLower();
+    bool shouldTreatAsArchive(const FileRecord &file) {
+        const QString archiveCandidate = file.archivePath.isEmpty() ? file.currentPath : file.archivePath;
+        const QString lower = archiveCandidate.toLower();
 
-    if (file.isCompressed || !file.archiveInternalPath.isEmpty()) {
-        return true;
-    }
-
-    for (const QString &extension : Constants::Files::ARCHIVE_EXTENSIONS) {
-        if (lower.endsWith(extension)) {
+        if (file.isCompressed || !file.archiveInternalPath.isEmpty()) {
             return true;
         }
-    }
 
-    return false;
-}
+        for (const QString &extension : Constants::Files::ARCHIVE_EXTENSIONS) {
+            if (lower.endsWith(extension)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
 }
 
 ModWorkflowService::ModWorkflowService(Database &db, PatchService &patchService)
     : m_db(db)
-    , m_patchSvc(patchService)
-{
-}
+    , m_patchSvc(patchService) { }
 
 // ── Install ──────────────────────────────────────────────────────────────────
 
-ModInstallResult ModWorkflowService::install(const FileRecord  &baseFile,
-                                             const ModEntry     &mod,
-                                             const QString      &outputDir,
-                                             ProgressCallback    cb)
-{
+ModInstallResult ModWorkflowService::install(
+    const FileRecord &baseFile, const ModEntry &mod, const QString &outputDir, ProgressCallback cb) {
     ModInstallResult result;
     const QString modType = mod.type.trimmed().toLower();
 
@@ -61,18 +55,16 @@ ModInstallResult ModWorkflowService::install(const FileRecord  &baseFile,
         return result;
     }
 
-    const bool validModType = modType == Constants::FileTypes::HACK ||
-        modType == Constants::FileTypes::TRANSLATION ||
-        modType == Constants::FileTypes::IMPROVEMENT ||
-        modType == Constants::FileTypes::HOMEBREW ||
-        modType == Constants::FileTypes::PROTOTYPE ||
-        modType == Constants::FileTypes::OFFICIAL;
+    const bool validModType = modType == Constants::FileTypes::HACK || modType == Constants::FileTypes::TRANSLATION
+        || modType == Constants::FileTypes::IMPROVEMENT || modType == Constants::FileTypes::HOMEBREW
+        || modType == Constants::FileTypes::PROTOTYPE || modType == Constants::FileTypes::OFFICIAL;
     if (!validModType) {
         result.error = "Catalog mod type is invalid: " + mod.type;
         return result;
     }
 
-    if (cb) cb("resolving", 0);
+    if (cb)
+        cb("resolving", 0);
 
     // ── 1. Resolve patch file path (may download from HTTP) ──────────────────
     QString resolveError;
@@ -83,14 +75,16 @@ ModInstallResult ModWorkflowService::install(const FileRecord  &baseFile,
     }
 
     // ── 2. Verify patch SHA1 ─────────────────────────────────────────────────
-    if (cb) cb("verifying", 15);
+    if (cb)
+        cb("verifying", 15);
     if (!mod.patchSha1.isEmpty() && !verifySha1(patchPath, mod.patchSha1)) {
         result.error = "Patch SHA1 mismatch — file may be corrupted or tampered with";
         return result;
     }
 
     // ── 3. Resolve base ROM path ─────────────────────────────────────────────
-    if (cb) cb("preparing", 20);
+    if (cb)
+        cb("preparing", 20);
     QString baseRomPath;
     std::optional<QTemporaryDir> tempDir;
 
@@ -103,8 +97,7 @@ ModInstallResult ModWorkflowService::install(const FileRecord  &baseFile,
         }
 
         ArchiveExtractor extractor;
-        const QString archivePath = baseFile.currentPath.isEmpty()
-                                    ? baseFile.archivePath : baseFile.currentPath;
+        const QString archivePath = baseFile.currentPath.isEmpty() ? baseFile.archivePath : baseFile.currentPath;
         ExtractionResult ex = extractor.extract(archivePath, tempDir->path(), false);
         if (!ex.success) {
             result.error = "Failed to extract base ROM: " + ex.error;
@@ -112,8 +105,8 @@ ModInstallResult ModWorkflowService::install(const FileRecord  &baseFile,
         }
 
         if (!baseFile.archiveInternalPath.isEmpty()) {
-            const QString normalizedInternalPath =
-                ArchiveExtractor::normalizeArchiveMemberPath(baseFile.archiveInternalPath);
+            const QString normalizedInternalPath
+                = ArchiveExtractor::normalizeArchiveMemberPath(baseFile.archiveInternalPath);
             if (normalizedInternalPath.isEmpty()) {
                 result.error = "Base ROM archive path is unsafe";
                 return result;
@@ -140,7 +133,7 @@ ModInstallResult ModWorkflowService::install(const FileRecord  &baseFile,
     }
 
     const QString baseName = QFileInfo(baseFile.filename).completeBaseName();
-    const QString ext      = QFileInfo(baseFile.filename).suffix();
+    const QString ext = QFileInfo(baseFile.filename).suffix();
     // Strip path separators from the remote-sourced title before embedding it
     // in a filename — prevents path traversal via a crafted mod title.
     QString safeTitle = mod.title;
@@ -155,7 +148,8 @@ ModInstallResult ModWorkflowService::install(const FileRecord  &baseFile,
     }
 
     // ── 5. Apply patch ───────────────────────────────────────────────────────
-    if (cb) cb("patching", 40);
+    if (cb)
+        cb("patching", 40);
     PatchResult patchResult = m_patchSvc.apply(baseRomPath, patchPath, patchedPath);
 
     // tempDir (QTemporaryDir) is released here — auto-removes the extraction directory
@@ -169,45 +163,48 @@ ModInstallResult ModWorkflowService::install(const FileRecord  &baseFile,
     result.patchedRomPath = patchedPath;
 
     // ── 6. Calculate hashes for the patched file ─────────────────────────────
-    if (cb) cb("hashing", 70);
+    if (cb)
+        cb("hashing", 70);
     Hasher hasher;
     HashResult hashes = hasher.calculateHashes(patchedPath);
 
     // ── 7. Register patched ROM in the files table ───────────────────────────
-    if (cb) cb("registering", 80);
+    if (cb)
+        cb("registering", 80);
     FileRecord patchedRecord;
-    patchedRecord.libraryId      = baseFile.libraryId;
-    patchedRecord.originalPath   = patchedPath;
-    patchedRecord.currentPath    = patchedPath;
-    patchedRecord.filename       = patchedName;
-    patchedRecord.extension      = ext;
-    patchedRecord.fileSize       = QFileInfo(patchedPath).size();
-    patchedRecord.isCompressed   = false;
-    patchedRecord.systemId       = baseFile.systemId;
-    patchedRecord.crc32          = hashes.crc32;
-    patchedRecord.md5            = hashes.md5;
-    patchedRecord.sha1           = hashes.sha1;
+    patchedRecord.libraryId = baseFile.libraryId;
+    patchedRecord.originalPath = patchedPath;
+    patchedRecord.currentPath = patchedPath;
+    patchedRecord.filename = patchedName;
+    patchedRecord.extension = ext;
+    patchedRecord.fileSize = QFileInfo(patchedPath).size();
+    patchedRecord.isCompressed = false;
+    patchedRecord.systemId = baseFile.systemId;
+    patchedRecord.crc32 = hashes.crc32;
+    patchedRecord.md5 = hashes.md5;
+    patchedRecord.sha1 = hashes.sha1;
     patchedRecord.hashCalculated = hashes.success;
-    patchedRecord.isPrimary      = false;
-    patchedRecord.parentFileId   = baseFile.id;
-    patchedRecord.baseTitle      = baseName;
-    patchedRecord.fileType       = modType;
-    patchedRecord.isPatched      = true;
-    patchedRecord.patchName      = mod.title;
+    patchedRecord.isPrimary = false;
+    patchedRecord.parentFileId = baseFile.id;
+    patchedRecord.baseTitle = baseName;
+    patchedRecord.fileType = modType;
+    patchedRecord.isPatched = true;
+    patchedRecord.patchName = mod.title;
 
     // ── 8. Record in mod_installations ───────────────────────────────────────
-    if (cb) cb("recording", 90);
+    if (cb)
+        cb("recording", 90);
     Database::ModInstallationRecord modRec;
-    modRec.baseFileId    = baseFile.id;
-    modRec.catalogModId  = mod.id;
-    modRec.modTitle      = mod.title;
-    modRec.modAuthor     = mod.author;
-    modRec.modVersion    = mod.version;
-    modRec.modType       = modType;
-    modRec.patchFormat   = mod.format;
-    modRec.patchUrl      = mod.patchUrl;
-    modRec.patchSha1     = mod.patchSha1;
-    modRec.sourceUrl     = mod.sourceUrl;
+    modRec.baseFileId = baseFile.id;
+    modRec.catalogModId = mod.id;
+    modRec.modTitle = mod.title;
+    modRec.modAuthor = mod.author;
+    modRec.modVersion = mod.version;
+    modRec.modType = modType;
+    modRec.patchFormat = mod.format;
+    modRec.patchUrl = mod.patchUrl;
+    modRec.patchSha1 = mod.patchSha1;
+    modRec.sourceUrl = mod.sourceUrl;
 
     QSqlDatabase &db = m_db.database();
     const bool useTransaction = db.driver() && db.driver()->hasFeature(QSqlDriver::Transactions);
@@ -243,28 +240,26 @@ ModInstallResult ModWorkflowService::install(const FileRecord  &baseFile,
         return rollbackInstall("Failed to commit mod installation: " + db.lastError().text());
     }
 
-    if (cb) cb("done", 100);
+    if (cb)
+        cb("done", 100);
     result.success = true;
     return result;
 }
 
 // ── Query ────────────────────────────────────────────────────────────────────
 
-QList<Database::ModInstallationRecord> ModWorkflowService::getInstalledMods(int baseFileId)
-{
+QList<Database::ModInstallationRecord> ModWorkflowService::getInstalledMods(int baseFileId) {
     return m_db.getModInstallations(baseFileId);
 }
 
 // ── Uninstall ────────────────────────────────────────────────────────────────
 
-bool ModWorkflowService::uninstall(int modInstallationId)
-{
+bool ModWorkflowService::uninstall(int modInstallationId) {
     // Look up the installation to find the patched file
     // We query all installations and find the matching one
     // (A targeted query would be better, but keeping it simple for Phase 1)
     QSqlQuery query(m_db.database());
-    query.prepare(QStringLiteral(
-        "SELECT patched_file_id FROM mod_installations WHERE id = ?"));
+    query.prepare(QStringLiteral("SELECT patched_file_id FROM mod_installations WHERE id = ?"));
     query.addBindValue(modInstallationId);
 
     if (!query.exec()) {

@@ -5,8 +5,7 @@
 
 using namespace Remus;
 
-class SystemResolverTest : public QObject
-{
+class SystemResolverTest : public QObject {
     Q_OBJECT
 
 private slots:
@@ -20,41 +19,39 @@ private slots:
     void testResolveSystemName();
 };
 
-void SystemResolverTest::testDisplayName()
-{
+void SystemResolverTest::testDisplayName() {
     QCOMPARE(SystemResolver::displayName(Constants::Systems::ID_GENESIS), QStringLiteral("Sega Genesis / Mega Drive"));
     QCOMPARE(SystemResolver::displayName(-1), QStringLiteral("Unknown"));
 }
 
-void SystemResolverTest::testInternalName()
-{
+void SystemResolverTest::testInternalName() {
     QCOMPARE(SystemResolver::internalName(Constants::Systems::ID_GENESIS), QStringLiteral("Genesis"));
     QCOMPARE(SystemResolver::internalName(-1), QStringLiteral("Unknown"));
 }
 
-void SystemResolverTest::testProviderName()
-{
-    QCOMPARE(SystemResolver::providerName(Constants::Systems::ID_GENESIS, Constants::Providers::THEGAMESDB), QStringLiteral("18"));
-    QCOMPARE(SystemResolver::providerName(Constants::Systems::ID_GENESIS, Constants::Providers::SCREENSCRAPER), QStringLiteral("1"));
-    QCOMPARE(SystemResolver::providerName(Constants::Systems::ID_GENESIS, Constants::Providers::IGDB), QStringLiteral("genesis"));
-    QCOMPARE(SystemResolver::providerName(Constants::Systems::ID_GENESIS, Constants::Providers::HASHEOUS), QStringLiteral("Genesis"));
+void SystemResolverTest::testProviderName() {
+    QCOMPARE(SystemResolver::providerName(Constants::Systems::ID_GENESIS, Constants::Providers::THEGAMESDB),
+        QStringLiteral("18"));
+    QCOMPARE(SystemResolver::providerName(Constants::Systems::ID_GENESIS, Constants::Providers::SCREENSCRAPER),
+        QStringLiteral("1"));
+    QCOMPARE(SystemResolver::providerName(Constants::Systems::ID_GENESIS, Constants::Providers::IGDB),
+        QStringLiteral("genesis"));
+    QCOMPARE(SystemResolver::providerName(Constants::Systems::ID_GENESIS, Constants::Providers::HASHEOUS),
+        QStringLiteral("Genesis"));
     QCOMPARE(SystemResolver::providerName(-1, Constants::Providers::IGDB), QString());
 }
 
-void SystemResolverTest::testSystemIdByName()
-{
+void SystemResolverTest::testSystemIdByName() {
     QCOMPARE(SystemResolver::systemIdByName("Genesis"), Constants::Systems::ID_GENESIS);
     QCOMPARE(SystemResolver::systemIdByName("Unknown"), 0);
 }
 
-void SystemResolverTest::testIsValidSystem()
-{
+void SystemResolverTest::testIsValidSystem() {
     QVERIFY(SystemResolver::isValidSystem(Constants::Systems::ID_GENESIS));
     QVERIFY(!SystemResolver::isValidSystem(-1));
 }
 
-void SystemResolverTest::testSystemIdByDatName()
-{
+void SystemResolverTest::testSystemIdByDatName() {
     using namespace Constants::Systems;
 
     // No-Intro canonical DAT names
@@ -105,16 +102,14 @@ void SystemResolverTest::testSystemIdByDatName()
     QCOMPARE(SystemResolver::systemIdByDatName(""), 0);
 }
 
-void SystemResolverTest::testSystemIdByDatName_caseInsensitive()
-{
+void SystemResolverTest::testSystemIdByDatName_caseInsensitive() {
     using namespace Constants::Systems;
 
     QCOMPARE(SystemResolver::systemIdByDatName("sega - mega drive - genesis"), ID_GENESIS);
     QCOMPARE(SystemResolver::systemIdByDatName("SONY - PLAYSTATION"), ID_PSX);
 }
 
-void SystemResolverTest::testResolveSystemName()
-{
+void SystemResolverTest::testResolveSystemName() {
     // Internal name passes through
     QCOMPARE(SystemResolver::resolveSystemName("Genesis"), QStringLiteral("Genesis"));
     QCOMPARE(SystemResolver::resolveSystemName("PlayStation"), QStringLiteral("PlayStation"));

@@ -8,35 +8,35 @@ namespace Remus {
 
 /**
  * @brief Match result with confidence scoring
- * 
+ *
  * Represents a match between a file and game metadata,
  * with confidence score based on matching method.
  */
 struct Match {
-    int fileId = 0;              // Foreign key to files table
-    int gameId = 0;              // Foreign key to games table (if exists)
-    
-    QString providerName;         // Provider that found the match
-    QString providerId;           // Provider-specific game ID
-    
+    int fileId = 0; // Foreign key to files table
+    int gameId = 0; // Foreign key to games table (if exists)
+
+    QString providerName; // Provider that found the match
+    QString providerId; // Provider-specific game ID
+
     // Confidence scoring (0-100%)
     int confidence = 0;
-    QString matchMethod;         // Canonicalized via Constants::MatchMethods
-    
+    QString matchMethod; // Canonicalized via Constants::MatchMethods
+
     // Match details
-    QString matchedHash;         // Hash that matched (if hash-based)
-    QString matchedName;         // Name that matched
+    QString matchedHash; // Hash that matched (if hash-based)
+    QString matchedName; // Name that matched
     float nameMatchScore = 0.0f; // Levenshtein distance score
-    
+
     // Metadata from provider
     QString title;
     QString system;
     QString region;
     QString description;
-    
+
     // Status
-    bool reviewed = false;       // User has reviewed this match
-    bool userConfirmed = false;  // User confirmed this is correct
+    bool reviewed = false; // User has reviewed this match
+    bool userConfirmed = false; // User confirmed this is correct
     QDateTime matchedAt;
 };
 
@@ -44,16 +44,16 @@ struct Match {
  * @brief Confidence levels for matches
  */
 enum class ConfidenceLevel {
-    Perfect = 100,      // Hash match OR user confirmation
-    High = 90,          // Exact filename match
-    Medium = 70,        // Close fuzzy match (80%+ similarity)
-    Low = 50,           // Distant fuzzy match (60-80% similarity)
-    Unknown = 0         // No match
+    Perfect = 100, // Hash match OR user confirmation
+    High = 90, // Exact filename match
+    Medium = 70, // Close fuzzy match (80%+ similarity)
+    Low = 50, // Distant fuzzy match (60-80% similarity)
+    Unknown = 0 // No match
 };
 
 /**
  * @brief Matching engine that combines file hashing with metadata providers
- * 
+ *
  * Implements three-tier matching strategy:
  * 1. Hash-based matching (100% confidence)
  * 2. Exact name matching (90% confidence)
@@ -68,12 +68,12 @@ public:
 
     /**
      * @brief Calculate confidence score based on matching method
-    * @param method Match method string, normalized via Constants::MatchMethods
+     * @param method Match method string, normalized via Constants::MatchMethods
      * @param nameMatchScore For fuzzy matches, the similarity score (0.0-1.0)
      * @return Confidence percentage (0-100)
      */
     static int calculateConfidence(const QString &method, float nameMatchScore = 0.0f);
-    
+
     /**
      * @brief Calculate Levenshtein distance between two strings
      * @param s1 First string
@@ -81,18 +81,18 @@ public:
      * @return Similarity score (0.0 = completely different, 1.0 = identical)
      */
     static float calculateNameSimilarity(const QString &s1, const QString &s2);
-    
+
     /**
      * @brief Normalize a filename for matching
-     * 
+     *
      * Removes file extension, region tags, version tags, etc.
      * "Super Mario Bros. (USA).nes" → "super mario bros"
-     * 
+     *
      * @param fileName Original filename
      * @return Normalized filename for comparison
      */
     static QString normalizeFileName(const QString &fileName);
-    
+
     /**
      * @brief Extract game title from No-Intro/Redump formatted filename
      * @param fileName Formatted filename

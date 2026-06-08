@@ -2,8 +2,7 @@
 
 #include "test_database_fixture.h"
 
-void DatabaseTest::testGetFilesBySystem()
-{
+void DatabaseTest::testGetFilesBySystem() {
     Database db;
     QVERIFY(db.initialize(":memory:"));
 
@@ -22,8 +21,7 @@ void DatabaseTest::testGetFilesBySystem()
     QCOMPARE(snesFiles.size(), 1);
 }
 
-void DatabaseTest::testMarkFileProcessed()
-{
+void DatabaseTest::testMarkFileProcessed() {
     Database db;
     QVERIFY(db.initialize(":memory:"));
 
@@ -45,32 +43,27 @@ void DatabaseTest::testMarkFileProcessed()
     QCOMPARE(unprocAfter.size(), 1);
 }
 
-void DatabaseTest::testInsertGame()
-{
+void DatabaseTest::testInsertGame() {
     Database db;
     QVERIFY(db.initialize(":memory:"));
     int sysId = db.getSystemId("SNES");
 
-    int gameId = db.insertGame("Chrono Trigger", sysId, "USA",
-                               "Square", "Square", "1995-08-22",
-                               "Classic RPG", "RPG", "1", 9.8f);
+    int gameId = db.insertGame(
+        "Chrono Trigger", sysId, "USA", "Square", "Square", "1995-08-22", "Classic RPG", "RPG", "1", 9.8f);
     QVERIFY(gameId > 0);
 }
 
-void DatabaseTest::testUpdateGame()
-{
+void DatabaseTest::testUpdateGame() {
     Database db;
     QVERIFY(db.initialize(":memory:"));
     int sysId = db.getSystemId("SNES");
     int gameId = db.insertGame("Chrono Trigger", sysId);
     QVERIFY(gameId > 0);
 
-    QVERIFY(db.updateGame(gameId, "Square", "Square", "1995-08-22",
-                          "Classic RPG", "RPG", "1", 9.8f));
+    QVERIFY(db.updateGame(gameId, "Square", "Square", "1995-08-22", "Classic RPG", "RPG", "1", 9.8f));
 }
 
-void DatabaseTest::testGetFileCountBySystem()
-{
+void DatabaseTest::testGetFileCountBySystem() {
     Database db;
     QVERIFY(db.initialize(":memory:"));
     int libId = db.insertLibrary("/roms", "Test");
@@ -86,8 +79,7 @@ void DatabaseTest::testGetFileCountBySystem()
     QCOMPARE(counts.value("SNES"), 2);
 }
 
-void DatabaseTest::testGetFilesWithoutHashes()
-{
+void DatabaseTest::testGetFilesWithoutHashes() {
     Database db;
     QVERIFY(db.initialize(":memory:"));
 
@@ -103,8 +95,7 @@ void DatabaseTest::testGetFilesWithoutHashes()
     QCOMPARE(noHash.first().id, fid2);
 }
 
-void DatabaseTest::testInsertFileDuplicateReturnsZero()
-{
+void DatabaseTest::testInsertFileDuplicateReturnsZero() {
     Database db;
     QVERIFY(db.initialize(":memory:"));
 
@@ -116,8 +107,7 @@ void DatabaseTest::testInsertFileDuplicateReturnsZero()
     QCOMPARE(db.insertFile(first), 0);
 }
 
-void DatabaseTest::testInsertArchiveMembersWithSameBasenameRemainDistinct()
-{
+void DatabaseTest::testInsertArchiveMembersWithSameBasenameRemainDistinct() {
     Database db;
     QVERIFY(db.initialize(":memory:"));
 
@@ -139,8 +129,7 @@ void DatabaseTest::testInsertArchiveMembersWithSameBasenameRemainDistinct()
     QCOMPARE(db.getAllFiles().size(), 2);
 }
 
-void DatabaseTest::testGetUnprocessedFiles()
-{
+void DatabaseTest::testGetUnprocessedFiles() {
     Database db;
     QVERIFY(db.initialize(":memory:"));
 
@@ -156,8 +145,7 @@ void DatabaseTest::testGetUnprocessedFiles()
     QCOMPARE(unproc.first().id, fid2);
 }
 
-void DatabaseTest::testUpdateFilePath()
-{
+void DatabaseTest::testUpdateFilePath() {
     Database db;
     QVERIFY(db.initialize(":memory:"));
 
@@ -172,8 +160,7 @@ void DatabaseTest::testUpdateFilePath()
     QCOMPARE(got.currentPath, newPath);
 }
 
-void DatabaseTest::testInsertAndGetPatchedFileMetadata()
-{
+void DatabaseTest::testInsertAndGetPatchedFileMetadata() {
     Database db;
     QVERIFY(db.initialize(":memory:"));
 
@@ -191,8 +178,7 @@ void DatabaseTest::testInsertAndGetPatchedFileMetadata()
     QCOMPARE(got.patchName, QStringLiteral("English v2.0 Addendum"));
 }
 
-void DatabaseTest::testUpdateFileHashesPromotesPatchedMetadata()
-{
+void DatabaseTest::testUpdateFileHashesPromotesPatchedMetadata() {
     Database db;
     QVERIFY(db.initialize(":memory:"));
 
@@ -225,8 +211,7 @@ void DatabaseTest::testUpdateFileHashesPromotesPatchedMetadata()
     QCOMPARE(got.patchName, QStringLiteral("English v2.0"));
 }
 
-void DatabaseTest::testDeleteFilesForLibrary()
-{
+void DatabaseTest::testDeleteFilesForLibrary() {
     Database db;
     QVERIFY(db.initialize(":memory:"));
 
@@ -242,8 +227,7 @@ void DatabaseTest::testDeleteFilesForLibrary()
     QVERIFY(!db.getLibraryPath(libId).isEmpty());
 }
 
-void DatabaseTest::testGetAllFilesIncludesStaleEntries()
-{
+void DatabaseTest::testGetAllFilesIncludesStaleEntries() {
     Database db;
     QVERIFY(db.initialize(":memory:"));
 
@@ -256,8 +240,7 @@ void DatabaseTest::testGetAllFilesIncludesStaleEntries()
     QVERIFY(!all.isEmpty());
 }
 
-void DatabaseTest::testGetExistingFilesOnlyReturnsValidPaths()
-{
+void DatabaseTest::testGetExistingFilesOnlyReturnsValidPaths() {
     Database db;
     QVERIFY(db.initialize(":memory:"));
 
@@ -270,8 +253,7 @@ void DatabaseTest::testGetExistingFilesOnlyReturnsValidPaths()
     QCOMPARE(existing.size(), 0);
 }
 
-void DatabaseTest::testGetFilePath()
-{
+void DatabaseTest::testGetFilePath() {
     Database db;
     QVERIFY(db.initialize(":memory:"));
 
@@ -284,8 +266,7 @@ void DatabaseTest::testGetFilePath()
     QVERIFY(db.getFilePath(99999).isEmpty());
 }
 
-void DatabaseTest::testUpdateFileOriginalPath()
-{
+void DatabaseTest::testUpdateFileOriginalPath() {
     Database db;
     QVERIFY(db.initialize(":memory:"));
 

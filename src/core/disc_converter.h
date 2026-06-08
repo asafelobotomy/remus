@@ -41,17 +41,11 @@ protected:
      * @param inputSize       Pre-calculated input size, or -1 to auto-detect
      * @param timeoutMs       Process timeout (default 30 min)
      */
-    ConversionResult runToolConversion(const QString &toolPath,
-                                        const QStringList &args,
-                                        const QString &toolDisplayName,
-                                        const QString &inputPath,
-                                        const QString &outputPath,
-                                        qint64 inputSize = -1,
-                                        int timeoutMs = 1800000);
+    ConversionResult runToolConversion(const QString &toolPath, const QStringList &args, const QString &toolDisplayName,
+        const QString &inputPath, const QString &outputPath, qint64 inputSize = -1, int timeoutMs = 1800000);
 
     static qint64 getFileSize(const QString &path);
-    static QString getDefaultOutputPath(const QString &inputPath,
-                                         const QString &targetExt);
+    static QString getDefaultOutputPath(const QString &inputPath, const QString &targetExt);
 };
 
 } // namespace Remus

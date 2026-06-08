@@ -17,88 +17,82 @@ namespace Remus {
 
 namespace {
 
-// Directories to skip in the RAPatches repo root
-const QStringList kSkipDirs = {
-    QStringLiteral("Removed"),
-    QStringLiteral("Saves"),
-    QStringLiteral("Utilities"),
-    QStringLiteral("Unsorted"),
-    QStringLiteral("DLC"),
-    QStringLiteral("misc"),
-    QStringLiteral(".git"),
-};
+    // Directories to skip in the RAPatches repo root
+    const QStringList kSkipDirs = {
+        QStringLiteral("Removed"),
+        QStringLiteral("Saves"),
+        QStringLiteral("Utilities"),
+        QStringLiteral("Unsorted"),
+        QStringLiteral("DLC"),
+        QStringLiteral("misc"),
+        QStringLiteral(".git"),
+    };
 
-// Patch file extensions we recognise
-const QStringList kPatchExtensions = {
-    QStringLiteral("bps"),
-    QStringLiteral("ips"),
-    QStringLiteral("xdelta"),
-    QStringLiteral("ups"),
-    QStringLiteral("ppf"),
-    QStringLiteral("vcdiff"),
-};
+    // Patch file extensions we recognise
+    const QStringList kPatchExtensions = {
+        QStringLiteral("bps"),
+        QStringLiteral("ips"),
+        QStringLiteral("xdelta"),
+        QStringLiteral("ups"),
+        QStringLiteral("ppf"),
+        QStringLiteral("vcdiff"),
+    };
 
-bool isPatchFile(const QString &filename)
-{
-    const QString ext = QFileInfo(filename).suffix().toLower();
-    return kPatchExtensions.contains(ext);
-}
-
-bool isArchiveFile(const QString &filename)
-{
-    const QString ext = QFileInfo(filename).suffix().toLower();
-    return ext == QStringLiteral("zip") || ext == QStringLiteral("7z");
-}
-
-// Generate a stable ID from system + type + filename
-QString generateId(const QString &system, const QString &type, const QString &filename)
-{
-    const QString key = system + QStringLiteral("/") + type
-                      + QStringLiteral("/") + filename;
-    const QByteArray hash = QCryptographicHash::hash(key.toUtf8(),
-                                                      QCryptographicHash::Md5);
-    return QStringLiteral("ra-") + QString::fromLatin1(hash.toHex().left(12));
-}
-
-// Try to extract readme.txt content from a zip using unzip -p
-QString extractReadmeFromZip(const QString &zipPath)
-{
-    QProcess proc;
-    proc.setProgram(QStringLiteral("unzip"));
-    proc.setArguments({QStringLiteral("-p"), zipPath, QStringLiteral("readme.txt")});
-    proc.start();
-    if (!proc.waitForFinished(5000)) {
-        return {};
+    bool isPatchFile(const QString &filename) {
+        const QString ext = QFileInfo(filename).suffix().toLower();
+        return kPatchExtensions.contains(ext);
     }
-    if (proc.exitCode() != 0) {
-        // Try case variations
-        proc.setArguments({QStringLiteral("-p"), zipPath, QStringLiteral("Readme.txt")});
+
+    bool isArchiveFile(const QString &filename) {
+        const QString ext = QFileInfo(filename).suffix().toLower();
+        return ext == QStringLiteral("zip") || ext == QStringLiteral("7z");
+    }
+
+    // Generate a stable ID from system + type + filename
+    QString generateId(const QString &system, const QString &type, const QString &filename) {
+        const QString key = system + QStringLiteral("/") + type + QStringLiteral("/") + filename;
+        const QByteArray hash = QCryptographicHash::hash(key.toUtf8(), QCryptographicHash::Md5);
+        return QStringLiteral("ra-") + QString::fromLatin1(hash.toHex().left(12));
+    }
+
+    // Try to extract readme.txt content from a zip using unzip -p
+    QString extractReadmeFromZip(const QString &zipPath) {
+        QProcess proc;
+        proc.setProgram(QStringLiteral("unzip"));
+        proc.setArguments({ QStringLiteral("-p"), zipPath, QStringLiteral("readme.txt") });
         proc.start();
-        if (!proc.waitForFinished(5000) || proc.exitCode() != 0) {
-            proc.setArguments({QStringLiteral("-p"), zipPath, QStringLiteral("README.txt")});
+        if (!proc.waitForFinished(5000)) {
+            return { };
+        }
+        if (proc.exitCode() != 0) {
+            // Try case variations
+            proc.setArguments({ QStringLiteral("-p"), zipPath, QStringLiteral("Readme.txt") });
             proc.start();
             if (!proc.waitForFinished(5000) || proc.exitCode() != 0) {
-                return {};
+                proc.setArguments({ QStringLiteral("-p"), zipPath, QStringLiteral("README.txt") });
+                proc.start();
+                if (!proc.waitForFinished(5000) || proc.exitCode() != 0) {
+                    return { };
+                }
             }
         }
+        return QString::fromUtf8(proc.readAllStandardOutput());
     }
-    return QString::fromUtf8(proc.readAllStandardOutput());
-}
 
-// List files inside a zip
-QStringList listZipContents(const QString &zipPath)
-{
-    QProcess proc;
-    proc.setProgram(QStringLiteral("unzip"));
-    proc.setArguments({QStringLiteral("-Z1"), zipPath});
-    proc.start();
-    if (!proc.waitForFinished(5000) || proc.exitCode() != 0) {
-        return {};
+    // List files inside a zip
+    QStringList listZipContents(const QString &zipPath) {
+        QProcess proc;
+        proc.setProgram(QStringLiteral("unzip"));
+        proc.setArguments({ QStringLiteral("-Z1"), zipPath });
+        proc.start();
+        if (!proc.waitForFinished(5000) || proc.exitCode() != 0) {
+            return { };
+        }
+        const QString output = QString::fromUtf8(proc.readAllStandardOutput()).trimmed();
+        if (output.isEmpty())
+            return { };
+        return output.split(QStringLiteral("\n"), Qt::SkipEmptyParts);
     }
-    const QString output = QString::fromUtf8(proc.readAllStandardOutput()).trimmed();
-    if (output.isEmpty()) return {};
-    return output.split(QStringLiteral("\n"), Qt::SkipEmptyParts);
-}
 
 } // anonymous namespace
 
@@ -106,9 +100,7 @@ QStringList listZipContents(const QString &zipPath)
 // Directory scanning
 // ============================================================================
 
-RAPatchesCatalogBuilder::BuildResult
-RAPatchesCatalogBuilder::buildFromDirectory(const QString &repoPath) const
-{
+RAPatchesCatalogBuilder::BuildResult RAPatchesCatalogBuilder::buildFromDirectory(const QString &repoPath) const {
     BuildResult result;
 
     QDir rootDir(repoPath);
@@ -118,8 +110,7 @@ RAPatchesCatalogBuilder::buildFromDirectory(const QString &repoPath) const
     }
 
     // Each top-level directory is a system (except skipped dirs)
-    const QStringList systemDirs = rootDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot,
-                                                      QDir::Name);
+    const QStringList systemDirs = rootDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot, QDir::Name);
     for (const QString &dirName : systemDirs) {
         if (kSkipDirs.contains(dirName)) {
             continue;
@@ -134,12 +125,8 @@ RAPatchesCatalogBuilder::buildFromDirectory(const QString &repoPath) const
     return result;
 }
 
-void RAPatchesCatalogBuilder::scanSystemDir(const QDir &systemDir,
-                                             const QString &system,
-                                             BuildResult &result) const
-{
-    const QStringList entries = systemDir.entryList(QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot,
-                                                     QDir::Name);
+void RAPatchesCatalogBuilder::scanSystemDir(const QDir &systemDir, const QString &system, BuildResult &result) const {
+    const QStringList entries = systemDir.entryList(QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot, QDir::Name);
 
     for (const QString &entry : entries) {
         const QString fullPath = systemDir.filePath(entry);
@@ -166,15 +153,10 @@ void RAPatchesCatalogBuilder::scanSystemDir(const QDir &systemDir,
     }
 }
 
-void RAPatchesCatalogBuilder::scanTypeDir(const QDir &typeDir,
-                                           const QString &system,
-                                           const QString &type,
-                                           BuildResult &result) const
-{
+void RAPatchesCatalogBuilder::scanTypeDir(
+    const QDir &typeDir, const QString &system, const QString &type, BuildResult &result) const {
     // Type directories can have subdirectories (e.g. Translation/English/)
-    QDirIterator it(typeDir.path(),
-                    QDir::Files | QDir::NoDotAndDotDot,
-                    QDirIterator::Subdirectories);
+    QDirIterator it(typeDir.path(), QDir::Files | QDir::NoDotAndDotDot, QDirIterator::Subdirectories);
 
     while (it.hasNext()) {
         it.next();
@@ -199,10 +181,8 @@ void RAPatchesCatalogBuilder::scanTypeDir(const QDir &typeDir,
     }
 }
 
-ModEntry RAPatchesCatalogBuilder::buildEntryFromZip(const QString &zipPath,
-                                                     const QString &system,
-                                                     const QString &type) const
-{
+ModEntry RAPatchesCatalogBuilder::buildEntryFromZip(
+    const QString &zipPath, const QString &system, const QString &type) const {
     ModEntry entry;
     const QFileInfo fi(zipPath);
     const QString zipName = fi.completeBaseName(); // e.g. "1234-SonicRussian"
@@ -255,8 +235,10 @@ ModEntry RAPatchesCatalogBuilder::buildEntryFromZip(const QString &zipPath,
 
     // If region/language available, add to description
     QStringList descParts;
-    if (!parsed.region.isEmpty()) descParts << parsed.region;
-    if (!parsed.language.isEmpty()) descParts << parsed.language;
+    if (!parsed.region.isEmpty())
+        descParts << parsed.region;
+    if (!parsed.language.isEmpty())
+        descParts << parsed.language;
     if (!descParts.isEmpty()) {
         entry.description = descParts.join(QStringLiteral(", "));
     }
@@ -264,10 +246,8 @@ ModEntry RAPatchesCatalogBuilder::buildEntryFromZip(const QString &zipPath,
     return entry;
 }
 
-ModEntry RAPatchesCatalogBuilder::buildEntryFromPatch(const QString &patchPath,
-                                                       const QString &system,
-                                                       const QString &type) const
-{
+ModEntry RAPatchesCatalogBuilder::buildEntryFromPatch(
+    const QString &patchPath, const QString &system, const QString &type) const {
     ModEntry entry;
     const QFileInfo fi(patchPath);
 
@@ -283,8 +263,10 @@ ModEntry RAPatchesCatalogBuilder::buildEntryFromPatch(const QString &patchPath,
     entry.sourceUrl = QStringLiteral("https://github.com/RetroAchievements/RAPatches");
 
     QStringList descParts;
-    if (!parsed.region.isEmpty()) descParts << parsed.region;
-    if (!parsed.language.isEmpty()) descParts << parsed.language;
+    if (!parsed.region.isEmpty())
+        descParts << parsed.region;
+    if (!parsed.language.isEmpty())
+        descParts << parsed.language;
     if (!descParts.isEmpty()) {
         entry.description = descParts.join(QStringLiteral(", "));
     }
@@ -296,31 +278,29 @@ ModEntry RAPatchesCatalogBuilder::buildEntryFromPatch(const QString &patchPath,
 // Catalog JSON output
 // ============================================================================
 
-QString RAPatchesCatalogBuilder::writeCatalogJson(const QList<ModEntry> &mods,
-                                                   const QString &outputPath)
-{
+QString RAPatchesCatalogBuilder::writeCatalogJson(const QList<ModEntry> &mods, const QString &outputPath) {
     QJsonArray modsArray;
     for (const ModEntry &mod : mods) {
         QJsonObject obj;
-        obj[QStringLiteral("id")]          = mod.id;
-        obj[QStringLiteral("title")]       = mod.title;
-        obj[QStringLiteral("author")]      = mod.author;
-        obj[QStringLiteral("version")]     = mod.version;
+        obj[QStringLiteral("id")] = mod.id;
+        obj[QStringLiteral("title")] = mod.title;
+        obj[QStringLiteral("author")] = mod.author;
+        obj[QStringLiteral("version")] = mod.version;
         obj[QStringLiteral("description")] = mod.description;
-        obj[QStringLiteral("type")]        = mod.type;
-        obj[QStringLiteral("system")]      = mod.system;
-        obj[QStringLiteral("format")]      = mod.format;
-        obj[QStringLiteral("patch_url")]   = mod.patchUrl;
-        obj[QStringLiteral("patch_sha1")]  = mod.patchSha1;
-        obj[QStringLiteral("patch_size")]  = mod.patchSize;
-        obj[QStringLiteral("source_url")]  = mod.sourceUrl;
-        obj[QStringLiteral("rating")]      = mod.rating;
-        obj[QStringLiteral("downloads")]   = mod.downloads;
+        obj[QStringLiteral("type")] = mod.type;
+        obj[QStringLiteral("system")] = mod.system;
+        obj[QStringLiteral("format")] = mod.format;
+        obj[QStringLiteral("patch_url")] = mod.patchUrl;
+        obj[QStringLiteral("patch_sha1")] = mod.patchSha1;
+        obj[QStringLiteral("patch_size")] = mod.patchSize;
+        obj[QStringLiteral("source_url")] = mod.sourceUrl;
+        obj[QStringLiteral("rating")] = mod.rating;
+        obj[QStringLiteral("downloads")] = mod.downloads;
 
         QJsonObject hashes;
         hashes[QStringLiteral("crc32")] = mod.baseCrc32;
-        hashes[QStringLiteral("md5")]   = mod.baseMd5;
-        hashes[QStringLiteral("sha1")]  = mod.baseSha1;
+        hashes[QStringLiteral("md5")] = mod.baseMd5;
+        hashes[QStringLiteral("sha1")] = mod.baseSha1;
         obj[QStringLiteral("base_rom_hashes")] = hashes;
 
         modsArray.append(obj);
@@ -337,7 +317,7 @@ QString RAPatchesCatalogBuilder::writeCatalogJson(const QList<ModEntry> &mods,
     }
 
     file.write(QJsonDocument(root).toJson(QJsonDocument::Indented));
-    return {};
+    return { };
 }
 
 } // namespace Remus

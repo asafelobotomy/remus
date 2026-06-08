@@ -17,7 +17,7 @@ struct SystemInfo {
     QString manufacturer;
     int generation = 0;
     QStringList extensions;
-    QString preferredHash;  // "CRC32", "MD5", or "SHA1"
+    QString preferredHash; // "CRC32", "MD5", or "SHA1"
 };
 
 /**
@@ -62,8 +62,8 @@ private:
     QString detectFromIsoHeader(const QString &path, const QStringList &candidates) const;
     QStringList getCandidatesForExtension(const QString &extension) const;
 
-    QMap<QString, QString> m_extensionMap;  // extension -> system name
-    QMap<QString, SystemInfo> m_systems;     // system name -> info
+    QMap<QString, QString> m_extensionMap; // extension -> system name
+    QMap<QString, SystemInfo> m_systems; // system name -> info
 };
 
 } // namespace Remus

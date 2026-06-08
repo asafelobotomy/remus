@@ -6,7 +6,7 @@
 #include <QString>
 #include <QList>
 
-#include "../core/hasher.h"  // HashResult
+#include "../core/hasher.h" // HashResult
 
 namespace Remus {
 
@@ -25,7 +25,7 @@ struct FileRecord;
 class HashService {
 public:
     using ProgressCallback = std::function<void(int done, int total, const QString &path)>;
-    using LogCallback      = std::function<void(const QString &message)>;
+    using LogCallback = std::function<void(const QString &message)>;
 
     HashService();
     ~HashService();
@@ -38,10 +38,8 @@ public:
      * @param cancelled  Optional pointer checked between files to allow cancellation
      * @return Number of files successfully hashed
      */
-    int hashAll(Database *db,
-                ProgressCallback progressCb = nullptr,
-                LogCallback logCb = nullptr,
-                const std::atomic<bool> *cancelled = nullptr);
+    int hashAll(Database *db, ProgressCallback progressCb = nullptr, LogCallback logCb = nullptr,
+        const std::atomic<bool> *cancelled = nullptr);
 
     /**
      * @brief Hash a single file and persist the result
@@ -66,16 +64,15 @@ public:
      * The caller is responsible for writing results to the DB.
      */
     struct HashBatchResult {
-        int     fileId     = 0;
+        int fileId = 0;
         QString filename;
         HashResult result;
-        bool    skipped    = false;
+        bool skipped = false;
         QString skipReason;
     };
 
-    QList<HashBatchResult> computeHashes(const QList<FileRecord> &files,
-                                          ProgressCallback progressCb = nullptr,
-                                          const std::atomic<bool> *cancelled = nullptr);
+    QList<HashBatchResult> computeHashes(const QList<FileRecord> &files, ProgressCallback progressCb = nullptr,
+        const std::atomic<bool> *cancelled = nullptr);
 
 private:
     std::unique_ptr<Hasher> m_hasher;

@@ -6,12 +6,11 @@ using namespace Remus;
 class MockHasheousProvider : public HasheousProvider {
     Q_OBJECT
 public:
-    MockHasheousProvider(const QJsonObject &gameFixture,
-                         const QMap<int, QJsonObject> &companyFixtures,
-                         QObject *parent = nullptr)
+    MockHasheousProvider(
+        const QJsonObject &gameFixture, const QMap<int, QJsonObject> &companyFixtures, QObject *parent = nullptr)
         : HasheousProvider(parent)
         , m_gameFixture(gameFixture)
-        , m_companyFixtures(companyFixtures) {}
+        , m_companyFixtures(companyFixtures) { }
 
     GameMetadata callFetchIgdbMetadata(int igdbId) {
         return fetchIgdbMetadata(igdbId);
@@ -49,8 +48,7 @@ private slots:
     void getByHashesKeepsHashMatchWhenMetadataProxyDisabled();
 };
 
-void HasheousParsingTest::parseIsoDateGenresCompaniesScreenshotsSystem()
-{
+void HasheousParsingTest::parseIsoDateGenresCompaniesScreenshotsSystem() {
     const int igdbId = 123;
 
     QJsonObject game;
@@ -59,36 +57,38 @@ void HasheousParsingTest::parseIsoDateGenresCompaniesScreenshotsSystem()
     game["first_release_date"] = "1991-06-23T00:00:00+00:00";
 
     QJsonObject genres;
-    genres["8"] = QJsonObject{{"name", "Platform"}};
+    genres["8"] = QJsonObject { { "name", "Platform" } };
     game["genres"] = genres;
 
-    QJsonObject cover{{"url", "//images.igdb.com/igdb/image/upload/t_thumb/cover.jpg"}};
+    QJsonObject cover { { "url", "//images.igdb.com/igdb/image/upload/t_thumb/cover.jpg" } };
     game["cover"] = cover;
 
     QJsonObject screenshots;
-    screenshots["1"] = QJsonObject{{"url", "//images.igdb.com/igdb/image/upload/t_thumb/screen1.jpg"}};
-    screenshots["2"] = QJsonObject{{"url", "//images.igdb.com/igdb/image/upload/t_thumb/screen2.jpg"}};
+    screenshots["1"] = QJsonObject { { "url", "//images.igdb.com/igdb/image/upload/t_thumb/screen1.jpg" } };
+    screenshots["2"] = QJsonObject { { "url", "//images.igdb.com/igdb/image/upload/t_thumb/screen2.jpg" } };
     game["screenshots"] = screenshots;
 
     QJsonObject platforms;
-    platforms["30"] = QJsonObject{{"slug", "genesis"}};
+    platforms["30"] = QJsonObject { { "slug", "genesis" } };
     game["platforms"] = platforms;
 
     QJsonObject companies;
-    companies["1"] = QJsonObject{{"company", 395}, {"developer", false}, {"publisher", false}};
-    companies["2"] = QJsonObject{{"company", 112}, {"developer", false}, {"publisher", false}};
+    companies["1"] = QJsonObject { { "company", 395 }, { "developer", false }, { "publisher", false } };
+    companies["2"] = QJsonObject { { "company", 112 }, { "developer", false }, { "publisher", false } };
     game["involved_companies"] = companies;
 
     QMap<int, QJsonObject> companyFixtures;
-    companyFixtures[395] = QJsonObject{{"name", "Sonic Team"}, {"developed", QJsonArray{igdbId}}, {"published", QJsonArray{}}};
-    companyFixtures[112] = QJsonObject{{"name", "Sega"}, {"developed", QJsonArray{}}, {"published", QJsonArray{igdbId}}};
+    companyFixtures[395] = QJsonObject { { "name", "Sonic Team" }, { "developed", QJsonArray { igdbId } },
+        { "published", QJsonArray { } } };
+    companyFixtures[112]
+        = QJsonObject { { "name", "Sega" }, { "developed", QJsonArray { } }, { "published", QJsonArray { igdbId } } };
 
     MockHasheousProvider provider(game, companyFixtures);
     GameMetadata md = provider.callFetchIgdbMetadata(igdbId);
 
     QCOMPARE(md.title, QString("Sonic the Hedgehog"));
     QCOMPARE(md.releaseDate, QString("1991-06-23"));
-    QCOMPARE(md.genres, QStringList({"Platform"}));
+    QCOMPARE(md.genres, QStringList({ "Platform" }));
     QCOMPARE(md.boxArtUrl, QString("https://images.igdb.com/igdb/image/upload/t_1080p/cover.jpg"));
     QCOMPARE(md.screenshotUrls.size(), 2);
     QCOMPARE(md.screenshotUrls.at(0), QString("https://images.igdb.com/igdb/image/upload/t_1080p/screen1.jpg"));
@@ -97,8 +97,7 @@ void HasheousParsingTest::parseIsoDateGenresCompaniesScreenshotsSystem()
     QCOMPARE(md.publisher, QString("Sega"));
 }
 
-void HasheousParsingTest::parseTimestampAndArrayGenres()
-{
+void HasheousParsingTest::parseTimestampAndArrayGenres() {
     const int igdbId = 999;
 
     QJsonObject game;
@@ -107,15 +106,15 @@ void HasheousParsingTest::parseTimestampAndArrayGenres()
     game["first_release_date"] = 677635200; // 1991-06-23 epoch (UTC seconds)
 
     QJsonArray genresArr;
-    genresArr.append(QJsonObject{{"name", "Adventure"}});
-    genresArr.append(QJsonObject{{"name", "Puzzle"}});
+    genresArr.append(QJsonObject { { "name", "Adventure" } });
+    genresArr.append(QJsonObject { { "name", "Puzzle" } });
     game["genres"] = genresArr;
 
-    MockHasheousProvider provider(game, {});
+    MockHasheousProvider provider(game, { });
     GameMetadata md = provider.callFetchIgdbMetadata(igdbId);
 
     QCOMPARE(md.releaseDate, QString("1991-06-23"));
-    QCOMPARE(md.genres, QStringList({"Adventure", "Puzzle"}));
+    QCOMPARE(md.genres, QStringList({ "Adventure", "Puzzle" }));
 }
 
 namespace {
@@ -136,13 +135,8 @@ protected:
         QJsonArray metadataArray;
         metadataArray.append(metadataEntry);
 
-        return QJsonObject{
-            {"id", 1},
-            {"name", "Sonic the Hedgehog"},
-            {"metadata", metadataArray},
-            {"signatures", QJsonArray()},
-            {"attributes", QJsonArray()}
-        };
+        return QJsonObject { { "id", 1 }, { "name", "Sonic the Hedgehog" }, { "metadata", metadataArray },
+            { "signatures", QJsonArray() }, { "attributes", QJsonArray() } };
     }
 
     GameMetadata fetchIgdbMetadata(int igdbId) override {
@@ -153,14 +147,11 @@ protected:
 };
 }
 
-void HasheousParsingTest::getByHashesKeepsHashMatchWhenMetadataProxyDisabled()
-{
+void HasheousParsingTest::getByHashesKeepsHashMatchWhenMetadataProxyDisabled() {
     HashLookupHasheousProvider provider;
 
-    GameMetadata md = provider.getByHashes("f9394e97",
-                                           "1bc674be034e43c96b86487ac69d9293",
-                                           "6ddb7de1e17e7f6cdb88927bd906352030daa194",
-                                           "Genesis");
+    GameMetadata md = provider.getByHashes(
+        "f9394e97", "1bc674be034e43c96b86487ac69d9293", "6ddb7de1e17e7f6cdb88927bd906352030daa194", "Genesis");
 
     QCOMPARE(md.title, QString("Sonic the Hedgehog"));
     QCOMPARE(md.providerId, QStringLiteral("hasheous"));

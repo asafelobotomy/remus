@@ -10,12 +10,11 @@ class LibretroMetadataParserTest : public QObject {
 
 private:
     // Write a DAT file with the given content into dir, return its path
-    QString writeDat(QTemporaryDir &dir, const QString &name, const QString &content)
-    {
+    QString writeDat(QTemporaryDir &dir, const QString &name, const QString &content) {
         QString path = dir.filePath(name);
         QFile f(path);
         if (!f.open(QIODevice::WriteOnly | QIODevice::Text))
-            return {};
+            return { };
         f.write(content.toUtf8());
         f.close();
         return path;
@@ -36,8 +35,7 @@ private slots:
 
 // ── Individual type parsing ──────────────────────────────────────
 
-void LibretroMetadataParserTest::testParseGenre()
-{
+void LibretroMetadataParserTest::testParseGenre() {
     // Arrange
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
@@ -69,8 +67,7 @@ void LibretroMetadataParserTest::testParseGenre()
     QCOMPARE(parser.lookup("11223344").genre, QString("Fighting"));
 }
 
-void LibretroMetadataParserTest::testParseDeveloper()
-{
+void LibretroMetadataParserTest::testParseDeveloper() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
     writeDat(dir, "Test.dat",
@@ -86,8 +83,7 @@ void LibretroMetadataParserTest::testParseDeveloper()
     QCOMPARE(parser.lookup("ABCD1234").developer, QString("Sega"));
 }
 
-void LibretroMetadataParserTest::testParsePublisher()
-{
+void LibretroMetadataParserTest::testParsePublisher() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
     writeDat(dir, "Test.dat",
@@ -103,8 +99,7 @@ void LibretroMetadataParserTest::testParsePublisher()
     QCOMPARE(parser.lookup("ABCD1234").publisher, QString("Sega"));
 }
 
-void LibretroMetadataParserTest::testParseMaxUsers()
-{
+void LibretroMetadataParserTest::testParseMaxUsers() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
     writeDat(dir, "Test.dat",
@@ -120,8 +115,7 @@ void LibretroMetadataParserTest::testParseMaxUsers()
     QCOMPARE(parser.lookup("11223344").maxUsers, 2);
 }
 
-void LibretroMetadataParserTest::testParseReleaseYear()
-{
+void LibretroMetadataParserTest::testParseReleaseYear() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
     writeDat(dir, "Test.dat",
@@ -139,8 +133,7 @@ void LibretroMetadataParserTest::testParseReleaseYear()
 
 // ── Merged metadata from multiple types ──────────────────────────
 
-void LibretroMetadataParserTest::testMergedLookup()
-{
+void LibretroMetadataParserTest::testMergedLookup() {
     // Arrange: separate dirs for genre and developer, same CRC
     QTemporaryDir genreDir;
     QTemporaryDir devDir;
@@ -177,8 +170,7 @@ void LibretroMetadataParserTest::testMergedLookup()
 
 // ── loadAll with real directory structure ─────────────────────────
 
-void LibretroMetadataParserTest::testLoadAll()
-{
+void LibretroMetadataParserTest::testLoadAll() {
     QTemporaryDir root;
     QVERIFY(root.isValid());
 
@@ -219,16 +211,14 @@ void LibretroMetadataParserTest::testLoadAll()
 
 // ── Edge cases ───────────────────────────────────────────────────
 
-void LibretroMetadataParserTest::testMissingDirectory()
-{
+void LibretroMetadataParserTest::testMissingDirectory() {
     LibretroMetadataParser parser;
     int result = parser.loadAll("/nonexistent/path/12345");
     QCOMPARE(result, 0);
     QCOMPARE(parser.size(), 0);
 }
 
-void LibretroMetadataParserTest::testClearResetsState()
-{
+void LibretroMetadataParserTest::testClearResetsState() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
     writeDat(dir, "Test.dat",
@@ -244,8 +234,7 @@ void LibretroMetadataParserTest::testClearResetsState()
     QVERIFY(!parser.contains("11111111"));
 }
 
-void LibretroMetadataParserTest::testCaseInsensitiveLookup()
-{
+void LibretroMetadataParserTest::testCaseInsensitiveLookup() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
     writeDat(dir, "Test.dat",

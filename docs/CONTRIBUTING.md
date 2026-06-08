@@ -1,6 +1,24 @@
 # Documentation Contributing Guide
 
-This guide defines where to place documentation in the Remus repository.
+This guide defines where to place documentation and how to submit code changes.
+
+## Code Changes
+
+1. Fork the repository and create a feature branch from `main`.
+2. Install build dependencies from [docs/setup/BUILD.md](setup/BUILD.md).
+3. Build and test locally:
+   ```bash
+   cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DREMUS_ENABLE_WARNINGS=ON
+   cmake --build build -j$(nproc)
+   ctest --test-dir build --output-on-failure
+   ```
+4. Format C++ changes before opening a pull request:
+   ```bash
+   find src tests -type f \( -name '*.cpp' -o -name '*.h' \) -print0 | xargs -0 clang-format -i
+   ```
+5. Open a pull request using the template and ensure CI checks pass.
+
+Maintainers should require the `CI` and `CodeQL` workflows to pass before merging to `main`.
 
 ## Placement Rules
 

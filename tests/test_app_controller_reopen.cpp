@@ -20,8 +20,7 @@ private slots:
     void orchestratorSkipsCredentialsOnBackendError();
 };
 
-void AppControllerReopenTest::reopeningLibraryRebuildsOrchestrator()
-{
+void AppControllerReopenTest::reopeningLibraryRebuildsOrchestrator() {
     QTemporaryDir tempDir;
     QVERIFY(tempDir.isValid());
 
@@ -48,8 +47,7 @@ void AppControllerReopenTest::reopeningLibraryRebuildsOrchestrator()
     QCOMPARE(orchestratorChangedSpy.count(), 2);
 }
 
-void AppControllerReopenTest::eraseLibraryDatabaseWipesDataAndReopens()
-{
+void AppControllerReopenTest::eraseLibraryDatabaseWipesDataAndReopens() {
     QTemporaryDir tempDir;
     QVERIFY(tempDir.isValid());
 
@@ -88,18 +86,16 @@ void AppControllerReopenTest::eraseLibraryDatabaseWipesDataAndReopens()
 /// does NOT fall back to plaintext QSettings for provider credentials.
 /// When the keychain is available and returns NotFound, the QSettings fallback
 /// IS expected (correct legacy migration path).
-void AppControllerReopenTest::orchestratorSkipsCredentialsOnBackendError()
-{
+void AppControllerReopenTest::orchestratorSkipsCredentialsOnBackendError() {
     // Seed QSettings with IGDB credentials so the old insecure code path
     // would have populated the IGDB provider.
     QSettings s(QStringLiteral("Remus"), QStringLiteral("Remus"));
-    s.setValue(QStringLiteral("igdb/client_id"),     QStringLiteral("qs_test_id"));
-    s.setValue(QStringLiteral("igdb/client_secret"),  QStringLiteral("qs_test_secret"));
+    s.setValue(QStringLiteral("igdb/client_id"), QStringLiteral("qs_test_id"));
+    s.setValue(QStringLiteral("igdb/client_secret"), QStringLiteral("qs_test_secret"));
     s.sync();
 
     // Probe actual keychain state so the assertion is meaningful in all envs.
-    const SecretStore::ReadResult kr =
-        SecretStore::readWithStatus(QStringLiteral("igdb/client_id"));
+    const SecretStore::ReadResult kr = SecretStore::readWithStatus(QStringLiteral("igdb/client_id"));
 
     QTemporaryDir tempDir;
     QVERIFY(tempDir.isValid());
@@ -110,12 +106,12 @@ void AppControllerReopenTest::orchestratorSkipsCredentialsOnBackendError()
 
     if (kr.status == SecretStore::ReadResult::Status::BackendError) {
         // Guard must prevent IGDB from silently loading plaintext QSettings creds.
-        QVERIFY2(!enabled.contains(QStringLiteral("igdb")),
-                 "IGDB must not be added when keychain returns BackendError");
+        QVERIFY2(
+            !enabled.contains(QStringLiteral("igdb")), "IGDB must not be added when keychain returns BackendError");
     } else if (kr.status == SecretStore::ReadResult::Status::NotFound) {
         // Keychain available, key absent — QSettings fallback is the correct path.
         QVERIFY2(enabled.contains(QStringLiteral("igdb")),
-                 "IGDB must be added via QSettings fallback when keychain returns NotFound");
+            "IGDB must be added via QSettings fallback when keychain returns NotFound");
     } else {
         QSKIP("igdb/client_id found in keychain; cannot test plaintext fallback path");
     }

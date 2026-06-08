@@ -6,8 +6,7 @@
 
 using namespace Remus;
 
-class CliModSupportTest : public QObject
-{
+class CliModSupportTest : public QObject {
     Q_OBJECT
 
 private slots:
@@ -20,9 +19,8 @@ private slots:
 
 namespace {
 
-void configureParser(QCommandLineParser &parser, const QStringList &args)
-{
-    parser.addOption(QCommandLineOption({"json", "mod-json"}, ""));
+void configureParser(QCommandLineParser &parser, const QStringList &args) {
+    parser.addOption(QCommandLineOption({ "json", "mod-json" }, ""));
     parser.addOption(QCommandLineOption("mod-system", "", "system"));
     parser.addOption(QCommandLineOption("mod-author", "", "author"));
     parser.addOption(QCommandLineOption("mod-type", "", "type"));
@@ -35,16 +33,8 @@ void configureParser(QCommandLineParser &parser, const QStringList &args)
     parser.process(args);
 }
 
-ModEntry makeMod(const QString &id,
-                 const QString &title,
-                 const QString &author,
-                 const QString &type,
-                 const QString &format,
-                 const QString &system,
-                 double         rating,
-                 int            downloads,
-                 const QString &sourceUrl = QString())
-{
+ModEntry makeMod(const QString &id, const QString &title, const QString &author, const QString &type,
+    const QString &format, const QString &system, double rating, int downloads, const QString &sourceUrl = QString()) {
     ModEntry mod;
     mod.id = id;
     mod.title = title;
@@ -60,10 +50,11 @@ ModEntry makeMod(const QString &id,
 
 } // namespace
 
-void CliModSupportTest::parseOptions_acceptsJsonAliasAndSort()
-{
+void CliModSupportTest::parseOptions_acceptsJsonAliasAndSort() {
     QCommandLineParser parser;
-    configureParser(parser, {QStringLiteral("test"), QStringLiteral("--json"), QStringLiteral("--mod-sort"), QStringLiteral("downloads")});
+    configureParser(parser,
+        { QStringLiteral("test"), QStringLiteral("--json"), QStringLiteral("--mod-sort"),
+            QStringLiteral("downloads") });
 
     ModQueryOptions options;
     QString error;
@@ -73,10 +64,9 @@ void CliModSupportTest::parseOptions_acceptsJsonAliasAndSort()
     QCOMPARE(options.sortBy, QStringLiteral("downloads"));
 }
 
-void CliModSupportTest::parseOptions_rejectsInvalidSort()
-{
+void CliModSupportTest::parseOptions_rejectsInvalidSort() {
     QCommandLineParser parser;
-    configureParser(parser, {QStringLiteral("test"), QStringLiteral("--mod-sort"), QStringLiteral("unknown")});
+    configureParser(parser, { QStringLiteral("test"), QStringLiteral("--mod-sort"), QStringLiteral("unknown") });
 
     ModQueryOptions options;
     QString error;
@@ -84,13 +74,11 @@ void CliModSupportTest::parseOptions_rejectsInvalidSort()
     QVERIFY(error.contains("Invalid value for --mod-sort"));
 }
 
-void CliModSupportTest::filterCatalogMods_appliesCombinedFilters()
-{
-    const QList<ModEntry> mods = {
-        makeMod("a", "Alpha", "Test Author", "hack", "ips", "SNES", 4.5, 1000, "https://example.com/a"),
-        makeMod("b", "Beta", "Other Author", "translation", "bps", "SNES", 3.0, 200, "https://example.com/b"),
-        makeMod("c", "Gamma", "Test Author", "hack", "ips", "Genesis", 4.7, 1200, "https://example.com/c")
-    };
+void CliModSupportTest::filterCatalogMods_appliesCombinedFilters() {
+    const QList<ModEntry> mods
+        = { makeMod("a", "Alpha", "Test Author", "hack", "ips", "SNES", 4.5, 1000, "https://example.com/a"),
+              makeMod("b", "Beta", "Other Author", "translation", "bps", "SNES", 3.0, 200, "https://example.com/b"),
+              makeMod("c", "Gamma", "Test Author", "hack", "ips", "Genesis", 4.7, 1200, "https://example.com/c") };
 
     ModQueryOptions options;
     options.authorFilter = QStringLiteral("Test");
@@ -104,13 +92,10 @@ void CliModSupportTest::filterCatalogMods_appliesCombinedFilters()
     QCOMPARE(filtered.first().id, QStringLiteral("c"));
 }
 
-void CliModSupportTest::sortListedMods_sortsByRatingDescending()
-{
-    QList<ListedMod> rows = {
-        {makeMod("a", "Alpha", "A", "hack", "ips", "SNES", 3.2, 100), {}},
-        {makeMod("b", "Beta", "B", "hack", "ips", "SNES", 4.8, 100), {}},
-        {makeMod("c", "Gamma", "C", "hack", "ips", "SNES", 4.1, 100), {}}
-    };
+void CliModSupportTest::sortListedMods_sortsByRatingDescending() {
+    QList<ListedMod> rows = { { makeMod("a", "Alpha", "A", "hack", "ips", "SNES", 3.2, 100), { } },
+        { makeMod("b", "Beta", "B", "hack", "ips", "SNES", 4.8, 100), { } },
+        { makeMod("c", "Gamma", "C", "hack", "ips", "SNES", 4.1, 100), { } } };
 
     ModQueryOptions options;
     options.sortBy = QStringLiteral("rating");
@@ -121,13 +106,10 @@ void CliModSupportTest::sortListedMods_sortsByRatingDescending()
     QCOMPARE(rows.at(2).mod.id, QStringLiteral("a"));
 }
 
-void CliModSupportTest::sortListedMods_sortsByTitleAscending()
-{
-    QList<ListedMod> rows = {
-        {makeMod("c", "Gamma", "C", "hack", "ips", "SNES", 3.2, 100), {}},
-        {makeMod("a", "Alpha", "A", "hack", "ips", "SNES", 4.8, 100), {}},
-        {makeMod("b", "Beta", "B", "hack", "ips", "SNES", 4.1, 100), {}}
-    };
+void CliModSupportTest::sortListedMods_sortsByTitleAscending() {
+    QList<ListedMod> rows = { { makeMod("c", "Gamma", "C", "hack", "ips", "SNES", 3.2, 100), { } },
+        { makeMod("a", "Alpha", "A", "hack", "ips", "SNES", 4.8, 100), { } },
+        { makeMod("b", "Beta", "B", "hack", "ips", "SNES", 4.1, 100), { } } };
 
     ModQueryOptions options;
     options.sortBy = QStringLiteral("title");

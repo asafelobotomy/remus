@@ -26,25 +26,15 @@ struct CompendiumSourceDescriptor {
 
 bool readTextFile(const QString &path, QString &content, QString &error);
 
-bool requireString(const QJsonObject &object,
-                   const QString &fieldName,
-                   QString &value,
-                   QString &error,
-                   bool allowEmpty = false);
+bool requireString(
+    const QJsonObject &object, const QString &fieldName, QString &value, QString &error, bool allowEmpty = false);
 
 QString resolveManifestRelativePath(const QString &manifestPath, const QString &sourcePath);
 
-bool parseSourceDescriptor(const QJsonObject &object,
-                           const QString &manifestPath,
-                           CompendiumSourceDescriptor &descriptor,
-                           QString &error);
+bool parseSourceDescriptor(
+    const QJsonObject &object, const QString &manifestPath, CompendiumSourceDescriptor &descriptor, QString &error);
 
-bool parseManifest(const QString &manifestPath,
-                   QString &buildId,
-                   int &schemaVersion,
-                   QString &manifestJson,
-                   QJsonArray &sourceObjects,
-                   QList<CompendiumSourceDescriptor> &sources,
-                   QString &error);
+bool parseManifest(const QString &manifestPath, QString &buildId, int &schemaVersion, QString &manifestJson,
+    QJsonArray &sourceObjects, QList<CompendiumSourceDescriptor> &sources, QString &error);
 
 } // namespace Remus

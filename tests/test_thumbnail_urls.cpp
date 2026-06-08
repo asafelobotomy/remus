@@ -3,59 +3,47 @@
 
 using namespace Remus;
 
-class ThumbnailUrlTest : public QObject
-{
+class ThumbnailUrlTest : public QObject {
     Q_OBJECT
 
 private slots:
-    void testSanitizeBasic()
-    {
+    void testSanitizeBasic() {
         // & is replaced with _
-        QCOMPARE(LocalDatabaseProvider::sanitizeThumbnailName("Sonic & Knuckles"),
-                 QString("Sonic _ Knuckles"));
+        QCOMPARE(LocalDatabaseProvider::sanitizeThumbnailName("Sonic & Knuckles"), QString("Sonic _ Knuckles"));
     }
 
-    void testSanitizeAllInvalidChars()
-    {
+    void testSanitizeAllInvalidChars() {
         // All invalid chars: & * / : \ < > ? | "
         QString input = "A&B*C/D:E\\F<G>H?I|J\"K";
         QString expected = "A_B_C_D_E_F_G_H_I_J_K";
         QCOMPARE(LocalDatabaseProvider::sanitizeThumbnailName(input), expected);
     }
 
-    void testSanitizeNoChange()
-    {
+    void testSanitizeNoChange() {
         // Normal name passes through unchanged
         QString name = "Sonic The Hedgehog (USA, Europe)";
         QCOMPARE(LocalDatabaseProvider::sanitizeThumbnailName(name), name);
     }
 
-    void testBuildThumbnailUrl()
-    {
+    void testBuildThumbnailUrl() {
         QString url = LocalDatabaseProvider::buildThumbnailUrl(
-            "Sega - Mega Drive - Genesis",
-            "Sonic The Hedgehog (World)",
-            "Named_Boxarts");
+            "Sega - Mega Drive - Genesis", "Sonic The Hedgehog (World)", "Named_Boxarts");
         QVERIFY(url.startsWith("https://thumbnails.libretro.com/"));
         QVERIFY(url.contains("Sega%20-%20Mega%20Drive%20-%20Genesis"));
         QVERIFY(url.contains("Named_Boxarts"));
         QVERIFY(url.endsWith(".png"));
     }
 
-    void testBuildThumbnailUrlEncodesSpecialChars()
-    {
+    void testBuildThumbnailUrlEncodesSpecialChars() {
         // Game name with & should be sanitized to _ then URL-encoded
         QString url = LocalDatabaseProvider::buildThumbnailUrl(
-            "Sega - Mega Drive - Genesis",
-            "Sonic & Knuckles (World)",
-            "Named_Boxarts");
+            "Sega - Mega Drive - Genesis", "Sonic & Knuckles (World)", "Named_Boxarts");
         // & was replaced with _ in filename, so no %26 in URL
         QVERIFY(!url.contains("%26"));
         QVERIFY(url.contains("Sonic%20_%20Knuckles"));
     }
 
-    void testBuildThumbnailUrlTypes()
-    {
+    void testBuildThumbnailUrlTypes() {
         QString base = "Nintendo - Game Boy Advance";
         QString game = "Pokemon (USA)";
 
@@ -68,23 +56,21 @@ private slots:
         QVERIFY(title.contains("Named_Titles"));
     }
 
-    void testGetArtworkReturnsUrls()
-    {
+    void testGetArtworkReturnsUrls() {
         LocalDatabaseProvider provider;
 
         // Create a temp DAT file
         QTemporaryDir tempDir;
         QVERIFY(tempDir.isValid());
 
-        QString datContent =
-            "clrmamepro (\n"
-            "  name \"Test System\"\n"
-            "  version \"2026.01.01\"\n"
-            ")\n\n"
-            "game (\n"
-            "  name \"Test Game (USA)\"\n"
-            "  rom ( name \"test.bin\" size 131072 crc AABB1122 )\n"
-            ")\n";
+        QString datContent = "clrmamepro (\n"
+                             "  name \"Test System\"\n"
+                             "  version \"2026.01.01\"\n"
+                             ")\n\n"
+                             "game (\n"
+                             "  name \"Test Game (USA)\"\n"
+                             "  rom ( name \"test.bin\" size 131072 crc AABB1122 )\n"
+                             ")\n";
 
         QString datPath = tempDir.path() + "/Test System.dat";
         QFile file(datPath);
@@ -105,29 +91,26 @@ private slots:
         QVERIFY(artwork.boxFront.toString().contains("Test System"));
     }
 
-    void testGetArtworkNotFound()
-    {
+    void testGetArtworkNotFound() {
         LocalDatabaseProvider provider;
         ArtworkUrls artwork = provider.getArtwork("DEADBEEF");
         QVERIFY(artwork.boxFront.isEmpty());
     }
 
-    void testGetByHashIncludesArtworkUrls()
-    {
+    void testGetByHashIncludesArtworkUrls() {
         LocalDatabaseProvider provider;
 
         QTemporaryDir tempDir;
         QVERIFY(tempDir.isValid());
 
-        QString datContent =
-            "clrmamepro (\n"
-            "  name \"Sega - Genesis\"\n"
-            "  version \"2026.01.01\"\n"
-            ")\n\n"
-            "game (\n"
-            "  name \"Sonic (World)\"\n"
-            "  rom ( name \"sonic.bin\" size 524288 crc CCDD3344 )\n"
-            ")\n";
+        QString datContent = "clrmamepro (\n"
+                             "  name \"Sega - Genesis\"\n"
+                             "  version \"2026.01.01\"\n"
+                             ")\n\n"
+                             "game (\n"
+                             "  name \"Sonic (World)\"\n"
+                             "  rom ( name \"sonic.bin\" size 524288 crc CCDD3344 )\n"
+                             ")\n";
 
         QString datPath = tempDir.path() + "/Sega - Genesis.dat";
         QFile file(datPath);
@@ -145,57 +128,45 @@ private slots:
         QCOMPARE(md.screenshotUrls.size(), 2);
     }
 
-    void testArtworkUrlWithParentheses()
-    {
+    void testArtworkUrlWithParentheses() {
         // Parentheses are valid in URI paths (RFC 3986) and are not encoded
-        QString url = LocalDatabaseProvider::buildThumbnailUrl(
-            "Nintendo - NES", "Super Mario (USA)", "Named_Boxarts");
+        QString url = LocalDatabaseProvider::buildThumbnailUrl("Nintendo - NES", "Super Mario (USA)", "Named_Boxarts");
         QVERIFY(url.contains("Super%20Mario%20(USA)"));
     }
 
-    void testStripLanguageTagsSingleCode()
-    {
+    void testStripLanguageTagsSingleCode() {
         // Single language code like (En) should be removed
         QCOMPARE(LocalDatabaseProvider::stripLanguageTags("007 Shitou - The Duel (Japan) (En)"),
-                 QString("007 Shitou - The Duel (Japan)"));
+            QString("007 Shitou - The Duel (Japan)"));
     }
 
-    void testStripLanguageTagsMultipleCodes()
-    {
+    void testStripLanguageTagsMultipleCodes() {
         // Multi-code groups like (En,Ja) and (En,Fr,De,Es,It) should be removed
         QCOMPARE(LocalDatabaseProvider::stripLanguageTags("Streets of Rage (World) (En,Ja)"),
-                 QString("Streets of Rage (World)"));
-        QCOMPARE(LocalDatabaseProvider::stripLanguageTags("Game (Europe) (En,Fr,De,Es,It)"),
-                 QString("Game (Europe)"));
+            QString("Streets of Rage (World)"));
+        QCOMPARE(LocalDatabaseProvider::stripLanguageTags("Game (Europe) (En,Fr,De,Es,It)"), QString("Game (Europe)"));
     }
 
-    void testStripLanguageTagsPreservesRegions()
-    {
+    void testStripLanguageTagsPreservesRegions() {
         // Region tags like (USA), (Japan), (World) are NOT language codes
-        QCOMPARE(LocalDatabaseProvider::stripLanguageTags("Sonic (USA)"),
-                 QString("Sonic (USA)"));
-        QCOMPARE(LocalDatabaseProvider::stripLanguageTags("Game (Japan)"),
-                 QString("Game (Japan)"));
-        QCOMPARE(LocalDatabaseProvider::stripLanguageTags("Game (World)"),
-                 QString("Game (World)"));
+        QCOMPARE(LocalDatabaseProvider::stripLanguageTags("Sonic (USA)"), QString("Sonic (USA)"));
+        QCOMPARE(LocalDatabaseProvider::stripLanguageTags("Game (Japan)"), QString("Game (Japan)"));
+        QCOMPARE(LocalDatabaseProvider::stripLanguageTags("Game (World)"), QString("Game (World)"));
     }
 
-    void testStripLanguageTagsMixed()
-    {
+    void testStripLanguageTagsMixed() {
         // Preserves region + revision while stripping language codes
         QCOMPARE(LocalDatabaseProvider::stripLanguageTags("Altered Beast (Japan, USA) (En) (Rev A)"),
-                 QString("Altered Beast (Japan, USA) (Rev A)"));
+            QString("Altered Beast (Japan, USA) (Rev A)"));
     }
 
-    void testStripLanguageTagsNoTags()
-    {
+    void testStripLanguageTagsNoTags() {
         // Name without language tags is returned unchanged
         QString name = "Sonic The Hedgehog (USA, Europe)";
         QCOMPARE(LocalDatabaseProvider::stripLanguageTags(name), name);
     }
 
-    void testGenerateCandidatesExactOnly()
-    {
+    void testGenerateCandidatesExactOnly() {
         // Name without language tags produces exactly 1 candidate
         QStringList candidates = LocalDatabaseProvider::generateThumbnailCandidates(
             "Sega - Mega Drive - Genesis", "Sonic (USA)", "Named_Boxarts");
@@ -203,13 +174,10 @@ private slots:
         QVERIFY(candidates.first().contains("Sonic%20(USA)"));
     }
 
-    void testGenerateCandidatesWithFallback()
-    {
+    void testGenerateCandidatesWithFallback() {
         // Name with language tag produces 2 candidates: exact then stripped
         QStringList candidates = LocalDatabaseProvider::generateThumbnailCandidates(
-            "Sega - Mega Drive - Genesis",
-            "007 Shitou - The Duel (Japan) (En)",
-            "Named_Boxarts");
+            "Sega - Mega Drive - Genesis", "007 Shitou - The Duel (Japan) (En)", "Named_Boxarts");
         QCOMPARE(candidates.size(), 2);
         // First: exact DAT name
         QVERIFY(candidates.at(0).contains("007%20Shitou%20-%20The%20Duel%20(Japan)%20(En)"));
@@ -218,23 +186,21 @@ private slots:
         QVERIFY(!candidates.at(1).contains("(En)"));
     }
 
-    void testGetByHashWithLanguageTagIncludesFallback()
-    {
+    void testGetByHashWithLanguageTagIncludesFallback() {
         LocalDatabaseProvider provider;
 
         QTemporaryDir tempDir;
         QVERIFY(tempDir.isValid());
 
         // DAT with a game name that has a language tag
-        QString datContent =
-            "clrmamepro (\n"
-            "  name \"Sega - Mega Drive - Genesis\"\n"
-            "  version \"2026.01.01\"\n"
-            ")\n\n"
-            "game (\n"
-            "  name \"Test Game (Japan) (En)\"\n"
-            "  rom ( name \"test.bin\" size 131072 crc EEFF5566 )\n"
-            ")\n";
+        QString datContent = "clrmamepro (\n"
+                             "  name \"Sega - Mega Drive - Genesis\"\n"
+                             "  version \"2026.01.01\"\n"
+                             ")\n\n"
+                             "game (\n"
+                             "  name \"Test Game (Japan) (En)\"\n"
+                             "  rom ( name \"test.bin\" size 131072 crc EEFF5566 )\n"
+                             ")\n";
 
         QString datPath = tempDir.path() + "/Sega - Mega Drive - Genesis.dat";
         QFile file(datPath);

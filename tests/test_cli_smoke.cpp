@@ -35,7 +35,7 @@ private:
                 return QDir::cleanPath(path);
             }
         }
-        return {};
+        return { };
     }
 
     QString cliPath() const {
@@ -44,7 +44,7 @@ private:
             fi.setFile(QCoreApplication::applicationDirPath() + "/remus-cli");
         }
         if (!fi.exists()) {
-            return {};
+            return { };
         }
         return fi.absoluteFilePath();
     }
@@ -118,7 +118,7 @@ private:
                 return object;
             }
         }
-        return {};
+        return { };
     }
 
     static QString uniqueConnectionName(const QString &prefix) {
@@ -132,27 +132,27 @@ private slots:
     }
 
     void testHelp() {
-        runCli({"--help"});
+        runCli({ "--help" });
     }
 
     void testStatsNonInteractive() {
-        runCli({"--stats"});
+        runCli({ "--stats" });
     }
 
     void testCheckToolsExitsZeroAndListsAllTools() {
         QString output;
-        runCliCapture({"--check-tools"}, output, 0);
-        QVERIFY2(output.contains("chdman"),       "output should mention chdman");
+        runCliCapture({ "--check-tools" }, output, 0);
+        QVERIFY2(output.contains("chdman"), "output should mention chdman");
         QVERIFY2(output.contains("dolphin-tool"), "output should mention dolphin-tool");
-        QVERIFY2(output.contains("maxcso"),       "output should mention maxcso");
-        QVERIFY2(!output.contains("not found") || output.contains("Tool availability"),
-                 "header line should always appear");
+        QVERIFY2(output.contains("maxcso"), "output should mention maxcso");
+        QVERIFY2(
+            !output.contains("not found") || output.contains("Tool availability"), "header line should always appear");
     }
 
     void testExportDryRun() {
         QTemporaryDir dir;
         QString outPath = dir.filePath("export.csv");
-        runCli({"--export", "csv", "--export-path", outPath, "--dry-run-all"});
+        runCli({ "--export", "csv", "--export-path", outPath, "--dry-run-all" });
     }
 
     void testArchiveDryRun() {
@@ -162,7 +162,7 @@ private slots:
         QVERIFY(f.open(QIODevice::WriteOnly));
         QVERIFY(f.write("PK\x03\x04") == 4); // minimal signature
         f.close();
-        runCli({"--extract-archive", archive, "--dry-run-all"});
+        runCli({ "--extract-archive", archive, "--dry-run-all" });
     }
 
     void testConvertChdDryRun() {
@@ -175,7 +175,7 @@ private slots:
         QVERIFY(f.open(QIODevice::WriteOnly));
         QVERIFY(f.write("REM dummy cue\n") == 14);
         f.close();
-        runCli({"--convert-chd", cue, "--dry-run-all"});
+        runCli({ "--convert-chd", cue, "--dry-run-all" });
     }
 
     void testConvertCsoDryRun() {
@@ -188,7 +188,7 @@ private slots:
         QVERIFY(f.open(QIODevice::WriteOnly));
         QVERIFY(f.write("dummy iso") == 9);
         f.close();
-        runCli({"--convert-cso", iso, "--dry-run-all"});
+        runCli({ "--convert-cso", iso, "--dry-run-all" });
     }
 
     void testExtractCsoDryRun() {
@@ -201,24 +201,24 @@ private slots:
         QVERIFY(f.open(QIODevice::WriteOnly));
         QVERIFY(f.write("dummy cso") == 9);
         f.close();
-        runCli({"--cso-extract", cso, "--dry-run-all"});
+        runCli({ "--cso-extract", cso, "--dry-run-all" });
     }
 
     void testOrganizeDryRun() {
         QTemporaryDir dir;
-        runCli({"--organize", dir.path(), "--dry-run-all"});
+        runCli({ "--organize", dir.path(), "--dry-run-all" });
     }
 
     void testPatchCreateDryRun() {
         QTemporaryDir dir;
         QString original = dir.filePath("orig.bin");
         QString modified = dir.filePath("mod.bin");
-        runCli({"--patch-create", modified, "--patch-original", original, "--patch-format", "bps", "--dry-run-all"});
+        runCli({ "--patch-create", modified, "--patch-original", original, "--patch-format", "bps", "--dry-run-all" });
     }
 
     void testScanEmptyDir() {
         QTemporaryDir dir;
-        runCli({"--scan", dir.path()});
+        runCli({ "--scan", dir.path() });
     }
 
     void testVerifyUsesNormalizedDatSystemName() {
@@ -249,15 +249,14 @@ private slots:
             out << ")\n";
         }
 
-        runCli({"--db", dbPath, "--scan", dir.path(), "--hash"});
+        runCli({ "--db", dbPath, "--scan", dir.path(), "--hash" });
 
         QString output;
-        runCliCapture({"--db", dbPath, "--verify", datPath}, output);
+        runCliCapture({ "--db", dbPath, "--verify", datPath }, output);
 
-        QVERIFY2(output.contains("System: \"Nintendo DS\""),
-                 qPrintable(QStringLiteral("Captured output:\n%1").arg(output)));
-        QVERIFY2(output.contains("Total files: 1"),
-                 qPrintable(QStringLiteral("Captured output:\n%1").arg(output)));
+        QVERIFY2(
+            output.contains("System: \"Nintendo DS\""), qPrintable(QStringLiteral("Captured output:\n%1").arg(output)));
+        QVERIFY2(output.contains("Total files: 1"), qPrintable(QStringLiteral("Captured output:\n%1").arg(output)));
     }
 
     void testBuildCompendiumCreatesDatabaseAndReport() {
@@ -287,7 +286,7 @@ private slots:
             QJsonObject manifestObject;
             manifestObject.insert("build_id", "test-build");
             manifestObject.insert("schema_version", 1);
-            manifestObject.insert("sources", QJsonArray{sourceObject});
+            manifestObject.insert("sources", QJsonArray { sourceObject });
 
             const QByteArray manifestJson = QJsonDocument(manifestObject).toJson(QJsonDocument::Indented);
             QVERIFY(manifestFile.write(manifestJson) == manifestJson.size());
@@ -297,7 +296,9 @@ private slots:
         const QString reportPath = dir.filePath("remus_compendium_test.report.json");
 
         QString output;
-        runCliCapture({"--build-compendium", "--compendium-manifest", manifestPath, "--compendium-output", outputDbPath}, output);
+        runCliCapture(
+            { "--build-compendium", "--compendium-manifest", manifestPath, "--compendium-output", outputDbPath },
+            output);
 
         QVERIFY2(QFile::exists(outputDbPath), qPrintable(output));
         QVERIFY2(QFile::exists(reportPath), qPrintable(output));
@@ -318,15 +319,16 @@ private slots:
         QVERIFY(reportDoc.object().value("resolved_fields").toInt() > 0);
         QCOMPARE(reportDoc.object().value("unresolved_conflicts").toInt(), 0);
 
-        const QString connectionName = QStringLiteral("compendium_smoke_%1")
-            .arg(QString::number(QDateTime::currentMSecsSinceEpoch()));
+        const QString connectionName
+            = QStringLiteral("compendium_smoke_%1").arg(QString::number(QDateTime::currentMSecsSinceEpoch()));
         {
             QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE", connectionName);
             db.setDatabaseName(outputDbPath);
             QVERIFY2(db.open(), qPrintable(db.lastError().text()));
 
             QSqlQuery countsQuery(db);
-            QVERIFY2(countsQuery.exec("SELECT COUNT(*) FROM compendium_builds"), qPrintable(countsQuery.lastError().text()));
+            QVERIFY2(
+                countsQuery.exec("SELECT COUNT(*) FROM compendium_builds"), qPrintable(countsQuery.lastError().text()));
             QVERIFY(countsQuery.next());
             QCOMPARE(countsQuery.value(0).toInt(), 1);
 
@@ -334,7 +336,8 @@ private slots:
             QVERIFY(countsQuery.next());
             QVERIFY(countsQuery.value(0).toInt() >= 1);
 
-            QVERIFY2(countsQuery.exec("SELECT COUNT(*) FROM source_snapshots"), qPrintable(countsQuery.lastError().text()));
+            QVERIFY2(
+                countsQuery.exec("SELECT COUNT(*) FROM source_snapshots"), qPrintable(countsQuery.lastError().text()));
             QVERIFY(countsQuery.next());
             QVERIFY(countsQuery.value(0).toInt() >= 1);
 
@@ -347,7 +350,8 @@ private slots:
             QVERIFY(countsQuery.next());
             QVERIFY(countsQuery.value(0).toInt() > 0);
 
-            QVERIFY2(countsQuery.exec("SELECT COUNT(*) FROM game_signatures"), qPrintable(countsQuery.lastError().text()));
+            QVERIFY2(
+                countsQuery.exec("SELECT COUNT(*) FROM game_signatures"), qPrintable(countsQuery.lastError().text()));
             QVERIFY(countsQuery.next());
             QVERIFY(countsQuery.value(0).toInt() > 0);
 
@@ -356,7 +360,8 @@ private slots:
             QVERIFY(countsQuery.value(0).toInt() > 0);
 
             QSqlQuery sourceQuery(db);
-            QVERIFY2(sourceQuery.exec("SELECT source_id, display_name, enabled, priority FROM sources"), qPrintable(sourceQuery.lastError().text()));
+            QVERIFY2(sourceQuery.exec("SELECT source_id, display_name, enabled, priority FROM sources"),
+                qPrintable(sourceQuery.lastError().text()));
             QVERIFY(sourceQuery.next());
             QCOMPARE(sourceQuery.value(0).toString(), QString("test-source"));
             QCOMPARE(sourceQuery.value(1).toString(), QString("Test Source"));
@@ -381,7 +386,8 @@ private slots:
 
             QSqlQuery query(db);
             QVERIFY2(query.exec("CREATE TABLE sentinel (value TEXT NOT NULL)"), qPrintable(query.lastError().text()));
-            QVERIFY2(query.exec("INSERT INTO sentinel (value) VALUES ('keep-me')"), qPrintable(query.lastError().text()));
+            QVERIFY2(
+                query.exec("INSERT INTO sentinel (value) VALUES ('keep-me')"), qPrintable(query.lastError().text()));
             db.close();
         }
         QSqlDatabase::removeDatabase(seedConnectionName);
@@ -412,15 +418,16 @@ private slots:
             QJsonObject manifestObject;
             manifestObject.insert("build_id", "test-build-failure");
             manifestObject.insert("schema_version", 1);
-            manifestObject.insert("sources", QJsonArray{badSourceA, badSourceB});
+            manifestObject.insert("sources", QJsonArray { badSourceA, badSourceB });
 
             const QByteArray manifestJson = QJsonDocument(manifestObject).toJson(QJsonDocument::Indented);
             QVERIFY(manifestFile.write(manifestJson) == manifestJson.size());
         }
 
         QString output;
-        runCliCapture({"--build-compendium", "--compendium-manifest", manifestPath, "--compendium-output", existingDbPath},
-                      output, 1);
+        runCliCapture(
+            { "--build-compendium", "--compendium-manifest", manifestPath, "--compendium-output", existingDbPath },
+            output, 1);
 
         QVERIFY2(QFile::exists(existingDbPath), qPrintable(output));
 
@@ -468,7 +475,7 @@ private slots:
             QJsonObject manifestObject;
             manifestObject.insert("build_id", "test-build-skip");
             manifestObject.insert("schema_version", 1);
-            manifestObject.insert("sources", QJsonArray{sourceObject});
+            manifestObject.insert("sources", QJsonArray { sourceObject });
 
             const QByteArray manifestJson = QJsonDocument(manifestObject).toJson(QJsonDocument::Indented);
             QVERIFY(manifestFile.write(manifestJson) == manifestJson.size());
@@ -478,21 +485,25 @@ private slots:
         writeManifest(true);
 
         QString firstOutput;
-        runCliCapture({"--build-compendium", "--compendium-manifest", manifestPath, "--compendium-output", outputDbPath},
-                      firstOutput);
+        runCliCapture(
+            { "--build-compendium", "--compendium-manifest", manifestPath, "--compendium-output", outputDbPath },
+            firstOutput);
         QVERIFY2(QFile::exists(outputDbPath), qPrintable(firstOutput));
         QVERIFY2(!firstOutput.contains("skipping rebuild", Qt::CaseInsensitive), qPrintable(firstOutput));
 
         QString secondOutput;
-        runCliCapture({"--build-compendium", "--compendium-manifest", manifestPath, "--compendium-output", outputDbPath},
-                      secondOutput);
-        QVERIFY2(secondOutput.contains("matches the requested manifest", Qt::CaseInsensitive), qPrintable(secondOutput));
+        runCliCapture(
+            { "--build-compendium", "--compendium-manifest", manifestPath, "--compendium-output", outputDbPath },
+            secondOutput);
+        QVERIFY2(
+            secondOutput.contains("matches the requested manifest", Qt::CaseInsensitive), qPrintable(secondOutput));
 
         writeManifest(false);
 
         QString thirdOutput;
-        runCliCapture({"--build-compendium", "--compendium-manifest", manifestPath, "--compendium-output", outputDbPath},
-                      thirdOutput);
+        runCliCapture(
+            { "--build-compendium", "--compendium-manifest", manifestPath, "--compendium-output", outputDbPath },
+            thirdOutput);
         QVERIFY2(!thirdOutput.contains("matches the requested manifest", Qt::CaseInsensitive), qPrintable(thirdOutput));
 
         const QString verifyConnectionName = uniqueConnectionName(QStringLiteral("compendium_skip_verify_"));
@@ -502,11 +513,14 @@ private slots:
             QVERIFY2(db.open(), qPrintable(db.lastError().text()));
 
             QSqlQuery query(db);
-            QVERIFY2(query.exec("SELECT enabled FROM sources WHERE source_id = 'test-source'"), qPrintable(query.lastError().text()));
+            QVERIFY2(query.exec("SELECT enabled FROM sources WHERE source_id = 'test-source'"),
+                qPrintable(query.lastError().text()));
             QVERIFY(query.next());
             QCOMPARE(query.value(0).toInt(), 0);
 
-            QVERIFY2(query.exec("SELECT source_manifest_json FROM compendium_builds WHERE build_id = 'test-build-skip'"), qPrintable(query.lastError().text()));
+            QVERIFY2(
+                query.exec("SELECT source_manifest_json FROM compendium_builds WHERE build_id = 'test-build-skip'"),
+                qPrintable(query.lastError().text()));
             QVERIFY(query.next());
             QVERIFY(query.value(0).toString().contains("\"enabled\":false"));
             db.close();
@@ -519,7 +533,7 @@ private slots:
         QVERIFY2(!catalog.isEmpty(), "Fixture test_mod_catalog.json not found");
 
         QJsonDocument doc;
-        runCliJson({"--mod-catalog", catalog, "--mod-systems", "--json"}, doc);
+        runCliJson({ "--mod-catalog", catalog, "--mod-systems", "--json" }, doc);
         QVERIFY(doc.isArray());
 
         const QJsonArray systems = doc.array();
@@ -543,7 +557,7 @@ private slots:
         QVERIFY2(!catalog.isEmpty(), "Fixture test_mod_catalog.json not found");
 
         QJsonDocument doc;
-        runCliJson({"--mod-catalog", catalog, "--mod-show", "test-mod-alpha", "--json"}, doc);
+        runCliJson({ "--mod-catalog", catalog, "--mod-show", "test-mod-alpha", "--json" }, doc);
         QVERIFY(doc.isObject());
 
         const QJsonObject mod = doc.object();
@@ -557,7 +571,7 @@ private slots:
         QVERIFY2(!catalog.isEmpty(), "Fixture test_mod_catalog.json not found");
 
         QJsonDocument doc;
-        runCliJson({"--mod-catalog", catalog, "--mod-system", "Super Nintendo", "--json"}, doc);
+        runCliJson({ "--mod-catalog", catalog, "--mod-system", "Super Nintendo", "--json" }, doc);
         QVERIFY(doc.isArray());
 
         const QJsonArray mods = doc.array();
@@ -571,7 +585,7 @@ private slots:
         QVERIFY2(!catalog.isEmpty(), "Fixture test_mod_catalog.json not found");
 
         QJsonDocument doc;
-        runCliJson({"--mod-catalog", catalog, "--mod-author", "Test", "--json"}, doc);
+        runCliJson({ "--mod-catalog", catalog, "--mod-author", "Test", "--json" }, doc);
         QVERIFY(doc.isArray());
 
         const QJsonArray mods = doc.array();
@@ -585,7 +599,7 @@ private slots:
         QVERIFY2(!catalog.isEmpty(), "Fixture test_mod_catalog.json not found");
 
         QJsonDocument doc;
-        runCliJson({"--mod-catalog", catalog, "--mod-type", "translation", "--mod-min-rating", "3.5", "--json"}, doc);
+        runCliJson({ "--mod-catalog", catalog, "--mod-type", "translation", "--mod-min-rating", "3.5", "--json" }, doc);
         QVERIFY(doc.isArray());
 
         const QJsonArray mods = doc.array();
@@ -598,7 +612,7 @@ private slots:
         const QString catalog = fixturePath("test_mod_catalog.json");
         QVERIFY2(!catalog.isEmpty(), "Fixture test_mod_catalog.json not found");
 
-        runCli({"--mod-catalog", catalog, "--mod-min-rating", "9.0"}, 1);
+        runCli({ "--mod-catalog", catalog, "--mod-min-rating", "9.0" }, 1);
     }
 
     void testModJsonSystemsOutput() {
@@ -606,7 +620,7 @@ private slots:
         QVERIFY2(!catalog.isEmpty(), "Fixture test_mod_catalog.json not found");
 
         QJsonDocument doc;
-        runCliJson({"--mod-catalog", catalog, "--mod-systems", "--json"}, doc);
+        runCliJson({ "--mod-catalog", catalog, "--mod-systems", "--json" }, doc);
         QVERIFY(doc.isArray());
         QVERIFY(doc.array().size() >= 2);
         QVERIFY(doc.array().first().toObject().contains("system"));
@@ -617,7 +631,8 @@ private slots:
         QVERIFY2(!catalog.isEmpty(), "Fixture test_mod_catalog.json not found");
 
         QJsonDocument doc;
-        runCliJson({"--mod-catalog", catalog, "--mod-system", "Super Nintendo", "--mod-sort", "downloads", "--json"}, doc);
+        runCliJson(
+            { "--mod-catalog", catalog, "--mod-system", "Super Nintendo", "--mod-sort", "downloads", "--json" }, doc);
         QVERIFY(doc.isArray());
 
         const QJsonArray mods = doc.array();
@@ -631,7 +646,7 @@ private slots:
         QVERIFY2(!catalog.isEmpty(), "Fixture test_mod_catalog.json not found");
 
         QJsonDocument doc;
-        runCliJson({"--mod-catalog", catalog, "--mod-format", "ips", "--mod-min-downloads", "800", "--json"}, doc);
+        runCliJson({ "--mod-catalog", catalog, "--mod-format", "ips", "--mod-min-downloads", "800", "--json" }, doc);
         QVERIFY(doc.isArray());
 
         const QJsonArray mods = doc.array();
@@ -645,7 +660,7 @@ private slots:
         QVERIFY2(!catalog.isEmpty(), "Fixture test_mod_catalog.json not found");
 
         QJsonDocument doc;
-        runCliJson({"--mod-catalog", catalog, "--mod-source-url", "beta", "--json"}, doc);
+        runCliJson({ "--mod-catalog", catalog, "--mod-source-url", "beta", "--json" }, doc);
         QVERIFY(doc.isArray());
 
         const QJsonArray mods = doc.array();
@@ -669,10 +684,11 @@ private slots:
         QVERIFY(rom.write(QByteArray(1024, '\0')) == 1024);
         rom.close();
 
-        runCli({"--db", dbPath, "--scan", dir.path()});
+        runCli({ "--db", dbPath, "--scan", dir.path() });
 
         QJsonDocument doc;
-        runCliJson({"--db", dbPath, "--mod-catalog", catalog, "--mod-list", "1", "--mod-no-system-fallback", "--json"}, doc);
+        runCliJson(
+            { "--db", dbPath, "--mod-catalog", catalog, "--mod-list", "1", "--mod-no-system-fallback", "--json" }, doc);
         QVERIFY(doc.isArray());
         QVERIFY(doc.array().isEmpty());
     }
@@ -704,8 +720,8 @@ private slots:
         QVERIFY(other.write("other") == 5);
         other.close();
 
-        runCli({"--db", dbPath, "--scan", libraryA});
-        runCli({"--db", dbPath, "--scan", libraryB, "--generate-m3u", "--m3u-dir", outputDir});
+        runCli({ "--db", dbPath, "--scan", libraryA });
+        runCli({ "--db", dbPath, "--scan", libraryB, "--generate-m3u", "--m3u-dir", outputDir });
 
         QVERIFY(QFile::exists(outputDir + "/Metal Gear Solid (USA).m3u"));
     }
@@ -741,8 +757,8 @@ private slots:
             out << "</datafile>\n";
         }
 
-        runCli({"--db", dbPath, "--scan", dir.path(), "--hash"});
-        runCli({"--db", dbPath, "--verify", datPath});
+        runCli({ "--db", dbPath, "--scan", dir.path(), "--hash" });
+        runCli({ "--db", dbPath, "--verify", datPath });
 
         Remus::Database db;
         QVERIFY(db.initialize(dbPath));
@@ -779,31 +795,31 @@ private slots:
             QJsonObject manifestObject;
             manifestObject.insert("build_id", "test-build-sidecar");
             manifestObject.insert("schema_version", 1);
-            manifestObject.insert("sources", QJsonArray{sourceObject});
+            manifestObject.insert("sources", QJsonArray { sourceObject });
 
             const QByteArray manifestJson = QJsonDocument(manifestObject).toJson(QJsonDocument::Indented);
             QVERIFY(manifestFile.write(manifestJson) == manifestJson.size());
         }
 
         const QString outputDbPath = dir.filePath("remus_compendium_sidecar.db");
-        const QString reportPath   = dir.filePath("remus_compendium_sidecar.report.json");
+        const QString reportPath = dir.filePath("remus_compendium_sidecar.report.json");
 
         // First build — must produce both DB and report.
-        runCli({"--build-compendium", "--compendium-manifest", manifestPath, "--compendium-output", outputDbPath});
+        runCli({ "--build-compendium", "--compendium-manifest", manifestPath, "--compendium-output", outputDbPath });
         QVERIFY2(QFile::exists(outputDbPath), "First build did not create the DB");
-        QVERIFY2(QFile::exists(reportPath),   "First build did not create the report");
+        QVERIFY2(QFile::exists(reportPath), "First build did not create the report");
 
         // Delete only the report sidecar.
         QVERIFY(QFile::remove(reportPath));
 
         // Second build — must NOT skip (report missing), and must regenerate the report.
         QString secondOutput;
-        runCliCapture({"--build-compendium", "--compendium-manifest", manifestPath, "--compendium-output", outputDbPath},
-                      secondOutput);
+        runCliCapture(
+            { "--build-compendium", "--compendium-manifest", manifestPath, "--compendium-output", outputDbPath },
+            secondOutput);
         QVERIFY2(!secondOutput.contains("matches the requested manifest", Qt::CaseInsensitive),
-                 qPrintable(QStringLiteral("Expected rebuild but got skip: %1").arg(secondOutput)));
-        QVERIFY2(QFile::exists(reportPath),
-                 qPrintable(QStringLiteral("Report not regenerated: %1").arg(secondOutput)));
+            qPrintable(QStringLiteral("Expected rebuild but got skip: %1").arg(secondOutput)));
+        QVERIFY2(QFile::exists(reportPath), qPrintable(QStringLiteral("Report not regenerated: %1").arg(secondOutput)));
     }
 
     void testBuildCompendiumRejectsInvalidSourceType() {
@@ -816,19 +832,19 @@ private slots:
             QVERIFY(manifestFile.open(QIODevice::WriteOnly | QIODevice::Text));
 
             QJsonObject sourceObject;
-            sourceObject.insert("source_id",      "bad-source");
-            sourceObject.insert("display_name",   "Bad Source");
-            sourceObject.insert("source_type",    "csv");  // not in the allowed list
-            sourceObject.insert("snapshot_id",    "snapshot-001");
+            sourceObject.insert("source_id", "bad-source");
+            sourceObject.insert("display_name", "Bad Source");
+            sourceObject.insert("source_type", "csv"); // not in the allowed list
+            sourceObject.insert("snapshot_id", "snapshot-001");
             sourceObject.insert("snapshot_label", "Snapshot 001");
-            sourceObject.insert("path",           "/nonexistent/path.csv");
-            sourceObject.insert("enabled",        true);
-            sourceObject.insert("priority",       5);
+            sourceObject.insert("path", "/nonexistent/path.csv");
+            sourceObject.insert("enabled", true);
+            sourceObject.insert("priority", 5);
 
             QJsonObject manifestObject;
-            manifestObject.insert("build_id",       "test-invalid-type");
+            manifestObject.insert("build_id", "test-invalid-type");
             manifestObject.insert("schema_version", 1);
-            manifestObject.insert("sources",        QJsonArray{sourceObject});
+            manifestObject.insert("sources", QJsonArray { sourceObject });
 
             const QByteArray manifestJson = QJsonDocument(manifestObject).toJson(QJsonDocument::Indented);
             QVERIFY(manifestFile.write(manifestJson) == manifestJson.size());
@@ -837,50 +853,12 @@ private slots:
         const QString outputDbPath = dir.filePath("remus_compendium_invalid.db");
 
         // Parser must reject the unrecognised source_type before any DB is created.
-        runCli({"--build-compendium", "--compendium-manifest", manifestPath, "--compendium-output", outputDbPath}, 1);
+        runCli({ "--build-compendium", "--compendium-manifest", manifestPath, "--compendium-output", outputDbPath }, 1);
         QVERIFY2(!QFile::exists(outputDbPath), "DB should not be created when source_type is invalid");
     }
 
     // X1: passing a directory to --export-path must create a file inside it
-    void testExportPathDirectoryProducesFileInsideDirectory()
-    {
-        QTemporaryDir dir;
-        QVERIFY(dir.isValid());
-
-        const QString dbPath  = dir.filePath("test.db");
-        const QString romDir  = dir.filePath("roms");
-        QVERIFY(QDir().mkpath(romDir));
-        {
-            QFile f(romDir + "/TestGame (USA).nes");
-            QVERIFY(f.open(QIODevice::WriteOnly));
-            f.write("NESDATA");
-        }
-
-        runCli({"--db", dbPath, "--scan", romDir});
-
-        // Insert a game and a match directly so the exporter has something to write.
-        {
-            Remus::Database db;
-            QVERIFY(db.initialize(dbPath));
-            const QList<Remus::FileRecord> files = db.getExistingFiles();
-            QVERIFY(!files.isEmpty());
-            const int sysId  = db.getSystemId("NES");
-            const int gameId = db.insertGame("TestGame", sysId, "USA");
-            QVERIFY(gameId > 0);
-            QVERIFY(db.insertMatch(files.first().id, gameId, 100.0f, "test"));
-        }
-
-        QTemporaryDir exportDir;
-        QVERIFY(exportDir.isValid());
-        runCli({"--db", dbPath, "--export", "csv", "--export-path", exportDir.path()});
-
-        const QStringList created = QDir(exportDir.path()).entryList(QDir::Files);
-        QVERIFY2(!created.isEmpty(),
-                 "Expected a file to be created inside the export directory");
-    }
-
-    void testEsExportIncludesPublisherAndReleasedate()
-    {
+    void testExportPathDirectoryProducesFileInsideDirectory() {
         QTemporaryDir dir;
         QVERIFY(dir.isValid());
 
@@ -893,34 +871,66 @@ private slots:
             f.write("NESDATA");
         }
 
-        runCli({"--db", dbPath, "--scan", romDir});
+        runCli({ "--db", dbPath, "--scan", romDir });
+
+        // Insert a game and a match directly so the exporter has something to write.
+        {
+            Remus::Database db;
+            QVERIFY(db.initialize(dbPath));
+            const QList<Remus::FileRecord> files = db.getExistingFiles();
+            QVERIFY(!files.isEmpty());
+            const int sysId = db.getSystemId("NES");
+            const int gameId = db.insertGame("TestGame", sysId, "USA");
+            QVERIFY(gameId > 0);
+            QVERIFY(db.insertMatch(files.first().id, gameId, 100.0f, "test"));
+        }
+
+        QTemporaryDir exportDir;
+        QVERIFY(exportDir.isValid());
+        runCli({ "--db", dbPath, "--export", "csv", "--export-path", exportDir.path() });
+
+        const QStringList created = QDir(exportDir.path()).entryList(QDir::Files);
+        QVERIFY2(!created.isEmpty(), "Expected a file to be created inside the export directory");
+    }
+
+    void testEsExportIncludesPublisherAndReleasedate() {
+        QTemporaryDir dir;
+        QVERIFY(dir.isValid());
+
+        const QString dbPath = dir.filePath("test.db");
+        const QString romDir = dir.filePath("roms");
+        QVERIFY(QDir().mkpath(romDir));
+        {
+            QFile f(romDir + "/TestGame (USA).nes");
+            QVERIFY(f.open(QIODevice::WriteOnly));
+            f.write("NESDATA");
+        }
+
+        runCli({ "--db", dbPath, "--scan", romDir });
 
         {
             Remus::Database db;
             QVERIFY(db.initialize(dbPath));
             const QList<Remus::FileRecord> files = db.getExistingFiles();
             QVERIFY(!files.isEmpty());
-            const int sysId  = db.getSystemId("NES");
-            const int gameId = db.insertGame("TestGame", sysId, "USA",
-                                              "Acme Corp", QString(), "2005-04-26");
+            const int sysId = db.getSystemId("NES");
+            const int gameId = db.insertGame("TestGame", sysId, "USA", "Acme Corp", QString(), "2005-04-26");
             QVERIFY(gameId > 0);
             QVERIFY(db.insertMatch(files.first().id, gameId, 100.0f, "test"));
         }
 
         const QString outFile = dir.filePath("gamelist.xml");
-        runCli({"--db", dbPath, "--export", "emustation", "--export-path", outFile});
+        runCli({ "--db", dbPath, "--export", "emustation", "--export-path", outFile });
 
         QFile f(outFile);
         QVERIFY(f.open(QIODevice::ReadOnly));
         const QString xml = QString::fromUtf8(f.readAll());
-        QVERIFY2(xml.contains("<publisher>Acme Corp</publisher>"),
-                 "ES export should include <publisher>");
+        QVERIFY2(xml.contains("<publisher>Acme Corp</publisher>"), "ES export should include <publisher>");
         QVERIFY2(xml.contains("<releasedate>20050426T000000</releasedate>"),
-                 "ES export should include <releasedate> in YYYYMMDDTXXXXXX format");
+            "ES export should include <releasedate> in YYYYMMDDTXXXXXX format");
     }
 
-    void testIngestSource_extractionFailure_noOrphanRows()
-    {
+    void testIngestSource_extractionFailure_noOrphanRows() {
         QTemporaryDir dir;
         QVERIFY(dir.isValid());
 
@@ -933,28 +943,26 @@ private slots:
             QFile manifestFile(manifestPath);
             QVERIFY(manifestFile.open(QIODevice::WriteOnly | QIODevice::Text));
             QJsonObject sourceObject;
-            sourceObject.insert("source_id",      "seed-source");
-            sourceObject.insert("display_name",   "Seed Source");
-            sourceObject.insert("source_type",    "dat");
-            sourceObject.insert("snapshot_id",    "snapshot-001");
+            sourceObject.insert("source_id", "seed-source");
+            sourceObject.insert("display_name", "Seed Source");
+            sourceObject.insert("source_type", "dat");
+            sourceObject.insert("snapshot_id", "snapshot-001");
             sourceObject.insert("snapshot_label", "Snapshot 001");
-            sourceObject.insert("snapshot_ref",   "seed-ref");
-            sourceObject.insert("path",           sourcePath);
+            sourceObject.insert("snapshot_ref", "seed-ref");
+            sourceObject.insert("path", sourcePath);
             sourceObject.insert("checksum_sha256", "seed123");
-            sourceObject.insert("enabled",        true);
-            sourceObject.insert("priority",       10);
+            sourceObject.insert("enabled", true);
+            sourceObject.insert("priority", 10);
             QJsonObject manifestObject;
-            manifestObject.insert("build_id",       "seed-build");
+            manifestObject.insert("build_id", "seed-build");
             manifestObject.insert("schema_version", 1);
-            manifestObject.insert("sources",        QJsonArray{sourceObject});
+            manifestObject.insert("sources", QJsonArray { sourceObject });
             const QByteArray json = QJsonDocument(manifestObject).toJson(QJsonDocument::Indented);
             QVERIFY(manifestFile.write(json) == json.size());
         }
 
         const QString outputDbPath = dir.filePath("remus_compendium_test.db");
-        runCli({"--build-compendium",
-                "--compendium-manifest", manifestPath,
-                "--compendium-output",   outputDbPath});
+        runCli({ "--build-compendium", "--compendium-manifest", manifestPath, "--compendium-output", outputDbPath });
         QVERIFY2(QFile::exists(outputDbPath), "Seed --build-compendium step failed");
 
         // 2. Write a zero-record DAT so DatExtractor produces no records.
@@ -962,16 +970,13 @@ private slots:
         {
             QFile datFile(emptyDatPath);
             QVERIFY(datFile.open(QIODevice::WriteOnly | QIODevice::Text));
-            const QByteArray content =
-                QByteArrayLiteral("<?xml version=\"1.0\"?><datafile></datafile>");
+            const QByteArray content = QByteArrayLiteral("<?xml version=\"1.0\"?><datafile></datafile>");
             QVERIFY(datFile.write(content) == content.size());
         }
 
         // 3. Attempt ingest — must fail (no records extracted).
         const QString sourceId = QStringLiteral("test-ingest-rollback");
-        runCli({"--ingest-source",     emptyDatPath,
-                "--compendium-output", outputDbPath,
-                "--source-id",         sourceId}, 1);
+        runCli({ "--ingest-source", emptyDatPath, "--compendium-output", outputDbPath, "--source-id", sourceId }, 1);
 
         // 4. Verify the failed ingest left no orphan rows.
         const QString connName = uniqueConnectionName(QStringLiteral("ingest_rollback_"));
@@ -981,15 +986,13 @@ private slots:
             QVERIFY2(db.open(), qPrintable(db.lastError().text()));
 
             QSqlQuery q(db);
-            q.prepare(QStringLiteral(
-                "SELECT COUNT(*) FROM sources WHERE source_id = ?"));
+            q.prepare(QStringLiteral("SELECT COUNT(*) FROM sources WHERE source_id = ?"));
             q.addBindValue(sourceId);
             QVERIFY2(q.exec(), qPrintable(q.lastError().text()));
             QVERIFY(q.next());
             QCOMPARE(q.value(0).toInt(), 0);
 
-            q.prepare(QStringLiteral(
-                "SELECT COUNT(*) FROM source_snapshots WHERE source_id = ?"));
+            q.prepare(QStringLiteral("SELECT COUNT(*) FROM source_snapshots WHERE source_id = ?"));
             q.addBindValue(sourceId);
             QVERIFY2(q.exec(), qPrintable(q.lastError().text()));
             QVERIFY(q.next());
@@ -1002,29 +1005,26 @@ private slots:
 
     // ── --enrich-source tests ─────────────────────────────────────────────────
 
-    void testEnrichSourceFlagAppearsInHelp()
-    {
+    void testEnrichSourceFlagAppearsInHelp() {
         // --help must list --enrich-source so users can discover the option.
         QString output;
-        runCliCapture({"--help"}, output, 0);
+        runCliCapture({ "--help" }, output, 0);
         QVERIFY2(output.contains(QStringLiteral("enrich-source")),
-                 qPrintable(QStringLiteral("--help output did not mention --enrich-source:\n%1").arg(output)));
+            qPrintable(QStringLiteral("--help output did not mention --enrich-source:\n%1").arg(output)));
     }
 
-    void testEnrichSourceHelpMentionsAllSourceKeys()
-    {
+    void testEnrichSourceHelpMentionsAllSourceKeys() {
         // --help should document every known source key so users know what to pass.
         QString output;
-        runCliCapture({"--help"}, output, 0);
+        runCliCapture({ "--help" }, output, 0);
         const QStringList keys = knownEnrichmentSourceKeys();
         for (const QString &key : keys) {
             QVERIFY2(output.contains(key),
-                     qPrintable(QStringLiteral("--help output is missing source key '%1':\n%2").arg(key, output)));
+                qPrintable(QStringLiteral("--help output is missing source key '%1':\n%2").arg(key, output)));
         }
     }
 
-    void testEnrichSourceUnknownKeyEmitsWarning()
-    {
+    void testEnrichSourceUnknownKeyEmitsWarning() {
         // --enrich-compendium on a nonexistent DB always returns exit 1, but
         // the warning about the unknown key must appear before the DB check.
         QTemporaryDir dir;
@@ -1032,15 +1032,12 @@ private slots:
         const QString missingDb = dir.filePath("nonexistent.db");
 
         QString output;
-        runCliCapture({
-            "--enrich-compendium",
-            "--compendium-output", missingDb,
-            "--enrich-source", "totally-unknown-source-key"
-        }, output, 1);
+        runCliCapture({ "--enrich-compendium", "--compendium-output", missingDb, "--enrich-source",
+                          "totally-unknown-source-key" },
+            output, 1);
 
         QVERIFY2(output.contains(QStringLiteral("totally-unknown-source-key")),
-                 qPrintable(QStringLiteral(
-                     "Expected a warning mentioning the unknown key, got:\n%1").arg(output)));
+            qPrintable(QStringLiteral("Expected a warning mentioning the unknown key, got:\n%1").arg(output)));
     }
 };
 

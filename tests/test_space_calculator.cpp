@@ -18,8 +18,7 @@ private slots:
     void formatHelpers();
 };
 
-static qint64 writeFileWithSize(const QString &path, int bytes)
-{
+static qint64 writeFileWithSize(const QString &path, int bytes) {
     QFile file(path);
     if (!file.open(QIODevice::WriteOnly)) {
         return 0;
@@ -32,8 +31,7 @@ static qint64 writeFileWithSize(const QString &path, int bytes)
     return file.size();
 }
 
-void SpaceCalculatorTest::cueAggregatesBinTracks()
-{
+void SpaceCalculatorTest::cueAggregatesBinTracks() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
@@ -55,8 +53,7 @@ void SpaceCalculatorTest::cueAggregatesBinTracks()
     QVERIFY(SpaceCalculator::isConvertible(cuePath));
 }
 
-void SpaceCalculatorTest::gdiSumsTrackSizes()
-{
+void SpaceCalculatorTest::gdiSumsTrackSizes() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
@@ -82,8 +79,7 @@ void SpaceCalculatorTest::gdiSumsTrackSizes()
     QVERIFY(stats.savedBytes >= 0);
 }
 
-void SpaceCalculatorTest::actualStatsUseConvertedSize()
-{
+void SpaceCalculatorTest::actualStatsUseConvertedSize() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
@@ -104,8 +100,7 @@ void SpaceCalculatorTest::actualStatsUseConvertedSize()
     QVERIFY(stats.compressionRatio > 0.0);
 }
 
-void SpaceCalculatorTest::scanDirectoryAggregatesFormats()
-{
+void SpaceCalculatorTest::scanDirectoryAggregatesFormats() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
@@ -124,9 +119,9 @@ void SpaceCalculatorTest::scanDirectoryAggregatesFormats()
 
     ConversionSummary summary = calc.scanDirectory(dir.path(), false);
 
-    QCOMPARE(summary.totalFiles, 3);           // ISO, CHD, CUE (BIN skipped)
-    QCOMPARE(summary.convertedFiles, 1);       // CHD
-    QCOMPARE(summary.convertibleFiles, 2);     // ISO + CUE
+    QCOMPARE(summary.totalFiles, 3); // ISO, CHD, CUE (BIN skipped)
+    QCOMPARE(summary.convertedFiles, 1); // CHD
+    QCOMPARE(summary.convertibleFiles, 2); // ISO + CUE
     QVERIFY(summary.totalOriginalSize >= 5000);
     QVERIFY(summary.totalConvertedSize > 0);
     QVERIFY(summary.totalSavedBytes >= 0);
@@ -134,8 +129,7 @@ void SpaceCalculatorTest::scanDirectoryAggregatesFormats()
     QVERIFY(!progressSpy.isEmpty());
 }
 
-void SpaceCalculatorTest::formatHelpers()
-{
+void SpaceCalculatorTest::formatHelpers() {
     QCOMPARE(SpaceCalculator::formatBytes(500), QString("500 bytes"));
     QCOMPARE(SpaceCalculator::formatBytes(2048), QString("2.00 KB"));
     QCOMPARE(SpaceCalculator::formatBytes(5 * 1024 * 1024), QString("5.00 MB"));

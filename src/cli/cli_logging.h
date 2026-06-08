@@ -14,7 +14,7 @@
 #undef qInfo
 #undef qWarning
 #undef qCritical
-#define qDebug()    qCDebug(logCli)
-#define qInfo()     qCInfo(logCli)
-#define qWarning()  qCWarning(logCli)
+#define qDebug() qCDebug(logCli)
+#define qInfo() qCInfo(logCli)
+#define qWarning() qCWarning(logCli)
 #define qCritical() qCCritical(logCli)

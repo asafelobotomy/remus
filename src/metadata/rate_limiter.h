@@ -9,7 +9,7 @@ namespace Remus {
 
 /**
  * @brief Rate limiter for API requests
- * 
+ *
  * Ensures minimum interval between requests to respect API limits.
  */
 class RateLimiter : public QObject {
@@ -41,7 +41,7 @@ public:
 
 private:
     QDateTime m_lastRequest;
-    int m_intervalMs = 1000;  // Default: 1 second
+    int m_intervalMs = 1000; // Default: 1 second
     mutable QMutex m_mutex;
 };
 

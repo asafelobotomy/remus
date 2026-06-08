@@ -82,15 +82,16 @@ public:
      */
     EnrichResult enrichCatalog(QList<ModEntry> &mods) const;
 
-    QString lastError() const { return m_lastError; }
+    QString lastError() const {
+        return m_lastError;
+    }
 
 private:
     QString m_username;
     QString m_apiKey;
     mutable QString m_lastError;
 
-    QByteArray makeApiRequest(const QString &endpoint,
-                              const QMap<QString, QString> &params) const;
+    QByteArray makeApiRequest(const QString &endpoint, const QMap<QString, QString> &params) const;
 };
 
 } // namespace Remus

@@ -7,25 +7,29 @@
 
 namespace Remus {
 
-QString selectBestMatchHash(const FileRecord &file)
-{
+QString selectBestMatchHash(const FileRecord &file) {
     if (Constants::Systems::SYSTEMS.contains(file.systemId)) {
         const Constants::Systems::SystemDef &systemDef = Constants::Systems::SYSTEMS[file.systemId];
         const QString preferred = systemDef.preferredHash.toLower();
 
-        if (preferred == "md5" && !file.md5.isEmpty()) return file.md5;
-        if (preferred == "sha1" && !file.sha1.isEmpty()) return file.sha1;
-        if (preferred == "crc32" && !file.crc32.isEmpty()) return file.crc32;
+        if (preferred == "md5" && !file.md5.isEmpty())
+            return file.md5;
+        if (preferred == "sha1" && !file.sha1.isEmpty())
+            return file.sha1;
+        if (preferred == "crc32" && !file.crc32.isEmpty())
+            return file.crc32;
     }
 
-    if (!file.crc32.isEmpty()) return file.crc32;
-    if (!file.sha1.isEmpty()) return file.sha1;
-    if (!file.md5.isEmpty()) return file.md5;
+    if (!file.crc32.isEmpty())
+        return file.crc32;
+    if (!file.sha1.isEmpty())
+        return file.sha1;
+    if (!file.md5.isEmpty())
+        return file.md5;
     return QString();
 }
 
-QString deriveMatchingDisplayName(const FileRecord &file)
-{
+QString deriveMatchingDisplayName(const FileRecord &file) {
     if (!file.baseTitle.isEmpty()) {
         return file.baseTitle;
     }
@@ -46,8 +50,9 @@ QString deriveMatchingDisplayName(const FileRecord &file)
             return containerBase;
         }
 
-        const QString entryBase = QFileInfo(file.archiveInternalPath.isEmpty() ? file.filename
-                                                                                : file.archiveInternalPath).completeBaseName();
+        const QString entryBase
+            = QFileInfo(file.archiveInternalPath.isEmpty() ? file.filename : file.archiveInternalPath)
+                  .completeBaseName();
         const QString patchedEntryBase = usePatchedBaseTitle(entryBase);
         if (!patchedEntryBase.isEmpty()) {
             return patchedEntryBase;

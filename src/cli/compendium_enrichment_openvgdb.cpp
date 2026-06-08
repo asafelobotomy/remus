@@ -17,7 +17,7 @@ struct OpenVGDBEntry {
     QString genre;
     QString developer;
     QString publisher;
-    int     releaseYear = 0;
+    int releaseYear = 0;
     QString releaseDate;
 };
 
@@ -25,12 +25,8 @@ struct OpenVGDBEntry {
 
 namespace CompendiumEnrichment {
 
-bool enrichFromOpenVGDB(QSqlDatabase &database,
-                        const QString &openvgdbPath,
-                        int &gamesEnriched,
-                        int &factsInserted,
-                        QString &error)
-{
+bool enrichFromOpenVGDB(
+    QSqlDatabase &database, const QString &openvgdbPath, int &gamesEnriched, int &factsInserted, QString &error) {
     gamesEnriched = 0;
     factsInserted = 0;
 
@@ -59,10 +55,10 @@ bool enrichFromOpenVGDB(QSqlDatabase &database,
         QSqlDatabase ovgdb = QSqlDatabase::database(connName);
 
         auto populateEntry = [](QSqlQuery &q, OpenVGDBEntry &e) {
-            e.description    = q.value(1).toString();
-            e.genre          = q.value(2).toString();
-            e.developer      = q.value(3).toString();
-            e.publisher      = q.value(4).toString();
+            e.description = q.value(1).toString();
+            e.genre = q.value(2).toString();
+            e.developer = q.value(3).toString();
+            e.publisher = q.value(4).toString();
             const QString dateStr = q.value(5).toString();
             if (dateStr.length() >= 4) {
                 bool ok = false;
@@ -77,19 +73,17 @@ bool enrichFromOpenVGDB(QSqlDatabase &database,
         // CRC32 index
         {
             QSqlQuery q(ovgdb);
-            if (!q.exec(QStringLiteral(
-                    "SELECT r.romHashCRC, re.releaseDescription, re.releaseGenre, "
-                    "re.releaseDeveloper, re.releasePublisher, re.releaseDate "
-                    "FROM ROMs r JOIN RELEASES re ON r.romID = re.romID "
-                    "WHERE r.romHashCRC IS NOT NULL AND r.romHashCRC != ''"))) {
+            if (!q.exec(QStringLiteral("SELECT r.romHashCRC, re.releaseDescription, re.releaseGenre, "
+                                       "re.releaseDeveloper, re.releasePublisher, re.releaseDate "
+                                       "FROM ROMs r JOIN RELEASES re ON r.romID = re.romID "
+                                       "WHERE r.romHashCRC IS NOT NULL AND r.romHashCRC != ''"))) {
                 error = QStringLiteral("OpenVGDB CRC32 query: %1").arg(q.lastError().text());
                 QSqlDatabase::removeDatabase(connName);
                 return false;
             }
             while (q.next()) {
                 // Right-justify to 8 chars in case leading zeros were trimmed
-                const QString crc = q.value(0).toString().toUpper()
-                                        .rightJustified(8, QLatin1Char('0'));
+                const QString crc = q.value(0).toString().toUpper().rightJustified(8, QLatin1Char('0'));
                 if (!crcIndex.contains(crc))
                     populateEntry(q, crcIndex[crc]);
             }
@@ -99,11 +93,10 @@ bool enrichFromOpenVGDB(QSqlDatabase &database,
         // where the compendium stores md5 signatures rather than crc32
         {
             QSqlQuery q(ovgdb);
-            if (!q.exec(QStringLiteral(
-                    "SELECT r.romHashMD5, re.releaseDescription, re.releaseGenre, "
-                    "re.releaseDeveloper, re.releasePublisher, re.releaseDate "
-                    "FROM ROMs r JOIN RELEASES re ON r.romID = re.romID "
-                    "WHERE r.romHashMD5 IS NOT NULL AND r.romHashMD5 != ''"))) {
+            if (!q.exec(QStringLiteral("SELECT r.romHashMD5, re.releaseDescription, re.releaseGenre, "
+                                       "re.releaseDeveloper, re.releasePublisher, re.releaseDate "
+                                       "FROM ROMs r JOIN RELEASES re ON r.romID = re.romID "
+                                       "WHERE r.romHashMD5 IS NOT NULL AND r.romHashMD5 != ''"))) {
                 error = QStringLiteral("OpenVGDB MD5 query: %1").arg(q.lastError().text());
                 QSqlDatabase::removeDatabase(connName);
                 return false;
@@ -120,30 +113,31 @@ bool enrichFromOpenVGDB(QSqlDatabase &database,
         // Only loads entries that carry a description so the pass is worthwhile.
         {
             QSqlQuery q(ovgdb);
-            if (!q.exec(QStringLiteral(
-                    "SELECT s.systemShortName, re.releaseTitleName, "
-                    "re.releaseDescription, re.releaseGenre, "
-                    "re.releaseDeveloper, re.releasePublisher, re.releaseDate "
-                    "FROM RELEASES re "
-                    "JOIN ROMs r ON r.romID = re.romID "
-                    "JOIN SYSTEMS s ON s.systemID = r.systemID "
-                    "WHERE re.releaseTitleName IS NOT NULL AND re.releaseTitleName != '' "
-                    "  AND re.releaseDescription IS NOT NULL AND re.releaseDescription != ''"))) {
+            if (!q.exec(QStringLiteral("SELECT s.systemShortName, re.releaseTitleName, "
+                                       "re.releaseDescription, re.releaseGenre, "
+                                       "re.releaseDeveloper, re.releasePublisher, re.releaseDate "
+                                       "FROM RELEASES re "
+                                       "JOIN ROMs r ON r.romID = re.romID "
+                                       "JOIN SYSTEMS s ON s.systemID = r.systemID "
+                                       "WHERE re.releaseTitleName IS NOT NULL AND re.releaseTitleName != '' "
+                                       "  AND re.releaseDescription IS NOT NULL AND re.releaseDescription != ''"))) {
                 error = QStringLiteral("OpenVGDB title query: %1").arg(q.lastError().text());
                 QSqlDatabase::removeDatabase(connName);
                 return false;
             }
             while (q.next()) {
                 const QString systemShort = q.value(0).toString();
-                const QString normTitle   = normalizeMetadataTitle(q.value(1).toString());
-                if (normTitle.isEmpty()) continue;
+                const QString normTitle = normalizeMetadataTitle(q.value(1).toString());
+                if (normTitle.isEmpty())
+                    continue;
                 const QString key = systemShort + QLatin1Char(':') + normTitle;
-                if (titleIndex.contains(key)) continue;
-                OpenVGDBEntry &e  = titleIndex[key];
-                e.description     = q.value(2).toString();
-                e.genre           = q.value(3).toString();
-                e.developer       = q.value(4).toString();
-                e.publisher       = q.value(5).toString();
+                if (titleIndex.contains(key))
+                    continue;
+                OpenVGDBEntry &e = titleIndex[key];
+                e.description = q.value(2).toString();
+                e.genre = q.value(3).toString();
+                e.developer = q.value(4).toString();
+                e.publisher = q.value(5).toString();
                 const QString dateStr = q.value(6).toString();
                 if (dateStr.length() >= 4) {
                     bool ok = false;
@@ -167,9 +161,11 @@ bool enrichFromOpenVGDB(QSqlDatabase &database,
     {
         QHash<QString, int> descFreq;
         for (const auto &e : std::as_const(crcIndex))
-            if (!e.description.isEmpty()) ++descFreq[e.description];
+            if (!e.description.isEmpty())
+                ++descFreq[e.description];
         for (const auto &e : std::as_const(md5Index))
-            if (!e.description.isEmpty()) ++descFreq[e.description];
+            if (!e.description.isEmpty())
+                ++descFreq[e.description];
         constexpr int kBoilerplateThreshold = 30;
         for (auto &e : crcIndex)
             if (!e.description.isEmpty() && descFreq.value(e.description) > kBoilerplateThreshold)
@@ -185,12 +181,11 @@ bool enrichFromOpenVGDB(QSqlDatabase &database,
     if (crcIndex.isEmpty() && md5Index.isEmpty() && titleIndex.isEmpty())
         return true;
 
-    const QString sourceId   = QStringLiteral("openvgdb");
+    const QString sourceId = QStringLiteral("openvgdb");
     const QString snapshotId = QStringLiteral("openvgdb-v29.0");
 
-    if (!upsertEnrichmentSource(
-            database,
-            SourceSpec{
+    if (!upsertEnrichmentSource(database,
+            SourceSpec {
                 sourceId,
                 QStringLiteral("OpenVGDB"),
                 QStringLiteral("openvgdb"),
@@ -199,7 +194,7 @@ bool enrichFromOpenVGDB(QSqlDatabase &database,
                 /*priority=*/25,
                 QStringLiteral("MIT"),
             },
-            SnapshotSpec{
+            SnapshotSpec {
                 snapshotId,
                 QStringLiteral("OpenVGDB v29.0"),
             },
@@ -210,8 +205,8 @@ bool enrichFromOpenVGDB(QSqlDatabase &database,
     QHash<QString, QString> gameIdByCrc;
     {
         QSqlQuery q(database);
-        if (!q.exec(QStringLiteral(
-                "SELECT game_id, UPPER(hash_value) FROM game_signatures WHERE hash_type = 'crc32'"))) {
+        if (!q.exec(
+                QStringLiteral("SELECT game_id, UPPER(hash_value) FROM game_signatures WHERE hash_type = 'crc32'"))) {
             error = QStringLiteral("Load CRC32 hashes: %1").arg(q.lastError().text());
             return false;
         }
@@ -223,8 +218,7 @@ bool enrichFromOpenVGDB(QSqlDatabase &database,
     QHash<QString, QString> gameIdByMd5;
     if (!md5Index.isEmpty()) {
         QSqlQuery q(database);
-        if (!q.exec(QStringLiteral(
-                "SELECT game_id, UPPER(hash_value) FROM game_signatures WHERE hash_type = 'md5'"))) {
+        if (!q.exec(QStringLiteral("SELECT game_id, UPPER(hash_value) FROM game_signatures WHERE hash_type = 'md5'"))) {
             error = QStringLiteral("Load MD5 hashes: %1").arg(q.lastError().text());
             return false;
         }
@@ -233,15 +227,14 @@ bool enrichFromOpenVGDB(QSqlDatabase &database,
     }
 
     QSqlQuery updateQuery(database);
-    updateQuery.prepare(QStringLiteral(
-        "UPDATE games SET "
-        "genre        = COALESCE(NULLIF(genre, ''), ?), "
-        "developer    = COALESCE(NULLIF(developer, ''), ?), "
-        "publisher    = COALESCE(NULLIF(publisher, ''), ?), "
-        "release_year = COALESCE(release_year, ?), "
-        "release_date = COALESCE(release_date, ?), "
-        "description  = COALESCE(NULLIF(description, ''), ?) "
-        "WHERE game_id = ?"));
+    updateQuery.prepare(QStringLiteral("UPDATE games SET "
+                                       "genre        = COALESCE(NULLIF(genre, ''), ?), "
+                                       "developer    = COALESCE(NULLIF(developer, ''), ?), "
+                                       "publisher    = COALESCE(NULLIF(publisher, ''), ?), "
+                                       "release_year = COALESCE(release_year, ?), "
+                                       "release_date = COALESCE(release_date, ?), "
+                                       "description  = COALESCE(NULLIF(description, ''), ?) "
+                                       "WHERE game_id = ?"));
 
     QSqlQuery factQuery(database);
     factQuery.prepare(QStringLiteral(
@@ -250,51 +243,37 @@ bool enrichFromOpenVGDB(QSqlDatabase &database,
         "VALUES (?, ?, ?, ?, ?, ?, ?, ?)"));
 
     QSqlQuery delQuery(database);
-    delQuery.prepare(QStringLiteral(
-        "DELETE FROM game_facts WHERE game_id = ? AND field_name = ? AND source_id = ?"));
+    delQuery.prepare(QStringLiteral("DELETE FROM game_facts WHERE game_id = ? AND field_name = ? AND source_id = ?"));
 
-    const FactInsertSpec factSpec{
+    const FactInsertSpec factSpec {
         sourceId,
         snapshotId,
         25,
         0.0,
     };
 
-    auto insertFact = [&](const QString &gameId,
-                          const QString &field,
-                          const QString &value,
-                          const QString &valueType,
-                          double confidence,
-                          const QString &contextPrefix) -> bool {
+    auto insertFact = [&](const QString &gameId, const QString &field, const QString &value, const QString &valueType,
+                          double confidence, const QString &contextPrefix) -> bool {
         FactInsertSpec scopedFactSpec = factSpec;
         scopedFactSpec.confidence = confidence;
         bool inserted = false;
-        if (!insertGameFact(delQuery,
-                            factQuery,
-                            scopedFactSpec,
-                            gameId,
-                            field,
-                            value,
-                            valueType,
-                            error,
-                            contextPrefix,
-                            &inserted))
+        if (!insertGameFact(
+                delQuery, factQuery, scopedFactSpec, gameId, field, value, valueType, error, contextPrefix, &inserted))
             return false;
-        if (inserted) ++factsInserted;
+        if (inserted)
+            ++factsInserted;
         return true;
     };
 
     auto hasData = [](const OpenVGDBEntry &e) {
-        return !e.description.isEmpty() || !e.genre.isEmpty()
-            || !e.developer.isEmpty() || !e.publisher.isEmpty() || e.releaseYear > 0;
+        return !e.description.isEmpty() || !e.genre.isEmpty() || !e.developer.isEmpty() || !e.publisher.isEmpty()
+            || e.releaseYear > 0;
     };
 
-    auto applyEntryToGame = [&](const QString &gameId,
-                                const OpenVGDBEntry &e,
-                                double confidence,
-                                const QString &contextPrefix,
-                                const QString &releaseYearType) -> bool {
-        if (!hasData(e)) return true;
+    auto applyEntryToGame = [&](const QString &gameId, const OpenVGDBEntry &e, double confidence,
+                                const QString &contextPrefix, const QString &releaseYearType) -> bool {
+        if (!hasData(e))
+            return true;
 
         updateQuery.bindValue(0, nullableText(e.genre));
         updateQuery.bindValue(1, nullableText(e.developer));
@@ -303,50 +282,44 @@ bool enrichFromOpenVGDB(QSqlDatabase &database,
         updateQuery.bindValue(4, nullableText(e.releaseDate));
         updateQuery.bindValue(5, nullableText(e.description));
         updateQuery.bindValue(6, gameId);
-        if (!execPrepared(updateQuery, error,
-                          QStringLiteral("Update game %1").arg(contextPrefix))) {
+        if (!execPrepared(updateQuery, error, QStringLiteral("Update game %1").arg(contextPrefix))) {
             return false;
         }
-        if (updateQuery.numRowsAffected() > 0) ++gamesEnriched;
+        if (updateQuery.numRowsAffected() > 0)
+            ++gamesEnriched;
 
-        if (!insertFact(gameId, QStringLiteral("genre"),
-                        e.genre, QStringLiteral("text"), confidence, contextPrefix)) return false;
-        if (!insertFact(gameId, QStringLiteral("developer"),
-                        e.developer, QStringLiteral("text"), confidence, contextPrefix)) return false;
-        if (!insertFact(gameId, QStringLiteral("publisher"),
-                        e.publisher, QStringLiteral("text"), confidence, contextPrefix)) return false;
-        if (!insertFact(gameId, QStringLiteral("description"),
-                        e.description, QStringLiteral("text"), confidence, contextPrefix)) return false;
+        if (!insertFact(gameId, QStringLiteral("genre"), e.genre, QStringLiteral("text"), confidence, contextPrefix))
+            return false;
+        if (!insertFact(
+                gameId, QStringLiteral("developer"), e.developer, QStringLiteral("text"), confidence, contextPrefix))
+            return false;
+        if (!insertFact(
+                gameId, QStringLiteral("publisher"), e.publisher, QStringLiteral("text"), confidence, contextPrefix))
+            return false;
+        if (!insertFact(gameId, QStringLiteral("description"), e.description, QStringLiteral("text"), confidence,
+                contextPrefix))
+            return false;
         if (!e.releaseDate.isEmpty()
-            && !insertFact(gameId,
-                           QStringLiteral("release_date"),
-                           e.releaseDate,
-                           QStringLiteral("text"),
-                           confidence,
-                           contextPrefix)) return false;
+            && !insertFact(gameId, QStringLiteral("release_date"), e.releaseDate, QStringLiteral("text"), confidence,
+                contextPrefix))
+            return false;
         if (e.releaseYear > 0
-            && !insertFact(gameId,
-                           QStringLiteral("release_year"),
-                           QString::number(e.releaseYear),
-                           releaseYearType,
-                           confidence,
-                           contextPrefix)) return false;
+            && !insertFact(gameId, QStringLiteral("release_year"), QString::number(e.releaseYear), releaseYearType,
+                confidence, contextPrefix))
+            return false;
         return true;
     };
 
     for (auto it = gameIdByCrc.cbegin(); it != gameIdByCrc.cend(); ++it) {
-        const QString &crc32  = it.key();
+        const QString &crc32 = it.key();
         const QString &gameId = it.value();
 
         auto entryIt = crcIndex.constFind(crc32);
-        if (entryIt == crcIndex.cend()) continue;
+        if (entryIt == crcIndex.cend())
+            continue;
         const OpenVGDBEntry &e = *entryIt;
 
-        if (!applyEntryToGame(gameId,
-                              e,
-                              0.80,
-                              QStringLiteral("openvgdb"),
-                              QStringLiteral("int"))) {
+        if (!applyEntryToGame(gameId, e, 0.80, QStringLiteral("openvgdb"), QStringLiteral("int"))) {
             return false;
         }
     }
@@ -355,18 +328,15 @@ bool enrichFromOpenVGDB(QSqlDatabase &database,
     // where the compendium stores md5 rather than crc32 signatures.
     // COALESCE and INSERT OR IGNORE prevent overwriting data already set by the CRC pass.
     for (auto it = gameIdByMd5.cbegin(); it != gameIdByMd5.cend(); ++it) {
-        const QString &md5    = it.key();
+        const QString &md5 = it.key();
         const QString &gameId = it.value();
 
         auto entryIt = md5Index.constFind(md5);
-        if (entryIt == md5Index.cend()) continue;
+        if (entryIt == md5Index.cend())
+            continue;
         const OpenVGDBEntry &e = *entryIt;
 
-        if (!applyEntryToGame(gameId,
-                              e,
-                              0.80,
-                              QStringLiteral("openvgdb MD5"),
-                              QStringLiteral("int"))) {
+        if (!applyEntryToGame(gameId, e, 0.80, QStringLiteral("openvgdb MD5"), QStringLiteral("int"))) {
             return false;
         }
     }
@@ -380,37 +350,32 @@ bool enrichFromOpenVGDB(QSqlDatabase &database,
         QHash<QString, QPair<QString, QString>> gamesForTitleMatch; // gameId → (title, internalName)
         {
             QSqlQuery q(database);
-            if (!q.exec(QStringLiteral(
-                    "SELECT g.game_id, g.canonical_title, sys.internal_name "
-                    "FROM games g "
-                    "JOIN systems sys ON sys.system_id = g.system_id "
-                    "WHERE g.description IS NULL OR g.description = '' "
-                    "   OR g.developer IS NULL OR g.developer = '' "
-                    "   OR g.publisher IS NULL OR g.publisher = '' "
-                    "   OR g.release_year IS NULL"))) {
+            if (!q.exec(QStringLiteral("SELECT g.game_id, g.canonical_title, sys.internal_name "
+                                       "FROM games g "
+                                       "JOIN systems sys ON sys.system_id = g.system_id "
+                                       "WHERE g.description IS NULL OR g.description = '' "
+                                       "   OR g.developer IS NULL OR g.developer = '' "
+                                       "   OR g.publisher IS NULL OR g.publisher = '' "
+                                       "   OR g.release_year IS NULL"))) {
                 error = QStringLiteral("Load games for title match: %1").arg(q.lastError().text());
                 return false;
             }
             while (q.next())
-                gamesForTitleMatch.insert(q.value(0).toString(),
-                                          {q.value(1).toString(), q.value(2).toString()});
+                gamesForTitleMatch.insert(q.value(0).toString(), { q.value(1).toString(), q.value(2).toString() });
         }
 
         for (auto it = gamesForTitleMatch.cbegin(); it != gamesForTitleMatch.cend(); ++it) {
-            const QString &gameId       = it.key();
-            const QString &title        = it.value().first;
+            const QString &gameId = it.key();
+            const QString &title = it.value().first;
             const QString &internalName = it.value().second;
 
             const QString key = internalName + QLatin1Char(':') + normalizeMetadataTitle(title);
             auto entryIt = titleIndex.constFind(key);
-            if (entryIt == titleIndex.cend()) continue;
+            if (entryIt == titleIndex.cend())
+                continue;
             const OpenVGDBEntry &e = *entryIt;
 
-            if (!applyEntryToGame(gameId,
-                                  e,
-                                  0.60,
-                                  QStringLiteral("openvgdb title"),
-                                  QStringLiteral("int"))) {
+            if (!applyEntryToGame(gameId, e, 0.60, QStringLiteral("openvgdb title"), QStringLiteral("int"))) {
                 return false;
             }
         }

@@ -6,14 +6,12 @@
 using namespace Remus;
 
 namespace {
-bool writeAll(QFile &file, const QByteArray &data)
-{
+bool writeAll(QFile &file, const QByteArray &data) {
     return file.write(data) == data.size();
 }
 }
 
-class FakeChdConverter : public CHDConverter
-{
+class FakeChdConverter : public CHDConverter {
 public:
     ProcessResult nextProcess;
     ProcessResult nextTracked;
@@ -22,15 +20,13 @@ public:
     bool autoCreateTrackedOutput = false;
 
 protected:
-    ProcessResult runProcess(const QString &program, const QStringList &args, int) override
-    {
+    ProcessResult runProcess(const QString &program, const QStringList &args, int) override {
         lastProgram = program;
         lastArgs = args;
         return nextProcess;
     }
 
-    ProcessResult runProcessTracked(const QString &program, const QStringList &args, int) override
-    {
+    ProcessResult runProcessTracked(const QString &program, const QStringList &args, int) override {
         lastProgram = program;
         lastArgs = args;
 
@@ -53,8 +49,7 @@ protected:
     }
 };
 
-class ChdConverterTest : public QObject
-{
+class ChdConverterTest : public QObject {
     Q_OBJECT
 
 private slots:
@@ -70,8 +65,7 @@ private slots:
     void testBatchConvertUnsupported();
 };
 
-void ChdConverterTest::testAvailabilityAndVersion()
-{
+void ChdConverterTest::testAvailabilityAndVersion() {
     FakeChdConverter converter;
     converter.nextProcess.started = true;
     converter.nextProcess.exitCode = 0;
@@ -82,8 +76,7 @@ void ChdConverterTest::testAvailabilityAndVersion()
     QCOMPARE(converter.getChdmanVersion(), QStringLiteral("chdman 0.1"));
 }
 
-void ChdConverterTest::testVerifyCHD()
-{
+void ChdConverterTest::testVerifyCHD() {
     FakeChdConverter converter;
     converter.nextProcess.started = true;
     converter.nextProcess.exitCode = 0;
@@ -100,8 +93,7 @@ void ChdConverterTest::testVerifyCHD()
     QCOMPARE(bad.error, QStringLiteral("bad"));
 }
 
-void ChdConverterTest::testVerifyCHDUsesGenericErrorWhenStderrMissing()
-{
+void ChdConverterTest::testVerifyCHDUsesGenericErrorWhenStderrMissing() {
     FakeChdConverter converter;
     converter.nextProcess.started = true;
     converter.nextProcess.exitCode = 2;
@@ -111,18 +103,16 @@ void ChdConverterTest::testVerifyCHDUsesGenericErrorWhenStderrMissing()
     QCOMPARE(result.error, QStringLiteral("Verification failed"));
 }
 
-void ChdConverterTest::testGetCHDInfo()
-{
+void ChdConverterTest::testGetCHDInfo() {
     FakeChdConverter converter;
     converter.nextProcess.started = true;
     converter.nextProcess.exitCode = 0;
-    converter.nextProcess.stdOutput =
-        "Input file:   /tmp/test.chd\n"
-        "File Version: 5\n"
-        "Logical size: 641,659,968 bytes\n"
-        "Compression: cdlz (CD LZMA), cdzl (CD Deflate), cdfl (CD FLAC)\n"
-        "CHD size:     307,388,422 bytes\n"
-        "SHA1:         abcdef\n";
+    converter.nextProcess.stdOutput = "Input file:   /tmp/test.chd\n"
+                                      "File Version: 5\n"
+                                      "Logical size: 641,659,968 bytes\n"
+                                      "Compression: cdlz (CD LZMA), cdzl (CD Deflate), cdfl (CD FLAC)\n"
+                                      "CHD size:     307,388,422 bytes\n"
+                                      "SHA1:         abcdef\n";
 
     CHDInfo info = converter.getCHDInfo("/tmp/test.chd");
     QCOMPARE(info.version, 5);
@@ -132,8 +122,7 @@ void ChdConverterTest::testGetCHDInfo()
     QCOMPARE(info.compression, QStringLiteral("cdlz (CD LZMA), cdzl (CD Deflate), cdfl (CD FLAC)"));
 }
 
-void ChdConverterTest::testGetCHDInfoSupportsLegacyLabelsAndFailureDefaults()
-{
+void ChdConverterTest::testGetCHDInfoSupportsLegacyLabelsAndFailureDefaults() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
@@ -146,12 +135,11 @@ void ChdConverterTest::testGetCHDInfoSupportsLegacyLabelsAndFailureDefaults()
     FakeChdConverter converter;
     converter.nextProcess.started = true;
     converter.nextProcess.exitCode = 0;
-    converter.nextProcess.stdOutput =
-        "CHD version: 4\n"
-        "Logical size: 123,456 bytes\n"
-        "Physical size: 78,901 bytes\n"
-        "SHA1: deadbeef\n"
-        "Compression: zlib\n";
+    converter.nextProcess.stdOutput = "CHD version: 4\n"
+                                      "Logical size: 123,456 bytes\n"
+                                      "Physical size: 78,901 bytes\n"
+                                      "SHA1: deadbeef\n"
+                                      "Compression: zlib\n";
 
     CHDInfo legacyInfo = converter.getCHDInfo(chdPath);
     QCOMPARE(legacyInfo.version, 4);
@@ -170,8 +158,7 @@ void ChdConverterTest::testGetCHDInfoSupportsLegacyLabelsAndFailureDefaults()
     QVERIFY(fallbackInfo.compression.isEmpty());
 }
 
-void ChdConverterTest::testConvertIso()
-{
+void ChdConverterTest::testConvertIso() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
@@ -200,8 +187,7 @@ void ChdConverterTest::testConvertIso()
     QVERIFY(!bad.success);
 }
 
-void ChdConverterTest::testConvertCueAndGdiIncludeConfiguredArguments()
-{
+void ChdConverterTest::testConvertCueAndGdiIncludeConfiguredArguments() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
@@ -252,8 +238,7 @@ void ChdConverterTest::testConvertCueAndGdiIncludeConfiguredArguments()
     QCOMPARE(converter.lastArgs.value(4), gdiOutputPath);
 }
 
-void ChdConverterTest::testExtractChdUsesDefaultCueOutputPath()
-{
+void ChdConverterTest::testExtractChdUsesDefaultCueOutputPath() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
@@ -276,8 +261,7 @@ void ChdConverterTest::testExtractChdUsesDefaultCueOutputPath()
     QCOMPARE(converter.lastArgs.value(4), dir.path() + "/disc.cue");
 }
 
-void ChdConverterTest::testBatchConvertSupportedFormatsUsesOutputDirectory()
-{
+void ChdConverterTest::testBatchConvertSupportedFormatsUsesOutputDirectory() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
@@ -311,7 +295,7 @@ void ChdConverterTest::testBatchConvertSupportedFormatsUsesOutputDirectory()
     converter.nextTracked.exitCode = 0;
     converter.autoCreateTrackedOutput = true;
 
-    const QList<ConversionResult> results = converter.batchConvert({cuePath, isoPath, gdiPath}, outputDir);
+    const QList<ConversionResult> results = converter.batchConvert({ cuePath, isoPath, gdiPath }, outputDir);
     QCOMPARE(results.size(), 3);
     QVERIFY(results.at(0).success);
     QVERIFY(results.at(1).success);
@@ -321,10 +305,9 @@ void ChdConverterTest::testBatchConvertSupportedFormatsUsesOutputDirectory()
     QCOMPARE(results.at(2).outputPath, outputDir + "/batch.chd");
 }
 
-void ChdConverterTest::testBatchConvertUnsupported()
-{
+void ChdConverterTest::testBatchConvertUnsupported() {
     FakeChdConverter converter;
-    QStringList inputs = {"/tmp/file.txt"};
+    QStringList inputs = { "/tmp/file.txt" };
 
     QList<ConversionResult> results = converter.batchConvert(inputs);
     QCOMPARE(results.size(), 1);

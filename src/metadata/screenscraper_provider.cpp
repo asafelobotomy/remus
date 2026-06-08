@@ -22,25 +22,19 @@
 namespace Remus {
 
 ScreenScraperProvider::ScreenScraperProvider(QObject *parent)
-    : HttpMetadataProvider(Constants::Network::SCREENSCRAPER_RATE_LIMIT_MS, parent)
-{
-}
+    : HttpMetadataProvider(Constants::Network::SCREENSCRAPER_RATE_LIMIT_MS, parent) { }
 
-void ScreenScraperProvider::setCredentials(const QString &username, const QString &password)
-{
+void ScreenScraperProvider::setCredentials(const QString &username, const QString &password) {
     MetadataProvider::setCredentials(username, password);
 }
 
-void ScreenScraperProvider::setDeveloperCredentials(const QString &devId, const QString &devPassword)
-{
+void ScreenScraperProvider::setDeveloperCredentials(const QString &devId, const QString &devPassword) {
     m_devId = devId;
     m_devPassword = devPassword;
 }
 
-QList<SearchResult> ScreenScraperProvider::searchByName(const QString &title,
-                                                         const QString &system,
-                                                         const QString &region)
-{
+QList<SearchResult> ScreenScraperProvider::searchByName(
+    const QString &title, const QString &system, const QString &region) {
     QList<SearchResult> results;
 
     if (!m_authenticated) {
@@ -53,7 +47,7 @@ QList<SearchResult> ScreenScraperProvider::searchByName(const QString &title,
     // Build API URL - jeuRecherche.php for name search
     QUrl url(QString(Constants::API::SCREENSCRAPER_BASE_URL) + Constants::API::SCREENSCRAPER_JEURECHERCHE_ENDPOINT);
     QUrlQuery query;
-    
+
     query.addQueryItem("devid", m_devId);
     query.addQueryItem("devpassword", m_devPassword);
     query.addQueryItem("softname", m_softwareName);
@@ -61,10 +55,10 @@ QList<SearchResult> ScreenScraperProvider::searchByName(const QString &title,
     query.addQueryItem("ssid", m_username);
     query.addQueryItem("sspassword", m_password);
     query.addQueryItem("recherche", title);
-    
+
     // NOTE: ScreenScraper API requires credentials as query parameters.
     // Do not log or print `url` after this point — it contains plaintext secrets.
-    
+
     if (!system.isEmpty()) {
         QString ssSystem = mapSystemToScreenScraper(system);
         if (!ssSystem.isEmpty()) {
@@ -90,31 +84,30 @@ QList<SearchResult> ScreenScraperProvider::searchByName(const QString &title,
     }
 
     QJsonObject root = doc.object();
-    
+
     if (root.contains("response") && root["response"].isObject()) {
         QJsonObject game = root["response"].toObject()["jeu"].toObject();
-        
+
         SearchResult result;
         result.id = QString::number(game["id"].toInt());
         result.title = game["nom"].toObject()["text"].toString();
         result.system = system;
-        
+
         if (game.contains("date")) {
             QString date = game["date"].toString();
             if (date.length() >= 4) {
                 result.releaseYear = date.left(4).toInt();
             }
         }
-        
-        result.matchScore = 0.9f;  // Name-based search has lower confidence
+
+        result.matchScore = 0.9f; // Name-based search has lower confidence
         results.append(result);
     }
 
     return results;
 }
 
-GameMetadata ScreenScraperProvider::getByHash(const QString &hash, const QString &system)
-{
+GameMetadata ScreenScraperProvider::getByHash(const QString &hash, const QString &system) {
     GameMetadata metadata;
 
     if (!m_authenticated) {
@@ -127,18 +120,18 @@ GameMetadata ScreenScraperProvider::getByHash(const QString &hash, const QString
     // Build API URL - jeuInfos.php for hash-based ROM identification
     QUrl url(QString(Constants::API::SCREENSCRAPER_BASE_URL) + Constants::API::SCREENSCRAPER_JEUINFOS_ENDPOINT);
     QUrlQuery query;
-    
+
     query.addQueryItem("devid", m_devId);
     query.addQueryItem("devpassword", m_devPassword);
     query.addQueryItem("softname", m_softwareName);
     query.addQueryItem("output", "json");
     query.addQueryItem("ssid", m_username);
     query.addQueryItem("sspassword", m_password);
-    
+
     // Detect hash type and add to query
     QString hashType = detectHashType(hash);
     query.addQueryItem(hashType, hash);
-    
+
     // Add system filter
     QString ssSystem = mapSystemToScreenScraper(system);
     if (!ssSystem.isEmpty()) {
@@ -157,8 +150,7 @@ GameMetadata ScreenScraperProvider::getByHash(const QString &hash, const QString
     return metadata;
 }
 
-GameMetadata ScreenScraperProvider::getById(const QString &id)
-{
+GameMetadata ScreenScraperProvider::getById(const QString &id) {
     GameMetadata metadata;
 
     if (!m_authenticated) {
@@ -171,7 +163,7 @@ GameMetadata ScreenScraperProvider::getById(const QString &id)
     // Build API URL
     QUrl url(QString(Constants::API::SCREENSCRAPER_BASE_URL) + Constants::API::SCREENSCRAPER_GETGAME_ENDPOINT);
     QUrlQuery query;
-    
+
     query.addQueryItem("devid", m_devId);
     query.addQueryItem("devpassword", m_devPassword);
     query.addQueryItem("softname", m_softwareName);
@@ -192,8 +184,7 @@ GameMetadata ScreenScraperProvider::getById(const QString &id)
     return metadata;
 }
 
-ArtworkUrls ScreenScraperProvider::getArtwork(const QString &id)
-{
+ArtworkUrls ScreenScraperProvider::getArtwork(const QString &id) {
     ArtworkUrls artwork;
 
     if (!m_authenticated) {
@@ -227,8 +218,7 @@ ArtworkUrls ScreenScraperProvider::getArtwork(const QString &id)
     return artwork;
 }
 
-ScreenScraperProvider::ApiResponse ScreenScraperProvider::makeRequest(const QUrl &url)
-{
+ScreenScraperProvider::ApiResponse ScreenScraperProvider::makeRequest(const QUrl &url) {
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::UserAgentHeader, Constants::API::USER_AGENT);
 
@@ -242,32 +232,29 @@ ScreenScraperProvider::ApiResponse ScreenScraperProvider::makeRequest(const QUrl
     return response;
 }
 
-QString ScreenScraperProvider::mapSystemToScreenScraper(const QString &system)
-{
+QString ScreenScraperProvider::mapSystemToScreenScraper(const QString &system) {
     // Use SystemResolver for consistent system name mapping
     int systemId = SystemResolver::systemIdByName(system);
     if (systemId == 0) {
-        return QString();  // System not found
+        return QString(); // System not found
     }
-    
+
     return SystemResolver::providerName(systemId, Constants::Providers::SCREENSCRAPER);
 }
 
-QString ScreenScraperProvider::detectHashType(const QString &hash)
-{
+QString ScreenScraperProvider::detectHashType(const QString &hash) {
     QString cleaned = hash.toLower().trimmed();
-    
+
     // Use HashAlgorithms utility for consistent hash detection
     QString detected = Constants::HashAlgorithms::detectFromLength(cleaned.length());
     if (!detected.isEmpty()) {
         return detected == Constants::HashAlgorithms::CRC32 ? "crc" : detected;
     }
-    
-    return "crc";  // Default to CRC32
+
+    return "crc"; // Default to CRC32
 }
 
-bool ScreenScraperProvider::isAvailable()
-{
+bool ScreenScraperProvider::isAvailable() {
     if (!m_authenticated || m_devId.isEmpty() || m_devPassword.isEmpty()) {
         return false;
     }

@@ -19,7 +19,7 @@ struct HashResult {
 
 /**
  * @brief Calculates file hashes (CRC32, MD5, SHA1)
- * 
+ *
  * Supports header stripping for systems that require it (NES, Lynx).
  */
 class Hasher : public QObject {
@@ -35,9 +35,7 @@ public:
      * @param headerSize Size of header to strip (bytes)
      * @return Hash results
      */
-    HashResult calculateHashes(const QString &filePath, 
-                               bool stripHeader = false,
-                               int headerSize = 0);
+    HashResult calculateHashes(const QString &filePath, bool stripHeader = false, int headerSize = 0);
 
     /**
      * @brief Calculate specific hash
@@ -47,10 +45,8 @@ public:
      * @param headerSize Size of header to strip
      * @return Hash string in hex format
      */
-    QString calculateHash(const QString &filePath,
-                          const QString &algorithm,
-                          bool stripHeader = false,
-                          int headerSize = 0);
+    QString calculateHash(
+        const QString &filePath, const QString &algorithm, bool stripHeader = false, int headerSize = 0);
 
     /**
      * @brief Detect and calculate header size for systems that need it

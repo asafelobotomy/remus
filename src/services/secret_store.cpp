@@ -8,8 +8,7 @@ namespace Remus {
 
 static const QString kService = QStringLiteral("remus");
 
-SecretStore::ReadResult SecretStore::readWithStatus(const QString &key)
-{
+SecretStore::ReadResult SecretStore::readWithStatus(const QString &key) {
     QKeychain::ReadPasswordJob job(kService);
     job.setAutoDelete(false);
     job.setInsecureFallback(false);
@@ -21,23 +20,21 @@ SecretStore::ReadResult SecretStore::readWithStatus(const QString &key)
     loop.exec();
 
     if (job.error() == QKeychain::NoError)
-        return {ReadResult::Status::Found, job.textData(), {}};
+        return { ReadResult::Status::Found, job.textData(), { } };
     if (job.error() == QKeychain::EntryNotFound)
-        return {ReadResult::Status::NotFound, {}, {}};
-    return {ReadResult::Status::BackendError, {},
-            QStringLiteral("Keychain error for '%1': %2").arg(key, job.errorString())};
+        return { ReadResult::Status::NotFound, { }, { } };
+    return { ReadResult::Status::BackendError, { },
+        QStringLiteral("Keychain error for '%1': %2").arg(key, job.errorString()) };
 }
 
-QString SecretStore::read(const QString &key)
-{
+QString SecretStore::read(const QString &key) {
     const ReadResult r = readWithStatus(key);
     if (r.status == ReadResult::Status::BackendError)
         qWarning().noquote() << "SecretStore:" << r.errorMessage;
     return r.value;
 }
 
-bool SecretStore::write(const QString &key, const QString &value)
-{
+bool SecretStore::write(const QString &key, const QString &value) {
     QKeychain::WritePasswordJob job(kService);
     job.setAutoDelete(false);
     job.setInsecureFallback(false);
@@ -52,8 +49,7 @@ bool SecretStore::write(const QString &key, const QString &value)
     return job.error() == QKeychain::NoError;
 }
 
-void SecretStore::remove(const QString &key)
-{
+void SecretStore::remove(const QString &key) {
     QKeychain::DeletePasswordJob job(kService);
     job.setAutoDelete(false);
     job.setInsecureFallback(false);

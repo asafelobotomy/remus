@@ -25,12 +25,9 @@ namespace Remus {
 
 MetadataCache::MetadataCache(QSqlDatabase &db, QObject *parent)
     : QObject(parent)
-    , m_db(db)
-{
-}
+    , m_db(db) { }
 
-GameMetadata MetadataCache::getByHash(const QString &hash, const QString &system)
-{
+GameMetadata MetadataCache::getByHash(const QString &hash, const QString &system) {
     GameMetadata metadata;
 
     QSqlQuery query(m_db);
@@ -38,7 +35,7 @@ GameMetadata MetadataCache::getByHash(const QString &hash, const QString &system
         SELECT cache_value FROM cache 
         WHERE cache_key = ? AND expiry > datetime('now')
     )");
-    
+
     QString cacheKey = QString("metadata:hash:%1:%2").arg(system, hash);
     query.addBindValue(cacheKey);
 
@@ -47,7 +44,7 @@ GameMetadata MetadataCache::getByHash(const QString &hash, const QString &system
         QJsonDocument doc = QJsonDocument::fromJson(data);
         if (!doc.isNull() && doc.isObject()) {
             QJsonObject json = doc.object();
-            
+
             metadata.id = json["id"].toString();
             metadata.title = json["title"].toString();
             metadata.system = json["system"].toString();
@@ -64,25 +61,25 @@ GameMetadata MetadataCache::getByHash(const QString &hash, const QString &system
             metadata.matchMethod = json["matchMethod"].toString();
             const double rawScore1 = json["matchScore"].toDouble();
             metadata.matchScore = static_cast<float>(std::isfinite(rawScore1) ? rawScore1 : 0.0);
-            
+
             // Deserialize genres
             QJsonArray genresArray = json["genres"].toArray();
             for (const QJsonValue &genre : genresArray) {
                 metadata.genres.append(genre.toString());
             }
-            
+
             // Deserialize external IDs
             QJsonObject externalIds = json["externalIds"].toObject();
             for (auto it = externalIds.begin(); it != externalIds.end(); ++it) {
                 metadata.externalIds[it.key()] = it.value().toString();
             }
-            
+
             // Deserialize timestamp
             QString fetchedAtStr = json["fetchedAt"].toString();
             if (!fetchedAtStr.isEmpty()) {
                 metadata.fetchedAt = QDateTime::fromString(fetchedAtStr, Qt::ISODate);
             }
-            
+
             qCDebug(logMetadata) << "Cache hit for hash:" << hash << "- Title:" << metadata.title;
         } else {
             qCWarning(logMetadata) << "Failed to parse cached metadata JSON for hash:" << hash;
@@ -92,8 +89,7 @@ GameMetadata MetadataCache::getByHash(const QString &hash, const QString &system
     return metadata;
 }
 
-GameMetadata MetadataCache::getByProviderId(const QString &providerId, const QString &gameId)
-{
+GameMetadata MetadataCache::getByProviderId(const QString &providerId, const QString &gameId) {
     GameMetadata metadata;
 
     QSqlQuery query(m_db);
@@ -101,7 +97,7 @@ GameMetadata MetadataCache::getByProviderId(const QString &providerId, const QSt
         SELECT cache_value FROM cache 
         WHERE cache_key = ? AND expiry > datetime('now')
     )");
-    
+
     QString cacheKey = QString("metadata:%1:%2").arg(providerId, gameId);
     query.addBindValue(cacheKey);
 
@@ -110,7 +106,7 @@ GameMetadata MetadataCache::getByProviderId(const QString &providerId, const QSt
         QJsonDocument doc = QJsonDocument::fromJson(data);
         if (!doc.isNull() && doc.isObject()) {
             QJsonObject json = doc.object();
-            
+
             metadata.id = json["id"].toString();
             metadata.title = json["title"].toString();
             metadata.system = json["system"].toString();
@@ -127,25 +123,25 @@ GameMetadata MetadataCache::getByProviderId(const QString &providerId, const QSt
             metadata.matchMethod = json["matchMethod"].toString();
             const double rawScore2 = json["matchScore"].toDouble();
             metadata.matchScore = static_cast<float>(std::isfinite(rawScore2) ? rawScore2 : 0.0);
-            
+
             // Deserialize genres
             QJsonArray genresArray = json["genres"].toArray();
             for (const QJsonValue &genre : genresArray) {
                 metadata.genres.append(genre.toString());
             }
-            
+
             // Deserialize external IDs
             QJsonObject externalIds = json["externalIds"].toObject();
             for (auto it = externalIds.begin(); it != externalIds.end(); ++it) {
                 metadata.externalIds[it.key()] = it.value().toString();
             }
-            
+
             // Deserialize timestamp
             QString fetchedAtStr = json["fetchedAt"].toString();
             if (!fetchedAtStr.isEmpty()) {
                 metadata.fetchedAt = QDateTime::fromString(fetchedAtStr, Qt::ISODate);
             }
-            
+
             qCDebug(logMetadata) << "Cache hit for" << providerId << "ID:" << gameId << "- Title:" << metadata.title;
         } else {
             qCWarning(logMetadata) << "Failed to parse cached metadata JSON for" << providerId << gameId;
@@ -155,8 +151,7 @@ GameMetadata MetadataCache::getByProviderId(const QString &providerId, const QSt
     return metadata;
 }
 
-bool MetadataCache::store(const GameMetadata &metadata, const QString &hash, const QString &system)
-{
+bool MetadataCache::store(const GameMetadata &metadata, const QString &hash, const QString &system) {
     // Serialize metadata to JSON
     QJsonObject json;
     json["id"] = metadata.id;
@@ -174,14 +169,14 @@ bool MetadataCache::store(const GameMetadata &metadata, const QString &hash, con
     json["boxArtUrl"] = metadata.boxArtUrl;
     json["matchMethod"] = metadata.matchMethod;
     json["matchScore"] = metadata.matchScore;
-    
+
     // Serialize external IDs
     QJsonObject externalIds;
     for (auto it = metadata.externalIds.begin(); it != metadata.externalIds.end(); ++it) {
         externalIds[it.key()] = it.value();
     }
     json["externalIds"] = externalIds;
-    
+
     // Serialize timestamp
     if (metadata.fetchedAt.isValid()) {
         json["fetchedAt"] = metadata.fetchedAt.toString(Qt::ISODate);
@@ -223,8 +218,7 @@ bool MetadataCache::store(const GameMetadata &metadata, const QString &hash, con
     return true;
 }
 
-bool MetadataCache::storeNegativeMiss(const QString &hash, const QString &system)
-{
+bool MetadataCache::storeNegativeMiss(const QString &hash, const QString &system) {
     if (hash.isEmpty() || system.isEmpty())
         return false;
 
@@ -237,15 +231,13 @@ bool MetadataCache::storeNegativeMiss(const QString &hash, const QString &system
     query.addBindValue(QString("metadata:hash:%1:%2").arg(system, hash));
     query.addBindValue(kMissPayload);
     if (!query.exec()) {
-        qCWarning(logMetadata) << "Failed to store negative miss for hash:" << hash
-                               << query.lastError().text();
+        qCWarning(logMetadata) << "Failed to store negative miss for hash:" << hash << query.lastError().text();
         return false;
     }
     return true;
 }
 
-bool MetadataCache::storeArtwork(const QString &gameId, const ArtworkUrls &artwork)
-{
+bool MetadataCache::storeArtwork(const QString &gameId, const ArtworkUrls &artwork) {
     QJsonObject json;
     json["boxFront"] = artwork.boxFront.toString();
     json["boxBack"] = artwork.boxBack.toString();
@@ -276,8 +268,7 @@ bool MetadataCache::storeArtwork(const QString &gameId, const ArtworkUrls &artwo
     return true;
 }
 
-ArtworkUrls MetadataCache::getArtwork(const QString &gameId)
-{
+ArtworkUrls MetadataCache::getArtwork(const QString &gameId) {
     ArtworkUrls artwork;
 
     QSqlQuery query(m_db);
@@ -285,7 +276,7 @@ ArtworkUrls MetadataCache::getArtwork(const QString &gameId)
         SELECT cache_value FROM cache 
         WHERE cache_key = ? AND expiry > datetime('now')
     )");
-    
+
     QString cacheKey = QString("artwork:%1").arg(gameId);
     query.addBindValue(cacheKey);
 
@@ -307,8 +298,7 @@ ArtworkUrls MetadataCache::getArtwork(const QString &gameId)
     return artwork;
 }
 
-int MetadataCache::clearOldCache(int days)
-{
+int MetadataCache::clearOldCache(int days) {
     QSqlQuery query(m_db);
     query.prepare(R"(
         DELETE FROM cache 
@@ -323,12 +313,11 @@ int MetadataCache::clearOldCache(int days)
     return 0;
 }
 
-MetadataCache::CacheStats MetadataCache::getStats()
-{
+MetadataCache::CacheStats MetadataCache::getStats() {
     CacheStats stats;
 
     QSqlQuery query(m_db);
-    
+
     // Total entries
     query.exec("SELECT COUNT(*) FROM cache WHERE cache_key LIKE 'metadata:%'");
     if (query.next()) {

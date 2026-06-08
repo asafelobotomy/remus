@@ -9,10 +9,10 @@ namespace Remus {
 
 /**
  * @brief TheGamesDB.net metadata provider
- * 
+ *
  * Secondary provider, free API with no registration required.
  * No hash-based lookup (name-based only).
- * 
+ *
  * API Docs: https://api.thegamesdb.net/
  */
 class TheGamesDBProvider : public HttpMetadataProvider {
@@ -21,12 +21,15 @@ class TheGamesDBProvider : public HttpMetadataProvider {
 public:
     explicit TheGamesDBProvider(QObject *parent = nullptr);
 
-    QString name() const override { return Constants::Providers::DISPLAY_THEGAMESDB; }
-    bool requiresAuth() const override { return false; }
+    QString name() const override {
+        return Constants::Providers::DISPLAY_THEGAMESDB;
+    }
+    bool requiresAuth() const override {
+        return false;
+    }
 
-    QList<SearchResult> searchByName(const QString &title,
-                                     const QString &system = QString(),
-                                     const QString &region = QString()) override;
+    QList<SearchResult> searchByName(
+        const QString &title, const QString &system = QString(), const QString &region = QString()) override;
 
     GameMetadata getByHash(const QString &hash, const QString &system) override;
     GameMetadata getById(const QString &id) override;

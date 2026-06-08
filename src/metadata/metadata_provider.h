@@ -13,34 +13,34 @@ namespace Remus {
  * @brief Game metadata from provider
  */
 struct GameMetadata {
-    QString id;                  // Provider-specific ID
+    QString id; // Provider-specific ID
     QString title;
     QString system;
     QString region;
     QString publisher;
     QString developer;
     QStringList genres;
-    QString releaseDate;         // ISO 8601
+    QString releaseDate; // ISO 8601
     QString description;
-    int players = 0;             // Max players
-    float rating = 0.0f;         // 0.0 to 10.0
-    QString ratingSource;        // e.g., "MobyGames", "IGDB", "Metacritic"
-    
+    int players = 0; // Max players
+    float rating = 0.0f; // 0.0 to 10.0
+    QString ratingSource; // e.g., "MobyGames", "IGDB", "Metacritic"
+
     // URLs for artwork (can be populated by getArtwork or included directly)
-    QString boxArtUrl;           // Box art URL
-    QStringList screenshotUrls;  // Additional screenshot URLs (gameplay, title, etc.)
-    
+    QString boxArtUrl; // Box art URL
+    QStringList screenshotUrls; // Additional screenshot URLs (gameplay, title, etc.)
+
     // External IDs for cross-referencing
-    QMap<QString, QString> externalIds;  // e.g., {"igdb": "1234", "retroachievements": "5678"}
-    QStringList serials;                 // All disc/cartridge serials for this game
-    
+    QMap<QString, QString> externalIds; // e.g., {"igdb": "1234", "retroachievements": "5678"}
+    QStringList serials; // All disc/cartridge serials for this game
+
     // Provider info
-    QString providerId;          // "screenscraper", "thegamesdb", "igdb", "hasheous"
+    QString providerId; // "screenscraper", "thegamesdb", "igdb", "hasheous"
     QDateTime fetchedAt;
-    
+
     // Match quality (set when matched via orchestrator)
-    float matchScore = 0.0f;     // 0.0 to 1.0 (1.0 = perfect hash match)
-    QString matchMethod;         // Canonicalized via Constants::MatchMethods
+    float matchScore = 0.0f; // 0.0 to 1.0 (1.0 = perfect hash match)
+    QString matchMethod; // Canonicalized via Constants::MatchMethods
 };
 
 /**
@@ -49,14 +49,14 @@ struct GameMetadata {
 struct ArtworkUrls {
     QUrl boxFront;
     QUrl boxBack;
-    QUrl boxFull;               // 3D box or full packaging
-    QUrl screenshot;            // Primary screenshot (gameplay)
-    QUrl screenshot2;           // Secondary screenshot
-    QUrl titleScreen;           // Title/start screen
+    QUrl boxFull; // 3D box or full packaging
+    QUrl screenshot; // Primary screenshot (gameplay)
+    QUrl screenshot2; // Secondary screenshot
+    QUrl titleScreen; // Title/start screen
     QUrl banner;
-    QUrl logo;                  // Game logo
-    QUrl clearLogo;             // Logo with transparent background
-    QUrl systemLogo;            // System/platform logo
+    QUrl logo; // Game logo
+    QUrl clearLogo; // Logo with transparent background
+    QUrl systemLogo; // System/platform logo
 };
 
 /**
@@ -68,8 +68,8 @@ struct SearchResult {
     QString system;
     QString region;
     int releaseYear = 0;
-    float matchScore = 0.0f;    // 0.0 to 1.0
-    QString provider;           // Provider name that returned this result
+    float matchScore = 0.0f; // 0.0 to 1.0
+    QString provider; // Provider name that returned this result
 };
 
 /**
@@ -104,9 +104,8 @@ public:
      * @param region Region (optional)
      * @return List of search results
      */
-    virtual QList<SearchResult> searchByName(const QString &title,
-                                             const QString &system = QString(),
-                                             const QString &region = QString()) = 0;
+    virtual QList<SearchResult> searchByName(
+        const QString &title, const QString &system = QString(), const QString &region = QString()) = 0;
 
     /**
      * @brief Get metadata by hash (for No-Intro/Redump verification)

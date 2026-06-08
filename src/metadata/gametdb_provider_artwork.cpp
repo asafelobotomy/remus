@@ -4,8 +4,7 @@
 
 namespace Remus {
 
-ArtworkUrls GameTDBProvider::getArtwork(const QString &id)
-{
+ArtworkUrls GameTDBProvider::getArtwork(const QString &id) {
     QMutexLocker locker(&m_mutex);
     if (!m_idIndex.contains(id)) {
         return ArtworkUrls();
@@ -35,10 +34,9 @@ ArtworkUrls GameTDBProvider::getArtwork(const QString &id)
     return artwork;
 }
 
-QString GameTDBProvider::cdnPlatformCode(const QString &gameType)
-{
-    if (gameType == QLatin1String("Wii") || gameType == QLatin1String("WiiWare") ||
-        gameType == QLatin1String("GameCube") || gameType == QLatin1String("Channel")) {
+QString GameTDBProvider::cdnPlatformCode(const QString &gameType) {
+    if (gameType == QLatin1String("Wii") || gameType == QLatin1String("WiiWare")
+        || gameType == QLatin1String("GameCube") || gameType == QLatin1String("Channel")) {
         return QStringLiteral("wii");
     }
     if (gameType == QLatin1String("DS") || gameType == QLatin1String("DSiWare")) {
@@ -59,16 +57,13 @@ QString GameTDBProvider::cdnPlatformCode(const QString &gameType)
     return QString();
 }
 
-QString GameTDBProvider::cdnRegionCode(const QString &gameRegion)
-{
-    if (gameRegion.contains(QLatin1String("NTSC-U")) ||
-        gameRegion.contains(QLatin1String("USA")) ||
-        gameRegion == QLatin1String("ALL")) {
+QString GameTDBProvider::cdnRegionCode(const QString &gameRegion) {
+    if (gameRegion.contains(QLatin1String("NTSC-U")) || gameRegion.contains(QLatin1String("USA"))
+        || gameRegion == QLatin1String("ALL")) {
         return QStringLiteral("US");
     }
-    if (gameRegion.contains(QLatin1String("NTSC-J")) ||
-        gameRegion.contains(QLatin1String("JPN")) ||
-        gameRegion == QLatin1String("NTSC-J")) {
+    if (gameRegion.contains(QLatin1String("NTSC-J")) || gameRegion.contains(QLatin1String("JPN"))
+        || gameRegion == QLatin1String("NTSC-J")) {
         return QStringLiteral("JA");
     }
     if (gameRegion.contains(QLatin1String("PAL"))) {
@@ -80,25 +75,17 @@ QString GameTDBProvider::cdnRegionCode(const QString &gameRegion)
     return QStringLiteral("US");
 }
 
-QString GameTDBProvider::buildArtworkUrl(const QString &platformCode,
-                                         const QString &artType,
-                                         const QString &regionCode,
-                                         const QString &gameId,
-                                         const QString &extension)
-{
+QString GameTDBProvider::buildArtworkUrl(const QString &platformCode, const QString &artType, const QString &regionCode,
+    const QString &gameId, const QString &extension) {
     QUrl url;
     url.setScheme(QStringLiteral("https"));
     url.setHost(QStringLiteral("art.gametdb.com"));
-    url.setPath(QLatin1Char('/') + platformCode +
-                QLatin1Char('/') + artType +
-                QLatin1Char('/') + regionCode +
-                QLatin1Char('/') + gameId +
-                QLatin1Char('.') + extension);
+    url.setPath(QLatin1Char('/') + platformCode + QLatin1Char('/') + artType + QLatin1Char('/') + regionCode
+        + QLatin1Char('/') + gameId + QLatin1Char('.') + extension);
     return url.toString(QUrl::FullyEncoded);
 }
 
-GameMetadata GameTDBProvider::entryToMetadata(const GameTDBEntry &entry) const
-{
+GameMetadata GameTDBProvider::entryToMetadata(const GameTDBEntry &entry) const {
     GameMetadata metadata;
     metadata.id = entry.id;
     metadata.title = entry.title;
@@ -121,9 +108,9 @@ GameMetadata GameTDBProvider::entryToMetadata(const GameTDBEntry &entry) const
     if (entry.year > 0) {
         if (entry.month > 0 && entry.day > 0) {
             metadata.releaseDate = QStringLiteral("%1-%2-%3")
-                .arg(entry.year, 4, 10, QLatin1Char('0'))
-                .arg(entry.month, 2, 10, QLatin1Char('0'))
-                .arg(entry.day, 2, 10, QLatin1Char('0'));
+                                       .arg(entry.year, 4, 10, QLatin1Char('0'))
+                                       .arg(entry.month, 2, 10, QLatin1Char('0'))
+                                       .arg(entry.day, 2, 10, QLatin1Char('0'));
         } else {
             metadata.releaseDate = QString::number(entry.year);
         }

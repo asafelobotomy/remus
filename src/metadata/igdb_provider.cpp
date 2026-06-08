@@ -13,16 +13,12 @@
 namespace Remus {
 
 IGDBProvider::IGDBProvider(QObject *parent)
-    : HttpMetadataProvider(Constants::Network::IGDB_RATE_LIMIT_MS, parent)
-{
-}
+    : HttpMetadataProvider(Constants::Network::IGDB_RATE_LIMIT_MS, parent) { }
 
-void IGDBProvider::setCredentials(const QString &clientId, const QString &clientSecret)
-{
+void IGDBProvider::setCredentials(const QString &clientId, const QString &clientSecret) {
     const QString trimmedClientId = clientId.trimmed();
     const QString trimmedClientSecret = clientSecret.trimmed();
-    const bool credentialsChanged = m_clientId != trimmedClientId
-        || m_clientSecret != trimmedClientSecret;
+    const bool credentialsChanged = m_clientId != trimmedClientId || m_clientSecret != trimmedClientSecret;
 
     m_clientId = trimmedClientId;
     m_clientSecret = trimmedClientSecret;
@@ -36,21 +32,22 @@ void IGDBProvider::setCredentials(const QString &clientId, const QString &client
     m_authenticated = false;
 }
 
-bool IGDBProvider::authenticate()
-{
+bool IGDBProvider::authenticate() {
     if (m_clientId.isEmpty() || m_clientSecret.isEmpty()) {
         m_authenticated = false;
         return false;
     }
 
     // Check if token is still valid with proactive refresh buffer
-    if (!m_accessToken.isEmpty() && QDateTime::currentDateTime() < m_tokenExpiry.addSecs(-Constants::Network::IGDB_TOKEN_REFRESH_BUFFER_SECS)) {
+    if (!m_accessToken.isEmpty()
+        && QDateTime::currentDateTime() < m_tokenExpiry.addSecs(-Constants::Network::IGDB_TOKEN_REFRESH_BUFFER_SECS)) {
         m_authenticated = true;
         return true;
     }
 
     if (!m_accessToken.isEmpty()) {
-        qInfo() << "IGDB: token expiring within" << Constants::Network::IGDB_TOKEN_REFRESH_BUFFER_SECS / 3600 << "hours, refreshing proactively";
+        qInfo() << "IGDB: token expiring within" << Constants::Network::IGDB_TOKEN_REFRESH_BUFFER_SECS / 3600
+                << "hours, refreshing proactively";
     }
 
     // Request new access token from Twitch
@@ -90,10 +87,7 @@ bool IGDBProvider::authenticate()
     return m_authenticated;
 }
 
-QList<SearchResult> IGDBProvider::searchByName(const QString &title,
-                                                const QString &system,
-                                                const QString &region)
-{
+QList<SearchResult> IGDBProvider::searchByName(const QString &title, const QString &system, const QString &region) {
     QList<SearchResult> results;
 
     if (!authenticate()) {
@@ -109,8 +103,7 @@ QList<SearchResult> IGDBProvider::searchByName(const QString &title,
     QString safeTitle = title;
     safeTitle.replace(QLatin1Char('\\'), QStringLiteral("\\\\"));
     safeTitle.replace(QLatin1Char('"'), QStringLiteral("\\\""));
-    QString body = QString("search \"%1\"; fields name,first_release_date,platforms; limit 10;")
-                       .arg(safeTitle);
+    QString body = QString("search \"%1\"; fields name,first_release_date,platforms; limit 10;").arg(safeTitle);
 
     ApiResponse response = makeRequest("/games", body);
     if (!response.success) {
@@ -128,21 +121,21 @@ QList<SearchResult> IGDBProvider::searchByName(const QString &title,
     }
 
     QJsonArray games = doc.array();
-    
+
     for (const QJsonValue &gameVal : games) {
         QJsonObject game = gameVal.toObject();
-        
+
         SearchResult result;
         result.id = QString::number(game["id"].toInt());
         result.title = game["name"].toString();
         result.system = system;
-        
+
         if (game.contains("first_release_date")) {
             qint64 timestamp = game["first_release_date"].toVariant().toLongLong();
             QDateTime releaseDate = QDateTime::fromSecsSinceEpoch(timestamp);
             result.releaseYear = releaseDate.date().year();
         }
-        
+
         result.matchScore = 0.85f;
         results.append(result);
     }
@@ -150,16 +143,14 @@ QList<SearchResult> IGDBProvider::searchByName(const QString &title,
     return results;
 }
 
-GameMetadata IGDBProvider::getByHash(const QString &hash, const QString &system)
-{
+GameMetadata IGDBProvider::getByHash(const QString &hash, const QString &system) {
     // IGDB does not support hash-based lookups
     GameMetadata metadata;
     emit errorOccurred("IGDB does not support hash-based lookups");
     return metadata;
 }
 
-GameMetadata IGDBProvider::getById(const QString &id)
-{
+GameMetadata IGDBProvider::getById(const QString &id) {
     GameMetadata metadata;
 
     bool ok = false;
@@ -197,7 +188,7 @@ GameMetadata IGDBProvider::getById(const QString &id)
     }
 
     QJsonArray games = doc.array();
-    
+
     if (!games.isEmpty()) {
         metadata = parseGameJson(games[0].toObject());
     }
@@ -205,8 +196,7 @@ GameMetadata IGDBProvider::getById(const QString &id)
     return metadata;
 }
 
-ArtworkUrls IGDBProvider::getArtwork(const QString &id)
-{
+ArtworkUrls IGDBProvider::getArtwork(const QString &id) {
     ArtworkUrls artwork;
 
     bool ok = false;
@@ -237,24 +227,26 @@ ArtworkUrls IGDBProvider::getArtwork(const QString &id)
     }
 
     QJsonArray games = doc.array();
-    
+
     if (!games.isEmpty()) {
         QJsonObject game = games[0].toObject();
-        
+
         // Cover
         if (game.contains("cover")) {
             QString coverUrl = game["cover"].toObject()["url"].toString();
             if (!coverUrl.isEmpty()) {
-                artwork.boxFront = QUrl("https:" + coverUrl.replace(Constants::API::IGDB_IMG_THUMB, Constants::API::IGDB_IMG_COVER_BIG));
+                artwork.boxFront = QUrl(
+                    "https:" + coverUrl.replace(Constants::API::IGDB_IMG_THUMB, Constants::API::IGDB_IMG_COVER_BIG));
             }
         }
-        
+
         // Screenshots
         if (game.contains("screenshots")) {
             QJsonArray screenshots = game["screenshots"].toArray();
             if (!screenshots.isEmpty()) {
                 QString screenshotUrl = screenshots[0].toObject()["url"].toString();
-                artwork.screenshot = QUrl("https:" + screenshotUrl.replace(Constants::API::IGDB_IMG_THUMB, Constants::API::IGDB_IMG_SCREENSHOT_BIG));
+                artwork.screenshot = QUrl("https:"
+                    + screenshotUrl.replace(Constants::API::IGDB_IMG_THUMB, Constants::API::IGDB_IMG_SCREENSHOT_BIG));
             }
         }
     }
@@ -262,8 +254,7 @@ ArtworkUrls IGDBProvider::getArtwork(const QString &id)
     return artwork;
 }
 
-IGDBProvider::ApiResponse IGDBProvider::makeRequest(const QString &endpoint, const QString &body)
-{
+IGDBProvider::ApiResponse IGDBProvider::makeRequest(const QString &endpoint, const QString &body) {
     QUrl url(QString(Constants::API::IGDB_BASE_URL) + endpoint);
     QNetworkRequest request(url);
 
@@ -275,8 +266,7 @@ IGDBProvider::ApiResponse IGDBProvider::makeRequest(const QString &endpoint, con
     return waitForReply(reply, Constants::Network::IGDB_TIMEOUT_MS);
 }
 
-GameMetadata IGDBProvider::parseGameJson(const QJsonObject &game)
-{
+GameMetadata IGDBProvider::parseGameJson(const QJsonObject &game) {
     GameMetadata metadata;
 
     metadata.id = QString::number(game["id"].toInt());
@@ -285,14 +275,14 @@ GameMetadata IGDBProvider::parseGameJson(const QJsonObject &game)
 
     metadata.title = game["name"].toString();
     metadata.description = game["summary"].toString();
-    
+
     // Release date
     if (game.contains("first_release_date")) {
         qint64 timestamp = game["first_release_date"].toVariant().toLongLong();
         QDateTime releaseDate = QDateTime::fromSecsSinceEpoch(timestamp);
         metadata.releaseDate = releaseDate.toString(Qt::ISODate);
     }
-    
+
     // Genres
     if (game.contains("genres")) {
         QJsonArray genres = game["genres"].toArray();
@@ -300,14 +290,14 @@ GameMetadata IGDBProvider::parseGameJson(const QJsonObject &game)
             metadata.genres.append(genreVal.toObject()["name"].toString());
         }
     }
-    
+
     // Companies (developer/publisher)
     if (game.contains("involved_companies")) {
         QJsonArray companies = game["involved_companies"].toArray();
         for (const QJsonValue &compVal : companies) {
             QJsonObject comp = compVal.toObject();
             QString companyName = comp["company"].toObject()["name"].toString();
-            
+
             if (comp["developer"].toBool() && metadata.developer.isEmpty()) {
                 metadata.developer = companyName;
             }
@@ -316,10 +306,11 @@ GameMetadata IGDBProvider::parseGameJson(const QJsonObject &game)
             }
         }
     }
-    
+
     // Rating
     if (game.contains("aggregated_rating")) {
-        metadata.rating = game["aggregated_rating"].toDouble() / Constants::API::IGDB_RATING_SCALE;  // Convert to 0-10 scale
+        metadata.rating
+            = game["aggregated_rating"].toDouble() / Constants::API::IGDB_RATING_SCALE; // Convert to 0-10 scale
     }
 
     // Players from multiplayer_modes.offlinemax
@@ -338,25 +329,21 @@ GameMetadata IGDBProvider::parseGameJson(const QJsonObject &game)
     return metadata;
 }
 
-QString IGDBProvider::mapSystemToIGDB(const QString &system)
-{
+QString IGDBProvider::mapSystemToIGDB(const QString &system) {
     // Use SystemResolver for consistent system name mapping
     int systemId = SystemResolver::systemIdByName(system);
     if (systemId == 0) {
-        return QString();  // System not found
+        return QString(); // System not found
     }
-    
+
     return SystemResolver::providerName(systemId, Constants::Providers::IGDB);
 }
 
-bool IGDBProvider::isAvailable()
-{
+bool IGDBProvider::isAvailable() {
     return !m_clientId.isEmpty() && !m_clientSecret.isEmpty();
 }
 
-QList<GameMetadata> IGDBProvider::fetchGamesByPlatformSlug(
-    const QString &platformSlug, int offset, int limit)
-{
+QList<GameMetadata> IGDBProvider::fetchGamesByPlatformSlug(const QString &platformSlug, int offset, int limit) {
     QList<GameMetadata> results;
 
     // Platform slugs must be lowercase alphanumeric + hyphens (IGDB convention).
@@ -374,15 +361,14 @@ QList<GameMetadata> IGDBProvider::fetchGamesByPlatformSlug(
 
     m_rateLimiter->waitIfNeeded();
 
-    const QString body = QStringLiteral(
-        "fields name,summary,genres.name,first_release_date,"
-        "involved_companies.company.name,involved_companies.developer,"
-        "involved_companies.publisher,aggregated_rating,multiplayer_modes.offlinemax; "
-        "where platforms.slug = \"%1\"; "
-        "limit %2; offset %3;")
-        .arg(platformSlug)
-        .arg(limit)
-        .arg(offset);
+    const QString body = QStringLiteral("fields name,summary,genres.name,first_release_date,"
+                                        "involved_companies.company.name,involved_companies.developer,"
+                                        "involved_companies.publisher,aggregated_rating,multiplayer_modes.offlinemax; "
+                                        "where platforms.slug = \"%1\"; "
+                                        "limit %2; offset %3;")
+                             .arg(platformSlug)
+                             .arg(limit)
+                             .arg(offset);
 
     const ApiResponse response = makeRequest(QStringLiteral("/games"), body);
     if (!response.success)

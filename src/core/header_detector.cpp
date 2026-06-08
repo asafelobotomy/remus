@@ -6,12 +6,9 @@
 namespace Remus {
 
 HeaderDetector::HeaderDetector(QObject *parent)
-    : QObject(parent)
-{
-}
+    : QObject(parent) { }
 
-HeaderInfo HeaderDetector::detect(const QString &filePath)
-{
+HeaderInfo HeaderDetector::detect(const QString &filePath) {
     QFile file(filePath);
     if (!file.open(QIODevice::ReadOnly)) {
         HeaderInfo info;
@@ -30,7 +27,7 @@ HeaderInfo HeaderDetector::detect(const QString &filePath)
     }
 
     HeaderInfo info = detectFromData(data, extension);
-    
+
     // For SNES, we need file size for SMC detection
     if (extension == ".smc" || extension == ".sfc") {
         info = detectSNES(data, fileSize);
@@ -39,17 +36,16 @@ HeaderInfo HeaderDetector::detect(const QString &filePath)
     return info;
 }
 
-HeaderInfo HeaderDetector::detectFromData(const QByteArray &data, const QString &extension)
-{
+HeaderInfo HeaderDetector::detectFromData(const QByteArray &data, const QString &extension) {
     HeaderInfo info;
-    
+
     // Check by extension and magic bytes
     if (extension == ".nes" || extension == ".unf") {
         return detectNES(data);
     } else if (extension == ".lnx") {
         return detectLynx(data);
     } else if (extension == ".smc" || extension == ".sfc") {
-        return detectSNES(data, 0);  // Will be called again with file size
+        return detectSNES(data, 0); // Will be called again with file size
     } else if (extension == ".fds") {
         return detectFDS(data);
     } else if (extension == ".a78") {
@@ -72,11 +68,10 @@ HeaderInfo HeaderDetector::detectFromData(const QByteArray &data, const QString 
         }
     }
 
-    return info;  // No header detected
+    return info; // No header detected
 }
 
-HeaderInfo HeaderDetector::detectNES(const QByteArray &data)
-{
+HeaderInfo HeaderDetector::detectNES(const QByteArray &data) {
     HeaderInfo info;
 
     if (data.size() < 16) {
@@ -106,16 +101,16 @@ HeaderInfo HeaderDetector::detectNES(const QByteArray &data)
     return info;
 }
 
-bool HeaderDetector::isNES20Format(const QByteArray &header)
-{
+bool HeaderDetector::isNES20Format(const QByteArray &header) {
     // NES 2.0 is identified by bits 2-3 of byte 7 being == 2
-    if (header.size() < 8) return false;
+    if (header.size() < 8)
+        return false;
     return ((static_cast<unsigned char>(header[7]) & 0x0C) == 0x08);
 }
 
-QString HeaderDetector::parseMapperInfo(const QByteArray &header)
-{
-    if (header.size() < 8) return QString();
+QString HeaderDetector::parseMapperInfo(const QByteArray &header) {
+    if (header.size() < 8)
+        return QString();
 
     unsigned char prgRom = static_cast<unsigned char>(header[4]);
     unsigned char chrRom = static_cast<unsigned char>(header[5]);
@@ -134,8 +129,7 @@ QString HeaderDetector::parseMapperInfo(const QByteArray &header)
         .arg(trainer ? ", Trainer" : "");
 }
 
-HeaderInfo HeaderDetector::detectLynx(const QByteArray &data)
-{
+HeaderInfo HeaderDetector::detectLynx(const QByteArray &data) {
     HeaderInfo info;
 
     if (data.size() < 64) {
@@ -159,8 +153,7 @@ HeaderInfo HeaderDetector::detectLynx(const QByteArray &data)
     return info;
 }
 
-HeaderInfo HeaderDetector::detectSNES(const QByteArray &data, qint64 fileSize)
-{
+HeaderInfo HeaderDetector::detectSNES(const QByteArray &data, qint64 fileSize) {
     HeaderInfo info;
 
     // SMC/SWC copier headers are 512 bytes
@@ -175,7 +168,7 @@ HeaderInfo HeaderDetector::detectSNES(const QByteArray &data, qint64 fileSize)
     // Check if file has a 512-byte header
     // ROM data after header should be power of 2
     qint64 romSize = fileSize - 512;
-    
+
     // Check if romSize is a power of 2 (and reasonable SNES size)
     if (romSize >= 262144 && (romSize & (romSize - 1)) == 0) {
         // Likely has SMC header
@@ -194,8 +187,7 @@ HeaderInfo HeaderDetector::detectSNES(const QByteArray &data, qint64 fileSize)
     return info;
 }
 
-HeaderInfo HeaderDetector::detectFDS(const QByteArray &data)
-{
+HeaderInfo HeaderDetector::detectFDS(const QByteArray &data) {
     HeaderInfo info;
 
     if (data.size() < 16) {
@@ -218,8 +210,7 @@ HeaderInfo HeaderDetector::detectFDS(const QByteArray &data)
     return info;
 }
 
-HeaderInfo HeaderDetector::detectA78(const QByteArray &data)
-{
+HeaderInfo HeaderDetector::detectA78(const QByteArray &data) {
     HeaderInfo info;
 
     if (data.size() < 128) {
@@ -244,10 +235,9 @@ HeaderInfo HeaderDetector::detectA78(const QByteArray &data)
     return info;
 }
 
-bool HeaderDetector::stripHeader(const QString &inputPath, const QString &outputPath)
-{
+bool HeaderDetector::stripHeader(const QString &inputPath, const QString &outputPath) {
     HeaderInfo headerInfo = detect(inputPath);
-    
+
     if (!headerInfo.hasHeader) {
         // No header to strip - just copy the file
         return QFile::copy(inputPath, outputPath);
@@ -276,10 +266,9 @@ bool HeaderDetector::stripHeader(const QString &inputPath, const QString &output
     return written == romData.size();
 }
 
-QByteArray HeaderDetector::getHeaderlessData(const QString &filePath)
-{
+QByteArray HeaderDetector::getHeaderlessData(const QString &filePath) {
     HeaderInfo headerInfo = detect(filePath);
-    
+
     QFile file(filePath);
     if (!file.open(QIODevice::ReadOnly)) {
         return QByteArray();
@@ -292,14 +281,13 @@ QByteArray HeaderDetector::getHeaderlessData(const QString &filePath)
     return file.readAll();
 }
 
-bool HeaderDetector::mayHaveHeader(const QString &extension)
-{
+bool HeaderDetector::mayHaveHeader(const QString &extension) {
     static const QStringList headeredFormats = {
-        ".nes", ".unf",   // iNES
-        ".lnx",           // Lynx
-        ".smc",           // SNES copier
-        ".fds",           // FDS
-        ".a78"            // Atari 7800
+        ".nes", ".unf", // iNES
+        ".lnx", // Lynx
+        ".smc", // SNES copier
+        ".fds", // FDS
+        ".a78" // Atari 7800
     };
 
     QString ext = extension.toLower();
@@ -310,16 +298,9 @@ bool HeaderDetector::mayHaveHeader(const QString &extension)
     return headeredFormats.contains(ext);
 }
 
-int HeaderDetector::getExpectedHeaderSize(const QString &extension)
-{
-    static const QMap<QString, int> headerSizes = {
-        {".nes", 16},
-        {".unf", 16},
-        {".lnx", 64},
-        {".smc", 512},
-        {".fds", 16},
-        {".a78", 128}
-    };
+int HeaderDetector::getExpectedHeaderSize(const QString &extension) {
+    static const QMap<QString, int> headerSizes
+        = { { ".nes", 16 }, { ".unf", 16 }, { ".lnx", 64 }, { ".smc", 512 }, { ".fds", 16 }, { ".a78", 128 } };
 
     QString ext = extension.toLower();
     if (!ext.startsWith('.')) {

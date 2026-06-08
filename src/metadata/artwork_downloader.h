@@ -27,10 +27,10 @@ public:
      * @brief Download artwork to file
      * @param url Source URL
      * @param destPath Destination file path
-      * @param savedPath Optional output for the final on-disk path after any format correction
+     * @param savedPath Optional output for the final on-disk path after any format correction
      * @return True if successful
      */
-     bool download(const QUrl &url, const QString &destPath, QString *savedPath = nullptr);
+    bool download(const QUrl &url, const QString &destPath, QString *savedPath = nullptr);
 
     /**
      * @brief Download artwork to memory
@@ -42,7 +42,9 @@ public:
     /**
      * @brief Set maximum parallel downloads
      */
-    void setMaxConcurrent(int max) { m_maxConcurrent = max; }
+    void setMaxConcurrent(int max) {
+        m_maxConcurrent = max;
+    }
 
 signals:
     void downloadProgress(const QUrl &url, qint64 bytesReceived, qint64 bytesTotal);

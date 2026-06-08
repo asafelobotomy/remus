@@ -11,16 +11,13 @@
 namespace Remus {
 namespace Compendium {
 
-class MergeResolver
-{
-public:
-    // Run the full merge pass over all game_facts in the open DB.
-    // Updates stats.resolvedFields and stats.unresolvedConflicts.
-    // Returns false on fatal DB error.
-    bool resolve(QSqlDatabase &db,
-                 CompilerStats &stats,
-                 QString &error) const;
-};
+    class MergeResolver {
+    public:
+        // Run the full merge pass over all game_facts in the open DB.
+        // Updates stats.resolvedFields and stats.unresolvedConflicts.
+        // Returns false on fatal DB error.
+        bool resolve(QSqlDatabase &db, CompilerStats &stats, QString &error) const;
+    };
 
 } // namespace Compendium
 } // namespace Remus

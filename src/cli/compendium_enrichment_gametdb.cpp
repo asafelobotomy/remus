@@ -23,12 +23,8 @@ using CompendiumEnrichmentSql::upsertEnrichmentSource;
 
 namespace CompendiumEnrichment {
 
-bool enrichFromGameTDB(QSqlDatabase &database,
-                       const QString &gametdbDir,
-                       int &gamesEnriched,
-                       int &factsInserted,
-                       QString &error)
-{
+bool enrichFromGameTDB(
+    QSqlDatabase &database, const QString &gametdbDir, int &gamesEnriched, int &factsInserted, QString &error) {
     gamesEnriched = 0;
     factsInserted = 0;
 
@@ -38,12 +34,11 @@ bool enrichFromGameTDB(QSqlDatabase &database,
         return true;
     }
 
-    const QString sourceId   = QStringLiteral("gametdb");
+    const QString sourceId = QStringLiteral("gametdb");
     const QString snapshotId = QStringLiteral("gametdb-bulk");
 
-    if (!upsertEnrichmentSource(
-            database,
-            SourceSpec{
+    if (!upsertEnrichmentSource(database,
+            SourceSpec {
                 sourceId,
                 QStringLiteral("GameTDB"),
                 QStringLiteral("gametdb"),
@@ -52,7 +47,7 @@ bool enrichFromGameTDB(QSqlDatabase &database,
                 /*priority=*/55,
                 QStringLiteral("CC-BY-SA-4.0"),
             },
-            SnapshotSpec{
+            SnapshotSpec {
                 snapshotId,
                 QStringLiteral("GameTDB XML snapshot"),
             },
@@ -66,48 +61,46 @@ bool enrichFromGameTDB(QSqlDatabase &database,
     QHash<QString, QString> gameMd5;
     {
         QSqlQuery q(database);
-        if (!q.exec(QStringLiteral(
-                "SELECT game_id, hash_type, hash_value FROM game_signatures "
-                "WHERE hash_type IN ('crc32', 'sha1', 'md5')"))) {
-            error = QStringLiteral("Load hashes for GameTDB enrichment: %1")
-                .arg(q.lastError().text());
+        if (!q.exec(QStringLiteral("SELECT game_id, hash_type, hash_value FROM game_signatures "
+                                   "WHERE hash_type IN ('crc32', 'sha1', 'md5')"))) {
+            error = QStringLiteral("Load hashes for GameTDB enrichment: %1").arg(q.lastError().text());
             return false;
         }
         while (q.next()) {
-            const QString gid  = q.value(0).toString();
+            const QString gid = q.value(0).toString();
             const QString type = q.value(1).toString();
-            const QString val  = q.value(2).toString();
-            if (type == QLatin1String("crc32"))      gameCrc32.insert(gid, val);
-            else if (type == QLatin1String("sha1"))  gameSha1.insert(gid, val);
-            else if (type == QLatin1String("md5"))   gameMd5.insert(gid, val);
+            const QString val = q.value(2).toString();
+            if (type == QLatin1String("crc32"))
+                gameCrc32.insert(gid, val);
+            else if (type == QLatin1String("sha1"))
+                gameSha1.insert(gid, val);
+            else if (type == QLatin1String("md5"))
+                gameMd5.insert(gid, val);
         }
     }
 
     QSqlQuery gameQuery(database);
-    if (!gameQuery.exec(QStringLiteral(
-            "SELECT game_id, canonical_title FROM games "
-            "WHERE genre IS NULL OR TRIM(genre) = '' "
-            "   OR developer IS NULL OR TRIM(developer) = '' "
-            "   OR publisher IS NULL OR TRIM(publisher) = '' "
-            "   OR players_max IS NULL "
-            "   OR release_year IS NULL "
-            "   OR description IS NULL OR TRIM(description) = ''"))) {
-        error = QStringLiteral("Load games for GameTDB enrichment: %1")
-            .arg(gameQuery.lastError().text());
+    if (!gameQuery.exec(QStringLiteral("SELECT game_id, canonical_title FROM games "
+                                       "WHERE genre IS NULL OR TRIM(genre) = '' "
+                                       "   OR developer IS NULL OR TRIM(developer) = '' "
+                                       "   OR publisher IS NULL OR TRIM(publisher) = '' "
+                                       "   OR players_max IS NULL "
+                                       "   OR release_year IS NULL "
+                                       "   OR description IS NULL OR TRIM(description) = ''"))) {
+        error = QStringLiteral("Load games for GameTDB enrichment: %1").arg(gameQuery.lastError().text());
         return false;
     }
 
     QSqlQuery updateQuery(database);
-    updateQuery.prepare(QStringLiteral(
-        "UPDATE games SET "
-        "genre        = COALESCE(genre, ?), "
-        "developer    = COALESCE(developer, ?), "
-        "publisher    = COALESCE(publisher, ?), "
-        "players_max  = COALESCE(players_max, ?), "
-        "release_year = COALESCE(release_year, ?), "
-        "release_date = COALESCE(release_date, ?), "
-        "description  = COALESCE(description, ?) "
-        "WHERE game_id = ?"));
+    updateQuery.prepare(QStringLiteral("UPDATE games SET "
+                                       "genre        = COALESCE(genre, ?), "
+                                       "developer    = COALESCE(developer, ?), "
+                                       "publisher    = COALESCE(publisher, ?), "
+                                       "players_max  = COALESCE(players_max, ?), "
+                                       "release_year = COALESCE(release_year, ?), "
+                                       "release_date = COALESCE(release_date, ?), "
+                                       "description  = COALESCE(description, ?) "
+                                       "WHERE game_id = ?"));
 
     QSqlQuery factQuery(database);
     factQuery.prepare(QStringLiteral(
@@ -116,41 +109,31 @@ bool enrichFromGameTDB(QSqlDatabase &database,
         "VALUES (?, ?, ?, ?, ?, ?, ?, ?)"));
 
     QSqlQuery delQuery(database);
-    delQuery.prepare(QStringLiteral(
-        "DELETE FROM game_facts WHERE game_id = ? AND field_name = ? AND source_id = ?"));
+    delQuery.prepare(QStringLiteral("DELETE FROM game_facts WHERE game_id = ? AND field_name = ? AND source_id = ?"));
 
-    const FactInsertSpec factSpec{
+    const FactInsertSpec factSpec {
         sourceId,
         snapshotId,
         55,
         0.90,
     };
 
-    auto insertFact = [&](const QString &gameId,
-                          const QString &field,
-                          const QString &value,
-                          const QString &valueType) -> bool {
+    auto insertFact
+        = [&](const QString &gameId, const QString &field, const QString &value, const QString &valueType) -> bool {
         bool inserted = false;
-        if (!insertGameFact(delQuery,
-                            factQuery,
-                            factSpec,
-                            gameId,
-                            field,
-                            value,
-                            valueType,
-                            error,
-                            QStringLiteral("gametdb"),
-                            &inserted))
+        if (!insertGameFact(delQuery, factQuery, factSpec, gameId, field, value, valueType, error,
+                QStringLiteral("gametdb"), &inserted))
             return false;
-        if (inserted) ++factsInserted;
+        if (inserted)
+            ++factsInserted;
         return true;
     };
 
     while (gameQuery.next()) {
         const QString gameId = gameQuery.value(0).toString();
-        const QString crc32  = gameCrc32.value(gameId);
-        const QString sha1   = gameSha1.value(gameId);
-        const QString md5    = gameMd5.value(gameId);
+        const QString crc32 = gameCrc32.value(gameId);
+        const QString sha1 = gameSha1.value(gameId);
+        const QString md5 = gameMd5.value(gameId);
 
         // GameTDBProvider::getByHash normalises the hash and checks
         // CRC32 → MD5 → SHA1 indexes in order.
@@ -190,14 +173,15 @@ bool enrichFromGameTDB(QSqlDatabase &database,
             }
         }
 
-        if (meta.title.isEmpty()) continue;
+        if (meta.title.isEmpty())
+            continue;
 
         const QString genre = meta.genres.join(QStringLiteral(", "));
         int releaseYear = 0;
         if (!meta.releaseDate.isEmpty()) {
-            const QDate d = QDate::fromString(meta.releaseDate.left(10),
-                                              QStringLiteral("yyyy-MM-dd"));
-            if (d.isValid()) releaseYear = d.year();
+            const QDate d = QDate::fromString(meta.releaseDate.left(10), QStringLiteral("yyyy-MM-dd"));
+            if (d.isValid())
+                releaseYear = d.year();
         }
 
         updateQuery.bindValue(0, nullableText(genre));
@@ -210,22 +194,27 @@ bool enrichFromGameTDB(QSqlDatabase &database,
         updateQuery.bindValue(7, gameId);
         if (!execPrepared(updateQuery, error, QStringLiteral("Update game GameTDB metadata")))
             return false;
-        if (updateQuery.numRowsAffected() > 0) ++gamesEnriched;
+        if (updateQuery.numRowsAffected() > 0)
+            ++gamesEnriched;
 
-        if (!insertFact(gameId, QStringLiteral("genre"),        genre,                    QStringLiteral("text"))) return false;
-        if (!insertFact(gameId, QStringLiteral("developer"),    meta.developer,            QStringLiteral("text"))) return false;
-        if (!insertFact(gameId, QStringLiteral("publisher"),    meta.publisher,            QStringLiteral("text"))) return false;
+        if (!insertFact(gameId, QStringLiteral("genre"), genre, QStringLiteral("text")))
+            return false;
+        if (!insertFact(gameId, QStringLiteral("developer"), meta.developer, QStringLiteral("text")))
+            return false;
+        if (!insertFact(gameId, QStringLiteral("publisher"), meta.publisher, QStringLiteral("text")))
+            return false;
         if (meta.players > 0
-            && !insertFact(gameId, QStringLiteral("players_max"),
-                           QString::number(meta.players),       QStringLiteral("int")))   return false;
+            && !insertFact(gameId, QStringLiteral("players_max"), QString::number(meta.players), QStringLiteral("int")))
+            return false;
         if (releaseYear > 0
-            && !insertFact(gameId, QStringLiteral("release_year"),
-                           QString::number(releaseYear),        QStringLiteral("int")))   return false;
+            && !insertFact(gameId, QStringLiteral("release_year"), QString::number(releaseYear), QStringLiteral("int")))
+            return false;
         if (releaseYear > 0
-            && !insertFact(gameId, QStringLiteral("release_date"),
-                           meta.releaseDate.left(10),           QStringLiteral("text")))  return false;
+            && !insertFact(gameId, QStringLiteral("release_date"), meta.releaseDate.left(10), QStringLiteral("text")))
+            return false;
         if (!meta.description.isEmpty()
-            && !insertFact(gameId, QStringLiteral("description"), meta.description,          QStringLiteral("text"))) return false;
+            && !insertFact(gameId, QStringLiteral("description"), meta.description, QStringLiteral("text")))
+            return false;
     }
 
     return true;

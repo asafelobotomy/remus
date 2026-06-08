@@ -6,18 +6,15 @@ namespace Remus {
 
 MetadataEditorController::MetadataEditorController(AppController *appController, QObject *parent)
     : QObject(parent)
-    , m_appController(appController)
-{
+    , m_appController(appController) {
     connect(m_appController, &AppController::selectedGameChanged, this, &MetadataEditorController::loadForSelectedFile);
 }
 
-void MetadataEditorController::loadForSelectedFile()
-{
+void MetadataEditorController::loadForSelectedFile() {
     load(m_appController ? m_appController->selectedGameId() : 0);
 }
 
-void MetadataEditorController::load(int gameId)
-{
+void MetadataEditorController::load(int gameId) {
     m_currentGameId = gameId;
     m_pendingFields.clear();
     m_currentGame = buildGameMap(gameId);
@@ -25,8 +22,7 @@ void MetadataEditorController::load(int gameId)
     emit currentGameChanged();
 }
 
-void MetadataEditorController::setField(const QString &field, const QVariant &value)
-{
+void MetadataEditorController::setField(const QString &field, const QVariant &value) {
     if (!m_currentGame.contains(field)) {
         return;
     }
@@ -37,17 +33,14 @@ void MetadataEditorController::setField(const QString &field, const QVariant &va
     emit currentGameChanged();
 }
 
-bool MetadataEditorController::save()
-{
+bool MetadataEditorController::save() {
     if (m_appController == nullptr || !m_appController->isLibraryOpen() || m_currentGameId <= 0) {
         emit saveFailed(QStringLiteral("No game is loaded."));
         return false;
     }
 
     Database *db = m_appController->database();
-    const bool updated = db->updateGame(
-        m_currentGameId,
-        m_pendingFields.value(QStringLiteral("publisher")).toString(),
+    const bool updated = db->updateGame(m_currentGameId, m_pendingFields.value(QStringLiteral("publisher")).toString(),
         m_pendingFields.value(QStringLiteral("developer")).toString(),
         m_pendingFields.value(QStringLiteral("releaseDate")).toString(),
         m_pendingFields.value(QStringLiteral("description")).toString(),
@@ -69,13 +62,11 @@ bool MetadataEditorController::save()
     return true;
 }
 
-void MetadataEditorController::discard()
-{
+void MetadataEditorController::discard() {
     load(m_currentGameId);
 }
 
-QVariantMap MetadataEditorController::buildGameMap(int gameId) const
-{
+QVariantMap MetadataEditorController::buildGameMap(int gameId) const {
     QVariantMap result;
     if (m_appController == nullptr || !m_appController->isLibraryOpen() || gameId <= 0) {
         return result;
@@ -87,9 +78,10 @@ QVariantMap MetadataEditorController::buildGameMap(int gameId) const
     result.insert(QStringLiteral("region"), match.value(QStringLiteral("region")));
     result.insert(QStringLiteral("publisher"), match.value(QStringLiteral("publisher")));
     result.insert(QStringLiteral("developer"), match.value(QStringLiteral("developer")));
-    result.insert(QStringLiteral("releaseDate"), match.value(QStringLiteral("releaseYear")).toInt() > 0
-        ? QString::number(match.value(QStringLiteral("releaseYear")).toInt())
-        : QString());
+    result.insert(QStringLiteral("releaseDate"),
+        match.value(QStringLiteral("releaseYear")).toInt() > 0
+            ? QString::number(match.value(QStringLiteral("releaseYear")).toInt())
+            : QString());
     result.insert(QStringLiteral("description"), match.value(QStringLiteral("description")));
     result.insert(QStringLiteral("genres"), match.value(QStringLiteral("genre")));
     result.insert(QStringLiteral("players"), match.value(QStringLiteral("players")));
@@ -97,8 +89,7 @@ QVariantMap MetadataEditorController::buildGameMap(int gameId) const
     return result;
 }
 
-void MetadataEditorController::setDirty(bool dirty)
-{
+void MetadataEditorController::setDirty(bool dirty) {
     if (m_dirty == dirty) {
         return;
     }

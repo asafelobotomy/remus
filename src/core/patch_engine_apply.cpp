@@ -17,11 +17,9 @@
 
 namespace Remus {
 
-PatchResult PatchEngine::applyIPS(const QString &basePath, const QString &patchPath,
-                                   const QString &outputPath)
-{
+PatchResult PatchEngine::applyIPS(const QString &basePath, const QString &patchPath, const QString &outputPath) {
     QString flips = getFlipsPath();
-    
+
     if (flips.isEmpty()) {
         // Fall back to built-in implementation
         return applyIPSBuiltin(basePath, patchPath, outputPath);
@@ -42,8 +40,8 @@ PatchResult PatchEngine::applyIPS(const QString &basePath, const QString &patchP
     // Run flips
     QProcess process;
     process.setProgram(flips);
-    process.setArguments({"--apply", patchPath, basePath, outputPath});
-    
+    process.setArguments({ "--apply", patchPath, basePath, outputPath });
+
     process.start();
     if (!process.waitForFinished(Constants::Engines::Patch::EXTERNAL_TOOL_TIMEOUT_MS)) {
         process.kill();
@@ -63,9 +61,7 @@ PatchResult PatchEngine::applyIPS(const QString &basePath, const QString &patchP
     return result;
 }
 
-PatchResult PatchEngine::applyIPSBuiltin(const QString &basePath, const QString &patchPath,
-                                          const QString &outputPath)
-{
+PatchResult PatchEngine::applyIPSBuiltin(const QString &basePath, const QString &patchPath, const QString &outputPath) {
     PatchResult result;
     result.outputPath = outputPath;
 
@@ -96,7 +92,8 @@ PatchResult PatchEngine::applyIPSBuiltin(const QString &basePath, const QString 
     // Apply IPS records
     while (!patchFile.atEnd()) {
         QByteArray offsetBytes = patchFile.read(3);
-        if (offsetBytes.size() < 3) break;
+        if (offsetBytes.size() < 3)
+            break;
 
         // Check for EOF marker
         if (offsetBytes == "EOF") {
@@ -104,9 +101,8 @@ PatchResult PatchEngine::applyIPSBuiltin(const QString &basePath, const QString 
         }
 
         // Parse 3-byte offset (big endian)
-        int offset = (static_cast<unsigned char>(offsetBytes[0]) << 16) |
-                     (static_cast<unsigned char>(offsetBytes[1]) << 8) |
-                     static_cast<unsigned char>(offsetBytes[2]);
+        int offset = (static_cast<unsigned char>(offsetBytes[0]) << 16)
+            | (static_cast<unsigned char>(offsetBytes[1]) << 8) | static_cast<unsigned char>(offsetBytes[2]);
 
         // Read 2-byte size
         QByteArray sizeBytes = patchFile.read(2);
@@ -116,8 +112,7 @@ PatchResult PatchEngine::applyIPSBuiltin(const QString &basePath, const QString 
             return result;
         }
 
-        int size = (static_cast<unsigned char>(sizeBytes[0]) << 8) |
-                   static_cast<unsigned char>(sizeBytes[1]);
+        int size = (static_cast<unsigned char>(sizeBytes[0]) << 8) | static_cast<unsigned char>(sizeBytes[1]);
 
         // Expand ROM if needed
         if (offset + size > romData.size()) {
@@ -132,8 +127,8 @@ PatchResult PatchEngine::applyIPSBuiltin(const QString &basePath, const QString 
                 patchFile.close();
                 return result;
             }
-            int rleSize = (static_cast<unsigned char>(rleSizeBytes[0]) << 8) |
-                          static_cast<unsigned char>(rleSizeBytes[1]);
+            int rleSize
+                = (static_cast<unsigned char>(rleSizeBytes[0]) << 8) | static_cast<unsigned char>(rleSizeBytes[1]);
             QByteArray rleBuf = patchFile.read(1);
             if (rleBuf.isEmpty()) {
                 result.error = "Truncated patch file (RLE byte)";
@@ -175,9 +170,7 @@ PatchResult PatchEngine::applyIPSBuiltin(const QString &basePath, const QString 
     return result;
 }
 
-PatchResult PatchEngine::applyBPS(const QString &basePath, const QString &patchPath,
-                                   const QString &outputPath)
-{
+PatchResult PatchEngine::applyBPS(const QString &basePath, const QString &patchPath, const QString &outputPath) {
     PatchResult result;
     result.outputPath = outputPath;
 
@@ -190,8 +183,8 @@ PatchResult PatchEngine::applyBPS(const QString &basePath, const QString &patchP
     // Run flips
     QProcess process;
     process.setProgram(flips);
-    process.setArguments({"--apply", patchPath, basePath, outputPath});
-    
+    process.setArguments({ "--apply", patchPath, basePath, outputPath });
+
     process.start();
     if (!process.waitForFinished(Constants::Engines::Patch::EXTERNAL_TOOL_LARGE_TIMEOUT_MS)) {
         process.kill();
@@ -202,7 +195,7 @@ PatchResult PatchEngine::applyBPS(const QString &basePath, const QString &patchP
 
     if (process.exitCode() == 0) {
         result.success = true;
-        result.checksumVerified = true;  // BPS verifies checksums internally
+        result.checksumVerified = true; // BPS verifies checksums internally
     } else {
         QString errorOutput = QString::fromUtf8(process.readAllStandardError());
         if (errorOutput.isEmpty()) {
@@ -214,9 +207,7 @@ PatchResult PatchEngine::applyBPS(const QString &basePath, const QString &patchP
     return result;
 }
 
-PatchResult PatchEngine::applyXDelta(const QString &basePath, const QString &patchPath,
-                                      const QString &outputPath)
-{
+PatchResult PatchEngine::applyXDelta(const QString &basePath, const QString &patchPath, const QString &outputPath) {
     PatchResult result;
     result.outputPath = outputPath;
 
@@ -229,8 +220,8 @@ PatchResult PatchEngine::applyXDelta(const QString &basePath, const QString &pat
     // Run xdelta3: xdelta3 -d -s source patch output
     QProcess process;
     process.setProgram(xdelta);
-    process.setArguments({"-d", "-s", basePath, patchPath, outputPath});
-    
+    process.setArguments({ "-d", "-s", basePath, patchPath, outputPath });
+
     process.start();
     if (!process.waitForFinished(Constants::Engines::Patch::EXTERNAL_TOOL_XDELTA_TIMEOUT_MS)) {
         process.kill();
@@ -249,9 +240,7 @@ PatchResult PatchEngine::applyXDelta(const QString &basePath, const QString &pat
     return result;
 }
 
-PatchResult PatchEngine::applyPPF(const QString &basePath, const QString &patchPath,
-                                  const QString &outputPath)
-{
+PatchResult PatchEngine::applyPPF(const QString &basePath, const QString &patchPath, const QString &outputPath) {
     PatchResult result;
     result.outputPath = outputPath;
 
@@ -272,7 +261,7 @@ PatchResult PatchEngine::applyPPF(const QString &basePath, const QString &patchP
 
     QProcess process;
     process.setProgram(ppfTool);
-    process.setArguments({patchPath, outputPath});
+    process.setArguments({ patchPath, outputPath });
 
     process.start();
     if (!process.waitForFinished(Constants::Engines::Patch::EXTERNAL_TOOL_TIMEOUT_MS)) {
@@ -297,9 +286,8 @@ PatchResult PatchEngine::applyPPF(const QString &basePath, const QString &patchP
     return result;
 }
 
-bool PatchEngine::createPatch(const QString &originalPath, const QString &modifiedPath,
-                               const QString &patchPath, PatchFormat format)
-{
+bool PatchEngine::createPatch(
+    const QString &originalPath, const QString &modifiedPath, const QString &patchPath, PatchFormat format) {
     QString flips = getFlipsPath();
     if (flips.isEmpty() && format != PatchFormat::XDelta3) {
         qWarning() << "Flips not found, cannot create IPS/BPS patches";
@@ -313,26 +301,26 @@ bool PatchEngine::createPatch(const QString &originalPath, const QString &modifi
     }
 
     QProcess process;
-    
+
     switch (format) {
-        case PatchFormat::IPS:
-            process.setProgram(flips);
-            process.setArguments({"--create", "--ips", originalPath, modifiedPath, patchPath});
-            break;
-            
-        case PatchFormat::BPS:
-            process.setProgram(flips);
-            process.setArguments({"--create", "--bps", originalPath, modifiedPath, patchPath});
-            break;
-            
-        case PatchFormat::XDelta3:
-            process.setProgram(xdelta);
-            process.setArguments({"-e", "-s", originalPath, modifiedPath, patchPath});
-            break;
-            
-        default:
-            qWarning() << "Unsupported format for patch creation";
-            return false;
+    case PatchFormat::IPS:
+        process.setProgram(flips);
+        process.setArguments({ "--create", "--ips", originalPath, modifiedPath, patchPath });
+        break;
+
+    case PatchFormat::BPS:
+        process.setProgram(flips);
+        process.setArguments({ "--create", "--bps", originalPath, modifiedPath, patchPath });
+        break;
+
+    case PatchFormat::XDelta3:
+        process.setProgram(xdelta);
+        process.setArguments({ "-e", "-s", originalPath, modifiedPath, patchPath });
+        break;
+
+    default:
+        qWarning() << "Unsupported format for patch creation";
+        return false;
     }
 
     process.start();

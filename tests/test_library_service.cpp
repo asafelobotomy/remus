@@ -12,13 +12,11 @@
 
 using namespace Remus;
 
-class TestLibraryService : public QObject
-{
+class TestLibraryService : public QObject {
     Q_OBJECT
 
 private:
-    void createStubRoms(const QString &dir)
-    {
+    void createStubRoms(const QString &dir) {
         // NES stub with iNES header
         QByteArray nesHeader("NES\x1A");
         nesHeader.append(QByteArray(12, '\x00'));
@@ -43,8 +41,7 @@ private:
 
 private slots:
 
-    void testScanInsertsFiles()
-    {
+    void testScanInsertsFiles() {
         QTemporaryDir tmp;
         QVERIFY(tmp.isValid());
         createStubRoms(tmp.path());
@@ -55,15 +52,13 @@ private slots:
 
         LibraryService svc;
         int inserted = svc.scan(tmp.path(), &db);
-        QVERIFY2(inserted >= 2,
-                 qPrintable(QString("Expected ≥2 inserted, got %1").arg(inserted)));
+        QVERIFY2(inserted >= 2, qPrintable(QString("Expected ≥2 inserted, got %1").arg(inserted)));
 
         auto files = db.getAllFiles();
         QVERIFY(files.size() >= 2);
     }
 
-    void testScanProgressCallback()
-    {
+    void testScanProgressCallback() {
         QTemporaryDir tmp;
         QVERIFY(tmp.isValid());
         createStubRoms(tmp.path());
@@ -74,13 +69,11 @@ private slots:
 
         int progressCalls = 0;
         LibraryService svc;
-        svc.scan(tmp.path(), &db,
-                 [&](int, int, const QString &) { ++progressCalls; });
+        svc.scan(tmp.path(), &db, [&](int, int, const QString &) { ++progressCalls; });
         QVERIFY2(progressCalls > 0, "Progress callback was never called");
     }
 
-    void testGetStats()
-    {
+    void testGetStats() {
         QTemporaryDir tmp;
         QVERIFY(tmp.isValid());
         createStubRoms(tmp.path());
@@ -97,8 +90,7 @@ private slots:
         QVERIFY(stats.value("totalFiles").toInt() >= 2);
     }
 
-    void testGetSystems()
-    {
+    void testGetSystems() {
         QTemporaryDir tmp;
         QVERIFY(tmp.isValid());
         createStubRoms(tmp.path());
@@ -114,8 +106,7 @@ private slots:
         QVERIFY2(!systems.isEmpty(), "Expected at least one detected system");
     }
 
-    void testScanPreservesCueBinParentLinkage()
-    {
+    void testScanPreservesCueBinParentLinkage() {
         QTemporaryDir tmp;
         QVERIFY(tmp.isValid());
 
@@ -157,8 +148,7 @@ private slots:
         QVERIFY(!cueRecord.isPrimary);
     }
 
-    void testRescanLinksNewCueToExistingBinParent()
-    {
+    void testRescanLinksNewCueToExistingBinParent() {
         QTemporaryDir tmp;
         QVERIFY(tmp.isValid());
 
@@ -175,7 +165,7 @@ private slots:
         QVERIFY(libraryId > 0);
 
         LibraryService svc;
-        QCOMPARE(svc.scan(tmp.path(), &db, {}, {}, libraryId), 1);
+        QCOMPARE(svc.scan(tmp.path(), &db, { }, { }, libraryId), 1);
 
         const QString cuePath = tmp.path() + "/disc.cue";
         QFile cue(cuePath);
@@ -183,7 +173,7 @@ private slots:
         QVERIFY(cue.write("FILE \"disc.bin\" BINARY\n  TRACK 01 MODE1/2352\n    INDEX 01 00:00:00\n") > 0);
         cue.close();
 
-        QVERIFY(svc.scan(tmp.path(), &db, {}, {}, libraryId) >= 1);
+        QVERIFY(svc.scan(tmp.path(), &db, { }, { }, libraryId) >= 1);
 
         FileRecord cueRecord;
         FileRecord binRecord;
@@ -206,8 +196,7 @@ private slots:
         QCOMPARE(cueRecord.parentFileId, binRecord.id);
     }
 
-    void testScanEmptyDir()
-    {
+    void testScanEmptyDir() {
         QTemporaryDir tmp;
         QVERIFY(tmp.isValid());
         // No files created — directory is empty
@@ -221,21 +210,20 @@ private slots:
         QCOMPARE(inserted, 0);
     }
 
-    void testGetAllExtensions()
-    {
+    void testGetAllExtensions() {
         LibraryService svc;
         QStringList exts = svc.getAllExtensions();
         QVERIFY2(!exts.isEmpty(), "Scanner should recognize at least some extensions");
         // Spot-check some well-known extensions
         bool hasNes = false;
         for (const auto &e : exts) {
-            if (e.contains("nes", Qt::CaseInsensitive)) hasNes = true;
+            if (e.contains("nes", Qt::CaseInsensitive))
+                hasNes = true;
         }
         QVERIFY2(hasNes, ".nes should be a recognized extension");
     }
 
-    void testRemoveLibrary()
-    {
+    void testRemoveLibrary() {
         QTemporaryDir tmp;
         QVERIFY(tmp.isValid());
         createStubRoms(tmp.path());
@@ -262,7 +250,8 @@ private slots:
         // After removal, files for that library are deleted
         int remainingForLib = 0;
         for (const auto &f : remaining)
-            if (f.libraryId == libId) remainingForLib++;
+            if (f.libraryId == libId)
+                remainingForLib++;
         QCOMPARE(remainingForLib, 0);
     }
 };

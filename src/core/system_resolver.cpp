@@ -7,44 +7,39 @@ using namespace Constants;
 using namespace Constants::Providers;
 using namespace Constants::Systems;
 
-QString SystemResolver::displayName(int systemId)
-{
-    const Constants::Systems::SystemDef* system = Constants::Systems::getSystem(systemId);
+QString SystemResolver::displayName(int systemId) {
+    const Constants::Systems::SystemDef *system = Constants::Systems::getSystem(systemId);
     return system ? system->displayName : QStringLiteral("Unknown");
 }
 
-QString SystemResolver::internalName(int systemId)
-{
-    const Constants::Systems::SystemDef* system = Constants::Systems::getSystem(systemId);
+QString SystemResolver::internalName(int systemId) {
+    const Constants::Systems::SystemDef *system = Constants::Systems::getSystem(systemId);
     return system ? system->internalName : QStringLiteral("Unknown");
 }
 
-QString SystemResolver::providerName(int systemId, const QString &providerId)
-{
+QString SystemResolver::providerName(int systemId, const QString &providerId) {
     static QMap<int, QMap<QString, QString>> mappings = providerMappings();
-    
+
     // Check if we have a mapping for this system
     if (!mappings.contains(systemId)) {
         return QString();
     }
-    
+
     // Check if we have a mapping for this provider
     const QMap<QString, QString> &providerMap = mappings[systemId];
     if (!providerMap.contains(providerId)) {
         // Fallback: for providers like Hasheous, use internal name
         return internalName(systemId);
     }
-    
+
     return providerMap[providerId];
 }
 
-int SystemResolver::systemIdByName(const QString &internalName)
-{
+int SystemResolver::systemIdByName(const QString &internalName) {
     return Constants::Systems::getSystemIdByName(internalName);
 }
 
-QString SystemResolver::resolveSystemName(const QString &name)
-{
+QString SystemResolver::resolveSystemName(const QString &name) {
     // Try direct internal name lookup first
     int id = systemIdByName(name);
     if (id != 0) {
@@ -60,8 +55,7 @@ QString SystemResolver::resolveSystemName(const QString &name)
     return name;
 }
 
-bool SystemResolver::isValidSystem(int systemId)
-{
+bool SystemResolver::isValidSystem(int systemId) {
     return Constants::Systems::getSystem(systemId) != nullptr;
 }
 

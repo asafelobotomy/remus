@@ -9,83 +9,74 @@
 namespace Remus {
 
 RetroAchievementsProvider::RetroAchievementsProvider(QObject *parent)
-    : HttpMetadataProvider(250, parent)  // 4 req/sec — RA requests ≤1/s but bulk tools safely use 4/s
-{
-}
+    : HttpMetadataProvider(250, parent) // 4 req/sec — RA requests ≤1/s but bulk tools safely use 4/s
+{ }
 
-void RetroAchievementsProvider::setCredentials(const QString &username,
-                                                const QString &apiKey)
-{
+void RetroAchievementsProvider::setCredentials(const QString &username, const QString &apiKey) {
     m_username = username;
     m_apiKey = apiKey;
     m_authenticated = !username.isEmpty() && !apiKey.isEmpty();
 }
 
-QList<SearchResult> RetroAchievementsProvider::searchByName(const QString &title,
-                                                             const QString &system,
-                                                             const QString &region)
-{
+QList<SearchResult> RetroAchievementsProvider::searchByName(
+    const QString &title, const QString &system, const QString &region) {
     Q_UNUSED(title);
     Q_UNUSED(system);
     Q_UNUSED(region);
     // RA API doesn't have a name search endpoint — hash-only provider
-    return {};
+    return { };
 }
 
-GameMetadata RetroAchievementsProvider::getByHash(const QString &hash,
-                                                    const QString &system)
-{
+GameMetadata RetroAchievementsProvider::getByHash(const QString &hash, const QString &system) {
     Q_UNUSED(system);
 
     if (!m_authenticated || hash.isEmpty())
-        return {};
+        return { };
 
     // RA hash lookup uses MD5 — if this isn't an MD5 hash (32 hex chars), skip
     const QString cleanHash = hash.trimmed().toLower();
     if (cleanHash.length() != 32)
-        return {};
+        return { };
 
     int gameId = resolveHashToGameId(cleanHash);
     if (gameId <= 0)
-        return {};
+        return { };
 
     QJsonObject gameJson = fetchGameJson(gameId);
     if (gameJson.isEmpty())
-        return {};
+        return { };
 
     return parseGameJson(gameJson, gameId);
 }
 
-GameMetadata RetroAchievementsProvider::getById(const QString &id)
-{
+GameMetadata RetroAchievementsProvider::getById(const QString &id) {
     if (!m_authenticated)
-        return {};
+        return { };
 
     bool ok = false;
     int gameId = id.toInt(&ok);
     if (!ok || gameId <= 0)
-        return {};
+        return { };
 
     QJsonObject gameJson = fetchGameJson(gameId);
     if (gameJson.isEmpty())
-        return {};
+        return { };
 
     return parseGameJson(gameJson, gameId);
 }
 
-ArtworkUrls RetroAchievementsProvider::getArtwork(const QString &id)
-{
+ArtworkUrls RetroAchievementsProvider::getArtwork(const QString &id) {
     if (!m_authenticated)
-        return {};
+        return { };
 
     bool ok = false;
     int gameId = id.toInt(&ok);
     if (!ok || gameId <= 0)
-        return {};
+        return { };
 
     QJsonObject json = fetchGameJson(gameId);
     if (json.isEmpty())
-        return {};
+        return { };
 
     ArtworkUrls artwork;
     const QString mediaBase = QString::fromLatin1(MEDIA_BASE);
@@ -109,8 +100,7 @@ ArtworkUrls RetroAchievementsProvider::getArtwork(const QString &id)
     return artwork;
 }
 
-int RetroAchievementsProvider::resolveHashToGameId(const QString &md5Hash)
-{
+int RetroAchievementsProvider::resolveHashToGameId(const QString &md5Hash) {
     throttle();
 
     // The standard emulator hash→gameID resolution endpoint
@@ -121,8 +111,8 @@ int RetroAchievementsProvider::resolveHashToGameId(const QString &md5Hash)
     url.setQuery(query);
 
     QNetworkRequest request(url);
-    request.setHeader(QNetworkRequest::UserAgentHeader,
-                      QStringLiteral("Remus/1.0 (https://github.com/asafelobotomy/remus)"));
+    request.setHeader(
+        QNetworkRequest::UserAgentHeader, QStringLiteral("Remus/1.0 (https://github.com/asafelobotomy/remus)"));
 
     QNetworkReply *reply = m_networkManager->get(request);
     ApiResponse response = waitForReply(reply, REQUEST_TIMEOUT_MS);
@@ -143,11 +133,9 @@ int RetroAchievementsProvider::resolveHashToGameId(const QString &md5Hash)
     return gameId;
 }
 
-QList<RetroAchievementsProvider::RAGameListEntry>
-RetroAchievementsProvider::fetchGameListBySystemId(int raSystemId)
-{
+QList<RetroAchievementsProvider::RAGameListEntry> RetroAchievementsProvider::fetchGameListBySystemId(int raSystemId) {
     if (!m_authenticated || raSystemId <= 0)
-        return {};
+        return { };
 
     throttle();
 
@@ -160,19 +148,19 @@ RetroAchievementsProvider::fetchGameListBySystemId(int raSystemId)
     // NOTE: Do not log `url` — it contains a plaintext API key.
 
     QNetworkRequest request(url);
-    request.setHeader(QNetworkRequest::UserAgentHeader,
-                      QStringLiteral("Remus/1.0 (https://github.com/asafelobotomy/remus)"));
+    request.setHeader(
+        QNetworkRequest::UserAgentHeader, QStringLiteral("Remus/1.0 (https://github.com/asafelobotomy/remus)"));
 
     QNetworkReply *reply = m_networkManager->get(request);
     ApiResponse response = waitForReply(reply, REQUEST_TIMEOUT_MS);
 
     if (!response.success || response.data.isEmpty())
-        return {};
+        return { };
 
     QJsonParseError parseError;
     QJsonDocument doc = QJsonDocument::fromJson(response.data, &parseError);
     if (parseError.error != QJsonParseError::NoError || !doc.isArray())
-        return {};
+        return { };
 
     QList<RAGameListEntry> entries;
     const QJsonArray arr = doc.array();
@@ -181,11 +169,12 @@ RetroAchievementsProvider::fetchGameListBySystemId(int raSystemId)
     for (const QJsonValue &val : arr) {
         const QJsonObject obj = val.toObject();
         const int gameId = obj.value(QStringLiteral("ID")).toInt(0);
-        if (gameId <= 0) continue;
+        if (gameId <= 0)
+            continue;
 
         RAGameListEntry entry;
-        entry.gameId          = gameId;
-        entry.title           = obj.value(QStringLiteral("Title")).toString();
+        entry.gameId = gameId;
+        entry.title = obj.value(QStringLiteral("Title")).toString();
         entry.achievementCount = obj.value(QStringLiteral("NumAchievements")).toInt(0);
 
         // "Hashes" is an array of MD5 strings present when the API supports h=1.
@@ -207,8 +196,7 @@ RetroAchievementsProvider::fetchGameListBySystemId(int raSystemId)
     return entries;
 }
 
-QJsonObject RetroAchievementsProvider::fetchGameJson(int gameId)
-{
+QJsonObject RetroAchievementsProvider::fetchGameJson(int gameId) {
     throttle();
 
     QUrl url(QString::fromLatin1(API_BASE) + QStringLiteral("/API_GetGame.php"));
@@ -220,26 +208,24 @@ QJsonObject RetroAchievementsProvider::fetchGameJson(int gameId)
     // Do not log or print `url` after this point — it contains a plaintext API key.
 
     QNetworkRequest request(url);
-    request.setHeader(QNetworkRequest::UserAgentHeader,
-                      QStringLiteral("Remus/1.0 (https://github.com/asafelobotomy/remus)"));
+    request.setHeader(
+        QNetworkRequest::UserAgentHeader, QStringLiteral("Remus/1.0 (https://github.com/asafelobotomy/remus)"));
 
     QNetworkReply *reply = m_networkManager->get(request);
     ApiResponse response = waitForReply(reply, REQUEST_TIMEOUT_MS);
 
     if (!response.success || response.data.isEmpty())
-        return {};
+        return { };
 
     QJsonParseError parseError;
     QJsonDocument doc = QJsonDocument::fromJson(response.data, &parseError);
     if (parseError.error != QJsonParseError::NoError)
-        return {};
+        return { };
 
     return doc.object();
 }
 
-GameMetadata RetroAchievementsProvider::parseGameJson(const QJsonObject &json,
-                                                       int gameId) const
-{
+GameMetadata RetroAchievementsProvider::parseGameJson(const QJsonObject &json, int gameId) const {
     GameMetadata metadata;
     metadata.id = QString::number(gameId);
     metadata.providerId = Constants::Providers::RETROACHIEVEMENTS;
@@ -279,8 +265,7 @@ GameMetadata RetroAchievementsProvider::parseGameJson(const QJsonObject &json,
         metadata.screenshotUrls.append(QString::fromLatin1(MEDIA_BASE) + ingame);
 
     // External ID cross-reference
-    metadata.externalIds.insert(Constants::Providers::ExternalId::RETROACHIEVEMENTS,
-                                QString::number(gameId));
+    metadata.externalIds.insert(Constants::Providers::ExternalId::RETROACHIEVEMENTS, QString::number(gameId));
 
     return metadata;
 }

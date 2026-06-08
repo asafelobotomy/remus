@@ -8,15 +8,13 @@
 
 namespace Remus {
 
-void VerificationEngine::setCompendiumDb(const QString &compendiumDbPath)
-{
+void VerificationEngine::setCompendiumDb(const QString &compendiumDbPath) {
     // Switching catalog sources invalidates in-memory DAT caches.
     m_datCache.clear();
     m_patchDatCache.clear();
     m_datHashTypes.clear();
 
-    const QString targetConnection = QString("compendium_verify_%1")
-        .arg(reinterpret_cast<quintptr>(this));
+    const QString targetConnection = QString("compendium_verify_%1").arg(reinterpret_cast<quintptr>(this));
 
     // Allow explicit detach by passing an empty path.
     if (compendiumDbPath.trimmed().isEmpty()) {
@@ -43,12 +41,10 @@ void VerificationEngine::setCompendiumDb(const QString &compendiumDbPath)
         QSqlDatabase::removeDatabase(targetConnection);
     }
 
-    QSqlDatabase db = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"),
-                                                targetConnection);
+    QSqlDatabase db = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), targetConnection);
     db.setDatabaseName(compendiumDbPath);
     if (!db.open()) {
-        qWarning() << "VerificationEngine: failed to open compendium DB:"
-                   << compendiumDbPath;
+        qWarning() << "VerificationEngine: failed to open compendium DB:" << compendiumDbPath;
         m_compendiumConnectionName.clear();
         return;
     }
@@ -57,8 +53,7 @@ void VerificationEngine::setCompendiumDb(const QString &compendiumDbPath)
     qDebug() << "VerificationEngine: compendium DB attached:" << compendiumDbPath;
 }
 
-bool VerificationEngine::createVerificationSchema()
-{
+bool VerificationEngine::createVerificationSchema() {
     QSqlQuery query(m_database->database());
 
     // Create verification_dats table

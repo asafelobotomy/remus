@@ -21,44 +21,35 @@ namespace CompendiumEnrichment {
 
 namespace {
 
-// Returns the candidate with the greatest number of non-empty enrichable fields.
-// Used to resolve title-collision ties in the IGDB index (multiple entries with
-// the same normalized title, e.g. different regional variants of the same game).
-const GameMetadata &bestCandidate(const QList<GameMetadata> &candidates)
-{
-    Q_ASSERT(!candidates.isEmpty());
-    int bestScore = -1;
-    int bestIdx   = 0;
-    for (int i = 0; i < candidates.size(); ++i) {
-        const GameMetadata &c = candidates.at(i);
-        const int score = (!c.description.isEmpty()   ? 1 : 0)
-                        + (!c.developer.isEmpty()     ? 1 : 0)
-                        + (!c.publisher.isEmpty()     ? 1 : 0)
-                        + (!c.genres.isEmpty()        ? 1 : 0)
-                        + (c.releaseDate.size() >= 4  ? 1 : 0)
-                        + (c.rating > 0.0f            ? 1 : 0)
-                        + (c.players > 0              ? 1 : 0);
-        if (score > bestScore) {
-            bestScore = score;
-            bestIdx   = i;
+    // Returns the candidate with the greatest number of non-empty enrichable fields.
+    // Used to resolve title-collision ties in the IGDB index (multiple entries with
+    // the same normalized title, e.g. different regional variants of the same game).
+    const GameMetadata &bestCandidate(const QList<GameMetadata> &candidates) {
+        Q_ASSERT(!candidates.isEmpty());
+        int bestScore = -1;
+        int bestIdx = 0;
+        for (int i = 0; i < candidates.size(); ++i) {
+            const GameMetadata &c = candidates.at(i);
+            const int score = (!c.description.isEmpty() ? 1 : 0) + (!c.developer.isEmpty() ? 1 : 0)
+                + (!c.publisher.isEmpty() ? 1 : 0) + (!c.genres.isEmpty() ? 1 : 0) + (c.releaseDate.size() >= 4 ? 1 : 0)
+                + (c.rating > 0.0f ? 1 : 0) + (c.players > 0 ? 1 : 0);
+            if (score > bestScore) {
+                bestScore = score;
+                bestIdx = i;
+            }
         }
+        return candidates.at(bestIdx);
     }
-    return candidates.at(bestIdx);
-}
 
 } // anonymous namespace
 
-bool enrichFromIGDB(QSqlDatabase &database,
-                    const QString &credentialsPath,
-                    int &gamesEnriched,
-                    int &factsInserted,
-                    QString &error)
-{
+bool enrichFromIGDB(
+    QSqlDatabase &database, const QString &credentialsPath, int &gamesEnriched, int &factsInserted, QString &error) {
     gamesEnriched = 0;
     factsInserted = 0;
 
     // Load credentials via CredentialManager (JSON file → env var → QSettings → keychain)
-    const QString clientId     = CredentialManager::get(QStringLiteral("igdb/client_id"),     credentialsPath);
+    const QString clientId = CredentialManager::get(QStringLiteral("igdb/client_id"), credentialsPath);
     const QString clientSecret = CredentialManager::get(QStringLiteral("igdb/client_secret"), credentialsPath);
     if (clientId.isEmpty() || clientSecret.isEmpty()) {
         qInfo() << "[IGDB] Credentials not configured — enrichment skipped";
@@ -67,24 +58,26 @@ bool enrichFromIGDB(QSqlDatabase &database,
 
     // Systems that still have games missing any enrichable field
     QSqlQuery sysQ(database);
-    if (!sysQ.exec(QStringLiteral(
-            "SELECT DISTINCT g.system_id, s.display_name FROM games g "
-            "JOIN systems s ON s.system_id = g.system_id "
-            "WHERE g.description IS NULL OR g.description = '' "
-            "   OR g.genre IS NULL OR g.genre = '' "
-            "   OR g.developer IS NULL OR g.developer = '' "
-            "   OR g.publisher IS NULL OR g.publisher = '' "
-            "   OR g.release_year IS NULL "
-            "   OR g.rating IS NULL "
-            "   OR g.players_max IS NULL "
-            "ORDER BY s.display_name"))) {
+    if (!sysQ.exec(QStringLiteral("SELECT DISTINCT g.system_id, s.display_name FROM games g "
+                                  "JOIN systems s ON s.system_id = g.system_id "
+                                  "WHERE g.description IS NULL OR g.description = '' "
+                                  "   OR g.genre IS NULL OR g.genre = '' "
+                                  "   OR g.developer IS NULL OR g.developer = '' "
+                                  "   OR g.publisher IS NULL OR g.publisher = '' "
+                                  "   OR g.release_year IS NULL "
+                                  "   OR g.rating IS NULL "
+                                  "   OR g.players_max IS NULL "
+                                  "ORDER BY s.display_name"))) {
         error = QStringLiteral("Query systems: %1").arg(sysQ.lastError().text());
         return false;
     }
-    struct SysInfo { int id; QString name; };
+    struct SysInfo {
+        int id;
+        QString name;
+    };
     QList<SysInfo> systems;
     while (sysQ.next())
-        systems.append({sysQ.value(0).toInt(), sysQ.value(1).toString()});
+        systems.append({ sysQ.value(0).toInt(), sysQ.value(1).toString() });
     // Release the cursor/prepared-statement before starting per-system write
     // transactions — an open cursor can cause SQLITE_LOCKED in some SQLite
     // journal modes when the nested QEventLoop (waitForReply) re-enters.
@@ -102,7 +95,7 @@ bool enrichFromIGDB(QSqlDatabase &database,
     IGDBProvider provider;
     provider.setCredentials(clientId, clientSecret);
 
-    const QString snapshotId   = QStringLiteral("igdb-bulk");
+    const QString snapshotId = QStringLiteral("igdb-bulk");
     static const int PAGE_SIZE = 500;
 
     for (const SysInfo &sys : systems) {
@@ -111,7 +104,8 @@ bool enrichFromIGDB(QSqlDatabase &database,
         HttpMetadataProvider::processNetworkEvents();
 
         const QString igdbSlug = SystemResolver::providerName(sys.id, Constants::Providers::IGDB);
-        if (igdbSlug.isEmpty()) continue;
+        if (igdbSlug.isEmpty())
+            continue;
 
         // Bulk-fetch all IGDB games for this platform
         QHash<QString, QList<GameMetadata>> igdbIndex;
@@ -122,24 +116,25 @@ bool enrichFromIGDB(QSqlDatabase &database,
                 if (!gm.title.isEmpty())
                     igdbIndex[normalizeMetadataTitle(gm.title)].append(gm);
             }
-            if (page.size() < PAGE_SIZE) break;
+            if (page.size() < PAGE_SIZE)
+                break;
             offset += PAGE_SIZE;
         }
 
-        if (igdbIndex.isEmpty()) continue;
-        qInfo().noquote() << QStringLiteral("[IGDB] %1 (%2): %3 entries indexed")
-            .arg(sys.name, igdbSlug).arg(igdbIndex.size());
+        if (igdbIndex.isEmpty())
+            continue;
+        qInfo().noquote()
+            << QStringLiteral("[IGDB] %1 (%2): %3 entries indexed").arg(sys.name, igdbSlug).arg(igdbIndex.size());
 
         // Per-system transaction — keeps lock duration short relative to network time
         if (!database.transaction()) {
             error = QStringLiteral("Failed to start transaction for system %1: %2")
-                .arg(sys.name, database.lastError().text());
+                        .arg(sys.name, database.lastError().text());
             return false;
         }
 
-        if (!upsertEnrichmentSource(
-                database,
-                SourceSpec{
+        if (!upsertEnrichmentSource(database,
+                SourceSpec {
                     QStringLiteral("igdb"),
                     QStringLiteral("IGDB"),
                     QStringLiteral("online-api"),
@@ -148,7 +143,7 @@ bool enrichFromIGDB(QSqlDatabase &database,
                     /*priority=*/70,
                     QString(),
                 },
-                SnapshotSpec{
+                SnapshotSpec {
                     snapshotId,
                     QStringLiteral("IGDB bulk enrichment"),
                 },
@@ -158,89 +153,78 @@ bool enrichFromIGDB(QSqlDatabase &database,
         }
 
         QSqlQuery updateQ(database);
-        updateQ.prepare(QStringLiteral(
-            "UPDATE games SET "
-            "description  = COALESCE(NULLIF(description, ''), ?), "
-            "genre        = COALESCE(NULLIF(genre, ''), ?), "
-            "developer    = COALESCE(NULLIF(developer, ''), ?), "
-            "publisher    = COALESCE(NULLIF(publisher, ''), ?), "
-            "release_year = COALESCE(release_year, ?), "
-            "release_date = COALESCE(release_date, ?), "
-            "rating       = COALESCE(rating, ?), "
-            "players_max  = COALESCE(players_max, ?) "
-            "WHERE game_id = ?"));
+        updateQ.prepare(QStringLiteral("UPDATE games SET "
+                                       "description  = COALESCE(NULLIF(description, ''), ?), "
+                                       "genre        = COALESCE(NULLIF(genre, ''), ?), "
+                                       "developer    = COALESCE(NULLIF(developer, ''), ?), "
+                                       "publisher    = COALESCE(NULLIF(publisher, ''), ?), "
+                                       "release_year = COALESCE(release_year, ?), "
+                                       "release_date = COALESCE(release_date, ?), "
+                                       "rating       = COALESCE(rating, ?), "
+                                       "players_max  = COALESCE(players_max, ?) "
+                                       "WHERE game_id = ?"));
 
         QSqlQuery factQ(database);
-        factQ.prepare(QStringLiteral(
-            "INSERT INTO game_facts "
-            "(game_id, field_name, field_value, value_type, source_id, snapshot_id, "
-            "source_priority, confidence) "
-            "VALUES (?, ?, ?, ?, ?, ?, ?, ?)"));
+        factQ.prepare(QStringLiteral("INSERT INTO game_facts "
+                                     "(game_id, field_name, field_value, value_type, source_id, snapshot_id, "
+                                     "source_priority, confidence) "
+                                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?)"));
 
         QSqlQuery delQ(database);
-        delQ.prepare(QStringLiteral(
-            "DELETE FROM game_facts WHERE game_id = ? AND field_name = ? AND source_id = ?"));
+        delQ.prepare(QStringLiteral("DELETE FROM game_facts WHERE game_id = ? AND field_name = ? AND source_id = ?"));
 
-        const FactInsertSpec factSpec{
+        const FactInsertSpec factSpec {
             QStringLiteral("igdb"),
             snapshotId,
             70,
             0.80,
         };
 
-        auto insertFact = [&](const QString &gameId, const QString &field,
-                               const QString &value,
-                               const QString &type = QStringLiteral("text")) -> bool {
+        auto insertFact = [&](const QString &gameId, const QString &field, const QString &value,
+                              const QString &type = QStringLiteral("text")) -> bool {
             bool inserted = false;
-            if (!insertGameFact(delQ,
-                                factQ,
-                                factSpec,
-                                gameId,
-                                field,
-                                value,
-                                type,
-                                error,
-                                QStringLiteral("igdb"),
-                                &inserted)) return false;
-            if (inserted) ++factsInserted;
+            if (!insertGameFact(
+                    delQ, factQ, factSpec, gameId, field, value, type, error, QStringLiteral("igdb"), &inserted))
+                return false;
+            if (inserted)
+                ++factsInserted;
             return true;
         };
 
         QSqlQuery gamesQ(database);
-        gamesQ.prepare(QStringLiteral(
-            "SELECT game_id, canonical_title FROM games "
-            "WHERE system_id = ? "
-            "  AND (description IS NULL OR description = '' "
-            "    OR genre IS NULL OR genre = '' "
-            "    OR developer IS NULL OR developer = '' "
-            "    OR publisher IS NULL OR publisher = '' "
-            "    OR release_year IS NULL "
-            "    OR rating IS NULL "
-            "    OR players_max IS NULL)"));
+        gamesQ.prepare(QStringLiteral("SELECT game_id, canonical_title FROM games "
+                                      "WHERE system_id = ? "
+                                      "  AND (description IS NULL OR description = '' "
+                                      "    OR genre IS NULL OR genre = '' "
+                                      "    OR developer IS NULL OR developer = '' "
+                                      "    OR publisher IS NULL OR publisher = '' "
+                                      "    OR release_year IS NULL "
+                                      "    OR rating IS NULL "
+                                      "    OR players_max IS NULL)"));
         gamesQ.addBindValue(sys.id);
         if (!gamesQ.exec()) {
             database.rollback();
-            error = QStringLiteral("Query games for system %1: %2")
-                .arg(sys.name, gamesQ.lastError().text());
+            error = QStringLiteral("Query games for system %1: %2").arg(sys.name, gamesQ.lastError().text());
             return false;
         }
 
         int sysEnriched = 0;
         while (gamesQ.next()) {
             const QString gameId = gamesQ.value(0).toString();
-            const QString norm   = normalizeMetadataTitle(gamesQ.value(1).toString());
-            const auto it        = igdbIndex.constFind(norm);
-            if (it == igdbIndex.cend()) continue;
+            const QString norm = normalizeMetadataTitle(gamesQ.value(1).toString());
+            const auto it = igdbIndex.constFind(norm);
+            if (it == igdbIndex.cend())
+                continue;
             const GameMetadata &gm = bestCandidate(it.value());
 
             int releaseYear = 0;
             if (gm.releaseDate.size() >= 4) {
                 bool ok = false;
                 const int y = gm.releaseDate.left(4).toInt(&ok);
-                if (ok && y > 1970 && y < 2030) releaseYear = y;
+                if (ok && y > 1970 && y < 2030)
+                    releaseYear = y;
             }
-            const QString releaseDateStr = (gm.releaseDate.size() >= 10)
-                ? gm.releaseDate.left(10) : QString();
+            const QString releaseDateStr = (gm.releaseDate.size() >= 10) ? gm.releaseDate.left(10) : QString();
 
             updateQ.bindValue(0, nullableText(gm.description));
             updateQ.bindValue(1, gm.genres.isEmpty() ? nullableText(QString()) : QVariant(gm.genres.first()));
@@ -255,29 +239,31 @@ bool enrichFromIGDB(QSqlDatabase &database,
                 database.rollback();
                 return false;
             }
-            if (updateQ.numRowsAffected() > 0) { ++gamesEnriched; ++sysEnriched; }
+            if (updateQ.numRowsAffected() > 0) {
+                ++gamesEnriched;
+                ++sysEnriched;
+            }
 
-            const QString genreStr   = gm.genres.isEmpty() ? QString() : gm.genres.first();
-            const QString yearStr    = releaseYear > 0 ? QString::number(releaseYear) : QString();
-            const QString ratingStr  = gm.rating > 0.0f
-                ? QString::number(static_cast<double>(gm.rating), 'f', 2) : QString();
+            const QString genreStr = gm.genres.isEmpty() ? QString() : gm.genres.first();
+            const QString yearStr = releaseYear > 0 ? QString::number(releaseYear) : QString();
+            const QString ratingStr
+                = gm.rating > 0.0f ? QString::number(static_cast<double>(gm.rating), 'f', 2) : QString();
             const QString playersStr = gm.players > 0 ? QString::number(gm.players) : QString();
             if (!insertFact(gameId, QStringLiteral("description"), gm.description)
-                || !insertFact(gameId, QStringLiteral("genre"),        genreStr)
-                || !insertFact(gameId, QStringLiteral("developer"),    gm.developer)
-                || !insertFact(gameId, QStringLiteral("publisher"),    gm.publisher)
+                || !insertFact(gameId, QStringLiteral("genre"), genreStr)
+                || !insertFact(gameId, QStringLiteral("developer"), gm.developer)
+                || !insertFact(gameId, QStringLiteral("publisher"), gm.publisher)
                 || !insertFact(gameId, QStringLiteral("release_year"), yearStr, QStringLiteral("integer"))
                 || !insertFact(gameId, QStringLiteral("release_date"), releaseDateStr)
-                || !insertFact(gameId, QStringLiteral("rating"),       ratingStr, QStringLiteral("decimal"))
-                || !insertFact(gameId, QStringLiteral("players_max"),  playersStr, QStringLiteral("integer"))) {
+                || !insertFact(gameId, QStringLiteral("rating"), ratingStr, QStringLiteral("decimal"))
+                || !insertFact(gameId, QStringLiteral("players_max"), playersStr, QStringLiteral("integer"))) {
                 database.rollback();
                 return false;
             }
         }
 
         if (!database.commit()) {
-            error = QStringLiteral("Failed to commit enrichment for %1: %2")
-                .arg(sys.name, database.lastError().text());
+            error = QStringLiteral("Failed to commit enrichment for %1: %2").arg(sys.name, database.lastError().text());
             return false;
         }
 

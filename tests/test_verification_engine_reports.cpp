@@ -6,16 +6,13 @@
 
 #include "test_verification_engine_fixture.h"
 
-void VerificationEngineTest::testGetMissingGames()
-{
+void VerificationEngineTest::testGetMissingGames() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
     Database db;
     QVERIFY(db.initialize(":memory:"));
-    populateDb(db, "7b5e9e81",
-               "811b027eaf99c2def7b933c5208636de",
-               "ea343f4e445a9050d4b4fbac2c77d0693b1d0922");
+    populateDb(db, "7b5e9e81", "811b027eaf99c2def7b933c5208636de", "ea343f4e445a9050d4b4fbac2c77d0693b1d0922");
 
     VerificationEngine engine(&db);
     const QString datPath = writeDat(dir);
@@ -27,8 +24,7 @@ void VerificationEngineTest::testGetMissingGames()
     QCOMPARE(missing.first().gameName, QStringLiteral("Donkey Kong"));
 }
 
-void VerificationEngineTest::testVerifyPatchedHashPromotesMetadata()
-{
+void VerificationEngineTest::testVerifyPatchedHashPromotesMetadata() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
@@ -70,16 +66,13 @@ void VerificationEngineTest::testVerifyPatchedHashPromotesMetadata()
     QCOMPARE(updated.patchName, QStringLiteral("English v2.0 Addendum"));
 }
 
-void VerificationEngineTest::testExportReportCsv()
-{
+void VerificationEngineTest::testExportReportCsv() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
     Database db;
     QVERIFY(db.initialize(":memory:"));
-    populateDb(db, "7b5e9e81",
-               "811b027eaf99c2def7b933c5208636de",
-               "ea343f4e445a9050d4b4fbac2c77d0693b1d0922");
+    populateDb(db, "7b5e9e81", "811b027eaf99c2def7b933c5208636de", "ea343f4e445a9050d4b4fbac2c77d0693b1d0922");
 
     VerificationEngine engine(&db);
     engine.importDat(writeDat(dir), "NES");
@@ -100,16 +93,13 @@ void VerificationEngineTest::testExportReportCsv()
     QVERIFY(csv.count('\n') >= 2);
 }
 
-void VerificationEngineTest::testExportReportJson()
-{
+void VerificationEngineTest::testExportReportJson() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
     Database db;
     QVERIFY(db.initialize(":memory:"));
-    populateDb(db, "7b5e9e81",
-               "811b027eaf99c2def7b933c5208636de",
-               "ea343f4e445a9050d4b4fbac2c77d0693b1d0922");
+    populateDb(db, "7b5e9e81", "811b027eaf99c2def7b933c5208636de", "ea343f4e445a9050d4b4fbac2c77d0693b1d0922");
 
     VerificationEngine engine(&db);
     engine.importDat(writeDat(dir), "NES");
@@ -140,8 +130,7 @@ void VerificationEngineTest::testExportReportJson()
     QVERIFY(first.contains("system"));
 }
 
-void VerificationEngineTest::testGetImportedDatsReturnsHeaders()
-{
+void VerificationEngineTest::testGetImportedDatsReturnsHeaders() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
@@ -160,8 +149,7 @@ void VerificationEngineTest::testGetImportedDatsReturnsHeaders()
     QVERIFY(patchDats.isEmpty() || !patchDats.contains("NES"));
 }
 
-void VerificationEngineTest::testVerifyLibraryWithSystemFilter()
-{
+void VerificationEngineTest::testVerifyLibraryWithSystemFilter() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
@@ -183,8 +171,8 @@ void VerificationEngineTest::testVerifyLibraryWithSystemFilter()
     nes.crc32 = "7b5e9e81";
     nes.hashCalculated = true;
     int nesFileId = db.insertFile(nes);
-    db.updateFileHashes(nesFileId, "7b5e9e81", "811b027eaf99c2def7b933c5208636de",
-                        "ea343f4e445a9050d4b4fbac2c77d0693b1d0922");
+    db.updateFileHashes(
+        nesFileId, "7b5e9e81", "811b027eaf99c2def7b933c5208636de", "ea343f4e445a9050d4b4fbac2c77d0693b1d0922");
 
     FileRecord snes;
     snes.libraryId = libId;

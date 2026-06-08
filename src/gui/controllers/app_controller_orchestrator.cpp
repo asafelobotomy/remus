@@ -23,51 +23,46 @@ namespace Remus {
 
 namespace {
 
-QSettings remusSettings()
-{
-    return QSettings(QString::fromLatin1(Constants::SETTINGS_ORGANIZATION),
-                     QString::fromLatin1(Constants::SETTINGS_APPLICATION));
-}
-
-QString findDataSubdir(const QString &subdir)
-{
-    const QString appDir = QCoreApplication::applicationDirPath();
-    const QString cwd = QDir::currentPath();
-    const QString seg = QStringLiteral("data/") + subdir;
-    const QStringList candidates = {
-        cwd + "/" + seg,
-        appDir + "/" + seg,
-        appDir + "/../" + seg,
-        appDir + "/../../" + seg,
-        appDir + "/../../../" + seg,
-        cwd + "/../" + seg,
-        cwd + "/../../" + seg,
-    };
-
-    for (const QString &candidate : candidates) {
-        if (QDir(candidate).exists()) {
-            return QDir::cleanPath(candidate);
-        }
+    QSettings remusSettings() {
+        return QSettings(QString::fromLatin1(Constants::SETTINGS_ORGANIZATION),
+            QString::fromLatin1(Constants::SETTINGS_APPLICATION));
     }
 
-    return QString();
-}
+    QString findDataSubdir(const QString &subdir) {
+        const QString appDir = QCoreApplication::applicationDirPath();
+        const QString cwd = QDir::currentPath();
+        const QString seg = QStringLiteral("data/") + subdir;
+        const QStringList candidates = {
+            cwd + "/" + seg,
+            appDir + "/" + seg,
+            appDir + "/../" + seg,
+            appDir + "/../../" + seg,
+            appDir + "/../../../" + seg,
+            cwd + "/../" + seg,
+            cwd + "/../../" + seg,
+        };
 
-QString findGameTdbDir()
-{
-    return findDataSubdir(QStringLiteral("gametdb"));
-}
+        for (const QString &candidate : candidates) {
+            if (QDir(candidate).exists()) {
+                return QDir::cleanPath(candidate);
+            }
+        }
 
-int providerPriorityOrDefault(const QString &providerName, int fallback)
-{
-    const auto providerInfo = Constants::Providers::getProviderInfo(providerName);
-    return providerInfo ? providerInfo->priority : fallback;
-}
+        return QString();
+    }
+
+    QString findGameTdbDir() {
+        return findDataSubdir(QStringLiteral("gametdb"));
+    }
+
+    int providerPriorityOrDefault(const QString &providerName, int fallback) {
+        const auto providerInfo = Constants::Providers::getProviderInfo(providerName);
+        return providerInfo ? providerInfo->priority : fallback;
+    }
 
 } // namespace
 
-void AppController::rebuildOrchestrator()
-{
+void AppController::rebuildOrchestrator() {
     m_cache.reset();
     m_orchestrator = std::make_unique<ProviderOrchestrator>(this);
     if (m_libraryOpen) {
@@ -83,10 +78,9 @@ void AppController::rebuildOrchestrator()
         if (QFileInfo::exists(compendiumPath)) {
             auto *compendiumProvider = new CompendiumProvider(m_orchestrator.get());
             if (compendiumProvider->openDatabase(compendiumPath)) {
-                m_orchestrator->addProvider(
-                    Constants::Providers::COMPENDIUM,
-                    compendiumProvider,
-                    providerPriorityOrDefault(Constants::Providers::COMPENDIUM, Constants::Providers::Priority::COMPENDIUM));
+                m_orchestrator->addProvider(Constants::Providers::COMPENDIUM, compendiumProvider,
+                    providerPriorityOrDefault(
+                        Constants::Providers::COMPENDIUM, Constants::Providers::Priority::COMPENDIUM));
             } else {
                 compendiumProvider->deleteLater();
             }
@@ -99,12 +93,11 @@ void AppController::rebuildOrchestrator()
     // downgraded to plaintext storage.  Only an explicit NotFound falls through
     // to legacy QSettings (systems that haven't migrated yet).
     auto secretValue = [](const char *key) -> QString {
-        const SecretStore::ReadResult kr =
-            SecretStore::readWithStatus(QString::fromLatin1(key));
+        const SecretStore::ReadResult kr = SecretStore::readWithStatus(QString::fromLatin1(key));
         if (kr.status == SecretStore::ReadResult::Status::Found)
             return kr.value;
         if (kr.status == SecretStore::ReadResult::Status::BackendError)
-            return {}; // logged by SecretStore; do NOT fall back to plaintext
+            return { }; // logged by SecretStore; do NOT fall back to plaintext
         // NotFound: key may still live in plain QSettings (legacy migration path).
         return remusSettings().value(QString::fromLatin1(key)).toString().trimmed();
     };
@@ -114,9 +107,7 @@ void AppController::rebuildOrchestrator()
         const QString hasheousKey = secretValue(Constants::Settings::Providers::HASHEOUS_CLIENT_API_KEY);
         if (!hasheousKey.isEmpty())
             hasheousProvider->setApiKey(hasheousKey);
-        m_orchestrator->addProvider(
-            Constants::Providers::HASHEOUS,
-            hasheousProvider,
+        m_orchestrator->addProvider(Constants::Providers::HASHEOUS, hasheousProvider,
             providerPriorityOrDefault(Constants::Providers::HASHEOUS, Constants::Providers::Priority::HASHEOUS));
     }
 
@@ -132,19 +123,16 @@ void AppController::rebuildOrchestrator()
             provider->setDeveloperCredentials(ssDevId, ssDevPass);
         }
 
-        m_orchestrator->addProvider(
-            Constants::Providers::SCREENSCRAPER,
-            provider,
-            providerPriorityOrDefault(Constants::Providers::SCREENSCRAPER, Constants::Providers::Priority::SCREENSCRAPER));
+        m_orchestrator->addProvider(Constants::Providers::SCREENSCRAPER, provider,
+            providerPriorityOrDefault(
+                Constants::Providers::SCREENSCRAPER, Constants::Providers::Priority::SCREENSCRAPER));
     }
 
     const QString gametdbDir = findGameTdbDir();
     if (!gametdbDir.isEmpty()) {
         auto *provider = new GameTDBProvider(m_orchestrator.get());
         if (provider->loadDatabases(gametdbDir) > 0) {
-            m_orchestrator->addProvider(
-                Constants::Providers::GAMETDB,
-                provider,
+            m_orchestrator->addProvider(Constants::Providers::GAMETDB, provider,
                 providerPriorityOrDefault(Constants::Providers::GAMETDB, Constants::Providers::Priority::GAMETDB));
         } else {
             provider->deleteLater();
@@ -155,9 +143,7 @@ void AppController::rebuildOrchestrator()
     if (!tgdbApiKey.isEmpty()) {
         auto *tgdbProvider = new TheGamesDBProvider(m_orchestrator.get());
         tgdbProvider->setApiKey(tgdbApiKey);
-        m_orchestrator->addProvider(
-            Constants::Providers::THEGAMESDB,
-            tgdbProvider,
+        m_orchestrator->addProvider(Constants::Providers::THEGAMESDB, tgdbProvider,
             providerPriorityOrDefault(Constants::Providers::THEGAMESDB, Constants::Providers::Priority::THEGAMESDB));
     } else {
         qInfo() << "TheGamesDB: skipped (no API key configured)";
@@ -168,9 +154,7 @@ void AppController::rebuildOrchestrator()
     if (!igdbClientId.isEmpty() && !igdbClientSecret.isEmpty()) {
         auto *igdbProvider = new IGDBProvider(m_orchestrator.get());
         igdbProvider->setCredentials(igdbClientId, igdbClientSecret);
-        m_orchestrator->addProvider(
-            Constants::Providers::IGDB,
-            igdbProvider,
+        m_orchestrator->addProvider(Constants::Providers::IGDB, igdbProvider,
             providerPriorityOrDefault(Constants::Providers::IGDB, Constants::Providers::Priority::IGDB));
     }
 
@@ -179,15 +163,12 @@ void AppController::rebuildOrchestrator()
     if (!raUser.isEmpty() && !raApiKey.isEmpty()) {
         auto *provider = new RetroAchievementsProvider(m_orchestrator.get());
         provider->setCredentials(raUser, raApiKey);
-        m_orchestrator->addProvider(
-            Constants::Providers::RETROACHIEVEMENTS,
-            provider,
-            providerPriorityOrDefault(Constants::Providers::RETROACHIEVEMENTS, Constants::Providers::Priority::RETROACHIEVEMENTS));
+        m_orchestrator->addProvider(Constants::Providers::RETROACHIEVEMENTS, provider,
+            providerPriorityOrDefault(
+                Constants::Providers::RETROACHIEVEMENTS, Constants::Providers::Priority::RETROACHIEVEMENTS));
     }
 
-    m_orchestrator->addProvider(
-        Constants::Providers::WIKIDATA,
-        new WikidataProvider(m_orchestrator.get()),
+    m_orchestrator->addProvider(Constants::Providers::WIKIDATA, new WikidataProvider(m_orchestrator.get()),
         providerPriorityOrDefault(Constants::Providers::WIKIDATA, Constants::Providers::Priority::WIKIDATA));
 
     emit orchestratorChanged();

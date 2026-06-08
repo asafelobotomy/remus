@@ -32,35 +32,35 @@ public:
         Original,
         Chd,
         Rvz,
-        Cso,    ///< PSP ISO → CSO (maxcso)
+        Cso, ///< PSP ISO → CSO (maxcso)
     };
 
     /**
      * @brief Configuration for a bundle operation
      */
     struct BundleConfig {
-        bool         includeBoxArt   = true;
-        bool         dryRun          = false;
-        ArchiveFormat outputFormat   = ArchiveFormat::ZIP;
+        bool includeBoxArt = true;
+        bool dryRun = false;
+        ArchiveFormat outputFormat = ArchiveFormat::ZIP;
         /// Path to an already-downloaded box-art file (handled by caller before bundling).
         /// If empty and includeBoxArt is true, the step is silently skipped.
-        QString      artworkPath;
+        QString artworkPath;
         /// Preferred disc packaging for bundle payloads. System-aware callers may
         /// request CHD broadly and let the bundler redirect GameCube/Wii images to RVZ.
         DiscOutputFormat discOutputFormat = DiscOutputFormat::Original;
         /// Output filename template. Tokens: {title}, {region}, {year}, {system}, {publisher}.
         /// If empty, the default naming logic (title + region) is used.
-        QString      namingTemplate;
+        QString namingTemplate;
     };
 
     /**
      * @brief Result of a bundle operation
      */
     struct BundleResult {
-        bool    success               = false;
-        QString outputPath;           ///< Final archive path
-        bool    skippedAlreadyBundled = false;
-        QStringList archiveEntries;   ///< Final staged archive entries (dry-run and real runs)
+        bool success = false;
+        QString outputPath; ///< Final archive path
+        bool skippedAlreadyBundled = false;
+        QStringList archiveEntries; ///< Final staged archive entries (dry-run and real runs)
         QString error;
     };
 
@@ -93,11 +93,8 @@ public:
      * @param config       Bundle options
      * @return BundleResult
      */
-    BundleResult bundle(const FileRecord              &file,
-                        const Database::MatchResult   &match,
-                        const GameMetadata            &metadata,
-                        const QString                 &destinationDir,
-                        const BundleConfig            &config);
+    BundleResult bundle(const FileRecord &file, const Database::MatchResult &match, const GameMetadata &metadata,
+        const QString &destinationDir, const BundleConfig &config);
 
     /**
      * @brief Bundle a staged file (e.g. a freshly patched ROM) into an archive.
@@ -105,11 +102,8 @@ public:
      * Unlike bundle(), this does NOT mutate the passed-in FileRecord in the DB.
      * Instead, it marks the patched file's own record as processed.
      */
-    BundleResult bundleStaged(const FileRecord              &patchedFile,
-                              const Database::MatchResult   &baseMatch,
-                              const GameMetadata            &metadata,
-                              const QString                 &destinationDir,
-                              const BundleConfig            &config);
+    BundleResult bundleStaged(const FileRecord &patchedFile, const Database::MatchResult &baseMatch,
+        const GameMetadata &metadata, const QString &destinationDir, const BundleConfig &config);
 
 signals:
     void progressMessage(const QString &msg);
@@ -118,13 +112,12 @@ private:
     /**
      * @brief Generate the contents of the .remus.md marker file.
      */
-    QString generateMarkerContent(const FileRecord            &file,
-                                  const Database::MatchResult &match,
-                                  const GameMetadata          &metadata) const;
+    QString generateMarkerContent(
+        const FileRecord &file, const Database::MatchResult &match, const GameMetadata &metadata) const;
 
-    Database        &m_db;
+    Database &m_db;
     ArchiveExtractor m_extractor;
-    ArchiveCreator   m_creator;
+    ArchiveCreator m_creator;
 };
 
 } // namespace Remus

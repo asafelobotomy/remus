@@ -9,7 +9,7 @@ namespace Remus {
 
 /**
  * @brief Local cache for metadata and artwork
- * 
+ *
  * Stores fetched metadata in SQLite to avoid redundant API calls.
  */
 class MetadataCache : public QObject {
@@ -41,9 +41,7 @@ public:
      * @param system Optional system name
      * @return True if successful
      */
-    bool store(const GameMetadata &metadata, 
-               const QString &hash = QString(),
-               const QString &system = QString());
+    bool store(const GameMetadata &metadata, const QString &hash = QString(), const QString &system = QString());
 
     /**
      * @brief Store artwork URLs in cache

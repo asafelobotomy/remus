@@ -23,15 +23,16 @@
 using namespace Remus;
 using namespace Remus::Constants;
 
-int handleStatsCommand(CliContext &ctx)
-{
-    if (!ctx.parser.isSet("stats")) return 0;
+int handleStatsCommand(CliContext &ctx) {
+    if (!ctx.parser.isSet("stats"))
+        return 0;
 
     QList<FileRecord> files = ctx.db.getExistingFiles();
     QMap<QString, int> counts = ctx.db.getFileCountBySystem();
     int hashed = 0;
     for (const FileRecord &f : files) {
-        if (f.hashCalculated) hashed++;
+        if (f.hashCalculated)
+            hashed++;
     }
     const int libraryCount = ctx.db.getLibraryCount();
 
@@ -60,54 +61,60 @@ int handleStatsCommand(CliContext &ctx)
     return 0;
 }
 
-int handleInfoCommand(CliContext &ctx)
-{
-    if (!ctx.parser.isSet("info")) return 0;
+int handleInfoCommand(CliContext &ctx) {
+    if (!ctx.parser.isSet("info"))
+        return 0;
 
     bool ok = false;
     int fileId = ctx.parser.value("info").toInt(&ok);
-    if (!ok) { qCritical() << "Invalid file id"; return 1; }
+    if (!ok) {
+        qCritical() << "Invalid file id";
+        return 1;
+    }
 
     FileRecord file = ctx.db.getFileById(fileId);
-    if (file.id == 0) { qCritical() << "File not found"; return 1; }
+    if (file.id == 0) {
+        qCritical() << "File not found";
+        return 1;
+    }
 
     const Database::MatchResult match = ctx.db.getMatchForFile(fileId);
 
     if (ctx.parser.isSet("json")) {
         QJsonObject obj;
-        obj[QStringLiteral("id")]             = file.id;
-        obj[QStringLiteral("filename")]       = file.filename;
-        obj[QStringLiteral("path")]           = file.currentPath;
-        obj[QStringLiteral("originalPath")]   = file.originalPath;
-        obj[QStringLiteral("extension")]      = file.extension;
-        obj[QStringLiteral("size")]           = static_cast<qint64>(file.fileSize);
-        obj[QStringLiteral("systemId")]       = file.systemId;
+        obj[QStringLiteral("id")] = file.id;
+        obj[QStringLiteral("filename")] = file.filename;
+        obj[QStringLiteral("path")] = file.currentPath;
+        obj[QStringLiteral("originalPath")] = file.originalPath;
+        obj[QStringLiteral("extension")] = file.extension;
+        obj[QStringLiteral("size")] = static_cast<qint64>(file.fileSize);
+        obj[QStringLiteral("systemId")] = file.systemId;
         obj[QStringLiteral("hashCalculated")] = file.hashCalculated;
-        obj[QStringLiteral("crc32")]          = file.crc32;
-        obj[QStringLiteral("md5")]            = file.md5;
-        obj[QStringLiteral("sha1")]           = file.sha1;
-        obj[QStringLiteral("isCompressed")]   = file.isCompressed;
-        obj[QStringLiteral("isPrimary")]      = file.isPrimary;
-        obj[QStringLiteral("fileType")]       = file.fileType;
-        obj[QStringLiteral("isPatched")]      = file.isPatched;
-        obj[QStringLiteral("patchName")]      = file.patchName;
+        obj[QStringLiteral("crc32")] = file.crc32;
+        obj[QStringLiteral("md5")] = file.md5;
+        obj[QStringLiteral("sha1")] = file.sha1;
+        obj[QStringLiteral("isCompressed")] = file.isCompressed;
+        obj[QStringLiteral("isPrimary")] = file.isPrimary;
+        obj[QStringLiteral("fileType")] = file.fileType;
+        obj[QStringLiteral("isPatched")] = file.isPatched;
+        obj[QStringLiteral("patchName")] = file.patchName;
         if (match.matchId != 0) {
             QJsonObject m;
-            m[QStringLiteral("matchId")]     = match.matchId;
-            m[QStringLiteral("gameId")]      = match.gameId;
-            m[QStringLiteral("title")]       = match.gameTitle;
-            m[QStringLiteral("confidence")]  = match.confidence;
-            m[QStringLiteral("method")]      = match.matchMethod;
-            m[QStringLiteral("publisher")]   = match.publisher;
-            m[QStringLiteral("developer")]   = match.developer;
+            m[QStringLiteral("matchId")] = match.matchId;
+            m[QStringLiteral("gameId")] = match.gameId;
+            m[QStringLiteral("title")] = match.gameTitle;
+            m[QStringLiteral("confidence")] = match.confidence;
+            m[QStringLiteral("method")] = match.matchMethod;
+            m[QStringLiteral("publisher")] = match.publisher;
+            m[QStringLiteral("developer")] = match.developer;
             m[QStringLiteral("releaseYear")] = match.releaseYear;
-            m[QStringLiteral("genre")]       = match.genre;
-            m[QStringLiteral("players")]     = match.players;
-            m[QStringLiteral("rating")]      = static_cast<double>(match.rating);
-            m[QStringLiteral("region")]      = match.region;
+            m[QStringLiteral("genre")] = match.genre;
+            m[QStringLiteral("players")] = match.players;
+            m[QStringLiteral("rating")] = static_cast<double>(match.rating);
+            m[QStringLiteral("region")] = match.region;
             m[QStringLiteral("description")] = match.description;
-            m[QStringLiteral("confirmed")]   = match.isConfirmed;
-            obj[QStringLiteral("match")]     = m;
+            m[QStringLiteral("confirmed")] = match.isConfirmed;
+            obj[QStringLiteral("match")] = m;
         } else {
             obj[QStringLiteral("match")] = QJsonValue::Null;
         }
@@ -123,13 +130,14 @@ int handleInfoCommand(CliContext &ctx)
         qInfo() << "=== Match ===";
         qInfo() << "Title:      " << match.gameTitle;
         qInfo().noquote() << QStringLiteral("Confidence:  %1% [%2]").arg(match.confidence).arg(match.matchMethod);
-        qInfo() << "Publisher:  " << (match.publisher.isEmpty()  ? QStringLiteral("-") : match.publisher);
-        qInfo() << "Developer:  " << (match.developer.isEmpty()  ? QStringLiteral("-") : match.developer);
-        qInfo() << "Release:    " << (match.releaseYear > 0      ? QString::number(match.releaseYear) : QStringLiteral("-"));
-        qInfo() << "Genre:      " << (match.genre.isEmpty()      ? QStringLiteral("-") : match.genre);
-        qInfo() << "Players:    " << (match.players.isEmpty()    ? QStringLiteral("-") : match.players);
-        qInfo() << "Rating:     " << (match.rating > 0.0f        ? QString::number(match.rating, 'f', 1) : QStringLiteral("-"));
-        qInfo() << "Region:     " << (match.region.isEmpty()     ? QStringLiteral("-") : match.region);
+        qInfo() << "Publisher:  " << (match.publisher.isEmpty() ? QStringLiteral("-") : match.publisher);
+        qInfo() << "Developer:  " << (match.developer.isEmpty() ? QStringLiteral("-") : match.developer);
+        qInfo() << "Release:    " << (match.releaseYear > 0 ? QString::number(match.releaseYear) : QStringLiteral("-"));
+        qInfo() << "Genre:      " << (match.genre.isEmpty() ? QStringLiteral("-") : match.genre);
+        qInfo() << "Players:    " << (match.players.isEmpty() ? QStringLiteral("-") : match.players);
+        qInfo() << "Rating:     "
+                << (match.rating > 0.0f ? QString::number(match.rating, 'f', 1) : QStringLiteral("-"));
+        qInfo() << "Region:     " << (match.region.isEmpty() ? QStringLiteral("-") : match.region);
         qInfo() << "Confirmed:  " << (match.isConfirmed ? QStringLiteral("yes") : QStringLiteral("no"));
         if (!match.description.isEmpty()) {
             qInfo() << "Description:" << match.description.left(200) + (match.description.length() > 200 ? "..." : "");
@@ -140,8 +148,7 @@ int handleInfoCommand(CliContext &ctx)
     return 0;
 }
 
-int handleInspectCommands(CliContext &ctx)
-{
+int handleInspectCommands(CliContext &ctx) {
     if (ctx.parser.isSet("header-info")) {
         const QString path = ctx.parser.value("header-info");
         HeaderDetector hd;
@@ -156,7 +163,8 @@ int handleInspectCommands(CliContext &ctx)
             qInfo() << "Header size:" << info.headerSize;
             qInfo() << "Type:" << info.headerType;
             qInfo() << "System hint:" << info.systemHint;
-            if (!info.info.isEmpty()) qInfo() << "Info:" << info.info;
+            if (!info.info.isEmpty())
+                qInfo() << "Info:" << info.info;
         }
     }
 
@@ -170,9 +178,9 @@ int handleInspectCommands(CliContext &ctx)
     return 0;
 }
 
-int handleListCommand(CliContext &ctx)
-{
-    if (!ctx.parser.isSet("list")) return 0;
+int handleListCommand(CliContext &ctx) {
+    if (!ctx.parser.isSet("list"))
+        return 0;
 
     QMap<QString, int> counts = ctx.db.getFileCountBySystem();
     int total = 0;
@@ -206,14 +214,15 @@ int handleListCommand(CliContext &ctx)
     return 0;
 }
 
-int handleHashAllCommand(CliContext &ctx)
-{
+int handleHashAllCommand(CliContext &ctx) {
     // --hash-all: explicit opt-in to hash everything in the DB.
     // --hash without --scan: same behaviour — hash all files lacking hashes.
     const bool scanRequested = ctx.parser.isSet("scan");
     const bool hashRequested = ctx.parser.isSet("hash") || ctx.parser.isSet("hash-all");
-    if (!hashRequested) return 0;
-    if (ctx.parser.isSet("hash") && scanRequested) return 0; // handled inside handleScanCommand
+    if (!hashRequested)
+        return 0;
+    if (ctx.parser.isSet("hash") && scanRequested)
+        return 0; // handled inside handleScanCommand
 
     qInfo() << "";
     qInfo() << "Hashing files without hashes...";
@@ -223,9 +232,7 @@ int handleHashAllCommand(CliContext &ctx)
     if (!ctx.processFileScopeIds.isEmpty()) {
         filesToHash.erase(
             std::remove_if(filesToHash.begin(), filesToHash.end(),
-                [&ctx](const FileRecord &f) {
-                    return !fileMatchesProcessScope(f, ctx.processFileScopeIds);
-                }),
+                [&ctx](const FileRecord &f) { return !fileMatchesProcessScope(f, ctx.processFileScopeIds); }),
             filesToHash.end());
     }
 
@@ -234,21 +241,19 @@ int handleHashAllCommand(CliContext &ctx)
         return 0;
     }
 
-    int hashedCount  = 0;
+    int hashedCount = 0;
     int skippedCount = 0;
 
     // Route through HashService::computeHashes() so that plain-file hashing
     // scales with available CPU cores via the existing QThreadPool worker pool.
     HashService svc;
-    const QList<HashService::HashBatchResult> taskResults =
-        svc.computeHashes(filesToHash);
+    const QList<HashService::HashBatchResult> taskResults = svc.computeHashes(filesToHash);
 
     int done = 0;
     for (const HashService::HashBatchResult &task : taskResults) {
         ++done;
         if (!task.skipped && task.result.success) {
-            ctx.db.updateFileHashes(task.fileId, task.result.crc32,
-                                    task.result.md5, task.result.sha1);
+            ctx.db.updateFileHashes(task.fileId, task.result.crc32, task.result.md5, task.result.sha1);
             hashedCount++;
             if (hashedCount % 10 == 0)
                 qInfo() << "  Hashed" << hashedCount << "of" << filesToHash.size() << "files...";
@@ -264,9 +269,9 @@ int handleHashAllCommand(CliContext &ctx)
     return 0;
 }
 
-int handleReclassifyIsoCommand(CliContext &ctx)
-{
-    if (!ctx.parser.isSet("reclassify-iso")) return 0;
+int handleReclassifyIsoCommand(CliContext &ctx) {
+    if (!ctx.parser.isSet("reclassify-iso"))
+        return 0;
 
     qInfo() << "";
     qInfo() << "Reclassifying ISO files...";
@@ -298,13 +303,9 @@ int handleReclassifyIsoCommand(CliContext &ctx)
         const int currentSystemId = select.value(5).toInt();
         ++scanned;
 
-        const QString detectPath = isCompressed && !archiveInternalPath.isEmpty()
-            ? archiveInternalPath
-            : currentPath;
+        const QString detectPath = isCompressed && !archiveInternalPath.isEmpty() ? archiveInternalPath : currentPath;
         const QString detectedSystemName = ctx.detector.detectSystem(extension, detectPath);
-        const int detectedSystemId = detectedSystemName.isEmpty()
-            ? 0
-            : ctx.db.getSystemId(detectedSystemName);
+        const int detectedSystemId = detectedSystemName.isEmpty() ? 0 : ctx.db.getSystemId(detectedSystemName);
 
         if (detectedSystemId == 0) {
             ++unresolved;
@@ -319,8 +320,7 @@ int handleReclassifyIsoCommand(CliContext &ctx)
         update.bindValue(0, detectedSystemId);
         update.bindValue(1, fileId);
         if (!update.exec()) {
-            qCritical() << "Failed to update system assignment for file" << fileId << ":"
-                        << update.lastError().text();
+            qCritical() << "Failed to update system assignment for file" << fileId << ":" << update.lastError().text();
             return 1;
         }
 

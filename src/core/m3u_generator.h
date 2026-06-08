@@ -11,17 +11,17 @@ namespace Remus {
 
 /**
  * @brief M3U playlist generator for multi-disc games
- * 
+ *
  * M3U playlists allow frontends like RetroArch and EmulationStation to treat
  * multi-disc games as single entries with disc swapping support.
- * 
+ *
  * Format:
  * ```
  * Final Fantasy VII (USA) (Disc 1).chd
  * Final Fantasy VII (USA) (Disc 2).chd
  * Final Fantasy VII (USA) (Disc 3).chd
  * ```
- * 
+ *
  * Saved as: `Final Fantasy VII (USA).m3u`
  */
 class M3UGenerator : public QObject {
@@ -45,9 +45,7 @@ public:
      * @param outputPath Path to write .m3u file
      * @return True if successful
      */
-    bool generateM3U(const QString &gameTitle,
-                    const QStringList &discPaths,
-                    const QString &outputPath);
+    bool generateM3U(const QString &gameTitle, const QStringList &discPaths, const QString &outputPath);
 
     /**
      * @brief Generate M3U playlists for all multi-disc games
@@ -55,10 +53,8 @@ public:
      * @param outputDir Directory to write .m3u files
      * @return Number of playlists created
      */
-    int generateAll(const QString &systemName = QString(), 
-                   const QString &outputDir = QString());
-    int generateAll(const QSet<int> &fileIds,
-                   const QString &outputDir = QString());
+    int generateAll(const QString &systemName = QString(), const QString &outputDir = QString());
+    int generateAll(const QSet<int> &fileIds, const QString &outputDir = QString());
 
     /**
      * @brief Check if a game appears to be multi-disc

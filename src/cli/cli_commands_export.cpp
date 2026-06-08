@@ -16,16 +16,12 @@
 // ── Export ────────────────────────────────────────────────────────────────────
 
 struct ExportRow {
-    FileRecord           file;
+    FileRecord file;
     Database::MatchResult match;
 };
 
-static bool persistAppliedPatchLineage(Database &db,
-                                       const QString &basePath,
-                                       const QString &patchPath,
-                                       const QString &outputPath,
-                                       const PatchInfo &patchInfo)
-{
+static bool persistAppliedPatchLineage(Database &db, const QString &basePath, const QString &patchPath,
+    const QString &outputPath, const PatchInfo &patchInfo) {
     Hasher hasher;
     const HashResult baseHashes = hasher.calculateHashes(basePath);
     const HashResult outputHashes = hasher.calculateHashes(outputPath);
@@ -35,19 +31,16 @@ static bool persistAppliedPatchLineage(Database &db,
 
     const PatchedRomInfo outputInfo = PatchedRomParser::parse(QFileInfo(outputPath).completeBaseName());
     const PatchedRomInfo patchInfoFromName = PatchedRomParser::parse(QFileInfo(patchPath).completeBaseName());
-    const QString baseTitle = !outputInfo.baseTitle.isEmpty()
-        ? outputInfo.baseTitle
-        : QFileInfo(basePath).completeBaseName();
+    const QString baseTitle
+        = !outputInfo.baseTitle.isEmpty() ? outputInfo.baseTitle : QFileInfo(basePath).completeBaseName();
     const QString patchName = !outputInfo.patchName.isEmpty()
         ? outputInfo.patchName
-        : (!patchInfoFromName.patchName.isEmpty()
-            ? patchInfoFromName.patchName
-            : QFileInfo(patchPath).completeBaseName());
+        : (!patchInfoFromName.patchName.isEmpty() ? patchInfoFromName.patchName
+                                                  : QFileInfo(patchPath).completeBaseName());
     const QString fileType = !Constants::FileTypes::isOfficial(outputInfo.fileType)
         ? outputInfo.fileType
-        : (!Constants::FileTypes::isOfficial(patchInfoFromName.fileType)
-            ? patchInfoFromName.fileType
-            : Constants::FileTypes::HACK);
+        : (!Constants::FileTypes::isOfficial(patchInfoFromName.fileType) ? patchInfoFromName.fileType
+                                                                         : Constants::FileTypes::HACK);
 
     Database::AppliedPatchRecord record;
     record.basePath = basePath;
@@ -69,41 +62,47 @@ static bool persistAppliedPatchLineage(Database &db,
     return db.insertAppliedPatch(record);
 }
 
-static QList<ExportRow> buildExportRows(CliContext &ctx, const QString &systemsArg)
-{
-    const QStringList systemFilters = systemsArg.isEmpty()
-        ? QStringList() : systemsArg.split(',', Qt::SkipEmptyParts);
+static QList<ExportRow> buildExportRows(CliContext &ctx, const QString &systemsArg) {
+    const QStringList systemFilters = systemsArg.isEmpty() ? QStringList() : systemsArg.split(',', Qt::SkipEmptyParts);
 
     QMap<int, Database::MatchResult> matches = ctx.db.getAllMatches();
     QList<FileRecord> files = ctx.db.getExistingFiles();
 
     QList<ExportRow> rows;
     for (const FileRecord &file : files) {
-        if (!matches.contains(file.id)) continue;
+        if (!matches.contains(file.id))
+            continue;
         const QString systemName = ctx.db.getSystemDisplayName(file.systemId);
-        if (!systemFilters.isEmpty() && !systemFilters.contains(systemName)) continue;
-        ExportRow row{file, matches.value(file.id)};
+        if (!systemFilters.isEmpty() && !systemFilters.contains(systemName))
+            continue;
+        ExportRow row { file, matches.value(file.id) };
         rows.append(row);
     }
     return rows;
 }
 
-int handleExportCommand(CliContext &ctx)
-{
-    if (!ctx.parser.isSet("export")) return 0;
+int handleExportCommand(CliContext &ctx) {
+    if (!ctx.parser.isSet("export"))
+        return 0;
 
-    const QString format     = ctx.parser.value("export").toLower();
-    QString outputPath       = ctx.parser.value("export-path");
+    const QString format = ctx.parser.value("export").toLower();
+    QString outputPath = ctx.parser.value("export-path");
     const QString systemsArg = ctx.parser.value("export-systems");
 
-    if (ctx.dryRunAll) qInfo() << "[DRY-RUN] Export outputs will not be written";
+    if (ctx.dryRunAll)
+        qInfo() << "[DRY-RUN] Export outputs will not be written";
 
     auto defaultFilename = [&]() -> QString {
-        if      (format == Constants::Exports::Formats::RETROARCH)  return Constants::Exports::Files::DEFAULT_RETROARCH_EXPORT;
-        else if (format == Constants::Exports::Formats::EMUSTATION) return Constants::Exports::Files::ES_GAMELIST;
-        else if (format == Constants::Exports::Formats::LAUNCHBOX)  return Constants::Exports::Files::DEFAULT_LAUNCHBOX_EXPORT;
-        else if (format == Constants::Exports::Formats::CSV)        return Constants::Exports::Files::DEFAULT_CSV_EXPORT;
-        else                                                        return Constants::Exports::Files::DEFAULT_JSON_EXPORT;
+        if (format == Constants::Exports::Formats::RETROARCH)
+            return Constants::Exports::Files::DEFAULT_RETROARCH_EXPORT;
+        else if (format == Constants::Exports::Formats::EMUSTATION)
+            return Constants::Exports::Files::ES_GAMELIST;
+        else if (format == Constants::Exports::Formats::LAUNCHBOX)
+            return Constants::Exports::Files::DEFAULT_LAUNCHBOX_EXPORT;
+        else if (format == Constants::Exports::Formats::CSV)
+            return Constants::Exports::Files::DEFAULT_CSV_EXPORT;
+        else
+            return Constants::Exports::Files::DEFAULT_JSON_EXPORT;
     };
 
     if (outputPath.isEmpty()) {
@@ -113,7 +112,10 @@ int handleExportCommand(CliContext &ctx)
     }
 
     const QList<ExportRow> rows = buildExportRows(ctx, systemsArg);
-    if (rows.isEmpty()) { qWarning() << "No matched files to export"; return 0; }
+    if (rows.isEmpty()) {
+        qWarning() << "No matched files to export";
+        return 0;
+    }
 
     auto openFile = [&](QFile &f) -> bool {
         if (!f.open(QIODevice::WriteOnly | QIODevice::Text)) {
@@ -128,42 +130,51 @@ int handleExportCommand(CliContext &ctx)
             qInfo() << "[DRY-RUN] Would write RetroArch playlist to" << outputPath << "(" << rows.size() << "entries)";
             return 0;
         }
-        QFile f(outputPath); if (!openFile(f)) return 1;
+        QFile f(outputPath);
+        if (!openFile(f))
+            return 1;
         QTextStream out(&f);
         for (const auto &row : rows) {
             out << row.file.currentPath << "\n";
             out << (!row.match.gameTitle.isEmpty() ? row.match.gameTitle : row.file.filename) << "\n";
             out << "DETECT\nDETECT\n";
             out << (row.file.crc32.isEmpty() ? "00000000" : row.file.crc32) << "|crc\n";
-            out << ctx.db.getSystemDisplayName(row.file.systemId) << Constants::Exports::Files::PLAYLIST_EXTENSION << "\n";
+            out << ctx.db.getSystemDisplayName(row.file.systemId) << Constants::Exports::Files::PLAYLIST_EXTENSION
+                << "\n";
         }
         qInfo() << "✓ RetroArch playlist exported to" << outputPath;
 
     } else if (format == Constants::Exports::Formats::EMUSTATION) {
         if (ctx.dryRunAll) {
-            qInfo() << "[DRY-RUN] Would write EmulationStation gamelist to" << outputPath << "(" << rows.size() << "entries)";
+            qInfo() << "[DRY-RUN] Would write EmulationStation gamelist to" << outputPath << "(" << rows.size()
+                    << "entries)";
             return 0;
         }
-        QFile f(outputPath); if (!openFile(f)) return 1;
+        QFile f(outputPath);
+        if (!openFile(f))
+            return 1;
         QTextStream out(&f);
         out << "<gameList>\n";
         // ES <releasedate> format: YYYYMMDDTXXXXXX
         const auto esDate = [](const QString &iso) -> QString {
             // Accept "YYYY-MM-DD", "YYYY-MM", or bare "YYYY"
             const QString d = iso.trimmed().remove(QLatin1Char('-'));
-            if (d.length() >= 8) return d.left(8) + QStringLiteral("T000000");
-            if (d.length() == 4) return d + QStringLiteral("0101T000000");
+            if (d.length() >= 8)
+                return d.left(8) + QStringLiteral("T000000");
+            if (d.length() == 4)
+                return d + QStringLiteral("0101T000000");
             return QString();
         };
         for (const auto &row : rows) {
-            const QString name = (!row.match.gameTitle.isEmpty() ? row.match.gameTitle : row.file.filename).toHtmlEscaped();
+            const QString name
+                = (!row.match.gameTitle.isEmpty() ? row.match.gameTitle : row.file.filename).toHtmlEscaped();
             out << "  <game>\n";
-            out << "    <path>"    << row.file.currentPath.toHtmlEscaped() << "</path>\n";
-            out << "    <name>"    << name << "</name>\n";
-            out << "    <desc>"    << row.match.description.toHtmlEscaped() << "</desc>\n";
-            out << "    <genre>"   << row.match.genre.toHtmlEscaped() << "</genre>\n";
+            out << "    <path>" << row.file.currentPath.toHtmlEscaped() << "</path>\n";
+            out << "    <name>" << name << "</name>\n";
+            out << "    <desc>" << row.match.description.toHtmlEscaped() << "</desc>\n";
+            out << "    <genre>" << row.match.genre.toHtmlEscaped() << "</genre>\n";
             out << "    <players>" << row.match.players << "</players>\n";
-            out << "    <region>"  << row.match.region.toHtmlEscaped() << "</region>\n";
+            out << "    <region>" << row.match.region.toHtmlEscaped() << "</region>\n";
             if (!row.match.publisher.isEmpty())
                 out << "    <publisher>" << row.match.publisher.toHtmlEscaped() << "</publisher>\n";
             const QString esd = esDate(row.match.releaseDate);
@@ -179,16 +190,19 @@ int handleExportCommand(CliContext &ctx)
             qInfo() << "[DRY-RUN] Would write LaunchBox XML to" << outputPath << "(" << rows.size() << "entries)";
             return 0;
         }
-        QFile f(outputPath); if (!openFile(f)) return 1;
+        QFile f(outputPath);
+        if (!openFile(f))
+            return 1;
         QTextStream out(&f);
         out << "<LaunchBox>\n";
         for (const auto &row : rows) {
-            const QString title = (!row.match.gameTitle.isEmpty() ? row.match.gameTitle : row.file.filename).toHtmlEscaped();
+            const QString title
+                = (!row.match.gameTitle.isEmpty() ? row.match.gameTitle : row.file.filename).toHtmlEscaped();
             out << "  <Game>\n";
-            out << "    <Title>"           << title << "</Title>\n";
+            out << "    <Title>" << title << "</Title>\n";
             out << "    <ApplicationPath>" << row.file.currentPath.toHtmlEscaped() << "</ApplicationPath>\n";
-            out << "    <Region>"          << row.match.region.toHtmlEscaped() << "</Region>\n";
-            out << "    <Genre>"           << row.match.genre.toHtmlEscaped() << "</Genre>\n";
+            out << "    <Region>" << row.match.region.toHtmlEscaped() << "</Region>\n";
+            out << "    <Genre>" << row.match.genre.toHtmlEscaped() << "</Genre>\n";
             out << "  </Game>\n";
         }
         out << "</LaunchBox>\n";
@@ -199,13 +213,16 @@ int handleExportCommand(CliContext &ctx)
             qInfo() << "[DRY-RUN] Would write CSV to" << outputPath << "(" << rows.size() << "entries)";
             return 0;
         }
-        QFile f(outputPath); if (!openFile(f)) return 1;
+        QFile f(outputPath);
+        if (!openFile(f))
+            return 1;
         QTextStream out(&f);
         // RFC 4180: wrap fields containing commas, double-quotes, or newlines in double-quotes;
         // escape embedded double-quotes by doubling them.
         const auto csvField = [](const QString &s) -> QString {
             if (s.contains(QLatin1Char(',')) || s.contains(QLatin1Char('"')) || s.contains(QLatin1Char('\n'))) {
-                return QLatin1Char('"') + QString(s).replace(QLatin1Char('"'), QStringLiteral("\"\"")) + QLatin1Char('"');
+                return QLatin1Char('"') + QString(s).replace(QLatin1Char('"'), QStringLiteral("\"\""))
+                    + QLatin1Char('"');
             }
             return s;
         };
@@ -213,10 +230,8 @@ int handleExportCommand(CliContext &ctx)
         for (const auto &row : rows) {
             out << row.file.id << ","
                 << csvField(!row.match.gameTitle.isEmpty() ? row.match.gameTitle : row.file.filename) << ","
-                << csvField(ctx.db.getSystemDisplayName(row.file.systemId)) << ","
-                << csvField(row.file.currentPath) << ","
-                << csvField(row.match.region) << ","
-                << row.match.confidence << "\n";
+                << csvField(ctx.db.getSystemDisplayName(row.file.systemId)) << "," << csvField(row.file.currentPath)
+                << "," << csvField(row.match.region) << "," << row.match.confidence << "\n";
         }
         qInfo() << "✓ CSV exported to" << outputPath;
 
@@ -225,15 +240,17 @@ int handleExportCommand(CliContext &ctx)
             qInfo() << "[DRY-RUN] Would write JSON to" << outputPath << "(" << rows.size() << "entries)";
             return 0;
         }
-        QFile f(outputPath); if (!openFile(f)) return 1;
+        QFile f(outputPath);
+        if (!openFile(f))
+            return 1;
         QJsonArray arr;
         for (const auto &row : rows) {
             QJsonObject obj;
-            obj["fileId"]  = row.file.id;
-            obj["title"]   = row.match.gameTitle;
-            obj["system"]  = ctx.db.getSystemDisplayName(row.file.systemId);
-            obj["path"]    = row.file.currentPath;
-            obj["region"]  = row.match.region;
+            obj["fileId"] = row.file.id;
+            obj["title"] = row.match.gameTitle;
+            obj["system"] = ctx.db.getSystemDisplayName(row.file.systemId);
+            obj["path"] = row.file.currentPath;
+            obj["region"] = row.match.region;
             obj["confidence"] = row.match.confidence;
             arr.append(obj);
         }
@@ -245,8 +262,7 @@ int handleExportCommand(CliContext &ctx)
 
 // ── Patch ─────────────────────────────────────────────────────────────────────
 
-int handlePatchCommands(CliContext &ctx)
-{
+int handlePatchCommands(CliContext &ctx) {
     if (ctx.parser.isSet("patch-tools")) {
         PatchEngine pe;
         auto tools = pe.checkToolAvailability();
@@ -260,11 +276,11 @@ int handlePatchCommands(CliContext &ctx)
         PatchInfo info = pe.detectFormat(ctx.parser.value("patch-info"));
         if (info.valid) {
             qInfo() << "Format:" << info.formatName;
-            qInfo() << "Size:"   << info.size;
+            qInfo() << "Size:" << info.size;
             if (!info.sourceChecksum.isEmpty()) {
                 qInfo() << "Source CRC:" << info.sourceChecksum;
                 qInfo() << "Target CRC:" << info.targetChecksum;
-                qInfo() << "Patch CRC:"  << info.patchChecksum;
+                qInfo() << "Patch CRC:" << info.patchChecksum;
             }
         } else {
             qWarning() << "Could not detect patch format:" << info.error;
@@ -272,13 +288,16 @@ int handlePatchCommands(CliContext &ctx)
     }
 
     if (ctx.parser.isSet("patch-apply") && ctx.parser.isSet("patch-patch")) {
-        const QString basePath   = ctx.parser.value("patch-apply");
-        const QString patchPath  = ctx.parser.value("patch-patch");
+        const QString basePath = ctx.parser.value("patch-apply");
+        const QString patchPath = ctx.parser.value("patch-patch");
         const QString outputPath = ctx.parser.value("patch-output");
 
         PatchEngine pe;
         PatchInfo info = pe.detectFormat(patchPath);
-        if (!info.valid) { qCritical() << "Invalid patch file" << info.error; return 1; }
+        if (!info.valid) {
+            qCritical() << "Invalid patch file" << info.error;
+            return 1;
+        }
 
         if (ctx.dryRunAll) {
             qInfo() << "[DRY-RUN] Would apply patch" << patchPath << "to" << basePath << "->" << outputPath;
@@ -289,37 +308,43 @@ int handlePatchCommands(CliContext &ctx)
                     qWarning() << "Failed to persist applied patch lineage for" << result.outputPath;
                 }
                 qInfo() << "✓ Patch applied:" << result.outputPath;
+            } else {
+                qCritical() << "✗ Patch failed:" << result.error;
+                return 1;
             }
-            else { qCritical() << "✗ Patch failed:" << result.error; return 1; }
         }
     }
 
     if (ctx.parser.isSet("patch-create") && ctx.parser.isSet("patch-original")) {
-        const QString modified  = ctx.parser.value("patch-create");
-        const QString original  = ctx.parser.value("patch-original");
-        QString patchPath       = ctx.parser.value("patch-patch");
-        const QString fmtStr    = ctx.parser.value("patch-format").toLower();
+        const QString modified = ctx.parser.value("patch-create");
+        const QString original = ctx.parser.value("patch-original");
+        QString patchPath = ctx.parser.value("patch-patch");
+        const QString fmtStr = ctx.parser.value("patch-format").toLower();
 
         PatchFormat format = PatchFormat::BPS;
-        if      (fmtStr == "ips")    format = PatchFormat::IPS;
-        else if (fmtStr == "ups")    format = PatchFormat::UPS;
-        else if (fmtStr == "xdelta") format = PatchFormat::XDelta3;
-        else if (fmtStr == "ppf")    format = PatchFormat::PPF;
+        if (fmtStr == "ips")
+            format = PatchFormat::IPS;
+        else if (fmtStr == "ups")
+            format = PatchFormat::UPS;
+        else if (fmtStr == "xdelta")
+            format = PatchFormat::XDelta3;
+        else if (fmtStr == "ppf")
+            format = PatchFormat::PPF;
 
         if (patchPath.isEmpty()) {
             QFileInfo baseInfo(original), modInfo(modified);
-            const QString ext = (format == PatchFormat::IPS)    ? "ips"  :
-                                 (format == PatchFormat::UPS)    ? "ups"  :
-                                 (format == PatchFormat::XDelta3)? "xdelta" :
-                                 (format == PatchFormat::PPF)    ? "ppf"  : "bps";
-            patchPath = baseInfo.absolutePath() + "/" +
-                baseInfo.completeBaseName() + "_to_" + modInfo.completeBaseName() + "." + ext;
+            const QString ext = (format == PatchFormat::IPS) ? "ips"
+                : (format == PatchFormat::UPS)               ? "ups"
+                : (format == PatchFormat::XDelta3)           ? "xdelta"
+                : (format == PatchFormat::PPF)               ? "ppf"
+                                                             : "bps";
+            patchPath = baseInfo.absolutePath() + "/" + baseInfo.completeBaseName() + "_to_"
+                + modInfo.completeBaseName() + "." + ext;
         }
 
         PatchEngine pe;
         if (ctx.dryRunAll) {
-            qInfo() << "[DRY-RUN] Would create patch" << patchPath
-                    << "from" << original << "to" << modified;
+            qInfo() << "[DRY-RUN] Would create patch" << patchPath << "from" << original << "to" << modified;
         } else if (pe.createPatch(original, modified, patchPath, format)) {
             qInfo() << "✓ Patch created:" << patchPath;
         } else {

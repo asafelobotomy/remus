@@ -14,12 +14,7 @@ namespace Remus {
 /**
  * @brief File operation types for undo system
  */
-enum class FileOperation {
-    Move,
-    Copy,
-    Rename,
-    Delete
-};
+enum class FileOperation { Move, Copy, Rename, Delete };
 
 /**
  * @brief Result of an organize operation
@@ -30,22 +25,22 @@ struct OrganizeResult {
     QString newPath;
     FileOperation operation;
     QString error;
-    int undoId;  // ID for undo tracking in database
+    int undoId; // ID for undo tracking in database
 };
 
 /**
  * @brief Collision resolution strategies
  */
 enum class CollisionStrategy {
-    Skip,           // Skip file if destination exists
-    Overwrite,      // Overwrite destination file
-    Rename,         // Auto-rename with suffix (file_1, file_2, etc.)
-    Ask             // Ask user (for GUI, not CLI)
+    Skip, // Skip file if destination exists
+    Overwrite, // Overwrite destination file
+    Rename, // Auto-rename with suffix (file_1, file_2, etc.)
+    Ask // Ask user (for GUI, not CLI)
 };
 
 /**
  * @brief Engine for organizing and renaming ROM files
- * 
+ *
  * Features:
  * - Template-based renaming with No-Intro/Redump compliance
  * - Dry-run preview before execution
@@ -55,7 +50,7 @@ enum class CollisionStrategy {
  * - Progress reporting via signals
  */
 class OrganizeEngine : public QObject {
-Q_OBJECT
+    Q_OBJECT
 
 public:
     explicit OrganizeEngine(Database &db, QObject *parent = nullptr);
@@ -92,10 +87,8 @@ public:
      * @param operation Move or Copy
      * @return Operation result
      */
-    OrganizeResult organizeFile(int fileId,
-                                const GameMetadata &metadata,
-                                const QString &destinationDir,
-                                FileOperation operation = FileOperation::Move);
+    OrganizeResult organizeFile(int fileId, const GameMetadata &metadata, const QString &destinationDir,
+        FileOperation operation = FileOperation::Move);
 
     /**
      * @brief Organize multiple files with progress tracking
@@ -105,10 +98,8 @@ public:
      * @param operation Move or Copy
      * @return List of results for each file
      */
-    QList<OrganizeResult> organizeFiles(const QList<int> &fileIds,
-                                       const QMap<int, GameMetadata> &metadataMap,
-                                       const QString &destinationDir,
-                                       FileOperation operation = FileOperation::Move);
+    QList<OrganizeResult> organizeFiles(const QList<int> &fileIds, const QMap<int, GameMetadata> &metadataMap,
+        const QString &destinationDir, FileOperation operation = FileOperation::Move);
 
     /**
      * @brief Undo the last operation
@@ -178,9 +169,8 @@ private:
      * @param destinationDir Target directory
      * @return Full destination path
      */
-    QString generateDestinationPath(const FileRecord &fileRecord,
-                                   const GameMetadata &metadata,
-                                   const QString &destinationDir);
+    QString generateDestinationPath(
+        const FileRecord &fileRecord, const GameMetadata &metadata, const QString &destinationDir);
 };
 
 } // namespace Remus

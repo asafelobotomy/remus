@@ -29,17 +29,35 @@ class ConversionController : public QObject {
 public:
     explicit ConversionController(AppController *appController, QObject *parent = nullptr);
 
-    bool isConverting() const { return m_converting; }
-    int progress() const { return m_progress; }
-    QString progressMessage() const { return m_progressMessage; }
-    QString targetFormat() const { return m_targetFormat; }
-    double compressionRatio() const { return m_compressionRatio; }
-    QString lastOutputPath() const { return m_lastOutputPath; }
-    QString lastMessage() const { return m_lastMessage; }
-    QVariantMap toolStatus() const { return m_toolStatus; }
+    bool isConverting() const {
+        return m_converting;
+    }
+    int progress() const {
+        return m_progress;
+    }
+    QString progressMessage() const {
+        return m_progressMessage;
+    }
+    QString targetFormat() const {
+        return m_targetFormat;
+    }
+    double compressionRatio() const {
+        return m_compressionRatio;
+    }
+    QString lastOutputPath() const {
+        return m_lastOutputPath;
+    }
+    QString lastMessage() const {
+        return m_lastMessage;
+    }
+    QVariantMap toolStatus() const {
+        return m_toolStatus;
+    }
 
-    Q_INVOKABLE void convertSelected(const QString &format, const QString &outputPath = QString(), const QString &scanDir = QString());
-    Q_INVOKABLE void convertAll(const QString &format, const QString &outputPath = QString(), const QString &scanDir = QString());
+    Q_INVOKABLE void convertSelected(
+        const QString &format, const QString &outputPath = QString(), const QString &scanDir = QString());
+    Q_INVOKABLE void convertAll(
+        const QString &format, const QString &outputPath = QString(), const QString &scanDir = QString());
     Q_INVOKABLE void refreshToolStatus();
 
 public slots:

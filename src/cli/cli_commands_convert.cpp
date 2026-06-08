@@ -10,9 +10,9 @@
 #include "../core/space_calculator.h"
 #include "cli_logging.h"
 
-int handleConvertRvzCommand(CliContext &ctx)
-{
-    if (!ctx.parser.isSet("convert-rvz")) return 0;
+int handleConvertRvzCommand(CliContext &ctx) {
+    if (!ctx.parser.isSet("convert-rvz"))
+        return 0;
 
     const QString inputPath = ctx.parser.value("convert-rvz");
     const QString outputDir = ctx.parser.value("output-dir");
@@ -30,11 +30,16 @@ int handleConvertRvzCommand(CliContext &ctx)
     qInfo() << "dolphin-tool version:" << converter.getDolphinToolVersion();
 
     RVZCompression compression = RVZCompression::Auto;
-    if      (compressionStr == "zstd")  compression = RVZCompression::Zstd;
-    else if (compressionStr == "bzip2") compression = RVZCompression::Bzip2;
-    else if (compressionStr == "lzma")  compression = RVZCompression::LZMA;
-    else if (compressionStr == "lzma2") compression = RVZCompression::LZMA2;
-    else if (compressionStr == "none")  compression = RVZCompression::None;
+    if (compressionStr == "zstd")
+        compression = RVZCompression::Zstd;
+    else if (compressionStr == "bzip2")
+        compression = RVZCompression::Bzip2;
+    else if (compressionStr == "lzma")
+        compression = RVZCompression::LZMA;
+    else if (compressionStr == "lzma2")
+        compression = RVZCompression::LZMA2;
+    else if (compressionStr == "none")
+        compression = RVZCompression::None;
     converter.setCompression(compression);
 
     QFileInfo info(inputPath);
@@ -57,15 +62,16 @@ int handleConvertRvzCommand(CliContext &ctx)
     }
 
     ConversionResult result = converter.convertIsoToRVZ(inputPath, outputPath);
-    if (!printConversionResult(result, "RVZ")) return 1;
+    if (!printConversionResult(result, "RVZ"))
+        return 1;
     return 0;
 }
 
-int handleRvzExtractCommand(CliContext &ctx)
-{
-    if (!ctx.parser.isSet("rvz-extract")) return 0;
+int handleRvzExtractCommand(CliContext &ctx) {
+    if (!ctx.parser.isSet("rvz-extract"))
+        return 0;
 
-    const QString rvzPath  = ctx.parser.value("rvz-extract");
+    const QString rvzPath = ctx.parser.value("rvz-extract");
     const QString outputDir = ctx.parser.value("output-dir");
 
     qInfo() << "";
@@ -100,9 +106,9 @@ int handleRvzExtractCommand(CliContext &ctx)
     return 0;
 }
 
-int handleRvzVerifyCommand(CliContext &ctx)
-{
-    if (!ctx.parser.isSet("rvz-verify")) return 0;
+int handleRvzVerifyCommand(CliContext &ctx) {
+    if (!ctx.parser.isSet("rvz-verify"))
+        return 0;
 
     const QString rvzPath = ctx.parser.value("rvz-verify");
     qInfo() << "";
@@ -128,9 +134,9 @@ int handleRvzVerifyCommand(CliContext &ctx)
     return 0;
 }
 
-int handleConvertCsoCommand(CliContext &ctx)
-{
-    if (!ctx.parser.isSet("convert-cso")) return 0;
+int handleConvertCsoCommand(CliContext &ctx) {
+    if (!ctx.parser.isSet("convert-cso"))
+        return 0;
 
     const QString inputPath = ctx.parser.value("convert-cso");
     const QString outputDir = ctx.parser.value("output-dir");
@@ -165,15 +171,16 @@ int handleConvertCsoCommand(CliContext &ctx)
     }
 
     ConversionResult result = converter.convertIsoToCSO(inputPath, outputPath);
-    if (!printConversionResult(result, "CSO")) return 1;
+    if (!printConversionResult(result, "CSO"))
+        return 1;
     return 0;
 }
 
-int handleCsoExtractCommand(CliContext &ctx)
-{
-    if (!ctx.parser.isSet("cso-extract")) return 0;
+int handleCsoExtractCommand(CliContext &ctx) {
+    if (!ctx.parser.isSet("cso-extract"))
+        return 0;
 
-    const QString csoPath  = ctx.parser.value("cso-extract");
+    const QString csoPath = ctx.parser.value("cso-extract");
     const QString outputDir = ctx.parser.value("output-dir");
 
     qInfo() << "";
@@ -208,9 +215,9 @@ int handleCsoExtractCommand(CliContext &ctx)
     return 0;
 }
 
-int handleConvertWbfsCommand(CliContext &ctx)
-{
-    if (!ctx.parser.isSet("convert-wbfs")) return 0;
+int handleConvertWbfsCommand(CliContext &ctx) {
+    if (!ctx.parser.isSet("convert-wbfs"))
+        return 0;
 
     const QString inputPath = ctx.parser.value("convert-wbfs");
     const QString outputDir = ctx.parser.value("output-dir");
@@ -245,15 +252,16 @@ int handleConvertWbfsCommand(CliContext &ctx)
     }
 
     ConversionResult result = converter.convertIsoToWbfs(inputPath, outputPath);
-    if (!printConversionResult(result, "WBFS")) return 1;
+    if (!printConversionResult(result, "WBFS"))
+        return 1;
     return 0;
 }
 
-int handleWbfsExtractCommand(CliContext &ctx)
-{
-    if (!ctx.parser.isSet("wbfs-extract")) return 0;
+int handleWbfsExtractCommand(CliContext &ctx) {
+    if (!ctx.parser.isSet("wbfs-extract"))
+        return 0;
 
-    const QString wbfsPath  = ctx.parser.value("wbfs-extract");
+    const QString wbfsPath = ctx.parser.value("wbfs-extract");
     const QString outputDir = ctx.parser.value("output-dir");
 
     qInfo() << "";
@@ -288,9 +296,9 @@ int handleWbfsExtractCommand(CliContext &ctx)
     return 0;
 }
 
-int handleExportPBPCommand(CliContext &ctx)
-{
-    if (!ctx.parser.isSet("export-pbp")) return 0;
+int handleExportPBPCommand(CliContext &ctx) {
+    if (!ctx.parser.isSet("export-pbp"))
+        return 0;
 
     const QString inputPath = ctx.parser.value("export-pbp");
     const QString outputDir = ctx.parser.value("output-dir");
@@ -327,6 +335,7 @@ int handleExportPBPCommand(CliContext &ctx)
     }
 
     ConversionResult result = exporter.exportToPBP(inputPath, outputPath);
-    if (!printConversionResult(result, "PBP")) return 1;
+    if (!printConversionResult(result, "PBP"))
+        return 1;
     return 0;
 }

@@ -17,8 +17,7 @@ namespace {
 
 // Parse the [Category] section of catver.ini into a romname→genre map.
 // Stops reading when a section other than [Category] is encountered.
-QHash<QString, QString> parseCatverIni(const QString &path, QString &error)
-{
+QHash<QString, QString> parseCatverIni(const QString &path, QString &error) {
     QHash<QString, QString> index;
     QFile file(path);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -33,7 +32,7 @@ QHash<QString, QString> parseCatverIni(const QString &path, QString &error)
         if (line.isEmpty() || line.startsWith(QLatin1Char(';')))
             continue;
         if (line.startsWith(QLatin1Char('['))) {
-            if (inCategory)   // We just left [Category] — no need to read further
+            if (inCategory) // We just left [Category] — no need to read further
                 break;
             inCategory = (line == QStringLiteral("[Category]"));
             continue;
@@ -43,7 +42,7 @@ QHash<QString, QString> parseCatverIni(const QString &path, QString &error)
         const int eq = line.indexOf(QLatin1Char('='));
         if (eq <= 0)
             continue;
-        const QString key   = line.left(eq);
+        const QString key = line.left(eq);
         const QString value = line.mid(eq + 1).trimmed();
         if (!value.isEmpty() && !index.contains(key))
             index.insert(key, value);
@@ -55,12 +54,8 @@ QHash<QString, QString> parseCatverIni(const QString &path, QString &error)
 
 namespace CompendiumEnrichment {
 
-bool enrichFromMameCatver(QSqlDatabase &database,
-                          const QString &catverPath,
-                          int &gamesEnriched,
-                          int &factsInserted,
-                          QString &error)
-{
+bool enrichFromMameCatver(
+    QSqlDatabase &database, const QString &catverPath, int &gamesEnriched, int &factsInserted, QString &error) {
     gamesEnriched = 0;
     factsInserted = 0;
 
@@ -72,13 +67,11 @@ bool enrichFromMameCatver(QSqlDatabase &database,
         return true;
     }
 
-    qInfo().noquote() << QStringLiteral("[MAME-catver] Parsed %1 entries from catver.ini")
-                             .arg(catver.size());
+    qInfo().noquote() << QStringLiteral("[MAME-catver] Parsed %1 entries from catver.ini").arg(catver.size());
 
     const QString snapshotId = QStringLiteral("mame-catver-bulk");
-    if (!upsertEnrichmentSource(
-            database,
-            SourceSpec{
+    if (!upsertEnrichmentSource(database,
+            SourceSpec {
                 QStringLiteral("mame-catver"),
                 QStringLiteral("MAME catver.ini"),
                 QStringLiteral("static-file"),
@@ -87,7 +80,7 @@ bool enrichFromMameCatver(QSqlDatabase &database,
                 /*priority=*/50,
                 QString(),
             },
-            SnapshotSpec{
+            SnapshotSpec {
                 snapshotId,
                 QStringLiteral("MAME catver.ini genre enrichment"),
             },
@@ -95,21 +88,18 @@ bool enrichFromMameCatver(QSqlDatabase &database,
         return false;
 
     QSqlQuery updateQ(database);
-    updateQ.prepare(QStringLiteral(
-        "UPDATE games SET genre = COALESCE(genre, ?) WHERE game_id = ?"));
+    updateQ.prepare(QStringLiteral("UPDATE games SET genre = COALESCE(genre, ?) WHERE game_id = ?"));
 
     QSqlQuery factQ(database);
-    factQ.prepare(QStringLiteral(
-        "INSERT INTO game_facts "
-        "(game_id, field_name, field_value, value_type, source_id, snapshot_id, "
-        "source_priority, confidence) "
-        "VALUES (?, ?, ?, ?, ?, ?, ?, ?)"));
+    factQ.prepare(QStringLiteral("INSERT INTO game_facts "
+                                 "(game_id, field_name, field_value, value_type, source_id, snapshot_id, "
+                                 "source_priority, confidence) "
+                                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?)"));
 
     QSqlQuery delQ(database);
-    delQ.prepare(QStringLiteral(
-        "DELETE FROM game_facts WHERE game_id = ? AND field_name = ? AND source_id = ?"));
+    delQ.prepare(QStringLiteral("DELETE FROM game_facts WHERE game_id = ? AND field_name = ? AND source_id = ?"));
 
-    const FactInsertSpec factSpec{
+    const FactInsertSpec factSpec {
         QStringLiteral("mame-catver"),
         snapshotId,
         50,
@@ -117,9 +107,8 @@ bool enrichFromMameCatver(QSqlDatabase &database,
     };
 
     QSqlQuery gamesQ(database);
-    gamesQ.prepare(QStringLiteral(
-        "SELECT game_id, canonical_title FROM games "
-        "WHERE system_id = ? AND (genre IS NULL OR genre = '')"));
+    gamesQ.prepare(QStringLiteral("SELECT game_id, canonical_title FROM games "
+                                  "WHERE system_id = ? AND (genre IS NULL OR genre = '')"));
     gamesQ.addBindValue(Constants::Systems::ID_ARCADE);
     if (!gamesQ.exec()) {
         error = QStringLiteral("Query MAME games: %1").arg(gamesQ.lastError().text());
@@ -127,7 +116,7 @@ bool enrichFromMameCatver(QSqlDatabase &database,
     }
 
     while (gamesQ.next()) {
-        const QString gameId  = gamesQ.value(0).toString();
+        const QString gameId = gamesQ.value(0).toString();
         const QString romName = gamesQ.value(1).toString();
         const auto it = catver.constFind(romName);
         if (it == catver.cend())
@@ -142,23 +131,15 @@ bool enrichFromMameCatver(QSqlDatabase &database,
             ++gamesEnriched;
 
         bool inserted = false;
-        if (!insertGameFact(delQ,
-                            factQ,
-                            factSpec,
-                            gameId,
-                            QStringLiteral("genre"),
-                            genre,
-                            QStringLiteral("text"),
-                            error,
-                            QStringLiteral("mame-catver"),
-                            &inserted))
+        if (!insertGameFact(delQ, factQ, factSpec, gameId, QStringLiteral("genre"), genre, QStringLiteral("text"),
+                error, QStringLiteral("mame-catver"), &inserted))
             return false;
         if (inserted)
             ++factsInserted;
     }
 
-    qInfo().noquote() << QStringLiteral("[MAME-catver] +%1 games enriched, +%2 facts")
-                             .arg(gamesEnriched).arg(factsInserted);
+    qInfo().noquote()
+        << QStringLiteral("[MAME-catver] +%1 games enriched, +%2 facts").arg(gamesEnriched).arg(factsInserted);
     return true;
 }
 

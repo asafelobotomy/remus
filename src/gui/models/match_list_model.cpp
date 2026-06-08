@@ -3,12 +3,9 @@
 namespace Remus {
 
 MatchListModel::MatchListModel(QObject *parent)
-    : QAbstractListModel(parent)
-{
-}
+    : QAbstractListModel(parent) { }
 
-int MatchListModel::rowCount(const QModelIndex &parent) const
-{
+int MatchListModel::rowCount(const QModelIndex &parent) const {
     if (parent.isValid()) {
         return 0;
     }
@@ -16,8 +13,7 @@ int MatchListModel::rowCount(const QModelIndex &parent) const
     return m_entries.size();
 }
 
-QVariant MatchListModel::data(const QModelIndex &index, int role) const
-{
+QVariant MatchListModel::data(const QModelIndex &index, int role) const {
     if (!index.isValid() || index.row() < 0 || index.row() >= m_entries.size()) {
         return QVariant();
     }
@@ -49,31 +45,28 @@ QVariant MatchListModel::data(const QModelIndex &index, int role) const
     }
 }
 
-QHash<int, QByteArray> MatchListModel::roleNames() const
-{
+QHash<int, QByteArray> MatchListModel::roleNames() const {
     return {
-        {FileIdRole, "fileId"},
-        {GameIdRole, "gameId"},
-        {FileNameRole, "fileName"},
-        {TitleRole, "title"},
-        {SystemRole, "system"},
-        {ProviderRole, "provider"},
-        {MethodRole, "method"},
-        {ConfidenceRole, "confidence"},
-        {ConfirmedRole, "confirmed"},
-        {RejectedRole, "rejected"},
+        { FileIdRole, "fileId" },
+        { GameIdRole, "gameId" },
+        { FileNameRole, "fileName" },
+        { TitleRole, "title" },
+        { SystemRole, "system" },
+        { ProviderRole, "provider" },
+        { MethodRole, "method" },
+        { ConfidenceRole, "confidence" },
+        { ConfirmedRole, "confirmed" },
+        { RejectedRole, "rejected" },
     };
 }
 
-void MatchListModel::setEntries(const QList<MatchListEntry> &entries)
-{
+void MatchListModel::setEntries(const QList<MatchListEntry> &entries) {
     beginResetModel();
     m_entries = entries;
     endResetModel();
 }
 
-void MatchListModel::clear()
-{
+void MatchListModel::clear() {
     beginResetModel();
     m_entries.clear();
     endResetModel();

@@ -22,16 +22,14 @@ namespace Remus {
 
 MatchController::MatchController(AppController *appController, QObject *parent)
     : QObject(parent)
-    , m_appController(appController)
-{
+    , m_appController(appController) {
     connect(m_appController, &AppController::orchestratorChanged, this, &MatchController::connectOrchestratorSignals);
-    connect(m_appController, &AppController::libraryClosed,       this, &MatchController::clearState);
+    connect(m_appController, &AppController::libraryClosed, this, &MatchController::clearState);
     connect(this, &MatchController::libraryChanged, m_appController, &AppController::refreshSelectedMatch);
     connectOrchestratorSignals();
 }
 
-void MatchController::refreshModel()
-{
+void MatchController::refreshModel() {
     if (m_model == nullptr) {
         return;
     }
@@ -66,8 +64,7 @@ void MatchController::refreshModel()
     updateUnconfirmedCount();
 }
 
-void MatchController::matchSelected()
-{
+void MatchController::matchSelected() {
     if (m_matching) {
         emit matchError(QStringLiteral("Matching is already running."));
         return;
@@ -85,7 +82,7 @@ void MatchController::matchSelected()
     }
 
     m_matching = true;
-    m_matchedFiles    = 0;
+    m_matchedFiles = 0;
     m_totalMatchFiles = 1;
     m_progressMessage = QStringLiteral("Matching selected file\u2026");
     emit matchingChanged();
@@ -110,8 +107,7 @@ void MatchController::matchSelected()
     emit libraryChanged();
 }
 
-void MatchController::matchAll()
-{
+void MatchController::matchAll() {
     if (m_matching) {
         emit matchError(QStringLiteral("Matching is already running."));
         return;
@@ -123,10 +119,10 @@ void MatchController::matchAll()
     }
 
     m_matching = true;
-    m_matchedFiles    = 0;
+    m_matchedFiles = 0;
     m_totalMatchFiles = 0;
-    m_matchAllIndex   = 0;
-    m_matchAllCount   = 0;
+    m_matchAllIndex = 0;
+    m_matchAllCount = 0;
     m_progressMessage = QStringLiteral("Matching files\u2026");
     emit matchingChanged();
     emit matchProgressChanged();
@@ -142,8 +138,7 @@ void MatchController::matchAll()
     QMetaObject::invokeMethod(this, &MatchController::doMatchNext, Qt::QueuedConnection);
 }
 
-void MatchController::doMatchNext()
-{
+void MatchController::doMatchNext() {
     if (m_matchAllIndex >= m_matchAllFiles.size()) {
         const int total = m_matchAllFiles.size();
         m_matching = false;
@@ -166,9 +161,7 @@ void MatchController::doMatchNext()
     }
 
     const FileRecord file = m_matchAllFiles.at(m_matchAllIndex);
-    m_progressMessage = QStringLiteral("Matching %1 / %2\u2026")
-                            .arg(m_matchAllIndex + 1)
-                            .arg(m_matchAllFiles.size());
+    m_progressMessage = QStringLiteral("Matching %1 / %2\u2026").arg(m_matchAllIndex + 1).arg(m_matchAllFiles.size());
     emit progressMessageChanged();
 
     if (matchFileRecord(file))
@@ -179,8 +172,7 @@ void MatchController::doMatchNext()
     QMetaObject::invokeMethod(this, &MatchController::doMatchNext, Qt::QueuedConnection);
 }
 
-void MatchController::confirmSelected()
-{
+void MatchController::confirmSelected() {
     if (m_appController == nullptr || !m_appController->isLibraryOpen()) {
         return;
     }
@@ -201,8 +193,7 @@ void MatchController::confirmSelected()
     emit libraryChanged();
 }
 
-void MatchController::updateUnconfirmedCount()
-{
+void MatchController::updateUnconfirmedCount() {
     if (m_appController == nullptr || !m_appController->isLibraryOpen()) {
         m_unconfirmedMatchCount = 0;
         return;
@@ -214,9 +205,9 @@ void MatchController::updateUnconfirmedCount()
     }
 }
 
-void MatchController::confirmAll()
-{
-    if (m_appController == nullptr || !m_appController->isLibraryOpen()) return;
+void MatchController::confirmAll() {
+    if (m_appController == nullptr || !m_appController->isLibraryOpen())
+        return;
     QSqlDatabase db = m_appController->database()->database();
     if (!db.transaction()) {
         emit matchError(QStringLiteral("Failed to start transaction."));
@@ -229,13 +220,12 @@ void MatchController::confirmAll()
         return;
     }
     // Propagate confirmed game titles to files.base_title so the queue shows the game name.
-    if (!q.exec(QStringLiteral(
-            "UPDATE files SET base_title = ("
-            "  SELECT g.title FROM games g"
-            "  JOIN matches m ON m.game_id = g.id"
-            "  WHERE m.file_id = files.id AND m.is_confirmed = 1"
-            "  LIMIT 1"
-            ") WHERE id IN (SELECT file_id FROM matches WHERE is_confirmed = 1)"))) {
+    if (!q.exec(QStringLiteral("UPDATE files SET base_title = ("
+                               "  SELECT g.title FROM games g"
+                               "  JOIN matches m ON m.game_id = g.id"
+                               "  WHERE m.file_id = files.id AND m.is_confirmed = 1"
+                               "  LIMIT 1"
+                               ") WHERE id IN (SELECT file_id FROM matches WHERE is_confirmed = 1)"))) {
         db.rollback();
         emit matchError(QStringLiteral("Failed to propagate titles: %1").arg(q.lastError().text()));
         return;
@@ -250,8 +240,7 @@ void MatchController::confirmAll()
     emit libraryChanged();
 }
 
-void MatchController::rejectSelected()
-{
+void MatchController::rejectSelected() {
     if (m_appController == nullptr || !m_appController->isLibraryOpen()) {
         return;
     }
@@ -271,8 +260,7 @@ void MatchController::rejectSelected()
     emit libraryChanged();
 }
 
-void MatchController::connectOrchestratorSignals()
-{
+void MatchController::connectOrchestratorSignals() {
     if (m_connectedOrchestrator != nullptr) {
         disconnect(m_connectedOrchestrator, nullptr, this, nullptr);
     }
@@ -285,21 +273,22 @@ void MatchController::connectOrchestratorSignals()
         return;
     }
 
-    connect(orchestrator, &ProviderOrchestrator::tryingProvider, this, [this](const QString &providerName, const QString &) {
-        if (m_currentProvider == providerName) {
-            return;
-        }
-        m_currentProvider = providerName;
-        emit currentProviderChanged();
-    });
+    connect(orchestrator, &ProviderOrchestrator::tryingProvider, this,
+        [this](const QString &providerName, const QString &) {
+            if (m_currentProvider == providerName) {
+                return;
+            }
+            m_currentProvider = providerName;
+            emit currentProviderChanged();
+        });
 
-    connect(orchestrator, &ProviderOrchestrator::providerFailed, this, [this](const QString &providerName, const QString &error) {
-        setLastMessage(QStringLiteral("%1 failed: %2").arg(providerName, error));
-    });
+    connect(orchestrator, &ProviderOrchestrator::providerFailed, this,
+        [this](const QString &providerName, const QString &error) {
+            setLastMessage(QStringLiteral("%1 failed: %2").arg(providerName, error));
+        });
 }
 
-bool MatchController::matchFileRecord(const FileRecord &file)
-{
+bool MatchController::matchFileRecord(const FileRecord &file) {
     if (m_appController == nullptr) {
         return false;
     }
@@ -330,10 +319,9 @@ bool MatchController::matchFileRecord(const FileRecord &file)
         if (DiscMagicDetector::isDiscImageExtension(file.extension)) {
             DiscHeaderInfo discInfo;
             if (file.isCompressed && !file.archivePath.isEmpty()) {
-                const QString memberPath = file.archiveInternalPath.isEmpty()
-                    ? file.filename : file.archiveInternalPath;
-                discInfo = DiscMagicDetector::detectFromArchive(
-                    file.archivePath, memberPath, file.fileSize);
+                const QString memberPath
+                    = file.archiveInternalPath.isEmpty() ? file.filename : file.archiveInternalPath;
+                discInfo = DiscMagicDetector::detectFromArchive(file.archivePath, memberPath, file.fileSize);
             } else {
                 discInfo = DiscMagicDetector::detect(file.currentPath);
                 if (!discInfo.detected || discInfo.serial.isEmpty()) {
@@ -347,8 +335,8 @@ bool MatchController::matchFileRecord(const FileRecord &file)
         }
 
         const QString displayName = deriveMatchingDisplayName(file);
-        metadata = orchestrator->searchWithFallback(hash, displayName, systemName,
-                                                    file.crc32, file.md5, file.sha1, discSerial);
+        metadata = orchestrator->searchWithFallback(
+            hash, displayName, systemName, file.crc32, file.md5, file.sha1, discSerial);
         if (!metadata.title.isEmpty()) {
             if (metadata.matchScore > 0.0f && !metadata.matchMethod.isEmpty()) {
                 confidence = metadata.matchScore * 100.0f;
@@ -368,17 +356,8 @@ bool MatchController::matchFileRecord(const FileRecord &file)
 
     const QString genres = metadata.genres.join(QStringLiteral(", "));
     const QString players = metadata.players > 0 ? QString::number(metadata.players) : QString();
-    const int gameId = db->insertGame(
-        metadata.title,
-        file.systemId,
-        metadata.region,
-        metadata.publisher,
-        metadata.developer,
-        metadata.releaseDate,
-        metadata.description,
-        genres,
-        players,
-        metadata.rating);
+    const int gameId = db->insertGame(metadata.title, file.systemId, metadata.region, metadata.publisher,
+        metadata.developer, metadata.releaseDate, metadata.description, genres, players, metadata.rating);
 
     if (gameId <= 0) {
         return false;
@@ -392,8 +371,7 @@ bool MatchController::matchFileRecord(const FileRecord &file)
     return true;
 }
 
-float MatchController::calculateNameSimilarity(const QString &left, const QString &right) const
-{
+float MatchController::calculateNameSimilarity(const QString &left, const QString &right) const {
     const QString normalizedLeft = left.toLower().simplified();
     const QString normalizedRight = right.toLower().simplified();
     if (normalizedLeft == normalizedRight) {
@@ -412,8 +390,7 @@ float MatchController::calculateNameSimilarity(const QString &left, const QStrin
     return qMax(0.0f, (1.0f - static_cast<float>(distance) / static_cast<float>(maxLength)) * 100.0f);
 }
 
-void MatchController::clearState()
-{
+void MatchController::clearState() {
     setLastMessage(QStringLiteral(""));
     if (!m_currentProvider.isEmpty()) {
         m_currentProvider.clear();
@@ -428,8 +405,7 @@ void MatchController::clearState()
     }
 }
 
-void MatchController::setLastMessage(const QString &message)
-{
+void MatchController::setLastMessage(const QString &message) {
     if (m_lastMessage == message) {
         return;
     }

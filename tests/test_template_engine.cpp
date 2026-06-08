@@ -60,10 +60,10 @@ void TemplateEngineTest::testSubstitutionBasic() {
     GameMetadata metadata;
     metadata.title = "Super Mario Bros";
     metadata.region = "USA";
-    
+
     QMap<QString, QString> fileInfo;
     fileInfo["ext"] = ".nes";
-    
+
     QString result = engine.applyTemplate("{title} ({region}){ext}", metadata, fileInfo);
     QVERIFY(result.contains("Super Mario Bros"));
     QVERIFY(result.contains("USA"));
@@ -74,10 +74,10 @@ void TemplateEngineTest::testSubstitutionMissingVariables() {
     TemplateEngine engine;
     GameMetadata metadata;
     metadata.title = "Test Game";
-    
+
     QMap<QString, QString> fileInfo;
     fileInfo["ext"] = ".rom";
-    
+
     // Region not provided, should result in empty parentheses
     QString result = engine.applyTemplate("{title} ({region}){ext}", metadata, fileInfo);
     QVERIFY(result.contains("Test Game"));
@@ -91,14 +91,13 @@ void TemplateEngineTest::testSubstitutionAllVariables() {
     metadata.releaseDate = "1997-09-07";
     metadata.publisher = "Square";
     metadata.system = "PlayStation";
-    
+
     QMap<QString, QString> fileInfo;
     fileInfo["ext"] = ".bin";
     fileInfo["disc"] = "1";
-    
-    QString result = engine.applyTemplate(
-        "{title} ({region}) ({year}) - {publisher}{ext}", metadata, fileInfo);
-    
+
+    QString result = engine.applyTemplate("{title} ({region}) ({year}) - {publisher}{ext}", metadata, fileInfo);
+
     QVERIFY(result.contains("Final Fantasy VII"));
     QVERIFY(result.contains("USA"));
     QVERIFY(result.contains("1997"));
@@ -108,8 +107,8 @@ void TemplateEngineTest::testSubstitutionAllVariables() {
 void TemplateEngineTest::testSubstitutionNoVariables() {
     TemplateEngine engine;
     GameMetadata metadata;
-    
-    QString result = engine.applyTemplate("static_filename.rom", metadata, {});
+
+    QString result = engine.applyTemplate("static_filename.rom", metadata, { });
     QCOMPARE(result, QString("static_filename.rom"));
 }
 
@@ -118,10 +117,10 @@ void TemplateEngineTest::testSubstitutionEmptyValue() {
     GameMetadata metadata;
     metadata.title = "";
     metadata.region = "USA";
-    
+
     QMap<QString, QString> fileInfo;
     fileInfo["ext"] = ".rom";
-    
+
     QString result = engine.applyTemplate("{title} ({region}){ext}", metadata, fileInfo);
     // Should handle empty title gracefully
     QVERIFY(result.contains("USA"));
@@ -150,7 +149,7 @@ void TemplateEngineTest::testMoveArticleNone() {
 void TemplateEngineTest::testMoveArticleCaseInsensitive() {
     QString result1 = TemplateEngine::moveArticleToEnd("the Legend");
     QString result2 = TemplateEngine::moveArticleToEnd("THE LEGEND");
-    
+
     // Function normalizes articles to proper case ("The", not "the" or "THE")
     QCOMPARE(result1, QString("Legend, The"));
     QCOMPARE(result2, QString("LEGEND, The"));
@@ -179,7 +178,7 @@ void TemplateEngineTest::testExtractDiscNumberInParens() {
 void TemplateEngineTest::testExtractDiscNumberCaseInsensitive() {
     int disc1 = TemplateEngine::extractDiscNumber("Game (disc 5).bin");
     int disc2 = TemplateEngine::extractDiscNumber("Game (DISC 5).bin");
-    
+
     QCOMPARE(disc1, 5);
     QCOMPARE(disc2, 5);
 }
@@ -220,10 +219,10 @@ void TemplateEngineTest::testCleanupEmptyParens() {
     GameMetadata metadata;
     metadata.title = "Game Name";
     metadata.region = "USA";
-    
+
     QMap<QString, QString> fileInfo;
     fileInfo["ext"] = ".rom";
-    
+
     // Empty languages variable will create empty parens
     QString result = engine.applyTemplate("{title} ({languages}) ({region}){ext}", metadata, fileInfo);
     QVERIFY(!result.contains("()"));
@@ -234,10 +233,10 @@ void TemplateEngineTest::testCleanupEmptyBrackets() {
     TemplateEngine engine;
     GameMetadata metadata;
     metadata.title = "Game";
-    
+
     QMap<QString, QString> fileInfo;
     fileInfo["ext"] = ".rom";
-    
+
     // Empty tags will create empty brackets
     QString result = engine.applyTemplate("{title} [{tags}]{ext}", metadata, fileInfo);
     QVERIFY(!result.contains("[]"));
@@ -247,10 +246,10 @@ void TemplateEngineTest::testCleanupMultipleSpaces() {
     TemplateEngine engine;
     GameMetadata metadata;
     metadata.title = "Game    Name"; // Multiple spaces in title
-    
+
     QMap<QString, QString> fileInfo;
     fileInfo["ext"] = ".rom";
-    
+
     QString result = engine.applyTemplate("{title}{ext}", metadata, fileInfo);
     // Should normalize multiple spaces
     QVERIFY(!result.contains("    "));
@@ -260,10 +259,10 @@ void TemplateEngineTest::testCleanupSpaceBeforeExtension() {
     TemplateEngine engine;
     GameMetadata metadata;
     metadata.title = "Game Name";
-    
+
     QMap<QString, QString> fileInfo;
     fileInfo["ext"] = ".rom";
-    
+
     QString result = engine.applyTemplate("{title} {ext}", metadata, fileInfo);
     // Should remove space before extension
     QVERIFY(!result.contains(" .rom"));
@@ -274,10 +273,10 @@ void TemplateEngineTest::testCleanupMixed() {
     TemplateEngine engine;
     GameMetadata metadata;
     metadata.title = "Game";
-    
+
     QMap<QString, QString> fileInfo;
     fileInfo["ext"] = ".rom";
-    
+
     QString result = engine.applyTemplate("{title} ({languages}) [{tags}] {ext}", metadata, fileInfo);
     // Should clean up all empty groups and spaces
     QVERIFY(!result.contains("()"));
@@ -295,7 +294,7 @@ void TemplateEngineTest::testValidateTemplateUnbalancedBraces() {
     TemplateEngine engine;
     bool valid1 = engine.validateTemplate("{title ({region}){ext}");
     bool valid2 = engine.validateTemplate("{title} {region}}{ext}");
-    
+
     QVERIFY(!valid1);
     QVERIFY(!valid2);
 }
@@ -317,13 +316,13 @@ void TemplateEngineTest::testApplyNoIntroTemplate() {
     GameMetadata metadata;
     metadata.title = "Super Mario Bros";
     metadata.region = "USA";
-    
+
     QMap<QString, QString> fileInfo;
     fileInfo["ext"] = ".nes";
-    
+
     QString tmpl = TemplateEngine::getNoIntroTemplate();
     QString result = engine.applyTemplate(tmpl, metadata, fileInfo);
-    
+
     QVERIFY(result.contains("Super Mario Bros"));
     QVERIFY(result.contains(".nes"));
 }
@@ -333,14 +332,14 @@ void TemplateEngineTest::testApplyRedumpTemplate() {
     GameMetadata metadata;
     metadata.title = "Final Fantasy VII";
     metadata.region = "USA";
-    
+
     QMap<QString, QString> fileInfo;
     fileInfo["ext"] = ".bin";
     fileInfo["disc"] = "1";
-    
+
     QString tmpl = TemplateEngine::getRedumpTemplate();
     QString result = engine.applyTemplate(tmpl, metadata, fileInfo);
-    
+
     QVERIFY(result.contains("Final Fantasy VII"));
     QVERIFY(result.contains(".bin"));
 }
@@ -351,13 +350,13 @@ void TemplateEngineTest::testApplyCustomTemplate() {
     metadata.title = "Sonic";
     metadata.system = "Genesis";
     metadata.releaseDate = "1991-06-23";
-    
+
     QMap<QString, QString> fileInfo;
     fileInfo["ext"] = ".md";
-    
+
     QString tmpl = "{system} - {title} ({year}){ext}";
     QString result = engine.applyTemplate(tmpl, metadata, fileInfo);
-    
+
     QVERIFY(result.contains("Genesis"));
     QVERIFY(result.contains("Sonic"));
     QVERIFY(result.contains("1991"));

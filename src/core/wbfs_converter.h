@@ -33,16 +33,14 @@ public:
      * @param isoPath   Source .iso or .gcm file
      * @param outputPath Destination .wbfs path; derived from isoPath if empty
      */
-    ConversionResult convertIsoToWbfs(const QString &isoPath,
-                                       const QString &outputPath = QString());
+    ConversionResult convertIsoToWbfs(const QString &isoPath, const QString &outputPath = QString());
 
     /**
      * @brief Convert a WBFS file back to a full ISO image.
      * @param wbfsPath   Source .wbfs file
      * @param outputPath Destination .iso path; derived from wbfsPath if empty
      */
-    ConversionResult extractWbfsToIso(const QString &wbfsPath,
-                                       const QString &outputPath = QString());
+    ConversionResult extractWbfsToIso(const QString &wbfsPath, const QString &outputPath = QString());
 
 private:
     QString m_witPath;

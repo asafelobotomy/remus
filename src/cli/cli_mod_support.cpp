@@ -11,24 +11,21 @@
 
 namespace {
 
-bool useDescendingSort(const QString &sortBy)
-{
+bool useDescendingSort(const QString &sortBy) {
     return sortBy == QStringLiteral("rating") || sortBy == QStringLiteral("downloads");
 }
 
 } // namespace
 
-bool parseModQueryOptions(const QCommandLineParser &parser,
-                          ModQueryOptions          &options,
-                          QString                  &error)
-{
+bool parseModQueryOptions(const QCommandLineParser &parser, ModQueryOptions &options, QString &error) {
     options.systemFilter = parser.isSet("mod-system") ? parser.value("mod-system").trimmed() : QString();
     options.authorFilter = parser.isSet("mod-author") ? parser.value("mod-author").trimmed() : QString();
     options.typeFilter = parser.isSet("mod-type") ? parser.value("mod-type").trimmed() : QString();
     options.formatFilter = parser.isSet("mod-format") ? parser.value("mod-format").trimmed() : QString();
     options.sourceUrlFilter = parser.isSet("mod-source-url") ? parser.value("mod-source-url").trimmed() : QString();
     options.sortBy = parser.isSet("mod-sort") ? parser.value("mod-sort").trimmed().toLower() : QString();
-    options.jsonOutput = parser.isSet(Remus::Constants::Cli::Options::JSON) || parser.isSet(Remus::Constants::Cli::Options::MOD_JSON);
+    options.jsonOutput
+        = parser.isSet(Remus::Constants::Cli::Options::JSON) || parser.isSet(Remus::Constants::Cli::Options::MOD_JSON);
     options.allowSystemFallback = !parser.isSet("mod-no-system-fallback");
 
     if (parser.isSet("mod-system") && options.systemFilter.isEmpty()) {
@@ -53,17 +50,12 @@ bool parseModQueryOptions(const QCommandLineParser &parser,
     }
 
     if (!options.sortBy.isEmpty()) {
-        static const QStringList validSorts = {
-            QStringLiteral("title"),
-            QStringLiteral("author"),
-            QStringLiteral("system"),
-            QStringLiteral("type"),
-            QStringLiteral("format"),
-            QStringLiteral("rating"),
-            QStringLiteral("downloads")
-        };
+        static const QStringList validSorts
+            = { QStringLiteral("title"), QStringLiteral("author"), QStringLiteral("system"), QStringLiteral("type"),
+                  QStringLiteral("format"), QStringLiteral("rating"), QStringLiteral("downloads") };
         if (!validSorts.contains(options.sortBy)) {
-            error = QStringLiteral("Invalid value for --mod-sort (expected title, author, system, type, format, rating, downloads)");
+            error = QStringLiteral(
+                "Invalid value for --mod-sort (expected title, author, system, type, format, rating, downloads)");
             return false;
         }
     }
@@ -89,9 +81,7 @@ bool parseModQueryOptions(const QCommandLineParser &parser,
     return true;
 }
 
-QList<Remus::ModEntry> filterCatalogMods(const QList<Remus::ModEntry> &mods,
-                                         const ModQueryOptions         &options)
-{
+QList<Remus::ModEntry> filterCatalogMods(const QList<Remus::ModEntry> &mods, const ModQueryOptions &options) {
     QList<Remus::ModEntry> filtered;
     for (const auto &mod : mods) {
         if (!options.systemFilter.isEmpty()) {
@@ -108,7 +98,8 @@ QList<Remus::ModEntry> filterCatalogMods(const QList<Remus::ModEntry> &mods,
                     }
                 }
             }
-            if (!systemMatch) continue;
+            if (!systemMatch)
+                continue;
         }
         if (!options.authorFilter.isEmpty() && !mod.author.contains(options.authorFilter, Qt::CaseInsensitive)) {
             continue;
@@ -119,7 +110,8 @@ QList<Remus::ModEntry> filterCatalogMods(const QList<Remus::ModEntry> &mods,
         if (!options.formatFilter.isEmpty() && mod.format.compare(options.formatFilter, Qt::CaseInsensitive) != 0) {
             continue;
         }
-        if (!options.sourceUrlFilter.isEmpty() && !mod.sourceUrl.contains(options.sourceUrlFilter, Qt::CaseInsensitive)) {
+        if (!options.sourceUrlFilter.isEmpty()
+            && !mod.sourceUrl.contains(options.sourceUrlFilter, Qt::CaseInsensitive)) {
             continue;
         }
         if (options.minRating >= 0.0 && mod.rating < options.minRating) {
@@ -133,20 +125,16 @@ QList<Remus::ModEntry> filterCatalogMods(const QList<Remus::ModEntry> &mods,
     return filtered;
 }
 
-QList<ListedMod> withScope(const QList<Remus::ModEntry> &mods,
-                           const QString                &scope)
-{
+QList<ListedMod> withScope(const QList<Remus::ModEntry> &mods, const QString &scope) {
     QList<ListedMod> rows;
     rows.reserve(mods.size());
     for (const auto &mod : mods) {
-        rows.append({mod, scope});
+        rows.append({ mod, scope });
     }
     return rows;
 }
 
-QList<ListedMod> sortListedMods(const QList<ListedMod> &mods,
-                                const ModQueryOptions  &options)
-{
+QList<ListedMod> sortListedMods(const QList<ListedMod> &mods, const ModQueryOptions &options) {
     QList<ListedMod> sorted = mods;
     if (options.sortBy.isEmpty()) {
         return sorted;
@@ -193,8 +181,7 @@ QList<ListedMod> sortListedMods(const QList<ListedMod> &mods,
     return sorted;
 }
 
-QString describeActiveFilters(const ModQueryOptions &options)
-{
+QString describeActiveFilters(const ModQueryOptions &options) {
     QStringList parts;
     if (!options.systemFilter.isEmpty()) {
         parts << QString("system=\"%1\"").arg(options.systemFilter);
@@ -225,8 +212,7 @@ QString describeActiveFilters(const ModQueryOptions &options)
 
 // Format functions extracted to cli_mod_support_format.cpp
 
-bool loadModCatalog(CliContext &ctx, Remus::ModCatalogProvider &catalog, QString &error)
-{
+bool loadModCatalog(CliContext &ctx, Remus::ModCatalogProvider &catalog, QString &error) {
     const bool hasCatalog = ctx.parser.isSet("mod-catalog");
     const bool hasCatalogUrl = ctx.parser.isSet("mod-catalog-url");
 

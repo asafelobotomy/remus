@@ -11,11 +11,11 @@
 namespace Remus {
 
 struct ModInstallResult {
-    bool    success = false;
+    bool success = false;
     QString error;
     QString patchedRomPath;
     QString bundlePath;
-    int     patchedFileId = 0;
+    int patchedFileId = 0;
 };
 
 class ModWorkflowService {
@@ -26,7 +26,9 @@ public:
 
     /// Mark that the active catalog was loaded from a remote URL.
     /// When set, file:// and relative patch sources are rejected.
-    void setCatalogIsRemote(bool isRemote) { m_catalogIsRemote = isRemote; }
+    void setCatalogIsRemote(bool isRemote) {
+        m_catalogIsRemote = isRemote;
+    }
 
     /// Install a mod for a matched file.
     ///
@@ -39,10 +41,8 @@ public:
     /// 6. Record in mod_installations table
     ///
     /// The original FileRecord is NEVER modified.
-    ModInstallResult install(const FileRecord           &baseFile,
-                             const ModEntry              &mod,
-                             const QString               &outputDir,
-                             ProgressCallback             cb = nullptr);
+    ModInstallResult install(
+        const FileRecord &baseFile, const ModEntry &mod, const QString &outputDir, ProgressCallback cb = nullptr);
 
     /// List installed mods for a base file.
     QList<Database::ModInstallationRecord> getInstalledMods(int baseFileId);
@@ -51,13 +51,11 @@ public:
     bool uninstall(int modInstallationId);
 
 private:
-    QString resolvePatchPath(const QString &patchUrl, QString &error,
-                             ProgressCallback cb = nullptr);
-    QString downloadPatch(const QUrl &url, QString &error,
-                          ProgressCallback cb = nullptr);
-    bool    verifySha1(const QString &filePath, const QString &expectedSha1);
+    QString resolvePatchPath(const QString &patchUrl, QString &error, ProgressCallback cb = nullptr);
+    QString downloadPatch(const QUrl &url, QString &error, ProgressCallback cb = nullptr);
+    bool verifySha1(const QString &filePath, const QString &expectedSha1);
 
-    Database     &m_db;
+    Database &m_db;
     PatchService &m_patchSvc;
     std::unique_ptr<QTemporaryDir> m_downloadDir;
     bool m_catalogIsRemote = false;

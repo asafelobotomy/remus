@@ -21,12 +21,24 @@ class ExportController : public QObject {
 public:
     explicit ExportController(AppController *appController, QObject *parent = nullptr);
 
-    bool isExporting() const { return m_exporting; }
-    int bundledFiles() const { return m_bundledFiles; }
-    int totalBundleFiles() const { return m_totalBundleFiles; }
-    QString progressMessage() const { return m_progressMessage; }
-    QString lastOutputPath() const { return m_lastOutputPath; }
-    QString lastMessage() const { return m_lastMessage; }
+    bool isExporting() const {
+        return m_exporting;
+    }
+    int bundledFiles() const {
+        return m_bundledFiles;
+    }
+    int totalBundleFiles() const {
+        return m_totalBundleFiles;
+    }
+    QString progressMessage() const {
+        return m_progressMessage;
+    }
+    QString lastOutputPath() const {
+        return m_lastOutputPath;
+    }
+    QString lastMessage() const {
+        return m_lastMessage;
+    }
 
     Q_INVOKABLE void bundleSelected(const QString &scanDir, const QString &namingTemplate = QString());
     Q_INVOKABLE void bundleAll(const QString &scanDir, const QString &namingTemplate = QString());

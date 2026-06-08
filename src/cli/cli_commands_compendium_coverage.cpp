@@ -17,9 +17,9 @@
 //
 // The output format is identical to the sqlite3 query in build_compendium_full.sh,
 // allowing that script to call this command instead of invoking sqlite3 directly.
-int handleCoverageReportCommand(CliContext &ctx)
-{
-    if (!ctx.parser.isSet(QStringLiteral("coverage-report"))) return 0;
+int handleCoverageReportCommand(CliContext &ctx) {
+    if (!ctx.parser.isSet(QStringLiteral("coverage-report")))
+        return 0;
 
     const QString outputPath = ctx.parser.value(QStringLiteral("compendium-output")).trimmed();
     if (outputPath.isEmpty()) {
@@ -33,8 +33,7 @@ int handleCoverageReportCommand(CliContext &ctx)
         return 1;
     }
 
-    const QString connectionName = QStringLiteral("coverage-")
-                                   + QUuid::createUuid().toString(QUuid::WithoutBraces);
+    const QString connectionName = QStringLiteral("coverage-") + QUuid::createUuid().toString(QUuid::WithoutBraces);
     QSqlDatabase database = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), connectionName);
     database.setDatabaseName(dbInfo.absoluteFilePath());
     database.setConnectOptions(QStringLiteral("QSQLITE_OPEN_READONLY"));
@@ -54,14 +53,15 @@ int handleCoverageReportCommand(CliContext &ctx)
     {
         QSqlQuery q(database);
         const auto scalar = [&](const QString &sql) -> qint64 {
-            if (!q.exec(sql) || !q.next()) return -1;
+            if (!q.exec(sql) || !q.next())
+                return -1;
             return q.value(0).toLongLong();
         };
 
-        const qint64 totalGames      = scalar(QStringLiteral("SELECT COUNT(*) FROM games"));
+        const qint64 totalGames = scalar(QStringLiteral("SELECT COUNT(*) FROM games"));
         const qint64 totalSignatures = scalar(QStringLiteral("SELECT COUNT(*) FROM game_signatures"));
-        const qint64 totalSystems    = scalar(QStringLiteral("SELECT COUNT(*) FROM systems"));
-        const qint64 totalSources    = scalar(QStringLiteral("SELECT COUNT(*) FROM sources WHERE enabled = 1"));
+        const qint64 totalSystems = scalar(QStringLiteral("SELECT COUNT(*) FROM systems"));
+        const qint64 totalSources = scalar(QStringLiteral("SELECT COUNT(*) FROM sources WHERE enabled = 1"));
 
         if (totalGames < 0) {
             qCritical() << "✗ Failed to query database:" << q.lastError().text();
@@ -105,14 +105,14 @@ int handleCoverageReportCommand(CliContext &ctx)
 
         QTextStream out(stdout);
         out << QStringLiteral("# games=%1 signatures=%2 systems=%3 active_sources=%4\n")
-                   .arg(totalGames).arg(totalSignatures).arg(totalSystems).arg(totalSources);
+                   .arg(totalGames)
+                   .arg(totalSignatures)
+                   .arg(totalSystems)
+                   .arg(totalSources);
         out << QStringLiteral("source_id\tsource_items\tsigs_owned\tgames_covered\tcoverage_pct\n");
         while (q.next()) {
-            out << q.value(0).toString() << '\t'
-                << q.value(1).toLongLong() << '\t'
-                << q.value(2).toLongLong() << '\t'
-                << q.value(3).toLongLong() << '\t'
-                << q.value(4).toString()   << '\n';
+            out << q.value(0).toString() << '\t' << q.value(1).toLongLong() << '\t' << q.value(2).toLongLong() << '\t'
+                << q.value(3).toLongLong() << '\t' << q.value(4).toString() << '\n';
         }
         out.flush();
     }

@@ -22,8 +22,7 @@ using namespace Remus::Constants;
 
 /// Build a single provider from parser credentials.
 /// Returns nullptr when providerName is "auto" or unrecognised.
-static std::unique_ptr<MetadataProvider> buildSingleProvider(const QCommandLineParser &parser)
-{
+static std::unique_ptr<MetadataProvider> buildSingleProvider(const QCommandLineParser &parser) {
     const QString providerName = parser.value("provider");
 
     if (providerName == Providers::SCREENSCRAPER) {
@@ -36,9 +35,8 @@ static std::unique_ptr<MetadataProvider> buildSingleProvider(const QCommandLineP
     }
     if (providerName == Providers::THEGAMESDB) {
         auto p = std::make_unique<TheGamesDBProvider>();
-        const QString tgdbApiKey = resolveSecret(parser,
-                                                         QStringLiteral("tgdb-api-key"),
-                                                         Settings::Providers::THEGAMESDB_API_KEY);
+        const QString tgdbApiKey
+            = resolveSecret(parser, QStringLiteral("tgdb-api-key"), Settings::Providers::THEGAMESDB_API_KEY);
         if (!tgdbApiKey.isEmpty()) {
             p->setApiKey(tgdbApiKey);
         }
@@ -46,12 +44,10 @@ static std::unique_ptr<MetadataProvider> buildSingleProvider(const QCommandLineP
     }
     if (providerName == Providers::IGDB) {
         auto p = std::make_unique<IGDBProvider>();
-        const QString clientId = resolveSecret(parser,
-                                                       QStringLiteral("igdb-client-id"),
-                                                       Settings::Providers::IGDB_CLIENT_ID);
-        const QString clientSecret = resolveSecret(parser,
-                                                           QStringLiteral("igdb-client-secret"),
-                                                           Settings::Providers::IGDB_CLIENT_SECRET);
+        const QString clientId
+            = resolveSecret(parser, QStringLiteral("igdb-client-id"), Settings::Providers::IGDB_CLIENT_ID);
+        const QString clientSecret
+            = resolveSecret(parser, QStringLiteral("igdb-client-secret"), Settings::Providers::IGDB_CLIENT_SECRET);
         if (!clientId.isEmpty() && !clientSecret.isEmpty()) {
             p->setCredentials(clientId, clientSecret);
         }
@@ -92,12 +88,10 @@ static std::unique_ptr<MetadataProvider> buildSingleProvider(const QCommandLineP
     }
     if (providerName == Providers::RETROACHIEVEMENTS) {
         auto p = std::make_unique<RetroAchievementsProvider>();
-        const QString raUser = resolveSecret(parser,
-                                                     QStringLiteral("ra-user"),
-                                                     Settings::Providers::RETROACHIEVEMENTS_USERNAME);
-        const QString raKey  = resolveSecret(parser,
-                                                     QStringLiteral("ra-api-key"),
-                                                     Settings::Providers::RETROACHIEVEMENTS_API_KEY);
+        const QString raUser
+            = resolveSecret(parser, QStringLiteral("ra-user"), Settings::Providers::RETROACHIEVEMENTS_USERNAME);
+        const QString raKey
+            = resolveSecret(parser, QStringLiteral("ra-api-key"), Settings::Providers::RETROACHIEVEMENTS_API_KEY);
         if (!raUser.isEmpty() && !raKey.isEmpty())
             p->setCredentials(raUser, raKey);
         return p;
@@ -108,13 +102,13 @@ static std::unique_ptr<MetadataProvider> buildSingleProvider(const QCommandLineP
     return nullptr;
 }
 
-int handleMetadataCommand(CliContext &ctx)
-{
-    if (!ctx.parser.isSet("metadata")) return 0;
+int handleMetadataCommand(CliContext &ctx) {
+    if (!ctx.parser.isSet("metadata"))
+        return 0;
 
-    const QString hash       = ctx.parser.value("metadata");
-    const QString system     = ctx.parser.value("system");
-    const QString provName   = ctx.parser.value("provider");
+    const QString hash = ctx.parser.value("metadata");
+    const QString system = ctx.parser.value("system");
+    const QString provName = ctx.parser.value("provider");
 
     qInfo() << "";
     qInfo() << "Fetching metadata for hash:" << hash;
@@ -134,13 +128,13 @@ int handleMetadataCommand(CliContext &ctx)
             return 0;
         }
         qInfo() << "─────────────────────────────────────";
-        qInfo() << "Title:"        << metadata.title;
-        qInfo() << "System:"       << metadata.system;
-        qInfo() << "Region:"       << metadata.region;
-        qInfo() << "Developer:"    << metadata.developer;
-        qInfo() << "Publisher:"    << metadata.publisher;
+        qInfo() << "Title:" << metadata.title;
+        qInfo() << "System:" << metadata.system;
+        qInfo() << "Region:" << metadata.region;
+        qInfo() << "Developer:" << metadata.developer;
+        qInfo() << "Publisher:" << metadata.publisher;
         qInfo() << "Release Date:" << metadata.releaseDate;
-        qInfo() << "Genres:"       << metadata.genres.join(", ");
+        qInfo() << "Genres:" << metadata.genres.join(", ");
         return 0;
     }
 
@@ -148,18 +142,18 @@ int handleMetadataCommand(CliContext &ctx)
     if (!metadata.title.isEmpty()) {
         qInfo() << "✓ Match found!";
         qInfo() << "─────────────────────────────────────";
-        qInfo() << "Title:"        << metadata.title;
-        qInfo() << "System:"       << metadata.system;
-        qInfo() << "Region:"       << metadata.region;
-        qInfo() << "Developer:"    << metadata.developer;
-        qInfo() << "Publisher:"    << metadata.publisher;
+        qInfo() << "Title:" << metadata.title;
+        qInfo() << "System:" << metadata.system;
+        qInfo() << "Region:" << metadata.region;
+        qInfo() << "Developer:" << metadata.developer;
+        qInfo() << "Publisher:" << metadata.publisher;
         qInfo() << "Release Date:" << metadata.releaseDate;
-        qInfo() << "Genres:"       << metadata.genres.join(", ");
-        qInfo() << "Players:"      << metadata.players;
-        qInfo() << "Rating:"       << metadata.rating << "/ 10";
+        qInfo() << "Genres:" << metadata.genres.join(", ");
+        qInfo() << "Players:" << metadata.players;
+        qInfo() << "Rating:" << metadata.rating << "/ 10";
         qInfo() << "";
         if (!metadata.boxArtUrl.isEmpty()) {
-            qInfo() << "Box Art:"   << metadata.boxArtUrl;
+            qInfo() << "Box Art:" << metadata.boxArtUrl;
         }
         for (const QString &url : metadata.screenshotUrls) {
             if (url.contains(QStringLiteral("Named_Snaps"))) {
@@ -181,18 +175,18 @@ int handleMetadataCommand(CliContext &ctx)
     return 0;
 }
 
-int handleSearchCommand(CliContext &ctx)
-{
-    if (!ctx.parser.isSet("search")) return 0;
+int handleSearchCommand(CliContext &ctx) {
+    if (!ctx.parser.isSet("search"))
+        return 0;
 
-    const QString title    = ctx.parser.value("search");
-    const QString system   = ctx.parser.value("system");
+    const QString title = ctx.parser.value("search");
+    const QString system = ctx.parser.value("system");
     const QString provName = ctx.parser.value("provider");
 
     qInfo() << "";
     qInfo() << "Searching for:" << title;
-    qInfo() << "System:"        << (system.isEmpty() ? "any" : system);
-    qInfo() << "Provider:"      << provName;
+    qInfo() << "System:" << (system.isEmpty() ? "any" : system);
+    qInfo() << "Provider:" << provName;
     qInfo() << "";
 
     auto provider = buildSingleProvider(ctx.parser);
@@ -216,9 +210,8 @@ int handleSearchCommand(CliContext &ctx)
         qInfo() << "No results found for:" << title;
         const QString provName = ctx.parser.value("provider");
         if (provName == Providers::THEGAMESDB) {
-            const QString key = resolveSecret(ctx.parser,
-                                                      QStringLiteral("tgdb-api-key"),
-                                                      Settings::Providers::THEGAMESDB_API_KEY);
+            const QString key
+                = resolveSecret(ctx.parser, QStringLiteral("tgdb-api-key"), Settings::Providers::THEGAMESDB_API_KEY);
             if (key.isEmpty())
                 qInfo() << "Hint: No API key configured for TheGamesDB. Set with --tgdb-api-key or in settings.";
         }
@@ -237,5 +230,3 @@ int handleSearchCommand(CliContext &ctx)
     }
     return 0;
 }
-
-

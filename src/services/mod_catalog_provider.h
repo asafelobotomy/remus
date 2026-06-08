@@ -14,12 +14,12 @@ struct ModEntry {
     QString author;
     QString version;
     QString description;
-    QString type;         // "translation", "hack", "improvement", "homebrew"
+    QString type; // "translation", "hack", "improvement", "homebrew"
     QString system;
-    QString format;       // "ips", "bps", "ups", "xdelta", "ppf"
+    QString format; // "ips", "bps", "ups", "xdelta", "ppf"
     QString patchUrl;
     QString patchSha1;
-    qint64  patchSize = 0;
+    qint64 patchSize = 0;
 
     // Base ROM identification (hash-first)
     QString baseCrc32;
@@ -28,8 +28,8 @@ struct ModEntry {
 
     // Display metadata
     QString sourceUrl;
-    double  rating = 0.0;
-    int     downloads = 0;
+    double rating = 0.0;
+    int downloads = 0;
 };
 
 class ModCatalogProvider {
@@ -38,9 +38,7 @@ public:
 
     bool loadFromUrl(const QUrl &url, bool forceRefresh = false);
 
-    QList<ModEntry> findModsForRom(const QString &crc32,
-                                   const QString &md5,
-                                   const QString &sha1) const;
+    QList<ModEntry> findModsForRom(const QString &crc32, const QString &md5, const QString &sha1) const;
 
     QList<ModEntry> findModsBySystem(const QString &system) const;
 

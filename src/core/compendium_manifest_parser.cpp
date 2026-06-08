@@ -11,8 +11,7 @@
 
 namespace Remus {
 
-bool readTextFile(const QString &path, QString &content, QString &error)
-{
+bool readTextFile(const QString &path, QString &content, QString &error) {
     QFile file(path);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         error = QStringLiteral("Failed to open %1: %2").arg(path, file.errorString());
@@ -23,12 +22,8 @@ bool readTextFile(const QString &path, QString &content, QString &error)
     return true;
 }
 
-bool requireString(const QJsonObject &object,
-                   const QString &fieldName,
-                   QString &value,
-                   QString &error,
-                   bool allowEmpty)
-{
+bool requireString(
+    const QJsonObject &object, const QString &fieldName, QString &value, QString &error, bool allowEmpty) {
     if (!object.contains(fieldName) || !object.value(fieldName).isString()) {
         error = QStringLiteral("Manifest field '%1' must be a string").arg(fieldName);
         return false;
@@ -43,11 +38,7 @@ bool requireString(const QJsonObject &object,
     return true;
 }
 
-static bool optionalString(const QJsonObject &object,
-                            const QString &fieldName,
-                            QString &value,
-                            QString &error)
-{
+static bool optionalString(const QJsonObject &object, const QString &fieldName, QString &value, QString &error) {
     if (!object.contains(fieldName)) {
         return true; // absent is fine — caller can use any default
     }
@@ -59,8 +50,7 @@ static bool optionalString(const QJsonObject &object,
     return true;
 }
 
-QString resolveManifestRelativePath(const QString &manifestPath, const QString &sourcePath)
-{
+QString resolveManifestRelativePath(const QString &manifestPath, const QString &sourcePath) {
     const QFileInfo sourceInfo(sourcePath);
     if (sourceInfo.isAbsolute()) {
         return QDir::cleanPath(sourceInfo.absoluteFilePath());
@@ -70,11 +60,8 @@ QString resolveManifestRelativePath(const QString &manifestPath, const QString &
     return QDir::cleanPath(manifestInfo.dir().absoluteFilePath(sourcePath));
 }
 
-bool parseSourceDescriptor(const QJsonObject &object,
-                           const QString &manifestPath,
-                            CompendiumSourceDescriptor &descriptor,
-                            QString &error)
-{
+bool parseSourceDescriptor(
+    const QJsonObject &object, const QString &manifestPath, CompendiumSourceDescriptor &descriptor, QString &error) {
     if (!requireString(object, QStringLiteral("source_id"), descriptor.sourceId, error)) {
         return false;
     }
@@ -143,8 +130,8 @@ bool parseSourceDescriptor(const QJsonObject &object,
 
     if (object.contains(QStringLiteral("attribution_required"))) {
         if (!object.value(QStringLiteral("attribution_required")).isBool()) {
-            error = QStringLiteral("Source '%1' field 'attribution_required' must be a boolean")
-                .arg(descriptor.sourceId);
+            error
+                = QStringLiteral("Source '%1' field 'attribution_required' must be a boolean").arg(descriptor.sourceId);
             return false;
         }
         descriptor.attributionRequired = object.value(QStringLiteral("attribution_required")).toBool();
@@ -152,22 +139,15 @@ bool parseSourceDescriptor(const QJsonObject &object,
 
     const QFileInfo inputInfo(descriptor.path);
     if (descriptor.enabled && (!inputInfo.exists() || !inputInfo.isFile())) {
-        error = QStringLiteral("Source '%1' path does not exist: %2")
-            .arg(descriptor.sourceId, descriptor.path);
+        error = QStringLiteral("Source '%1' path does not exist: %2").arg(descriptor.sourceId, descriptor.path);
         return false;
     }
 
     return true;
 }
 
-bool parseManifest(const QString &manifestPath,
-                   QString &buildId,
-                   int &schemaVersion,
-                   QString &manifestJson,
-                   QJsonArray &sourceObjects,
-                   QList<CompendiumSourceDescriptor> &sources,
-                   QString &error)
-{
+bool parseManifest(const QString &manifestPath, QString &buildId, int &schemaVersion, QString &manifestJson,
+    QJsonArray &sourceObjects, QList<CompendiumSourceDescriptor> &sources, QString &error) {
     if (!readTextFile(manifestPath, manifestJson, error)) {
         return false;
     }

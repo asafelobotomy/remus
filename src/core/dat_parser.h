@@ -14,9 +14,9 @@ namespace Remus {
  * @brief DAT file header information
  */
 struct DatHeader {
-    QString name;           // e.g., "Nintendo - Nintendo Entertainment System (Headerless)"
-    QString description;    // e.g., "No-Intro | 2024-01-15"
-    QString version;        // e.g., "20240115"
+    QString name; // e.g., "Nintendo - Nintendo Entertainment System (Headerless)"
+    QString description; // e.g., "No-Intro | 2024-01-15"
+    QString version; // e.g., "20240115"
     QString author;
     QString category;
     QString url;
@@ -27,19 +27,19 @@ struct DatHeader {
  * @brief Individual ROM entry in a DAT file
  */
 struct DatRomEntry {
-    QString gameName;       // Parent game name
-    QString description;    // Game description
-    QString romName;        // ROM filename
-    qint64 size = 0;        // File size in bytes
-    QString crc32;          // CRC32 hash (lowercase hex)
-    QString md5;            // MD5 hash (lowercase hex)
-    QString sha1;           // SHA1 hash (lowercase hex)
-    QString sha256;         // SHA256 hash (lowercase hex)
-    QString status;         // "verified", "good", "bad", etc.
-    QString serial;         // Game serial number (if available)
-    QString baseTitle;      // Base title for patched ROM catalogs
-    QString patchName;      // Patch/transformation name for patched ROM catalogs
-    QString fileType;       // official, translation, hack, prototype, etc.
+    QString gameName; // Parent game name
+    QString description; // Game description
+    QString romName; // ROM filename
+    qint64 size = 0; // File size in bytes
+    QString crc32; // CRC32 hash (lowercase hex)
+    QString md5; // MD5 hash (lowercase hex)
+    QString sha1; // SHA1 hash (lowercase hex)
+    QString sha256; // SHA256 hash (lowercase hex)
+    QString status; // "verified", "good", "bad", etc.
+    QString serial; // Game serial number (if available)
+    QString baseTitle; // Base title for patched ROM catalogs
+    QString patchName; // Patch/transformation name for patched ROM catalogs
+    QString fileType; // official, translation, hack, prototype, etc.
 };
 
 /**
@@ -55,7 +55,7 @@ struct DatParseResult {
 
 /**
  * @brief Parses No-Intro/Redump XML DAT files (Logiqx format)
- * 
+ *
  * Supports:
  * - Standard Logiqx DTD format used by No-Intro and Redump
  * - Multi-ROM games (each ROM file as separate entry)
@@ -87,9 +87,7 @@ public:
      * @param hashType "crc32", "md5", "sha1", or "sha256"
      * @return Map of hash value to entry
      */
-    static QMap<QString, DatRomEntry> indexByHash(
-        const QList<DatRomEntry> &entries, 
-        const QString &hashType);
+    static QMap<QString, DatRomEntry> indexByHash(const QList<DatRomEntry> &entries, const QString &hashType);
 
     /**
      * @brief Detect DAT file source

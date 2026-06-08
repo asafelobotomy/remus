@@ -11,17 +11,14 @@ namespace Remus {
 
 M3UGenerator::M3UGenerator(Database &db, QObject *parent)
     : QObject(parent)
-    , m_database(db)
-{
-}
+    , m_database(db) { }
 
-QMap<QString, QList<int>> M3UGenerator::detectMultiDiscGames(const QString &systemName)
-{
+QMap<QString, QList<int>> M3UGenerator::detectMultiDiscGames(const QString &systemName) {
     QMap<QString, QList<int>> multiDiscGames;
 
     // Get all files, optionally filtered by system
     QList<FileRecord> files;
-    
+
     if (systemName.isEmpty()) {
         files = m_database.getAllFiles();
     } else {
@@ -39,16 +36,14 @@ QMap<QString, QList<int>> M3UGenerator::detectMultiDiscGames(const QString &syst
                 fileIds.append(file.id);
             }
             multiDiscGames[it.key()] = fileIds;
-            qInfo() << "Multi-disc game detected:" << it.key() 
-                    << "(" << it.value().size() << "discs)";
+            qInfo() << "Multi-disc game detected:" << it.key() << "(" << it.value().size() << "discs)";
         }
     }
 
     return multiDiscGames;
 }
 
-QMap<QString, QList<int>> M3UGenerator::detectMultiDiscGames(const QSet<int> &fileIds)
-{
+QMap<QString, QList<int>> M3UGenerator::detectMultiDiscGames(const QSet<int> &fileIds) {
     if (fileIds.isEmpty()) {
         return detectMultiDiscGames(QString());
     }
@@ -77,10 +72,7 @@ QMap<QString, QList<int>> M3UGenerator::detectMultiDiscGames(const QSet<int> &fi
     return multiDiscGames;
 }
 
-bool M3UGenerator::generateM3U(const QString &gameTitle,
-                              const QStringList &discPaths,
-                              const QString &outputPath)
-{
+bool M3UGenerator::generateM3U(const QString &gameTitle, const QStringList &discPaths, const QString &outputPath) {
     if (discPaths.isEmpty()) {
         qWarning() << "No disc paths provided for M3U generation";
         emit errorOccurred("No disc paths provided");
@@ -101,8 +93,7 @@ bool M3UGenerator::generateM3U(const QString &gameTitle,
     bool success = writeM3UFile(outputPath, relativePaths);
 
     if (success) {
-        qInfo() << "✓ Generated M3U playlist:" << outputPath 
-                << "(" << discPaths.size() << "discs)";
+        qInfo() << "✓ Generated M3U playlist:" << outputPath << "(" << discPaths.size() << "discs)";
         emit playlistGenerated(outputPath, discPaths.size());
     } else {
         qWarning() << "✗ Failed to generate M3U:" << outputPath;
@@ -112,8 +103,7 @@ bool M3UGenerator::generateM3U(const QString &gameTitle,
     return success;
 }
 
-int M3UGenerator::generateAll(const QString &systemName, const QString &outputDir)
-{
+int M3UGenerator::generateAll(const QString &systemName, const QString &outputDir) {
     QMap<QString, QList<int>> multiDiscGames = detectMultiDiscGames(systemName);
 
     if (multiDiscGames.isEmpty()) {
@@ -173,8 +163,7 @@ int M3UGenerator::generateAll(const QString &systemName, const QString &outputDi
     return generated;
 }
 
-int M3UGenerator::generateAll(const QSet<int> &fileIds, const QString &outputDir)
-{
+int M3UGenerator::generateAll(const QSet<int> &fileIds, const QString &outputDir) {
     QMap<QString, QList<int>> multiDiscGames = detectMultiDiscGames(fileIds);
 
     if (multiDiscGames.isEmpty()) {
@@ -219,15 +208,13 @@ int M3UGenerator::generateAll(const QSet<int> &fileIds, const QString &outputDir
     return generated;
 }
 
-bool M3UGenerator::isMultiDisc(const QString &filename)
-{
+bool M3UGenerator::isMultiDisc(const QString &filename) {
     // Match patterns like "Disc 1", "Disc 01", "(Disc 1)", "CD1", etc.
     QRegularExpression re("\\b(Disc|CD|Disk)\\s*\\d+", QRegularExpression::CaseInsensitiveOption);
     return re.match(filename).hasMatch();
 }
 
-QString M3UGenerator::extractBaseTitle(const QString &filename)
-{
+QString M3UGenerator::extractBaseTitle(const QString &filename) {
     // Remove disc number patterns
     QString baseTitle = filename;
 
@@ -236,8 +223,8 @@ QString M3UGenerator::extractBaseTitle(const QString &filename)
     baseTitle = info.completeBaseName();
 
     // Remove disc patterns
-    QRegularExpression discPattern("\\s*\\(?\\s*(Disc|CD|Disk)\\s*\\d+.*?\\)?\\s*", 
-                                  QRegularExpression::CaseInsensitiveOption);
+    QRegularExpression discPattern(
+        "\\s*\\(?\\s*(Disc|CD|Disk)\\s*\\d+.*?\\)?\\s*", QRegularExpression::CaseInsensitiveOption);
     baseTitle.remove(discPattern);
 
     // Clean up extra spaces and parentheses
@@ -248,8 +235,7 @@ QString M3UGenerator::extractBaseTitle(const QString &filename)
     return baseTitle;
 }
 
-int M3UGenerator::extractDiscNumber(const QString &filename)
-{
+int M3UGenerator::extractDiscNumber(const QString &filename) {
     QRegularExpression re("\\b(Disc|CD|Disk)\\s*(\\d+)", QRegularExpression::CaseInsensitiveOption);
     QRegularExpressionMatch match = re.match(filename);
 
@@ -260,8 +246,7 @@ int M3UGenerator::extractDiscNumber(const QString &filename)
     return 0;
 }
 
-QMap<QString, QList<FileRecord>> M3UGenerator::groupByBaseTitle(const QList<FileRecord> &files)
-{
+QMap<QString, QList<FileRecord>> M3UGenerator::groupByBaseTitle(const QList<FileRecord> &files) {
     QMap<QString, QList<FileRecord>> groups;
 
     for (const FileRecord &file : files) {
@@ -274,8 +259,7 @@ QMap<QString, QList<FileRecord>> M3UGenerator::groupByBaseTitle(const QList<File
     return groups;
 }
 
-QList<FileRecord> M3UGenerator::sortByDiscNumber(const QList<FileRecord> &files)
-{
+QList<FileRecord> M3UGenerator::sortByDiscNumber(const QList<FileRecord> &files) {
     QList<FileRecord> sorted = files;
 
     // Sort by disc number
@@ -288,8 +272,7 @@ QList<FileRecord> M3UGenerator::sortByDiscNumber(const QList<FileRecord> &files)
     return sorted;
 }
 
-bool M3UGenerator::writeM3UFile(const QString &path, const QStringList &discPaths)
-{
+bool M3UGenerator::writeM3UFile(const QString &path, const QStringList &discPaths) {
     QFile file(path);
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
         qWarning() << "Failed to open file for writing:" << path;

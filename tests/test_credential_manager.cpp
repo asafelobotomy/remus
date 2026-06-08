@@ -17,8 +17,7 @@
 
 using namespace Remus;
 
-class CredentialManagerTest : public QObject
-{
+class CredentialManagerTest : public QObject {
     Q_OBJECT
 
 private slots:
@@ -32,18 +31,15 @@ private slots:
 // ── Helpers ────────────────────────────────────────────────────────────────
 
 /// Write a minimal credentials JSON file with one outer/inner key.
-static QString writeCredJson(const QTemporaryDir &dir,
-                             const QString &outer,
-                             const QString &inner,
-                             const QString &value)
-{
-    const QJsonObject inner_obj{{inner, value}};
-    const QJsonObject root{{outer, inner_obj}};
+static QString writeCredJson(
+    const QTemporaryDir &dir, const QString &outer, const QString &inner, const QString &value) {
+    const QJsonObject inner_obj { { inner, value } };
+    const QJsonObject root { { outer, inner_obj } };
     const QJsonDocument doc(root);
     const QString path = dir.filePath(QStringLiteral("creds.json"));
     QFile f(path);
     if (!f.open(QIODevice::WriteOnly | QIODevice::Text))
-        return {};
+        return { };
     f.write(doc.toJson());
     return path;
 }
@@ -51,8 +47,7 @@ static QString writeCredJson(const QTemporaryDir &dir,
 // ── Tests ──────────────────────────────────────────────────────────────────
 
 /// JSON file value must beat a simultaneously-set env var (step 1 > step 2).
-void CredentialManagerTest::testJsonTakesPriorityOverEnvVar()
-{
+void CredentialManagerTest::testJsonTakesPriorityOverEnvVar() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
@@ -68,20 +63,17 @@ void CredentialManagerTest::testJsonTakesPriorityOverEnvVar()
 
 /// When the JSON path points to a non-existent file the lookup must fall
 /// through to the next source (env var), not return empty prematurely.
-void CredentialManagerTest::testNonexistentJsonFileFallsThrough()
-{
+void CredentialManagerTest::testNonexistentJsonFileFallsThrough() {
     const QString missingPath = QStringLiteral("/nonexistent/path/creds.json");
     qputenv("REMUS_IGDB_CLIENT_SECRET", "env_secret");
-    const QString result =
-        CredentialManager::get("igdb/client_secret", missingPath);
+    const QString result = CredentialManager::get("igdb/client_secret", missingPath);
     qunsetenv("REMUS_IGDB_CLIENT_SECRET");
 
     QCOMPARE(result, QStringLiteral("env_secret"));
 }
 
 /// An env var in the built-in mapping table must be returned as-is (step 2).
-void CredentialManagerTest::testEnvVarResolvesForMappedKey()
-{
+void CredentialManagerTest::testEnvVarResolvesForMappedKey() {
     qputenv("REMUS_TGDB_API_KEY", "tgdb_abc123");
     const QString result = CredentialManager::get("thegamesdb/api_key");
     qunsetenv("REMUS_TGDB_API_KEY");
@@ -90,8 +82,7 @@ void CredentialManagerTest::testEnvVarResolvesForMappedKey()
 }
 
 /// A key absent from every source must produce an empty string, not a crash.
-void CredentialManagerTest::testEmptyReturnedWhenNothingSet()
-{
+void CredentialManagerTest::testEmptyReturnedWhenNothingSet() {
     // Use a key that is not in the env-var mapping table and has no JSON /
     // QSettings / keychain value in a clean test run.
     const QString key = QStringLiteral("test_credential_manager/nonexistent");
@@ -103,10 +94,9 @@ void CredentialManagerTest::testEmptyReturnedWhenNothingSet()
 /// string rather than downgrading silently to plaintext QSettings storage.
 /// When the backend is available and returns NotFound, get() correctly falls
 /// through to QSettings (expected safe fallback path).
-void CredentialManagerTest::testBackendErrorDoesNotFallThroughToQSettings()
-{
+void CredentialManagerTest::testBackendErrorDoesNotFallThroughToQSettings() {
     // Use a key with no env-var mapping so the lookup reaches the keychain.
-    const QString key  = QStringLiteral("test_credential_manager/sentinel");
+    const QString key = QStringLiteral("test_credential_manager/sentinel");
     const QString sentinel = QStringLiteral("qsettings_sentinel_42");
 
     QSettings s(QStringLiteral("Remus"), QStringLiteral("Remus"));

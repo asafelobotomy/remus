@@ -8,8 +8,7 @@
 
 namespace Remus {
 
-class CompendiumProvider : public MetadataProvider
-{
+class CompendiumProvider : public MetadataProvider {
     Q_OBJECT
 
 public:
@@ -18,16 +17,19 @@ public:
 
     bool openDatabase(const QString &databasePath);
 
-    QList<SearchResult> searchByName(const QString &title,
-                                     const QString &system,
-                                     const QString &region = QString()) override;
+    QList<SearchResult> searchByName(
+        const QString &title, const QString &system, const QString &region = QString()) override;
     GameMetadata getByHash(const QString &hash, const QString &system) override;
     GameMetadata getBySerial(const QString &serial, const QString &system) override;
     GameMetadata getById(const QString &id) override;
     ArtworkUrls getArtwork(const QString &id) override;
 
-    QString name() const override { return QStringLiteral("Compendium"); }
-    bool requiresAuth() const override { return false; }
+    QString name() const override {
+        return QStringLiteral("Compendium");
+    }
+    bool requiresAuth() const override {
+        return false;
+    }
     bool isAvailable() override;
 
 private:

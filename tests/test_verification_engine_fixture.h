@@ -9,14 +9,10 @@ using namespace Remus;
 
 QString writeDat(const QTemporaryDir &dir);
 QString writePatchDat(const QTemporaryDir &dir);
-int populateDb(Database &db,
-               const QString &crc,
-               const QString &md5 = QString(),
-               const QString &sha1 = QString(),
-               bool hashCalculated = true);
+int populateDb(Database &db, const QString &crc, const QString &md5 = QString(), const QString &sha1 = QString(),
+    bool hashCalculated = true);
 
-class VerificationEngineTest : public QObject
-{
+class VerificationEngineTest : public QObject {
     Q_OBJECT
 
 private slots:

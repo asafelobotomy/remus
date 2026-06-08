@@ -13,18 +13,15 @@
 namespace Remus {
 
 AppController::AppController(QObject *parent)
-    : QObject(parent)
-{
+    : QObject(parent) {
     rebuildOrchestrator();
 }
 
-AppController::~AppController()
-{
+AppController::~AppController() {
     closeLibrary();
 }
 
-bool AppController::openLibrary(const QString &dbPath)
-{
+bool AppController::openLibrary(const QString &dbPath) {
     const QString cleanedPath = QDir::cleanPath(dbPath.trimmed());
     if (cleanedPath.isEmpty()) {
         setStatusMessage(QStringLiteral("Select a database path first."));
@@ -65,8 +62,7 @@ bool AppController::openLibrary(const QString &dbPath)
     return true;
 }
 
-void AppController::closeLibrary()
-{
+void AppController::closeLibrary() {
     const bool wasOpen = m_libraryOpen;
     m_database.close();
     m_cache.reset();
@@ -86,11 +82,7 @@ void AppController::closeLibrary()
     }
 }
 
-bool AppController::eraseLibraryDatabase(bool eraseFiles,
-                                         bool eraseMatchData,
-                                         bool eraseApiCache,
-                                         bool eraseArtwork)
-{
+bool AppController::eraseLibraryDatabase(bool eraseFiles, bool eraseMatchData, bool eraseApiCache, bool eraseArtwork) {
     if (!m_libraryOpen) {
         setStatusMessage(QStringLiteral("No library is open."));
         return false;
@@ -113,10 +105,9 @@ bool AppController::eraseLibraryDatabase(bool eraseFiles,
     if (eraseFiles) {
         // Deleting libraries cascades to files → matches, undo_queue (FK SET NULL).
         // Games and applied_patches are not cascade-linked so we remove them explicitly.
-        if (!q.exec(QStringLiteral("DELETE FROM applied_patches")) ||
-            !q.exec(QStringLiteral("DELETE FROM libraries")) || // cascade: files → matches; undo_queue FK SET NULL
-            !q.exec(QStringLiteral("DELETE FROM undo_queue")) ||
-            !q.exec(QStringLiteral("DELETE FROM games"))) {
+        if (!q.exec(QStringLiteral("DELETE FROM applied_patches")) || !q.exec(QStringLiteral("DELETE FROM libraries"))
+            || // cascade: files → matches; undo_queue FK SET NULL
+            !q.exec(QStringLiteral("DELETE FROM undo_queue")) || !q.exec(QStringLiteral("DELETE FROM games"))) {
             db.rollback();
             setStatusMessage(QStringLiteral("Erase failed: %1").arg(q.lastError().text()));
             return false;
@@ -124,8 +115,7 @@ bool AppController::eraseLibraryDatabase(bool eraseFiles,
         erased << QStringLiteral("file records");
     } else if (eraseMatchData) {
         // Keep file records but strip match results and game metadata.
-        if (!q.exec(QStringLiteral("DELETE FROM matches")) ||
-            !q.exec(QStringLiteral("DELETE FROM games"))) {
+        if (!q.exec(QStringLiteral("DELETE FROM matches")) || !q.exec(QStringLiteral("DELETE FROM games"))) {
             db.rollback();
             setStatusMessage(QStringLiteral("Erase failed: %1").arg(q.lastError().text()));
             return false;
@@ -154,9 +144,8 @@ bool AppController::eraseLibraryDatabase(bool eraseFiles,
     }
 
     if (eraseApiCache) {
-        const QString modCacheDir = QDir(
-            QStandardPaths::writableLocation(QStandardPaths::AppDataLocation))
-            .filePath(QStringLiteral("mod_catalog_cache"));
+        const QString modCacheDir = QDir(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation))
+                                        .filePath(QStringLiteral("mod_catalog_cache"));
         QDir(modCacheDir).removeRecursively();
     }
 
@@ -176,14 +165,12 @@ bool AppController::eraseLibraryDatabase(bool eraseFiles,
     return true;
 }
 
-QString AppController::defaultLibraryPath() const
-{
+QString AppController::defaultLibraryPath() const {
     const QString documentsDir = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
     return QDir(documentsDir).filePath(QStringLiteral("remus-library.db"));
 }
 
-QVariantMap AppController::selectedFile()
-{
+QVariantMap AppController::selectedFile() {
     QVariantMap result;
     if (!m_libraryOpen || m_selectedFileId <= 0) {
         return result;
@@ -211,41 +198,38 @@ QVariantMap AppController::selectedFile()
 
     // Pipeline stage flags and paths
     QSqlQuery flagsQ(m_database.database());
-    flagsQ.prepare(QStringLiteral(
-        "SELECT is_converted, is_bundled, bundle_output_path FROM files WHERE id = ?"));
+    flagsQ.prepare(QStringLiteral("SELECT is_converted, is_bundled, bundle_output_path FROM files WHERE id = ?"));
     flagsQ.addBindValue(m_selectedFileId);
     bool isConverted = false, isBundled = false;
     QString bundleOutputPath;
     if (flagsQ.exec() && flagsQ.next()) {
-        isConverted      = flagsQ.value(0).toBool();
-        isBundled        = flagsQ.value(1).toBool();
+        isConverted = flagsQ.value(0).toBool();
+        isBundled = flagsQ.value(1).toBool();
         bundleOutputPath = flagsQ.value(2).toString();
     }
 
     QSqlQuery orgQ(m_database.database());
-    orgQ.prepare(QStringLiteral(
-        "SELECT new_path FROM undo_queue "
-        "WHERE file_id = ? AND undone = 0 "
-        "ORDER BY executed_at DESC LIMIT 1"));
+    orgQ.prepare(QStringLiteral("SELECT new_path FROM undo_queue "
+                                "WHERE file_id = ? AND undone = 0 "
+                                "ORDER BY executed_at DESC LIMIT 1"));
     orgQ.addBindValue(m_selectedFileId);
     QString organizedPath;
     if (orgQ.exec() && orgQ.next())
         organizedPath = orgQ.value(0).toString();
 
-    result.insert(QStringLiteral("originalPath"),     file.originalPath);
-    result.insert(QStringLiteral("originalExists"),   QFileInfo::exists(file.originalPath));
-    result.insert(QStringLiteral("currentExists"),    QFileInfo::exists(file.currentPath));
-    result.insert(QStringLiteral("isConverted"),      isConverted);
-    result.insert(QStringLiteral("isBundled"),        isBundled);
-    result.insert(QStringLiteral("isOrganized"),      !organizedPath.isEmpty());
-    result.insert(QStringLiteral("organizedPath"),    organizedPath);
+    result.insert(QStringLiteral("originalPath"), file.originalPath);
+    result.insert(QStringLiteral("originalExists"), QFileInfo::exists(file.originalPath));
+    result.insert(QStringLiteral("currentExists"), QFileInfo::exists(file.currentPath));
+    result.insert(QStringLiteral("isConverted"), isConverted);
+    result.insert(QStringLiteral("isBundled"), isBundled);
+    result.insert(QStringLiteral("isOrganized"), !organizedPath.isEmpty());
+    result.insert(QStringLiteral("organizedPath"), organizedPath);
     result.insert(QStringLiteral("bundleOutputPath"), bundleOutputPath);
 
     return result;
 }
 
-QVariantMap AppController::selectedMatch()
-{
+QVariantMap AppController::selectedMatch() {
     QVariantMap result;
     if (!m_libraryOpen || m_selectedFileId <= 0) {
         return result;
@@ -277,8 +261,7 @@ QVariantMap AppController::selectedMatch()
     return result;
 }
 
-QString AppController::systemName(int systemId)
-{
+QString AppController::systemName(int systemId) {
     if (!m_libraryOpen || systemId <= 0) {
         return QString();
     }
@@ -286,8 +269,7 @@ QString AppController::systemName(int systemId)
     return m_database.getSystemDisplayName(systemId);
 }
 
-void AppController::setCurrentView(int view)
-{
+void AppController::setCurrentView(int view) {
     // Clamp to the valid 4-view range; guards against stale persisted values.
     const int clamped = qBound(0, view, 3);
     if (m_currentView == clamped) {
@@ -298,8 +280,7 @@ void AppController::setCurrentView(int view)
     emit currentViewChanged();
 }
 
-void AppController::setSelectedFileId(int fileId)
-{
+void AppController::setSelectedFileId(int fileId) {
     if (m_selectedFileId == fileId) {
         refreshSelectedMatch();
         return;
@@ -311,8 +292,7 @@ void AppController::setSelectedFileId(int fileId)
     refreshSelectedMatch();
 }
 
-void AppController::setStatusMessage(const QString &message)
-{
+void AppController::setStatusMessage(const QString &message) {
     if (m_statusMessage == message) {
         return;
     }
@@ -321,8 +301,7 @@ void AppController::setStatusMessage(const QString &message)
     emit statusMessageChanged();
 }
 
-void AppController::refreshSelectedMatch()
-{
+void AppController::refreshSelectedMatch() {
     int nextGameId = 0;
     if (m_libraryOpen && m_selectedFileId > 0) {
         nextGameId = m_database.getMatchForFile(m_selectedFileId).gameId;
@@ -337,8 +316,7 @@ void AppController::refreshSelectedMatch()
     emit selectedMatchDataChanged();
 }
 
-void AppController::refreshSelectedFile()
-{
+void AppController::refreshSelectedFile() {
     emit selectedFileDataChanged();
 }
 

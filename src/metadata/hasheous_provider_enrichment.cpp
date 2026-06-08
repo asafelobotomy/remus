@@ -12,8 +12,7 @@
 
 namespace Remus {
 
-GameMetadata HasheousProvider::parseGameJson(const QJsonObject &json) const
-{
+GameMetadata HasheousProvider::parseGameJson(const QJsonObject &json) const {
     GameMetadata metadata;
 
     if (json.isEmpty()) {
@@ -62,8 +61,7 @@ GameMetadata HasheousProvider::parseGameJson(const QJsonObject &json) const
     return metadata;
 }
 
-GameMetadata HasheousProvider::fetchIgdbMetadata(int igdbId)
-{
+GameMetadata HasheousProvider::fetchIgdbMetadata(int igdbId) {
     if (igdbId <= 0) {
         return GameMetadata();
     }
@@ -77,7 +75,9 @@ GameMetadata HasheousProvider::fetchIgdbMetadata(int igdbId)
 
     QUrlQuery params;
     params.addQueryItem("Id", QString::number(igdbId));
-    params.addQueryItem("expandColumns", "age_ratings,alternative_names,collections,cover,dlcs,expanded_games,franchise,franchises,game_modes,genres,involved_companies,platforms,ports,remakes,screenshots,similar_games,videos");
+    params.addQueryItem("expandColumns",
+        "age_ratings,alternative_names,collections,cover,dlcs,expanded_games,franchise,franchises,game_modes,genres,"
+        "involved_companies,platforms,ports,remakes,screenshots,similar_games,videos");
 
     const QJsonObject igdbGame = makeRequest(Constants::API::HASHEOUS_PROXY_IGDB_GAME, params);
     if (igdbGame.isEmpty()) {
@@ -191,7 +191,8 @@ GameMetadata HasheousProvider::fetchIgdbMetadata(int igdbId)
                         } else {
                             QUrlQuery compParams;
                             compParams.addQueryItem("Id", QString::number(companyId));
-                            const QJsonObject compData = makeRequest(Constants::API::HASHEOUS_PROXY_IGDB_COMPANY, compParams);
+                            const QJsonObject compData
+                                = makeRequest(Constants::API::HASHEOUS_PROXY_IGDB_COMPANY, compParams);
                             companyName = compData["name"].toString();
                             if (!companyName.isEmpty()) {
                                 m_companyCache.insert(companyId, companyName);

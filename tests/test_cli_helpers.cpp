@@ -14,8 +14,7 @@
 
 using namespace Remus;
 
-class CliHelpersTest : public QObject
-{
+class CliHelpersTest : public QObject {
     Q_OBJECT
 
 private slots:
@@ -48,52 +47,43 @@ private slots:
 
 // ── Helpers ───────────────────────────────────────────────────────────────
 
-static FileRecord makeRecord(int libId, int sysId,
-                             const QString &name,
-                             const QString &crc   = QString(),
-                             const QString &md5   = QString(),
-                             const QString &sha1  = QString())
-{
+static FileRecord makeRecord(int libId, int sysId, const QString &name, const QString &crc = QString(),
+    const QString &md5 = QString(), const QString &sha1 = QString()) {
     FileRecord fr;
-    fr.libraryId      = libId;
-    fr.filename       = name;
-    fr.originalPath   = "/roms/" + name;
-    fr.currentPath    = fr.originalPath;
-    fr.extension      = "." + name.section('.', -1);
-    fr.systemId       = sysId;
-    fr.fileSize       = 4096;
-    fr.crc32          = crc;
-    fr.md5            = md5;
-    fr.sha1           = sha1;
+    fr.libraryId = libId;
+    fr.filename = name;
+    fr.originalPath = "/roms/" + name;
+    fr.currentPath = fr.originalPath;
+    fr.extension = "." + name.section('.', -1);
+    fr.systemId = sysId;
+    fr.fileSize = 4096;
+    fr.crc32 = crc;
+    fr.md5 = md5;
+    fr.sha1 = sha1;
     fr.hashCalculated = !crc.isEmpty() || !md5.isEmpty() || !sha1.isEmpty();
     return fr;
 }
 
-static GameMetadata makeMetadata(const QString &title = "Super Mario Bros.",
-                                  const QString &system = "NES")
-{
+static GameMetadata makeMetadata(const QString &title = "Super Mario Bros.", const QString &system = "NES") {
     GameMetadata m;
-    m.title       = title;
-    m.system      = system;
-    m.region      = "USA";
-    m.publisher   = "Nintendo";
+    m.title = title;
+    m.system = system;
+    m.region = "USA";
+    m.publisher = "Nintendo";
     m.releaseDate = "1985-09-13";
-    m.matchScore  = 1.0f;
+    m.matchScore = 1.0f;
     m.matchMethod = "hash";
     return m;
 }
 
-class CurrentDirGuard
-{
+class CurrentDirGuard {
 public:
     explicit CurrentDirGuard(const QString &path)
-        : m_original(QDir::currentPath())
-    {
+        : m_original(QDir::currentPath()) {
         QDir::setCurrent(path);
     }
 
-    ~CurrentDirGuard()
-    {
+    ~CurrentDirGuard() {
         QDir::setCurrent(m_original);
     }
 
@@ -101,22 +91,20 @@ private:
     QString m_original;
 };
 
-static bool execSql(QSqlDatabase &db, const QString &sql)
-{
+static bool execSql(QSqlDatabase &db, const QString &sql) {
     QSqlQuery query(db);
     return query.exec(sql);
 }
 
-static bool seedCompendiumDatabase(const QString &rootPath)
-{
+static bool seedCompendiumDatabase(const QString &rootPath) {
     const QString compendiumDir = rootPath + "/data/compendium";
     if (!QDir().mkpath(compendiumDir)) {
         return false;
     }
 
     const QString dbPath = compendiumDir + "/remus_compendium.db";
-    const QString connectionName = QStringLiteral("cli_helpers_compendium_%1")
-        .arg(QString::number(QDateTime::currentMSecsSinceEpoch()));
+    const QString connectionName
+        = QStringLiteral("cli_helpers_compendium_%1").arg(QString::number(QDateTime::currentMSecsSinceEpoch()));
 
     {
         QSqlDatabase db = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), connectionName);
@@ -125,17 +113,49 @@ static bool seedCompendiumDatabase(const QString &rootPath)
             return false;
         }
 
-        const bool ok =
-            execSql(db, QStringLiteral("CREATE TABLE systems (system_id INTEGER PRIMARY KEY, internal_name TEXT NOT NULL UNIQUE, display_name TEXT NOT NULL)")) &&
-            execSql(db, QStringLiteral("CREATE TABLE games (game_id TEXT PRIMARY KEY, system_id INTEGER NOT NULL, canonical_title TEXT NOT NULL, primary_region_code TEXT, release_date TEXT, release_year INTEGER, developer TEXT, publisher TEXT, genre TEXT, players_max INTEGER, description TEXT, rating REAL, canonical_confidence REAL NOT NULL DEFAULT 0)")) &&
-            execSql(db, QStringLiteral("CREATE TABLE game_signatures (signature_id INTEGER PRIMARY KEY AUTOINCREMENT, game_id TEXT NOT NULL, hash_type TEXT NOT NULL, hash_value TEXT NOT NULL, source_id TEXT NOT NULL DEFAULT 'test', snapshot_id TEXT, source_entry_key TEXT, confidence REAL NOT NULL, is_primary INTEGER NOT NULL DEFAULT 0)")) &&
-            execSql(db, QStringLiteral("CREATE TABLE game_serials (serial_id INTEGER PRIMARY KEY AUTOINCREMENT, game_id TEXT NOT NULL, serial_value TEXT NOT NULL, source_id TEXT NOT NULL DEFAULT 'test', snapshot_id TEXT, source_entry_key TEXT, confidence REAL NOT NULL)")) &&
-            execSql(db, QStringLiteral("CREATE TABLE game_facts (fact_id INTEGER PRIMARY KEY AUTOINCREMENT, game_id TEXT NOT NULL, field_name TEXT NOT NULL, field_value TEXT NOT NULL, value_type TEXT NOT NULL DEFAULT 'text', source_id TEXT NOT NULL DEFAULT 'test', snapshot_id TEXT NOT NULL DEFAULT '', source_item_id INTEGER, source_priority INTEGER NOT NULL DEFAULT 100, confidence REAL NOT NULL DEFAULT 1.0)")) &&
-            execSql(db, QStringLiteral("CREATE TABLE canonical_resolution (game_id TEXT NOT NULL, field_name TEXT NOT NULL, selected_fact_id INTEGER NOT NULL, resolved_by_rule TEXT NOT NULL, PRIMARY KEY (game_id, field_name))")) &&
-            execSql(db, QStringLiteral("CREATE TABLE game_names (game_name_id INTEGER PRIMARY KEY AUTOINCREMENT, game_id TEXT NOT NULL, name_text TEXT NOT NULL, alias_type TEXT NOT NULL, locale TEXT NOT NULL DEFAULT '', snapshot_id TEXT NOT NULL DEFAULT '', confidence REAL NOT NULL DEFAULT 0)")) &&
-            execSql(db, QStringLiteral("INSERT INTO systems (system_id, internal_name, display_name) VALUES (4, 'GameCube', 'Nintendo GameCube')")) &&
-            execSql(db, QStringLiteral("INSERT INTO games (game_id, system_id, canonical_title, primary_region_code, release_year, developer, publisher, genre, players_max, description, rating, canonical_confidence) VALUES ('game-1', 4, 'Paper Mario: The Thousand-Year Door', 'USA', 2004, 'Intelligent Systems', 'Nintendo', 'Role-Playing', 1, 'A turn-based adventure across the Mushroom Kingdom.', 9.0, 0.95)")) &&
-            execSql(db, QStringLiteral("INSERT INTO game_signatures (game_id, hash_type, hash_value, confidence, is_primary) VALUES ('game-1', 'md5', '0123456789abcdef0123456789abcdef', 1.0, 1)"));
+        const bool ok = execSql(db,
+                            QStringLiteral("CREATE TABLE systems (system_id INTEGER PRIMARY KEY, internal_name TEXT "
+                                           "NOT NULL UNIQUE, display_name TEXT NOT NULL)"))
+            && execSql(db,
+                QStringLiteral("CREATE TABLE games (game_id TEXT PRIMARY KEY, system_id INTEGER NOT NULL, "
+                               "canonical_title TEXT NOT NULL, primary_region_code TEXT, release_date TEXT, "
+                               "release_year INTEGER, developer TEXT, publisher TEXT, genre TEXT, players_max INTEGER, "
+                               "description TEXT, rating REAL, canonical_confidence REAL NOT NULL DEFAULT 0)"))
+            && execSql(db,
+                QStringLiteral("CREATE TABLE game_signatures (signature_id INTEGER PRIMARY KEY AUTOINCREMENT, game_id "
+                               "TEXT NOT NULL, hash_type TEXT NOT NULL, hash_value TEXT NOT NULL, source_id TEXT NOT "
+                               "NULL DEFAULT 'test', snapshot_id TEXT, source_entry_key TEXT, confidence REAL NOT "
+                               "NULL, is_primary INTEGER NOT NULL DEFAULT 0)"))
+            && execSql(db,
+                QStringLiteral("CREATE TABLE game_serials (serial_id INTEGER PRIMARY KEY AUTOINCREMENT, game_id TEXT "
+                               "NOT NULL, serial_value TEXT NOT NULL, source_id TEXT NOT NULL DEFAULT 'test', "
+                               "snapshot_id TEXT, source_entry_key TEXT, confidence REAL NOT NULL)"))
+            && execSql(db,
+                QStringLiteral(
+                    "CREATE TABLE game_facts (fact_id INTEGER PRIMARY KEY AUTOINCREMENT, game_id TEXT NOT NULL, "
+                    "field_name TEXT NOT NULL, field_value TEXT NOT NULL, value_type TEXT NOT NULL DEFAULT 'text', "
+                    "source_id TEXT NOT NULL DEFAULT 'test', snapshot_id TEXT NOT NULL DEFAULT '', source_item_id "
+                    "INTEGER, source_priority INTEGER NOT NULL DEFAULT 100, confidence REAL NOT NULL DEFAULT 1.0)"))
+            && execSql(db,
+                QStringLiteral("CREATE TABLE canonical_resolution (game_id TEXT NOT NULL, field_name TEXT NOT NULL, "
+                               "selected_fact_id INTEGER NOT NULL, resolved_by_rule TEXT NOT NULL, PRIMARY KEY "
+                               "(game_id, field_name))"))
+            && execSql(db,
+                QStringLiteral("CREATE TABLE game_names (game_name_id INTEGER PRIMARY KEY AUTOINCREMENT, game_id TEXT "
+                               "NOT NULL, name_text TEXT NOT NULL, alias_type TEXT NOT NULL, locale TEXT NOT NULL "
+                               "DEFAULT '', snapshot_id TEXT NOT NULL DEFAULT '', confidence REAL NOT NULL DEFAULT 0)"))
+            && execSql(db,
+                QStringLiteral("INSERT INTO systems (system_id, internal_name, display_name) VALUES (4, 'GameCube', "
+                               "'Nintendo GameCube')"))
+            && execSql(db,
+                QStringLiteral(
+                    "INSERT INTO games (game_id, system_id, canonical_title, primary_region_code, release_year, "
+                    "developer, publisher, genre, players_max, description, rating, canonical_confidence) VALUES "
+                    "('game-1', 4, 'Paper Mario: The Thousand-Year Door', 'USA', 2004, 'Intelligent Systems', "
+                    "'Nintendo', 'Role-Playing', 1, 'A turn-based adventure across the Mushroom Kingdom.', 9.0, 0.95)"))
+            && execSql(db,
+                QStringLiteral("INSERT INTO game_signatures (game_id, hash_type, hash_value, confidence, is_primary) "
+                               "VALUES ('game-1', 'md5', '0123456789abcdef0123456789abcdef', 1.0, 1)"));
 
         db.close();
         if (!ok) {
@@ -150,8 +170,7 @@ static bool seedCompendiumDatabase(const QString &rootPath)
 
 // ── Tests ─────────────────────────────────────────────────────────────────
 
-void CliHelpersTest::testSelectBestHashCrc32Only()
-{
+void CliHelpersTest::testSelectBestHashCrc32Only() {
     FileRecord fr;
     fr.crc32 = "AABBCCDD";
     fr.hashCalculated = true;
@@ -160,29 +179,26 @@ void CliHelpersTest::testSelectBestHashCrc32Only()
     QCOMPARE(hash, QStringLiteral("AABBCCDD"));
 }
 
-void CliHelpersTest::testSelectBestHashPrefersHasheous()
-{
+void CliHelpersTest::testSelectBestHashPrefersHasheous() {
     // Disc-based systems prefer MD5 (Hasheous primary hash for disc media)
     FileRecord fr;
     fr.crc32 = "AABBCCDD";
-    fr.md5   = "abcdef1234567890abcdef1234567890";
-    fr.sha1  = "sha1value00000000000000000000000000000000";
+    fr.md5 = "abcdef1234567890abcdef1234567890";
+    fr.sha1 = "sha1value00000000000000000000000000000000";
     fr.hashCalculated = true;
     // We just verify something non-empty is returned
     QString hash = selectBestHash(fr);
     QVERIFY(!hash.isEmpty());
 }
 
-void CliHelpersTest::testSelectBestHashEmptyWhenNoHashes()
-{
+void CliHelpersTest::testSelectBestHashEmptyWhenNoHashes() {
     FileRecord fr;
     fr.hashCalculated = false;
     QString hash = selectBestHash(fr);
     QVERIFY(hash.isEmpty());
 }
 
-void CliHelpersTest::testFindExistingArtworkPathProbesSupportedExtensions()
-{
+void CliHelpersTest::testFindExistingArtworkPathProbesSupportedExtensions() {
     QTemporaryDir tmpDir;
     QVERIFY(tmpDir.isValid());
 
@@ -203,62 +219,50 @@ void CliHelpersTest::testFindExistingArtworkPathProbesSupportedExtensions()
     QCOMPARE(findExistingArtworkPath(basePath), basePath + QStringLiteral(".webp"));
 }
 
-void CliHelpersTest::testResolveCliOptionValueUsesPresetWhenOptionUnset()
-{
+void CliHelpersTest::testResolveCliOptionValueUsesPresetWhenOptionUnset() {
     QCommandLineParser parser;
     parser.addOption(QCommandLineOption("bundle-disc-format", "", "format", "original"));
-    parser.process(QStringList{QStringLiteral("test")});
+    parser.process(QStringList { QStringLiteral("test") });
 
-    QCOMPARE(resolveCliOptionValue(parser,
-                                   QStringLiteral("bundle-disc-format"),
-                                   QStringLiteral("chd")),
-             QStringLiteral("chd"));
+    QCOMPARE(resolveCliOptionValue(parser, QStringLiteral("bundle-disc-format"), QStringLiteral("chd")),
+        QStringLiteral("chd"));
 }
 
-void CliHelpersTest::testResolveCliOptionValuePrefersExplicitOption()
-{
+void CliHelpersTest::testResolveCliOptionValuePrefersExplicitOption() {
     QCommandLineParser parser;
     parser.addOption(QCommandLineOption("bundle-disc-format", "", "format", "original"));
-    parser.process(QStringList{QStringLiteral("test"),
-                               QStringLiteral("--bundle-disc-format"),
-                               QStringLiteral("rvz")});
+    parser.process(
+        QStringList { QStringLiteral("test"), QStringLiteral("--bundle-disc-format"), QStringLiteral("rvz") });
 
-    QCOMPARE(resolveCliOptionValue(parser,
-                                   QStringLiteral("bundle-disc-format"),
-                                   QStringLiteral("chd")),
-             QStringLiteral("rvz"));
+    QCOMPARE(resolveCliOptionValue(parser, QStringLiteral("bundle-disc-format"), QStringLiteral("chd")),
+        QStringLiteral("rvz"));
 }
 
-void CliHelpersTest::testResolveCliOptionValueFallsBackToParserDefault()
-{
+void CliHelpersTest::testResolveCliOptionValueFallsBackToParserDefault() {
     QCommandLineParser parser;
-    parser.addOption(QCommandLineOption("bundle-disc-format", "", "format",
-                                        QString::fromLatin1(Constants::Cli::Defaults::BUNDLE_DISC_FORMAT)));
-    parser.process(QStringList{QStringLiteral("test")});
+    parser.addOption(QCommandLineOption(
+        "bundle-disc-format", "", "format", QString::fromLatin1(Constants::Cli::Defaults::BUNDLE_DISC_FORMAT)));
+    parser.process(QStringList { QStringLiteral("test") });
 
-    QCOMPARE(resolveCliOptionValue(parser,
-                                   QStringLiteral("bundle-disc-format")),
-             QString::fromLatin1(Constants::Cli::Defaults::BUNDLE_DISC_FORMAT));
+    QCOMPARE(resolveCliOptionValue(parser, QStringLiteral("bundle-disc-format")),
+        QString::fromLatin1(Constants::Cli::Defaults::BUNDLE_DISC_FORMAT));
 }
 
-void CliHelpersTest::testGetMatchingSystemNameReturnsInternalName()
-{
+void CliHelpersTest::testGetMatchingSystemNameReturnsInternalName() {
     FileRecord fr;
     fr.systemId = 2;
 
     QCOMPARE(getMatchingSystemName(fr), QStringLiteral("SNES"));
 }
 
-void CliHelpersTest::testGetMatchingSystemNameHandlesUnknownSystem()
-{
+void CliHelpersTest::testGetMatchingSystemNameHandlesUnknownSystem() {
     FileRecord fr;
     fr.systemId = -1;
 
     QVERIFY(getMatchingSystemName(fr).isEmpty());
 }
 
-void CliHelpersTest::testGetProviderLookupSystemNamePrefersMatchedSystem()
-{
+void CliHelpersTest::testGetProviderLookupSystemNamePrefersMatchedSystem() {
     FileRecord fr;
     fr.systemId = Constants::Systems::ID_PSX;
 
@@ -268,16 +272,14 @@ void CliHelpersTest::testGetProviderLookupSystemNamePrefersMatchedSystem()
     QCOMPARE(getProviderLookupSystemName(fr, &match), QStringLiteral("GameCube"));
 }
 
-void CliHelpersTest::testGetProviderLookupSystemNameFallsBackToFileSystem()
-{
+void CliHelpersTest::testGetProviderLookupSystemNameFallsBackToFileSystem() {
     FileRecord fr;
     fr.systemId = Constants::Systems::ID_SNES;
 
     QCOMPARE(getProviderLookupSystemName(fr), QStringLiteral("SNES"));
 }
 
-void CliHelpersTest::testGetHashedFilesOnlyReturnsHashedRows()
-{
+void CliHelpersTest::testGetHashedFilesOnlyReturnsHashedRows() {
     // getExistingFiles() checks QFileInfo::exists(), so files must be on disk.
     QTemporaryDir tmpDir;
     QVERIFY(tmpDir.isValid());
@@ -289,7 +291,7 @@ void CliHelpersTest::testGetHashedFilesOnlyReturnsHashedRows()
     int sysId = db.getSystemId("NES");
 
     // Create actual files on disk
-    const QString hashedPath   = tmpDir.path() + "/mario.nes";
+    const QString hashedPath = tmpDir.path() + "/mario.nes";
     const QString unhashedPath = tmpDir.path() + "/zelda.nes";
     {
         QFile f(hashedPath);
@@ -304,25 +306,25 @@ void CliHelpersTest::testGetHashedFilesOnlyReturnsHashedRows()
 
     // Insert hashed file with real path
     FileRecord frHashed;
-    frHashed.libraryId    = libId;
-    frHashed.filename     = "mario.nes";
+    frHashed.libraryId = libId;
+    frHashed.filename = "mario.nes";
     frHashed.originalPath = hashedPath;
-    frHashed.currentPath  = hashedPath;
-    frHashed.extension    = ".nes";
-    frHashed.systemId     = sysId;
-    frHashed.fileSize     = 4;
+    frHashed.currentPath = hashedPath;
+    frHashed.extension = ".nes";
+    frHashed.systemId = sysId;
+    frHashed.fileSize = 4;
     int hashedId = db.insertFile(frHashed);
     db.updateFileHashes(hashedId, "AABBCCDD", "md5value", "sha1value");
 
     // Insert unhashed file with real path
     FileRecord frUnhashed;
-    frUnhashed.libraryId    = libId;
-    frUnhashed.filename     = "zelda.nes";
+    frUnhashed.libraryId = libId;
+    frUnhashed.filename = "zelda.nes";
     frUnhashed.originalPath = unhashedPath;
-    frUnhashed.currentPath  = unhashedPath;
-    frUnhashed.extension    = ".nes";
-    frUnhashed.systemId     = sysId;
-    frUnhashed.fileSize     = 4;
+    frUnhashed.currentPath = unhashedPath;
+    frUnhashed.extension = ".nes";
+    frUnhashed.systemId = sysId;
+    frUnhashed.fileSize = 4;
     db.insertFile(frUnhashed);
 
     QList<FileRecord> hashed = getHashedFiles(db);
@@ -330,16 +332,14 @@ void CliHelpersTest::testGetHashedFilesOnlyReturnsHashedRows()
     QCOMPARE(hashed.first().id, hashedId);
 }
 
-void CliHelpersTest::testGetMatchingDisplayNameForRegularFile()
-{
+void CliHelpersTest::testGetMatchingDisplayNameForRegularFile() {
     FileRecord fr;
     fr.filename = "Sonic The Hedgehog (USA, Europe).md";
 
     QCOMPARE(getMatchingDisplayName(fr), QStringLiteral("Sonic The Hedgehog (USA, Europe)"));
 }
 
-void CliHelpersTest::testGetMatchingDisplayNameForArchiveFile()
-{
+void CliHelpersTest::testGetMatchingDisplayNameForArchiveFile() {
     FileRecord fr;
     fr.isCompressed = true;
     fr.currentPath = "/roms/Sonic The Hedgehog (USA, Europe).zip";
@@ -349,16 +349,14 @@ void CliHelpersTest::testGetMatchingDisplayNameForArchiveFile()
     QCOMPARE(getMatchingDisplayName(fr), QStringLiteral("Sonic The Hedgehog (USA, Europe)"));
 }
 
-void CliHelpersTest::testGetMatchingDisplayNameForPatchedFile()
-{
+void CliHelpersTest::testGetMatchingDisplayNameForPatchedFile() {
     FileRecord fr;
     fr.filename = "Dragon Quest III (English v2.0)[Addendum].sfc";
 
     QCOMPARE(getMatchingDisplayName(fr), QStringLiteral("Dragon Quest III"));
 }
 
-void CliHelpersTest::testGetMatchingDisplayNameForPatchedArchive()
-{
+void CliHelpersTest::testGetMatchingDisplayNameForPatchedArchive() {
     FileRecord fr;
     fr.isCompressed = true;
     fr.currentPath = "/roms/Dragon Quest III (English v2.0)[Addendum].zip";
@@ -368,25 +366,23 @@ void CliHelpersTest::testGetMatchingDisplayNameForPatchedArchive()
     QCOMPARE(getMatchingDisplayName(fr), QStringLiteral("Dragon Quest III"));
 }
 
-void CliHelpersTest::testBuildOrchestratorSkipsIgdbWithoutCredentials()
-{
+void CliHelpersTest::testBuildOrchestratorSkipsIgdbWithoutCredentials() {
     QCommandLineParser parser;
     parser.addOption(QCommandLineOption("ss-user", "", "username"));
     parser.addOption(QCommandLineOption("ss-pass", "", "password"));
     parser.addOption(QCommandLineOption("igdb-client-id", "", "clientId"));
     parser.addOption(QCommandLineOption("igdb-client-secret", "", "clientSecret"));
-    parser.process(QStringList{QStringLiteral("test")});
+    parser.process(QStringList { QStringLiteral("test") });
 
     auto orchestrator = buildOrchestrator(parser);
 
     const QStringList providers = orchestrator->getEnabledProviders();
     QVERIFY(providers.contains(QStringLiteral("hasheous")));
-    QVERIFY(!providers.contains(QStringLiteral("thegamesdb")));  // gated on API key
+    QVERIFY(!providers.contains(QStringLiteral("thegamesdb"))); // gated on API key
     QVERIFY(!providers.contains(QStringLiteral("igdb")));
 }
 
-void CliHelpersTest::testBuildOrchestratorLoadsCompendiumProviderFromDataDir()
-{
+void CliHelpersTest::testBuildOrchestratorLoadsCompendiumProviderFromDataDir() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
     QVERIFY(seedCompendiumDatabase(dir.path()));
@@ -398,7 +394,7 @@ void CliHelpersTest::testBuildOrchestratorLoadsCompendiumProviderFromDataDir()
     parser.addOption(QCommandLineOption("ss-pass", "", "password"));
     parser.addOption(QCommandLineOption("igdb-client-id", "", "clientId"));
     parser.addOption(QCommandLineOption("igdb-client-secret", "", "clientSecret"));
-    parser.process(QStringList{QStringLiteral("test")});
+    parser.process(QStringList { QStringLiteral("test") });
 
     auto orchestrator = buildOrchestrator(parser);
     const QStringList providers = orchestrator->getEnabledProviders();
@@ -409,8 +405,7 @@ void CliHelpersTest::testBuildOrchestratorLoadsCompendiumProviderFromDataDir()
 
     QSignalSpy trySpy(orchestrator.get(), &ProviderOrchestrator::tryingProvider);
     const GameMetadata metadata = orchestrator->getByHashWithFallback(
-        QStringLiteral("0123456789ABCDEF0123456789ABCDEF"),
-        QStringLiteral("GameCube"));
+        QStringLiteral("0123456789ABCDEF0123456789ABCDEF"), QStringLiteral("GameCube"));
 
     QCOMPARE(metadata.title, QStringLiteral("Paper Mario: The Thousand-Year Door"));
     QCOMPARE(metadata.system, QStringLiteral("GameCube"));
@@ -421,15 +416,13 @@ void CliHelpersTest::testBuildOrchestratorLoadsCompendiumProviderFromDataDir()
     QCOMPARE(trySpy.at(0).at(1).toString(), QStringLiteral("hash"));
 }
 
-void CliHelpersTest::testPersistMetadataInsertsGame()
-{
+void CliHelpersTest::testPersistMetadataInsertsGame() {
     Database db;
     QVERIFY(db.initialize(":memory:"));
 
-    int libId  = db.insertLibrary("/roms", "Test");
-    int sysId  = db.getSystemId("NES");
-    FileRecord fr = makeRecord(libId, sysId, "mario.nes",
-                                "AABBCCDD", "md5val", "sha1val");
+    int libId = db.insertLibrary("/roms", "Test");
+    int sysId = db.getSystemId("NES");
+    FileRecord fr = makeRecord(libId, sysId, "mario.nes", "AABBCCDD", "md5val", "sha1val");
     int fileId = db.insertFile(fr);
     fr.id = fileId;
 
@@ -439,11 +432,10 @@ void CliHelpersTest::testPersistMetadataInsertsGame()
     // The file should now have a match record
     Database::MatchResult match = db.getMatchForFile(fileId);
     QCOMPARE(match.gameId, gameId);
-    QVERIFY(match.confidence >= 90.0f);  // Hash match → high confidence
+    QVERIFY(match.confidence >= 90.0f); // Hash match → high confidence
 }
 
-void CliHelpersTest::testPersistMetadataNameMatchScoreRoundTrips()
-{
+void CliHelpersTest::testPersistMetadataNameMatchScoreRoundTrips() {
     // Finding #5 — persistMetadata() must pass matchScore through to insertMatch()
     // as nameMatchScore so that fuzzy/name-match scores survive a DB round-trip.
     Database db;
@@ -456,7 +448,7 @@ void CliHelpersTest::testPersistMetadataNameMatchScoreRoundTrips()
     fr.id = fileId;
 
     GameMetadata meta = makeMetadata("Sonic The Hedgehog", "Mega Drive");
-    meta.matchScore  = 0.87f;
+    meta.matchScore = 0.87f;
     meta.matchMethod = QStringLiteral("fuzzy");
 
     int gameId = persistMetadata(db, fr, meta);
@@ -466,16 +458,15 @@ void CliHelpersTest::testPersistMetadataNameMatchScoreRoundTrips()
     QVERIFY(match.matchId > 0);
     // nameMatchScore must reflect matchScore (0.87), not the default 0.0
     QVERIFY2(match.nameMatchScore >= 0.86f && match.nameMatchScore <= 0.88f,
-             qPrintable(QString("nameMatchScore = %1").arg(match.nameMatchScore)));
+        qPrintable(QString("nameMatchScore = %1").arg(match.nameMatchScore)));
 }
 
-void CliHelpersTest::testPersistMetadataDuplicateGame()
-{
+void CliHelpersTest::testPersistMetadataDuplicateGame() {
     Database db;
     QVERIFY(db.initialize(":memory:"));
 
-    int libId  = db.insertLibrary("/roms", "Test");
-    int sysId  = db.getSystemId("NES");
+    int libId = db.insertLibrary("/roms", "Test");
+    int sysId = db.getSystemId("NES");
 
     FileRecord fr1 = makeRecord(libId, sysId, "mario1.nes", "CRC1", "MD51", "SHA11");
     int fid1 = db.insertFile(fr1);
@@ -496,8 +487,7 @@ void CliHelpersTest::testPersistMetadataDuplicateGame()
     QVERIFY(db.getMatchForFile(fid2).matchId > 0);
 }
 
-void CliHelpersTest::testHashFileRecordRealFile()
-{
+void CliHelpersTest::testHashFileRecordRealFile() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
@@ -515,7 +505,7 @@ void CliHelpersTest::testHashFileRecordRealFile()
 
     FileRecord fr = makeRecord(libId, sysId, "game.nes");
     fr.originalPath = path;
-    fr.currentPath  = path;
+    fr.currentPath = path;
 
     Hasher hasher;
     HashResult result = hashFileRecord(fr, hasher);
@@ -526,8 +516,7 @@ void CliHelpersTest::testHashFileRecordRealFile()
     QVERIFY(!result.sha1.isEmpty());
 }
 
-void CliHelpersTest::testHashFileRecordGdiUsesReferencedTrackPayload()
-{
+void CliHelpersTest::testHashFileRecordGdiUsesReferencedTrackPayload() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
@@ -577,14 +566,13 @@ void CliHelpersTest::testHashFileRecordGdiUsesReferencedTrackPayload()
     QCOMPARE(actual.sha1, expected.sha1);
 }
 
-void CliHelpersTest::testPrintFileInfoDoesNotCrash()
-{
+void CliHelpersTest::testPrintFileInfoDoesNotCrash() {
     FileRecord fr;
-    fr.id           = 42;
-    fr.filename     = "game.nes";
-    fr.currentPath  = "/roms/game.nes";
-    fr.fileSize     = 1024;
-    fr.crc32        = "AABB";
+    fr.id = 42;
+    fr.filename = "game.nes";
+    fr.currentPath = "/roms/game.nes";
+    fr.fileSize = 1024;
+    fr.crc32 = "AABB";
     fr.hashCalculated = true;
 
     // Should not throw or abort; output goes to logging category
@@ -592,27 +580,22 @@ void CliHelpersTest::testPrintFileInfoDoesNotCrash()
     QVERIFY(true);
 }
 
-void CliHelpersTest::testBuildOrchestratorWithArgvFlagEmitsSecurityWarning()
-{
+void CliHelpersTest::testBuildOrchestratorWithArgvFlagEmitsSecurityWarning() {
     // resolveSecret() must emit a security warning whenever a secret is supplied
     // via argv (visible in process listings).  Declare the two expected warnings
     // so Qt Test verifies they are emitted (Qt >= 6.3 fails the test if a
     // registered ignoreMessage is never triggered).
-    QTest::ignoreMessage(QtWarningMsg,
-        QRegularExpression(QStringLiteral("Security: --igdb-client-id.*argv")));
-    QTest::ignoreMessage(QtWarningMsg,
-        QRegularExpression(QStringLiteral("Security: --igdb-client-secret.*argv")));
+    QTest::ignoreMessage(QtWarningMsg, QRegularExpression(QStringLiteral("Security: --igdb-client-id.*argv")));
+    QTest::ignoreMessage(QtWarningMsg, QRegularExpression(QStringLiteral("Security: --igdb-client-secret.*argv")));
 
     QCommandLineParser parser;
     parser.addOption(QCommandLineOption(QStringLiteral("ss-user"), QString(), QStringLiteral("username")));
     parser.addOption(QCommandLineOption(QStringLiteral("ss-pass"), QString(), QStringLiteral("password")));
     parser.addOption(QCommandLineOption(QStringLiteral("igdb-client-id"), QString(), QStringLiteral("clientId")));
-    parser.addOption(QCommandLineOption(QStringLiteral("igdb-client-secret"), QString(), QStringLiteral("clientSecret")));
-    parser.process(QStringList{
-        QStringLiteral("test"),
-        QStringLiteral("--igdb-client-id=id_from_argv"),
-        QStringLiteral("--igdb-client-secret=secret_from_argv")
-    });
+    parser.addOption(
+        QCommandLineOption(QStringLiteral("igdb-client-secret"), QString(), QStringLiteral("clientSecret")));
+    parser.process(QStringList { QStringLiteral("test"), QStringLiteral("--igdb-client-id=id_from_argv"),
+        QStringLiteral("--igdb-client-secret=secret_from_argv") });
 
     auto orchestrator = buildOrchestrator(parser);
 

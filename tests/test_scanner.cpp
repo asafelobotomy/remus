@@ -25,8 +25,7 @@ private slots:
     void concurrentScanNoDuplicates();
 };
 
-static QString writeFile(const QString &path, const QByteArray &data = QByteArray("data"))
-{
+static QString writeFile(const QString &path, const QByteArray &data = QByteArray("data")) {
     QFile f(path);
     if (!f.open(QIODevice::WriteOnly)) {
         return QString();
@@ -38,9 +37,8 @@ static QString writeFile(const QString &path, const QByteArray &data = QByteArra
     return path;
 }
 
-static QString findSevenZip()
-{
-    const QStringList candidates = {"7z", "7za", "7zz"};
+static QString findSevenZip() {
+    const QStringList candidates = { "7z", "7za", "7zz" };
     for (const QString &candidate : candidates) {
         const QString executable = QStandardPaths::findExecutable(candidate);
         if (!executable.isEmpty()) {
@@ -51,14 +49,11 @@ static QString findSevenZip()
     return QString();
 }
 
-static bool createArchive(const QString &program,
-                          const QString &workingDirectory,
-                          const QString &archivePath,
-                          const QStringList &inputs)
-{
+static bool createArchive(
+    const QString &program, const QString &workingDirectory, const QString &archivePath, const QStringList &inputs) {
     QProcess process;
     process.setWorkingDirectory(workingDirectory);
-    process.start(program, QStringList{"a", "-t7z", archivePath} + inputs);
+    process.start(program, QStringList { "a", "-t7z", archivePath } + inputs);
     if (!process.waitForStarted()) {
         return false;
     }
@@ -69,8 +64,7 @@ static bool createArchive(const QString &program,
     return process.exitStatus() == QProcess::NormalExit && process.exitCode() == 0;
 }
 
-void ScannerTest::missingDirectoryEmitsError()
-{
+void ScannerTest::missingDirectoryEmitsError() {
     Scanner scanner;
     scanner.setArchiveScanning(false);
     QSignalSpy errSpy(&scanner, &Scanner::scanError);
@@ -79,8 +73,7 @@ void ScannerTest::missingDirectoryEmitsError()
     QVERIFY(!errSpy.isEmpty());
 }
 
-void ScannerTest::cancelStopsScan()
-{
+void ScannerTest::cancelStopsScan() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
     // Create a bunch of files so we can cancel mid-scan
@@ -90,20 +83,17 @@ void ScannerTest::cancelStopsScan()
     }
 
     Scanner scanner;
-    scanner.setExtensions({".nes"});
+    scanner.setExtensions({ ".nes" });
     scanner.setArchiveScanning(false);
 
-    connect(&scanner, &Scanner::fileFound, &scanner, [&scanner]() {
-        scanner.requestCancel();
-    });
+    connect(&scanner, &Scanner::fileFound, &scanner, [&scanner]() { scanner.requestCancel(); });
 
     QList<ScanResult> results = scanner.scan(dir.path());
     QVERIFY(scanner.wasCancelled());
-    QVERIFY(results.size() < fileCount);  // Should stop early
+    QVERIFY(results.size() < fileCount); // Should stop early
 }
 
-void ScannerTest::archiveFilePathScansArchiveContents()
-{
+void ScannerTest::archiveFilePathScansArchiveContents() {
     const QString sevenZip = findSevenZip();
     if (sevenZip.isEmpty()) {
         QSKIP("7z not available");
@@ -118,10 +108,10 @@ void ScannerTest::archiveFilePathScansArchiveContents()
     QVERIFY(!writeFile(sourceDir.filePath("game.iso"), QByteArray(1024, '\0')).isEmpty());
 
     const QString archivePath = dir.filePath("game.7z");
-    QVERIFY(createArchive(sevenZip, sourceDir.path(), archivePath, {"game.iso"}));
+    QVERIFY(createArchive(sevenZip, sourceDir.path(), archivePath, { "game.iso" }));
 
     Scanner scanner;
-    scanner.setExtensions({".iso"});
+    scanner.setExtensions({ ".iso" });
 
     const QList<ScanResult> results = scanner.scan(archivePath);
     QCOMPARE(results.size(), 1);
@@ -130,8 +120,7 @@ void ScannerTest::archiveFilePathScansArchiveContents()
     QCOMPARE(results.first().archiveInternalPath, QStringLiteral("game.iso"));
 }
 
-void ScannerTest::multiFileLinking()
-{
+void ScannerTest::multiFileLinking() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
@@ -149,7 +138,7 @@ void ScannerTest::multiFileLinking()
     QVERIFY(!writeFile(dir.filePath("track02.bin")).isEmpty());
 
     Scanner scanner;
-    scanner.setExtensions({".cue", ".bin", ".gdi"});
+    scanner.setExtensions({ ".cue", ".bin", ".gdi" });
     scanner.setArchiveScanning(false);
     QList<ScanResult> results = scanner.scan(dir.path());
 
@@ -157,9 +146,8 @@ void ScannerTest::multiFileLinking()
     QCOMPARE(results.size(), 5);
 
     // Find cue linked to bin (data track is primary, sheet is secondary)
-    auto itCue = std::find_if(results.begin(), results.end(), [](const ScanResult &r) {
-        return r.extension == ".cue" && r.parentFilePath.endsWith("game.bin");
-    });
+    auto itCue = std::find_if(results.begin(), results.end(),
+        [](const ScanResult &r) { return r.extension == ".cue" && r.parentFilePath.endsWith("game.bin"); });
     QVERIFY(itCue != results.end());
     QCOMPARE(itCue->isPrimary, false);
 
@@ -175,8 +163,7 @@ void ScannerTest::multiFileLinking()
     QCOMPARE(linkedTracks, 2);
 }
 
-void ScannerTest::compressedArchiveMultiFileLinking()
-{
+void ScannerTest::compressedArchiveMultiFileLinking() {
     const QString sevenZip = findSevenZip();
     if (sevenZip.isEmpty()) {
         QSKIP("7z not available");
@@ -191,18 +178,16 @@ void ScannerTest::compressedArchiveMultiFileLinking()
     QVERIFY(QDir().mkpath(sourceDir.filePath("cue")));
     QVERIFY(QDir().mkpath(sourceDir.filePath("gdi")));
 
-    const QByteArray cueContents = QByteArrayLiteral(
-        "FILE \"game.bin\" BINARY\n"
-        "  TRACK 01 MODE1/2352\n"
-        "    INDEX 01 00:00:00\n");
+    const QByteArray cueContents = QByteArrayLiteral("FILE \"game.bin\" BINARY\n"
+                                                     "  TRACK 01 MODE1/2352\n"
+                                                     "    INDEX 01 00:00:00\n");
     QVERIFY(!writeFile(sourceDir.filePath("cue/game.cue"), cueContents).isEmpty());
     QVERIFY(!writeFile(sourceDir.filePath("cue/game.bin")).isEmpty());
 
-    const QByteArray gdiContents = QByteArrayLiteral(
-        "3\n"
-        "1 0 4 2352 \"track01.bin\" 0\n"
-        "2 45000 0 2352 \"track02.raw\" 0\n"
-        "3 90000 4 2352 \"track03.bin\" 0\n");
+    const QByteArray gdiContents = QByteArrayLiteral("3\n"
+                                                     "1 0 4 2352 \"track01.bin\" 0\n"
+                                                     "2 45000 0 2352 \"track02.raw\" 0\n"
+                                                     "3 90000 4 2352 \"track03.bin\" 0\n");
     QVERIFY(!writeFile(sourceDir.filePath("gdi/disc.gdi"), gdiContents).isEmpty());
     QVERIFY(!writeFile(sourceDir.filePath("gdi/track01.bin")).isEmpty());
     QVERIFY(!writeFile(sourceDir.filePath("gdi/track02.raw")).isEmpty());
@@ -210,19 +195,18 @@ void ScannerTest::compressedArchiveMultiFileLinking()
 
     const QString cueArchive = dir.filePath("cue_set.7z");
     const QString gdiArchive = dir.filePath("gdi_set.7z");
-    QVERIFY(createArchive(sevenZip, sourceDir.path(), cueArchive, {"cue"}));
-    QVERIFY(createArchive(sevenZip, sourceDir.path(), gdiArchive, {"gdi"}));
+    QVERIFY(createArchive(sevenZip, sourceDir.path(), cueArchive, { "cue" }));
+    QVERIFY(createArchive(sevenZip, sourceDir.path(), gdiArchive, { "gdi" }));
 
     Scanner scanner;
-    scanner.setExtensions({".cue", ".bin", ".raw", ".gdi"});
+    scanner.setExtensions({ ".cue", ".bin", ".raw", ".gdi" });
     QList<ScanResult> results = scanner.scan(dir.path());
 
     QCOMPARE(results.size(), 6);
 
     auto findEntry = [&](const QString &archiveName, const QString &memberSuffix) -> ScanResult * {
         for (auto &result : results) {
-            if (result.archivePath.endsWith(archiveName)
-                && result.archiveInternalPath.endsWith(memberSuffix)) {
+            if (result.archivePath.endsWith(archiveName) && result.archiveInternalPath.endsWith(memberSuffix)) {
                 return &result;
             }
         }
@@ -241,11 +225,7 @@ void ScannerTest::compressedArchiveMultiFileLinking()
     QVERIFY(gdiFile != nullptr);
     QVERIFY(gdiFile->isPrimary);
 
-    const QStringList trackMembers = {
-        "gdi/track01.bin",
-        "gdi/track02.raw",
-        "gdi/track03.bin"
-    };
+    const QStringList trackMembers = { "gdi/track01.bin", "gdi/track02.raw", "gdi/track03.bin" };
     for (const QString &member : trackMembers) {
         ScanResult *trackFile = findEntry("gdi_set.7z", member);
         QVERIFY(trackFile != nullptr);
@@ -254,8 +234,7 @@ void ScannerTest::compressedArchiveMultiFileLinking()
     }
 }
 
-void ScannerTest::markdownDocumentsAreSkippedButGenesisRomFilesRemain()
-{
+void ScannerTest::markdownDocumentsAreSkippedButGenesisRomFilesRemain() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
@@ -267,7 +246,7 @@ void ScannerTest::markdownDocumentsAreSkippedButGenesisRomFilesRemain()
     QVERIFY(!writeFile(romPath, romData).isEmpty());
 
     Scanner scanner;
-    scanner.setExtensions({".md"});
+    scanner.setExtensions({ ".md" });
     scanner.setArchiveScanning(false);
 
     QList<ScanResult> results = scanner.scan(dir.path());
@@ -275,8 +254,7 @@ void ScannerTest::markdownDocumentsAreSkippedButGenesisRomFilesRemain()
     QCOMPARE(results.first().filename, QString("Sonic The Hedgehog (USA, Europe).md"));
 }
 
-void ScannerTest::exclusionMarkerChangesAreRespectedAcrossScans()
-{
+void ScannerTest::exclusionMarkerChangesAreRespectedAcrossScans() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
@@ -284,7 +262,7 @@ void ScannerTest::exclusionMarkerChangesAreRespectedAcrossScans()
     QVERIFY(!writeFile(romPath).isEmpty());
 
     Scanner scanner;
-    scanner.setExtensions({".nes"});
+    scanner.setExtensions({ ".nes" });
     scanner.setArchiveScanning(false);
 
     QList<ScanResult> initialResults = scanner.scan(dir.path());
@@ -297,8 +275,7 @@ void ScannerTest::exclusionMarkerChangesAreRespectedAcrossScans()
     QCOMPARE(excludedResults.size(), 0);
 }
 
-void ScannerTest::cancelDuringArchivePhaseReturnsPartialResults()
-{
+void ScannerTest::cancelDuringArchivePhaseReturnsPartialResults() {
     // Finding #2 — cancellation should stop archive member iteration mid-archive,
     // not only between archive files. After requestCancel() fires on the first
     // fileFound signal, subsequent members of the same archive must not be returned.
@@ -322,21 +299,18 @@ void ScannerTest::cancelDuringArchivePhaseReturnsPartialResults()
     QVERIFY(createArchive(sevenZip, sourceDir.path(), archivePath, inputs));
 
     Scanner scanner;
-    scanner.setExtensions({".nes"});
+    scanner.setExtensions({ ".nes" });
 
     // Cancel on the very first discovered entry; the loop check inside
     // processArchiveWithExtractor should then break before appending the rest.
-    connect(&scanner, &Scanner::fileFound, &scanner, [&scanner]() {
-        scanner.requestCancel();
-    }, Qt::DirectConnection);
+    connect(&scanner, &Scanner::fileFound, &scanner, [&scanner]() { scanner.requestCancel(); }, Qt::DirectConnection);
 
     const QList<ScanResult> results = scanner.scan(dir.path());
     QVERIFY(scanner.wasCancelled());
     QVERIFY(results.size() < entryCount);
 }
 
-void ScannerTest::concurrentScanNoDuplicates()
-{
+void ScannerTest::concurrentScanNoDuplicates() {
     const QString sevenZip = findSevenZip();
     if (sevenZip.isEmpty()) {
         QSKIP("7z not available");
@@ -361,15 +335,14 @@ void ScannerTest::concurrentScanNoDuplicates()
         const QString srcSubDir = QString("arc_%1").arg(a);
         QVERIFY(QDir().mkpath(sourceDir.filePath(srcSubDir)));
         for (int f = 0; f < filesPerArchive; ++f) {
-            QVERIFY(!writeFile(sourceDir.filePath(
-                srcSubDir + QString("/rom_%1_%2.nes").arg(a).arg(f))).isEmpty());
+            QVERIFY(!writeFile(sourceDir.filePath(srcSubDir + QString("/rom_%1_%2.nes").arg(a).arg(f))).isEmpty());
         }
         const QString archivePath = dir.filePath(QString("archive_%1.7z").arg(a));
-        QVERIFY(createArchive(sevenZip, sourceDir.path(), archivePath, {srcSubDir}));
+        QVERIFY(createArchive(sevenZip, sourceDir.path(), archivePath, { srcSubDir }));
     }
 
     Scanner scanner;
-    scanner.setExtensions({".nes"});
+    scanner.setExtensions({ ".nes" });
 
     const QList<ScanResult> results = scanner.scan(dir.path());
 
@@ -379,9 +352,7 @@ void ScannerTest::concurrentScanNoDuplicates()
     // No duplicate entries — each path+internal combination must appear exactly once
     QSet<QString> seen;
     for (const ScanResult &r : results) {
-        const QString key = r.isCompressed
-            ? r.archivePath + QLatin1String("::") + r.archiveInternalPath
-            : r.path;
+        const QString key = r.isCompressed ? r.archivePath + QLatin1String("::") + r.archiveInternalPath : r.path;
         QVERIFY2(!seen.contains(key), qPrintable(QLatin1String("Duplicate result: ") + key));
         seen.insert(key);
     }

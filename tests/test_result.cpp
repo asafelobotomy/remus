@@ -12,8 +12,7 @@ class ResultTest : public QObject {
     Q_OBJECT
 
 private slots:
-    void testOkHoldsValue()
-    {
+    void testOkHoldsValue() {
         auto r = Result<int>::ok(42);
         QVERIFY(r.hasValue());
         QVERIFY(static_cast<bool>(r));
@@ -22,16 +21,14 @@ private slots:
         QVERIFY(r.error().isEmpty());
     }
 
-    void testFailHoldsError()
-    {
+    void testFailHoldsError() {
         auto r = Result<int>::fail("something broke");
         QVERIFY(!r.hasValue());
         QVERIFY(!static_cast<bool>(r));
         QCOMPARE(r.error(), QStringLiteral("something broke"));
     }
 
-    void testValueOr()
-    {
+    void testValueOr() {
         auto ok = Result<int>::ok(7);
         QCOMPARE(ok.valueOr(99), 7);
 
@@ -39,8 +36,7 @@ private slots:
         QCOMPARE(err.valueOr(99), 99);
     }
 
-    void testStructValue()
-    {
+    void testStructValue() {
         TestData d;
         d.id = 1;
         d.name = "Test";
@@ -50,8 +46,7 @@ private slots:
         QCOMPARE(r->name, QStringLiteral("Test"));
     }
 
-    void testMoveSemantics()
-    {
+    void testMoveSemantics() {
         auto r = Result<QString>::ok("hello");
         QString s = std::move(r).value();
         QCOMPARE(s, QStringLiteral("hello"));

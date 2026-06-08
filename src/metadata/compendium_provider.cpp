@@ -12,18 +12,14 @@ namespace Remus {
 
 CompendiumProvider::CompendiumProvider(QObject *parent)
     : MetadataProvider(parent)
-    , m_connectionName(QStringLiteral("compendium_provider_%1")
-                           .arg(QUuid::createUuid().toString(QUuid::WithoutBraces)))
-{
-}
+    , m_connectionName(
+          QStringLiteral("compendium_provider_%1").arg(QUuid::createUuid().toString(QUuid::WithoutBraces))) { }
 
-CompendiumProvider::~CompendiumProvider()
-{
+CompendiumProvider::~CompendiumProvider() {
     closeConnection();
 }
 
-bool CompendiumProvider::openDatabase(const QString &databasePath)
-{
+bool CompendiumProvider::openDatabase(const QString &databasePath) {
     closeConnection();
 
     const QFileInfo info(databasePath);
@@ -43,22 +39,20 @@ bool CompendiumProvider::openDatabase(const QString &databasePath)
     return true;
 }
 
-void CompendiumProvider::ensureFts5Index()
-{
+void CompendiumProvider::ensureFts5Index() {
     QSqlDatabase db = database();
     if (!db.isOpen())
         return;
 
     // Create trigram FTS5 virtual table if not present (handles existing DBs without rebuild)
     QSqlQuery create(db);
-    create.exec(QStringLiteral(
-        "CREATE VIRTUAL TABLE IF NOT EXISTS games_search USING fts5("
-        "    title,"
-        "    game_id UNINDEXED,"
-        "    system_id UNINDEXED,"
-        "    region_code UNINDEXED,"
-        "    tokenize='trigram'"
-        ")"));
+    create.exec(QStringLiteral("CREATE VIRTUAL TABLE IF NOT EXISTS games_search USING fts5("
+                               "    title,"
+                               "    game_id UNINDEXED,"
+                               "    system_id UNINDEXED,"
+                               "    region_code UNINDEXED,"
+                               "    tokenize='trigram'"
+                               ")"));
 
     // Populate only when the table is empty (first time or after wipe)
     QSqlQuery countQ(db);
@@ -67,30 +61,27 @@ void CompendiumProvider::ensureFts5Index()
         return;
 
     QSqlQuery populate(db);
-    populate.exec(QStringLiteral(
-        "INSERT INTO games_search(title, game_id, system_id, region_code) "
-        "SELECT canonical_title, game_id, system_id, COALESCE(primary_region_code, '') FROM games "
-        "UNION ALL "
-        "SELECT gn.name_text, gn.game_id, g.system_id, COALESCE(g.primary_region_code, '') "
-        "FROM game_names gn JOIN games g ON gn.game_id = g.game_id"));
+    populate.exec(
+        QStringLiteral("INSERT INTO games_search(title, game_id, system_id, region_code) "
+                       "SELECT canonical_title, game_id, system_id, COALESCE(primary_region_code, '') FROM games "
+                       "UNION ALL "
+                       "SELECT gn.name_text, gn.game_id, g.system_id, COALESCE(g.primary_region_code, '') "
+                       "FROM game_names gn JOIN games g ON gn.game_id = g.game_id"));
 
     QSqlQuery optimize(db);
     optimize.exec(QStringLiteral("INSERT INTO games_search(games_search) VALUES('optimize')"));
 }
 
-bool CompendiumProvider::isAvailable()
-{
+bool CompendiumProvider::isAvailable() {
     QSqlDatabase db = database();
     return db.isValid() && db.isOpen();
 }
 
-QSqlDatabase CompendiumProvider::database() const
-{
+QSqlDatabase CompendiumProvider::database() const {
     return QSqlDatabase::database(m_connectionName, false);
 }
 
-int CompendiumProvider::resolveSystemId(const QString &system) const
-{
+int CompendiumProvider::resolveSystemId(const QString &system) const {
     const QString systemName = system.trimmed();
     if (systemName.isEmpty()) {
         return 0;
@@ -112,10 +103,9 @@ int CompendiumProvider::resolveSystemId(const QString &system) const
     }
 
     QSqlQuery query(db);
-    query.prepare(QStringLiteral(
-        "SELECT system_id FROM systems "
-        "WHERE LOWER(internal_name) = LOWER(?) OR LOWER(display_name) = LOWER(?) "
-        "LIMIT 1"));
+    query.prepare(QStringLiteral("SELECT system_id FROM systems "
+                                 "WHERE LOWER(internal_name) = LOWER(?) OR LOWER(display_name) = LOWER(?) "
+                                 "LIMIT 1"));
     query.addBindValue(systemName);
     query.addBindValue(systemName);
     if (!query.exec() || !query.next()) {
@@ -125,8 +115,7 @@ int CompendiumProvider::resolveSystemId(const QString &system) const
     return query.value(0).toInt();
 }
 
-void CompendiumProvider::closeConnection()
-{
+void CompendiumProvider::closeConnection() {
     const QString connectionName = m_connectionName;
     if (!QSqlDatabase::contains(connectionName)) {
         m_databasePath.clear();
@@ -144,8 +133,7 @@ void CompendiumProvider::closeConnection()
     m_databasePath.clear();
 }
 
-QString CompendiumProvider::detectHashType(const QString &hash, QString &normalizedValue)
-{
+QString CompendiumProvider::detectHashType(const QString &hash, QString &normalizedValue) {
     const QString compact = hash.trimmed().remove(QLatin1Char(' '));
     if (compact.size() == 8) {
         normalizedValue = compact.toUpper();
@@ -161,7 +149,7 @@ QString CompendiumProvider::detectHashType(const QString &hash, QString &normali
     }
 
     normalizedValue.clear();
-    return {};
+    return { };
 }
 
 } // namespace Remus

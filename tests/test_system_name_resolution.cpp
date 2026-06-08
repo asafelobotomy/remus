@@ -9,15 +9,15 @@ using namespace Remus;
 
 int main(int argc, char *argv[]) {
     QCoreApplication app(argc, argv);
-    
+
     Database db;
     if (!db.initialize(":memory:")) {
         qCritical() << "Failed to initialize database";
         return 1;
     }
-    
+
     qDebug() << "\n=== Testing System Name Resolution ===\n";
-    
+
     // Insert a test system
     QSqlQuery insert(db.database());
     insert.prepare(R"(
@@ -29,20 +29,20 @@ int main(int argc, char *argv[]) {
     insert.addBindValue("Nintendo");
     insert.addBindValue("['.nes', '.unf']");
     insert.addBindValue("CRC32");
-    
+
     if (!insert.exec()) {
         qCritical() << "Failed to insert test system:" << insert.lastError().text();
         return 1;
     }
-    
+
     int systemId = insert.lastInsertId().toInt();
     qDebug() << "✓ Inserted test system with ID:" << systemId;
-    
+
     // Test the query that MatchController::getSystemName() uses
     QSqlQuery query(db.database());
     query.prepare("SELECT name FROM systems WHERE id = ?");
     query.addBindValue(systemId);
-    
+
     QString systemName;
     if (query.exec() && query.next()) {
         systemName = query.value(0).toString();
@@ -51,7 +51,7 @@ int main(int argc, char *argv[]) {
         qCritical() << "❌ Query failed:" << query.lastError().text();
         return 1;
     }
-    
+
     // Verify correctness
     if (systemName == "TEST_NES") {
         qDebug() << "\n✅ SUCCESS: System name resolution works correctly!";

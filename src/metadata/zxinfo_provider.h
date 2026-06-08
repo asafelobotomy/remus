@@ -18,17 +18,22 @@ class ZXInfoProvider : public HttpMetadataProvider {
 public:
     explicit ZXInfoProvider(QObject *parent = nullptr);
 
-    QString name() const override { return QStringLiteral("ZXInfo"); }
-    bool requiresAuth() const override { return false; }
-    bool isAvailable() override { return true; }
+    QString name() const override {
+        return QStringLiteral("ZXInfo");
+    }
+    bool requiresAuth() const override {
+        return false;
+    }
+    bool isAvailable() override {
+        return true;
+    }
 
-    QList<SearchResult> searchByName(const QString &title,
-                                     const QString &system = QString(),
-                                     const QString &region = QString()) override;
+    QList<SearchResult> searchByName(
+        const QString &title, const QString &system = QString(), const QString &region = QString()) override;
 
     GameMetadata getByHash(const QString &hash, const QString &system) override;
     GameMetadata getById(const QString &id) override;
-    ArtworkUrls  getArtwork(const QString &id) override;
+    ArtworkUrls getArtwork(const QString &id) override;
 
     /**
      * @brief Search for a title and return full GameMetadata for the top matches.
@@ -40,7 +45,7 @@ public:
 
 private:
     GameMetadata parseEntry(const QJsonObject &source) const;
-    ApiResponse  makeRequest(const QUrl &url);
+    ApiResponse makeRequest(const QUrl &url);
 };
 
 } // namespace Remus

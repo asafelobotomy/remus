@@ -8,16 +8,14 @@
 using namespace Remus;
 
 namespace {
-QString crc32Hex(const QByteArray &data)
-{
+QString crc32Hex(const QByteArray &data) {
     uLong crc = crc32(0L, Z_NULL, 0);
-    crc = crc32(crc, reinterpret_cast<const Bytef*>(data.constData()), data.size());
+    crc = crc32(crc, reinterpret_cast<const Bytef *>(data.constData()), data.size());
     return QString("%1").arg(crc, 8, 16, QChar('0')).toLower();
 }
 }
 
-class HasherTest : public QObject
-{
+class HasherTest : public QObject {
     Q_OBJECT
 
 private slots:
@@ -28,8 +26,7 @@ private slots:
     void testMissingFile();
 };
 
-void HasherTest::testCalculateHashes()
-{
+void HasherTest::testCalculateHashes() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
@@ -50,8 +47,7 @@ void HasherTest::testCalculateHashes()
     QCOMPARE(result.sha1, QString(QCryptographicHash::hash(data, QCryptographicHash::Sha1).toHex()));
 }
 
-void HasherTest::testCalculateHashSingle()
-{
+void HasherTest::testCalculateHashSingle() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
@@ -65,13 +61,14 @@ void HasherTest::testCalculateHashSingle()
 
     Hasher hasher;
     QCOMPARE(hasher.calculateHash(filePath, "CRC32"), crc32Hex(data));
-    QCOMPARE(hasher.calculateHash(filePath, "MD5"), QString(QCryptographicHash::hash(data, QCryptographicHash::Md5).toHex()));
-    QCOMPARE(hasher.calculateHash(filePath, "SHA1"), QString(QCryptographicHash::hash(data, QCryptographicHash::Sha1).toHex()));
+    QCOMPARE(hasher.calculateHash(filePath, "MD5"),
+        QString(QCryptographicHash::hash(data, QCryptographicHash::Md5).toHex()));
+    QCOMPARE(hasher.calculateHash(filePath, "SHA1"),
+        QString(QCryptographicHash::hash(data, QCryptographicHash::Sha1).toHex()));
     QCOMPARE(hasher.calculateHash(filePath, "UNKNOWN"), QString());
 }
 
-void HasherTest::testStripHeader()
-{
+void HasherTest::testStripHeader() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
@@ -92,8 +89,7 @@ void HasherTest::testStripHeader()
     QCOMPARE(result.crc32, crc32Hex(data));
 }
 
-void HasherTest::testDetectHeaderSize()
-{
+void HasherTest::testDetectHeaderSize() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
@@ -119,8 +115,7 @@ void HasherTest::testDetectHeaderSize()
     QCOMPARE(Hasher::detectHeaderSize(smcPath, ".bin"), 0);
 }
 
-void HasherTest::testMissingFile()
-{
+void HasherTest::testMissingFile() {
     Hasher hasher;
     HashResult result = hasher.calculateHashes("/no/such/file.bin");
     QVERIFY(!result.success);

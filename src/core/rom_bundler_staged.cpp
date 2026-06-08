@@ -13,40 +13,31 @@ namespace Remus {
 
 namespace {
 
-static constexpr const char *MARKER_FILENAME = ".remus.md";
-static constexpr const char *ARTWORK_SUBDIR  = "artwork";
-static constexpr const char *BOXART_FILENAME = "boxfront.jpg";
+    static constexpr const char *MARKER_FILENAME = ".remus.md";
+    static constexpr const char *ARTWORK_SUBDIR = "artwork";
+    static constexpr const char *BOXART_FILENAME = "boxfront.jpg";
 
-QStringList collectArchiveEntries(const QString &rootDir)
-{
-    QStringList entries;
-    QDir root(rootDir);
-    QDirIterator it(rootDir,
-                    QDir::Files | QDir::Hidden,
-                    QDirIterator::Subdirectories);
-    while (it.hasNext()) {
-        it.next();
-        entries << root.relativeFilePath(it.filePath()).replace('\\', '/');
+    QStringList collectArchiveEntries(const QString &rootDir) {
+        QStringList entries;
+        QDir root(rootDir);
+        QDirIterator it(rootDir, QDir::Files | QDir::Hidden, QDirIterator::Subdirectories);
+        while (it.hasNext()) {
+            it.next();
+            entries << root.relativeFilePath(it.filePath()).replace('\\', '/');
+        }
+        entries.sort();
+        return entries;
     }
-    entries.sort();
-    return entries;
-}
 
-QString dottedSuffix(const QString &path)
-{
-    const QString suffix = QFileInfo(path).suffix();
-    return suffix.isEmpty() ? QString() : QStringLiteral(".") + suffix.toLower();
-}
+    QString dottedSuffix(const QString &path) {
+        const QString suffix = QFileInfo(path).suffix();
+        return suffix.isEmpty() ? QString() : QStringLiteral(".") + suffix.toLower();
+    }
 
 } // namespace
 
-RomBundler::BundleResult RomBundler::bundleStaged(
-    const FileRecord              &patchedFile,
-    const Database::MatchResult   &baseMatch,
-    const GameMetadata            &metadata,
-    const QString                 &destinationDir,
-    const BundleConfig            &config)
-{
+RomBundler::BundleResult RomBundler::bundleStaged(const FileRecord &patchedFile, const Database::MatchResult &baseMatch,
+    const GameMetadata &metadata, const QString &destinationDir, const BundleConfig &config) {
     BundleResult result;
 
     const QString sourcePath = patchedFile.currentPath;
@@ -62,8 +53,7 @@ RomBundler::BundleResult RomBundler::bundleStaged(
     }
 
     const QString tempRoot = config.dryRun ? QDir::tempPath() : destDir.absolutePath();
-    const QString tempBase = tempRoot + "/.remus_bundle_"
-                           + QString::number(QDateTime::currentMSecsSinceEpoch());
+    const QString tempBase = tempRoot + "/.remus_bundle_" + QString::number(QDateTime::currentMSecsSinceEpoch());
     QDir tempDir(tempBase);
     if (!tempDir.mkpath(".")) {
         result.error = "Cannot create temp directory: " + tempBase;
@@ -91,8 +81,7 @@ RomBundler::BundleResult RomBundler::bundleStaged(
         out << generateMarkerContent(patchedFile, baseMatch, metadata);
     }
 
-    if (config.includeBoxArt && !config.artworkPath.isEmpty()
-        && QFile::exists(config.artworkPath)) {
+    if (config.includeBoxArt && !config.artworkPath.isEmpty() && QFile::exists(config.artworkPath)) {
         const QString artDestDir = tempBase + "/" + ARTWORK_SUBDIR;
         QDir().mkpath(artDestDir);
         const QString artDest = artDestDir + "/" + BOXART_FILENAME;
@@ -103,7 +92,8 @@ RomBundler::BundleResult RomBundler::bundleStaged(
 
     result.archiveEntries = collectArchiveEntries(tempBase);
 
-    const QString ext = (config.outputFormat == ArchiveFormat::SevenZip) ? Constants::Files::SEVEN_Z : Constants::Files::ZIP;
+    const QString ext
+        = (config.outputFormat == ArchiveFormat::SevenZip) ? Constants::Files::SEVEN_Z : Constants::Files::ZIP;
     const QString baseName = QFileInfo(patchedFile.filename).completeBaseName();
     const QString outputArchive = destDir.absoluteFilePath(baseName + ext);
 
@@ -119,8 +109,7 @@ RomBundler::BundleResult RomBundler::bundleStaged(
     const QFileInfo bundledPayloadInfo(destRom);
     const qint64 bundledFileSize = bundledPayloadInfo.size();
     const QString bundledExtension = dottedSuffix(destRom);
-    CompressionResult cr = m_creator.compressDirectoryContents(
-        tempBase, outputArchive, config.outputFormat);
+    CompressionResult cr = m_creator.compressDirectoryContents(tempBase, outputArchive, config.outputFormat);
     cleanup();
 
     if (!cr.success) {
@@ -150,10 +139,8 @@ RomBundler::BundleResult RomBundler::bundleStaged(
     return result;
 }
 
-QString RomBundler::generateMarkerContent(const FileRecord            &file,
-                                          const Database::MatchResult &match,
-                                          const GameMetadata          &metadata) const
-{
+QString RomBundler::generateMarkerContent(
+    const FileRecord &file, const Database::MatchResult &match, const GameMetadata &metadata) const {
     const QString now = QDateTime::currentDateTime().toString(Qt::ISODate);
     QString out;
     QTextStream s(&out);

@@ -5,8 +5,7 @@
 
 using namespace Remus;
 
-class PatchEngineTest : public QObject
-{
+class PatchEngineTest : public QObject {
     Q_OBJECT
 
 private slots:
@@ -18,8 +17,7 @@ private slots:
     void testCreatePatchUnsupported();
 };
 
-void PatchEngineTest::testFormatDetection()
-{
+void PatchEngineTest::testFormatDetection() {
     QCOMPARE(PatchEngine::formatFromExtension("ips"), PatchFormat::IPS);
     QCOMPARE(PatchEngine::formatFromExtension(".bps"), PatchFormat::BPS);
     QCOMPARE(PatchEngine::formatFromExtension(".ups"), PatchFormat::UPS);
@@ -31,8 +29,7 @@ void PatchEngineTest::testFormatDetection()
     QCOMPARE(PatchEngine::formatName(PatchFormat::Unknown), QStringLiteral("Unknown"));
 }
 
-void PatchEngineTest::testApplyInvalidPatch()
-{
+void PatchEngineTest::testApplyInvalidPatch() {
     PatchEngine engine;
     PatchInfo info;
     info.valid = false;
@@ -43,8 +40,7 @@ void PatchEngineTest::testApplyInvalidPatch()
     QVERIFY(result.error.contains("Invalid patch"));
 }
 
-void PatchEngineTest::testDetectUpsChecksums()
-{
+void PatchEngineTest::testDetectUpsChecksums() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
@@ -79,8 +75,7 @@ void PatchEngineTest::testDetectUpsChecksums()
     QCOMPARE(info.patchChecksum, QStringLiteral("90abcdef"));
 }
 
-void PatchEngineTest::testApplyIpsBuiltin()
-{
+void PatchEngineTest::testApplyIpsBuiltin() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
@@ -123,8 +118,7 @@ void PatchEngineTest::testApplyIpsBuiltin()
     QCOMPARE(static_cast<unsigned char>(data[1]), 0x7F);
 }
 
-void PatchEngineTest::testApplyMissingBase()
-{
+void PatchEngineTest::testApplyMissingBase() {
     PatchEngine engine;
     PatchInfo info;
     info.valid = true;
@@ -137,8 +131,7 @@ void PatchEngineTest::testApplyMissingBase()
     QVERIFY(result.error.contains("Base ROM file not found"));
 }
 
-void PatchEngineTest::testCreatePatchUnsupported()
-{
+void PatchEngineTest::testCreatePatchUnsupported() {
     PatchEngine engine;
     QVERIFY(!engine.createPatch("a", "b", "c", PatchFormat::PPF));
 }

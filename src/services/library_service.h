@@ -25,7 +25,7 @@ struct FileRecord;
 class LibraryService {
 public:
     using ProgressCallback = std::function<void(int done, int total, const QString &path)>;
-    using LogCallback      = std::function<void(const QString &message)>;
+    using LogCallback = std::function<void(const QString &message)>;
 
     LibraryService();
     ~LibraryService();
@@ -38,10 +38,8 @@ public:
      * @param logCb      Optional log callback
      * @return Number of files inserted
      */
-    int scan(const QString &path, Database *db,
-             ProgressCallback progressCb = nullptr,
-             LogCallback logCb = nullptr,
-             int existingLibraryId = 0);
+    int scan(const QString &path, Database *db, ProgressCallback progressCb = nullptr, LogCallback logCb = nullptr,
+        int existingLibraryId = 0);
 
     /**
      * @brief Cancel a running scan
@@ -93,18 +91,16 @@ public:
      * @param logCb      Optional log callback
      * @return Ordered list of scan results
      */
-    QList<ScanResult> scanFilesystem(const QString &path,
-                                     ProgressCallback progressCb = nullptr,
-                                     LogCallback logCb = nullptr);
+    QList<ScanResult> scanFilesystem(
+        const QString &path, ProgressCallback progressCb = nullptr, LogCallback logCb = nullptr);
 
     /**
      * @brief Convert scan results to FileRecords and insert into DB.
      *
      * Must be called on the thread that owns the Database connection.
      */
-    int persistScanResults(const QList<ScanResult> &results,
-                           int libraryId, Database *db,
-                           ProgressCallback progressCb = nullptr);
+    int persistScanResults(
+        const QList<ScanResult> &results, int libraryId, Database *db, ProgressCallback progressCb = nullptr);
 
     std::unique_ptr<Scanner> m_scanner;
     std::unique_ptr<SystemDetector> m_detector;

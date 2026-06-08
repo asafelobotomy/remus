@@ -7,23 +7,29 @@
 - **Qt 6 development files** (Core, Gui, Sql, Network, Concurrent, Quick, QML, Quick Controls 2, Quick Layouts, Quick Dialogs 2)
 - **C++17** compatible compiler (GCC 7+, Clang 5+, MSVC 2017+)
 - **zlib** (for CRC32 calculation)
+- **libarchive** (ZIP/7z/RAR extraction)
+- **Qt6Keychain** (OS credential store for provider API keys)
 
 ### Installing Dependencies
 
 #### Ubuntu/Debian
 ```bash
 sudo apt update
-sudo apt install build-essential cmake qt6-base-dev qt6-base-dev-tools qt6-declarative-dev libqt6sql6-sqlite zlib1g-dev
+sudo apt install build-essential cmake \
+  qt6-base-dev qt6-base-dev-tools qt6-declarative-dev qt6-declarative-dev-tools \
+  libqt6sql6-sqlite libgl1-mesa-dev libxkbcommon-dev \
+  zlib1g-dev libarchive-dev qtkeychain-qt6-dev
 ```
 
 #### Fedora
 ```bash
-sudo dnf install cmake qt6-qtbase-devel qt6-qtbase-private-devel qt6-qtdeclarative-devel zlib-devel gcc-c++
+sudo dnf install cmake qt6-qtbase-devel qt6-qtbase-private-devel qt6-qtdeclarative-devel \
+  zlib-devel libarchive-devel qt6-qtkeychain-devel gcc-c++
 ```
 
 #### Arch Linux
 ```bash
-sudo pacman -S cmake qt6-base qt6-declarative zlib gcc
+sudo pacman -S cmake qt6-base qt6-declarative zlib libarchive qt6-keychain gcc
 ```
 
 ## Building from Source
@@ -84,6 +90,20 @@ Use when you create multiple build directories and recompile similar code. In th
 If Qt 6 is not found automatically, specify the path:
 ```bash
 cmake -DCMAKE_PREFIX_PATH=/usr/lib/qt6 ..
+```
+
+### Code style
+
+C++ sources under `src/` and `tests/` use the repository `.clang-format` (WebKit-based, 120-column limit). Format before committing:
+
+```bash
+find src tests -type f \( -name '*.cpp' -o -name '*.h' \) -print0 | xargs -0 clang-format -i
+```
+
+Enable compiler warnings during development:
+
+```bash
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DREMUS_ENABLE_WARNINGS=ON
 ```
 
 ### 4. Build

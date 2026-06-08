@@ -27,7 +27,7 @@ class Database;
 class ConversionService {
 public:
     using ProgressCallback = std::function<void(int percent, const QString &info)>;
-    using LogCallback      = std::function<void(const QString &message)>;
+    using LogCallback = std::function<void(const QString &message)>;
 
     ConversionService();
     ~ConversionService() = default;
@@ -42,10 +42,8 @@ public:
      * @param progressCb Progress callback (percent, info)
      * @return Conversion result
      */
-    ConversionResult convertToCHD(const QString &path,
-                                     CHDCodec codec = CHDCodec::Auto,
-                                     const QString &outputPath = {},
-                                     ProgressCallback progressCb = nullptr);
+    ConversionResult convertToCHD(const QString &path, CHDCodec codec = CHDCodec::Auto, const QString &outputPath = { },
+        ProgressCallback progressCb = nullptr);
 
     /**
      * @brief Extract a CHD back to BIN/CUE
@@ -54,9 +52,8 @@ public:
      * @param progressCb Progress callback
      * @return Conversion result
      */
-    ConversionResult extractCHD(const QString &chdPath,
-                                   const QString &outputPath = {},
-                                   ProgressCallback progressCb = nullptr);
+    ConversionResult extractCHD(
+        const QString &chdPath, const QString &outputPath = { }, ProgressCallback progressCb = nullptr);
 
     /**
      * @brief Batch convert disc images to CHD
@@ -66,10 +63,8 @@ public:
      * @param progressCb  Per-file progress (percent, file)
      * @return List of conversion results
      */
-    QList<ConversionResult> batchConvertToCHD(const QStringList &inputPaths,
-                                                 const QString &outputDir,
-                                                 CHDCodec codec = CHDCodec::Auto,
-                                                 ProgressCallback progressCb = nullptr);
+    QList<ConversionResult> batchConvertToCHD(const QStringList &inputPaths, const QString &outputDir,
+        CHDCodec codec = CHDCodec::Auto, ProgressCallback progressCb = nullptr);
 
     /**
      * @brief Verify a CHD file
@@ -83,35 +78,27 @@ public:
 
     // ── RVZ Conversion ────────────────────────────────────
 
-    ConversionResult convertToRVZ(const QString &path,
-                                     RVZCompression compression = RVZCompression::Auto,
-                                     const QString &outputPath = {},
-                                     ProgressCallback progressCb = nullptr);
+    ConversionResult convertToRVZ(const QString &path, RVZCompression compression = RVZCompression::Auto,
+        const QString &outputPath = { }, ProgressCallback progressCb = nullptr);
 
-    ConversionResult extractRVZ(const QString &rvzPath,
-                                   const QString &outputPath = {},
-                                   ProgressCallback progressCb = nullptr);
+    ConversionResult extractRVZ(
+        const QString &rvzPath, const QString &outputPath = { }, ProgressCallback progressCb = nullptr);
 
-    QList<ConversionResult> batchConvertToRVZ(const QStringList &inputPaths,
-                                                 const QString &outputDir,
-                                                 RVZCompression compression = RVZCompression::Auto,
-                                                 ProgressCallback progressCb = nullptr);
+    QList<ConversionResult> batchConvertToRVZ(const QStringList &inputPaths, const QString &outputDir,
+        RVZCompression compression = RVZCompression::Auto, ProgressCallback progressCb = nullptr);
 
     VerifyResult verifyRVZ(const QString &rvzPath);
 
     // ── CSO Conversion ────────────────────────────────────
 
-    ConversionResult convertToCSO(const QString &path,
-                                     const QString &outputPath = {},
-                                     ProgressCallback progressCb = nullptr);
+    ConversionResult convertToCSO(
+        const QString &path, const QString &outputPath = { }, ProgressCallback progressCb = nullptr);
 
-    ConversionResult extractCSO(const QString &csoPath,
-                                   const QString &outputPath = {},
-                                   ProgressCallback progressCb = nullptr);
+    ConversionResult extractCSO(
+        const QString &csoPath, const QString &outputPath = { }, ProgressCallback progressCb = nullptr);
 
-    QList<ConversionResult> batchConvertToCSO(const QStringList &inputPaths,
-                                                 const QString &outputDir,
-                                                 ProgressCallback progressCb = nullptr);
+    QList<ConversionResult> batchConvertToCSO(
+        const QStringList &inputPaths, const QString &outputDir, ProgressCallback progressCb = nullptr);
 
     // ── Archive Extraction ────────────────────────────────
 
@@ -122,9 +109,8 @@ public:
      * @param progressCb  Progress callback
      * @return Extraction result
      */
-    ExtractionResult extractArchive(const QString &archivePath,
-                                    const QString &outputDir,
-                                    ProgressCallback progressCb = nullptr);
+    ExtractionResult extractArchive(
+        const QString &archivePath, const QString &outputDir, ProgressCallback progressCb = nullptr);
 
     /**
      * @brief Extract an archive and update DB file paths
@@ -134,10 +120,8 @@ public:
      * @param progressCb  Progress callback
      * @return Extraction result
      */
-    ExtractionResult extractArchiveWithDbUpdate(const QString &archivePath,
-                                                const QString &outputDir,
-                                                Database *db,
-                                                ProgressCallback progressCb = nullptr);
+    ExtractionResult extractArchiveWithDbUpdate(
+        const QString &archivePath, const QString &outputDir, Database *db, ProgressCallback progressCb = nullptr);
 
     // ── Tool Status ───────────────────────────────────────
 
@@ -184,10 +168,8 @@ public:
      * @param progressCb   Progress callback
      * @return Compression result
      */
-    CompressionResult compressToArchive(const QStringList &inputPaths,
-                                        const QString &outputArchive,
-                                        ArchiveFormat format = ArchiveFormat::ZIP,
-                                        ProgressCallback progressCb = nullptr);
+    CompressionResult compressToArchive(const QStringList &inputPaths, const QString &outputArchive,
+        ArchiveFormat format = ArchiveFormat::ZIP, ProgressCallback progressCb = nullptr);
 
     /**
      * @brief Batch compress directories into individual archives
@@ -197,10 +179,8 @@ public:
      * @param progressCb Progress callback
      * @return List of compression results
      */
-    QList<CompressionResult> batchCompressToArchive(const QStringList &dirs,
-                                                    const QString &outputDir,
-                                                    ArchiveFormat format = ArchiveFormat::ZIP,
-                                                    ProgressCallback progressCb = nullptr);
+    QList<CompressionResult> batchCompressToArchive(const QStringList &dirs, const QString &outputDir,
+        ArchiveFormat format = ArchiveFormat::ZIP, ProgressCallback progressCb = nullptr);
 
     /**
      * @brief Check if a specific archive format can be created
@@ -225,20 +205,30 @@ public:
     /**
      * @brief Access underlying CHDConverter (for advanced use)
      */
-    CHDConverter *chdConverter() { return m_chdConverter.get(); }
+    CHDConverter *chdConverter() {
+        return m_chdConverter.get();
+    }
 
     /**
      * @brief Access underlying ArchiveExtractor
      */
-    ArchiveExtractor *archiveExtractor() { return m_archiveExtractor.get(); }
+    ArchiveExtractor *archiveExtractor() {
+        return m_archiveExtractor.get();
+    }
 
     /**
      * @brief Access underlying ArchiveCreator
      */
-    ArchiveCreator *archiveCreator() { return m_archiveCreator.get(); }
+    ArchiveCreator *archiveCreator() {
+        return m_archiveCreator.get();
+    }
 
-    RVZConverter *rvzConverter() { return m_rvzConverter.get(); }
-    CSOConverter *csoConverter() { return m_csoConverter.get(); }
+    RVZConverter *rvzConverter() {
+        return m_rvzConverter.get();
+    }
+    CSOConverter *csoConverter() {
+        return m_csoConverter.get();
+    }
 
 private:
     std::unique_ptr<CHDConverter> m_chdConverter;

@@ -9,24 +9,19 @@ namespace Remus {
 HttpMetadataProvider::HttpMetadataProvider(int rateLimitMs, QObject *parent)
     : MetadataProvider(parent)
     , m_networkManager(new QNetworkAccessManager(this))
-    , m_rateLimiter(new RateLimiter(this))
-{
+    , m_rateLimiter(new RateLimiter(this)) {
     m_rateLimiter->setInterval(rateLimitMs);
 }
 
-void HttpMetadataProvider::processNetworkEvents()
-{
+void HttpMetadataProvider::processNetworkEvents() {
     QCoreApplication::sendPostedEvents(nullptr, QEvent::DeferredDelete);
 }
 
-void HttpMetadataProvider::throttle()
-{
+void HttpMetadataProvider::throttle() {
     m_rateLimiter->waitIfNeeded();
 }
 
-HttpMetadataProvider::ApiResponse
-HttpMetadataProvider::waitForReply(QNetworkReply *reply, int timeoutMs)
-{
+HttpMetadataProvider::ApiResponse HttpMetadataProvider::waitForReply(QNetworkReply *reply, int timeoutMs) {
     ApiResponse response;
 
     QEventLoop loop;
@@ -43,8 +38,7 @@ HttpMetadataProvider::waitForReply(QNetworkReply *reply, int timeoutMs)
     if (timeout.isActive()) {
         timeout.stop();
 
-        response.httpStatusCode =
-            reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+        response.httpStatusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
 
         if (reply->error() == QNetworkReply::NoError) {
             response.success = true;

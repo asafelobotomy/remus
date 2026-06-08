@@ -7,15 +7,13 @@
 
 namespace Remus {
 
-int VerificationEngine::importDat(const QString &datFilePath, const QString &systemName)
-{
+int VerificationEngine::importDat(const QString &datFilePath, const QString &systemName) {
     DatParser parser;
     const DatParseResult parseResult = parser.parse(datFilePath);
     return importDat(parseResult, systemName);
 }
 
-int VerificationEngine::importDat(const DatParseResult &parseResult, const QString &systemName)
-{
+int VerificationEngine::importDat(const DatParseResult &parseResult, const QString &systemName) {
     if (!parseResult.success) {
         emit error(QString("Failed to parse DAT file: %1").arg(parseResult.error));
         return -1;
@@ -86,8 +84,7 @@ int VerificationEngine::importDat(const DatParseResult &parseResult, const QStri
     return imported;
 }
 
-int VerificationEngine::importPatchDat(const QString &datFilePath, const QString &systemName)
-{
+int VerificationEngine::importPatchDat(const QString &datFilePath, const QString &systemName) {
     DatParser parser;
     const DatParseResult parseResult = parser.parse(datFilePath);
 
@@ -165,8 +162,7 @@ int VerificationEngine::importPatchDat(const QString &datFilePath, const QString
     return imported;
 }
 
-QMap<QString, DatHeader> VerificationEngine::getImportedDats()
-{
+QMap<QString, DatHeader> VerificationEngine::getImportedDats() {
     QMap<QString, DatHeader> dats;
 
     // ── Compendium path ────────────────────────────────────────────────────
@@ -183,11 +179,12 @@ QMap<QString, DatHeader> VerificationEngine::getImportedDats()
         while (q.next()) {
             DatHeader header;
             const QString sysName = q.value(0).toString();
-            header.name    = q.value(1).toString();
-            header.category = q.value(2).toString();   // preferred_hash in category slot
+            header.name = q.value(1).toString();
+            header.category = q.value(2).toString(); // preferred_hash in category slot
             dats.insert(sysName, header);
         }
-        if (!dats.isEmpty()) return dats;
+        if (!dats.isEmpty())
+            return dats;
     }
 
     // ── Runtime-import fallback ────────────────────────────────────────────
@@ -206,8 +203,7 @@ QMap<QString, DatHeader> VerificationEngine::getImportedDats()
     return dats;
 }
 
-QMap<QString, DatHeader> VerificationEngine::getImportedPatchDats()
-{
+QMap<QString, DatHeader> VerificationEngine::getImportedPatchDats() {
     QMap<QString, DatHeader> dats;
 
     // ── Compendium path ────────────────────────────────────────────────────
@@ -222,13 +218,14 @@ QMap<QString, DatHeader> VerificationEngine::getImportedPatchDats()
         while (q.next()) {
             DatHeader header;
             const QString sysName = q.value(0).toString();
-            header.name        = q.value(1).toString();
-            header.version     = q.value(2).toString();
-            header.category    = q.value(3).toString();
+            header.name = q.value(1).toString();
+            header.version = q.value(2).toString();
+            header.category = q.value(3).toString();
             header.description = q.value(4).toString();
             dats.insert(sysName, header);
         }
-        if (!dats.isEmpty()) return dats;
+        if (!dats.isEmpty())
+            return dats;
     }
 
     // ── Runtime-import fallback ────────────────────────────────────────────
@@ -247,8 +244,7 @@ QMap<QString, DatHeader> VerificationEngine::getImportedPatchDats()
     return dats;
 }
 
-bool VerificationEngine::removeDat(const QString &systemName)
-{
+bool VerificationEngine::removeDat(const QString &systemName) {
     QSqlQuery query(m_database->database());
     query.prepare("DELETE FROM verification_dats WHERE system_name = ?");
     query.addBindValue(systemName);
@@ -260,8 +256,7 @@ bool VerificationEngine::removeDat(const QString &systemName)
     return false;
 }
 
-bool VerificationEngine::removePatchDat(const QString &systemName)
-{
+bool VerificationEngine::removePatchDat(const QString &systemName) {
     QSqlQuery query(m_database->database());
     query.prepare("DELETE FROM patch_verification_dats WHERE system_name = ?");
     query.addBindValue(systemName);
@@ -273,8 +268,7 @@ bool VerificationEngine::removePatchDat(const QString &systemName)
     return false;
 }
 
-bool VerificationEngine::hasDat(const QString &systemName)
-{
+bool VerificationEngine::hasDat(const QString &systemName) {
     // ── Compendium path ────────────────────────────────────────────────────
     if (!m_compendiumConnectionName.isEmpty()) {
         QSqlDatabase cdb = QSqlDatabase::database(m_compendiumConnectionName);
@@ -303,8 +297,7 @@ bool VerificationEngine::hasDat(const QString &systemName)
     return false;
 }
 
-bool VerificationEngine::hasPatchDat(const QString &systemName)
-{
+bool VerificationEngine::hasPatchDat(const QString &systemName) {
     // ── Compendium path ────────────────────────────────────────────────────
     if (!m_compendiumConnectionName.isEmpty()) {
         QSqlDatabase cdb = QSqlDatabase::database(m_compendiumConnectionName);

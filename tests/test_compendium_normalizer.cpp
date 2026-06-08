@@ -7,8 +7,7 @@
 using namespace Remus::Compendium;
 using namespace Remus::Constants::Systems;
 
-class CompendiumNormalizerTest : public QObject
-{
+class CompendiumNormalizerTest : public QObject {
     Q_OBJECT
 
 private slots:
@@ -40,73 +39,63 @@ private slots:
 
 // ── resolveRegionCode ─────────────────────────────────────────────────────────
 
-void CompendiumNormalizerTest::regionCode_usa()
-{
+void CompendiumNormalizerTest::regionCode_usa() {
     CompendiumNormalizer n;
-    QCOMPARE(n.resolveRegionCode(QStringLiteral("USA")),     QStringLiteral("USA"));
-    QCOMPARE(n.resolveRegionCode(QStringLiteral("us")),      QStringLiteral("USA"));
-    QCOMPARE(n.resolveRegionCode(QStringLiteral("NTSC-U")),  QStringLiteral("USA"));
+    QCOMPARE(n.resolveRegionCode(QStringLiteral("USA")), QStringLiteral("USA"));
+    QCOMPARE(n.resolveRegionCode(QStringLiteral("us")), QStringLiteral("USA"));
+    QCOMPARE(n.resolveRegionCode(QStringLiteral("NTSC-U")), QStringLiteral("USA"));
     QCOMPARE(n.resolveRegionCode(QStringLiteral("America")), QStringLiteral("USA"));
 }
 
-void CompendiumNormalizerTest::regionCode_europe()
-{
+void CompendiumNormalizerTest::regionCode_europe() {
     CompendiumNormalizer n;
     QCOMPARE(n.resolveRegionCode(QStringLiteral("Europe")), QStringLiteral("EUR"));
-    QCOMPARE(n.resolveRegionCode(QStringLiteral("EUR")),    QStringLiteral("EUR"));
-    QCOMPARE(n.resolveRegionCode(QStringLiteral("PAL")),    QStringLiteral("EUR"));
+    QCOMPARE(n.resolveRegionCode(QStringLiteral("EUR")), QStringLiteral("EUR"));
+    QCOMPARE(n.resolveRegionCode(QStringLiteral("PAL")), QStringLiteral("EUR"));
 }
 
-void CompendiumNormalizerTest::regionCode_japan()
-{
+void CompendiumNormalizerTest::regionCode_japan() {
     CompendiumNormalizer n;
     QCOMPARE(n.resolveRegionCode(QStringLiteral("Japan")), QStringLiteral("JPN"));
-    QCOMPARE(n.resolveRegionCode(QStringLiteral("JPN")),   QStringLiteral("JPN"));
-    QCOMPARE(n.resolveRegionCode(QStringLiteral("JP")),    QStringLiteral("JPN"));
+    QCOMPARE(n.resolveRegionCode(QStringLiteral("JPN")), QStringLiteral("JPN"));
+    QCOMPARE(n.resolveRegionCode(QStringLiteral("JP")), QStringLiteral("JPN"));
 }
 
-void CompendiumNormalizerTest::regionCode_ntscU()
-{
+void CompendiumNormalizerTest::regionCode_ntscU() {
     CompendiumNormalizer n;
     QCOMPARE(n.resolveRegionCode(QStringLiteral("NTSC")), QStringLiteral("USA"));
 }
 
-void CompendiumNormalizerTest::regionCode_pal()
-{
+void CompendiumNormalizerTest::regionCode_pal() {
     CompendiumNormalizer n;
     QCOMPARE(n.resolveRegionCode(QStringLiteral("PAL-E")), QStringLiteral("EUR"));
 }
 
-void CompendiumNormalizerTest::regionCode_ntscJ()
-{
+void CompendiumNormalizerTest::regionCode_ntscJ() {
     CompendiumNormalizer n;
     QCOMPARE(n.resolveRegionCode(QStringLiteral("NTSC-J")), QStringLiteral("JPN"));
 }
 
-void CompendiumNormalizerTest::regionCode_world()
-{
+void CompendiumNormalizerTest::regionCode_world() {
     CompendiumNormalizer n;
-    QCOMPARE(n.resolveRegionCode(QStringLiteral("World")),     QStringLiteral("WORLD"));
+    QCOMPARE(n.resolveRegionCode(QStringLiteral("World")), QStringLiteral("WORLD"));
     QCOMPARE(n.resolveRegionCode(QStringLiteral("Worldwide")), QStringLiteral("WORLD"));
 }
 
-void CompendiumNormalizerTest::regionCode_commaDelimited()
-{
+void CompendiumNormalizerTest::regionCode_commaDelimited() {
     // Only the first token is used; "USA, Europe" → "USA"
     CompendiumNormalizer n;
     QCOMPARE(n.resolveRegionCode(QStringLiteral("USA, Europe")), QStringLiteral("USA"));
-    QCOMPARE(n.resolveRegionCode(QStringLiteral("Japan, USA")),  QStringLiteral("JPN"));
+    QCOMPARE(n.resolveRegionCode(QStringLiteral("Japan, USA")), QStringLiteral("JPN"));
 }
 
-void CompendiumNormalizerTest::regionCode_empty()
-{
+void CompendiumNormalizerTest::regionCode_empty() {
     CompendiumNormalizer n;
     QVERIFY(n.resolveRegionCode(QString()).isEmpty());
     QVERIFY(n.resolveRegionCode(QStringLiteral("")).isEmpty());
 }
 
-void CompendiumNormalizerTest::regionCode_unknown()
-{
+void CompendiumNormalizerTest::regionCode_unknown() {
     CompendiumNormalizer n;
     QVERIFY(n.resolveRegionCode(QStringLiteral("Narnia")).isEmpty());
     QVERIFY(n.resolveRegionCode(QStringLiteral("XYZ")).isEmpty());
@@ -114,71 +103,60 @@ void CompendiumNormalizerTest::regionCode_unknown()
 
 // ── resolveSystemId ───────────────────────────────────────────────────────────
 
-void CompendiumNormalizerTest::systemId_nes()
-{
+void CompendiumNormalizerTest::systemId_nes() {
     CompendiumNormalizer n;
-    QCOMPARE(n.resolveSystemId(
-        QStringLiteral("Nintendo - Nintendo Entertainment System")), ID_NES);
+    QCOMPARE(n.resolveSystemId(QStringLiteral("Nintendo - Nintendo Entertainment System")), ID_NES);
 }
 
-void CompendiumNormalizerTest::systemId_genesis()
-{
+void CompendiumNormalizerTest::systemId_genesis() {
     CompendiumNormalizer n;
-    QCOMPARE(n.resolveSystemId(
-        QStringLiteral("Sega - Mega Drive - Genesis")), ID_GENESIS);
+    QCOMPARE(n.resolveSystemId(QStringLiteral("Sega - Mega Drive - Genesis")), ID_GENESIS);
 }
 
-void CompendiumNormalizerTest::systemId_psx()
-{
+void CompendiumNormalizerTest::systemId_psx() {
     CompendiumNormalizer n;
-    QCOMPARE(n.resolveSystemId(
-        QStringLiteral("Sony - PlayStation")), ID_PSX);
+    QCOMPARE(n.resolveSystemId(QStringLiteral("Sony - PlayStation")), ID_PSX);
 }
 
-void CompendiumNormalizerTest::systemId_empty()
-{
+void CompendiumNormalizerTest::systemId_empty() {
     CompendiumNormalizer n;
     QCOMPARE(n.resolveSystemId(QString()), 0);
 }
 
-void CompendiumNormalizerTest::systemId_unknown()
-{
+void CompendiumNormalizerTest::systemId_unknown() {
     CompendiumNormalizer n;
     QCOMPARE(n.resolveSystemId(QStringLiteral("Not a Real System")), 0);
 }
 
 // ── normalize ────────────────────────────────────────────────────────────────
 
-void CompendiumNormalizerTest::normalize_setsSystemAndRegion()
-{
+void CompendiumNormalizerTest::normalize_setsSystemAndRegion() {
     CompendiumNormalizer n;
 
     SourceRecordEnvelope rec;
     rec.systemHint = QStringLiteral("Nintendo - Nintendo Entertainment System");
-    rec.regionRaw  = QStringLiteral("USA");
+    rec.regionRaw = QStringLiteral("USA");
 
     n.normalize(rec);
 
-    QCOMPARE(rec.resolvedSystemId,    ID_NES);
-    QCOMPARE(rec.resolvedRegionCode,  QStringLiteral("USA"));
+    QCOMPARE(rec.resolvedSystemId, ID_NES);
+    QCOMPARE(rec.resolvedRegionCode, QStringLiteral("USA"));
 }
 
-void CompendiumNormalizerTest::normalize_unknownHintsProduceZeroAndEmpty()
-{
+void CompendiumNormalizerTest::normalize_unknownHintsProduceZeroAndEmpty() {
     CompendiumNormalizer n;
 
     SourceRecordEnvelope rec;
     rec.systemHint = QStringLiteral("Imaginary Console 9000");
-    rec.regionRaw  = QStringLiteral("Outer Space");
+    rec.regionRaw = QStringLiteral("Outer Space");
 
     n.normalize(rec);
 
-    QCOMPARE(rec.resolvedSystemId,   0);
+    QCOMPARE(rec.resolvedSystemId, 0);
     QVERIFY(rec.resolvedRegionCode.isEmpty());
 }
 
-void CompendiumNormalizerTest::normalize_normalizesRegionInFields()
-{
+void CompendiumNormalizerTest::normalize_normalizesRegionInFields() {
     // Raw region strings in rec.fields["region"] must be mapped to canonical
     // region_codes so the merge resolver can safely propagate them to
     // games.primary_region_code (which has an FK to regions(region_code)).
@@ -186,7 +164,7 @@ void CompendiumNormalizerTest::normalize_normalizesRegionInFields()
 
     SourceRecordEnvelope rec;
     rec.systemHint = QStringLiteral("Sony - PlayStation");
-    rec.regionRaw  = QStringLiteral("Japan");
+    rec.regionRaw = QStringLiteral("Japan");
     rec.fields.insert(QStringLiteral("region"), QStringLiteral("Japan"));
 
     n.normalize(rec);
@@ -195,15 +173,14 @@ void CompendiumNormalizerTest::normalize_normalizesRegionInFields()
     QCOMPARE(rec.fields.value(QStringLiteral("region")), QStringLiteral("JPN"));
 }
 
-void CompendiumNormalizerTest::normalize_removesUnmappableRegionFromFields()
-{
+void CompendiumNormalizerTest::normalize_removesUnmappableRegionFromFields() {
     // Unmappable region strings must be removed from rec.fields to prevent
     // the merge resolver from writing an invalid value to primary_region_code.
     CompendiumNormalizer n;
 
     SourceRecordEnvelope rec;
     rec.systemHint = QStringLiteral("Sony - PlayStation");
-    rec.regionRaw  = QStringLiteral("Narnia");
+    rec.regionRaw = QStringLiteral("Narnia");
     rec.fields.insert(QStringLiteral("region"), QStringLiteral("Narnia"));
 
     n.normalize(rec);

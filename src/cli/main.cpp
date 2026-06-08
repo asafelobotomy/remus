@@ -18,15 +18,13 @@
 using namespace Remus;
 using namespace Remus::Constants;
 
-static bool hasFlag(const QStringList &args, const QString &flag)
-{
+static bool hasFlag(const QStringList &args, const QString &flag) {
     return args.contains(flag);
 }
 
-static QString normalizeOptionToken(const QString &arg)
-{
+static QString normalizeOptionToken(const QString &arg) {
     if (!arg.startsWith('-')) {
-        return {};
+        return { };
     }
 
     int start = 0;
@@ -35,14 +33,13 @@ static QString normalizeOptionToken(const QString &arg)
     }
 
     if (start >= arg.size()) {
-        return {};
+        return { };
     }
 
     return arg.mid(start).section('=', 0, 0);
 }
 
-static bool hasAnyAction(const QStringList &args, const QSet<QString> &actionOptions)
-{
+static bool hasAnyAction(const QStringList &args, const QSet<QString> &actionOptions) {
     for (const QString &arg : args) {
         const QString token = normalizeOptionToken(arg);
         if (!token.isEmpty() && actionOptions.contains(token)) {
@@ -52,18 +49,14 @@ static bool hasAnyAction(const QStringList &args, const QSet<QString> &actionOpt
     return false;
 }
 
-static void printBanner()
-{
+static void printBanner() {
     qInfo() << "╔════════════════════════════════════════╗";
     qInfo() << "║  Remus - Retro Game Library Manager   ║";
     qInfo() << "╚════════════════════════════════════════╝";
     qInfo() << "";
 }
 
-static void machineReadableMessageHandler(QtMsgType type,
-                                          const QMessageLogContext &context,
-                                          const QString &msg)
-{
+static void machineReadableMessageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg) {
     Q_UNUSED(context);
 
     if (type == QtDebugMsg || type == QtInfoMsg) {
@@ -81,10 +74,7 @@ static void machineReadableMessageHandler(QtMsgType type,
 // Global file pointer for --log-file tee output (non-JSON mode only).
 static std::unique_ptr<QFile> g_logFile;
 
-static void logFileTeeMessageHandler(QtMsgType type,
-                                     const QMessageLogContext &context,
-                                     const QString &msg)
-{
+static void logFileTeeMessageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg) {
     Q_UNUSED(context);
 
     if (type == QtDebugMsg || type == QtInfoMsg) {
@@ -103,15 +93,14 @@ static void logFileTeeMessageHandler(QtMsgType type,
     }
 }
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
     QCoreApplication app(argc, argv);
 
     // Ignore SIGPIPE so that broken SSL/TCP connections from QNetworkAccessManager
     // return EPIPE to Qt instead of terminating the process silently (Linux default).
     // Set AFTER QCoreApplication construction (which may touch signal state).
     // Use sigaction rather than std::signal for reliable SA_RESTART semantics.
-    struct sigaction sa {};
+    struct sigaction sa { };
     sa.sa_handler = SIG_IGN;
     sigemptyset(&sa.sa_mask);
     sa.sa_flags = SA_RESTART;
@@ -124,9 +113,8 @@ int main(int argc, char *argv[])
     // the OS keychain, but the config dir should not be world-readable).
     {
         const QString cfgDir = QStandardPaths::writableLocation(QStandardPaths::GenericConfigLocation)
-                                + QStringLiteral("/") + QString::fromLatin1(Constants::SETTINGS_ORGANIZATION);
-        QFile::setPermissions(cfgDir,
-            QFileDevice::ReadOwner | QFileDevice::WriteOwner | QFileDevice::ExeOwner);
+            + QStringLiteral("/") + QString::fromLatin1(Constants::SETTINGS_ORGANIZATION);
+        QFile::setPermissions(cfgDir, QFileDevice::ReadOwner | QFileDevice::WriteOwner | QFileDevice::ExeOwner);
     }
 
     QCommandLineParser parser;
@@ -134,17 +122,14 @@ int main(int argc, char *argv[])
     parser.addHelpOption();
     parser.addVersionOption();
 
-    QSet<QString> actionOptions = {
-        QStringLiteral("help"),
-        QStringLiteral("h"),
-        QStringLiteral("version")
-    };
+    QSet<QString> actionOptions = { QStringLiteral("help"), QStringLiteral("h"), QStringLiteral("version") };
 
     registerAllOptions(parser, actionOptions);
 
     QStringList activeArgs = app.arguments();
-    const bool jsonRequested = hasFlag(activeArgs, "--" + Constants::Cli::Options::JSON) || hasFlag(activeArgs, "--" + Constants::Cli::Options::MOD_JSON);
-    const bool actionsProvided   = hasAnyAction(activeArgs, actionOptions);
+    const bool jsonRequested = hasFlag(activeArgs, "--" + Constants::Cli::Options::JSON)
+        || hasFlag(activeArgs, "--" + Constants::Cli::Options::MOD_JSON);
+    const bool actionsProvided = hasAnyAction(activeArgs, actionOptions);
 
     if (jsonRequested) {
         qInstallMessageHandler(machineReadableMessageHandler);
@@ -179,29 +164,29 @@ int main(int argc, char *argv[])
 
     SystemDetector detector;
 
-    CliContext ctx{parser, db, detector,
-                   /*dryRunAll*/        parser.isSet(Constants::Cli::Options::DRY_RUN_ALL),
-                   /*processRequested*/ parser.isSet("process") || parser.isSet("library"),
-                   /*processHandled*/   false,
-                   /*processSystemIdFilter*/ -1,
-                   /*processFileScopeIds*/ {},
-                   /*presetBundleFormat*/  {},
-                   /*presetDiscFormat*/    {},
-                   /*presetFolderNaming*/  {},
-                   /*presetDisplayName*/   {},
-                   /*processArtworkCacheDir*/ {},
-                   /*processSourcePath*/  {},
-                   /*processOutputPath*/  {}};
+    CliContext ctx { parser, db, detector,
+        /*dryRunAll*/ parser.isSet(Constants::Cli::Options::DRY_RUN_ALL),
+        /*processRequested*/ parser.isSet("process") || parser.isSet("library"),
+        /*processHandled*/ false,
+        /*processSystemIdFilter*/ -1,
+        /*processFileScopeIds*/ { },
+        /*presetBundleFormat*/ { },
+        /*presetDiscFormat*/ { },
+        /*presetFolderNaming*/ { },
+        /*presetDisplayName*/ { },
+        /*processArtworkCacheDir*/ { },
+        /*processSourcePath*/ { },
+        /*processOutputPath*/ { } };
 
     // Resolve --process-preset into concrete overrides
     if (parser.isSet("process-preset")) {
         const QString presetKey = parser.value("process-preset").trimmed().toLower();
         if (Constants::Cli::PROCESS_PRESETS.contains(presetKey)) {
             const auto &preset = Constants::Cli::PROCESS_PRESETS.value(presetKey);
-            ctx.presetBundleFormat  = QString::fromLatin1(preset.bundleFormat);
-            ctx.presetDiscFormat    = QString::fromLatin1(preset.discFormat);
-            ctx.presetFolderNaming  = QString::fromLatin1(preset.folderNaming);
-            ctx.presetDisplayName   = QString::fromLatin1(preset.displayName);
+            ctx.presetBundleFormat = QString::fromLatin1(preset.bundleFormat);
+            ctx.presetDiscFormat = QString::fromLatin1(preset.discFormat);
+            ctx.presetFolderNaming = QString::fromLatin1(preset.folderNaming);
+            ctx.presetDisplayName = QString::fromLatin1(preset.displayName);
         } else {
             qCritical() << "Unknown preset:" << presetKey;
             qInfo() << "Available presets:" << Constants::Cli::PROCESS_PRESET_NAMES.join(", ");
@@ -221,10 +206,14 @@ int main(int argc, char *argv[])
         ctx.processSourcePath = parser.value("library");
         ctx.processOutputPath = parser.value("output");
         // Apply consumer-friendly defaults when not already set by a preset or explicit flags
-        if (ctx.presetBundleFormat.isEmpty())  ctx.presetBundleFormat  = QStringLiteral("zip");
-        if (ctx.presetDiscFormat.isEmpty())    ctx.presetDiscFormat    = QStringLiteral("chd");
-        if (ctx.presetFolderNaming.isEmpty())  ctx.presetFolderNaming  = QStringLiteral("default");
-        if (ctx.presetDisplayName.isEmpty())   ctx.presetDisplayName   = QStringLiteral("library");
+        if (ctx.presetBundleFormat.isEmpty())
+            ctx.presetBundleFormat = QStringLiteral("zip");
+        if (ctx.presetDiscFormat.isEmpty())
+            ctx.presetDiscFormat = QStringLiteral("chd");
+        if (ctx.presetFolderNaming.isEmpty())
+            ctx.presetFolderNaming = QStringLiteral("default");
+        if (ctx.presetDisplayName.isEmpty())
+            ctx.presetDisplayName = QStringLiteral("library");
         if (ctx.processOutputPath.isEmpty())
             qWarning() << "remus: --library used without --output; bundling and organizing will be skipped";
     }
@@ -241,54 +230,102 @@ int main(int argc, char *argv[])
             qWarning() << "remus: ignoring invalid --file-id value:" << idStr;
     }
 
-    if (int rc = handleStatsCommand(ctx))          return rc;
-    if (int rc = handleInfoCommand(ctx))           return rc;
-    if (int rc = handleInspectCommands(ctx))       return rc;
-    if (int rc = handleCheckToolsCommand(ctx))     return rc;
-    if (int rc = handleScanCommand(ctx))           return rc;
-    if (int rc = handleListCommand(ctx))           return rc;
-    if (int rc = handleHashAllCommand(ctx))        return rc;
-    if (int rc = handleReclassifyIsoCommand(ctx))  return rc;
-    if (int rc = handleMetadataCommand(ctx))       return rc;
-    if (int rc = handleSearchCommand(ctx))         return rc;
-    if (int rc = handleMatchCommand(ctx))          return rc;
-    if (int rc = handleEnrichCommand(ctx))         return rc;
-    if (int rc = handleMatchReportCommand(ctx))    return rc;
-    if (int rc = handleChecksumVerifyCommand(ctx)) return rc;
-    if (int rc = handleVerifyCommand(ctx))         return rc;
-    if (int rc = handlePatchDatCommand(ctx))       return rc;
-    if (int rc = handleArtworkCommand(ctx))        return rc;
-    if (int rc = handleBundleCommand(ctx))         return rc;
-    if (int rc = handleOrganizeCommand(ctx))       return rc;
-    if (int rc = handleGenerateM3uCommand(ctx))    return rc;
-    if (int rc = handleConvertChdCommand(ctx))     return rc;
-    if (int rc = handleChdExtractCommand(ctx))     return rc;
-    if (int rc = handleChdVerifyCommand(ctx))      return rc;
-    if (int rc = handleChdInfoCommand(ctx))        return rc;
-    if (int rc = handleExtractArchiveCommand(ctx)) return rc;
-    if (int rc = handleSpaceReportCommand(ctx))    return rc;
-    if (int rc = handleConvertRvzCommand(ctx))     return rc;
-    if (int rc = handleRvzExtractCommand(ctx))     return rc;
-    if (int rc = handleRvzVerifyCommand(ctx))      return rc;
-    if (int rc = handleConvertCsoCommand(ctx))     return rc;
-    if (int rc = handleCsoExtractCommand(ctx))     return rc;
-    if (int rc = handleConvertWbfsCommand(ctx))    return rc;
-    if (int rc = handleWbfsExtractCommand(ctx))    return rc;
-    if (int rc = handleExportPBPCommand(ctx))      return rc;
-    if (int rc = handleExportCommand(ctx))         return rc;
-    if (int rc = handlePatchCommands(ctx))         return rc;
-    if (int rc = handleModCommands(ctx))           return rc;
-    if (int rc = handleModCatalogBuildCommand(ctx)) return rc;
-    if (int rc = handleBuildCompendiumCommand(ctx)) return rc;
-    if (int rc = handleEnrichCompendiumCommand(ctx)) return rc;
-    if (int rc = handleIngestSourceCommand(ctx)) return rc;
-    if (int rc = handleCoverageReportCommand(ctx)) return rc;
-    if (int rc = handleUpdateDatsCommand(ctx))     return rc;
-    if (int rc = handleImportDatCommand(ctx))      return rc;
-    if (int rc = handleRemoveDatCommand(ctx))      return rc;
-    if (int rc = handleListDatsCommand(ctx))       return rc;
-    if (int rc = handleDatCoverageCommand(ctx))    return rc;
-    if (int rc = handleEditMetadataCommand(ctx))   return rc;
+    if (int rc = handleStatsCommand(ctx))
+        return rc;
+    if (int rc = handleInfoCommand(ctx))
+        return rc;
+    if (int rc = handleInspectCommands(ctx))
+        return rc;
+    if (int rc = handleCheckToolsCommand(ctx))
+        return rc;
+    if (int rc = handleScanCommand(ctx))
+        return rc;
+    if (int rc = handleListCommand(ctx))
+        return rc;
+    if (int rc = handleHashAllCommand(ctx))
+        return rc;
+    if (int rc = handleReclassifyIsoCommand(ctx))
+        return rc;
+    if (int rc = handleMetadataCommand(ctx))
+        return rc;
+    if (int rc = handleSearchCommand(ctx))
+        return rc;
+    if (int rc = handleMatchCommand(ctx))
+        return rc;
+    if (int rc = handleEnrichCommand(ctx))
+        return rc;
+    if (int rc = handleMatchReportCommand(ctx))
+        return rc;
+    if (int rc = handleChecksumVerifyCommand(ctx))
+        return rc;
+    if (int rc = handleVerifyCommand(ctx))
+        return rc;
+    if (int rc = handlePatchDatCommand(ctx))
+        return rc;
+    if (int rc = handleArtworkCommand(ctx))
+        return rc;
+    if (int rc = handleBundleCommand(ctx))
+        return rc;
+    if (int rc = handleOrganizeCommand(ctx))
+        return rc;
+    if (int rc = handleGenerateM3uCommand(ctx))
+        return rc;
+    if (int rc = handleConvertChdCommand(ctx))
+        return rc;
+    if (int rc = handleChdExtractCommand(ctx))
+        return rc;
+    if (int rc = handleChdVerifyCommand(ctx))
+        return rc;
+    if (int rc = handleChdInfoCommand(ctx))
+        return rc;
+    if (int rc = handleExtractArchiveCommand(ctx))
+        return rc;
+    if (int rc = handleSpaceReportCommand(ctx))
+        return rc;
+    if (int rc = handleConvertRvzCommand(ctx))
+        return rc;
+    if (int rc = handleRvzExtractCommand(ctx))
+        return rc;
+    if (int rc = handleRvzVerifyCommand(ctx))
+        return rc;
+    if (int rc = handleConvertCsoCommand(ctx))
+        return rc;
+    if (int rc = handleCsoExtractCommand(ctx))
+        return rc;
+    if (int rc = handleConvertWbfsCommand(ctx))
+        return rc;
+    if (int rc = handleWbfsExtractCommand(ctx))
+        return rc;
+    if (int rc = handleExportPBPCommand(ctx))
+        return rc;
+    if (int rc = handleExportCommand(ctx))
+        return rc;
+    if (int rc = handlePatchCommands(ctx))
+        return rc;
+    if (int rc = handleModCommands(ctx))
+        return rc;
+    if (int rc = handleModCatalogBuildCommand(ctx))
+        return rc;
+    if (int rc = handleBuildCompendiumCommand(ctx))
+        return rc;
+    if (int rc = handleEnrichCompendiumCommand(ctx))
+        return rc;
+    if (int rc = handleIngestSourceCommand(ctx))
+        return rc;
+    if (int rc = handleCoverageReportCommand(ctx))
+        return rc;
+    if (int rc = handleUpdateDatsCommand(ctx))
+        return rc;
+    if (int rc = handleImportDatCommand(ctx))
+        return rc;
+    if (int rc = handleRemoveDatCommand(ctx))
+        return rc;
+    if (int rc = handleListDatsCommand(ctx))
+        return rc;
+    if (int rc = handleDatCoverageCommand(ctx))
+        return rc;
+    if (int rc = handleEditMetadataCommand(ctx))
+        return rc;
 
     if (!jsonRequested) {
         qInfo() << "";

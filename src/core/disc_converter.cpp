@@ -6,24 +6,16 @@
 namespace Remus {
 
 DiscConverter::DiscConverter(QObject *parent)
-    : ExternalToolRunner(parent)
-{
-}
+    : ExternalToolRunner(parent) { }
 
-void DiscConverter::cancel()
-{
+void DiscConverter::cancel() {
     ExternalToolRunner::cancel();
     emit conversionCancelled();
 }
 
-ConversionResult DiscConverter::runToolConversion(const QString &toolPath,
-                                                   const QStringList &args,
-                                                   const QString &toolDisplayName,
-                                                   const QString &inputPath,
-                                                   const QString &outputPath,
-                                                   qint64 inputSize,
-                                                   int timeoutMs)
-{
+ConversionResult DiscConverter::runToolConversion(const QString &toolPath, const QStringList &args,
+    const QString &toolDisplayName, const QString &inputPath, const QString &outputPath, qint64 inputSize,
+    int timeoutMs) {
     ConversionResult result;
     result.inputPath = inputPath;
     result.outputPath = outputPath;
@@ -51,8 +43,7 @@ ConversionResult DiscConverter::runToolConversion(const QString &toolPath,
         result.outputSize = getFileSize(outputPath);
 
         if (result.inputSize > 0) {
-            result.compressionRatio = static_cast<double>(result.outputSize)
-                                       / static_cast<double>(result.inputSize);
+            result.compressionRatio = static_cast<double>(result.outputSize) / static_cast<double>(result.inputSize);
         }
 
         qInfo() << toolDisplayName << "conversion successful:" << inputPath << "->" << outputPath;
@@ -60,8 +51,8 @@ ConversionResult DiscConverter::runToolConversion(const QString &toolPath,
     } else {
         result.success = false;
         result.error = result.stdError.isEmpty()
-                           ? QString("%1 exited with code %2").arg(toolDisplayName).arg(result.exitCode)
-                           : result.stdError;
+            ? QString("%1 exited with code %2").arg(toolDisplayName).arg(result.exitCode)
+            : result.stdError;
         qWarning() << toolDisplayName << "conversion failed:" << result.error;
     }
 
@@ -69,15 +60,12 @@ ConversionResult DiscConverter::runToolConversion(const QString &toolPath,
     return result;
 }
 
-qint64 DiscConverter::getFileSize(const QString &path)
-{
+qint64 DiscConverter::getFileSize(const QString &path) {
     QFileInfo info(path);
     return info.exists() ? info.size() : 0;
 }
 
-QString DiscConverter::getDefaultOutputPath(const QString &inputPath,
-                                             const QString &targetExt)
-{
+QString DiscConverter::getDefaultOutputPath(const QString &inputPath, const QString &targetExt) {
     QFileInfo info(inputPath);
     QString ext = targetExt.startsWith('.') ? targetExt.mid(1) : targetExt;
     return info.absoluteDir().filePath(info.completeBaseName() + QStringLiteral(".") + ext);

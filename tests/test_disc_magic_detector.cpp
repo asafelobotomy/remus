@@ -10,8 +10,7 @@
 using namespace Remus;
 using namespace Remus::Constants::Systems;
 
-class DiscMagicDetectorTest : public QObject
-{
+class DiscMagicDetectorTest : public QObject {
     Q_OBJECT
 
 private slots:
@@ -32,8 +31,7 @@ private slots:
     void testDetectFromArchive();
 };
 
-void DiscMagicDetectorTest::testIsDiscImageExtension()
-{
+void DiscMagicDetectorTest::testIsDiscImageExtension() {
     QVERIFY(DiscMagicDetector::isDiscImageExtension(".iso"));
     QVERIFY(DiscMagicDetector::isDiscImageExtension(".ISO"));
     QVERIFY(DiscMagicDetector::isDiscImageExtension(".bin"));
@@ -45,8 +43,7 @@ void DiscMagicDetectorTest::testIsDiscImageExtension()
     QVERIFY(DiscMagicDetector::isDiscImageExtension(".gcm"));
 }
 
-void DiscMagicDetectorTest::testIsNotDiscImageExtension()
-{
+void DiscMagicDetectorTest::testIsNotDiscImageExtension() {
     QVERIFY(!DiscMagicDetector::isDiscImageExtension(".nes"));
     QVERIFY(!DiscMagicDetector::isDiscImageExtension(".sfc"));
     QVERIFY(!DiscMagicDetector::isDiscImageExtension(".gba"));
@@ -54,8 +51,7 @@ void DiscMagicDetectorTest::testIsNotDiscImageExtension()
     QVERIFY(!DiscMagicDetector::isDiscImageExtension(""));
 }
 
-void DiscMagicDetectorTest::testDetectGameCube()
-{
+void DiscMagicDetectorTest::testDetectGameCube() {
     // GameCube disc magic: 0xC2339F3D at offset 0x1C
     QByteArray data(0x10000, '\0');
     data[0x1C] = '\xC2';
@@ -69,8 +65,7 @@ void DiscMagicDetectorTest::testDetectGameCube()
     QCOMPARE(info.systemName, QStringLiteral("GameCube"));
 }
 
-void DiscMagicDetectorTest::testDetectWii()
-{
+void DiscMagicDetectorTest::testDetectWii() {
     // Wii disc magic: 0x5D1C9EA3 at offset 0x18
     QByteArray data(0x10000, '\0');
     data[0x18] = '\x5D';
@@ -84,8 +79,7 @@ void DiscMagicDetectorTest::testDetectWii()
     QCOMPARE(info.systemName, QStringLiteral("Wii"));
 }
 
-void DiscMagicDetectorTest::testDetectDreamcast()
-{
+void DiscMagicDetectorTest::testDetectDreamcast() {
     // Dreamcast: "SEGA SEGAKATANA" at offset 0x10
     QByteArray data(0x10000, '\0');
     QByteArray magic("SEGA SEGAKATANA", 15);
@@ -97,8 +91,7 @@ void DiscMagicDetectorTest::testDetectDreamcast()
     QCOMPARE(info.systemName, QStringLiteral("Dreamcast"));
 }
 
-void DiscMagicDetectorTest::testDetectSaturn()
-{
+void DiscMagicDetectorTest::testDetectSaturn() {
     // Saturn: "SEGA SEGASATURN" at offset 0x10
     QByteArray data(0x10000, '\0');
     QByteArray magic("SEGA SEGASATURN", 15);
@@ -110,8 +103,7 @@ void DiscMagicDetectorTest::testDetectSaturn()
     QCOMPARE(info.systemName, QStringLiteral("Saturn"));
 }
 
-void DiscMagicDetectorTest::testDetectSegaCD()
-{
+void DiscMagicDetectorTest::testDetectSegaCD() {
     // Sega CD: "SEGADISCSYSTEM" at offset 0x10
     QByteArray data(0x10000, '\0');
     QByteArray magic("SEGADISCSYSTEM", 14);
@@ -123,8 +115,7 @@ void DiscMagicDetectorTest::testDetectSegaCD()
     QCOMPARE(info.systemName, QStringLiteral("Sega CD"));
 }
 
-void DiscMagicDetectorTest::testDetectPSP()
-{
+void DiscMagicDetectorTest::testDetectPSP() {
     // PSP: "PSP GAME" at offset 0x8008
     QByteArray data(0x10000, '\0');
     QByteArray magic("PSP GAME", 8);
@@ -136,8 +127,7 @@ void DiscMagicDetectorTest::testDetectPSP()
     QCOMPARE(info.systemName, QStringLiteral("PSP"));
 }
 
-void DiscMagicDetectorTest::testDetectPS2()
-{
+void DiscMagicDetectorTest::testDetectPS2() {
     // PS2: "PLAYSTATION" at offset 0x8008 with file > 800MB
     QByteArray data(0x10000, '\0');
     QByteArray magic("PLAYSTATION", 11);
@@ -148,8 +138,7 @@ void DiscMagicDetectorTest::testDetectPS2()
     QCOMPARE(info.systemId, ID_PS2);
 }
 
-void DiscMagicDetectorTest::testDetectPS1()
-{
+void DiscMagicDetectorTest::testDetectPS1() {
     // PS1: "Sony Computer " at offset 0x24F8
     QByteArray data(0x10000, '\0');
     QByteArray magic("Sony Computer ", 14);
@@ -161,8 +150,7 @@ void DiscMagicDetectorTest::testDetectPS1()
     QCOMPARE(info.systemName, QStringLiteral("PlayStation"));
 }
 
-void DiscMagicDetectorTest::testPS1PS2SizeDisambiguation()
-{
+void DiscMagicDetectorTest::testPS1PS2SizeDisambiguation() {
     // PS2 "PLAYSTATION" magic at 0x8008, but file ≤ 800MB → detected as PS1
     QByteArray data(0x10000, '\0');
     QByteArray magic("PLAYSTATION", 11);
@@ -174,24 +162,21 @@ void DiscMagicDetectorTest::testPS1PS2SizeDisambiguation()
     QCOMPARE(info.systemName, QStringLiteral("PlayStation"));
 }
 
-void DiscMagicDetectorTest::testEmptyDataReturnsNotDetected()
-{
+void DiscMagicDetectorTest::testEmptyDataReturnsNotDetected() {
     QByteArray data;
     DiscHeaderInfo info = DiscMagicDetector::detectFromData(data, 0);
     QVERIFY(!info.detected);
     QCOMPARE(info.systemId, 0);
 }
 
-void DiscMagicDetectorTest::testTooSmallDataReturnsNotDetected()
-{
+void DiscMagicDetectorTest::testTooSmallDataReturnsNotDetected() {
     // Data too small to contain any magic at expected offsets
     QByteArray data(16, '\0');
     DiscHeaderInfo info = DiscMagicDetector::detectFromData(data, 16);
     QVERIFY(!info.detected);
 }
 
-void DiscMagicDetectorTest::testDreamcastSerialExtraction()
-{
+void DiscMagicDetectorTest::testDreamcastSerialExtraction() {
     // Build a fake IP.BIN with "SEGA SEGAKATANA" at offset 0x10
     // and serial at +0x40, title at +0x80
     QByteArray data(0x200, '\0');
@@ -213,8 +198,7 @@ void DiscMagicDetectorTest::testDreamcastSerialExtraction()
     QCOMPARE(info.title, QStringLiteral("SONIC ADVENTURE"));
 }
 
-void DiscMagicDetectorTest::testDetectFromArchive()
-{
+void DiscMagicDetectorTest::testDetectFromArchive() {
     // Requires 7z to pack a fake disc image.
     if (QStandardPaths::findExecutable(QStringLiteral("7z")).isEmpty()) {
         QSKIP("7z not available — skipping detectFromArchive test");
@@ -238,13 +222,12 @@ void DiscMagicDetectorTest::testDetectFromArchive()
     const QString archivePath = dir.filePath(QStringLiteral("test.7z"));
     QProcess packer;
     packer.setWorkingDirectory(dir.path());
-    packer.start(QStringLiteral("7z"), {QStringLiteral("a"), archivePath, isoName});
+    packer.start(QStringLiteral("7z"), { QStringLiteral("a"), archivePath, isoName });
     QVERIFY(packer.waitForFinished(15000) && packer.exitCode() == 0);
     QFile::remove(dir.filePath(isoName));
 
     // memberSize > 800 MB forces PS2 (not PS1) classification.
-    const DiscHeaderInfo info = DiscMagicDetector::detectFromArchive(
-        archivePath, isoName, 1LL * 1024 * 1024 * 1024);
+    const DiscHeaderInfo info = DiscMagicDetector::detectFromArchive(archivePath, isoName, 1LL * 1024 * 1024 * 1024);
 
     QVERIFY(info.detected);
     QCOMPARE(info.systemId, ID_PS2);

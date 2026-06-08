@@ -17,20 +17,35 @@ class StubProvider : public MetadataProvider {
     Q_OBJECT
 public:
     explicit StubProvider(const QString &id, QObject *parent = nullptr)
-        : MetadataProvider(parent), m_id(id) {}
+        : MetadataProvider(parent)
+        , m_id(id) { }
 
-    QString name() const override { return m_id; }
-    bool requiresAuth() const override { return false; }
+    QString name() const override {
+        return m_id;
+    }
+    bool requiresAuth() const override {
+        return false;
+    }
 
     QList<SearchResult> searchByName(const QString &name, const QString &, const QString &) override {
         m_lastSearchName = name;
         return m_searchResults;
     }
 
-    GameMetadata getByHash(const QString &, const QString &) override { ++m_hashCallCount; return m_hashMetadata; }
-    GameMetadata getBySerial(const QString &, const QString &) override { ++m_serialCallCount; return m_serialMetadata; }
-    GameMetadata getById(const QString &) override { return m_idMetadata; }
-    ArtworkUrls getArtwork(const QString &) override { return m_artwork; }
+    GameMetadata getByHash(const QString &, const QString &) override {
+        ++m_hashCallCount;
+        return m_hashMetadata;
+    }
+    GameMetadata getBySerial(const QString &, const QString &) override {
+        ++m_serialCallCount;
+        return m_serialMetadata;
+    }
+    GameMetadata getById(const QString &) override {
+        return m_idMetadata;
+    }
+    ArtworkUrls getArtwork(const QString &) override {
+        return m_artwork;
+    }
 
     GameMetadata m_hashMetadata;
     GameMetadata m_serialMetadata;
@@ -49,17 +64,17 @@ private:
 class StubHasheousProvider : public HasheousProvider {
     Q_OBJECT
 public:
-    explicit StubHasheousProvider(QObject *parent = nullptr) : HasheousProvider(parent) {}
+    explicit StubHasheousProvider(QObject *parent = nullptr)
+        : HasheousProvider(parent) { }
+
 protected:
-    QJsonObject makePostRequest(const QString &, const QJsonObject &,
-                                const QUrlQuery & = QUrlQuery()) override
-    {
+    QJsonObject makePostRequest(const QString &, const QJsonObject &, const QUrlQuery & = QUrlQuery()) override {
         QJsonObject response;
-        response["id"]   = 42;
+        response["id"] = 42;
         response["name"] = QStringLiteral("Test Game");
         QJsonArray metadata;
         QJsonObject igdbEntry;
-        igdbEntry["source"]      = QStringLiteral("IGDB");
+        igdbEntry["source"] = QStringLiteral("IGDB");
         igdbEntry["immutableId"] = QStringLiteral("12345");
         metadata.append(igdbEntry);
         response["metadata"] = metadata;
@@ -67,9 +82,8 @@ protected:
     }
 };
 
-static QSqlDatabase createTestCacheDb(){
-    const QString connectionName = QStringLiteral("orch-cache-%1")
-        .arg(QDateTime::currentMSecsSinceEpoch());
+static QSqlDatabase createTestCacheDb() {
+    const QString connectionName = QStringLiteral("orch-cache-%1").arg(QDateTime::currentMSecsSinceEpoch());
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE", connectionName);
     db.setDatabaseName(":memory:");
     if (!db.open()) {
@@ -77,8 +91,8 @@ static QSqlDatabase createTestCacheDb(){
     }
     QSqlQuery query(db);
     query.exec("CREATE TABLE cache (cache_key TEXT PRIMARY KEY, "
-                "cache_value BLOB, expiry TEXT, "
-                "created_at TEXT DEFAULT CURRENT_TIMESTAMP)");
+               "cache_value BLOB, expiry TEXT, "
+               "created_at TEXT DEFAULT CURRENT_TIMESTAMP)");
     return db;
 }
 
@@ -122,8 +136,7 @@ private slots:
     void nameCascadeWhenHashAndSerialMiss();
 };
 
-void ProviderOrchestratorTest::hashProviderPriority()
-{
+void ProviderOrchestratorTest::hashProviderPriority() {
     ProviderOrchestrator orchestrator;
 
     auto *hashProvider = new StubProvider("screenscraper");
@@ -146,8 +159,7 @@ void ProviderOrchestratorTest::hashProviderPriority()
     QVERIFY(successSpy.count() == 1);
 }
 
-void ProviderOrchestratorTest::fallsBackToNameSearch()
-{
+void ProviderOrchestratorTest::fallsBackToNameSearch() {
     ProviderOrchestrator orchestrator;
 
     auto *hashProvider = new StubProvider("screenscraper");
@@ -158,7 +170,7 @@ void ProviderOrchestratorTest::fallsBackToNameSearch()
     result.id = "42";
     result.title = "Name Hit";
     result.matchScore = 0.8f;
-    nameProvider->m_searchResults = {result};
+    nameProvider->m_searchResults = { result };
 
     GameMetadata metadata;
     metadata.id = "42";
@@ -175,8 +187,7 @@ void ProviderOrchestratorTest::fallsBackToNameSearch()
     QCOMPARE(found.matchMethod, Constants::MatchMethods::FUZZY);
 }
 
-void ProviderOrchestratorTest::detailFetchFailureEmitsSpecificProviderError()
-{
+void ProviderOrchestratorTest::detailFetchFailureEmitsSpecificProviderError() {
     ProviderOrchestrator orchestrator;
 
     auto *first = new StubProvider("igdb");
@@ -184,14 +195,14 @@ void ProviderOrchestratorTest::detailFetchFailureEmitsSpecificProviderError()
     failedDetailResult.id = "42";
     failedDetailResult.title = "Name Hit";
     failedDetailResult.matchScore = 0.8f;
-    first->m_searchResults = {failedDetailResult};
+    first->m_searchResults = { failedDetailResult };
 
     auto *second = new StubProvider("thegamesdb");
     SearchResult successResult;
     successResult.id = "84";
     successResult.title = "Backup Hit";
     successResult.matchScore = 0.75f;
-    second->m_searchResults = {successResult};
+    second->m_searchResults = { successResult };
 
     GameMetadata metadata;
     metadata.id = "84";
@@ -214,8 +225,7 @@ void ProviderOrchestratorTest::detailFetchFailureEmitsSpecificProviderError()
     QVERIFY(firstFailure.at(1).toString().contains(QStringLiteral("Name Hit")));
 }
 
-void ProviderOrchestratorTest::normalizesVersionedNamesBeforeNameSearch()
-{
+void ProviderOrchestratorTest::normalizesVersionedNamesBeforeNameSearch() {
     ProviderOrchestrator orchestrator;
 
     auto *nameProvider = new StubProvider("igdb");
@@ -223,7 +233,7 @@ void ProviderOrchestratorTest::normalizesVersionedNamesBeforeNameSearch()
     result.id = "dq3";
     result.title = "Dragon Quest III";
     result.matchScore = 0.99f;
-    nameProvider->m_searchResults = {result};
+    nameProvider->m_searchResults = { result };
 
     GameMetadata metadata;
     metadata.id = "dq3";
@@ -232,19 +242,14 @@ void ProviderOrchestratorTest::normalizesVersionedNamesBeforeNameSearch()
 
     orchestrator.addProvider("igdb", nameProvider, 40);
 
-    GameMetadata found = orchestrator.searchWithFallback(
-        "",
-        "Dragon Quest III (English v2.0)[Addendum]",
-        "SNES"
-    );
+    GameMetadata found = orchestrator.searchWithFallback("", "Dragon Quest III (English v2.0)[Addendum]", "SNES");
 
     QCOMPARE(nameProvider->m_lastSearchName, QString("Dragon Quest III"));
     QCOMPARE(found.title, QString("Dragon Quest III"));
     QCOMPARE(found.matchMethod, Constants::MatchMethods::NAME);
 }
 
-void ProviderOrchestratorTest::artworkFallback()
-{
+void ProviderOrchestratorTest::artworkFallback() {
     ProviderOrchestrator orchestrator;
 
     auto *first = new StubProvider("igdb");
@@ -261,8 +266,7 @@ void ProviderOrchestratorTest::artworkFallback()
     QCOMPARE(loaded.boxFront, artwork.boxFront);
 }
 
-void ProviderOrchestratorTest::searchWithFallbackContinuesPastCacheWithoutArtwork()
-{
+void ProviderOrchestratorTest::searchWithFallbackContinuesPastCacheWithoutArtwork() {
     QSqlDatabase db = createTestCacheDb();
     MetadataCache cache(db);
     ProviderOrchestrator orchestrator;
@@ -274,7 +278,7 @@ void ProviderOrchestratorTest::searchWithFallbackContinuesPastCacheWithoutArtwor
     cached.publisher = "Square";
     cached.developer = "Square";
     cached.releaseDate = "1994-09-02";
-    cached.genres = {"RPG"};
+    cached.genres = { "RPG" };
     cached.players = 1;
     cache.store(cached, "6291ee08", "SNES");
 
@@ -283,7 +287,7 @@ void ProviderOrchestratorTest::searchWithFallbackContinuesPastCacheWithoutArtwor
     result.id = "igdb-live-a-live";
     result.title = "Live A Live";
     result.matchScore = 0.99f;
-    provider->m_searchResults = {result};
+    provider->m_searchResults = { result };
 
     GameMetadata enriched = cached;
     enriched.boxArtUrl = "http://example.com/live-a-live-front.jpg";
@@ -304,8 +308,7 @@ void ProviderOrchestratorTest::searchWithFallbackContinuesPastCacheWithoutArtwor
 
 // ── Phase 0 characterization tests ─────────────────────────────────────────
 
-void ProviderOrchestratorTest::testRemoveProvider()
-{
+void ProviderOrchestratorTest::testRemoveProvider() {
     ProviderOrchestrator orchestrator;
 
     auto *provider = new StubProvider("screenscraper");
@@ -316,8 +319,7 @@ void ProviderOrchestratorTest::testRemoveProvider()
     QVERIFY(!orchestrator.getEnabledProviders().contains("screenscraper"));
 }
 
-void ProviderOrchestratorTest::testGetEnabledProviders()
-{
+void ProviderOrchestratorTest::testGetEnabledProviders() {
     ProviderOrchestrator orchestrator;
 
     QVERIFY(orchestrator.getEnabledProviders().isEmpty());
@@ -333,8 +335,7 @@ void ProviderOrchestratorTest::testGetEnabledProviders()
     QVERIFY(enabled.contains("c"));
 }
 
-void ProviderOrchestratorTest::testSetProviderEnabled()
-{
+void ProviderOrchestratorTest::testSetProviderEnabled() {
     ProviderOrchestrator orchestrator;
 
     auto *provider = new StubProvider("igdb");
@@ -348,8 +349,7 @@ void ProviderOrchestratorTest::testSetProviderEnabled()
     QVERIFY(orchestrator.getEnabledProviders().contains("igdb"));
 }
 
-void ProviderOrchestratorTest::testAllProvidersFailed()
-{
+void ProviderOrchestratorTest::testAllProvidersFailed() {
     ProviderOrchestrator orchestrator;
 
     // Add providers that return empty results (will fail)
@@ -363,8 +363,7 @@ void ProviderOrchestratorTest::testAllProvidersFailed()
     QVERIFY(failedSpy.count() >= 1);
 }
 
-void ProviderOrchestratorTest::testSearchAllProviders()
-{
+void ProviderOrchestratorTest::testSearchAllProviders() {
     ProviderOrchestrator orchestrator;
 
     auto *p1 = new StubProvider("provider1");
@@ -372,14 +371,14 @@ void ProviderOrchestratorTest::testSearchAllProviders()
     r1.id = "1";
     r1.title = "Result A";
     r1.matchScore = 0.9f;
-    p1->m_searchResults = {r1};
+    p1->m_searchResults = { r1 };
 
     auto *p2 = new StubProvider("provider2");
     SearchResult r2;
     r2.id = "2";
     r2.title = "Result B";
     r2.matchScore = 0.7f;
-    p2->m_searchResults = {r2};
+    p2->m_searchResults = { r2 };
 
     orchestrator.addProvider("provider1", p1, 10);
     orchestrator.addProvider("provider2", p2, 5);
@@ -390,8 +389,7 @@ void ProviderOrchestratorTest::testSearchAllProviders()
 
 // ── Cache integration tests ────────────────────────────────────────────────
 
-void ProviderOrchestratorTest::cacheHitSkipsProviders()
-{
+void ProviderOrchestratorTest::cacheHitSkipsProviders() {
     QSqlDatabase db = createTestCacheDb();
     MetadataCache cache(db);
     ProviderOrchestrator orchestrator;
@@ -414,8 +412,7 @@ void ProviderOrchestratorTest::cacheHitSkipsProviders()
     QCOMPARE(result.title, QString("Cached Game"));
 }
 
-void ProviderOrchestratorTest::cacheMissStoresResult()
-{
+void ProviderOrchestratorTest::cacheMissStoresResult() {
     QSqlDatabase db = createTestCacheDb();
     MetadataCache cache(db);
     ProviderOrchestrator orchestrator;
@@ -436,8 +433,7 @@ void ProviderOrchestratorTest::cacheMissStoresResult()
     QCOMPARE(fromCache.title, QString("Fresh Result"));
 }
 
-void ProviderOrchestratorTest::artworkCacheHitSkipsProviders()
-{
+void ProviderOrchestratorTest::artworkCacheHitSkipsProviders() {
     QSqlDatabase db = createTestCacheDb();
     MetadataCache cache(db);
     ProviderOrchestrator orchestrator;
@@ -458,8 +454,7 @@ void ProviderOrchestratorTest::artworkCacheHitSkipsProviders()
     QCOMPARE(result.boxFront, QUrl("http://example/cached-front.png"));
 }
 
-void ProviderOrchestratorTest::hashMatchSkipsRemainingProviders()
-{
+void ProviderOrchestratorTest::hashMatchSkipsRemainingProviders() {
     // A hash match from the first (local) provider must prevent any further
     // provider from being queried — the ROM identity is resolved at 100%.
     ProviderOrchestrator orchestrator;
@@ -477,8 +472,7 @@ void ProviderOrchestratorTest::hashMatchSkipsRemainingProviders()
 
     QSignalSpy trySpy(&orchestrator, &ProviderOrchestrator::tryingProvider);
 
-    const GameMetadata result = orchestrator.searchWithFallback(
-        "AABBCCDD", "Super Mario World", "SNES");
+    const GameMetadata result = orchestrator.searchWithFallback("AABBCCDD", "Super Mario World", "SNES");
 
     QCOMPARE(result.title, QStringLiteral("Super Mario World"));
 
@@ -494,8 +488,7 @@ void ProviderOrchestratorTest::hashMatchSkipsRemainingProviders()
     QVERIFY(!sawSecond);
 }
 
-void ProviderOrchestratorTest::hashMatchWithRequireArtworkContinuesForArtwork()
-{
+void ProviderOrchestratorTest::hashMatchWithRequireArtworkContinuesForArtwork() {
     // With requireArtwork=true, if the hash-matched provider has no artwork,
     // the orchestrator should continue to find artwork — but the title from
     // the hash match must be preserved (not overwritten).
@@ -512,7 +505,7 @@ void ProviderOrchestratorTest::hashMatchWithRequireArtworkContinuesForArtwork()
     sr.id = "ct-42";
     sr.title = "Chrono Trigger";
     sr.matchScore = 0.99f;
-    second->m_searchResults = {sr};
+    second->m_searchResults = { sr };
     GameMetadata enriched;
     enriched.title = "Chrono Trigger";
     enriched.boxArtUrl = "http://example.com/ct-front.jpg";
@@ -522,8 +515,7 @@ void ProviderOrchestratorTest::hashMatchWithRequireArtworkContinuesForArtwork()
     orchestrator.addProvider("thegamesdb", second, 50);
 
     const GameMetadata result = orchestrator.searchWithFallback(
-        "CCDDEE11", "Chrono Trigger", "SNES",
-        QString(), QString(), QString(), QString(), /*requireArtwork=*/true);
+        "CCDDEE11", "Chrono Trigger", "SNES", QString(), QString(), QString(), QString(), /*requireArtwork=*/true);
 
     // Title must come from the hash match.
     QCOMPARE(result.title, QStringLiteral("Chrono Trigger"));
@@ -531,8 +523,7 @@ void ProviderOrchestratorTest::hashMatchWithRequireArtworkContinuesForArtwork()
     QVERIFY(!result.boxArtUrl.isEmpty());
 }
 
-void ProviderOrchestratorTest::testIgdbSkippedCountWhenProxyDisabled()
-{
+void ProviderOrchestratorTest::testIgdbSkippedCountWhenProxyDisabled() {
     // No API key → metadataProxyEnabled() returns false → IGDB enrichment skipped
     StubHasheousProvider provider;
     QCOMPARE(provider.igdbSkippedCount(), 0);
@@ -545,20 +536,18 @@ void ProviderOrchestratorTest::testIgdbSkippedCountWhenProxyDisabled()
     QCOMPARE(provider.igdbSkippedCount(), 2);
 }
 
-void ProviderOrchestratorTest::testGetProviderReturnsCorrectType()
-{
+void ProviderOrchestratorTest::testGetProviderReturnsCorrectType() {
     ProviderOrchestrator orchestrator;
     auto *hasheous = new StubHasheousProvider();
     orchestrator.addProvider("hasheous", hasheous, 80);
 
     MetadataProvider *raw = orchestrator.getProvider("hasheous");
     QVERIFY(raw != nullptr);
-    QVERIFY(dynamic_cast<HasheousProvider*>(raw) != nullptr);
+    QVERIFY(dynamic_cast<HasheousProvider *>(raw) != nullptr);
     QVERIFY(orchestrator.getProvider("nonexistent") == nullptr);
 }
 
-void ProviderOrchestratorTest::testConcurrentMatchResultsNoDuplicates()
-{
+void ProviderOrchestratorTest::testConcurrentMatchResultsNoDuplicates() {
     // P2 acceptance: collecting results from N concurrent match tasks into a
     // shared list must yield exactly N distinct entries — no duplicates.
     //
@@ -583,15 +572,13 @@ void ProviderOrchestratorTest::testConcurrentMatchResultsNoDuplicates()
         const QString providerName = QStringLiteral("stub-%1").arg(id);
         auto *stub = new StubProvider(providerName);
         const QString title = QStringLiteral("Title-%1").arg(id);
-        stub->m_searchResults = { SearchResult{ QStringLiteral("id-%1").arg(id), title, {}, {}, 0, 1.0f } };
+        stub->m_searchResults = { SearchResult { QStringLiteral("id-%1").arg(id), title, { }, { }, 0, 1.0f } };
         stub->m_idMetadata.title = title;
         stub->m_idMetadata.matchScore = 1.0f;
         localOrch.addProvider(providerName, stub, 100);
 
         GameMetadata result = localOrch.searchWithFallback(
-            QStringLiteral("hash-%1").arg(id),
-            QStringLiteral("Game %1").arg(id),
-            QStringLiteral("SNES"));
+            QStringLiteral("hash-%1").arg(id), QStringLiteral("Game %1").arg(id), QStringLiteral("SNES"));
 
         QMutexLocker lock(&resultsMutex);
         collectedResults.append(result);
@@ -606,19 +593,17 @@ void ProviderOrchestratorTest::testConcurrentMatchResultsNoDuplicates()
     QCOMPARE(titles.size(), N);
 }
 
-void ProviderOrchestratorTest::testComputeFieldGapConcurrentlyConsistent()
-{
+void ProviderOrchestratorTest::testComputeFieldGapConcurrentlyConsistent() {
     // P3 acceptance: computing the field gap for the same metadata stub from
     // N concurrent threads must always yield an identical result — no data
     // races in computeFieldGap (which is a pure const static-style function).
 
     GameMetadata partial;
-    partial.title       = QStringLiteral("Sonic");
-    partial.publisher   = QStringLiteral("Sega");
+    partial.title = QStringLiteral("Sonic");
+    partial.publisher = QStringLiteral("Sega");
     // developer, releaseDate, genres, players, description are all empty
 
-    const ProviderOrchestrator::FieldSet expected =
-        ProviderOrchestrator::computeFieldGap(partial);
+    const ProviderOrchestrator::FieldSet expected = ProviderOrchestrator::computeFieldGap(partial);
     QVERIFY(expected.contains(QStringLiteral("developer")));
     QVERIFY(!expected.contains(QStringLiteral("publisher")));
 
@@ -629,12 +614,12 @@ void ProviderOrchestratorTest::testComputeFieldGapConcurrentlyConsistent()
 
     QList<int> ids;
     ids.reserve(N);
-    for (int i = 0; i < N; ++i) ids.append(i);
+    for (int i = 0; i < N; ++i)
+        ids.append(i);
 
     QtConcurrent::blockingMap(ids, [&](int i) {
         // Each worker computes the gap independently — no shared mutable state.
-        const ProviderOrchestrator::FieldSet gap =
-            ProviderOrchestrator::computeFieldGap(partial);
+        const ProviderOrchestrator::FieldSet gap = ProviderOrchestrator::computeFieldGap(partial);
         QMutexLocker lock(&mu);
         results[i] = gap;
     });
@@ -646,8 +631,7 @@ void ProviderOrchestratorTest::testComputeFieldGapConcurrentlyConsistent()
 
 // Cascade: hash miss → serial → name
 
-void ProviderOrchestratorTest::serialCascadeWhenHashMisses()
-{
+void ProviderOrchestratorTest::serialCascadeWhenHashMisses() {
     // Arrange: provider returns empty on hash, a result on serial.
     ProviderOrchestrator orchestrator;
 
@@ -664,8 +648,7 @@ void ProviderOrchestratorTest::serialCascadeWhenHashMisses()
 
     // Act: supply a serial; hash is empty so only serial/name paths run.
     GameMetadata result = orchestrator.searchWithFallback(
-        QString(), QString(), QStringLiteral("Wii U"),
-        QString(), QString(), QString(), QStringLiteral("WUP-A-BAAE"));
+        QString(), QString(), QStringLiteral("Wii U"), QString(), QString(), QString(), QStringLiteral("WUP-A-BAAE"));
 
     // Assert: matched via serial, hash never called, serial called once.
     QCOMPARE(result.title, QStringLiteral("Mario Kart 8"));
@@ -674,8 +657,7 @@ void ProviderOrchestratorTest::serialCascadeWhenHashMisses()
     QCOMPARE(provider->m_serialCallCount, 1);
 }
 
-void ProviderOrchestratorTest::nameCascadeWhenHashAndSerialMiss()
-{
+void ProviderOrchestratorTest::nameCascadeWhenHashAndSerialMiss() {
     // Arrange: provider returns empty on both hash and serial, a result on name.
     ProviderOrchestrator orchestrator;
 
@@ -685,7 +667,7 @@ void ProviderOrchestratorTest::nameCascadeWhenHashAndSerialMiss()
     sr.id = "wup-a-baae";
     sr.title = "Mario Kart 8";
     sr.matchScore = 0.99f;
-    provider->m_searchResults = {sr};
+    provider->m_searchResults = { sr };
     GameMetadata idResult;
     idResult.id = "wup-a-baae";
     idResult.title = "Mario Kart 8";
@@ -694,8 +676,8 @@ void ProviderOrchestratorTest::nameCascadeWhenHashAndSerialMiss()
     orchestrator.addProvider("compendium", provider, 100);
 
     // Act: supply name but no hash or serial.
-    GameMetadata result = orchestrator.searchWithFallback(
-        QString(), QStringLiteral("Mario Kart 8"), QStringLiteral("Wii U"));
+    GameMetadata result
+        = orchestrator.searchWithFallback(QString(), QStringLiteral("Mario Kart 8"), QStringLiteral("Wii U"));
 
     // Assert: matched via name, hash and serial never called.
     QCOMPARE(result.title, QStringLiteral("Mario Kart 8"));

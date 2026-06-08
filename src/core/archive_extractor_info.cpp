@@ -7,8 +7,7 @@
 
 namespace Remus {
 
-ArchiveInfo ArchiveExtractor::getArchiveInfo(const QString &path)
-{
+ArchiveInfo ArchiveExtractor::getArchiveInfo(const QString &path) {
     ArchiveInfo info;
     info.path = path;
     info.format = detectFormat(path);

@@ -11,25 +11,22 @@ using namespace CompendiumEnrichmentSql;
 
 namespace {
 
-bool createFactsSchema(QSqlDatabase &db)
-{
+bool createFactsSchema(QSqlDatabase &db) {
     QSqlQuery q(db);
-    return q.exec(QStringLiteral(
-        "CREATE TABLE game_facts ("
-        "fact_id INTEGER PRIMARY KEY AUTOINCREMENT, "
-        "game_id TEXT NOT NULL, "
-        "field_name TEXT NOT NULL, "
-        "field_value TEXT NOT NULL, "
-        "value_type TEXT NOT NULL DEFAULT 'text', "
-        "source_id TEXT NOT NULL, "
-        "snapshot_id TEXT NOT NULL DEFAULT '', "
-        "source_priority INTEGER NOT NULL DEFAULT 100, "
-        "confidence REAL NOT NULL DEFAULT 1.0, "
-        "UNIQUE (game_id, field_name, source_id))"));
+    return q.exec(QStringLiteral("CREATE TABLE game_facts ("
+                                 "fact_id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                                 "game_id TEXT NOT NULL, "
+                                 "field_name TEXT NOT NULL, "
+                                 "field_value TEXT NOT NULL, "
+                                 "value_type TEXT NOT NULL DEFAULT 'text', "
+                                 "source_id TEXT NOT NULL, "
+                                 "snapshot_id TEXT NOT NULL DEFAULT '', "
+                                 "source_priority INTEGER NOT NULL DEFAULT 100, "
+                                 "confidence REAL NOT NULL DEFAULT 1.0, "
+                                 "UNIQUE (game_id, field_name, source_id))"));
 }
 
-QSqlDatabase openMemoryDb(const QString &connectionName)
-{
+QSqlDatabase openMemoryDb(const QString &connectionName) {
     QSqlDatabase db = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), connectionName);
     db.setDatabaseName(QStringLiteral(":memory:"));
     return db;
@@ -37,8 +34,7 @@ QSqlDatabase openMemoryDb(const QString &connectionName)
 
 } // namespace
 
-class CompendiumEnrichmentSqlHelpersTest : public QObject
-{
+class CompendiumEnrichmentSqlHelpersTest : public QObject {
     Q_OBJECT
 
 private slots:
@@ -49,8 +45,7 @@ private slots:
     void normalizeMetadataTitle_stripsStackedSuffixes();
 };
 
-void CompendiumEnrichmentSqlHelpersTest::nullableHelpers_returnNullOrValue()
-{
+void CompendiumEnrichmentSqlHelpersTest::nullableHelpers_returnNullOrValue() {
     const QVariant nullText = nullableText(QString());
     QVERIFY(nullText.isNull());
 
@@ -70,8 +65,7 @@ void CompendiumEnrichmentSqlHelpersTest::nullableHelpers_returnNullOrValue()
     QCOMPARE(doubleValue.toDouble(), 3.5);
 }
 
-void CompendiumEnrichmentSqlHelpersTest::insertGameFact_insertsRowAndReportsInserted()
-{
+void CompendiumEnrichmentSqlHelpersTest::insertGameFact_insertsRowAndReportsInserted() {
     const QString connectionName = QStringLiteral("enrichment_sql_helpers_insert");
     {
         QSqlDatabase db = openMemoryDb(connectionName);
@@ -85,10 +79,9 @@ void CompendiumEnrichmentSqlHelpersTest::insertGameFact_insertsRowAndReportsInse
             "VALUES (?, ?, ?, ?, ?, ?, ?, ?)"));
 
         QSqlQuery delQ(db);
-        delQ.prepare(QStringLiteral(
-            "DELETE FROM game_facts WHERE game_id = ? AND field_name = ? AND source_id = ?"));
+        delQ.prepare(QStringLiteral("DELETE FROM game_facts WHERE game_id = ? AND field_name = ? AND source_id = ?"));
 
-        const FactInsertSpec spec{
+        const FactInsertSpec spec {
             QStringLiteral("test-source"),
             QStringLiteral("snap-1"),
             70,
@@ -97,16 +90,8 @@ void CompendiumEnrichmentSqlHelpersTest::insertGameFact_insertsRowAndReportsInse
 
         QString error;
         bool inserted = false;
-        QVERIFY(insertGameFact(delQ,
-                               factQ,
-                               spec,
-                               QStringLiteral("g1"),
-                               QStringLiteral("genre"),
-                               QStringLiteral("Action"),
-                               QStringLiteral("text"),
-                               error,
-                               QStringLiteral("test"),
-                               &inserted));
+        QVERIFY(insertGameFact(delQ, factQ, spec, QStringLiteral("g1"), QStringLiteral("genre"),
+            QStringLiteral("Action"), QStringLiteral("text"), error, QStringLiteral("test"), &inserted));
         QVERIFY2(error.isEmpty(), qPrintable(error));
         QVERIFY(inserted);
 
@@ -120,8 +105,7 @@ void CompendiumEnrichmentSqlHelpersTest::insertGameFact_insertsRowAndReportsInse
     QSqlDatabase::removeDatabase(connectionName);
 }
 
-void CompendiumEnrichmentSqlHelpersTest::insertGameFact_emptyValueNoop()
-{
+void CompendiumEnrichmentSqlHelpersTest::insertGameFact_emptyValueNoop() {
     const QString connectionName = QStringLiteral("enrichment_sql_helpers_noop");
     {
         QSqlDatabase db = openMemoryDb(connectionName);
@@ -135,10 +119,9 @@ void CompendiumEnrichmentSqlHelpersTest::insertGameFact_emptyValueNoop()
             "VALUES (?, ?, ?, ?, ?, ?, ?, ?)"));
 
         QSqlQuery delQ(db);
-        delQ.prepare(QStringLiteral(
-            "DELETE FROM game_facts WHERE game_id = ? AND field_name = ? AND source_id = ?"));
+        delQ.prepare(QStringLiteral("DELETE FROM game_facts WHERE game_id = ? AND field_name = ? AND source_id = ?"));
 
-        const FactInsertSpec spec{
+        const FactInsertSpec spec {
             QStringLiteral("test-source"),
             QStringLiteral("snap-1"),
             70,
@@ -147,16 +130,8 @@ void CompendiumEnrichmentSqlHelpersTest::insertGameFact_emptyValueNoop()
 
         QString error;
         bool inserted = true;
-        QVERIFY(insertGameFact(delQ,
-                               factQ,
-                               spec,
-                               QStringLiteral("g1"),
-                               QStringLiteral("genre"),
-                               QString(),
-                               QStringLiteral("text"),
-                               error,
-                               QStringLiteral("test"),
-                               &inserted));
+        QVERIFY(insertGameFact(delQ, factQ, spec, QStringLiteral("g1"), QStringLiteral("genre"), QString(),
+            QStringLiteral("text"), error, QStringLiteral("test"), &inserted));
         QVERIFY2(error.isEmpty(), qPrintable(error));
         QVERIFY(!inserted);
 
@@ -170,8 +145,7 @@ void CompendiumEnrichmentSqlHelpersTest::insertGameFact_emptyValueNoop()
     QSqlDatabase::removeDatabase(connectionName);
 }
 
-void CompendiumEnrichmentSqlHelpersTest::insertGameFact_replacesPriorFactFromSameSource()
-{
+void CompendiumEnrichmentSqlHelpersTest::insertGameFact_replacesPriorFactFromSameSource() {
     const QString connectionName = QStringLiteral("enrichment_sql_helpers_replace");
     {
         QSqlDatabase db = openMemoryDb(connectionName);
@@ -185,10 +159,9 @@ void CompendiumEnrichmentSqlHelpersTest::insertGameFact_replacesPriorFactFromSam
             "VALUES (?, ?, ?, ?, ?, ?, ?, ?)"));
 
         QSqlQuery delQ(db);
-        delQ.prepare(QStringLiteral(
-            "DELETE FROM game_facts WHERE game_id = ? AND field_name = ? AND source_id = ?"));
+        delQ.prepare(QStringLiteral("DELETE FROM game_facts WHERE game_id = ? AND field_name = ? AND source_id = ?"));
 
-        const FactInsertSpec spec{
+        const FactInsertSpec spec {
             QStringLiteral("test-source"),
             QStringLiteral("snap-1"),
             70,
@@ -198,18 +171,14 @@ void CompendiumEnrichmentSqlHelpersTest::insertGameFact_replacesPriorFactFromSam
         QString error;
         bool inserted = false;
         // First insert: 'Action'
-        QVERIFY(insertGameFact(delQ, factQ, spec,
-                               QStringLiteral("g1"), QStringLiteral("genre"),
-                               QStringLiteral("Action"), QStringLiteral("text"),
-                               error, QStringLiteral("test"), &inserted));
+        QVERIFY(insertGameFact(delQ, factQ, spec, QStringLiteral("g1"), QStringLiteral("genre"),
+            QStringLiteral("Action"), QStringLiteral("text"), error, QStringLiteral("test"), &inserted));
         QVERIFY(inserted);
 
         inserted = false;
         // Second insert with a different value: 'RPG' should replace 'Action'.
-        QVERIFY(insertGameFact(delQ, factQ, spec,
-                               QStringLiteral("g1"), QStringLiteral("genre"),
-                               QStringLiteral("RPG"), QStringLiteral("text"),
-                               error, QStringLiteral("test"), &inserted));
+        QVERIFY(insertGameFact(delQ, factQ, spec, QStringLiteral("g1"), QStringLiteral("genre"), QStringLiteral("RPG"),
+            QStringLiteral("text"), error, QStringLiteral("test"), &inserted));
         QVERIFY(inserted);
 
         // Only one row should exist and it must hold the newer value.
@@ -224,8 +193,7 @@ void CompendiumEnrichmentSqlHelpersTest::insertGameFact_replacesPriorFactFromSam
     QSqlDatabase::removeDatabase(connectionName);
 }
 
-void CompendiumEnrichmentSqlHelpersTest::normalizeMetadataTitle_stripsStackedSuffixes()
-{
+void CompendiumEnrichmentSqlHelpersTest::normalizeMetadataTitle_stripsStackedSuffixes() {
     // A title with no suffixes must normalize identically to the same title
     // with any number of stacked trailing parenthetical groups.
     const QString bare = normalizeMetadataTitle(QStringLiteral("Foo Game"));
@@ -236,8 +204,7 @@ void CompendiumEnrichmentSqlHelpersTest::normalizeMetadataTitle_stripsStackedSuf
 
     // Leading article is still stripped after suffix removal.
     const QString bareThe = normalizeMetadataTitle(QStringLiteral("Legend of Foo"));
-    QCOMPARE(normalizeMetadataTitle(QStringLiteral("The Legend of Foo (Europe) (En,De)")),
-             bareThe);
+    QCOMPARE(normalizeMetadataTitle(QStringLiteral("The Legend of Foo (Europe) (En,De)")), bareThe);
 
     // A title whose only content is inside parentheses must not be reduced to empty.
     const QString onlyParens = normalizeMetadataTitle(QStringLiteral("(Test)"));

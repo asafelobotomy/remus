@@ -6,8 +6,7 @@ namespace Remus {
 
 VerificationEngine::VerificationEngine(Database *database, QObject *parent)
     : QObject(parent)
-    , m_database(database)
-{
+    , m_database(database) {
     // Schema creation requires an open connection.  Defer silently if the
     // library has not been opened yet; callers must connect libraryOpened to
     // createVerificationSchema() so that the schema is applied on first open.
@@ -16,8 +15,7 @@ VerificationEngine::VerificationEngine(Database *database, QObject *parent)
     }
 }
 
-VerificationEngine::~VerificationEngine()
-{
+VerificationEngine::~VerificationEngine() {
     if (m_compendiumConnectionName.isEmpty()) {
         return;
     }

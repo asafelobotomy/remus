@@ -20,16 +20,14 @@ namespace Remus {
 
 namespace {
 
-QString dottedSuffix(const QString &path)
-{
-    const QString suffix = QFileInfo(path).suffix();
-    return suffix.isEmpty() ? QString() : QStringLiteral(".") + suffix.toLower();
-}
+    QString dottedSuffix(const QString &path) {
+        const QString suffix = QFileInfo(path).suffix();
+        return suffix.isEmpty() ? QString() : QStringLiteral(".") + suffix.toLower();
+    }
 
 }
 
-bool OrganizeEngine::undoOperation(int undoId)
-{
+bool OrganizeEngine::undoOperation(int undoId) {
     QSqlQuery query(m_database.database());
     query.prepare(R"(
         SELECT operation_type, old_path, new_path, file_id, undone
@@ -129,8 +127,7 @@ bool OrganizeEngine::undoOperation(int undoId)
     return true;
 }
 
-int OrganizeEngine::undoAll(int limit)
-{
+int OrganizeEngine::undoAll(int limit) {
     QSqlQuery query(m_database.database());
 
     QString sql = QStringLiteral("SELECT id FROM undo_queue WHERE undone = 0 ORDER BY executed_at DESC");

@@ -13,14 +13,12 @@
 
 using namespace Remus;
 
-class TestPatchService : public QObject
-{
+class TestPatchService : public QObject {
     Q_OBJECT
 
 private slots:
 
-    void testDetectFormatWithIPSHeader()
-    {
+    void testDetectFormatWithIPSHeader() {
         QTemporaryDir tmp;
         QVERIFY(tmp.isValid());
 
@@ -28,9 +26,9 @@ private slots:
         QString patchPath = tmp.path() + "/test.ips";
         QFile f(patchPath);
         QVERIFY(f.open(QIODevice::WriteOnly));
-        QVERIFY(f.write("PATCH") == 5);           // IPS magic
+        QVERIFY(f.write("PATCH") == 5); // IPS magic
         QVERIFY(f.write(QByteArray(10, '\x00')) == 10); // dummy payload
-        QVERIFY(f.write("EOF") == 3);             // IPS footer
+        QVERIFY(f.write("EOF") == 3); // IPS footer
         f.close();
 
         PatchService svc;
@@ -38,8 +36,7 @@ private slots:
         QCOMPARE(info.format, PatchFormat::IPS);
     }
 
-    void testDetectFormatUnknown()
-    {
+    void testDetectFormatUnknown() {
         QTemporaryDir tmp;
         QVERIFY(tmp.isValid());
 
@@ -54,15 +51,13 @@ private slots:
         QCOMPARE(info.format, PatchFormat::Unknown);
     }
 
-    void testDetectFormatMissingFile()
-    {
+    void testDetectFormatMissingFile() {
         PatchService svc;
         PatchInfo info = svc.detectFormat("/nonexistent/patch.ips");
         QCOMPARE(info.format, PatchFormat::Unknown);
     }
 
-    void testGetSupportedFormats()
-    {
+    void testGetSupportedFormats() {
         PatchService svc;
         QStringList formats = svc.getSupportedFormats();
         // Should report some formats even if tools aren't installed
@@ -70,40 +65,33 @@ private slots:
         Q_UNUSED(formats);
     }
 
-    void testGetToolStatus()
-    {
+    void testGetToolStatus() {
         PatchService svc;
         auto status = svc.getToolStatus();
         // Should contain standard tool keys
         QVERIFY2(!status.isEmpty(), "Tool status map should not be empty");
     }
 
-    void testApplyMissingFiles()
-    {
+    void testApplyMissingFiles() {
         PatchService svc;
         auto result = svc.apply("/nonexistent/rom.nes", "/nonexistent/patch.ips");
         QVERIFY(!result.success);
     }
 
-    void testBatchApplyEmpty()
-    {
+    void testBatchApplyEmpty() {
         PatchService svc;
-        auto results = svc.batchApply("/nonexistent/rom.nes", {});
+        auto results = svc.batchApply("/nonexistent/rom.nes", { });
         QCOMPARE(results.size(), 0);
     }
 
-    void testGenerateOutputPath()
-    {
-        QString out = PatchService::generateOutputPath(
-            "/roms/game.nes", "/patches/fix.ips");
+    void testGenerateOutputPath() {
+        QString out = PatchService::generateOutputPath("/roms/game.nes", "/patches/fix.ips");
         QVERIFY(!out.isEmpty());
         // Output should end with the ROM extension
-        QVERIFY2(out.endsWith(".nes"),
-                 qPrintable(QString("Expected .nes suffix, got: %1").arg(out)));
+        QVERIFY2(out.endsWith(".nes"), qPrintable(QString("Expected .nes suffix, got: %1").arg(out)));
     }
 
-    void testSetToolPathsDoNotCrash()
-    {
+    void testSetToolPathsDoNotCrash() {
         PatchService svc;
         svc.setFlipsPath("/usr/bin/flips");
         svc.setXdelta3Path("/usr/bin/xdelta3");
@@ -111,8 +99,7 @@ private slots:
         // Verify setters don't crash — getters may not persist if path validation fails
     }
 
-    void testIsFormatSupportedDoesNotCrash()
-    {
+    void testIsFormatSupportedDoesNotCrash() {
         PatchService svc;
         // May return true or false depending on host tools
         svc.isFormatSupported(PatchFormat::IPS);

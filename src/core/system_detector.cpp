@@ -9,19 +9,17 @@
 
 namespace Remus {
 
-SystemDetector::SystemDetector()
-{
+SystemDetector::SystemDetector() {
     initializeDefaultSystems();
 }
 
-void SystemDetector::loadSystems(const QList<SystemInfo> &systems)
-{
+void SystemDetector::loadSystems(const QList<SystemInfo> &systems) {
     m_systems.clear();
     m_extensionMap.clear();
 
     for (const auto &system : systems) {
         m_systems[system.name] = system;
-        
+
         for (const QString &ext : system.extensions) {
             // Handle ambiguous extensions (ISO, BIN, etc.)
             if (m_extensionMap.contains(ext)) {
@@ -34,8 +32,7 @@ void SystemDetector::loadSystems(const QList<SystemInfo> &systems)
     }
 }
 
-QString SystemDetector::detectSystem(const QString &extension, const QString &path) const
-{
+QString SystemDetector::detectSystem(const QString &extension, const QString &path) const {
     const QString ext = extension.toLower();
 
     QStringList candidates = getCandidatesForExtension(ext);
@@ -64,8 +61,7 @@ QString SystemDetector::detectSystem(const QString &extension, const QString &pa
     return candidates.first();
 }
 
-QString SystemDetector::detectFromPath(const QString &path, const QStringList &candidates) const
-{
+QString SystemDetector::detectFromPath(const QString &path, const QStringList &candidates) const {
     const QString lowerPath = path.toLower();
 
     // For ambiguous ISO files, inspect headers first when possible.
@@ -77,43 +73,38 @@ QString SystemDetector::detectFromPath(const QString &path, const QStringList &c
             return byHeader;
         }
     }
-    
+
     // Check for system name in path
     for (const QString &candidate : candidates) {
         if (lowerPath.contains(candidate.toLower())) {
             return candidate;
         }
-        
+
         // Check for common folder name patterns
-        if (candidate == "PlayStation" && 
-            (lowerPath.contains("psx") || lowerPath.contains("ps1"))) {
+        if (candidate == "PlayStation" && (lowerPath.contains("psx") || lowerPath.contains("ps1"))) {
             return candidate;
         }
-        if (candidate == "PlayStation 2" && 
-            (lowerPath.contains("ps2") || lowerPath.contains("pcsx2") ||
-             lowerPath.contains("slus") || lowerPath.contains("scus") ||
-             lowerPath.contains("sles") || lowerPath.contains("slps") ||
-             lowerPath.contains("scps"))) {
+        if (candidate == "PlayStation 2"
+            && (lowerPath.contains("ps2") || lowerPath.contains("pcsx2") || lowerPath.contains("slus")
+                || lowerPath.contains("scus") || lowerPath.contains("sles") || lowerPath.contains("slps")
+                || lowerPath.contains("scps"))) {
             return candidate;
         }
-        if (candidate == "GameCube" && 
-            (lowerPath.contains("gamecube") || lowerPath.contains("gcn") ||
-             lowerPath.contains("ngc") || lowerPath.contains("dolphin") ||
-             lowerPath.endsWith(QStringLiteral(".gcm")) ||
-             lowerPath.endsWith(QStringLiteral(".gcz")) ||
-             lowerPath.endsWith(QStringLiteral(".rvz")))) {
+        if (candidate == "GameCube"
+            && (lowerPath.contains("gamecube") || lowerPath.contains("gcn") || lowerPath.contains("ngc")
+                || lowerPath.contains("dolphin") || lowerPath.endsWith(QStringLiteral(".gcm"))
+                || lowerPath.endsWith(QStringLiteral(".gcz")) || lowerPath.endsWith(QStringLiteral(".rvz")))) {
             return candidate;
         }
-        if (candidate == "Wii" &&
-            (lowerPath.contains("wii") || lowerPath.contains("wbfs") ||
-             lowerPath.endsWith(QStringLiteral(".rvz")))) {
+        if (candidate == "Wii"
+            && (lowerPath.contains("wii") || lowerPath.contains("wbfs")
+                || lowerPath.endsWith(QStringLiteral(".rvz")))) {
             return candidate;
         }
-        if (candidate == "PSP" &&
-            (lowerPath.contains("psp") || lowerPath.contains("ppsspp") ||
-             lowerPath.contains("ulus") || lowerPath.contains("ules") ||
-             lowerPath.contains("uljm") || lowerPath.contains("ucus") ||
-             lowerPath.contains("npuh") || lowerPath.contains("npjh"))) {
+        if (candidate == "PSP"
+            && (lowerPath.contains("psp") || lowerPath.contains("ppsspp") || lowerPath.contains("ulus")
+                || lowerPath.contains("ules") || lowerPath.contains("uljm") || lowerPath.contains("ucus")
+                || lowerPath.contains("npuh") || lowerPath.contains("npjh"))) {
             return candidate;
         }
     }
@@ -122,8 +113,7 @@ QString SystemDetector::detectFromPath(const QString &path, const QStringList &c
     return candidates.first();
 }
 
-QString SystemDetector::detectFromIsoHeader(const QString &path, const QStringList &candidates) const
-{
+QString SystemDetector::detectFromIsoHeader(const QString &path, const QStringList &candidates) const {
     QFile file(path);
     if (!file.exists() || !file.open(QIODevice::ReadOnly)) {
         return QString();
@@ -136,7 +126,8 @@ QString SystemDetector::detectFromIsoHeader(const QString &path, const QStringLi
         if (file.seek(0x18)) {
             const QByteArray wiiMagicBytes = file.read(4);
             if (wiiMagicBytes.size() == 4) {
-                const quint32 wiiMagic = qFromBigEndian<quint32>(reinterpret_cast<const uchar *>(wiiMagicBytes.constData()));
+                const quint32 wiiMagic
+                    = qFromBigEndian<quint32>(reinterpret_cast<const uchar *>(wiiMagicBytes.constData()));
                 if (wiiMagic == 0x5D1C9EA3u && candidates.contains(QStringLiteral("Wii"))) {
                     return QStringLiteral("Wii");
                 }
@@ -145,7 +136,8 @@ QString SystemDetector::detectFromIsoHeader(const QString &path, const QStringLi
         if (file.seek(0x1C)) {
             const QByteArray gcMagicBytes = file.read(4);
             if (gcMagicBytes.size() == 4) {
-                const quint32 gcMagic = qFromBigEndian<quint32>(reinterpret_cast<const uchar *>(gcMagicBytes.constData()));
+                const quint32 gcMagic
+                    = qFromBigEndian<quint32>(reinterpret_cast<const uchar *>(gcMagicBytes.constData()));
                 if (gcMagic == 0xC2339F3Du && candidates.contains(QStringLiteral("GameCube"))) {
                     return QStringLiteral("GameCube");
                 }
@@ -158,17 +150,15 @@ QString SystemDetector::detectFromIsoHeader(const QString &path, const QStringLi
         const QByteArray head = file.read(4 * 1024 * 1024);
         if (!head.isEmpty()) {
             const QByteArray upper = head.toUpper();
-            if (candidates.contains(QStringLiteral("PlayStation 2")) &&
-                (upper.contains("BOOT2 = CDROM0:\\\\SL") ||
-                 upper.contains("SYSTEM.CNF"))) {
+            if (candidates.contains(QStringLiteral("PlayStation 2"))
+                && (upper.contains("BOOT2 = CDROM0:\\\\SL") || upper.contains("SYSTEM.CNF"))) {
                 return QStringLiteral("PlayStation 2");
             }
-            if (candidates.contains(QStringLiteral("PSP")) &&
-                (upper.contains("PSP_GAME") || upper.contains("UMD_DATA.BIN"))) {
+            if (candidates.contains(QStringLiteral("PSP"))
+                && (upper.contains("PSP_GAME") || upper.contains("UMD_DATA.BIN"))) {
                 return QStringLiteral("PSP");
             }
-            if (candidates.contains(QStringLiteral("PlayStation")) &&
-                upper.contains("PLAYSTATION")) {
+            if (candidates.contains(QStringLiteral("PlayStation")) && upper.contains("PLAYSTATION")) {
                 return QStringLiteral("PlayStation");
             }
         }
@@ -177,53 +167,41 @@ QString SystemDetector::detectFromIsoHeader(const QString &path, const QStringLi
     return QString();
 }
 
-SystemInfo SystemDetector::getSystemInfo(const QString &systemName) const
-{
+SystemInfo SystemDetector::getSystemInfo(const QString &systemName) const {
     return m_systems.value(systemName, SystemInfo());
 }
 
-QString SystemDetector::getPreferredHash(const QString &systemName) const
-{
+QString SystemDetector::getPreferredHash(const QString &systemName) const {
     if (m_systems.contains(systemName)) {
         return m_systems[systemName].preferredHash;
     }
-    return "MD5";  // Default fallback
+    return "MD5"; // Default fallback
 }
 
-QStringList SystemDetector::getAllExtensions() const
-{
+QStringList SystemDetector::getAllExtensions() const {
     return m_extensionMap.keys();
 }
 
-void SystemDetector::initializeDefaultSystems()
-{
+void SystemDetector::initializeDefaultSystems() {
     using namespace Constants::Systems;
-    
+
     QList<SystemInfo> systems;
 
     // Load all systems from the constants registry
     for (auto it = SYSTEMS.begin(); it != SYSTEMS.end(); ++it) {
         const auto &def = it.value();
-        systems.append({
-            def.id,
-            def.internalName,
-            def.displayName,
-            def.manufacturer,
-            def.generation,
-            def.extensions,
-            def.preferredHash
-        });
+        systems.append({ def.id, def.internalName, def.displayName, def.manufacturer, def.generation, def.extensions,
+            def.preferredHash });
     }
 
     // Note: The old hardcoded system list has been replaced with the constants registry.
     // If additional systems are needed that aren't in the registry, add them to
     // src/core/constants/systems.h instead of here.
-    
+
     loadSystems(systems);
 }
 
-QStringList SystemDetector::getCandidatesForExtension(const QString &extension) const
-{
+QStringList SystemDetector::getCandidatesForExtension(const QString &extension) const {
     using namespace Constants::Systems;
 
     QStringList candidates;

@@ -8,9 +8,7 @@
 namespace Remus {
 
 GameTDBProvider::GameTDBProvider(QObject *parent)
-    : MetadataProvider(parent)
-{
-}
+    : MetadataProvider(parent) { }
 
 GameTDBProvider::~GameTDBProvider() = default;
 
@@ -18,15 +16,14 @@ GameTDBProvider::~GameTDBProvider() = default;
 // Database Loading
 // ============================================================================
 
-int GameTDBProvider::loadDatabases(const QString &directory)
-{
+int GameTDBProvider::loadDatabases(const QString &directory) {
     QDir dir(directory);
     if (!dir.exists()) {
         return 0;
     }
 
     int totalLoaded = 0;
-    const QStringList xmlFiles = dir.entryList({QStringLiteral("*.xml")}, QDir::Files);
+    const QStringList xmlFiles = dir.entryList({ QStringLiteral("*.xml") }, QDir::Files);
     for (const QString &fileName : xmlFiles) {
         int count = loadDatabase(dir.filePath(fileName));
         totalLoaded += count;
@@ -34,8 +31,7 @@ int GameTDBProvider::loadDatabases(const QString &directory)
     return totalLoaded;
 }
 
-int GameTDBProvider::loadDatabase(const QString &filePath)
-{
+int GameTDBProvider::loadDatabase(const QString &filePath) {
     QFile file(filePath);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         qWarning() << "GameTDB: cannot open" << filePath;
@@ -45,12 +41,18 @@ int GameTDBProvider::loadDatabase(const QString &filePath)
     // Infer default platform from filename (e.g. wiitdb.xml → Wii)
     const QString baseName = QFileInfo(filePath).baseName().toLower();
     QString defaultType;
-    if (baseName.startsWith(QLatin1String("wiitdb")))       defaultType = QStringLiteral("Wii");
-    else if (baseName.startsWith(QLatin1String("dstdb")))   defaultType = QStringLiteral("DS");
-    else if (baseName.startsWith(QLatin1String("3dstdb")))  defaultType = QStringLiteral("3DS");
-    else if (baseName.startsWith(QLatin1String("wiiutdb"))) defaultType = QStringLiteral("WiiU");
-    else if (baseName.startsWith(QLatin1String("switchtdb"))) defaultType = QStringLiteral("Switch");
-    else if (baseName.startsWith(QLatin1String("ps3tdb")))  defaultType = QStringLiteral("PS3");
+    if (baseName.startsWith(QLatin1String("wiitdb")))
+        defaultType = QStringLiteral("Wii");
+    else if (baseName.startsWith(QLatin1String("dstdb")))
+        defaultType = QStringLiteral("DS");
+    else if (baseName.startsWith(QLatin1String("3dstdb")))
+        defaultType = QStringLiteral("3DS");
+    else if (baseName.startsWith(QLatin1String("wiiutdb")))
+        defaultType = QStringLiteral("WiiU");
+    else if (baseName.startsWith(QLatin1String("switchtdb")))
+        defaultType = QStringLiteral("Switch");
+    else if (baseName.startsWith(QLatin1String("ps3tdb")))
+        defaultType = QStringLiteral("PS3");
 
     QXmlStreamReader xml(&file);
     int loaded = 0;
@@ -118,24 +120,31 @@ int GameTDBProvider::loadDatabase(const QString &filePath)
             } else if (inGame && elemName == QLatin1String("input")) {
                 bool ok = false;
                 int val = xml.attributes().value(QLatin1String("players")).toInt(&ok);
-                if (ok) current.players = val;
+                if (ok)
+                    current.players = val;
 
             } else if (inGame && elemName == QLatin1String("date")) {
                 bool ok = false;
                 int y = xml.attributes().value(QLatin1String("year")).toInt(&ok);
-                if (ok) current.year = y;
+                if (ok)
+                    current.year = y;
                 int m = xml.attributes().value(QLatin1String("month")).toInt(&ok);
-                if (ok) current.month = m;
+                if (ok)
+                    current.month = m;
                 int d = xml.attributes().value(QLatin1String("day")).toInt(&ok);
-                if (ok) current.day = d;
+                if (ok)
+                    current.day = d;
 
             } else if (inGame && elemName == QLatin1String("rom")) {
                 QString crc = xml.attributes().value(QLatin1String("crc")).toString().toUpper();
                 QString md5 = xml.attributes().value(QLatin1String("md5")).toString().toUpper();
                 QString sha1 = xml.attributes().value(QLatin1String("sha1")).toString().toUpper();
-                if (!crc.isEmpty()) current.crc32 = crc;
-                if (!md5.isEmpty()) current.md5 = md5;
-                if (!sha1.isEmpty()) current.sha1 = sha1;
+                if (!crc.isEmpty())
+                    current.crc32 = crc;
+                if (!md5.isEmpty())
+                    current.md5 = md5;
+                if (!sha1.isEmpty())
+                    current.sha1 = sha1;
             }
 
         } else if (token == QXmlStreamReader::EndElement) {
@@ -183,16 +192,12 @@ int GameTDBProvider::loadDatabase(const QString &filePath)
 // MetadataProvider Interface
 // ============================================================================
 
-QString GameTDBProvider::gameIdByNormalizedTitle(const QString &normalizedTitle) const
-{
+QString GameTDBProvider::gameIdByNormalizedTitle(const QString &normalizedTitle) const {
     QMutexLocker locker(&m_mutex);
     return m_titleIndex.value(normalizedTitle);
 }
 
-QList<SearchResult> GameTDBProvider::searchByName(const QString &title,
-                                                   const QString &system,
-                                                   const QString &region)
-{
+QList<SearchResult> GameTDBProvider::searchByName(const QString &title, const QString &system, const QString &region) {
     QList<SearchResult> results;
     QMutexLocker locker(&m_mutex);
 
@@ -220,8 +225,7 @@ QList<SearchResult> GameTDBProvider::searchByName(const QString &title,
     return results;
 }
 
-GameMetadata GameTDBProvider::getByHash(const QString &hash, const QString &system)
-{
+GameMetadata GameTDBProvider::getByHash(const QString &hash, const QString &system) {
     Q_UNUSED(system)
 
     QMutexLocker locker(&m_mutex);
@@ -244,8 +248,7 @@ GameMetadata GameTDBProvider::getByHash(const QString &hash, const QString &syst
     return entryToMetadata(m_idIndex[gameId]);
 }
 
-GameMetadata GameTDBProvider::getById(const QString &id)
-{
+GameMetadata GameTDBProvider::getById(const QString &id) {
     QMutexLocker locker(&m_mutex);
     if (!m_idIndex.contains(id)) {
         return GameMetadata();
@@ -253,8 +256,7 @@ GameMetadata GameTDBProvider::getById(const QString &id)
     return entryToMetadata(m_idIndex[id]);
 }
 
-QString GameTDBProvider::normalizeHash(const QString &hash) const
-{
+QString GameTDBProvider::normalizeHash(const QString &hash) const {
     return hash.trimmed().toUpper().remove(QLatin1Char(' '));
 }
 

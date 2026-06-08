@@ -10,10 +10,11 @@
 using namespace Remus;
 using namespace Remus::Constants;
 
-int handleEnrichCommand(CliContext &ctx)
-{
-    if (!ctx.parser.isSet("enrich") && !ctx.processRequested) return 0;
-    if (ctx.processRequested && ctx.processHandled) return 0;
+int handleEnrichCommand(CliContext &ctx) {
+    if (!ctx.parser.isSet("enrich") && !ctx.processRequested)
+        return 0;
+    if (ctx.processRequested && ctx.processHandled)
+        return 0;
 
     qInfo() << "";
     qInfo() << "=== Metadata Enrichment ===";
@@ -39,7 +40,7 @@ int handleEnrichCommand(CliContext &ctx)
         QString publisher;
         QString developer;
         int releaseYear = 0;
-        QString releaseDate;   // full ISO date if available, e.g. "2005-04-26"
+        QString releaseDate; // full ISO date if available, e.g. "2005-04-26"
         QString description;
         QString genres;
         QString players;
@@ -49,8 +50,10 @@ int handleEnrichCommand(CliContext &ctx)
 
     for (auto it = matches.constBegin(); it != matches.constEnd(); ++it) {
         const Database::MatchResult &m = it.value();
-        if (seenGames.contains(m.gameId)) continue;
-        if (!fileMap.contains(m.fileId)) continue;
+        if (seenGames.contains(m.gameId))
+            continue;
+        if (!fileMap.contains(m.fileId))
+            continue;
         if (!fileMatchesProcessScope(fileMap.value(m.fileId), ctx.processFileScopeIds)) {
             continue;
         }
@@ -59,15 +62,13 @@ int handleEnrichCommand(CliContext &ctx)
         }
         seenGames.insert(m.gameId);
 
-        const bool sparse = m.publisher.isEmpty() || m.developer.isEmpty()
-                          || m.genre.isEmpty() || m.players.isEmpty()
-                          || m.description.isEmpty()
-                          || (m.releaseDate.isEmpty() && m.releaseYear == 0);
-        if (!sparse) continue;
+        const bool sparse = m.publisher.isEmpty() || m.developer.isEmpty() || m.genre.isEmpty() || m.players.isEmpty()
+            || m.description.isEmpty() || (m.releaseDate.isEmpty() && m.releaseYear == 0);
+        if (!sparse)
+            continue;
 
-        const QString system = fileMap.contains(m.fileId)
-            ? ctx.db.getSystemDisplayName(fileMap[m.fileId].systemId)
-            : QString();
+        const QString system
+            = fileMap.contains(m.fileId) ? ctx.db.getSystemDisplayName(fileMap[m.fileId].systemId) : QString();
 
         QString crc32, md5, sha1;
         if (fileMap.contains(m.fileId)) {
@@ -76,9 +77,8 @@ int handleEnrichCommand(CliContext &ctx)
             md5 = f.md5;
             sha1 = f.sha1;
         }
-        candidates.append({m.gameId, m.fileId, m.gameTitle, system, crc32, md5, sha1,
-                            m.publisher, m.developer, m.releaseYear, m.releaseDate,
-                            m.description, m.genre, m.players});
+        candidates.append({ m.gameId, m.fileId, m.gameTitle, system, crc32, md5, sha1, m.publisher, m.developer,
+            m.releaseYear, m.releaseDate, m.description, m.genre, m.players });
     }
 
     if (candidates.isEmpty()) {
@@ -98,34 +98,32 @@ int handleEnrichCommand(CliContext &ctx)
     // operations with no shared mutable state; safe for concurrent execution.
     struct PreparedEnrichTask {
         EnrichCandidate candidate;
-        GameMetadata    existing;
+        GameMetadata existing;
         ProviderOrchestrator::FieldSet gap;
         bool alreadyComplete = false;
     };
 
-    const QList<PreparedEnrichTask> tasks = QtConcurrent::blockingMapped(
-        candidates,
-        [](const EnrichCandidate &c) -> PreparedEnrichTask {
-            PreparedEnrichTask t;
-            t.candidate        = c;
-            t.existing.title       = c.title;
-            t.existing.system      = c.system;
-            t.existing.publisher   = c.publisher;
-            t.existing.developer   = c.developer;
-            // Preserve the full stored date (e.g. "2005-04-26") when available;
-            // only synthesize a year-only string as a last resort so that a
-            // subsequent enrich run does not degrade an already-complete date.
-            t.existing.releaseDate = !c.releaseDate.isEmpty()
-                ? c.releaseDate
-                : (c.releaseYear > 0 ? QString::number(c.releaseYear) : QString());
-            t.existing.description = c.description;
-            t.existing.genres      = c.genres.isEmpty()
-                ? QStringList() : c.genres.split(QStringLiteral(", "));
-            t.existing.players     = c.players.toInt();
-            t.gap = ProviderOrchestrator::computeFieldGap(t.existing);
-            t.alreadyComplete = t.gap.isEmpty();
-            return t;
-        });
+    const QList<PreparedEnrichTask> tasks
+        = QtConcurrent::blockingMapped(candidates, [](const EnrichCandidate &c) -> PreparedEnrichTask {
+              PreparedEnrichTask t;
+              t.candidate = c;
+              t.existing.title = c.title;
+              t.existing.system = c.system;
+              t.existing.publisher = c.publisher;
+              t.existing.developer = c.developer;
+              // Preserve the full stored date (e.g. "2005-04-26") when available;
+              // only synthesize a year-only string as a last resort so that a
+              // subsequent enrich run does not degrade an already-complete date.
+              t.existing.releaseDate = !c.releaseDate.isEmpty()
+                  ? c.releaseDate
+                  : (c.releaseYear > 0 ? QString::number(c.releaseYear) : QString());
+              t.existing.description = c.description;
+              t.existing.genres = c.genres.isEmpty() ? QStringList() : c.genres.split(QStringLiteral(", "));
+              t.existing.players = c.players.toInt();
+              t.gap = ProviderOrchestrator::computeFieldGap(t.existing);
+              t.alreadyComplete = t.gap.isEmpty();
+              return t;
+          });
 
     // Phase 2 — Serial provider enrichment and DB writes.
     // QNetworkAccessManager inside HttpMetadataProvider has thread affinity to
@@ -140,13 +138,10 @@ int handleEnrichCommand(CliContext &ctx)
             continue;
         }
 
-        const QString bestHash = !c.sha1.isEmpty() ? c.sha1 :
-                                 !c.md5.isEmpty()  ? c.md5  :
-                                 c.crc32;
+        const QString bestHash = !c.sha1.isEmpty() ? c.sha1 : !c.md5.isEmpty() ? c.md5 : c.crc32;
 
         GameMetadata metadata = orchestrator->enrichMissingFields(
-            task.gap, task.existing, bestHash, c.title, c.system,
-            c.crc32, c.md5, c.sha1);
+            task.gap, task.existing, bestHash, c.title, c.system, c.crc32, c.md5, c.sha1);
 
         if (metadata.title.isEmpty()) {
             qInfo() << "  ✗ No metadata found";
@@ -157,16 +152,9 @@ int handleEnrichCommand(CliContext &ctx)
         const QString genres = metadata.genres.join(", ");
         const QString players = metadata.players > 0 ? QString::number(metadata.players) : QString();
 
-        bool updated = ctx.db.updateGame(c.gameId,
-                                         metadata.publisher,
-                                         metadata.developer,
-                                         metadata.releaseDate,
-                                         metadata.description,
-                                         genres,
-                                         players,
-                                         metadata.rating);
-        const ProviderOrchestrator::FieldSet remaining =
-            ProviderOrchestrator::computeFieldGap(metadata);
+        bool updated = ctx.db.updateGame(c.gameId, metadata.publisher, metadata.developer, metadata.releaseDate,
+            metadata.description, genres, players, metadata.rating);
+        const ProviderOrchestrator::FieldSet remaining = ProviderOrchestrator::computeFieldGap(metadata);
         if (updated) {
             if (remaining.isEmpty()) {
                 qInfo() << "  \u2713 Fully enriched from" << metadata.providerId;
@@ -184,10 +172,9 @@ int handleEnrichCommand(CliContext &ctx)
     qInfo() << "";
     qInfo() << "=== Enrichment Complete ===";
     qInfo() << "Enriched:" << enriched;
-    qInfo() << "Failed:"   << failed;
+    qInfo() << "Failed:" << failed;
 
-    auto *hasheous = dynamic_cast<HasheousProvider*>(
-        orchestrator->getProvider(Constants::Providers::HASHEOUS));
+    auto *hasheous = dynamic_cast<HasheousProvider *>(orchestrator->getProvider(Constants::Providers::HASHEOUS));
     if (hasheous && hasheous->igdbSkippedCount() > 0) {
         qInfo() << "";
         qInfo().noquote() << QString("%1 title(s) had IGDB data available — "

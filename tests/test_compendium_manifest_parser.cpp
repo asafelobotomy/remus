@@ -11,8 +11,7 @@
 
 using namespace Remus;
 
-class CompendiumManifestParserTest : public QObject
-{
+class CompendiumManifestParserTest : public QObject {
     Q_OBJECT
 
 private slots:
@@ -38,8 +37,7 @@ private slots:
 
 // ── readTextFile ─────────────────────────────────────────────────────────────
 
-void CompendiumManifestParserTest::readTextFile_success()
-{
+void CompendiumManifestParserTest::readTextFile_success() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
@@ -56,8 +54,7 @@ void CompendiumManifestParserTest::readTextFile_success()
     QVERIFY(error.isEmpty());
 }
 
-void CompendiumManifestParserTest::readTextFile_missingFile()
-{
+void CompendiumManifestParserTest::readTextFile_missingFile() {
     QString content;
     QString error;
     QVERIFY(!readTextFile(QStringLiteral("/nonexistent/path/file.txt"), content, error));
@@ -66,8 +63,7 @@ void CompendiumManifestParserTest::readTextFile_missingFile()
 
 // ── requireString ────────────────────────────────────────────────────────────
 
-void CompendiumManifestParserTest::requireString_present()
-{
+void CompendiumManifestParserTest::requireString_present() {
     QJsonObject obj;
     obj.insert(QStringLiteral("key"), QStringLiteral("value"));
 
@@ -78,8 +74,7 @@ void CompendiumManifestParserTest::requireString_present()
     QVERIFY(error.isEmpty());
 }
 
-void CompendiumManifestParserTest::requireString_missingField()
-{
+void CompendiumManifestParserTest::requireString_missingField() {
     QJsonObject obj;
     QString value;
     QString error;
@@ -87,8 +82,7 @@ void CompendiumManifestParserTest::requireString_missingField()
     QVERIFY(!error.isEmpty());
 }
 
-void CompendiumManifestParserTest::requireString_nonStringField()
-{
+void CompendiumManifestParserTest::requireString_nonStringField() {
     QJsonObject obj;
     obj.insert(QStringLiteral("num"), 42);
 
@@ -98,8 +92,7 @@ void CompendiumManifestParserTest::requireString_nonStringField()
     QVERIFY(!error.isEmpty());
 }
 
-void CompendiumManifestParserTest::requireString_emptyNotAllowed()
-{
+void CompendiumManifestParserTest::requireString_emptyNotAllowed() {
     QJsonObject obj;
     obj.insert(QStringLiteral("k"), QStringLiteral(""));
 
@@ -109,8 +102,7 @@ void CompendiumManifestParserTest::requireString_emptyNotAllowed()
     QVERIFY(!error.isEmpty());
 }
 
-void CompendiumManifestParserTest::requireString_emptyAllowed()
-{
+void CompendiumManifestParserTest::requireString_emptyAllowed() {
     QJsonObject obj;
     obj.insert(QStringLiteral("k"), QStringLiteral(""));
 
@@ -122,33 +114,31 @@ void CompendiumManifestParserTest::requireString_emptyAllowed()
 
 // ── parseSourceDescriptor ────────────────────────────────────────────────────
 
-void CompendiumManifestParserTest::parseSourceDescriptor_valid()
-{
+void CompendiumManifestParserTest::parseSourceDescriptor_valid() {
     QJsonObject obj;
-    obj.insert(QStringLiteral("source_id"),       QStringLiteral("nointro"));
-    obj.insert(QStringLiteral("display_name"),    QStringLiteral("No-Intro"));
-    obj.insert(QStringLiteral("source_type"),     QStringLiteral("dat"));
-    obj.insert(QStringLiteral("snapshot_id"),     QStringLiteral("snap-001"));
-    obj.insert(QStringLiteral("snapshot_label"),  QStringLiteral("Snapshot 1"));
-    obj.insert(QStringLiteral("snapshot_ref"),    QStringLiteral("ref-abc"));
-    obj.insert(QStringLiteral("path"),            QStringLiteral("/some/path.dat"));
+    obj.insert(QStringLiteral("source_id"), QStringLiteral("nointro"));
+    obj.insert(QStringLiteral("display_name"), QStringLiteral("No-Intro"));
+    obj.insert(QStringLiteral("source_type"), QStringLiteral("dat"));
+    obj.insert(QStringLiteral("snapshot_id"), QStringLiteral("snap-001"));
+    obj.insert(QStringLiteral("snapshot_label"), QStringLiteral("Snapshot 1"));
+    obj.insert(QStringLiteral("snapshot_ref"), QStringLiteral("ref-abc"));
+    obj.insert(QStringLiteral("path"), QStringLiteral("/some/path.dat"));
     obj.insert(QStringLiteral("checksum_sha256"), QStringLiteral("abc123"));
-    obj.insert(QStringLiteral("priority"),        5);
-    obj.insert(QStringLiteral("enabled"),         false);
+    obj.insert(QStringLiteral("priority"), 5);
+    obj.insert(QStringLiteral("enabled"), false);
 
     CompendiumSourceDescriptor descriptor;
     QString error;
     QVERIFY(parseSourceDescriptor(obj, QStringLiteral("/tmp/manifest.json"), descriptor, error));
-    QCOMPARE(descriptor.sourceId,      QStringLiteral("nointro"));
-    QCOMPARE(descriptor.displayName,   QStringLiteral("No-Intro"));
-    QCOMPARE(descriptor.sourceType,    QStringLiteral("dat"));
-    QCOMPARE(descriptor.snapshotId,    QStringLiteral("snap-001"));
-    QCOMPARE(descriptor.priority,      5);
-    QCOMPARE(descriptor.enabled,       false);
+    QCOMPARE(descriptor.sourceId, QStringLiteral("nointro"));
+    QCOMPARE(descriptor.displayName, QStringLiteral("No-Intro"));
+    QCOMPARE(descriptor.sourceType, QStringLiteral("dat"));
+    QCOMPARE(descriptor.snapshotId, QStringLiteral("snap-001"));
+    QCOMPARE(descriptor.priority, 5);
+    QCOMPARE(descriptor.enabled, false);
 }
 
-void CompendiumManifestParserTest::parseSourceDescriptor_missingSourceId()
-{
+void CompendiumManifestParserTest::parseSourceDescriptor_missingSourceId() {
     QJsonObject obj;
     obj.insert(QStringLiteral("display_name"), QStringLiteral("No-Intro"));
 
@@ -158,8 +148,7 @@ void CompendiumManifestParserTest::parseSourceDescriptor_missingSourceId()
     QVERIFY(!error.isEmpty());
 }
 
-void CompendiumManifestParserTest::parseSourceDescriptor_resolvesRelativePathFromManifest()
-{
+void CompendiumManifestParserTest::parseSourceDescriptor_resolvesRelativePathFromManifest() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
@@ -186,8 +175,7 @@ void CompendiumManifestParserTest::parseSourceDescriptor_resolvesRelativePathFro
     QCOMPARE(descriptor.path, sourcePath);
 }
 
-void CompendiumManifestParserTest::parseSourceDescriptor_resolvesManifestRelativeParentPath()
-{
+void CompendiumManifestParserTest::parseSourceDescriptor_resolvesManifestRelativeParentPath() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
@@ -221,34 +209,33 @@ void CompendiumManifestParserTest::parseSourceDescriptor_resolvesManifestRelativ
 
 // ── parseManifest ─────────────────────────────────────────────────────────────
 
-void CompendiumManifestParserTest::parseManifest_valid()
-{
+void CompendiumManifestParserTest::parseManifest_valid() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
     // Build a minimal manifest JSON on disk
     QJsonObject source;
-    source.insert(QStringLiteral("source_id"),       QStringLiteral("test-src"));
-    source.insert(QStringLiteral("display_name"),    QStringLiteral("Test Source"));
-    source.insert(QStringLiteral("source_type"),     QStringLiteral("dat"));
-    source.insert(QStringLiteral("snapshot_id"),     QStringLiteral("snap-1"));
-    source.insert(QStringLiteral("snapshot_label"),  QStringLiteral("Snap 1"));
-    source.insert(QStringLiteral("snapshot_ref"),    QStringLiteral("ref-1"));
+    source.insert(QStringLiteral("source_id"), QStringLiteral("test-src"));
+    source.insert(QStringLiteral("display_name"), QStringLiteral("Test Source"));
+    source.insert(QStringLiteral("source_type"), QStringLiteral("dat"));
+    source.insert(QStringLiteral("snapshot_id"), QStringLiteral("snap-1"));
+    source.insert(QStringLiteral("snapshot_label"), QStringLiteral("Snap 1"));
+    source.insert(QStringLiteral("snapshot_ref"), QStringLiteral("ref-1"));
     const QString sourcePath = dir.filePath("a.dat");
     QFile sourceFile(sourcePath);
     QVERIFY(sourceFile.open(QIODevice::WriteOnly | QIODevice::Text));
     sourceFile.write("fixture");
     sourceFile.close();
 
-    source.insert(QStringLiteral("path"),            sourcePath);
+    source.insert(QStringLiteral("path"), sourcePath);
     source.insert(QStringLiteral("checksum_sha256"), QStringLiteral("deadbeef"));
-    source.insert(QStringLiteral("priority"),        10);
-    source.insert(QStringLiteral("enabled"),         false);
+    source.insert(QStringLiteral("priority"), 10);
+    source.insert(QStringLiteral("enabled"), false);
 
     QJsonObject manifest;
-    manifest.insert(QStringLiteral("build_id"),       QStringLiteral("build-001"));
+    manifest.insert(QStringLiteral("build_id"), QStringLiteral("build-001"));
     manifest.insert(QStringLiteral("schema_version"), 1);
-    manifest.insert(QStringLiteral("sources"),        QJsonArray{source});
+    manifest.insert(QStringLiteral("sources"), QJsonArray { source });
 
     const QString manifestPath = dir.filePath("manifest.json");
     QFile f(manifestPath);
@@ -263,23 +250,21 @@ void CompendiumManifestParserTest::parseManifest_valid()
     QList<CompendiumSourceDescriptor> sources;
     QString error;
 
-    QVERIFY(parseManifest(manifestPath, buildId, schemaVersion, manifestJson,
-                          sourceObjects, sources, error));
-    QCOMPARE(buildId,        QStringLiteral("build-001"));
-    QCOMPARE(schemaVersion,  1);
+    QVERIFY(parseManifest(manifestPath, buildId, schemaVersion, manifestJson, sourceObjects, sources, error));
+    QCOMPARE(buildId, QStringLiteral("build-001"));
+    QCOMPARE(schemaVersion, 1);
     QCOMPARE(sources.size(), 1);
     QCOMPARE(sources.first().sourceId, QStringLiteral("test-src"));
     QVERIFY(!manifestJson.isEmpty());
 }
 
-void CompendiumManifestParserTest::parseManifest_missingBuildId()
-{
+void CompendiumManifestParserTest::parseManifest_missingBuildId() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
     QJsonObject manifest;
     manifest.insert(QStringLiteral("schema_version"), 1);
-    manifest.insert(QStringLiteral("sources"), QJsonArray{});
+    manifest.insert(QStringLiteral("sources"), QJsonArray { });
 
     const QString manifestPath = dir.filePath("manifest.json");
     QFile f(manifestPath);
@@ -294,20 +279,18 @@ void CompendiumManifestParserTest::parseManifest_missingBuildId()
     QList<CompendiumSourceDescriptor> sources;
     QString error;
 
-    QVERIFY(!parseManifest(manifestPath, buildId, schemaVersion, manifestJson,
-                           sourceObjects, sources, error));
+    QVERIFY(!parseManifest(manifestPath, buildId, schemaVersion, manifestJson, sourceObjects, sources, error));
     QVERIFY(!error.isEmpty());
 }
 
-void CompendiumManifestParserTest::parseManifest_noSources()
-{
+void CompendiumManifestParserTest::parseManifest_noSources() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
     QJsonObject manifest;
-    manifest.insert(QStringLiteral("build_id"),       QStringLiteral("build-empty"));
+    manifest.insert(QStringLiteral("build_id"), QStringLiteral("build-empty"));
     manifest.insert(QStringLiteral("schema_version"), 1);
-    manifest.insert(QStringLiteral("sources"),        QJsonArray{});
+    manifest.insert(QStringLiteral("sources"), QJsonArray { });
 
     const QString manifestPath = dir.filePath("manifest.json");
     QFile f(manifestPath);
@@ -323,21 +306,19 @@ void CompendiumManifestParserTest::parseManifest_noSources()
     QString error;
 
     // Empty sources array is rejected — the parser requires at least one source.
-    QVERIFY(!parseManifest(manifestPath, buildId, schemaVersion, manifestJson,
-                           sourceObjects, sources, error));
+    QVERIFY(!parseManifest(manifestPath, buildId, schemaVersion, manifestJson, sourceObjects, sources, error));
     QVERIFY(!error.isEmpty());
 }
 
-void CompendiumManifestParserTest::parseSourceDescriptor_unsupportedSourceType()
-{
+void CompendiumManifestParserTest::parseSourceDescriptor_unsupportedSourceType() {
     QJsonObject obj;
-    obj.insert(QStringLiteral("source_id"),      QStringLiteral("bad-src"));
-    obj.insert(QStringLiteral("source_type"),    QStringLiteral("csv"));
-    obj.insert(QStringLiteral("snapshot_id"),    QStringLiteral("snap-001"));
+    obj.insert(QStringLiteral("source_id"), QStringLiteral("bad-src"));
+    obj.insert(QStringLiteral("source_type"), QStringLiteral("csv"));
+    obj.insert(QStringLiteral("snapshot_id"), QStringLiteral("snap-001"));
     obj.insert(QStringLiteral("snapshot_label"), QStringLiteral("Snap 1"));
-    obj.insert(QStringLiteral("path"),           QStringLiteral("/fake/path.csv"));
-    obj.insert(QStringLiteral("priority"),       5);
-    obj.insert(QStringLiteral("enabled"),        false);
+    obj.insert(QStringLiteral("path"), QStringLiteral("/fake/path.csv"));
+    obj.insert(QStringLiteral("priority"), 5);
+    obj.insert(QStringLiteral("enabled"), false);
 
     CompendiumSourceDescriptor descriptor;
     QString error;
@@ -346,16 +327,15 @@ void CompendiumManifestParserTest::parseSourceDescriptor_unsupportedSourceType()
     QVERIFY2(error.contains(QStringLiteral("csv")), qPrintable(error));
 }
 
-void CompendiumManifestParserTest::parseSourceDescriptor_rejectsJsonSourceType()
-{
+void CompendiumManifestParserTest::parseSourceDescriptor_rejectsJsonSourceType() {
     QJsonObject obj;
-    obj.insert(QStringLiteral("source_id"),      QStringLiteral("json-src"));
-    obj.insert(QStringLiteral("source_type"),    QStringLiteral("json"));
-    obj.insert(QStringLiteral("snapshot_id"),    QStringLiteral("snap-001"));
+    obj.insert(QStringLiteral("source_id"), QStringLiteral("json-src"));
+    obj.insert(QStringLiteral("source_type"), QStringLiteral("json"));
+    obj.insert(QStringLiteral("snapshot_id"), QStringLiteral("snap-001"));
     obj.insert(QStringLiteral("snapshot_label"), QStringLiteral("Snap 1"));
-    obj.insert(QStringLiteral("path"),           QStringLiteral("/fake/path.json"));
-    obj.insert(QStringLiteral("priority"),       5);
-    obj.insert(QStringLiteral("enabled"),        false);
+    obj.insert(QStringLiteral("path"), QStringLiteral("/fake/path.json"));
+    obj.insert(QStringLiteral("priority"), 5);
+    obj.insert(QStringLiteral("enabled"), false);
 
     CompendiumSourceDescriptor descriptor;
     QString error;
@@ -363,17 +343,16 @@ void CompendiumManifestParserTest::parseSourceDescriptor_rejectsJsonSourceType()
     QVERIFY2(error.contains(QStringLiteral("expected: dat")), qPrintable(error));
 }
 
-void CompendiumManifestParserTest::parseSourceDescriptor_nonStringOptionalField()
-{
+void CompendiumManifestParserTest::parseSourceDescriptor_nonStringOptionalField() {
     QJsonObject obj;
-    obj.insert(QStringLiteral("source_id"),      QStringLiteral("test-src"));
-    obj.insert(QStringLiteral("source_type"),    QStringLiteral("dat"));
-    obj.insert(QStringLiteral("snapshot_id"),    QStringLiteral("snap-001"));
+    obj.insert(QStringLiteral("source_id"), QStringLiteral("test-src"));
+    obj.insert(QStringLiteral("source_type"), QStringLiteral("dat"));
+    obj.insert(QStringLiteral("snapshot_id"), QStringLiteral("snap-001"));
     obj.insert(QStringLiteral("snapshot_label"), QStringLiteral("Snap 1"));
-    obj.insert(QStringLiteral("path"),           QStringLiteral("/fake/path.dat"));
-    obj.insert(QStringLiteral("license_id"),     42);  // must be a string, not a number
-    obj.insert(QStringLiteral("priority"),       5);
-    obj.insert(QStringLiteral("enabled"),        false);
+    obj.insert(QStringLiteral("path"), QStringLiteral("/fake/path.dat"));
+    obj.insert(QStringLiteral("license_id"), 42); // must be a string, not a number
+    obj.insert(QStringLiteral("priority"), 5);
+    obj.insert(QStringLiteral("enabled"), false);
 
     CompendiumSourceDescriptor descriptor;
     QString error;
@@ -381,16 +360,15 @@ void CompendiumManifestParserTest::parseSourceDescriptor_nonStringOptionalField(
     QVERIFY(!error.isEmpty());
 }
 
-void CompendiumManifestParserTest::parseSourceDescriptor_nonIntegerPriority()
-{
+void CompendiumManifestParserTest::parseSourceDescriptor_nonIntegerPriority() {
     QJsonObject obj;
-    obj.insert(QStringLiteral("source_id"),      QStringLiteral("test-src"));
-    obj.insert(QStringLiteral("source_type"),    QStringLiteral("dat"));
-    obj.insert(QStringLiteral("snapshot_id"),    QStringLiteral("snap-001"));
+    obj.insert(QStringLiteral("source_id"), QStringLiteral("test-src"));
+    obj.insert(QStringLiteral("source_type"), QStringLiteral("dat"));
+    obj.insert(QStringLiteral("snapshot_id"), QStringLiteral("snap-001"));
     obj.insert(QStringLiteral("snapshot_label"), QStringLiteral("Snap 1"));
-    obj.insert(QStringLiteral("path"),           QStringLiteral("/fake/path.dat"));
-    obj.insert(QStringLiteral("priority"),       10.5);  // must be an integer
-    obj.insert(QStringLiteral("enabled"),        false);
+    obj.insert(QStringLiteral("path"), QStringLiteral("/fake/path.dat"));
+    obj.insert(QStringLiteral("priority"), 10.5); // must be an integer
+    obj.insert(QStringLiteral("enabled"), false);
 
     CompendiumSourceDescriptor descriptor;
     QString error;

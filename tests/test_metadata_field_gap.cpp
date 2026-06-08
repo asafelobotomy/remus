@@ -21,8 +21,7 @@
 using namespace Remus;
 using namespace Remus::Constants::ProviderFields;
 
-class MetadataFieldGapTest : public QObject
-{
+class MetadataFieldGapTest : public QObject {
     Q_OBJECT
 
 private slots:
@@ -37,33 +36,30 @@ private slots:
 
 // ---------------------------------------------------------------------------
 
-void MetadataFieldGapTest::fieldGap_emptyMetadata_allRequired()
-{
+void MetadataFieldGapTest::fieldGap_emptyMetadata_allRequired() {
     GameMetadata empty;
     const ProviderOrchestrator::FieldSet gap = ProviderOrchestrator::computeFieldGap(empty);
     QCOMPARE(gap, REQUIRED_FIELDS);
 }
 
-void MetadataFieldGapTest::fieldGap_fullMetadata_noGap()
-{
+void MetadataFieldGapTest::fieldGap_fullMetadata_noGap() {
     GameMetadata full;
-    full.title       = QStringLiteral("Test Game");
-    full.publisher   = QStringLiteral("Test Pub");
-    full.developer   = QStringLiteral("Test Dev");
+    full.title = QStringLiteral("Test Game");
+    full.publisher = QStringLiteral("Test Pub");
+    full.developer = QStringLiteral("Test Dev");
     full.releaseDate = QStringLiteral("1990-01-01");
-    full.genres      = { QStringLiteral("Action") };
-    full.players     = 2;
+    full.genres = { QStringLiteral("Action") };
+    full.players = 2;
     full.description = QStringLiteral("A fine game.");
-    full.boxArtUrl   = QStringLiteral("https://example.com/art.jpg");
+    full.boxArtUrl = QStringLiteral("https://example.com/art.jpg");
 
     const ProviderOrchestrator::FieldSet gap = ProviderOrchestrator::computeFieldGap(full);
     QVERIFY(gap.isEmpty());
 }
 
-void MetadataFieldGapTest::fieldGap_partialMetadata_correctGap()
-{
+void MetadataFieldGapTest::fieldGap_partialMetadata_correctGap() {
     GameMetadata partial;
-    partial.title     = QStringLiteral("Some Title");
+    partial.title = QStringLiteral("Some Title");
     partial.publisher = QStringLiteral("Publisher");
     // developer, releaseDate, genres, players, description, boxArtUrl all empty/zero
 
@@ -80,8 +76,7 @@ void MetadataFieldGapTest::fieldGap_partialMetadata_correctGap()
     QCOMPARE(gap.size(), 6);
 }
 
-void MetadataFieldGapTest::requiredFields_containsAll8()
-{
+void MetadataFieldGapTest::requiredFields_containsAll8() {
     QCOMPARE(REQUIRED_FIELDS.size(), 8);
     QVERIFY(REQUIRED_FIELDS.contains(QLatin1String(TITLE)));
     QVERIFY(REQUIRED_FIELDS.contains(QLatin1String(PUBLISHER)));
@@ -93,8 +88,7 @@ void MetadataFieldGapTest::requiredFields_containsAll8()
     QVERIFY(REQUIRED_FIELDS.contains(QLatin1String(BOX_ART_URL)));
 }
 
-void MetadataFieldGapTest::capabilities_localProvidersPresent()
-{
+void MetadataFieldGapTest::capabilities_localProvidersPresent() {
     QVERIFY(CAPABILITIES.contains(QStringLiteral("localdatabase")));
     QVERIFY(CAPABILITIES.contains(QStringLiteral("gametdb")));
 
@@ -104,8 +98,7 @@ void MetadataFieldGapTest::capabilities_localProvidersPresent()
     QVERIFY(CAPABILITIES[QStringLiteral("gametdb")].contains(QLatin1String(BOX_ART_URL)));
 }
 
-void MetadataFieldGapTest::capabilities_allRequiredFieldsCoveredBySomeProvider()
-{
+void MetadataFieldGapTest::capabilities_allRequiredFieldsCoveredBySomeProvider() {
     // Every required field must be reachable through at least one provider.
     QSet<QString> allCovered;
     for (const auto &fields : CAPABILITIES)
@@ -113,12 +106,11 @@ void MetadataFieldGapTest::capabilities_allRequiredFieldsCoveredBySomeProvider()
 
     for (const QString &field : REQUIRED_FIELDS) {
         QVERIFY2(allCovered.contains(field),
-                 qPrintable(QStringLiteral("Required field '%1' not covered by any provider").arg(field)));
+            qPrintable(QStringLiteral("Required field '%1' not covered by any provider").arg(field)));
     }
 }
 
-void MetadataFieldGapTest::capabilities_intersect_detectsSkipCandidate()
-{
+void MetadataFieldGapTest::capabilities_intersect_detectsSkipCandidate() {
     // Suppose only 'description' is missing.  A provider that cannot supply
     // description should have an empty intersection with the gap.
     const ProviderOrchestrator::FieldSet gap = { QLatin1String(DESCRIPTION) };

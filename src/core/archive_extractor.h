@@ -13,7 +13,7 @@ namespace Remus {
 enum class ArchiveFormat {
     Unknown,
     ZIP,
-    SevenZip,  // 7z
+    SevenZip, // 7z
     RAR,
     GZip,
     TarGz,
@@ -28,12 +28,12 @@ enum class ArchiveFormat {
 struct ArchiveInfo {
     QString path;
     ArchiveFormat format = ArchiveFormat::Unknown;
-    qint64 compressedSize = 0;     // Size of archive
-    qint64 uncompressedSize = 0;   // Total extracted size
-    int fileCount = 0;             // Number of files in archive
-    QStringList contents;          // List of contained files
+    qint64 compressedSize = 0; // Size of archive
+    qint64 uncompressedSize = 0; // Total extracted size
+    int fileCount = 0; // Number of files in archive
+    QStringList contents; // List of contained files
     QMap<QString, qint64> entrySizes; // Uncompressed size per archive entry
-    QStringList unsafeEntries;     // Entries rejected as unsafe paths
+    QStringList unsafeEntries; // Entries rejected as unsafe paths
 };
 
 /**
@@ -47,7 +47,7 @@ struct ExtractionResult {
     int failedFiles = 0;
     qint64 bytesExtracted = 0;
     QString error;
-    QStringList extractedFiles;    // List of extracted file paths
+    QStringList extractedFiles; // List of extracted file paths
 };
 
 /**
@@ -72,9 +72,9 @@ public:
     bool canExtract(const QString &path) const;
 
     // No-op setters kept for API compatibility
-    void setUnzipPath(const QString &) {}
-    void setSevenZipPath(const QString &) {}
-    void setUnrarPath(const QString &) {}
+    void setUnzipPath(const QString &) { }
+    void setSevenZipPath(const QString &) { }
+    void setUnrarPath(const QString &) { }
 
     /**
      * @brief Get information about an archive without extracting
@@ -98,23 +98,19 @@ public:
      * @param outputDir     Output directory (defaults to archive's directory)
      * @param createSubfolder Create subfolder named after the archive stem
      */
-    ExtractionResult extract(const QString &archivePath,
-                             const QString &outputDir = QString(),
-                             bool createSubfolder = false);
+    ExtractionResult extract(
+        const QString &archivePath, const QString &outputDir = QString(), bool createSubfolder = false);
 
     /**
      * @brief Extract a single named member from an archive
      */
-    ExtractionResult extractFile(const QString &archivePath,
-                                 const QString &fileName,
-                                 const QString &outputDir);
+    ExtractionResult extractFile(const QString &archivePath, const QString &fileName, const QString &outputDir);
 
     /**
      * @brief Batch extract multiple archives
      */
-    QList<ExtractionResult> batchExtract(const QStringList &archivePaths,
-                                         const QString &outputDir = QString(),
-                                         bool createSubfolders = true);
+    QList<ExtractionResult> batchExtract(
+        const QStringList &archivePaths, const QString &outputDir = QString(), bool createSubfolders = true);
 
     /**
      * @brief Stream the first maxBytes bytes from an archive member.
@@ -122,12 +118,14 @@ public:
      * Decompresses only the requested prefix — suitable for disc magic-byte
      * detection without extracting the full member.
      */
-    QByteArray readMemberPrefix(const QString &archivePath,
-                                const QString &memberPath,
-                                qint64 maxBytes);
+    QByteArray readMemberPrefix(const QString &archivePath, const QString &memberPath, qint64 maxBytes);
 
-    void cancel() { m_cancelled = true; }
-    bool isRunning() const { return false; }  // extraction is synchronous
+    void cancel() {
+        m_cancelled = true;
+    }
+    bool isRunning() const {
+        return false;
+    } // extraction is synchronous
 
 signals:
     void extractionStarted(const QString &archivePath, const QString &outputDir);
@@ -139,9 +137,8 @@ signals:
 private:
     bool m_cancelled = false;
 
-    ExtractionResult extractToDir(const QString &archivePath,
-                                  const QString &outputDir,
-                                  const QString &singleMember = QString());
+    ExtractionResult extractToDir(
+        const QString &archivePath, const QString &outputDir, const QString &singleMember = QString());
 };
 
 } // namespace Remus

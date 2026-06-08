@@ -12,12 +12,12 @@ namespace Remus {
  */
 struct ConversionStats {
     QString path;
-    QString format;              // "BIN/CUE", "ISO", "GDI", "CHD"
-    qint64 originalSize = 0;     // Size before conversion
-    qint64 convertedSize = 0;    // Size after conversion (0 if estimate)
-    qint64 savedBytes = 0;       // Bytes saved (originalSize - convertedSize)
-    double compressionRatio = 0.0;  // convertedSize / originalSize
-    bool converted = false;      // True if actually converted, false if estimate
+    QString format; // "BIN/CUE", "ISO", "GDI", "CHD"
+    qint64 originalSize = 0; // Size before conversion
+    qint64 convertedSize = 0; // Size after conversion (0 if estimate)
+    qint64 savedBytes = 0; // Bytes saved (originalSize - convertedSize)
+    double compressionRatio = 0.0; // convertedSize / originalSize
+    bool converted = false; // True if actually converted, false if estimate
 };
 
 /**
@@ -25,14 +25,14 @@ struct ConversionStats {
  */
 struct ConversionSummary {
     int totalFiles = 0;
-    int convertibleFiles = 0;    // Files that can be converted
-    int convertedFiles = 0;      // Files already converted
-    
+    int convertibleFiles = 0; // Files that can be converted
+    int convertedFiles = 0; // Files already converted
+
     qint64 totalOriginalSize = 0;
     qint64 totalConvertedSize = 0;
     qint64 totalSavedBytes = 0;
     double averageCompressionRatio = 0.0;
-    
+
     // By format breakdown
     QMap<QString, qint64> sizeByFormat;
     QMap<QString, int> countByFormat;
@@ -50,13 +50,13 @@ public:
 
     /**
      * @brief Estimate compression for a disc image
-     * 
+     *
      * Uses average compression ratios:
      * - PlayStation/PS2: 40-50% compression
      * - Dreamcast: 40-55% compression
      * - Sega CD/Saturn: 35-45% compression
      * - PC Engine CD: 35-50% compression
-     * 
+     *
      * @param path Path to disc image
      * @return Estimated statistics
      */
@@ -65,8 +65,7 @@ public:
     /**
      * @brief Get actual conversion stats from completed conversion
      */
-    ConversionStats getActualStats(const QString &originalPath,
-                                    const QString &convertedPath);
+    ConversionStats getActualStats(const QString &originalPath, const QString &convertedPath);
 
     /**
      * @brief Scan directory and estimate total savings
@@ -109,7 +108,7 @@ private:
     qint64 getFileSize(const QString &path) const;
     qint64 getDirectorySize(const QString &path, bool recursive) const;
     QString detectSystem(const QString &path) const;
-    
+
     // Typical compression ratios by system
     QMap<QString, double> m_typicalRatios;
 };

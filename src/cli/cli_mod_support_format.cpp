@@ -3,8 +3,7 @@
 #include <QJsonDocument>
 #include <QTextStream>
 
-QJsonObject listedModToJson(const ListedMod &row)
-{
+QJsonObject listedModToJson(const ListedMod &row) {
     const auto &mod = row.mod;
 
     QJsonObject object;
@@ -31,9 +30,7 @@ QJsonObject listedModToJson(const ListedMod &row)
     return object;
 }
 
-QJsonObject installedModToJson(const Remus::Database::ModInstallationRecord &record,
-                              const QString                                &baseFilename)
-{
+QJsonObject installedModToJson(const Remus::Database::ModInstallationRecord &record, const QString &baseFilename) {
     QJsonObject object;
     object["id"] = record.id;
     object["baseFileId"] = record.baseFileId;
@@ -52,28 +49,24 @@ QJsonObject installedModToJson(const Remus::Database::ModInstallationRecord &rec
     return object;
 }
 
-QJsonObject systemCountToJson(const QString &system, int count)
-{
+QJsonObject systemCountToJson(const QString &system, int count) {
     QJsonObject object;
     object["system"] = system;
     object["count"] = count;
     return object;
 }
 
-void printJsonArray(const QJsonArray &array)
-{
+void printJsonArray(const QJsonArray &array) {
     QTextStream stream(stdout);
     stream << QString::fromUtf8(QJsonDocument(array).toJson(QJsonDocument::Indented)).trimmed() << Qt::endl;
 }
 
-void printJsonObject(const QJsonObject &object)
-{
+void printJsonObject(const QJsonObject &object) {
     QTextStream stream(stdout);
     stream << QString::fromUtf8(QJsonDocument(object).toJson(QJsonDocument::Indented)).trimmed() << Qt::endl;
 }
 
-void printModList(const QList<ListedMod> &mods)
-{
+void printModList(const QList<ListedMod> &mods) {
     bool showMatchScope = false;
     for (const auto &row : mods) {
         if (!row.matchScope.isEmpty()) {
@@ -84,44 +77,43 @@ void printModList(const QList<ListedMod> &mods)
 
     if (showMatchScope) {
         qInfo().noquote() << QString("%1  %2  %3  %4  %5  %6")
-            .arg("Scope", -8)
-            .arg("ID", -20)
-            .arg("Title", -40)
-            .arg("Type", -14)
-            .arg("Format", -8)
-            .arg("Rating");
+                                 .arg("Scope", -8)
+                                 .arg("ID", -20)
+                                 .arg("Title", -40)
+                                 .arg("Type", -14)
+                                 .arg("Format", -8)
+                                 .arg("Rating");
     } else {
         qInfo().noquote() << QString("%1  %2  %3  %4  %5")
-            .arg("ID", -20)
-            .arg("Title", -40)
-            .arg("Type", -14)
-            .arg("Format", -8)
-            .arg("Rating");
+                                 .arg("ID", -20)
+                                 .arg("Title", -40)
+                                 .arg("Type", -14)
+                                 .arg("Format", -8)
+                                 .arg("Rating");
     }
 
     for (const auto &row : mods) {
         const auto &mod = row.mod;
         if (showMatchScope) {
             qInfo().noquote() << QString("%1  %2  %3  %4  %5  %6")
-                .arg(row.matchScope.left(8), -8)
-                .arg(mod.id.left(20), -20)
-                .arg(mod.title.left(40), -40)
-                .arg(mod.type.left(14), -14)
-                .arg(mod.format.left(8), -8)
-                .arg(QString::number(mod.rating, 'f', 1));
+                                     .arg(row.matchScope.left(8), -8)
+                                     .arg(mod.id.left(20), -20)
+                                     .arg(mod.title.left(40), -40)
+                                     .arg(mod.type.left(14), -14)
+                                     .arg(mod.format.left(8), -8)
+                                     .arg(QString::number(mod.rating, 'f', 1));
         } else {
             qInfo().noquote() << QString("%1  %2  %3  %4  %5")
-                .arg(mod.id.left(20), -20)
-                .arg(mod.title.left(40), -40)
-                .arg(mod.type.left(14), -14)
-                .arg(mod.format.left(8), -8)
-                .arg(QString::number(mod.rating, 'f', 1));
+                                     .arg(mod.id.left(20), -20)
+                                     .arg(mod.title.left(40), -40)
+                                     .arg(mod.type.left(14), -14)
+                                     .arg(mod.format.left(8), -8)
+                                     .arg(QString::number(mod.rating, 'f', 1));
         }
     }
 }
 
-void printModDetails(const Remus::ModEntry &mod)
-{
+void printModDetails(const Remus::ModEntry &mod) {
     qInfo().noquote() << QString("ID:          %1").arg(mod.id);
     qInfo().noquote() << QString("Title:       %1").arg(mod.title);
     qInfo().noquote() << QString("Author:      %1").arg(mod.author);

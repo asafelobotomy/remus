@@ -19,14 +19,9 @@
 
 namespace Remus {
 
-WorkflowController::WorkflowController(AppController   *app,
-                                       HashController  *hash,
-                                       MatchController *match,
-                                       ArtworkController    *artwork,
-                                       ConversionController *conversion,
-                                       OrganizeController   *organize,
-                                       ExportController     *export_ctl,
-                                       QObject *parent)
+WorkflowController::WorkflowController(AppController *app, HashController *hash, MatchController *match,
+    ArtworkController *artwork, ConversionController *conversion, OrganizeController *organize,
+    ExportController *export_ctl, QObject *parent)
     : QObject(parent)
     , m_appController(app)
     , m_hashController(hash)
@@ -34,8 +29,7 @@ WorkflowController::WorkflowController(AppController   *app,
     , m_artworkController(artwork)
     , m_conversionController(conversion)
     , m_organizeController(organize)
-    , m_exportController(export_ctl)
-{
+    , m_exportController(export_ctl) {
     // Debounce refresh() calls so that multiple rapid signals (e.g. from several
     // controllers finishing in quick succession) trigger only one filesystem scan.
     // openStage 1–6 (QML StageCards) != Stage enum 0–3 (pipeline queue buckets).
@@ -46,81 +40,71 @@ WorkflowController::WorkflowController(AppController   *app,
         refreshCounts();
         refreshQueueFiles();
     });
-    connect(app, &AppController::libraryOpened,
-            this, &WorkflowController::refresh);
-    connect(app, &AppController::libraryClosed,
-            this, &WorkflowController::refresh);
-    connect(hash,  &HashController::libraryChanged,
-            this, &WorkflowController::refresh);
-    connect(match, &MatchController::libraryChanged,
-            this, &WorkflowController::refresh);
-    connect(organize, &OrganizeController::libraryChanged,
-            this, &WorkflowController::refresh);
-    connect(export_ctl, &ExportController::libraryChanged,
-            this, &WorkflowController::refresh);
-    connect(conversion, &ConversionController::libraryChanged,
-            this, &WorkflowController::refresh);
-    connect(artwork, &ArtworkController::artworkDownloaded,
-            this, &WorkflowController::refresh);
+    connect(app, &AppController::libraryOpened, this, &WorkflowController::refresh);
+    connect(app, &AppController::libraryClosed, this, &WorkflowController::refresh);
+    connect(hash, &HashController::libraryChanged, this, &WorkflowController::refresh);
+    connect(match, &MatchController::libraryChanged, this, &WorkflowController::refresh);
+    connect(organize, &OrganizeController::libraryChanged, this, &WorkflowController::refresh);
+    connect(export_ctl, &ExportController::libraryChanged, this, &WorkflowController::refresh);
+    connect(conversion, &ConversionController::libraryChanged, this, &WorkflowController::refresh);
+    connect(artwork, &ArtworkController::artworkDownloaded, this, &WorkflowController::refresh);
 }
 
 // ── Public invokables ─────────────────────────────────────────────────────────
 
-void WorkflowController::refresh()
-{
+void WorkflowController::refresh() {
     if (m_refreshTimer)
         m_refreshTimer->start(); // coalesce rapid-fire signals into one refresh
 }
 
-void WorkflowController::setQueueStage(int stage)
-{
-    if (m_queueStage == stage) return;
+void WorkflowController::setQueueStage(int stage) {
+    if (m_queueStage == stage)
+        return;
     m_queueStage = stage;
     emit queueStageChanged();
     refreshQueueFiles();
 }
 
-void WorkflowController::runAll(const QString &scanDir, const QString &destDir,
-                                const QString &namingTemplate)
-{
-    if (!m_appController || !m_appController->isLibraryOpen() || m_running) return;
-    m_scanDir        = scanDir;
-    m_destDir        = destDir;
+void WorkflowController::runAll(const QString &scanDir, const QString &destDir, const QString &namingTemplate) {
+    if (!m_appController || !m_appController->isLibraryOpen() || m_running)
+        return;
+    m_scanDir = scanDir;
+    m_destDir = destDir;
     m_namingTemplate = namingTemplate;
-    m_running  = true;
-    m_runStep  = 0;
+    m_running = true;
+    m_runStep = 0;
     emit runningChanged();
     advanceRunAll();
 }
 
-void WorkflowController::cancel()
-{
-    if (m_running) cancelRunAll();
+void WorkflowController::cancel() {
+    if (m_running)
+        cancelRunAll();
 }
 
-void WorkflowController::hashAndMatchAll()
-{
-    if (!m_appController || !m_appController->isLibraryOpen()) return;
-    connect(m_hashController, &HashController::hashCompleted,
-            this, [this](int) { m_matchController->matchAll(); },
-            Qt::SingleShotConnection);
+void WorkflowController::hashAndMatchAll() {
+    if (!m_appController || !m_appController->isLibraryOpen())
+        return;
+    connect(
+        m_hashController, &HashController::hashCompleted, this, [this](int) { m_matchController->matchAll(); },
+        Qt::SingleShotConnection);
     m_hashController->startHashAll();
 }
 
-void WorkflowController::hashAndMatchSelected()
-{
-    if (!m_appController || !m_appController->isLibraryOpen()) return;
-    connect(m_hashController, &HashController::hashCompleted,
-            this, [this](int) { m_matchController->matchSelected(); },
-            Qt::SingleShotConnection);
+void WorkflowController::hashAndMatchSelected() {
+    if (!m_appController || !m_appController->isLibraryOpen())
+        return;
+    connect(
+        m_hashController, &HashController::hashCompleted, this, [this](int) { m_matchController->matchSelected(); },
+        Qt::SingleShotConnection);
     m_hashController->hashSelected();
 }
 
-bool WorkflowController::artworkExistsForFile(int fileId) const
-{
-    if (fileId <= 0) return false;
+bool WorkflowController::artworkExistsForFile(int fileId) const {
+    if (fileId <= 0)
+        return false;
     const QString base = QDir(artworkDirPath()).filePath(QStringLiteral("artwork_%1").arg(fileId));
-    for (const char *ext : {".png", ".jpg", ".jpeg", ".webp"}) {
+    for (const char *ext : { ".png", ".jpg", ".jpeg", ".webp" }) {
         if (QFileInfo::exists(base + QLatin1String(ext)))
             return true;
     }
@@ -129,17 +113,15 @@ bool WorkflowController::artworkExistsForFile(int fileId) const
 
 // ── Private helpers ───────────────────────────────────────────────────────────
 
-QString WorkflowController::artworkDirPath() const
-{
+QString WorkflowController::artworkDirPath() const {
     QSettings s;
     const QString cfg = s.value(QLatin1String(GuiSettings::ARTWORK_CACHE_DIR)).toString().trimmed();
-    if (!cfg.isEmpty()) return cfg;
-    return QDir(QStandardPaths::writableLocation(
-                    QStandardPaths::AppDataLocation)).filePath(QStringLiteral("artwork"));
+    if (!cfg.isEmpty())
+        return cfg;
+    return QDir(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)).filePath(QStringLiteral("artwork"));
 }
 
-void WorkflowController::refreshCounts()
-{
+void WorkflowController::refreshCounts() {
     if (!m_appController || !m_appController->isLibraryOpen()) {
         m_identityCount = m_enrichCount = m_doneCount = 0;
         emit stageCountsChanged();
@@ -151,41 +133,40 @@ void WorkflowController::refreshCounts()
     // Identity: no confirmed (non-rejected) match
     {
         QSqlQuery q(db);
-        const bool ok = q.exec(QStringLiteral(
-            "SELECT COUNT(DISTINCT f.id) FROM files f "
-            "WHERE NOT EXISTS ("
-            "  SELECT 1 FROM matches m "
-            "  WHERE m.file_id = f.id "
-            "    AND m.is_confirmed = 1 AND m.is_rejected = 0)"));
+        const bool ok = q.exec(QStringLiteral("SELECT COUNT(DISTINCT f.id) FROM files f "
+                                              "WHERE NOT EXISTS ("
+                                              "  SELECT 1 FROM matches m "
+                                              "  WHERE m.file_id = f.id "
+                                              "    AND m.is_confirmed = 1 AND m.is_rejected = 0)"));
         m_identityCount = (ok && q.next()) ? q.value(0).toInt() : 0;
     }
 
     // Enrich / Done: confirmed files split by artwork presence
     int enriched = 0;
-    int done     = 0;
+    int done = 0;
     {
         QSqlQuery q(db);
-        const bool ok = q.exec(QStringLiteral(
-            "SELECT DISTINCT f.id FROM files f "
-            "WHERE EXISTS ("
-            "  SELECT 1 FROM matches m "
-            "  WHERE m.file_id = f.id "
-            "    AND m.is_confirmed = 1 AND m.is_rejected = 0)"));
+        const bool ok = q.exec(QStringLiteral("SELECT DISTINCT f.id FROM files f "
+                                              "WHERE EXISTS ("
+                                              "  SELECT 1 FROM matches m "
+                                              "  WHERE m.file_id = f.id "
+                                              "    AND m.is_confirmed = 1 AND m.is_rejected = 0)"));
         if (ok) {
             while (q.next()) {
-                if (artworkExistsForFile(q.value(0).toInt())) ++done;
-                else ++enriched;
+                if (artworkExistsForFile(q.value(0).toInt()))
+                    ++done;
+                else
+                    ++enriched;
             }
         }
     }
     m_enrichCount = enriched;
-    m_doneCount   = done;
+    m_doneCount = done;
 
     emit stageCountsChanged();
 }
 
-void WorkflowController::refreshQueueFiles()
-{
+void WorkflowController::refreshQueueFiles() {
     m_queueFiles.clear();
 
     if (!m_appController || !m_appController->isLibraryOpen()) {
@@ -216,38 +197,38 @@ void WorkflowController::refreshQueueFiles()
     QString sql;
     switch (m_queueStage) {
     case Identity:
-        sql = QStringLiteral(
-            "SELECT f.id, f.filename, f.current_path, f.md5, f.base_title, f.extension, "
-            "%1 "
-            "FROM files f "
-            "WHERE f.is_primary = 1 "
-            "  AND ((f.md5 IS NULL OR f.md5 = '') "
-            "       OR NOT EXISTS ("
-            "         SELECT 1 FROM matches m "
-            "         WHERE m.file_id = f.id "
-            "           AND m.is_confirmed = 1 AND m.is_rejected = 0)) "
-            "ORDER BY COALESCE(f.base_title, f.filename) LIMIT 500").arg(kChildExts);
+        sql = QStringLiteral("SELECT f.id, f.filename, f.current_path, f.md5, f.base_title, f.extension, "
+                             "%1 "
+                             "FROM files f "
+                             "WHERE f.is_primary = 1 "
+                             "  AND ((f.md5 IS NULL OR f.md5 = '') "
+                             "       OR NOT EXISTS ("
+                             "         SELECT 1 FROM matches m "
+                             "         WHERE m.file_id = f.id "
+                             "           AND m.is_confirmed = 1 AND m.is_rejected = 0)) "
+                             "ORDER BY COALESCE(f.base_title, f.filename) LIMIT 500")
+                  .arg(kChildExts);
         break;
     case Enrich:
     case Done:
-        sql = QStringLiteral(
-            "SELECT f.id, f.filename, f.current_path, f.md5, f.base_title, f.extension, "
-            "%1 "
-            "FROM files f "
-            "WHERE f.is_primary = 1 "
-            "  AND EXISTS ("
-            "    SELECT 1 FROM matches m "
-            "    WHERE m.file_id = f.id "
-            "      AND m.is_confirmed = 1 AND m.is_rejected = 0) "
-            "ORDER BY COALESCE(f.base_title, f.filename) LIMIT 500").arg(kChildExts);
+        sql = QStringLiteral("SELECT f.id, f.filename, f.current_path, f.md5, f.base_title, f.extension, "
+                             "%1 "
+                             "FROM files f "
+                             "WHERE f.is_primary = 1 "
+                             "  AND EXISTS ("
+                             "    SELECT 1 FROM matches m "
+                             "    WHERE m.file_id = f.id "
+                             "      AND m.is_confirmed = 1 AND m.is_rejected = 0) "
+                             "ORDER BY COALESCE(f.base_title, f.filename) LIMIT 500")
+                  .arg(kChildExts);
         break;
     default: // AllFiles
-        sql = QStringLiteral(
-            "SELECT f.id, f.filename, f.current_path, f.md5, f.base_title, f.extension, "
-            "%1 "
-            "FROM files f "
-            "WHERE f.is_primary = 1 "
-            "ORDER BY COALESCE(f.base_title, f.filename) LIMIT 500").arg(kChildExts);
+        sql = QStringLiteral("SELECT f.id, f.filename, f.current_path, f.md5, f.base_title, f.extension, "
+                             "%1 "
+                             "FROM files f "
+                             "WHERE f.is_primary = 1 "
+                             "ORDER BY COALESCE(f.base_title, f.filename) LIMIT 500")
+                  .arg(kChildExts);
         break;
     }
 
@@ -258,34 +239,34 @@ void WorkflowController::refreshQueueFiles()
     }
 
     while (q.next()) {
-        const int     id          = q.value(0).toInt();
-        const bool    hasArtwork  = artworkExistsForFile(id);
-        const QString baseTitle   = q.value(4).toString();
+        const int id = q.value(0).toInt();
+        const bool hasArtwork = artworkExistsForFile(id);
+        const QString baseTitle = q.value(4).toString();
         const QString displayName = baseTitle.isEmpty() ? q.value(1).toString() : baseTitle;
 
-        if (m_queueStage == Enrich && hasArtwork)  continue;
-        if (m_queueStage == Done   && !hasArtwork) continue;
+        if (m_queueStage == Enrich && hasArtwork)
+            continue;
+        if (m_queueStage == Done && !hasArtwork)
+            continue;
 
         QVariantMap item;
-        item[QStringLiteral("fileId")]          = id;
-        item[QStringLiteral("filename")]         = displayName;
-        item[QStringLiteral("path")]             = q.value(2).toString();
-        static const QStringList kConvertibleExts = {
-            QStringLiteral(".cue"), QStringLiteral(".gdi"), QStringLiteral(".iso"),
-            QStringLiteral(".bin"), QStringLiteral(".img"), QStringLiteral(".mdf"),
-            QStringLiteral(".nrg"), QStringLiteral(".gcm")
-        };
+        item[QStringLiteral("fileId")] = id;
+        item[QStringLiteral("filename")] = displayName;
+        item[QStringLiteral("path")] = q.value(2).toString();
+        static const QStringList kConvertibleExts
+            = { QStringLiteral(".cue"), QStringLiteral(".gdi"), QStringLiteral(".iso"), QStringLiteral(".bin"),
+                  QStringLiteral(".img"), QStringLiteral(".mdf"), QStringLiteral(".nrg"), QStringLiteral(".gcm") };
         const QString rawExt = q.value(5).toString().toLower(); // already stored with leading dot
-        item[QStringLiteral("hasHash")]          = !q.value(3).toString().isEmpty();
-        item[QStringLiteral("hasArtwork")]        = hasArtwork;
-        item[QStringLiteral("extension")]         = q.value(5).toString();
-        item[QStringLiteral("childExtensions")]   = q.value(6).toString();
-        item[QStringLiteral("hasMatch")]          = q.value(7).toBool();
-        item[QStringLiteral("hasAnyMatch")]       = q.value(8).toBool();
-        item[QStringLiteral("isOrganized")]       = q.value(9).toBool();
-        item[QStringLiteral("isConverted")]       = q.value(10).toBool();
-        item[QStringLiteral("isBundled")]         = q.value(11).toBool();
-        item[QStringLiteral("isConvertible")]     = kConvertibleExts.contains(rawExt);
+        item[QStringLiteral("hasHash")] = !q.value(3).toString().isEmpty();
+        item[QStringLiteral("hasArtwork")] = hasArtwork;
+        item[QStringLiteral("extension")] = q.value(5).toString();
+        item[QStringLiteral("childExtensions")] = q.value(6).toString();
+        item[QStringLiteral("hasMatch")] = q.value(7).toBool();
+        item[QStringLiteral("hasAnyMatch")] = q.value(8).toBool();
+        item[QStringLiteral("isOrganized")] = q.value(9).toBool();
+        item[QStringLiteral("isConverted")] = q.value(10).toBool();
+        item[QStringLiteral("isBundled")] = q.value(11).toBool();
+        item[QStringLiteral("isConvertible")] = kConvertibleExts.contains(rawExt);
         m_queueFiles.append(item);
     }
 

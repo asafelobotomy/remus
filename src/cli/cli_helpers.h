@@ -31,16 +31,21 @@ HashResult hashFileRecord(const FileRecord &file, Hasher &hasher);
 // when --ss-user / --ss-pass are both set.
 // When a database reference is provided, creates a MetadataCache and
 // attaches it to the orchestrator.
-std::unique_ptr<ProviderOrchestrator> buildOrchestrator(const QCommandLineParser &parser,
-                                                         Database *db = nullptr);
+std::unique_ptr<ProviderOrchestrator> buildOrchestrator(const QCommandLineParser &parser, Database *db = nullptr);
 
 // Discover a data/<subdir>/ directory relative to cwd or app location.
 QString findDataSubdir(const QString &subdir);
 
 // Convenience wrappers for common data subdirectories.
-inline QString findDatabaseDir()  { return findDataSubdir(QStringLiteral("databases")); }
-inline QString findMetadataDir()  { return findDataSubdir(QStringLiteral("metadata")); }
-inline QString findGameTDBDir()   { return findDataSubdir(QStringLiteral("gametdb")); }
+inline QString findDatabaseDir() {
+    return findDataSubdir(QStringLiteral("databases"));
+}
+inline QString findMetadataDir() {
+    return findDataSubdir(QStringLiteral("metadata"));
+}
+inline QString findGameTDBDir() {
+    return findDataSubdir(QStringLiteral("gametdb"));
+}
 inline QString findOpenVGDBPath() {
     const QString dir = findDataSubdir(QStringLiteral("openvgdb"));
     return dir.isEmpty() ? QString() : dir + QStringLiteral("/openvgdb.sqlite");
@@ -60,30 +65,24 @@ QString findExistingArtworkPath(const QString &basePath);
 
 // Resolve an option value when presets are acting as defaults.
 // Explicit CLI values win, then preset values, then parser defaults.
-QString resolveCliOptionValue(const QCommandLineParser &parser,
-                              const QString &optionName,
-                              const QString &presetValue = QString());
+QString resolveCliOptionValue(
+    const QCommandLineParser &parser, const QString &optionName, const QString &presetValue = QString());
 
 // Return only files that have at least one computed hash value.
 QList<FileRecord> getHashedFiles(Database &db);
 
 // Resolve a provider secret: CLI flag → CredentialManager (env var → OS keychain → legacy QSettings).
 // Emits a security warning when the secret arrives via argv.
-QString resolveSecret(const QCommandLineParser &parser,
-                      const QString &optionName,
-                      const char *settingKey);
+QString resolveSecret(const QCommandLineParser &parser, const QString &optionName, const char *settingKey);
 QList<FileRecord> getHashedFiles(Database &db, const QSet<int> &fileScopeIds);
 bool fileMatchesProcessScope(const FileRecord &file, const QSet<int> &fileScopeIds);
 
 // Resolve the effective system ID for downstream handling, preferring the
 // matched game system when available and falling back to the scanned file.
-int resolveMatchedSystemId(const FileRecord &file,
-                           const Database::MatchResult *match = nullptr);
+int resolveMatchedSystemId(const FileRecord &file, const Database::MatchResult *match = nullptr);
 
 // Convenience predicate for per-system process batches.
-bool fileMatchesSystemFilter(const FileRecord &file,
-                             int systemId,
-                             const Database::MatchResult *match = nullptr);
+bool fileMatchesSystemFilter(const FileRecord &file, int systemId, const Database::MatchResult *match = nullptr);
 
 // Return the best user-facing name for matching/search. For archive-backed
 // records this prefers the container name over the inner entry extension.
@@ -94,8 +93,7 @@ QString getMatchingSystemName(const FileRecord &file);
 
 // Return the best provider lookup system name, preferring the matched game
 // system when available and otherwise falling back to the scanned file.
-QString getProviderLookupSystemName(const FileRecord &file,
-                                    const Database::MatchResult *match = nullptr);
+QString getProviderLookupSystemName(const FileRecord &file, const Database::MatchResult *match = nullptr);
 
 // Insert a matched game into the database and record the match confidence/method.
 // Returns the newly-inserted gameId, or 0 on failure.

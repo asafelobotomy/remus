@@ -15,16 +15,14 @@ namespace Remus {
 ModController::ModController(AppController *appController, QObject *parent)
     : QObject(parent)
     , m_appController(appController)
-    , m_workflow(std::make_unique<ModWorkflowService>(*appController->database(), m_patchService))
-{
-    QSettings settings(QString::fromLatin1(Constants::SETTINGS_ORGANIZATION),
-                       QString::fromLatin1(Constants::SETTINGS_APPLICATION));
+    , m_workflow(std::make_unique<ModWorkflowService>(*appController->database(), m_patchService)) {
+    QSettings settings(
+        QString::fromLatin1(Constants::SETTINGS_ORGANIZATION), QString::fromLatin1(Constants::SETTINGS_APPLICATION));
     m_catalogUrl = settings.value(QString::fromLatin1(GuiSettings::MOD_CATALOG_URL)).toString();
     connect(m_appController, &AppController::selectedFileChanged, this, &ModController::loadForSelectedFile);
 }
 
-void ModController::loadCatalog(const QString &url, bool forceRefresh)
-{
+void ModController::loadCatalog(const QString &url, bool forceRefresh) {
     const QString resolvedUrl = url.trimmed().isEmpty() ? m_catalogUrl : url.trimmed();
     if (resolvedUrl.isEmpty()) {
         setLastError(QStringLiteral("Provide a mod catalog URL or local JSON path."));
@@ -37,30 +35,32 @@ void ModController::loadCatalog(const QString &url, bool forceRefresh)
     const bool isRemote = resolvedUrl.startsWith(QStringLiteral("https://"));
 
     QThread *thread = QThread::create([this, resolvedUrl, isRemote, forceRefresh]() {
-        const bool loaded = isRemote
-            ? m_provider.loadFromUrl(QUrl(resolvedUrl), forceRefresh)
-            : m_provider.loadFromFile(resolvedUrl);
+        const bool loaded
+            = isRemote ? m_provider.loadFromUrl(QUrl(resolvedUrl), forceRefresh) : m_provider.loadFromFile(resolvedUrl);
 
-        QMetaObject::invokeMethod(this, [this, loaded, resolvedUrl, isRemote]() {
-            m_loadingCatalog = false;
-            emit loadingCatalogChanged();
-            if (!loaded) {
-                setLastError(m_provider.lastError());
-                return;
-            }
-            setCatalogUrl(resolvedUrl);
-            const bool remote = resolvedUrl.startsWith(QStringLiteral("https://"));
-            m_workflow->setCatalogIsRemote(remote);
-            loadForSelectedFile();
-        }, Qt::QueuedConnection);
+        QMetaObject::invokeMethod(
+            this,
+            [this, loaded, resolvedUrl, isRemote]() {
+                m_loadingCatalog = false;
+                emit loadingCatalogChanged();
+                if (!loaded) {
+                    setLastError(m_provider.lastError());
+                    return;
+                }
+                setCatalogUrl(resolvedUrl);
+                const bool remote = resolvedUrl.startsWith(QStringLiteral("https://"));
+                m_workflow->setCatalogIsRemote(remote);
+                loadForSelectedFile();
+            },
+            Qt::QueuedConnection);
     });
     connect(thread, &QThread::finished, thread, &QThread::deleteLater);
     thread->start();
 }
 
-void ModController::loadForSelectedFile()
-{
-    if (m_loadingCatalog) return; // provider data is being written on the worker thread
+void ModController::loadForSelectedFile() {
+    if (m_loadingCatalog)
+        return; // provider data is being written on the worker thread
     if (m_appController == nullptr || !m_appController->isLibraryOpen()) {
         if (m_model != nullptr) {
             m_model->clear();
@@ -115,8 +115,7 @@ void ModController::loadForSelectedFile()
     refreshInstalledMods();
 }
 
-bool ModController::installMod(const QString &modId, const QString &outputDir)
-{
+bool ModController::installMod(const QString &modId, const QString &outputDir) {
     if (m_appController == nullptr || !m_appController->isLibraryOpen()) {
         setLastError(QStringLiteral("Open a library before installing mods."));
         return false;
@@ -138,11 +137,8 @@ bool ModController::installMod(const QString &modId, const QString &outputDir)
 
     m_installing = true;
     emit installingChanged();
-    const ModInstallResult result = m_workflow->install(
-        m_appController->database()->getFileById(fileId),
-        mod.value(),
-        outputDir,
-        nullptr);
+    const ModInstallResult result
+        = m_workflow->install(m_appController->database()->getFileById(fileId), mod.value(), outputDir, nullptr);
     m_installing = false;
     emit installingChanged();
 
@@ -156,8 +152,7 @@ bool ModController::installMod(const QString &modId, const QString &outputDir)
     return true;
 }
 
-bool ModController::uninstallInstallation(int installationId)
-{
+bool ModController::uninstallInstallation(int installationId) {
     if (!m_workflow->uninstall(installationId)) {
         setLastError(QStringLiteral("Failed to uninstall the selected mod."));
         return false;
@@ -168,23 +163,21 @@ bool ModController::uninstallInstallation(int installationId)
     return true;
 }
 
-void ModController::setCatalogUrl(const QString &value)
-{
+void ModController::setCatalogUrl(const QString &value) {
     if (m_catalogUrl == value) {
         return;
     }
 
     m_catalogUrl = value;
-    QSettings settings(QString::fromLatin1(Constants::SETTINGS_ORGANIZATION),
-                       QString::fromLatin1(Constants::SETTINGS_APPLICATION));
+    QSettings settings(
+        QString::fromLatin1(Constants::SETTINGS_ORGANIZATION), QString::fromLatin1(Constants::SETTINGS_APPLICATION));
     settings.setValue(QString::fromLatin1(GuiSettings::MOD_CATALOG_URL), value);
     emit catalogUrlChanged();
 }
 
-void ModController::applyToolPaths()
-{
-    QSettings settings(QString::fromLatin1(Constants::SETTINGS_ORGANIZATION),
-                       QString::fromLatin1(Constants::SETTINGS_APPLICATION));
+void ModController::applyToolPaths() {
+    QSettings settings(
+        QString::fromLatin1(Constants::SETTINGS_ORGANIZATION), QString::fromLatin1(Constants::SETTINGS_APPLICATION));
     const QString flipsPath = settings.value(QString::fromLatin1(GuiSettings::FLIPS_PATH)).toString().trimmed();
     const QString xdeltaPath = settings.value(QString::fromLatin1(GuiSettings::XDELTA3_PATH)).toString().trimmed();
     const QString ppfPath = settings.value(QString::fromLatin1(GuiSettings::PPF_PATH)).toString().trimmed();
@@ -199,11 +192,11 @@ void ModController::applyToolPaths()
     }
 }
 
-void ModController::refreshInstalledMods()
-{
+void ModController::refreshInstalledMods() {
     QVariantList installedMods;
     if (m_appController != nullptr && m_appController->isLibraryOpen() && m_appController->selectedFileId() > 0) {
-        const QList<ModInstallationRecord> records = m_appController->database()->getModInstallations(m_appController->selectedFileId());
+        const QList<ModInstallationRecord> records
+            = m_appController->database()->getModInstallations(m_appController->selectedFileId());
         for (const ModInstallationRecord &record : records) {
             QVariantMap item;
             item.insert(QStringLiteral("installationId"), record.id);
@@ -220,8 +213,7 @@ void ModController::refreshInstalledMods()
     emit installedModsChanged();
 }
 
-void ModController::setLastError(const QString &message)
-{
+void ModController::setLastError(const QString &message) {
     if (m_lastError == message) {
         return;
     }

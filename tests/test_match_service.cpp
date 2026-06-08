@@ -11,20 +11,20 @@
 
 using namespace Remus;
 
-class TestMatchService : public QObject
-{
+class TestMatchService : public QObject {
     Q_OBJECT
 
 private:
     /// Populate a DB with a file + match, return {fileId, gameId}.
-    std::pair<int, int> populateFixture(Database &db)
-    {
+    std::pair<int, int> populateFixture(Database &db) {
         int libId = db.insertLibrary("/tmp/roms");
-        if (libId <= 0) qFatal("populateFixture: insertLibrary returned %d", libId);
+        if (libId <= 0)
+            qFatal("populateFixture: insertLibrary returned %d", libId);
 
         // Use pre-populated default system
         int sysId = db.getSystemId("NES");
-        if (sysId <= 0) qFatal("populateFixture: getSystemId returned %d", sysId);
+        if (sysId <= 0)
+            qFatal("populateFixture: getSystemId returned %d", sysId);
 
         FileRecord fr;
         fr.libraryId = libId;
@@ -36,21 +36,20 @@ private:
         fr.crc32 = "AABB1122";
         fr.hashCalculated = true;
         int fileId = db.insertFile(fr);
-        if (fileId <= 0) qFatal("populateFixture: insertFile returned %d", fileId);
+        if (fileId <= 0)
+            qFatal("populateFixture: insertFile returned %d", fileId);
 
-        int gameId = db.insertGame("Test Game", sysId, "USA",
-                                   "Pub", "Dev", "1990-01-01",
-                                   "Desc", "Action", "1", 7.5f);
-        if (gameId <= 0) qFatal("populateFixture: insertGame returned %d", gameId);
+        int gameId = db.insertGame("Test Game", sysId, "USA", "Pub", "Dev", "1990-01-01", "Desc", "Action", "1", 7.5f);
+        if (gameId <= 0)
+            qFatal("populateFixture: insertGame returned %d", gameId);
 
         db.insertMatch(fileId, gameId, 90.0f, "hash");
-        return {fileId, gameId};
+        return { fileId, gameId };
     }
 
 private slots:
 
-    void testConfirmMatch()
-    {
+    void testConfirmMatch() {
         QTemporaryDir tmp;
         QVERIFY(tmp.isValid());
         Database db;
@@ -65,8 +64,7 @@ private slots:
         QVERIFY(!mr.isRejected);
     }
 
-    void testRejectMatch()
-    {
+    void testRejectMatch() {
         QTemporaryDir tmp;
         QVERIFY(tmp.isValid());
         Database db;
@@ -81,8 +79,7 @@ private slots:
         QVERIFY(!mr.isConfirmed);
     }
 
-    void testGetAllMatches()
-    {
+    void testGetAllMatches() {
         QTemporaryDir tmp;
         QVERIFY(tmp.isValid());
         Database db;
@@ -96,8 +93,7 @@ private slots:
         QCOMPARE(matches[fileId].gameTitle, QString("Test Game"));
     }
 
-    void testGetMatchForFile()
-    {
+    void testGetMatchForFile() {
         QTemporaryDir tmp;
         QVERIFY(tmp.isValid());
         Database db;
@@ -110,8 +106,7 @@ private slots:
         QVERIFY(qFuzzyCompare(mr.confidence, 90.0f));
     }
 
-    void testGetMatchForNonexistentFile()
-    {
+    void testGetMatchForNonexistentFile() {
         QTemporaryDir tmp;
         QVERIFY(tmp.isValid());
         Database db;
@@ -123,8 +118,7 @@ private slots:
         QCOMPARE(mr.matchId, 0);
     }
 
-    void testConfirmNonexistentFile()
-    {
+    void testConfirmNonexistentFile() {
         QTemporaryDir tmp;
         QVERIFY(tmp.isValid());
         Database db;

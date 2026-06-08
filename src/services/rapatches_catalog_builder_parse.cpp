@@ -2,74 +2,71 @@
 
 namespace Remus {
 
-QString RAPatchesCatalogBuilder::normaliseSystemName(const QString &dirName)
-{
+QString RAPatchesCatalogBuilder::normaliseSystemName(const QString &dirName) {
     static const QMap<QString, QString> mapping = {
-        {QStringLiteral("3DO"),                 QStringLiteral("3DO")},
-        {QStringLiteral("Amstrad CPC"),         QStringLiteral("Amstrad CPC")},
-        {QStringLiteral("Apple II"),            QStringLiteral("Apple II")},
-        {QStringLiteral("Arcadia 2001"),        QStringLiteral("Arcadia 2001")},
-        {QStringLiteral("Atari 2600"),          QStringLiteral("Atari 2600")},
-        {QStringLiteral("Atari Jaguar"),        QStringLiteral("Atari Jaguar")},
-        {QStringLiteral("Dreamcast"),           QStringLiteral("Dreamcast")},
-        {QStringLiteral("Famicom Disk System"), QStringLiteral("Famicom Disk System")},
-        {QStringLiteral("GBA"),                 QStringLiteral("Game Boy Advance")},
-        {QStringLiteral("GBC"),                 QStringLiteral("Game Boy Color")},
-        {QStringLiteral("Game Boy"),            QStringLiteral("Game Boy")},
-        {QStringLiteral("Game Gear"),           QStringLiteral("Game Gear")},
-        {QStringLiteral("GameCube"),            QStringLiteral("GameCube")},
-        {QStringLiteral("MD"),                  QStringLiteral("Sega Genesis / Mega Drive")},
-        {QStringLiteral("MSX"),                 QStringLiteral("MSX")},
-        {QStringLiteral("Master System"),       QStringLiteral("Master System")},
-        {QStringLiteral("N64"),                 QStringLiteral("Nintendo 64")},
-        {QStringLiteral("NDS"),                 QStringLiteral("Nintendo DS")},
-        {QStringLiteral("NES"),                 QStringLiteral("NES")},
-        {QStringLiteral("Neo Geo CD"),          QStringLiteral("Neo Geo CD")},
-        {QStringLiteral("Neo Geo Pocket"),      QStringLiteral("Neo Geo Pocket")},
-        {QStringLiteral("Nintendo 64DD"),       QStringLiteral("Nintendo 64DD")},
-        {QStringLiteral("PC Engine CD"),        QStringLiteral("PC Engine CD")},
-        {QStringLiteral("PC Engine"),           QStringLiteral("PC Engine")},
-        {QStringLiteral("PC-8801"),             QStringLiteral("PC-8801")},
-        {QStringLiteral("PC-FX"),               QStringLiteral("PC-FX")},
-        {QStringLiteral("PS2"),                 QStringLiteral("PlayStation 2")},
-        {QStringLiteral("PlayStation Portable"),QStringLiteral("PlayStation Portable")},
-        {QStringLiteral("PlayStation"),         QStringLiteral("PlayStation")},
-        {QStringLiteral("Pokemon Mini"),        QStringLiteral("Pokemon Mini")},
-        {QStringLiteral("SG-1000"),             QStringLiteral("SG-1000")},
-        {QStringLiteral("SNES"),                QStringLiteral("Super Nintendo")},
-        {QStringLiteral("Saturn"),              QStringLiteral("Saturn")},
-        {QStringLiteral("Sega 32X"),            QStringLiteral("Sega 32X")},
-        {QStringLiteral("Sega CD"),             QStringLiteral("Sega CD")},
-        {QStringLiteral("Vectrex"),             QStringLiteral("Vectrex")},
-        {QStringLiteral("Virtual Boy"),         QStringLiteral("Virtual Boy")},
-        {QStringLiteral("Watara Supervision"),  QStringLiteral("Watara Supervision")},
-        {QStringLiteral("Wii"),                 QStringLiteral("Wii")},
-        {QStringLiteral("WonderSwan"),          QStringLiteral("WonderSwan")},
+        { QStringLiteral("3DO"), QStringLiteral("3DO") },
+        { QStringLiteral("Amstrad CPC"), QStringLiteral("Amstrad CPC") },
+        { QStringLiteral("Apple II"), QStringLiteral("Apple II") },
+        { QStringLiteral("Arcadia 2001"), QStringLiteral("Arcadia 2001") },
+        { QStringLiteral("Atari 2600"), QStringLiteral("Atari 2600") },
+        { QStringLiteral("Atari Jaguar"), QStringLiteral("Atari Jaguar") },
+        { QStringLiteral("Dreamcast"), QStringLiteral("Dreamcast") },
+        { QStringLiteral("Famicom Disk System"), QStringLiteral("Famicom Disk System") },
+        { QStringLiteral("GBA"), QStringLiteral("Game Boy Advance") },
+        { QStringLiteral("GBC"), QStringLiteral("Game Boy Color") },
+        { QStringLiteral("Game Boy"), QStringLiteral("Game Boy") },
+        { QStringLiteral("Game Gear"), QStringLiteral("Game Gear") },
+        { QStringLiteral("GameCube"), QStringLiteral("GameCube") },
+        { QStringLiteral("MD"), QStringLiteral("Sega Genesis / Mega Drive") },
+        { QStringLiteral("MSX"), QStringLiteral("MSX") },
+        { QStringLiteral("Master System"), QStringLiteral("Master System") },
+        { QStringLiteral("N64"), QStringLiteral("Nintendo 64") },
+        { QStringLiteral("NDS"), QStringLiteral("Nintendo DS") },
+        { QStringLiteral("NES"), QStringLiteral("NES") },
+        { QStringLiteral("Neo Geo CD"), QStringLiteral("Neo Geo CD") },
+        { QStringLiteral("Neo Geo Pocket"), QStringLiteral("Neo Geo Pocket") },
+        { QStringLiteral("Nintendo 64DD"), QStringLiteral("Nintendo 64DD") },
+        { QStringLiteral("PC Engine CD"), QStringLiteral("PC Engine CD") },
+        { QStringLiteral("PC Engine"), QStringLiteral("PC Engine") },
+        { QStringLiteral("PC-8801"), QStringLiteral("PC-8801") },
+        { QStringLiteral("PC-FX"), QStringLiteral("PC-FX") },
+        { QStringLiteral("PS2"), QStringLiteral("PlayStation 2") },
+        { QStringLiteral("PlayStation Portable"), QStringLiteral("PlayStation Portable") },
+        { QStringLiteral("PlayStation"), QStringLiteral("PlayStation") },
+        { QStringLiteral("Pokemon Mini"), QStringLiteral("Pokemon Mini") },
+        { QStringLiteral("SG-1000"), QStringLiteral("SG-1000") },
+        { QStringLiteral("SNES"), QStringLiteral("Super Nintendo") },
+        { QStringLiteral("Saturn"), QStringLiteral("Saturn") },
+        { QStringLiteral("Sega 32X"), QStringLiteral("Sega 32X") },
+        { QStringLiteral("Sega CD"), QStringLiteral("Sega CD") },
+        { QStringLiteral("Vectrex"), QStringLiteral("Vectrex") },
+        { QStringLiteral("Virtual Boy"), QStringLiteral("Virtual Boy") },
+        { QStringLiteral("Watara Supervision"), QStringLiteral("Watara Supervision") },
+        { QStringLiteral("Wii"), QStringLiteral("Wii") },
+        { QStringLiteral("WonderSwan"), QStringLiteral("WonderSwan") },
     };
 
     auto it = mapping.constFind(dirName);
     return it != mapping.constEnd() ? it.value() : dirName;
 }
 
-QString RAPatchesCatalogBuilder::normaliseTypeName(const QString &dirName)
-{
+QString RAPatchesCatalogBuilder::normaliseTypeName(const QString &dirName) {
     static const QMap<QString, QString> mapping = {
-        {QStringLiteral("Fix"),           QStringLiteral("fix")},
-        {QStringLiteral("Hacks"),         QStringLiteral("hack")},
-        {QStringLiteral("Translation"),   QStringLiteral("translation")},
-        {QStringLiteral("Improvement"),   QStringLiteral("improvement")},
-        {QStringLiteral("MSU-1"),         QStringLiteral("enhancement")},
-        {QStringLiteral("MSU-1-Older"),   QStringLiteral("enhancement")},
-        {QStringLiteral("Subset"),        QStringLiteral("subset")},
-        {QStringLiteral("GTConversion"),  QStringLiteral("conversion")},
+        { QStringLiteral("Fix"), QStringLiteral("fix") },
+        { QStringLiteral("Hacks"), QStringLiteral("hack") },
+        { QStringLiteral("Translation"), QStringLiteral("translation") },
+        { QStringLiteral("Improvement"), QStringLiteral("improvement") },
+        { QStringLiteral("MSU-1"), QStringLiteral("enhancement") },
+        { QStringLiteral("MSU-1-Older"), QStringLiteral("enhancement") },
+        { QStringLiteral("Subset"), QStringLiteral("subset") },
+        { QStringLiteral("GTConversion"), QStringLiteral("conversion") },
     };
 
     auto it = mapping.constFind(dirName);
     return it != mapping.constEnd() ? it.value() : dirName.toLower();
 }
 
-RAPatchesCatalogBuilder::ParsedFilename RAPatchesCatalogBuilder::parseFilename(const QString &filename)
-{
+RAPatchesCatalogBuilder::ParsedFilename RAPatchesCatalogBuilder::parseFilename(const QString &filename) {
     ParsedFilename result;
 
     const int dotPos = filename.lastIndexOf(QLatin1Char('.'));
@@ -101,8 +98,7 @@ RAPatchesCatalogBuilder::ParsedFilename RAPatchesCatalogBuilder::parseFilename(c
     static const QRegularExpression langRe(
         QStringLiteral("^(En|Ja|Fr|De|Es|It|Nl|Pt|Ru|Zh|Ko|Sv|Da|No|Fi|Pl|Cs|Hu|Ro|Tr|Ar|He|Th|Vi)$"),
         QRegularExpression::CaseInsensitiveOption);
-    static const QRegularExpression versionRe(
-        QStringLiteral("^(v\\d|Final|Alpha|Beta|Alt\\s*\\d|Demo|RC\\d|v\\d{8})"),
+    static const QRegularExpression versionRe(QStringLiteral("^(v\\d|Final|Alpha|Beta|Alt\\s*\\d|Demo|RC\\d|v\\d{8})"),
         QRegularExpression::CaseInsensitiveOption);
 
     for (int i = 0; i < segments.size(); ++i) {
@@ -121,8 +117,7 @@ RAPatchesCatalogBuilder::ParsedFilename RAPatchesCatalogBuilder::parseFilename(c
     return result;
 }
 
-RAPatchesCatalogBuilder::ReadmeHashes RAPatchesCatalogBuilder::parseReadme(const QString &readmeContent)
-{
+RAPatchesCatalogBuilder::ReadmeHashes RAPatchesCatalogBuilder::parseReadme(const QString &readmeContent) {
     ReadmeHashes result;
     if (readmeContent.isEmpty()) {
         return result;

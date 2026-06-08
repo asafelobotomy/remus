@@ -24,13 +24,25 @@ class ModController : public QObject {
 public:
     explicit ModController(AppController *appController, QObject *parent = nullptr);
 
-    bool isLoadingCatalog() const { return m_loadingCatalog; }
-    bool isInstalling() const { return m_installing; }
-    QString catalogUrl() const { return m_catalogUrl; }
-    QString lastError() const { return m_lastError; }
-    QVariantList installedMods() const { return m_installedMods; }
+    bool isLoadingCatalog() const {
+        return m_loadingCatalog;
+    }
+    bool isInstalling() const {
+        return m_installing;
+    }
+    QString catalogUrl() const {
+        return m_catalogUrl;
+    }
+    QString lastError() const {
+        return m_lastError;
+    }
+    QVariantList installedMods() const {
+        return m_installedMods;
+    }
 
-    void setModel(ModListModel *model) { m_model = model; }
+    void setModel(ModListModel *model) {
+        m_model = model;
+    }
 
     Q_INVOKABLE void loadCatalog(const QString &url = QString(), bool forceRefresh = false);
     Q_INVOKABLE void loadForSelectedFile();

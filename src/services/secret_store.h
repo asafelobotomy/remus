@@ -12,11 +12,11 @@ public:
     /// Structured result from readWithStatus().
     struct ReadResult {
         enum class Status {
-            Found,        ///< Key exists and value was returned.
-            NotFound,     ///< Key does not exist in the keychain.
-            BackendError  ///< Keychain backend unavailable or other I/O error.
+            Found, ///< Key exists and value was returned.
+            NotFound, ///< Key does not exist in the keychain.
+            BackendError ///< Keychain backend unavailable or other I/O error.
         };
-        Status  status;
+        Status status;
         QString value;
         QString errorMessage; ///< Non-empty only when status == BackendError.
     };

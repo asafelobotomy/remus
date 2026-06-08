@@ -18,10 +18,18 @@ class HashController : public QObject {
 public:
     explicit HashController(AppController *appController, QObject *parent = nullptr);
 
-    bool isHashing() const { return m_hashing; }
-    int hashedFiles() const { return m_hashedFiles; }
-    int totalFiles() const { return m_totalFiles; }
-    QString progressMessage() const { return m_progressMessage; }
+    bool isHashing() const {
+        return m_hashing;
+    }
+    int hashedFiles() const {
+        return m_hashedFiles;
+    }
+    int totalFiles() const {
+        return m_totalFiles;
+    }
+    QString progressMessage() const {
+        return m_progressMessage;
+    }
 
     Q_INVOKABLE void startHashAll();
     Q_INVOKABLE void hashSelected();

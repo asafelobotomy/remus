@@ -8,10 +8,9 @@
 
 namespace Remus {
 
-void VerificationEngine::loadDatCache(const QString &systemName)
-{
+void VerificationEngine::loadDatCache(const QString &systemName) {
     if (m_datCache.contains(systemName)) {
-        return;  // Already loaded
+        return; // Already loaded
     }
 
     QMap<QString, DatRomEntry> entries;
@@ -41,17 +40,18 @@ void VerificationEngine::loadDatCache(const QString &systemName)
             JOIN game_signatures gs ON gs.game_id = g.game_id
             WHERE s.internal_name = ?
             GROUP BY g.game_id
-        )");;
+        )");
+        ;
         q.addBindValue(systemName);
 
         if (q.exec()) {
             while (q.next()) {
                 DatRomEntry entry;
                 entry.gameName = q.value(0).toString();
-                entry.crc32    = q.value(1).toString();
-                entry.md5      = q.value(2).toString();
-                entry.sha1     = q.value(3).toString();
-                entry.sha256   = q.value(4).toString();
+                entry.crc32 = q.value(1).toString();
+                entry.md5 = q.value(2).toString();
+                entry.sha1 = q.value(3).toString();
+                entry.sha256 = q.value(4).toString();
 
                 if (!entry.sha256.isEmpty())
                     entries.insert(entry.sha256.toLower(), entry);
@@ -63,14 +63,11 @@ void VerificationEngine::loadDatCache(const QString &systemName)
                     entries.insert(entry.crc32.toLower(), entry);
             }
             m_datCache.insert(systemName, entries);
-            m_datHashTypes.insert(systemName,
-                                  hashType.isEmpty() ? QStringLiteral("crc32") : hashType);
-            qDebug() << "Loaded" << entries.size()
-                     << "compendium DAT entries for" << systemName;
+            m_datHashTypes.insert(systemName, hashType.isEmpty() ? QStringLiteral("crc32") : hashType);
+            qDebug() << "Loaded" << entries.size() << "compendium DAT entries for" << systemName;
             return;
         }
-        qWarning() << "VerificationEngine: compendium loadDatCache query failed:"
-                   << q.lastError().text();
+        qWarning() << "VerificationEngine: compendium loadDatCache query failed:" << q.lastError().text();
     }
 
     // ── Runtime-import fallback ────────────────────────────────────────────
@@ -121,8 +118,7 @@ void VerificationEngine::loadDatCache(const QString &systemName)
     qDebug() << "Loaded" << entries.size() << "DAT entries for" << systemName;
 }
 
-void VerificationEngine::loadPatchDatCache(const QString &systemName)
-{
+void VerificationEngine::loadPatchDatCache(const QString &systemName) {
     if (m_patchDatCache.contains(systemName)) {
         return;
     }
@@ -145,18 +141,18 @@ void VerificationEngine::loadPatchDatCache(const QString &systemName)
         if (q.exec()) {
             while (q.next()) {
                 DatRomEntry entry;
-                entry.gameName  = q.value(0).toString();
-                entry.romName   = q.value(1).toString();
-                entry.size      = q.value(2).toLongLong();
-                entry.crc32     = q.value(3).toString();
-                entry.md5       = q.value(4).toString();
-                entry.sha1      = q.value(5).toString();
-                entry.sha256    = q.value(6).toString();
+                entry.gameName = q.value(0).toString();
+                entry.romName = q.value(1).toString();
+                entry.size = q.value(2).toLongLong();
+                entry.crc32 = q.value(3).toString();
+                entry.md5 = q.value(4).toString();
+                entry.sha1 = q.value(5).toString();
+                entry.sha256 = q.value(6).toString();
                 entry.description = q.value(7).toString();
-                entry.status    = q.value(8).toString();
+                entry.status = q.value(8).toString();
                 entry.baseTitle = q.value(9).toString();
                 entry.patchName = q.value(10).toString();
-                entry.fileType  = q.value(11).toString();
+                entry.fileType = q.value(11).toString();
 
                 if (!entry.sha256.isEmpty())
                     entries.insert(entry.sha256.toLower(), entry);
@@ -168,12 +164,10 @@ void VerificationEngine::loadPatchDatCache(const QString &systemName)
                     entries.insert(entry.crc32.toLower(), entry);
             }
             m_patchDatCache.insert(systemName, entries);
-            qDebug() << "Loaded" << entries.size()
-                     << "compendium patch entries for" << systemName;
+            qDebug() << "Loaded" << entries.size() << "compendium patch entries for" << systemName;
             return;
         }
-        qWarning() << "VerificationEngine: compendium loadPatchDatCache query failed:"
-                   << q.lastError().text();
+        qWarning() << "VerificationEngine: compendium loadPatchDatCache query failed:" << q.lastError().text();
     }
 
     // ── Runtime-import fallback ────────────────────────────────────────────
@@ -225,8 +219,7 @@ void VerificationEngine::loadPatchDatCache(const QString &systemName)
     qDebug() << "Loaded" << entries.size() << "patch DAT entries for" << systemName;
 }
 
-QString VerificationEngine::getPreferredHashType(const QString &systemName)
-{
+QString VerificationEngine::getPreferredHashType(const QString &systemName) {
     QSqlQuery query(m_database->database());
     query.prepare("SELECT preferred_hash FROM systems WHERE name = ?");
     query.addBindValue(systemName);
@@ -236,7 +229,7 @@ QString VerificationEngine::getPreferredHashType(const QString &systemName)
     }
 
     // Fallback to Constants::Systems registry if database query fails
-    const Constants::Systems::SystemDef* systemDef = Constants::Systems::getSystemByName(systemName);
+    const Constants::Systems::SystemDef *systemDef = Constants::Systems::getSystemByName(systemName);
     if (systemDef) {
         return systemDef->preferredHash.toLower();
     }

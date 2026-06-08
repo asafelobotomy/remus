@@ -20,7 +20,7 @@ namespace Remus {
 class PatchService {
 public:
     using ProgressCallback = std::function<void(int percent)>;
-    using LogCallback      = std::function<void(const QString &message)>;
+    using LogCallback = std::function<void(const QString &message)>;
 
     PatchService();
     ~PatchService();
@@ -52,18 +52,14 @@ public:
      * @param progressCb Progress callback (percent)
      * @return Patch result
      */
-    PatchResult apply(const QString &basePath,
-                      const QString &patchPath,
-                      const QString &outputPath = {},
-                      ProgressCallback progressCb = nullptr);
+    PatchResult apply(const QString &basePath, const QString &patchPath, const QString &outputPath = { },
+        ProgressCallback progressCb = nullptr);
 
     /**
      * @brief Apply a patch using pre-detected PatchInfo
      */
-    PatchResult apply(const QString &basePath,
-                      const PatchInfo &info,
-                      const QString &outputPath = {},
-                      ProgressCallback progressCb = nullptr);
+    PatchResult apply(const QString &basePath, const PatchInfo &info, const QString &outputPath = { },
+        ProgressCallback progressCb = nullptr);
 
     /**
      * @brief Batch-apply multiple patches to the same base
@@ -73,20 +69,16 @@ public:
      * @param logCb       Optional log callback
      * @return List of results (one per patch)
      */
-    QList<PatchResult> batchApply(const QString &basePath,
-                                  const QStringList &patchPaths,
-                                  ProgressCallback progressCb = nullptr,
-                                  LogCallback logCb = nullptr);
+    QList<PatchResult> batchApply(const QString &basePath, const QStringList &patchPaths,
+        ProgressCallback progressCb = nullptr, LogCallback logCb = nullptr);
 
     // ── Create Patch ──────────────────────────────────────
 
     /**
      * @brief Create a patch from two files
      */
-    bool createPatch(const QString &originalPath,
-                     const QString &modifiedPath,
-                     const QString &patchPath,
-                     PatchFormat format);
+    bool createPatch(
+        const QString &originalPath, const QString &modifiedPath, const QString &patchPath, PatchFormat format);
 
     // ── Tool Management ───────────────────────────────────
 
@@ -120,13 +112,14 @@ public:
     /**
      * @brief Generate an output path based on base + patch names
      */
-    static QString generateOutputPath(const QString &basePath,
-                                      const QString &patchPath);
+    static QString generateOutputPath(const QString &basePath, const QString &patchPath);
 
     /**
      * @brief Access underlying PatchEngine (for advanced use)
      */
-    PatchEngine *engine() { return m_engine.get(); }
+    PatchEngine *engine() {
+        return m_engine.get();
+    }
 
 private:
     std::unique_ptr<PatchEngine> m_engine;

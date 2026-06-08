@@ -16,59 +16,54 @@ namespace Remus {
 
 namespace {
 
-/// Move @p filePath to {baseDir}/original_roms/ to preserve the original ROM
-/// before or after conversion. Returns the new path on success or empty on failure.
-static QString moveToOriginalRomsConv(const QString &filePath, const QString &baseDir)
-{
-    const QString origRomsDir = QDir(baseDir).filePath(QStringLiteral("original_roms"));
-    if (!QDir().mkpath(origRomsDir))
-        return QString();
-
-    // Write the .remusdir marker so the scanner automatically skips this directory.
-    const QString markerPath = QDir(origRomsDir).filePath(
-        QString::fromLatin1(Constants::Settings::Files::MARKER_SKIP_SCAN));
-    if (!QFileInfo::exists(markerPath)) {
-        QFile marker(markerPath);
-        if (!marker.open(QIODevice::WriteOnly)) {
-            qWarning() << "conversion_controller: failed to write scan-skip marker at" << markerPath
-                       << "-" << marker.errorString();
-        }
-    }
-
-    const QString destPath = QDir(origRomsDir).filePath(QFileInfo(filePath).fileName());
-    if (QFileInfo::exists(destPath)) {
-        if (!QFileInfo::exists(filePath))
-            return destPath; // already moved in a previous run
-        int n = 1;
-        QString candidate;
-        do {
-            candidate = QDir(origRomsDir).filePath(
-                QFileInfo(filePath).completeBaseName()
-                + QStringLiteral("_%1.").arg(n++)
-                + QFileInfo(filePath).suffix());
-        } while (QFileInfo::exists(candidate));
-        if (!QFile::rename(filePath, candidate))
+    /// Move @p filePath to {baseDir}/original_roms/ to preserve the original ROM
+    /// before or after conversion. Returns the new path on success or empty on failure.
+    static QString moveToOriginalRomsConv(const QString &filePath, const QString &baseDir) {
+        const QString origRomsDir = QDir(baseDir).filePath(QStringLiteral("original_roms"));
+        if (!QDir().mkpath(origRomsDir))
             return QString();
-        return candidate;
+
+        // Write the .remusdir marker so the scanner automatically skips this directory.
+        const QString markerPath
+            = QDir(origRomsDir).filePath(QString::fromLatin1(Constants::Settings::Files::MARKER_SKIP_SCAN));
+        if (!QFileInfo::exists(markerPath)) {
+            QFile marker(markerPath);
+            if (!marker.open(QIODevice::WriteOnly)) {
+                qWarning() << "conversion_controller: failed to write scan-skip marker at" << markerPath << "-"
+                           << marker.errorString();
+            }
+        }
+
+        const QString destPath = QDir(origRomsDir).filePath(QFileInfo(filePath).fileName());
+        if (QFileInfo::exists(destPath)) {
+            if (!QFileInfo::exists(filePath))
+                return destPath; // already moved in a previous run
+            int n = 1;
+            QString candidate;
+            do {
+                candidate = QDir(origRomsDir)
+                                .filePath(QFileInfo(filePath).completeBaseName() + QStringLiteral("_%1.").arg(n++)
+                                    + QFileInfo(filePath).suffix());
+            } while (QFileInfo::exists(candidate));
+            if (!QFile::rename(filePath, candidate))
+                return QString();
+            return candidate;
+        }
+        if (!QFile::rename(filePath, destPath))
+            return QString();
+        return destPath;
     }
-    if (!QFile::rename(filePath, destPath))
-        return QString();
-    return destPath;
-}
 
 } // anonymous namespace
 
 ConversionController::ConversionController(AppController *appController, QObject *parent)
     : QObject(parent)
-    , m_appController(appController)
-{
-    connect(this, &ConversionController::libraryChanged,
-            m_appController, &AppController::refreshSelectedFile);
+    , m_appController(appController) {
+    connect(this, &ConversionController::libraryChanged, m_appController, &AppController::refreshSelectedFile);
     refreshToolStatus();
 }
 
-void ConversionController::convertSelected(const QString &format, const QString &outputPath, const QString &scanDir)
-{
+void ConversionController::convertSelected(const QString &format, const QString &outputPath, const QString &scanDir) {
     if (m_converting) {
         setLastMessage(QStringLiteral("A conversion is already running."));
         return;
@@ -99,9 +94,7 @@ void ConversionController::convertSelected(const QString &format, const QString 
 
     // For AUTO, resolve the target format from the (possibly extracted) ROM extension
     const QString detectedExt = QFileInfo(romPath).suffix().toLower();
-    const QString normalizedFormat = (rawFormat == QStringLiteral("AUTO"))
-        ? resolveAutoFormat(detectedExt)
-        : rawFormat;
+    const QString normalizedFormat = (rawFormat == QStringLiteral("AUTO")) ? resolveAutoFormat(detectedExt) : rawFormat;
     if (normalizedFormat.isEmpty()) {
         setLastMessage(QStringLiteral("No conversion format determined for \"%1\" — skipped.").arg(file.filename));
         return;
@@ -109,24 +102,27 @@ void ConversionController::convertSelected(const QString &format, const QString 
 
     m_converting = true;
     m_progress = 0;
-    m_progressMessage = QStringLiteral("Converting \"%1\" to %2\u2026").arg(QFileInfo(romPath).fileName(), normalizedFormat);
+    m_progressMessage
+        = QStringLiteral("Converting \"%1\" to %2\u2026").arg(QFileInfo(romPath).fileName(), normalizedFormat);
     emit convertingChanged();
     emit progressChanged();
     emit progressMessageChanged();
 
     ConversionResult result;
     if (normalizedFormat == QStringLiteral("CHD")) {
-        result = m_conversionService.convertToCHD(romPath, CHDCodec::Auto, outputPath, [this](int percent, const QString &) {
-            m_progress = percent;
-            emit progressChanged();
-            QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
-        });
+        result = m_conversionService.convertToCHD(
+            romPath, CHDCodec::Auto, outputPath, [this](int percent, const QString &) {
+                m_progress = percent;
+                emit progressChanged();
+                QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
+            });
     } else if (normalizedFormat == QStringLiteral("RVZ")) {
-        result = m_conversionService.convertToRVZ(romPath, RVZCompression::Auto, outputPath, [this](int percent, const QString &) {
-            m_progress = percent;
-            emit progressChanged();
-            QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
-        });
+        result = m_conversionService.convertToRVZ(
+            romPath, RVZCompression::Auto, outputPath, [this](int percent, const QString &) {
+                m_progress = percent;
+                emit progressChanged();
+                QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
+            });
     } else if (normalizedFormat == QStringLiteral("CSO")) {
         result = m_conversionService.convertToCSO(romPath, outputPath, [this](int percent, const QString &) {
             m_progress = percent;
@@ -203,8 +199,7 @@ void ConversionController::convertSelected(const QString &format, const QString 
     emit libraryChanged();
 }
 
-void ConversionController::convertAll(const QString &format, const QString &outputPath, const QString &scanDir)
-{
+void ConversionController::convertAll(const QString &format, const QString &outputPath, const QString &scanDir) {
     if (m_converting) {
         setLastMessage(QStringLiteral("A conversion is already running."));
         return;
@@ -242,7 +237,9 @@ void ConversionController::convertAll(const QString &format, const QString &outp
         const FileRecord &file = files.at(i);
 
         m_progressMessage = QStringLiteral("Processing %1 / %2: \"%3\"\u2026")
-                                .arg(i + 1).arg(total).arg(QFileInfo(file.currentPath).fileName());
+                                .arg(i + 1)
+                                .arg(total)
+                                .arg(QFileInfo(file.currentPath).fileName());
         emit progressMessageChanged();
         QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
 
@@ -251,9 +248,8 @@ void ConversionController::convertAll(const QString &format, const QString &outp
 
         // For AUTO, resolve from the (possibly extracted) ROM extension
         const QString detectedExt = QFileInfo(romPath).suffix().toLower();
-        const QString normalizedFormat = (normalizedInput == QStringLiteral("AUTO"))
-            ? resolveAutoFormat(detectedExt)
-            : normalizedInput;
+        const QString normalizedFormat
+            = (normalizedInput == QStringLiteral("AUTO")) ? resolveAutoFormat(detectedExt) : normalizedInput;
 
         if (normalizedFormat.isEmpty()) {
             ++skipped;
@@ -324,8 +320,7 @@ void ConversionController::convertAll(const QString &format, const QString &outp
             }
             // Move the original ROM to original_roms/ for preservation.
             {
-                const QString baseDir = scanDir.isEmpty()
-                    ? QFileInfo(file.currentPath).absolutePath() : scanDir;
+                const QString baseDir = scanDir.isEmpty() ? QFileInfo(file.currentPath).absolutePath() : scanDir;
                 if (QFileInfo::exists(file.currentPath) && file.currentPath != finalOutputPath)
                     moveToOriginalRomsConv(file.currentPath, baseDir);
             }
@@ -339,16 +334,14 @@ void ConversionController::convertAll(const QString &format, const QString &outp
     emit convertingChanged();
     emit progressMessageChanged();
 
-    setLastMessage(QStringLiteral("Converted %1 | Skipped %2 | Failed %3")
-                       .arg(converted).arg(skipped).arg(failed));
+    setLastMessage(QStringLiteral("Converted %1 | Skipped %2 | Failed %3").arg(converted).arg(skipped).arg(failed));
     if (converted > 0) {
         emit conversionFinished();
         emit libraryChanged();
     }
 }
 
-void ConversionController::refreshToolStatus()
-{
+void ConversionController::refreshToolStatus() {
     applyToolPaths();
 
     m_toolStatus.insert(QStringLiteral("chdman"), m_conversionService.isChdmanAvailable());
@@ -359,8 +352,7 @@ void ConversionController::refreshToolStatus()
     emit toolStatusChanged();
 }
 
-void ConversionController::setTargetFormat(const QString &format)
-{
+void ConversionController::setTargetFormat(const QString &format) {
     const QString normalized = format.trimmed().toUpper();
     if (m_targetFormat == normalized) {
         return;
@@ -370,8 +362,7 @@ void ConversionController::setTargetFormat(const QString &format)
     emit targetFormatChanged();
 }
 
-void ConversionController::setLastMessage(const QString &message)
-{
+void ConversionController::setLastMessage(const QString &message) {
     if (m_lastMessage == message) {
         return;
     }

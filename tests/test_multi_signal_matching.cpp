@@ -57,18 +57,18 @@ bool testDatLoading() {
  */
 bool testHashMatching(LocalDatabaseProvider &provider) {
     qInfo() << "\n=== Test 2: Hash-Only Matching ===";
-    
+
     // Test with known Genesis ROM hash (Sonic The Hedgehog USA)
     ROMSignals romSignals;
     romSignals.crc32 = "f9394e97"; // Correct CRC32 for Sonic 1 (USA, Europe)
     romSignals.filename = "Sonic The Hedgehog (USA, Europe).md";
     romSignals.fileSize = 524288; // 512KB
-    
+
     QList<MultiSignalMatch> matches = provider.matchROM(romSignals);
-    
+
     if (!matches.isEmpty()) {
         qInfo() << "✓ Found" << matches.size() << "match(es)";
-        
+
         const MultiSignalMatch &best = matches.first();
         qInfo() << "  Best match:" << best.entry.gameName;
         qInfo() << "  ROM name:" << best.entry.romName;
@@ -79,7 +79,7 @@ bool testHashMatching(LocalDatabaseProvider &provider) {
         qInfo() << "    Filename:" << (best.filenameMatch ? "✓" : "✗");
         qInfo() << "    Size:" << (best.sizeMatch ? "✓" : "✗");
         qInfo() << "    Serial:" << (best.serialMatch ? "✓" : "✗");
-        
+
         return best.confidencePercent() >= 50;
     } else {
         qWarning() << "✗ No matches found";
@@ -92,14 +92,14 @@ bool testHashMatching(LocalDatabaseProvider &provider) {
  */
 bool testMultiSignalMatching(LocalDatabaseProvider &provider) {
     qInfo() << "\n=== Test 3: Multi-Signal Matching (All Signals) ===";
-    
+
     ROMSignals romSignals;
     romSignals.crc32 = "f9394e97";
     romSignals.filename = "Sonic The Hedgehog (USA, Europe).md";
     romSignals.fileSize = 524288;
-    
+
     QList<MultiSignalMatch> matches = provider.matchROM(romSignals);
-    
+
     if (!matches.isEmpty()) {
         const MultiSignalMatch &best = matches.first();
         qInfo() << "✓ Perfect match scenario:";
@@ -107,11 +107,11 @@ bool testMultiSignalMatching(LocalDatabaseProvider &provider) {
         qInfo() << "  Confidence:" << best.confidencePercent() << "%";
         qInfo() << "  Expected: ≥150/200 (75%)";
         qInfo() << "  Actual:" << best.confidenceScore << "/200";
-        
+
         // Should have hash + filename + size = 180 points minimum
         return best.confidenceScore >= 150;
     }
-    
+
     return false;
 }
 
@@ -120,14 +120,14 @@ bool testMultiSignalMatching(LocalDatabaseProvider &provider) {
  */
 bool testFallbackMatching(LocalDatabaseProvider &provider) {
     qInfo() << "\n=== Test 4: Fallback Matching (No Hash) ===";
-    
+
     ROMSignals romSignals;
     // No hash provided
     romSignals.filename = "Sonic The Hedgehog (USA, Europe).md";
     romSignals.fileSize = 524288;
-    
+
     QList<MultiSignalMatch> matches = provider.matchROM(romSignals);
-    
+
     if (!matches.isEmpty()) {
         const MultiSignalMatch &best = matches.first();
         qInfo() << "✓ Fallback match found:";
@@ -136,11 +136,11 @@ bool testFallbackMatching(LocalDatabaseProvider &provider) {
         qInfo() << "  Hash matched:" << (best.hashMatch ? "YES" : "NO (expected)");
         qInfo() << "  Filename matched:" << (best.filenameMatch ? "YES" : "NO");
         qInfo() << "  Size matched:" << (best.sizeMatch ? "YES" : "NO");
-        
+
         // Should have filename + size = 80 points
         return !best.hashMatch && best.confidenceScore == 80;
     }
-    
+
     qWarning() << "✗ No fallback matches found";
     return false;
 }
@@ -150,7 +150,7 @@ bool testFallbackMatching(LocalDatabaseProvider &provider) {
  */
 bool testRealROMFile() {
     qInfo() << "\n=== Test 5: Real ROM File Processing ===";
-    
+
     QTemporaryFile tempFile;
     tempFile.setAutoRemove(true);
     if (!tempFile.open()) {
@@ -196,54 +196,44 @@ bool testRealROMFile() {
  */
 bool testConfidenceScoring(LocalDatabaseProvider &provider) {
     qInfo() << "\n=== Test 6: Confidence Score Distribution ===";
-    
+
     struct TestCase {
         QString name;
         ROMSignals romSignals;
         int expectedMin;
         int expectedMax;
     };
-    
-    QList<TestCase> cases = {
-        {
-            "Perfect Match (All 4 signals)",
-            {"f9394e97", "1bc674be034e43c96b86487ac69d9293", "6ddb7de1e17e7f6cdb88927bd906352030daa194", "Sonic The Hedgehog (USA, Europe).md", 524288, "00001009-00"},
-            150, 200
-        },
-        {
-            "Hash Only",
-            {"f9394e97", "", "", "WrongName.md", 999999, ""},
-            100, 100
-        },
-        {
-            "Filename + Size (No Hash)",
-            {"", "", "", "Sonic The Hedgehog (USA, Europe).md", 524288, ""},
-            80, 80
-        }
-    };
-    
+
+    QList<TestCase> cases = { { "Perfect Match (All 4 signals)",
+                                  { "f9394e97", "1bc674be034e43c96b86487ac69d9293",
+                                      "6ddb7de1e17e7f6cdb88927bd906352030daa194", "Sonic The Hedgehog (USA, Europe).md",
+                                      524288, "00001009-00" },
+                                  150, 200 },
+        { "Hash Only", { "f9394e97", "", "", "WrongName.md", 999999, "" }, 100, 100 },
+        { "Filename + Size (No Hash)", { "", "", "", "Sonic The Hedgehog (USA, Europe).md", 524288, "" }, 80, 80 } };
+
     bool allPassed = true;
-    
+
     for (const TestCase &testCase : cases) {
         qInfo() << "\n  Testing:" << testCase.name;
-        
+
         QList<MultiSignalMatch> matches = provider.matchROM(testCase.romSignals);
-        
+
         if (!matches.isEmpty()) {
             int score = matches.first().confidenceScore;
             bool passed = (score >= testCase.expectedMin && score <= testCase.expectedMax);
-            
+
             qInfo() << "    Score:" << score << "/200";
             qInfo() << "    Expected range:" << testCase.expectedMin << "-" << testCase.expectedMax;
             qInfo() << "    Result:" << (passed ? "✓ PASS" : "✗ FAIL");
-            
+
             allPassed = allPassed && passed;
         } else {
             qInfo() << "    ✗ No matches found";
             allPassed = false;
         }
     }
-    
+
     return allPassed;
 }
 
@@ -289,8 +279,7 @@ bool testSerialNormalization() {
         for (const auto &m : matches) {
             if (m.serialMatch) {
                 found = true;
-                qInfo() << "  ✓ MK-51000 matched" << m.entry.gameName
-                        << "(serial:" << m.entry.serial << ")";
+                qInfo() << "  ✓ MK-51000 matched" << m.entry.gameName << "(serial:" << m.entry.serial << ")";
                 break;
             }
         }
@@ -312,8 +301,7 @@ bool testSerialNormalization() {
         for (const auto &m : matches) {
             if (m.serialMatch) {
                 found = true;
-                qInfo() << "  ✓ MK-51000-50 matched" << m.entry.gameName
-                        << "(serial:" << m.entry.serial << ")";
+                qInfo() << "  ✓ MK-51000-50 matched" << m.entry.gameName << "(serial:" << m.entry.serial << ")";
                 break;
             }
         }
@@ -335,8 +323,7 @@ bool testSerialNormalization() {
         for (const auto &m : matches) {
             if (m.serialMatch) {
                 found = true;
-                qInfo() << "  ✓ 51000 exact-matched" << m.entry.gameName
-                        << "(serial:" << m.entry.serial << ")";
+                qInfo() << "  ✓ 51000 exact-matched" << m.entry.gameName << "(serial:" << m.entry.serial << ")";
                 break;
             }
         }
@@ -372,8 +359,7 @@ bool testSerialNormalization() {
     return allPassed;
 }
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
     QCoreApplication app(argc, argv);
 
     qInfo() << "╔════════════════════════════════════════════════════════════╗";
@@ -388,23 +374,23 @@ int main(int argc, char *argv[])
     if (testDatLoading()) {
         passed++;
     }
-    
+
     // Create provider for remaining tests
     LocalDatabaseProvider provider;
-        QTemporaryDir tempDir;
-        if (!tempDir.isValid()) {
-            qCritical() << "\n✗ Cannot continue: temp directory could not be created";
-            return 1;
-        }
+    QTemporaryDir tempDir;
+    if (!tempDir.isValid()) {
+        qCritical() << "\n✗ Cannot continue: temp directory could not be created";
+        return 1;
+    }
 
-        const QString datPath = TestFixtures::writeGenesisDat(tempDir);
+    const QString datPath = TestFixtures::writeGenesisDat(tempDir);
     if (datPath.isEmpty()) {
-            qCritical() << "\n✗ Cannot continue: Genesis DAT fixture could not be created";
+        qCritical() << "\n✗ Cannot continue: Genesis DAT fixture could not be created";
         return 1;
     }
 
     int entries = provider.loadDatabase(datPath);
-    
+
     if (entries == 0) {
         qCritical() << "\n✗ Cannot continue: Genesis DAT not loaded";
         qInfo() << "\nFixture path:" << datPath;
@@ -418,44 +404,44 @@ int main(int argc, char *argv[])
     if (testHashMatching(provider)) {
         passed++;
     }
-    
+
     // Test 3: Multi-Signal Matching
     total++;
     if (testMultiSignalMatching(provider)) {
         passed++;
     }
-    
+
     // Test 4: Fallback Matching
     total++;
     if (testFallbackMatching(provider)) {
         passed++;
     }
-    
+
     // Test 5: Real ROM File
     total++;
     if (testRealROMFile()) {
         passed++;
     }
-    
+
     // Test 6: Confidence Scoring
     total++;
     if (testConfidenceScoring(provider)) {
         passed++;
     }
-    
+
     // Test 7: Serial Normalization (Dreamcast)
     total++;
     if (testSerialNormalization()) {
         passed++;
     }
-    
+
     // Summary
     qInfo() << "\n╔════════════════════════════════════════════════════════════╗";
     qInfo() << "║  Test Results                                              ║";
     qInfo() << "╚════════════════════════════════════════════════════════════╝";
     qInfo() << "Passed:" << passed << "/" << total;
     qInfo() << "Success rate:" << (passed * 100 / total) << "%";
-    
+
     if (passed == total) {
         qInfo() << "\n✓ All tests passed! Multi-signal matching is working correctly.";
         return 0;

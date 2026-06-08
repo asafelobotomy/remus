@@ -31,12 +31,8 @@ protected:
         QString stdError;
     };
 
-    virtual ProcessResult runProcess(const QString &program,
-                                     const QStringList &args,
-                                     int timeoutMs);
-    virtual ProcessResult runProcessTracked(const QString &program,
-                                            const QStringList &args,
-                                            int timeoutMs);
+    virtual ProcessResult runProcess(const QString &program, const QStringList &args, int timeoutMs);
+    virtual ProcessResult runProcessTracked(const QString &program, const QStringList &args, int timeoutMs);
 
     bool m_cancelled = false;
     QProcess *m_process = nullptr;

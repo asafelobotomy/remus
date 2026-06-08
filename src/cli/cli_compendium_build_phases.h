@@ -25,32 +25,32 @@ using EnrichmentProgressCallback = std::function<void(int passIdx, int totalPass
 struct EnrichmentStats {
     int metadataGamesEnriched = 0;
     int metadataFactsInserted = 0;
-    int gametdbGamesEnriched  = 0;
-    int gametdbFactsInserted  = 0;
+    int gametdbGamesEnriched = 0;
+    int gametdbFactsInserted = 0;
     int openvgdbGamesEnriched = 0;
     int openvgdbFactsInserted = 0;
-    int igdbGamesEnriched     = 0;
-    int igdbFactsInserted     = 0;
-    int raGamesEnriched        = 0;
-    int raFactsInserted        = 0;
-    int mameGamesEnriched      = 0;
-    int mameFactsInserted      = 0;
+    int igdbGamesEnriched = 0;
+    int igdbFactsInserted = 0;
+    int raGamesEnriched = 0;
+    int raFactsInserted = 0;
+    int mameGamesEnriched = 0;
+    int mameFactsInserted = 0;
     int mameListXmlGamesEnriched = 0;
     int mameListXmlFactsInserted = 0;
-    int zxinfoGamesEnriched    = 0;
-    int zxinfoFactsInserted    = 0;
-    int resolvedFields         = 0;
-    int unresolvedConflicts    = 0;
-    int passesExecuted           = 0;
-    int passesSkippedNoInput     = 0;
-    int passesSkippedNoGaps      = 0;
-    int passesSkippedFiltered    = 0;  // passes skipped by --enrich-source filter
-    int passesFailedWithError    = 0;  // non-fatal pass failures; pipeline continues
-    int mergeRuns              = 0;
-    int raApiCallsNeeded       = 0;
-    int raApiCallsPerformed    = 0;
-    int raApiCallsSuppressed   = 0;
-    int ftsRowsIndexed         = 0;
+    int zxinfoGamesEnriched = 0;
+    int zxinfoFactsInserted = 0;
+    int resolvedFields = 0;
+    int unresolvedConflicts = 0;
+    int passesExecuted = 0;
+    int passesSkippedNoInput = 0;
+    int passesSkippedNoGaps = 0;
+    int passesSkippedFiltered = 0; // passes skipped by --enrich-source filter
+    int passesFailedWithError = 0; // non-fatal pass failures; pipeline continues
+    int mergeRuns = 0;
+    int raApiCallsNeeded = 0;
+    int raApiCallsPerformed = 0;
+    int raApiCallsSuppressed = 0;
+    int ftsRowsIndexed = 0;
 };
 
 /**
@@ -77,17 +77,10 @@ struct EnrichmentStats {
  *                       Valid keys: see knownEnrichmentSourceKeys().
  * @return true on success, false on error.
  */
-bool runCompendiumEnrichmentPasses(QSqlDatabase &db,
-                                   const QString &metadataDir,
-                                   const QString &gametdbDir,
-                                   const QString &openvgdbPath,
-                                   const QString &credPath,
-                                   const QString &mameCatverPath,
-                                   const QString &mameListXmlPath,
-                                   EnrichmentStats &stats,
-                                   QString &error,
-                                   EnrichmentProgressCallback onProgress = nullptr,
-                                   QStringList sourceFilter = {});
+bool runCompendiumEnrichmentPasses(QSqlDatabase &db, const QString &metadataDir, const QString &gametdbDir,
+    const QString &openvgdbPath, const QString &credPath, const QString &mameCatverPath, const QString &mameListXmlPath,
+    EnrichmentStats &stats, QString &error, EnrichmentProgressCallback onProgress = nullptr,
+    QStringList sourceFilter = { });
 
 /**
  * @brief Populate the FTS search index tables from the games/game_names rows.
@@ -109,9 +102,8 @@ bool populateCompendiumFtsIndex(QSqlDatabase &db, int &rowsIndexed, QString &err
  * @param stats  Enrichment stats source.
  * @param resolvedFieldsKey JSON key name to use for stats.resolvedFields.
  */
-void insertEnrichmentStatsReportFields(QJsonObject &report,
-                                       const EnrichmentStats &stats,
-                                       const QString &resolvedFieldsKey);
+void insertEnrichmentStatsReportFields(
+    QJsonObject &report, const EnrichmentStats &stats, const QString &resolvedFieldsKey);
 
 /**
  * @brief Returns the canonical set of source key strings accepted by the
@@ -123,8 +115,7 @@ void insertEnrichmentStatsReportFields(QJsonObject &report,
  * Tests and CLI option-validation code should use this function rather than
  * hard-coding the key strings.
  */
-inline QStringList knownEnrichmentSourceKeys()
-{
+inline QStringList knownEnrichmentSourceKeys() {
     return {
         QStringLiteral("libretro"),
         QStringLiteral("gametdb"),

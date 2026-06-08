@@ -24,30 +24,21 @@ namespace Remus {
 
 namespace {
 
-const QSet<QString> kMarkdownDocumentNames = {
-    "readme.md",
-    "changelog.md",
-    "contributing.md",
-    "copying.md",
-    "license.md",
-    "todo.md",
-    ".remus.md"  // bundler marker written inside bundle archives — must not be treated as a ROM
-};
+    const QSet<QString> kMarkdownDocumentNames = {
+        "readme.md", "changelog.md", "contributing.md", "copying.md", "license.md", "todo.md",
+        ".remus.md" // bundler marker written inside bundle archives — must not be treated as a ROM
+    };
 
 }
 
 Scanner::Scanner(QObject *parent)
-    : QObject(parent)
-{
-}
+    : QObject(parent) { }
 
-void Scanner::setExtensions(const QStringList &extensions)
-{
+void Scanner::setExtensions(const QStringList &extensions) {
     m_extensions = extensions;
 }
 
-QList<ScanResult> Scanner::scan(const QString &libraryPath)
-{
+QList<ScanResult> Scanner::scan(const QString &libraryPath) {
     QList<ScanResult> results;
     m_filesProcessed = 0;
     m_cancelRequested = false;
@@ -112,25 +103,26 @@ QList<ScanResult> Scanner::scan(const QString &libraryPath)
     return results;
 }
 
-void Scanner::scanDirectory(const QString &dirPath, QList<ScanResult> &results)
-{
+void Scanner::scanDirectory(const QString &dirPath, QList<ScanResult> &results) {
     QStringList archivePaths;
 
     // Phase 1: Walk the directory tree sequentially.
     // Plain ROM files are processed immediately; archives are queued for Phase 2.
     // isInExcludedDirectory() modifies mutable caches — must run on the main thread.
-    QDirIterator it(dirPath, QDir::Files | QDir::Dirs | QDir::NoDotAndDotDot,
-                    QDirIterator::Subdirectories);
+    QDirIterator it(dirPath, QDir::Files | QDir::Dirs | QDir::NoDotAndDotDot, QDirIterator::Subdirectories);
 
     while (it.hasNext()) {
-        if (m_cancelRequested.load(std::memory_order_relaxed)) return;
+        if (m_cancelRequested.load(std::memory_order_relaxed))
+            return;
 
         const QString path = it.next();
         const QFileInfo fileInfo(path);
 
-        if (isInExcludedDirectory(fileInfo.absolutePath())) continue;
+        if (isInExcludedDirectory(fileInfo.absolutePath()))
+            continue;
 
-        if (!fileInfo.isFile()) continue;
+        if (!fileInfo.isFile())
+            continue;
 
         const QString extension = "." + fileInfo.suffix().toLower();
         if (m_archiveScanning && isArchiveExtension(extension)) {
@@ -145,19 +137,20 @@ void Scanner::scanDirectory(const QString &dirPath, QList<ScanResult> &results)
         }
     }
 
-    if (archivePaths.isEmpty() || m_cancelRequested.load(std::memory_order_relaxed)) return;
+    if (archivePaths.isEmpty() || m_cancelRequested.load(std::memory_order_relaxed))
+        return;
 
     // Phase 2: Process archives concurrently, each worker using its own ArchiveExtractor.
     // Emitting Qt signals from worker threads is safe: cross-thread connections are
     // automatically queued. shouldScanArchiveEntry() is const and reads only m_extensions,
     // which is not modified after scan() begins.
-    const QList<QList<ScanResult>> parallelResults = QtConcurrent::blockingMapped(
-        archivePaths,
-        [this](const QString &path) -> QList<ScanResult> {
-            if (m_cancelRequested.load(std::memory_order_relaxed)) return {};
-            ArchiveExtractor localExtractor;
-            return processArchiveWithExtractor(path, localExtractor);
-        });
+    const QList<QList<ScanResult>> parallelResults
+        = QtConcurrent::blockingMapped(archivePaths, [this](const QString &path) -> QList<ScanResult> {
+              if (m_cancelRequested.load(std::memory_order_relaxed))
+                  return { };
+              ArchiveExtractor localExtractor;
+              return processArchiveWithExtractor(path, localExtractor);
+          });
 
     // Phase 3: Merge archive results into the main list (back on calling thread).
     for (const QList<ScanResult> &partial : parallelResults) {
@@ -171,16 +164,14 @@ void Scanner::scanDirectory(const QString &dirPath, QList<ScanResult> &results)
     }
 }
 
-bool Scanner::isValidExtension(const QString &extension) const
-{
+bool Scanner::isValidExtension(const QString &extension) const {
     if (m_extensions.isEmpty()) {
-        return true;  // No filter, accept all
+        return true; // No filter, accept all
     }
     return m_extensions.contains(extension, Qt::CaseInsensitive);
 }
 
-bool Scanner::shouldScanFile(const QFileInfo &fileInfo) const
-{
+bool Scanner::shouldScanFile(const QFileInfo &fileInfo) const {
     const QString extension = "." + fileInfo.suffix().toLower();
     if (!isValidExtension(extension)) {
         return false;
@@ -189,8 +180,7 @@ bool Scanner::shouldScanFile(const QFileInfo &fileInfo) const
     return !isLikelyMarkdownDocument(fileInfo.absoluteFilePath());
 }
 
-bool Scanner::shouldScanArchiveEntry(const QString &internalPath) const
-{
+bool Scanner::shouldScanArchiveEntry(const QString &internalPath) const {
     const QString extension = "." + QFileInfo(internalPath).suffix().toLower();
     if (!isValidExtension(extension)) {
         return false;
@@ -199,13 +189,11 @@ bool Scanner::shouldScanArchiveEntry(const QString &internalPath) const
     return !isLikelyMarkdownDocument(internalPath);
 }
 
-bool Scanner::isArchiveExtension(const QString &extension) const
-{
+bool Scanner::isArchiveExtension(const QString &extension) const {
     return Constants::Files::isArchiveExtension(extension);
 }
 
-bool Scanner::isInExcludedDirectory(const QString &dirPath) const
-{
+bool Scanner::isInExcludedDirectory(const QString &dirPath) const {
     // Check if this directory or any parent contains .remusdir marker
     QDir dir(dirPath);
 
@@ -217,13 +205,13 @@ bool Scanner::isInExcludedDirectory(const QString &dirPath) const
     if (m_checkedDirs.contains(absPath)) {
         return false;
     }
-    
+
     // Walk up the directory tree looking for .remusdir
     QDir checkDir(absPath);
     while (!checkDir.isRoot()) {
         QString markerPath = checkDir.absolutePath() + "/" + Constants::Settings::Files::MARKER_SKIP_SCAN;
         if (QFile::exists(markerPath)) {
-            m_excludedDirs.insert(absPath);  // Cache this path as excluded
+            m_excludedDirs.insert(absPath); // Cache this path as excluded
             return true;
         }
         if (!checkDir.cdUp()) {
@@ -231,12 +219,11 @@ bool Scanner::isInExcludedDirectory(const QString &dirPath) const
         }
     }
 
-    m_checkedDirs.insert(absPath);  // Cache as not excluded
+    m_checkedDirs.insert(absPath); // Cache as not excluded
     return false;
 }
 
-bool Scanner::isLikelyMarkdownDocument(const QString &path) const
-{
+bool Scanner::isLikelyMarkdownDocument(const QString &path) const {
     const QFileInfo fileInfo(path);
     if (fileInfo.suffix().compare("md", Qt::CaseInsensitive) != 0) {
         return false;
@@ -258,8 +245,7 @@ bool Scanner::isLikelyMarkdownDocument(const QString &path) const
     return false;
 }
 
-bool Scanner::isLikelyTextFile(const QString &path) const
-{
+bool Scanner::isLikelyTextFile(const QString &path) const {
     QFile file(path);
     if (!file.open(QIODevice::ReadOnly)) {
         return false;
@@ -285,15 +271,12 @@ bool Scanner::isLikelyTextFile(const QString &path) const
     return (static_cast<double>(printableBytes) / sample.size()) >= 0.9;
 }
 
-void Scanner::processArchive(const QString &archivePath, QList<ScanResult> &results)
-{
+void Scanner::processArchive(const QString &archivePath, QList<ScanResult> &results) {
     const QList<ScanResult> local = processArchiveWithExtractor(archivePath, m_archiveExtractor);
     results.append(local);
 }
 
-QList<ScanResult> Scanner::processArchiveWithExtractor(const QString &archivePath,
-                                                        ArchiveExtractor &extractor)
-{
+QList<ScanResult> Scanner::processArchiveWithExtractor(const QString &archivePath, ArchiveExtractor &extractor) {
     QList<ScanResult> results;
 
     ArchiveInfo archiveInfo = extractor.getArchiveInfo(archivePath);
@@ -315,7 +298,8 @@ QList<ScanResult> Scanner::processArchiveWithExtractor(const QString &archivePat
     }
 
     for (const QString &internalPath : archiveInfo.contents) {
-        if (m_cancelRequested.load(std::memory_order_relaxed)) break;
+        if (m_cancelRequested.load(std::memory_order_relaxed))
+            break;
 
         const QString normalizedInternalPath = ArchiveExtractor::normalizeArchiveMemberPath(internalPath);
         if (normalizedInternalPath.isEmpty()) {
@@ -346,8 +330,7 @@ QList<ScanResult> Scanner::processArchiveWithExtractor(const QString &archivePat
     return results;
 }
 
-ScanResult Scanner::createScanResult(const QFileInfo &fileInfo)
-{
+ScanResult Scanner::createScanResult(const QFileInfo &fileInfo) {
     ScanResult result;
     result.path = fileInfo.absoluteFilePath();
     result.filename = fileInfo.fileName();

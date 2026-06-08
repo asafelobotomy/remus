@@ -11,62 +11,58 @@ namespace Remus {
 
 namespace {
 
-// Column order must match kFileSelectColumns below exactly.
-// 0=id, 1=library_id, 2=original_path, 3=current_path, 4=filename, 5=extension,
-// 6=file_size, 7=is_compressed, 8=archive_path, 9=archive_internal_path,
-// 10=system_id, 11=crc32, 12=md5, 13=sha1, 14=hash_calculated,
-// 15=is_primary, 16=parent_file_id, 17=base_title, 18=file_type, 19=is_patched,
-// 20=patch_name, 21=is_processed, 22=processing_status,
-// 23=last_modified, 24=scanned_at
-static const char kFileSelectColumns[] =
-    "id, library_id, original_path, current_path, filename, extension, "
-    "file_size, is_compressed, archive_path, archive_internal_path, "
-    "system_id, crc32, md5, sha1, hash_calculated, "
-    "is_primary, parent_file_id, base_title, file_type, is_patched, "
-    "patch_name, is_processed, processing_status, last_modified, scanned_at";
+    // Column order must match kFileSelectColumns below exactly.
+    // 0=id, 1=library_id, 2=original_path, 3=current_path, 4=filename, 5=extension,
+    // 6=file_size, 7=is_compressed, 8=archive_path, 9=archive_internal_path,
+    // 10=system_id, 11=crc32, 12=md5, 13=sha1, 14=hash_calculated,
+    // 15=is_primary, 16=parent_file_id, 17=base_title, 18=file_type, 19=is_patched,
+    // 20=patch_name, 21=is_processed, 22=processing_status,
+    // 23=last_modified, 24=scanned_at
+    static const char kFileSelectColumns[] = "id, library_id, original_path, current_path, filename, extension, "
+                                             "file_size, is_compressed, archive_path, archive_internal_path, "
+                                             "system_id, crc32, md5, sha1, hash_calculated, "
+                                             "is_primary, parent_file_id, base_title, file_type, is_patched, "
+                                             "patch_name, is_processed, processing_status, last_modified, scanned_at";
 
-static FileRecord fileRecordFromRow(const QSqlQuery &q)
-{
-    FileRecord r;
-    r.id               = q.value(0).toInt();
-    r.libraryId        = q.value(1).toInt();
-    r.originalPath     = q.value(2).toString();
-    r.currentPath      = q.value(3).toString();
-    r.filename         = q.value(4).toString();
-    r.extension        = q.value(5).toString();
-    r.fileSize         = q.value(6).toLongLong();
-    r.isCompressed     = q.value(7).toBool();
-    r.archivePath      = q.value(8).toString();
-    r.archiveInternalPath = q.value(9).toString();
-    r.systemId         = q.value(10).toInt();
-    r.crc32            = q.value(11).toString();
-    r.md5              = q.value(12).toString();
-    r.sha1             = q.value(13).toString();
-    r.hashCalculated   = q.value(14).toBool();
-    r.isPrimary        = q.value(15).toBool();
-    r.parentFileId     = q.value(16).toInt();
-    r.baseTitle        = q.value(17).toString();
-    r.fileType         = q.value(18).toString();
-    r.isPatched        = q.value(19).toBool();
-    r.patchName        = q.value(20).toString();
-    r.isProcessed      = q.value(21).toBool();
-    r.processingStatus = q.value(22).toString();
-    r.lastModified     = q.value(23).toDateTime();
-    r.scannedAt        = q.value(24).toDateTime();
-    return r;
-}
+    static FileRecord fileRecordFromRow(const QSqlQuery &q) {
+        FileRecord r;
+        r.id = q.value(0).toInt();
+        r.libraryId = q.value(1).toInt();
+        r.originalPath = q.value(2).toString();
+        r.currentPath = q.value(3).toString();
+        r.filename = q.value(4).toString();
+        r.extension = q.value(5).toString();
+        r.fileSize = q.value(6).toLongLong();
+        r.isCompressed = q.value(7).toBool();
+        r.archivePath = q.value(8).toString();
+        r.archiveInternalPath = q.value(9).toString();
+        r.systemId = q.value(10).toInt();
+        r.crc32 = q.value(11).toString();
+        r.md5 = q.value(12).toString();
+        r.sha1 = q.value(13).toString();
+        r.hashCalculated = q.value(14).toBool();
+        r.isPrimary = q.value(15).toBool();
+        r.parentFileId = q.value(16).toInt();
+        r.baseTitle = q.value(17).toString();
+        r.fileType = q.value(18).toString();
+        r.isPatched = q.value(19).toBool();
+        r.patchName = q.value(20).toString();
+        r.isProcessed = q.value(21).toBool();
+        r.processingStatus = q.value(22).toString();
+        r.lastModified = q.value(23).toDateTime();
+        r.scannedAt = q.value(24).toDateTime();
+        return r;
+    }
 
 } // anonymous namespace
 
-bool Database::removeFile(int fileId)
-{
+bool Database::removeFile(int fileId) {
     // Remove associated match record first to keep referential integrity
     QSqlQuery matchQuery(m_db);
     matchQuery.prepare("DELETE FROM matches WHERE file_id = ?");
     matchQuery.addBindValue(fileId);
     if (!matchQuery.exec()) {
-        logError("Failed to delete match for file " + QString::number(fileId) + ": "
-                 + matchQuery.lastError().text());
+        logError("Failed to delete match for file " + QString::number(fileId) + ": " + matchQuery.lastError().text());
         // Continue — the file record removal is more important
     }
 
@@ -74,31 +70,27 @@ bool Database::removeFile(int fileId)
     fileQuery.prepare("DELETE FROM files WHERE id = ?");
     fileQuery.addBindValue(fileId);
     if (!fileQuery.exec()) {
-        logError("Failed to remove file record " + QString::number(fileId) + ": "
-                 + fileQuery.lastError().text());
+        logError("Failed to remove file record " + QString::number(fileId) + ": " + fileQuery.lastError().text());
         return false;
     }
 
     return fileQuery.numRowsAffected() > 0;
 }
 
-int Database::insertFile(const FileRecord &record)
-{
-    const QString classificationName = !record.archiveInternalPath.isEmpty()
-        ? record.archiveInternalPath
-        : record.filename;
+int Database::insertFile(const FileRecord &record) {
+    const QString classificationName
+        = !record.archiveInternalPath.isEmpty() ? record.archiveInternalPath : record.filename;
     const PatchedRomInfo patchedInfo = PatchedRomParser::parse(classificationName);
-    const bool hasExplicitClassification = !Constants::FileTypes::isOfficial(record.fileType) ||
-        record.isPatched || !record.patchName.isEmpty();
+    const bool hasExplicitClassification
+        = !Constants::FileTypes::isOfficial(record.fileType) || record.isPatched || !record.patchName.isEmpty();
     const QString baseTitle = record.baseTitle.isEmpty() ? patchedInfo.baseTitle : record.baseTitle;
     const QString fileType = hasExplicitClassification ? record.fileType : patchedInfo.fileType;
     const bool isPatched = record.isPatched || patchedInfo.isPatched;
     const QString patchName = record.patchName.isEmpty() ? patchedInfo.patchName : record.patchName;
 
     QSqlQuery existingQuery(m_db);
-    existingQuery.prepare(
-        "SELECT id FROM files WHERE original_path = ? AND filename = ? "
-        "AND COALESCE(archive_internal_path, '') = COALESCE(?, '')");
+    existingQuery.prepare("SELECT id FROM files WHERE original_path = ? AND filename = ? "
+                          "AND COALESCE(archive_internal_path, '') = COALESCE(?, '')");
     existingQuery.addBindValue(record.originalPath);
     existingQuery.addBindValue(record.filename);
     existingQuery.addBindValue(record.archiveInternalPath);
@@ -150,9 +142,7 @@ int Database::insertFile(const FileRecord &record)
     return newId;
 }
 
-bool Database::updateFileHashes(int fileId, const QString &crc32,
-                                 const QString &md5, const QString &sha1)
-{
+bool Database::updateFileHashes(int fileId, const QString &crc32, const QString &md5, const QString &sha1) {
     QSqlQuery query(m_db);
     const AppliedPatchRecord lineage = findAppliedPatchByOutputHashes(crc32, md5, sha1);
     const bool hasLineage = lineage.id > 0;
@@ -190,8 +180,7 @@ bool Database::updateFileHashes(int fileId, const QString &crc32,
     return true;
 }
 
-QList<FileRecord> Database::getFilesWithoutHashes()
-{
+QList<FileRecord> Database::getFilesWithoutHashes() {
     QList<FileRecord> files;
 
     QSqlQuery query(m_db);
@@ -232,8 +221,7 @@ QList<FileRecord> Database::getFilesWithoutHashes()
     return files;
 }
 
-QMap<QString, int> Database::getFileCountBySystem()
-{
+QMap<QString, int> Database::getFileCountBySystem() {
     QMap<QString, int> counts;
 
     QSqlQuery query(m_db);
@@ -256,30 +244,27 @@ QMap<QString, int> Database::getFileCountBySystem()
     return counts;
 }
 
-FileRecord Database::getFileById(int fileId)
-{
+FileRecord Database::getFileById(int fileId) {
     QSqlQuery query(m_db);
     query.prepare(QString("SELECT %1 FROM files WHERE id = ?").arg(QLatin1String(kFileSelectColumns)));
     query.addBindValue(fileId);
     if (query.exec() && query.next())
         return fileRecordFromRow(query);
-    return {};
+    return { };
 }
 
-QList<FileRecord> Database::getAllFiles()
-{
+QList<FileRecord> Database::getAllFiles() {
     return queryFiles();
 }
 
-QList<FileRecord> Database::queryFiles(const QString &whereClause)
-{
+QList<FileRecord> Database::queryFiles(const QString &whereClause) {
     const QString sql = whereClause.isEmpty()
         ? QString("SELECT %1 FROM files").arg(QLatin1String(kFileSelectColumns))
         : QString("SELECT %1 FROM files WHERE %2").arg(QLatin1String(kFileSelectColumns), whereClause);
     QSqlQuery query(m_db);
     if (!query.exec(sql)) {
         logError("Failed to query files: " + query.lastError().text());
-        return {};
+        return { };
     }
     QList<FileRecord> files;
     while (query.next())
@@ -287,12 +272,11 @@ QList<FileRecord> Database::queryFiles(const QString &whereClause)
     return files;
 }
 
-QList<FileRecord> Database::getExistingFiles()
-{
+QList<FileRecord> Database::getExistingFiles() {
     QSqlQuery query(m_db);
     if (!query.exec(QString("SELECT %1 FROM files").arg(QLatin1String(kFileSelectColumns)))) {
         logError("Failed to get existing files: " + query.lastError().text());
-        return {};
+        return { };
     }
     QList<FileRecord> files;
     while (query.next()) {
@@ -303,17 +287,16 @@ QList<FileRecord> Database::getExistingFiles()
     return files;
 }
 
-QList<FileRecord> Database::getFilesWithConfirmedMatch()
-{
+QList<FileRecord> Database::getFilesWithConfirmedMatch() {
     QSqlQuery query(m_db);
-    const QString sql = QString(
-        "SELECT %1 FROM files "
-        "WHERE id IN ("
-        "  SELECT DISTINCT file_id FROM matches WHERE is_confirmed = 1 AND is_rejected = 0"
-        ")").arg(QLatin1String(kFileSelectColumns));
+    const QString sql = QString("SELECT %1 FROM files "
+                                "WHERE id IN ("
+                                "  SELECT DISTINCT file_id FROM matches WHERE is_confirmed = 1 AND is_rejected = 0"
+                                ")")
+                            .arg(QLatin1String(kFileSelectColumns));
     if (!query.exec(sql)) {
         logError("Failed to get files with confirmed match: " + query.lastError().text());
-        return {};
+        return { };
     }
     QList<FileRecord> files;
     while (query.next())
@@ -321,20 +304,19 @@ QList<FileRecord> Database::getFilesWithConfirmedMatch()
     return files;
 }
 
-QList<FileRecord> Database::getFilesBySystem(const QString &systemName)
-{
+QList<FileRecord> Database::getFilesBySystem(const QString &systemName) {
     const int systemId = getSystemId(systemName);
     if (systemId == 0) {
         logError("System not found: " + systemName);
-        return {};
+        return { };
     }
     QSqlQuery query(m_db);
-    query.prepare(QString("SELECT %1 FROM files WHERE system_id = ? AND is_primary = 1")
-                      .arg(QLatin1String(kFileSelectColumns)));
+    query.prepare(
+        QString("SELECT %1 FROM files WHERE system_id = ? AND is_primary = 1").arg(QLatin1String(kFileSelectColumns)));
     query.addBindValue(systemId);
     if (!query.exec()) {
         logError("Failed to get files by system: " + query.lastError().text());
-        return {};
+        return { };
     }
     QList<FileRecord> files;
     while (query.next())
@@ -342,15 +324,13 @@ QList<FileRecord> Database::getFilesBySystem(const QString &systemName)
     return files;
 }
 
-QList<FileRecord> Database::getFilesByParent(int parentId)
-{
+QList<FileRecord> Database::getFilesByParent(int parentId) {
     QSqlQuery query(m_db);
-    query.prepare(QString("SELECT %1 FROM files WHERE parent_file_id = ?")
-                      .arg(QLatin1String(kFileSelectColumns)));
+    query.prepare(QString("SELECT %1 FROM files WHERE parent_file_id = ?").arg(QLatin1String(kFileSelectColumns)));
     query.addBindValue(parentId);
     if (!query.exec()) {
         logError("Failed to get files by parent: " + query.lastError().text());
-        return {};
+        return { };
     }
     QList<FileRecord> files;
     while (query.next())

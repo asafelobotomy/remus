@@ -16,36 +16,32 @@
 
 using namespace Remus;
 
-inline bool romBundlerWriteAll(QFile &file, const QByteArray &data)
-{
+inline bool romBundlerWriteAll(QFile &file, const QByteArray &data) {
     return file.write(data) == data.size();
 }
 
-class RomBundlerTest : public QObject
-{
+class RomBundlerTest : public QObject {
     Q_OBJECT
 
 protected:
-    static FileRecord makeFileRecord(int id, const QString &path, const QString &filename = {})
-    {
+    static FileRecord makeFileRecord(int id, const QString &path, const QString &filename = { }) {
         FileRecord r;
         const QString resolvedFilename = filename.isEmpty() ? QFileInfo(path).fileName() : filename;
         const QString suffix = QFileInfo(resolvedFilename).suffix();
-        r.id           = id;
+        r.id = id;
         r.originalPath = path;
-        r.currentPath  = path;
-        r.filename     = resolvedFilename;
-        r.extension    = suffix.isEmpty() ? QString() : "." + suffix;
-        r.fileSize     = QFileInfo(path).exists() ? QFileInfo(path).size() : 0;
+        r.currentPath = path;
+        r.filename = resolvedFilename;
+        r.extension = suffix.isEmpty() ? QString() : "." + suffix;
+        r.fileSize = QFileInfo(path).exists() ? QFileInfo(path).size() : 0;
         r.isCompressed = false;
-        r.crc32        = "AABBCCDD";
-        r.md5          = "abc123";
-        r.sha1         = "def456";
+        r.crc32 = "AABBCCDD";
+        r.md5 = "abc123";
+        r.sha1 = "def456";
         return r;
     }
 
-    static int insertTestFile(Database &db, FileRecord &record)
-    {
+    static int insertTestFile(Database &db, FileRecord &record) {
         const QString anchorPath = record.currentPath.isEmpty() ? record.originalPath : record.currentPath;
         record.libraryId = db.insertLibrary(QFileInfo(anchorPath).absolutePath(), "Test");
         if (record.originalPath.isEmpty()) {
@@ -58,35 +54,33 @@ protected:
         return record.id;
     }
 
-    static Database::MatchResult makeMatch(const QString &title = "Test Game")
-    {
+    static Database::MatchResult makeMatch(const QString &title = "Test Game") {
         Database::MatchResult m;
-        m.gameTitle   = title;
+        m.gameTitle = title;
         m.matchMethod = "CRC32";
-        m.confidence  = 1.0f;
-        m.isRejected  = false;
+        m.confidence = 1.0f;
+        m.isRejected = false;
         return m;
     }
 
-    static GameMetadata makeMetadata(const QString &title = "Test Game")
-    {
+    static GameMetadata makeMetadata(const QString &title = "Test Game") {
         GameMetadata meta;
-        meta.title  = title;
+        meta.title = title;
         meta.system = "Test System";
         return meta;
     }
 
-    static bool writeFile(const QString &path, const QByteArray &data = "DUMMY ROM DATA")
-    {
+    static bool writeFile(const QString &path, const QByteArray &data = "DUMMY ROM DATA") {
         QFile f(path);
-        if (!f.open(QIODevice::WriteOnly)) return false;
-        if (!romBundlerWriteAll(f, data)) return false;
+        if (!f.open(QIODevice::WriteOnly))
+            return false;
+        if (!romBundlerWriteAll(f, data))
+            return false;
         f.close();
         return true;
     }
 
-    static bool writeMinimalCueBinSet(const QString &cuePath, const QString &binPath)
-    {
+    static bool writeMinimalCueBinSet(const QString &cuePath, const QString &binPath) {
         if (!writeFile(binPath, QByteArray(2352 * 16, '\0')))
             return false;
 
@@ -94,17 +88,17 @@ protected:
         if (!cueFile.open(QIODevice::WriteOnly | QIODevice::Text))
             return false;
 
-        const QByteArray cueContents = QStringLiteral(
-            "FILE \"%1\" BINARY\n  TRACK 01 MODE1/2352\n    INDEX 01 00:00:00\n")
-            .arg(QFileInfo(binPath).fileName()).toUtf8();
+        const QByteArray cueContents
+            = QStringLiteral("FILE \"%1\" BINARY\n  TRACK 01 MODE1/2352\n    INDEX 01 00:00:00\n")
+                  .arg(QFileInfo(binPath).fileName())
+                  .toUtf8();
         if (!romBundlerWriteAll(cueFile, cueContents))
             return false;
         cueFile.close();
         return true;
     }
 
-    static bool copyFixtureDirectoryFiles(const QString &sourceDir, const QString &destinationDir)
-    {
+    static bool copyFixtureDirectoryFiles(const QString &sourceDir, const QString &destinationDir) {
         const QDir dir(sourceDir);
         const QFileInfoList entries = dir.entryInfoList(QDir::Files | QDir::NoDotAndDotDot);
         for (const QFileInfo &entry : entries) {

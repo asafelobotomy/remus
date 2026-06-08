@@ -27,37 +27,39 @@ using namespace Remus;
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
 // Compute SHA-256 of a file in 1 MiB chunks. Returns hex string or empty.
-static QString fileChecksum(const QString &path)
-{
+static QString fileChecksum(const QString &path) {
     QFile f(path);
-    if (!f.open(QIODevice::ReadOnly)) return {};
+    if (!f.open(QIODevice::ReadOnly))
+        return { };
     QCryptographicHash h(QCryptographicHash::Sha256);
     while (!f.atEnd()) {
         const QByteArray chunk = f.read(1024 * 1024);
-        if (chunk.isEmpty()) break;
+        if (chunk.isEmpty())
+            break;
         h.addData(chunk);
     }
     return QString::fromLatin1(h.result().toHex());
 }
 
 // Derive a sanitised source-id from a DAT base name (no extension).
-static QString deriveSourceId(const QString &baseName)
-{
+static QString deriveSourceId(const QString &baseName) {
     QString name = baseName.toLower();
     static const QRegularExpression reInvalid(QStringLiteral("[^a-z0-9]+"));
     name.replace(reInvalid, QStringLiteral("-"));
-    while (name.startsWith(QLatin1Char('-'))) name.remove(0, 1);
-    while (name.endsWith(QLatin1Char('-')))   name.chop(1);
+    while (name.startsWith(QLatin1Char('-')))
+        name.remove(0, 1);
+    while (name.endsWith(QLatin1Char('-')))
+        name.chop(1);
     return name.left(64);
 }
 
 // ── Command handler ───────────────────────────────────────────────────────────
 
-int handleIngestSourceCommand(CliContext &ctx)
-{
-    if (!ctx.parser.isSet("ingest-source")) return 0;
+int handleIngestSourceCommand(CliContext &ctx) {
+    if (!ctx.parser.isSet("ingest-source"))
+        return 0;
 
-    const QString datPath    = ctx.parser.value("ingest-source").trimmed();
+    const QString datPath = ctx.parser.value("ingest-source").trimmed();
     const QString outputPath = ctx.parser.value("compendium-output").trimmed();
 
     const QFileInfo datInfo(datPath);
@@ -68,14 +70,12 @@ int handleIngestSourceCommand(CliContext &ctx)
 
     const QFileInfo dbInfo(outputPath);
     if (!dbInfo.exists()) {
-        qCritical() << "✗ Compendium database not found (run --build-compendium first):"
-                    << outputPath;
+        qCritical() << "✗ Compendium database not found (run --build-compendium first):" << outputPath;
         return 1;
     }
 
-    const QString sourceId = ctx.parser.isSet("source-id")
-                                 ? ctx.parser.value("source-id").trimmed()
-                                 : deriveSourceId(datInfo.completeBaseName());
+    const QString sourceId = ctx.parser.isSet("source-id") ? ctx.parser.value("source-id").trimmed()
+                                                           : deriveSourceId(datInfo.completeBaseName());
     if (sourceId.isEmpty()) {
         qCritical() << "✗ Could not derive a source-id from:" << datPath;
         return 1;
@@ -85,8 +85,7 @@ int handleIngestSourceCommand(CliContext &ctx)
 
     qInfo().noquote() << QStringLiteral("[ingest-source] DAT:       %1").arg(datInfo.absoluteFilePath());
     qInfo().noquote() << QStringLiteral("[ingest-source] DB:        %1").arg(dbInfo.absoluteFilePath());
-    qInfo().noquote() << QStringLiteral("[ingest-source] source-id: %1  priority: %2")
-                             .arg(sourceId).arg(priority);
+    qInfo().noquote() << QStringLiteral("[ingest-source] source-id: %1  priority: %2").arg(sourceId).arg(priority);
 
     qInfo() << "[ingest-source] Computing DAT checksum...";
     const QString datChecksum = fileChecksum(datInfo.absoluteFilePath());
@@ -95,8 +94,7 @@ int handleIngestSourceCommand(CliContext &ctx)
         return 1;
     }
 
-    const QString connectionName = QStringLiteral("ingest-")
-                                   + QUuid::createUuid().toString(QUuid::WithoutBraces);
+    const QString connectionName = QStringLiteral("ingest-") + QUuid::createUuid().toString(QUuid::WithoutBraces);
     QSqlDatabase database = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), connectionName);
     database.setDatabaseName(dbInfo.absoluteFilePath());
     if (!database.open()) {
@@ -119,20 +117,18 @@ int handleIngestSourceCommand(CliContext &ctx)
              QStringLiteral("PRAGMA temp_store = MEMORY"),
              QStringLiteral("PRAGMA cache_size = -65536"),
          }) {
-        pragma.exec(p);  // non-fatal; WAL already set by --build-compendium
+        pragma.exec(p); // non-fatal; WAL already set by --build-compendium
     }
 
     // Idempotency: skip if this exact DAT (by checksum) was already ingested
     {
         QSqlQuery q(database);
-        q.prepare(QStringLiteral(
-            "SELECT snapshot_id FROM source_snapshots "
-            "WHERE source_id = ? AND checksum_sha256 = ? LIMIT 1"));
+        q.prepare(QStringLiteral("SELECT snapshot_id FROM source_snapshots "
+                                 "WHERE source_id = ? AND checksum_sha256 = ? LIMIT 1"));
         q.addBindValue(sourceId);
         q.addBindValue(datChecksum);
         if (q.exec() && q.next()) {
-            qInfo().noquote() << QStringLiteral(
-                "[ingest-source] ✔ Already ingested (snapshot: %1) — nothing to do.")
+            qInfo().noquote() << QStringLiteral("[ingest-source] ✔ Already ingested (snapshot: %1) — nothing to do.")
                                      .arg(q.value(0).toString());
             cleanup();
             return 0;
@@ -161,11 +157,10 @@ int handleIngestSourceCommand(CliContext &ctx)
     // so that a changed --source-priority flag takes effect immediately.
     {
         QSqlQuery q(database);
-        q.prepare(QStringLiteral(
-            "INSERT INTO sources "
-            "    (source_id, display_name, source_type, priority, enabled) "
-            "VALUES (?, ?, 'dat', ?, 1) "
-            "ON CONFLICT(source_id) DO UPDATE SET priority = excluded.priority"));
+        q.prepare(QStringLiteral("INSERT INTO sources "
+                                 "    (source_id, display_name, source_type, priority, enabled) "
+                                 "VALUES (?, ?, 'dat', ?, 1) "
+                                 "ON CONFLICT(source_id) DO UPDATE SET priority = excluded.priority"));
         q.addBindValue(sourceId);
         q.addBindValue(datInfo.completeBaseName());
         q.addBindValue(priority);
@@ -181,10 +176,9 @@ int handleIngestSourceCommand(CliContext &ctx)
     // Insert snapshot row (new snapshot for this DAT version)
     {
         QSqlQuery q(database);
-        q.prepare(QStringLiteral(
-            "INSERT INTO source_snapshots "
-            "    (snapshot_id, source_id, snapshot_label, fetched_at, checksum_sha256) "
-            "VALUES (?, ?, ?, ?, ?)"));
+        q.prepare(QStringLiteral("INSERT INTO source_snapshots "
+                                 "    (snapshot_id, source_id, snapshot_label, fetched_at, checksum_sha256) "
+                                 "VALUES (?, ?, ?, ?, ?)"));
         q.addBindValue(snapshotId);
         q.addBindValue(sourceId);
         q.addBindValue(datInfo.fileName());
@@ -216,9 +210,8 @@ int handleIngestSourceCommand(CliContext &ctx)
     // Extract DAT
     qInfo() << "[ingest-source] Extracting DAT records...";
     QString extractError;
-    QList<Remus::Compendium::SourceRecordEnvelope> records =
-        Remus::Compendium::DatExtractor::extract(
-            datInfo.absoluteFilePath(), sourceId, snapshotId, extractError);
+    QList<Remus::Compendium::SourceRecordEnvelope> records
+        = Remus::Compendium::DatExtractor::extract(datInfo.absoluteFilePath(), sourceId, snapshotId, extractError);
     if (records.isEmpty()) {
         qCritical() << "✗ Extraction produced no records:" << extractError;
         database.rollback();
@@ -235,9 +228,9 @@ int handleIngestSourceCommand(CliContext &ctx)
 
     // Link identities (new records link to existing games where hashes/serials/titles match)
     const int newGames = linker.link(records);
-    qInfo().noquote()
-        << QStringLiteral("[ingest-source] Linked: %1 new games, %2 merged to existing.")
-               .arg(newGames).arg(records.size() - newGames);
+    qInfo().noquote() << QStringLiteral("[ingest-source] Linked: %1 new games, %2 merged to existing.")
+                             .arg(newGames)
+                             .arg(records.size() - newGames);
 
     // Persist linked records
     Remus::Compendium::CompilerStats stats;
@@ -262,8 +255,7 @@ int handleIngestSourceCommand(CliContext &ctx)
         }
         stats.deduplicatedGames = merged;
         if (merged > 0) {
-            qInfo().noquote()
-                << QStringLiteral("[ingest-source] Deduped %1 game rows.").arg(merged);
+            qInfo().noquote() << QStringLiteral("[ingest-source] Deduped %1 game rows.").arg(merged);
         }
     }
 

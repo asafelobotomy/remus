@@ -5,8 +5,7 @@
 
 using namespace Remus;
 
-class HeaderDetectorTest : public QObject
-{
+class HeaderDetectorTest : public QObject {
     Q_OBJECT
 
 private slots:
@@ -19,8 +18,7 @@ private slots:
     void testHelpers();
 };
 
-void HeaderDetectorTest::testDetectNES()
-{
+void HeaderDetectorTest::testDetectNES() {
     HeaderDetector detector;
 
     QByteArray header("NES\x1A");
@@ -38,8 +36,7 @@ void HeaderDetectorTest::testDetectNES()
     QCOMPARE(nes2.headerType, QStringLiteral("NES2.0"));
 }
 
-void HeaderDetectorTest::testDetectLynx()
-{
+void HeaderDetectorTest::testDetectLynx() {
     HeaderDetector detector;
     QByteArray data(64, '\x00');
     data[0] = 'L';
@@ -56,8 +53,7 @@ void HeaderDetectorTest::testDetectLynx()
     QVERIFY(info.info.contains("TestGame"));
 }
 
-void HeaderDetectorTest::testDetectFDS()
-{
+void HeaderDetectorTest::testDetectFDS() {
     HeaderDetector detector;
     QByteArray data("FDS\x1A");
     data.append(QByteArray(12, '\x00'));
@@ -70,8 +66,7 @@ void HeaderDetectorTest::testDetectFDS()
     QVERIFY(info.info.contains("Disk sides: 2"));
 }
 
-void HeaderDetectorTest::testDetectA78()
-{
+void HeaderDetectorTest::testDetectA78() {
     HeaderDetector detector;
     QByteArray data(128, '\x00');
     data[1] = 'A';
@@ -93,8 +88,7 @@ void HeaderDetectorTest::testDetectA78()
     QVERIFY(info.info.contains("Test Title"));
 }
 
-void HeaderDetectorTest::testDetectSNES()
-{
+void HeaderDetectorTest::testDetectSNES() {
     HeaderDetector detector;
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
@@ -113,8 +107,7 @@ void HeaderDetectorTest::testDetectSNES()
     QCOMPARE(info.systemHint, QStringLiteral("SNES"));
 }
 
-void HeaderDetectorTest::testStripHeader()
-{
+void HeaderDetectorTest::testStripHeader() {
     HeaderDetector detector;
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
@@ -141,8 +134,7 @@ void HeaderDetectorTest::testStripHeader()
     QCOMPARE(outData, body);
 }
 
-void HeaderDetectorTest::testHelpers()
-{
+void HeaderDetectorTest::testHelpers() {
     QCOMPARE(HeaderDetector::mayHaveHeader(".nes"), true);
     QCOMPARE(HeaderDetector::mayHaveHeader(".bin"), false);
     QCOMPARE(HeaderDetector::getExpectedHeaderSize(".nes"), 16);

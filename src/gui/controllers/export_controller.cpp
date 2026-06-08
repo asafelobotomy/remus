@@ -20,99 +20,92 @@ namespace Remus {
 
 namespace {
 
-/// Returns the path where ArtworkController stores downloaded artwork for a file,
-/// probing common image extensions because the downloader may rename the file.
-QString artworkPathForFile(int fileId)
-{
-    QSettings settings(QString::fromLatin1(Constants::SETTINGS_ORGANIZATION),
-                       QString::fromLatin1(Constants::SETTINGS_APPLICATION));
-    const QString configured = settings.value(QLatin1String(GuiSettings::ARTWORK_CACHE_DIR)).toString().trimmed();
-    const QString artDir = configured.isEmpty()
-        ? QDir(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)).filePath(QStringLiteral("artwork"))
-        : configured;
-    const QString base = QDir(artDir).filePath(QStringLiteral("artwork_%1").arg(fileId));
-    for (const char *ext : {".png", ".jpg", ".jpeg", ".webp"}) {
-        const QString candidate = base + QLatin1String(ext);
-        if (QFileInfo::exists(candidate))
-            return candidate;
-    }
-    return QString(); // not found
-}
-
-bool trashOriginalEnabled()
-{
-    QSettings settings(QString::fromLatin1(Constants::SETTINGS_ORGANIZATION),
-                       QString::fromLatin1(Constants::SETTINGS_APPLICATION));
-    return settings.value(QStringLiteral("gui/trash_original_after_bundle"), false).toBool();
-}
-
-/// Prefer ZIP; fall back to 7z. Returns Unknown if neither tool is available.
-ArchiveFormat pickBestFormat()
-{
-    ArchiveCreator probe;
-    if (probe.canCompress(ArchiveFormat::ZIP))
-        return ArchiveFormat::ZIP;
-    if (probe.canCompress(ArchiveFormat::SevenZip))
-        return ArchiveFormat::SevenZip;
-    return ArchiveFormat::Unknown;
-}
-
-/// Move @p filePath to {scanDir}/original_roms/ before bundling.
-/// Returns the new path on success, or an empty string on failure.
-QString moveToOriginalRoms(const QString &filePath, const QString &scanDir)
-{
-    const QString origRomsDir = QDir(scanDir).filePath(QStringLiteral("original_roms"));
-    if (!QDir().mkpath(origRomsDir))
-        return QString();
-
-    // Write the .remusdir marker so the scanner automatically skips this
-    // directory on future scans — original ROMs must not be re-imported.
-    const QString markerPath = QDir(origRomsDir).filePath(
-        QString::fromLatin1(Constants::Settings::Files::MARKER_SKIP_SCAN));
-    if (!QFileInfo::exists(markerPath)) {
-        QFile marker(markerPath);
-        if (!marker.open(QIODevice::WriteOnly)) {
-            qWarning() << "export_controller: failed to write scan-skip marker at" << markerPath
-                       << "-" << marker.errorString();
+    /// Returns the path where ArtworkController stores downloaded artwork for a file,
+    /// probing common image extensions because the downloader may rename the file.
+    QString artworkPathForFile(int fileId) {
+        QSettings settings(QString::fromLatin1(Constants::SETTINGS_ORGANIZATION),
+            QString::fromLatin1(Constants::SETTINGS_APPLICATION));
+        const QString configured = settings.value(QLatin1String(GuiSettings::ARTWORK_CACHE_DIR)).toString().trimmed();
+        const QString artDir = configured.isEmpty()
+            ? QDir(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation))
+                  .filePath(QStringLiteral("artwork"))
+            : configured;
+        const QString base = QDir(artDir).filePath(QStringLiteral("artwork_%1").arg(fileId));
+        for (const char *ext : { ".png", ".jpg", ".jpeg", ".webp" }) {
+            const QString candidate = base + QLatin1String(ext);
+            if (QFileInfo::exists(candidate))
+                return candidate;
         }
+        return QString(); // not found
     }
 
-    const QString destPath = QDir(origRomsDir).filePath(QFileInfo(filePath).fileName());
-    if (QFileInfo::exists(destPath)) {
-        // Already moved in a previous run — just acknowledge it.
-        if (!QFileInfo::exists(filePath))
-            return destPath;
-        // Both exist; rename with a numeric suffix to avoid clobbering.
-        int n = 1;
-        QString candidate;
-        do {
-            candidate = QDir(origRomsDir).filePath(
-                QFileInfo(filePath).completeBaseName()
-                + QStringLiteral("_%1.").arg(n++)
-                + QFileInfo(filePath).suffix());
-        } while (QFileInfo::exists(candidate));
-        if (!QFile::rename(filePath, candidate))
-            return QString();
-        return candidate;
+    bool trashOriginalEnabled() {
+        QSettings settings(QString::fromLatin1(Constants::SETTINGS_ORGANIZATION),
+            QString::fromLatin1(Constants::SETTINGS_APPLICATION));
+        return settings.value(QStringLiteral("gui/trash_original_after_bundle"), false).toBool();
     }
-    if (!QFile::rename(filePath, destPath))
-        return QString();
-    return destPath;
-}
+
+    /// Prefer ZIP; fall back to 7z. Returns Unknown if neither tool is available.
+    ArchiveFormat pickBestFormat() {
+        ArchiveCreator probe;
+        if (probe.canCompress(ArchiveFormat::ZIP))
+            return ArchiveFormat::ZIP;
+        if (probe.canCompress(ArchiveFormat::SevenZip))
+            return ArchiveFormat::SevenZip;
+        return ArchiveFormat::Unknown;
+    }
+
+    /// Move @p filePath to {scanDir}/original_roms/ before bundling.
+    /// Returns the new path on success, or an empty string on failure.
+    QString moveToOriginalRoms(const QString &filePath, const QString &scanDir) {
+        const QString origRomsDir = QDir(scanDir).filePath(QStringLiteral("original_roms"));
+        if (!QDir().mkpath(origRomsDir))
+            return QString();
+
+        // Write the .remusdir marker so the scanner automatically skips this
+        // directory on future scans — original ROMs must not be re-imported.
+        const QString markerPath
+            = QDir(origRomsDir).filePath(QString::fromLatin1(Constants::Settings::Files::MARKER_SKIP_SCAN));
+        if (!QFileInfo::exists(markerPath)) {
+            QFile marker(markerPath);
+            if (!marker.open(QIODevice::WriteOnly)) {
+                qWarning() << "export_controller: failed to write scan-skip marker at" << markerPath << "-"
+                           << marker.errorString();
+            }
+        }
+
+        const QString destPath = QDir(origRomsDir).filePath(QFileInfo(filePath).fileName());
+        if (QFileInfo::exists(destPath)) {
+            // Already moved in a previous run — just acknowledge it.
+            if (!QFileInfo::exists(filePath))
+                return destPath;
+            // Both exist; rename with a numeric suffix to avoid clobbering.
+            int n = 1;
+            QString candidate;
+            do {
+                candidate = QDir(origRomsDir)
+                                .filePath(QFileInfo(filePath).completeBaseName() + QStringLiteral("_%1.").arg(n++)
+                                    + QFileInfo(filePath).suffix());
+            } while (QFileInfo::exists(candidate));
+            if (!QFile::rename(filePath, candidate))
+                return QString();
+            return candidate;
+        }
+        if (!QFile::rename(filePath, destPath))
+            return QString();
+        return destPath;
+    }
 
 } // anonymous namespace
 
 ExportController::ExportController(AppController *appController, QObject *parent)
     : QObject(parent)
     , m_appController(appController)
-    , m_bundler(std::make_unique<RomBundler>(*appController->database(), this))
-{
-    connect(this, &ExportController::libraryChanged,
-            m_appController, &AppController::refreshSelectedFile);
+    , m_bundler(std::make_unique<RomBundler>(*appController->database(), this)) {
+    connect(this, &ExportController::libraryChanged, m_appController, &AppController::refreshSelectedFile);
 }
 
-void ExportController::bundleSelected(const QString &scanDir, const QString &namingTemplate)
-{
+void ExportController::bundleSelected(const QString &scanDir, const QString &namingTemplate) {
     if (m_appController == nullptr || !m_appController->isLibraryOpen()) {
         setLastMessage(QStringLiteral("Open a library before bundling files."));
         return;
@@ -173,7 +166,7 @@ void ExportController::bundleSelected(const QString &scanDir, const QString &nam
     }
 
     RomBundler::BundleConfig config;
-    config.outputFormat   = fmt;
+    config.outputFormat = fmt;
     config.namingTemplate = namingTemplate;
     const QString cachedArt = artworkPathForFile(fileId);
     if (QFileInfo::exists(cachedArt))
@@ -201,8 +194,8 @@ void ExportController::bundleSelected(const QString &scanDir, const QString &nam
     m_lastOutputPath = result.outputPath;
     {
         QSqlQuery upd(m_appController->database()->database());
-        upd.prepare(QStringLiteral(
-            "UPDATE files SET is_bundled = 1, bundle_output_path = ?, base_title = ? WHERE id = ?"));
+        upd.prepare(
+            QStringLiteral("UPDATE files SET is_bundled = 1, bundle_output_path = ?, base_title = ? WHERE id = ?"));
         upd.addBindValue(result.outputPath);
         // Store the bundle display name (filename without archive extension) as base_title
         // so the queue sidebar reflects the bundled & renamed title.
@@ -217,8 +210,7 @@ void ExportController::bundleSelected(const QString &scanDir, const QString &nam
     emit libraryChanged();
 }
 
-void ExportController::bundleAll(const QString &scanDir, const QString &namingTemplate)
-{
+void ExportController::bundleAll(const QString &scanDir, const QString &namingTemplate) {
     if (m_appController == nullptr || !m_appController->isLibraryOpen()) {
         setLastMessage(QStringLiteral("Open a library before bundling files."));
         return;
@@ -251,7 +243,7 @@ void ExportController::bundleAll(const QString &scanDir, const QString &namingTe
     }
 
     int bundled = 0;
-    int failed  = 0;
+    int failed = 0;
 
     for (auto it = allMatches.constBegin(); it != allMatches.constEnd(); ++it) {
         FileRecord file = m_appController->database()->getFileById(it.key());
@@ -299,14 +291,13 @@ void ExportController::bundleAll(const QString &scanDir, const QString &namingTe
         }
 
         RomBundler::BundleConfig config;
-        config.outputFormat   = fmt;
+        config.outputFormat = fmt;
         config.namingTemplate = namingTemplate;
         const QString cachedArt = artworkPathForFile(it.key());
         if (QFileInfo::exists(cachedArt))
             config.artworkPath = cachedArt;
 
-        const RomBundler::BundleResult result =
-            m_bundler->bundle(file, match, metadataForMatch(match), romDir, config);
+        const RomBundler::BundleResult result = m_bundler->bundle(file, match, metadataForMatch(match), romDir, config);
 
         if (result.success) {
             if (trashOriginal && QFileInfo::exists(file.currentPath))
@@ -320,7 +311,8 @@ void ExportController::bundleAll(const QString &scanDir, const QString &namingTe
                 upd.addBindValue(QFileInfo(result.outputPath).completeBaseName());
                 upd.addBindValue(it.key());
                 if (!upd.exec())
-                    qWarning() << "bundleAll: failed to set is_bundled=1 for file" << it.key() << upd.lastError().text();
+                    qWarning() << "bundleAll: failed to set is_bundled=1 for file" << it.key()
+                               << upd.lastError().text();
             }
         } else {
             ++failed;
@@ -345,8 +337,7 @@ void ExportController::bundleAll(const QString &scanDir, const QString &namingTe
         emit exportFinished();
 }
 
-bool ExportController::exportM3u(const QString &outputPath)
-{
+bool ExportController::exportM3u(const QString &outputPath) {
     if (m_appController == nullptr || !m_appController->isLibraryOpen()) {
         setLastMessage(QStringLiteral("Open a library before exporting playlists."));
         return false;
@@ -381,8 +372,7 @@ bool ExportController::exportM3u(const QString &outputPath)
     return true;
 }
 
-GameMetadata ExportController::metadataForMatch(const Database::MatchResult &match) const
-{
+GameMetadata ExportController::metadataForMatch(const Database::MatchResult &match) const {
     GameMetadata metadata;
     metadata.title = match.gameTitle;
     metadata.region = match.region;
@@ -396,8 +386,7 @@ GameMetadata ExportController::metadataForMatch(const Database::MatchResult &mat
     return metadata;
 }
 
-void ExportController::setLastMessage(const QString &message)
-{
+void ExportController::setLastMessage(const QString &message) {
     if (m_lastMessage == message) {
         return;
     }

@@ -27,8 +27,7 @@ using namespace Remus;
 
 namespace {
 
-QString normalizeManifestJson(const QString &manifestJson)
-{
+QString normalizeManifestJson(const QString &manifestJson) {
     QJsonParseError parseError;
     const QJsonDocument document = QJsonDocument::fromJson(manifestJson.toUtf8(), &parseError);
     if (parseError.error != QJsonParseError::NoError || document.isNull()) {
@@ -37,16 +36,11 @@ QString normalizeManifestJson(const QString &manifestJson)
     return QString::fromUtf8(document.toJson(QJsonDocument::Compact));
 }
 
-QString makeStagedSiblingPath(const QString &finalPath)
-{
-    return finalPath + QStringLiteral(".staged-")
-           + QUuid::createUuid().toString(QUuid::WithoutBraces);
+QString makeStagedSiblingPath(const QString &finalPath) {
+    return finalPath + QStringLiteral(".staged-") + QUuid::createUuid().toString(QUuid::WithoutBraces);
 }
 
-bool promoteStagedFile(const QString &stagedPath,
-                      const QString &finalPath,
-                      QString &error)
-{
+bool promoteStagedFile(const QString &stagedPath, const QString &finalPath, QString &error) {
     if (stagedPath == finalPath) {
         return true;
     }
@@ -74,8 +68,7 @@ bool promoteStagedFile(const QString &stagedPath,
     return true;
 }
 
-void releaseDatabase(QSqlDatabase &database, const QString &connectionName)
-{
+void releaseDatabase(QSqlDatabase &database, const QString &connectionName) {
     database.close();
     database = QSqlDatabase();
     QSqlDatabase::removeDatabase(connectionName);
@@ -83,32 +76,31 @@ void releaseDatabase(QSqlDatabase &database, const QString &connectionName)
 
 } // namespace
 
-int handleBuildCompendiumCommand(CliContext &ctx)
-{
-    if (!ctx.parser.isSet("build-compendium")) return 0;
+int handleBuildCompendiumCommand(CliContext &ctx) {
+    if (!ctx.parser.isSet("build-compendium"))
+        return 0;
 
     const QString manifestPath = ctx.parser.value("compendium-manifest").trimmed();
 
     // --enrich-source filters which enrichment pass(es) to run.
     // When given without an explicit --compendium-output, auto-derive the output name from the key(s).
     const QString sourceFilterArg = ctx.parser.value("enrich-source").trimmed();
-    const QStringList sourceFilter = sourceFilterArg.isEmpty()
-        ? QStringList{}
-        : sourceFilterArg.split(QLatin1Char(','), Qt::SkipEmptyParts);
+    const QStringList sourceFilter
+        = sourceFilterArg.isEmpty() ? QStringList { } : sourceFilterArg.split(QLatin1Char(','), Qt::SkipEmptyParts);
     {
         const QStringList validKeys = knownEnrichmentSourceKeys();
         for (const QString &key : sourceFilter) {
             if (!validKeys.contains(key)) {
-                qWarning().noquote()
-                    << QStringLiteral("[enrich] Unknown --enrich-source key '%1' — will be ignored. "
-                                      "Valid keys: %2").arg(key, validKeys.join(", "));
+                qWarning().noquote() << QStringLiteral("[enrich] Unknown --enrich-source key '%1' — will be ignored. "
+                                                       "Valid keys: %2")
+                                            .arg(key, validKeys.join(", "));
             }
         }
     }
     const QString outputPath = [&]() -> QString {
         if (!sourceFilter.isEmpty() && !ctx.parser.isSet("compendium-output")) {
-            const QString suffix = sourceFilter.join(QLatin1Char('_')).toUpper()
-                                       .replace(QLatin1Char('-'), QLatin1Char('_'));
+            const QString suffix
+                = sourceFilter.join(QLatin1Char('_')).toUpper().replace(QLatin1Char('-'), QLatin1Char('_'));
             return QStringLiteral("data/compendium/remus_compendium_%1.db").arg(suffix);
         }
         return ctx.parser.value("compendium-output").trimmed();
@@ -173,16 +165,15 @@ int handleBuildCompendiumCommand(CliContext &ctx)
     // Skip only when the persisted manifest contract exactly matches the current
     // build request. This catches disabled/removed sources and identity changes.
     if (QFileInfo::exists(finalOutputPath)) {
-        const QString checkConn = QStringLiteral("compendium-check-")
-                                  + QUuid::createUuid().toString(QUuid::WithoutBraces);
+        const QString checkConn
+            = QStringLiteral("compendium-check-") + QUuid::createUuid().toString(QUuid::WithoutBraces);
         QSqlDatabase checkDb = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), checkConn);
         checkDb.setDatabaseName(finalOutputPath);
         bool manifestMatches = checkDb.open();
         if (manifestMatches) {
             QSqlQuery q(checkDb);
-            q.prepare(QStringLiteral(
-                "SELECT 1 FROM compendium_builds "
-                "WHERE build_id = ? AND schema_version = ? AND source_manifest_json = ? LIMIT 1"));
+            q.prepare(QStringLiteral("SELECT 1 FROM compendium_builds "
+                                     "WHERE build_id = ? AND schema_version = ? AND source_manifest_json = ? LIMIT 1"));
             q.addBindValue(buildId);
             q.addBindValue(schemaVersion);
             q.addBindValue(normalizedManifestJson);
@@ -270,9 +261,9 @@ int handleBuildCompendiumCommand(CliContext &ctx)
 
     for (const CompendiumSourceDescriptor &source : sources) {
         QSqlQuery sourceQuery(database);
-        sourceQuery.prepare(QStringLiteral(
-            "INSERT INTO sources (source_id, display_name, source_type, license_id, license_url, attribution_required, priority, enabled) "
-            "VALUES (?, ?, ?, ?, ?, ?, ?, ?)"));
+        sourceQuery.prepare(QStringLiteral("INSERT INTO sources (source_id, display_name, source_type, license_id, "
+                                           "license_url, attribution_required, priority, enabled) "
+                                           "VALUES (?, ?, ?, ?, ?, ?, ?, ?)"));
         sourceQuery.addBindValue(source.sourceId);
         sourceQuery.addBindValue(source.displayName);
         sourceQuery.addBindValue(source.sourceType);
@@ -290,9 +281,9 @@ int handleBuildCompendiumCommand(CliContext &ctx)
         }
 
         QSqlQuery snapshotQuery(database);
-        snapshotQuery.prepare(QStringLiteral(
-            "INSERT INTO source_snapshots (snapshot_id, source_id, snapshot_label, snapshot_ref, fetched_at, checksum_sha256) "
-            "VALUES (?, ?, ?, ?, ?, ?)"));
+        snapshotQuery.prepare(QStringLiteral("INSERT INTO source_snapshots (snapshot_id, source_id, snapshot_label, "
+                                             "snapshot_ref, fetched_at, checksum_sha256) "
+                                             "VALUES (?, ?, ?, ?, ?, ?)"));
         snapshotQuery.addBindValue(source.snapshotId);
         snapshotQuery.addBindValue(source.sourceId);
         snapshotQuery.addBindValue(source.snapshotLabel);
@@ -317,21 +308,21 @@ int handleBuildCompendiumCommand(CliContext &ctx)
 
     // ── Run compiler service (extraction → linking → persistence → merge) ──────
     Remus::Compendium::CompendiumBuildConfig buildConfig;
-    buildConfig.buildId       = buildId;
+    buildConfig.buildId = buildId;
     buildConfig.schemaVersion = schemaVersion;
-    buildConfig.manifestJson  = manifestJson;
+    buildConfig.manifestJson = manifestJson;
     for (const CompendiumSourceDescriptor &src : sources) {
         Remus::Compendium::CompendiumSourceConfig cfg;
-        cfg.sourceId             = src.sourceId;
-        cfg.displayName          = src.displayName;
-        cfg.sourceType           = src.sourceType;
-        cfg.snapshotId           = src.snapshotId;
-        cfg.filePath             = src.path;
-        cfg.priority             = src.priority;
-        cfg.enabled              = src.enabled;
-        cfg.licenseId            = src.licenseId;
-        cfg.licenseUrl           = src.licenseUrl;
-        cfg.attributionRequired  = src.attributionRequired;
+        cfg.sourceId = src.sourceId;
+        cfg.displayName = src.displayName;
+        cfg.sourceType = src.sourceType;
+        cfg.snapshotId = src.snapshotId;
+        cfg.filePath = src.path;
+        cfg.priority = src.priority;
+        cfg.enabled = src.enabled;
+        cfg.licenseId = src.licenseId;
+        cfg.licenseUrl = src.licenseUrl;
+        cfg.attributionRequired = src.attributionRequired;
         buildConfig.sources.append(cfg);
     }
 
@@ -347,38 +338,37 @@ int handleBuildCompendiumCommand(CliContext &ctx)
     // ── Progress tracking: <output>.progress.json — query with cat or jq ─────
     const QString progressPath = finalOutputPath + QStringLiteral(".progress.json");
     int totalEnabled = 0;
-    for (const auto &s : std::as_const(buildConfig.sources)) { if (s.enabled) ++totalEnabled; }
+    for (const auto &s : std::as_const(buildConfig.sources)) {
+        if (s.enabled)
+            ++totalEnabled;
+    }
 
-    auto writeProgress = [&](const QString &status, int current,
-                              const QString &srcId, const Remus::Compendium::CompilerStats &s,
-                              int overallPct = -1) {
+    auto writeProgress = [&](const QString &status, int current, const QString &srcId,
+                             const Remus::Compendium::CompilerStats &s, int overallPct = -1) {
         // Default: scale ingest progress over 0-10% of the full pipeline.
-        const int pct = overallPct >= 0 ? overallPct
-                                        : (totalEnabled > 0 ? current * 10 / totalEnabled : 0);
+        const int pct = overallPct >= 0 ? overallPct : (totalEnabled > 0 ? current * 10 / totalEnabled : 0);
         const QJsonObject obj {
-            {QStringLiteral("status"),           status},
-            {QStringLiteral("current"),          current},
-            {QStringLiteral("total"),            totalEnabled},
-            {QStringLiteral("current_source"),   srcId},
-            {QStringLiteral("overall_pct"),      pct},
-            {QStringLiteral("records_ingested"), s.recordsIngested},
-            {QStringLiteral("games_created"),    s.gamesCreated},
-            {QStringLiteral("elapsed_ms"),       static_cast<qint64>(timer.elapsed())},
-            {QStringLiteral("started_at"),       startedAt.toString(Qt::ISODate)},
-            {QStringLiteral("updated_at"),       QDateTime::currentDateTimeUtc().toString(Qt::ISODate)},
+            { QStringLiteral("status"), status },
+            { QStringLiteral("current"), current },
+            { QStringLiteral("total"), totalEnabled },
+            { QStringLiteral("current_source"), srcId },
+            { QStringLiteral("overall_pct"), pct },
+            { QStringLiteral("records_ingested"), s.recordsIngested },
+            { QStringLiteral("games_created"), s.gamesCreated },
+            { QStringLiteral("elapsed_ms"), static_cast<qint64>(timer.elapsed()) },
+            { QStringLiteral("started_at"), startedAt.toString(Qt::ISODate) },
+            { QStringLiteral("updated_at"), QDateTime::currentDateTimeUtc().toString(Qt::ISODate) },
         };
         QFile pf(progressPath);
         if (pf.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text))
             pf.write(QJsonDocument(obj).toJson());
     };
-    Remus::Compendium::ProgressCallback onProgress = [&](int current, int /*total*/,
-                                                          const QString &srcId,
-                                                          const Remus::Compendium::CompilerStats &s) {
-        qInfo().noquote() << QStringLiteral("[%1/%2] \u2714 %3")
-            .arg(current, 3).arg(totalEnabled, 3).arg(srcId);
-        writeProgress(QStringLiteral("in_progress"), current, srcId, s);
-    };
-    writeProgress(QStringLiteral("in_progress"), 0, {}, {});
+    Remus::Compendium::ProgressCallback onProgress
+        = [&](int current, int /*total*/, const QString &srcId, const Remus::Compendium::CompilerStats &s) {
+              qInfo().noquote() << QStringLiteral("[%1/%2] \u2714 %3").arg(current, 3).arg(totalEnabled, 3).arg(srcId);
+              writeProgress(QStringLiteral("in_progress"), current, srcId, s);
+          };
+    writeProgress(QStringLiteral("in_progress"), 0, { }, { });
 
     const Remus::Compendium::CompilerStats stats = service.run(buildConfig, database, error, onProgress);
     if (!error.isEmpty()) {
@@ -395,7 +385,7 @@ int handleBuildCompendiumCommand(CliContext &ctx)
         QSqlDatabase::removeDatabase(connectionName);
         return 1;
     }
-    writeProgress(QStringLiteral("enriching"), totalEnabled, {}, stats, /*overallPct=*/10);
+    writeProgress(QStringLiteral("enriching"), totalEnabled, { }, stats, /*overallPct=*/10);
 
     // ── Enrichment passes (Libretro, GameTDB, OpenVGDB, IGDB) + merge resolve ──
     // Fires before each pass to keep progress.json live during the long enrichment phase.
@@ -403,19 +393,19 @@ int handleBuildCompendiumCommand(CliContext &ctx)
     EnrichmentProgressCallback onEnrichProgress = [&](int passIdx, int totalPasses, const QString &passName) {
         const int pct = 10 + (passIdx - 1) * 85 / (totalPasses > 0 ? totalPasses : 1);
         const QJsonObject obj {
-            {QStringLiteral("status"),                    QStringLiteral("enriching")},
-            {QStringLiteral("current"),                   totalEnabled},
-            {QStringLiteral("total"),                     totalEnabled},
-            {QStringLiteral("current_source"),            QString()},
-            {QStringLiteral("enrichment_pass_current"),   passIdx},
-            {QStringLiteral("enrichment_pass_total"),     totalPasses},
-            {QStringLiteral("enrichment_pass_name"),      passName},
-            {QStringLiteral("overall_pct"),               pct},
-            {QStringLiteral("records_ingested"),          stats.recordsIngested},
-            {QStringLiteral("games_created"),             stats.gamesCreated},
-            {QStringLiteral("elapsed_ms"),                static_cast<qint64>(timer.elapsed())},
-            {QStringLiteral("started_at"),                startedAt.toString(Qt::ISODate)},
-            {QStringLiteral("updated_at"),                QDateTime::currentDateTimeUtc().toString(Qt::ISODate)},
+            { QStringLiteral("status"), QStringLiteral("enriching") },
+            { QStringLiteral("current"), totalEnabled },
+            { QStringLiteral("total"), totalEnabled },
+            { QStringLiteral("current_source"), QString() },
+            { QStringLiteral("enrichment_pass_current"), passIdx },
+            { QStringLiteral("enrichment_pass_total"), totalPasses },
+            { QStringLiteral("enrichment_pass_name"), passName },
+            { QStringLiteral("overall_pct"), pct },
+            { QStringLiteral("records_ingested"), stats.recordsIngested },
+            { QStringLiteral("games_created"), stats.gamesCreated },
+            { QStringLiteral("elapsed_ms"), static_cast<qint64>(timer.elapsed()) },
+            { QStringLiteral("started_at"), startedAt.toString(Qt::ISODate) },
+            { QStringLiteral("updated_at"), QDateTime::currentDateTimeUtc().toString(Qt::ISODate) },
         };
         QFile pf(progressPath);
         if (pf.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text))
@@ -425,18 +415,14 @@ int handleBuildCompendiumCommand(CliContext &ctx)
     // ── Enrichment passes (Libretro, GameTDB, OpenVGDB, IGDB) + merge resolve ──
     EnrichmentStats enrichStats;
     {
-        const QString metadataDir   = findDataSubdir(QStringLiteral("metadata"));
-        const QString gametdbDir    = findDataSubdir(QStringLiteral("gametdb"));
-        const QString openvgdbPath  = findOpenVGDBPath();
+        const QString metadataDir = findDataSubdir(QStringLiteral("metadata"));
+        const QString gametdbDir = findDataSubdir(QStringLiteral("gametdb"));
+        const QString openvgdbPath = findOpenVGDBPath();
         const QString mameCatverPath = findMameCatverPath();
         const QString mameListXmlPath = findMameListXmlPath();
-        const QString credPath      = outputInfo.dir().filePath(
-                                          QStringLiteral("enrichment-credentials.json"));
-        if (!runCompendiumEnrichmentPasses(database, metadataDir, gametdbDir,
-                                          openvgdbPath, credPath, mameCatverPath,
-                                          mameListXmlPath,
-                                          enrichStats, error, onEnrichProgress,
-                                          sourceFilter)) {
+        const QString credPath = outputInfo.dir().filePath(QStringLiteral("enrichment-credentials.json"));
+        if (!runCompendiumEnrichmentPasses(database, metadataDir, gametdbDir, openvgdbPath, credPath, mameCatverPath,
+                mameListXmlPath, enrichStats, error, onEnrichProgress, sourceFilter)) {
             qCritical().noquote() << QStringLiteral("✗ %1").arg(error);
             database.close();
             QSqlDatabase::removeDatabase(connectionName);
@@ -462,9 +448,8 @@ int handleBuildCompendiumCommand(CliContext &ctx)
         return 1;
     }
 
-    int conflictsCount = scalarCount(database,
-                                     QStringLiteral("SELECT COUNT(*) FROM merge_conflicts WHERE resolution_status = 'unresolved'"),
-                                     error);
+    int conflictsCount = scalarCount(
+        database, QStringLiteral("SELECT COUNT(*) FROM merge_conflicts WHERE resolution_status = 'unresolved'"), error);
     if (conflictsCount < 0) {
         qCritical().noquote() << QStringLiteral("✗ Failed to count unresolved conflicts: %1").arg(error);
         database.close();
@@ -512,7 +497,7 @@ int handleBuildCompendiumCommand(CliContext &ctx)
     qInfo() << "Seeded systems:" << systemsCount;
     qInfo() << "Unresolved conflicts:" << conflictsCount;
 
-    writeProgress(QStringLiteral("complete"), totalEnabled, {}, stats, /*overallPct=*/100);
+    writeProgress(QStringLiteral("complete"), totalEnabled, { }, stats, /*overallPct=*/100);
 
     releaseDatabase(database, connectionName);
 

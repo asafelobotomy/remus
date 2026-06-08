@@ -19,13 +19,11 @@ using namespace Remus::Constants;
  * Disc-based systems (PlayStation, Saturn, etc.) prefer MD5/SHA1.
  * Cartridge-based systems (NES, SNES, GBA, etc.) prefer CRC32.
  */
-QString selectBestHash(const FileRecord &file)
-{
+QString selectBestHash(const FileRecord &file) {
     return selectBestMatchHash(file);
 }
 
-static bool isArchivePath(const QString &path)
-{
+static bool isArchivePath(const QString &path) {
     const QString lower = path.toLower();
     for (const QString &extension : Files::ARCHIVE_EXTENSIONS) {
         if (lower.endsWith(extension)) {
@@ -35,12 +33,11 @@ static bool isArchivePath(const QString &path)
     return false;
 }
 
-static QStringList referencedDiscFiles(const QString &manifestPath)
-{
+static QStringList referencedDiscFiles(const QString &manifestPath) {
     const QString suffix = QFileInfo(manifestPath).suffix().toLower();
     QFile manifestFile(manifestPath);
     if (!manifestFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        return {};
+        return { };
     }
 
     QStringList referencedFiles;
@@ -48,8 +45,7 @@ static QStringList referencedDiscFiles(const QString &manifestPath)
 
     if (suffix == QStringLiteral("cue")) {
         static const QRegularExpression cueFilePattern(
-            QStringLiteral("^\\s*FILE\\s+\"([^\"]+)\""),
-            QRegularExpression::CaseInsensitiveOption);
+            QStringLiteral("^\\s*FILE\\s+\"([^\"]+)\""), QRegularExpression::CaseInsensitiveOption);
 
         while (!input.atEnd()) {
             const QString line = input.readLine();
@@ -85,8 +81,7 @@ static QStringList referencedDiscFiles(const QString &manifestPath)
     return referencedFiles;
 }
 
-static QString resolveHashSourcePath(const QString &path)
-{
+static QString resolveHashSourcePath(const QString &path) {
     const QString suffix = QFileInfo(path).suffix().toLower();
     if (suffix != QStringLiteral("cue") && suffix != QStringLiteral("gdi")) {
         return path;
@@ -101,7 +96,8 @@ static QString resolveHashSourcePath(const QString &path)
     for (const QString &relativePath : referencedFiles) {
         // Reject absolute paths and directory-traversal references (e.g. ../evil).
         const QString safeRelPath = ArchiveExtractor::normalizeArchiveMemberPath(relativePath);
-        if (safeRelPath.isEmpty()) continue;
+        if (safeRelPath.isEmpty())
+            continue;
         const QString candidatePath = manifestDir.filePath(safeRelPath);
         const QFileInfo candidateInfo(candidatePath);
         if (!candidateInfo.exists() || !candidateInfo.isFile()) {
@@ -117,15 +113,13 @@ static QString resolveHashSourcePath(const QString &path)
     return bestPath.isEmpty() ? path : bestPath;
 }
 
-static HashResult hashResolvedPath(const QString &path, Hasher &hasher)
-{
+static HashResult hashResolvedPath(const QString &path, Hasher &hasher) {
     const QString extension = QStringLiteral(".") + QFileInfo(path).suffix().toLower();
     const int headerSize = Hasher::detectHeaderSize(path, extension);
     return hasher.calculateHashes(path, headerSize > 0, headerSize);
 }
 
-HashResult hashFileRecord(const FileRecord &file, Hasher &hasher)
-{
+HashResult hashFileRecord(const FileRecord &file, Hasher &hasher) {
     const QString archivePath = file.archivePath.isEmpty() ? file.currentPath : file.archivePath;
     const bool treatAsArchive = file.isCompressed || isArchivePath(archivePath);
 
@@ -147,8 +141,8 @@ HashResult hashFileRecord(const FileRecord &file, Hasher &hasher)
 
     ArchiveExtractor extractor;
     const QString internalPath = file.archiveInternalPath.isEmpty() ? file.filename : file.archiveInternalPath;
-    const bool isDiscManifest = file.extension.compare(QStringLiteral(".cue"), Qt::CaseInsensitive) == 0 ||
-        file.extension.compare(QStringLiteral(".gdi"), Qt::CaseInsensitive) == 0;
+    const bool isDiscManifest = file.extension.compare(QStringLiteral(".cue"), Qt::CaseInsensitive) == 0
+        || file.extension.compare(QStringLiteral(".gdi"), Qt::CaseInsensitive) == 0;
 
     ExtractionResult extraction;
     if (!isDiscManifest) {
@@ -157,9 +151,8 @@ HashResult hashFileRecord(const FileRecord &file, Hasher &hasher)
     if (!extraction.success || extraction.extractedFiles.isEmpty()) {
         extraction = extractor.extract(archivePath, tempDir.path(), false);
         if (!extraction.success || extraction.extractedFiles.isEmpty()) {
-            result.error = extraction.error.isEmpty()
-                ? QString("Failed to extract %1 from archive").arg(internalPath)
-                : extraction.error;
+            result.error = extraction.error.isEmpty() ? QString("Failed to extract %1 from archive").arg(internalPath)
+                                                      : extraction.error;
             return result;
         }
 
@@ -186,9 +179,13 @@ HashResult hashFileRecord(const FileRecord &file, Hasher &hasher)
 
         QString picked;
         for (const QString &path : extraction.extractedFiles) {
-            if (path.endsWith(file.extension, Qt::CaseInsensitive)) { picked = path; break; }
+            if (path.endsWith(file.extension, Qt::CaseInsensitive)) {
+                picked = path;
+                break;
+            }
         }
-        if (picked.isEmpty()) picked = extraction.extractedFiles.first();
+        if (picked.isEmpty())
+            picked = extraction.extractedFiles.first();
         return hashResolvedPath(resolveHashSourcePath(picked), hasher);
     }
 
@@ -196,12 +193,10 @@ HashResult hashFileRecord(const FileRecord &file, Hasher &hasher)
     return hashResolvedPath(resolveHashSourcePath(extractedPath), hasher);
 }
 
-QString findDataSubdir(const QString &subdir)
-;
+QString findDataSubdir(const QString &subdir);
 
-QString findExistingArtworkPath(const QString &basePath)
-{
-    for (const char *ext : {".png", ".jpg", ".jpeg", ".webp"}) {
+QString findExistingArtworkPath(const QString &basePath) {
+    for (const char *ext : { ".png", ".jpg", ".jpeg", ".webp" }) {
         const QString candidate = basePath + QLatin1String(ext);
         if (QFileInfo::exists(candidate)) {
             return candidate;
@@ -211,10 +206,7 @@ QString findExistingArtworkPath(const QString &basePath)
     return QString();
 }
 
-QString resolveCliOptionValue(const QCommandLineParser &parser,
-                              const QString &optionName,
-                              const QString &presetValue)
-{
+QString resolveCliOptionValue(const QCommandLineParser &parser, const QString &optionName, const QString &presetValue) {
     if (parser.isSet(optionName)) {
         return parser.value(optionName).trimmed();
     }
@@ -226,13 +218,11 @@ QString resolveCliOptionValue(const QCommandLineParser &parser,
     return parser.value(optionName).trimmed();
 }
 
-QList<FileRecord> getHashedFiles(Database &db)
-{
-    return getHashedFiles(db, {});
+QList<FileRecord> getHashedFiles(Database &db) {
+    return getHashedFiles(db, { });
 }
 
-QList<FileRecord> getHashedFiles(Database &db, const QSet<int> &fileScopeIds)
-{
+QList<FileRecord> getHashedFiles(Database &db, const QSet<int> &fileScopeIds) {
     const QList<FileRecord> files = db.getExistingFiles();
     QList<FileRecord> filtered;
     for (const FileRecord &f : files) {
@@ -245,14 +235,11 @@ QList<FileRecord> getHashedFiles(Database &db, const QSet<int> &fileScopeIds)
     return filtered;
 }
 
-bool fileMatchesProcessScope(const FileRecord &file, const QSet<int> &fileScopeIds)
-{
+bool fileMatchesProcessScope(const FileRecord &file, const QSet<int> &fileScopeIds) {
     return fileScopeIds.isEmpty() || fileScopeIds.contains(file.id);
 }
 
-int resolveMatchedSystemId(const FileRecord &file,
-                           const Database::MatchResult *match)
-{
+int resolveMatchedSystemId(const FileRecord &file, const Database::MatchResult *match) {
     if (match && match->systemId > 0) {
         return match->systemId;
     }
@@ -260,10 +247,7 @@ int resolveMatchedSystemId(const FileRecord &file,
     return file.systemId;
 }
 
-bool fileMatchesSystemFilter(const FileRecord &file,
-                             int systemId,
-                             const Database::MatchResult *match)
-{
+bool fileMatchesSystemFilter(const FileRecord &file, int systemId, const Database::MatchResult *match) {
     if (systemId < 0) {
         return true;
     }
@@ -271,13 +255,11 @@ bool fileMatchesSystemFilter(const FileRecord &file,
     return resolveMatchedSystemId(file, match) == systemId;
 }
 
-QString getMatchingDisplayName(const FileRecord &file)
-{
+QString getMatchingDisplayName(const FileRecord &file) {
     return Remus::deriveMatchingDisplayName(file);
 }
 
-QString getMatchingSystemName(const FileRecord &file)
-{
+QString getMatchingSystemName(const FileRecord &file) {
     if (file.systemId <= 0) {
         return QString();
     }
@@ -286,9 +268,7 @@ QString getMatchingSystemName(const FileRecord &file)
     return systemName == QStringLiteral("Unknown") ? QString() : systemName;
 }
 
-QString getProviderLookupSystemName(const FileRecord &file,
-                                    const Database::MatchResult *match)
-{
+QString getProviderLookupSystemName(const FileRecord &file, const Database::MatchResult *match) {
     const int systemId = resolveMatchedSystemId(file, match);
     if (systemId <= 0) {
         return QString();
@@ -298,20 +278,19 @@ QString getProviderLookupSystemName(const FileRecord &file,
     return systemName == QStringLiteral("Unknown") ? QString() : systemName;
 }
 
-int persistMetadata(Database &db, const FileRecord &file, const GameMetadata &metadata)
-{
+int persistMetadata(Database &db, const FileRecord &file, const GameMetadata &metadata) {
     int systemId = db.getSystemId(metadata.system);
-    if (systemId == 0) systemId = file.systemId;
+    if (systemId == 0)
+        systemId = file.systemId;
 
-    const QString region = metadata.region.isEmpty()
-        ? Metadata::FilenameNormalizer::extractRegion(file.filename)
-        : metadata.region;
+    const QString region
+        = metadata.region.isEmpty() ? Metadata::FilenameNormalizer::extractRegion(file.filename) : metadata.region;
     const QString genres = metadata.genres.join(", ");
     const QString players = metadata.players > 0 ? QString::number(metadata.players) : QString();
-    int gameId = db.insertGame(metadata.title, systemId, region, metadata.publisher,
-                               metadata.developer, metadata.releaseDate, metadata.description,
-                               genres, players, metadata.rating);
-    if (gameId == 0) return 0;
+    int gameId = db.insertGame(metadata.title, systemId, region, metadata.publisher, metadata.developer,
+        metadata.releaseDate, metadata.description, genres, players, metadata.rating);
+    if (gameId == 0)
+        return 0;
 
     const int confidence = metadata.matchScore > 0 ? static_cast<int>(metadata.matchScore * 100) : 0;
     const QString method = metadata.matchMethod.isEmpty() ? QStringLiteral("auto") : metadata.matchMethod;
@@ -319,8 +298,7 @@ int persistMetadata(Database &db, const FileRecord &file, const GameMetadata &me
     return gameId;
 }
 
-void printFileInfo(const FileRecord &file)
-{
+void printFileInfo(const FileRecord &file) {
     qInfo() << "File ID:" << file.id;
     qInfo() << "Library ID:" << file.libraryId;
     if (file.isCompressed) {
@@ -352,8 +330,7 @@ void printFileInfo(const FileRecord &file)
     qInfo() << "Processed:" << file.isProcessed << "Status:" << file.processingStatus;
 }
 
-QString buildOutputPath(const QString &inputPath, const QString &outputDir, const QString &targetExt)
-{
+QString buildOutputPath(const QString &inputPath, const QString &outputDir, const QString &targetExt) {
     QFileInfo info(inputPath);
     const QString filename = info.completeBaseName() + "." + targetExt;
     if (outputDir.isEmpty()) {
@@ -363,15 +340,13 @@ QString buildOutputPath(const QString &inputPath, const QString &outputDir, cons
     return QDir(outputDir).filePath(filename);
 }
 
-bool printConversionResult(const ConversionResult &result, const QString &formatName)
-{
+bool printConversionResult(const ConversionResult &result, const QString &formatName) {
     if (result.success) {
         qInfo() << "✓ Conversion successful!";
         qInfo().noquote() << "  Original size:" << SpaceCalculator::formatBytes(result.inputSize);
         qInfo().noquote() << "  " + formatName + " size:" << SpaceCalculator::formatBytes(result.outputSize);
         qInfo().noquote() << "  Saved:" << SpaceCalculator::formatBytes(result.inputSize - result.outputSize);
-        qInfo() << "  Compression:"
-                << QString::number((1.0 - result.compressionRatio) * 100, 'f', 1) << "%";
+        qInfo() << "  Compression:" << QString::number((1.0 - result.compressionRatio) * 100, 'f', 1) << "%";
         return true;
     }
     qCritical() << "✗ Conversion failed:" << result.error;

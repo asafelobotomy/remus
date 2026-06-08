@@ -9,10 +9,10 @@ namespace Remus {
 
 /**
  * @brief ScreenScraper.fr metadata provider
- * 
+ *
  * Primary provider with extensive database and hash-based matching.
  * Requires user account for API access.
- * 
+ *
  * API Docs: https://www.screenscraper.fr/webapi.php
  */
 class ScreenScraperProvider : public HttpMetadataProvider {
@@ -21,14 +21,17 @@ class ScreenScraperProvider : public HttpMetadataProvider {
 public:
     explicit ScreenScraperProvider(QObject *parent = nullptr);
 
-    QString name() const override { return Constants::Providers::DISPLAY_SCREENSCRAPER; }
-    bool requiresAuth() const override { return true; }
+    QString name() const override {
+        return Constants::Providers::DISPLAY_SCREENSCRAPER;
+    }
+    bool requiresAuth() const override {
+        return true;
+    }
 
     void setCredentials(const QString &username, const QString &password) override;
 
-    QList<SearchResult> searchByName(const QString &title,
-                                     const QString &system = QString(),
-                                     const QString &region = QString()) override;
+    QList<SearchResult> searchByName(
+        const QString &title, const QString &system = QString(), const QString &region = QString()) override;
 
     GameMetadata getByHash(const QString &hash, const QString &system) override;
     GameMetadata getById(const QString &id) override;
@@ -54,8 +57,8 @@ private:
     QString m_devId;
     QString m_devPassword;
     QString m_softwareName = "Remus";
-    
-    static constexpr int MAX_REQUESTS_PER_DAY = 10000;  // Unregistered: 10k/day
+
+    static constexpr int MAX_REQUESTS_PER_DAY = 10000; // Unregistered: 10k/day
 };
 
 } // namespace Remus

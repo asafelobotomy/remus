@@ -12,45 +12,50 @@ using namespace Constants::Systems;
 // Magic byte table derived from RetroArch task_database_cue.c (MIT/GPL-3.0)
 // and cross-confirmed against Dolphin DiscUtils.h and PPSSPP Core/Loaders.cpp.
 // Order matters: first match wins. More specific entries come first.
-const QList<DiscMagicDetector::MagicEntry> &DiscMagicDetector::magicTable()
-{
+const QList<DiscMagicDetector::MagicEntry> &DiscMagicDetector::magicTable() {
     static const QList<MagicEntry> table = {
         // GameCube disc magic (big-endian 0xC2339F3D at offset 0x1C)
-        {ID_GAMECUBE, "GameCube",   "\xC2\x33\x9F\x3D", 4, 0x0001C},
+        { ID_GAMECUBE, "GameCube", "\xC2\x33\x9F\x3D", 4, 0x0001C },
         // Wii disc magic (big-endian 0x5D1C9EA3): standard ISO, WBFS, RVZ/WIA
-        {ID_WII,      "Wii",        "\x5D\x1C\x9E\xA3", 4, 0x00018},
-        {ID_WII,      "Wii",        "\x5D\x1C\x9E\xA3", 4, 0x00218},  // WBFS
-        {ID_WII,      "Wii",        "\x5D\x1C\x9E\xA3", 4, 0x00070},  // RVZ/WIA
+        { ID_WII, "Wii", "\x5D\x1C\x9E\xA3", 4, 0x00018 },
+        { ID_WII, "Wii", "\x5D\x1C\x9E\xA3", 4, 0x00218 }, // WBFS
+        { ID_WII, "Wii", "\x5D\x1C\x9E\xA3", 4, 0x00070 }, // RVZ/WIA
         // Sega disc systems: "SEGA SEGAKATANA" (Dreamcast), "SEGA SEGASATURN", "SEGADISCSYSTEM"
-        {ID_DREAMCAST, "Dreamcast", "SEGA SEGAKATANA",  15, 0x00010},
-        {ID_SEGA_CD,   "Sega CD",   "SEGADISCSYSTEM",   14, 0x00010},
-        {ID_SATURN,    "Saturn",     "SEGA SEGASATURN",  15, 0x00010},
+        { ID_DREAMCAST, "Dreamcast", "SEGA SEGAKATANA", 15, 0x00010 },
+        { ID_SEGA_CD, "Sega CD", "SEGADISCSYSTEM", 14, 0x00010 },
+        { ID_SATURN, "Saturn", "SEGA SEGASATURN", 15, 0x00010 },
         // PSP: "PSP GAME" in ISO 9660 PVD system identifier at 0x8008
-        {ID_PSP,      "PSP",        "PSP GAME",          8, 0x08008},
+        { ID_PSP, "PSP", "PSP GAME", 8, 0x08008 },
         // PS2: "PLAYSTATION" at DVD offset 0x8008 (most common PS2 ISO format)
-        {ID_PS2,      "PlayStation 2", "PLAYSTATION",    11, 0x08008},
+        { ID_PS2, "PlayStation 2", "PLAYSTATION", 11, 0x08008 },
         // PS2: "PLAYSTATION" at CD offset 0x9320
-        {ID_PS2,      "PlayStation 2", "PLAYSTATION",    11, 0x09320},
+        { ID_PS2, "PlayStation 2", "PLAYSTATION", 11, 0x09320 },
         // PS1: "Sony Computer " license string at offset 0x24F8
-        {ID_PSX,      "PlayStation", "Sony Computer ",   14, 0x024F8},
+        { ID_PSX, "PlayStation", "Sony Computer ", 14, 0x024F8 },
     };
     return table;
 }
 
-bool DiscMagicDetector::isDiscImageExtension(const QString &extension)
-{
+bool DiscMagicDetector::isDiscImageExtension(const QString &extension) {
     static const QStringList discExts = {
-        ".iso", ".bin", ".img", ".cdi", ".cue", ".gdi",
-        ".mdf", ".nrg", ".wbfs", ".gcm",
+        ".iso",
+        ".bin",
+        ".img",
+        ".cdi",
+        ".cue",
+        ".gdi",
+        ".mdf",
+        ".nrg",
+        ".wbfs",
+        ".gcm",
     };
     return discExts.contains(extension.toLower());
 }
 
-DiscHeaderInfo DiscMagicDetector::detect(const QString &filePath)
-{
+DiscHeaderInfo DiscMagicDetector::detect(const QString &filePath) {
     QFile file(filePath);
     if (!file.open(QIODevice::ReadOnly)) {
-        return {};
+        return { };
     }
 
     const qint64 fileSize = file.size();
@@ -64,8 +69,7 @@ DiscHeaderInfo DiscMagicDetector::detect(const QString &filePath)
     return detectFromData(data, fileSize);
 }
 
-DiscHeaderInfo DiscMagicDetector::detectFromData(const QByteArray &data, qint64 fileSize)
-{
+DiscHeaderInfo DiscMagicDetector::detectFromData(const QByteArray &data, qint64 fileSize) {
     for (const MagicEntry &entry : magicTable()) {
         const qint64 endOffset = entry.offset + entry.magicLen;
         if (data.size() < endOffset) {
@@ -100,7 +104,10 @@ DiscHeaderInfo DiscMagicDetector::detectFromData(const QByteArray &data, qint64 
                     // Validate: game IDs are printable ASCII
                     bool valid = true;
                     for (char c : rawId) {
-                        if (c < 0x20 || c > 0x7E) { valid = false; break; }
+                        if (c < 0x20 || c > 0x7E) {
+                            valid = false;
+                            break;
+                        }
                     }
                     if (valid) {
                         info.serial = QString::fromLatin1(rawId).trimmed();
@@ -129,14 +136,13 @@ DiscHeaderInfo DiscMagicDetector::detectFromData(const QByteArray &data, qint64 
         }
     }
 
-    return {};
+    return { };
 }
 
-DiscHeaderInfo DiscMagicDetector::extractDreamcastHeader(const QString &filePath)
-{
+DiscHeaderInfo DiscMagicDetector::extractDreamcastHeader(const QString &filePath) {
     QFile file(filePath);
     if (!file.open(QIODevice::ReadOnly)) {
-        return {};
+        return { };
     }
 
     // CDI files embed the data track at an unpredictable offset.
@@ -150,7 +156,8 @@ DiscHeaderInfo DiscMagicDetector::extractDreamcastHeader(const QString &filePath
         // For large CDI files, the data track may start further in.
         // Re-read in 256KB chunks up to 16MB.
         QFile scanFile(filePath);
-        if (!scanFile.open(QIODevice::ReadOnly)) return {};
+        if (!scanFile.open(QIODevice::ReadOnly))
+            return { };
 
         constexpr qint64 MAX_SCAN = 16LL * 1024 * 1024;
         const qint64 scanLimit = qMin(scanFile.size(), MAX_SCAN);
@@ -159,7 +166,8 @@ DiscHeaderInfo DiscMagicDetector::extractDreamcastHeader(const QString &filePath
         while (pos < scanLimit) {
             scanFile.seek(pos);
             QByteArray chunk = scanFile.read(SCAN_SIZE);
-            if (chunk.isEmpty()) break;
+            if (chunk.isEmpty())
+                break;
 
             info = scanForDreamcastHeader(chunk);
             if (info.detected) {
@@ -175,15 +183,14 @@ DiscHeaderInfo DiscMagicDetector::extractDreamcastHeader(const QString &filePath
     return info;
 }
 
-DiscHeaderInfo DiscMagicDetector::scanForDreamcastHeader(const QByteArray &data)
-{
+DiscHeaderInfo DiscMagicDetector::scanForDreamcastHeader(const QByteArray &data) {
     // Scan for "SEGA SEGAKATANA" (15 bytes) — the Dreamcast IP.BIN hardware ID.
     // Once found, that position is offset 0x00 of IP.BIN.
     static const QByteArray MAGIC("SEGA SEGAKATANA", 15);
 
     int pos = data.indexOf(MAGIC);
     if (pos < 0) {
-        return {};
+        return { };
     }
 
     DiscHeaderInfo info;
@@ -197,44 +204,46 @@ DiscHeaderInfo DiscMagicDetector::scanForDreamcastHeader(const QByteArray &data)
     // 0x080: Game Title     (128 bytes)
 
     const int serialOffset = pos + 0x040;
-    const int dateOffset   = pos + 0x050;
-    const int titleOffset  = pos + 0x080;
+    const int dateOffset = pos + 0x050;
+    const int titleOffset = pos + 0x080;
 
     if (serialOffset + 10 <= data.size()) {
         info.serial = QString::fromLatin1(data.constData() + serialOffset, 10).trimmed();
         // Truncate at null byte (IP.BIN fields are null-padded)
         int nul = info.serial.indexOf(QChar::fromLatin1('\0'));
-        if (nul >= 0) info.serial.truncate(nul);
+        if (nul >= 0)
+            info.serial.truncate(nul);
         info.serial = info.serial.trimmed();
     }
 
     if (dateOffset + 16 <= data.size()) {
         info.releaseDate = QString::fromLatin1(data.constData() + dateOffset, 16).trimmed();
         int nul = info.releaseDate.indexOf(QChar::fromLatin1('\0'));
-        if (nul >= 0) info.releaseDate.truncate(nul);
+        if (nul >= 0)
+            info.releaseDate.truncate(nul);
         info.releaseDate = info.releaseDate.trimmed();
     }
 
     if (titleOffset + 128 <= data.size()) {
         info.title = QString::fromLatin1(data.constData() + titleOffset, 128).trimmed();
         int nul = info.title.indexOf(QChar::fromLatin1('\0'));
-        if (nul >= 0) info.title.truncate(nul);
+        if (nul >= 0)
+            info.title.truncate(nul);
         info.title = info.title.trimmed();
     }
 
     return info;
 }
 
-DiscHeaderInfo DiscMagicDetector::detectFromArchive(const QString &archivePath,
-                                                     const QString &memberPath,
-                                                     qint64 memberSize)
-{
+DiscHeaderInfo DiscMagicDetector::detectFromArchive(
+    const QString &archivePath, const QString &memberPath, qint64 memberSize) {
     // 64 KB covers the deepest known magic offset (PS2 at 0x9320 + 11 ≈ 37.6 KB).
     // Reading more wastes I/O; reading less would miss PS1/PS2 signatures.
     static constexpr qint64 PROBE_SIZE = 0x10000;
     ArchiveExtractor extractor;
     const QByteArray data = extractor.readMemberPrefix(archivePath, memberPath, PROBE_SIZE);
-    if (data.isEmpty()) return {};
+    if (data.isEmpty())
+        return { };
     return detectFromData(data, memberSize);
 }
 

@@ -8,24 +8,26 @@ namespace Remus {
 
 namespace {
 
-// RAII helper that wires a DiscConverter::conversionProgress signal to a callback
-// and disconnects automatically on destruction.
-class ScopedProgressConnection {
-public:
-    ScopedProgressConnection(DiscConverter *converter,
-                             ConversionService::ProgressCallback cb)
-    {
-        if (cb && converter) {
-            m_conn = QObject::connect(converter, &DiscConverter::conversionProgress,
-                [cb](int pct, const QString &info) { cb(pct, info); });
+    // RAII helper that wires a DiscConverter::conversionProgress signal to a callback
+    // and disconnects automatically on destruction.
+    class ScopedProgressConnection {
+    public:
+        ScopedProgressConnection(DiscConverter *converter, ConversionService::ProgressCallback cb) {
+            if (cb && converter) {
+                m_conn = QObject::connect(converter, &DiscConverter::conversionProgress,
+                    [cb](int pct, const QString &info) { cb(pct, info); });
+            }
         }
-    }
-    ~ScopedProgressConnection() { if (m_conn) QObject::disconnect(m_conn); }
-    ScopedProgressConnection(const ScopedProgressConnection &) = delete;
-    ScopedProgressConnection &operator=(const ScopedProgressConnection &) = delete;
-private:
-    QMetaObject::Connection m_conn;
-};
+        ~ScopedProgressConnection() {
+            if (m_conn)
+                QObject::disconnect(m_conn);
+        }
+        ScopedProgressConnection(const ScopedProgressConnection &) = delete;
+        ScopedProgressConnection &operator=(const ScopedProgressConnection &) = delete;
+
+    private:
+        QMetaObject::Connection m_conn;
+    };
 
 } // anonymous namespace
 
@@ -34,17 +36,12 @@ ConversionService::ConversionService()
     , m_rvzConverter(std::make_unique<RVZConverter>())
     , m_csoConverter(std::make_unique<CSOConverter>())
     , m_archiveExtractor(std::make_unique<ArchiveExtractor>())
-    , m_archiveCreator(std::make_unique<ArchiveCreator>())
-{
-}
+    , m_archiveCreator(std::make_unique<ArchiveCreator>()) { }
 
 // ── CHD Conversion ──────────────────────────────────────────
 
-ConversionResult ConversionService::convertToCHD(const QString &path,
-                                                     CHDCodec codec,
-                                                     const QString &outputPath,
-                                                     ProgressCallback progressCb)
-{
+ConversionResult ConversionService::convertToCHD(
+    const QString &path, CHDCodec codec, const QString &outputPath, ProgressCallback progressCb) {
     QFileInfo fi(path);
     if (!fi.exists()) {
         ConversionResult r;
@@ -71,10 +68,8 @@ ConversionResult ConversionService::convertToCHD(const QString &path,
     return result;
 }
 
-ConversionResult ConversionService::extractCHD(const QString &chdPath,
-                                                   const QString &outputPath,
-                                                   ProgressCallback progressCb)
-{
+ConversionResult ConversionService::extractCHD(
+    const QString &chdPath, const QString &outputPath, ProgressCallback progressCb) {
     QFileInfo fi(chdPath);
     if (!fi.exists()) {
         ConversionResult r;
@@ -87,33 +82,24 @@ ConversionResult ConversionService::extractCHD(const QString &chdPath,
 }
 
 QList<ConversionResult> ConversionService::batchConvertToCHD(
-    const QStringList &inputPaths,
-    const QString &outputDir,
-    CHDCodec codec,
-    ProgressCallback progressCb)
-{
+    const QStringList &inputPaths, const QString &outputDir, CHDCodec codec, ProgressCallback progressCb) {
     m_chdConverter->setCodec(codec);
     ScopedProgressConnection guard(m_chdConverter.get(), progressCb);
     return m_chdConverter->batchConvert(inputPaths, outputDir);
 }
 
-VerifyResult ConversionService::verifyCHD(const QString &chdPath)
-{
+VerifyResult ConversionService::verifyCHD(const QString &chdPath) {
     return m_chdConverter->verifyCHD(chdPath);
 }
 
-CHDInfo ConversionService::getCHDInfo(const QString &chdPath)
-{
+CHDInfo ConversionService::getCHDInfo(const QString &chdPath) {
     return m_chdConverter->getCHDInfo(chdPath);
 }
 
 // ── RVZ Conversion ────────────────────────────────────────
 
-ConversionResult ConversionService::convertToRVZ(const QString &path,
-                                                     RVZCompression compression,
-                                                     const QString &outputPath,
-                                                     ProgressCallback progressCb)
-{
+ConversionResult ConversionService::convertToRVZ(
+    const QString &path, RVZCompression compression, const QString &outputPath, ProgressCallback progressCb) {
     QFileInfo fi(path);
     if (!fi.exists()) {
         ConversionResult r;
@@ -126,10 +112,8 @@ ConversionResult ConversionService::convertToRVZ(const QString &path,
     return m_rvzConverter->convertIsoToRVZ(path, outputPath);
 }
 
-ConversionResult ConversionService::extractRVZ(const QString &rvzPath,
-                                                   const QString &outputPath,
-                                                   ProgressCallback progressCb)
-{
+ConversionResult ConversionService::extractRVZ(
+    const QString &rvzPath, const QString &outputPath, ProgressCallback progressCb) {
     QFileInfo fi(rvzPath);
     if (!fi.exists()) {
         ConversionResult r;
@@ -142,27 +126,20 @@ ConversionResult ConversionService::extractRVZ(const QString &rvzPath,
 }
 
 QList<ConversionResult> ConversionService::batchConvertToRVZ(
-    const QStringList &inputPaths,
-    const QString &outputDir,
-    RVZCompression compression,
-    ProgressCallback progressCb)
-{
+    const QStringList &inputPaths, const QString &outputDir, RVZCompression compression, ProgressCallback progressCb) {
     m_rvzConverter->setCompression(compression);
     ScopedProgressConnection guard(m_rvzConverter.get(), progressCb);
     return m_rvzConverter->batchConvert(inputPaths, outputDir);
 }
 
-VerifyResult ConversionService::verifyRVZ(const QString &rvzPath)
-{
+VerifyResult ConversionService::verifyRVZ(const QString &rvzPath) {
     return m_rvzConverter->verifyRVZ(rvzPath);
 }
 
 // ── CSO Conversion ────────────────────────────────────────
 
-ConversionResult ConversionService::convertToCSO(const QString &path,
-                                                     const QString &outputPath,
-                                                     ProgressCallback progressCb)
-{
+ConversionResult ConversionService::convertToCSO(
+    const QString &path, const QString &outputPath, ProgressCallback progressCb) {
     QFileInfo fi(path);
     if (!fi.exists()) {
         ConversionResult r;
@@ -181,10 +158,8 @@ ConversionResult ConversionService::convertToCSO(const QString &path,
     return m_csoConverter->convertIsoToCSO(path, outputPath);
 }
 
-ConversionResult ConversionService::extractCSO(const QString &csoPath,
-                                                   const QString &outputPath,
-                                                   ProgressCallback progressCb)
-{
+ConversionResult ConversionService::extractCSO(
+    const QString &csoPath, const QString &outputPath, ProgressCallback progressCb) {
     QFileInfo fi(csoPath);
     if (!fi.exists()) {
         ConversionResult r;
@@ -204,10 +179,7 @@ ConversionResult ConversionService::extractCSO(const QString &csoPath,
 }
 
 QList<ConversionResult> ConversionService::batchConvertToCSO(
-    const QStringList &inputPaths,
-    const QString &outputDir,
-    ProgressCallback progressCb)
-{
+    const QStringList &inputPaths, const QString &outputDir, ProgressCallback progressCb) {
     ScopedProgressConnection guard(m_csoConverter.get(), progressCb);
     return m_csoConverter->batchConvert(inputPaths, outputDir);
 }

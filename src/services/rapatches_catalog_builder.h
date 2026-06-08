@@ -43,8 +43,7 @@ public:
      * @param outputPath Path for the output JSON file
      * @return Empty string on success, error description on failure
      */
-    static QString writeCatalogJson(const QList<ModEntry> &mods,
-                                    const QString &outputPath);
+    static QString writeCatalogJson(const QList<ModEntry> &mods, const QString &outputPath);
 
     /**
      * @brief Parse a RAPatches filename into mod metadata.
@@ -58,7 +57,7 @@ public:
         QString language;
         QString version;
         QString author;
-        QString format;   // bps, ips, xdelta, ppf, ups
+        QString format; // bps, ips, xdelta, ppf, ups
     };
 
     static ParsedFilename parseFilename(const QString &filename);
@@ -85,22 +84,13 @@ public:
     static QString normaliseTypeName(const QString &dirName);
 
 private:
-    void scanSystemDir(const QDir &systemDir,
-                       const QString &system,
-                       BuildResult &result) const;
+    void scanSystemDir(const QDir &systemDir, const QString &system, BuildResult &result) const;
 
-    void scanTypeDir(const QDir &typeDir,
-                     const QString &system,
-                     const QString &type,
-                     BuildResult &result) const;
+    void scanTypeDir(const QDir &typeDir, const QString &system, const QString &type, BuildResult &result) const;
 
-    ModEntry buildEntryFromZip(const QString &zipPath,
-                               const QString &system,
-                               const QString &type) const;
+    ModEntry buildEntryFromZip(const QString &zipPath, const QString &system, const QString &type) const;
 
-    ModEntry buildEntryFromPatch(const QString &patchPath,
-                                 const QString &system,
-                                 const QString &type) const;
+    ModEntry buildEntryFromPatch(const QString &patchPath, const QString &system, const QString &type) const;
 };
 
 } // namespace Remus

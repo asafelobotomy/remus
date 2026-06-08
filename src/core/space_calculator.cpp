@@ -8,10 +8,9 @@
 namespace Remus {
 
 SpaceCalculator::SpaceCalculator(QObject *parent)
-    : QObject(parent)
-{
+    : QObject(parent) {
     using namespace Constants::Systems;
-    
+
     // Initialize typical compression ratios (compressed/original)
     // Lower = better compression
     // Using system constants for consistency
@@ -24,53 +23,64 @@ SpaceCalculator::SpaceCalculator(QObject *parent)
     const auto *pcecd = getSystemByName("TurboGrafx-CD");
     const auto *gc = getSystemByName("GameCube");
     const auto *wii = getSystemByName("Wii");
-    
-    if (psx) m_typicalRatios[psx->internalName] = 0.50;      // ~50% of original
-    if (ps2) m_typicalRatios[ps2->internalName] = 0.55;      // ~55% of original
-    if (psp) m_typicalRatios[psp->internalName] = 0.60;      // ~60% of original
-    if (dc) m_typicalRatios[dc->internalName] = 0.50;        // ~50% of original
-    if (saturn) m_typicalRatios[saturn->internalName] = 0.45; // ~45% of original
-    if (segacd) m_typicalRatios[segacd->internalName] = 0.45; // ~45% of original
-    if (pcecd) m_typicalRatios[pcecd->internalName] = 0.45;   // ~45% of original
-    if (gc) m_typicalRatios[gc->internalName] = 0.65;        // ~65% of original (less audio)
-    if (wii) m_typicalRatios[wii->internalName] = 0.70;      // ~70% of original
-    
+
+    if (psx)
+        m_typicalRatios[psx->internalName] = 0.50; // ~50% of original
+    if (ps2)
+        m_typicalRatios[ps2->internalName] = 0.55; // ~55% of original
+    if (psp)
+        m_typicalRatios[psp->internalName] = 0.60; // ~60% of original
+    if (dc)
+        m_typicalRatios[dc->internalName] = 0.50; // ~50% of original
+    if (saturn)
+        m_typicalRatios[saturn->internalName] = 0.45; // ~45% of original
+    if (segacd)
+        m_typicalRatios[segacd->internalName] = 0.45; // ~45% of original
+    if (pcecd)
+        m_typicalRatios[pcecd->internalName] = 0.45; // ~45% of original
+    if (gc)
+        m_typicalRatios[gc->internalName] = 0.65; // ~65% of original (less audio)
+    if (wii)
+        m_typicalRatios[wii->internalName] = 0.70; // ~70% of original
+
     const auto *threeDo = getSystemByName("3DO");
     const auto *neogeocd = getSystemByName("Neo Geo CD");
     const auto *xbox = getSystemByName("Xbox");
-    
-    if (threeDo) m_typicalRatios[threeDo->internalName] = 0.50;  // ~50% of original
-    if (neogeocd) m_typicalRatios[neogeocd->internalName] = 0.40; // ~40% of original
-    if (xbox) m_typicalRatios[xbox->internalName] = 0.65;        // ~65% of original
-    m_typicalRatios["Default"] = 0.50;          // Default assumption
+
+    if (threeDo)
+        m_typicalRatios[threeDo->internalName] = 0.50; // ~50% of original
+    if (neogeocd)
+        m_typicalRatios[neogeocd->internalName] = 0.40; // ~40% of original
+    if (xbox)
+        m_typicalRatios[xbox->internalName] = 0.65; // ~65% of original
+    m_typicalRatios["Default"] = 0.50; // Default assumption
 }
 
-ConversionStats SpaceCalculator::estimateConversion(const QString &path)
-{
+ConversionStats SpaceCalculator::estimateConversion(const QString &path) {
     ConversionStats stats;
     stats.path = path;
     stats.converted = false;
-    
+
     QFileInfo info(path);
     if (!info.exists()) {
         return stats;
     }
-    
+
     QString ext = info.suffix().toLower();
-    
+
     // Get total size (including BIN files for CUE)
     if (ext == "cue") {
         stats.format = "BIN/CUE";
         stats.originalSize = info.size();
-        
+
         // Find matching BIN files
         QDir dir = info.absoluteDir();
         QString baseName = info.completeBaseName();
-        
+
         // Look for matching .bin files (could be single or multi-track)
         QStringList binFilters;
         binFilters << "*.bin";
-        
+
         for (const QFileInfo &binInfo : dir.entryInfoList(binFilters, QDir::Files)) {
             // Check if BIN matches CUE base name
             if (binInfo.completeBaseName().startsWith(baseName)) {
@@ -83,7 +93,7 @@ ConversionStats SpaceCalculator::estimateConversion(const QString &path)
     } else if (ext == "gdi") {
         stats.format = "GDI";
         stats.originalSize = info.size();
-        
+
         // GDI files reference multiple track files
         QDir dir = info.absoluteDir();
         QFile gdiFile(path);
@@ -106,19 +116,19 @@ ConversionStats SpaceCalculator::estimateConversion(const QString &path)
         stats.format = "CHD";
         stats.originalSize = info.size();
         stats.convertedSize = info.size();
-        stats.compressionRatio = 1.0;  // Already compressed
+        stats.compressionRatio = 1.0; // Already compressed
         return stats;
     } else if (ext == "rvz") {
         stats.format = "RVZ";
         stats.originalSize = info.size();
         stats.convertedSize = info.size();
-        stats.compressionRatio = 1.0;  // Already compressed
+        stats.compressionRatio = 1.0; // Already compressed
         return stats;
     } else if (ext == "cso") {
         stats.format = "CSO";
         stats.originalSize = info.size();
         stats.convertedSize = info.size();
-        stats.compressionRatio = 1.0;  // Already compressed
+        stats.compressionRatio = 1.0; // Already compressed
         return stats;
     } else if (ext == "gcm") {
         stats.format = "GCM";
@@ -127,72 +137,66 @@ ConversionStats SpaceCalculator::estimateConversion(const QString &path)
         stats.format = ext.toUpper();
         stats.originalSize = info.size();
     }
-    
+
     // Estimate converted size based on typical ratios
     QString system = detectSystem(path);
     double ratio = m_typicalRatios.value(system, m_typicalRatios["Default"]);
-    
+
     stats.compressionRatio = ratio;
     stats.convertedSize = static_cast<qint64>(stats.originalSize * ratio);
     stats.savedBytes = stats.originalSize - stats.convertedSize;
-    
+
     return stats;
 }
 
-ConversionStats SpaceCalculator::getActualStats(const QString &originalPath,
-                                                  const QString &convertedPath)
-{
+ConversionStats SpaceCalculator::getActualStats(const QString &originalPath, const QString &convertedPath) {
     ConversionStats stats;
     stats.path = originalPath;
     stats.converted = true;
-    
+
     // Get original size (estimate method handles BIN/CUE pairs)
     ConversionStats original = estimateConversion(originalPath);
     stats.originalSize = original.originalSize;
     stats.format = original.format;
-    
+
     // Get actual converted size
     stats.convertedSize = getFileSize(convertedPath);
     stats.savedBytes = stats.originalSize - stats.convertedSize;
-    
+
     if (stats.originalSize > 0) {
-        stats.compressionRatio = static_cast<double>(stats.convertedSize) / 
-                                  static_cast<double>(stats.originalSize);
+        stats.compressionRatio = static_cast<double>(stats.convertedSize) / static_cast<double>(stats.originalSize);
     }
-    
+
     return stats;
 }
 
-ConversionSummary SpaceCalculator::scanDirectory(const QString &dirPath, bool recursive)
-{
+ConversionSummary SpaceCalculator::scanDirectory(const QString &dirPath, bool recursive) {
     ConversionSummary summary;
-    
+
     const QStringList filters = Constants::Files::globPatternsFor(Constants::Files::SPACE_SCAN_EXTENSIONS);
-    
-    QDirIterator::IteratorFlags flags = recursive ? 
-        QDirIterator::Subdirectories : QDirIterator::NoIteratorFlags;
-    
+
+    QDirIterator::IteratorFlags flags = recursive ? QDirIterator::Subdirectories : QDirIterator::NoIteratorFlags;
+
     QDirIterator it(dirPath, filters, QDir::Files, flags);
-    
+
     // Track processed CUE files to avoid counting their BIN files separately
     QSet<QString> processedBases;
-    
+
     int scanned = 0;
-    
+
     auto isAlreadyCompressed = [](const QString &p) {
         QString e = QFileInfo(p).suffix().toLower();
-        return e == Constants::Files::CHD.mid(1) ||
-               e == Constants::Files::RVZ.mid(1) ||
-               e == Constants::Files::CSO.mid(1);
+        return e == Constants::Files::CHD.mid(1) || e == Constants::Files::RVZ.mid(1)
+            || e == Constants::Files::CSO.mid(1);
     };
-    
+
     while (it.hasNext()) {
         QString path = it.next();
         QFileInfo info(path);
         QString ext = info.suffix().toLower();
-        
+
         emit scanProgress(++scanned, path);
-        
+
         // Skip standalone BIN files if their CUE was already processed
         if (ext == Constants::Files::BIN.mid(1)) {
             QString basePath = info.absolutePath() + "/" + info.completeBaseName();
@@ -202,72 +206,66 @@ ConversionSummary SpaceCalculator::scanDirectory(const QString &dirPath, bool re
             // Check if a CUE exists for this BIN
             QString cuePath = basePath + Constants::Files::CUE;
             if (QFile::exists(cuePath)) {
-                continue;  // Will be counted with CUE
+                continue; // Will be counted with CUE
             }
         }
-        
+
         ConversionStats stats = estimateConversion(path);
-        
+
         summary.totalFiles++;
         summary.totalOriginalSize += stats.originalSize;
-        
+
         // Track by format
         summary.sizeByFormat[stats.format] += stats.originalSize;
         summary.countByFormat[stats.format]++;
-        
+
         if (isAlreadyCompressed(path)) {
             summary.convertedFiles++;
             summary.totalConvertedSize += stats.convertedSize;
         } else if (isConvertible(path)) {
             summary.convertibleFiles++;
-            summary.totalConvertedSize += stats.convertedSize;  // Estimated
+            summary.totalConvertedSize += stats.convertedSize; // Estimated
             summary.totalSavedBytes += stats.savedBytes;
         }
-        
+
         // Mark as processed
         if (ext == Constants::Files::CUE.mid(1) || ext == Constants::Files::GDI.mid(1)) {
             processedBases.insert(info.absolutePath() + "/" + info.completeBaseName());
         }
     }
-    
+
     // Calculate average compression ratio
     if (summary.totalOriginalSize > 0) {
-        summary.averageCompressionRatio = static_cast<double>(summary.totalConvertedSize) / 
-                                           static_cast<double>(summary.totalOriginalSize);
+        summary.averageCompressionRatio
+            = static_cast<double>(summary.totalConvertedSize) / static_cast<double>(summary.totalOriginalSize);
     }
-    
+
     emit scanComplete(summary);
     return summary;
 }
 
-bool SpaceCalculator::isConvertible(const QString &path)
-{
+bool SpaceCalculator::isConvertible(const QString &path) {
     QString ext = QFileInfo(path).suffix().toLower();
-    return ext == Constants::Files::CUE.mid(1) ||
-           ext == Constants::Files::ISO.mid(1) ||
-           ext == Constants::Files::GDI.mid(1) ||
-           ext == Constants::Files::IMG.mid(1) ||
-           ext == Constants::Files::GCM.mid(1);
+    return ext == Constants::Files::CUE.mid(1) || ext == Constants::Files::ISO.mid(1)
+        || ext == Constants::Files::GDI.mid(1) || ext == Constants::Files::IMG.mid(1)
+        || ext == Constants::Files::GCM.mid(1);
 }
 
-bool SpaceCalculator::isCHD(const QString &path)
-{
+bool SpaceCalculator::isCHD(const QString &path) {
     return QFileInfo(path).suffix().toLower() == Constants::Files::CHD.mid(1);
 }
 
-double SpaceCalculator::getTypicalRatio(const QString &system)
-{
+double SpaceCalculator::getTypicalRatio(const QString &system) {
     SpaceCalculator calc;
     return calc.m_typicalRatios.value(system, calc.m_typicalRatios["Default"]);
 }
 
-QString SpaceCalculator::formatBytes(qint64 bytes)
-{
+QString SpaceCalculator::formatBytes(qint64 bytes) {
     const qint64 KB = 1024;
     const qint64 MB = KB * 1024;
     const qint64 GB = MB * 1024;
     const qint64 TB = GB * 1024;
-    
+
     if (bytes >= TB) {
         return QString::number(bytes / static_cast<double>(TB), 'f', 2) + " TB";
     } else if (bytes >= GB) {
@@ -281,67 +279,58 @@ QString SpaceCalculator::formatBytes(qint64 bytes)
     }
 }
 
-QString SpaceCalculator::formatSavingsReport(const ConversionSummary &summary)
-{
+QString SpaceCalculator::formatSavingsReport(const ConversionSummary &summary) {
     QString report;
-    
+
     report += "╔══════════════════════════════════════════╗\n";
     report += "║       CHD Conversion Savings Report      ║\n";
     report += "╚══════════════════════════════════════════╝\n\n";
-    
+
     report += QString("Total files scanned:     %1\n").arg(summary.totalFiles);
     report += QString("Convertible files:       %1\n").arg(summary.convertibleFiles);
     report += QString("Already CHD:             %1\n\n").arg(summary.convertedFiles);
-    
+
     report += QString("Current disk usage:      %1\n").arg(formatBytes(summary.totalOriginalSize));
     report += QString("After conversion:        %1\n").arg(formatBytes(summary.totalConvertedSize));
     report += QString("Estimated savings:       %1\n").arg(formatBytes(summary.totalSavedBytes));
-    report += QString("Compression ratio:       %1%\n\n").arg(
-        QString::number(summary.averageCompressionRatio * 100, 'f', 1));
-    
+    report += QString("Compression ratio:       %1%\n\n")
+                  .arg(QString::number(summary.averageCompressionRatio * 100, 'f', 1));
+
     if (!summary.countByFormat.isEmpty()) {
         report += "Breakdown by format:\n";
-        for (auto it = summary.countByFormat.constBegin(); 
-             it != summary.countByFormat.constEnd(); ++it) {
+        for (auto it = summary.countByFormat.constBegin(); it != summary.countByFormat.constEnd(); ++it) {
             qint64 size = summary.sizeByFormat.value(it.key(), 0);
-            report += QString("  %1: %2 files (%3)\n")
-                .arg(it.key(), -10)
-                .arg(it.value())
-                .arg(formatBytes(size));
+            report += QString("  %1: %2 files (%3)\n").arg(it.key(), -10).arg(it.value()).arg(formatBytes(size));
         }
     }
-    
+
     return report;
 }
 
-qint64 SpaceCalculator::getFileSize(const QString &path) const
-{
+qint64 SpaceCalculator::getFileSize(const QString &path) const {
     QFileInfo info(path);
     return info.exists() ? info.size() : 0;
 }
 
-qint64 SpaceCalculator::getDirectorySize(const QString &path, bool recursive) const
-{
+qint64 SpaceCalculator::getDirectorySize(const QString &path, bool recursive) const {
     qint64 totalSize = 0;
-    
-    QDirIterator::IteratorFlags flags = recursive ? 
-        QDirIterator::Subdirectories : QDirIterator::NoIteratorFlags;
-    
+
+    QDirIterator::IteratorFlags flags = recursive ? QDirIterator::Subdirectories : QDirIterator::NoIteratorFlags;
+
     QDirIterator it(path, QDir::Files, flags);
     while (it.hasNext()) {
         it.next();
         totalSize += it.fileInfo().size();
     }
-    
+
     return totalSize;
 }
 
-QString SpaceCalculator::detectSystem(const QString &path) const
-{
+QString SpaceCalculator::detectSystem(const QString &path) const {
     using namespace Constants::Systems;
-    
+
     QString pathLower = path.toLower();
-    
+
     // Get system names from constants
     const auto *ps2 = getSystemByName("PlayStation 2");
     const auto *psx = getSystemByName("PlayStation");
@@ -352,7 +341,7 @@ QString SpaceCalculator::detectSystem(const QString &path) const
     const auto *pcecd = getSystemByName("TurboGrafx-CD");
     const auto *gc = getSystemByName("GameCube");
     const auto *wii = getSystemByName("Wii");
-    
+
     // Simple heuristics based on path
     if (ps2 && (pathLower.contains("playstation 2") || pathLower.contains("ps2")))
         return ps2->internalName;
@@ -372,18 +361,18 @@ QString SpaceCalculator::detectSystem(const QString &path) const
         return gc->internalName;
     if (wii && pathLower.contains("wii"))
         return wii->internalName;
-    
+
     const auto *threeDo = getSystemByName("3DO");
     const auto *neogeocd = getSystemByName("Neo Geo CD");
     const auto *xbox = getSystemByName("Xbox");
-    
+
     if (threeDo && pathLower.contains("3do"))
         return threeDo->internalName;
     if (neogeocd && (pathLower.contains("neo geo cd") || pathLower.contains("neogeocd")))
         return neogeocd->internalName;
     if (xbox && pathLower.contains("xbox"))
         return xbox->internalName;
-    
+
     return "Default";
 }
 

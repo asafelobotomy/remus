@@ -20,8 +20,7 @@ using namespace Remus;
 
 namespace {
 
-QString scanResultIdentifier(const ScanResult &result)
-{
+QString scanResultIdentifier(const ScanResult &result) {
     if (result.isCompressed && !result.archivePath.isEmpty() && !result.archiveInternalPath.isEmpty()) {
         const QString normalized = ArchiveExtractor::normalizeArchiveMemberPath(result.archiveInternalPath);
         if (!normalized.isEmpty()) {
@@ -32,8 +31,7 @@ QString scanResultIdentifier(const ScanResult &result)
     return QFileInfo(result.path).absoluteFilePath();
 }
 
-QString fileRecordIdentifier(const FileRecord &record)
-{
+QString fileRecordIdentifier(const FileRecord &record) {
     if (!record.archiveInternalPath.isEmpty()) {
         const QString normalized = ArchiveExtractor::normalizeArchiveMemberPath(record.archiveInternalPath);
         const QString archivePath = !record.originalPath.isEmpty()
@@ -48,8 +46,7 @@ QString fileRecordIdentifier(const FileRecord &record)
     return QFileInfo(path).absoluteFilePath();
 }
 
-QList<int> orderedProcessSystemIds(Database &db, const QSet<int> &fileScopeIds)
-{
+QList<int> orderedProcessSystemIds(Database &db, const QSet<int> &fileScopeIds) {
     QMap<QString, int> knownSystems;
     bool hasUnknown = false;
 
@@ -73,15 +70,13 @@ QList<int> orderedProcessSystemIds(Database &db, const QSet<int> &fileScopeIds)
     return systemIds;
 }
 
-QString processSystemLabel(Database &db, int systemId)
-{
+QString processSystemLabel(Database &db, int systemId) {
     return systemId > 0 ? db.getSystemDisplayName(systemId) : QStringLiteral("Unknown");
 }
 
 }
 
-int handleScanCommand(CliContext &ctx)
-{
+int handleScanCommand(CliContext &ctx) {
     const bool scanRequested = ctx.parser.isSet("scan") || ctx.processRequested;
     if (!scanRequested) {
         return 0;
@@ -91,9 +86,8 @@ int handleScanCommand(CliContext &ctx)
         ctx.processFileScopeIds.clear();
     }
 
-    const QStringList scanPaths = ctx.parser.isSet("scan")
-                                  ? ctx.parser.values("scan")
-                                  : QStringList{ctx.processSourcePath};
+    const QStringList scanPaths
+        = ctx.parser.isSet("scan") ? ctx.parser.values("scan") : QStringList { ctx.processSourcePath };
     if (scanPaths.isEmpty() || scanPaths.first().isEmpty()) {
         qCritical() << "Scan path not provided";
         return 1;
@@ -101,15 +95,12 @@ int handleScanCommand(CliContext &ctx)
 
     if (ctx.processRequested) {
         const bool hasOutput = !ctx.processOutputPath.isEmpty();
-        const QString effectiveBundleFormat = resolveCliOptionValue(ctx.parser,
-                                                                    QStringLiteral("bundle-format"),
-                                                                    ctx.presetBundleFormat);
-        const QString effectiveDiscFormat = resolveCliOptionValue(ctx.parser,
-                                                                  QStringLiteral("bundle-disc-format"),
-                                                                  ctx.presetDiscFormat);
-        const QString effectiveFolderNaming = resolveCliOptionValue(ctx.parser,
-                                                                    QStringLiteral("folder-naming"),
-                                                                    ctx.presetFolderNaming);
+        const QString effectiveBundleFormat
+            = resolveCliOptionValue(ctx.parser, QStringLiteral("bundle-format"), ctx.presetBundleFormat);
+        const QString effectiveDiscFormat
+            = resolveCliOptionValue(ctx.parser, QStringLiteral("bundle-disc-format"), ctx.presetDiscFormat);
+        const QString effectiveFolderNaming
+            = resolveCliOptionValue(ctx.parser, QStringLiteral("folder-naming"), ctx.presetFolderNaming);
         qInfo() << "=== Full Processing Pipeline ===";
         if (!ctx.presetDisplayName.isEmpty()) {
             qInfo() << "Preset:" << ctx.presetDisplayName;
@@ -117,11 +108,10 @@ int handleScanCommand(CliContext &ctx)
         qInfo() << "Source:" << scanPaths.join(QStringLiteral(", "));
         if (hasOutput) {
             qInfo() << "Output:" << ctx.processOutputPath;
-            qInfo() << "Archive:" << effectiveBundleFormat
-                    << "| Disc:" << effectiveDiscFormat
+            qInfo() << "Archive:" << effectiveBundleFormat << "| Disc:" << effectiveDiscFormat
                     << "| Folders:" << effectiveFolderNaming;
         }
-        QStringList stages = {QStringLiteral("scan"), QStringLiteral("per-system [hash → match → enrich")};
+        QStringList stages = { QStringLiteral("scan"), QStringLiteral("per-system [hash → match → enrich") };
         if (hasOutput) {
             stages.last().append(QStringLiteral(" → bundle"));
         }
@@ -149,9 +139,7 @@ int handleScanCommand(CliContext &ctx)
 
         Scanner scanner;
         scanner.setExtensions(ctx.detector.getAllExtensions());
-        QObject::connect(&scanner, &Scanner::fileFound, [](const QString &path) {
-            qDebug() << "Found:" << path;
-        });
+        QObject::connect(&scanner, &Scanner::fileFound, [](const QString &path) { qDebug() << "Found:" << path; });
         QObject::connect(&scanner, &Scanner::scanProgress, [](int processed, int) {
             if (processed > 0 && processed % 50 == 0) {
                 qInfo() << "Processed" << processed << "files...";
@@ -165,61 +153,61 @@ int handleScanCommand(CliContext &ctx)
         const int libraryId = ctx.db.insertLibrary(scanPath);
 
         QList<ScanResult> orderedResults = results;
-        std::stable_sort(orderedResults.begin(), orderedResults.end(),
-                         [](const ScanResult &left, const ScanResult &right) {
-                             // Primary files always before companions
-                             if (left.isPrimary != right.isPrimary)
-                                 return left.isPrimary > right.isPrimary;
-                             // Among primaries: smallest first (fast failures surface early)
-                             return left.fileSize < right.fileSize;
-                         });
+        std::stable_sort(
+            orderedResults.begin(), orderedResults.end(), [](const ScanResult &left, const ScanResult &right) {
+                // Primary files always before companions
+                if (left.isPrimary != right.isPrimary)
+                    return left.isPrimary > right.isPrimary;
+                // Among primaries: smallest first (fast failures surface early)
+                return left.fileSize < right.fileSize;
+            });
 
         for (const ScanResult &result : orderedResults) {
-        const QString systemDetectPath = result.isCompressed && !result.archiveInternalPath.isEmpty()
-            ? result.archiveInternalPath
-            : result.path;
-        QString systemName = ctx.detector.detectSystem(result.extension, systemDetectPath);
+            const QString systemDetectPath = result.isCompressed && !result.archiveInternalPath.isEmpty()
+                ? result.archiveInternalPath
+                : result.path;
+            QString systemName = ctx.detector.detectSystem(result.extension, systemDetectPath);
 
-        if (result.isCompressed && !result.archivePath.isEmpty() &&
-            DiscMagicDetector::isDiscImageExtension(result.extension)) {
-            const QString memberPath = result.archiveInternalPath.isEmpty()
-                ? result.filename : result.archiveInternalPath;
-            const DiscHeaderInfo discInfo = DiscMagicDetector::detectFromArchive(
-                result.archivePath, memberPath, result.fileSize);
-            if (discInfo.detected && !discInfo.systemName.isEmpty()) {
-                systemName = discInfo.systemName;
-                qInfo() << "  Disc magic:" << systemName << "(from" << result.filename << ")";
+            if (result.isCompressed && !result.archivePath.isEmpty()
+                && DiscMagicDetector::isDiscImageExtension(result.extension)) {
+                const QString memberPath
+                    = result.archiveInternalPath.isEmpty() ? result.filename : result.archiveInternalPath;
+                const DiscHeaderInfo discInfo
+                    = DiscMagicDetector::detectFromArchive(result.archivePath, memberPath, result.fileSize);
+                if (discInfo.detected && !discInfo.systemName.isEmpty()) {
+                    systemName = discInfo.systemName;
+                    qInfo() << "  Disc magic:" << systemName << "(from" << result.filename << ")";
+                }
+            }
+
+            FileRecord record;
+            record.libraryId = libraryId;
+            record.originalPath = result.path;
+            record.currentPath = result.path;
+            record.filename = result.filename;
+            record.extension = result.extension;
+            record.fileSize = result.fileSize;
+            record.isCompressed = result.isCompressed;
+            record.archivePath = result.archivePath;
+            record.archiveInternalPath = result.archiveInternalPath;
+            record.systemId = systemName.isEmpty() ? 0 : ctx.db.getSystemId(systemName);
+            record.isPrimary = result.isPrimary;
+            if (!result.parentFilePath.isEmpty()) {
+                record.parentFileId = insertedIds.value(result.parentFilePath);
+            }
+            record.lastModified = result.lastModified;
+
+            const int insertedId = ctx.db.insertFile(record);
+            if (insertedId > 0) {
+                insertedCount++;
+                insertedIds.insert(scanResultIdentifier(result), insertedId);
+                if (ctx.processRequested && result.isPrimary) {
+                    ctx.processFileScopeIds.insert(insertedId);
+                }
+            } else {
+                skippedCount++;
             }
         }
-
-        FileRecord record;
-        record.libraryId = libraryId;
-        record.originalPath = result.path;
-        record.currentPath = result.path;
-        record.filename = result.filename;
-        record.extension = result.extension;
-        record.fileSize = result.fileSize;
-        record.isCompressed = result.isCompressed;
-        record.archivePath = result.archivePath;
-        record.archiveInternalPath = result.archiveInternalPath;
-        record.systemId = systemName.isEmpty() ? 0 : ctx.db.getSystemId(systemName);
-        record.isPrimary = result.isPrimary;
-        if (!result.parentFilePath.isEmpty()) {
-            record.parentFileId = insertedIds.value(result.parentFilePath);
-        }
-        record.lastModified = result.lastModified;
-
-        const int insertedId = ctx.db.insertFile(record);
-        if (insertedId > 0) {
-            insertedCount++;
-            insertedIds.insert(scanResultIdentifier(result), insertedId);
-            if (ctx.processRequested && result.isPrimary) {
-                ctx.processFileScopeIds.insert(insertedId);
-            }
-        } else {
-            skippedCount++;
-        }
-    }
     } // end per-path scan loop
 
     qInfo() << "";
@@ -243,9 +231,13 @@ int handleScanCommand(CliContext &ctx)
             RVZConverter rvzCheck;
             CSOConverter csoCheck;
             qInfo() << "Tool availability:";
-            qInfo() << (chdCheck.isChdmanAvailable()       ? "  ✓ chdman"       : "  ✗ chdman       (disc images will not be converted to CHD)");
-            qInfo() << (rvzCheck.isDolphinToolAvailable()  ? "  ✓ dolphin-tool"  : "  ✗ dolphin-tool  (GameCube/Wii images will not be converted to RVZ)");
-            qInfo() << (csoCheck.isMaxcsoAvailable()       ? "  ✓ maxcso"        : "  ✗ maxcso        (PSP images will not be converted to CSO)");
+            qInfo() << (chdCheck.isChdmanAvailable() ? "  ✓ chdman"
+                                                     : "  ✗ chdman       (disc images will not be converted to CHD)");
+            qInfo() << (rvzCheck.isDolphinToolAvailable()
+                    ? "  ✓ dolphin-tool"
+                    : "  ✗ dolphin-tool  (GameCube/Wii images will not be converted to RVZ)");
+            qInfo() << (csoCheck.isMaxcsoAvailable() ? "  ✓ maxcso"
+                                                     : "  ✗ maxcso        (PSP images will not be converted to CSO)");
             qInfo() << "";
         }
 
@@ -275,19 +267,16 @@ int handleScanCommand(CliContext &ctx)
             // Build the per-system subset and route through the parallel batch API.
             QList<FileRecord> systemBatch;
             for (const FileRecord &file : filesToHash) {
-                if (fileMatchesProcessScope(file, ctx.processFileScopeIds)
-                        && fileMatchesSystemFilter(file, systemId))
+                if (fileMatchesProcessScope(file, ctx.processFileScopeIds) && fileMatchesSystemFilter(file, systemId))
                     systemBatch.append(file);
             }
 
             HashService svc;
-            const QList<HashService::HashBatchResult> taskResults =
-                svc.computeHashes(systemBatch);
+            const QList<HashService::HashBatchResult> taskResults = svc.computeHashes(systemBatch);
 
             for (const HashService::HashBatchResult &task : taskResults) {
                 if (!task.skipped && task.result.success) {
-                    ctx.db.updateFileHashes(task.fileId, task.result.crc32,
-                                            task.result.md5, task.result.sha1);
+                    ctx.db.updateFileHashes(task.fileId, task.result.crc32, task.result.md5, task.result.sha1);
                     hashedCount++;
                 } else {
                     qWarning() << "  Hash failed for" << task.filename << ":" << task.result.error;
@@ -330,17 +319,15 @@ int handleScanCommand(CliContext &ctx)
         qInfo() << "Calculating hashes...";
 
         const QList<FileRecord> filesToHash = ctx.db.getFilesWithoutHashes();
-        int hashedCount  = 0;
+        int hashedCount = 0;
         int skippedCount = 0;
 
         HashService svc;
-        const QList<HashService::HashBatchResult> taskResults =
-            svc.computeHashes(filesToHash);
+        const QList<HashService::HashBatchResult> taskResults = svc.computeHashes(filesToHash);
 
         for (const HashService::HashBatchResult &task : taskResults) {
             if (!task.skipped && task.result.success) {
-                ctx.db.updateFileHashes(task.fileId, task.result.crc32,
-                                        task.result.md5, task.result.sha1);
+                ctx.db.updateFileHashes(task.fileId, task.result.crc32, task.result.md5, task.result.sha1);
                 hashedCount++;
                 if (hashedCount % 10 == 0) {
                     qInfo() << "  Hashed" << hashedCount << "of" << filesToHash.size() << "files...";
@@ -359,9 +346,9 @@ int handleScanCommand(CliContext &ctx)
     return 0;
 }
 
-int handleCheckToolsCommand(CliContext &ctx)
-{
-    if (!ctx.parser.isSet("check-tools")) return 0;
+int handleCheckToolsCommand(CliContext &ctx) {
+    if (!ctx.parser.isSet("check-tools"))
+        return 0;
 
     CHDConverter chd;
     RVZConverter rvz;
@@ -376,8 +363,8 @@ int handleCheckToolsCommand(CliContext &ctx)
     };
 
     qInfo().noquote() << "Tool availability (all tools are optional):";
-    printTool(chd.isChdmanAvailable(),      "chdman",       chd.getChdmanVersion());
+    printTool(chd.isChdmanAvailable(), "chdman", chd.getChdmanVersion());
     printTool(rvz.isDolphinToolAvailable(), "dolphin-tool", rvz.getDolphinToolVersion());
-    printTool(cso.isMaxcsoAvailable(),      "maxcso",       cso.getMaxcsoVersion());
+    printTool(cso.isMaxcsoAvailable(), "maxcso", cso.getMaxcsoVersion());
     return 0;
 }

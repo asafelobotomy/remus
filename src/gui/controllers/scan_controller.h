@@ -23,12 +23,24 @@ public:
     explicit ScanController(AppController *appController, QObject *parent = nullptr);
     ~ScanController();
 
-    bool isScanning() const { return m_scanning; }
-    int scannedFiles() const { return m_scannedFiles; }
-    int totalFiles() const { return m_totalFiles; }
-    QString progressMessage() const { return m_progressMessage; }
-    QStringList recentLogs() const { return m_recentLogs; }
-    QString lastDirectory() const { return m_lastDirectory; }
+    bool isScanning() const {
+        return m_scanning;
+    }
+    int scannedFiles() const {
+        return m_scannedFiles;
+    }
+    int totalFiles() const {
+        return m_totalFiles;
+    }
+    QString progressMessage() const {
+        return m_progressMessage;
+    }
+    QStringList recentLogs() const {
+        return m_recentLogs;
+    }
+    QString lastDirectory() const {
+        return m_lastDirectory;
+    }
 
     Q_INVOKABLE void startScan(const QString &directory);
     Q_INVOKABLE void stopScan();

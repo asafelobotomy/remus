@@ -10,12 +10,12 @@ namespace Remus {
  * @brief Disc image header info extracted from IP.BIN or ISO 9660 PVD
  */
 struct DiscHeaderInfo {
-    int systemId = 0;           ///< Detected system ID (from Constants::Systems)
-    QString systemName;         ///< Internal system name (e.g., "GameCube")
-    QString serial;             ///< Product serial from disc header (e.g., "HDR-0176")
-    QString title;              ///< Game title from disc header
-    QString releaseDate;        ///< Release date from disc header
-    bool detected = false;      ///< True if magic bytes matched a known system
+    int systemId = 0; ///< Detected system ID (from Constants::Systems)
+    QString systemName; ///< Internal system name (e.g., "GameCube")
+    QString serial; ///< Product serial from disc header (e.g., "HDR-0176")
+    QString title; ///< Game title from disc header
+    QString releaseDate; ///< Release date from disc header
+    bool detected = false; ///< True if magic bytes matched a known system
 };
 
 /**
@@ -30,8 +30,7 @@ struct DiscHeaderInfo {
  * - PPSSPP Core/Loaders.cpp PVD system identifier check
  * - dreamcast.wiki IP.BIN header field table
  */
-class DiscMagicDetector
-{
+class DiscMagicDetector {
 public:
     /**
      * @brief Detect system from a disc image file
@@ -84,9 +83,8 @@ public:
      *                    (used for PS1/PS2 disambiguation)
      * @return Detection result; detected == false if streaming failed
      */
-    static DiscHeaderInfo detectFromArchive(const QString &archivePath,
-                                             const QString &memberPath,
-                                             qint64 memberSize = -1);
+    static DiscHeaderInfo detectFromArchive(
+        const QString &archivePath, const QString &memberPath, qint64 memberSize = -1);
 
 private:
     struct MagicEntry {

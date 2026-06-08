@@ -11,24 +11,20 @@ namespace Remus {
 
 namespace {
 
-bool failureRatioExceeded(int successes, int failures)
-{
-    return failures >= 3 && failures >= (successes * 3);
-}
+    bool failureRatioExceeded(int successes, int failures) {
+        return failures >= 3 && failures >= (successes * 3);
+    }
 
-QString summarizeFailures(const QString &prefix, int failedFiles)
-{
-    return QStringLiteral("%1 (%2 failed file%3)")
-        .arg(prefix)
-        .arg(failedFiles)
-        .arg(failedFiles == 1 ? QString() : QStringLiteral("s"));
-}
+    QString summarizeFailures(const QString &prefix, int failedFiles) {
+        return QStringLiteral("%1 (%2 failed file%3)")
+            .arg(prefix)
+            .arg(failedFiles)
+            .arg(failedFiles == 1 ? QString() : QStringLiteral("s"));
+    }
 
 } // namespace
 
-CompressionResult ArchiveCreator::compressFiles(const QList<ArchiveInputEntry> &entries,
-                                                 const QString &outputArchive)
-{
+CompressionResult ArchiveCreator::compressFiles(const QList<ArchiveInputEntry> &entries, const QString &outputArchive) {
     CompressionResult result;
     result.outputPath = outputArchive;
 
@@ -41,8 +37,8 @@ CompressionResult ArchiveCreator::compressFiles(const QList<ArchiveInputEntry> &
 
     const QByteArray outBytes = outputArchive.toUtf8();
     if (archive_write_open_filename(a.get(), outBytes.constData()) != ARCHIVE_OK) {
-        result.error = QStringLiteral("Failed to create archive: %1")
-            .arg(QString::fromUtf8(archive_error_string(a.get())));
+        result.error
+            = QStringLiteral("Failed to create archive: %1").arg(QString::fromUtf8(archive_error_string(a.get())));
         return result;
     }
 
@@ -58,8 +54,8 @@ CompressionResult ArchiveCreator::compressFiles(const QList<ArchiveInputEntry> &
         if (!fi.isFile()) {
             result.failedFiles++;
             if (failureRatioExceeded(result.filesCompressed, result.failedFiles)) {
-                result.error = summarizeFailures(QStringLiteral("Compression aborted after too many file failures"),
-                                                 result.failedFiles);
+                result.error = summarizeFailures(
+                    QStringLiteral("Compression aborted after too many file failures"), result.failedFiles);
                 return result;
             }
             continue;
@@ -69,8 +65,8 @@ CompressionResult ArchiveCreator::compressFiles(const QList<ArchiveInputEntry> &
         if (!inputFile.open(QIODevice::ReadOnly)) {
             result.failedFiles++;
             if (failureRatioExceeded(result.filesCompressed, result.failedFiles)) {
-                result.error = summarizeFailures(QStringLiteral("Compression aborted after too many file failures"),
-                                                 result.failedFiles);
+                result.error = summarizeFailures(
+                    QStringLiteral("Compression aborted after too many file failures"), result.failedFiles);
                 return result;
             }
             continue;
@@ -86,8 +82,8 @@ CompressionResult ArchiveCreator::compressFiles(const QList<ArchiveInputEntry> &
         if (archive_write_header(a.get(), entry.get()) != ARCHIVE_OK) {
             result.failedFiles++;
             if (failureRatioExceeded(result.filesCompressed, result.failedFiles)) {
-                result.error = summarizeFailures(QStringLiteral("Compression aborted after too many file failures"),
-                                                 result.failedFiles);
+                result.error = summarizeFailures(
+                    QStringLiteral("Compression aborted after too many file failures"), result.failedFiles);
                 return result;
             }
             continue;
@@ -110,8 +106,8 @@ CompressionResult ArchiveCreator::compressFiles(const QList<ArchiveInputEntry> &
         if (!entryOk) {
             result.failedFiles++;
             if (failureRatioExceeded(result.filesCompressed, result.failedFiles)) {
-                result.error = summarizeFailures(QStringLiteral("Compression aborted after too many file failures"),
-                                                 result.failedFiles);
+                result.error = summarizeFailures(
+                    QStringLiteral("Compression aborted after too many file failures"), result.failedFiles);
                 return result;
             }
             continue;
@@ -135,11 +131,11 @@ CompressionResult ArchiveCreator::compressFiles(const QList<ArchiveInputEntry> &
 
     result.success = (result.filesCompressed > 0);
     if (result.failedFiles > 0 && result.success) {
-        result.error = summarizeFailures(QStringLiteral("Compression completed with skipped files"),
-                                         result.failedFiles);
+        result.error
+            = summarizeFailures(QStringLiteral("Compression completed with skipped files"), result.failedFiles);
     } else if (!result.success && result.error.isEmpty()) {
-        result.error = summarizeFailures(QStringLiteral("Compression completed without any successful files"),
-                                         result.failedFiles);
+        result.error = summarizeFailures(
+            QStringLiteral("Compression completed without any successful files"), result.failedFiles);
     }
     result.compressedSize = outInfo.size();
     return result;

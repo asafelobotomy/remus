@@ -16,34 +16,33 @@ namespace Remus {
 
 namespace {
 
-bool failureRatioExceeded(int successes, int failures)
-{
-    return failures >= 3 && failures >= (successes * 3);
-}
-
-QString summarizeFailures(const QString &prefix, int failedFiles)
-{
-    return QStringLiteral("%1 (%2 failed file%3)")
-        .arg(prefix)
-        .arg(failedFiles)
-        .arg(failedFiles == 1 ? QString() : QStringLiteral("s"));
-}
-
-// Streams all data blocks from archive reader |ar| into a QFile.
-// Returns true on success (EOF reached without error).
-bool copyEntryToFile(archive *ar, QFile &out)
-{
-    const void *buff;
-    size_t size;
-    la_int64_t offset;
-    for (;;) {
-        const int r = archive_read_data_block(ar, &buff, &size, &offset);
-        if (r == ARCHIVE_EOF) return true;
-        if (r < ARCHIVE_OK) return false;
-        if (out.write(static_cast<const char *>(buff), static_cast<qint64>(size)) < 0)
-            return false;
+    bool failureRatioExceeded(int successes, int failures) {
+        return failures >= 3 && failures >= (successes * 3);
     }
-}
+
+    QString summarizeFailures(const QString &prefix, int failedFiles) {
+        return QStringLiteral("%1 (%2 failed file%3)")
+            .arg(prefix)
+            .arg(failedFiles)
+            .arg(failedFiles == 1 ? QString() : QStringLiteral("s"));
+    }
+
+    // Streams all data blocks from archive reader |ar| into a QFile.
+    // Returns true on success (EOF reached without error).
+    bool copyEntryToFile(archive *ar, QFile &out) {
+        const void *buff;
+        size_t size;
+        la_int64_t offset;
+        for (;;) {
+            const int r = archive_read_data_block(ar, &buff, &size, &offset);
+            if (r == ARCHIVE_EOF)
+                return true;
+            if (r < ARCHIVE_OK)
+                return false;
+            if (out.write(static_cast<const char *>(buff), static_cast<qint64>(size)) < 0)
+                return false;
+        }
+    }
 
 } // anonymous namespace
 
@@ -51,10 +50,7 @@ bool copyEntryToFile(archive *ar, QFile &out)
 // Public API
 // ─────────────────────────────────────────────────────────────────────────────
 
-ExtractionResult ArchiveExtractor::extract(const QString &archivePath,
-                                           const QString &outputDir,
-                                           bool createSubfolder)
-{
+ExtractionResult ArchiveExtractor::extract(const QString &archivePath, const QString &outputDir, bool createSubfolder) {
     ExtractionResult result;
     result.archivePath = archivePath;
 
@@ -86,10 +82,8 @@ ExtractionResult ArchiveExtractor::extract(const QString &archivePath,
     return result;
 }
 
-ExtractionResult ArchiveExtractor::extractFile(const QString &archivePath,
-                                               const QString &fileName,
-                                               const QString &outputDir)
-{
+ExtractionResult ArchiveExtractor::extractFile(
+    const QString &archivePath, const QString &fileName, const QString &outputDir) {
     ExtractionResult result;
     result.archivePath = archivePath;
     result.outputDir = outputDir;
@@ -113,17 +107,16 @@ ExtractionResult ArchiveExtractor::extractFile(const QString &archivePath,
     return result;
 }
 
-QList<ExtractionResult> ArchiveExtractor::batchExtract(const QStringList &archivePaths,
-                                                       const QString &outputDir,
-                                                       bool createSubfolders)
-{
+QList<ExtractionResult> ArchiveExtractor::batchExtract(
+    const QStringList &archivePaths, const QString &outputDir, bool createSubfolders) {
     QList<ExtractionResult> results;
     m_cancelled = false;
 
     const int total = archivePaths.size();
     int completed = 0;
     for (const QString &archivePath : archivePaths) {
-        if (m_cancelled) break;
+        if (m_cancelled)
+            break;
         results.append(extract(archivePath, outputDir, createSubfolders));
         emit batchProgress(++completed, total);
     }
@@ -131,14 +124,13 @@ QList<ExtractionResult> ArchiveExtractor::batchExtract(const QStringList &archiv
     return results;
 }
 
-QByteArray ArchiveExtractor::readMemberPrefix(const QString &archivePath,
-                                               const QString &memberPath,
-                                               qint64 maxBytes)
-{
-    if (maxBytes <= 0) return {};
+QByteArray ArchiveExtractor::readMemberPrefix(const QString &archivePath, const QString &memberPath, qint64 maxBytes) {
+    if (maxBytes <= 0)
+        return { };
 
     const QString normalized = normalizeArchiveMemberPath(memberPath);
-    if (normalized.isEmpty()) return {};
+    if (normalized.isEmpty())
+        return { };
 
     using ArchivePtr = std::unique_ptr<archive, decltype(&archive_read_free)>;
     ArchivePtr a(archive_read_new(), archive_read_free);
@@ -147,12 +139,11 @@ QByteArray ArchiveExtractor::readMemberPrefix(const QString &archivePath,
 
     const QByteArray pathBytes = archivePath.toUtf8();
     if (archive_read_open_filename(a.get(), pathBytes.constData(), 65536) != ARCHIVE_OK)
-        return {};
+        return { };
 
     archive_entry *entry = nullptr;
     while (archive_read_next_header(a.get(), &entry) == ARCHIVE_OK) {
-        const QString entryNorm = normalizeArchiveMemberPath(
-            QString::fromUtf8(archive_entry_pathname(entry)));
+        const QString entryNorm = normalizeArchiveMemberPath(QString::fromUtf8(archive_entry_pathname(entry)));
         if (entryNorm != normalized) {
             archive_read_data_skip(a.get());
             continue;
@@ -164,35 +155,33 @@ QByteArray ArchiveExtractor::readMemberPrefix(const QString &archivePath,
         qint64 remaining = maxBytes;
         la_ssize_t n;
         while (remaining > 0) {
-            const la_ssize_t toRead = static_cast<la_ssize_t>(
-                qMin<qint64>(remaining, static_cast<qint64>(sizeof(buf))));
+            const la_ssize_t toRead
+                = static_cast<la_ssize_t>(qMin<qint64>(remaining, static_cast<qint64>(sizeof(buf))));
             n = archive_read_data(a.get(), buf, static_cast<size_t>(toRead));
-            if (n <= 0) break;
+            if (n <= 0)
+                break;
             data.append(buf, static_cast<int>(n));
             remaining -= n;
         }
         return data;
     }
 
-    return {};
+    return { };
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Private extraction core
 // ─────────────────────────────────────────────────────────────────────────────
 
-ExtractionResult ArchiveExtractor::extractToDir(const QString &archivePath,
-                                                 const QString &outputDir,
-                                                 const QString &singleMember)
-{
+ExtractionResult ArchiveExtractor::extractToDir(
+    const QString &archivePath, const QString &outputDir, const QString &singleMember) {
     ExtractionResult result;
     result.archivePath = archivePath;
     result.outputDir = outputDir;
 
     const ArchiveInfo info = getArchiveInfo(archivePath);
     if (!info.unsafeEntries.isEmpty()) {
-        result.error = QStringLiteral("Archive contains unsafe path entries: %1")
-            .arg(info.unsafeEntries.first());
+        result.error = QStringLiteral("Archive contains unsafe path entries: %1").arg(info.unsafeEntries.first());
         return result;
     }
 
@@ -238,8 +227,8 @@ ExtractionResult ArchiveExtractor::extractToDir(const QString &archivePath,
             result.failedFiles++;
             archive_read_data_skip(a.get());
             if (failureRatioExceeded(result.filesExtracted, result.failedFiles)) {
-                result.error = summarizeFailures(QStringLiteral("Extraction aborted after too many file failures"),
-                                                 result.failedFiles);
+                result.error = summarizeFailures(
+                    QStringLiteral("Extraction aborted after too many file failures"), result.failedFiles);
                 return result;
             }
             continue;
@@ -251,8 +240,8 @@ ExtractionResult ArchiveExtractor::extractToDir(const QString &archivePath,
             outFile.remove();
             result.failedFiles++;
             if (failureRatioExceeded(result.filesExtracted, result.failedFiles)) {
-                result.error = summarizeFailures(QStringLiteral("Extraction aborted after too many file failures"),
-                                                 result.failedFiles);
+                result.error = summarizeFailures(
+                    QStringLiteral("Extraction aborted after too many file failures"), result.failedFiles);
                 return result;
             }
             continue;
@@ -268,18 +257,16 @@ ExtractionResult ArchiveExtractor::extractToDir(const QString &archivePath,
 
     if (readStatus != ARCHIVE_EOF) {
         result.failedFiles++;
-        result.error = QStringLiteral("Archive read failed: %1")
-            .arg(QString::fromUtf8(archive_error_string(a.get())));
+        result.error = QStringLiteral("Archive read failed: %1").arg(QString::fromUtf8(archive_error_string(a.get())));
         return result;
     }
 
     result.success = (result.filesExtracted > 0);
     if (result.failedFiles > 0 && result.success) {
-        result.error = summarizeFailures(QStringLiteral("Extraction completed with skipped files"),
-                                         result.failedFiles);
+        result.error = summarizeFailures(QStringLiteral("Extraction completed with skipped files"), result.failedFiles);
     } else if (!result.success && result.error.isEmpty()) {
-        result.error = summarizeFailures(QStringLiteral("Extraction completed without any successful files"),
-                                         result.failedFiles);
+        result.error = summarizeFailures(
+            QStringLiteral("Extraction completed without any successful files"), result.failedFiles);
     }
     return result;
 }

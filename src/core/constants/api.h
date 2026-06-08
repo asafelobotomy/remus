@@ -3,7 +3,7 @@
 /**
  * @file api.h
  * @brief API endpoints and service URLs for metadata providers
- * 
+ *
  * Centralizes all external API endpoints and service URLs used by
  * metadata providers, avoiding scattered hardcoded URLs throughout the codebase.
  */
@@ -11,189 +11,189 @@
 namespace Remus {
 namespace Constants {
 
-/**
- * @brief Application version string
- *
- * Single source of truth for the version number.
- * Format: MAJOR.MINOR.PATCH — updated per milestone completions.
- */
-inline constexpr const char* APP_VERSION = "0.10.1";
+    /**
+     * @brief Application version string
+     *
+     * Single source of truth for the version number.
+     * Format: MAJOR.MINOR.PATCH — updated per milestone completions.
+     */
+    inline constexpr const char *APP_VERSION = "0.10.1";
 
-/**
- * @brief Milestone tracking
- */
-inline constexpr const char* CURRENT_MILESTONE = "M10";
+    /**
+     * @brief Milestone tracking
+     */
+    inline constexpr const char *CURRENT_MILESTONE = "M10";
 
-namespace API {
+    namespace API {
 
-// ============================================================================
-// ScreenScraper.fr API
-// ============================================================================
+        // ============================================================================
+        // ScreenScraper.fr API
+        // ============================================================================
 
-/// Base URL for ScreenScraper API
-inline constexpr const char* SCREENSCRAPER_BASE_URL = "https://api.screenscraper.fr/api2";
+        /// Base URL for ScreenScraper API
+        inline constexpr const char *SCREENSCRAPER_BASE_URL = "https://api.screenscraper.fr/api2";
 
-/// ScreenScraper platform endpoint (for system info)
-inline constexpr const char* SCREENSCRAPER_PLATFORM_ENDPOINT = "/platform.php";
+        /// ScreenScraper platform endpoint (for system info)
+        inline constexpr const char *SCREENSCRAPER_PLATFORM_ENDPOINT = "/platform.php";
 
-/// ScreenScraper ROM identification endpoint (hash-based lookup)
-inline constexpr const char* SCREENSCRAPER_JEUINFOS_ENDPOINT = "/jeuInfos.php";
+        /// ScreenScraper ROM identification endpoint (hash-based lookup)
+        inline constexpr const char *SCREENSCRAPER_JEUINFOS_ENDPOINT = "/jeuInfos.php";
 
-/// ScreenScraper game name search endpoint
-inline constexpr const char* SCREENSCRAPER_JEURECHERCHE_ENDPOINT = "/jeuRecherche.php";
+        /// ScreenScraper game name search endpoint
+        inline constexpr const char *SCREENSCRAPER_JEURECHERCHE_ENDPOINT = "/jeuRecherche.php";
 
-/// ScreenScraper game details endpoint — same base as JEUINFOS
-/// (both use jeuInfos.php; differs only in query params: gameid vs hash)
-inline constexpr const char* SCREENSCRAPER_GETGAME_ENDPOINT = "/jeuInfos.php";
+        /// ScreenScraper game details endpoint — same base as JEUINFOS
+        /// (both use jeuInfos.php; differs only in query params: gameid vs hash)
+        inline constexpr const char *SCREENSCRAPER_GETGAME_ENDPOINT = "/jeuInfos.php";
 
-/// ScreenScraper screenshot endpoint
-inline constexpr const char* SCREENSCRAPER_SCREENSHOT_ENDPOINT = "/media/screenshots";
+        /// ScreenScraper screenshot endpoint
+        inline constexpr const char *SCREENSCRAPER_SCREENSHOT_ENDPOINT = "/media/screenshots";
 
-/// ScreenScraper wheel art endpoint
-inline constexpr const char* SCREENSCRAPER_WHEEL_ENDPOINT = "/media/wheels";
+        /// ScreenScraper wheel art endpoint
+        inline constexpr const char *SCREENSCRAPER_WHEEL_ENDPOINT = "/media/wheels";
 
-/// ScreenScraper marquee endpoint
-inline constexpr const char* SCREENSCRAPER_MARQUEE_ENDPOINT = "/media/marquees";
+        /// ScreenScraper marquee endpoint
+        inline constexpr const char *SCREENSCRAPER_MARQUEE_ENDPOINT = "/media/marquees";
 
-/// ScreenScraper video endpoint
-inline constexpr const char* SCREENSCRAPER_VIDEO_ENDPOINT = "/media/videos";
+        /// ScreenScraper video endpoint
+        inline constexpr const char *SCREENSCRAPER_VIDEO_ENDPOINT = "/media/videos";
 
-// ============================================================================
-// TheGamesDB API
-// ============================================================================
+        // ============================================================================
+        // TheGamesDB API
+        // ============================================================================
 
-/// Base URL for TheGamesDB API v1
-inline constexpr const char* THEGAMESDB_BASE_URL = "https://api.thegamesdb.net/v1";
+        /// Base URL for TheGamesDB API v1
+        inline constexpr const char *THEGAMESDB_BASE_URL = "https://api.thegamesdb.net/v1";
 
-/// TheGamesDB games endpoint (search)
-inline constexpr const char* THEGAMESDB_GAMES_ENDPOINT = "/Games/ByGameName";
+        /// TheGamesDB games endpoint (search)
+        inline constexpr const char *THEGAMESDB_GAMES_ENDPOINT = "/Games/ByGameName";
 
-/// TheGamesDB platforms endpoint (system info)
-inline constexpr const char* THEGAMESDB_PLATFORMS_ENDPOINT = "/Platforms";
+        /// TheGamesDB platforms endpoint (system info)
+        inline constexpr const char *THEGAMESDB_PLATFORMS_ENDPOINT = "/Platforms";
 
-/// TheGamesDB game details endpoint (by ID)
-inline constexpr const char* THEGAMESDB_GAMEINFO_ENDPOINT = "/Games/ByGameID";
+        /// TheGamesDB game details endpoint (by ID)
+        inline constexpr const char *THEGAMESDB_GAMEINFO_ENDPOINT = "/Games/ByGameID";
 
-/// TheGamesDB images endpoint (game artwork)
-inline constexpr const char* THEGAMESDB_IMAGES_ENDPOINT = "/Games/Images";
+        /// TheGamesDB images endpoint (game artwork)
+        inline constexpr const char *THEGAMESDB_IMAGES_ENDPOINT = "/Games/Images";
 
-/// TheGamesDB image CDN base URL (artwork base)
-inline constexpr const char* THEGAMESDB_IMAGES_BASE = "https://cdn.thegamesdb.net/images";
+        /// TheGamesDB image CDN base URL (artwork base)
+        inline constexpr const char *THEGAMESDB_IMAGES_BASE = "https://cdn.thegamesdb.net/images";
 
-// ============================================================================
-// IGDB API (Internet Game Database)
-// ============================================================================
+        // ============================================================================
+        // IGDB API (Internet Game Database)
+        // ============================================================================
 
-/// Base URL for IGDB API v4
-inline constexpr const char* IGDB_BASE_URL = "https://api.igdb.com/v4";
+        /// Base URL for IGDB API v4
+        inline constexpr const char *IGDB_BASE_URL = "https://api.igdb.com/v4";
 
-/// IGDB games endpoint (search/query)
-inline constexpr const char* IGDB_GAMES_ENDPOINT = "/games";
+        /// IGDB games endpoint (search/query)
+        inline constexpr const char *IGDB_GAMES_ENDPOINT = "/games";
 
-/// IGDB platforms endpoint (system info)
-inline constexpr const char* IGDB_PLATFORMS_ENDPOINT = "/platforms";
+        /// IGDB platforms endpoint (system info)
+        inline constexpr const char *IGDB_PLATFORMS_ENDPOINT = "/platforms";
 
-/// IGDB covers endpoint (artwork)
-inline constexpr const char* IGDB_COVERS_ENDPOINT = "/covers";
+        /// IGDB covers endpoint (artwork)
+        inline constexpr const char *IGDB_COVERS_ENDPOINT = "/covers";
 
-/// IGDB screenshots endpoint
-inline constexpr const char* IGDB_SCREENSHOTS_ENDPOINT = "/screenshots";
+        /// IGDB screenshots endpoint
+        inline constexpr const char *IGDB_SCREENSHOTS_ENDPOINT = "/screenshots";
 
-/// IGDB image CDN base URL
-inline constexpr const char* IGDB_CDN_BASE = "https://images.igdb.com/igdb/image/upload";
+        /// IGDB image CDN base URL
+        inline constexpr const char *IGDB_CDN_BASE = "https://images.igdb.com/igdb/image/upload";
 
-/// IGDB Twitch OAuth2 token endpoint
-inline constexpr const char* IGDB_AUTH_URL = "https://id.twitch.tv/oauth2/token";
+        /// IGDB Twitch OAuth2 token endpoint
+        inline constexpr const char *IGDB_AUTH_URL = "https://id.twitch.tv/oauth2/token";
 
-// IGDB image size tokens (used in CDN URL construction)
-/// Thumbnail image size token (~90px)
-inline constexpr const char* IGDB_IMG_THUMB = "t_thumb";
-/// 1080p high-resolution image size token
-inline constexpr const char* IGDB_IMG_1080P = "t_1080p";
-/// Cover big image size token (~264px wide)
-inline constexpr const char* IGDB_IMG_COVER_BIG = "t_cover_big";
-/// Screenshot big image size token (~889px wide)
-inline constexpr const char* IGDB_IMG_SCREENSHOT_BIG = "t_screenshot_big";
+        // IGDB image size tokens (used in CDN URL construction)
+        /// Thumbnail image size token (~90px)
+        inline constexpr const char *IGDB_IMG_THUMB = "t_thumb";
+        /// 1080p high-resolution image size token
+        inline constexpr const char *IGDB_IMG_1080P = "t_1080p";
+        /// Cover big image size token (~264px wide)
+        inline constexpr const char *IGDB_IMG_COVER_BIG = "t_cover_big";
+        /// Screenshot big image size token (~889px wide)
+        inline constexpr const char *IGDB_IMG_SCREENSHOT_BIG = "t_screenshot_big";
 
-/// IGDB rating divisor: IGDB stores ratings on a 0–100 scale; divide by this to get 0–10
-inline constexpr double IGDB_RATING_SCALE = 10.0;
+        /// IGDB rating divisor: IGDB stores ratings on a 0–100 scale; divide by this to get 0–10
+        inline constexpr double IGDB_RATING_SCALE = 10.0;
 
-// ============================================================================
-// Hasheous API (Free hash matching)
-// ============================================================================
+        // ============================================================================
+        // Hasheous API (Free hash matching)
+        // ============================================================================
 
-/// Base URL for Hasheous service
-inline constexpr const char* HASHEOUS_BASE_URL = "https://hasheous.org";
+        /// Base URL for Hasheous service
+        inline constexpr const char *HASHEOUS_BASE_URL = "https://hasheous.org";
 
-/// Hasheous hash lookup endpoint (POST with JSON body)
-inline constexpr const char* HASHEOUS_LOOKUP_ENDPOINT = "/api/v1/Lookup/ByHash";
+        /// Hasheous hash lookup endpoint (POST with JSON body)
+        inline constexpr const char *HASHEOUS_LOOKUP_ENDPOINT = "/api/v1/Lookup/ByHash";
 
-/// Hasheous IGDB metadata proxy endpoint (GET with game ID)
-inline constexpr const char* HASHEOUS_PROXY_IGDB_GAME = "/api/v1/MetadataProxy/IGDB/Game";
+        /// Hasheous IGDB metadata proxy endpoint (GET with game ID)
+        inline constexpr const char *HASHEOUS_PROXY_IGDB_GAME = "/api/v1/MetadataProxy/IGDB/Game";
 
-/// Hasheous TheGamesDB metadata proxy endpoint
-inline constexpr const char* HASHEOUS_PROXY_TGDB_GAME = "/api/v1/MetadataProxy/TheGamesDB/Game";
+        /// Hasheous TheGamesDB metadata proxy endpoint
+        inline constexpr const char *HASHEOUS_PROXY_TGDB_GAME = "/api/v1/MetadataProxy/TheGamesDB/Game";
 
-/// Hasheous IGDB company metadata proxy endpoint
-inline constexpr const char* HASHEOUS_PROXY_IGDB_COMPANY = "/api/v1/MetadataProxy/IGDB/Company";
+        /// Hasheous IGDB company metadata proxy endpoint
+        inline constexpr const char *HASHEOUS_PROXY_IGDB_COMPANY = "/api/v1/MetadataProxy/IGDB/Company";
 
-/// Hasheous health check endpoint
-inline constexpr const char* HASHEOUS_HEALTHCHECK_ENDPOINT = "/api/v1/HealthCheck";
+        /// Hasheous health check endpoint
+        inline constexpr const char *HASHEOUS_HEALTHCHECK_ENDPOINT = "/api/v1/HealthCheck";
 
-// ============================================================================
-// RetroAchievements Patch API
-// ============================================================================
+        // ============================================================================
+        // RetroAchievements Patch API
+        // ============================================================================
 
-/// Base URL for RetroAchievements web API
-inline constexpr const char* RA_API_BASE_URL = "https://retroachievements.org/API";
+        /// Base URL for RetroAchievements web API
+        inline constexpr const char *RA_API_BASE_URL = "https://retroachievements.org/API";
 
-/// RAPatches GitHub repository (raw file base URL)
-inline constexpr const char* RAPATCHES_RAW_BASE = "https://github.com/RetroAchievements/RAPatches/raw/main";
+        /// RAPatches GitHub repository (raw file base URL)
+        inline constexpr const char *RAPATCHES_RAW_BASE = "https://github.com/RetroAchievements/RAPatches/raw/main";
 
-/// RAPatches GitHub repository clone URL
-inline constexpr const char* RAPATCHES_CLONE_URL = "https://github.com/RetroAchievements/RAPatches.git";
+        /// RAPatches GitHub repository clone URL
+        inline constexpr const char *RAPATCHES_CLONE_URL = "https://github.com/RetroAchievements/RAPatches.git";
 
-/// RA API endpoint: get all console/system IDs
-inline constexpr const char* RA_CONSOLE_IDS_ENDPOINT = "/API_GetConsoleIDs.php";
+        /// RA API endpoint: get all console/system IDs
+        inline constexpr const char *RA_CONSOLE_IDS_ENDPOINT = "/API_GetConsoleIDs.php";
 
-/// RA API endpoint: get game list (with optional hashes) for a system
-inline constexpr const char* RA_GAME_LIST_ENDPOINT = "/API_GetGameList.php";
+        /// RA API endpoint: get game list (with optional hashes) for a system
+        inline constexpr const char *RA_GAME_LIST_ENDPOINT = "/API_GetGameList.php";
 
-/// RA API endpoint: get supported hashes for a game
-inline constexpr const char* RA_GAME_HASHES_ENDPOINT = "/API_GetGameHashes.php";
+        /// RA API endpoint: get supported hashes for a game
+        inline constexpr const char *RA_GAME_HASHES_ENDPOINT = "/API_GetGameHashes.php";
 
-/// Environment variable name for RA API key (optional, skips RA enrichment if unset)
-inline constexpr const char* RA_API_KEY_ENV = "REMUS_RA_API_KEY";
+        /// Environment variable name for RA API key (optional, skips RA enrichment if unset)
+        inline constexpr const char *RA_API_KEY_ENV = "REMUS_RA_API_KEY";
 
-/// Environment variable name for RA username (optional)
-inline constexpr const char* RA_USERNAME_ENV = "REMUS_RA_USERNAME";
+        /// Environment variable name for RA username (optional)
+        inline constexpr const char *RA_USERNAME_ENV = "REMUS_RA_USERNAME";
 
-// ============================================================================
-// Known ROM Database Services
-// ============================================================================
+        // ============================================================================
+        // Known ROM Database Services
+        // ============================================================================
 
-/// URL pattern for downloading DAT files from No-Intro
-inline constexpr const char* NO_INTRO_DAT_BASE = "https://datomatic.no-intro.org";
+        /// URL pattern for downloading DAT files from No-Intro
+        inline constexpr const char *NO_INTRO_DAT_BASE = "https://datomatic.no-intro.org";
 
-/// URL pattern for downloading DAT files from Redump
-inline constexpr const char* REDUMP_DAT_BASE = "https://redump.org/datfiles";
+        /// URL pattern for downloading DAT files from Redump
+        inline constexpr const char *REDUMP_DAT_BASE = "https://redump.org/datfiles";
 
-// ============================================================================
-// API Query Parameters
-// ============================================================================
+        // ============================================================================
+        // API Query Parameters
+        // ============================================================================
 
-/// HTTP User-Agent string for API requests (derived from Constants::APP_VERSION)
-inline const QString USER_AGENT = QString("Remus/%1 (ROM Library Manager)").arg(APP_VERSION);
+        /// HTTP User-Agent string for API requests (derived from Constants::APP_VERSION)
+        inline const QString USER_AGENT = QString("Remus/%1 (ROM Library Manager)").arg(APP_VERSION);
 
-/// IGDB API Client User-Agent header name
-inline constexpr const char* IGDB_CLIENT_ID_HEADER = "Client-ID";
+        /// IGDB API Client User-Agent header name
+        inline constexpr const char *IGDB_CLIENT_ID_HEADER = "Client-ID";
 
-/// Maximum number of items per API request (pagination limit)
-inline constexpr int MAX_RESULTS_PER_PAGE = 50;
+        /// Maximum number of items per API request (pagination limit)
+        inline constexpr int MAX_RESULTS_PER_PAGE = 50;
 
-/// Default number of results per API request
-inline constexpr int DEFAULT_RESULTS_PER_PAGE = 20;
+        /// Default number of results per API request
+        inline constexpr int DEFAULT_RESULTS_PER_PAGE = 20;
 
-}  // namespace API
-}  // namespace Constants
-}  // namespace Remus
+    } // namespace API
+} // namespace Constants
+} // namespace Remus

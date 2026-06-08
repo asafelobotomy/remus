@@ -20,11 +20,21 @@ class DatManagerController : public QObject {
 public:
     explicit DatManagerController(AppController *appController, QObject *parent = nullptr);
 
-    bool isImporting() const { return m_importing; }
-    int progress() const { return m_progress; }
-    int total() const { return m_total; }
-    QVariantList loadedDats() const { return m_loadedDats; }
-    QString lastError() const { return m_lastError; }
+    bool isImporting() const {
+        return m_importing;
+    }
+    int progress() const {
+        return m_progress;
+    }
+    int total() const {
+        return m_total;
+    }
+    QVariantList loadedDats() const {
+        return m_loadedDats;
+    }
+    QString lastError() const {
+        return m_lastError;
+    }
 
     Q_INVOKABLE bool importDat(const QString &path, const QString &systemName);
     Q_INVOKABLE void removeDat(const QString &systemName);

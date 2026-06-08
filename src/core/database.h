@@ -32,7 +32,9 @@ public:
      * @brief Get the underlying QSqlDatabase connection
      * @return Reference to the database connection
      */
-    QSqlDatabase& database() { return m_db; }
+    QSqlDatabase &database() {
+        return m_db;
+    }
     /**
      * @brief Initialize database connection and create schema
      * @param dbPath Path to SQLite database file
@@ -51,13 +53,13 @@ public:
      * @return True if successful
      */
     bool createSchema();
-    
+
     /**
      * @brief Populate default systems on new database
      * @return True if successful
      */
     bool populateDefaultSystems();
-    
+
     /**
      * @brief Run database migrations for schema updates
      */
@@ -195,7 +197,7 @@ public:
      * @return True if successful
      */
     bool updateFileStorageState(const FileRecord &record);
-    
+
     /**
      * @brief Update file's original path (used when file is extracted from archive)
      * @param fileId File ID
@@ -211,20 +213,20 @@ public:
      * @return True if successful
      */
     bool updateFileSystemId(int fileId, int systemId);
-    
+
     /**
      * @brief Get match information for all files (for FileListModel)
      * @return Map of fileId -> MatchResult
      */
     QMap<int, MatchResult> getAllMatches();
-    
+
     /**
      * @brief Get match for a specific file
      * @param fileId File ID
      * @return Match result (matchId=0 if no match)
      */
     MatchResult getMatchForFile(int fileId);
-    
+
     /**
      * @brief Insert game metadata
      * @param title Game title
@@ -240,8 +242,9 @@ public:
      * @return Game ID (0 if failed)
      */
     int insertGame(const QString &title, int systemId, const QString &region = QString(),
-                   const QString &publisher = QString(), const QString &developer = QString(), const QString &releaseDate = QString(),
-                   const QString &description = QString(), const QString &genres = QString(), const QString &players = QString(), float rating = 0.0f);
+        const QString &publisher = QString(), const QString &developer = QString(),
+        const QString &releaseDate = QString(), const QString &description = QString(),
+        const QString &genres = QString(), const QString &players = QString(), float rating = 0.0f);
 
     /**
      * @brief Update an existing game record with enriched metadata.
@@ -256,30 +259,30 @@ public:
      * @return True if updated successfully
      */
     bool updateGame(int gameId, const QString &publisher = QString(), const QString &developer = QString(),
-                    const QString &releaseDate = QString(), const QString &description = QString(),
-                    const QString &genres = QString(), const QString &players = QString(), float rating = -1.0f,
-                    const QString &title = QString(), const QString &region = QString());
-    
+        const QString &releaseDate = QString(), const QString &description = QString(),
+        const QString &genres = QString(), const QString &players = QString(), float rating = -1.0f,
+        const QString &title = QString(), const QString &region = QString());
+
     /**
      * @brief Insert or update a metadata match
      * @param fileId File ID
      * @param gameId Game ID (metadata source ID)
      * @param confidence Match confidence (0-100)
-    * @param matchMethod Match method (hash/name/fuzzy/manual)
+     * @param matchMethod Match method (hash/name/fuzzy/manual)
      * @return True if successful
      */
     bool insertMatch(int fileId, int gameId, float confidence, const QString &matchMethod, float nameMatchScore = 0.0f);
-    
+
     /**
      * @brief Confirm a match (user verification)
      * @param fileId File ID
      * @return True if successful
      */
     bool confirmMatch(int fileId);
-    
+
     /**
      * @brief Reject a match (user verification)
-     * @param fileId File ID  
+     * @param fileId File ID
      * @return True if successful
      */
     bool rejectMatch(int fileId);
@@ -296,7 +299,7 @@ public:
      * @return File path (empty if not found)
      */
     QString getFilePath(int fileId);
-    
+
     /**
      * @brief Mark a file as processed
      * @param fileId File ID
@@ -304,20 +307,20 @@ public:
      * @return True if successful
      */
     bool markFileProcessed(int fileId, const QString &status = Constants::Engines::ProcessingStatus::PROCESSED);
-    
+
     /**
      * @brief Mark a file as unprocessed
-     * @param fileId File ID  
+     * @param fileId File ID
      * @return True if successful
      */
     bool markFileUnprocessed(int fileId);
-    
+
     /**
      * @brief Get all processed files
      * @return List of processed file records
      */
     QList<FileRecord> getProcessedFiles();
-    
+
     /**
      * @brief Get all unprocessed files
      * @return List of unprocessed file records
@@ -338,9 +341,7 @@ public:
      * @param sha1 Output SHA1
      * @return Matching lineage record, or id=0 if not found
      */
-    AppliedPatchRecord findAppliedPatchByOutputHashes(const QString &crc32,
-                                                      const QString &md5,
-                                                      const QString &sha1);
+    AppliedPatchRecord findAppliedPatchByOutputHashes(const QString &crc32, const QString &md5, const QString &sha1);
 
     /**
      * @brief Insert a mod installation record
@@ -384,7 +385,7 @@ private:
     bool executeSqlFile(const QString &filePath);
     void logError(const QString &message);
     /// SELECT full file records with an optional WHERE clause (literal string only, no user input).
-    QList<FileRecord> queryFiles(const QString &whereClause = {});
+    QList<FileRecord> queryFiles(const QString &whereClause = { });
 
     QSqlDatabase m_db;
     QString m_dbPath;

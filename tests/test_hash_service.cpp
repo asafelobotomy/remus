@@ -10,6 +10,8 @@
 #include <QtTest/QtTest>
 #include <QTemporaryDir>
 #include <QFile>
+#include <QSqlQuery>
+#include <QSqlError>
 
 #include "../src/services/hash_service.h"
 #include "../src/core/archive_creator.h"
@@ -19,31 +21,28 @@
 
 using namespace Remus;
 
-class TestHashService : public QObject
-{
+class TestHashService : public QObject {
     Q_OBJECT
 
 private:
     /// Write known bytes to a file and return the path.
-    QString writeTestFile(const QString &dir, const QString &name, const QByteArray &data)
-    {
+    QString writeTestFile(const QString &dir, const QString &name, const QByteArray &data) {
         if (!QDir().mkpath(dir)) {
-            return {};
+            return { };
         }
         QString path = dir + "/" + name;
         QFile f(path);
         if (!f.open(QIODevice::WriteOnly))
-            return {};
+            return { };
         if (f.write(data) != data.size())
-            return {};
+            return { };
         f.close();
         return path;
     }
 
     /// Insert a FileRecord into the DB for the given file.
-    int insertTestFile(Database &db, int libId, const QString &path,
-                       const QString &filename, const QString &ext, int sysId)
-    {
+    int insertTestFile(
+        Database &db, int libId, const QString &path, const QString &filename, const QString &ext, int sysId) {
         FileRecord fr;
         fr.libraryId = libId;
         fr.filename = filename;
@@ -52,7 +51,8 @@ private:
         fr.extension = ext;
         fr.systemId = sysId;
         int id = db.insertFile(fr);
-        if (id <= 0) qFatal("insertTestFile: insertFile returned %d", id);
+        if (id <= 0)
+            qFatal("insertTestFile: insertFile returned %d", id);
         return id;
     }
 
@@ -60,8 +60,7 @@ private slots:
 
     // ── hashRecord (no DB) ────────────────────────────────
 
-    void testHashRecordKnownContent()
-    {
+    void testHashRecordKnownContent() {
         QTemporaryDir tmp;
         QVERIFY(tmp.isValid());
 
@@ -82,8 +81,7 @@ private slots:
         QVERIFY(!res.sha1.isEmpty());
     }
 
-    void testHashRecordNonexistentFile()
-    {
+    void testHashRecordNonexistentFile() {
         FileRecord fr;
         fr.currentPath = "/tmp/nonexistent_file_remus_test_12345.bin";
         fr.extension = ".bin";
@@ -96,8 +94,7 @@ private slots:
 
     // ── hashFile (with DB) ────────────────────────────────
 
-    void testHashRecordCompressedArchiveUsesRequestedMember()
-    {
+    void testHashRecordCompressedArchiveUsesRequestedMember() {
         ArchiveCreator creator;
         ArchiveExtractor extractor;
         if (!creator.canCompress(ArchiveFormat::ZIP) || !extractor.canExtract(ArchiveFormat::ZIP)) {
@@ -116,8 +113,8 @@ private slots:
         QVERIFY(!writeTestFile(sourceDir, "other.nes", QByteArrayLiteral("OTHER_DATA")).isEmpty());
 
         const QString archivePath = tmp.path() + "/games.zip";
-        const CompressionResult compressed = creator.compressDirectoryContents(
-            sourceDir, archivePath, ArchiveFormat::ZIP);
+        const CompressionResult compressed
+            = creator.compressDirectoryContents(sourceDir, archivePath, ArchiveFormat::ZIP);
         QVERIFY2(compressed.success, qPrintable(compressed.error));
 
         Hasher hasher;
@@ -142,8 +139,7 @@ private slots:
         QVERIFY(res.md5 != hasher.calculateHashes(otherPath).md5);
     }
 
-    void testHashFilePersistsToDatabase()
-    {
+    void testHashFilePersistsToDatabase() {
         QTemporaryDir tmp;
         QVERIFY(tmp.isValid());
 
@@ -178,8 +174,7 @@ private slots:
         QVERIFY(!after.sha1.isEmpty());
     }
 
-    void testHashFileInvalidId()
-    {
+    void testHashFileInvalidId() {
         QTemporaryDir tmp;
         QVERIFY(tmp.isValid());
 
@@ -191,8 +186,7 @@ private slots:
         QVERIFY(!ok);
     }
 
-    void testHashFileNullDb()
-    {
+    void testHashFileNullDb() {
         HashService svc;
         bool ok = svc.hashFile(nullptr, 1);
         QVERIFY(!ok);
@@ -200,8 +194,7 @@ private slots:
 
     // ── hashAll ───────────────────────────────────────────
 
-    void testHashAllProcessesUnhashedFiles()
-    {
+    void testHashAllProcessesUnhashedFiles() {
         QTemporaryDir tmp;
         QVERIFY(tmp.isValid());
 
@@ -222,9 +215,7 @@ private slots:
         // Hash all
         int progressCalls = 0;
         HashService svc;
-        int hashed = svc.hashAll(&db, [&](int, int, const QString &) {
-            progressCalls++;
-        });
+        int hashed = svc.hashAll(&db, [&](int, int, const QString &) { progressCalls++; });
 
         QCOMPARE(hashed, 3);
         QVERIFY(progressCalls > 0); // at least some progress callbacks
@@ -232,13 +223,11 @@ private slots:
         // Verify all have hashes
         auto files = db.getAllFiles();
         for (const auto &f : files) {
-            QVERIFY2(f.hashCalculated,
-                     qPrintable("File " + f.filename + " not hashed"));
+            QVERIFY2(f.hashCalculated, qPrintable("File " + f.filename + " not hashed"));
         }
     }
 
-    void testHashAllWithCancellation()
-    {
+    void testHashAllWithCancellation() {
         QTemporaryDir tmp;
         QVERIFY(tmp.isValid());
 
@@ -257,15 +246,14 @@ private slots:
         }
 
         // Cancel immediately
-        std::atomic<bool> cancelled{true};
+        std::atomic<bool> cancelled { true };
         HashService svc;
         int hashed = svc.hashAll(&db, nullptr, nullptr, &cancelled);
 
         QCOMPARE(hashed, 0);
     }
 
-    void testHashAllEmptyDatabase()
-    {
+    void testHashAllEmptyDatabase() {
         QTemporaryDir tmp;
         QVERIFY(tmp.isValid());
 
@@ -277,16 +265,14 @@ private slots:
         QCOMPARE(hashed, 0);
     }
 
-    void testHashAllNullDb()
-    {
+    void testHashAllNullDb() {
         HashService svc;
         int hashed = svc.hashAll(nullptr);
         QCOMPARE(hashed, 0);
     }
 
     // H1: failures must be counted as skipped and surfaced in the log
-    void testHashAllReportsSkippedFilesWithReason()
-    {
+    void testHashAllReportsSkippedFilesWithReason() {
         QTemporaryDir tmp;
         QVERIFY(tmp.isValid());
 
@@ -302,27 +288,22 @@ private slots:
 
         QStringList logLines;
         HashService svc;
-        int hashed = svc.hashAll(&db, nullptr, [&](const QString &msg) {
-            logLines << msg;
-        });
+        int hashed = svc.hashAll(&db, nullptr, [&](const QString &msg) { logLines << msg; });
 
         QCOMPARE(hashed, 0);
 
         bool hasSkipLine = false;
         for (const QString &line : logLines) {
-            if (line.contains("missing.nes")
-                    || line.contains("skipped", Qt::CaseInsensitive)) {
+            if (line.contains("missing.nes") || line.contains("skipped", Qt::CaseInsensitive)) {
                 hasSkipLine = true;
                 break;
             }
         }
-        QVERIFY2(hasSkipLine,
-                 qPrintable("Expected a skip message in log but got: " + logLines.join("; ")));
+        QVERIFY2(hasSkipLine, qPrintable("Expected a skip message in log but got: " + logLines.join("; ")));
     }
 
     // P4/Finding #3 — Progress must be fired once per file, during hashing (not in a post-hoc burst)
-    void testComputeHashesProgressFiredDuringWork()
-    {
+    void testComputeHashesProgressFiredDuringWork() {
         QTemporaryDir tmp;
         QVERIFY(tmp.isValid());
 
@@ -334,10 +315,10 @@ private slots:
             QString path = writeTestFile(tmp.path(), name, data);
             QVERIFY(!path.isEmpty());
             FileRecord fr;
-            fr.id          = i + 1;
+            fr.id = i + 1;
             fr.currentPath = path;
-            fr.filename    = name;
-            fr.extension   = QStringLiteral(".nes");
+            fr.filename = name;
+            fr.extension = QStringLiteral(".nes");
             records.append(fr);
         }
 
@@ -345,11 +326,10 @@ private slots:
         QList<int> doneValues;
 
         HashService svc;
-        svc.computeHashes(records,
-            [&mu, &doneValues](int done, int /*total*/, const QString &) {
-                QMutexLocker lock(&mu);
-                doneValues.append(done);
-            });
+        svc.computeHashes(records, [&mu, &doneValues](int done, int /*total*/, const QString &) {
+            QMutexLocker lock(&mu);
+            doneValues.append(done);
+        });
 
         // Exactly one callback per file, each with a unique done value 1..N
         QCOMPARE(doneValues.size(), FILE_COUNT);
@@ -359,8 +339,7 @@ private slots:
     }
 
     // P4 — Batch API must produce the same hashes as single-file hashRecord()
-    void testComputeHashesMatchesSingleFileResults()
-    {
+    void testComputeHashesMatchesSingleFileResults() {
         QTemporaryDir tmp;
         QVERIFY(tmp.isValid());
 
@@ -376,10 +355,10 @@ private slots:
             QVERIFY(!path.isEmpty());
 
             FileRecord fr;
-            fr.id          = i + 1;  // synthetic id for comparison
+            fr.id = i + 1; // synthetic id for comparison
             fr.currentPath = path;
-            fr.filename    = name;
-            fr.extension   = QStringLiteral(".nes");
+            fr.filename = name;
+            fr.extension = QStringLiteral(".nes");
             records.append(fr);
 
             // Reference: single-file result
@@ -390,15 +369,13 @@ private slots:
 
         // Batch via computeHashes()
         HashService batchSvc;
-        const QList<HashService::HashBatchResult> results =
-            batchSvc.computeHashes(records);
+        const QList<HashService::HashBatchResult> results = batchSvc.computeHashes(records);
 
         QCOMPARE(results.size(), FILE_COUNT);
         for (int i = 0; i < FILE_COUNT; ++i) {
             const HashService::HashBatchResult &task = results[i];
-            QVERIFY2(!task.skipped,
-                     qPrintable(QString("File %1 unexpectedly skipped: %2")
-                                    .arg(i).arg(task.skipReason)));
+            QVERIFY2(
+                !task.skipped, qPrintable(QString("File %1 unexpectedly skipped: %2").arg(i).arg(task.skipReason)));
             QVERIFY(task.result.success);
             QCOMPARE(task.result.crc32, expectedCrc32s[i]);
         }
@@ -406,8 +383,7 @@ private slots:
 
     // C2 — regression: when updateFileHashes returns false (DB write rejected),
     // the file must NOT be counted as hashed and the method returns 0.
-    void testHashAllDbWriteFailure_returnsZeroHashed()
-    {
+    void testHashAllDbWriteFailure_returnsZeroHashed() {
         QTemporaryDir tmp;
         QVERIFY(tmp.isValid());
 
@@ -426,8 +402,7 @@ private slots:
 
         // Switch to read-only mode so all DB writes (updateFileHashes) fail.
         QSqlQuery pragma(db.database());
-        QVERIFY2(pragma.exec("PRAGMA query_only = 1"),
-                 qPrintable(pragma.lastError().text()));
+        QVERIFY2(pragma.exec("PRAGMA query_only = 1"), qPrintable(pragma.lastError().text()));
 
         HashService svc;
         int hashed = svc.hashAll(&db);
@@ -437,8 +412,7 @@ private slots:
     }
 };
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
     QCoreApplication coreApp(argc, argv);
     TestHashService t;
     return QTest::qExec(&t, argc, argv);

@@ -4,21 +4,19 @@
 
 #include "test_database_fixture.h"
 
-FileRecord makeRecord(int libId, int sysId, const QString &name)
-{
+FileRecord makeRecord(int libId, int sysId, const QString &name) {
     FileRecord fr;
-    fr.libraryId     = libId;
-    fr.filename      = name;
-    fr.originalPath  = "/roms/" + name;
-    fr.currentPath   = fr.originalPath;
-    fr.extension     = "." + name.section('.', -1);
-    fr.systemId      = sysId;
-    fr.fileSize      = 1024;
+    fr.libraryId = libId;
+    fr.filename = name;
+    fr.originalPath = "/roms/" + name;
+    fr.currentPath = fr.originalPath;
+    fr.extension = "." + name.section('.', -1);
+    fr.systemId = sysId;
+    fr.fileSize = 1024;
     return fr;
 }
 
-bool execSql(QSqlQuery &query, const QString &sql)
-{
+bool execSql(QSqlQuery &query, const QString &sql) {
     if (!query.exec(sql)) {
         qWarning() << "SQL failed:" << sql << query.lastError().text();
         return false;
@@ -27,10 +25,8 @@ bool execSql(QSqlQuery &query, const QString &sql)
     return true;
 }
 
-bool createLegacyDatabaseWithBrokenAppliedPatches(const QString &dbPath)
-{
-    const QString connectionName =
-        QStringLiteral("legacy-schema-") + QUuid::createUuid().toString(QUuid::Id128);
+bool createLegacyDatabaseWithBrokenAppliedPatches(const QString &dbPath) {
+    const QString connectionName = QStringLiteral("legacy-schema-") + QUuid::createUuid().toString(QUuid::Id128);
     bool ok = false;
 
     {
@@ -41,8 +37,7 @@ bool createLegacyDatabaseWithBrokenAppliedPatches(const QString &dbPath)
         }
 
         QSqlQuery query(db);
-        ok =
-            execSql(query, QStringLiteral(R"(
+        ok = execSql(query, QStringLiteral(R"(
                 CREATE TABLE systems (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     name TEXT NOT NULL UNIQUE,
@@ -53,8 +48,8 @@ bool createLegacyDatabaseWithBrokenAppliedPatches(const QString &dbPath)
                     preferred_hash TEXT NOT NULL,
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 )
-            )")) &&
-            execSql(query, QStringLiteral(R"(
+            )"))
+            && execSql(query, QStringLiteral(R"(
                 CREATE TABLE files (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     library_id INTEGER NOT NULL,
@@ -73,8 +68,8 @@ bool createLegacyDatabaseWithBrokenAppliedPatches(const QString &dbPath)
                     last_modified TIMESTAMP,
                     scanned_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 )
-            )")) &&
-            execSql(query, QStringLiteral(R"(
+            )"))
+            && execSql(query, QStringLiteral(R"(
                 CREATE TABLE matches (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     file_id INTEGER NOT NULL,
@@ -86,8 +81,8 @@ bool createLegacyDatabaseWithBrokenAppliedPatches(const QString &dbPath)
                     matched_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                     UNIQUE(file_id, game_id)
                 )
-            )")) &&
-            execSql(query, QStringLiteral("CREATE VIEW applied_patches AS SELECT 1 AS id"));
+            )"))
+            && execSql(query, QStringLiteral("CREATE VIEW applied_patches AS SELECT 1 AS id"));
 
         db.close();
     }
@@ -96,10 +91,8 @@ bool createLegacyDatabaseWithBrokenAppliedPatches(const QString &dbPath)
     return ok;
 }
 
-bool tableHasColumn(const QString &dbPath, const QString &tableName, const QString &columnName)
-{
-    const QString connectionName =
-        QStringLiteral("inspect-schema-") + QUuid::createUuid().toString(QUuid::Id128);
+bool tableHasColumn(const QString &dbPath, const QString &tableName, const QString &columnName) {
+    const QString connectionName = QStringLiteral("inspect-schema-") + QUuid::createUuid().toString(QUuid::Id128);
     bool found = false;
 
     {
@@ -126,14 +119,12 @@ bool tableHasColumn(const QString &dbPath, const QString &tableName, const QStri
     return found;
 }
 
-void DatabaseTest::testInitializeInMemory()
-{
+void DatabaseTest::testInitializeInMemory() {
     Database db;
     QVERIFY(db.initialize(":memory:"));
 }
 
-void DatabaseTest::testInitializeEnablesForeignKeysOnExistingDatabase()
-{
+void DatabaseTest::testInitializeEnablesForeignKeysOnExistingDatabase() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
@@ -153,8 +144,7 @@ void DatabaseTest::testInitializeEnablesForeignKeysOnExistingDatabase()
     QCOMPARE(pragma.value(0).toInt(), 1);
 }
 
-void DatabaseTest::testInsertAndGetFile()
-{
+void DatabaseTest::testInsertAndGetFile() {
     Database db;
     QVERIFY(db.initialize(":memory:"));
 
@@ -174,8 +164,7 @@ void DatabaseTest::testInsertAndGetFile()
     QCOMPARE(got.systemId, sysId);
 }
 
-void DatabaseTest::testSystemIdsRemainStableAcrossReopen()
-{
+void DatabaseTest::testSystemIdsRemainStableAcrossReopen() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
@@ -223,8 +212,7 @@ void DatabaseTest::testSystemIdsRemainStableAcrossReopen()
     }
 }
 
-void DatabaseTest::testInitializeRepairsDanglingSystemIds()
-{
+void DatabaseTest::testInitializeRepairsDanglingSystemIds() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
@@ -237,8 +225,7 @@ void DatabaseTest::testInitializeRepairsDanglingSystemIds()
 
         const int genesisId = db.getSystemId("Genesis");
         QCOMPARE(genesisId, 10);
-        const int legacyGenesisId =
-            Constants::DatabaseSchema::Migrations::LEGACY_SYSTEM_SLOT_OFFSET * 2 + genesisId;
+        const int legacyGenesisId = Constants::DatabaseSchema::Migrations::LEGACY_SYSTEM_SLOT_OFFSET * 2 + genesisId;
 
         const int libId = db.insertLibrary("/roms", "Test");
         QVERIFY(libId > 0);
@@ -289,54 +276,48 @@ void DatabaseTest::testInitializeRepairsDanglingSystemIds()
     }
 }
 
-void DatabaseTest::testInitializeRollsBackFailedMigrations()
-{
+void DatabaseTest::testInitializeRollsBackFailedMigrations() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
     const QString dbPath = dir.filePath("broken_migration.db");
     QVERIFY(createLegacyDatabaseWithBrokenAppliedPatches(dbPath));
-    QVERIFY(!tableHasColumn(dbPath,
-                            QStringLiteral("files"),
-                            QString::fromLatin1(Constants::DatabaseSchema::Columns::Files::IS_PROCESSED)));
+    QVERIFY(!tableHasColumn(
+        dbPath, QStringLiteral("files"), QString::fromLatin1(Constants::DatabaseSchema::Columns::Files::IS_PROCESSED)));
 
     Database db;
     QVERIFY(!db.initialize(dbPath));
 
-    QVERIFY(!tableHasColumn(dbPath,
-                            QStringLiteral("files"),
-                            QString::fromLatin1(Constants::DatabaseSchema::Columns::Files::IS_PROCESSED)));
-    QVERIFY(!tableHasColumn(dbPath,
-                            QStringLiteral("files"),
-                            QString::fromLatin1(Constants::DatabaseSchema::Columns::Files::PROCESSING_STATUS)));
+    QVERIFY(!tableHasColumn(
+        dbPath, QStringLiteral("files"), QString::fromLatin1(Constants::DatabaseSchema::Columns::Files::IS_PROCESSED)));
+    QVERIFY(!tableHasColumn(dbPath, QStringLiteral("files"),
+        QString::fromLatin1(Constants::DatabaseSchema::Columns::Files::PROCESSING_STATUS)));
 }
 
-void DatabaseTest::testUpdateFileHashes()
-{
+void DatabaseTest::testUpdateFileHashes() {
     Database db;
     QVERIFY(db.initialize(":memory:"));
 
-    int libId  = db.insertLibrary("/roms", "Test");
-    int sysId  = db.getSystemId("NES");
+    int libId = db.insertLibrary("/roms", "Test");
+    int sysId = db.getSystemId("NES");
     FileRecord fr = makeRecord(libId, sysId, "mario.nes");
     int fileId = db.insertFile(fr);
 
     QVERIFY(db.updateFileHashes(fileId, "AABBCCDD", "abcd1234md5", "sha1sha1sha1"));
 
     FileRecord got = db.getFileById(fileId);
-    QCOMPARE(got.crc32,  QStringLiteral("AABBCCDD"));
-    QCOMPARE(got.md5,    QStringLiteral("abcd1234md5"));
-    QCOMPARE(got.sha1,   QStringLiteral("sha1sha1sha1"));
+    QCOMPARE(got.crc32, QStringLiteral("AABBCCDD"));
+    QCOMPARE(got.md5, QStringLiteral("abcd1234md5"));
+    QCOMPARE(got.sha1, QStringLiteral("sha1sha1sha1"));
     QVERIFY(got.hashCalculated);
 }
 
-void DatabaseTest::testRemoveFile()
-{
+void DatabaseTest::testRemoveFile() {
     Database db;
     QVERIFY(db.initialize(":memory:"));
 
-    int libId  = db.insertLibrary("/roms", "Test");
-    int sysId  = db.getSystemId("NES");
+    int libId = db.insertLibrary("/roms", "Test");
+    int sysId = db.getSystemId("NES");
     FileRecord fr = makeRecord(libId, sysId, "mario.nes");
     int fileId = db.insertFile(fr);
     QVERIFY(fileId > 0);
@@ -348,34 +329,31 @@ void DatabaseTest::testRemoveFile()
     QCOMPARE(gone.id, 0);
 }
 
-void DatabaseTest::testInsertAndGetMatch()
-{
+void DatabaseTest::testInsertAndGetMatch() {
     Database db;
     QVERIFY(db.initialize(":memory:"));
 
-    int libId  = db.insertLibrary("/roms", "Test");
-    int sysId  = db.getSystemId("NES");
+    int libId = db.insertLibrary("/roms", "Test");
+    int sysId = db.getSystemId("NES");
     int fileId = db.insertFile(makeRecord(libId, sysId, "mario.nes"));
-    int gameId = db.insertGame("Super Mario Bros.", sysId, "USA",
-                               "Nintendo", "Nintendo", "1985-09-13",
-                               "Classic platformer", "Platform", "1", 9.0f);
+    int gameId = db.insertGame("Super Mario Bros.", sysId, "USA", "Nintendo", "Nintendo", "1985-09-13",
+        "Classic platformer", "Platform", "1", 9.0f);
     QVERIFY(gameId > 0);
     QVERIFY(db.insertMatch(fileId, gameId, 100.0f, "hash"));
 
     Database::MatchResult m = db.getMatchForFile(fileId);
-    QCOMPARE(m.fileId,      fileId);
-    QCOMPARE(m.gameId,      gameId);
+    QCOMPARE(m.fileId, fileId);
+    QCOMPARE(m.gameId, gameId);
     QCOMPARE(m.matchMethod, QStringLiteral("hash"));
     QVERIFY(m.confidence >= 99.0f);
 }
 
-void DatabaseTest::testConfirmRejectMatch()
-{
+void DatabaseTest::testConfirmRejectMatch() {
     Database db;
     QVERIFY(db.initialize(":memory:"));
 
-    int libId  = db.insertLibrary("/roms", "Test");
-    int sysId  = db.getSystemId("NES");
+    int libId = db.insertLibrary("/roms", "Test");
+    int sysId = db.getSystemId("NES");
     int fileId = db.insertFile(makeRecord(libId, sysId, "mario.nes"));
     int gameId = db.insertGame("Super Mario Bros.", sysId);
     db.insertMatch(fileId, gameId, 80.0f, "fuzzy");
@@ -394,8 +372,7 @@ void DatabaseTest::testConfirmRejectMatch()
     }
 }
 
-void DatabaseTest::testInsertLibraryAndDelete()
-{
+void DatabaseTest::testInsertLibraryAndDelete() {
     Database db;
     QVERIFY(db.initialize(":memory:"));
 

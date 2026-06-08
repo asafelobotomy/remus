@@ -3,12 +3,9 @@
 namespace Remus {
 
 ExternalToolRunner::ExternalToolRunner(QObject *parent)
-    : QObject(parent)
-{
-}
+    : QObject(parent) { }
 
-void ExternalToolRunner::cancel()
-{
+void ExternalToolRunner::cancel() {
     m_cancelled = true;
     if (m_process && m_process->state() == QProcess::Running) {
         m_process->terminate();
@@ -19,15 +16,12 @@ void ExternalToolRunner::cancel()
     }
 }
 
-bool ExternalToolRunner::isRunning() const
-{
+bool ExternalToolRunner::isRunning() const {
     return m_process && m_process->state() == QProcess::Running;
 }
 
-ExternalToolRunner::ProcessResult ExternalToolRunner::runProcess(const QString &program,
-                                                                 const QStringList &args,
-                                                                 int timeoutMs)
-{
+ExternalToolRunner::ProcessResult ExternalToolRunner::runProcess(
+    const QString &program, const QStringList &args, int timeoutMs) {
     ProcessResult result;
     QProcess process;
 
@@ -47,9 +41,7 @@ ExternalToolRunner::ProcessResult ExternalToolRunner::runProcess(const QString &
         process.kill();
         process.waitForFinished(3000);
         if (result.stdError.isEmpty()) {
-            result.stdError = QStringLiteral("Process timed out after %1 ms: %2")
-                                  .arg(timeoutMs)
-                                  .arg(program);
+            result.stdError = QStringLiteral("Process timed out after %1 ms: %2").arg(timeoutMs).arg(program);
         }
     }
     result.exitCode = process.exitCode();
@@ -59,10 +51,8 @@ ExternalToolRunner::ProcessResult ExternalToolRunner::runProcess(const QString &
     return result;
 }
 
-ExternalToolRunner::ProcessResult ExternalToolRunner::runProcessTracked(const QString &program,
-                                                                        const QStringList &args,
-                                                                        int timeoutMs)
-{
+ExternalToolRunner::ProcessResult ExternalToolRunner::runProcessTracked(
+    const QString &program, const QStringList &args, int timeoutMs) {
     // Reset cancellation state so a previous cancel() call does not suppress
     // the timeout-kill path on the next tracked run.
     m_cancelled = false;
@@ -87,9 +77,7 @@ ExternalToolRunner::ProcessResult ExternalToolRunner::runProcessTracked(const QS
         process.kill();
         process.waitForFinished(3000);
         if (result.stdError.isEmpty()) {
-            result.stdError = QStringLiteral("Process timed out after %1 ms: %2")
-                                  .arg(timeoutMs)
-                                  .arg(program);
+            result.stdError = QStringLiteral("Process timed out after %1 ms: %2").arg(timeoutMs).arg(program);
         }
     }
     result.exitCode = process.exitCode();

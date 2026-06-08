@@ -11,13 +11,11 @@ namespace Remus {
 // Normalise a disc serial for fuzzy comparison.
 // Strips known manufacturer prefixes (MK-, HDR-, T-, SDC-, etc.)
 // and region suffixes (-50, -53, etc.) to extract the core product number.
-static QString normalizeSerial(const QString &serial)
-{
+static QString normalizeSerial(const QString &serial) {
     QString s = serial.trimmed().toUpper();
     // Strip known prefixes: "MK-", "HDR-", "SDC-", "T-" prefix
     static const QRegularExpression prefixRe(
-        QStringLiteral("^(?:MK-|HDR-|SDC-|T-|HKT-)"),
-        QRegularExpression::CaseInsensitiveOption);
+        QStringLiteral("^(?:MK-|HDR-|SDC-|T-|HKT-)"), QRegularExpression::CaseInsensitiveOption);
     s.replace(prefixRe, QString());
     // Strip trailing region suffix: dash followed by 1-2 digits at end (e.g. -50, -53)
     static const QRegularExpression suffixRe(QStringLiteral("-\\d{1,2}$"));
@@ -27,8 +25,7 @@ static QString normalizeSerial(const QString &serial)
 
 // Compare two serial numbers with normalisation.
 // Returns true if either the raw serials match or the normalised cores match.
-static bool serialsMatch(const QString &a, const QString &b)
-{
+static bool serialsMatch(const QString &a, const QString &b) {
     if (a.compare(b, Qt::CaseInsensitive) == 0)
         return true;
     const QString na = normalizeSerial(a);
@@ -38,10 +35,7 @@ static bool serialsMatch(const QString &a, const QString &b)
     return na == nb;
 }
 
-
-
-QList<MultiSignalMatch> LocalDatabaseProvider::matchROM(const ROMSignals &input) const
-{
+QList<MultiSignalMatch> LocalDatabaseProvider::matchROM(const ROMSignals &input) const {
     QMutexLocker locker(&m_mutex);
     QList<MultiSignalMatch> matches;
 
@@ -122,7 +116,8 @@ QList<MultiSignalMatch> LocalDatabaseProvider::matchROM(const ROMSignals &input)
         QSet<QString> seenEntries;
 
         auto tryFallbackScan = [&](auto &index) {
-            if (!matches.isEmpty()) return;
+            if (!matches.isEmpty())
+                return;
             for (auto it = index.constBegin(); it != index.constEnd(); ++it) {
                 const ClrMameProEntry &entry = it.value();
                 const QString entryKey = entry.gameName + "|" + entry.romName;
@@ -230,14 +225,12 @@ QList<MultiSignalMatch> LocalDatabaseProvider::matchROM(const ROMSignals &input)
         }
     }
 
-    std::sort(matches.begin(), matches.end(), [](const MultiSignalMatch &a, const MultiSignalMatch &b) {
-        return a.confidenceScore > b.confidenceScore;
-    });
+    std::sort(matches.begin(), matches.end(),
+        [](const MultiSignalMatch &a, const MultiSignalMatch &b) { return a.confidenceScore > b.confidenceScore; });
 
     if (!matches.isEmpty()) {
-        qDebug() << "LocalDB:" << input.filename << "→" << matches.first().entry.gameName
-                 << "via" << matchedVia
-                 << "(" << matches.first().confidencePercent() << "%)";
+        qDebug() << "LocalDB:" << input.filename << "→" << matches.first().entry.gameName << "via" << matchedVia << "("
+                 << matches.first().confidencePercent() << "%)";
     }
 
     return matches;

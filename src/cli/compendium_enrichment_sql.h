@@ -65,10 +65,7 @@ bool execPrepared(QSqlQuery &query, QString &error, const QString &context);
  * @param error               [out] Human-readable error message on failure.
  * @return true on success, false on error.
  */
-bool upsertEnrichmentSource(QSqlDatabase &db,
-                            const SourceSpec &source,
-                            const SnapshotSpec &snapshot,
-                            QString &error);
+bool upsertEnrichmentSource(QSqlDatabase &db, const SourceSpec &source, const SnapshotSpec &snapshot, QString &error);
 
 /**
  * @brief Replace the fact for (game_id, field_name) from this source, then
@@ -82,16 +79,9 @@ bool upsertEnrichmentSource(QSqlDatabase &db,
  * Empty @p fieldValue is treated as a no-op and returns true.
  * When @p inserted is provided it is set to true if the fact was (re-)inserted.
  */
-bool insertGameFact(QSqlQuery &delQuery,
-                    QSqlQuery &factQuery,
-                    const FactInsertSpec &spec,
-                    const QString &gameId,
-                    const QString &fieldName,
-                    const QString &fieldValue,
-                    const QString &valueType,
-                    QString &error,
-                    const QString &contextPrefix,
-                    bool *inserted = nullptr);
+bool insertGameFact(QSqlQuery &delQuery, QSqlQuery &factQuery, const FactInsertSpec &spec, const QString &gameId,
+    const QString &fieldName, const QString &fieldValue, const QString &valueType, QString &error,
+    const QString &contextPrefix, bool *inserted = nullptr);
 
 /**
  * @brief Helpers for binding nullable values in UPDATE statements.

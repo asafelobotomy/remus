@@ -9,14 +9,12 @@
 using namespace Remus;
 
 namespace {
-bool writeAll(QFile &file, const QByteArray &data)
-{
+bool writeAll(QFile &file, const QByteArray &data) {
     return file.write(data) == data.size();
 }
 } // namespace
 
-class FakeWbfsConverter : public WBFSConverter
-{
+class FakeWbfsConverter : public WBFSConverter {
 public:
     using ProcessResult = ExternalToolRunner::ProcessResult;
     ProcessResult nextProcess;
@@ -26,15 +24,13 @@ public:
     bool autoCreateTrackedOutput = false;
 
 protected:
-    ProcessResult runProcess(const QString &program, const QStringList &args, int) override
-    {
+    ProcessResult runProcess(const QString &program, const QStringList &args, int) override {
         lastProgram = program;
         lastArgs = args;
         return nextProcess;
     }
 
-    ProcessResult runProcessTracked(const QString &program, const QStringList &args, int) override
-    {
+    ProcessResult runProcessTracked(const QString &program, const QStringList &args, int) override {
         lastProgram = program;
         lastArgs = args;
 
@@ -45,8 +41,7 @@ protected:
                 const QString outputPath = args.at(destIndex + 1);
                 QFileInfo info(outputPath);
                 if (!QDir().mkpath(info.absolutePath())) {
-                    qFatal("FakeWbfsConverter: cannot mkpath %s",
-                           qPrintable(info.absolutePath()));
+                    qFatal("FakeWbfsConverter: cannot mkpath %s", qPrintable(info.absolutePath()));
                 }
                 QFile outputFile(outputPath);
                 if (outputFile.open(QIODevice::WriteOnly)) {
@@ -61,8 +56,7 @@ protected:
     }
 };
 
-class WbfsConverterTest : public QObject
-{
+class WbfsConverterTest : public QObject {
     Q_OBJECT
 
 private slots:
@@ -73,8 +67,7 @@ private slots:
     void testUnsupportedSourceFormatIsRejected();
 };
 
-void WbfsConverterTest::testAvailabilityUsesConfiguredToolPath()
-{
+void WbfsConverterTest::testAvailabilityUsesConfiguredToolPath() {
     FakeWbfsConverter converter;
     converter.setWitPath("/custom/wit");
     converter.nextProcess.started = false;
@@ -83,8 +76,7 @@ void WbfsConverterTest::testAvailabilityUsesConfiguredToolPath()
     QCOMPARE(converter.lastProgram, QStringLiteral("/custom/wit"));
 }
 
-void WbfsConverterTest::testGetVersionPrefersStderrWhenStdoutMissing()
-{
+void WbfsConverterTest::testGetVersionPrefersStderrWhenStdoutMissing() {
     FakeWbfsConverter converter;
     converter.nextProcess.started = true;
     converter.nextProcess.stdError = QStringLiteral("wit v3.04a r8222");
@@ -93,8 +85,7 @@ void WbfsConverterTest::testGetVersionPrefersStderrWhenStdoutMissing()
     QCOMPARE(version, QStringLiteral("wit v3.04a r8222"));
 }
 
-void WbfsConverterTest::testConvertIsoUsesDefaultOutputPath()
-{
+void WbfsConverterTest::testConvertIsoUsesDefaultOutputPath() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
@@ -119,8 +110,7 @@ void WbfsConverterTest::testConvertIsoUsesDefaultOutputPath()
     QVERIFY(converter.lastArgs.contains(isoPath));
 }
 
-void WbfsConverterTest::testExtractWbfsUsesDefaultIsoOutputPath()
-{
+void WbfsConverterTest::testExtractWbfsUsesDefaultIsoOutputPath() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
@@ -143,8 +133,7 @@ void WbfsConverterTest::testExtractWbfsUsesDefaultIsoOutputPath()
     QVERIFY(converter.lastArgs.contains(wbfsPath));
 }
 
-void WbfsConverterTest::testUnsupportedSourceFormatIsRejected()
-{
+void WbfsConverterTest::testUnsupportedSourceFormatIsRejected() {
     // WBFSConverter does not have its own format guard — it passes whatever
     // the CLI gives it to wit.  The CLI rejects unknown extensions before calling
     // convertIsoToWbfs.  But we can verify that converting a file with an

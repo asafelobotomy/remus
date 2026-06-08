@@ -15,8 +15,12 @@ class MetadataEditorController : public QObject {
 public:
     explicit MetadataEditorController(AppController *appController, QObject *parent = nullptr);
 
-    QVariantMap currentGame() const { return m_currentGame; }
-    bool isDirty() const { return m_dirty; }
+    QVariantMap currentGame() const {
+        return m_currentGame;
+    }
+    bool isDirty() const {
+        return m_dirty;
+    }
 
     Q_INVOKABLE void loadForSelectedFile();
     Q_INVOKABLE void load(int gameId);

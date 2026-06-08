@@ -15,8 +15,7 @@ private slots:
     void artworkAndCleanup();
 };
 
-static QSqlDatabase createDatabase()
-{
+static QSqlDatabase createDatabase() {
     const QString connectionName = QStringLiteral("cache-test-%1").arg(QDateTime::currentMSecsSinceEpoch());
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE", connectionName);
     db.setDatabaseName(":memory:");
@@ -25,14 +24,14 @@ static QSqlDatabase createDatabase()
     }
 
     QSqlQuery query(db);
-    if (!query.exec("CREATE TABLE cache (cache_key TEXT PRIMARY KEY, cache_value BLOB, expiry TEXT, created_at TEXT DEFAULT CURRENT_TIMESTAMP)")) {
+    if (!query.exec("CREATE TABLE cache (cache_key TEXT PRIMARY KEY, cache_value BLOB, expiry TEXT, created_at TEXT "
+                    "DEFAULT CURRENT_TIMESTAMP)")) {
         qFatal("Failed to create cache test schema: %s", qPrintable(query.lastError().text()));
     }
     return db;
 }
 
-void MetadataCacheTest::storeAndRetrieveMetadata()
-{
+void MetadataCacheTest::storeAndRetrieveMetadata() {
     QSqlDatabase db = createDatabase();
     MetadataCache cache(db);
 
@@ -43,7 +42,7 @@ void MetadataCacheTest::storeAndRetrieveMetadata()
     metadata.region = "USA";
     metadata.publisher = "Pub";
     metadata.developer = "Dev";
-    metadata.genres = {"Action", "Puzzle"};
+    metadata.genres = { "Action", "Puzzle" };
     metadata.releaseDate = "1991-01-01";
     metadata.description = "Desc";
     metadata.players = 2;
@@ -71,8 +70,7 @@ void MetadataCacheTest::storeAndRetrieveMetadata()
     QVERIFY(stats.totalSizeBytes > 0);
 }
 
-void MetadataCacheTest::artworkAndCleanup()
-{
+void MetadataCacheTest::artworkAndCleanup() {
     QSqlDatabase db = createDatabase();
     MetadataCache cache(db);
 
@@ -87,7 +85,8 @@ void MetadataCacheTest::artworkAndCleanup()
     QCOMPARE(loaded.boxBack, artwork.boxBack);
 
     QSqlQuery insertOld(db);
-    insertOld.prepare("INSERT INTO cache (cache_key, cache_value, expiry, created_at) VALUES ('old','{}', datetime('now','-40 days'), datetime('now','-40 days'))");
+    insertOld.prepare("INSERT INTO cache (cache_key, cache_value, expiry, created_at) VALUES ('old','{}', "
+                      "datetime('now','-40 days'), datetime('now','-40 days'))");
     QVERIFY(insertOld.exec());
 
     const int removed = cache.clearOldCache(30);

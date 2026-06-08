@@ -4,8 +4,7 @@
 
 using namespace Remus;
 
-class RvzConverterTest : public QObject
-{
+class RvzConverterTest : public QObject {
     Q_OBJECT
 
 private slots:
@@ -16,22 +15,19 @@ private slots:
     void setDolphinToolPath_doesNotCrash();
 };
 
-void RvzConverterTest::construction_doesNotCrash()
-{
+void RvzConverterTest::construction_doesNotCrash() {
     RVZConverter converter;
     Q_UNUSED(converter)
 }
 
-void RvzConverterTest::isDolphinToolAvailable_noToolInPath()
-{
+void RvzConverterTest::isDolphinToolAvailable_noToolInPath() {
     RVZConverter converter;
     // dolphin-tool is not in the CI environment; availability should be false.
     converter.setDolphinToolPath(QStringLiteral("/nonexistent/dolphin-tool"));
     QVERIFY(!converter.isDolphinToolAvailable());
 }
 
-void RvzConverterTest::setCompression_doesNotCrash()
-{
+void RvzConverterTest::setCompression_doesNotCrash() {
     RVZConverter converter;
     converter.setCompression(RVZCompression::Zstd);
     converter.setCompression(RVZCompression::Bzip2);
@@ -41,16 +37,14 @@ void RvzConverterTest::setCompression_doesNotCrash()
     converter.setCompression(RVZCompression::Auto);
 }
 
-void RvzConverterTest::setCompressionLevel_doesNotCrash()
-{
+void RvzConverterTest::setCompressionLevel_doesNotCrash() {
     RVZConverter converter;
     converter.setCompressionLevel(1);
     converter.setCompressionLevel(5);
     converter.setCompressionLevel(9);
 }
 
-void RvzConverterTest::setDolphinToolPath_doesNotCrash()
-{
+void RvzConverterTest::setDolphinToolPath_doesNotCrash() {
     RVZConverter converter;
     converter.setDolphinToolPath(QStringLiteral("/usr/bin/dolphin-tool"));
     converter.setDolphinToolPath(QStringLiteral("dolphin-tool"));

@@ -8,8 +8,7 @@
 
 namespace Remus {
 
-GameMetadata ScreenScraperProvider::parseGameJson(const QByteArray &json)
-{
+GameMetadata ScreenScraperProvider::parseGameJson(const QByteArray &json) {
     GameMetadata metadata;
 
     const QJsonDocument doc = QJsonDocument::fromJson(json);
@@ -93,13 +92,12 @@ GameMetadata ScreenScraperProvider::parseGameJson(const QByteArray &json)
     return metadata;
 }
 
-ArtworkUrls ScreenScraperProvider::parseArtworkJson(const QByteArray &json) const
-{
+ArtworkUrls ScreenScraperProvider::parseArtworkJson(const QByteArray &json) const {
     const QJsonDocument doc = QJsonDocument::fromJson(json);
     const QJsonObject root = doc.object();
 
     if (!root.contains("response")) {
-        return {};
+        return { };
     }
 
     const QJsonObject response = root["response"].toObject();
@@ -108,8 +106,7 @@ ArtworkUrls ScreenScraperProvider::parseArtworkJson(const QByteArray &json) cons
     return parseArtworkFromGameObject(game);
 }
 
-ArtworkUrls ScreenScraperProvider::parseArtworkFromGameObject(const QJsonObject &game) const
-{
+ArtworkUrls ScreenScraperProvider::parseArtworkFromGameObject(const QJsonObject &game) const {
     ArtworkUrls artwork;
 
     QJsonArray mediaArray;
@@ -171,8 +168,7 @@ ArtworkUrls ScreenScraperProvider::parseArtworkFromGameObject(const QJsonObject 
     return artwork;
 }
 
-QString ScreenScraperProvider::pickArtworkUrl(const QJsonObject &media) const
-{
+QString ScreenScraperProvider::pickArtworkUrl(const QJsonObject &media) const {
     QString url = media["url"].toString();
     if (!url.isEmpty()) {
         return url;

@@ -23,12 +23,8 @@ using CompendiumEnrichmentSql::upsertEnrichmentSource;
 
 namespace CompendiumEnrichment {
 
-bool enrichFromLibretroMetadata(QSqlDatabase &database,
-                                const QString &metadataDir,
-                                int &gamesEnriched,
-                                int &factsInserted,
-                                QString &error)
-{
+bool enrichFromLibretroMetadata(
+    QSqlDatabase &database, const QString &metadataDir, int &gamesEnriched, int &factsInserted, QString &error) {
     gamesEnriched = 0;
     factsInserted = 0;
 
@@ -38,12 +34,11 @@ bool enrichFromLibretroMetadata(QSqlDatabase &database,
         return true;
     }
 
-    const QString sourceId   = QStringLiteral("libretro-metadata");
+    const QString sourceId = QStringLiteral("libretro-metadata");
     const QString snapshotId = QStringLiteral("libretro-metadata-bulk");
 
-    if (!upsertEnrichmentSource(
-            database,
-            SourceSpec{
+    if (!upsertEnrichmentSource(database,
+            SourceSpec {
                 sourceId,
                 QStringLiteral("Libretro Metadata DAT"),
                 QStringLiteral("libretro_metadata"),
@@ -52,7 +47,7 @@ bool enrichFromLibretroMetadata(QSqlDatabase &database,
                 /*priority=*/30,
                 QStringLiteral("CC-BY-SA-4.0"),
             },
-            SnapshotSpec{
+            SnapshotSpec {
                 snapshotId,
                 QStringLiteral("libretro metadata"),
             },
@@ -64,8 +59,7 @@ bool enrichFromLibretroMetadata(QSqlDatabase &database,
     QHash<QString, QString> gameCrc32;
     {
         QSqlQuery q(database);
-        if (!q.exec(QStringLiteral(
-                "SELECT game_id, hash_value FROM game_signatures WHERE hash_type = 'crc32'"))) {
+        if (!q.exec(QStringLiteral("SELECT game_id, hash_value FROM game_signatures WHERE hash_type = 'crc32'"))) {
             error = QStringLiteral("Load CRC32 hashes: %1").arg(q.lastError().text());
             return false;
         }
@@ -77,8 +71,7 @@ bool enrichFromLibretroMetadata(QSqlDatabase &database,
     QHash<QString, QString> gameSerial;
     {
         QSqlQuery q(database);
-        if (!q.exec(QStringLiteral(
-                "SELECT game_id, MIN(serial_value) FROM game_serials GROUP BY game_id"))) {
+        if (!q.exec(QStringLiteral("SELECT game_id, MIN(serial_value) FROM game_serials GROUP BY game_id"))) {
             error = QStringLiteral("Load serials: %1").arg(q.lastError().text());
             return false;
         }
@@ -87,29 +80,26 @@ bool enrichFromLibretroMetadata(QSqlDatabase &database,
     }
 
     QSqlQuery gameQuery(database);
-    if (!gameQuery.exec(QStringLiteral(
-            "SELECT game_id, canonical_title FROM games "
-            "WHERE genre IS NULL OR TRIM(genre) = '' "
-            "   OR developer IS NULL OR TRIM(developer) = '' "
-            "   OR publisher IS NULL OR TRIM(publisher) = '' "
-            "   OR players_max IS NULL "
-            "   OR release_year IS NULL "
-            "   OR description IS NULL OR TRIM(description) = ''"))) {
-        error = QStringLiteral("Load games for libretro enrichment: %1")
-            .arg(gameQuery.lastError().text());
+    if (!gameQuery.exec(QStringLiteral("SELECT game_id, canonical_title FROM games "
+                                       "WHERE genre IS NULL OR TRIM(genre) = '' "
+                                       "   OR developer IS NULL OR TRIM(developer) = '' "
+                                       "   OR publisher IS NULL OR TRIM(publisher) = '' "
+                                       "   OR players_max IS NULL "
+                                       "   OR release_year IS NULL "
+                                       "   OR description IS NULL OR TRIM(description) = ''"))) {
+        error = QStringLiteral("Load games for libretro enrichment: %1").arg(gameQuery.lastError().text());
         return false;
     }
 
     QSqlQuery updateQuery(database);
-    updateQuery.prepare(QStringLiteral(
-        "UPDATE games SET "
-        "genre        = COALESCE(genre, ?), "
-        "developer    = COALESCE(developer, ?), "
-        "publisher    = COALESCE(publisher, ?), "
-        "players_max  = COALESCE(players_max, ?), "
-        "release_year = COALESCE(release_year, ?), "
-        "description  = COALESCE(description, ?) "
-        "WHERE game_id = ?"));
+    updateQuery.prepare(QStringLiteral("UPDATE games SET "
+                                       "genre        = COALESCE(genre, ?), "
+                                       "developer    = COALESCE(developer, ?), "
+                                       "publisher    = COALESCE(publisher, ?), "
+                                       "players_max  = COALESCE(players_max, ?), "
+                                       "release_year = COALESCE(release_year, ?), "
+                                       "description  = COALESCE(description, ?) "
+                                       "WHERE game_id = ?"));
 
     QSqlQuery factQuery(database);
     factQuery.prepare(QStringLiteral(
@@ -118,58 +108,46 @@ bool enrichFromLibretroMetadata(QSqlDatabase &database,
         "VALUES (?, ?, ?, ?, ?, ?, ?, ?)"));
 
     QSqlQuery delQuery(database);
-    delQuery.prepare(QStringLiteral(
-        "DELETE FROM game_facts WHERE game_id = ? AND field_name = ? AND source_id = ?"));
+    delQuery.prepare(QStringLiteral("DELETE FROM game_facts WHERE game_id = ? AND field_name = ? AND source_id = ?"));
 
-    const FactInsertSpec factSpec{
+    const FactInsertSpec factSpec {
         sourceId,
         snapshotId,
         30,
         0.85,
     };
 
-    auto insertFact = [&](const QString &gameId,
-                          const QString &field,
-                          const QString &value,
-                          const QString &valueType) -> bool {
+    auto insertFact
+        = [&](const QString &gameId, const QString &field, const QString &value, const QString &valueType) -> bool {
         bool inserted = false;
-        if (!insertGameFact(delQuery,
-                            factQuery,
-                            factSpec,
-                            gameId,
-                            field,
-                            value,
-                            valueType,
-                            error,
-                            QStringLiteral("libretro"),
-                            &inserted))
+        if (!insertGameFact(delQuery, factQuery, factSpec, gameId, field, value, valueType, error,
+                QStringLiteral("libretro"), &inserted))
             return false;
-        if (inserted) ++factsInserted;
+        if (inserted)
+            ++factsInserted;
         return true;
     };
 
     while (gameQuery.next()) {
         const QString gameId = gameQuery.value(0).toString();
-        const QString title  = gameQuery.value(1).toString();
-        const QString crc32  = gameCrc32.value(gameId);
+        const QString title = gameQuery.value(1).toString();
+        const QString crc32 = gameCrc32.value(gameId);
         const QString serial = gameSerial.value(gameId);
 
         Remus::LibretroMetadata meta;
         if (!crc32.isEmpty())
             meta = parser.lookup(crc32);
-        if (meta.genre.isEmpty() && meta.developer.isEmpty()
-                && meta.publisher.isEmpty() && meta.maxUsers == 0
-                && meta.releaseYear == 0 && meta.description.isEmpty() && !serial.isEmpty())
+        if (meta.genre.isEmpty() && meta.developer.isEmpty() && meta.publisher.isEmpty() && meta.maxUsers == 0
+            && meta.releaseYear == 0 && meta.description.isEmpty() && !serial.isEmpty())
             meta = parser.lookupBySerial(serial);
-        if (meta.genre.isEmpty() && meta.developer.isEmpty()
-                && meta.publisher.isEmpty() && meta.maxUsers == 0
-                && meta.releaseYear == 0 && meta.description.isEmpty() && !title.isEmpty())
+        if (meta.genre.isEmpty() && meta.developer.isEmpty() && meta.publisher.isEmpty() && meta.maxUsers == 0
+            && meta.releaseYear == 0 && meta.description.isEmpty() && !title.isEmpty())
             meta = parser.lookupByName(title);
 
-        const bool hasData = !meta.genre.isEmpty() || !meta.developer.isEmpty()
-            || !meta.publisher.isEmpty() || meta.maxUsers > 0 || meta.releaseYear > 0
-            || !meta.description.isEmpty();
-        if (!hasData) continue;
+        const bool hasData = !meta.genre.isEmpty() || !meta.developer.isEmpty() || !meta.publisher.isEmpty()
+            || meta.maxUsers > 0 || meta.releaseYear > 0 || !meta.description.isEmpty();
+        if (!hasData)
+            continue;
 
         updateQuery.bindValue(0, nullableText(meta.genre));
         updateQuery.bindValue(1, nullableText(meta.developer));
@@ -180,22 +158,28 @@ bool enrichFromLibretroMetadata(QSqlDatabase &database,
         updateQuery.bindValue(6, gameId);
         if (!execPrepared(updateQuery, error, QStringLiteral("Update game libretro metadata")))
             return false;
-        if (updateQuery.numRowsAffected() > 0) ++gamesEnriched;
+        if (updateQuery.numRowsAffected() > 0)
+            ++gamesEnriched;
 
-        if (!insertFact(gameId, QStringLiteral("genre"),       meta.genre,               QStringLiteral("text"))) return false;
-        if (!insertFact(gameId, QStringLiteral("developer"),   meta.developer,            QStringLiteral("text"))) return false;
-        if (!insertFact(gameId, QStringLiteral("publisher"),   meta.publisher,            QStringLiteral("text"))) return false;
-        if (!insertFact(gameId, QStringLiteral("description"), meta.description,          QStringLiteral("text"))) return false;
+        if (!insertFact(gameId, QStringLiteral("genre"), meta.genre, QStringLiteral("text")))
+            return false;
+        if (!insertFact(gameId, QStringLiteral("developer"), meta.developer, QStringLiteral("text")))
+            return false;
+        if (!insertFact(gameId, QStringLiteral("publisher"), meta.publisher, QStringLiteral("text")))
+            return false;
+        if (!insertFact(gameId, QStringLiteral("description"), meta.description, QStringLiteral("text")))
+            return false;
         if (meta.maxUsers > 0
-            && !insertFact(gameId, QStringLiteral("players_max"),
-                           QString::number(meta.maxUsers),     QStringLiteral("int")))   return false;
+            && !insertFact(
+                gameId, QStringLiteral("players_max"), QString::number(meta.maxUsers), QStringLiteral("int")))
+            return false;
         if (meta.releaseYear > 0
-            && !insertFact(gameId, QStringLiteral("release_year"),
-                           QString::number(meta.releaseYear),  QStringLiteral("int")))   return false;
+            && !insertFact(
+                gameId, QStringLiteral("release_year"), QString::number(meta.releaseYear), QStringLiteral("int")))
+            return false;
     }
 
     return true;
 }
-
 
 } // namespace CompendiumEnrichment

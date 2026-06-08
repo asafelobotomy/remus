@@ -26,31 +26,31 @@ using namespace Constants;
 // ---------------------------------------------------------------------------
 
 // static
-ProviderOrchestrator::FieldSet ProviderOrchestrator::computeFieldGap(const GameMetadata &m)
-{
+ProviderOrchestrator::FieldSet ProviderOrchestrator::computeFieldGap(const GameMetadata &m) {
     using namespace Constants::ProviderFields;
     ProviderOrchestrator::FieldSet gap;
-    if (m.title.isEmpty())       gap.insert(TITLE);
-    if (m.publisher.isEmpty())   gap.insert(PUBLISHER);
-    if (m.developer.isEmpty())   gap.insert(DEVELOPER);
-    if (m.releaseDate.isEmpty()) gap.insert(RELEASE_DATE);
-    if (m.genres.isEmpty())      gap.insert(GENRES);
-    if (m.players == 0)          gap.insert(PLAYERS);
-    if (m.description.isEmpty()) gap.insert(DESCRIPTION);
-    if (m.boxArtUrl.isEmpty())   gap.insert(BOX_ART_URL);
+    if (m.title.isEmpty())
+        gap.insert(TITLE);
+    if (m.publisher.isEmpty())
+        gap.insert(PUBLISHER);
+    if (m.developer.isEmpty())
+        gap.insert(DEVELOPER);
+    if (m.releaseDate.isEmpty())
+        gap.insert(RELEASE_DATE);
+    if (m.genres.isEmpty())
+        gap.insert(GENRES);
+    if (m.players == 0)
+        gap.insert(PLAYERS);
+    if (m.description.isEmpty())
+        gap.insert(DESCRIPTION);
+    if (m.boxArtUrl.isEmpty())
+        gap.insert(BOX_ART_URL);
     return gap;
 }
 
-GameMetadata ProviderOrchestrator::enrichMissingFields(const FieldSet &missing,
-                                                        const GameMetadata &existing,
-                                                        const QString &hash,
-                                                        const QString &name,
-                                                        const QString &system,
-                                                        const QString &crc32,
-                                                        const QString &md5,
-                                                        const QString &sha1,
-                                                        const QString &serial)
-{
+GameMetadata ProviderOrchestrator::enrichMissingFields(const FieldSet &missing, const GameMetadata &existing,
+    const QString &hash, const QString &name, const QString &system, const QString &crc32, const QString &md5,
+    const QString &sha1, const QString &serial) {
     if (missing.isEmpty()) {
         qInfo() << "enrichMissingFields: no gaps — skipping all providers";
         return existing;
@@ -76,8 +76,7 @@ GameMetadata ProviderOrchestrator::enrichMissingFields(const FieldSet &missing,
     // LOCAL providers first (priority 200–150).
     const QStringList localProviders = getSortedLocalProviders();
     for (const QString &providerName : localProviders) {
-        const QSet<QString> &caps =
-            Constants::ProviderFields::CAPABILITIES.value(providerName.toLower());
+        const QSet<QString> &caps = Constants::ProviderFields::CAPABILITIES.value(providerName.toLower());
         if (!caps.intersects(gapSet)) {
             qInfo() << "enrichMissingFields: skipping local provider" << providerName
                     << "(no capability overlap with gap)";
@@ -95,8 +94,7 @@ GameMetadata ProviderOrchestrator::enrichMissingFields(const FieldSet &missing,
     if (!gapSet.isEmpty()) {
         const QStringList remoteProviders = getSortedRemoteProviders();
         for (const QString &providerName : remoteProviders) {
-            const QSet<QString> &caps =
-                Constants::ProviderFields::CAPABILITIES.value(providerName.toLower());
+            const QSet<QString> &caps = Constants::ProviderFields::CAPABILITIES.value(providerName.toLower());
             if (!caps.intersects(gapSet)) {
                 qInfo() << "enrichMissingFields: skipping remote provider" << providerName
                         << "(no capability overlap with gap)";

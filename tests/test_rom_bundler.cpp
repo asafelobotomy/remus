@@ -2,8 +2,7 @@
 
 // ── isAlreadyBundled ─────────────────────────────────────────────────────
 
-void RomBundlerTest::testIsAlreadyBundled_nonexistentPath_returnsFalse()
-{
+void RomBundlerTest::testIsAlreadyBundled_nonexistentPath_returnsFalse() {
     QTemporaryDir tmp;
     QVERIFY(tmp.isValid());
 
@@ -14,8 +13,7 @@ void RomBundlerTest::testIsAlreadyBundled_nonexistentPath_returnsFalse()
     QVERIFY(!bundler.isAlreadyBundled("/nonexistent/archive.zip"));
 }
 
-void RomBundlerTest::testIsAlreadyBundled_plainFile_returnsFalse()
-{
+void RomBundlerTest::testIsAlreadyBundled_plainFile_returnsFalse() {
     QTemporaryDir tmp;
     QVERIFY(tmp.isValid());
 
@@ -32,8 +30,7 @@ void RomBundlerTest::testIsAlreadyBundled_plainFile_returnsFalse()
 
 // ── bundle() dry-run ─────────────────────────────────────────────────────
 
-void RomBundlerTest::testBundle_dryRun_returnsSuccessWithoutCreatingFile()
-{
+void RomBundlerTest::testBundle_dryRun_returnsSuccessWithoutCreatingFile() {
     QTemporaryDir tmp;
     QVERIFY(tmp.isValid());
 
@@ -55,9 +52,9 @@ void RomBundlerTest::testBundle_dryRun_returnsSuccessWithoutCreatingFile()
     const QString destDir = tmp.filePath("output");
 
     RomBundler::BundleConfig cfg;
-    cfg.dryRun        = true;
+    cfg.dryRun = true;
     cfg.includeBoxArt = false;
-    cfg.outputFormat  = ArchiveFormat::ZIP;
+    cfg.outputFormat = ArchiveFormat::ZIP;
 
     RomBundler::BundleResult result = bundler.bundle(rec, makeMatch(), makeMetadata(), destDir, cfg);
 
@@ -71,8 +68,7 @@ void RomBundlerTest::testBundle_dryRun_returnsSuccessWithoutCreatingFile()
     QVERIFY(!QFile::exists(result.outputPath));
 }
 
-void RomBundlerTest::testBundle_dryRun_outputPathContainsBaseName()
-{
+void RomBundlerTest::testBundle_dryRun_outputPathContainsBaseName() {
     QTemporaryDir tmp;
     QVERIFY(tmp.isValid());
 
@@ -89,7 +85,7 @@ void RomBundlerTest::testBundle_dryRun_outputPathContainsBaseName()
     RomBundler bundler(db);
 
     RomBundler::BundleConfig cfg;
-    cfg.dryRun        = true;
+    cfg.dryRun = true;
     cfg.includeBoxArt = false;
 
     const QString destDir = tmp.filePath("bundles");
@@ -107,8 +103,7 @@ void RomBundlerTest::testBundle_dryRun_outputPathContainsBaseName()
 
 // ── bundle() real archives ───────────────────────────────────────────────
 
-void RomBundlerTest::testBundle_realZipContainsMarkerAndArtworkSubdir()
-{
+void RomBundlerTest::testBundle_realZipContainsMarkerAndArtworkSubdir() {
     ArchiveCreator creator;
     ArchiveExtractor extractor;
     if (!creator.canCompress(ArchiveFormat::ZIP)) {
@@ -137,8 +132,8 @@ void RomBundlerTest::testBundle_realZipContainsMarkerAndArtworkSubdir()
 
     RomBundler::BundleConfig cfg;
     cfg.includeBoxArt = true;
-    cfg.outputFormat  = ArchiveFormat::ZIP;
-    cfg.artworkPath   = artPath;
+    cfg.outputFormat = ArchiveFormat::ZIP;
+    cfg.artworkPath = artPath;
 
     const QString destDir = tmp.filePath("bundles");
     RomBundler::BundleResult result = bundler.bundle(rec, makeMatch(), makeMetadata(), destDir, cfg);
@@ -152,8 +147,7 @@ void RomBundlerTest::testBundle_realZipContainsMarkerAndArtworkSubdir()
     QVERIFY(info.contents.contains("artwork/boxfront.jpg"));
 }
 
-void RomBundlerTest::testBundle_realSevenZipContainsMarkerAndArtworkSubdir()
-{
+void RomBundlerTest::testBundle_realSevenZipContainsMarkerAndArtworkSubdir() {
     ArchiveCreator creator;
     ArchiveExtractor extractor;
     if (!creator.canCompress(ArchiveFormat::SevenZip)) {
@@ -182,8 +176,8 @@ void RomBundlerTest::testBundle_realSevenZipContainsMarkerAndArtworkSubdir()
 
     RomBundler::BundleConfig cfg;
     cfg.includeBoxArt = true;
-    cfg.outputFormat  = ArchiveFormat::SevenZip;
-    cfg.artworkPath   = artPath;
+    cfg.outputFormat = ArchiveFormat::SevenZip;
+    cfg.artworkPath = artPath;
 
     const QString destDir = tmp.filePath("bundles");
     RomBundler::BundleResult result = bundler.bundle(rec, makeMatch(), makeMetadata(), destDir, cfg);
@@ -196,8 +190,7 @@ void RomBundlerTest::testBundle_realSevenZipContainsMarkerAndArtworkSubdir()
     QVERIFY(info.contents.contains("artwork/boxfront.jpg"));
 }
 
-void RomBundlerTest::testBundle_updatesStoredFileStateToArchivePayload()
-{
+void RomBundlerTest::testBundle_updatesStoredFileStateToArchivePayload() {
     ArchiveCreator creator;
     ArchiveExtractor extractor;
     if (!creator.canCompress(ArchiveFormat::ZIP)) {
@@ -240,8 +233,7 @@ void RomBundlerTest::testBundle_updatesStoredFileStateToArchivePayload()
     QCOMPARE(bundled.fileSize, static_cast<qint64>(10));
 }
 
-void RomBundlerTest::testBundleStaged_updatesStoredFileStateAndReturnsOutputPath()
-{
+void RomBundlerTest::testBundleStaged_updatesStoredFileStateAndReturnsOutputPath() {
     ArchiveCreator creator;
     ArchiveExtractor extractor;
     if (!creator.canCompress(ArchiveFormat::ZIP)) {
@@ -286,8 +278,7 @@ void RomBundlerTest::testBundleStaged_updatesStoredFileStateAndReturnsOutputPath
     QCOMPARE(bundled.fileSize, static_cast<qint64>(10));
 }
 
-void RomBundlerTest::testBundle_compressedNestedPayloadIsFlattenedToArchiveRoot()
-{
+void RomBundlerTest::testBundle_compressedNestedPayloadIsFlattenedToArchiveRoot() {
     ArchiveCreator creator;
     ArchiveExtractor extractor;
     if (!creator.canCompress(ArchiveFormat::ZIP)) {
@@ -306,8 +297,8 @@ void RomBundlerTest::testBundle_compressedNestedPayloadIsFlattenedToArchiveRoot(
     QVERIFY(writeFile(nestedRom, "ROMPAYLOAD"));
 
     const QString sourceArchive = tmp.filePath("nested.zip");
-    const CompressionResult compressed = creator.compressDirectoryContents(
-        sourceDir, sourceArchive, ArchiveFormat::ZIP);
+    const CompressionResult compressed
+        = creator.compressDirectoryContents(sourceDir, sourceArchive, ArchiveFormat::ZIP);
     QVERIFY2(compressed.success, qPrintable(compressed.error));
     QVERIFY(QFile::exists(sourceArchive));
 
@@ -329,8 +320,8 @@ void RomBundlerTest::testBundle_compressedNestedPayloadIsFlattenedToArchiveRoot(
     cfg.outputFormat = ArchiveFormat::ZIP;
 
     const QString destDir = tmp.filePath("bundles");
-    const RomBundler::BundleResult result = bundler.bundle(
-        rec, makeMatch("Nested Game"), makeMetadata("Nested Game"), destDir, cfg);
+    const RomBundler::BundleResult result
+        = bundler.bundle(rec, makeMatch("Nested Game"), makeMetadata("Nested Game"), destDir, cfg);
     QVERIFY2(result.success, qPrintable(result.error));
     QVERIFY(QFile::exists(result.outputPath));
 
@@ -349,8 +340,7 @@ void RomBundlerTest::testBundle_compressedNestedPayloadIsFlattenedToArchiveRoot(
     QVERIFY(!hasNestedFolder);
 }
 
-void RomBundlerTest::testBundle_markerUsesStoredPercentConfidence()
-{
+void RomBundlerTest::testBundle_markerUsesStoredPercentConfidence() {
     ArchiveCreator creator;
     ArchiveExtractor extractor;
     if (!creator.canCompress(ArchiveFormat::ZIP)) {
@@ -380,7 +370,7 @@ void RomBundlerTest::testBundle_markerUsesStoredPercentConfidence()
 
     RomBundler::BundleConfig cfg;
     cfg.includeBoxArt = false;
-    cfg.outputFormat  = ArchiveFormat::ZIP;
+    cfg.outputFormat = ArchiveFormat::ZIP;
 
     const QString destDir = tmp.filePath("bundles");
     RomBundler::BundleResult result = bundler.bundle(rec, match, makeMetadata(), destDir, cfg);
@@ -400,8 +390,7 @@ void RomBundlerTest::testBundle_markerUsesStoredPercentConfidence()
     QVERIFY(!marker.contains("10000.0%"));
 }
 
-void RomBundlerTest::testBundle_skipsWhenCurrentCompressedPathAlreadyBundled()
-{
+void RomBundlerTest::testBundle_skipsWhenCurrentCompressedPathAlreadyBundled() {
     ArchiveCreator creator;
     ArchiveExtractor extractor;
     if (!creator.canCompress(ArchiveFormat::ZIP)) {
@@ -430,8 +419,8 @@ void RomBundlerTest::testBundle_skipsWhenCurrentCompressedPathAlreadyBundled()
 
     RomBundler::BundleConfig cfg;
     cfg.includeBoxArt = true;
-    cfg.outputFormat  = ArchiveFormat::ZIP;
-    cfg.artworkPath   = artPath;
+    cfg.outputFormat = ArchiveFormat::ZIP;
+    cfg.artworkPath = artPath;
 
     const QString destDir = tmp.filePath("bundles");
     RomBundler::BundleResult first = bundler.bundle(original, makeMatch(), makeMetadata(), destDir, cfg);
@@ -446,7 +435,9 @@ void RomBundlerTest::testBundle_skipsWhenCurrentCompressedPathAlreadyBundled()
     bundled.archivePath = first.outputPath;
     bundled.archiveInternalPath = "game.md";
 
-    const QByteArray before = QFileInfo(first.outputPath).exists() ? QByteArray::number(QFileInfo(first.outputPath).lastModified().toMSecsSinceEpoch()) : QByteArray();
+    const QByteArray before = QFileInfo(first.outputPath).exists()
+        ? QByteArray::number(QFileInfo(first.outputPath).lastModified().toMSecsSinceEpoch())
+        : QByteArray();
     QVERIFY(!before.isEmpty());
 
     RomBundler::BundleResult second = bundler.bundle(bundled, makeMatch(), makeMetadata(), destDir, cfg);
@@ -458,8 +449,7 @@ void RomBundlerTest::testBundle_skipsWhenCurrentCompressedPathAlreadyBundled()
     QCOMPARE(after, before);
 }
 
-void RomBundlerTest::testBundle_rebundlesWhenCurrentPathPointsToPriorBundleOutput()
-{
+void RomBundlerTest::testBundle_rebundlesWhenCurrentPathPointsToPriorBundleOutput() {
     ArchiveCreator creator;
     ArchiveExtractor extractor;
     if (!creator.canCompress(ArchiveFormat::ZIP)) {
@@ -486,11 +476,10 @@ void RomBundlerTest::testBundle_rebundlesWhenCurrentPathPointsToPriorBundleOutpu
 
     RomBundler::BundleConfig cfg;
     cfg.includeBoxArt = false;
-    cfg.outputFormat  = ArchiveFormat::ZIP;
+    cfg.outputFormat = ArchiveFormat::ZIP;
 
     const QString firstDestDir = tmp.filePath("bundles-a");
-    const RomBundler::BundleResult first = bundler.bundle(
-        original, makeMatch(), makeMetadata(), firstDestDir, cfg);
+    const RomBundler::BundleResult first = bundler.bundle(original, makeMatch(), makeMetadata(), firstDestDir, cfg);
     QVERIFY2(first.success, qPrintable(first.error));
     QVERIFY(QFile::exists(first.outputPath));
 
@@ -501,8 +490,8 @@ void RomBundlerTest::testBundle_rebundlesWhenCurrentPathPointsToPriorBundleOutpu
     rebundleCandidate.archiveInternalPath = "game.md";
 
     const QString secondDestDir = tmp.filePath("bundles-b");
-    const RomBundler::BundleResult second = bundler.bundle(
-        rebundleCandidate, makeMatch(), makeMetadata(), secondDestDir, cfg);
+    const RomBundler::BundleResult second
+        = bundler.bundle(rebundleCandidate, makeMatch(), makeMetadata(), secondDestDir, cfg);
     QVERIFY2(second.success, qPrintable(second.error));
     QVERIFY(!second.skippedAlreadyBundled);
     QVERIFY(QFile::exists(second.outputPath));

@@ -14,8 +14,7 @@
 
 using namespace Remus;
 
-class RAPatchesCatalogTest : public QObject
-{
+class RAPatchesCatalogTest : public QObject {
     Q_OBJECT
 
 private slots:
@@ -61,10 +60,8 @@ private slots:
 // parseFilename tests
 // ═══════════════════════════════════════════════════════════════════
 
-void RAPatchesCatalogTest::parseFilename_fullFormat()
-{
-    const auto p = RAPatchesCatalogBuilder::parseFilename(
-        "ToeJam & Earl (USA, Europe) (Fr) (v0.9) (sky2048).bps");
+void RAPatchesCatalogTest::parseFilename_fullFormat() {
+    const auto p = RAPatchesCatalogBuilder::parseFilename("ToeJam & Earl (USA, Europe) (Fr) (v0.9) (sky2048).bps");
 
     QCOMPARE(p.title, QStringLiteral("ToeJam & Earl"));
     QCOMPARE(p.region, QStringLiteral("USA, Europe"));
@@ -74,8 +71,7 @@ void RAPatchesCatalogTest::parseFilename_fullFormat()
     QCOMPARE(p.format, QStringLiteral("bps"));
 }
 
-void RAPatchesCatalogTest::parseFilename_titleOnly()
-{
+void RAPatchesCatalogTest::parseFilename_titleOnly() {
     const auto p = RAPatchesCatalogBuilder::parseFilename("SomeRomHack.ips");
     QCOMPARE(p.title, QStringLiteral("SomeRomHack"));
     QVERIFY(p.region.isEmpty());
@@ -83,33 +79,27 @@ void RAPatchesCatalogTest::parseFilename_titleOnly()
     QCOMPARE(p.format, QStringLiteral("ips"));
 }
 
-void RAPatchesCatalogTest::parseFilename_regionAndAuthor()
-{
-    const auto p = RAPatchesCatalogBuilder::parseFilename(
-        "Super Mario World (Japan) (hacker123).bps");
+void RAPatchesCatalogTest::parseFilename_regionAndAuthor() {
+    const auto p = RAPatchesCatalogBuilder::parseFilename("Super Mario World (Japan) (hacker123).bps");
     QCOMPARE(p.title, QStringLiteral("Super Mario World"));
     QCOMPARE(p.region, QStringLiteral("Japan"));
     QCOMPARE(p.author, QStringLiteral("hacker123"));
 }
 
-void RAPatchesCatalogTest::parseFilename_versionVariants()
-{
+void RAPatchesCatalogTest::parseFilename_versionVariants() {
     // Test "Final" as a version
     {
-        const auto p = RAPatchesCatalogBuilder::parseFilename(
-            "Castlevania (USA) (Final).bps");
+        const auto p = RAPatchesCatalogBuilder::parseFilename("Castlevania (USA) (Final).bps");
         QCOMPARE(p.version, QStringLiteral("Final"));
     }
     // Test "Beta"
     {
-        const auto p = RAPatchesCatalogBuilder::parseFilename(
-            "Zelda (World) (Beta).ips");
+        const auto p = RAPatchesCatalogBuilder::parseFilename("Zelda (World) (Beta).ips");
         QCOMPARE(p.version, QStringLiteral("Beta"));
     }
 }
 
-void RAPatchesCatalogTest::parseFilename_noExtension()
-{
+void RAPatchesCatalogTest::parseFilename_noExtension() {
     const auto p = RAPatchesCatalogBuilder::parseFilename("NoExtension");
     QCOMPARE(p.title, QStringLiteral("NoExtension"));
     QVERIFY(p.format.isEmpty());
@@ -119,40 +109,34 @@ void RAPatchesCatalogTest::parseFilename_noExtension()
 // parseReadme tests
 // ═══════════════════════════════════════════════════════════════════
 
-void RAPatchesCatalogTest::parseReadme_md5AndCrc32()
-{
-    const QString content =
-        "Base ROM: Sonic the Hedgehog (USA).md\n"
-        "MD5: d4a9c1e15c4c3f4a3d4e5f6a7b8c9d0e\n"
-        "CRC32: AABB1122\n"
-        "Apply with Floating IPS\n";
+void RAPatchesCatalogTest::parseReadme_md5AndCrc32() {
+    const QString content = "Base ROM: Sonic the Hedgehog (USA).md\n"
+                            "MD5: d4a9c1e15c4c3f4a3d4e5f6a7b8c9d0e\n"
+                            "CRC32: AABB1122\n"
+                            "Apply with Floating IPS\n";
 
     const auto r = RAPatchesCatalogBuilder::parseReadme(content);
     QCOMPARE(r.baseMd5, QStringLiteral("d4a9c1e15c4c3f4a3d4e5f6a7b8c9d0e"));
     QCOMPARE(r.baseCrc32, QStringLiteral("aabb1122"));
 }
 
-void RAPatchesCatalogTest::parseReadme_md5Only()
-{
+void RAPatchesCatalogTest::parseReadme_md5Only() {
     const QString content = "md5: AABBCCDD11223344AABBCCDD11223344\n";
     const auto r = RAPatchesCatalogBuilder::parseReadme(content);
     QCOMPARE(r.baseMd5, QStringLiteral("aabbccdd11223344aabbccdd11223344"));
     QVERIFY(r.baseCrc32.isEmpty());
 }
 
-void RAPatchesCatalogTest::parseReadme_empty()
-{
+void RAPatchesCatalogTest::parseReadme_empty() {
     const auto r = RAPatchesCatalogBuilder::parseReadme(QString());
     QVERIFY(r.baseMd5.isEmpty());
     QVERIFY(r.baseCrc32.isEmpty());
     QVERIFY(r.baseRomName.isEmpty());
 }
 
-void RAPatchesCatalogTest::parseReadme_romName()
-{
-    const QString content =
-        "Super Mario World (USA).sfc\n"
-        "MD5: 00000000000000000000000000000000\n";
+void RAPatchesCatalogTest::parseReadme_romName() {
+    const QString content = "Super Mario World (USA).sfc\n"
+                            "MD5: 00000000000000000000000000000000\n";
 
     const auto r = RAPatchesCatalogBuilder::parseReadme(content);
     QCOMPARE(r.baseRomName, QStringLiteral("Super Mario World (USA).sfc"));
@@ -162,62 +146,43 @@ void RAPatchesCatalogTest::parseReadme_romName()
 // normaliseSystemName tests
 // ═══════════════════════════════════════════════════════════════════
 
-void RAPatchesCatalogTest::normaliseSystem_knownMappings()
-{
-    QCOMPARE(RAPatchesCatalogBuilder::normaliseSystemName("GBA"),
-             QStringLiteral("Game Boy Advance"));
-    QCOMPARE(RAPatchesCatalogBuilder::normaliseSystemName("SNES"),
-             QStringLiteral("Super Nintendo"));
-    QCOMPARE(RAPatchesCatalogBuilder::normaliseSystemName("MD"),
-             QStringLiteral("Sega Genesis / Mega Drive"));
-    QCOMPARE(RAPatchesCatalogBuilder::normaliseSystemName("N64"),
-             QStringLiteral("Nintendo 64"));
-    QCOMPARE(RAPatchesCatalogBuilder::normaliseSystemName("NDS"),
-             QStringLiteral("Nintendo DS"));
-    QCOMPARE(RAPatchesCatalogBuilder::normaliseSystemName("PS2"),
-             QStringLiteral("PlayStation 2"));
+void RAPatchesCatalogTest::normaliseSystem_knownMappings() {
+    QCOMPARE(RAPatchesCatalogBuilder::normaliseSystemName("GBA"), QStringLiteral("Game Boy Advance"));
+    QCOMPARE(RAPatchesCatalogBuilder::normaliseSystemName("SNES"), QStringLiteral("Super Nintendo"));
+    QCOMPARE(RAPatchesCatalogBuilder::normaliseSystemName("MD"), QStringLiteral("Sega Genesis / Mega Drive"));
+    QCOMPARE(RAPatchesCatalogBuilder::normaliseSystemName("N64"), QStringLiteral("Nintendo 64"));
+    QCOMPARE(RAPatchesCatalogBuilder::normaliseSystemName("NDS"), QStringLiteral("Nintendo DS"));
+    QCOMPARE(RAPatchesCatalogBuilder::normaliseSystemName("PS2"), QStringLiteral("PlayStation 2"));
 }
 
-void RAPatchesCatalogTest::normaliseSystem_unmapped()
-{
+void RAPatchesCatalogTest::normaliseSystem_unmapped() {
     // Unknown names pass through unchanged
-    QCOMPARE(RAPatchesCatalogBuilder::normaliseSystemName("UnknownSystem"),
-             QStringLiteral("UnknownSystem"));
+    QCOMPARE(RAPatchesCatalogBuilder::normaliseSystemName("UnknownSystem"), QStringLiteral("UnknownSystem"));
 }
 
 // ═══════════════════════════════════════════════════════════════════
 // normaliseTypeName tests
 // ═══════════════════════════════════════════════════════════════════
 
-void RAPatchesCatalogTest::normaliseType_knownMappings()
-{
-    QCOMPARE(RAPatchesCatalogBuilder::normaliseTypeName("Fix"),
-             QStringLiteral("fix"));
-    QCOMPARE(RAPatchesCatalogBuilder::normaliseTypeName("Hacks"),
-             QStringLiteral("hack"));
-    QCOMPARE(RAPatchesCatalogBuilder::normaliseTypeName("Translation"),
-             QStringLiteral("translation"));
-    QCOMPARE(RAPatchesCatalogBuilder::normaliseTypeName("Improvement"),
-             QStringLiteral("improvement"));
-    QCOMPARE(RAPatchesCatalogBuilder::normaliseTypeName("MSU-1"),
-             QStringLiteral("enhancement"));
-    QCOMPARE(RAPatchesCatalogBuilder::normaliseTypeName("GTConversion"),
-             QStringLiteral("conversion"));
+void RAPatchesCatalogTest::normaliseType_knownMappings() {
+    QCOMPARE(RAPatchesCatalogBuilder::normaliseTypeName("Fix"), QStringLiteral("fix"));
+    QCOMPARE(RAPatchesCatalogBuilder::normaliseTypeName("Hacks"), QStringLiteral("hack"));
+    QCOMPARE(RAPatchesCatalogBuilder::normaliseTypeName("Translation"), QStringLiteral("translation"));
+    QCOMPARE(RAPatchesCatalogBuilder::normaliseTypeName("Improvement"), QStringLiteral("improvement"));
+    QCOMPARE(RAPatchesCatalogBuilder::normaliseTypeName("MSU-1"), QStringLiteral("enhancement"));
+    QCOMPARE(RAPatchesCatalogBuilder::normaliseTypeName("GTConversion"), QStringLiteral("conversion"));
 }
 
-void RAPatchesCatalogTest::normaliseType_unmapped()
-{
+void RAPatchesCatalogTest::normaliseType_unmapped() {
     // Unknown type names are lowercased
-    QCOMPARE(RAPatchesCatalogBuilder::normaliseTypeName("SomeNewType"),
-             QStringLiteral("somenewtype"));
+    QCOMPARE(RAPatchesCatalogBuilder::normaliseTypeName("SomeNewType"), QStringLiteral("somenewtype"));
 }
 
 // ═══════════════════════════════════════════════════════════════════
 // Catalog JSON round-trip
 // ═══════════════════════════════════════════════════════════════════
 
-void RAPatchesCatalogTest::catalogJsonRoundTrip()
-{
+void RAPatchesCatalogTest::catalogJsonRoundTrip() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
@@ -227,25 +192,25 @@ void RAPatchesCatalogTest::catalogJsonRoundTrip()
     QList<ModEntry> mods;
     {
         ModEntry e;
-        e.id       = QStringLiteral("ra-test001");
-        e.title    = QStringLiteral("Sonic Russian Translation");
-        e.author   = QStringLiteral("sky2048");
-        e.version  = QStringLiteral("v1.0");
-        e.type     = QStringLiteral("translation");
-        e.system   = QStringLiteral("Sega Genesis / Mega Drive");
-        e.format   = QStringLiteral("bps");
-        e.baseMd5  = QStringLiteral("d4a9c1e15c4c3f4a3d4e5f6a7b8c9d0e");
+        e.id = QStringLiteral("ra-test001");
+        e.title = QStringLiteral("Sonic Russian Translation");
+        e.author = QStringLiteral("sky2048");
+        e.version = QStringLiteral("v1.0");
+        e.type = QStringLiteral("translation");
+        e.system = QStringLiteral("Sega Genesis / Mega Drive");
+        e.format = QStringLiteral("bps");
+        e.baseMd5 = QStringLiteral("d4a9c1e15c4c3f4a3d4e5f6a7b8c9d0e");
         e.baseCrc32 = QStringLiteral("aabb1122");
         mods.append(e);
     }
     {
         ModEntry e;
-        e.id       = QStringLiteral("ra-test002");
-        e.title    = QStringLiteral("Super Mario World Kaizo");
-        e.author   = QStringLiteral("romhacker");
-        e.type     = QStringLiteral("hack");
-        e.system   = QStringLiteral("Super Nintendo");
-        e.format   = QStringLiteral("ips");
+        e.id = QStringLiteral("ra-test002");
+        e.title = QStringLiteral("Super Mario World Kaizo");
+        e.author = QStringLiteral("romhacker");
+        e.type = QStringLiteral("hack");
+        e.system = QStringLiteral("Super Nintendo");
+        e.format = QStringLiteral("ips");
         mods.append(e);
     }
 
@@ -272,8 +237,7 @@ void RAPatchesCatalogTest::catalogJsonRoundTrip()
 // buildFromDirectory tests
 // ═══════════════════════════════════════════════════════════════════
 
-void RAPatchesCatalogTest::buildFromDirectory_emptyDir()
-{
+void RAPatchesCatalogTest::buildFromDirectory_emptyDir() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
@@ -285,8 +249,7 @@ void RAPatchesCatalogTest::buildFromDirectory_emptyDir()
     QCOMPARE(result.filesScanned, 0);
 }
 
-void RAPatchesCatalogTest::buildFromDirectory_patchFiles()
-{
+void RAPatchesCatalogTest::buildFromDirectory_patchFiles() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
@@ -333,8 +296,7 @@ void RAPatchesCatalogTest::buildFromDirectory_patchFiles()
     QVERIFY2(foundGba, "Expected a Game Boy Advance entry");
 }
 
-void RAPatchesCatalogTest::buildFromDirectory_skippedDirs()
-{
+void RAPatchesCatalogTest::buildFromDirectory_skippedDirs() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
@@ -370,8 +332,7 @@ void RAPatchesCatalogTest::buildFromDirectory_skippedDirs()
 // RetroAchievementsEnricher tests (credential logic, no network)
 // ═══════════════════════════════════════════════════════════════════
 
-void RAPatchesCatalogTest::enricher_noApiKey_gracefulSkip()
-{
+void RAPatchesCatalogTest::enricher_noApiKey_gracefulSkip() {
     // Clear env vars to ensure no key
     qunsetenv("REMUS_RA_API_KEY");
     qunsetenv("REMUS_RA_USERNAME");
@@ -391,8 +352,7 @@ void RAPatchesCatalogTest::enricher_noApiKey_gracefulSkip()
     QCOMPARE(result.skippedCount, 1);
 }
 
-void RAPatchesCatalogTest::enricher_setApiKey()
-{
+void RAPatchesCatalogTest::enricher_setApiKey() {
     qunsetenv("REMUS_RA_API_KEY");
     qunsetenv("REMUS_RA_USERNAME");
 
@@ -405,8 +365,7 @@ void RAPatchesCatalogTest::enricher_setApiKey()
     QCOMPARE(enricher.effectiveApiKey(), QStringLiteral("testapikey123"));
 }
 
-void RAPatchesCatalogTest::enricher_envFallback()
-{
+void RAPatchesCatalogTest::enricher_envFallback() {
     qputenv("REMUS_RA_API_KEY", "envkey456");
     qputenv("REMUS_RA_USERNAME", "envuser");
 
@@ -424,8 +383,7 @@ void RAPatchesCatalogTest::enricher_envFallback()
     qunsetenv("REMUS_RA_USERNAME");
 }
 
-void RAPatchesCatalogTest::enricher_enrichCatalog_noKey()
-{
+void RAPatchesCatalogTest::enricher_enrichCatalog_noKey() {
     qunsetenv("REMUS_RA_API_KEY");
     qunsetenv("REMUS_RA_USERNAME");
 
@@ -443,8 +401,7 @@ void RAPatchesCatalogTest::enricher_enrichCatalog_noKey()
 
 /// A .zip file whose contents can't be listed (invalid/empty zip) must produce
 /// a fallback entry with an EMPTY patchUrl — not a fabricated wrong URL.
-void RAPatchesCatalogTest::buildFromDirectory_zipNoPatchMember()
-{
+void RAPatchesCatalogTest::buildFromDirectory_zipNoPatchMember() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
     QDir root(dir.path());
@@ -468,15 +425,13 @@ void RAPatchesCatalogTest::buildFromDirectory_zipNoPatchMember()
     QCOMPARE(entry.system, QStringLiteral("Super Nintendo"));
     QCOMPARE(entry.type, QStringLiteral("hack"));
     // Must be empty — not a wrong URL built from dirname.
-    QVERIFY2(entry.patchUrl.isEmpty(),
-             "patchUrl must be empty when no patch member is found in zip");
+    QVERIFY2(entry.patchUrl.isEmpty(), "patchUrl must be empty when no patch member is found in zip");
     QVERIFY(!entry.sourceUrl.isEmpty());
 }
 
 /// A .zip that contains a recognizable patch file must produce a fully
 /// populated entry.  Skipped if the `zip` command is not available on PATH.
-void RAPatchesCatalogTest::buildFromDirectory_zipWithPatchInside()
-{
+void RAPatchesCatalogTest::buildFromDirectory_zipWithPatchInside() {
     // Require the `zip` tool at runtime to create the test archive.
     const QString zipTool = QStandardPaths::findExecutable(QStringLiteral("zip"));
     if (zipTool.isEmpty())
@@ -488,8 +443,7 @@ void RAPatchesCatalogTest::buildFromDirectory_zipWithPatchInside()
     root.mkpath("GBA/Translation");
 
     // Create the patch file that will go inside the zip.
-    const QString patchName =
-        QStringLiteral("My Game (Japan) (En) (v1.2) (AuthorName).bps");
+    const QString patchName = QStringLiteral("My Game (Japan) (En) (v1.2) (AuthorName).bps");
     QTemporaryDir patchSrc;
     QVERIFY(patchSrc.isValid());
     QFile pf(QDir(patchSrc.path()).filePath(patchName));
@@ -498,11 +452,10 @@ void RAPatchesCatalogTest::buildFromDirectory_zipWithPatchInside()
     pf.close();
 
     // Build the zip inside the mock repo tree.
-    const QString zipPath =
-        root.filePath(QStringLiteral("GBA/Translation/My Game Translation.zip"));
+    const QString zipPath = root.filePath(QStringLiteral("GBA/Translation/My Game Translation.zip"));
     QProcess proc;
     proc.setWorkingDirectory(patchSrc.path());
-    proc.start(zipTool, {zipPath, patchName});
+    proc.start(zipTool, { zipPath, patchName });
     QVERIFY(proc.waitForFinished(5000));
     QVERIFY2(proc.exitCode() == 0, "Failed to create test zip");
 

@@ -5,85 +5,81 @@
 
 using namespace Remus;
 
-class GameTDBProviderTest : public QObject
-{
+class GameTDBProviderTest : public QObject {
     Q_OBJECT
 
 private:
     // Minimal Wii-style XML for testing
-    static QByteArray sampleXml()
-    {
-        return QByteArrayLiteral(
-            "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-            "<datafile>\n"
-            "  <game name=\"Mario Kart Wii (Europe) (EN,FR)\">\n"
-            "    <id>RMCP01</id>\n"
-            "    <type>Wii</type>\n"
-            "    <region>PAL</region>\n"
-            "    <locale lang=\"EN\">\n"
-            "      <title>Mario Kart Wii</title>\n"
-            "      <synopsis>Race with Mario and friends.</synopsis>\n"
-            "    </locale>\n"
-            "    <locale lang=\"FR\">\n"
-            "      <title>Mario Kart Wii</title>\n"
-            "      <synopsis>Texte francais.</synopsis>\n"
-            "    </locale>\n"
-            "    <developer>Nintendo EAD</developer>\n"
-            "    <publisher>Nintendo</publisher>\n"
-            "    <date year=\"2008\" month=\"4\" day=\"11\"/>\n"
-            "    <genre>racing, party</genre>\n"
-            "    <input players=\"4\"/>\n"
-            "    <rom version=\"0\" size=\"4699979776\""
-            "         crc=\"3a70d78b\""
-            "         md5=\"e7b1ff1fabb0789482ce2cb0661d986e\""
-            "         sha1=\"4fde5ce38d68f632d92c5b0d52bbab0b1d355a95\"/>\n"
-            "  </game>\n"
-            "  <game name=\"Super Mario Sunshine (USA) (EN)\">\n"
-            "    <id>GMCE01</id>\n"
-            "    <type>GameCube</type>\n"
-            "    <region>NTSC-U</region>\n"
-            "    <locale lang=\"EN\">\n"
-            "      <title>Super Mario Sunshine</title>\n"
-            "      <synopsis>Mario cleans up Isle Delfino.</synopsis>\n"
-            "    </locale>\n"
-            "    <developer>Nintendo EAD</developer>\n"
-            "    <publisher>Nintendo</publisher>\n"
-            "    <date year=\"2002\" month=\"7\" day=\"19\"/>\n"
-            "    <genre>action, platformer</genre>\n"
-            "    <input players=\"1\"/>\n"
-            "    <rom version=\"0\" size=\"1459978240\" crc=\"AABB1122\"/>\n"
-            "  </game>\n"
-            "  <game name=\"WiiWare Title (World) (EN)\">\n"
-            "    <id>NOROM</id>\n"
-            "    <type>Wii</type>\n"
-            "    <region>ALL</region>\n"
-            "    <locale lang=\"EN\">\n"
-            "      <title>WiiWare Title</title>\n"
-            "      <synopsis>A digital-only game.</synopsis>\n"
-            "    </locale>\n"
-            "    <developer>Indie Dev</developer>\n"
-            "    <publisher>Indie Pub</publisher>\n"
-            "    <genre>puzzle</genre>\n"
-            "    <input players=\"2\"/>\n"
-            "  </game>\n"
-            "  <game name=\"Japanese Only Game (Japan) (JA)\">\n"
-            "    <id>JPONLY</id>\n"
-            "    <type>Wii</type>\n"
-            "    <region>NTSC-J</region>\n"
-            "    <locale lang=\"JA\">\n"
-            "      <title>Japanese Only Game</title>\n"
-            "      <synopsis>Japan exclusive title.</synopsis>\n"
-            "    </locale>\n"
-            "    <developer>JP Dev</developer>\n"
-            "    <publisher>JP Pub</publisher>\n"
-            "    <input players=\"1\"/>\n"
-            "    <rom crc=\"DEADBEEF\"/>\n"
-            "  </game>\n"
-            "</datafile>\n");
+    static QByteArray sampleXml() {
+        return QByteArrayLiteral("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+                                 "<datafile>\n"
+                                 "  <game name=\"Mario Kart Wii (Europe) (EN,FR)\">\n"
+                                 "    <id>RMCP01</id>\n"
+                                 "    <type>Wii</type>\n"
+                                 "    <region>PAL</region>\n"
+                                 "    <locale lang=\"EN\">\n"
+                                 "      <title>Mario Kart Wii</title>\n"
+                                 "      <synopsis>Race with Mario and friends.</synopsis>\n"
+                                 "    </locale>\n"
+                                 "    <locale lang=\"FR\">\n"
+                                 "      <title>Mario Kart Wii</title>\n"
+                                 "      <synopsis>Texte francais.</synopsis>\n"
+                                 "    </locale>\n"
+                                 "    <developer>Nintendo EAD</developer>\n"
+                                 "    <publisher>Nintendo</publisher>\n"
+                                 "    <date year=\"2008\" month=\"4\" day=\"11\"/>\n"
+                                 "    <genre>racing, party</genre>\n"
+                                 "    <input players=\"4\"/>\n"
+                                 "    <rom version=\"0\" size=\"4699979776\""
+                                 "         crc=\"3a70d78b\""
+                                 "         md5=\"e7b1ff1fabb0789482ce2cb0661d986e\""
+                                 "         sha1=\"4fde5ce38d68f632d92c5b0d52bbab0b1d355a95\"/>\n"
+                                 "  </game>\n"
+                                 "  <game name=\"Super Mario Sunshine (USA) (EN)\">\n"
+                                 "    <id>GMCE01</id>\n"
+                                 "    <type>GameCube</type>\n"
+                                 "    <region>NTSC-U</region>\n"
+                                 "    <locale lang=\"EN\">\n"
+                                 "      <title>Super Mario Sunshine</title>\n"
+                                 "      <synopsis>Mario cleans up Isle Delfino.</synopsis>\n"
+                                 "    </locale>\n"
+                                 "    <developer>Nintendo EAD</developer>\n"
+                                 "    <publisher>Nintendo</publisher>\n"
+                                 "    <date year=\"2002\" month=\"7\" day=\"19\"/>\n"
+                                 "    <genre>action, platformer</genre>\n"
+                                 "    <input players=\"1\"/>\n"
+                                 "    <rom version=\"0\" size=\"1459978240\" crc=\"AABB1122\"/>\n"
+                                 "  </game>\n"
+                                 "  <game name=\"WiiWare Title (World) (EN)\">\n"
+                                 "    <id>NOROM</id>\n"
+                                 "    <type>Wii</type>\n"
+                                 "    <region>ALL</region>\n"
+                                 "    <locale lang=\"EN\">\n"
+                                 "      <title>WiiWare Title</title>\n"
+                                 "      <synopsis>A digital-only game.</synopsis>\n"
+                                 "    </locale>\n"
+                                 "    <developer>Indie Dev</developer>\n"
+                                 "    <publisher>Indie Pub</publisher>\n"
+                                 "    <genre>puzzle</genre>\n"
+                                 "    <input players=\"2\"/>\n"
+                                 "  </game>\n"
+                                 "  <game name=\"Japanese Only Game (Japan) (JA)\">\n"
+                                 "    <id>JPONLY</id>\n"
+                                 "    <type>Wii</type>\n"
+                                 "    <region>NTSC-J</region>\n"
+                                 "    <locale lang=\"JA\">\n"
+                                 "      <title>Japanese Only Game</title>\n"
+                                 "      <synopsis>Japan exclusive title.</synopsis>\n"
+                                 "    </locale>\n"
+                                 "    <developer>JP Dev</developer>\n"
+                                 "    <publisher>JP Pub</publisher>\n"
+                                 "    <input players=\"1\"/>\n"
+                                 "    <rom crc=\"DEADBEEF\"/>\n"
+                                 "  </game>\n"
+                                 "</datafile>\n");
     }
 
-    QString writeSampleXml(const QString &dir)
-    {
+    QString writeSampleXml(const QString &dir) {
         QString path = dir + "/wiitdb.xml";
         QFile f(path);
         f.open(QIODevice::WriteOnly);
@@ -94,8 +90,7 @@ private:
 
 private slots:
 
-    void testLoadDatabase()
-    {
+    void testLoadDatabase() {
         QTemporaryDir tmpDir;
         QVERIFY(tmpDir.isValid());
 
@@ -105,8 +100,7 @@ private slots:
         QCOMPARE(count, 4);
     }
 
-    void testLoadDatabases()
-    {
+    void testLoadDatabases() {
         QTemporaryDir tmpDir;
         QVERIFY(tmpDir.isValid());
         writeSampleXml(tmpDir.path());
@@ -116,8 +110,7 @@ private slots:
         QCOMPARE(count, 4);
     }
 
-    void testGetByHashCRC32()
-    {
+    void testGetByHashCRC32() {
         QTemporaryDir tmpDir;
         QVERIFY(tmpDir.isValid());
 
@@ -136,8 +129,7 @@ private slots:
         QCOMPARE(md.providerId, QString("gametdb"));
     }
 
-    void testGetByHashMD5()
-    {
+    void testGetByHashMD5() {
         QTemporaryDir tmpDir;
         QVERIFY(tmpDir.isValid());
 
@@ -149,8 +141,7 @@ private slots:
         QCOMPARE(md.title, QString("Mario Kart Wii"));
     }
 
-    void testGetByHashSHA1()
-    {
+    void testGetByHashSHA1() {
         QTemporaryDir tmpDir;
         QVERIFY(tmpDir.isValid());
 
@@ -162,8 +153,7 @@ private slots:
         QCOMPARE(md.title, QString("Mario Kart Wii"));
     }
 
-    void testGetByHashNotFound()
-    {
+    void testGetByHashNotFound() {
         QTemporaryDir tmpDir;
         QVERIFY(tmpDir.isValid());
 
@@ -174,8 +164,7 @@ private slots:
         QVERIFY(md.title.isEmpty());
     }
 
-    void testGetById()
-    {
+    void testGetById() {
         QTemporaryDir tmpDir;
         QVERIFY(tmpDir.isValid());
 
@@ -191,8 +180,7 @@ private slots:
         QCOMPARE(md.externalIds["gametdb"], QString("GMCE01"));
     }
 
-    void testSearchByName()
-    {
+    void testSearchByName() {
         QTemporaryDir tmpDir;
         QVERIFY(tmpDir.isValid());
 
@@ -203,8 +191,7 @@ private slots:
         QCOMPARE(results.size(), 2); // Mario Kart Wii + Super Mario Sunshine
     }
 
-    void testSearchByNameRespectsSystemAndRegion()
-    {
+    void testSearchByNameRespectsSystemAndRegion() {
         QTemporaryDir tmpDir;
         QVERIFY(tmpDir.isValid());
 
@@ -224,8 +211,7 @@ private slots:
         QCOMPARE(palResults.first().title, QString("Mario Kart Wii"));
     }
 
-    void testSearchByNameCaseInsensitive()
-    {
+    void testSearchByNameCaseInsensitive() {
         QTemporaryDir tmpDir;
         QVERIFY(tmpDir.isValid());
 
@@ -237,8 +223,7 @@ private slots:
         QCOMPARE(results.first().title, QString("Mario Kart Wii"));
     }
 
-    void testJapaneseFallbackLocale()
-    {
+    void testJapaneseFallbackLocale() {
         QTemporaryDir tmpDir;
         QVERIFY(tmpDir.isValid());
 
@@ -251,8 +236,7 @@ private slots:
         QCOMPARE(md.description, QString("Japan exclusive title."));
     }
 
-    void testCdnPlatformCode()
-    {
+    void testCdnPlatformCode() {
         QCOMPARE(GameTDBProvider::cdnPlatformCode("Wii"), QString("wii"));
         QCOMPARE(GameTDBProvider::cdnPlatformCode("GameCube"), QString("wii"));
         QCOMPARE(GameTDBProvider::cdnPlatformCode("WiiWare"), QString("wii"));
@@ -266,8 +250,7 @@ private slots:
         QVERIFY(GameTDBProvider::cdnPlatformCode("Unknown").isEmpty());
     }
 
-    void testCdnRegionCode()
-    {
+    void testCdnRegionCode() {
         QCOMPARE(GameTDBProvider::cdnRegionCode("NTSC-U"), QString("US"));
         QCOMPARE(GameTDBProvider::cdnRegionCode("PAL"), QString("EN"));
         QCOMPARE(GameTDBProvider::cdnRegionCode("NTSC-J"), QString("JA"));
@@ -275,14 +258,12 @@ private slots:
         QCOMPARE(GameTDBProvider::cdnRegionCode("KOR"), QString("KO"));
     }
 
-    void testBuildArtworkUrl()
-    {
+    void testBuildArtworkUrl() {
         QString url = GameTDBProvider::buildArtworkUrl("wii", "cover", "US", "RMGE01", "png");
         QCOMPARE(url, QString("https://art.gametdb.com/wii/cover/US/RMGE01.png"));
     }
 
-    void testGetArtworkWii()
-    {
+    void testGetArtworkWii() {
         QTemporaryDir tmpDir;
         QVERIFY(tmpDir.isValid());
 
@@ -299,8 +280,7 @@ private slots:
         QVERIFY(artwork.boxFull.toString().contains("cover3D"));
     }
 
-    void testGetArtworkGameCube()
-    {
+    void testGetArtworkGameCube() {
         QTemporaryDir tmpDir;
         QVERIFY(tmpDir.isValid());
 
@@ -313,15 +293,13 @@ private slots:
         QVERIFY(artwork.boxFront.toString().contains("wii/cover/US/GMCE01.png"));
     }
 
-    void testGetArtworkNotFound()
-    {
+    void testGetArtworkNotFound() {
         GameTDBProvider provider;
         ArtworkUrls artwork = provider.getArtwork("NONEXIST");
         QVERIFY(artwork.boxFront.isEmpty());
     }
 
-    void testBoxArtInMetadata()
-    {
+    void testBoxArtInMetadata() {
         QTemporaryDir tmpDir;
         QVERIFY(tmpDir.isValid());
 
@@ -334,8 +312,7 @@ private slots:
         QVERIFY(md.boxArtUrl.contains("cover"));
     }
 
-    void testNoRomEntryStillLoads()
-    {
+    void testNoRomEntryStillLoads() {
         QTemporaryDir tmpDir;
         QVERIFY(tmpDir.isValid());
 
@@ -349,8 +326,7 @@ private slots:
         QCOMPARE(md.players, 2);
     }
 
-    void testReleaseDateFormats()
-    {
+    void testReleaseDateFormats() {
         QTemporaryDir tmpDir;
         QVERIFY(tmpDir.isValid());
 
@@ -366,8 +342,7 @@ private slots:
         QVERIFY(norom.releaseDate.isEmpty());
     }
 
-    void testProviderAttributes()
-    {
+    void testProviderAttributes() {
         GameTDBProvider provider;
         QCOMPARE(provider.name(), QString("GameTDB"));
         QCOMPARE(provider.requiresAuth(), false);

@@ -21,119 +21,111 @@ namespace Remus {
 
 namespace {
 
-
-
-// Return a temp-dir base path that has at least estimatedBytes free.
-// Search order: REMUS_TMPDIR env var → system temp → archive parent dir.
-// Returns empty string if none of the candidates have sufficient space.
-struct TempDirChoice {
-    QString path;
-    QString warningIfFallback; // non-empty when we fell back from system temp
-};
-
-TempDirChoice chooseTempBase(const QString &archivePath, qint64 estimatedBytes)
-{
-    auto hasSpace = [](const QString &dir, qint64 needed) -> bool {
-        QStorageInfo info(dir);
-        return info.isValid() && info.bytesAvailable() >= needed;
+    // Return a temp-dir base path that has at least estimatedBytes free.
+    // Search order: REMUS_TMPDIR env var → system temp → archive parent dir.
+    // Returns empty string if none of the candidates have sufficient space.
+    struct TempDirChoice {
+        QString path;
+        QString warningIfFallback; // non-empty when we fell back from system temp
     };
 
-    // 1. User-specified override
-    const QString override = qEnvironmentVariable("REMUS_TMPDIR");
-    if (!override.isEmpty()) {
-        if (hasSpace(override, estimatedBytes))
-            return {override, {}};
-    }
+    TempDirChoice chooseTempBase(const QString &archivePath, qint64 estimatedBytes) {
+        auto hasSpace = [](const QString &dir, qint64 needed) -> bool {
+            QStorageInfo info(dir);
+            return info.isValid() && info.bytesAvailable() >= needed;
+        };
 
-    // 2. System default temp
-    const QString sysTemp = QDir::tempPath();
-    if (hasSpace(sysTemp, estimatedBytes))
-        return {sysTemp, {}};
+        // 1. User-specified override
+        const QString override = qEnvironmentVariable("REMUS_TMPDIR");
+        if (!override.isEmpty()) {
+            if (hasSpace(override, estimatedBytes))
+                return { override, { } };
+        }
 
-    // 3. Archive's own parent directory as last resort
-    const QString parentDir = QFileInfo(archivePath).absolutePath();
-    if (hasSpace(parentDir, estimatedBytes)) {
-        return {parentDir,
-                QStringLiteral("System temp (%1) lacks space; extracting beside archive (%2)")
-                    .arg(sysTemp, parentDir)};
-    }
+        // 2. System default temp
+        const QString sysTemp = QDir::tempPath();
+        if (hasSpace(sysTemp, estimatedBytes))
+            return { sysTemp, { } };
 
-    // Nothing suitable found — return empty so the caller can emit a clear error
-    QStorageInfo si(sysTemp);
-    return {{},
+        // 3. Archive's own parent directory as last resort
+        const QString parentDir = QFileInfo(archivePath).absolutePath();
+        if (hasSpace(parentDir, estimatedBytes)) {
+            return {
+                parentDir,
+                QStringLiteral("System temp (%1) lacks space; extracting beside archive (%2)").arg(sysTemp, parentDir)
+            };
+        }
+
+        // Nothing suitable found — return empty so the caller can emit a clear error
+        QStorageInfo si(sysTemp);
+        return { { },
             QStringLiteral("No temp location has ~%1 MB free. "
                            "Set REMUS_TMPDIR to a directory on a larger partition. "
                            "(%2 has %3 MB available)")
                 .arg(estimatedBytes / (1024 * 1024))
                 .arg(sysTemp)
-                .arg(si.bytesAvailable() / (1024 * 1024))};
-}
-
-QString selectExtractedMember(const QString &outputDir,
-                              const QStringList &extractedFiles,
-                              const QString &expectedMemberPath,
-                              const QString &fallbackFileName)
-{
-    const QString normalizedMember = ArchiveExtractor::normalizeArchiveMemberPath(expectedMemberPath);
-    const QString normalizedFallback = ArchiveExtractor::normalizeArchiveMemberPath(fallbackFileName);
-    const QString preferredFileName = QFileInfo(
-        !normalizedMember.isEmpty() ? normalizedMember : normalizedFallback).fileName();
-
-    for (const QString &path : extractedFiles) {
-        const QString relativePath = QDir(outputDir).relativeFilePath(path).replace('\\', '/');
-        if (!normalizedMember.isEmpty() && relativePath == normalizedMember) {
-            return path;
-        }
+                .arg(si.bytesAvailable() / (1024 * 1024)) };
     }
 
-    QString matchedByName;
-    for (const QString &path : extractedFiles) {
-        if (QFileInfo(path).fileName().compare(preferredFileName, Qt::CaseInsensitive) == 0) {
-            if (!matchedByName.isEmpty()) {
-                return QString();
+    QString selectExtractedMember(const QString &outputDir, const QStringList &extractedFiles,
+        const QString &expectedMemberPath, const QString &fallbackFileName) {
+        const QString normalizedMember = ArchiveExtractor::normalizeArchiveMemberPath(expectedMemberPath);
+        const QString normalizedFallback = ArchiveExtractor::normalizeArchiveMemberPath(fallbackFileName);
+        const QString preferredFileName
+            = QFileInfo(!normalizedMember.isEmpty() ? normalizedMember : normalizedFallback).fileName();
+
+        for (const QString &path : extractedFiles) {
+            const QString relativePath = QDir(outputDir).relativeFilePath(path).replace('\\', '/');
+            if (!normalizedMember.isEmpty() && relativePath == normalizedMember) {
+                return path;
             }
-            matchedByName = path;
         }
-    }
 
-    return matchedByName;
-}
+        QString matchedByName;
+        for (const QString &path : extractedFiles) {
+            if (QFileInfo(path).fileName().compare(preferredFileName, Qt::CaseInsensitive) == 0) {
+                if (!matchedByName.isEmpty()) {
+                    return QString();
+                }
+                matchedByName = path;
+            }
+        }
+
+        return matchedByName;
+    }
 
 } // namespace
 
 HashService::HashService()
-    : m_hasher(std::make_unique<Hasher>())
-{
-}
+    : m_hasher(std::make_unique<Hasher>()) { }
 
-HashService::~HashService()
-{
-}
+HashService::~HashService() { }
 
-int HashService::hashAll(Database *db,
-                         ProgressCallback progressCb,
-                         LogCallback logCb,
-                         const std::atomic<bool> *cancelled)
-{
-    if (!db) return 0;
+int HashService::hashAll(
+    Database *db, ProgressCallback progressCb, LogCallback logCb, const std::atomic<bool> *cancelled) {
+    if (!db)
+        return 0;
 
     QList<FileRecord> files = db->getFilesWithoutHashes();
     const int total = files.size();
-    if (progressCb) progressCb(0, total, QString());
+    if (progressCb)
+        progressCb(0, total, QString());
 
     if (total == 0) {
-        if (logCb) logCb(QString("Hashing complete: 0/0"));
+        if (logCb)
+            logCb(QString("Hashing complete: 0/0"));
         return 0;
     }
 
     if (cancelled && cancelled->load()) {
-        if (logCb) logCb(QString("Hashing cancelled: 0/%1").arg(total));
+        if (logCb)
+            logCb(QString("Hashing cancelled: 0/%1").arg(total));
         return 0;
     }
 
     const QList<HashBatchResult> taskResults = computeHashes(files, progressCb, cancelled);
 
-    int hashed  = 0;
+    int hashed = 0;
     int skipped = 0;
 
     QSqlDatabase sqlDb = db->database();
@@ -149,10 +141,7 @@ int HashService::hashAll(Database *db,
             continue;
         }
         if (task.result.success) {
-            if (db->updateFileHashes(task.fileId,
-                                     task.result.crc32,
-                                     task.result.md5,
-                                     task.result.sha1)) {
+            if (db->updateFileHashes(task.fileId, task.result.crc32, task.result.md5, task.result.sha1)) {
                 hashed++;
             } else {
                 skipped++;
@@ -183,12 +172,11 @@ int HashService::hashAll(Database *db,
     return hashed;
 }
 
-QList<HashService::HashBatchResult> HashService::computeHashes(const QList<FileRecord> &files,
-                                                                ProgressCallback progressCb,
-                                                                const std::atomic<bool> *cancelled)
-{
+QList<HashService::HashBatchResult> HashService::computeHashes(
+    const QList<FileRecord> &files, ProgressCallback progressCb, const std::atomic<bool> *cancelled) {
     const int total = files.size();
-    if (total == 0) return {};
+    if (total == 0)
+        return { };
 
     const int idealThreads = QThread::idealThreadCount();
     const int maxThreads = qMax(1, qMin(idealThreads > 0 ? idealThreads : 1, 8));
@@ -201,15 +189,15 @@ QList<HashService::HashBatchResult> HashService::computeHashes(const QList<FileR
     auto doneCount = std::make_shared<std::atomic<int>>(0);
     ProgressCallback cbCopy = progressCb;
 
-    QList<HashBatchResult> taskResults = QtConcurrent::blockingMapped(&localPool, files,
-        [total, doneCount, cbCopy, cancelled](const FileRecord &file) {
+    QList<HashBatchResult> taskResults = QtConcurrent::blockingMapped(
+        &localPool, files, [total, doneCount, cbCopy, cancelled](const FileRecord &file) {
             HashBatchResult task;
-            task.fileId   = file.id;
+            task.fileId = file.id;
             task.filename = file.filename;
 
             if (cancelled && cancelled->load()) {
-                task.skipped     = true;
-                task.skipReason  = QStringLiteral("cancelled");
+                task.skipped = true;
+                task.skipReason = QStringLiteral("cancelled");
             } else {
                 HashService worker;
                 task.result = worker.hashRecord(file);
@@ -226,12 +214,13 @@ QList<HashService::HashBatchResult> HashService::computeHashes(const QList<FileR
     return taskResults;
 }
 
-bool HashService::hashFile(Database *db, int fileId)
-{
-    if (!db) return false;
+bool HashService::hashFile(Database *db, int fileId) {
+    if (!db)
+        return false;
 
     FileRecord file = db->getFileById(fileId);
-    if (file.id == 0) return false;
+    if (file.id == 0)
+        return false;
 
     HashResult result = hashRecord(file);
     if (result.success) {
@@ -241,8 +230,7 @@ bool HashService::hashFile(Database *db, int fileId)
     return false;
 }
 
-HashResult HashService::hashRecord(const FileRecord &file)
-{
+HashResult HashService::hashRecord(const FileRecord &file) {
     // Detect whether this file is inside an archive
     auto isArchivePath = [](const QString &path) {
         const QString lower = path.toLower();
@@ -291,8 +279,7 @@ HashResult HashService::hashRecord(const FileRecord &file)
     }
 
     ArchiveExtractor extractor;
-    const QString internalPath = file.archiveInternalPath.isEmpty()
-        ? file.filename : file.archiveInternalPath;
+    const QString internalPath = file.archiveInternalPath.isEmpty() ? file.filename : file.archiveInternalPath;
 
     ExtractionResult extraction = extractor.extractFile(archivePath, internalPath, tempDir.path());
 
@@ -300,21 +287,16 @@ HashResult HashService::hashRecord(const FileRecord &file)
         // Fallback: extract entire archive and pick suitable file
         extraction = extractor.extract(archivePath, tempDir.path(), false);
         if (!extraction.success || extraction.extractedFiles.isEmpty()) {
-            result.error = extraction.error.isEmpty()
-                ? QString("Failed to extract %1 from archive").arg(internalPath)
-                : extraction.error;
+            result.error = extraction.error.isEmpty() ? QString("Failed to extract %1 from archive").arg(internalPath)
+                                                      : extraction.error;
             return result;
         }
 
-        const QString picked = selectExtractedMember(
-            tempDir.path(),
-            extraction.extractedFiles,
-            internalPath,
-            file.filename);
+        const QString picked
+            = selectExtractedMember(tempDir.path(), extraction.extractedFiles, internalPath, file.filename);
 
         if (picked.isEmpty()) {
-            result.error = QStringLiteral("Failed to locate extracted archive member: %1")
-                .arg(internalPath);
+            result.error = QStringLiteral("Failed to locate extracted archive member: %1").arg(internalPath);
             return result;
         }
 

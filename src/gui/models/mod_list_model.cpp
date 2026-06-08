@@ -3,12 +3,9 @@
 namespace Remus {
 
 ModListModel::ModListModel(QObject *parent)
-    : QAbstractListModel(parent)
-{
-}
+    : QAbstractListModel(parent) { }
 
-int ModListModel::rowCount(const QModelIndex &parent) const
-{
+int ModListModel::rowCount(const QModelIndex &parent) const {
     if (parent.isValid()) {
         return 0;
     }
@@ -16,8 +13,7 @@ int ModListModel::rowCount(const QModelIndex &parent) const
     return m_entries.size();
 }
 
-QVariant ModListModel::data(const QModelIndex &index, int role) const
-{
+QVariant ModListModel::data(const QModelIndex &index, int role) const {
     if (!index.isValid() || index.row() < 0 || index.row() >= m_entries.size()) {
         return QVariant();
     }
@@ -53,33 +49,30 @@ QVariant ModListModel::data(const QModelIndex &index, int role) const
     }
 }
 
-QHash<int, QByteArray> ModListModel::roleNames() const
-{
+QHash<int, QByteArray> ModListModel::roleNames() const {
     return {
-        {IdRole, "modId"},
-        {TitleRole, "title"},
-        {AuthorRole, "author"},
-        {VersionRole, "version"},
-        {TypeRole, "type"},
-        {FormatRole, "format"},
-        {SystemRole, "system"},
-        {DescriptionRole, "description"},
-        {RatingRole, "rating"},
-        {DownloadsRole, "downloads"},
-        {InstalledRole, "installed"},
-        {InstallationIdRole, "installationId"},
+        { IdRole, "modId" },
+        { TitleRole, "title" },
+        { AuthorRole, "author" },
+        { VersionRole, "version" },
+        { TypeRole, "type" },
+        { FormatRole, "format" },
+        { SystemRole, "system" },
+        { DescriptionRole, "description" },
+        { RatingRole, "rating" },
+        { DownloadsRole, "downloads" },
+        { InstalledRole, "installed" },
+        { InstallationIdRole, "installationId" },
     };
 }
 
-void ModListModel::setEntries(const QList<ModListEntry> &entries)
-{
+void ModListModel::setEntries(const QList<ModListEntry> &entries) {
     beginResetModel();
     m_entries = entries;
     endResetModel();
 }
 
-void ModListModel::clear()
-{
+void ModListModel::clear() {
     beginResetModel();
     m_entries.clear();
     endResetModel();

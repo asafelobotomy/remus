@@ -13,21 +13,21 @@ namespace Remus {
  * @brief A single game entry parsed from a GameTDB XML database
  */
 struct GameTDBEntry {
-    QString id;                 // Platform-specific game ID (e.g. "RMCP01")
-    QString type;               // "Wii", "GameCube", "DS", "3DS", "WiiU", "Switch", "PS3"
-    QString region;             // "PAL", "NTSC-U", "NTSC-J", etc.
-    QString title;              // English title (from locale lang="EN")
-    QString synopsis;           // English description
+    QString id; // Platform-specific game ID (e.g. "RMCP01")
+    QString type; // "Wii", "GameCube", "DS", "3DS", "WiiU", "Switch", "PS3"
+    QString region; // "PAL", "NTSC-U", "NTSC-J", etc.
+    QString title; // English title (from locale lang="EN")
+    QString synopsis; // English description
     QString developer;
     QString publisher;
-    QString genre;              // Comma-separated genres
-    int players = 0;            // Max local players
-    int year = 0;               // Release year
-    int month = 0;              // Release month
-    int day = 0;                // Release day
-    QString crc32;              // ROM CRC32 (uppercase, from <rom> element)
-    QString md5;                // ROM MD5 (uppercase)
-    QString sha1;               // ROM SHA1 (uppercase)
+    QString genre; // Comma-separated genres
+    int players = 0; // Max local players
+    int year = 0; // Release year
+    int month = 0; // Release month
+    int day = 0; // Release day
+    QString crc32; // ROM CRC32 (uppercase, from <rom> element)
+    QString md5; // ROM MD5 (uppercase)
+    QString sha1; // ROM SHA1 (uppercase)
 };
 
 /**
@@ -46,8 +46,7 @@ struct GameTDBEntry {
  * - Artwork URL construction via art.gametdb.com CDN
  * - No authentication required
  */
-class GameTDBProvider : public MetadataProvider
-{
+class GameTDBProvider : public MetadataProvider {
     Q_OBJECT
 
 public:
@@ -69,19 +68,26 @@ public:
     int loadDatabase(const QString &filePath);
 
     // MetadataProvider interface
-    QList<SearchResult> searchByName(const QString &title,
-                                     const QString &system,
-                                     const QString &region = QString()) override;
+    QList<SearchResult> searchByName(
+        const QString &title, const QString &system, const QString &region = QString()) override;
 
     GameMetadata getByHash(const QString &hash, const QString &system) override;
     GameMetadata getById(const QString &id) override;
     ArtworkUrls getArtwork(const QString &id) override;
 
-    QString name() const override { return QStringLiteral("GameTDB"); }
-    bool requiresAuth() const override { return false; }
+    QString name() const override {
+        return QStringLiteral("GameTDB");
+    }
+    bool requiresAuth() const override {
+        return false;
+    }
 
-    QString providerName() const { return QStringLiteral("GameTDB"); }
-    int priority() const { return Constants::Providers::Priority::GAMETDB; }
+    QString providerName() const {
+        return QStringLiteral("GameTDB");
+    }
+    int priority() const {
+        return Constants::Providers::Priority::GAMETDB;
+    }
 
     /**
      * @brief Map a GameTDB type string to the CDN platform code
@@ -96,11 +102,8 @@ public:
     /**
      * @brief Build a GameTDB artwork CDN URL
      */
-    static QString buildArtworkUrl(const QString &platformCode,
-                                   const QString &artType,
-                                   const QString &regionCode,
-                                   const QString &gameId,
-                                   const QString &extension);
+    static QString buildArtworkUrl(const QString &platformCode, const QString &artType, const QString &regionCode,
+        const QString &gameId, const QString &extension);
 
     /**
      * @brief O(1) lookup by normalized (lowercase trimmed) title.
@@ -114,11 +117,11 @@ private:
     QString normalizeHash(const QString &hash) const;
 
     mutable QMutex m_mutex;
-    QHash<QString, GameTDBEntry> m_idIndex;       // gameId -> entry
-    QHash<QString, QString> m_crc32Index;          // CRC32 -> gameId
-    QHash<QString, QString> m_md5Index;            // MD5 -> gameId
-    QHash<QString, QString> m_sha1Index;           // SHA1 -> gameId
-    QHash<QString, QString> m_titleIndex;          // normalized title -> gameId (first seen)
+    QHash<QString, GameTDBEntry> m_idIndex; // gameId -> entry
+    QHash<QString, QString> m_crc32Index; // CRC32 -> gameId
+    QHash<QString, QString> m_md5Index; // MD5 -> gameId
+    QHash<QString, QString> m_sha1Index; // SHA1 -> gameId
+    QHash<QString, QString> m_titleIndex; // normalized title -> gameId (first seen)
 };
 
 } // namespace Remus

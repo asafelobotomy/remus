@@ -22,8 +22,7 @@ struct MatchTask {
 
 // Thread-safe: all DiscMagicDetector methods are static and create their own
 // worker-local ArchiveExtractor instances.  No shared mutable state.
-MatchTask buildMatchTask(const FileRecord &file)
-{
+MatchTask buildMatchTask(const FileRecord &file) {
     MatchTask task;
     task.file = file;
     if (!DiscMagicDetector::isDiscImageExtension(file.extension))
@@ -31,10 +30,8 @@ MatchTask buildMatchTask(const FileRecord &file)
 
     DiscHeaderInfo discInfo;
     if (file.isCompressed && !file.archivePath.isEmpty()) {
-        const QString memberPath = file.archiveInternalPath.isEmpty()
-            ? file.filename : file.archiveInternalPath;
-        discInfo = DiscMagicDetector::detectFromArchive(
-            file.archivePath, memberPath, file.fileSize);
+        const QString memberPath = file.archiveInternalPath.isEmpty() ? file.filename : file.archiveInternalPath;
+        discInfo = DiscMagicDetector::detectFromArchive(file.archivePath, memberPath, file.fileSize);
     } else {
         discInfo = DiscMagicDetector::detect(file.currentPath);
         if (!discInfo.detected || discInfo.serial.isEmpty()) {
@@ -52,10 +49,11 @@ MatchTask buildMatchTask(const FileRecord &file)
 
 } // namespace
 
-int handleMatchCommand(CliContext &ctx)
-{
-    if (!ctx.parser.isSet("match") && !ctx.processRequested) return 0;
-    if (ctx.processRequested && ctx.processHandled) return 0;
+int handleMatchCommand(CliContext &ctx) {
+    if (!ctx.parser.isSet("match") && !ctx.processRequested)
+        return 0;
+    if (ctx.processRequested && ctx.processHandled)
+        return 0;
 
     qInfo() << "";
     qInfo() << "=== Intelligent Metadata Matching (M3) ===";
@@ -64,17 +62,13 @@ int handleMatchCommand(CliContext &ctx)
     auto orchestrator = buildOrchestrator(ctx.parser, &ctx.db);
 
     QObject::connect(orchestrator.get(), &ProviderOrchestrator::tryingProvider,
-                     [](const QString &name, const QString &method) {
-        qInfo() << "  [TRYING]" << name << "(" << method << ")";
-    });
-    QObject::connect(orchestrator.get(), &ProviderOrchestrator::providerSucceeded,
-                     [](const QString &name, const QString &method) {
-        qInfo() << "  [SUCCESS]" << name << "matched via" << method;
-    });
+        [](const QString &name, const QString &method) { qInfo() << "  [TRYING]" << name << "(" << method << ")"; });
+    QObject::connect(
+        orchestrator.get(), &ProviderOrchestrator::providerSucceeded, [](const QString &name, const QString &method) {
+            qInfo() << "  [SUCCESS]" << name << "matched via" << method;
+        });
     QObject::connect(orchestrator.get(), &ProviderOrchestrator::providerFailed,
-                     [](const QString &name, const QString &error) {
-        qInfo() << "  [FAILED]" << name << "-" << error;
-    });
+        [](const QString &name, const QString &error) { qInfo() << "  [FAILED]" << name << "-" << error; });
 
     QList<FileRecord> files = getHashedFiles(ctx.db, ctx.processFileScopeIds);
     int minConfidence = ctx.parser.value(Cli::Options::MIN_CONFIDENCE).toInt();
@@ -91,8 +85,10 @@ int handleMatchCommand(CliContext &ctx)
     // stay on the main thread — the Database connection is not thread-safe).
     QList<FileRecord> pendingFiles;
     for (const FileRecord &file : files) {
-        if (!fileMatchesSystemFilter(file, ctx.processSystemIdFilter)) continue;
-        if (ctx.db.getMatchForFile(file.id).matchId != 0) continue;
+        if (!fileMatchesSystemFilter(file, ctx.processSystemIdFilter))
+            continue;
+        if (ctx.db.getMatchForFile(file.id).matchId != 0)
+            continue;
         pendingFiles.append(file);
     }
     qInfo() << "Files pending match:" << pendingFiles.size();
@@ -102,9 +98,8 @@ int handleMatchCommand(CliContext &ctx)
     // DiscMagicDetector methods are static and worker-local; safe for concurrent
     // use.  HttpMetadataProvider instances (QNAM thread affinity) are NOT touched
     // here — network provider calls remain serial in Phase 2.
-    const QList<MatchTask> tasks = QtConcurrent::blockingMapped(
-        pendingFiles,
-        [](const FileRecord &f) { return buildMatchTask(f); });
+    const QList<MatchTask> tasks
+        = QtConcurrent::blockingMapped(pendingFiles, [](const FileRecord &f) { return buildMatchTask(f); });
 
     // Phase 2 — Serial provider matching and DB writes.
     // QNetworkAccessManager inside HttpMetadataProvider has thread affinity to
@@ -122,24 +117,21 @@ int handleMatchCommand(CliContext &ctx)
             qInfo() << "  Disc serial:" << task.discSerial;
 
         GameMetadata metadata = orchestrator->searchWithFallback(
-            selectBestHash(file), displayName, systemName,
-            file.crc32, file.md5, file.sha1, task.discSerial);
+            selectBestHash(file), displayName, systemName, file.crc32, file.md5, file.sha1, task.discSerial);
 
         if (!metadata.title.isEmpty()) {
-            const int confidence = metadata.matchScore > 0
-                ? static_cast<int>(metadata.matchScore * 100) : 0;
+            const int confidence = metadata.matchScore > 0 ? static_cast<int>(metadata.matchScore * 100) : 0;
 
             if (confidence >= minConfidence) {
                 int gameId = persistMetadata(ctx.db, file, metadata);
                 qInfo() << "  ✓ MATCHED:" << metadata.title << "(" << confidence << "% confidence)";
                 qInfo() << "    Provider:" << metadata.providerId;
-                qInfo() << "    Method:"   << metadata.matchMethod;
-                qInfo() << "    System:"   << metadata.system;
-                qInfo() << "    Game ID:"  << gameId;
+                qInfo() << "    Method:" << metadata.matchMethod;
+                qInfo() << "    System:" << metadata.system;
+                qInfo() << "    Game ID:" << gameId;
                 matched++;
             } else {
-                qInfo() << "  ⚠ Low confidence:" << confidence
-                        << "% (threshold:" << minConfidence << "%)";
+                qInfo() << "  ⚠ Low confidence:" << confidence << "% (threshold:" << minConfidence << "%)";
                 failed++;
             }
         } else {
@@ -151,17 +143,16 @@ int handleMatchCommand(CliContext &ctx)
 
     qInfo() << "=== Matching Complete ===";
     qInfo() << "Matched:" << matched;
-    qInfo() << "Failed:"  << failed;
+    qInfo() << "Failed:" << failed;
     if (matched + failed > 0) {
-        qInfo() << "Success rate:"
-                << QString::number((matched * 100.0) / (matched + failed), 'f', 1) + "%";
+        qInfo() << "Success rate:" << QString::number((matched * 100.0) / (matched + failed), 'f', 1) + "%";
     }
     return 0;
 }
 
-int handleMatchReportCommand(CliContext &ctx)
-{
-    if (!ctx.parser.isSet("match-report")) return 0;
+int handleMatchReportCommand(CliContext &ctx) {
+    if (!ctx.parser.isSet("match-report"))
+        return 0;
 
     qInfo() << "";
     qInfo() << "=== Matching Report with Confidence Scores ===";
@@ -196,28 +187,32 @@ int handleMatchReportCommand(CliContext &ctx)
 
         int confidence = 0;
         QString method = "N/A";
-        QString title  = "No match";
+        QString title = "No match";
 
         if (matches.contains(file.id)) {
             const auto &match = matches[file.id];
             confidence = static_cast<int>(match.confidence);
             method = match.matchMethod.isEmpty() ? "N/A" : match.matchMethod;
-            title  = match.gameTitle.isEmpty()    ? "No match" : match.gameTitle;
+            title = match.gameTitle.isEmpty() ? "No match" : match.gameTitle;
         }
 
         QString indicator;
-        if      (confidence >= 90) indicator = "✓✓✓";
-        else if (confidence >= 70) indicator = "✓✓";
-        else if (confidence >= 50) indicator = "✓";
-        else                       indicator = "✗";
+        if (confidence >= 90)
+            indicator = "✓✓✓";
+        else if (confidence >= 70)
+            indicator = "✓✓";
+        else if (confidence >= 50)
+            indicator = "✓";
+        else
+            indicator = "✗";
 
         outStream << QString("│ %1 │ %2 │ %3 %4 │ %5 │ %6 │\n")
-            .arg(QString::number(file.id).leftJustified(10))
-            .arg(displayName.left(28).leftJustified(28))
-            .arg(QString::number(confidence).rightJustified(4))
-            .arg(indicator.rightJustified(3))
-            .arg(method.leftJustified(8))
-            .arg(title.left(19).leftJustified(19));
+                         .arg(QString::number(file.id).leftJustified(10))
+                         .arg(displayName.left(28).leftJustified(28))
+                         .arg(QString::number(confidence).rightJustified(4))
+                         .arg(indicator.rightJustified(3))
+                         .arg(method.leftJustified(8))
+                         .arg(title.left(19).leftJustified(19));
     }
 
     outStream << "└────────────┴──────────────────────────────┴──────────┴──────────┴──────────────────────┘\n";

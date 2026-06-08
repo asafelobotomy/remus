@@ -15,26 +15,27 @@ using namespace Remus;
 class ClosedDeviceReply : public QNetworkReply {
     Q_OBJECT
 public:
-    explicit ClosedDeviceReply(QObject *parent = nullptr) : QNetworkReply(parent)
-    {
+    explicit ClosedDeviceReply(QObject *parent = nullptr)
+        : QNetworkReply(parent) {
         // Default error is NoError. Device is never opened, so isOpen() == false.
-        QMetaObject::invokeMethod(this, [this]() { emit finished(); },
-                                  Qt::QueuedConnection);
+        QMetaObject::invokeMethod(this, [this]() { emit finished(); }, Qt::QueuedConnection);
     }
-    void abort() override {}
+    void abort() override { }
+
 protected:
-    qint64 readData(char *, qint64) override { return -1; }
+    qint64 readData(char *, qint64) override {
+        return -1;
+    }
 };
 
 class FakeNetworkAccessManager : public QNetworkAccessManager {
     Q_OBJECT
 public:
     explicit FakeNetworkAccessManager(QObject *parent = nullptr)
-        : QNetworkAccessManager(parent) {}
+        : QNetworkAccessManager(parent) { }
+
 protected:
-    QNetworkReply *createRequest(Operation, const QNetworkRequest &,
-                                  QIODevice *) override
-    {
+    QNetworkReply *createRequest(Operation, const QNetworkRequest &, QIODevice *) override {
         return new ClosedDeviceReply(this);
     }
 };
@@ -45,30 +46,32 @@ class RedirectReply : public QNetworkReply {
     Q_OBJECT
 public:
     explicit RedirectReply(const QUrl &redirectTo, QObject *parent = nullptr)
-        : QNetworkReply(parent)
-    {
+        : QNetworkReply(parent) {
         // Signal a redirect to the target URL before finishing.
         setAttribute(QNetworkRequest::RedirectionTargetAttribute, redirectTo);
         setAttribute(QNetworkRequest::HttpStatusCodeAttribute, 301);
-        QMetaObject::invokeMethod(this, [this]() { emit finished(); },
-                                  Qt::QueuedConnection);
+        QMetaObject::invokeMethod(this, [this]() { emit finished(); }, Qt::QueuedConnection);
     }
-    void abort() override {}
+    void abort() override { }
+
 protected:
-    qint64 readData(char *, qint64) override { return -1; }
+    qint64 readData(char *, qint64) override {
+        return -1;
+    }
 };
 
 class RedirectingFakeManager : public QNetworkAccessManager {
     Q_OBJECT
 public:
     explicit RedirectingFakeManager(const QUrl &redirectTo, QObject *parent = nullptr)
-        : QNetworkAccessManager(parent), m_redirectTo(redirectTo) {}
+        : QNetworkAccessManager(parent)
+        , m_redirectTo(redirectTo) { }
+
 protected:
-    QNetworkReply *createRequest(Operation, const QNetworkRequest &,
-                                  QIODevice *) override
-    {
+    QNetworkReply *createRequest(Operation, const QNetworkRequest &, QIODevice *) override {
         return new RedirectReply(m_redirectTo, this);
     }
+
 private:
     QUrl m_redirectTo;
 };
@@ -90,8 +93,7 @@ private slots:
     void redirectToPrivateHostRejected();
 };
 
-void ArtworkDownloaderTest::downloadsLocalFile()
-{
+void ArtworkDownloaderTest::downloadsLocalFile() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
@@ -114,8 +116,7 @@ void ArtworkDownloaderTest::downloadsLocalFile()
     QCOMPARE(completeSpy.count(), 1);
 }
 
-void ArtworkDownloaderTest::returnsCorrectedFormatPath()
-{
+void ArtworkDownloaderTest::returnsCorrectedFormatPath() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
@@ -135,8 +136,7 @@ void ArtworkDownloaderTest::returnsCorrectedFormatPath()
     QVERIFY(!QFile::exists(dest));
 }
 
-void ArtworkDownloaderTest::invalidUrlFails()
-{
+void ArtworkDownloaderTest::invalidUrlFails() {
     ArtworkDownloader downloader;
     QSignalSpy failSpy(&downloader, &ArtworkDownloader::downloadFailed);
     const bool ok = downloader.download(QUrl("http://"), "/tmp/nowhere.bin");
@@ -144,19 +144,17 @@ void ArtworkDownloaderTest::invalidUrlFails()
     QVERIFY(!failSpy.isEmpty());
 }
 
-void ArtworkDownloaderTest::httpUrlFails()
-{
+void ArtworkDownloaderTest::httpUrlFails() {
     ArtworkDownloader downloader;
     QSignalSpy failSpy(&downloader, &ArtworkDownloader::downloadFailed);
 
-    const bool ok = downloader.download(QUrl(QStringLiteral("http://example.com/cover.jpg")),
-                                        QStringLiteral("/tmp/nowhere.bin"));
+    const bool ok
+        = downloader.download(QUrl(QStringLiteral("http://example.com/cover.jpg")), QStringLiteral("/tmp/nowhere.bin"));
     QVERIFY(!ok);
     QCOMPARE(failSpy.count(), 1);
 }
 
-void ArtworkDownloaderTest::fileUrlRejectedAsRemote()
-{
+void ArtworkDownloaderTest::fileUrlRejectedAsRemote() {
     // file:// URLs must be rejected by isSupportedRemoteUrl so that a malicious
     // provider response cannot coerce local-file reads via the artwork path.
     QVERIFY(!ArtworkDownloader::isSupportedRemoteUrl(QUrl::fromLocalFile(QStringLiteral("/etc/passwd"))));
@@ -165,8 +163,7 @@ void ArtworkDownloaderTest::fileUrlRejectedAsRemote()
     QVERIFY(!ArtworkDownloader::isSupportedRemoteUrl(QUrl(QStringLiteral("https://"))));
 }
 
-void ArtworkDownloaderTest::localhostAndPrivateHostsRejectedAsRemote()
-{
+void ArtworkDownloaderTest::localhostAndPrivateHostsRejectedAsRemote() {
     QVERIFY(!ArtworkDownloader::isSupportedRemoteUrl(QUrl(QStringLiteral("https://localhost/cover.jpg"))));
     QVERIFY(!ArtworkDownloader::isSupportedRemoteUrl(QUrl(QStringLiteral("https://127.0.0.1/cover.jpg"))));
     QVERIFY(!ArtworkDownloader::isSupportedRemoteUrl(QUrl(QStringLiteral("https://192.168.1.5/cover.jpg"))));
@@ -174,44 +171,32 @@ void ArtworkDownloaderTest::localhostAndPrivateHostsRejectedAsRemote()
     QVERIFY(ArtworkDownloader::isSupportedRemoteUrl(QUrl(QStringLiteral("https://cdn.example.com/cover.jpg"))));
 }
 
-void ArtworkDownloaderTest::resolvedPrivateAddressesRejected()
-{
-    QVERIFY(!ArtworkDownloader::areResolvedRemoteAddressesAllowed({}));
-    QVERIFY(!ArtworkDownloader::areResolvedRemoteAddressesAllowed({
-        QHostAddress(QStringLiteral("127.0.0.1"))
-    }));
-    QVERIFY(!ArtworkDownloader::areResolvedRemoteAddressesAllowed({
-        QHostAddress(QStringLiteral("192.168.1.5"))
-    }));
-    QVERIFY(!ArtworkDownloader::areResolvedRemoteAddressesAllowed({
-        QHostAddress(QStringLiteral("::1"))
-    }));
-    QVERIFY(ArtworkDownloader::areResolvedRemoteAddressesAllowed({
-        QHostAddress(QStringLiteral("93.184.216.34"))
-    }));
+void ArtworkDownloaderTest::resolvedPrivateAddressesRejected() {
+    QVERIFY(!ArtworkDownloader::areResolvedRemoteAddressesAllowed({ }));
+    QVERIFY(!ArtworkDownloader::areResolvedRemoteAddressesAllowed({ QHostAddress(QStringLiteral("127.0.0.1")) }));
+    QVERIFY(!ArtworkDownloader::areResolvedRemoteAddressesAllowed({ QHostAddress(QStringLiteral("192.168.1.5")) }));
+    QVERIFY(!ArtworkDownloader::areResolvedRemoteAddressesAllowed({ QHostAddress(QStringLiteral("::1")) }));
+    QVERIFY(ArtworkDownloader::areResolvedRemoteAddressesAllowed({ QHostAddress(QStringLiteral("93.184.216.34")) }));
 }
 
-void ArtworkDownloaderTest::downloadFromClosedDeviceReturnsEmpty()
-{
+void ArtworkDownloaderTest::downloadFromClosedDeviceReturnsEmpty() {
     // Exercises the isOpen() guard added for C2. Requires DNS resolution for
     // example.com to pass the SSRF security check; skip in offline environments.
     const QHostInfo hostInfo = QHostInfo::fromName(QStringLiteral("example.com"));
     if (hostInfo.error() != QHostInfo::NoError
-            || !ArtworkDownloader::areResolvedRemoteAddressesAllowed(hostInfo.addresses())) {
+        || !ArtworkDownloader::areResolvedRemoteAddressesAllowed(hostInfo.addresses())) {
         QSKIP("DNS resolution for example.com failed or returned a disallowed address");
     }
 
     FakeNetworkAccessManager mgr;
     ArtworkDownloader downloader(&mgr);
 
-    const QByteArray data = downloader.downloadToMemory(
-        QUrl(QStringLiteral("https://example.com/img.png")));
+    const QByteArray data = downloader.downloadToMemory(QUrl(QStringLiteral("https://example.com/img.png")));
 
     QVERIFY(data.isEmpty());
 }
 
-void ArtworkDownloaderTest::redirectToPrivateHostRejected()
-{
+void ArtworkDownloaderTest::redirectToPrivateHostRejected() {
     // Finding #4 — A redirect pointing to a private-IP literal must be rejected
     // via the URL check before making another network connection. This exercises
     // the redirect guard path and confirms private-address redirects are blocked.
@@ -229,8 +214,7 @@ void ArtworkDownloaderTest::redirectToPrivateHostRejected()
 
     // 8.8.8.8 is a public IP — isSupportedRemoteUrl accepts it and
     // QHostInfo::fromName resolves the numeric literal without a network call.
-    const QByteArray data = downloader.downloadToMemory(
-        QUrl(QStringLiteral("https://8.8.8.8/cover.png")));
+    const QByteArray data = downloader.downloadToMemory(QUrl(QStringLiteral("https://8.8.8.8/cover.png")));
 
     QVERIFY(data.isEmpty());
     QCOMPARE(failSpy.count(), 1);

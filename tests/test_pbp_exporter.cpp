@@ -9,14 +9,12 @@
 using namespace Remus;
 
 namespace {
-bool writeAll(QFile &file, const QByteArray &data)
-{
+bool writeAll(QFile &file, const QByteArray &data) {
     return file.write(data) == data.size();
 }
 } // namespace
 
-class FakePBPExporter : public PBPExporter
-{
+class FakePBPExporter : public PBPExporter {
 public:
     using ProcessResult = ExternalToolRunner::ProcessResult;
     ProcessResult nextProcess;
@@ -26,15 +24,13 @@ public:
     bool autoCreateTrackedOutput = false;
 
 protected:
-    ProcessResult runProcess(const QString &program, const QStringList &args, int) override
-    {
+    ProcessResult runProcess(const QString &program, const QStringList &args, int) override {
         lastProgram = program;
         lastArgs = args;
         return nextProcess;
     }
 
-    ProcessResult runProcessTracked(const QString &program, const QStringList &args, int) override
-    {
+    ProcessResult runProcessTracked(const QString &program, const QStringList &args, int) override {
         lastProgram = program;
         lastArgs = args;
 
@@ -44,8 +40,7 @@ protected:
                 const QString outputPath = args.last();
                 QFileInfo info(outputPath);
                 if (!QDir().mkpath(info.absolutePath())) {
-                    qFatal("FakePBPExporter: cannot mkpath %s",
-                           qPrintable(info.absolutePath()));
+                    qFatal("FakePBPExporter: cannot mkpath %s", qPrintable(info.absolutePath()));
                 }
                 QFile outputFile(outputPath);
                 if (outputFile.open(QIODevice::WriteOnly)) {
@@ -60,8 +55,7 @@ protected:
     }
 };
 
-class PBPExporterTest : public QObject
-{
+class PBPExporterTest : public QObject {
     Q_OBJECT
 
 private slots:
@@ -72,8 +66,7 @@ private slots:
     void testExportReturnsErrorWhenToolFails();
 };
 
-void PBPExporterTest::testAvailabilityUsesConfiguredToolPath()
-{
+void PBPExporterTest::testAvailabilityUsesConfiguredToolPath() {
     FakePBPExporter exporter;
     exporter.setPSXPackagerPath("/usr/local/bin/PSXPackager");
     exporter.nextProcess.started = false;
@@ -82,8 +75,7 @@ void PBPExporterTest::testAvailabilityUsesConfiguredToolPath()
     QCOMPARE(exporter.lastProgram, QStringLiteral("/usr/local/bin/PSXPackager"));
 }
 
-void PBPExporterTest::testGetVersionPrefersStderrWhenStdoutMissing()
-{
+void PBPExporterTest::testGetVersionPrefersStderrWhenStdoutMissing() {
     FakePBPExporter exporter;
     exporter.nextProcess.started = true;
     exporter.nextProcess.stdError = QStringLiteral("PSXPackager 1.2.0");
@@ -92,8 +84,7 @@ void PBPExporterTest::testGetVersionPrefersStderrWhenStdoutMissing()
     QCOMPARE(version, QStringLiteral("PSXPackager 1.2.0"));
 }
 
-void PBPExporterTest::testExportCueUsesDefaultPBPOutputPath()
-{
+void PBPExporterTest::testExportCueUsesDefaultPBPOutputPath() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
@@ -116,8 +107,7 @@ void PBPExporterTest::testExportCueUsesDefaultPBPOutputPath()
     QVERIFY(exporter.lastArgs.contains(cuePath));
 }
 
-void PBPExporterTest::testExportIsoUsesDefaultPBPOutputPath()
-{
+void PBPExporterTest::testExportIsoUsesDefaultPBPOutputPath() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
@@ -138,8 +128,7 @@ void PBPExporterTest::testExportIsoUsesDefaultPBPOutputPath()
     QVERIFY(result.outputPath.endsWith(QStringLiteral(".pbp")));
 }
 
-void PBPExporterTest::testExportReturnsErrorWhenToolFails()
-{
+void PBPExporterTest::testExportReturnsErrorWhenToolFails() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 

@@ -5,8 +5,7 @@
 
 namespace Remus {
 
-bool Database::updateFilePath(int fileId, const QString &newPath)
-{
+bool Database::updateFilePath(int fileId, const QString &newPath) {
     QSqlQuery query(m_db);
     query.prepare("UPDATE files SET current_path = ? WHERE id = ?");
     query.addBindValue(newPath);
@@ -20,8 +19,7 @@ bool Database::updateFilePath(int fileId, const QString &newPath)
     return query.numRowsAffected() > 0;
 }
 
-bool Database::updateFileStorageState(const FileRecord &record)
-{
+bool Database::updateFileStorageState(const FileRecord &record) {
     if (record.id <= 0) {
         logError("Failed to update file storage state: invalid file id");
         return false;
@@ -64,8 +62,7 @@ bool Database::updateFileStorageState(const FileRecord &record)
     return query.numRowsAffected() > 0;
 }
 
-bool Database::updateFileOriginalPath(int fileId, const QString &newOriginalPath)
-{
+bool Database::updateFileOriginalPath(int fileId, const QString &newOriginalPath) {
     QSqlQuery query(m_db);
     query.prepare("UPDATE files SET original_path = ?, current_path = ? WHERE id = ?");
     query.addBindValue(newOriginalPath);
@@ -80,8 +77,7 @@ bool Database::updateFileOriginalPath(int fileId, const QString &newOriginalPath
     return query.numRowsAffected() > 0;
 }
 
-QString Database::getFilePath(int fileId)
-{
+QString Database::getFilePath(int fileId) {
     QSqlQuery query(m_db);
     query.prepare("SELECT current_path FROM files WHERE id = ?");
     query.addBindValue(fileId);
@@ -93,8 +89,7 @@ QString Database::getFilePath(int fileId)
     return QString();
 }
 
-bool Database::markFileProcessed(int fileId, const QString &status)
-{
+bool Database::markFileProcessed(int fileId, const QString &status) {
     QSqlQuery query(m_db);
     query.prepare("UPDATE files SET is_processed = 1, processing_status = ? WHERE id = ?");
     query.addBindValue(status);
@@ -108,8 +103,7 @@ bool Database::markFileProcessed(int fileId, const QString &status)
     return query.numRowsAffected() > 0;
 }
 
-bool Database::markFileUnprocessed(int fileId)
-{
+bool Database::markFileUnprocessed(int fileId) {
     QSqlQuery query(m_db);
     query.prepare("UPDATE files SET is_processed = 0, processing_status = 'unprocessed' WHERE id = ?");
     query.addBindValue(fileId);
@@ -122,13 +116,11 @@ bool Database::markFileUnprocessed(int fileId)
     return query.numRowsAffected() > 0;
 }
 
-QList<FileRecord> Database::getProcessedFiles()
-{
+QList<FileRecord> Database::getProcessedFiles() {
     return queryFiles(QStringLiteral("is_primary = 1 AND is_processed = 1"));
 }
 
-QList<FileRecord> Database::getUnprocessedFiles()
-{
+QList<FileRecord> Database::getUnprocessedFiles() {
     return queryFiles(QStringLiteral("is_primary = 1 AND is_processed = 0"));
 }
 

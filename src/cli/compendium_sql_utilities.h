@@ -12,8 +12,7 @@
 
 namespace CompendiumSqlUtilities {
 
-inline QStringList splitSqlStatements(const QString &content)
-{
+inline QStringList splitSqlStatements(const QString &content) {
     QStringList statements;
     QString current;
     bool inSingleQuote = false;
@@ -74,14 +73,12 @@ inline QStringList splitSqlStatements(const QString &content)
     return statements;
 }
 
-inline QString reportPathForDatabase(const QString &databasePath)
-{
+inline QString reportPathForDatabase(const QString &databasePath) {
     QFileInfo info(databasePath);
     return info.dir().filePath(info.completeBaseName() + QStringLiteral(".report.json"));
 }
 
-inline bool executeSqlScript(QSqlDatabase &database, const QString &path, QString &error)
-{
+inline bool executeSqlScript(QSqlDatabase &database, const QString &path, QString &error) {
     QFile file(path);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         error = QStringLiteral("Failed to open %1: %2").arg(path, file.errorString());
@@ -97,8 +94,7 @@ inline bool executeSqlScript(QSqlDatabase &database, const QString &path, QStrin
 
         QSqlQuery query(database);
         if (!query.exec(statement)) {
-            error = QStringLiteral("Failed to execute %1: %2")
-                .arg(path, query.lastError().text());
+            error = QStringLiteral("Failed to execute %1: %2").arg(path, query.lastError().text());
             return false;
         }
     }
@@ -106,8 +102,7 @@ inline bool executeSqlScript(QSqlDatabase &database, const QString &path, QStrin
     return true;
 }
 
-inline bool execPrepared(QSqlQuery &query, QString &error, const QString &context)
-{
+inline bool execPrepared(QSqlQuery &query, QString &error, const QString &context) {
     if (!query.exec()) {
         error = QStringLiteral("%1 failed: %2").arg(context, query.lastError().text());
         return false;
@@ -115,8 +110,7 @@ inline bool execPrepared(QSqlQuery &query, QString &error, const QString &contex
     return true;
 }
 
-inline int scalarCount(QSqlDatabase &database, const QString &sql, QString &error)
-{
+inline int scalarCount(QSqlDatabase &database, const QString &sql, QString &error) {
     QSqlQuery query(database);
     if (!query.exec(sql)) {
         error = query.lastError().text();
@@ -129,8 +123,7 @@ inline int scalarCount(QSqlDatabase &database, const QString &sql, QString &erro
     return query.value(0).toInt();
 }
 
-inline bool integrityCheckOk(QSqlDatabase &database, QString &error)
-{
+inline bool integrityCheckOk(QSqlDatabase &database, QString &error) {
     QSqlQuery query(database);
     if (!query.exec(QStringLiteral("PRAGMA integrity_check"))) {
         error = query.lastError().text();
@@ -147,8 +140,7 @@ inline bool integrityCheckOk(QSqlDatabase &database, QString &error)
     return true;
 }
 
-inline bool writeReport(const QString &path, const QJsonObject &report, QString &error)
-{
+inline bool writeReport(const QString &path, const QJsonObject &report, QString &error) {
     QFile file(path);
     if (!file.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text)) {
         error = QStringLiteral("Failed to write report %1: %2").arg(path, file.errorString());

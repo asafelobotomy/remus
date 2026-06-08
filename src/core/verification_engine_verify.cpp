@@ -13,8 +13,7 @@
 namespace Remus {
 using namespace VerificationHashMatcher;
 
-QList<VerificationResult> VerificationEngine::verifyLibrary(const QString &systemFilter)
-{
+QList<VerificationResult> VerificationEngine::verifyLibrary(const QString &systemFilter) {
     QList<VerificationResult> results;
     m_lastSummary = VerificationSummary();
 
@@ -94,8 +93,7 @@ QList<VerificationResult> VerificationEngine::verifyLibrary(const QString &syste
     return results;
 }
 
-QList<VerificationResult> VerificationEngine::verifyFiles(const QList<int> &fileIds)
-{
+QList<VerificationResult> VerificationEngine::verifyFiles(const QList<int> &fileIds) {
     QList<VerificationResult> results;
     for (int fileId : fileIds) {
         results.append(verifyFile(fileId));
@@ -103,8 +101,7 @@ QList<VerificationResult> VerificationEngine::verifyFiles(const QList<int> &file
     return results;
 }
 
-VerificationResult VerificationEngine::verifyFile(int fileId)
-{
+VerificationResult VerificationEngine::verifyFile(int fileId) {
     VerificationResult result;
     result.fileId = fileId;
 
@@ -150,15 +147,8 @@ VerificationResult VerificationEngine::verifyFile(int fileId)
         DatRomEntry matchedEntry;
         QString matchedHash;
         QString matchedHashType;
-        if (findOfficialDatMatch(datEntries,
-                                 m_datHashTypes.value(result.system, QStringLiteral("crc32")),
-                                 crc32,
-                                 md5,
-                                 sha1,
-                                 QStringLiteral(""),
-                                 matchedEntry,
-                                 matchedHash,
-                                 matchedHashType)) {
+        if (findOfficialDatMatch(datEntries, m_datHashTypes.value(result.system, QStringLiteral("crc32")), crc32, md5,
+                sha1, QStringLiteral(""), matchedEntry, matchedHash, matchedHashType)) {
             result.status = VerificationStatus::Verified;
             result.datName = matchedEntry.gameName;
             result.datRomName = matchedEntry.romName;
@@ -174,9 +164,9 @@ VerificationResult VerificationEngine::verifyFile(int fileId)
     DatRomEntry patchEntry;
     QString matchedHash;
     QString matchedHashType;
-    if (hasPatchCatalog && findPatchCatalogMatch(result.system, crc32, md5, sha1,
-                                                 QStringLiteral(""),
-                                                 patchEntry, matchedHash, matchedHashType)) {
+    if (hasPatchCatalog
+        && findPatchCatalogMatch(
+            result.system, crc32, md5, sha1, QStringLiteral(""), patchEntry, matchedHash, matchedHashType)) {
         result.status = VerificationStatus::Verified;
         result.datName = patchEntry.gameName;
         result.datRomName = patchEntry.romName;
@@ -196,15 +186,9 @@ VerificationResult VerificationEngine::verifyFile(int fileId)
     return result;
 }
 
-bool VerificationEngine::findPatchCatalogMatch(const QString &systemName,
-                                               const QString &crc32,
-                                               const QString &md5,
-                                               const QString &sha1,
-                                               const QString &sha256,
-                                               DatRomEntry &matchedEntry,
-                                               QString &matchedHash,
-                                               QString &matchedHashType)
-{
+bool VerificationEngine::findPatchCatalogMatch(const QString &systemName, const QString &crc32, const QString &md5,
+    const QString &sha1, const QString &sha256, DatRomEntry &matchedEntry, QString &matchedHash,
+    QString &matchedHashType) {
     if (!hasPatchDat(systemName)) {
         return false;
     }
@@ -216,12 +200,9 @@ bool VerificationEngine::findPatchCatalogMatch(const QString &systemName,
         QString type;
         QString value;
     };
-    const QList<CandidateHash> candidates = {
-        {QStringLiteral("sha256"), sha256.toLower()},
-        {QStringLiteral("sha1"), sha1.toLower()},
-        {QStringLiteral("md5"), md5.toLower()},
-        {QStringLiteral("crc32"), crc32.toLower()}
-    };
+    const QList<CandidateHash> candidates
+        = { { QStringLiteral("sha256"), sha256.toLower() }, { QStringLiteral("sha1"), sha1.toLower() },
+              { QStringLiteral("md5"), md5.toLower() }, { QStringLiteral("crc32"), crc32.toLower() } };
 
     for (const CandidateHash &candidate : candidates) {
         if (!candidate.value.isEmpty() && patchEntries.contains(candidate.value)) {
@@ -235,8 +216,7 @@ bool VerificationEngine::findPatchCatalogMatch(const QString &systemName,
     return false;
 }
 
-void VerificationEngine::promotePatchMetadata(int fileId, const DatRomEntry &entry)
-{
+void VerificationEngine::promotePatchMetadata(int fileId, const DatRomEntry &entry) {
     DatRomEntry metadataEntry = entry;
     if (metadataEntry.baseTitle.isEmpty() || metadataEntry.patchName.isEmpty() || metadataEntry.fileType.isEmpty()) {
         const PatchedRomInfo parsed = PatchedRomParser::parse(metadataEntry.gameName);
@@ -251,9 +231,9 @@ void VerificationEngine::promotePatchMetadata(int fileId, const DatRomEntry &ent
         }
     }
 
-    const bool markPatched = !metadataEntry.patchName.isEmpty() ||
-        metadataEntry.fileType == Constants::FileTypes::TRANSLATION ||
-        metadataEntry.fileType == Constants::FileTypes::HACK;
+    const bool markPatched = !metadataEntry.patchName.isEmpty()
+        || metadataEntry.fileType == Constants::FileTypes::TRANSLATION
+        || metadataEntry.fileType == Constants::FileTypes::HACK;
 
     QSqlQuery query(m_database->database());
     query.prepare(R"(
@@ -275,8 +255,7 @@ void VerificationEngine::promotePatchMetadata(int fileId, const DatRomEntry &ent
     }
 }
 
-QList<DatRomEntry> VerificationEngine::getMissingGames(const QString &systemName)
-{
+QList<DatRomEntry> VerificationEngine::getMissingGames(const QString &systemName) {
     QList<DatRomEntry> missing;
     if (!hasDat(systemName)) {
         return missing;
@@ -297,7 +276,8 @@ QList<DatRomEntry> VerificationEngine::getMissingGames(const QString &systemName
             while (query.next()) {
                 for (int col = 0; col < 3; ++col) {
                     const QString h = query.value(col).toString();
-                    if (!h.isEmpty()) verifiedHashes.insert(h);
+                    if (!h.isEmpty())
+                        verifiedHashes.insert(h);
                 }
             }
         }
@@ -323,25 +303,24 @@ QList<DatRomEntry> VerificationEngine::getMissingGames(const QString &systemName
         if (q.exec()) {
             while (q.next()) {
                 const QString crc32 = q.value(1).toString().toLower();
-                const QString md5   = q.value(2).toString().toLower();
-                const QString sha1  = q.value(3).toString().toLower();
+                const QString md5 = q.value(2).toString().toLower();
+                const QString sha1 = q.value(3).toString().toLower();
 
-                const bool found = (!crc32.isEmpty() && verifiedHashes.contains(crc32)) ||
-                                   (!md5.isEmpty()   && verifiedHashes.contains(md5))   ||
-                                   (!sha1.isEmpty()  && verifiedHashes.contains(sha1));
+                const bool found = (!crc32.isEmpty() && verifiedHashes.contains(crc32))
+                    || (!md5.isEmpty() && verifiedHashes.contains(md5))
+                    || (!sha1.isEmpty() && verifiedHashes.contains(sha1));
                 if (!found) {
                     DatRomEntry entry;
                     entry.gameName = q.value(0).toString();
-                    entry.crc32    = crc32;
-                    entry.md5      = md5;
-                    entry.sha1     = sha1;
+                    entry.crc32 = crc32;
+                    entry.md5 = md5;
+                    entry.sha1 = sha1;
                     missing.append(entry);
                 }
             }
             return missing;
         }
-        qWarning() << "VerificationEngine: compendium getMissingGames query failed:"
-                   << q.lastError().text();
+        qWarning() << "VerificationEngine: compendium getMissingGames query failed:" << q.lastError().text();
     }
 
     // ── Runtime-import fallback ────────────────────────────────────────────
@@ -357,9 +336,8 @@ QList<DatRomEntry> VerificationEngine::getMissingGames(const QString &systemName
         }
         seenEntries.insert(entryKey);
 
-        const bool found = verifiedHashes.contains(entry.crc32.toLower()) ||
-            verifiedHashes.contains(entry.md5.toLower()) ||
-            verifiedHashes.contains(entry.sha1.toLower());
+        const bool found = verifiedHashes.contains(entry.crc32.toLower())
+            || verifiedHashes.contains(entry.md5.toLower()) || verifiedHashes.contains(entry.sha1.toLower());
         if (!found) {
             missing.append(entry);
         }

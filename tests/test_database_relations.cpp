@@ -1,7 +1,6 @@
 #include "test_database_fixture.h"
 
-void DatabaseTest::testInsertAndFindAppliedPatch()
-{
+void DatabaseTest::testInsertAndFindAppliedPatch() {
     Database db;
     QVERIFY(db.initialize(":memory:"));
 
@@ -25,16 +24,15 @@ void DatabaseTest::testInsertAndFindAppliedPatch()
 
     QVERIFY(db.insertAppliedPatch(record));
 
-    const Database::AppliedPatchRecord found =
-        db.findAppliedPatchByOutputHashes("BBBB2222", "output-md5", "output-sha1");
+    const Database::AppliedPatchRecord found
+        = db.findAppliedPatchByOutputHashes("BBBB2222", "output-md5", "output-sha1");
     QVERIFY(found.id > 0);
     QCOMPARE(found.baseTitle, QStringLiteral("Base Game"));
     QCOMPARE(found.patchName, QStringLiteral("English v2.0"));
     QCOMPARE(found.fileType, QStringLiteral("translation"));
 }
 
-void DatabaseTest::testGetFilesByParent()
-{
+void DatabaseTest::testGetFilesByParent() {
     Database db;
     QVERIFY(db.initialize(":memory:"));
 
@@ -62,8 +60,7 @@ void DatabaseTest::testGetFilesByParent()
     QCOMPARE(children.size(), 2);
 }
 
-void DatabaseTest::testGetAllMatches()
-{
+void DatabaseTest::testGetAllMatches() {
     Database db;
     QVERIFY(db.initialize(":memory:"));
 
@@ -87,8 +84,7 @@ void DatabaseTest::testGetAllMatches()
     QCOMPARE(matches[fid2].matchMethod, QStringLiteral("fuzzy"));
 }
 
-void DatabaseTest::testInsertAndGetModInstallation()
-{
+void DatabaseTest::testInsertAndGetModInstallation() {
     Database db;
     QVERIFY(db.initialize(":memory:"));
 
@@ -115,8 +111,7 @@ void DatabaseTest::testInsertAndGetModInstallation()
     QCOMPARE(mods.first().catalogModId, QStringLiteral("mod-123"));
 }
 
-void DatabaseTest::testRemoveModInstallation()
-{
+void DatabaseTest::testRemoveModInstallation() {
     Database db;
     QVERIFY(db.initialize(":memory:"));
 
@@ -137,8 +132,7 @@ void DatabaseTest::testRemoveModInstallation()
     QCOMPARE(db.getModInstallations(baseId).size(), 0);
 }
 
-void DatabaseTest::testUpsertAndGetCatalogCache()
-{
+void DatabaseTest::testUpsertAndGetCatalogCache() {
     Database db;
     QVERIFY(db.initialize(":memory:"));
 
@@ -167,8 +161,7 @@ void DatabaseTest::testUpsertAndGetCatalogCache()
     QCOMPARE(missing.id, 0);
 }
 
-void DatabaseTest::testDeleteLibraryCascadesFiles()
-{
+void DatabaseTest::testDeleteLibraryCascadesFiles() {
     Database db;
     QVERIFY(db.initialize(":memory:"));
 
@@ -188,8 +181,7 @@ void DatabaseTest::testDeleteLibraryCascadesFiles()
     QCOMPARE(db.getFileById(fid2).id, 0);
 }
 
-void DatabaseTest::testInsertMatchWithNameMatchScore()
-{
+void DatabaseTest::testInsertMatchWithNameMatchScore() {
     Database db;
     QVERIFY(db.initialize(":memory:"));
 

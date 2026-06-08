@@ -16,14 +16,13 @@
 
 using namespace Remus;
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
     QCoreApplication app(argc, argv);
-    
+
     qInfo() << "╔══════════════════════════════════════════════════════════════╗";
     qInfo() << "║  Metadata Pipeline Integration Test                         ║";
     qInfo() << "╚══════════════════════════════════════════════════════════════╝\n";
-    
+
     // Step 1: Set up a temporary database with a known ROM entry
     qInfo() << "Step 1: Creating temp database and ROM record...";
 
@@ -73,7 +72,7 @@ int main(int argc, char *argv[])
     qInfo() << "✓ Created ROM record:" << file.filename;
     qInfo() << "  Size:" << file.fileSize << "bytes";
     qInfo() << "  CRC32:" << file.crc32 << "\n";
-    
+
     // Step 3: Load DAT file
     qInfo() << "Step 3: Loading Genesis DAT file...";
     LocalDatabaseProvider provider;
@@ -90,10 +89,10 @@ int main(int argc, char *argv[])
         return 1;
     }
     qInfo() << "✓ Loaded" << entries << "entries\n";
-    
+
     // Step 4: Test multi-signal matching
     qInfo() << "Step 4: Testing multi-signal matching...\n";
-    
+
     // Test 4a: Perfect match (all signals)
     qInfo() << "Test 4a: Perfect Match (All Signals)";
     ROMSignals perfectSignals;
@@ -103,9 +102,9 @@ int main(int argc, char *argv[])
     perfectSignals.filename = file.filename;
     perfectSignals.fileSize = file.fileSize;
     perfectSignals.serial = ""; // We could query this from metadata if available
-    
+
     QList<MultiSignalMatch> matches = provider.matchROM(perfectSignals);
-    
+
     if (matches.isEmpty()) {
         qWarning() << "✗ No matches found";
     } else {
@@ -122,16 +121,16 @@ int main(int argc, char *argv[])
         qInfo() << "    Serial:" << (best.serialMatch ? "✓" : "✗");
         qInfo() << "";
     }
-    
+
     // Test 4b: Hash-only matching
     qInfo() << "Test 4b: Hash-Only Match";
     ROMSignals hashOnlySignals;
     hashOnlySignals.crc32 = file.crc32;
     hashOnlySignals.filename = "WrongName.md";
     hashOnlySignals.fileSize = 999999;
-    
+
     matches = provider.matchROM(hashOnlySignals);
-    
+
     if (!matches.isEmpty()) {
         const MultiSignalMatch &best = matches.first();
         qInfo() << "✓ Hash match still works despite wrong metadata";
@@ -139,15 +138,15 @@ int main(int argc, char *argv[])
         qInfo() << "  Confidence:" << best.confidencePercent() << "% (expected ~50%)";
         qInfo() << "";
     }
-    
+
     // Test 4c: Fallback matching (no hash)
     qInfo() << "Test 4c: Fallback Match (No Hash)";
     ROMSignals fallbackSignals;
     fallbackSignals.filename = file.filename;
     fallbackSignals.fileSize = file.fileSize;
-    
+
     matches = provider.matchROM(fallbackSignals);
-    
+
     if (!matches.isEmpty()) {
         const MultiSignalMatch &best = matches.first();
         qInfo() << "✓ Fallback match works without hash";
@@ -155,11 +154,11 @@ int main(int argc, char *argv[])
         qInfo() << "  Confidence:" << best.confidencePercent() << "% (expected ~40%)";
         qInfo() << "";
     }
-    
+
     // Step 5: Test legacy hash lookup (backwards compatibility)
     qInfo() << "Step 5: Testing legacy getByHash() method...";
     GameMetadata metadata = provider.getByHash(file.crc32, "Genesis");
-    
+
     if (!metadata.title.isEmpty()) {
         qInfo() << "✓ Legacy method still works";
         qInfo() << "  Title:" << metadata.title;
@@ -168,7 +167,7 @@ int main(int argc, char *argv[])
     } else {
         qWarning() << "✗ Legacy method returned no results";
     }
-    
+
     // Summary
     qInfo() << "╔══════════════════════════════════════════════════════════════╗";
     qInfo() << "║  Integration Test Summary                                   ║";
@@ -182,7 +181,7 @@ int main(int argc, char *argv[])
     {
         QFile romFile(romPath);
         if (romFile.open(QIODevice::WriteOnly)) {
-            romFile.write(QByteArray(512, 0x00));  // 512 bytes of dummy data
+            romFile.write(QByteArray(512, 0x00)); // 512 bytes of dummy data
         }
     }
     if (!QFile::exists(romPath)) {
@@ -192,16 +191,16 @@ int main(int argc, char *argv[])
 
     // Update the DB record to point at the real file
     FileRecord bundleRecord;
-    bundleRecord.id           = fileId;
-    bundleRecord.libraryId    = libraryId;
+    bundleRecord.id = fileId;
+    bundleRecord.libraryId = libraryId;
     bundleRecord.originalPath = romPath;
-    bundleRecord.currentPath  = romPath;
-    bundleRecord.filename     = "Sonic The Hedgehog (USA, Europe).md";
-    bundleRecord.extension    = ".md";
-    bundleRecord.fileSize     = 512;
-    bundleRecord.systemId     = db.getSystemId("Genesis");
-    bundleRecord.crc32        = "f9394e97";
-    bundleRecord.isPrimary    = true;
+    bundleRecord.currentPath = romPath;
+    bundleRecord.filename = "Sonic The Hedgehog (USA, Europe).md";
+    bundleRecord.extension = ".md";
+    bundleRecord.fileSize = 512;
+    bundleRecord.systemId = db.getSystemId("Genesis");
+    bundleRecord.crc32 = "f9394e97";
+    bundleRecord.isPrimary = true;
 
     // Insert a game + match so the bundler has metadata to work with
     const int gameId = db.insertGame("Sonic The Hedgehog", bundleRecord.systemId, "USA");
@@ -221,7 +220,7 @@ int main(int argc, char *argv[])
     }
 
     GameMetadata bundleMeta;
-    bundleMeta.title  = bundleMatch.gameTitle;
+    bundleMeta.title = bundleMatch.gameTitle;
     bundleMeta.region = bundleMatch.region;
 
     QTemporaryDir bundleDestDir;
@@ -232,8 +231,8 @@ int main(int argc, char *argv[])
 
     RomBundler bundler(db);
     RomBundler::BundleConfig cfg;
-    cfg.includeBoxArt   = false;
-    cfg.dryRun          = false;
+    cfg.includeBoxArt = false;
+    cfg.dryRun = false;
     const bool hasZip = !QStandardPaths::findExecutable(QStringLiteral("zip")).isEmpty();
     const bool hasSevenZip = !QStandardPaths::findExecutable(QStringLiteral("7z")).isEmpty()
         || !QStandardPaths::findExecutable(QStringLiteral("7za")).isEmpty()
@@ -246,8 +245,8 @@ int main(int argc, char *argv[])
     cfg.outputFormat = hasZip ? ArchiveFormat::ZIP : ArchiveFormat::SevenZip;
     cfg.discOutputFormat = RomBundler::DiscOutputFormat::Original;
 
-    RomBundler::BundleResult bundleResult = bundler.bundle(
-        bundleRecord, bundleMatch, bundleMeta, bundleDestDir.path(), cfg);
+    RomBundler::BundleResult bundleResult
+        = bundler.bundle(bundleRecord, bundleMatch, bundleMeta, bundleDestDir.path(), cfg);
 
     if (!bundleResult.success) {
         qCritical() << "\u2717 Bundle failed:" << bundleResult.error;
@@ -266,9 +265,15 @@ int main(int argc, char *argv[])
     qInfo() << "\u2713 .remus.md marker present in archive";
     qInfo() << "";
 
-    qInfo() << "\u2554\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2557";
+    qInfo() << "\u2554\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550"
+               "\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550"
+               "\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550"
+               "\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2557";
     qInfo() << "\u2551  Integration Test Summary                                   \u2551";
-    qInfo() << "\u255a\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u255d";
+    qInfo() << "\u255a\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550"
+               "\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550"
+               "\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550"
+               "\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u255d";
     qInfo() << "\u2713 Database query: Working";
     qInfo() << "\u2713 DAT loading: Working";
     qInfo() << "\u2713 Multi-signal matching: Working";
@@ -277,6 +282,6 @@ int main(int argc, char *argv[])
     qInfo() << "\u2713 Bundling (.remus.md marker): Working";
     qInfo() << "";
     qInfo() << "Full metadata pipeline is operational!";
-    
+
     return 0;
 }

@@ -17,7 +17,7 @@ namespace {
 
 struct MachineInfo {
     QString manufacturer;
-    int year    = 0;
+    int year = 0;
     int players = 0;
 };
 
@@ -25,8 +25,7 @@ struct MachineInfo {
 // a map of romname → MachineInfo for runnable, non-device machines only.
 // Clones are included — they share manufacturer/year with the parent and need
 // their own facts in the database.
-QHash<QString, MachineInfo> parseMameListXml(const QString &path, QString &error)
-{
+QHash<QString, MachineInfo> parseMameListXml(const QString &path, QString &error) {
     QHash<QString, MachineInfo> index;
     QFile file(path);
     if (!file.open(QIODevice::ReadOnly)) {
@@ -69,8 +68,7 @@ QHash<QString, MachineInfo> parseMameListXml(const QString &path, QString &error
             } else if (xml.name() == QLatin1String("manufacturer")) {
                 info.manufacturer = xml.readElementText().trimmed();
             } else if (xml.name() == QLatin1String("input")) {
-                const QString playersStr =
-                    xml.attributes().value(QLatin1String("players")).toString();
+                const QString playersStr = xml.attributes().value(QLatin1String("players")).toString();
                 bool ok = false;
                 const int p = playersStr.toInt(&ok);
                 if (ok && p >= 1 && p <= 16)
@@ -87,7 +85,7 @@ QHash<QString, MachineInfo> parseMameListXml(const QString &path, QString &error
 
     if (xml.hasError()) {
         error = QStringLiteral("XML parse error in listxml: %1").arg(xml.errorString());
-        return {};
+        return { };
     }
 
     return index;
@@ -97,12 +95,8 @@ QHash<QString, MachineInfo> parseMameListXml(const QString &path, QString &error
 
 namespace CompendiumEnrichment {
 
-bool enrichFromMameListXml(QSqlDatabase &database,
-                            const QString &listxmlPath,
-                            int &gamesEnriched,
-                            int &factsInserted,
-                            QString &error)
-{
+bool enrichFromMameListXml(
+    QSqlDatabase &database, const QString &listxmlPath, int &gamesEnriched, int &factsInserted, QString &error) {
     gamesEnriched = 0;
     factsInserted = 0;
 
@@ -114,13 +108,11 @@ bool enrichFromMameListXml(QSqlDatabase &database,
         return true;
     }
 
-    qInfo().noquote() << QStringLiteral("[MAME-listxml] Parsed %1 machine entries from listxml")
-                             .arg(machines.size());
+    qInfo().noquote() << QStringLiteral("[MAME-listxml] Parsed %1 machine entries from listxml").arg(machines.size());
 
     const QString snapshotId = QStringLiteral("mame-listxml-bulk");
-    if (!upsertEnrichmentSource(
-            database,
-            SourceSpec{
+    if (!upsertEnrichmentSource(database,
+            SourceSpec {
                 QStringLiteral("mame-listxml"),
                 QStringLiteral("MAME listxml"),
                 QStringLiteral("static-file"),
@@ -129,7 +121,7 @@ bool enrichFromMameListXml(QSqlDatabase &database,
                 /*priority=*/50,
                 QString(),
             },
-            SnapshotSpec{
+            SnapshotSpec {
                 snapshotId,
                 QStringLiteral("MAME listxml machine enrichment"),
             },
@@ -137,26 +129,23 @@ bool enrichFromMameListXml(QSqlDatabase &database,
         return false;
 
     QSqlQuery updateQ(database);
-    updateQ.prepare(QStringLiteral(
-        "UPDATE games SET "
-        "developer    = COALESCE(NULLIF(developer, ''), ?), "
-        "publisher    = COALESCE(NULLIF(publisher, ''), ?), "
-        "release_year = COALESCE(release_year, ?), "
-        "players_max  = COALESCE(players_max, ?) "
-        "WHERE game_id = ?"));
+    updateQ.prepare(QStringLiteral("UPDATE games SET "
+                                   "developer    = COALESCE(NULLIF(developer, ''), ?), "
+                                   "publisher    = COALESCE(NULLIF(publisher, ''), ?), "
+                                   "release_year = COALESCE(release_year, ?), "
+                                   "players_max  = COALESCE(players_max, ?) "
+                                   "WHERE game_id = ?"));
 
     QSqlQuery factQ(database);
-    factQ.prepare(QStringLiteral(
-        "INSERT INTO game_facts "
-        "(game_id, field_name, field_value, value_type, source_id, snapshot_id, "
-        "source_priority, confidence) "
-        "VALUES (?, ?, ?, ?, ?, ?, ?, ?)"));
+    factQ.prepare(QStringLiteral("INSERT INTO game_facts "
+                                 "(game_id, field_name, field_value, value_type, source_id, snapshot_id, "
+                                 "source_priority, confidence) "
+                                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?)"));
 
     QSqlQuery delQ(database);
-    delQ.prepare(QStringLiteral(
-        "DELETE FROM game_facts WHERE game_id = ? AND field_name = ? AND source_id = ?"));
+    delQ.prepare(QStringLiteral("DELETE FROM game_facts WHERE game_id = ? AND field_name = ? AND source_id = ?"));
 
-    const FactInsertSpec factSpec{
+    const FactInsertSpec factSpec {
         QStringLiteral("mame-listxml"),
         snapshotId,
         50,
@@ -168,17 +157,15 @@ bool enrichFromMameListXml(QSqlDatabase &database,
     // still receive updated game_facts (via DELETE+INSERT) for resolver accuracy,
     // but the games table COALESCE update will be a no-op for them.
     QSqlQuery gamesQ(database);
-    gamesQ.prepare(QStringLiteral(
-        "SELECT game_id, canonical_title FROM games WHERE system_id = ?"));
+    gamesQ.prepare(QStringLiteral("SELECT game_id, canonical_title FROM games WHERE system_id = ?"));
     gamesQ.addBindValue(Constants::Systems::ID_ARCADE);
     if (!gamesQ.exec()) {
-        error = QStringLiteral("Query arcade games for MAME listxml: %1")
-                    .arg(gamesQ.lastError().text());
+        error = QStringLiteral("Query arcade games for MAME listxml: %1").arg(gamesQ.lastError().text());
         return false;
     }
 
     while (gamesQ.next()) {
-        const QString gameId  = gamesQ.value(0).toString();
+        const QString gameId = gamesQ.value(0).toString();
         const QString romName = gamesQ.value(1).toString();
         const auto it = machines.constFind(romName);
         if (it == machines.cend())
@@ -199,45 +186,43 @@ bool enrichFromMameListXml(QSqlDatabase &database,
         bool inserted = false;
 
         if (!info.manufacturer.isEmpty()) {
-            if (!insertGameFact(delQ, factQ, factSpec, gameId,
-                                QStringLiteral("developer"), info.manufacturer,
-                                QStringLiteral("text"), error,
-                                QStringLiteral("mame-listxml"), &inserted))
+            if (!insertGameFact(delQ, factQ, factSpec, gameId, QStringLiteral("developer"), info.manufacturer,
+                    QStringLiteral("text"), error, QStringLiteral("mame-listxml"), &inserted))
                 return false;
-            if (inserted) ++factsInserted;
+            if (inserted)
+                ++factsInserted;
 
             inserted = false;
-            if (!insertGameFact(delQ, factQ, factSpec, gameId,
-                                QStringLiteral("publisher"), info.manufacturer,
-                                QStringLiteral("text"), error,
-                                QStringLiteral("mame-listxml"), &inserted))
+            if (!insertGameFact(delQ, factQ, factSpec, gameId, QStringLiteral("publisher"), info.manufacturer,
+                    QStringLiteral("text"), error, QStringLiteral("mame-listxml"), &inserted))
                 return false;
-            if (inserted) ++factsInserted;
+            if (inserted)
+                ++factsInserted;
         }
 
         if (info.year > 0) {
             inserted = false;
-            if (!insertGameFact(delQ, factQ, factSpec, gameId,
-                                QStringLiteral("release_year"), QString::number(info.year),
-                                QStringLiteral("int"), error,
-                                QStringLiteral("mame-listxml"), &inserted))
+            if (!insertGameFact(delQ, factQ, factSpec, gameId, QStringLiteral("release_year"),
+                    QString::number(info.year), QStringLiteral("int"), error, QStringLiteral("mame-listxml"),
+                    &inserted))
                 return false;
-            if (inserted) ++factsInserted;
+            if (inserted)
+                ++factsInserted;
         }
 
         if (info.players > 0) {
             inserted = false;
-            if (!insertGameFact(delQ, factQ, factSpec, gameId,
-                                QStringLiteral("players_max"), QString::number(info.players),
-                                QStringLiteral("int"), error,
-                                QStringLiteral("mame-listxml"), &inserted))
+            if (!insertGameFact(delQ, factQ, factSpec, gameId, QStringLiteral("players_max"),
+                    QString::number(info.players), QStringLiteral("int"), error, QStringLiteral("mame-listxml"),
+                    &inserted))
                 return false;
-            if (inserted) ++factsInserted;
+            if (inserted)
+                ++factsInserted;
         }
     }
 
-    qInfo().noquote() << QStringLiteral("[MAME-listxml] +%1 games enriched, +%2 facts")
-                             .arg(gamesEnriched).arg(factsInserted);
+    qInfo().noquote()
+        << QStringLiteral("[MAME-listxml] +%1 games enriched, +%2 facts").arg(gamesEnriched).arg(factsInserted);
     return true;
 }
 

@@ -4,77 +4,74 @@
 
 // ── Minimal Logiqx-format DAT content for NES ─────────────────────────────
 
-static const char *k_datXml =
-    "<?xml version=\"1.0\"?>\n"
-    "<!DOCTYPE datafile PUBLIC \"-//Logiqx//DTD ROM Management Datafile//EN\"\n"
-    "    \"http://www.logiqx.com/Docs/CMakeLists.dtd\">\n"
-    "<datafile>\n"
-    "    <header>\n"
-    "        <name>Nintendo - NES (Test)</name>\n"
-    "        <description>Test DAT</description>\n"
-    "        <version>20260101</version>\n"
-    "        <author>test</author>\n"
-    "    </header>\n"
-    "    <game name=\"Super Mario Bros.\">\n"
-    "        <description>Super Mario Bros.</description>\n"
-    "        <rom name=\"Super Mario Bros. (World).nes\"\n"
-    "             size=\"40960\"\n"
-    "             crc=\"7b5e9e81\"\n"
-    "             md5=\"811b027eaf99c2def7b933c5208636de\"\n"
-    "             sha1=\"ea343f4e445a9050d4b4fbac2c77d0693b1d0922\"/>\n"
-    "    </game>\n"
-    "    <game name=\"Donkey Kong\">\n"
-    "        <description>Donkey Kong</description>\n"
-    "        <rom name=\"Donkey Kong (World).nes\"\n"
-    "             size=\"16384\"\n"
-    "             crc=\"deadbeef\"\n"
-    "             md5=\"00000000000000000000000000000001\"\n"
-    "             sha1=\"0000000000000000000000000000000000000001\"/>\n"
-    "    </game>\n"
-    "</datafile>\n";
+static const char *k_datXml = "<?xml version=\"1.0\"?>\n"
+                              "<!DOCTYPE datafile PUBLIC \"-//Logiqx//DTD ROM Management Datafile//EN\"\n"
+                              "    \"http://www.logiqx.com/Docs/CMakeLists.dtd\">\n"
+                              "<datafile>\n"
+                              "    <header>\n"
+                              "        <name>Nintendo - NES (Test)</name>\n"
+                              "        <description>Test DAT</description>\n"
+                              "        <version>20260101</version>\n"
+                              "        <author>test</author>\n"
+                              "    </header>\n"
+                              "    <game name=\"Super Mario Bros.\">\n"
+                              "        <description>Super Mario Bros.</description>\n"
+                              "        <rom name=\"Super Mario Bros. (World).nes\"\n"
+                              "             size=\"40960\"\n"
+                              "             crc=\"7b5e9e81\"\n"
+                              "             md5=\"811b027eaf99c2def7b933c5208636de\"\n"
+                              "             sha1=\"ea343f4e445a9050d4b4fbac2c77d0693b1d0922\"/>\n"
+                              "    </game>\n"
+                              "    <game name=\"Donkey Kong\">\n"
+                              "        <description>Donkey Kong</description>\n"
+                              "        <rom name=\"Donkey Kong (World).nes\"\n"
+                              "             size=\"16384\"\n"
+                              "             crc=\"deadbeef\"\n"
+                              "             md5=\"00000000000000000000000000000001\"\n"
+                              "             sha1=\"0000000000000000000000000000000000000001\"/>\n"
+                              "    </game>\n"
+                              "</datafile>\n";
 
-static const char *k_patchDatXml =
-    "<?xml version=\"1.0\"?>\n"
-    "<datafile>\n"
-    "    <header>\n"
-    "        <name>NES Patch Catalog (Test)</name>\n"
-    "        <description>Known patched ROM outputs</description>\n"
-    "        <version>20260102</version>\n"
-    "        <author>test</author>\n"
-    "    </header>\n"
-    "    <game name=\"Dragon Quest III (English v2.0)[Addendum]\" base_title=\"Dragon Quest III\" patch_name=\"English v2.0 Addendum\" file_type=\"translation\">\n"
-    "        <description>Verified translated build</description>\n"
-    "        <rom name=\"Dragon Quest III (English v2.0)[Addendum].nes\"\n"
-    "             size=\"40960\"\n"
-    "             crc=\"1a2b3c4d\"\n"
-    "             md5=\"11111111111111111111111111111111\"\n"
-    "             sha1=\"2222222222222222222222222222222222222222\"/>\n"
-    "    </game>\n"
-    "</datafile>\n";
+static const char *k_patchDatXml = "<?xml version=\"1.0\"?>\n"
+                                   "<datafile>\n"
+                                   "    <header>\n"
+                                   "        <name>NES Patch Catalog (Test)</name>\n"
+                                   "        <description>Known patched ROM outputs</description>\n"
+                                   "        <version>20260102</version>\n"
+                                   "        <author>test</author>\n"
+                                   "    </header>\n"
+                                   "    <game name=\"Dragon Quest III (English v2.0)[Addendum]\" base_title=\"Dragon "
+                                   "Quest III\" patch_name=\"English v2.0 Addendum\" file_type=\"translation\">\n"
+                                   "        <description>Verified translated build</description>\n"
+                                   "        <rom name=\"Dragon Quest III (English v2.0)[Addendum].nes\"\n"
+                                   "             size=\"40960\"\n"
+                                   "             crc=\"1a2b3c4d\"\n"
+                                   "             md5=\"11111111111111111111111111111111\"\n"
+                                   "             sha1=\"2222222222222222222222222222222222222222\"/>\n"
+                                   "    </game>\n"
+                                   "</datafile>\n";
 
-static const char *k_md5OnlyDatXml =
-    "<?xml version=\"1.0\"?>\n"
-    "<!DOCTYPE datafile PUBLIC \"-//Logiqx//DTD ROM Management Datafile//EN\"\n"
-    "    \"http://www.logiqx.com/Docs/CMakeLists.dtd\">\n"
-    "<datafile>\n"
-    "    <header>\n"
-    "        <name>Nintendo - NES (MD5 Test)</name>\n"
-    "        <description>MD5-only DAT</description>\n"
-    "        <version>20260103</version>\n"
-    "        <author>test</author>\n"
-    "    </header>\n"
-    "    <game name=\"Super Mario Bros.\">\n"
-    "        <description>Super Mario Bros.</description>\n"
-    "        <rom name=\"Super Mario Bros. (World).nes\"\n"
-    "             size=\"40960\"\n"
-    "             md5=\"811b027eaf99c2def7b933c5208636de\"/>\n"
-    "    </game>\n"
-    "</datafile>\n";
+static const char *k_md5OnlyDatXml = "<?xml version=\"1.0\"?>\n"
+                                     "<!DOCTYPE datafile PUBLIC \"-//Logiqx//DTD ROM Management Datafile//EN\"\n"
+                                     "    \"http://www.logiqx.com/Docs/CMakeLists.dtd\">\n"
+                                     "<datafile>\n"
+                                     "    <header>\n"
+                                     "        <name>Nintendo - NES (MD5 Test)</name>\n"
+                                     "        <description>MD5-only DAT</description>\n"
+                                     "        <version>20260103</version>\n"
+                                     "        <author>test</author>\n"
+                                     "    </header>\n"
+                                     "    <game name=\"Super Mario Bros.\">\n"
+                                     "        <description>Super Mario Bros.</description>\n"
+                                     "        <rom name=\"Super Mario Bros. (World).nes\"\n"
+                                     "             size=\"40960\"\n"
+                                     "             md5=\"811b027eaf99c2def7b933c5208636de\"/>\n"
+                                     "    </game>\n"
+                                     "</datafile>\n";
 
 // ── File-scope helpers (kept outside the class body for MOC compatibility) ──
 
-QString writeDat(const QTemporaryDir &dir)
-{
+QString writeDat(const QTemporaryDir &dir) {
     const QString path = dir.path() + "/test.dat";
     QFile f(path);
     if (!f.open(QIODevice::WriteOnly | QIODevice::Text)) {
@@ -91,8 +88,7 @@ QString writeDat(const QTemporaryDir &dir)
     return path;
 }
 
-QString writePatchDat(const QTemporaryDir &dir)
-{
+QString writePatchDat(const QTemporaryDir &dir) {
     const QString path = dir.path() + "/patch-test.dat";
     QFile f(path);
     if (!f.open(QIODevice::WriteOnly | QIODevice::Text)) {
@@ -109,8 +105,7 @@ QString writePatchDat(const QTemporaryDir &dir)
     return path;
 }
 
-QString writeMd5OnlyDat(const QTemporaryDir &dir)
-{
+QString writeMd5OnlyDat(const QTemporaryDir &dir) {
     const QString path = dir.path() + "/md5-only.dat";
     QFile f(path);
     if (!f.open(QIODevice::WriteOnly | QIODevice::Text)) {
@@ -127,26 +122,21 @@ QString writeMd5OnlyDat(const QTemporaryDir &dir)
     return path;
 }
 
-int populateDb(Database &db,
-               const QString &crc,
-               const QString &md5,
-               const QString &sha1,
-               bool hashCalculated)
-{
+int populateDb(Database &db, const QString &crc, const QString &md5, const QString &sha1, bool hashCalculated) {
     int libId = db.insertLibrary("/roms", "Test");
     int sysId = db.getSystemId("NES");
 
     FileRecord fr;
-    fr.libraryId      = libId;
-    fr.filename       = "Super Mario Bros. (World).nes";
-    fr.originalPath   = "/roms/Super Mario Bros. (World).nes";
-    fr.currentPath    = fr.originalPath;
-    fr.extension      = ".nes";
-    fr.systemId       = sysId;
-    fr.fileSize       = 40960;
-    fr.crc32          = crc;
-    fr.md5            = md5;
-    fr.sha1           = sha1;
+    fr.libraryId = libId;
+    fr.filename = "Super Mario Bros. (World).nes";
+    fr.originalPath = "/roms/Super Mario Bros. (World).nes";
+    fr.currentPath = fr.originalPath;
+    fr.extension = ".nes";
+    fr.systemId = sysId;
+    fr.fileSize = 40960;
+    fr.crc32 = crc;
+    fr.md5 = md5;
+    fr.sha1 = sha1;
     fr.hashCalculated = hashCalculated;
     int fileId = db.insertFile(fr);
     // insertFile omits hash_calculated; persist it explicitly when needed.
@@ -155,8 +145,7 @@ int populateDb(Database &db,
     }
     return fileId;
 }
-void VerificationEngineTest::testImportDat()
-{
+void VerificationEngineTest::testImportDat() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
@@ -167,19 +156,17 @@ void VerificationEngineTest::testImportDat()
     const QString datPath = writeDat(dir);
     QVERIFY(!datPath.isEmpty());
     int count = engine.importDat(datPath, "NES");
-    QCOMPARE(count, 2);  // Two game entries in the DAT
+    QCOMPARE(count, 2); // Two game entries in the DAT
 }
 
-void VerificationEngineTest::testVerifyMatchingHash()
-{
+void VerificationEngineTest::testVerifyMatchingHash() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
     Database db;
     QVERIFY(db.initialize(":memory:"));
-    int fileId = populateDb(db, "7b5e9e81",
-                             "811b027eaf99c2def7b933c5208636de",
-                             "ea343f4e445a9050d4b4fbac2c77d0693b1d0922");
+    int fileId
+        = populateDb(db, "7b5e9e81", "811b027eaf99c2def7b933c5208636de", "ea343f4e445a9050d4b4fbac2c77d0693b1d0922");
 
     VerificationEngine engine(&db);
     const QString datPath = writeDat(dir);
@@ -191,18 +178,13 @@ void VerificationEngineTest::testVerifyMatchingHash()
     QCOMPARE(result.status, VerificationStatus::Verified);
 }
 
-void VerificationEngineTest::testVerifyOfficialDatFallsBackToMd5WhenPreferredHashMissing()
-{
+void VerificationEngineTest::testVerifyOfficialDatFallsBackToMd5WhenPreferredHashMissing() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
     Database db;
     QVERIFY(db.initialize(":memory:"));
-    const int fileId = populateDb(db,
-                                  QString(),
-                                  QStringLiteral("811b027eaf99c2def7b933c5208636de"),
-                                  QString(),
-                                  true);
+    const int fileId = populateDb(db, QString(), QStringLiteral("811b027eaf99c2def7b933c5208636de"), QString(), true);
 
     VerificationEngine engine(&db);
     const QString datPath = writeMd5OnlyDat(dir);
@@ -215,8 +197,7 @@ void VerificationEngineTest::testVerifyOfficialDatFallsBackToMd5WhenPreferredHas
     QCOMPARE(result.fileHash, QStringLiteral("811b027eaf99c2def7b933c5208636de"));
 }
 
-void VerificationEngineTest::testImportPatchDat()
-{
+void VerificationEngineTest::testImportPatchDat() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
@@ -230,14 +211,13 @@ void VerificationEngineTest::testImportPatchDat()
     QCOMPARE(count, 1);
 }
 
-void VerificationEngineTest::testVerifyMismatch()
-{
+void VerificationEngineTest::testVerifyMismatch() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
     Database db;
     QVERIFY(db.initialize(":memory:"));
-    int fileId = populateDb(db, "ffffffff");  // Wrong CRC
+    int fileId = populateDb(db, "ffffffff"); // Wrong CRC
 
     VerificationEngine engine(&db);
     const QString datPath = writeDat(dir);
@@ -248,8 +228,7 @@ void VerificationEngineTest::testVerifyMismatch()
     QCOMPARE(result.status, VerificationStatus::NotInDat);
 }
 
-void VerificationEngineTest::testVerifyNotInDat()
-{
+void VerificationEngineTest::testVerifyNotInDat() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
@@ -260,14 +239,14 @@ void VerificationEngineTest::testVerifyNotInDat()
     int libId = db.insertLibrary("/roms", "Test");
     int sysId = db.getSystemId("NES");
     FileRecord fr;
-    fr.libraryId      = libId;
-    fr.filename       = "Unknown Game.nes";
-    fr.originalPath   = "/roms/Unknown Game.nes";
-    fr.currentPath    = fr.originalPath;
-    fr.extension      = ".nes";
-    fr.systemId       = sysId;
-    fr.fileSize       = 8192;
-    fr.crc32          = "cafebabe";
+    fr.libraryId = libId;
+    fr.filename = "Unknown Game.nes";
+    fr.originalPath = "/roms/Unknown Game.nes";
+    fr.currentPath = fr.originalPath;
+    fr.extension = ".nes";
+    fr.systemId = sysId;
+    fr.fileSize = 8192;
+    fr.crc32 = "cafebabe";
     fr.hashCalculated = true;
     int fileId = db.insertFile(fr);
     // insertFile omits hash_calculated; persist it explicitly.
@@ -282,8 +261,7 @@ void VerificationEngineTest::testVerifyNotInDat()
     QCOMPARE(result.status, VerificationStatus::NotInDat);
 }
 
-void VerificationEngineTest::testVerifyHashMissing()
-{
+void VerificationEngineTest::testVerifyHashMissing() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
@@ -301,17 +279,14 @@ void VerificationEngineTest::testVerifyHashMissing()
     QCOMPARE(result.status, VerificationStatus::HashMissing);
 }
 
-void VerificationEngineTest::testVerifySummary()
-{
+void VerificationEngineTest::testVerifySummary() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
     Database db;
     QVERIFY(db.initialize(":memory:"));
     // One matching file
-    populateDb(db, "7b5e9e81",
-               "811b027eaf99c2def7b933c5208636de",
-               "ea343f4e445a9050d4b4fbac2c77d0693b1d0922");
+    populateDb(db, "7b5e9e81", "811b027eaf99c2def7b933c5208636de", "ea343f4e445a9050d4b4fbac2c77d0693b1d0922");
 
     VerificationEngine engine(&db);
     const QString datPath = writeDat(dir);
@@ -325,8 +300,7 @@ void VerificationEngineTest::testVerifySummary()
     QCOMPARE(summary.mismatched, 0);
 }
 
-void VerificationEngineTest::testHasDat()
-{
+void VerificationEngineTest::testHasDat() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
@@ -343,8 +317,7 @@ void VerificationEngineTest::testHasDat()
     QVERIFY(!engine.hasDat("SNES"));
 }
 
-void VerificationEngineTest::testHasPatchDat()
-{
+void VerificationEngineTest::testHasPatchDat() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
@@ -361,8 +334,7 @@ void VerificationEngineTest::testHasPatchDat()
     QVERIFY(!engine.hasPatchDat("SNES"));
 }
 
-void VerificationEngineTest::testRemoveDat()
-{
+void VerificationEngineTest::testRemoveDat() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
@@ -379,8 +351,7 @@ void VerificationEngineTest::testRemoveDat()
     QVERIFY(!engine.hasDat("NES"));
 }
 
-void VerificationEngineTest::testRemovePatchDat()
-{
+void VerificationEngineTest::testRemovePatchDat() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 

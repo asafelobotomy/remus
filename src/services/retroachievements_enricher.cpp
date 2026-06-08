@@ -23,27 +23,22 @@ namespace Remus {
 // Credential management
 // ---------------------------------------------------------------------------
 
-void RetroAchievementsEnricher::setApiKey(const QString &username,
-                                           const QString &apiKey)
-{
+void RetroAchievementsEnricher::setApiKey(const QString &username, const QString &apiKey) {
     m_username = username;
-    m_apiKey   = apiKey;
+    m_apiKey = apiKey;
 }
 
-bool RetroAchievementsEnricher::hasApiKey() const
-{
+bool RetroAchievementsEnricher::hasApiKey() const {
     return !effectiveApiKey().isEmpty() && !effectiveUsername().isEmpty();
 }
 
-QString RetroAchievementsEnricher::effectiveApiKey() const
-{
+QString RetroAchievementsEnricher::effectiveApiKey() const {
     if (!m_apiKey.isEmpty())
         return m_apiKey;
     return CredentialManager::get(QStringLiteral("retroachievements/api_key"));
 }
 
-QString RetroAchievementsEnricher::effectiveUsername() const
-{
+QString RetroAchievementsEnricher::effectiveUsername() const {
     if (!m_username.isEmpty())
         return m_username;
     return CredentialManager::get(QStringLiteral("retroachievements/username"));
@@ -54,9 +49,7 @@ QString RetroAchievementsEnricher::effectiveUsername() const
 // ---------------------------------------------------------------------------
 
 QByteArray RetroAchievementsEnricher::makeApiRequest(
-        const QString &endpoint,
-        const QMap<QString, QString> &params) const
-{
+    const QString &endpoint, const QMap<QString, QString> &params) const {
     QUrl url(QString::fromLatin1(Constants::API::RA_API_BASE_URL) + endpoint);
     QUrlQuery query;
     query.addQueryItem(QStringLiteral("z"), effectiveUsername());
@@ -67,8 +60,7 @@ QByteArray RetroAchievementsEnricher::makeApiRequest(
 
     QNetworkAccessManager manager;
     QNetworkRequest request(url);
-    request.setHeader(QNetworkRequest::UserAgentHeader,
-                      Constants::API::USER_AGENT);
+    request.setHeader(QNetworkRequest::UserAgentHeader, Constants::API::USER_AGENT);
 
     QNetworkReply *reply = manager.get(request);
 
@@ -101,8 +93,7 @@ QByteArray RetroAchievementsEnricher::makeApiRequest(
 // fetchSystemList
 // ---------------------------------------------------------------------------
 
-QMap<int, QString> RetroAchievementsEnricher::fetchSystemList() const
-{
+QMap<int, QString> RetroAchievementsEnricher::fetchSystemList() const {
     QMap<int, QString> systems;
 
     if (!hasApiKey()) {
@@ -110,8 +101,7 @@ QMap<int, QString> RetroAchievementsEnricher::fetchSystemList() const
         return systems;
     }
 
-    QByteArray data = makeApiRequest(
-        QString::fromLatin1(Constants::API::RA_CONSOLE_IDS_ENDPOINT), {});
+    QByteArray data = makeApiRequest(QString::fromLatin1(Constants::API::RA_CONSOLE_IDS_ENDPOINT), { });
     if (data.isEmpty())
         return systems;
 
@@ -138,9 +128,7 @@ QMap<int, QString> RetroAchievementsEnricher::fetchSystemList() const
 // fetchGameHashes
 // ---------------------------------------------------------------------------
 
-QList<RetroAchievementsEnricher::HashPatchEntry>
-RetroAchievementsEnricher::fetchGameHashes(int gameId) const
-{
+QList<RetroAchievementsEnricher::HashPatchEntry> RetroAchievementsEnricher::fetchGameHashes(int gameId) const {
     QList<HashPatchEntry> entries;
 
     if (!hasApiKey()) {
@@ -151,8 +139,7 @@ RetroAchievementsEnricher::fetchGameHashes(int gameId) const
     QMap<QString, QString> params;
     params.insert(QStringLiteral("i"), QString::number(gameId));
 
-    QByteArray data = makeApiRequest(
-        QString::fromLatin1(Constants::API::RA_GAME_HASHES_ENDPOINT), params);
+    QByteArray data = makeApiRequest(QString::fromLatin1(Constants::API::RA_GAME_HASHES_ENDPOINT), params);
     if (data.isEmpty())
         return entries;
 
@@ -169,8 +156,8 @@ RetroAchievementsEnricher::fetchGameHashes(int gameId) const
     for (const QJsonValue &val : results) {
         const QJsonObject obj = val.toObject();
         HashPatchEntry entry;
-        entry.md5      = obj.value(QStringLiteral("MD5")).toString().toLower();
-        entry.name     = obj.value(QStringLiteral("Name")).toString();
+        entry.md5 = obj.value(QStringLiteral("MD5")).toString().toLower();
+        entry.name = obj.value(QStringLiteral("Name")).toString();
         entry.patchUrl = obj.value(QStringLiteral("PatchUrl")).toString();
 
         const QJsonArray labels = obj.value(QStringLiteral("Labels")).toArray();
@@ -188,9 +175,7 @@ RetroAchievementsEnricher::fetchGameHashes(int gameId) const
 // enrichCatalog
 // ---------------------------------------------------------------------------
 
-RetroAchievementsEnricher::EnrichResult
-RetroAchievementsEnricher::enrichCatalog(QList<ModEntry> &mods) const
-{
+RetroAchievementsEnricher::EnrichResult RetroAchievementsEnricher::enrichCatalog(QList<ModEntry> &mods) const {
     EnrichResult result;
 
     if (!hasApiKey()) {
@@ -223,15 +208,14 @@ RetroAchievementsEnricher::enrichCatalog(QList<ModEntry> &mods) const
     // For each system, fetch game list to get gameId→hashes mapping
     for (auto sysIt = systems.cbegin(); sysIt != systems.cend(); ++sysIt) {
         if (md5ToIndices.isEmpty())
-            break;  // all matched
+            break; // all matched
 
         QMap<QString, QString> params;
         params.insert(QStringLiteral("i"), QString::number(sysIt.key()));
         params.insert(QStringLiteral("h"), QStringLiteral("1")); // include hashes
         params.insert(QStringLiteral("f"), QStringLiteral("1")); // only games with hashes
 
-        QByteArray data = makeApiRequest(
-            QString::fromLatin1(Constants::API::RA_GAME_LIST_ENDPOINT), params);
+        QByteArray data = makeApiRequest(QString::fromLatin1(Constants::API::RA_GAME_LIST_ENDPOINT), params);
         if (data.isEmpty())
             continue;
 
@@ -250,8 +234,7 @@ RetroAchievementsEnricher::enrichCatalog(QList<ModEntry> &mods) const
                 continue;
 
             // Hashes is a tilde-delimited string of MD5s
-            const QStringList hashList = hashes.split(QLatin1Char('~'),
-                                                       Qt::SkipEmptyParts);
+            const QStringList hashList = hashes.split(QLatin1Char('~'), Qt::SkipEmptyParts);
             for (const QString &h : hashList) {
                 const QString md5 = h.toLower().trimmed();
                 if (!md5ToIndices.contains(md5))

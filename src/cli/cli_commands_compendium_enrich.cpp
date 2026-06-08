@@ -19,9 +19,9 @@
 // Opens an existing compendium DB and runs all enrichment passes that have data
 // available, filling only fields that are still missing (COALESCE semantics).
 // Passes are idempotent: already-filled fields are never overwritten.
-int handleEnrichCompendiumCommand(CliContext &ctx)
-{
-    if (!ctx.parser.isSet("enrich-compendium")) return 0;
+int handleEnrichCompendiumCommand(CliContext &ctx) {
+    if (!ctx.parser.isSet("enrich-compendium"))
+        return 0;
 
     const QString outputPath = ctx.parser.value("compendium-output").trimmed();
     if (outputPath.isEmpty()) {
@@ -32,16 +32,15 @@ int handleEnrichCompendiumCommand(CliContext &ctx)
     // Validate --enrich-source keys early so the warning is visible even when
     // subsequent checks (DB not found, etc.) cause an early exit.
     const QString sourceFilterArg = ctx.parser.value("enrich-source").trimmed();
-    const QStringList sourceFilter = sourceFilterArg.isEmpty()
-        ? QStringList{}
-        : sourceFilterArg.split(QLatin1Char(','), Qt::SkipEmptyParts);
+    const QStringList sourceFilter
+        = sourceFilterArg.isEmpty() ? QStringList { } : sourceFilterArg.split(QLatin1Char(','), Qt::SkipEmptyParts);
     {
         const QStringList validKeys = knownEnrichmentSourceKeys();
         for (const QString &key : sourceFilter) {
             if (!validKeys.contains(key)) {
-                qWarning().noquote()
-                    << QStringLiteral("[enrich] Unknown --enrich-source key '%1' — will be ignored. "
-                                      "Valid keys: %2").arg(key, validKeys.join(", "));
+                qWarning().noquote() << QStringLiteral("[enrich] Unknown --enrich-source key '%1' — will be ignored. "
+                                                       "Valid keys: %2")
+                                            .arg(key, validKeys.join(", "));
             }
         }
     }
@@ -53,12 +52,12 @@ int handleEnrichCompendiumCommand(CliContext &ctx)
     }
 
     // Locate data directories — absent directories are skipped, not fatal.
-    const QString metadataDir  = findMetadataDir();
-    const QString gametdbDir   = findGameTDBDir();
+    const QString metadataDir = findMetadataDir();
+    const QString gametdbDir = findGameTDBDir();
     const QString openvgdbPath = findOpenVGDBPath();
     const QString mameCatverPath = findMameCatverPath();
     const QString mameListXmlPath = findMameListXmlPath();
-    const QString credPath     = outputInfo.dir().filePath(QStringLiteral("enrichment-credentials.json"));
+    const QString credPath = outputInfo.dir().filePath(QStringLiteral("enrichment-credentials.json"));
 
     if (metadataDir.isEmpty())
         qInfo() << "[enrich] data/metadata/ not found — Libretro metadata pass skipped";
@@ -73,7 +72,8 @@ int handleEnrichCompendiumCommand(CliContext &ctx)
     if (mameListXmlPath.isEmpty())
         qInfo() << "[enrich] data/mame/listxml.xml not found — MAME listxml pass skipped";
 
-    const QString connectionName = QStringLiteral("compendium-enrich-") + QUuid::createUuid().toString(QUuid::WithoutBraces);
+    const QString connectionName
+        = QStringLiteral("compendium-enrich-") + QUuid::createUuid().toString(QUuid::WithoutBraces);
     QElapsedTimer timer;
     timer.start();
 
@@ -108,17 +108,8 @@ int handleEnrichCompendiumCommand(CliContext &ctx)
     EnrichmentStats stats;
     {
         QString enrichError;
-        if (!runCompendiumEnrichmentPasses(database,
-                                          metadataDir,
-                                          gametdbDir,
-                                          openvgdbPath,
-                                          credPath,
-                                          mameCatverPath,
-                                          mameListXmlPath,
-                                          stats,
-                                          enrichError,
-                                          nullptr,
-                                          sourceFilter)) {
+        if (!runCompendiumEnrichmentPasses(database, metadataDir, gametdbDir, openvgdbPath, credPath, mameCatverPath,
+                mameListXmlPath, stats, enrichError, nullptr, sourceFilter)) {
             qCritical().noquote() << QStringLiteral("✗ %1").arg(enrichError);
             database.close();
             database = QSqlDatabase();

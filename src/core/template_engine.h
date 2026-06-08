@@ -9,9 +9,9 @@ namespace Remus {
 
 /**
  * @brief Template engine for generating filenames from metadata
- * 
+ *
  * Supports No-Intro and Redump naming conventions with variable substitution.
- * 
+ *
  * Variables:
  * - {title}: Game title (with proper article placement)
  * - {region}: Full region name (USA, Europe, Japan, World)
@@ -26,7 +26,7 @@ namespace Remus {
  * - {system}: System name
  * - {ext}: File extension (with dot)
  * - {id}: Provider-specific ID
- * 
+ *
  * Templates:
  * - No-Intro: "{title} ({region}) ({languages}) ({version}) ({status}) ({additional}) [{tags}]{ext}"
  * - Redump: "{title} ({region}) ({version}) ({additional}) (Disc {disc}){ext}"
@@ -44,9 +44,8 @@ public:
      * @param fileInfo Additional file-specific info (extension, disc number)
      * @return Generated filename
      */
-    QString applyTemplate(const QString &templateStr, 
-                         const GameMetadata &metadata,
-                         const QMap<QString, QString> &fileInfo = QMap<QString, QString>());
+    QString applyTemplate(const QString &templateStr, const GameMetadata &metadata,
+        const QMap<QString, QString> &fileInfo = QMap<QString, QString>());
 
     /**
      * @brief Get default No-Intro template
@@ -112,8 +111,7 @@ private:
      * @param fileInfo Additional file info
      * @return Map of variable names to values
      */
-    QMap<QString, QString> buildVariableMap(const GameMetadata &metadata, 
-                                            const QMap<QString, QString> &fileInfo);
+    QMap<QString, QString> buildVariableMap(const GameMetadata &metadata, const QMap<QString, QString> &fileInfo);
 };
 
 } // namespace Remus

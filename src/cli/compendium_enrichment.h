@@ -29,11 +29,8 @@ namespace CompendiumEnrichment {
  * @param error        [out] Human-readable error message on failure.
  * @return true on success, false on error.
  */
-bool enrichFromLibretroMetadata(QSqlDatabase &database,
-                                const QString &metadataDir,
-                                int &gamesEnriched,
-                                int &factsInserted,
-                                QString &error);
+bool enrichFromLibretroMetadata(
+    QSqlDatabase &database, const QString &metadataDir, int &gamesEnriched, int &factsInserted, QString &error);
 
 /**
  * @brief Enrich games with GameTDB XML databases.
@@ -49,11 +46,8 @@ bool enrichFromLibretroMetadata(QSqlDatabase &database,
  * @param error        [out] Human-readable error message on failure.
  * @return true on success, false on error.
  */
-bool enrichFromGameTDB(QSqlDatabase &database,
-                       const QString &gametdbDir,
-                       int &gamesEnriched,
-                       int &factsInserted,
-                       QString &error);
+bool enrichFromGameTDB(
+    QSqlDatabase &database, const QString &gametdbDir, int &gamesEnriched, int &factsInserted, QString &error);
 
 /**
  * @brief Enrich games with the OpenVGDB SQLite database.
@@ -69,11 +63,8 @@ bool enrichFromGameTDB(QSqlDatabase &database,
  * @param error         [out] Human-readable error message on failure.
  * @return true on success, false on error.
  */
-bool enrichFromOpenVGDB(QSqlDatabase &database,
-                        const QString &openvgdbPath,
-                        int &gamesEnriched,
-                        int &factsInserted,
-                        QString &error);
+bool enrichFromOpenVGDB(
+    QSqlDatabase &database, const QString &openvgdbPath, int &gamesEnriched, int &factsInserted, QString &error);
 
 /**
  * @brief Enrich games using the IGDB online API (bulk platform-slug fetch).
@@ -95,11 +86,8 @@ bool enrichFromOpenVGDB(QSqlDatabase &database,
  * @param error            [out] Human-readable error message on failure.
  * @return true on success (or silently skipped), false on error.
  */
-bool enrichFromIGDB(QSqlDatabase &database,
-                    const QString &credentialsPath,
-                    int &gamesEnriched,
-                    int &factsInserted,
-                    QString &error);
+bool enrichFromIGDB(
+    QSqlDatabase &database, const QString &credentialsPath, int &gamesEnriched, int &factsInserted, QString &error);
 
 /**
  * @brief Enrich games using the RetroAchievements online API (hash-based matching).
@@ -131,14 +119,9 @@ bool enrichFromIGDB(QSqlDatabase &database,
  * @param error            [out] Human-readable error message on failure.
  * @return true on success (or silently skipped), false on error.
  */
-bool enrichFromRetroAchievements(QSqlDatabase &database,
-                                  const QString &credentialsPath,
-                                  int &gamesEnriched,
-                                  int &factsInserted,
-                                  QString &error,
-                                  int *apiCallsNeededOut = nullptr,
-                                  int *apiCallsPerformedOut = nullptr,
-                                  int *apiCallsSuppressedOut = nullptr);
+bool enrichFromRetroAchievements(QSqlDatabase &database, const QString &credentialsPath, int &gamesEnriched,
+    int &factsInserted, QString &error, int *apiCallsNeededOut = nullptr, int *apiCallsPerformedOut = nullptr,
+    int *apiCallsSuppressedOut = nullptr);
 
 /**
  * @brief Enrich Arcade/MAME games using the MAME catver.ini category database.
@@ -156,11 +139,8 @@ bool enrichFromRetroAchievements(QSqlDatabase &database,
  * @param error       [out] Human-readable error message on failure.
  * @return true on success, false on error.
  */
-bool enrichFromMameCatver(QSqlDatabase &database,
-                          const QString &catverPath,
-                          int &gamesEnriched,
-                          int &factsInserted,
-                          QString &error);
+bool enrichFromMameCatver(
+    QSqlDatabase &database, const QString &catverPath, int &gamesEnriched, int &factsInserted, QString &error);
 
 /**
  * @brief Enrich Arcade/MAME games using a MAME listxml XML database.
@@ -183,11 +163,8 @@ bool enrichFromMameCatver(QSqlDatabase &database,
  * @param error         [out] Human-readable error message on failure.
  * @return true on success, false on error.
  */
-bool enrichFromMameListXml(QSqlDatabase &database,
-                            const QString &listxmlPath,
-                            int &gamesEnriched,
-                            int &factsInserted,
-                            QString &error);
+bool enrichFromMameListXml(
+    QSqlDatabase &database, const QString &listxmlPath, int &gamesEnriched, int &factsInserted, QString &error);
 
 /**
  * @brief Enrich ZX Spectrum games using the ZXInfo online API.
@@ -205,9 +182,6 @@ bool enrichFromMameListXml(QSqlDatabase &database,
  * @param error         [out] Human-readable error message on failure.
  * @return true on success, false on error.
  */
-bool enrichFromZXInfo(QSqlDatabase &database,
-                      int &gamesEnriched,
-                      int &factsInserted,
-                      QString &error);
+bool enrichFromZXInfo(QSqlDatabase &database, int &gamesEnriched, int &factsInserted, QString &error);
 
 } // namespace CompendiumEnrichment

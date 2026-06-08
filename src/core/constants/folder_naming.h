@@ -7,377 +7,450 @@
 
 namespace Remus {
 namespace Constants {
-namespace FolderNaming {
+    namespace FolderNaming {
 
-// ============================================================================
-// Folder Naming Schemes
-// ============================================================================
+        // ============================================================================
+        // Folder Naming Schemes
+        // ============================================================================
 
-/**
- * @brief Predefined folder naming schemes matching popular emulation frontends
- *
- * Each scheme maps system IDs to the exact directory names expected by the
- * corresponding frontend. "Default" uses ES-DE conventions (widest compatibility).
- */
-enum class Scheme {
-    None,       ///< No system subfolder — flat output (legacy behaviour)
-    Default,    ///< ES-DE / majority vote across frontends
-    Batocera,   ///< Batocera Linux
-    RetroPie,   ///< RetroPie
-    EmuDeck,    ///< EmuDeck (Steam Deck)
-    RomM        ///< RomM server
-};
+        /**
+         * @brief Predefined folder naming schemes matching popular emulation frontends
+         *
+         * Each scheme maps system IDs to the exact directory names expected by the
+         * corresponding frontend. "Default" uses ES-DE conventions (widest compatibility).
+         */
+        enum class Scheme {
+            None, ///< No system subfolder — flat output (legacy behaviour)
+            Default, ///< ES-DE / majority vote across frontends
+            Batocera, ///< Batocera Linux
+            RetroPie, ///< RetroPie
+            EmuDeck, ///< EmuDeck (Steam Deck)
+            RomM ///< RomM server
+        };
 
-inline const QStringList SCHEME_NAMES = {
-    QStringLiteral("none"),
-    QStringLiteral("default"),
-    QStringLiteral("batocera"),
-    QStringLiteral("retropie"),
-    QStringLiteral("emudeck"),
-    QStringLiteral("romm")
-};
+        inline const QStringList SCHEME_NAMES = { QStringLiteral("none"), QStringLiteral("default"),
+            QStringLiteral("batocera"), QStringLiteral("retropie"), QStringLiteral("emudeck"), QStringLiteral("romm") };
 
-/**
- * @brief Parse a scheme name string to the enum
- * @param name Scheme name (case-insensitive)
- * @return Scheme enum value, or Scheme::None if unrecognised
- */
-inline Scheme schemeFromString(const QString &name)
-{
-    const QString lower = name.trimmed().toLower();
-    if (lower == QLatin1String("default") || lower == QLatin1String("es-de") || lower == QLatin1String("esde"))
-        return Scheme::Default;
-    if (lower == QLatin1String("batocera"))
-        return Scheme::Batocera;
-    if (lower == QLatin1String("retropie"))
-        return Scheme::RetroPie;
-    if (lower == QLatin1String("emudeck"))
-        return Scheme::EmuDeck;
-    if (lower == QLatin1String("romm"))
-        return Scheme::RomM;
-    // RetroDeck embeds ES-DE, so it uses the Default (ES-DE) naming scheme
-    if (lower == QLatin1String("retrodeck"))
-        return Scheme::Default;
-    return Scheme::None;
-}
-
-/**
- * @brief Get the display name for a scheme
- */
-inline QString schemeDisplayName(Scheme scheme)
-{
-    switch (scheme) {
-    case Scheme::None:     return QStringLiteral("None (flat)");
-    case Scheme::Default:  return QStringLiteral("Default (ES-DE)");
-    case Scheme::Batocera: return QStringLiteral("Batocera");
-    case Scheme::RetroPie: return QStringLiteral("RetroPie");
-    case Scheme::EmuDeck:  return QStringLiteral("EmuDeck");
-    case Scheme::RomM:     return QStringLiteral("RomM");
-    }
-    return QStringLiteral("Unknown");
-}
-
-// ============================================================================
-// System Folder Name Lookup
-// ============================================================================
-
-/**
- * @brief Get the folder name for a system under the given naming scheme
- * @param systemId System ID constant (ID_NES, etc.)
- * @param scheme Folder naming scheme to use
- * @return Folder name (e.g. "nes", "megadrive", "psx"), or empty string if unknown
- *
- * Source-verified from:
- * - ES-DE: es_systems.xml <name> tags
- * - Batocera: /userdata/roms/ folder names
- * - RetroPie: ~/RetroPie/roms/ folder names
- * - EmuDeck: Emulation/roms/ folder names
- * - RomM: UniversalPlatformSlug enum values
- */
-inline QString folderNameForSystemId(int systemId, Scheme scheme)
-{
-    using namespace Systems;
-
-    // For Scheme::None, return empty — caller handles flat output
-    if (scheme == Scheme::None)
-        return {};
-
-    // --- Default / ES-DE (majority-vote baseline) ---
-    // Other schemes only override where they diverge.
-
-    switch (systemId) {
-
-    // ── Nintendo ────────────────────────────────────────
-    case ID_NES:
-        return QStringLiteral("nes");
-
-    case ID_SNES:
-        return QStringLiteral("snes");
-
-    case ID_N64:
-        return QStringLiteral("n64");
-
-    case ID_GB:
-        return QStringLiteral("gb");
-
-    case ID_GBC:
-        return QStringLiteral("gbc");
-
-    case ID_GBA:
-        return QStringLiteral("gba");
-
-    case ID_NDS:
-        return QStringLiteral("nds");
-
-    case ID_GAMECUBE:
-        switch (scheme) {
-        case Scheme::Batocera: return QStringLiteral("gamecube");
-        case Scheme::RomM:     return QStringLiteral("ngc");
-        default:               return QStringLiteral("gc");
+        /**
+         * @brief Parse a scheme name string to the enum
+         * @param name Scheme name (case-insensitive)
+         * @return Scheme enum value, or Scheme::None if unrecognised
+         */
+        inline Scheme schemeFromString(const QString &name) {
+            const QString lower = name.trimmed().toLower();
+            if (lower == QLatin1String("default") || lower == QLatin1String("es-de") || lower == QLatin1String("esde"))
+                return Scheme::Default;
+            if (lower == QLatin1String("batocera"))
+                return Scheme::Batocera;
+            if (lower == QLatin1String("retropie"))
+                return Scheme::RetroPie;
+            if (lower == QLatin1String("emudeck"))
+                return Scheme::EmuDeck;
+            if (lower == QLatin1String("romm"))
+                return Scheme::RomM;
+            // RetroDeck embeds ES-DE, so it uses the Default (ES-DE) naming scheme
+            if (lower == QLatin1String("retrodeck"))
+                return Scheme::Default;
+            return Scheme::None;
         }
 
-    case ID_WII:
-        return QStringLiteral("wii");
-
-    case ID_3DS:
-        switch (scheme) {
-        case Scheme::Default:  return QStringLiteral("n3ds");
-        default:               return QStringLiteral("3ds");
+        /**
+         * @brief Get the display name for a scheme
+         */
+        inline QString schemeDisplayName(Scheme scheme) {
+            switch (scheme) {
+            case Scheme::None:
+                return QStringLiteral("None (flat)");
+            case Scheme::Default:
+                return QStringLiteral("Default (ES-DE)");
+            case Scheme::Batocera:
+                return QStringLiteral("Batocera");
+            case Scheme::RetroPie:
+                return QStringLiteral("RetroPie");
+            case Scheme::EmuDeck:
+                return QStringLiteral("EmuDeck");
+            case Scheme::RomM:
+                return QStringLiteral("RomM");
+            }
+            return QStringLiteral("Unknown");
         }
 
-    case ID_VIRTUAL_BOY:
-        return QStringLiteral("virtualboy");
+        // ============================================================================
+        // System Folder Name Lookup
+        // ============================================================================
 
-    case ID_SWITCH:
-        return QStringLiteral("switch");
+        /**
+         * @brief Get the folder name for a system under the given naming scheme
+         * @param systemId System ID constant (ID_NES, etc.)
+         * @param scheme Folder naming scheme to use
+         * @return Folder name (e.g. "nes", "megadrive", "psx"), or empty string if unknown
+         *
+         * Source-verified from:
+         * - ES-DE: es_systems.xml <name> tags
+         * - Batocera: /userdata/roms/ folder names
+         * - RetroPie: ~/RetroPie/roms/ folder names
+         * - EmuDeck: Emulation/roms/ folder names
+         * - RomM: UniversalPlatformSlug enum values
+         */
+        inline QString folderNameForSystemId(int systemId, Scheme scheme) {
+            using namespace Systems;
 
-    // ── Sega ────────────────────────────────────────────
-    case ID_GENESIS:
-        switch (scheme) {
-        case Scheme::Default:
-        case Scheme::EmuDeck:
-        case Scheme::RomM:     return QStringLiteral("genesis");
-        default:               return QStringLiteral("megadrive");
+            // For Scheme::None, return empty — caller handles flat output
+            if (scheme == Scheme::None)
+                return { };
+
+            // --- Default / ES-DE (majority-vote baseline) ---
+            // Other schemes only override where they diverge.
+
+            switch (systemId) {
+
+            // ── Nintendo ────────────────────────────────────────
+            case ID_NES:
+                return QStringLiteral("nes");
+
+            case ID_SNES:
+                return QStringLiteral("snes");
+
+            case ID_N64:
+                return QStringLiteral("n64");
+
+            case ID_GB:
+                return QStringLiteral("gb");
+
+            case ID_GBC:
+                return QStringLiteral("gbc");
+
+            case ID_GBA:
+                return QStringLiteral("gba");
+
+            case ID_NDS:
+                return QStringLiteral("nds");
+
+            case ID_GAMECUBE:
+                switch (scheme) {
+                case Scheme::Batocera:
+                    return QStringLiteral("gamecube");
+                case Scheme::RomM:
+                    return QStringLiteral("ngc");
+                default:
+                    return QStringLiteral("gc");
+                }
+
+            case ID_WII:
+                return QStringLiteral("wii");
+
+            case ID_3DS:
+                switch (scheme) {
+                case Scheme::Default:
+                    return QStringLiteral("n3ds");
+                default:
+                    return QStringLiteral("3ds");
+                }
+
+            case ID_VIRTUAL_BOY:
+                return QStringLiteral("virtualboy");
+
+            case ID_SWITCH:
+                return QStringLiteral("switch");
+
+            // ── Sega ────────────────────────────────────────────
+            case ID_GENESIS:
+                switch (scheme) {
+                case Scheme::Default:
+                case Scheme::EmuDeck:
+                case Scheme::RomM:
+                    return QStringLiteral("genesis");
+                default:
+                    return QStringLiteral("megadrive");
+                }
+
+            case ID_MASTER_SYSTEM:
+                switch (scheme) {
+                case Scheme::RomM:
+                    return QStringLiteral("sms");
+                default:
+                    return QStringLiteral("mastersystem");
+                }
+
+            case ID_SATURN:
+                return QStringLiteral("saturn");
+
+            case ID_DREAMCAST:
+                switch (scheme) {
+                case Scheme::RomM:
+                    return QStringLiteral("dc");
+                default:
+                    return QStringLiteral("dreamcast");
+                }
+
+            case ID_GAME_GEAR:
+                return QStringLiteral("gamegear");
+
+            case ID_SEGA_CD:
+                switch (scheme) {
+                case Scheme::Batocera:
+                    return QStringLiteral("megacd");
+                default:
+                    return QStringLiteral("segacd");
+                }
+
+            case ID_32X:
+                switch (scheme) {
+                case Scheme::RomM:
+                    return QStringLiteral("sega32");
+                default:
+                    return QStringLiteral("sega32x");
+                }
+
+            // ── Sony ────────────────────────────────────────────
+            case ID_PSX:
+                return QStringLiteral("psx");
+
+            case ID_PS2:
+                return QStringLiteral("ps2");
+
+            case ID_PSP:
+                return QStringLiteral("psp");
+
+            case ID_PSVITA:
+                return QStringLiteral("psvita");
+
+            // ── Atari ───────────────────────────────────────────
+            case ID_ATARI_2600:
+                return QStringLiteral("atari2600");
+
+            case ID_ATARI_7800:
+                return QStringLiteral("atari7800");
+
+            case ID_LYNX:
+                switch (scheme) {
+                case Scheme::Batocera:
+                case Scheme::EmuDeck:
+                case Scheme::RomM:
+                    return QStringLiteral("lynx");
+                default:
+                    return QStringLiteral("atarilynx");
+                }
+
+            case ID_ATARI_JAGUAR:
+                switch (scheme) {
+                case Scheme::Batocera:
+                case Scheme::RomM:
+                    return QStringLiteral("jaguar");
+                default:
+                    return QStringLiteral("atarijaguar");
+                }
+
+            // ── NEC ─────────────────────────────────────────────
+            case ID_TURBOGRAFX16:
+                switch (scheme) {
+                case Scheme::EmuDeck:
+                case Scheme::RomM:
+                    return QStringLiteral("tg16");
+                default:
+                    return QStringLiteral("pcengine");
+                }
+
+            case ID_TURBOGRAFX_CD:
+                switch (scheme) {
+                case Scheme::EmuDeck:
+                    return QStringLiteral("tg-cd");
+                case Scheme::RomM:
+                    return QStringLiteral("turbografx-cd");
+                default:
+                    return QStringLiteral("pcenginecd");
+                }
+
+            case ID_SUPERGRAFX:
+                return QStringLiteral("supergrafx");
+
+            // ── 3DO ─────────────────────────────────────────────
+            case ID_3DO:
+                return QStringLiteral("3do");
+
+            // ── SNK ─────────────────────────────────────────────
+            case ID_NEO_GEO:
+                switch (scheme) {
+                case Scheme::EmuDeck:
+                    return QStringLiteral("fbneo");
+                case Scheme::RomM:
+                    return QStringLiteral("neogeoaes");
+                default:
+                    return QStringLiteral("neogeo");
+                }
+
+            case ID_NEO_GEO_CD:
+                return QStringLiteral("neogeocd");
+
+            case ID_NGP:
+                switch (scheme) {
+                case Scheme::RomM:
+                    return QStringLiteral("neo-geo-pocket");
+                default:
+                    return QStringLiteral("ngp");
+                }
+
+            // ── Microsoft ───────────────────────────────────────
+            case ID_XBOX:
+                return QStringLiteral("xbox");
+
+            case ID_XBOX360:
+                return QStringLiteral("xbox360");
+
+            // ── Other ───────────────────────────────────────────
+            case ID_C64:
+                return QStringLiteral("c64");
+
+            case ID_AMIGA:
+                return QStringLiteral("amiga");
+
+            case ID_ZX_SPECTRUM:
+                switch (scheme) {
+                case Scheme::RomM:
+                    return QStringLiteral("zxs");
+                default:
+                    return QStringLiteral("zxspectrum");
+                }
+
+            case ID_WONDERSWAN:
+                switch (scheme) {
+                case Scheme::Batocera:
+                    return QStringLiteral("wswan");
+                default:
+                    return QStringLiteral("wonderswan");
+                }
+
+            case ID_ARCADE:
+                switch (scheme) {
+                case Scheme::Batocera:
+                    return QStringLiteral("mame");
+                default:
+                    return QStringLiteral("arcade");
+                }
+
+            // ── Famicom Disk System ──────────────────────────────
+            case ID_FDS:
+                return QStringLiteral("fds");
+
+            // ── Nintendo extended ────────────────────────────────
+            case ID_WIIU:
+                return QStringLiteral("wiiu");
+
+            // ── Sony extended ────────────────────────────────────
+            case ID_PS3:
+                return QStringLiteral("ps3");
+
+            // ── Atari extended ───────────────────────────────────
+            case ID_ATARI_5200:
+                return QStringLiteral("atari5200");
+            case ID_ATARI_8BIT:
+                return QStringLiteral("atari800");
+            case ID_ATARI_ST:
+                return QStringLiteral("atarist");
+            case ID_ATARI_JAGUAR_CD:
+                return QStringLiteral("atarijaguarcd");
+
+            // ── Sega extended ────────────────────────────────────
+            case ID_SG1000:
+                switch (scheme) {
+                case Scheme::Batocera:
+                    return QStringLiteral("sg1000");
+                default:
+                    return QStringLiteral("sg-1000");
+                }
+            case ID_NAOMI:
+                return QStringLiteral("naomi");
+            case ID_SEGA_PICO:
+                return QStringLiteral("pico");
+
+            // ── Home computers ───────────────────────────────────
+            case ID_MSX:
+                return QStringLiteral("msx");
+            case ID_MSX2:
+                return QStringLiteral("msx2");
+            case ID_COLECOVISION:
+                return QStringLiteral("colecovision");
+            case ID_INTELLIVISION:
+                return QStringLiteral("intellivision");
+            case ID_AMSTRAD_CPC:
+                return QStringLiteral("amstradcpc");
+            case ID_ZX81:
+                return QStringLiteral("zx81");
+            case ID_VIC20:
+                return QStringLiteral("vic20");
+            case ID_PC98:
+                return QStringLiteral("pc-98");
+            case ID_SHARP_X1:
+                return QStringLiteral("x1");
+            case ID_X68000:
+                return QStringLiteral("x68000");
+            case ID_ENTERPRISE_128:
+                return QStringLiteral("ep128");
+            case ID_VIDEOTON_TVC:
+                return QStringLiteral("tvc");
+
+            // ── Disc-based / optical ─────────────────────────────
+            case ID_PC_FX:
+                return QStringLiteral("pcfx");
+            case ID_CDI:
+                return QStringLiteral("cdimono1");
+            case ID_CD32:
+                return QStringLiteral("amigacd32");
+
+            // ── Other consoles / handhelds ────────────────────────
+            case ID_ODYSSEY2:
+                return QStringLiteral("odyssey2");
+            case ID_VECTREX:
+                return QStringLiteral("vectrex");
+            case ID_POKEMON_MINI:
+                return QStringLiteral("pokemini");
+            case ID_CHANNEL_F:
+                return QStringLiteral("channelf");
+            case ID_SUPERVISION:
+                return QStringLiteral("supervision");
+            case ID_ARCADIA_2001:
+                return QStringLiteral("arcadia");
+            case ID_SCV:
+                return QStringLiteral("scv");
+            case ID_GP32:
+                return QStringLiteral("gp32");
+            case ID_GAMECOM:
+                return QStringLiteral("gamecom");
+            case ID_STUDIO_II:
+                return QStringLiteral("rca2");
+            case ID_ATOMISWAVE:
+                return QStringLiteral("atomiswave");
+            case ID_SUPER_ACAN:
+                return QStringLiteral("supracan");
+            case ID_POCKET_CHALLENGE_V2:
+                return QStringLiteral("pocketchallengewsc");
+            case ID_INTERTON_VC4000:
+                return QStringLiteral("vc4000");
+            case ID_CASIO_PV1000:
+                return QStringLiteral("pv1000");
+            case ID_CASIO_LOOPY:
+                return QStringLiteral("loopy");
+
+            default:
+                return { };
+            }
         }
 
-    case ID_MASTER_SYSTEM:
-        switch (scheme) {
-        case Scheme::RomM: return QStringLiteral("sms");
-        default:           return QStringLiteral("mastersystem");
+        /**
+         * @brief Get all folder names for a given scheme (for documentation/UI)
+         * @param scheme Folder naming scheme
+         * @return Map of system ID -> folder name
+         */
+        inline QMap<int, QString> allFolderNames(Scheme scheme) {
+            QMap<int, QString> result;
+            for (auto it = Systems::SYSTEMS.constBegin(); it != Systems::SYSTEMS.constEnd(); ++it) {
+                QString folder = folderNameForSystemId(it.key(), scheme);
+                if (!folder.isEmpty())
+                    result.insert(it.key(), folder);
+            }
+            return result;
         }
 
-    case ID_SATURN:
-        return QStringLiteral("saturn");
-
-    case ID_DREAMCAST:
-        switch (scheme) {
-        case Scheme::RomM: return QStringLiteral("dc");
-        default:           return QStringLiteral("dreamcast");
-        }
-
-    case ID_GAME_GEAR:
-        return QStringLiteral("gamegear");
-
-    case ID_SEGA_CD:
-        switch (scheme) {
-        case Scheme::Batocera: return QStringLiteral("megacd");
-        default:               return QStringLiteral("segacd");
-        }
-
-    case ID_32X:
-        switch (scheme) {
-        case Scheme::RomM: return QStringLiteral("sega32");
-        default:           return QStringLiteral("sega32x");
-        }
-
-    // ── Sony ────────────────────────────────────────────
-    case ID_PSX:
-        return QStringLiteral("psx");
-
-    case ID_PS2:
-        return QStringLiteral("ps2");
-
-    case ID_PSP:
-        return QStringLiteral("psp");
-
-    case ID_PSVITA:
-        return QStringLiteral("psvita");
-
-    // ── Atari ───────────────────────────────────────────
-    case ID_ATARI_2600:
-        return QStringLiteral("atari2600");
-
-    case ID_ATARI_7800:
-        return QStringLiteral("atari7800");
-
-    case ID_LYNX:
-        switch (scheme) {
-        case Scheme::Batocera:
-        case Scheme::EmuDeck:
-        case Scheme::RomM:     return QStringLiteral("lynx");
-        default:               return QStringLiteral("atarilynx");
-        }
-
-    case ID_ATARI_JAGUAR:
-        switch (scheme) {
-        case Scheme::Batocera:
-        case Scheme::RomM:     return QStringLiteral("jaguar");
-        default:               return QStringLiteral("atarijaguar");
-        }
-
-    // ── NEC ─────────────────────────────────────────────
-    case ID_TURBOGRAFX16:
-        switch (scheme) {
-        case Scheme::EmuDeck:
-        case Scheme::RomM:     return QStringLiteral("tg16");
-        default:               return QStringLiteral("pcengine");
-        }
-
-    case ID_TURBOGRAFX_CD:
-        switch (scheme) {
-        case Scheme::EmuDeck:  return QStringLiteral("tg-cd");
-        case Scheme::RomM:     return QStringLiteral("turbografx-cd");
-        default:               return QStringLiteral("pcenginecd");
-        }
-
-    case ID_SUPERGRAFX:
-        return QStringLiteral("supergrafx");
-
-    // ── 3DO ─────────────────────────────────────────────
-    case ID_3DO:
-        return QStringLiteral("3do");
-
-    // ── SNK ─────────────────────────────────────────────
-    case ID_NEO_GEO:
-        switch (scheme) {
-        case Scheme::EmuDeck:  return QStringLiteral("fbneo");
-        case Scheme::RomM:     return QStringLiteral("neogeoaes");
-        default:               return QStringLiteral("neogeo");
-        }
-
-    case ID_NEO_GEO_CD:
-        return QStringLiteral("neogeocd");
-
-    case ID_NGP:
-        switch (scheme) {
-        case Scheme::RomM: return QStringLiteral("neo-geo-pocket");
-        default:           return QStringLiteral("ngp");
-        }
-
-    // ── Microsoft ───────────────────────────────────────
-    case ID_XBOX:
-        return QStringLiteral("xbox");
-
-    case ID_XBOX360:
-        return QStringLiteral("xbox360");
-
-    // ── Other ───────────────────────────────────────────
-    case ID_C64:
-        return QStringLiteral("c64");
-
-    case ID_AMIGA:
-        return QStringLiteral("amiga");
-
-    case ID_ZX_SPECTRUM:
-        switch (scheme) {
-        case Scheme::RomM: return QStringLiteral("zxs");
-        default:           return QStringLiteral("zxspectrum");
-        }
-
-    case ID_WONDERSWAN:
-        switch (scheme) {
-        case Scheme::Batocera: return QStringLiteral("wswan");
-        default:               return QStringLiteral("wonderswan");
-        }
-
-    case ID_ARCADE:
-        switch (scheme) {
-        case Scheme::Batocera: return QStringLiteral("mame");
-        default:               return QStringLiteral("arcade");
-        }
-
-    // ── Famicom Disk System ──────────────────────────────
-    case ID_FDS:             return QStringLiteral("fds");
-
-    // ── Nintendo extended ────────────────────────────────
-    case ID_WIIU:            return QStringLiteral("wiiu");
-
-    // ── Sony extended ────────────────────────────────────
-    case ID_PS3:             return QStringLiteral("ps3");
-
-    // ── Atari extended ───────────────────────────────────
-    case ID_ATARI_5200:      return QStringLiteral("atari5200");
-    case ID_ATARI_8BIT:      return QStringLiteral("atari800");
-    case ID_ATARI_ST:        return QStringLiteral("atarist");
-    case ID_ATARI_JAGUAR_CD: return QStringLiteral("atarijaguarcd");
-
-    // ── Sega extended ────────────────────────────────────
-    case ID_SG1000:
-        switch (scheme) {
-        case Scheme::Batocera: return QStringLiteral("sg1000");
-        default:               return QStringLiteral("sg-1000");
-        }
-    case ID_NAOMI:           return QStringLiteral("naomi");
-    case ID_SEGA_PICO:       return QStringLiteral("pico");
-
-    // ── Home computers ───────────────────────────────────
-    case ID_MSX:             return QStringLiteral("msx");
-    case ID_MSX2:            return QStringLiteral("msx2");
-    case ID_COLECOVISION:    return QStringLiteral("colecovision");
-    case ID_INTELLIVISION:   return QStringLiteral("intellivision");
-    case ID_AMSTRAD_CPC:     return QStringLiteral("amstradcpc");
-    case ID_ZX81:            return QStringLiteral("zx81");
-    case ID_VIC20:           return QStringLiteral("vic20");
-    case ID_PC98:            return QStringLiteral("pc-98");
-    case ID_SHARP_X1:        return QStringLiteral("x1");
-    case ID_X68000:          return QStringLiteral("x68000");
-    case ID_ENTERPRISE_128:  return QStringLiteral("ep128");
-    case ID_VIDEOTON_TVC:    return QStringLiteral("tvc");
-
-    // ── Disc-based / optical ─────────────────────────────
-    case ID_PC_FX:           return QStringLiteral("pcfx");
-    case ID_CDI:             return QStringLiteral("cdimono1");
-    case ID_CD32:            return QStringLiteral("amigacd32");
-
-    // ── Other consoles / handhelds ────────────────────────
-    case ID_ODYSSEY2:             return QStringLiteral("odyssey2");
-    case ID_VECTREX:              return QStringLiteral("vectrex");
-    case ID_POKEMON_MINI:         return QStringLiteral("pokemini");
-    case ID_CHANNEL_F:            return QStringLiteral("channelf");
-    case ID_SUPERVISION:          return QStringLiteral("supervision");
-    case ID_ARCADIA_2001:         return QStringLiteral("arcadia");
-    case ID_SCV:                  return QStringLiteral("scv");
-    case ID_GP32:                 return QStringLiteral("gp32");
-    case ID_GAMECOM:              return QStringLiteral("gamecom");
-    case ID_STUDIO_II:            return QStringLiteral("rca2");
-    case ID_ATOMISWAVE:           return QStringLiteral("atomiswave");
-    case ID_SUPER_ACAN:           return QStringLiteral("supracan");
-    case ID_POCKET_CHALLENGE_V2:  return QStringLiteral("pocketchallengewsc");
-    case ID_INTERTON_VC4000:      return QStringLiteral("vc4000");
-    case ID_CASIO_PV1000:         return QStringLiteral("pv1000");
-    case ID_CASIO_LOOPY:          return QStringLiteral("loopy");
-
-    default:
-        return {};
-    }
-}
-
-/**
- * @brief Get all folder names for a given scheme (for documentation/UI)
- * @param scheme Folder naming scheme
- * @return Map of system ID -> folder name
- */
-inline QMap<int, QString> allFolderNames(Scheme scheme)
-{
-    QMap<int, QString> result;
-    for (auto it = Systems::SYSTEMS.constBegin(); it != Systems::SYSTEMS.constEnd(); ++it) {
-        QString folder = folderNameForSystemId(it.key(), scheme);
-        if (!folder.isEmpty())
-            result.insert(it.key(), folder);
-    }
-    return result;
-}
-
-} // FolderNaming
+    } // FolderNaming
 } // Constants
 } // Remus

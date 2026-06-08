@@ -11,18 +11,16 @@
 
 namespace {
 
-bool loadTableColumns(QSqlDatabase &db, const QString &tableName, QSet<QString> &columns, QString &error)
-{
-    static const QSet<QString> kAllowedTables = {
-        QString::fromLatin1(Remus::Constants::DatabaseSchema::Tables::SYSTEMS),
-        QString::fromLatin1(Remus::Constants::DatabaseSchema::Tables::LIBRARIES),
-        QString::fromLatin1(Remus::Constants::DatabaseSchema::Tables::FILES),
-        QString::fromLatin1(Remus::Constants::DatabaseSchema::Tables::GAMES),
-        QString::fromLatin1(Remus::Constants::DatabaseSchema::Tables::MATCHES),
-        QString::fromLatin1(Remus::Constants::DatabaseSchema::Tables::APPLIED_PATCHES),
-        QString::fromLatin1(Remus::Constants::DatabaseSchema::Tables::CACHE),
-        QString::fromLatin1(Remus::Constants::DatabaseSchema::Tables::UNDO_HISTORY)
-    };
+bool loadTableColumns(QSqlDatabase &db, const QString &tableName, QSet<QString> &columns, QString &error) {
+    static const QSet<QString> kAllowedTables
+        = { QString::fromLatin1(Remus::Constants::DatabaseSchema::Tables::SYSTEMS),
+              QString::fromLatin1(Remus::Constants::DatabaseSchema::Tables::LIBRARIES),
+              QString::fromLatin1(Remus::Constants::DatabaseSchema::Tables::FILES),
+              QString::fromLatin1(Remus::Constants::DatabaseSchema::Tables::GAMES),
+              QString::fromLatin1(Remus::Constants::DatabaseSchema::Tables::MATCHES),
+              QString::fromLatin1(Remus::Constants::DatabaseSchema::Tables::APPLIED_PATCHES),
+              QString::fromLatin1(Remus::Constants::DatabaseSchema::Tables::CACHE),
+              QString::fromLatin1(Remus::Constants::DatabaseSchema::Tables::UNDO_HISTORY) };
 
     if (!kAllowedTables.contains(tableName)) {
         error = QStringLiteral("Unsupported table name for schema inspection: %1").arg(tableName);
@@ -46,12 +44,10 @@ bool loadTableColumns(QSqlDatabase &db, const QString &tableName, QSet<QString> 
 
 namespace Remus {
 
-bool migrateCanonicalSystems(QSqlDatabase &db,
-                             Database &database,
-                             const std::function<bool(const QString &)> &rollbackAndFail);
+bool migrateCanonicalSystems(
+    QSqlDatabase &db, Database &database, const std::function<bool(const QString &)> &rollbackAndFail);
 
-bool Database::runMigrations()
-{
+bool Database::runMigrations() {
     const bool useTransaction = m_db.driver()->hasFeature(QSqlDriver::Transactions);
     if (useTransaction && !m_db.transaction()) {
         logError("Migration: Failed to start transaction: " + m_db.lastError().text());
@@ -85,36 +81,38 @@ bool Database::runMigrations()
     const bool hasProcessingStatus = fileColumns.contains(Constants::DatabaseSchema::Columns::Files::PROCESSING_STATUS);
     const bool hasIsCompressed = fileColumns.contains(Constants::DatabaseSchema::Columns::Files::IS_COMPRESSED);
     const bool hasArchivePath = fileColumns.contains(Constants::DatabaseSchema::Columns::Files::ARCHIVE_PATH);
-    const bool hasArchiveInternalPath = fileColumns.contains(Constants::DatabaseSchema::Columns::Files::ARCHIVE_INTERNAL_PATH);
+    const bool hasArchiveInternalPath
+        = fileColumns.contains(Constants::DatabaseSchema::Columns::Files::ARCHIVE_INTERNAL_PATH);
     const bool hasBaseTitle = fileColumns.contains(Constants::DatabaseSchema::Columns::Files::BASE_TITLE);
     const bool hasFileType = fileColumns.contains(Constants::DatabaseSchema::Columns::Files::FILE_TYPE);
     const bool hasIsPatched = fileColumns.contains(Constants::DatabaseSchema::Columns::Files::IS_PATCHED);
     const bool hasPatchName = fileColumns.contains(Constants::DatabaseSchema::Columns::Files::PATCH_NAME);
     const bool hasIsConverted = fileColumns.contains(Constants::DatabaseSchema::Columns::Files::IS_CONVERTED);
     const bool hasIsBundled = fileColumns.contains(Constants::DatabaseSchema::Columns::Files::IS_BUNDLED);
-    const bool hasBundleOutputPath = fileColumns.contains(Constants::DatabaseSchema::Columns::Files::BUNDLE_OUTPUT_PATH);
-    
+    const bool hasBundleOutputPath
+        = fileColumns.contains(Constants::DatabaseSchema::Columns::Files::BUNDLE_OUTPUT_PATH);
+
     // Add is_processed column if missing
     if (!hasIsProcessed) {
         qInfo() << "Migration: Adding is_processed column to files table";
         if (!execChecked(query,
-                         QString("ALTER TABLE %1 ADD COLUMN %2 BOOLEAN DEFAULT 0")
-                             .arg(Constants::DatabaseSchema::Tables::FILES,
-                                  Constants::DatabaseSchema::Columns::Files::IS_PROCESSED),
-                         "Migration: Failed to add is_processed column to files table")) {
+                QString("ALTER TABLE %1 ADD COLUMN %2 BOOLEAN DEFAULT 0")
+                    .arg(Constants::DatabaseSchema::Tables::FILES,
+                        Constants::DatabaseSchema::Columns::Files::IS_PROCESSED),
+                "Migration: Failed to add is_processed column to files table")) {
             return false;
         }
     }
-    
+
     // Add processing_status column if missing
     if (!hasProcessingStatus) {
         qInfo() << "Migration: Adding processing_status column to files table";
         if (!execChecked(query,
-                         QString("ALTER TABLE %1 ADD COLUMN %2 TEXT DEFAULT '%3'")
-                             .arg(Constants::DatabaseSchema::Tables::FILES,
-                                  Constants::DatabaseSchema::Columns::Files::PROCESSING_STATUS,
-                                  Constants::Engines::ProcessingStatus::UNPROCESSED),
-                         "Migration: Failed to add processing_status column to files table")) {
+                QString("ALTER TABLE %1 ADD COLUMN %2 TEXT DEFAULT '%3'")
+                    .arg(Constants::DatabaseSchema::Tables::FILES,
+                        Constants::DatabaseSchema::Columns::Files::PROCESSING_STATUS,
+                        Constants::Engines::ProcessingStatus::UNPROCESSED),
+                "Migration: Failed to add processing_status column to files table")) {
             return false;
         }
     }
@@ -122,10 +120,10 @@ bool Database::runMigrations()
     if (!hasIsCompressed) {
         qInfo() << "Migration: Adding is_compressed column to files table";
         if (!execChecked(query,
-                         QString("ALTER TABLE %1 ADD COLUMN %2 BOOLEAN DEFAULT 0")
-                             .arg(Constants::DatabaseSchema::Tables::FILES,
-                                  Constants::DatabaseSchema::Columns::Files::IS_COMPRESSED),
-                         "Migration: Failed to add is_compressed column to files table")) {
+                QString("ALTER TABLE %1 ADD COLUMN %2 BOOLEAN DEFAULT 0")
+                    .arg(Constants::DatabaseSchema::Tables::FILES,
+                        Constants::DatabaseSchema::Columns::Files::IS_COMPRESSED),
+                "Migration: Failed to add is_compressed column to files table")) {
             return false;
         }
     }
@@ -133,10 +131,10 @@ bool Database::runMigrations()
     if (!hasArchivePath) {
         qInfo() << "Migration: Adding archive_path column to files table";
         if (!execChecked(query,
-                         QString("ALTER TABLE %1 ADD COLUMN %2 TEXT")
-                             .arg(Constants::DatabaseSchema::Tables::FILES,
-                                  Constants::DatabaseSchema::Columns::Files::ARCHIVE_PATH),
-                         "Migration: Failed to add archive_path column to files table")) {
+                QString("ALTER TABLE %1 ADD COLUMN %2 TEXT")
+                    .arg(Constants::DatabaseSchema::Tables::FILES,
+                        Constants::DatabaseSchema::Columns::Files::ARCHIVE_PATH),
+                "Migration: Failed to add archive_path column to files table")) {
             return false;
         }
     }
@@ -144,10 +142,10 @@ bool Database::runMigrations()
     if (!hasArchiveInternalPath) {
         qInfo() << "Migration: Adding archive_internal_path column to files table";
         if (!execChecked(query,
-                         QString("ALTER TABLE %1 ADD COLUMN %2 TEXT")
-                             .arg(Constants::DatabaseSchema::Tables::FILES,
-                                  Constants::DatabaseSchema::Columns::Files::ARCHIVE_INTERNAL_PATH),
-                         "Migration: Failed to add archive_internal_path column to files table")) {
+                QString("ALTER TABLE %1 ADD COLUMN %2 TEXT")
+                    .arg(Constants::DatabaseSchema::Tables::FILES,
+                        Constants::DatabaseSchema::Columns::Files::ARCHIVE_INTERNAL_PATH),
+                "Migration: Failed to add archive_internal_path column to files table")) {
             return false;
         }
     }
@@ -155,10 +153,10 @@ bool Database::runMigrations()
     if (!hasBaseTitle) {
         qInfo() << "Migration: Adding base_title column to files table";
         if (!execChecked(query,
-                         QString("ALTER TABLE %1 ADD COLUMN %2 TEXT")
-                             .arg(Constants::DatabaseSchema::Tables::FILES,
-                                  Constants::DatabaseSchema::Columns::Files::BASE_TITLE),
-                         "Migration: Failed to add base_title column to files table")) {
+                QString("ALTER TABLE %1 ADD COLUMN %2 TEXT")
+                    .arg(Constants::DatabaseSchema::Tables::FILES,
+                        Constants::DatabaseSchema::Columns::Files::BASE_TITLE),
+                "Migration: Failed to add base_title column to files table")) {
             return false;
         }
     }
@@ -166,10 +164,10 @@ bool Database::runMigrations()
     if (!hasFileType) {
         qInfo() << "Migration: Adding file_type column to files table";
         if (!execChecked(query,
-                         QString("ALTER TABLE %1 ADD COLUMN %2 TEXT DEFAULT 'official'")
-                             .arg(Constants::DatabaseSchema::Tables::FILES,
-                                  Constants::DatabaseSchema::Columns::Files::FILE_TYPE),
-                         "Migration: Failed to add file_type column to files table")) {
+                QString("ALTER TABLE %1 ADD COLUMN %2 TEXT DEFAULT 'official'")
+                    .arg(
+                        Constants::DatabaseSchema::Tables::FILES, Constants::DatabaseSchema::Columns::Files::FILE_TYPE),
+                "Migration: Failed to add file_type column to files table")) {
             return false;
         }
     }
@@ -177,10 +175,10 @@ bool Database::runMigrations()
     if (!hasIsPatched) {
         qInfo() << "Migration: Adding is_patched column to files table";
         if (!execChecked(query,
-                         QString("ALTER TABLE %1 ADD COLUMN %2 BOOLEAN DEFAULT 0")
-                             .arg(Constants::DatabaseSchema::Tables::FILES,
-                                  Constants::DatabaseSchema::Columns::Files::IS_PATCHED),
-                         "Migration: Failed to add is_patched column to files table")) {
+                QString("ALTER TABLE %1 ADD COLUMN %2 BOOLEAN DEFAULT 0")
+                    .arg(Constants::DatabaseSchema::Tables::FILES,
+                        Constants::DatabaseSchema::Columns::Files::IS_PATCHED),
+                "Migration: Failed to add is_patched column to files table")) {
             return false;
         }
     }
@@ -188,10 +186,10 @@ bool Database::runMigrations()
     if (!hasPatchName) {
         qInfo() << "Migration: Adding patch_name column to files table";
         if (!execChecked(query,
-                         QString("ALTER TABLE %1 ADD COLUMN %2 TEXT")
-                             .arg(Constants::DatabaseSchema::Tables::FILES,
-                                  Constants::DatabaseSchema::Columns::Files::PATCH_NAME),
-                         "Migration: Failed to add patch_name column to files table")) {
+                QString("ALTER TABLE %1 ADD COLUMN %2 TEXT")
+                    .arg(Constants::DatabaseSchema::Tables::FILES,
+                        Constants::DatabaseSchema::Columns::Files::PATCH_NAME),
+                "Migration: Failed to add patch_name column to files table")) {
             return false;
         }
     }
@@ -199,10 +197,10 @@ bool Database::runMigrations()
     if (!hasIsConverted) {
         qInfo() << "Migration: Adding is_converted column to files table";
         if (!execChecked(query,
-                         QString("ALTER TABLE %1 ADD COLUMN %2 BOOLEAN DEFAULT 0")
-                             .arg(Constants::DatabaseSchema::Tables::FILES,
-                                  Constants::DatabaseSchema::Columns::Files::IS_CONVERTED),
-                         "Migration: Failed to add is_converted column to files table")) {
+                QString("ALTER TABLE %1 ADD COLUMN %2 BOOLEAN DEFAULT 0")
+                    .arg(Constants::DatabaseSchema::Tables::FILES,
+                        Constants::DatabaseSchema::Columns::Files::IS_CONVERTED),
+                "Migration: Failed to add is_converted column to files table")) {
             return false;
         }
     }
@@ -210,10 +208,10 @@ bool Database::runMigrations()
     if (!hasIsBundled) {
         qInfo() << "Migration: Adding is_bundled column to files table";
         if (!execChecked(query,
-                         QString("ALTER TABLE %1 ADD COLUMN %2 BOOLEAN DEFAULT 0")
-                             .arg(Constants::DatabaseSchema::Tables::FILES,
-                                  Constants::DatabaseSchema::Columns::Files::IS_BUNDLED),
-                         "Migration: Failed to add is_bundled column to files table")) {
+                QString("ALTER TABLE %1 ADD COLUMN %2 BOOLEAN DEFAULT 0")
+                    .arg(Constants::DatabaseSchema::Tables::FILES,
+                        Constants::DatabaseSchema::Columns::Files::IS_BUNDLED),
+                "Migration: Failed to add is_bundled column to files table")) {
             return false;
         }
     }
@@ -221,15 +219,16 @@ bool Database::runMigrations()
     if (!hasBundleOutputPath) {
         qInfo() << "Migration: Adding bundle_output_path column to files table";
         if (!execChecked(query,
-                         QString("ALTER TABLE %1 ADD COLUMN %2 TEXT")
-                             .arg(Constants::DatabaseSchema::Tables::FILES,
-                                  Constants::DatabaseSchema::Columns::Files::BUNDLE_OUTPUT_PATH),
-                         "Migration: Failed to add bundle_output_path column to files table")) {
+                QString("ALTER TABLE %1 ADD COLUMN %2 TEXT")
+                    .arg(Constants::DatabaseSchema::Tables::FILES,
+                        Constants::DatabaseSchema::Columns::Files::BUNDLE_OUTPUT_PATH),
+                "Migration: Failed to add bundle_output_path column to files table")) {
             return false;
         }
     }
 
-    if (!execChecked(query, QString(R"(
+    if (!execChecked(query,
+            QString(R"(
         CREATE TABLE IF NOT EXISTS %1 (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             base_path TEXT NOT NULL,
@@ -250,26 +249,27 @@ bool Database::runMigrations()
             output_sha1 TEXT,
             applied_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
-    )").arg(Constants::DatabaseSchema::Tables::APPLIED_PATCHES),
-                     "Migration: Failed to create applied_patches table")) {
+    )")
+                .arg(Constants::DatabaseSchema::Tables::APPLIED_PATCHES),
+            "Migration: Failed to create applied_patches table")) {
         return false;
     }
     if (!execChecked(query,
-                     QString("CREATE INDEX IF NOT EXISTS idx_applied_patches_output_sha1 ON %1(output_sha1)")
-                         .arg(Constants::DatabaseSchema::Tables::APPLIED_PATCHES),
-                     "Migration: Failed to create applied_patches SHA1 index")) {
+            QString("CREATE INDEX IF NOT EXISTS idx_applied_patches_output_sha1 ON %1(output_sha1)")
+                .arg(Constants::DatabaseSchema::Tables::APPLIED_PATCHES),
+            "Migration: Failed to create applied_patches SHA1 index")) {
         return false;
     }
     if (!execChecked(query,
-                     QString("CREATE INDEX IF NOT EXISTS idx_applied_patches_output_md5 ON %1(output_md5)")
-                         .arg(Constants::DatabaseSchema::Tables::APPLIED_PATCHES),
-                     "Migration: Failed to create applied_patches MD5 index")) {
+            QString("CREATE INDEX IF NOT EXISTS idx_applied_patches_output_md5 ON %1(output_md5)")
+                .arg(Constants::DatabaseSchema::Tables::APPLIED_PATCHES),
+            "Migration: Failed to create applied_patches MD5 index")) {
         return false;
     }
     if (!execChecked(query,
-                     QString("CREATE INDEX IF NOT EXISTS idx_applied_patches_output_crc32 ON %1(output_crc32)")
-                         .arg(Constants::DatabaseSchema::Tables::APPLIED_PATCHES),
-                     "Migration: Failed to create applied_patches CRC32 index")) {
+            QString("CREATE INDEX IF NOT EXISTS idx_applied_patches_output_crc32 ON %1(output_crc32)")
+                .arg(Constants::DatabaseSchema::Tables::APPLIED_PATCHES),
+            "Migration: Failed to create applied_patches CRC32 index")) {
         return false;
     }
 
@@ -282,16 +282,15 @@ bool Database::runMigrations()
     if (!loadTableColumns(m_db, Constants::DatabaseSchema::Tables::MATCHES, matchColumns, columnError)) {
         return rollbackAndFail("Migration: Failed to inspect matches table: " + columnError);
     }
-    const bool hasNameMatchScore =
-        matchColumns.contains(Constants::DatabaseSchema::Columns::Matches::NAME_MATCH_SCORE);
+    const bool hasNameMatchScore = matchColumns.contains(Constants::DatabaseSchema::Columns::Matches::NAME_MATCH_SCORE);
     QSqlQuery matchesQuery(m_db);
     if (!hasNameMatchScore) {
         qInfo() << "Migration: Adding name_match_score column to matches table";
         if (!execChecked(matchesQuery,
-                         QString("ALTER TABLE %1 ADD COLUMN %2 REAL DEFAULT 0")
-                             .arg(Constants::DatabaseSchema::Tables::MATCHES,
-                                  Constants::DatabaseSchema::Columns::Matches::NAME_MATCH_SCORE),
-                         "Migration: Failed to add name_match_score column to matches table")) {
+                QString("ALTER TABLE %1 ADD COLUMN %2 REAL DEFAULT 0")
+                    .arg(Constants::DatabaseSchema::Tables::MATCHES,
+                        Constants::DatabaseSchema::Columns::Matches::NAME_MATCH_SCORE),
+                "Migration: Failed to add name_match_score column to matches table")) {
             return false;
         }
     }
@@ -316,17 +315,19 @@ bool Database::runMigrations()
             FOREIGN KEY (base_file_id)    REFERENCES files(id) ON DELETE CASCADE,
             FOREIGN KEY (patched_file_id) REFERENCES files(id) ON DELETE SET NULL
         )
-    )"), "Migration: Failed to create mod_installations table")) {
+    )"),
+            "Migration: Failed to create mod_installations table")) {
         return false;
     }
     if (!execChecked(modQuery,
-                     QStringLiteral("CREATE INDEX IF NOT EXISTS idx_mod_installations_base ON mod_installations(base_file_id)"),
-                     "Migration: Failed to create mod_installations base index")) {
+            QStringLiteral("CREATE INDEX IF NOT EXISTS idx_mod_installations_base ON mod_installations(base_file_id)"),
+            "Migration: Failed to create mod_installations base index")) {
         return false;
     }
     if (!execChecked(modQuery,
-                     QStringLiteral("CREATE INDEX IF NOT EXISTS idx_mod_installations_catalog ON mod_installations(catalog_mod_id)"),
-                     "Migration: Failed to create mod_installations catalog index")) {
+            QStringLiteral(
+                "CREATE INDEX IF NOT EXISTS idx_mod_installations_catalog ON mod_installations(catalog_mod_id)"),
+            "Migration: Failed to create mod_installations catalog index")) {
         return false;
     }
 
@@ -340,15 +341,19 @@ bool Database::runMigrations()
             fetched_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             mod_count   INTEGER DEFAULT 0
         )
-    )"), "Migration: Failed to create mod_catalog_cache table")) {
+    )"),
+            "Migration: Failed to create mod_catalog_cache table")) {
         return false;
     }
 
     // Composite performance indexes — idempotent; safe to add for existing databases.
-    query.exec(QStringLiteral("CREATE INDEX IF NOT EXISTS idx_files_hash_primary ON files(hash_calculated, is_primary)"));
-    query.exec(QStringLiteral("CREATE INDEX IF NOT EXISTS idx_files_primary_processed ON files(is_primary, is_processed)"));
+    query.exec(
+        QStringLiteral("CREATE INDEX IF NOT EXISTS idx_files_hash_primary ON files(hash_calculated, is_primary)"));
+    query.exec(
+        QStringLiteral("CREATE INDEX IF NOT EXISTS idx_files_primary_processed ON files(is_primary, is_processed)"));
     query.exec(QStringLiteral("CREATE INDEX IF NOT EXISTS idx_games_title_system ON games(title, system_id)"));
-    query.exec(QStringLiteral("CREATE INDEX IF NOT EXISTS idx_matches_file_status ON matches(file_id, is_confirmed, is_rejected)"));
+    query.exec(QStringLiteral(
+        "CREATE INDEX IF NOT EXISTS idx_matches_file_status ON matches(file_id, is_confirmed, is_rejected)"));
 
     if (useTransaction && !m_db.commit()) {
         logError("Migration: Failed to commit transaction: " + m_db.lastError().text());

@@ -10,26 +10,19 @@
 #include "../services/patch_service.h"
 #include "cli_logging.h"
 
-int handleModCommands(CliContext &ctx)
-{
-    const bool hasList         = ctx.parser.isSet("mod-list");
-    const bool hasShow         = ctx.parser.isSet("mod-show");
-    const bool hasSystems      = ctx.parser.isSet("mod-systems");
-    const bool hasCatalogQuery = ctx.parser.isSet("mod-system")
-                              || ctx.parser.isSet("mod-author")
-                              || ctx.parser.isSet("mod-type")
-                              || ctx.parser.isSet("mod-format")
-                              || ctx.parser.isSet("mod-source-url")
-                              || ctx.parser.isSet("mod-min-rating")
-                              || ctx.parser.isSet("mod-min-downloads")
-                              || ctx.parser.isSet("mod-sort");
-    const bool hasInstall      = ctx.parser.isSet("mod-install");
-    const bool hasInstalled    = ctx.parser.isSet("mod-installed");
-    const bool hasUninstall    = ctx.parser.isSet("mod-uninstall");
-    const bool wantsJson       = ctx.parser.isSet("json") || ctx.parser.isSet("mod-json");
+int handleModCommands(CliContext &ctx) {
+    const bool hasList = ctx.parser.isSet("mod-list");
+    const bool hasShow = ctx.parser.isSet("mod-show");
+    const bool hasSystems = ctx.parser.isSet("mod-systems");
+    const bool hasCatalogQuery = ctx.parser.isSet("mod-system") || ctx.parser.isSet("mod-author")
+        || ctx.parser.isSet("mod-type") || ctx.parser.isSet("mod-format") || ctx.parser.isSet("mod-source-url")
+        || ctx.parser.isSet("mod-min-rating") || ctx.parser.isSet("mod-min-downloads") || ctx.parser.isSet("mod-sort");
+    const bool hasInstall = ctx.parser.isSet("mod-install");
+    const bool hasInstalled = ctx.parser.isSet("mod-installed");
+    const bool hasUninstall = ctx.parser.isSet("mod-uninstall");
+    const bool wantsJson = ctx.parser.isSet("json") || ctx.parser.isSet("mod-json");
 
-    if (!hasList && !hasShow && !hasSystems && !hasCatalogQuery
-        && !hasInstall && !hasInstalled && !hasUninstall) {
+    if (!hasList && !hasShow && !hasSystems && !hasCatalogQuery && !hasInstall && !hasInstalled && !hasUninstall) {
         return 0;
     }
 
@@ -49,20 +42,20 @@ int handleModCommands(CliContext &ctx)
                 if (!found) {
                     qInfo() << "=== Installed Mods ===";
                     qInfo().noquote() << QString("%1  %2  %3  %4  %5")
-                        .arg("ID", -6)
-                        .arg("Title", -30)
-                        .arg("Type", -14)
-                        .arg("Version", -10)
-                        .arg("Base File");
+                                             .arg("ID", -6)
+                                             .arg("Title", -30)
+                                             .arg("Type", -14)
+                                             .arg("Version", -10)
+                                             .arg("Base File");
                     found = true;
                 }
 
                 qInfo().noquote() << QString("%1  %2  %3  %4  %5")
-                    .arg(inst.id, -6)
-                    .arg(inst.modTitle.left(30), -30)
-                    .arg(inst.modType.left(14), -14)
-                    .arg(inst.modVersion.left(10), -10)
-                    .arg(file.filename);
+                                         .arg(inst.id, -6)
+                                         .arg(inst.modTitle.left(30), -30)
+                                         .arg(inst.modType.left(14), -14)
+                                         .arg(inst.modVersion.left(10), -10)
+                                         .arg(file.filename);
             }
         }
 
@@ -150,7 +143,7 @@ int handleModCommands(CliContext &ctx)
         }
 
         if (queryOptions.jsonOutput) {
-            printJsonObject(listedModToJson({*modOpt, {}}));
+            printJsonObject(listedModToJson({ *modOpt, { } }));
         } else {
             qInfo() << "=== Mod Details ===";
             printModDetails(*modOpt);
@@ -162,7 +155,7 @@ int handleModCommands(CliContext &ctx)
         const auto mods = filterCatalogMods(catalog.allMods(), queryOptions);
         if (mods.isEmpty()) {
             if (queryOptions.jsonOutput) {
-                printJsonArray(QJsonArray{});
+                printJsonArray(QJsonArray { });
             } else {
                 qInfo() << "No catalog mods matched the requested filters.";
             }
@@ -172,9 +165,9 @@ int handleModCommands(CliContext &ctx)
         if (!queryOptions.jsonOutput) {
             const QString filterLabel = describeActiveFilters(queryOptions);
             qInfo().noquote() << QString("=== Catalog Mods (%1) ===")
-                .arg(filterLabel.isEmpty() ? QStringLiteral("all") : filterLabel);
+                                     .arg(filterLabel.isEmpty() ? QStringLiteral("all") : filterLabel);
         }
-        emitRows(sortListedMods(withScope(mods, {}), queryOptions));
+        emitRows(sortListedMods(withScope(mods, { }), queryOptions));
         return 0;
     }
 
@@ -192,9 +185,9 @@ int handleModCommands(CliContext &ctx)
             return 1;
         }
 
-        QList<ListedMod> rows = withScope(
-            filterCatalogMods(catalog.findModsForRom(file.crc32, file.md5, file.sha1), queryOptions),
-            QStringLiteral("hash"));
+        QList<ListedMod> rows
+            = withScope(filterCatalogMods(catalog.findModsForRom(file.crc32, file.md5, file.sha1), queryOptions),
+                QStringLiteral("hash"));
 
         if (rows.isEmpty() && queryOptions.allowSystemFallback && file.systemId > 0) {
             ModQueryOptions fallbackOptions = queryOptions;
@@ -206,13 +199,14 @@ int handleModCommands(CliContext &ctx)
             rows = withScope(fallbackMods, QStringLiteral("system"));
 
             if (!rows.isEmpty() && !queryOptions.jsonOutput) {
-                qInfo() << "No hash-exact mods found; showing catalog entries for system" << fallbackOptions.systemFilter;
+                qInfo() << "No hash-exact mods found; showing catalog entries for system"
+                        << fallbackOptions.systemFilter;
             }
         }
 
         if (rows.isEmpty()) {
             if (queryOptions.jsonOutput) {
-                printJsonArray(QJsonArray{});
+                printJsonArray(QJsonArray { });
             } else if (!queryOptions.allowSystemFallback) {
                 qInfo() << "No exact-hash mods available for" << file.filename;
             } else {
@@ -259,8 +253,7 @@ int handleModCommands(CliContext &ctx)
 
         QString outputDir = ctx.parser.value("mod-output");
         if (outputDir.isEmpty()) {
-            const QString basePath = baseFile.currentPath.isEmpty()
-                                     ? baseFile.archivePath : baseFile.currentPath;
+            const QString basePath = baseFile.currentPath.isEmpty() ? baseFile.archivePath : baseFile.currentPath;
             outputDir = QFileInfo(basePath).absolutePath();
         }
 
@@ -269,15 +262,13 @@ int handleModCommands(CliContext &ctx)
         workflow.setCatalogIsRemote(ctx.parser.isSet("mod-catalog-url"));
 
         if (ctx.dryRunAll) {
-            qInfo() << "[DRY-RUN] Would install mod" << modOpt->title
-                    << "for" << baseFile.filename << "→" << outputDir;
+            qInfo() << "[DRY-RUN] Would install mod" << modOpt->title << "for" << baseFile.filename << "→" << outputDir;
             return 0;
         }
 
-        auto result = workflow.install(baseFile, *modOpt, outputDir,
-            [](const QString &stage, int percent) {
-                qInfo().noquote() << QString("  [%1%] %2...").arg(percent, 3).arg(stage);
-            });
+        auto result = workflow.install(baseFile, *modOpt, outputDir, [](const QString &stage, int percent) {
+            qInfo().noquote() << QString("  [%1%] %2...").arg(percent, 3).arg(stage);
+        });
 
         if (result.success) {
             qInfo() << "";

@@ -34,8 +34,7 @@ struct LibretroMetadata {
  * The parser extracts CRC → value pairs and merges them into a single
  * LibretroMetadata struct per CRC.
  */
-class LibretroMetadataParser
-{
+class LibretroMetadataParser {
 public:
     /**
      * @brief Load all metadata DATs from a base directory

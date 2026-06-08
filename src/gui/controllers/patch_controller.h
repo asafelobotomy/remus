@@ -20,13 +20,23 @@ public:
     explicit PatchController(AppController *appController, QObject *parent = nullptr);
     ~PatchController() override;
 
-    bool isPatching() const { return m_patching; }
-    int progress() const { return m_progress; }
-    QString currentOperation() const { return m_currentOperation; }
-    QVariantMap toolStatus() const { return m_toolStatus; }
+    bool isPatching() const {
+        return m_patching;
+    }
+    int progress() const {
+        return m_progress;
+    }
+    QString currentOperation() const {
+        return m_currentOperation;
+    }
+    QVariantMap toolStatus() const {
+        return m_toolStatus;
+    }
 
-    Q_INVOKABLE bool applyPatch(const QString &basePath, const QString &patchPath, const QString &outputPath = QString());
-    Q_INVOKABLE bool createPatch(const QString &originalPath, const QString &modifiedPath, const QString &patchPath, const QString &format = QStringLiteral("bps"));
+    Q_INVOKABLE bool applyPatch(
+        const QString &basePath, const QString &patchPath, const QString &outputPath = QString());
+    Q_INVOKABLE bool createPatch(const QString &originalPath, const QString &modifiedPath, const QString &patchPath,
+        const QString &format = QStringLiteral("bps"));
     Q_INVOKABLE void checkTools();
 
 signals:

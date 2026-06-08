@@ -23,13 +23,27 @@ class OrganizeController : public QObject {
 public:
     explicit OrganizeController(AppController *appController, QObject *parent = nullptr);
 
-    QString namingTemplate() const { return m_namingTemplate; }
-    bool isOrganizing() const { return m_organizing; }
-    int organizedFiles() const { return m_organizedFiles; }
-    int totalOrganizeFiles() const { return m_totalOrganizeFiles; }
-    QString progressMessage() const { return m_progressMessage; }
-    QVariantList previewEntries() const { return m_previewEntries; }
-    QString lastError() const { return m_lastError; }
+    QString namingTemplate() const {
+        return m_namingTemplate;
+    }
+    bool isOrganizing() const {
+        return m_organizing;
+    }
+    int organizedFiles() const {
+        return m_organizedFiles;
+    }
+    int totalOrganizeFiles() const {
+        return m_totalOrganizeFiles;
+    }
+    QString progressMessage() const {
+        return m_progressMessage;
+    }
+    QVariantList previewEntries() const {
+        return m_previewEntries;
+    }
+    QString lastError() const {
+        return m_lastError;
+    }
 
     Q_INVOKABLE void previewOrganize(const QString &destinationDir);
     Q_INVOKABLE void applyOrganize(const QString &destinationDir);

@@ -8,8 +8,7 @@
 
 using namespace Remus;
 
-class DatabaseTest : public QObject
-{
+class DatabaseTest : public QObject {
     Q_OBJECT
 
 private slots:

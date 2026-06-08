@@ -10,21 +10,16 @@
 namespace Remus {
 
 Database::Database(QObject *parent)
-    : QObject(parent)
-{
-}
+    : QObject(parent) { }
 
-Database::~Database()
-{
+Database::~Database() {
     close();
 }
 
-bool Database::initialize(const QString &dbPath, const QString &connectionName)
-{
+bool Database::initialize(const QString &dbPath, const QString &connectionName) {
     m_dbPath = dbPath;
-    m_connectionName = connectionName.isEmpty()
-        ? QStringLiteral("remus-") + QUuid::createUuid().toString(QUuid::Id128)
-        : connectionName;
+    m_connectionName = connectionName.isEmpty() ? QStringLiteral("remus-") + QUuid::createUuid().toString(QUuid::Id128)
+                                                : connectionName;
 
     m_db = QSqlDatabase::addDatabase("QSQLITE", m_connectionName);
     m_db.setDatabaseName(dbPath);
@@ -45,13 +40,12 @@ bool Database::initialize(const QString &dbPath, const QString &connectionName)
     for (const char *pragma : {
              "PRAGMA journal_mode = WAL",
              "PRAGMA synchronous = NORMAL",
-             "PRAGMA cache_size = -65536",    // 64 MB page cache
+             "PRAGMA cache_size = -65536", // 64 MB page cache
              "PRAGMA temp_store = MEMORY",
-             "PRAGMA mmap_size = 268435456",  // 256 MB mmap window
+             "PRAGMA mmap_size = 268435456", // 256 MB mmap window
          }) {
         if (!pragmaQuery.exec(QString::fromLatin1(pragma)))
-            qWarning() << "Database PRAGMA failed (non-fatal):" << pragma
-                       << pragmaQuery.lastError().text();
+            qWarning() << "Database PRAGMA failed (non-fatal):" << pragma << pragmaQuery.lastError().text();
     }
 
     qInfo() << "Database opened:" << dbPath;
@@ -67,21 +61,21 @@ bool Database::initialize(const QString &dbPath, const QString &connectionName)
     }
 
     bool isNewDatabase = !query.next();
-    
+
     if (isNewDatabase) {
         // Schema doesn't exist, create it
         if (!createSchema()) {
             logError(Constants::Errors::Database::FAILED_TO_CREATE_SCHEMA);
             return false;
         }
-        
+
         // Populate default systems
         if (!populateDefaultSystems()) {
             logError(Constants::Errors::Database::FAILED_TO_POPULATE_SYSTEMS);
             return false;
         }
     }
-    
+
     // Run migrations for new columns
     if (!runMigrations()) {
         close();
@@ -91,8 +85,7 @@ bool Database::initialize(const QString &dbPath, const QString &connectionName)
     return true;
 }
 
-void Database::close()
-{
+void Database::close() {
     if (m_db.isOpen()) {
         m_db.close();
     }
@@ -102,8 +95,7 @@ void Database::close()
     }
 }
 
-int Database::insertLibrary(const QString &path, const QString &name)
-{
+int Database::insertLibrary(const QString &path, const QString &name) {
     QSqlQuery query(m_db);
     query.prepare("INSERT OR IGNORE INTO libraries (path, name) VALUES (?, ?)");
     query.addBindValue(path);
@@ -124,8 +116,7 @@ int Database::insertLibrary(const QString &path, const QString &name)
     return 0;
 }
 
-bool Database::deleteLibrary(int libraryId)
-{
+bool Database::deleteLibrary(int libraryId) {
     QSqlQuery query(m_db);
     query.prepare("DELETE FROM libraries WHERE id = ?");
     query.addBindValue(libraryId);
@@ -138,8 +129,7 @@ bool Database::deleteLibrary(int libraryId)
     return query.numRowsAffected() > 0;
 }
 
-QString Database::getLibraryPath(int libraryId)
-{
+QString Database::getLibraryPath(int libraryId) {
     QSqlQuery query(m_db);
     query.prepare("SELECT path FROM libraries WHERE id = ?");
     query.addBindValue(libraryId);
@@ -151,8 +141,7 @@ QString Database::getLibraryPath(int libraryId)
     return QString();
 }
 
-int Database::getLibraryCount()
-{
+int Database::getLibraryCount() {
     QSqlQuery query(m_db);
     if (!query.exec("SELECT COUNT(*) FROM libraries")) {
         logError("Failed to count libraries: " + query.lastError().text());
@@ -166,8 +155,7 @@ int Database::getLibraryCount()
     return 0;
 }
 
-bool Database::deleteFilesForLibrary(int libraryId)
-{
+bool Database::deleteFilesForLibrary(int libraryId) {
     QSqlQuery query(m_db);
     query.prepare("DELETE FROM files WHERE library_id = ?");
     query.addBindValue(libraryId);
@@ -180,8 +168,7 @@ bool Database::deleteFilesForLibrary(int libraryId)
     return true;
 }
 
-int Database::insertSystem(const SystemInfo &system)
-{
+int Database::insertSystem(const SystemInfo &system) {
     if (system.name.isEmpty()) {
         logError("Cannot insert system with empty name");
         return 0;
@@ -219,8 +206,7 @@ int Database::insertSystem(const SystemInfo &system)
     return getSystemId(system.name);
 }
 
-int Database::getSystemId(const QString &name)
-{
+int Database::getSystemId(const QString &name) {
     QSqlQuery query(m_db);
     query.prepare("SELECT id FROM systems WHERE name = ?");
     query.addBindValue(name);
@@ -232,14 +218,12 @@ int Database::getSystemId(const QString &name)
     return 0;
 }
 
-QString Database::getSystemDisplayName(int systemId)
-{
+QString Database::getSystemDisplayName(int systemId) {
     // Use SystemResolver for consistent name resolution across all layers
     return SystemResolver::displayName(systemId);
 }
 
-void Database::logError(const QString &message)
-{
+void Database::logError(const QString &message) {
     qCritical() << message;
     emit databaseError(message);
 }

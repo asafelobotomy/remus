@@ -1,5 +1,7 @@
 # Remus - Next Steps & Technical Debt
 
+> **Historical document.** Generated for v0.9.0 (2026-02-05). Many counts and open items here are stale; use [docs/plan.md](../../plan.md), the test suite, and issue tracking for current status.
+
 **Generated:** 2026-02-05  
 **Version:** 0.9.0 (Post-M9)  
 **Status:** All milestones M0-M9 complete

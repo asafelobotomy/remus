@@ -6,7 +6,7 @@
 #include <QStringList>
 #include <QMap>
 
-#include "archive_extractor.h"  // reuse ArchiveFormat enum
+#include "archive_extractor.h" // reuse ArchiveFormat enum
 
 namespace Remus {
 
@@ -37,23 +37,22 @@ public:
     bool canCompress(ArchiveFormat format) const;
 
     // No-op setters kept for API compatibility
-    void setZipPath(const QString &) {}
-    void setSevenZipPath(const QString &) {}
+    void setZipPath(const QString &) { }
+    void setSevenZipPath(const QString &) { }
 
-    CompressionResult compress(const QStringList &inputPaths,
-                               const QString &outputArchive,
-                               ArchiveFormat format = ArchiveFormat::ZIP);
+    CompressionResult compress(
+        const QStringList &inputPaths, const QString &outputArchive, ArchiveFormat format = ArchiveFormat::ZIP);
 
-    CompressionResult compressDirectoryContents(const QString &rootDir,
-                                                const QString &outputArchive,
-                                                ArchiveFormat format = ArchiveFormat::ZIP);
+    CompressionResult compressDirectoryContents(
+        const QString &rootDir, const QString &outputArchive, ArchiveFormat format = ArchiveFormat::ZIP);
 
-    QList<CompressionResult> batchCompress(const QStringList &dirs,
-                                           const QString &outputDir,
-                                           ArchiveFormat format = ArchiveFormat::ZIP);
+    QList<CompressionResult> batchCompress(
+        const QStringList &dirs, const QString &outputDir, ArchiveFormat format = ArchiveFormat::ZIP);
 
     void cancel();
-    bool isRunning() const { return m_running; }
+    bool isRunning() const {
+        return m_running;
+    }
 
 signals:
     void compressionStarted(const QString &outputPath);
@@ -71,8 +70,7 @@ private:
     bool m_running = false;
     bool m_cancelled = false;
 
-    CompressionResult compressFiles(const QList<ArchiveInputEntry> &entries,
-                                    const QString &outputArchive);
+    CompressionResult compressFiles(const QList<ArchiveInputEntry> &entries, const QString &outputArchive);
 
     QStringList collectRelativeFilePaths(const QString &rootDir) const;
     qint64 calculateTotalSize(const QStringList &paths) const;
