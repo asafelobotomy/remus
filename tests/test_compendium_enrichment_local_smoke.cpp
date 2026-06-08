@@ -189,6 +189,7 @@ void CompendiumEnrichmentLocalSmokeTest::mameCatverParsedWithoutArcadeRows_upser
     QTextStream out(&catverFile);
     out << "[Category]\n";
     out << "sf2=Fighting\n";
+    out.flush();
     catverFile.close();
 
     const QString connectionName = QStringLiteral("compendium_local_smoke_mame");
@@ -240,6 +241,7 @@ void CompendiumEnrichmentLocalSmokeTest::mameListXmlParsedWithoutArcadeRows_upse
         << "<input players=\"2\" coins=\"2\"/>\n"
         << "</machine>\n"
         << "</mame>\n";
+    out.flush();
     xmlFile.close();
 
     const QString connectionName = QStringLiteral("compendium_local_smoke_mame_listxml");
@@ -300,6 +302,7 @@ void CompendiumEnrichmentLocalSmokeTest::gametdbTitleStripMatches_enrichesGame()
         << "  <genre>action</genre>\n"
         << "</game>\n"
         << "</datafile>\n";
+    out.flush();
     xmlFile.close();
 
     const QString connectionName = QStringLiteral("compendium_local_smoke_gametdb_strip");
