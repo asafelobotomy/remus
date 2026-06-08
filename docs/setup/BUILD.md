@@ -130,15 +130,19 @@ remus-cli 0.10.1
 
 The GUI launches the Qt Quick shell with views for library browsing, scan/hash workflows, metadata matching, artwork, DAT management, verification, organization, conversion, patching, mods, and settings.
 
-### 6. Package a CLI release archive
+### 7. Package release artifacts
 
-Create a distributable CLI archive from the current build:
+Create distributable CLI archives from the current build:
 
 ```bash
 ../scripts/package_cli_archive.sh
+../scripts/package_appimage.sh
 ```
 
-The script writes a versioned tarball and SHA256 file to the repository root `dist/` directory.
+These write versioned outputs to the repository root `dist/` directory:
+
+- `remus-cli-<version>-linux-x64.tar.gz` (+ `.sha256`)
+- `Remus-<version>-x86_64.AppImage` (+ `.sha256`) — bundles `remus-cli` only
 
 ## Running the CLI
 
@@ -230,11 +234,6 @@ The script writes a versioned tarball and SHA256 file to the repository root `di
 
 Expected output:
 ```
-╔════════════════════════════════════════╗
-║  Remus - Retro Game Library Manager   ║
-║  M1: Core Scanning Engine (CLI)       ║
-╚════════════════════════════════════════╝
-
 Files by system:
 ─────────────────────────────────────
   NES                 : 450 files
@@ -242,8 +241,6 @@ Files by system:
   Unknown             : 5 files
 ─────────────────────────────────────
   Total: 775 files
-
-Done!
 ```
 
 ## Project Structure
@@ -323,7 +320,7 @@ sudo dnf install zlib-devel
 ## Delivery Focus
 
 - Ship and verify both the CLI (`remus-cli`) and GUI (`remus-gui`) by default — both are part of the standard build at 0.10.1.
-- Use simple release archives until the full GUI workflow is stable.
+- Release packaging currently ships CLI-only tarballs and AppImages; install `remus-gui` locally via `cmake --install` or from the build tree.
 - The GUI shell launches a Qt Quick interface with views for library browsing, scan/hash workflows, metadata matching, artwork, DAT management, verification, organisation, conversion, patching, mods, and settings.
 
 ## Testing
@@ -350,20 +347,16 @@ printf '%s\n' '[open] describe the failing case here' >> ../test_output/attentio
 
 ## Release Outputs
 
-- `build/remus-cli` for local development
-- `dist/remus-cli-<version>-linux-x64.tar.gz` for release packaging
-- `dist/remus-cli-<version>-linux-x64.tar.gz.sha256` for checksum verification
+- `build/remus-cli` and `build/src/gui/remus-gui` for local development
+- `dist/remus-cli-<version>-linux-x64.tar.gz` (+ `.sha256`) for release packaging
+- `dist/Remus-<version>-x86_64.AppImage` (+ `.sha256`) — CLI-only AppImage
+
+Releases are published manually via the GitHub Actions **Release** workflow (`workflow_dispatch`).
 
 ## Contributing
 
-M1 is the foundation. Once core scanning is stable, we'll proceed to metadata layer (M2).
-
-Feedback welcome on:
-- System detection accuracy
-- Hash calculation performance
-- Multi-file set detection (CUE+BIN)
-- Database schema
+See [../CONTRIBUTING.md](../CONTRIBUTING.md) for the contribution workflow, formatting rules, and required CI checks.
 
 ## License
 
-*To be determined*
+MIT License — see [../../LICENSE](../../LICENSE).

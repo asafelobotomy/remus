@@ -12,7 +12,7 @@ The active build now ships a shared CLI and Qt Quick GUI. The legacy TUI remains
 
 ### Implemented in the active build
 
-- Support for 23+ retro gaming systems across cartridge, optical-disc, and archive workflows.
+- Support for 100+ retro gaming systems across cartridge, optical-disc, and archive workflows.
 - Hash-first scanning and matching with CRC32, MD5, and SHA1.
 - Provider orchestration with offline and online fallback:
   - Bundled compendium database
@@ -93,7 +93,7 @@ make -j$(nproc)
 # Scan and hash ROMs
 ./remus-cli --scan ../roms/NES --hash
 
-# Match with intelligent fallback (M3)
+# Match with intelligent provider fallback
 ./remus-cli --match --min-confidence 70
 
 # Use Hasheous (FREE, no auth!)
@@ -102,7 +102,7 @@ make -j$(nproc)
 # List results
 ./remus-cli --list
 
-# NEW in M4: Organize files with No-Intro naming
+# Organize files with No-Intro naming
 ./remus-cli --organize ~/roms/organized --template "{title} ({region}){ext}"
 
 # Preview changes without modifying files
@@ -136,8 +136,8 @@ make -j$(nproc)
 
 **Build performance tip:** See [docs/setup/BUILD.md](docs/setup/BUILD.md) for benchmark-backed build profiles:
 
-- **Fast clean rebuilds:** `PCH=ON` + `UNITY=ON`
-- **Fast iterative rebuilds across fresh build dirs:** `CCACHE=ON` + `PCH=OFF`
+- **Fast clean rebuilds:** `-DREMUS_ENABLE_PCH=ON` + `-DREMUS_ENABLE_UNITY_BUILD=ON`
+- **Fast iterative rebuilds across fresh build dirs:** `-DREMUS_ENABLE_CCACHE=ON` + `-DREMUS_ENABLE_PCH=OFF`
 
 ## Tech Stack
 
@@ -145,12 +145,12 @@ make -j$(nproc)
 - **Core:** C++17
 - **Database:** SQLite
 - **Networking:** QtNetwork
-- **Packaging:** tar.gz release archives
+- **Packaging:** CLI tar.gz archives and CLI AppImages (see [docs/setup/BUILD.md](docs/setup/BUILD.md); GUI is built locally but not yet packaged for release)
 - **CI/CD:** GitHub Actions
 
 ## Building from Source
 
-See **[docs/setup/BUILD.md](docs/setup/BUILD.md)** for detailed build instructions for Linux, macOS, and Windows.
+See **[docs/setup/BUILD.md](docs/setup/BUILD.md)** for detailed build instructions on Linux (Ubuntu/Debian, Fedora, Arch).
 
 Quick build:
 

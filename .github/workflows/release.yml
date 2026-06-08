@@ -1,31 +1,31 @@
 name: Release
 
 on:
-  push:
-    branches: [main]
-    paths-ignore:
-      - '*.md'
-      - 'docs/**'
-      - '.github/*.md'
   workflow_dispatch:
     inputs:
       version:
-        description: 'Version tag (e.g., v0.7.0)'
-        required: true
+        description: 'Version tag (e.g., v0.10.1). Leave empty to read APP_VERSION from api.h'
+        required: false
         type: string
-
-permissions:
-  contents: write
+      force:
+        description: 'Rebuild and republish even if the tag already exists'
+        required: false
+        type: boolean
+        default: false
 
 jobs:
   prepare-release:
     runs-on: ubuntu-24.04
+    permissions:
+      contents: read
     outputs:
       version: ${{ steps.version.outputs.version }}
       should_release: ${{ steps.check.outputs.should_release }}
     steps:
       - name: Checkout
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+        with:
+          fetch-depth: 0
 
       - name: Get version from api.h
         id: version
@@ -42,22 +42,34 @@ jobs:
 
       - name: Check if release needed
         id: check
+        env:
+          FORCE: ${{ github.event.inputs.force }}
         run: |
           VERSION="${{ steps.version.outputs.version }}"
           if git rev-parse "$VERSION" >/dev/null 2>&1; then
-            echo "Tag $VERSION already exists"
-            echo "should_release=false" >> "$GITHUB_OUTPUT"
+            if [[ "$FORCE" == "true" ]]; then
+              echo "Tag $VERSION exists — force rebuild enabled"
+              echo "should_release=true" >> "$GITHUB_OUTPUT"
+            else
+              echo "Tag $VERSION already exists — use force=true to republish"
+              echo "should_release=false" >> "$GITHUB_OUTPUT"
+            fi
           else
             echo "should_release=true" >> "$GITHUB_OUTPUT"
           fi
 
   build-and-release:
     needs: prepare-release
-    if: needs.prepare-release.outputs.should_release == 'true' || github.event_name == 'workflow_dispatch'
+    if: needs.prepare-release.outputs.should_release == 'true'
     runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    environment: release
     steps:
       - name: Checkout
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+        with:
+          fetch-depth: 0
 
       - name: Install dependencies
         run: bash .github/scripts/install-build-deps.sh
@@ -103,12 +115,17 @@ jobs:
           scripts/package_appimage.sh
 
       - name: Create Git Tag
-        if: github.event_name == 'workflow_dispatch'
+        if: github.event.inputs.force != 'true'
         run: |
+          VERSION="${{ needs.prepare-release.outputs.version }}"
+          if git rev-parse "$VERSION" >/dev/null 2>&1; then
+            echo "Tag $VERSION already exists — skipping tag creation"
+            exit 0
+          fi
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git tag -a "${{ needs.prepare-release.outputs.version }}" -m "Release ${{ needs.prepare-release.outputs.version }}"
-          git push origin "${{ needs.prepare-release.outputs.version }}"
+          git tag -a "$VERSION" -m "Release $VERSION"
+          git push origin "$VERSION"
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2

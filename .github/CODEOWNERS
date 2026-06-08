@@ -1,0 +1,5 @@
+# Default owners for sensitive paths. GitHub uses the first matching pattern.
+/.github/workflows/ @asafelobotomy
+/.github/scripts/ @asafelobotomy
+/scripts/package_*.sh @asafelobotomy
+/data/compendium/ @asafelobotomy

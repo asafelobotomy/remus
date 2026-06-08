@@ -18,7 +18,22 @@ This guide defines where to place documentation and how to submit code changes.
    ```
 5. Open a pull request using the template and ensure CI checks pass.
 
-Maintainers should require the `CI` and `CodeQL` workflows to pass before merging to `main`.
+### Required CI checks
+
+Maintainers should configure [branch protection](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches) on `main` to require these status checks before merge:
+
+| Check name | Workflow | Notes |
+|------------|----------|-------|
+| `build (Debug)` | CI | Primary build + test matrix |
+| `build (Release)` | CI | Release configuration smoke build |
+| `lint` | CI | clang-format (pinned version) |
+| `coverage` | CI | lcov report generation |
+| `sanitizer` | CI | ASan + UBSan test pass |
+| `Analyze` | CodeQL | C++ static analysis |
+
+Also require at least one approving review and disallow force-pushes to `main`.
+
+Releases are **manual only**: run the **Release** workflow via *Actions → Release → Run workflow*. Optionally configure a `release` environment with required reviewers in GitHub repository settings.
 
 ## Placement Rules
 

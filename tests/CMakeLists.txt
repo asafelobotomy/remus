@@ -246,6 +246,14 @@ target_include_directories(test_workflow_controller PRIVATE
     ${CMAKE_SOURCE_DIR}/src/gui
 )
 
+add_remus_test(test_gui_controllers GuiControllersSmokeTest
+    SOURCES test_gui_controllers.cpp
+    LIBS Qt6::Test Qt6::Core Qt6::Sql remus-metadata remus-core remus-services remus-gui-controllers
+)
+target_include_directories(test_gui_controllers PRIVATE
+    ${CMAKE_SOURCE_DIR}/src/gui
+)
+
 add_remus_test(test_provider_orchestrator ProviderOrchestratorTest
     SOURCES test_provider_orchestrator.cpp
     LIBS Qt6::Test Qt6::Core remus-metadata remus-core
