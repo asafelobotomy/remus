@@ -10,11 +10,11 @@ namespace Remus {
 // XML element name constants — ClrMamePro / No-Intro DAT format
 // ---------------------------------------------------------------------------
 namespace DatXml {
-    constexpr QLatin1StringView DATAFILE = QLatin1StringView("datafile");
-    constexpr QLatin1StringView HEADER = QLatin1StringView("header");
-    constexpr QLatin1StringView GAME = QLatin1StringView("game");
-    constexpr QLatin1StringView MACHINE = QLatin1StringView("machine");
-    constexpr QLatin1StringView PATCH = QLatin1StringView("patch");
+    constexpr QLatin1String DATAFILE = QLatin1String("datafile");
+    constexpr QLatin1String HEADER = QLatin1String("header");
+    constexpr QLatin1String GAME = QLatin1String("game");
+    constexpr QLatin1String MACHINE = QLatin1String("machine");
+    constexpr QLatin1String PATCH = QLatin1String("patch");
 } // namespace DatXml
 
 DatParser::DatParser(QObject *parent)

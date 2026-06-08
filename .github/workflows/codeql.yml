@@ -16,7 +16,7 @@ permissions:
 jobs:
   analyze:
     name: Analyze (C/C++)
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4

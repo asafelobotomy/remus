@@ -12,7 +12,10 @@
 
 ### Installing Dependencies
 
-#### Ubuntu/Debian
+#### Ubuntu/Debian (22.04+)
+
+CI uses Ubuntu 24.04 with Qt 6.4+. For Ubuntu 22.04, use Qt 6.4 or newer from your distro or the Qt online installer.
+
 ```bash
 sudo apt update
 sudo apt install build-essential cmake \
