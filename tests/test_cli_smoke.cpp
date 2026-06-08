@@ -16,6 +16,7 @@
 
 #include "../src/core/database.h"
 #include "../src/core/constants/systems.h"
+#include "../src/core/compendium_manifest_parser.h"
 #include "../src/core/verification_engine.h"
 #include "../src/cli/cli_compendium_build_phases.h"
 
@@ -36,6 +37,11 @@ private:
             }
         }
         return { };
+    }
+
+    QString fixtureDatChecksum() const {
+        const QString path = fixturePath(QStringLiteral("test_compendium_source.dat"));
+        return path.isEmpty() ? QString() : Remus::fileSha256Hex(path);
     }
 
     QString cliPath() const {
@@ -279,7 +285,7 @@ private slots:
             sourceObject.insert("snapshot_label", "Snapshot 001");
             sourceObject.insert("snapshot_ref", "test-ref");
             sourceObject.insert("path", sourcePath);
-            sourceObject.insert("checksum_sha256", "abc123");
+            sourceObject.insert("checksum_sha256", fixtureDatChecksum());
             sourceObject.insert("enabled", true);
             sourceObject.insert("priority", 10);
 
@@ -373,6 +379,47 @@ private slots:
         QSqlDatabase::removeDatabase(connectionName);
     }
 
+    void testBuildCompendiumRejectsChecksumMismatch() {
+        QTemporaryDir dir;
+        QVERIFY(dir.isValid());
+
+        const QString sourcePath = fixturePath(QStringLiteral("test_compendium_source.dat"));
+        QVERIFY2(!sourcePath.isEmpty(), "Fixture test_compendium_source.dat not found");
+
+        const QString manifestPath = dir.filePath(QStringLiteral("manifest_bad_checksum.json"));
+        {
+            QFile manifestFile(manifestPath);
+            QVERIFY(manifestFile.open(QIODevice::WriteOnly | QIODevice::Text));
+
+            QJsonObject sourceObject;
+            sourceObject.insert(QStringLiteral("source_id"), QStringLiteral("test-source"));
+            sourceObject.insert(QStringLiteral("display_name"), QStringLiteral("Test Source"));
+            sourceObject.insert(QStringLiteral("source_type"), QStringLiteral("dat"));
+            sourceObject.insert(QStringLiteral("snapshot_id"), QStringLiteral("snapshot-001"));
+            sourceObject.insert(QStringLiteral("snapshot_label"), QStringLiteral("Snapshot 001"));
+            sourceObject.insert(QStringLiteral("path"), sourcePath);
+            sourceObject.insert(QStringLiteral("checksum_sha256"), QStringLiteral("deadbeef"));
+            sourceObject.insert(QStringLiteral("enabled"), true);
+            sourceObject.insert(QStringLiteral("priority"), 10);
+
+            QJsonObject manifestObject;
+            manifestObject.insert(QStringLiteral("build_id"), QStringLiteral("test-build-bad-checksum"));
+            manifestObject.insert(QStringLiteral("schema_version"), 1);
+            manifestObject.insert(QStringLiteral("sources"), QJsonArray { sourceObject });
+
+            const QByteArray manifestJson = QJsonDocument(manifestObject).toJson(QJsonDocument::Indented);
+            QVERIFY(manifestFile.write(manifestJson) == manifestJson.size());
+        }
+
+        const QString outputDbPath = dir.filePath(QStringLiteral("remus_compendium_bad_checksum.db"));
+        QString output;
+        runCliCapture({ QStringLiteral("--build-compendium"), QStringLiteral("--compendium-manifest"), manifestPath,
+                          QStringLiteral("--compendium-output"), outputDbPath },
+            output, 1);
+        QVERIFY2(output.contains(QStringLiteral("checksum mismatch")), qPrintable(output));
+        QVERIFY2(!QFile::exists(outputDbPath), qPrintable(output));
+    }
+
     void testBuildCompendiumFailurePreservesExistingDatabase() {
         QTemporaryDir dir;
         QVERIFY(dir.isValid());
@@ -407,7 +454,7 @@ private slots:
             badSourceA.insert("snapshot_id", "snapshot-001");
             badSourceA.insert("snapshot_label", "Snapshot 001");
             badSourceA.insert("path", sourcePath);
-            badSourceA.insert("checksum_sha256", "abc123");
+            badSourceA.insert("checksum_sha256", fixtureDatChecksum());
             badSourceA.insert("enabled", true);
             badSourceA.insert("priority", 10);
 
@@ -468,7 +515,7 @@ private slots:
             sourceObject.insert("snapshot_label", "Snapshot 001");
             sourceObject.insert("snapshot_ref", "test-ref");
             sourceObject.insert("path", sourcePath);
-            sourceObject.insert("checksum_sha256", "abc123");
+            sourceObject.insert("checksum_sha256", fixtureDatChecksum());
             sourceObject.insert("enabled", enabled);
             sourceObject.insert("priority", 10);
 
@@ -788,7 +835,7 @@ private slots:
             sourceObject.insert("snapshot_label", "Snapshot 001");
             sourceObject.insert("snapshot_ref", "test-ref");
             sourceObject.insert("path", sourcePath);
-            sourceObject.insert("checksum_sha256", "abc123");
+            sourceObject.insert("checksum_sha256", fixtureDatChecksum());
             sourceObject.insert("enabled", true);
             sourceObject.insert("priority", 10);
 
@@ -950,7 +997,7 @@ private slots:
             sourceObject.insert("snapshot_label", "Snapshot 001");
             sourceObject.insert("snapshot_ref", "seed-ref");
             sourceObject.insert("path", sourcePath);
-            sourceObject.insert("checksum_sha256", "seed123");
+            sourceObject.insert("checksum_sha256", fixtureDatChecksum());
             sourceObject.insert("enabled", true);
             sourceObject.insert("priority", 10);
             QJsonObject manifestObject;
@@ -1086,7 +1133,7 @@ private slots:
             sourceObject.insert(QStringLiteral("snapshot_label"), QStringLiteral("Snapshot 001"));
             sourceObject.insert(QStringLiteral("snapshot_ref"), QStringLiteral("test-ref"));
             sourceObject.insert(QStringLiteral("path"), sourcePath);
-            sourceObject.insert(QStringLiteral("checksum_sha256"), QStringLiteral("abc123"));
+            sourceObject.insert(QStringLiteral("checksum_sha256"), fixtureDatChecksum());
             sourceObject.insert(QStringLiteral("enabled"), true);
             sourceObject.insert(QStringLiteral("priority"), 10);
 

@@ -137,7 +137,51 @@ The GUI launches the Qt Quick shell with views for library browsing, scan/hash w
 ctest --test-dir build --output-on-failure
 ```
 
-### 7. Package release artifacts
+### 7. Build the compendium database
+
+Remus ships a bundled `remus_compendium.db` for hash-first matching. Rebuild it locally when DAT sources or enrichment inputs change.
+
+**One-command full refresh** (download DATs, generate manifest, build, validate, coverage report):
+
+```bash
+cmake --build build
+bash scripts/build_compendium_full.sh
+```
+
+The wrapper script:
+
+- Refreshes DATs via `scripts/update_dats.sh --all` (skip with `--skip-update`)
+- Generates `data/compendium/compendium-manifest-full.json`
+- Runs `remus-cli --build-compendium` with **manifest checksum verification** on every enabled DAT
+- **Fails** on unresolved merge conflicts unless you pass `--allow-unresolved-conflicts`
+- Runs `data/compendium/validation/0001_phase1_checks.sql` (skip with `--skip-validation`)
+- Writes `data/compendium/remus_compendium.coverage.tsv`
+
+**Manual steps** for a smaller experiment:
+
+```bash
+bash scripts/generate_compendium_manifest.sh \
+  --dat-dir data/databases \
+  --output data/compendium/compendium-manifest-full.json
+
+build/remus-cli --build-compendium \
+  --compendium-manifest data/compendium/compendium-manifest-full.json \
+  --compendium-output data/compendium/remus_compendium.db
+
+bash .github/scripts/validate-compendium-db.sh data/compendium/remus_compendium.db
+```
+
+Optional enrichment inputs (skipped quietly when missing — see `.report.json`):
+
+- `data/metadata/` (libretro)
+- `data/gametdb/`
+- `data/openvgdb/openvgdb.sqlite`
+- `data/mame/catver.ini`, `data/mame/listxml.xml`
+- `data/compendium/enrichment-credentials.json` (IGDB + RetroAchievements)
+
+See [data/compendium/README.md](../../data/compendium/README.md) for schema migrations, incremental `--ingest-source`, and `--enrich-compendium`.
+
+### 8. Package release artifacts
 
 Create distributable CLI archives from the current build:
 

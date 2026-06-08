@@ -160,6 +160,10 @@ int handleBuildCompendiumCommand(CliContext &ctx) {
         qCritical().noquote() << QStringLiteral("✗ %1").arg(error);
         return 1;
     }
+    if (!verifyAndNormalizeSourceChecksums(sources, error)) {
+        qCritical().noquote() << QStringLiteral("✗ %1").arg(error);
+        return 1;
+    }
     const QString normalizedManifestJson = normalizeManifestJson(manifestJson);
 
     // Skip only when the persisted manifest contract exactly matches the current

@@ -36,6 +36,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `shellcheck` CI job; informational `qml-lint` and `clang-tidy` jobs; CI installs `mame-tools` for `chdman` coverage
 - AppImage bundles `remus-gui` and `remus-cli`; legacy archive docs and ADR-0001 updated for active GUI-only integration
 - Converted cache/system-name tests to Qt Test; IGDB enrichment skip-path smoke test
+- Compendium build verifies manifest DAT checksums; full-build wrapper fails on exit code 2 and runs phase-1 validation gate by default
 
 ### Removed
 

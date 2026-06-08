@@ -9,8 +9,8 @@
 #include "../metadata/compendium_identity_linker.h"
 #include "../metadata/compendium_merge_resolver.h"
 #include "../metadata/compendium_normalizer.h"
+#include "../core/compendium_manifest_parser.h"
 
-#include <QCryptographicHash>
 #include <QDateTime>
 #include <QDebug>
 #include <QFile>
@@ -24,24 +24,7 @@
 using namespace CompendiumSqlUtilities;
 using namespace Remus;
 
-// ── Helpers ───────────────────────────────────────────────────────────────────
-
-// Compute SHA-256 of a file in 1 MiB chunks. Returns hex string or empty.
-static QString fileChecksum(const QString &path) {
-    QFile f(path);
-    if (!f.open(QIODevice::ReadOnly))
-        return { };
-    QCryptographicHash h(QCryptographicHash::Sha256);
-    while (!f.atEnd()) {
-        const QByteArray chunk = f.read(1024 * 1024);
-        if (chunk.isEmpty())
-            break;
-        h.addData(chunk);
-    }
-    return QString::fromLatin1(h.result().toHex());
-}
-
-// Derive a sanitised source-id from a DAT base name (no extension).
+// ── Command handler ───────────────────────────────────────────────────────────
 static QString deriveSourceId(const QString &baseName) {
     QString name = baseName.toLower();
     static const QRegularExpression reInvalid(QStringLiteral("[^a-z0-9]+"));
@@ -88,7 +71,7 @@ int handleIngestSourceCommand(CliContext &ctx) {
     qInfo().noquote() << QStringLiteral("[ingest-source] source-id: %1  priority: %2").arg(sourceId).arg(priority);
 
     qInfo() << "[ingest-source] Computing DAT checksum...";
-    const QString datChecksum = fileChecksum(datInfo.absoluteFilePath());
+    const QString datChecksum = fileSha256Hex(datInfo.absoluteFilePath());
     if (datChecksum.isEmpty()) {
         qCritical() << "✗ Could not read DAT file:" << datPath;
         return 1;

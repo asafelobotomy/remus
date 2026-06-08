@@ -6,6 +6,8 @@
 #include <QJsonDocument>
 #include <QJsonParseError>
 #include <QJsonValue>
+#include <QCryptographicHash>
+#include <QDebug>
 
 #include <cmath>
 
@@ -141,6 +143,56 @@ bool parseSourceDescriptor(
     if (descriptor.enabled && (!inputInfo.exists() || !inputInfo.isFile())) {
         error = QStringLiteral("Source '%1' path does not exist: %2").arg(descriptor.sourceId, descriptor.path);
         return false;
+    }
+
+    return true;
+}
+
+QString fileSha256Hex(const QString &path) {
+    QFile file(path);
+    if (!file.open(QIODevice::ReadOnly)) {
+        return { };
+    }
+
+    QCryptographicHash hash(QCryptographicHash::Sha256);
+    while (!file.atEnd()) {
+        const QByteArray chunk = file.read(1024 * 1024);
+        if (chunk.isEmpty()) {
+            break;
+        }
+        hash.addData(chunk);
+    }
+    return QString::fromLatin1(hash.result().toHex());
+}
+
+bool verifyAndNormalizeSourceChecksums(QList<CompendiumSourceDescriptor> &sources, QString &error) {
+    for (CompendiumSourceDescriptor &source : sources) {
+        if (!source.enabled || source.sourceType != QStringLiteral("dat")) {
+            continue;
+        }
+
+        const QString actual = fileSha256Hex(source.path);
+        if (actual.isEmpty()) {
+            error = QStringLiteral("Source '%1': could not read DAT file for checksum: %2")
+                        .arg(source.sourceId, source.path);
+            return false;
+        }
+
+        if (source.checksumSha256.isEmpty()) {
+            qWarning().noquote() << QStringLiteral("[build-compendium] Source '%1' has no checksum_sha256 in manifest; "
+                                                   "using computed digest.")
+                                      .arg(source.sourceId);
+            source.checksumSha256 = actual;
+            continue;
+        }
+
+        if (source.checksumSha256.compare(actual, Qt::CaseInsensitive) != 0) {
+            error = QStringLiteral("Source '%1' checksum mismatch for %2\n"
+                                   "  manifest: %3\n"
+                                   "  actual:   %4")
+                        .arg(source.sourceId, source.path, source.checksumSha256, actual);
+            return false;
+        }
     }
 
     return true;

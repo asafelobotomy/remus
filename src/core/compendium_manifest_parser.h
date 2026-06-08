@@ -37,4 +37,11 @@ bool parseSourceDescriptor(
 bool parseManifest(const QString &manifestPath, QString &buildId, int &schemaVersion, QString &manifestJson,
     QJsonArray &sourceObjects, QList<CompendiumSourceDescriptor> &sources, QString &error);
 
+// Compute SHA-256 hex digest of a file (empty string on read failure).
+QString fileSha256Hex(const QString &path);
+
+// For enabled DAT sources: verify manifest checksum_sha256 matches the file when present,
+// and fill missing checksums from disk. Returns false on mismatch or unreadable file.
+bool verifyAndNormalizeSourceChecksums(QList<CompendiumSourceDescriptor> &sources, QString &error);
+
 } // namespace Remus

@@ -11,6 +11,8 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
 SKIP_UPDATE=false
+ALLOW_UNRESOLVED_CONFLICTS=false
+SKIP_VALIDATION=false
 DAT_DIR="$ROOT_DIR/data/databases"
 MANIFEST_PATH="$ROOT_DIR/data/compendium/compendium-manifest-full.json"
 OUTPUT_DB="$ROOT_DIR/data/compendium/remus_compendium.db"
@@ -87,6 +89,9 @@ Usage:
 
 Options:
   --skip-update             Skip `scripts/update_dats.sh --all`
+  --allow-unresolved-conflicts
+                            Treat exit code 2 (unresolved merge conflicts) as success
+  --skip-validation         Skip post-build phase-1 validation SQL
   --dat-dir <path>          DAT directory for manifest generation
   --manifest <path>         Manifest output/input path
   --output-db <path>        Compendium SQLite output path
@@ -100,6 +105,14 @@ while [[ $# -gt 0 ]]; do
     case "$1" in
         --skip-update)
             SKIP_UPDATE=true
+            shift
+            ;;
+        --allow-unresolved-conflicts)
+            ALLOW_UNRESOLVED_CONFLICTS=true
+            shift
+            ;;
+        --skip-validation)
+            SKIP_VALIDATION=true
             shift
             ;;
         --dat-dir)
@@ -220,9 +233,21 @@ if [[ "$build_rc" -ne 0 && "$build_rc" -ne 2 ]]; then
 fi
 
 if [[ "$build_rc" -eq 2 ]]; then
-    echo "==> Build completed with unresolved conflicts (exit code 2)"
+    if $ALLOW_UNRESOLVED_CONFLICTS; then
+        echo "==> Build completed with unresolved conflicts (exit code 2; --allow-unresolved-conflicts)"
+    else
+        echo "error: compendium build finished with unresolved merge conflicts (exit code 2)" >&2
+        echo "hint: resolve conflicts, delete the DB, rebuild, or pass --allow-unresolved-conflicts" >&2
+        echo "--- build log tail ---" >&2
+        tail -40 "$BUILD_LOG" >&2
+        exit 2
+    fi
 else
     echo "==> Build completed cleanly (exit code 0)"
+fi
+
+if ! $SKIP_VALIDATION; then
+    bash "$ROOT_DIR/.github/scripts/validate-compendium-db.sh" "$OUTPUT_DB"
 fi
 
 # Emit a machine-friendly per-source coverage report via remus-cli --coverage-report.
@@ -263,4 +288,7 @@ if [ -n "$empty_systems" ]; then
 fi
 
 echo "==> Build log: $BUILD_LOG"
+if [[ "$build_rc" -eq 2 ]] && $ALLOW_UNRESOLVED_CONFLICTS; then
+    exit 0
+fi
 exit "$build_rc"

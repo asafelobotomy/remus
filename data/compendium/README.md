@@ -26,8 +26,16 @@ sqlite3 data/compendium/remus_compendium.db < data/compendium/migrations/0004_ft
 ## Validate phase 1 constraints and collisions
 
 ```bash
+bash .github/scripts/validate-compendium-db.sh data/compendium/remus_compendium.db
+```
+
+Or manually:
+
+```bash
 sqlite3 -header -column data/compendium/remus_compendium.db < data/compendium/validation/0001_phase1_checks.sql
 ```
+
+`scripts/build_compendium_full.sh` runs this gate automatically after a successful build.
 
 ## Verify core seed counts
 

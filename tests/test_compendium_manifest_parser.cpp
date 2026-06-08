@@ -33,6 +33,9 @@ private slots:
     void parseSourceDescriptor_rejectsJsonSourceType();
     void parseSourceDescriptor_nonStringOptionalField();
     void parseSourceDescriptor_nonIntegerPriority();
+    void verifySourceChecksums_acceptsMatchingDigest();
+    void verifySourceChecksums_rejectsMismatch();
+    void verifySourceChecksums_fillsMissingDigest();
 };
 
 // ── readTextFile ─────────────────────────────────────────────────────────────
@@ -374,6 +377,74 @@ void CompendiumManifestParserTest::parseSourceDescriptor_nonIntegerPriority() {
     QString error;
     QVERIFY(!parseSourceDescriptor(obj, QStringLiteral("/tmp/manifest.json"), descriptor, error));
     QVERIFY(!error.isEmpty());
+}
+
+void CompendiumManifestParserTest::verifySourceChecksums_acceptsMatchingDigest() {
+    QTemporaryDir dir;
+    QVERIFY(dir.isValid());
+
+    const QString sourcePath = dir.filePath(QStringLiteral("source.dat"));
+    QFile sourceFile(sourcePath);
+    QVERIFY(sourceFile.open(QIODevice::WriteOnly | QIODevice::Text));
+    sourceFile.write("payload");
+    sourceFile.close();
+
+    CompendiumSourceDescriptor descriptor;
+    descriptor.sourceId = QStringLiteral("test-source");
+    descriptor.sourceType = QStringLiteral("dat");
+    descriptor.path = sourcePath;
+    descriptor.enabled = true;
+    descriptor.checksumSha256 = fileSha256Hex(sourcePath);
+
+    QList<CompendiumSourceDescriptor> sources { descriptor };
+    QString error;
+    QVERIFY(verifyAndNormalizeSourceChecksums(sources, error));
+    QCOMPARE(sources.first().checksumSha256, descriptor.checksumSha256);
+}
+
+void CompendiumManifestParserTest::verifySourceChecksums_rejectsMismatch() {
+    QTemporaryDir dir;
+    QVERIFY(dir.isValid());
+
+    const QString sourcePath = dir.filePath(QStringLiteral("source.dat"));
+    QFile sourceFile(sourcePath);
+    QVERIFY(sourceFile.open(QIODevice::WriteOnly | QIODevice::Text));
+    sourceFile.write("payload");
+    sourceFile.close();
+
+    CompendiumSourceDescriptor descriptor;
+    descriptor.sourceId = QStringLiteral("test-source");
+    descriptor.sourceType = QStringLiteral("dat");
+    descriptor.path = sourcePath;
+    descriptor.enabled = true;
+    descriptor.checksumSha256 = QStringLiteral("deadbeef");
+
+    QList<CompendiumSourceDescriptor> sources { descriptor };
+    QString error;
+    QVERIFY(!verifyAndNormalizeSourceChecksums(sources, error));
+    QVERIFY(error.contains(QStringLiteral("checksum mismatch")));
+}
+
+void CompendiumManifestParserTest::verifySourceChecksums_fillsMissingDigest() {
+    QTemporaryDir dir;
+    QVERIFY(dir.isValid());
+
+    const QString sourcePath = dir.filePath(QStringLiteral("source.dat"));
+    QFile sourceFile(sourcePath);
+    QVERIFY(sourceFile.open(QIODevice::WriteOnly | QIODevice::Text));
+    sourceFile.write("payload");
+    sourceFile.close();
+
+    CompendiumSourceDescriptor descriptor;
+    descriptor.sourceId = QStringLiteral("test-source");
+    descriptor.sourceType = QStringLiteral("dat");
+    descriptor.path = sourcePath;
+    descriptor.enabled = true;
+
+    QList<CompendiumSourceDescriptor> sources { descriptor };
+    QString error;
+    QVERIFY(verifyAndNormalizeSourceChecksums(sources, error));
+    QCOMPARE(sources.first().checksumSha256, fileSha256Hex(sourcePath));
 }
 
 QTEST_MAIN(CompendiumManifestParserTest)
