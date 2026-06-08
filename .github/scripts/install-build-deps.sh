@@ -10,6 +10,7 @@ sudo apt-get install -y \
   qt6-base-private-dev \
   qt6-base-dev-tools \
   qt6-declarative-dev \
+  qt6-declarative-private-dev \
   qt6-declarative-dev-tools \
   libqt6sql6-sqlite \
   libgl1-mesa-dev \
