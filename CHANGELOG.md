@@ -31,6 +31,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CI installs `zip`, `unzip`, and `p7zip-full` so archive/bundler tests no longer skip silently
 - Removed duplicate `LevenshteinMatchingTest`; production `MatchingEngine::levenshteinDistance` covered in `MatchingEngineTest`
 - Branch protection requires code owner review on `.github/CODEOWNERS` paths; `release` environment gates publish jobs
+- CI enforces 50% minimum line coverage on production sources; Release matrix builds compile with `-DREMUS_ENABLE_WARNINGS=ON`
+- GitHub issue templates for bugs and feature requests; release workflow verifies SHA256 sidecars and publishes artifact attestations
 
 ### Removed
 

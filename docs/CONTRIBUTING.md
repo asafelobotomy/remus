@@ -27,7 +27,7 @@ Maintainers should configure [branch protection](https://docs.github.com/en/repo
 | `build (Debug)` | CI | Primary build + test matrix |
 | `build (Release)` | CI | Release configuration smoke build |
 | `lint` | CI | clang-format (pinned version) |
-| `coverage` | CI | lcov report generation |
+| `coverage` | CI | lcov report generation; fails below 50% line coverage on `src/` |
 | `sanitizer` | CI | ASan + UBSan test pass |
 | `Analyze` | CodeQL | C++ static analysis (job display name: `Analyze (C/C++)`) |
 
@@ -43,6 +43,15 @@ Releases are **manual only**: run the **Release** workflow via *Actions → Rele
 4. Use **force: true** only to republish when a tag already exists (bad artifact rebuild). Do not use force for routine releases.
 
 Configure a **`release` environment** in GitHub repository settings with required reviewers so the publish job waits for approval before uploading assets.
+
+Published tar.gz and AppImage files include `.sha256` sidecars generated during packaging. Release builds also emit [GitHub artifact attestations](https://docs.github.com/en/actions/security-for-github-actions/using-artifact-attestations) binding those archives to the workflow run and commit. Verify a download with:
+
+```bash
+sha256sum -c remus-cli-<version>-linux-x64.tar.gz.sha256
+gh attestation verify remus-cli-<version>-linux-x64.tar.gz --repo asafelobotomy/remus
+```
+
+Use GitHub issue templates (**Bug Report** / **Feature Request**) when filing bugs or enhancements.
 
 ## Placement Rules
 

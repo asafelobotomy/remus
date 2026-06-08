@@ -1,0 +1,68 @@
+name: Bug Report
+description: Report incorrect behavior, crashes, or data loss in Remus
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the report. Include enough detail that someone can reproduce the issue on Linux with a recent `main` build.
+
+  - type: input
+    id: version
+    attributes:
+      label: Remus version
+      description: Output of `remus-cli --version` or the release tag you installed
+      placeholder: e.g. v0.10.1 or git commit
+    validations:
+      required: true
+
+  - type: dropdown
+    id: component
+    attributes:
+      label: Component
+      options:
+        - remus-cli
+        - remus-gui
+        - compendium / matching
+        - packaging / install
+        - other
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Commands, library layout, or GUI actions that trigger the bug
+      placeholder: |
+        1. Open library at ...
+        2. Run `remus-cli --scan ...`
+        3. See error ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      placeholder: Include stderr/log output in a fenced block if possible
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: OS, Qt version, and any external tools involved (chdman, maxcso, etc.)
+      placeholder: e.g. Manjaro, Qt 6.11, GCC 16
+    validations:
+      required: false

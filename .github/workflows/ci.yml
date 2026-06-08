@@ -40,11 +40,9 @@ jobs:
 
       - name: Configure
         run: |
-          WARNINGS_FLAG=""
-          if [ "${{ matrix.build_type }}" = "Debug" ]; then
-            WARNINGS_FLAG="-DREMUS_ENABLE_WARNINGS=ON"
-          fi
-          cmake -S . -B build -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} ${WARNINGS_FLAG}
+          cmake -S . -B build \
+            -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
+            -DREMUS_ENABLE_WARNINGS=ON
 
       - name: Build
         run: cmake --build build --config ${{ matrix.build_type }} -j$(nproc)
@@ -95,6 +93,11 @@ jobs:
           lcov --capture --directory build --output-file build/coverage.info --rc lcov_branch_coverage=0
           lcov --remove build/coverage.info '/usr/*' '*/tests/*' --output-file build/coverage.info
           genhtml build/coverage.info --output-directory build/coverage-html
+
+      - name: Enforce coverage threshold
+        env:
+          COVERAGE_THRESHOLD: "50"
+        run: bash .github/scripts/check-coverage-threshold.sh build/coverage.info
 
       - name: Upload coverage report
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4

@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Documentation
+    url: https://github.com/asafelobotomy/remus/tree/main/docs
+    about: Guides, architecture notes, and setup instructions
+  - name: Discussions
+    url: https://github.com/asafelobotomy/remus/discussions
+    about: Ask questions or share ideas (use issues for bugs and feature requests)

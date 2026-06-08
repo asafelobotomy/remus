@@ -1,0 +1,48 @@
+name: Feature Request
+description: Suggest a new capability or workflow improvement
+title: "[Feature]: "
+labels:
+  - enhancement
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Describe the problem you are trying to solve and how Remus should behave after the change.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem / use case
+      description: What workflow is painful or missing today?
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: CLI flags, GUI changes, or data model updates you have in mind
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Workarounds, scripts, or other tools you tried
+    validations:
+      required: false
+
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Likely scope
+      options:
+        - CLI only
+        - GUI only
+        - CLI + GUI
+        - compendium / metadata
+        - packaging / docs
+        - unsure
+    validations:
+      required: true
