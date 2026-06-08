@@ -12,6 +12,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - MIT `LICENSE` and blocking clang-format CI (`lint` job, pinned clang-format-22)
 - CI coverage and sanitizer jobs; `-fprofile-update=atomic` for parallel gcov on GCC 13
 - `GuiControllersSmokeTest` (`test_gui_controllers.cpp`) for scan/match/verification/conversion controllers
+- `DiscConverterTest` (`test_disc_converter.cpp`) for conversion tool path, success/failure, and cancel signals
+- `IGDBProviderHttpTest` (`test_igdb_provider_http.cpp`) for IGDB HTTP response parsing via fake network replies
+- CLI smoke coverage for empty-library match, bundle dry-run, compendium coverage report, and DAT coverage exit code
 - `.github/CODEOWNERS` for workflows, scripts, packaging, and compendium data
 - Centralized CI dependency install (`.github/scripts/install-build-deps.sh`, `read-app-version.sh`)
 - `remus-gui` Qt Quick desktop application in the default build (library, scan/hash, matching, artwork, DAT, verification, organize, convert, patch, mods, settings)

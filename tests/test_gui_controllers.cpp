@@ -2,13 +2,21 @@
 
 #include <QSignalSpy>
 #include <QTemporaryDir>
+#include <QSqlQuery>
+#include <QSqlError>
+#include <QDir>
+#include <QFile>
+#include <QCoreApplication>
 
 #include "controllers/app_controller.h"
 #include "controllers/conversion_controller.h"
 #include "controllers/match_controller.h"
 #include "controllers/scan_controller.h"
 #include "controllers/verification_controller.h"
+#include "models/match_list_model.h"
 #include "models/verification_result_model.h"
+#include "../src/core/database.h"
+#include "../src/core/database_types.h"
 
 using namespace Remus;
 
@@ -26,6 +34,8 @@ private slots:
     void verificationController_verifyAllOnEmptyLibrary();
     void conversionController_defaultTargetFormat();
     void conversionController_refreshToolStatusPopulatesMap();
+    void scanController_scanDirectoryCompletesWithInsertedFiles();
+    void matchController_refreshModelReflectsUnconfirmedMatch();
 };
 
 void GuiControllersSmokeTest::scanController_requiresOpenLibrary() {
@@ -138,6 +148,89 @@ void GuiControllersSmokeTest::conversionController_refreshToolStatusPopulatesMap
 
     conversion.refreshToolStatus();
     QVERIFY(!conversion.toolStatus().isEmpty());
+}
+
+void GuiControllersSmokeTest::scanController_scanDirectoryCompletesWithInsertedFiles() {
+    QTemporaryDir tempDir;
+    QVERIFY(tempDir.isValid());
+
+    const QString scanDir = tempDir.filePath(QStringLiteral("roms"));
+    QVERIFY(QDir().mkpath(scanDir));
+
+    QFile romFile(scanDir + QStringLiteral("/sample.bin"));
+    QVERIFY(romFile.open(QIODevice::WriteOnly));
+    QVERIFY(romFile.write(QByteArrayLiteral("rom-bytes")) == 9);
+    romFile.close();
+
+    AppController app;
+    QVERIFY(app.openLibrary(tempDir.filePath(QStringLiteral("library.db"))));
+
+    ScanController scan(&app);
+    QSignalSpy completedSpy(&scan, &ScanController::scanCompleted);
+
+    scan.startScan(scanDir);
+
+    for (int attempt = 0; attempt < 500 && completedSpy.isEmpty(); ++attempt) {
+        QCoreApplication::processEvents(QEventLoop::AllEvents, 20);
+    }
+
+    QCOMPARE(completedSpy.count(), 1);
+    QVERIFY(completedSpy.at(0).at(0).toInt() >= 1);
+    QVERIFY(!scan.isScanning());
+}
+
+void GuiControllersSmokeTest::matchController_refreshModelReflectsUnconfirmedMatch() {
+    QTemporaryDir tempDir;
+    QVERIFY(tempDir.isValid());
+
+    AppController app;
+    QVERIFY(app.openLibrary(tempDir.filePath(QStringLiteral("library.db"))));
+
+    Database *db = app.database();
+    const int libraryId = db->insertLibrary(tempDir.path(), QStringLiteral("roms"));
+    QVERIFY(libraryId > 0);
+
+    const QString romDir = tempDir.filePath(QStringLiteral("roms"));
+    QVERIFY(QDir().mkpath(romDir));
+    const QString romPath = QDir(romDir).filePath(QStringLiteral("game.bin"));
+    {
+        QFile romFile(romPath);
+        QVERIFY(romFile.open(QIODevice::WriteOnly));
+        romFile.write("fake rom");
+    }
+
+    FileRecord file;
+    file.libraryId = libraryId;
+    file.filename = QStringLiteral("game.bin");
+    file.originalPath = romPath;
+    file.currentPath = romPath;
+    file.extension = QStringLiteral(".bin");
+    file.fileSize = 9;
+    file.md5 = QStringLiteral("0123456789abcdef0123456789abcdef");
+    const int fileId = db->insertFile(file);
+    QVERIFY(fileId > 0);
+
+    QSqlQuery gameQuery(db->database());
+    QVERIFY(gameQuery.exec(QStringLiteral("INSERT INTO games (title) VALUES ('Matched Game')")));
+    const int gameId = gameQuery.lastInsertId().toInt();
+    QVERIFY(gameId > 0);
+
+    QSqlQuery matchQuery(db->database());
+    matchQuery.prepare(QStringLiteral(
+        "INSERT INTO matches (file_id, game_id, confidence, match_method, is_confirmed, is_rejected) "
+        "VALUES (?, ?, ?, 'test', 0, 0)"));
+    matchQuery.addBindValue(fileId);
+    matchQuery.addBindValue(gameId);
+    matchQuery.addBindValue(0.85);
+    QVERIFY2(matchQuery.exec(), qPrintable(matchQuery.lastError().text()));
+
+    MatchController match(&app);
+    MatchListModel model;
+    match.setModel(&model);
+    match.refreshModel();
+
+    QCOMPARE(model.rowCount(), 1);
+    QCOMPARE(match.unconfirmedMatchCount(), 1);
 }
 
 QTEST_MAIN(GuiControllersSmokeTest)

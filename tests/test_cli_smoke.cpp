@@ -1039,6 +1039,82 @@ private slots:
         QVERIFY2(output.contains(QStringLiteral("totally-unknown-source-key")),
             qPrintable(QStringLiteral("Expected a warning mentioning the unknown key, got:\n%1").arg(output)));
     }
+
+    void testMatchOnEmptyLibrary() {
+        QTemporaryDir dir;
+        QVERIFY(dir.isValid());
+
+        const QString dbPath = dir.filePath(QStringLiteral("match-empty.db"));
+        QString output;
+        runCliCapture({ QStringLiteral("--db"), dbPath, QStringLiteral("--scan"), dir.path(), QStringLiteral("--match") },
+            output);
+        QVERIFY2(output.contains(QStringLiteral("Matching")), qPrintable(output));
+        QVERIFY2(output.contains(QStringLiteral("0 files")) || output.contains(QStringLiteral("Matching 0")),
+            qPrintable(output));
+    }
+
+    void testBundleDryRunAll() {
+        QTemporaryDir dir;
+        QVERIFY(dir.isValid());
+
+        const QString dbPath = dir.filePath(QStringLiteral("bundle.db"));
+        runCli({ QStringLiteral("--db"), dbPath, QStringLiteral("--scan"), dir.path(), QStringLiteral("--bundle"),
+            dir.filePath(QStringLiteral("bundles")), QStringLiteral("--dry-run-all") });
+    }
+
+    void testCoverageReportRequiresCompendiumOutput() {
+        runCli({ QStringLiteral("--coverage-report") }, 1);
+    }
+
+    void testCoverageReportEmitsSummaryRow() {
+        QTemporaryDir dir;
+        QVERIFY(dir.isValid());
+
+        const QString sourcePath = fixturePath(QStringLiteral("test_compendium_source.dat"));
+        QVERIFY2(!sourcePath.isEmpty(), "Fixture test_compendium_source.dat not found");
+
+        const QString manifestPath = dir.filePath(QStringLiteral("manifest.json"));
+        {
+            QFile manifestFile(manifestPath);
+            QVERIFY(manifestFile.open(QIODevice::WriteOnly | QIODevice::Text));
+
+            QJsonObject sourceObject;
+            sourceObject.insert(QStringLiteral("source_id"), QStringLiteral("test-source"));
+            sourceObject.insert(QStringLiteral("display_name"), QStringLiteral("Test Source"));
+            sourceObject.insert(QStringLiteral("source_type"), QStringLiteral("dat"));
+            sourceObject.insert(QStringLiteral("snapshot_id"), QStringLiteral("snapshot-001"));
+            sourceObject.insert(QStringLiteral("snapshot_label"), QStringLiteral("Snapshot 001"));
+            sourceObject.insert(QStringLiteral("snapshot_ref"), QStringLiteral("test-ref"));
+            sourceObject.insert(QStringLiteral("path"), sourcePath);
+            sourceObject.insert(QStringLiteral("checksum_sha256"), QStringLiteral("abc123"));
+            sourceObject.insert(QStringLiteral("enabled"), true);
+            sourceObject.insert(QStringLiteral("priority"), 10);
+
+            QJsonObject manifestObject;
+            manifestObject.insert(QStringLiteral("build_id"), QStringLiteral("coverage-smoke"));
+            manifestObject.insert(QStringLiteral("schema_version"), 1);
+            manifestObject.insert(QStringLiteral("sources"), QJsonArray { sourceObject });
+
+            const QByteArray manifestJson = QJsonDocument(manifestObject).toJson(QJsonDocument::Indented);
+            QVERIFY(manifestFile.write(manifestJson) == manifestJson.size());
+        }
+
+        const QString outputDbPath = dir.filePath(QStringLiteral("remus_compendium_test.db"));
+        runCli({ QStringLiteral("--build-compendium"), QStringLiteral("--compendium-manifest"), manifestPath,
+            QStringLiteral("--compendium-output"), outputDbPath });
+
+        QString output;
+        runCliCapture(
+            { QStringLiteral("--coverage-report"), QStringLiteral("--compendium-output"), outputDbPath }, output);
+        QVERIFY2(output.contains(QStringLiteral("# games=")), qPrintable(output));
+        QVERIFY2(output.contains(QStringLiteral("source_id")), qPrintable(output));
+    }
+
+    void testDatCoverageExitsZero() {
+        QTemporaryDir dir;
+        QVERIFY(dir.isValid());
+        runCli({ QStringLiteral("--db"), dir.filePath(QStringLiteral("dat-coverage.db")), QStringLiteral("--dat-coverage") });
+    }
 };
 
 QTEST_MAIN(CliSmokeTest)

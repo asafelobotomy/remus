@@ -114,6 +114,11 @@ add_remus_test(test_cso_converter CsoConverterTest
     LIBS Qt6::Test Qt6::Core remus-core
 )
 
+add_remus_test(test_disc_converter DiscConverterTest
+    SOURCES test_disc_converter.cpp
+    LIBS Qt6::Test Qt6::Core remus-core
+)
+
 add_remus_test(test_wbfs_converter WbfsConverterTest
     SOURCES test_wbfs_converter.cpp
     LIBS Qt6::Test Qt6::Core remus-core
@@ -272,6 +277,11 @@ add_remus_test(test_artwork_downloader ArtworkDownloaderTest
 add_remus_test(test_providers_minimal ProvidersMinimalTest
     SOURCES test_providers_minimal.cpp
     LIBS Qt6::Test Qt6::Core remus-metadata remus-core remus-services
+)
+
+add_remus_test(test_igdb_provider_http IGDBProviderHttpTest
+    SOURCES test_igdb_provider_http.cpp
+    LIBS Qt6::Test Qt6::Core Qt6::Network remus-metadata remus-core
 )
 
 add_remus_test(test_credential_manager CredentialManagerTest
