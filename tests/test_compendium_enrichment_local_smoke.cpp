@@ -231,16 +231,16 @@ void CompendiumEnrichmentLocalSmokeTest::mameListXmlParsedWithoutArcadeRows_upse
     // Write a minimal but valid MAME listxml with one runnable machine.
     QFile xmlFile(listxmlPath);
     QVERIFY(xmlFile.open(QIODevice::WriteOnly | QIODevice::Text));
-    const QByteArray payload = QByteArray(
-        "<?xml version=\"1.0\"?>\n"
-        "<mame build=\"0.258\">\n"
-        "<machine name=\"sf2\" isdevice=\"no\" runnable=\"yes\">\n"
-        "<description>Street Fighter II: The World Warrior (World 910522)</description>\n"
-        "<year>1991</year>\n"
-        "<manufacturer>Capcom</manufacturer>\n"
-        "<input players=\"2\" coins=\"2\"/>\n"
-        "</machine>\n"
-        "</mame>\n");
+    const QByteArray payload
+        = QByteArray("<?xml version=\"1.0\"?>\n"
+                     "<mame build=\"0.258\">\n"
+                     "<machine name=\"sf2\" isdevice=\"no\" runnable=\"yes\">\n"
+                     "<description>Street Fighter II: The World Warrior (World 910522)</description>\n"
+                     "<year>1991</year>\n"
+                     "<manufacturer>Capcom</manufacturer>\n"
+                     "<input players=\"2\" coins=\"2\"/>\n"
+                     "</machine>\n"
+                     "</mame>\n");
     QCOMPARE(xmlFile.write(payload), payload.size());
     xmlFile.close();
 

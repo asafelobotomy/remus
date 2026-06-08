@@ -35,14 +35,9 @@ QHash<QString, MachineInfo> parseMameListXml(const QString &path, QString &error
 
     QXmlStreamReader xml(&file);
     while (!xml.atEnd() && !xml.hasError()) {
-        if (!xml.readNextStartElement())
+        xml.readNext();
+        if (xml.tokenType() != QXmlStreamReader::StartElement || xml.name() != QLatin1String("machine"))
             continue;
-        if (xml.name() != QLatin1String("machine")) {
-            // Skip the top-level <mame> element's non-machine children.
-            if (xml.name() != QLatin1String("mame"))
-                xml.skipCurrentElement();
-            continue;
-        }
 
         const QXmlStreamAttributes attrs = xml.attributes();
         // Skip device entries (sound chips, CPUs) and non-runnable BIOS/sample sets.
@@ -58,7 +53,11 @@ QHash<QString, MachineInfo> parseMameListXml(const QString &path, QString &error
         }
 
         MachineInfo info;
-        while (xml.readNextStartElement()) {
+        while (xml.readNext()) {
+            if (xml.tokenType() == QXmlStreamReader::EndElement && xml.name() == QLatin1String("machine"))
+                break;
+            if (xml.tokenType() != QXmlStreamReader::StartElement)
+                continue;
             if (xml.name() == QLatin1String("year")) {
                 const QString yearStr = xml.readElementText().trimmed();
                 bool ok = false;
@@ -73,7 +72,6 @@ QHash<QString, MachineInfo> parseMameListXml(const QString &path, QString &error
                 const int p = playersStr.toInt(&ok);
                 if (ok && p >= 1 && p <= 16)
                     info.players = p;
-                xml.skipCurrentElement();
             } else {
                 xml.skipCurrentElement();
             }
