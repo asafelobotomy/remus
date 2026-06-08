@@ -17,4 +17,7 @@ sudo apt-get install -y \
   libxkbcommon-dev \
   zlib1g-dev \
   libarchive-dev \
-  qtkeychain-qt6-dev
+  qtkeychain-qt6-dev \
+  zip \
+  unzip \
+  p7zip-full

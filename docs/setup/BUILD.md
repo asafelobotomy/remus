@@ -5,7 +5,7 @@
 ### Required Dependencies
 - **CMake** >= 3.16
 - **Qt 6 development files** (Core, Gui, Sql, Network, Concurrent, Quick, QML, Quick Controls 2, Quick Layouts, Quick Dialogs 2)
-- **C++17** compatible compiler (GCC 7+, Clang 5+, MSVC 2017+)
+- **C++17** compatible compiler (GCC 7+, Clang 5+)
 - **zlib** (for CRC32 calculation)
 - **libarchive** (ZIP/7z/RAR extraction)
 - **Qt6Keychain** (OS credential store for provider API keys)
@@ -22,7 +22,8 @@ sudo apt install build-essential cmake \
   qt6-base-dev qt6-base-private-dev qt6-base-dev-tools \
   qt6-declarative-dev qt6-declarative-private-dev qt6-declarative-dev-tools \
   libqt6sql6-sqlite libgl1-mesa-dev libxkbcommon-dev \
-  zlib1g-dev libarchive-dev qtkeychain-qt6-dev
+  zlib1g-dev libarchive-dev qtkeychain-qt6-dev \
+  zip unzip p7zip-full
 ```
 
 #### Fedora
@@ -130,6 +131,12 @@ remus-cli 0.10.1
 
 The GUI launches the Qt Quick shell with views for library browsing, scan/hash workflows, metadata matching, artwork, DAT management, verification, organization, conversion, patching, mods, and settings.
 
+### 6. Run tests
+
+```bash
+ctest --test-dir build --output-on-failure
+```
+
 ### 7. Package release artifacts
 
 Create distributable CLI archives from the current build:
@@ -168,7 +175,7 @@ These write versioned outputs to the repository root `dist/` directory:
 ./remus-cli --scan ~/roms/SNES --db ~/my-library.db --hash
 ```
 
-### Metadata Commands (M2)
+### Metadata Commands
 
 #### Search for a game by name
 ```bash
@@ -197,7 +204,7 @@ These write versioned outputs to the repository root `dist/` directory:
 ./remus-cli --metadata 811b027eaf99c2def7b933c5208636de --provider hasheous
 ```
 
-### Matching Commands (M3)
+### Matching Commands
 
 #### Match files with intelligent provider fallback
 ```bash

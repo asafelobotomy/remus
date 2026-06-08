@@ -29,11 +29,20 @@ Maintainers should configure [branch protection](https://docs.github.com/en/repo
 | `lint` | CI | clang-format (pinned version) |
 | `coverage` | CI | lcov report generation |
 | `sanitizer` | CI | ASan + UBSan test pass |
-| `Analyze` | CodeQL | C++ static analysis |
+| `Analyze` | CodeQL | C++ static analysis (job display name: `Analyze (C/C++)`) |
 
-Also require at least one approving review and disallow force-pushes to `main`.
+Also require at least one approving review, **code owner review** on protected paths (see `.github/CODEOWNERS`), and disallow force-pushes to `main`.
 
-Releases are **manual only**: run the **Release** workflow via *Actions → Release → Run workflow*. Optionally configure a `release` environment with required reviewers in GitHub repository settings.
+Releases are **manual only**: run the **Release** workflow via *Actions → Release → Run workflow*.
+
+### Release workflow (maintainers)
+
+1. Bump `APP_VERSION` in `src/core/constants/api.h` and update `CHANGELOG.md` on a PR merged to `main`.
+2. Run **Release** → *Run workflow* (leave version empty to use `api.h`, or pass e.g. `v0.10.2`).
+3. The job creates the tag (if missing), runs tests, and publishes tar.gz + AppImage artifacts.
+4. Use **force: true** only to republish when a tag already exists (bad artifact rebuild). Do not use force for routine releases.
+
+Configure a **`release` environment** in GitHub repository settings with required reviewers so the publish job waits for approval before uploading assets.
 
 ## Placement Rules
 

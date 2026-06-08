@@ -7,13 +7,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Added - GUI Surface
+### Added
 
-- `remus-gui` Qt Quick desktop application target in the default build with an application shell, shared app state, and phase-oriented views for library browsing, scanning, hashing, metadata matching, artwork, DAT management, verification, organization, conversion, patching, mods, and settings
+- MIT `LICENSE` and blocking clang-format CI (`lint` job, pinned clang-format-22)
+- CI coverage and sanitizer jobs; `-fprofile-update=atomic` for parallel gcov on GCC 13
+- `GuiControllersSmokeTest` (`test_gui_controllers.cpp`) for scan/match/verification/conversion controllers
+- `.github/CODEOWNERS` for workflows, scripts, packaging, and compendium data
+- Centralized CI dependency install (`.github/scripts/install-build-deps.sh`, `read-app-version.sh`)
+- `remus-gui` Qt Quick desktop application in the default build (library, scan/hash, matching, artwork, DAT, verification, organize, convert, patch, mods, settings)
 
-### Changed - Build Surface
+### Changed
 
-- Default CMake configuration now includes the active Qt Quick GUI alongside `remus-cli`; canonical README and build docs now describe the GUI build and launch path while keeping the legacy TUI archived
+- Release workflow is manual-only (`workflow_dispatch`); auto-publish on `main` push removed
+- Branch protection on `main` requires six CI jobs, CodeQL, and one PR review
+- README and BUILD docs updated for 100+ systems, Linux build scope, and CLI/AppImage packaging notes
+- MAME listxml parser fixed for self-closing `<input/>` on Qt 6.4 (Ubuntu 24.04 CI)
+- Sanitizer job runs on pull requests; `llvm.sh` checksum verified before clang-format install
+- Default CMake build documents both `remus-cli` and `remus-gui`; legacy TUI remains archived
+- `test_output/` policy: only `README.md` and `attention.log` are tracked; pipeline artifacts stay local
+- CI installs `zip`, `unzip`, and `p7zip-full` so archive/bundler tests no longer skip silently
+- Removed duplicate `LevenshteinMatchingTest`; production `MatchingEngine::levenshteinDistance` covered in `MatchingEngineTest`
+- Branch protection requires code owner review on `.github/CODEOWNERS` paths; `release` environment gates publish jobs
+
+### Removed
+
+- GitHub Copilot / xanadAssistant agent infrastructure (`.github/agents/`, `.copilot/`, `AGENTS.md`, and related managed files). Detailed Copilot template update notes from early 2026 remain in git history only.
 
 ### Added in early setup
 
@@ -51,33 +69,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `--ra-api-key` / `--ra-username` CLI flags and `REMUS_RA_API_KEY` / `REMUS_RA_USERNAME` env vars for optional API key injection
 - 17 new test cases in `RAPatchesCatalogTest`: filename parsing, README hash extraction, system/type normalisation, JSON round-trip, directory scanning, enricher credential logic
 
-### Changed
+### Changed in early setup
 
-- Copilot instructions updated from template v5.4.0 → v5.5.0.
-  Preserved locally modified sections: §2, §5, §8, §9.
-  Updated companion agents: `coding.agent.md`, `extensions.agent.md`, `fast.agent.md`, `review.agent.md`, and `setup.agent.md`.
-  Refreshed `.github/copilot-version.md` with section fingerprints, managed file hashes, and setup answers; synced `AGENTS.md` and `UPDATE.md` to the `v5.5.0` restore wording; reconciled `.copilot/workspace/workspace-index.json` to the newer schema while preserving the local inventory.
-  Backup at: `.github/archive/pre-update-2026-04-04-v5.4.0/`
-  Follow-up backup at: `.github/archive/pre-followup-2026-04-04-v5.5.0/`
-- Copilot instructions updated from template v5.1.0 → v5.4.0.
-  Preserved locally modified sections: §2, §5, §8, §9.
-  Refreshed heartbeat companion scripts (`pulse.sh` + Python helpers + policy file), added `commit-preflight` skill, migrated `.copilot/workspace/DOC_INDEX.json` to `.copilot/workspace/workspace-index.json`, and updated `HEARTBEAT.md` retrospective/response-contract guidance.
-  Backup at: `.github/archive/pre-update-2026-04-04-v5.1.0/`
-- Copilot instructions updated from template v5.0.0 → v5.1.0.
-  §8 (Living Update Protocol): Agent Hooks table expanded to 8 lifecycle events (added `UserPromptSubmit`).
-  Update agent merged into Setup agent. Hook scripts refreshed (21 files, includes new `pulse.sh` orchestrator and `mcp-npx.sh`/`mcp-uvx.sh` launcher wrappers).
-  Companion files updated: `HEARTBEAT.md`, `doctor.agent.md`, `setup.agent.md`, `.vscode/mcp.json`, `copilot-hooks.json`.
-  Backup at: `.github/archive/pre-update-2026-03-31-v5.0.0/`
-- Copilot instructions recreated from template v4.0.0 (file was missing from disk).
-  All 13 sections restored. §10 values recovered from BOOTSTRAP.md, JOURNAL.md, and workspace identity files.
-  Backup at: `.github/archive/pre-update-2026-03-20-v4.0.0/`
 - `local_database_provider.cpp` decomposed: thumbnail helpers extracted to `local_database_provider_thumbnails.cpp` (517 → 450 LOC)
-
-### Added
-
-- Copilot instructions scaffolded from [copilot-instructions-template](https://github.com/asafelobotomy/copilot-instructions-template) v1.0.3 on 2026-02-19.
-  Includes: `.github/copilot-instructions.md`, model-pinned agents (`.github/agents/`),
-  workspace identity files (`.copilot/workspace/`), `JOURNAL.md`, `BIBLIOGRAPHY.md`, `METRICS.md`.
 
 ### Fixed in early setup
 

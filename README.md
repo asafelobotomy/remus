@@ -77,9 +77,9 @@ Historical milestone reports remain in [docs/archive/milestones/](docs/archive/m
 Repository-local path policy:
 
 - Put local ROM inputs under `roms/`.
-- Use `test_output/` for small processed-ROM test runs and tracked review notes.
+- Use `test_output/` for small processed-ROM test runs (local artifacts; not committed except `attention.log`).
 - Keep `test_output/` to 5 active cases or fewer.
-- Record anything that needs follow-up in `test_output/attention.log`.
+- Record follow-up items in the tracked `test_output/attention.log` file.
 
 ```bash
 # Build
@@ -165,12 +165,14 @@ The active build produces both the CLI and the Qt Quick desktop GUI. The legacy 
 
 ## Contributing
 
-Contributions are welcome! To contribute:
+Contributions are welcome! Read **[docs/CONTRIBUTING.md](docs/CONTRIBUTING.md)** for the workflow, formatting rules, required CI checks, and release policy.
+
+Quick path:
 
 1. Check the [project roadmap](docs/plan.md) to see what's being worked on
 2. Read the [architecture documentation](docs/architecture/) to understand the codebase
 3. Fork the repository and create a feature branch
-4. Submit a pull request with clear description of changes
+4. Open a pull request using the template and ensure all CI checks pass
 
 For major changes, please open an issue first to discuss the proposed changes.
 

@@ -44,11 +44,6 @@ add_remus_test(test_system_detector SystemDetectorTest
     LIBS Qt6::Test Qt6::Core remus-core
 )
 
-add_remus_test(test_levenshtein_matching LevenshteinMatchingTest
-    SOURCES test_levenshtein_matching.cpp
-    LIBS Qt6::Core
-)
-
 add_remus_test(test_matching_engine MatchingEngineTest
     SOURCES test_matching_engine.cpp
     LIBS Qt6::Test Qt6::Core remus-core

@@ -4,6 +4,15 @@ Use this folder for repository-local processed-ROM test runs and lightweight loc
 
 Put durable summaries in [../docs/reports/](../docs/reports/README.md), not in this directory.
 
+## Tracked in git
+
+Only these paths under `test_output/` are committed:
+
+- `README.md` (this file)
+- `attention.log` (follow-up queue — one line per open item)
+
+Everything else under `test_output/` (databases, pipeline runs, processed ROMs, `*.log` files) is **local-only** and ignored by git.
+
 ## Formalized Pipeline Testing
 
 Run all pipeline tests through the test runner script to ensure consistent output:
@@ -51,5 +60,3 @@ For ad-hoc cleanup after one-off validation runs, use:
 - Remove stale output as soon as the underlying issue is resolved.
 - Move any retained validation summary into [../docs/reports/](../docs/reports/README.md).
 - **Do not** create ad-hoc `.db` or report files in the root of `test_output/` — use the script.
-
-Only lightweight notes and logs are intended to remain tracked in GitHub.

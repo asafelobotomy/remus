@@ -1,0 +1,8 @@
+# Local follow-up queue for test_output/ runs.
+# Only this file and test_output/README.md are tracked in git.
+# Pipeline artifacts, databases, and other logs under test_output/ stay local.
+#
+# Format: [open|done] YYYY-MM-DD — short description
+#
+# Example:
+# [open] 2026-06-08 — verify organize dry-run on multi-disc PSX sample

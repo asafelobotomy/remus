@@ -39,6 +39,20 @@ ctest --test-dir build -R DatabaseTest --output-on-failure
 
 Rebuild before rerunning a test when you changed code or test sources.
 
+## GUI smoke tests
+
+When changing `src/gui/`, run the controller smoke suite:
+
+```bash
+ctest --test-dir build -R GuiControllersSmokeTest --output-on-failure
+```
+
+Optional manual launch:
+
+```bash
+./build/src/gui/remus-gui
+```
+
 ## Exercise CLI workflows manually
 
 Sanity-check the shipped interface with the built executable:
@@ -49,7 +63,7 @@ Sanity-check the shipped interface with the built executable:
 ./build/remus-cli --list
 ```
 
-Use small repository-local samples for manual verification. Record follow-up items in `test_output/attention.log` when a run exposes a gap that is not part of the current patch.
+Use small repository-local samples for manual verification. Record follow-up items in the tracked `test_output/attention.log` when a run exposes a gap that is not part of the current patch.
 
 ## Verify metadata matching safely
 
@@ -73,7 +87,7 @@ sqlite3 ~/.local/share/Remus/Remus/remus.db \
 
 ## Watch for common failures
 
-- Missing external tools: verify that `7z`, `unzip`, `xdelta3`, `flips`, or `chdman` are installed before testing the workflows that depend on them.
+- Missing external tools: CI installs `zip`, `unzip`, and `p7zip-full` via the build-deps script. Locally, also install `chdman`, `maxcso`, `xdelta3`, or `flips` before testing workflows that depend on them.
 - Missing provider credentials: ScreenScraper, IGDB, and RetroAchievements need credentials before authenticated calls succeed.
 - Stale binaries: rebuild after source changes before interpreting a test result.
 - Large manual runs: keep artifacts under `test_output/` and trim them after review.
@@ -85,3 +99,4 @@ A change is ready when:
 - the relevant focused tests pass
 - `ctest --test-dir build -j$(nproc)` passes
 - any manual CLI workflow you changed has been exercised at least once
+- GUI changes pass `GuiControllersSmokeTest` (or broader GUI verification when appropriate)

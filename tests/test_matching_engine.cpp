@@ -49,6 +49,7 @@ private slots:
     void testLevenshteinCompletelyDifferent();
     void testLevenshteinSingleCharDifference();
     void testLevenshteinCaseInsensitive();
+    void testLevenshteinDistanceDirect();
 
     // Name similarity tests
     void testNameSimilarityPerfectMatch();
@@ -222,6 +223,13 @@ void MatchingEngineTest::testLevenshteinSingleCharDifference() {
 void MatchingEngineTest::testLevenshteinCaseInsensitive() {
     float similarity = MatchingEngine::calculateNameSimilarity("Mario", "MARIO");
     QCOMPARE(similarity, 1.0f); // Should be case-insensitive
+}
+
+void MatchingEngineTest::testLevenshteinDistanceDirect() {
+    QCOMPARE(MatchingEngine::levenshteinDistance(QStringLiteral("mario"), QStringLiteral("mario")), 0);
+    QCOMPARE(MatchingEngine::levenshteinDistance(QStringLiteral("mario"), QStringLiteral("maria")), 1);
+    QCOMPARE(MatchingEngine::levenshteinDistance(QStringLiteral("super mario bros"), QStringLiteral("super mario")),
+        5);
 }
 
 // ============================================================================
