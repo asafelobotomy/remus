@@ -1,7 +1,7 @@
 #pragma once
 
+#include <QtGlobal>
 #include <QString>
-#include <QtTypes>
 
 namespace Remus {
 namespace Constants {
