@@ -98,7 +98,7 @@ GameMetadata HasheousProvider::fetchIgdbMetadata(int igdbId) {
                 metadata.releaseDate = dt.toUTC().date().toString("yyyy-MM-dd");
             }
         } else if (dateVal.isDouble()) {
-            const QDateTime dt = QDateTime::fromSecsSinceEpoch(dateVal.toInteger(), QTimeZone::UTC);
+            const QDateTime dt = QDateTime::fromSecsSinceEpoch(dateVal.toInteger(), Qt::UTC);
             metadata.releaseDate = dt.toUTC().date().toString("yyyy-MM-dd");
         }
     }
