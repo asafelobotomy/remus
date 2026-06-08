@@ -112,7 +112,16 @@ jobs:
           echo "$LINUXDEPLOY_SHA256  build/linuxdeploy-x86_64.AppImage" | sha256sum -c -
           chmod +x build/linuxdeploy-x86_64.AppImage
 
+      - name: Download linuxdeploy-plugin-qt
+        run: |
+          PLUGIN_URL="https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage"
+          wget -q "$PLUGIN_URL" -O build/linuxdeploy-plugin-qt-x86_64.AppImage
+          chmod +x build/linuxdeploy-plugin-qt-x86_64.AppImage
+
       - name: Package AppImage
+        env:
+          LINUXDEPLOY: build/linuxdeploy-x86_64.AppImage
+          LINUXDEPLOY_PLUGIN_QT: build/linuxdeploy-plugin-qt-x86_64.AppImage
         run: |
           chmod +x scripts/package_appimage.sh
           scripts/package_appimage.sh

@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# Package Remus CLI as a Linux AppImage.
+# Package Remus CLI + Qt Quick GUI as a Linux AppImage.
 #
 # Prerequisites (installed by CI or manually):
 #   - linuxdeploy (https://github.com/linuxdeploy/linuxdeploy)
-#   - linuxdeploy-plugin-qt (for Qt library bundling)
+#   - linuxdeploy-plugin-qt (for Qt/QML bundling)
 #
 # Usage:
 #   scripts/package_appimage.sh          # uses ./build as default
@@ -14,9 +14,16 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 BUILD_DIR="${BUILD_DIR:-$ROOT_DIR/build}"
 DIST_DIR="${DIST_DIR:-$ROOT_DIR/dist}"
 BIN_CLI="$BUILD_DIR/remus-cli"
+BIN_GUI="$BUILD_DIR/src/gui/remus-gui"
 
 if [[ ! -f "$BIN_CLI" ]]; then
     echo "Missing CLI binary: $BIN_CLI" >&2
+    echo "Run: cmake --build build --config Release" >&2
+    exit 1
+fi
+
+if [[ ! -f "$BIN_GUI" ]]; then
+    echo "Missing GUI binary: $BIN_GUI" >&2
     echo "Run: cmake --build build --config Release" >&2
     exit 1
 fi
@@ -34,6 +41,7 @@ mkdir -p "$APPDIR/usr/share/applications"
 mkdir -p "$APPDIR/usr/share/icons/hicolor/256x256/apps"
 
 cp -a "$BIN_CLI" "$APPDIR/usr/bin/remus-cli"
+cp -a "$BIN_GUI" "$APPDIR/usr/bin/remus-gui"
 cp -a "$ROOT_DIR/assets/remus.desktop" "$APPDIR/usr/share/applications/remus.desktop"
 cp -a "$ROOT_DIR/assets/icon/remus_icon.png" "$APPDIR/usr/share/icons/hicolor/256x256/apps/remus.png"
 
@@ -54,7 +62,6 @@ ln -sf usr/share/icons/hicolor/256x256/apps/remus.png "$APPDIR/remus.png"
 # ── Bundle shared libraries ─────────────────────────────────────────────────
 LINUXDEPLOY="${LINUXDEPLOY:-linuxdeploy}"
 if ! command -v "$LINUXDEPLOY" &>/dev/null; then
-    # Try the downloaded AppImage in BUILD_DIR
     if [[ -x "$BUILD_DIR/linuxdeploy-x86_64.AppImage" ]]; then
         LINUXDEPLOY="$BUILD_DIR/linuxdeploy-x86_64.AppImage"
     else
@@ -62,6 +69,19 @@ if ! command -v "$LINUXDEPLOY" &>/dev/null; then
         exit 1
     fi
 fi
+
+LINUXDEPLOY_PLUGIN_QT="${LINUXDEPLOY_PLUGIN_QT:-linuxdeploy-plugin-qt}"
+if ! command -v "$LINUXDEPLOY_PLUGIN_QT" &>/dev/null; then
+    if [[ -x "$BUILD_DIR/linuxdeploy-plugin-qt-x86_64.AppImage" ]]; then
+        LINUXDEPLOY_PLUGIN_QT="$BUILD_DIR/linuxdeploy-plugin-qt-x86_64.AppImage"
+    else
+        echo "linuxdeploy-plugin-qt not found. Install it or set LINUXDEPLOY_PLUGIN_QT." >&2
+        exit 1
+    fi
+fi
+
+export QML_SOURCES_PATHS="$ROOT_DIR/src/gui/qml"
+export PATH="$ROOT_DIR/build:${PATH}"
 
 mkdir -p "$DIST_DIR"
 OUTPUT="$DIST_DIR/Remus-${VERSION}-x86_64.AppImage"
@@ -71,6 +91,8 @@ export OUTPUT
     --appdir "$APPDIR" \
     --desktop-file "$APPDIR/usr/share/applications/remus.desktop" \
     --icon-file "$APPDIR/usr/share/icons/hicolor/256x256/apps/remus.png" \
+    --executable "$APPDIR/usr/bin/remus-gui" \
+    --plugin qt \
     --output appimage
 
 # ── Checksum ────────────────────────────────────────────────────────────────
@@ -78,6 +100,7 @@ if [[ -f "$OUTPUT" ]]; then
     sha256sum "$OUTPUT" > "$OUTPUT.sha256"
     ls -lh "$OUTPUT" "$OUTPUT.sha256"
     echo "AppImage created: $OUTPUT"
+    echo "Bundled binaries: remus-gui (desktop entry), remus-cli (terminal)"
 else
     echo "AppImage creation failed" >&2
     exit 1

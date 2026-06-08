@@ -30,7 +30,7 @@ jobs:
             build-essential cmake qt6-base-dev qt6-base-private-dev qt6-base-dev-tools \
             qt6-declarative-dev qt6-declarative-private-dev qt6-declarative-dev-tools \
             libqt6sql6-sqlite libgl1-mesa-dev libxkbcommon-dev zlib1g-dev libarchive-dev qtkeychain-qt6-dev \
-            zip unzip p7zip-full \
+            zip unzip p7zip-full shellcheck mame-tools \
             > build/dependency-manifest.txt
           echo "--- cmake version ---" >> build/dependency-manifest.txt
           cmake --version >> build/dependency-manifest.txt
@@ -149,3 +149,43 @@ jobs:
         env:
           ASAN_OPTIONS: detect_leaks=0
         run: ctest --test-dir build --output-on-failure
+
+  shellcheck:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+
+      - name: Install shellcheck
+        run: sudo apt-get update && sudo apt-get install -y shellcheck
+
+      - name: Lint shell scripts
+        run: bash .github/scripts/run-shellcheck.sh
+
+  qml-lint:
+    runs-on: ubuntu-24.04
+    continue-on-error: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+
+      - name: Install dependencies
+        run: bash .github/scripts/install-build-deps.sh
+
+      - name: Lint QML sources
+        run: bash .github/scripts/run-qmllint.sh
+
+  clang-tidy:
+    runs-on: ubuntu-24.04
+    continue-on-error: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+
+      - name: Install dependencies
+        run: |
+          bash .github/scripts/install-build-deps.sh
+          sudo apt-get install -y clang-tidy
+
+      - name: Spot-check core sources
+        run: bash .github/scripts/run-clang-tidy.sh

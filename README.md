@@ -1,6 +1,7 @@
 # Remus - Retro Game Library Manager
 
 [![CI](https://github.com/asafelobotomy/remus/actions/workflows/ci.yml/badge.svg)](https://github.com/asafelobotomy/remus/actions/workflows/ci.yml)
+[![CodeQL](https://github.com/asafelobotomy/remus/actions/workflows/codeql.yml/badge.svg)](https://github.com/asafelobotomy/remus/actions/workflows/codeql.yml)
 [![Version](https://img.shields.io/badge/version-0.10.1-blue.svg)](CHANGELOG.md)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 

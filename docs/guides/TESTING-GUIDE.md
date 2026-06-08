@@ -87,9 +87,10 @@ sqlite3 ~/.local/share/Remus/Remus/remus.db \
 
 ## Watch for common failures
 
-- Missing external tools: CI installs `zip`, `unzip`, and `p7zip-full` via the build-deps script. Locally, also install `chdman`, `maxcso`, `xdelta3`, or `flips` before testing workflows that depend on them.
+- Missing external tools: CI installs `zip`, `unzip`, `p7zip-full`, and `mame-tools` (`chdman`) via the build-deps script. `maxcso` is not packaged on Ubuntu CI and related tests skip by design; install it locally before testing CSO conversion end-to-end.
 - Missing provider credentials: ScreenScraper, IGDB, and RetroAchievements need credentials before authenticated calls succeed.
 - Stale binaries: rebuild after source changes before interpreting a test result.
+- Legacy test runners: `test_multi_signal_matching`, `test_pipeline_integration`, and `test_hash_service` still use custom `main()` harnesses; prefer Qt Test (`QTEST_MAIN`) for new suites.
 - Large manual runs: keep artifacts under `test_output/` and trim them after review.
 
 ## Treat this as done

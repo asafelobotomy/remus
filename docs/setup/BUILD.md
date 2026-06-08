@@ -149,7 +149,7 @@ Create distributable CLI archives from the current build:
 These write versioned outputs to the repository root `dist/` directory:
 
 - `remus-cli-<version>-linux-x64.tar.gz` (+ `.sha256`)
-- `Remus-<version>-x86_64.AppImage` (+ `.sha256`) — bundles `remus-cli` only
+- `Remus-<version>-x86_64.AppImage` (+ `.sha256`) — bundles `remus-gui` (desktop entry) and `remus-cli`
 
 ## Running the CLI
 
@@ -327,7 +327,7 @@ sudo dnf install zlib-devel
 ## Delivery Focus
 
 - Ship and verify both the CLI (`remus-cli`) and GUI (`remus-gui`) by default — both are part of the standard build at 0.10.1.
-- Release packaging currently ships CLI-only tarballs and AppImages; install `remus-gui` locally via `cmake --install` or from the build tree.
+- Release packaging ships CLI tarballs plus an AppImage with both `remus-gui` and `remus-cli`; install either binary locally via `cmake --install` or from the build tree.
 - The GUI shell launches a Qt Quick interface with views for library browsing, scan/hash workflows, metadata matching, artwork, DAT management, verification, organisation, conversion, patching, mods, and settings.
 
 ## Testing
@@ -356,7 +356,7 @@ printf '%s\n' '[open] describe the failing case here' >> ../test_output/attentio
 
 - `build/remus-cli` and `build/src/gui/remus-gui` for local development
 - `dist/remus-cli-<version>-linux-x64.tar.gz` (+ `.sha256`) for release packaging
-- `dist/Remus-<version>-x86_64.AppImage` (+ `.sha256`) — CLI-only AppImage
+- `dist/Remus-<version>-x86_64.AppImage` (+ `.sha256`) — GUI + CLI AppImage
 
 Releases are published manually via the GitHub Actions **Release** workflow (`workflow_dispatch`).
 

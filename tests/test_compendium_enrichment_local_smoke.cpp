@@ -93,6 +93,7 @@ private slots:
     void openvgdbMissingFile_skipsWithoutWrites();
     void mameCatverParsedWithoutArcadeRows_upsertsSourceOnly();
     void mameListXmlParsedWithoutArcadeRows_upsertsSourceOnly();
+    void igdbMissingCredentials_skipsWithoutWrites();
     void gametdbTitleStripMatches_enrichesGame();
     void knownSourceKeys_noBlankNoDuplicates();
     void knownSourceKeys_containsAllExpectedEnrichers();
@@ -269,6 +270,33 @@ void CompendiumEnrichmentLocalSmokeTest::mameListXmlParsedWithoutArcadeRows_upse
         QCOMPARE(scalarInt(db, QStringLiteral("SELECT COUNT(*) FROM sources WHERE source_id = 'mame-listxml'")), 1);
         QCOMPARE(
             scalarInt(db, QStringLiteral("SELECT COUNT(*) FROM source_snapshots WHERE source_id = 'mame-listxml'")), 1);
+        QCOMPARE(scalarInt(db, QStringLiteral("SELECT COUNT(*) FROM game_facts")), 0);
+
+        db.close();
+    }
+    QSqlDatabase::removeDatabase(connectionName);
+}
+
+void CompendiumEnrichmentLocalSmokeTest::igdbMissingCredentials_skipsWithoutWrites() {
+    const QString connectionName = QStringLiteral("compendium_local_smoke_igdb");
+    {
+        QSqlDatabase db = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), connectionName);
+        db.setDatabaseName(QStringLiteral(":memory:"));
+        QVERIFY2(db.open(), qPrintable(db.lastError().text()));
+        QVERIFY(createSchema(db));
+
+        QVERIFY(db.transaction());
+        int games = 0;
+        int facts = 0;
+        QString error;
+        const bool ok = CompendiumEnrichment::enrichFromIGDB(
+            db, QStringLiteral("/nonexistent/igdb-credentials.json"), games, facts, error);
+        QVERIFY2(ok, qPrintable(error));
+        QVERIFY(db.commit());
+
+        QCOMPARE(games, 0);
+        QCOMPARE(facts, 0);
+        QCOMPARE(scalarInt(db, QStringLiteral("SELECT COUNT(*) FROM sources")), 0);
         QCOMPARE(scalarInt(db, QStringLiteral("SELECT COUNT(*) FROM game_facts")), 0);
 
         db.close();

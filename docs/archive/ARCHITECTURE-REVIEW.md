@@ -1,5 +1,7 @@
 # Remus Architecture Review: Standardized Constants Library Proposal
 
+> **Historical document (M6 era).** References to `.github/copilot-instructions.md` are obsolete; see [docs/architecture/README.md](../architecture/README.md).
+
 **Date**: February 5, 2026  
 **Status**: Strategic Review (Pre-Implementation)  
 **Scope**: Current codebase (M0-M5) + Future features (M6-M8)  
@@ -124,7 +126,7 @@ nameFilters: ["Archives (*.zip *.7z *.rar)"]
 
 #### Template Variables (Scattered)
 ```cpp
-// docs/requirements.md & .github/copilot-instructions.md
+// docs/requirements.md and docs/architecture/
 Variables: {title}, {region}, {year}, {disc}, {publisher}, {id}, {ext}
 
 // UI: SettingsView.qml

@@ -18,7 +18,12 @@ Do not open public issues for unpatched vulnerabilities.
 
 ## Supported Versions
 
-The project currently supports the latest release on the main branch.
+| Version | Supported |
+|---------|-----------|
+| 0.10.1 (latest on `main`) | Yes |
+| Older tagged releases | Best-effort; upgrade to 0.10.1+ |
+
+Security fixes are released for the latest version on `main` and backported only when practical.
 
 ## Scope
 

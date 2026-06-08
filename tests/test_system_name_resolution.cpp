@@ -1,65 +1,44 @@
-// Test for system name resolution fix
-#include "../src/core/database.h"
-#include <QCoreApplication>
-#include <QDebug>
-#include <QSqlQuery>
+#include <QtTest/QtTest>
+
 #include <QSqlError>
+#include <QSqlQuery>
+
+#include "../src/core/database.h"
 
 using namespace Remus;
 
-int main(int argc, char *argv[]) {
-    QCoreApplication app(argc, argv);
+class SystemNameResolutionTest : public QObject {
+    Q_OBJECT
 
+private slots:
+    void lookupBySystemIdReturnsInsertedName();
+};
+
+void SystemNameResolutionTest::lookupBySystemIdReturnsInsertedName() {
     Database db;
-    if (!db.initialize(":memory:")) {
-        qCritical() << "Failed to initialize database";
-        return 1;
-    }
+    QVERIFY(db.initialize(QStringLiteral(":memory:")));
 
-    qDebug() << "\n=== Testing System Name Resolution ===\n";
-
-    // Insert a test system
     QSqlQuery insert(db.database());
-    insert.prepare(R"(
-        INSERT INTO systems (name, display_name, manufacturer, extensions, preferred_hash)
-        VALUES (?, ?, ?, ?, ?)
-    )");
-    insert.addBindValue("TEST_NES");
-    insert.addBindValue("Test Nintendo Entertainment System");
-    insert.addBindValue("Nintendo");
-    insert.addBindValue("['.nes', '.unf']");
-    insert.addBindValue("CRC32");
+    insert.prepare(QStringLiteral(
+        "INSERT INTO systems (name, display_name, manufacturer, extensions, preferred_hash) "
+        "VALUES (?, ?, ?, ?, ?)"));
+    insert.addBindValue(QStringLiteral("TEST_NES"));
+    insert.addBindValue(QStringLiteral("Test Nintendo Entertainment System"));
+    insert.addBindValue(QStringLiteral("Nintendo"));
+    insert.addBindValue(QStringLiteral("['.nes', '.unf']"));
+    insert.addBindValue(QStringLiteral("CRC32"));
+    QVERIFY2(insert.exec(), qPrintable(insert.lastError().text()));
 
-    if (!insert.exec()) {
-        qCritical() << "Failed to insert test system:" << insert.lastError().text();
-        return 1;
-    }
+    const int systemId = insert.lastInsertId().toInt();
+    QVERIFY(systemId > 0);
 
-    int systemId = insert.lastInsertId().toInt();
-    qDebug() << "✓ Inserted test system with ID:" << systemId;
-
-    // Test the query that MatchController::getSystemName() uses
     QSqlQuery query(db.database());
-    query.prepare("SELECT name FROM systems WHERE id = ?");
+    query.prepare(QStringLiteral("SELECT name FROM systems WHERE id = ?"));
     query.addBindValue(systemId);
-
-    QString systemName;
-    if (query.exec() && query.next()) {
-        systemName = query.value(0).toString();
-        qDebug() << "✓ Query succeeded, retrieved name:" << systemName;
-    } else {
-        qCritical() << "❌ Query failed:" << query.lastError().text();
-        return 1;
-    }
-
-    // Verify correctness
-    if (systemName == "TEST_NES") {
-        qDebug() << "\n✅ SUCCESS: System name resolution works correctly!";
-        qDebug() << "   - Inserted: TEST_NES (ID" << systemId << ")";
-        qDebug() << "   - Retrieved: " << systemName;
-        return 0;
-    } else {
-        qCritical() << "\n❌ FAILED: Expected 'TEST_NES', got '" << systemName << "'";
-        return 1;
-    }
+    QVERIFY2(query.exec() && query.next(), qPrintable(query.lastError().text()));
+    QCOMPARE(query.value(0).toString(), QStringLiteral("TEST_NES"));
 }
+
+QTEST_MAIN(SystemNameResolutionTest)
+
+#include "test_system_name_resolution.moc"

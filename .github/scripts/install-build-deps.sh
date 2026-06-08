@@ -20,4 +20,6 @@ sudo apt-get install -y \
   qtkeychain-qt6-dev \
   zip \
   unzip \
-  p7zip-full
+  p7zip-full \
+  shellcheck \
+  mame-tools

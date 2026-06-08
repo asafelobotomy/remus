@@ -1,5 +1,7 @@
 # Executive Summary: Remus Constants Library Initiative
 
+> **Historical document (M6 era).** Agent/Copilot instruction paths referenced below were removed in 2026. See [docs/architecture/README.md](../architecture/README.md).
+
 **Status**: Strategic Recommendation Ready  
 **Priority**: High (Foundation for M6-M8)  
 **Effort**: 10-15 hours  
@@ -245,7 +247,7 @@ Remus approach (Proposed):
 2. ✅ CONSTANTS-IMPLEMENTATION.md (step-by-step guide)
 3. ✅ src/core/constants/ directory (header files)
 4. ✅ Updated CMakeLists.txt
-5. ✅ Updated .github/copilot-instructions.md
+5. ✅ Updated architecture docs in `docs/architecture/` (legacy `.github/copilot-instructions.md` removed)
 6. ✅ Unit tests for lookup functions
 7. ✅ Migration guide for existing code
 
@@ -349,7 +351,7 @@ The ROI is clear: ~15 hours of work now saves ~50+ hours across M6-M8 developmen
 - [CONSTANTS-IMPLEMENTATION.md](./CONSTANTS-IMPLEMENTATION.md) - Step-by-step implementation guide
 - [docs/plan.md](./docs/plan.md) - Project roadmap and milestones
 - [docs/data-model.md](./docs/data-model.md) - Database schema reference
-- [.github/copilot-instructions.md](./.github/copilot-instructions.md) - Architecture overview
+- [docs/architecture/README.md](../architecture/README.md) - Architecture overview
 
 ---
 

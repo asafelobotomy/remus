@@ -49,7 +49,7 @@ Introduce three new components and one database migration:
 2. **`ModWorkflowService`** — orchestrates download → patch → bundle for a mod
 3. **New DB table `mod_installations`** — tracks installed mods as derived artifacts
 4. **`RomBundler::bundleStaged()`** — bundles a staged file without mutating the base record
-5. **CLI commands + GUI/TUI integration** for browsing and installing mods
+5. **CLI commands + `remus-gui` integration** for browsing and installing mods
 
 ### Data model: patched ROMs as derived artifacts
 

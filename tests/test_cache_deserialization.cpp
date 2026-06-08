@@ -1,103 +1,56 @@
-// Quick test for metadata cache deserialization fix
-#include "../src/metadata/metadata_cache.h"
-#include "../src/core/database.h"
+#include <QtTest/QtTest>
+
 #include "../src/core/constants/match_methods.h"
-#include <QCoreApplication>
-#include <QDebug>
-#include <QDateTime>
+#include "../src/core/database.h"
+#include "../src/metadata/metadata_cache.h"
 
 using namespace Remus;
 using namespace Remus::Constants;
 
-int main(int argc, char *argv[]) {
-    QCoreApplication app(argc, argv);
+class CacheDeserializationTest : public QObject {
+    Q_OBJECT
 
-    // Create temporary database
+private slots:
+    void roundTripPreservesMetadataFields();
+};
+
+void CacheDeserializationTest::roundTripPreservesMetadataFields() {
     Database db;
-    if (!db.initialize(":memory:")) {
-        qCritical() << "Failed to initialize database";
-        return 1;
-    }
+    QVERIFY(db.initialize(QStringLiteral(":memory:")));
 
     MetadataCache cache(db.database());
 
-    // Create test metadata
     GameMetadata original;
-    original.id = "12345";
-    original.title = "Super Mario Bros.";
-    original.system = "NES";
-    original.region = "USA";
-    original.publisher = "Nintendo";
-    original.developer = "Nintendo R&D4";
-    original.genres << "Platform" << "Action";
-    original.releaseDate = "1985-09-13";
-    original.description = "Classic platformer";
+    original.id = QStringLiteral("12345");
+    original.title = QStringLiteral("Super Mario Bros.");
+    original.system = QStringLiteral("NES");
+    original.region = QStringLiteral("USA");
+    original.publisher = QStringLiteral("Nintendo");
+    original.developer = QStringLiteral("Nintendo R&D4");
+    original.genres << QStringLiteral("Platform") << QStringLiteral("Action");
+    original.releaseDate = QStringLiteral("1985-09-13");
+    original.description = QStringLiteral("Classic platformer");
     original.players = 2;
     original.rating = 9.5f;
-    original.providerId = "screenscraper";
-    original.boxArtUrl = "https://example.com/art.jpg";
+    original.providerId = QStringLiteral("screenscraper");
+    original.boxArtUrl = QStringLiteral("https://example.com/art.jpg");
     original.matchMethod = MatchMethods::HASH;
     original.matchScore = 1.0f;
-    original.externalIds["igdb"] = "999";
+    original.externalIds[QStringLiteral("igdb")] = QStringLiteral("999");
     original.fetchedAt = QDateTime::currentDateTime();
 
-    qDebug() << "\n=== Testing Metadata Cache Deserialization ===\n";
-    qDebug() << "Original metadata:";
-    qDebug() << "  Title:" << original.title;
-    qDebug() << "  Genres:" << original.genres;
-    qDebug() << "  Rating:" << original.rating;
-    qDebug() << "  External IDs:" << original.externalIds;
+    const QString hash = QStringLiteral("811b027eaf99c2def7b933c5208636de");
+    QVERIFY(cache.store(original, hash, QStringLiteral("NES")));
 
-    // Store metadata
-    QString hash = "811b027eaf99c2def7b933c5208636de";
-    if (!cache.store(original, hash, "NES")) {
-        qCritical() << "\n❌ FAILED: Could not store metadata";
-        return 1;
-    }
-    qDebug() << "\n✓ Metadata stored in cache";
-
-    // Retrieve by hash
-    GameMetadata retrieved = cache.getByHash(hash, "NES");
-
-    // Verify deserialization
-    bool success = true;
-
-    if (retrieved.title != original.title) {
-        qCritical() << "❌ Title mismatch:" << retrieved.title << "!=" << original.title;
-        success = false;
-    }
-
-    if (retrieved.genres != original.genres) {
-        qCritical() << "❌ Genres mismatch:" << retrieved.genres << "!=" << original.genres;
-        success = false;
-    }
-
-    if (retrieved.rating != original.rating) {
-        qCritical() << "❌ Rating mismatch:" << retrieved.rating << "!=" << original.rating;
-        success = false;
-    }
-
-    if (retrieved.externalIds != original.externalIds) {
-        qCritical() << "❌ External IDs mismatch:" << retrieved.externalIds << "!=" << original.externalIds;
-        success = false;
-    }
-
-    if (retrieved.matchScore != original.matchScore) {
-        qCritical() << "❌ Match score mismatch:" << retrieved.matchScore << "!=" << original.matchScore;
-        success = false;
-    }
-
-    if (success) {
-        qDebug() << "\n✓ Retrieved metadata:";
-        qDebug() << "  Title:" << retrieved.title;
-        qDebug() << "  Genres:" << retrieved.genres;
-        qDebug() << "  Rating:" << retrieved.rating;
-        qDebug() << "  External IDs:" << retrieved.externalIds;
-        qDebug() << "  Fetched at:" << retrieved.fetchedAt.toString(Qt::ISODate);
-        qDebug() << "\n✅ SUCCESS: Cache deserialization works correctly!";
-        return 0;
-    } else {
-        qCritical() << "\n❌ FAILED: Cache deserialization has errors";
-        return 1;
-    }
+    const GameMetadata retrieved = cache.getByHash(hash, QStringLiteral("NES"));
+    QCOMPARE(retrieved.title, original.title);
+    QCOMPARE(retrieved.genres, original.genres);
+    QCOMPARE(retrieved.rating, original.rating);
+    QCOMPARE(retrieved.externalIds, original.externalIds);
+    QCOMPARE(retrieved.matchScore, original.matchScore);
+    QVERIFY(retrieved.fetchedAt.isValid());
 }
+
+QTEST_MAIN(CacheDeserializationTest)
+
+#include "test_cache_deserialization.moc"

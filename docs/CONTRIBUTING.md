@@ -29,9 +29,12 @@ Maintainers should configure [branch protection](https://docs.github.com/en/repo
 | `lint` | CI | clang-format (pinned version) |
 | `coverage` | CI | lcov report generation; fails below 50% line coverage on `src/` |
 | `sanitizer` | CI | ASan + UBSan test pass |
+| `shellcheck` | CI | Shell script lint on `.github/scripts/` and `scripts/` |
+| `qml-lint` | CI | Informational `qmllint` pass on `src/gui/qml` |
+| `clang-tidy` | CI | Informational spot-check on `src/core` |
 | `Analyze` | CodeQL | C++ static analysis (job display name: `Analyze (C/C++)`) |
 
-Also require at least one approving review, **code owner review** on protected paths (see `.github/CODEOWNERS`), and disallow force-pushes to `main`.
+Also require at least one approving review, **code owner review** on protected paths (see `.github/CODEOWNERS`), **strict** required status checks, **resolved conversations** before merge, and disallow force-pushes to `main`.
 
 Releases are **manual only**: run the **Release** workflow via *Actions → Release → Run workflow*.
 

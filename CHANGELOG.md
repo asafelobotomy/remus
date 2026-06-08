@@ -33,6 +33,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Branch protection requires code owner review on `.github/CODEOWNERS` paths; `release` environment gates publish jobs
 - CI enforces 50% minimum line coverage on production sources; Release matrix builds compile with `-DREMUS_ENABLE_WARNINGS=ON`
 - GitHub issue templates for bugs and feature requests; release workflow verifies SHA256 sidecars and publishes artifact attestations
+- `shellcheck` CI job; informational `qml-lint` and `clang-tidy` jobs; CI installs `mame-tools` for `chdman` coverage
+- AppImage bundles `remus-gui` and `remus-cli`; legacy archive docs and ADR-0001 updated for active GUI-only integration
+- Converted cache/system-name tests to Qt Test; IGDB enrichment skip-path smoke test
 
 ### Removed
 
