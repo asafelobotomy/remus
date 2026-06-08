@@ -16,7 +16,7 @@
 ```bash
 sudo apt update
 sudo apt install build-essential cmake \
-  qt6-base-dev qt6-base-dev-tools qt6-declarative-dev qt6-declarative-dev-tools \
+  qt6-base-dev qt6-base-private-dev qt6-base-dev-tools qt6-declarative-dev qt6-declarative-dev-tools \
   libqt6sql6-sqlite libgl1-mesa-dev libxkbcommon-dev \
   zlib1g-dev libarchive-dev qtkeychain-qt6-dev
 ```
@@ -94,7 +94,7 @@ cmake -DCMAKE_PREFIX_PATH=/usr/lib/qt6 ..
 
 ### Code style
 
-C++ sources under `src/` and `tests/` use the repository `.clang-format` (WebKit-based, 120-column limit). Format before committing:
+Format before committing (clang-format version in `.clang-format-version`):
 
 ```bash
 find src tests -type f \( -name '*.cpp' -o -name '*.h' \) -print0 | xargs -0 clang-format -i

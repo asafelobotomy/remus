@@ -27,7 +27,7 @@ jobs:
         run: |
           mkdir -p build
           dpkg-query -W -f='${Package}==${Version}\n' \
-            build-essential cmake qt6-base-dev qt6-base-dev-tools qt6-declarative-dev qt6-declarative-dev-tools \
+            build-essential cmake qt6-base-dev qt6-base-private-dev qt6-base-dev-tools qt6-declarative-dev qt6-declarative-dev-tools \
             libqt6sql6-sqlite libgl1-mesa-dev libxkbcommon-dev zlib1g-dev libarchive-dev qtkeychain-qt6-dev \
             > build/dependency-manifest.txt
           echo "--- cmake version ---" >> build/dependency-manifest.txt
@@ -110,8 +110,8 @@ jobs:
 
       - name: Check formatting (clang-format)
         run: |
-          sudo apt-get update
-          sudo apt-get install -y clang-format
+          CLANG_FORMAT_VERSION="$(tr -d '[:space:]' < .clang-format-version)"
+          bash .github/scripts/install-clang-format.sh
           mapfile -t files < <(find src tests -type f \( -name '*.cpp' -o -name '*.h' \) | sort)
           if [ "${#files[@]}" -eq 0 ]; then
             echo "No C++ source files found to check."

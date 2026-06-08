@@ -7,6 +7,7 @@ sudo apt-get install -y \
   build-essential \
   cmake \
   qt6-base-dev \
+  qt6-base-private-dev \
   qt6-base-dev-tools \
   qt6-declarative-dev \
   qt6-declarative-dev-tools \

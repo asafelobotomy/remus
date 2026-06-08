@@ -12,7 +12,7 @@ This guide defines where to place documentation and how to submit code changes.
    cmake --build build -j$(nproc)
    ctest --test-dir build --output-on-failure
    ```
-4. Format C++ changes before opening a pull request:
+4. Format C++ changes before opening a pull request (use clang-format version from `.clang-format-version`):
    ```bash
    find src tests -type f \( -name '*.cpp' -o -name '*.h' \) -print0 | xargs -0 clang-format -i
    ```

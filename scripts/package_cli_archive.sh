@@ -11,12 +11,7 @@ if [[ ! -f "$BIN_CLI" ]]; then
     exit 1
 fi
 
-VERSION_HEADER="$ROOT_DIR/src/core/constants/api.h"
-VERSION="$(sed -nE 's/^inline constexpr const char\* APP_VERSION = "([0-9]+\.[0-9]+\.[0-9]+)";$/\1/p' "$VERSION_HEADER" | head -n 1)"
-if [[ -z "$VERSION" ]]; then
-    echo "Failed to extract APP_VERSION from $VERSION_HEADER" >&2
-    exit 1
-fi
+VERSION="$(bash "$ROOT_DIR/.github/scripts/read-app-version.sh")"
 
 PACKAGE_ROOT="$BUILD_DIR/package-cli"
 ARCHIVE_STEM="remus-cli-${VERSION}-linux-x64"

@@ -27,7 +27,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
-      - name: Get version from constants.h
+      - name: Get version from api.h
         id: version
         env:
           INPUT_VERSION: ${{ github.event.inputs.version }}
@@ -35,7 +35,7 @@ jobs:
           if [[ -n "$INPUT_VERSION" ]]; then
             VERSION="$INPUT_VERSION"
           else
-            VERSION="v$(grep -E 'APP_VERSION' src/core/constants/constants.h | sed -E 's/.*"([0-9]+\.[0-9]+\.[0-9]+)".*/\1/')"
+            VERSION="v$(bash .github/scripts/read-app-version.sh)"
           fi
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           echo "Detected version: $VERSION"
@@ -66,7 +66,7 @@ jobs:
         run: |
           mkdir -p build dist
           dpkg-query -W -f='${Package}==${Version}\n' \
-            build-essential cmake qt6-base-dev qt6-base-dev-tools qt6-declarative-dev qt6-declarative-dev-tools \
+            build-essential cmake qt6-base-dev qt6-base-private-dev qt6-base-dev-tools qt6-declarative-dev qt6-declarative-dev-tools \
             libqt6sql6-sqlite libgl1-mesa-dev libxkbcommon-dev zlib1g-dev libarchive-dev qtkeychain-qt6-dev \
             > dist/dependency-manifest.txt
           echo "--- cmake version ---" >> dist/dependency-manifest.txt
