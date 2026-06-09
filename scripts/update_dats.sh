@@ -606,7 +606,7 @@ PYEOF
         rm -f "$mame_out_dat"
     fi
     # Also keep the raw listxml for the MAME listxml enrichment pass.
-    mame_listxml_dest="$(dirname "$MAME_DIR")/mame/listxml.xml"
+    mame_listxml_dest="$PROJECT_ROOT/data/mame/listxml.xml"
     mkdir -p "$(dirname "$mame_listxml_dest")"
     if cp "$mame_xml_tmp" "$mame_listxml_dest" 2>/dev/null; then
         echo "  MAME listxml: $mame_listxml_dest ($(du -sh "$mame_listxml_dest" | cut -f1))"

@@ -130,18 +130,21 @@ rom_tests/
 # Extracted ROM/game output directories (can appear anywhere)
 **/extracted/
 
-# Legacy downloaded DAT databases (if raw DAT workflows are used manually)
-data/databases/*.dat
-data/databases/**/*.dat
+# Downloaded catalogue and enrichment data (update_dats.sh — never commit)
+data/databases/**
+
+# GameTDB XML databases (large, refreshed by update_dats.sh)
+data/gametdb/*.xml
 
 # Legacy downloaded metadata DATs (if raw DAT workflows are used manually)
 data/metadata/
 
 # OpenVGDB SQLite (downloaded by update_dats.sh — large binary, not tracked)
-data/openvgdb/*.sqlite
+data/openvgdb/**
 
-# MAME listxml (downloaded by update_dats.sh — 300+ MB, not tracked)
+# MAME enrichment payloads (listxml ~300 MB; catver version-stamped)
 data/mame/listxml.xml
+data/mame/catver.ini
 
 # Canonical local ROM storage (keep ROM payloads out of git)
 /roms/**
