@@ -74,8 +74,13 @@ namespace Compendium {
         {
             QSqlQuery q(db);
             q.setForwardOnly(true);
-            if (!q.exec(QStringLiteral("SELECT gs.serial_value, gs.game_id, g.system_id "
-                                       "FROM game_serials gs JOIN games g ON g.game_id = gs.game_id"))) {
+            if (!q.exec(QStringLiteral(R"(
+                SELECT gs.serial_value, gs.game_id, g.system_id
+                FROM game_serials gs
+                JOIN games g ON g.game_id = gs.game_id
+                LEFT JOIN game_signatures sig ON sig.game_id = g.game_id
+                GROUP BY gs.serial_value, gs.game_id, g.system_id
+                ORDER BY COUNT(sig.signature_id) DESC, gs.game_id ASC)"))) {
                 error = q.lastError().text();
                 return false;
             }

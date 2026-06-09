@@ -96,20 +96,21 @@ bool hasArcadeListxmlGaps(QSqlDatabase &db, QString &error) {
         error);
 }
 
-// ZXInfo provides genre, developer, publisher, release_year for ZX Spectrum.
-// It does not provide description, players_max, or rating.
-bool hasZxSpectrumGaps(QSqlDatabase &db, QString &error) {
-    return queryHasRows(db,
-        QStringLiteral("SELECT 1 FROM games "
-                       "WHERE system_id = %1 "
-                       "  AND (genre IS NULL OR TRIM(genre) = '' "
-                       "    OR developer IS NULL OR TRIM(developer) = '' "
-                       "    OR publisher IS NULL OR TRIM(publisher) = '' "
-                       "    OR release_year IS NULL) "
-                       "LIMIT 1")
-            .arg(Remus::Constants::Systems::ID_ZX_SPECTRUM),
-        error);
-}
+    // ZXInfo provides genre, developer, publisher, release_year, and description.
+    // It does not provide players_max or rating.
+    bool hasZxSpectrumGaps(QSqlDatabase &db, QString &error) {
+        return queryHasRows(db,
+            QStringLiteral("SELECT 1 FROM games "
+                           "WHERE system_id = %1 "
+                           "  AND (genre IS NULL OR TRIM(genre) = '' "
+                           "    OR developer IS NULL OR TRIM(developer) = '' "
+                           "    OR publisher IS NULL OR TRIM(publisher) = '' "
+                           "    OR release_year IS NULL "
+                           "    OR description IS NULL OR TRIM(description) = '') "
+                           "LIMIT 1")
+                .arg(Remus::Constants::Systems::ID_ZX_SPECTRUM),
+            error);
+    }
 
 bool hasAnyRaGaps(QSqlDatabase &db, QString &error) {
     // Check for any game that has an MD5 signature but is still missing enrichable

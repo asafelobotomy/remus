@@ -131,6 +131,22 @@ QMap<int, QMap<QString, QString>> SystemResolver::providerMappings() {
         { ID_PS3, { { IGDB, QStringLiteral("ps3") } } },
         { ID_WIIU, { { IGDB, QStringLiteral("wiiu") } } },
         { ID_AMSTRAD_CPC, { { IGDB, QStringLiteral("cpc") } } },
+        { ID_3DO, { { IGDB, QStringLiteral("3do") } } },
+        { ID_NEO_GEO_CD, { { IGDB, QStringLiteral("neogeocd") } } },
+        { ID_FDS, { { IGDB, QStringLiteral("fds") } } },
+        { ID_ATARI_5200, { { IGDB, QStringLiteral("atari5200") } } },
+        { ID_ATARI_8BIT, { { IGDB, QStringLiteral("atari8bit") } } },
+        { ID_ATARI_ST, { { IGDB, QStringLiteral("atari-st") } } },
+        { ID_COLECOVISION, { { IGDB, QStringLiteral("colecovision") } } },
+        { ID_INTELLIVISION, { { IGDB, QStringLiteral("intellivision") } } },
+        { ID_MSX, { { IGDB, QStringLiteral("msx") } } },
+        { ID_MSX2, { { IGDB, QStringLiteral("msx2") } } },
+        { ID_PC_FX, { { IGDB, QStringLiteral("pc-fx") } } },
+        { ID_CDI, { { IGDB, QStringLiteral("philips-cdi") } } },
+        { ID_CD32, { { IGDB, QStringLiteral("amiga-cd32") } } },
+        { ID_VIC20, { { IGDB, QStringLiteral("vic-20") } } },
+        { ID_ODYSSEY2, { { IGDB, QStringLiteral("odyssey-2") } } },
+        { ID_PC98, { { IGDB, QStringLiteral("pc-98") } } },
     };
 }
 

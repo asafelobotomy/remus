@@ -173,6 +173,8 @@ void registerAllOptions(QCommandLineParser &parser, QSet<QString> &actionOptions
 
     addActionOption(QCommandLineOption("build-compendium", "Build a canonical compendium database from a manifest"));
     addActionOption(QCommandLineOption(
+        "dedup-compendium", "Prune bad serial rows and merge duplicate games in an existing compendium database"));
+    addActionOption(QCommandLineOption(
         "enrich-compendium", "Run all enrichment passes against an existing compendium database without rebuilding"));
     addOption(QCommandLineOption("enrich-source",
         "Comma-separated list of enrichment source(s) to run (default: all). Valid keys: libretro, gametdb, openvgdb, "

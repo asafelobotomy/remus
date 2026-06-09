@@ -14,9 +14,6 @@
 // Queries an existing compendium database and emits a per-source signature-yield
 // report as TSV to stdout.  A machine-readable summary row at the top lists
 // total game, signature, and system counts.
-//
-// The output format is identical to the sqlite3 query in build_compendium_full.sh,
-// allowing that script to call this command instead of invoking sqlite3 directly.
 int handleCoverageReportCommand(CliContext &ctx) {
     if (!ctx.parser.isSet(QStringLiteral("coverage-report")))
         return 0;
@@ -62,6 +59,14 @@ int handleCoverageReportCommand(CliContext &ctx) {
         const qint64 totalSignatures = scalar(QStringLiteral("SELECT COUNT(*) FROM game_signatures"));
         const qint64 totalSystems = scalar(QStringLiteral("SELECT COUNT(*) FROM systems"));
         const qint64 totalSources = scalar(QStringLiteral("SELECT COUNT(*) FROM sources WHERE enabled = 1"));
+        const qint64 shadowedSources = scalar(QStringLiteral(
+            "SELECT COUNT(*) FROM ("
+            "  SELECT si.source_id FROM source_items si "
+            "  JOIN sources s ON s.source_id = si.source_id AND s.enabled = 1 "
+            "  GROUP BY si.source_id "
+            "  HAVING COUNT(*) > 100 "
+            "    AND COALESCE((SELECT COUNT(*) FROM game_signatures gs WHERE gs.source_id = si.source_id), 0) = 0"
+            ")"));
 
         if (totalGames < 0) {
             qCritical() << "✗ Failed to query database:" << q.lastError().text();
@@ -89,14 +94,21 @@ int handleCoverageReportCommand(CliContext &ctx) {
             "  GROUP BY gf.source_id "
             ") "
             "SELECT si.source_id, "
+            "       COALESCE(s.enabled, 1) AS enabled, "
+            "       COALESCE(s.priority, 0) AS priority, "
             "       si.source_items, "
             "       COALESCE(gs_owned.sigs_owned, 0) AS sigs_owned, "
             "       COALESCE(gf_covered.games_covered, 0) AS games_covered, "
-            "       ROUND(COALESCE(gf_covered.games_covered, 0) * 100.0 / si.source_items, 1) AS coverage_pct "
+            "       ROUND(COALESCE(gf_covered.games_covered, 0) * 100.0 / si.source_items, 1) AS coverage_pct, "
+            "       ROUND(COALESCE(gs_owned.sigs_owned, 0) * 100.0 / si.source_items, 1) AS sig_yield_pct, "
+            "       CASE WHEN si.source_items > 100 AND COALESCE(gs_owned.sigs_owned, 0) = 0 THEN 1 ELSE 0 END "
+            "           AS shadowed "
             "FROM si "
+            "LEFT JOIN sources s ON s.source_id = si.source_id "
             "LEFT JOIN gs_owned   ON gs_owned.source_id   = si.source_id "
             "LEFT JOIN gf_covered ON gf_covered.source_id = si.source_id "
-            "ORDER BY coverage_pct ASC, si.source_items DESC"));
+            "WHERE COALESCE(s.enabled, 1) = 1 "
+            "ORDER BY shadowed DESC, sig_yield_pct ASC, coverage_pct ASC, si.source_items DESC"));
         if (!ok) {
             qCritical() << "✗ Failed to query source coverage:" << q.lastError().text();
             cleanup();
@@ -104,15 +116,20 @@ int handleCoverageReportCommand(CliContext &ctx) {
         }
 
         QTextStream out(stdout);
-        out << QStringLiteral("# games=%1 signatures=%2 systems=%3 active_sources=%4\n")
+        out << QStringLiteral("# games=%1 signatures=%2 systems=%3 active_sources=%4 shadowed_sources=%5\n")
                    .arg(totalGames)
                    .arg(totalSignatures)
                    .arg(totalSystems)
-                   .arg(totalSources);
-        out << QStringLiteral("source_id\tsource_items\tsigs_owned\tgames_covered\tcoverage_pct\n");
+                   .arg(totalSources)
+                   .arg(shadowedSources);
+        out << QStringLiteral(
+            "source_id\tenabled\tpriority\tsource_items\tsigs_owned\tgames_covered\tcoverage_pct\tsig_yield_pct\t"
+            "shadowed\n");
         while (q.next()) {
-            out << q.value(0).toString() << '\t' << q.value(1).toLongLong() << '\t' << q.value(2).toLongLong() << '\t'
-                << q.value(3).toLongLong() << '\t' << q.value(4).toString() << '\n';
+            out << q.value(0).toString() << '\t' << q.value(1).toInt() << '\t' << q.value(2).toInt() << '\t'
+                << q.value(3).toLongLong() << '\t' << q.value(4).toLongLong() << '\t' << q.value(5).toLongLong()
+                << '\t' << q.value(6).toString() << '\t' << q.value(7).toString() << '\t' << q.value(8).toInt()
+                << '\n';
         }
         out.flush();
     }

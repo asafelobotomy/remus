@@ -108,15 +108,17 @@ FROM (
     HAVING COUNT(*) > 1
 );
 
+-- Serial collisions are scoped by system_id (identity linker uses system|serial keys).
 SELECT 'collision.serial_multi_game' AS check_name,
        CASE WHEN COUNT(*) = 0 THEN 'PASS' ELSE 'FAIL' END AS status,
        COUNT(*) AS observed,
        0 AS expected
 FROM (
-    SELECT serial_value
-    FROM game_serials
-    GROUP BY serial_value
-    HAVING COUNT(DISTINCT game_id) > 1
+    SELECT gs.serial_value, g.system_id
+    FROM game_serials gs
+    JOIN games g ON g.game_id = gs.game_id
+    GROUP BY gs.serial_value, g.system_id
+    HAVING COUNT(DISTINCT gs.game_id) > 1
 );
 
 SELECT 'collision.canonical_resolution_selected_fact_mismatch' AS check_name,
@@ -146,9 +148,10 @@ GROUP BY hash_type, hash_value
 HAVING COUNT(*) > 1
 ORDER BY duplicate_rows DESC, hash_type, hash_value;
 
--- Diagnostic details for serial values shared by multiple canonical games.
-SELECT serial_value, COUNT(DISTINCT game_id) AS games_sharing_serial
-FROM game_serials
-GROUP BY serial_value
-HAVING COUNT(DISTINCT game_id) > 1
-ORDER BY games_sharing_serial DESC, serial_value;
+-- Diagnostic details for serial values shared by multiple canonical games (same system).
+SELECT gs.serial_value, g.system_id, COUNT(DISTINCT gs.game_id) AS games_sharing_serial
+FROM game_serials gs
+JOIN games g ON g.game_id = gs.game_id
+GROUP BY gs.serial_value, g.system_id
+HAVING COUNT(DISTINCT gs.game_id) > 1
+ORDER BY games_sharing_serial DESC, gs.serial_value, g.system_id;

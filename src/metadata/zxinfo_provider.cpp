@@ -130,16 +130,21 @@ GameMetadata ZXInfoProvider::parseEntry(const QJsonObject &source) const {
     if (!pubs.isEmpty())
         m.publisher = pubs.first().toObject().value(QStringLiteral("name")).toString().trimmed();
 
-    // Developer: look for authors with labelType starting with "Company" (e.g.
-    // "Company: Publisher/Manager", "Company: User group") and type "Creator"
+    // Developer: prefer Company+Creator, then any Creator author.
     const QJsonArray authors = source.value(QStringLiteral("authors")).toArray();
     for (const QJsonValue &av : authors) {
         const QJsonObject a = av.toObject();
-        if (a.value(QStringLiteral("labelType")).toString().startsWith(QStringLiteral("Company"))
-            && a.value(QStringLiteral("type")).toString() == QStringLiteral("Creator")) {
-            m.developer = a.value(QStringLiteral("name")).toString().trimmed();
+        if (a.value(QStringLiteral("type")).toString() != QStringLiteral("Creator"))
+            continue;
+        const QString name = a.value(QStringLiteral("name")).toString().trimmed();
+        if (name.isEmpty())
+            continue;
+        if (a.value(QStringLiteral("labelType")).toString().startsWith(QStringLiteral("Company"))) {
+            m.developer = name;
             break;
         }
+        if (m.developer.isEmpty())
+            m.developer = name;
     }
 
     // Description: the remarks field (may be absent or null for many entries)

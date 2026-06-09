@@ -37,6 +37,15 @@ sqlite3 -header -column data/compendium/remus_compendium.db < data/compendium/va
 
 `scripts/build_compendium_full.sh` runs this gate automatically after a successful build.
 
+Phase 2 quality thresholds (informational, do not block phase 1):
+
+```bash
+bash .github/scripts/validate-compendium-db.sh data/compendium/remus_compendium.db \
+  data/compendium/validation/0002_phase2_quality_checks.sql
+```
+
+External data source reference: [docs/reports/COMPENDIUM-DATA-SOURCES.md](../../docs/reports/COMPENDIUM-DATA-SOURCES.md)
+
 ## Verify core seed counts
 
 ```bash

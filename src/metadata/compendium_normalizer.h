@@ -25,6 +25,10 @@ namespace Compendium {
         // Apply system and region normalization to a record in-place.
         void normalize(SourceRecordEnvelope &record) const;
 
+        // True when a Sony-style product code prefix matches the region, or when
+        // the prefix/region cannot be validated (unknown prefix or empty region).
+        static bool serialMatchesRegion(const QString &serial, const QString &regionCode);
+
     private:
         // Maps from lowercased DAT system name substrings to system IDs.
         // Built from Constants::Systems::SYSTEMS in the constructor.

@@ -171,6 +171,8 @@ QList<ClrMameProEntry> ClrMameProParser::parseGameBlocks(const QString &content)
             entry.publisher = gameData.value(QStringLiteral("publisher"));
             entry.developer = gameData.value(QStringLiteral("developer"));
             entry.releaseYear = gameData.value(QStringLiteral("releaseyear")).toInt();
+            entry.releaseMonth = gameData.value(QStringLiteral("releasemonth")).toInt();
+            entry.releaseDay = gameData.value(QStringLiteral("releaseday")).toInt();
             entry.users = gameData.value(QStringLiteral("users")).toInt();
             entry.region = baseRegion;
 

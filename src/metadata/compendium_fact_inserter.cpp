@@ -1,5 +1,7 @@
 #include "compendium_fact_inserter.h"
 
+#include "compendium_normalizer.h"
+
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QVariant>
@@ -152,6 +154,9 @@ namespace Compendium {
             if (serial.isEmpty()) {
                 continue;
             }
+            if (!CompendiumNormalizer::serialMatchesRegion(serial, rec.resolvedRegionCode)) {
+                continue;
+            }
             q.bindValue(0, rec.linkedGameId);
             q.bindValue(1, serial);
             q.bindValue(2, rec.sourceId);
@@ -176,6 +181,9 @@ namespace Compendium {
     static QString valueTypeForField(const QString &fieldName) {
         if (fieldName == QLatin1String("region")) {
             return QStringLiteral("explicit_region_code");
+        }
+        if (fieldName == QLatin1String("release_date")) {
+            return QStringLiteral("text");
         }
         if (fieldName == QLatin1String("release_year") || fieldName == QLatin1String("players_max")) {
             return QStringLiteral("int");

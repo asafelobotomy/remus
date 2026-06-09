@@ -157,6 +157,8 @@ The wrapper script:
 - Runs `data/compendium/validation/0001_phase1_checks.sql` (skip with `--skip-validation`)
 - Writes `data/compendium/remus_compendium.coverage.tsv`
 
+`collision.serial_multi_game` is scoped by `(serial_value, system_id)` to match the identity linker. If validation fails after a build, run `remus-cli --dedup-compendium` to prune region-mismatched serial rows and merge duplicate games sharing a serial on the same system.
+
 **Manual steps** for a smaller experiment:
 
 ```bash

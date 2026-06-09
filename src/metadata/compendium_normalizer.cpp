@@ -1,6 +1,8 @@
 #include "compendium_normalizer.h"
 #include "../core/system_resolver.h"
 
+#include <QHash>
+
 namespace Remus {
 namespace Compendium {
 
@@ -169,6 +171,31 @@ namespace Compendium {
         }
 
         return { };
+    }
+
+    bool CompendiumNormalizer::serialMatchesRegion(const QString &serial, const QString &regionCode) {
+        if (regionCode.isEmpty() || serial.length() < 4) {
+            return true;
+        }
+
+        static const QHash<QString, QString> prefixToRegion = {
+            { QStringLiteral("ULUS"), QStringLiteral("USA") },
+            { QStringLiteral("ULAS"), QStringLiteral("ASIA") },
+            { QStringLiteral("ULES"), QStringLiteral("EUR") },
+            { QStringLiteral("ULJS"), QStringLiteral("JPN") },
+            { QStringLiteral("ULKS"), QStringLiteral("KOR") },
+            { QStringLiteral("SLUS"), QStringLiteral("USA") },
+            { QStringLiteral("SCUS"), QStringLiteral("USA") },
+            { QStringLiteral("SLES"), QStringLiteral("EUR") },
+            { QStringLiteral("SLPS"), QStringLiteral("JPN") },
+        };
+
+        const QString prefix = serial.left(4).toUpper();
+        const auto it = prefixToRegion.constFind(prefix);
+        if (it == prefixToRegion.constEnd()) {
+            return true;
+        }
+        return it.value() == regionCode;
     }
 
     void CompendiumNormalizer::normalize(SourceRecordEnvelope &record) const {

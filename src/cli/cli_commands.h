@@ -114,6 +114,7 @@ int handleModCatalogBuildCommand(CliContext &ctx);
 // ── DAT Management & Metadata Editing ─────────────────────────────────────────
 // --update-dats, --import-dat, --remove-dat, --list-dats, --dat-coverage, --edit-metadata
 int handleBuildCompendiumCommand(CliContext &ctx);
+int handleDedupCompendiumCommand(CliContext &ctx);
 int handleEnrichCompendiumCommand(CliContext &ctx);
 int handleIngestSourceCommand(CliContext &ctx);
 int handleCoverageReportCommand(CliContext &ctx);

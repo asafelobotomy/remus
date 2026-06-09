@@ -159,6 +159,9 @@ EXCLUDED_SOURCE_IDS=(
     "libretro-dat-nintendo-super-nintendo-entertainment-system" # 25 items; nointro: 4255 items
     "libretro-dat-nec-pc-98"                            # 6 items; redump: 109 items
     "libretro-dat-nintendo-wii"                         # 12% match; redump: 97%
+    # Hashless GameTDB catalogue (serial/metadata only, no crc/md5/sha1). Inflates
+    # game counts without verification capability; use Redump + Digital No-Intro instead.
+    "libretro-dat-nintendo-wii-u"
     "libretro-dat-sony-playstation-3"                   # 12% match; redump: 99%
     "libretro-dat-nintendo-gamecube"                    # 49% match; redump: 97%
     "libretro-dat-microsoft-xbox-360"                   # 52% match; nointro: 100%

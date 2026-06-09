@@ -248,6 +248,12 @@ fi
 
 if ! $SKIP_VALIDATION; then
     bash "$ROOT_DIR/.github/scripts/validate-compendium-db.sh" "$OUTPUT_DB"
+    if [[ -f "$ROOT_DIR/data/compendium/validation/0002_phase2_quality_checks.sql" ]]; then
+        echo "==> Phase 2 quality checks (informational thresholds)"
+        bash "$ROOT_DIR/.github/scripts/validate-compendium-db.sh" \
+            "$OUTPUT_DB" "$ROOT_DIR/data/compendium/validation/0002_phase2_quality_checks.sql" \
+            || echo "warning: one or more phase-2 quality checks failed (see above)" >&2
+    fi
 fi
 
 # Emit a machine-friendly per-source coverage report via remus-cli --coverage-report.
@@ -269,8 +275,11 @@ UNION ALL SELECT 'unresolved_merge_conflicts', COUNT(*)
 echo "==> Build summary"
 sqlite3 -header -column "$OUTPUT_DB" "$summary_query"
 
-echo "==> Low-coverage sources (top 15)"
+echo "==> Low-coverage / shadowed sources (top 15 by sig_yield_pct)"
 head -17 "$COVERAGE_REPORT"
+
+echo "==> Shadowed enabled sources (sigs_owned=0, items>100)"
+awk -F'\t' 'NR>2 && $9==1 {print}' "$COVERAGE_REPORT" | head -15
 
 echo "==> Coverage report written: $COVERAGE_REPORT"
 

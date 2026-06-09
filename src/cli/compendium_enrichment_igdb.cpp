@@ -55,6 +55,7 @@ bool enrichFromIGDB(
         qInfo() << "[IGDB] Credentials not configured — enrichment skipped";
         return true;
     }
+    qInfo() << "[IGDB] Credentials loaded — starting bulk platform enrichment";
 
     // Systems that still have games missing any enrichable field
     QSqlQuery sysQ(database);
@@ -97,6 +98,8 @@ bool enrichFromIGDB(
 
     const QString snapshotId = QStringLiteral("igdb-bulk");
     static const int PAGE_SIZE = 500;
+    int systemsSkippedNoSlug = 0;
+    int systemsSkippedEmptyIndex = 0;
 
     for (const SysInfo &sys : systems) {
         // Flush any deleteLater() events posted by the previous system's network
@@ -104,8 +107,10 @@ bool enrichFromIGDB(
         HttpMetadataProvider::processNetworkEvents();
 
         const QString igdbSlug = SystemResolver::providerName(sys.id, Constants::Providers::IGDB);
-        if (igdbSlug.isEmpty())
+        if (igdbSlug.isEmpty()) {
+            ++systemsSkippedNoSlug;
             continue;
+        }
 
         // Bulk-fetch all IGDB games for this platform
         QHash<QString, QList<GameMetadata>> igdbIndex;
@@ -121,8 +126,13 @@ bool enrichFromIGDB(
             offset += PAGE_SIZE;
         }
 
-        if (igdbIndex.isEmpty())
+        if (igdbIndex.isEmpty()) {
+            ++systemsSkippedEmptyIndex;
+            qWarning().noquote()
+                << QStringLiteral("[IGDB] %1 (slug=%2): API returned no entries — check slug or network")
+                       .arg(sys.name, igdbSlug);
             continue;
+        }
         qInfo().noquote()
             << QStringLiteral("[IGDB] %1 (%2): %3 entries indexed").arg(sys.name, igdbSlug).arg(igdbIndex.size());
 
@@ -273,6 +283,13 @@ bool enrichFromIGDB(
     // Flush any pending deleteLater() events from the last system's replies before
     // the single shared IGDBProvider (and its QNAM) goes out of scope at function return.
     HttpMetadataProvider::processNetworkEvents();
+
+    qInfo().noquote() << QStringLiteral("[IGDB] Complete: %1 games enriched, %2 facts inserted, "
+                                       "%3 systems skipped (no slug), %4 systems skipped (empty API index)")
+                             .arg(gamesEnriched)
+                             .arg(factsInserted)
+                             .arg(systemsSkippedNoSlug)
+                             .arg(systemsSkippedEmptyIndex);
 
     return true;
 }

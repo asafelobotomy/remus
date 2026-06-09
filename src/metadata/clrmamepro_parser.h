@@ -26,6 +26,8 @@ struct ClrMameProEntry {
     QString publisher;
     QString developer;
     int releaseYear = 0;
+    int releaseMonth = 0;
+    int releaseDay = 0;
     int users = 0; // Max players
 };
 

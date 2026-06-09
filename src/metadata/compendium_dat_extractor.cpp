@@ -208,6 +208,13 @@ namespace Compendium {
             }
             if (entry.releaseYear > 0) {
                 rec.fields.insert(QStringLiteral("release_year"), QString::number(entry.releaseYear));
+                const int month = entry.releaseMonth > 0 ? entry.releaseMonth : 1;
+                const int day = entry.releaseDay > 0 ? entry.releaseDay : 1;
+                rec.fields.insert(QStringLiteral("release_date"),
+                    QStringLiteral("%1-%2-%3")
+                        .arg(entry.releaseYear, 4, 10, QChar('0'))
+                        .arg(month, 2, 10, QChar('0'))
+                        .arg(day, 2, 10, QChar('0')));
             }
             if (entry.users > 0) {
                 rec.fields.insert(QStringLiteral("players_max"), QString::number(entry.users));

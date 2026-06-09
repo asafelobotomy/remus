@@ -53,12 +53,18 @@ namespace Compendium {
             ProgressCallback onProgress = nullptr);
     };
 
-    // Merge game rows that share the same (system_id, canonical_title), keeping
-    // the row with the most signatures and reassigning all child rows to the winner.
+    // Merge game rows that share the same (system_id, canonical_title) or the same
+    // (system_id, serial_value), keeping the row with the most signatures and
+    // reassigning all child rows to the winner.  Also prunes region-mismatched
+    // Sony-style serial rows before merging.
     // Called automatically by CompendiumCompilerService::run() and also exposed
     // here for incremental-ingest callers that run their own pipeline.
     // Returns the number of merged rows, or -1 on fatal DB error.
     int deduplicateGames(QSqlDatabase &db, QString &error);
+
+    // Delete game_serials rows whose Sony-style prefix disagrees with the game's
+    // primary region. Returns rows deleted, or -1 on error.
+    int pruneRegionMismatchedSerials(QSqlDatabase &db, QString &error);
 
 } // namespace Compendium
 } // namespace Remus

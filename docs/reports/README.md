@@ -5,6 +5,7 @@ Test results, implementation reports, and verification documentation.
 ## Active Reports
 
 - **METADATA-VERIFICATION-REPORT.md** - Metadata verification and validation report
+- **[COMPENDIUM-DATA-SOURCES.md](COMPENDIUM-DATA-SOURCES.md)** - External hash/metadata/patch sources for compendium gaps
 
 ## Archived Reports
 

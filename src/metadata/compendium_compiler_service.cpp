@@ -14,13 +14,112 @@
 namespace Remus {
 namespace Compendium {
 
+namespace {
+
+    // Reassign child rows to winners and delete loser game rows.
+    int applyDedupMap(QSqlDatabase &db, QString &error) {
+        QSqlQuery q(db);
+
+        if (!q.exec(QStringLiteral("SELECT COUNT(*) FROM _dedup_map"))) {
+            error = q.lastError().text();
+            return -1;
+        }
+        q.next();
+        const int dupCount = q.value(0).toInt();
+
+        if (dupCount == 0) {
+            q.exec(QStringLiteral("DROP TABLE IF EXISTS _dedup_map"));
+            return 0;
+        }
+
+        const QStringList updates = {
+            QStringLiteral("UPDATE OR IGNORE game_names"
+                           " SET game_id = (SELECT winner_id FROM _dedup_map WHERE loser_id = game_names.game_id)"
+                           " WHERE game_id IN (SELECT loser_id FROM _dedup_map)"),
+            QStringLiteral("UPDATE OR IGNORE game_signatures"
+                           " SET game_id = (SELECT winner_id FROM _dedup_map WHERE loser_id = game_signatures.game_id)"
+                           " WHERE game_id IN (SELECT loser_id FROM _dedup_map)"),
+            QStringLiteral("UPDATE OR IGNORE game_serials"
+                           " SET game_id = (SELECT winner_id FROM _dedup_map WHERE loser_id = game_serials.game_id)"
+                           " WHERE game_id IN (SELECT loser_id FROM _dedup_map)"),
+            QStringLiteral("UPDATE OR IGNORE game_facts"
+                           " SET game_id = (SELECT winner_id FROM _dedup_map WHERE loser_id = game_facts.game_id)"
+                           " WHERE game_id IN (SELECT loser_id FROM _dedup_map)"),
+        };
+        for (const QString &sql : updates) {
+            if (!q.exec(sql)) {
+                error = q.lastError().text();
+                q.exec(QStringLiteral("DROP TABLE IF EXISTS _dedup_map"));
+                return -1;
+            }
+        }
+
+        if (!q.exec(QStringLiteral("DELETE FROM games WHERE game_id IN (SELECT loser_id FROM _dedup_map)"))) {
+            error = q.lastError().text();
+            q.exec(QStringLiteral("DROP TABLE IF EXISTS _dedup_map"));
+            return -1;
+        }
+
+        q.exec(QStringLiteral("DROP TABLE IF EXISTS _dedup_map"));
+        return dupCount;
+    }
+
+    int buildAndApplyDedupMap(QSqlDatabase &db, const QString &createMapSql, QString &error) {
+        QSqlQuery q(db);
+        q.exec(QStringLiteral("DROP TABLE IF EXISTS _dedup_map"));
+        if (!q.exec(createMapSql)) {
+            error = q.lastError().text();
+            return -1;
+        }
+        return applyDedupMap(db, error);
+    }
+
+} // namespace
+
+    // Remove Sony-style serial rows whose product-code prefix disagrees with the
+    // game's primary region (e.g. ULUS on an ASIA game from a bad upstream DAT).
+    int pruneRegionMismatchedSerials(QSqlDatabase &db, QString &error) {
+        QSqlQuery q(db);
+        if (!q.exec(QStringLiteral(R"(
+            DELETE FROM game_serials
+            WHERE serial_id IN (
+                SELECT gs.serial_id
+                FROM game_serials gs
+                JOIN games g ON g.game_id = gs.game_id
+                WHERE g.primary_region_code IS NOT NULL
+                  AND TRIM(g.primary_region_code) != ''
+                  AND (
+                      (gs.serial_value LIKE 'ULUS-%' AND g.primary_region_code != 'USA')
+                   OR (gs.serial_value LIKE 'ULAS-%' AND g.primary_region_code != 'ASIA')
+                   OR (gs.serial_value LIKE 'ULES-%' AND g.primary_region_code != 'EUR')
+                   OR (gs.serial_value LIKE 'ULJS-%' AND g.primary_region_code != 'JPN')
+                   OR (gs.serial_value LIKE 'ULKS-%' AND g.primary_region_code != 'KOR')
+                   OR (gs.serial_value LIKE 'SLUS-%' AND g.primary_region_code != 'USA')
+                   OR (gs.serial_value LIKE 'SCUS-%' AND g.primary_region_code != 'USA')
+                   OR (gs.serial_value LIKE 'SLES-%' AND g.primary_region_code != 'EUR')
+                   OR (gs.serial_value LIKE 'SLPS-%' AND g.primary_region_code != 'JPN')
+                  )
+            ))"))) {
+            error = q.lastError().text();
+            return -1;
+        }
+        return q.numRowsAffected();
+    }
+
     // ── Post-ingest dedup ─────────────────────────────────────────────────────────
     // See header for full documentation.
     int deduplicateGames(QSqlDatabase &db, QString &error) {
-        QSqlQuery q(db);
+        const int pruned = pruneRegionMismatchedSerials(db, error);
+        if (pruned < 0) {
+            return -1;
+        }
+        if (pruned > 0) {
+            qInfo() << "[deduplicateGames] Pruned" << pruned << "region-mismatched serial row(s).";
+        }
 
-        // Build winner→loser mapping using window functions (SQLite ≥3.25).
-        if (!q.exec(QStringLiteral(R"(
+        int totalMerged = 0;
+
+        const int titleMerged = buildAndApplyDedupMap(db, QStringLiteral(R"(
         CREATE TEMPORARY TABLE _dedup_map AS
         WITH sig_counts AS (
             SELECT g.game_id, g.system_id, g.canonical_title,
@@ -49,58 +148,52 @@ namespace Compendium {
         JOIN ranked winner ON loser.system_id    = winner.system_id
                           AND loser.canonical_title = winner.canonical_title
                           AND winner.rn = 1
-        WHERE loser.rn > 1)"))) {
-            error = q.lastError().text();
+        WHERE loser.rn > 1)"),
+            error);
+        if (titleMerged < 0) {
             return -1;
         }
+        totalMerged += titleMerged;
 
-        if (!q.exec(QStringLiteral("SELECT COUNT(*) FROM _dedup_map"))) {
-            error = q.lastError().text();
+        const int serialMerged = buildAndApplyDedupMap(db, QStringLiteral(R"(
+        CREATE TEMPORARY TABLE _dedup_map AS
+        WITH sig_counts AS (
+            SELECT g.game_id, g.system_id, gs.serial_value,
+                   COUNT(sig.signature_id) AS sig_count
+            FROM games g
+            JOIN game_serials gs ON gs.game_id = g.game_id
+            LEFT JOIN game_signatures sig ON sig.game_id = g.game_id
+            GROUP BY g.game_id, g.system_id, gs.serial_value
+        ),
+        ranked AS (
+            SELECT game_id, system_id, serial_value, sig_count,
+                   ROW_NUMBER() OVER (
+                       PARTITION BY system_id, serial_value
+                       ORDER BY sig_count DESC, game_id ASC
+                   ) AS rn
+            FROM sig_counts
+            WHERE (system_id, serial_value) IN (
+                SELECT g.system_id, gs.serial_value
+                FROM games g
+                JOIN game_serials gs ON gs.game_id = g.game_id
+                GROUP BY g.system_id, gs.serial_value
+                HAVING COUNT(DISTINCT g.game_id) > 1
+            )
+        )
+        SELECT loser.game_id  AS loser_id,
+               winner.game_id AS winner_id
+        FROM ranked loser
+        JOIN ranked winner ON loser.system_id    = winner.system_id
+                          AND loser.serial_value = winner.serial_value
+                          AND winner.rn = 1
+        WHERE loser.rn > 1)"),
+            error);
+        if (serialMerged < 0) {
             return -1;
         }
-        q.next();
-        const int dupCount = q.value(0).toInt();
+        totalMerged += serialMerged;
 
-        if (dupCount == 0) {
-            q.exec(QStringLiteral("DROP TABLE IF EXISTS _dedup_map"));
-            return 0;
-        }
-
-        // Reassign child rows to winner; IGNORE on unique-constraint violations
-        // (those duplicates are already owned by the winner and will be cleaned up
-        // when the loser game row is deleted via ON DELETE CASCADE).
-        const QStringList updates = {
-            QStringLiteral("UPDATE OR IGNORE game_names"
-                           " SET game_id = (SELECT winner_id FROM _dedup_map WHERE loser_id = game_names.game_id)"
-                           " WHERE game_id IN (SELECT loser_id FROM _dedup_map)"),
-            QStringLiteral("UPDATE OR IGNORE game_signatures"
-                           " SET game_id = (SELECT winner_id FROM _dedup_map WHERE loser_id = game_signatures.game_id)"
-                           " WHERE game_id IN (SELECT loser_id FROM _dedup_map)"),
-            QStringLiteral("UPDATE OR IGNORE game_serials"
-                           " SET game_id = (SELECT winner_id FROM _dedup_map WHERE loser_id = game_serials.game_id)"
-                           " WHERE game_id IN (SELECT loser_id FROM _dedup_map)"),
-            QStringLiteral("UPDATE OR IGNORE game_facts"
-                           " SET game_id = (SELECT winner_id FROM _dedup_map WHERE loser_id = game_facts.game_id)"
-                           " WHERE game_id IN (SELECT loser_id FROM _dedup_map)"),
-        };
-        for (const QString &sql : updates) {
-            if (!q.exec(sql)) {
-                error = q.lastError().text();
-                q.exec(QStringLiteral("DROP TABLE IF EXISTS _dedup_map"));
-                return -1;
-            }
-        }
-
-        // Delete losers; ON DELETE CASCADE removes any remaining child rows that
-        // could not be reassigned (already covered by a winner row).
-        if (!q.exec(QStringLiteral("DELETE FROM games WHERE game_id IN (SELECT loser_id FROM _dedup_map)"))) {
-            error = q.lastError().text();
-            q.exec(QStringLiteral("DROP TABLE IF EXISTS _dedup_map"));
-            return -1;
-        }
-
-        q.exec(QStringLiteral("DROP TABLE IF EXISTS _dedup_map"));
-        return dupCount;
+        return totalMerged;
     }
 
     // ── Compiler service ──────────────────────────────────────────────────────────
@@ -165,7 +258,7 @@ namespace Compendium {
             }
         }
 
-        // ── Post-ingest dedup: merge game rows with same (system_id, title) ───────
+        // ── Post-ingest dedup: merge duplicate titles and shared serials ─────────
         {
             QString dedupError;
             const int merged = deduplicateGames(db, dedupError);

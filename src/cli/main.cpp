@@ -308,6 +308,8 @@ int main(int argc, char *argv[]) {
         return rc;
     if (int rc = handleBuildCompendiumCommand(ctx))
         return rc;
+    if (int rc = handleDedupCompendiumCommand(ctx))
+        return rc;
     if (int rc = handleEnrichCompendiumCommand(ctx))
         return rc;
     if (int rc = handleIngestSourceCommand(ctx))
