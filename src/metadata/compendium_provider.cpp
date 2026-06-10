@@ -147,6 +147,10 @@ QString CompendiumProvider::detectHashType(const QString &hash, QString &normali
         normalizedValue = compact.toLower();
         return QStringLiteral("sha1");
     }
+    if (compact.size() == 64) {
+        normalizedValue = compact.toLower();
+        return QStringLiteral("sha256");
+    }
 
     normalizedValue.clear();
     return { };

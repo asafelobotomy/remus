@@ -187,6 +187,7 @@ class CompendiumProviderTest : public QObject {
 
 private slots:
     void getByHashReturnsCanonicalMetadata();
+    void getByHashSupportsSha256();
     void searchByNameUsesAliasAndFilters();
     void searchByNameWithOfficialTitleReturnsSameGame();
     void searchByNameKeepsBestMatchFirst();
@@ -225,6 +226,32 @@ void CompendiumProviderTest::getByHashReturnsCanonicalMetadata() {
     QCOMPARE(metadata.providerId, QStringLiteral("compendium"));
     QCOMPARE(metadata.matchScore, 1.0f);
     QCOMPARE(metadata.matchMethod, QStringLiteral("hash"));
+}
+
+void CompendiumProviderTest::getByHashSupportsSha256() {
+    const QString dbPath = createFixtureDatabase();
+    QVERIFY(!dbPath.isEmpty());
+
+    CompendiumProvider provider;
+    QVERIFY(provider.openDatabase(dbPath));
+
+    {
+        QSqlDatabase db = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), QStringLiteral("sha256_seed"));
+        db.setDatabaseName(dbPath);
+        QVERIFY(db.open());
+        QVERIFY(execSql(db,
+            QStringLiteral("INSERT INTO game_signatures (game_id, hash_type, hash_value, confidence, is_primary) "
+                           "VALUES ('game-2', 'sha256', "
+                           "'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 1.0, 1)")));
+        db.close();
+        QSqlDatabase::removeDatabase(QStringLiteral("sha256_seed"));
+    }
+
+    const GameMetadata metadata = provider.getByHash(
+        QStringLiteral("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"), QStringLiteral("GameCube"));
+
+    QCOMPARE(metadata.id, QStringLiteral("game-2"));
+    QCOMPARE(metadata.title, QStringLiteral("Paper Mario"));
 }
 
 void CompendiumProviderTest::searchByNameUsesAliasAndFilters() {

@@ -1,9 +1,11 @@
 #include "match_utils.h"
 
 #include <QFileInfo>
+#include <QSet>
 
 #include "constants/constants.h"
 #include "patched_rom_parser.h"
+#include "verification_hash_matcher.h"
 
 namespace Remus {
 
@@ -68,6 +70,33 @@ QString deriveMatchingDisplayName(const FileRecord &file) {
         return patchedBase;
     }
     return baseName.isEmpty() ? file.filename : baseName;
+}
+
+QStringList orderedMatchHashValues(const QString &preferredHashType, const QString &crc32, const QString &md5,
+    const QString &sha1, const QString &sha256) {
+    const auto valueForType = [&](const QString &hashType) -> QString {
+        if (hashType == QStringLiteral("sha256"))
+            return sha256.trimmed();
+        if (hashType == QStringLiteral("sha1"))
+            return sha1.trimmed();
+        if (hashType == QStringLiteral("md5"))
+            return md5.trimmed();
+        return crc32.trimmed();
+    };
+
+    QStringList ordered;
+    QSet<QString> seen;
+    for (const QString &hashType : VerificationHashMatcher::orderedOfficialHashTypes(preferredHashType)) {
+        const QString value = valueForType(hashType);
+        if (value.isEmpty())
+            continue;
+        const QString key = value.toLower();
+        if (seen.contains(key))
+            continue;
+        seen.insert(key);
+        ordered.append(value);
+    }
+    return ordered;
 }
 
 } // namespace Remus
