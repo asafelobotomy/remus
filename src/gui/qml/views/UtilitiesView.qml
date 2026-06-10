@@ -4,10 +4,16 @@ import QtQuick.Layouts
 import Remus.Gui
 
 // Utilities workbench: DAT import, verification, patching, and mods.
-// Groups the four legacy tool views behind a simple TabBar.
+// Opened from Tools menu (P6) — not a primary sidebar destination.
 Item {
+    id: root
+
     Layout.fillWidth:  true
     Layout.fillHeight: true
+
+    function openTab(index) {
+        tabBar.currentIndex = Math.max(0, Math.min(index, tabBar.count - 1))
+    }
 
     ColumnLayout {
         anchors.fill: parent

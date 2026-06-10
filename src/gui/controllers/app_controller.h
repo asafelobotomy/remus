@@ -25,8 +25,7 @@ class AppController : public QObject {
 public:
     enum View {
         LibraryView = 0,
-        UtilitiesView = 1,
-        SettingsView = 2,
+        SettingsView = 1,
     };
     Q_ENUM(View)
 

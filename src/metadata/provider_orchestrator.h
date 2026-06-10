@@ -88,6 +88,22 @@ public:
     QList<SearchResult> searchAllProviders(const QString &name, const QString &system);
 
     /**
+     * @brief Search a single provider by name (or all when @p providerName is empty).
+     */
+    QList<SearchResult> searchProvider(const QString &providerName, const QString &name, const QString &system);
+
+    /**
+     * @brief Fetch full metadata for a provider result id (preview / apply).
+     */
+    GameMetadata fetchProviderMetadata(const QString &providerName, const QString &id, const QString &system = QString());
+
+    /**
+     * @brief Hash lookup on a single provider when supported.
+     */
+    GameMetadata getHashFromProvider(const QString &providerName, const QString &hash, const QString &system,
+        const QString &crc32 = QString(), const QString &md5 = QString(), const QString &sha1 = QString());
+
+    /**
      * @brief Get metadata by hash from all hash-capable providers
      * @param hash File hash (CRC32/MD5/SHA1)
      * @param system System identifier

@@ -51,7 +51,6 @@ QVariantList SettingsController::toolFields() const {
         { GuiSettings::DEFAULT_LIBRARY_PATH, "Default Library Database", true, false },
         { GuiSettings::ARTWORK_CACHE_DIR, "Artwork Cache Directory", true, true },
         { GuiSettings::MOD_CATALOG_URL, "Mod Catalog URL", false, false },
-        { Constants::Settings::Organize::NAMING_TEMPLATE, "Naming Template", false, false },
     };
 
     QVariantList fields;

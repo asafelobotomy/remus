@@ -270,8 +270,7 @@ QString AppController::systemName(int systemId) {
 }
 
 void AppController::setCurrentView(int view) {
-    // Clamp to the valid 4-view range; guards against stale persisted values.
-    const int clamped = qBound(0, view, 3);
+    const int clamped = qBound(static_cast<int>(LibraryView), view, static_cast<int>(SettingsView));
     if (m_currentView == clamped) {
         return;
     }

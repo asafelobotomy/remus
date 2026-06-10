@@ -234,6 +234,95 @@ QList<SearchResult> ProviderOrchestrator::searchAllProviders(const QString &name
     return allResults;
 }
 
+QList<SearchResult> ProviderOrchestrator::searchProvider(
+    const QString &providerName, const QString &name, const QString &system) {
+    if (name.isEmpty()) {
+        qWarning() << "Cannot search: name is empty";
+        return { };
+    }
+
+    if (providerName.isEmpty())
+        return searchAllProviders(name, system);
+
+    const ProviderInfo *info = m_providers.contains(providerName) ? &m_providers[providerName] : nullptr;
+    if (info == nullptr || !info->enabled || info->provider == nullptr) {
+        qWarning() << "Provider not available:" << providerName;
+        return { };
+    }
+
+    emit tryingProvider(providerName, MatchMethods::NAME);
+    try {
+        QList<SearchResult> results = info->provider->searchByName(name, system);
+        for (SearchResult &result : results)
+            result.provider = providerName;
+        if (results.isEmpty()) {
+            emit providerFailed(providerName, QStringLiteral("No results"));
+        } else {
+            emit providerSucceeded(providerName, MatchMethods::NAME);
+        }
+        return results;
+    } catch (const std::exception &error) {
+        qWarning() << providerName << "search error:" << error.what();
+        emit providerFailed(providerName, error.what());
+        return { };
+    }
+}
+
+GameMetadata ProviderOrchestrator::fetchProviderMetadata(
+    const QString &providerName, const QString &id, const QString &system) {
+    if (providerName.isEmpty() || id.isEmpty())
+        return { };
+
+    const ProviderInfo *info = m_providers.contains(providerName) ? &m_providers[providerName] : nullptr;
+    if (info == nullptr || !info->enabled || info->provider == nullptr)
+        return { };
+
+    GameMetadata metadata = info->provider->getById(id);
+    if (metadata.title.isEmpty())
+        return { };
+
+    if (metadata.system.isEmpty())
+        metadata.system = system;
+    if (metadata.providerId.isEmpty())
+        metadata.providerId = providerName;
+    return metadata;
+}
+
+GameMetadata ProviderOrchestrator::getHashFromProvider(const QString &providerName, const QString &hash,
+    const QString &system, const QString &crc32, const QString &md5, const QString &sha1) {
+    if (providerName.isEmpty() || hash.isEmpty())
+        return { };
+
+    const ProviderInfo *info = m_providers.contains(providerName) ? &m_providers[providerName] : nullptr;
+    if (info == nullptr || !info->enabled || !info->supportsHash || info->provider == nullptr)
+        return { };
+
+    emit tryingProvider(providerName, MatchMethods::HASH);
+    GameMetadata metadata = info->provider->getByHash(hash, system);
+    if (metadata.title.isEmpty() && (!crc32.isEmpty() || !md5.isEmpty() || !sha1.isEmpty())) {
+        if (!md5.isEmpty() && metadata.title.isEmpty())
+            metadata = info->provider->getByHash(md5, system);
+        if (!sha1.isEmpty() && metadata.title.isEmpty())
+            metadata = info->provider->getByHash(sha1, system);
+        if (!crc32.isEmpty() && metadata.title.isEmpty())
+            metadata = info->provider->getByHash(crc32, system);
+    }
+
+    if (metadata.title.isEmpty()) {
+        emit providerFailed(providerName, QStringLiteral("No hash match"));
+        return { };
+    }
+
+    if (metadata.matchScore <= 0.0f) {
+        metadata.matchScore = 1.0f;
+        metadata.matchMethod = QString::fromLatin1(MatchMethods::HASH);
+    }
+    if (metadata.providerId.isEmpty())
+        metadata.providerId = providerName;
+    emit providerSucceeded(providerName, MatchMethods::HASH);
+    return metadata;
+}
+
 GameMetadata ProviderOrchestrator::searchWithFallback(const QString &hash, const QString &name, const QString &system,
     const QString &crc32, const QString &md5, const QString &sha1, const QString &serial, bool requireArtwork) {
     GameMetadata accumulator;

@@ -9,6 +9,7 @@ namespace Remus {
 
 namespace GuiSettings {
     inline constexpr const char *DEFAULT_LIBRARY_PATH = "gui/default_library_path";
+    inline constexpr const char *ORGANIZE_DESTINATION = "gui/organize_destination";
     inline constexpr const char *ARTWORK_CACHE_DIR = "gui/artwork_cache_dir";
     inline constexpr const char *MOD_CATALOG_URL = "mods/catalog_url";
     inline constexpr const char *CHDMAN_PATH = "tools/chdman_path";

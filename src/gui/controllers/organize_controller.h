@@ -46,6 +46,8 @@ public:
     }
 
     Q_INVOKABLE void previewOrganize(const QString &destinationDir);
+    Q_INVOKABLE void previewRenameOrganize(const QString &destinationDir, bool selectedOnly);
+    Q_INVOKABLE int renameOrganizeFileCount(bool selectedOnly) const;
     Q_INVOKABLE void applyOrganize(const QString &destinationDir);
     Q_INVOKABLE void organizeAll(const QString &destinationDir);
     Q_INVOKABLE void undoLast();
@@ -65,9 +67,11 @@ signals:
 private:
     QList<int> targetFileIds() const;
     QList<int> bundledFileIds() const;
+    QList<int> matchedFileIds(bool selectedOnly) const;
     QMap<int, GameMetadata> metadataForFiles(const QList<int> &fileIds) const;
     void setLastError(const QString &message);
-    void runOrganize(const QString &destinationDir, bool dryRun, bool allBundled = false);
+    void runOrganize(const QString &destinationDir, bool dryRun, bool allBundled = false,
+        const QList<int> &explicitFileIds = { });
 
     AppController *m_appController;
     std::unique_ptr<OrganizeEngine> m_engine;

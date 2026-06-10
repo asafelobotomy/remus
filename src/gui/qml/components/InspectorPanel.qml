@@ -7,6 +7,8 @@ import Remus.Gui
 Frame {
     id: panel
 
+    signal matchSearchRequested()
+
     Layout.fillHeight: true
 
     property int currentTab: 0
@@ -146,7 +148,7 @@ Frame {
                             value: appController.selectedFileData.extension || ""
                         }
 
-                        panel.SectionDivider {}
+                        SectionDivider {}
 
                         ColumnLayout {
                             Layout.fillWidth: true
@@ -230,7 +232,7 @@ Frame {
                             mono:    true
                         }
 
-                        panel.SectionDivider {}
+                        SectionDivider {}
 
                         Label {
                             text:           "Hashes"
@@ -413,7 +415,28 @@ Frame {
                             visible: !!appController.selectedMatchData.matchId
                         }
 
-                        panel.SectionDivider {}
+                        SectionDivider {}
+
+                        RowLayout {
+                            Layout.fillWidth: true
+                            spacing: 6
+
+                            Button {
+                                text:      "Search && match…"
+                                enabled:   appController.selectedFileId > 0
+                                font.pixelSize: 11
+                                highlighted: true
+                                onClicked: panel.matchSearchRequested()
+                            }
+                            Button {
+                                text:      "Hash && Match"
+                                enabled:   !hashController.hashing &&
+                                           !matchController.matching &&
+                                           appController.selectedFileId > 0
+                                font.pixelSize: 11
+                                onClicked: workflowController.hashAndMatchSelected()
+                            }
+                        }
 
                         RowLayout {
                             Layout.fillWidth: true
@@ -439,28 +462,6 @@ Frame {
                             }
                         }
 
-                        RowLayout {
-                            Layout.fillWidth: true
-                            spacing: 6
-
-                            Button {
-                                text:      "Hash && Match"
-                                enabled:   !hashController.hashing &&
-                                           !matchController.matching &&
-                                           appController.selectedFileId > 0
-                                font.pixelSize: 11
-                                onClicked: workflowController.hashAndMatchSelected()
-                            }
-                            Button {
-                                text:      "Re-match"
-                                enabled:   !matchController.matching &&
-                                           appController.selectedFileId > 0
-                                font.pixelSize: 11
-                                flat:      true
-                                onClicked: matchController.matchSelected()
-                            }
-                        }
-
                         ProgressCard {
                             Layout.fillWidth: true
                             visible:       hashController.hashing || matchController.matching
@@ -483,14 +484,6 @@ Frame {
                             color:            "#83a598"
                             font.pixelSize:   10
                             wrapMode:         Text.WordWrap
-                        }
-
-                        Label {
-                            Layout.fillWidth: true
-                            wrapMode:         Text.WordWrap
-                            font.pixelSize:   10
-                            color:            "#665c54"
-                            text:             "A searchable match picker dialog is planned for a later release."
                         }
 
                         Item { Layout.preferredHeight: 8 }

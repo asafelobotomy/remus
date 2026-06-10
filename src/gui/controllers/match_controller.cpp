@@ -391,6 +391,7 @@ float MatchController::calculateNameSimilarity(const QString &left, const QStrin
 }
 
 void MatchController::clearState() {
+    clearSearchState();
     setLastMessage(QStringLiteral(""));
     if (!m_currentProvider.isEmpty()) {
         m_currentProvider.clear();

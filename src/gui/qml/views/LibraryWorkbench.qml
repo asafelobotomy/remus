@@ -87,6 +87,14 @@ Item {
         }
     }
 
+    MatchEnrichDialog {
+        id: matchEnrichDialog
+    }
+
+    RenameOrganizeDialog {
+        id: renameOrganizeDialog
+    }
+
     SplitView {
         anchors.fill: parent
         orientation:  Qt.Horizontal
@@ -105,6 +113,7 @@ Item {
             SplitView.preferredWidth: 280
             SplitView.minimumWidth:   200
             SplitView.maximumWidth:   400
+            onMatchSearchRequested: matchEnrichDialog.open()
         }
     }
 
@@ -170,5 +179,13 @@ Item {
 
     function openEditDialog() {
         editMetadataDialog.open()
+    }
+
+    function openMatchEnrichDialog() {
+        matchEnrichDialog.open()
+    }
+
+    function openRenameOrganizeDialog() {
+        renameOrganizeDialog.open()
     }
 }

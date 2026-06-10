@@ -78,22 +78,16 @@ Item {
         }
     }
 
+    readonly property string organizeDest: settingsController.stringValue("gui/organize_destination", "")
+    readonly property string organizeLibraryPath: organizeDest.length > 0 ? organizeDest + "/Remus Library" : ""
+    readonly property string namingTemplate: organizeController.namingTemplate
+
     // ── Folder pickers ───────────────────────────────────────────────────────
     FolderDialog {
         id: scanFolderDialog
         title: "Select directory to scan"
         onAccepted: scanDirField.text = decodeURIComponent(
                         selectedFolder.toString().replace(/^file:\/\//, ""))
-    }
-
-    FolderDialog {
-        id: organizeFolderDialog
-        title: "Select destination directory"
-        onAccepted: {
-            destDirField.text = decodeURIComponent(
-                selectedFolder.toString().replace(/^file:\/\//, ""))
-            settingsController.setValue("gui/organize_destination", destDirField.text)
-        }
     }
 
     // ── Apply: no organize directory warning ─────────────────────────────────
@@ -104,7 +98,7 @@ Item {
         anchors.centerIn: Overlay.overlay
 
         Label {
-            text: "Please select an Organize directory in section 6 before using Apply."
+            text: "Set an organize destination in Settings before using Apply."
             wrapMode: Text.WordWrap
             width: 320
         }
@@ -147,7 +141,7 @@ Item {
 
             Label {
                 text: "\u2022 Bundle & Rename using template: <i>" +
-                      bundleNameTemplate.editText + "</i>"
+                      root.namingTemplate + "</i>"
                 Layout.fillWidth: true
                 wrapMode: Text.WordWrap
                 textFormat: Text.RichText
@@ -155,15 +149,15 @@ Item {
 
             Label {
                 text: "\u2022 Organize ROMs into: <i>" +
-                      destDirField.text + "/Remus Library</i>"
-                visible: destDirField.text.length > 0
+                      root.organizeLibraryPath + "</i>"
+                visible: root.organizeDest.length > 0
                 Layout.fillWidth: true
                 wrapMode: Text.WordWrap
                 textFormat: Text.RichText
             }
 
             Label {
-                visible: destDirField.text.length === 0
+                visible: root.organizeDest.length === 0
                 text: "\u2022 Organize: skipped (no destination directory set)"
                 Layout.fillWidth: true
                 wrapMode: Text.WordWrap
@@ -184,9 +178,8 @@ Item {
 
         onAccepted: {
             matchController.confirmAll()
-            exportController.bundleAll(scanController.lastDirectory,
-                                       bundleNameTemplate.editText)
-            organizeController.applyOrganize(destDirField.text + "/Remus Library")
+            exportController.bundleAll(scanController.lastDirectory, root.namingTemplate)
+            organizeController.applyOrganize(root.organizeLibraryPath)
         }
     }
 
@@ -217,10 +210,8 @@ Item {
                             } else {
                                 workflowController.runAll(
                                     scanController.lastDirectory,
-                                    destDirField.text.length > 0
-                                        ? destDirField.text + "/Remus Library"
-                                        : "",
-                                    bundleNameTemplate.editText)
+                                    root.organizeLibraryPath,
+                                    root.namingTemplate)
                             }
                         }
                     }
@@ -478,38 +469,23 @@ Item {
                             text:      "Bundle Selected"
                             enabled:   appController.selectedFileId > 0 &&
                                        !exportController.exporting
-                            onClicked: exportController.bundleSelected(scanController.lastDirectory, bundleNameTemplate.editText)
+                            onClicked: exportController.bundleSelected(scanController.lastDirectory, root.namingTemplate)
                         }
                         Button {
                             text:      "Bundle All"
                             enabled:   appController.libraryOpen &&
                                        !exportController.exporting
-                            onClicked: exportController.bundleAll(scanController.lastDirectory, bundleNameTemplate.editText)
+                            onClicked: exportController.bundleAll(scanController.lastDirectory, root.namingTemplate)
                         }
                         Item { Layout.fillWidth: true }
                     }
 
-                    RowLayout {
+                    Label {
                         Layout.fillWidth: true
-                        spacing: 6
-
-                        Label {
-                            text:           "Name:"
-                            color:          "#a89984"
-                            font.pixelSize: 12
-                        }
-                        ComboBox {
-                            id:             bundleNameTemplate
-                            Layout.fillWidth: true
-                            editable:       true
-                            model:          ["{title} ({region})",
-                                             "{title}",
-                                             "{title} ({year})",
-                                             "{title} ({system})",
-                                             "{title} ({region}) [{system}]"]
-                            currentIndex:   0
-                            font.pixelSize: 12
-                        }
+                        wrapMode: Text.WordWrap
+                        font.pixelSize: 11
+                        color: "#928374"
+                        text: "Template: " + root.namingTemplate + "  (edit in Settings)"
                     }
 
                     ProgressCard {
@@ -534,40 +510,36 @@ Item {
                         Layout.fillWidth: true
                         spacing: 6
 
-                        TextField {
-                            id:               destDirField
-                            Layout.fillWidth: true
-                            placeholderText:  "Destination directory…"
-                            font.pixelSize:   12
-                            text:             settingsController.stringValue("gui/organize_destination", "")
-                            onEditingFinished: settingsController.setValue("gui/organize_destination", text)
-                        }
-                        Button {
-                            text:      "Browse"
-                            flat:      true
-                            onClicked: organizeFolderDialog.open()
-                        }
                         Button {
                             text:      "Organize All"
                             enabled:   appController.libraryOpen &&
                                        !organizeController.organizing &&
-                                       destDirField.text.length > 0
-                            onClicked: organizeController.organizeAll(
-                                           destDirField.text + "/Remus Library")
+                                       root.organizeDest.length > 0
+                            onClicked: organizeController.organizeAll(root.organizeLibraryPath)
                         }
                         Button {
                             text:      "Organize"
                             enabled:   appController.libraryOpen &&
                                        !organizeController.organizing &&
-                                       destDirField.text.length > 0
-                            onClicked: organizeController.applyOrganize(
-                                           destDirField.text + "/Remus Library")
+                                       root.organizeDest.length > 0
+                            onClicked: organizeController.applyOrganize(root.organizeLibraryPath)
                         }
                         Button {
                             text:      "Undo"
                             flat:      true
                             onClicked: organizeController.undoLast()
                         }
+                        Item { Layout.fillWidth: true }
+                    }
+
+                    Label {
+                        Layout.fillWidth: true
+                        wrapMode: Text.WordWrap
+                        font.pixelSize: 11
+                        color: root.organizeDest.length > 0 ? "#928374" : "#fabd2f"
+                        text: root.organizeDest.length > 0
+                              ? "Destination: " + root.organizeLibraryPath + "  (edit in Settings)"
+                              : "No organize destination configured — set in Settings."
                     }
 
                     ProgressCard {
@@ -609,7 +581,7 @@ Item {
                                   workflowController.enrichCount +
                                   workflowController.doneCount) > 0
                         onClicked: {
-                            if (destDirField.text.length === 0)
+                            if (root.organizeDest.length === 0)
                                 applyNoDirDialog.open()
                             else
                                 applyConfirmDialog.open()

@@ -89,9 +89,14 @@ ApplicationWindow {
 
                 onPipelineDrawerRequested: libraryWorkbench.openPipelineDrawer()
                 onRunAllRequested:         libraryWorkbench.requestRunAll()
-                onUtilitiesRequested:        appController.currentView = 1
-                onSettingsRequested:         appController.currentView = 2
+                onSettingsRequested:         appController.currentView = 1
+                onUtilityToolRequested:      function(tab) {
+                    utilitiesPanel.openTab(tab)
+                    utilitiesDrawer.open()
+                }
                 onEditRequested:             libraryWorkbench.openEditDialog()
+                onMatchEnrichRequested:      libraryWorkbench.openMatchEnrichDialog()
+                onRenameOrganizeRequested:   libraryWorkbench.openRenameOrganizeDialog()
             }
         }
     }
@@ -129,8 +134,50 @@ ApplicationWindow {
                 LibraryWorkbench {
                     id: libraryWorkbench
                 }
-                UtilitiesView {}
-                SettingsView  {}
+                SettingsView {}
+            }
+        }
+    }
+
+    Drawer {
+        id: utilitiesDrawer
+        edge:       Qt.RightEdge
+        width:      Math.min(window.width * 0.55, 720)
+        modal:      true
+        interactive: true
+
+        background: Rectangle {
+            color: "#282828"
+            border.color: "#504945"
+        }
+
+        ColumnLayout {
+            anchors.fill: parent
+            spacing: 0
+
+            ToolBar {
+                Layout.fillWidth: true
+
+                RowLayout {
+                    anchors.fill: parent
+                    anchors.margins: 8
+                    Label {
+                        text: "Tools"
+                        font.bold: true
+                        color: "#fbf1c7"
+                    }
+                    Item { Layout.fillWidth: true }
+                    ToolButton {
+                        text: "Close"
+                        onClicked: utilitiesDrawer.close()
+                    }
+                }
+            }
+
+            UtilitiesView {
+                id: utilitiesPanel
+                Layout.fillWidth:  true
+                Layout.fillHeight: true
             }
         }
     }

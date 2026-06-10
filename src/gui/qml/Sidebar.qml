@@ -9,9 +9,8 @@ Frame {
     signal viewRequested(int index)
 
     readonly property var items: [
-        { label: "Library",   index: 0 },
-        { label: "Utilities", index: 1 },
-        { label: "Settings",  index: 2 }
+        { label: "Library",  index: 0 },
+        { label: "Settings", index: 1 }
     ]
 
     background: Rectangle {

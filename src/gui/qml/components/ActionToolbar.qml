@@ -12,12 +12,13 @@ RowLayout {
 
     signal pipelineDrawerRequested()
     signal runAllRequested()
-    signal utilitiesRequested()
     signal settingsRequested()
+    signal utilityToolRequested(int tabIndex)
     signal editRequested()
+    signal matchEnrichRequested()
+    signal renameOrganizeRequested()
 
     property bool pendingEnrich: false
-    property string organizeDestination: settingsController.stringValue("gui/organize_destination", "")
 
     FolderDialog {
         id: scanFolderDialog
@@ -27,71 +28,6 @@ RowLayout {
             scanController.lastDirectory = dir
             scanController.startScan(dir)
         }
-    }
-
-    FolderDialog {
-        id: organizeFolderDialog
-        title: "Select organize destination"
-        onAccepted: {
-            organizeDestination = decodeURIComponent(selectedFolder.toString().replace(/^file:\/\//, ""))
-            settingsController.setValue("gui/organize_destination", organizeDestination)
-            renameOrganizeConfirmDialog.open()
-        }
-    }
-
-    Dialog {
-        id: renameOrganizeConfirmDialog
-        title: "Rename & Organize"
-        modal: true
-        anchors.centerIn: Overlay.overlay
-
-        ColumnLayout {
-            width: 380
-            spacing: 10
-
-            Label {
-                Layout.fillWidth: true
-                wrapMode: Text.WordWrap
-                text: "Bundle matched ROMs and organize them into:"
-            }
-            Label {
-                Layout.fillWidth: true
-                wrapMode: Text.WordWrap
-                textFormat: Text.RichText
-                text: "<i>" + organizeDestination + "/Remus Library</i>"
-                color: "#ebdbb2"
-            }
-            Label {
-                visible: matchController.unconfirmedMatchCount > 0
-                Layout.fillWidth: true
-                wrapMode: Text.WordWrap
-                color: "#fabd2f"
-                text: "Will confirm " + matchController.unconfirmedMatchCount + " pending match(es) first."
-            }
-        }
-
-        standardButtons: Dialog.Ok | Dialog.Cancel
-
-        onAccepted: {
-            if (matchController.unconfirmedMatchCount > 0)
-                matchController.confirmAll()
-            exportController.bundleAll(scanController.lastDirectory, organizeController.namingTemplate)
-            organizeController.applyOrganize(organizeDestination + "/Remus Library")
-        }
-    }
-
-    Dialog {
-        id: noOrganizeDirDialog
-        title: "Organize Destination"
-        modal: true
-        anchors.centerIn: Overlay.overlay
-        Label {
-            text: "Choose a destination folder for organized ROMs."
-            wrapMode: Text.WordWrap
-            width: 320
-        }
-        standardButtons: Dialog.Ok
-        onAccepted: organizeFolderDialog.open()
     }
 
     Connections {
@@ -125,11 +61,12 @@ RowLayout {
                  !matchController.matching &&
                  !artworkController.downloading
         onClicked: {
-            pendingEnrich = true
-            if (appController.selectedFileId > 0)
-                workflowController.hashAndMatchSelected()
-            else
+            if (appController.selectedFileId > 0) {
+                root.matchEnrichRequested()
+            } else {
+                pendingEnrich = true
                 workflowController.hashAndMatchAll()
+            }
         }
     }
 
@@ -144,12 +81,7 @@ RowLayout {
         enabled: appController.libraryOpen &&
                  !exportController.exporting &&
                  !organizeController.organizing
-        onClicked: {
-            if (organizeDestination.length === 0)
-                noOrganizeDirDialog.open()
-            else
-                renameOrganizeConfirmDialog.open()
-        }
+        onClicked: root.renameOrganizeRequested()
     }
 
     ToolSeparator {}
@@ -171,9 +103,22 @@ RowLayout {
             }
             MenuSeparator {}
             MenuItem {
-                text: "Utilities"
-                onTriggered: root.utilitiesRequested()
+                text: "Import DAT…"
+                onTriggered: root.utilityToolRequested(0)
             }
+            MenuItem {
+                text: "Verify ROM…"
+                onTriggered: root.utilityToolRequested(1)
+            }
+            MenuItem {
+                text: "Apply patch…"
+                onTriggered: root.utilityToolRequested(2)
+            }
+            MenuItem {
+                text: "Mod catalog…"
+                onTriggered: root.utilityToolRequested(3)
+            }
+            MenuSeparator {}
             MenuItem {
                 text: "Settings"
                 onTriggered: root.settingsRequested()

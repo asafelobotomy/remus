@@ -8,6 +8,7 @@ add_library(remus-gui-controllers STATIC
     controllers/scan_controller.cpp
     controllers/hash_controller.cpp
     controllers/match_controller.cpp
+    controllers/match_controller_search.cpp
     controllers/metadata_editor_controller.cpp
     controllers/artwork_controller.cpp
     controllers/dat_manager_controller.cpp
@@ -61,6 +62,8 @@ qt_add_qml_module(remus-gui
         qml/components/PipelinePanel.qml
         qml/components/InspectorPanel.qml
         qml/views/LibraryWorkbench.qml
+        qml/dialogs/MatchEnrichDialog.qml
+        qml/dialogs/RenameOrganizeDialog.qml
         qml/views/UtilitiesView.qml
         qml/views/ScanView.qml
         qml/views/HashView.qml

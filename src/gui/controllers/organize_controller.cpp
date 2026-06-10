@@ -25,6 +25,14 @@ void OrganizeController::previewOrganize(const QString &destinationDir) {
     runOrganize(destinationDir, true);
 }
 
+void OrganizeController::previewRenameOrganize(const QString &destinationDir, bool selectedOnly) {
+    runOrganize(destinationDir, true, false, matchedFileIds(selectedOnly));
+}
+
+int OrganizeController::renameOrganizeFileCount(bool selectedOnly) const {
+    return matchedFileIds(selectedOnly).size();
+}
+
 void OrganizeController::applyOrganize(const QString &destinationDir) {
     runOrganize(destinationDir, false);
 }
@@ -54,18 +62,6 @@ void OrganizeController::setNamingTemplate(const QString &value) {
     emit namingTemplateChanged();
 }
 
-QList<int> OrganizeController::targetFileIds() const {
-    if (m_appController == nullptr || !m_appController->isLibraryOpen()) {
-        return { };
-    }
-
-    if (m_appController->selectedFileId() > 0) {
-        return { m_appController->selectedFileId() };
-    }
-
-    return bundledFileIds();
-}
-
 QList<int> OrganizeController::bundledFileIds() const {
     if (m_appController == nullptr || !m_appController->isLibraryOpen()) {
         return { };
@@ -81,6 +77,40 @@ QList<int> OrganizeController::bundledFileIds() const {
                              "JOIN matches m ON m.file_id = f.id "
                              "WHERE f.is_bundled = 1 "
                              "  AND m.is_confirmed = 1 AND m.is_rejected = 0"));
+    if (!q.exec())
+        return { };
+
+    QList<int> fileIds;
+    while (q.next())
+        fileIds.append(q.value(0).toInt());
+    return fileIds;
+}
+
+QList<int> OrganizeController::targetFileIds() const {
+    if (m_appController == nullptr || !m_appController->isLibraryOpen()) {
+        return { };
+    }
+
+    if (m_appController->selectedFileId() > 0) {
+        return { m_appController->selectedFileId() };
+    }
+
+    return bundledFileIds();
+}
+
+QList<int> OrganizeController::matchedFileIds(bool selectedOnly) const {
+    if (m_appController == nullptr || !m_appController->isLibraryOpen()) {
+        return { };
+    }
+
+    if (selectedOnly && m_appController->selectedFileId() > 0) {
+        return { m_appController->selectedFileId() };
+    }
+
+    QSqlQuery q(m_appController->database()->database());
+    q.prepare(QStringLiteral("SELECT DISTINCT f.id FROM files f "
+                             "JOIN matches m ON m.file_id = f.id "
+                             "WHERE m.is_confirmed = 1 AND m.is_rejected = 0"));
     if (!q.exec())
         return { };
 
@@ -128,13 +158,18 @@ void OrganizeController::setLastError(const QString &message) {
     emit lastErrorChanged();
 }
 
-void OrganizeController::runOrganize(const QString &destinationDir, bool dryRun, bool allBundled) {
+void OrganizeController::runOrganize(const QString &destinationDir,
+    bool dryRun,
+    bool allBundled,
+    const QList<int> &explicitFileIds) {
     if (m_appController == nullptr || !m_appController->isLibraryOpen()) {
         setLastError(QStringLiteral("Open a library before organizing files."));
         return;
     }
 
-    const QList<int> fileIds = allBundled ? bundledFileIds() : targetFileIds();
+    const QList<int> fileIds = !explicitFileIds.isEmpty()
+        ? explicitFileIds
+        : (allBundled ? bundledFileIds() : targetFileIds());
     if (fileIds.isEmpty()) {
         setLastError(allBundled
                 ? QStringLiteral("No bundled ROMs found. Complete Stage 5 (Bundle & Rename) before organizing.")

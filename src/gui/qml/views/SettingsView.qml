@@ -29,6 +29,15 @@ ScrollView {
         }
     }
 
+    FolderDialog {
+        id: organizeDestFolderDialog
+        title: "Select organize destination"
+        onAccepted: {
+            const path = decodeURIComponent(selectedFolder.toString().replace(/^file:\/\//, ""))
+            settingsController.setValue("gui/organize_destination", path)
+        }
+    }
+
     // Surface credential-save failures to the user without exposing raw key names.
     Connections {
         target: settingsController
@@ -207,12 +216,129 @@ ScrollView {
             color: "#504945"
         }
 
-        // ── Bundle & Rename ──────────────────────────────────────────────────
-        Label { text: "Bundle && Rename"; font.bold: true }
+        // ── Rename & Organize ────────────────────────────────────────────────
+        Label { text: "Rename & Organize"; font.bold: true }
+
+        RowLayout {
+            Layout.fillWidth: true
+            spacing: 8
+
+            Label {
+                Layout.preferredWidth: 200
+                text: "Naming template"
+                font.pixelSize: 12
+            }
+
+            ComboBox {
+                id: namingTemplateCombo
+                Layout.fillWidth: true
+                editable: true
+                model: ["{title} ({region})",
+                        "{title}",
+                        "{title} ({year})",
+                        "{title} ({system})",
+                        "{title} ({region}) [{system}]"]
+                font.pixelSize: 12
+                Component.onCompleted: syncNamingTemplate()
+                onActivated: saveNamingTemplate()
+                onEditTextChanged: {
+                    if (editable && activeFocus)
+                        organizeController.namingTemplate = editText
+                }
+                onEditingFinished: saveNamingTemplate()
+
+                function syncNamingTemplate() {
+                    const current = organizeController.namingTemplate
+                    const idx = model.indexOf(current)
+                    if (idx >= 0)
+                        currentIndex = idx
+                    else
+                        editText = current
+                }
+
+                function saveNamingTemplate() {
+                    organizeController.namingTemplate = editText.length > 0 ? editText : model[0]
+                }
+
+                Connections {
+                    target: organizeController
+                    function onNamingTemplateChanged() {
+                        namingTemplateCombo.syncNamingTemplate()
+                    }
+                }
+            }
+        }
+
+        Label {
+            Layout.fillWidth: true
+            wrapMode: Text.WordWrap
+            font.pixelSize: 11
+            color: "#928374"
+            text: "Variables: {title}, {region}, {year}, {system}, {publisher}, {ext}, and more."
+        }
+
+        RowLayout {
+            Layout.fillWidth: true
+            spacing: 8
+
+            Label {
+                Layout.preferredWidth: 200
+                text: "Organize destination"
+                font.pixelSize: 12
+            }
+
+            TextField {
+                id: organizeDestField
+                Layout.fillWidth: true
+                font.pixelSize: 12
+                placeholderText: "/path/to/emulator-libraries"
+                text: settingsController.stringValue("gui/organize_destination", "")
+                onEditingFinished: settingsController.setValue("gui/organize_destination", text)
+
+                Connections {
+                    target: settingsController
+                    function onSettingsChanged() {
+                        organizeDestField.text = settingsController.stringValue("gui/organize_destination", "")
+                    }
+                }
+            }
+
+            Button {
+                text: "Browse"
+                flat: true
+                font.pixelSize: 11
+                padding: 6
+                onClicked: organizeDestFolderDialog.open()
+            }
+        }
+
+        Label {
+            Layout.fillWidth: true
+            wrapMode: Text.WordWrap
+            font.pixelSize: 11
+            color: "#928374"
+            leftPadding: 200
+            text: "ROMs are organized into <i>destination/Remus Library/{system}/…</i>"
+            textFormat: Text.RichText
+        }
+
+        CheckBox {
+            id: chkOrganizeBySystem
+            text: "Group folders by system"
+            checked: settingsController.boolValue("organize/by_system", true)
+            onCheckedChanged: settingsController.setValue("organize/by_system", checked)
+
+            Connections {
+                target: settingsController
+                function onSettingsChanged() {
+                    chkOrganizeBySystem.checked = settingsController.boolValue("organize/by_system", true)
+                }
+            }
+        }
 
         CheckBox {
             id: chkTrashOriginal
-            text: "Trash original ROM after Bundle && Rename completes?"
+            text: "Trash original ROM after bundle completes"
             checked: settingsController.boolValue("gui/trash_original_after_bundle")
             onCheckedChanged: settingsController.setValue("gui/trash_original_after_bundle", checked)
 
@@ -240,6 +366,7 @@ ScrollView {
             color: "#504945"
         }
 
+        // ── Danger Zone ──────────────────────────────────────────────────────
         Label {
             text: "Danger Zone"
             font.bold: true
