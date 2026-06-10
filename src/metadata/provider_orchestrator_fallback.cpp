@@ -2,6 +2,7 @@
 
 #include "compendium_provider.h"
 #include "filename_normalizer.h"
+#include "gametdb_provider.h"
 #include "hasheous_provider.h"
 #include "metadata_cache.h"
 #include "playmatch_provider.h"
@@ -45,10 +46,16 @@ namespace {
     }
 
     GameMetadata lookupByHashCascade(MetadataProvider *provider, const QString &system, const QString &preferredHashType,
-        const QString &primaryHash, const QString &crc32, const QString &md5, const QString &sha1,
+        const QString &primaryHash, const QString &crc32, const QString &md5, const QString &sha1, qint64 fileSize = 0,
         const QString &sha256 = QString()) {
         if (provider == nullptr) {
             return { };
+        }
+
+        auto *compendium = qobject_cast<CompendiumProvider *>(provider);
+        auto *gametdb = qobject_cast<GameTDBProvider *>(provider);
+        if (gametdb != nullptr) {
+            return gametdb->getByHashes(crc32, md5, sha1, system, preferredHashType);
         }
 
         const QStringList candidates
@@ -56,14 +63,17 @@ namespace {
         QSet<QString> tried;
         for (const QString &candidate : candidates) {
             tried.insert(candidate.toLower());
-            const GameMetadata metadata = provider->getByHash(candidate, system);
+            const GameMetadata metadata = compendium != nullptr
+                ? compendium->getByHash(candidate, system, fileSize)
+                : provider->getByHash(candidate, system);
             if (!metadata.title.isEmpty()) {
                 return metadata;
             }
         }
 
         if (!primaryHash.isEmpty() && !tried.contains(primaryHash.toLower())) {
-            return provider->getByHash(primaryHash, system);
+            return compendium != nullptr ? compendium->getByHash(primaryHash, system, fileSize)
+                                         : provider->getByHash(primaryHash, system);
         }
 
         return { };
@@ -115,10 +125,15 @@ void ProviderOrchestrator::queryProvider(GameMetadata &accumulator, const QStrin
             } else if (providerName.compare(Constants::Providers::PLAYMATCH, Qt::CaseInsensitive) == 0) {
                 result = lookupPlayMatch(qobject_cast<PlayMatchProvider *>(info.provider), name, fileSize, hash, crc32,
                     md5, sha1, system);
+            } else if (providerName.compare(Constants::Providers::RETROACHIEVEMENTS, Qt::CaseInsensitive) == 0) {
+                // RA resolves No-Intro MD5 only; never pass CRC32/SHA1 from selectBestHash.
+                if (!md5.isEmpty()) {
+                    result = info.provider->getByHash(md5, system);
+                }
             } else if (providerName.compare(Constants::Providers::COMPENDIUM, Qt::CaseInsensitive) == 0
                 || providerName.compare(Constants::Providers::GAMETDB, Qt::CaseInsensitive) == 0) {
                 result = lookupByHashCascade(
-                    info.provider, system, preferredHashType, hash, crc32, md5, sha1);
+                    info.provider, system, preferredHashType, hash, crc32, md5, sha1, fileSize);
             } else {
                 result = info.provider->getByHash(hash, system);
             }
@@ -282,6 +297,10 @@ GameMetadata ProviderOrchestrator::getByHashWithFallback(
             } else if (providerName.compare(Constants::Providers::PLAYMATCH, Qt::CaseInsensitive) == 0) {
                 emit providerFailed(providerName, QStringLiteral("Skipped (needs fileName and fileSize)"));
                 continue;
+            } else if (providerName.compare(Constants::Providers::RETROACHIEVEMENTS, Qt::CaseInsensitive) == 0) {
+                if (!md5.isEmpty()) {
+                    metadata = info.provider->getByHash(md5, system);
+                }
             } else if (providerName.compare(Constants::Providers::COMPENDIUM, Qt::CaseInsensitive) == 0
                 || providerName.compare(Constants::Providers::GAMETDB, Qt::CaseInsensitive) == 0) {
                 metadata = lookupByHashCascade(
@@ -427,6 +446,10 @@ GameMetadata ProviderOrchestrator::getHashFromProvider(const QString &providerNa
     } else if (providerName.compare(Constants::Providers::PLAYMATCH, Qt::CaseInsensitive) == 0) {
         emit providerFailed(providerName, QStringLiteral("Requires fileName and fileSize"));
         return { };
+    } else if (providerName.compare(Constants::Providers::RETROACHIEVEMENTS, Qt::CaseInsensitive) == 0) {
+        if (!md5.isEmpty()) {
+            metadata = info->provider->getByHash(md5, system);
+        }
     } else if (providerName.compare(Constants::Providers::COMPENDIUM, Qt::CaseInsensitive) == 0
         || providerName.compare(Constants::Providers::GAMETDB, Qt::CaseInsensitive) == 0) {
         metadata = lookupByHashCascade(info->provider, system, preferredHashTypeForSystem(system), hash, crc32, md5,

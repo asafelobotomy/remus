@@ -85,9 +85,10 @@ still passes all calculated digests into the cascade.
 
 ### RetroAchievements
 
-- Matching: MD5-oriented hash lookup
+- Matching: MD5 hash lookup via RA API (`dorequest.php?r=gameid`)
 - Auth: required username and API key
-- Best use: achievement-linked metadata; not interchangeable with No-Intro MD5 on all systems
+- Best use: achievement-linked metadata when the ROM's MD5 is in RA's hash list
+- Notes: RA uses RAHasher MD5 on some platforms (≠ No-Intro); orchestrator passes file MD5, not CRC32/SHA1 from `selectBestHash`
 
 ### TheGamesDB
 

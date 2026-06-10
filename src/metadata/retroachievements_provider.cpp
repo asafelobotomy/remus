@@ -33,7 +33,7 @@ GameMetadata RetroAchievementsProvider::getByHash(const QString &hash, const QSt
     if (!m_authenticated || hash.isEmpty())
         return { };
 
-    // RA hash lookup uses MD5 — if this isn't an MD5 hash (32 hex chars), skip
+    // RA hash lookup uses the API's MD5 list (RAHasher on some platforms), not No-Intro MD5.
     const QString cleanHash = hash.trimmed().toLower();
     if (cleanHash.length() != 32)
         return { };

@@ -129,6 +129,18 @@ private slots:
         QCOMPARE(md.providerId, QString("gametdb"));
     }
 
+    void testGetByHashes_fallsBackToMd5WhenCrcMissing() {
+        QTemporaryDir tmpDir;
+        QVERIFY(tmpDir.isValid());
+
+        GameTDBProvider provider;
+        provider.loadDatabase(writeSampleXml(tmpDir.path()));
+
+        const GameMetadata md = provider.getByHashes(QString(), QStringLiteral("e7b1ff1fabb0789482ce2cb0661d986e"),
+            QString(), QString(), QStringLiteral("crc32"));
+        QCOMPARE(md.title, QStringLiteral("Mario Kart Wii"));
+    }
+
     void testGetByHashMD5() {
         QTemporaryDir tmpDir;
         QVERIFY(tmpDir.isValid());

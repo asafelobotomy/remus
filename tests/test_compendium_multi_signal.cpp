@@ -52,6 +52,7 @@ private slots:
     void matchROM_filenameSizeFallback();
     void matchROM_serialOnly();
     void orchestratorUsesMultiSignalWhenHashMisses();
+    void getByHash_rejectsCatalogSizeMismatch();
 };
 
 void CompendiumMultiSignalTest::orchestratorUsesMultiSignalWhenHashMisses() {
@@ -201,6 +202,47 @@ void CompendiumMultiSignalTest::matchROM_serialOnly() {
     const GameMetadata metadata = provider.metadataFromMatch(matches.first(), QStringLiteral("GameCube"));
     QCOMPARE(metadata.matchMethod, QStringLiteral("serial"));
     QVERIFY(metadata.matchScore >= 0.65f);
+}
+
+void CompendiumMultiSignalTest::getByHash_rejectsCatalogSizeMismatch() {
+    QTemporaryDir tempDir;
+    QVERIFY(tempDir.isValid());
+
+    const QString dbPath = tempDir.filePath(QStringLiteral("size-check.db"));
+    QSqlDatabase db = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), QStringLiteral("size-check-test"));
+    db.setDatabaseName(dbPath);
+    QVERIFY(db.open());
+    QVERIFY(createSchema(db));
+
+    const QString entryKey = QStringLiteral("Nintendo - NES|Super Mario Bros.|Super Mario Bros. (World).nes");
+    const QString payload
+        = QStringLiteral(R"({"rom_name":"Super Mario Bros. (World).nes","size":40976,"crc32":"222A6A53"})");
+
+    const int nesSystemId = SystemResolver::systemIdByName(QStringLiteral("NES"));
+    QVERIFY(nesSystemId > 0);
+
+    QVERIFY(execSql(db, QStringLiteral("INSERT OR REPLACE INTO systems (system_id, internal_name, display_name) "
+                                        "VALUES (%1, 'NES', 'Nintendo Entertainment System')")
+                        .arg(nesSystemId)));
+    QVERIFY(execSql(db, QStringLiteral("INSERT INTO games (game_id, system_id, canonical_title, canonical_confidence) "
+                                        "VALUES ('smb', %1, 'Super Mario Bros.', 0.99)")
+                        .arg(nesSystemId)));
+    QVERIFY(execSql(db, QStringLiteral("INSERT INTO source_items (source_id, external_key, payload_json) "
+                                        "VALUES ('test', '%1', '%2')")
+                        .arg(entryKey, payload)));
+    QVERIFY(execSql(db, QStringLiteral("INSERT INTO game_signatures (game_id, hash_type, hash_value, source_entry_key, "
+                                        "confidence, is_primary) "
+                                        "VALUES ('smb', 'crc32', '222A6A53', '%1', 1.0, 1)")
+                        .arg(entryKey)));
+
+    CompendiumProvider provider;
+    QVERIFY(provider.openDatabase(dbPath));
+
+    const GameMetadata match = provider.getByHash(QStringLiteral("222A6A53"), QStringLiteral("NES"), 40976);
+    QCOMPARE(match.title, QStringLiteral("Super Mario Bros."));
+
+    const GameMetadata mismatch = provider.getByHash(QStringLiteral("222A6A53"), QStringLiteral("NES"), 99999);
+    QVERIFY(mismatch.title.isEmpty());
 }
 
 QTEST_MAIN(CompendiumMultiSignalTest)

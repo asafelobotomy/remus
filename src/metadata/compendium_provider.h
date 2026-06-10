@@ -21,6 +21,8 @@ public:
     QList<SearchResult> searchByName(
         const QString &title, const QString &system, const QString &region = QString()) override;
     GameMetadata getByHash(const QString &hash, const QString &system) override;
+    /// Hash lookup with optional catalog size corroboration (0 = skip size check).
+    GameMetadata getByHash(const QString &hash, const QString &system, qint64 fileSize);
     GameMetadata getBySerial(const QString &serial, const QString &system) override;
     GameMetadata getById(const QString &id) override;
     ArtworkUrls getArtwork(const QString &id) override;
@@ -57,7 +59,7 @@ private:
 
     static QString detectHashType(const QString &hash, QString &normalizedValue);
     GameMetadata lookupPatchByHash(const QString &hashType, const QString &normalizedHash, const QString &system,
-        int systemId) const;
+        int systemId, qint64 fileSize = 0) const;
 
     QString m_connectionName;
     QString m_databasePath;

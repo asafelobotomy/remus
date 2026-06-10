@@ -1,4 +1,5 @@
 #include "gametdb_provider.h"
+#include "../core/match_utils.h"
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
@@ -246,6 +247,18 @@ GameMetadata GameTDBProvider::getByHash(const QString &hash, const QString &syst
     }
 
     return entryToMetadata(m_idIndex[gameId]);
+}
+
+GameMetadata GameTDBProvider::getByHashes(
+    const QString &crc32, const QString &md5, const QString &sha1, const QString &system, const QString &preferredHashType) {
+    const QStringList candidates = orderedMatchHashValues(preferredHashType, crc32, md5, sha1);
+    for (const QString &candidate : candidates) {
+        const GameMetadata metadata = getByHash(candidate, system);
+        if (!metadata.title.isEmpty()) {
+            return metadata;
+        }
+    }
+    return GameMetadata();
 }
 
 GameMetadata GameTDBProvider::getById(const QString &id) {

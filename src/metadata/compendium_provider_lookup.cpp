@@ -5,6 +5,8 @@
 #include "thumbnail_url_helper.h"
 
 #include <QDate>
+#include <QJsonDocument>
+#include <QJsonObject>
 #include <QSqlDatabase>
 #include <QSqlError>
 #include <QSqlQuery>
@@ -22,6 +24,26 @@ namespace {
 
         const QDate parsed = QDate::fromString(releaseDate, Qt::ISODate);
         return parsed.isValid() ? parsed.year() : 0;
+    }
+
+    bool catalogSizeMatches(QSqlDatabase &db, const QString &sourceEntryKey, qint64 fileSize) {
+        if (fileSize <= 0 || sourceEntryKey.isEmpty()) {
+            return true;
+        }
+
+        QSqlQuery sizeQuery(db);
+        sizeQuery.prepare(QStringLiteral("SELECT payload_json FROM source_items WHERE external_key = ? LIMIT 1"));
+        sizeQuery.addBindValue(sourceEntryKey);
+        if (!sizeQuery.exec() || !sizeQuery.next()) {
+            return true;
+        }
+
+        const QJsonObject payload = QJsonDocument::fromJson(sizeQuery.value(0).toByteArray()).object();
+        const qint64 expectedSize = static_cast<qint64>(payload.value(QStringLiteral("size")).toDouble(0.0));
+        if (expectedSize <= 0) {
+            return true;
+        }
+        return expectedSize == fileSize;
     }
 
 } // namespace
@@ -176,7 +198,7 @@ namespace {
 } // namespace
 
 GameMetadata CompendiumProvider::lookupPatchByHash(const QString &hashType, const QString &normalizedHash,
-    const QString &system, int systemId) const {
+    const QString &system, int systemId, qint64 fileSize) const {
     const QString hashColumn = patchHashColumn(hashType);
     if (hashColumn.isEmpty()) {
         return { };
@@ -191,7 +213,7 @@ GameMetadata CompendiumProvider::lookupPatchByHash(const QString &hashType, cons
 
     QSqlQuery query(db);
     query.prepare(QStringLiteral("SELECT pe.game_name, pe.rom_name, pe.description, pe.base_title, pe.patch_name, "
-                                 "pe.file_type, pcs.system_name "
+                                 "pe.file_type, pcs.system_name, pe.rom_size "
                                  "FROM patch_entries pe "
                                  "JOIN patch_catalog_sources pcs ON pe.source_id = pcs.source_id "
                                  "WHERE (? = '' OR pcs.system_name = ?) "
@@ -212,10 +234,21 @@ GameMetadata CompendiumProvider::lookupPatchByHash(const QString &hashType, cons
         return { };
     }
 
+    if (fileSize > 0) {
+        const qint64 catalogSize = query.value(7).toLongLong();
+        if (catalogSize > 0 && catalogSize != fileSize) {
+            return { };
+        }
+    }
+
     return metadataFromPatchRow(query, system, hashType, normalizedHash);
 }
 
 GameMetadata CompendiumProvider::getByHash(const QString &hash, const QString &system) {
+    return getByHash(hash, system, 0);
+}
+
+GameMetadata CompendiumProvider::getByHash(const QString &hash, const QString &system, qint64 fileSize) {
     QString normalizedHash;
     const QString hashType = detectHashType(hash, normalizedHash);
     if (hashType.isEmpty()) {
@@ -245,11 +278,14 @@ GameMetadata CompendiumProvider::getByHash(const QString &hash, const QString &s
         return { };
     }
     if (!query.next()) {
-        return lookupPatchByHash(hashType, normalizedHash, system, systemId);
+        return lookupPatchByHash(hashType, normalizedHash, system, systemId, fileSize);
     }
 
     const QString gameId = query.value(0).toString();
     const QString sourceEntryKey = query.value(1).toString();
+    if (!catalogSizeMatches(db, sourceEntryKey, fileSize)) {
+        return { };
+    }
 
     GameMetadata metadata = fetchGameMetadata(gameId);
     if (!metadata.id.isEmpty()) {

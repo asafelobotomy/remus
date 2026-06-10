@@ -82,8 +82,9 @@ Signals ranked from most to least accurate for **identity** (not enrichment):
 | 4 | Multi-hash online lookup (Hasheous: CRC+MD5+SHA1 POST) | High | N/A | Yes (Hasheous) | No |
 | 5 | Hash APIs (ScreenScraper, PlayMatch) | High | N/A | Yes | No |
 | 6 | Multi-signal offline (hash+size, filename+size, serial) | Medium–high | Yes (`matchROM`) | Yes (compendium) | No |
-| 7 | Structured name (FTS / normalized title) | Medium–low | Yes | Last resort per provider | No |
-| 8 | Fuzzy name (TGDB, IGDB, Wikidata) | Low | N/A | Yes | No |
+| 7 | GameTDB multi-hash (Nintendo/PS3) | High | N/A | Yes (`getByHashes`) | No |
+| 8 | Structured name (FTS / normalized title) | Medium–low | Yes | Last resort per provider | No |
+| 9 | Fuzzy name (TGDB, IGDB, Wikidata) | Low | N/A | Yes | No |
 
 ### 2.1 Canonical hash cascade
 
@@ -102,7 +103,7 @@ sha256 → <system preferred> → sha1 → md5 → crc32
 |-----------|----------|-------|
 | Verification — official DAT | `findOfficialDatMatch` | Compendium `game_signatures` cache |
 | Verification — patch catalog | `findPatchCatalogMatch` | Same cascade (aligned in P7) |
-| Metadata — compendium / GameTDB | `orderedMatchHashValues` → `lookupByHashCascade` | Tries every non-empty digest |
+| Metadata — compendium / GameTDB | `orderedMatchHashValues` / `getByHashes` | Compendium also corroborates catalog `size` when `fileSize` is known |
 | Metadata — cache key only | `selectBestHash` / `selectBestMatchHash` | One digest for cache keys; does **not** limit lookup |
 
 `selectBestHash` is a convenience for cache keys and logging. The orchestrator passes
@@ -187,11 +188,11 @@ in `--match` can still show `NotInDat` in verify if no hash is in catalog.
 
 ### Open
 
-| ID | Issue | Impact |
+| ID | Issue | Status |
 |----|--------|--------|
-| **G9** | RA hash ≠ No-Intro MD5 on several systems | RA provider false-negative when compendium/Hasheous match |
-| **G10** | No runtime size check after compendium hash hit | Theoretical collision not filtered at match time |
-| **G11** | GameTDB internal index vs multi-hash pass | Orchestrator now cascades; GameTDB still length-indexes per call |
+| **G9** | RA hash ≠ No-Intro MD5 on several systems | **Mitigated** — orchestrator passes MD5 explicitly; RAHasher-only titles may still miss |
+| **G10** | No runtime size check after compendium hash hit | **Fixed** — `CompendiumProvider::getByHash(..., fileSize)` rejects catalog size mismatches |
+| **G11** | GameTDB internal index vs multi-hash pass | **Fixed** — `GameTDBProvider::getByHashes` uses verification-aligned cascade |
 
 ### Documentation
 
@@ -310,6 +311,7 @@ bash .github/scripts/validate-compendium-db.sh data/compendium/remus_compendium.
 
 | Date | Change |
 |------|--------|
+| 2026-06-10 | G9–G11 — RA MD5 wiring, compendium size corroboration, GameTDB getByHashes cascade |
 | 2026-06-10 | P7 — shared hash cascade documented; patch verification uses `findHashInDatEntries` |
 | 2026-06-10 | P1–P6 — multi-hash match, patch catalog, provider order, compendium-first, multi-signal, PlayMatch/Hasheous enrichment |
 | 2026-06-10 | Initial audit — dual pipeline analysis, gap register (G1–G11), remediation roadmap |
