@@ -20,6 +20,7 @@ namespace Constants {
         inline constexpr const char *BOX_ART_URL = "boxArtUrl";
         inline constexpr const char *RATING = "rating";
         inline constexpr const char *SCREENSHOTS = "screenshotUrls";
+        inline constexpr const char *EXTERNAL_IDS = "externalIds";
 
         // The 8 required fields that define a "fully enriched" game record.
         // Every field in this set must be non-empty/non-zero before a game is
@@ -46,13 +47,18 @@ namespace Constants {
             // REMOTE BAND — queried only for fields still missing after local exhaustion.
             { QStringLiteral("screenscraper"),
                 { TITLE, PUBLISHER, DEVELOPER, RELEASE_DATE, GENRES, PLAYERS, DESCRIPTION, BOX_ART_URL, RATING,
-                    SCREENSHOTS } },
-            { QStringLiteral("hasheous"), { TITLE, PUBLISHER, DEVELOPER, GENRES, RELEASE_DATE, RATING, DESCRIPTION } },
+                    SCREENSHOTS, EXTERNAL_IDS } },
+            { QStringLiteral("hasheous"),
+                { TITLE, PUBLISHER, DEVELOPER, GENRES, RELEASE_DATE, RATING, DESCRIPTION, EXTERNAL_IDS } },
+            { QStringLiteral("playmatch"),
+                { TITLE, RELEASE_DATE, RATING, DESCRIPTION, EXTERNAL_IDS } },
             { QStringLiteral("igdb"),
-                { TITLE, PUBLISHER, DEVELOPER, GENRES, RELEASE_DATE, DESCRIPTION, PLAYERS, RATING } },
-            { QStringLiteral("retroachievements"), { TITLE, PUBLISHER, DEVELOPER, GENRES, BOX_ART_URL } },
+                { TITLE, PUBLISHER, DEVELOPER, GENRES, RELEASE_DATE, DESCRIPTION, PLAYERS, RATING, SCREENSHOTS,
+                    EXTERNAL_IDS } },
+            { QStringLiteral("retroachievements"),
+                { TITLE, PUBLISHER, DEVELOPER, GENRES, BOX_ART_URL, RATING, EXTERNAL_IDS } },
             { QStringLiteral("thegamesdb"),
-                { TITLE, PUBLISHER, DEVELOPER, RELEASE_DATE, DESCRIPTION, PLAYERS, GENRES } },
+                { TITLE, PUBLISHER, DEVELOPER, RELEASE_DATE, DESCRIPTION, PLAYERS, GENRES, SCREENSHOTS, RATING } },
             { QStringLiteral("wikidata"), { TITLE, PUBLISHER, DEVELOPER, GENRES, RELEASE_DATE, DESCRIPTION } },
         };
 

@@ -39,7 +39,12 @@ private slots:
 void MetadataFieldGapTest::fieldGap_emptyMetadata_allRequired() {
     GameMetadata empty;
     const ProviderOrchestrator::FieldSet gap = ProviderOrchestrator::computeFieldGap(empty);
-    QCOMPARE(gap, REQUIRED_FIELDS);
+    for (const QString &field : REQUIRED_FIELDS) {
+        QVERIFY2(gap.contains(field), qPrintable(QStringLiteral("Missing required gap field: %1").arg(field)));
+    }
+    QVERIFY(gap.contains(QLatin1String(SCREENSHOTS)));
+    QVERIFY(gap.contains(QLatin1String(RATING)));
+    QVERIFY(gap.contains(QLatin1String(EXTERNAL_IDS)));
 }
 
 void MetadataFieldGapTest::fieldGap_fullMetadata_noGap() {
@@ -52,6 +57,9 @@ void MetadataFieldGapTest::fieldGap_fullMetadata_noGap() {
     full.players = 2;
     full.description = QStringLiteral("A fine game.");
     full.boxArtUrl = QStringLiteral("https://example.com/art.jpg");
+    full.rating = 4.0f;
+    full.screenshotUrls = { QStringLiteral("https://example.com/shot.jpg") };
+    full.externalIds.insert(QStringLiteral("igdb"), QStringLiteral("42"));
 
     const ProviderOrchestrator::FieldSet gap = ProviderOrchestrator::computeFieldGap(full);
     QVERIFY(gap.isEmpty());
@@ -73,7 +81,10 @@ void MetadataFieldGapTest::fieldGap_partialMetadata_correctGap() {
     QVERIFY(gap.contains(QLatin1String(PLAYERS)));
     QVERIFY(gap.contains(QLatin1String(DESCRIPTION)));
     QVERIFY(gap.contains(QLatin1String(BOX_ART_URL)));
-    QCOMPARE(gap.size(), 6);
+    QVERIFY(gap.contains(QLatin1String(SCREENSHOTS)));
+    QVERIFY(gap.contains(QLatin1String(RATING)));
+    QVERIFY(gap.contains(QLatin1String(EXTERNAL_IDS)));
+    QCOMPARE(gap.size(), 9);
 }
 
 void MetadataFieldGapTest::requiredFields_containsAll8() {

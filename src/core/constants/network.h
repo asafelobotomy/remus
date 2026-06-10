@@ -36,6 +36,7 @@ namespace Constants {
 
         /// Hasheous API timeout (5 seconds, fast service)
         inline constexpr int HASHEOUS_TIMEOUT_MS = 5000;
+        inline constexpr int PLAYMATCH_TIMEOUT_MS = 5000;
 
         /// Connection establishment timeout (3 seconds)
         inline constexpr int CONNECT_TIMEOUT_MS = 3000;
@@ -67,6 +68,7 @@ namespace Constants {
         /// Hasheous minimum interval between requests (milliseconds)
         /// Conservative despite fast service
         inline constexpr int HASHEOUS_RATE_LIMIT_MS = 1000;
+        inline constexpr int PLAYMATCH_RATE_LIMIT_MS = 500;
 
         /// RetroAchievements minimum interval between requests (milliseconds)
         /// Free API — be polite; 500ms keeps well within limits

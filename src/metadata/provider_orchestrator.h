@@ -77,7 +77,7 @@ public:
      */
     GameMetadata searchWithFallback(const QString &hash, const QString &name, const QString &system,
         const QString &crc32 = QString(), const QString &md5 = QString(), const QString &sha1 = QString(),
-        const QString &serial = QString(), bool requireArtwork = false);
+        const QString &serial = QString(), qint64 fileSize = 0, bool requireArtwork = false);
 
     /**
      * @brief Get list of all search results from all providers
@@ -135,7 +135,8 @@ public:
      */
     GameMetadata enrichMissingFields(const FieldSet &missing, const GameMetadata &existing, const QString &hash,
         const QString &name, const QString &system, const QString &crc32 = QString(), const QString &md5 = QString(),
-        const QString &sha1 = QString(), const QString &serial = QString());
+        const QString &sha1 = QString(), const QString &serial = QString(),
+        const QSet<QString> &excludeProviders = {});
 
     /**
      * @brief Get list of enabled providers
@@ -218,7 +219,8 @@ private:
      * Fills only the fields that are still empty in @p accumulator (additive).
      */
     void queryProvider(GameMetadata &accumulator, const QString &providerName, const QString &hash, const QString &name,
-        const QString &system, const QString &crc32, const QString &md5, const QString &sha1, const QString &serial);
+        const QString &system, const QString &crc32, const QString &md5, const QString &sha1, const QString &serial,
+        qint64 fileSize = 0);
 
     /**
      * @brief Determine if provider supports hash matching

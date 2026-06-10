@@ -4,6 +4,7 @@
 #include "metadata_provider.h"
 #include "clrmamepro_parser.h"
 #include "libretro_metadata_parser.h"
+#include "multi_signal_types.h"
 #include "../core/constants/providers.h"
 #include <QMap>
 #include <QHash>
@@ -46,18 +47,6 @@ struct MultiSignalMatch {
         // Perfect match (all signals) = 200 points = 100%
         return qMin(100, (confidenceScore * 100) / 200);
     }
-};
-
-/**
- * @brief Input signals for multi-signal matching
- */
-struct ROMSignals {
-    QString crc32; // CRC32 hash (optional)
-    QString md5; // MD5 hash (optional)
-    QString sha1; // SHA1 hash (optional)
-    QString filename; // ROM filename (required)
-    qint64 fileSize = 0; // File size in bytes (required)
-    QString serial; // Serial number (optional)
 };
 
 /**

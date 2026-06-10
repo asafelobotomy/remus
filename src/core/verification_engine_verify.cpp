@@ -196,24 +196,8 @@ bool VerificationEngine::findPatchCatalogMatch(const QString &systemName, const 
     loadPatchDatCache(systemName);
     const auto &patchEntries = m_patchDatCache.value(systemName);
 
-    struct CandidateHash {
-        QString type;
-        QString value;
-    };
-    const QList<CandidateHash> candidates
-        = { { QStringLiteral("sha256"), sha256.toLower() }, { QStringLiteral("sha1"), sha1.toLower() },
-              { QStringLiteral("md5"), md5.toLower() }, { QStringLiteral("crc32"), crc32.toLower() } };
-
-    for (const CandidateHash &candidate : candidates) {
-        if (!candidate.value.isEmpty() && patchEntries.contains(candidate.value)) {
-            matchedEntry = patchEntries.value(candidate.value);
-            matchedHash = candidate.value;
-            matchedHashType = candidate.type;
-            return true;
-        }
-    }
-
-    return false;
+    return findHashInDatEntries(patchEntries, m_datHashTypes.value(systemName, QStringLiteral("crc32")), crc32, md5,
+        sha1, sha256, matchedEntry, matchedHash, matchedHashType);
 }
 
 void VerificationEngine::promotePatchMetadata(int fileId, const DatRomEntry &entry) {

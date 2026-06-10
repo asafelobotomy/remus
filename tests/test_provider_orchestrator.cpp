@@ -296,7 +296,7 @@ void ProviderOrchestratorTest::searchWithFallbackContinuesPastCacheWithoutArtwor
     orchestrator.addProvider("igdb", provider, 40);
 
     GameMetadata found = orchestrator.searchWithFallback(
-        "6291ee08", "Live A Live", "SNES", QString(), QString(), QString(), QString(), true);
+        "6291ee08", "Live A Live", "SNES", QString(), QString(), QString(), QString(), 0, true);
 
     QCOMPARE(provider->m_lastSearchName, QString("Live A Live"));
     QCOMPARE(found.title, QString("Live A Live"));
@@ -461,6 +461,16 @@ void ProviderOrchestratorTest::hashMatchSkipsRemainingProviders() {
 
     auto *first = new StubProvider("compendium");
     first->m_hashMetadata.title = "Super Mario World";
+    first->m_hashMetadata.publisher = "Nintendo";
+    first->m_hashMetadata.developer = "Nintendo";
+    first->m_hashMetadata.releaseDate = "1990-11-21";
+    first->m_hashMetadata.genres = { "Platform" };
+    first->m_hashMetadata.players = 2;
+    first->m_hashMetadata.description = "Classic platformer.";
+    first->m_hashMetadata.boxArtUrl = "http://example.com/smw-front.jpg";
+    first->m_hashMetadata.rating = 4.9f;
+    first->m_hashMetadata.screenshotUrls = { "http://example.com/smw-shot.png" };
+    first->m_hashMetadata.externalIds.insert("igdb", "1234");
     first->m_hashMetadata.matchScore = 1.0f;
     first->m_hashMetadata.matchMethod = Constants::MatchMethods::HASH;
 
@@ -515,7 +525,7 @@ void ProviderOrchestratorTest::hashMatchWithRequireArtworkContinuesForArtwork() 
     orchestrator.addProvider("thegamesdb", second, 50);
 
     const GameMetadata result = orchestrator.searchWithFallback(
-        "CCDDEE11", "Chrono Trigger", "SNES", QString(), QString(), QString(), QString(), /*requireArtwork=*/true);
+        "CCDDEE11", "Chrono Trigger", "SNES", QString(), QString(), QString(), QString(), 0, true);
 
     // Title must come from the hash match.
     QCOMPARE(result.title, QStringLiteral("Chrono Trigger"));

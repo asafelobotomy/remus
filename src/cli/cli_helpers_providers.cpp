@@ -11,6 +11,7 @@
 #include "../metadata/hasheous_provider.h"
 #include "../metadata/igdb_provider.h"
 #include "../metadata/metadata_cache.h"
+#include "../metadata/playmatch_provider.h"
 #include "../metadata/retroachievements_provider.h"
 #include "../metadata/screenscraper_provider.h"
 #include "../metadata/thegamesdb_provider.h"
@@ -98,6 +99,12 @@ std::unique_ptr<ProviderOrchestrator> buildOrchestrator(const QCommandLineParser
     const auto hasheousInfo = Providers::getProviderInfo(Providers::HASHEOUS);
     orchestrator->addProvider(Providers::HASHEOUS, hasheousProvider.get(), hasheousInfo ? hasheousInfo->priority : 80);
     hasheousProvider.release();
+
+    auto playmatchProvider = std::make_unique<PlayMatchProvider>();
+    const auto playmatchInfo = Providers::getProviderInfo(Providers::PLAYMATCH);
+    orchestrator->addProvider(Providers::PLAYMATCH, playmatchProvider.get(),
+        playmatchInfo ? playmatchInfo->priority : Constants::Providers::Priority::PLAYMATCH);
+    playmatchProvider.release();
 
     const QString ssUser
         = resolveSecret(parser, QStringLiteral("ss-user"), Settings::Providers::SCREENSCRAPER_USERNAME);

@@ -1,6 +1,6 @@
 # ROM matching audit — accuracy order and gaps
 
-> **Status:** Active audit (2026-06-10)  
+> **Status:** Active audit — remediation P1–P7 complete (2026-06-10)  
 > **Scope:** Metadata matching (`--match`, GUI) and verification (`VerificationEngine`)  
 > **Related:** [COMPENDIUM-DATA-SOURCES.md](COMPENDIUM-DATA-SOURCES.md) · [metadata-providers.md](../metadata-providers.md) · [compendium-first-matching.md](../archive/plans/compendium-first-matching.md)
 
@@ -11,23 +11,24 @@ correct accuracy order, and what to add for unmatched files.
 
 ## Executive summary
 
-Remus runs **two separate matching pipelines** that do not share the same logic:
+Remus runs **two matching pipelines** with different goals but a **shared hash cascade**
+for offline catalog lookups:
 
 | Pipeline | Entry point | Purpose |
 |----------|-------------|---------|
 | **Metadata matching** | `--match`, GUI match controller | Identify game + persist metadata |
 | **Verification** | `VerificationEngine::verifyFile` | Confirm ROM against official/patch catalogs |
 
-The strongest offline signals (compendium multi-hash, serial, patch catalog,
-multi-signal corroboration) are **not all exercised** in the main `--match` path.
-The richest offline multi-signal logic (`LocalDatabaseProvider::matchROM`) exists
-but is **not registered** in the default CLI orchestrator.
+Both pipelines now try digests in the same order for compendium official signatures
+and patch entries (see [§2.1 Canonical hash cascade](#21-canonical-hash-cascade)).
+Metadata matching adds serial, multi-signal, and online provider fallbacks that
+verification intentionally excludes.
 
-**Highest-accuracy path for unmatched ROMs (target state):**
+**Current highest-accuracy metadata identity path:**
 
 ```text
-multi-hash compendium → serial (disc) → patch catalog → Hasheous/PlayMatch
-→ guarded filename+size → FTS name with system/region → manual confirm
+compendium multi-hash → serial → patch catalog (via cascade) → compendium multi-signal
+→ GameTDB multi-hash → Hasheous → ScreenScraper → PlayMatch → RA → name providers
 ```
 
 ---
@@ -39,8 +40,8 @@ flowchart TD
     subgraph meta [Metadata matching]
         A[FileRecord hashes + disc serial] --> B[selectBestHash]
         B --> C[ProviderOrchestrator.searchWithFallback]
-        C --> D[Local: Compendium → GameTDB]
-        C --> E[Remote: ScreenScraper → Hasheous → IGDB → RA → TGDB → Wikidata]
+        C --> D[Local: Compendium two-pass → GameTDB]
+        C --> E[Remote: Hasheous → ScreenScraper → PlayMatch → IGDB → RA → TGDB → Wikidata]
         D --> F[persistMetadata]
         E --> F
     end
@@ -59,7 +60,9 @@ flowchart TD
 | Orchestrator fallback | `src/metadata/provider_orchestrator_fallback.cpp` |
 | Provider registration (CLI) | `src/cli/cli_helpers_providers.cpp` |
 | Match command | `src/cli/cli_commands_match.cpp` |
-| Hash selection | `src/core/match_utils.cpp` |
+| Hash selection (cache key) | `src/core/match_utils.cpp` (`selectBestMatchHash`) |
+| Hash cascade (shared) | `src/core/verification_hash_matcher.cpp` |
+| Match hash ordering | `src/core/match_utils.cpp` (`orderedMatchHashValues`) |
 | Compendium hash/serial | `src/metadata/compendium_provider_lookup.cpp` |
 | Verification | `src/core/verification_engine_verify.cpp` |
 | Multi-signal (legacy) | `src/metadata/local_database_provider_match.cpp` |
@@ -73,55 +76,80 @@ Signals ranked from most to least accurate for **identity** (not enrichment):
 
 | Rank | Signal | Confidence | Compendium | `--match` | Verification |
 |------|--------|------------|------------|-----------|--------------|
-| 1 | Cryptographic hash (SHA256 → SHA1 → MD5 → CRC32, system-preferred first) | Definitive | Yes (`game_signatures`) | Partial | Yes |
-| 2 | Disc/product serial (IP.BIN, etc.) | Very high (disc) | Yes (`game_serials`) | After hash per provider | No |
-| 3 | Patch/hack hash (libretro hacks, translations) | Definitive (patched ROM) | Yes (`patch_entries`) | **No** | Yes (after official miss) |
-| 4 | Multi-hash online lookup (Hasheous: CRC+MD5+SHA1 POST) | High | N/A | Hasheous only | No |
-| 5 | Authenticated hash APIs (ScreenScraper, PlayMatch) | High | N/A | ScreenScraper only | No |
-| 6 | Hash + file size corroboration | High | Partial | **No** | No |
-| 7 | Filename + size (exact base + ±1 KiB) | Medium (~40–80%) | No | **No** | No |
-| 8 | Serial-only (no hash) | Medium (~65%) | Yes | Compendium only | No |
-| 9 | Structured name (FTS / normalized title) | Medium–low | Yes | Last resort per provider | No |
-| 10 | Fuzzy name (TGDB, IGDB, Wikidata) | Low | N/A | Yes | No |
+| 1 | Cryptographic hash (SHA256 → preferred → SHA1 → MD5 → CRC32) | Definitive | Yes (`game_signatures`) | Yes (cascade) | Yes |
+| 2 | Disc/product serial (IP.BIN, etc.) | Very high (disc) | Yes (`game_serials`) | Yes (after hash per provider) | No |
+| 3 | Patch/hack hash (libretro hacks, translations) | Definitive (patched ROM) | Yes (`patch_entries`) | Yes (cascade miss) | Yes (same cascade) |
+| 4 | Multi-hash online lookup (Hasheous: CRC+MD5+SHA1 POST) | High | N/A | Yes (Hasheous) | No |
+| 5 | Hash APIs (ScreenScraper, PlayMatch) | High | N/A | Yes | No |
+| 6 | Multi-signal offline (hash+size, filename+size, serial) | Medium–high | Yes (`matchROM`) | Yes (compendium) | No |
+| 7 | Structured name (FTS / normalized title) | Medium–low | Yes | Last resort per provider | No |
+| 8 | Fuzzy name (TGDB, IGDB, Wikidata) | Low | N/A | Yes | No |
+
+### 2.1 Canonical hash cascade
+
+Single source of truth: `VerificationHashMatcher::orderedOfficialHashTypes()` in
+`src/core/verification_hash_matcher.cpp`.
+
+**Try order** (each digest type at most once):
+
+```text
+sha256 → <system preferred> → sha1 → md5 → crc32
+```
+
+**Consumers**
+
+| Subsystem | Function | Notes |
+|-----------|----------|-------|
+| Verification — official DAT | `findOfficialDatMatch` | Compendium `game_signatures` cache |
+| Verification — patch catalog | `findPatchCatalogMatch` | Same cascade (aligned in P7) |
+| Metadata — compendium / GameTDB | `orderedMatchHashValues` → `lookupByHashCascade` | Tries every non-empty digest |
+| Metadata — cache key only | `selectBestHash` / `selectBestMatchHash` | One digest for cache keys; does **not** limit lookup |
+
+`selectBestHash` is a convenience for cache keys and logging. The orchestrator passes
+all calculated digests into `lookupByHashCascade`, so a ROM can verify and match on
+the same hash even when the system-preferred type is empty.
 
 ---
 
 ## 3. Current `--match` execution order
 
 Wiring: `buildOrchestrator()` in `src/cli/cli_helpers_providers.cpp`.
+Search: `ProviderOrchestrator::searchWithFallback()` in `provider_orchestrator_fallback.cpp`.
 
-**`LocalDatabaseProvider` is not registered.** Multi-signal `matchROM()` is unused
-in production match (see `docs/metadata-providers.md`).
+**Pass 1 — compendium identity + gap enrichment**, then **Pass 2 — legacy waterfall**
+for remaining gaps. `LocalDatabaseProvider` is not registered; compendium-backed
+`matchROM()` covers the same multi-signal signals (P5).
 
 ### Phase A — local providers (priority descending)
 
-| Order | Provider | Priority | Hash | Serial | Name |
-|-------|----------|----------|------|--------|------|
-| 1 | Compendium | 210 | Single hash via `getByHash` | Yes | FTS/LIKE |
-| 2 | GameTDB | 150 | Single hash (index by digest length) | No | Yes |
+| Order | Provider | Priority | Hash | Serial | Multi-signal | Name |
+|-------|----------|----------|------|--------|--------------|------|
+| 1 | Compendium | 210 | Multi-hash cascade + patch fallback | Yes | Yes | FTS/LIKE |
+| 2 | GameTDB | 150 | Multi-hash cascade | No | No | Yes |
 
 ### Phase B — remote providers
 
-Only if identity not resolved (hash match score ≥ 1.0 stops the waterfall
-unless artwork is required).
+Hash identity stops the waterfall at score ≥ 1.0 unless artwork is still required.
 
 | Order | Provider | Priority | Hash behaviour |
 |-------|----------|----------|----------------|
-| 1 | ScreenScraper | 90 | One hash type per API request |
-| 2 | Hasheous | 80 | All CRC+MD5+SHA1 in one POST |
-| 3 | IGDB | 70 | Name only |
-| 4 | RetroAchievements | 60 | MD5-oriented API hash |
-| 5 | TheGamesDB | 50 | Name only |
-| 6 | Wikidata | 40 | Name only |
+| 1 | Hasheous | 91 | CRC+MD5+SHA1 POST |
+| 2 | ScreenScraper | 89 | One hash type per request (if creds) |
+| 3 | PlayMatch | 88 | Identify API (fileName+size+hashes) |
+| 4 | IGDB | 70 | Name only |
+| 5 | RetroAchievements | 60 | MD5-oriented API hash |
+| 6 | TheGamesDB | 50 | Name only |
+| 7 | Wikidata | 40 | Name only |
 
 ### Per-provider attempt order (`queryProvider`)
 
 For each provider, in order:
 
-1. **Hash** — `getByHash(selectBestHash(file), …)`  
-   Exception: Hasheous uses `getByHashes(crc32, md5, sha1)`.
+1. **Hash** — multi-hash cascade for compendium/GameTDB; Hasheous `getByHashes`;
+   PlayMatch `identifyBySignals` when fileName and fileSize are available.
 2. **Serial** — `getBySerial(discSerial)` when extracted.
-3. **Name** — normalized filename search.
+3. **Multi-signal** — compendium `matchROM()` when hash/serial miss (P5).
+4. **Name** — normalized filename search.
 
 ---
 
@@ -131,8 +159,9 @@ For each provider, in order:
 
 1. Require calculated hashes.
 2. **Official catalog** — compendium `game_signatures` via DAT cache;  
-   `findOfficialDatMatch` uses SHA256-first cascade.
-3. **Patch catalog** — `findPatchCatalogMatch` (libretro hacks DATs).
+   `findOfficialDatMatch` uses the [canonical hash cascade](#21-canonical-hash-cascade).
+3. **Patch catalog** — `findPatchCatalogMatch` uses the **same cascade** (not a fixed
+   sha256→crc32 list).
 4. Else → `NotInDat`.
 
 **Not used in verification:** serial-only, filename+size, name search, Hasheous,
@@ -141,34 +170,33 @@ in `--match` can still show `NotInDat` in verify if no hash is in catalog.
 
 ---
 
-## 5. Identified gaps
+## 5. Gap register
 
-### Critical
+### Resolved (P1–P7)
+
+| ID | Issue | Resolution |
+|----|--------|------------|
+| **G1** | Single-hash compendium lookup | P1 — `lookupByHashCascade` tries all digests |
+| **G2** | SHA256 invisible to compendium | P1 — SHA256 in `detectHashType` + cascade |
+| **G3** | Multi-signal not in orchestrator | P5 — compendium `matchROM()` wired |
+| **G4** | Patch catalog excluded from match | P2 — `lookupPatchByHash` on official miss |
+| **G5** | ScreenScraper before Hasheous | P3 — priorities 91 / 89 |
+| **G6** | PlayMatch not implemented | P6 — `PlayMatchProvider` |
+| **G7** | Compendium-first two-pass missing | P4 — `searchWithFallback` two-pass |
+| **G8** | Hash order inconsistency | P7 — shared `VerificationHashMatcher` cascade; patch aligned |
+
+### Open
 
 | ID | Issue | Impact |
 |----|--------|--------|
-| **G1** | Single-hash compendium lookup — only `selectBestHash` passed to `getByHash` | Miss when preferred hash empty or catalog keyed on different digest |
-| **G2** | No SHA256 in `CompendiumProvider::detectHashType` (stops at 40-char SHA1) | CHD/MAME-style SHA256 signatures invisible to compendium lookup |
-| **G3** | Multi-signal matching not in orchestrator (`LocalDatabaseProvider::matchROM`) | Unhashed/partial dumps fail earlier than necessary |
-| **G4** | Patch catalog excluded from metadata match | Translations/hacks verify but may not get metadata via `--match` |
-| **G5** | Remote hash order: ScreenScraper (90) before Hasheous (80) | SS may fail when Hasheous multi-hash would succeed |
-| **G6** | PlayMatch referenced in `detectHashSupport` but not implemented | No second hash→IGDB bridge (RomM-style) |
-| **G7** | Compendium-first two-pass + `enrichMissingFields` not wired in `searchWithFallback` | Redundant provider calls; planned in [compendium-first-matching.md](../archive/plans/compendium-first-matching.md) |
-
-### Moderate
-
-| ID | Issue | Impact |
-|----|--------|--------|
-| **G8** | Hash order inconsistency across subsystems | Same ROM can verify but fail match (or vice versa) |
 | **G9** | RA hash ≠ No-Intro MD5 on several systems | RA provider false-negative when compendium/Hasheous match |
 | **G10** | No runtime size check after compendium hash hit | Theoretical collision not filtered at match time |
-| **G11** | GameTDB checks indexes by digest length, but orchestrator passes one hash | Better than compendium single-type query, still not multi-field |
+| **G11** | GameTDB internal index vs multi-hash pass | Orchestrator now cascades; GameTDB still length-indexes per call |
 
-### Documentation drift
+### Documentation
 
-`docs/metadata-providers.md` lists providers in registration order, not
-local-then-remote execution order, and omits that GameTDB runs before any online
-provider.
+Provider execution order and hash cascade are documented in
+[metadata-providers.md](../metadata-providers.md) and [§2.1](#21-canonical-hash-cascade) above.
 
 ---
 
@@ -251,8 +279,8 @@ Verification stays strict: **official hash → patch hash → NotInDat** (no nam
 | P3 | Hasheous before ScreenScraper for hash identity | G5 | Small |
 | P4 | Compendium-first two-pass + `enrichMissingFields` | G7 | Medium — see plan |
 | P5 | Port `matchROM` signals to compendium-backed offline matcher | G3 | Medium |
-| P6 | PlayMatch provider + bulk Hasheous compendium pass | G6, Tier B | Large |
-| P7 | Align verification vs match hash cascade documentation | G8 | Small (docs + optional unify) |
+| P6 | PlayMatch provider + bulk Hasheous compendium pass | G6, Tier B | **Done** |
+| P7 | Align verification vs match hash cascade documentation | G8 | **Done** |
 
 ---
 
@@ -282,4 +310,6 @@ bash .github/scripts/validate-compendium-db.sh data/compendium/remus_compendium.
 
 | Date | Change |
 |------|--------|
+| 2026-06-10 | P7 — shared hash cascade documented; patch verification uses `findHashInDatEntries` |
+| 2026-06-10 | P1–P6 — multi-hash match, patch catalog, provider order, compendium-first, multi-signal, PlayMatch/Hasheous enrichment |
 | 2026-06-10 | Initial audit — dual pipeline analysis, gap register (G1–G11), remediation roadmap |

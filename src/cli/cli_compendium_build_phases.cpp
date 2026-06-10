@@ -129,6 +129,22 @@ bool hasAnyRaGaps(QSqlDatabase &db, QString &error) {
         error);
 }
 
+bool hasAnyHasheousGaps(QSqlDatabase &db, QString &error) {
+    return queryHasRows(db,
+        QStringLiteral("SELECT 1 FROM games g "
+                       "WHERE EXISTS ("
+                       "  SELECT 1 FROM game_signatures gs "
+                       "  WHERE gs.game_id = g.game_id "
+                       "    AND gs.hash_type IN ('md5', 'sha1', 'crc32')) "
+                       "  AND NOT EXISTS ("
+                       "  SELECT 1 FROM game_facts gf "
+                       "  WHERE gf.game_id = g.game_id "
+                       "    AND gf.field_name = 'igdb_id' "
+                       "    AND gf.source_id = 'hasheous') "
+                       "LIMIT 1"),
+        error);
+}
+
 } // namespace
 
 void insertEnrichmentStatsReportFields(
@@ -159,6 +175,10 @@ void insertEnrichmentStatsReportFields(
     report.insert(QStringLiteral("ra_api_calls_needed"), stats.raApiCallsNeeded);
     report.insert(QStringLiteral("ra_api_calls_performed"), stats.raApiCallsPerformed);
     report.insert(QStringLiteral("ra_api_calls_suppressed"), stats.raApiCallsSuppressed);
+    report.insert(QStringLiteral("hasheous_games_enriched"), stats.hasheousGamesEnriched);
+    report.insert(QStringLiteral("hasheous_facts_inserted"), stats.hasheousFactsInserted);
+    report.insert(QStringLiteral("hasheous_api_calls_needed"), stats.hasheousApiCallsNeeded);
+    report.insert(QStringLiteral("hasheous_api_calls_performed"), stats.hasheousApiCallsPerformed);
     report.insert(QStringLiteral("post_enrich_fts_rows_indexed"), stats.ftsRowsIndexed);
 }
 
@@ -267,6 +287,18 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db, const QString &metadataDir,
                 return CompendiumEnrichment::enrichFromRetroAchievements(db, credPath, stats.raGamesEnriched,
                     stats.raFactsInserted, error, &stats.raApiCallsNeeded, &stats.raApiCallsPerformed,
                     &stats.raApiCallsSuppressed);
+            },
+        },
+        {
+            QStringLiteral("Hasheous enrichment"),
+            QStringLiteral("hasheous"),
+            TransactionMode::SelfManaged,
+            [] { return true; },
+            [&] { return hasAnyHasheousGaps(db, error); },
+            [&] {
+                return CompendiumEnrichment::enrichFromHasheous(db, credPath, stats.hasheousGamesEnriched,
+                    stats.hasheousFactsInserted, error, &stats.hasheousApiCallsNeeded,
+                    &stats.hasheousApiCallsPerformed);
             },
         },
         {

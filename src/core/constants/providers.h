@@ -29,6 +29,7 @@ namespace Constants {
         //
         //   hasheous       91 —  1/10 bare / 9/10 with MetadataProxy; multi-hash POST before SS
         //   screenscraper  89 — 10/10: all fields including rating & screenshots; requires auth
+        //   playmatch      88 —  6/10: title/desc/date/rating via IGDB proxy; hash + filename+size
         //   igdb           70 —  8/10: title pub dev genres date desc players rating; requires OAuth
         //   retroachievements 60 — 6/10: title sys pub dev genres date art; MD5 hash-only, free key
         //   thegamesdb     50 —  6/10: title sys pub dev date desc players; simplified genres, no auth
@@ -39,6 +40,7 @@ namespace Constants {
             inline constexpr int GAMETDB = 150;
             inline constexpr int HASHEOUS = 91;
             inline constexpr int SCREENSCRAPER = 89;
+            inline constexpr int PLAYMATCH = 88;
             inline constexpr int IGDB = 70;
             inline constexpr int RETROACHIEVEMENTS = 60;
             inline constexpr int THEGAMESDB = 50;
@@ -47,6 +49,9 @@ namespace Constants {
 
         /// Metadata provider: Hasheous (free, hash-only)
         inline constexpr const char *HASHEOUS = "hasheous";
+
+        /// Metadata provider: PlayMatch (free public API, hash/filename matching)
+        inline constexpr const char *PLAYMATCH = "playmatch";
 
         /// Metadata provider: ScreenScraper (requires auth)
         inline constexpr const char *SCREENSCRAPER = "screenscraper";
@@ -78,6 +83,9 @@ namespace Constants {
 
         /// Human-readable name for Hasheous
         inline const QString DISPLAY_HASHEOUS = QStringLiteral("Hasheous");
+
+        /// Human-readable name for PlayMatch
+        inline const QString DISPLAY_PLAYMATCH = QStringLiteral("PlayMatch");
 
         /// Human-readable name for ScreenScraper
         inline const QString DISPLAY_SCREENSCRAPER = QStringLiteral("ScreenScraper");
@@ -187,6 +195,18 @@ namespace Constants {
                     false, // No name search (hash only)
                     false, // No auth required
                     QStringLiteral(""), Priority::HASHEOUS,
+                    true // Free service
+                } },
+
+            // Priority 88: Hash/filename bridge with IGDB proxy — 6/10 fields; no auth on public instance
+            { PLAYMATCH,
+                {
+                    PLAYMATCH, DISPLAY_PLAYMATCH,
+                    QStringLiteral("Hash and filename matching with IGDB metadata via PlayMatch (no auth required)"),
+                    true, // Hash matching (via identify API)
+                    false, // No standalone name search
+                    false, // No auth required on public instance
+                    QStringLiteral("https://playmatch.retrorealm.dev"), Priority::PLAYMATCH,
                     true // Free service
                 } },
 

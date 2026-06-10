@@ -20,7 +20,7 @@ namespace VerificationHashMatcher {
         return ordered;
     }
 
-    bool findOfficialDatMatch(const QMap<QString, DatRomEntry> &datEntries, const QString &preferredHashType,
+    bool findHashInDatEntries(const QMap<QString, DatRomEntry> &datEntries, const QString &preferredHashType,
         const QString &crc32, const QString &md5, const QString &sha1, const QString &sha256, DatRomEntry &matchedEntry,
         QString &matchedHash, QString &matchedHashType) {
         for (const QString &hashType : orderedOfficialHashTypes(preferredHashType)) {
@@ -44,6 +44,13 @@ namespace VerificationHashMatcher {
         }
 
         return false;
+    }
+
+    bool findOfficialDatMatch(const QMap<QString, DatRomEntry> &datEntries, const QString &preferredHashType,
+        const QString &crc32, const QString &md5, const QString &sha1, const QString &sha256, DatRomEntry &matchedEntry,
+        QString &matchedHash, QString &matchedHashType) {
+        return findHashInDatEntries(
+            datEntries, preferredHashType, crc32, md5, sha1, sha256, matchedEntry, matchedHash, matchedHashType);
     }
 
     QString datEntryKey(const DatRomEntry &entry) {

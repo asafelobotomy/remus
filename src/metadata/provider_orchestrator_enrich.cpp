@@ -45,12 +45,18 @@ ProviderOrchestrator::FieldSet ProviderOrchestrator::computeFieldGap(const GameM
         gap.insert(DESCRIPTION);
     if (m.boxArtUrl.isEmpty())
         gap.insert(BOX_ART_URL);
+    if (m.screenshotUrls.isEmpty())
+        gap.insert(SCREENSHOTS);
+    if (m.rating == 0.0f)
+        gap.insert(RATING);
+    if (m.externalIds.isEmpty())
+        gap.insert(EXTERNAL_IDS);
     return gap;
 }
 
 GameMetadata ProviderOrchestrator::enrichMissingFields(const FieldSet &missing, const GameMetadata &existing,
     const QString &hash, const QString &name, const QString &system, const QString &crc32, const QString &md5,
-    const QString &sha1, const QString &serial) {
+    const QString &sha1, const QString &serial, const QSet<QString> &excludeProviders) {
     if (missing.isEmpty()) {
         qInfo() << "enrichMissingFields: no gaps — skipping all providers";
         return existing;
@@ -76,6 +82,9 @@ GameMetadata ProviderOrchestrator::enrichMissingFields(const FieldSet &missing, 
     // LOCAL providers first (priority 200–150).
     const QStringList localProviders = getSortedLocalProviders();
     for (const QString &providerName : localProviders) {
+        if (excludeProviders.contains(providerName)) {
+            continue;
+        }
         const QSet<QString> &caps = Constants::ProviderFields::CAPABILITIES.value(providerName.toLower());
         if (!caps.intersects(gapSet)) {
             qInfo() << "enrichMissingFields: skipping local provider" << providerName
@@ -94,6 +103,9 @@ GameMetadata ProviderOrchestrator::enrichMissingFields(const FieldSet &missing, 
     if (!gapSet.isEmpty()) {
         const QStringList remoteProviders = getSortedRemoteProviders();
         for (const QString &providerName : remoteProviders) {
+            if (excludeProviders.contains(providerName)) {
+                continue;
+            }
             const QSet<QString> &caps = Constants::ProviderFields::CAPABILITIES.value(providerName.toLower());
             if (!caps.intersects(gapSet)) {
                 qInfo() << "enrichMissingFields: skipping remote provider" << providerName

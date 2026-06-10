@@ -141,6 +141,19 @@ namespace Constants {
         inline constexpr const char *HASHEOUS_HEALTHCHECK_ENDPOINT = "/api/v1/HealthCheck";
 
         // ============================================================================
+        // PlayMatch API (RetroRealm hash→IGDB bridge)
+        // ============================================================================
+
+        /// Base URL for the public PlayMatch service
+        inline constexpr const char *PLAYMATCH_BASE_URL = "https://playmatch.retrorealm.dev";
+
+        /// PlayMatch hash/filename identify endpoint
+        inline constexpr const char *PLAYMATCH_IDENTIFY_IDS_ENDPOINT = "/api/identify/ids";
+
+        /// PlayMatch IGDB metadata proxy endpoint
+        inline constexpr const char *PLAYMATCH_IGDB_GAME_ENDPOINT = "/api/igdb/game";
+
+        // ============================================================================
         // RetroAchievements Patch API
         // ============================================================================
 

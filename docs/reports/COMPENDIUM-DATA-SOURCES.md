@@ -35,8 +35,8 @@ fields). URLs are starting points — verify licensing and freshness before auto
 |--------|----------|------|----------------------|-------------|
 | **IGDB** | [api-docs.igdb.com](https://api-docs.igdb.com/) | Twitch OAuth | Yes — `enrichFromIGDB` | Yes |
 | **RetroAchievements** | [api.retroachievements.org](https://api.retroachievements.org/) | Username + API key | Yes — hash + metadata | Yes |
-| **Hasheous** | [hasheous.org/swagger](https://hasheous.org/swagger/index.html) | Optional client API key (`REMUS_HASHEOUS_API_KEY`) for MetadataProxy | **No** — runtime hash→IGDB bridge only | Yes (priority 80) |
-| **PlayMatch** | [RetroRealm/playmatch](https://github.com/RetroRealm/playmatch) | Requires IGDB credentials | **No** — RomM-style hash matcher | Listed in orchestrator fallback |
+| **Hasheous** | [hasheous.org/swagger](https://hasheous.org/swagger/index.html) | Optional client API key (`REMUS_HASHEOUS_API_KEY`) for MetadataProxy | Yes — `enrichFromHasheous` (`--enrich-source hasheous`) | Yes (priority 91) |
+| **PlayMatch** | [RetroRealm/playmatch](https://github.com/RetroRealm/playmatch) | None on public instance | **No** — runtime hash matcher | Yes (priority 88) |
 | **ScreenScraper** | [screenscraper.fr](https://www.screenscraper.fr/) | Dev credentials | **No** | Yes |
 | **TheGamesDB** | [thegamesdb.net](https://thegamesdb.net/) | API key | **No** | Yes |
 

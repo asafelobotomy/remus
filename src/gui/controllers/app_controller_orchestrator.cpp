@@ -13,6 +13,7 @@
 #include "../../metadata/hasheous_provider.h"
 #include "../../metadata/igdb_provider.h"
 #include "../../metadata/metadata_cache.h"
+#include "../../metadata/playmatch_provider.h"
 #include "../../metadata/provider_orchestrator.h"
 #include "../../metadata/retroachievements_provider.h"
 #include "../../metadata/screenscraper_provider.h"
@@ -109,6 +110,12 @@ void AppController::rebuildOrchestrator() {
             hasheousProvider->setApiKey(hasheousKey);
         m_orchestrator->addProvider(Constants::Providers::HASHEOUS, hasheousProvider,
             providerPriorityOrDefault(Constants::Providers::HASHEOUS, Constants::Providers::Priority::HASHEOUS));
+    }
+
+    {
+        auto *playmatchProvider = new PlayMatchProvider(m_orchestrator.get());
+        m_orchestrator->addProvider(Constants::Providers::PLAYMATCH, playmatchProvider,
+            providerPriorityOrDefault(Constants::Providers::PLAYMATCH, Constants::Providers::Priority::PLAYMATCH));
     }
 
     const QString ssUser = secretValue(Constants::Settings::Providers::SCREENSCRAPER_USERNAME);

@@ -9,6 +9,7 @@ add_library(remus-metadata STATIC
     zxinfo_provider.cpp
     hasheous_provider.cpp
     hasheous_provider_enrichment.cpp
+    playmatch_provider.cpp
     clrmamepro_parser.cpp
     local_database_provider.cpp
     local_database_provider_lookup.cpp
@@ -35,6 +36,7 @@ add_library(remus-metadata STATIC
     compendium_compiler_service.cpp
     compendium_provider.cpp
     compendium_provider_lookup.cpp
+    compendium_provider_match.cpp
     compendium_provider_fetch.cpp
     compendium_patch_catalog_importer.cpp
 )

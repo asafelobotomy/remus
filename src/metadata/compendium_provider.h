@@ -2,6 +2,7 @@
 
 #include "metadata_provider.h"
 #include "compendium_normalizer.h"
+#include "multi_signal_types.h"
 
 #include <QSqlDatabase>
 #include <QString>
@@ -23,6 +24,19 @@ public:
     GameMetadata getBySerial(const QString &serial, const QString &system) override;
     GameMetadata getById(const QString &id) override;
     ArtworkUrls getArtwork(const QString &id) override;
+
+    /**
+     * @brief Offline multi-signal matching against compendium catalog data.
+     *
+     * Combines hash, filename, size, and serial corroboration with confidence scoring.
+     * Used when definitive hash lookup misses (partial dumps, renamed files).
+     */
+    QList<CompendiumMultiSignalMatch> matchROM(const ROMSignals &input, const QString &system) const;
+
+    /**
+     * @brief Convert a multi-signal match into provider metadata.
+     */
+    GameMetadata metadataFromMatch(const CompendiumMultiSignalMatch &match, const QString &system) const;
 
     QString name() const override {
         return QStringLiteral("Compendium");

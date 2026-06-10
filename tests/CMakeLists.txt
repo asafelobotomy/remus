@@ -159,6 +159,11 @@ add_remus_test(test_hasheous_parsing HasheousParsingTest
     LIBS Qt6::Test Qt6::Core remus-metadata remus-core
 )
 
+add_remus_test(test_playmatch_parsing PlayMatchParsingTest
+    SOURCES test_playmatch_parsing.cpp
+    LIBS Qt6::Test Qt6::Core remus-metadata remus-core
+)
+
 add_remus_test(test_clrmamepro_parser ClrMameProParserTest
     SOURCES test_clrmamepro_parser.cpp
     LIBS Qt6::Test Qt6::Core remus-metadata
@@ -189,6 +194,11 @@ target_compile_definitions(test_compendium_dat_extractor PRIVATE
 
 add_remus_test(test_compendium_provider CompendiumProviderTest
     SOURCES test_compendium_provider.cpp
+    LIBS Qt6::Test Qt6::Core Qt6::Sql remus-metadata remus-core
+)
+
+add_remus_test(test_compendium_multi_signal CompendiumMultiSignalTest
+    SOURCES test_compendium_multi_signal.cpp
     LIBS Qt6::Test Qt6::Core Qt6::Sql remus-metadata remus-core
 )
 
@@ -262,6 +272,11 @@ target_include_directories(test_gui_controllers PRIVATE
 
 add_remus_test(test_provider_orchestrator ProviderOrchestratorTest
     SOURCES test_provider_orchestrator.cpp
+    LIBS Qt6::Test Qt6::Core remus-metadata remus-core
+)
+
+add_remus_test(test_orchestrator_compendium_primary CompendiumPrimaryOrchestratorTest
+    SOURCES test_orchestrator_compendium_primary.cpp
     LIBS Qt6::Test Qt6::Core remus-metadata remus-core
 )
 
@@ -370,6 +385,11 @@ add_remus_test(test_verification_engine_compendium VerificationEngineCompendiumT
     LIBS Qt6::Test Qt6::Core Qt6::Sql remus-core
 )
 
+add_remus_test(test_verification_hash_matcher VerificationHashMatcherTest
+    SOURCES test_verification_hash_matcher.cpp
+    LIBS Qt6::Test Qt6::Core remus-core
+)
+
 add_remus_test(test_organize_engine OrganizeEngineTest
     SOURCES test_organize_engine.cpp
     LIBS Qt6::Test Qt6::Core Qt6::Sql remus-core remus-metadata
@@ -443,6 +463,13 @@ add_remus_test(test_compendium_ra_enrichment CompendiumRaEnrichmentTest
             ../src/cli/compendium_enrichment_ra.cpp
             ../src/cli/compendium_enrichment_sql.cpp
     LIBS Qt6::Test Qt6::Core Qt6::Sql remus-metadata remus-core remus-services
+)
+
+add_remus_test(test_compendium_hasheous_enrichment CompendiumHasheousEnrichmentTest
+    SOURCES test_compendium_hasheous_enrichment.cpp
+            ../src/cli/compendium_enrichment_hasheous.cpp
+            ../src/cli/compendium_enrichment_sql.cpp
+    LIBS Qt6::Test Qt6::Core Qt6::Sql Qt6::Network remus-metadata remus-core remus-services
 )
 
 add_remus_test(test_compendium_zxinfo_enrichment CompendiumZxInfoEnrichmentTest

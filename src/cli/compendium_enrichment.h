@@ -124,6 +124,28 @@ bool enrichFromRetroAchievements(QSqlDatabase &database, const QString &credenti
     int *apiCallsSuppressedOut = nullptr);
 
 /**
+ * @brief Enrich compendium games with IGDB IDs via Hasheous hash lookup.
+ *
+ * For each game that has CRC32/MD5/SHA1 signatures but no @c igdb_id fact from
+ * Hasheous yet, calls @c Lookup/ByHash and writes @c igdb_id facts. When
+ * MetadataProxy is available (optional @c hasheous/client_api_key in
+ * @p credentialsPath), also applies COALESCE metadata updates for description,
+ * genre, developer, publisher, release year, and rating.
+ *
+ * Hash lookup works without credentials; MetadataProxy enrichment is optional.
+ * This function manages its own transaction internally.
+ *
+ * @param database         Open SQLite connection (no active transaction required).
+ * @param credentialsPath  Path to enrichment-credentials.json (optional Hasheous key).
+ * @param gamesEnriched    [out] Number of game rows updated with metadata fields.
+ * @param factsInserted    [out] Number of new @c igdb_id game_facts rows inserted.
+ * @param error            [out] Human-readable error message on failure.
+ * @return true on success (or when nothing to do), false on error.
+ */
+bool enrichFromHasheous(QSqlDatabase &database, const QString &credentialsPath, int &gamesEnriched,
+    int &factsInserted, QString &error, int *apiCallsNeededOut = nullptr, int *apiCallsPerformedOut = nullptr);
+
+/**
  * @brief Enrich Arcade/MAME games using the MAME catver.ini category database.
  *
  * Reads the `[Category]` section of a local catver.ini file and writes genre
