@@ -71,6 +71,7 @@ credentials.json
 *.pem
 .env
 .env.*
+!.env.local.example
 *.credentials
 secrets.yml
 .aws/credentials
@@ -145,6 +146,10 @@ data/openvgdb/**
 # MAME enrichment payloads (listxml ~300 MB; catver version-stamped)
 data/mame/listxml.xml
 data/mame/catver.ini
+
+# Patch/hack DATs (synced from libretro metadat/hacks by update_dats.sh)
+data/patches/**/*.dat
+!data/patches/README.md
 
 # Canonical local ROM storage (keep ROM payloads out of git)
 /roms/**

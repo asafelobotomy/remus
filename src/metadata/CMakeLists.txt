@@ -36,6 +36,7 @@ add_library(remus-metadata STATIC
     compendium_provider.cpp
     compendium_provider_lookup.cpp
     compendium_provider_fetch.cpp
+    compendium_patch_catalog_importer.cpp
 )
 
 target_link_libraries(remus-metadata PUBLIC

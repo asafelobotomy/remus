@@ -66,6 +66,7 @@ bool enrichFromIGDB(
                                   "   OR g.developer IS NULL OR g.developer = '' "
                                   "   OR g.publisher IS NULL OR g.publisher = '' "
                                   "   OR g.release_year IS NULL "
+                                  "   OR g.release_date IS NULL OR g.release_date = '' "
                                   "   OR g.rating IS NULL "
                                   "   OR g.players_max IS NULL "
                                   "ORDER BY s.display_name"))) {

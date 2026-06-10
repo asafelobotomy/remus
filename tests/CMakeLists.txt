@@ -164,6 +164,11 @@ add_remus_test(test_clrmamepro_parser ClrMameProParserTest
     LIBS Qt6::Test Qt6::Core remus-metadata
 )
 
+add_remus_test(test_compendium_patch_catalog_importer CompendiumPatchCatalogImporterTest
+    SOURCES test_compendium_patch_catalog_importer.cpp
+    LIBS Qt6::Test Qt6::Core Qt6::Sql remus-metadata
+)
+
 add_remus_test(test_libretro_metadata_parser LibretroMetadataParserTest
     SOURCES test_libretro_metadata_parser.cpp
     LIBS Qt6::Test Qt6::Core remus-metadata
@@ -289,6 +294,12 @@ add_remus_test(test_credential_manager CredentialManagerTest
     SOURCES test_credential_manager.cpp
     LIBS Qt6::Test Qt6::Core remus-services
 )
+
+add_remus_test(test_credentials_live CredentialsLiveTest
+    SOURCES test_credentials_live.cpp
+    LIBS Qt6::Test Qt6::Core Qt6::Network remus-metadata remus-services remus-core
+)
+set_tests_properties(CredentialsLiveTest PROPERTIES LABELS "live;network")
 
 add_remus_test(test_wikidata_provider WikidataProviderTest
     SOURCES test_wikidata_provider.cpp

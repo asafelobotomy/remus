@@ -109,6 +109,14 @@ QList<ClrMameProEntry> ClrMameProParser::parseGameBlocks(const QString &content)
         const int firstRomStart = gameBlock.indexOf(QStringLiteral("rom ("));
         const QString gameMetadata = (firstRomStart != -1) ? gameBlock.left(firstRomStart) : gameBlock;
         const QMap<QString, QString> gameData = extractKeyValues(gameMetadata);
+        QString patchUrl = gameData.value(QStringLiteral("patch"));
+        if (patchUrl.isEmpty()) {
+            static const QRegularExpression patchRegex(
+                QStringLiteral(R"rx((?m)^\s*patch\s+"([^"]+)")rx"));
+            const QRegularExpressionMatch patchMatch = patchRegex.match(gameBlock);
+            if (patchMatch.hasMatch())
+                patchUrl = patchMatch.captured(1);
+        }
 
         // Derive region once from game-level data or from the title parenthetical.
         QString baseRegion = gameData.value(QStringLiteral("region"));
@@ -167,6 +175,7 @@ QList<ClrMameProEntry> ClrMameProParser::parseGameBlocks(const QString &content)
             ClrMameProEntry entry;
             entry.gameName = gameData.value(QStringLiteral("name"));
             entry.description = gameData.value(QStringLiteral("description"), gameData.value(QStringLiteral("name")));
+            entry.patchUrl = patchUrl;
             entry.serial = gameData.value(QStringLiteral("serial"));
             entry.publisher = gameData.value(QStringLiteral("publisher"));
             entry.developer = gameData.value(QStringLiteral("developer"));

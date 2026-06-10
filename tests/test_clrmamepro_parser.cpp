@@ -52,6 +52,7 @@ private slots:
 
     // ── Redump multi-track disc tests ─────────────────────────────
     void testParseMultiRomBlocks();
+    void testParsePatchUrl();
 };
 
 // ─────────────────────────────────────────────────────────────────
@@ -310,6 +311,25 @@ void ClrMameProParserTest::testParseMultiRomBlocks() {
     QVERIFY(entries[1].romName.endsWith(QStringLiteral(".bin")));
     QCOMPARE(entries[0].crc32.toLower(), QString("aabb1122"));
     QCOMPARE(entries[1].crc32.toLower(), QString("deadbeef"));
+}
+
+void ClrMameProParserTest::testParsePatchUrl() {
+    QString content = "clrmamepro (\n"
+                      "    name \"NES hacks\"\n"
+                      ")\n"
+                      "game (\n"
+                      "    name \"Dragon Quest III (English) [T-En by Foo]\"\n"
+                      "    rom ( name \"dq3en.nes\" size 262144 crc AABBCCDD md5 811b027eaf99c2def7b933c5208636de )\n"
+                      "    patch \"http://www.romhacking.net/translations/1234/\"\n"
+                      ")\n";
+
+    QTemporaryFile tmp;
+    const QString path = writeTempDat(tmp, content);
+    QVERIFY(!path.isEmpty());
+
+    const QList<ClrMameProEntry> entries = ClrMameProParser::parse(path);
+    QCOMPARE(entries.size(), 1);
+    QCOMPARE(entries[0].patchUrl, QString("http://www.romhacking.net/translations/1234/"));
 }
 
 QTEST_MAIN(ClrMameProParserTest)

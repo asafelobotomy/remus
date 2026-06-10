@@ -65,6 +65,12 @@ namespace CredentialManager {
                         return QString::fromLocal8Bit(val).trimmed();
                 }
             }
+            // Legacy alias documented in .env.local — prefer REMUS_RA_USERNAME when both set.
+            if (key == QLatin1String("retroachievements/username")) {
+                const QByteArray legacy = qgetenv("REMUS_RA_USER");
+                if (!legacy.isEmpty())
+                    return QString::fromLocal8Bit(legacy).trimmed();
+            }
             return { };
         }
 

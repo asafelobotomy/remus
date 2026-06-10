@@ -120,6 +120,7 @@ set(REMUS_CLI_SOURCES
     src/cli/cli_commands_compendium.cpp
     src/cli/cli_compendium_build_phases.cpp
     src/cli/cli_commands_compendium_dedup.cpp
+    src/cli/cli_commands_compendium_patch.cpp
     src/cli/cli_commands_compendium_enrich.cpp
     src/cli/cli_commands_compendium_ingest.cpp
     src/cli/cli_commands_compendium_coverage.cpp

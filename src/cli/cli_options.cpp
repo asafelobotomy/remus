@@ -175,6 +175,9 @@ void registerAllOptions(QCommandLineParser &parser, QSet<QString> &actionOptions
     addActionOption(QCommandLineOption(
         "dedup-compendium", "Prune bad serial rows and merge duplicate games in an existing compendium database"));
     addActionOption(QCommandLineOption(
+        "import-patch-catalog", "Import patch/hack DAT files from data/patches into the compendium patch catalog"));
+    addOption(QCommandLineOption("patch-dir", "Directory containing patch DAT files (default: data/patches)", "path"));
+    addActionOption(QCommandLineOption(
         "enrich-compendium", "Run all enrichment passes against an existing compendium database without rebuilding"));
     addOption(QCommandLineOption("enrich-source",
         "Comma-separated list of enrichment source(s) to run (default: all). Valid keys: libretro, gametdb, openvgdb, "

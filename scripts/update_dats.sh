@@ -625,7 +625,24 @@ else
     echo "    2. Place a merged MAME .dat file manually in: $MAME_DIR/"
 fi
 
-# 5. Metadata DATs (genre, developer, publisher, maxusers, releaseyear)
+# 5. metadat/hacks/ — ROM hack / translation patch DATs (libretro curated, romhacking.net URLs)
+PATCHES_DIR="$PROJECT_ROOT/data/patches/hacks"
+hacks_copied=0
+if [[ -d "$CLONE_DIR/metadat/hacks" ]]; then
+    mkdir -p "$PATCHES_DIR"
+    for dat in "$CLONE_DIR/metadat/hacks/"*.dat; do
+        [[ -f "$dat" ]] || continue
+        if should_include "$dat"; then
+            cp "$dat" "$PATCHES_DIR/$(basename "$dat")"
+            hacks_copied=$((hacks_copied + 1))
+        fi
+    done
+    echo "  Patch/hack DATs:    $hacks_copied files in $PATCHES_DIR"
+else
+    echo "  Skipping hacks (metadat/hacks not found in libretro-database clone)"
+fi
+
+# 6. Metadata DATs (genre, developer, publisher, maxusers, releaseyear)
 METADATA_DIR="$PROJECT_ROOT/data/metadata"
 METADAT_TYPES=("genre" "developer" "publisher" "maxusers" "releaseyear")
 meta_copied=0
@@ -647,7 +664,7 @@ for meta_type in "${METADAT_TYPES[@]}"; do
     done
 done
 
-# 6. GameTDB XML databases (Wii/GameCube, DS, 3DS, WiiU, Switch, PS3)
+# 7. GameTDB XML databases (Wii/GameCube, DS, 3DS, WiiU, Switch, PS3)
 GAMETDB_DIR="$PROJECT_ROOT/data/gametdb"
 GAMETDB_BASE="https://www.gametdb.com"
 gametdb_copied=0
@@ -729,6 +746,9 @@ if [[ -d "$METADATA_DIR" ]]; then
 fi
 if [[ -d "$GAMETDB_DIR" ]]; then
     find "$GAMETDB_DIR" -name '*.xml' | wc -l | xargs -I{} echo "  GameTDB XMLs:       {} files"
+fi
+if [[ -d "$PATCHES_DIR" ]]; then
+    find "$PATCHES_DIR" -maxdepth 1 -name '*.dat' 2>/dev/null | wc -l | xargs -I{} echo "  patch/hack DATs:    {} files in $PATCHES_DIR"
 fi
 if [[ -f "$OPENVGDB_DEST" ]]; then
     echo "  OpenVGDB:           $OPENVGDB_DEST"

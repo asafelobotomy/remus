@@ -43,7 +43,28 @@ mkdir -p "$APPDIR/usr/share/icons/hicolor/256x256/apps"
 cp -a "$BIN_CLI" "$APPDIR/usr/bin/remus-cli"
 cp -a "$BIN_GUI" "$APPDIR/usr/bin/remus-gui"
 cp -a "$ROOT_DIR/assets/remus.desktop" "$APPDIR/usr/share/applications/remus.desktop"
-cp -a "$ROOT_DIR/assets/icon/remus_icon.png" "$APPDIR/usr/share/icons/hicolor/256x256/apps/remus.png"
+
+# linuxdeploy validates icon pixel size against the hicolor directory name (256x256).
+ICON_SRC="$ROOT_DIR/assets/icon/remus_icon.png"
+ICON_DEST="$APPDIR/usr/share/icons/hicolor/256x256/apps/remus.png"
+if command -v python3 &>/dev/null; then
+    python3 - "$ICON_SRC" "$ICON_DEST" <<'PY'
+import sys
+from pathlib import Path
+try:
+    from PIL import Image
+except ImportError:
+    sys.exit(1)
+src, dest = sys.argv[1], sys.argv[2]
+Path(dest).parent.mkdir(parents=True, exist_ok=True)
+Image.open(src).resize((256, 256), Image.Resampling.LANCZOS).save(dest)
+PY
+    if [[ ! -f "$ICON_DEST" ]]; then
+        cp -a "$ICON_SRC" "$ICON_DEST"
+    fi
+else
+    cp -a "$ICON_SRC" "$ICON_DEST"
+fi
 
 # ── Bundle compendium database ───────────────────────────────────────────────
 COMPENDIUM_SRC="$ROOT_DIR/data/compendium/remus_compendium.db"
@@ -82,6 +103,13 @@ fi
 
 export QML_SOURCES_PATHS="$ROOT_DIR/src/gui/qml"
 export PATH="$ROOT_DIR/build:${PATH}"
+
+# Qt6 builds need qmake6; optional SQL drivers (ibase/mysql/odbc) are not bundled.
+if command -v qmake6 &>/dev/null; then
+    export QMAKE="${QMAKE:-qmake6}"
+fi
+export NO_STRIP="${NO_STRIP:-1}"
+export LINUXDEPLOY_EXCLUDED_LIBRARIES="${LINUXDEPLOY_EXCLUDED_LIBRARIES:-libqsqlibase.so;libqsqlmysql.so;libqsqlodbc.so;libqsqlmimer.so;libqsqlpsql.so}"
 
 mkdir -p "$DIST_DIR"
 OUTPUT="$DIST_DIR/Remus-${VERSION}-x86_64.AppImage"

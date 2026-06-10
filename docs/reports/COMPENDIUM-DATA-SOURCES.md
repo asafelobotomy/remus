@@ -31,12 +31,32 @@ fields). URLs are starting points — verify licensing and freshness before auto
 
 ## Metadata enrichment (online API)
 
-| Source | API docs | Auth | IGDB platform slugs |
-|--------|----------|------|---------------------|
-| **IGDB** | [api-docs.igdb.com](https://api-docs.igdb.com/) | Twitch OAuth (`enrichment-credentials.json`) | Mapped in `system_resolver_provider_mappings.cpp`; query all slugs: `POST /v4/platforms` with `fields name,slug` |
-| **RetroAchievements** | [api.retroachievements.org](https://api.retroachievements.org/) | Username + API key | Console IDs in same mappings file |
-| **ScreenScraper** | [screenscraper.fr](https://www.screenscraper.fr/) | Dev credentials | Not yet in compendium bulk build (runtime provider only) |
-| **TheGamesDB** | [thegamesdb.net](https://thegamesdb.net/) | API key | Mapped for TGDB IDs; no bulk compendium pass yet |
+| Source | API docs | Auth | Compendium bulk pass | Runtime CLI |
+|--------|----------|------|----------------------|-------------|
+| **IGDB** | [api-docs.igdb.com](https://api-docs.igdb.com/) | Twitch OAuth | Yes — `enrichFromIGDB` | Yes |
+| **RetroAchievements** | [api.retroachievements.org](https://api.retroachievements.org/) | Username + API key | Yes — hash + metadata | Yes |
+| **Hasheous** | [hasheous.org/swagger](https://hasheous.org/swagger/index.html) | Optional client API key (`REMUS_HASHEOUS_API_KEY`) for MetadataProxy | **No** — runtime hash→IGDB bridge only | Yes (priority 80) |
+| **PlayMatch** | [RetroRealm/playmatch](https://github.com/RetroRealm/playmatch) | Requires IGDB credentials | **No** — RomM-style hash matcher | Listed in orchestrator fallback |
+| **ScreenScraper** | [screenscraper.fr](https://www.screenscraper.fr/) | Dev credentials | **No** | Yes |
+| **TheGamesDB** | [thegamesdb.net](https://thegamesdb.net/) | API key | **No** | Yes |
+
+### Hasheous / PlayMatch (hash→metadata bridges)
+
+Both services map ROM hashes (No-Intro, Redump, TOSEC, MAME) to external metadata IDs.
+RomM 4.0+ uses them as complementary hash matchers; Remus already integrates **Hasheous**
+at runtime (`hasheous_provider.cpp`) with optional MetadataProxy enrichment when
+`REMUS_HASHEOUS_API_KEY` is set.
+
+| Capability | Hasheous | PlayMatch |
+|------------|----------|-----------|
+| Hash lookup (CRC/MD5/SHA1 POST) | Yes — `/api/v1/Lookup/ByHash` | Yes — Rust microservice |
+| IGDB metadata without own Twitch app | Yes — MetadataProxy | No — needs IGDB creds |
+| RA game IDs in lookup response | Sometimes | Via IGDB linkage |
+| Bulk compendium enrichment | Not implemented | Not implemented |
+| **Future use** | Gap-fill pass for unmatched signatures; proxy IGDB for games missing description | Secondary hash matcher for disc systems |
+
+Reference: [RomM metadata providers](https://docs.romm.app/latest/Getting-Started/Metadata-Providers/),
+[Hasheous repo](https://github.com/gaseous-project/hasheous).
 
 ### High-value IGDB slugs to add over time
 
@@ -56,11 +76,35 @@ Common additions for gap systems: `msx`, `msx2`, `3do`, `neogeocd`, `fds`, `atar
 
 ## Patch / translation catalogues
 
+| Source | URL | Sync / import | Notes |
+|--------|-----|---------------|-------|
+| **libretro hacks DATs** | [metadat/hacks](https://github.com/libretro/libretro-database/tree/master/metadat/hacks) | `update_dats.sh` → `data/patches/hacks/` | **Primary** — ClrMamePro format with hashes + `patch "url"`; imported via `--import-patch-catalog` |
+| No-Intro non-Redump | [datomatic.no-intro.org](https://datomatic.no-intro.org/) | Manual `.dat` → `data/patches/` | Hacks, translations, bad dumps — verify set name |
+| ROMhacking.net | [romhacking.net](https://www.romhacking.net/) | Linked from libretro hacks entries | Project pages; not a bulk DAT export |
+| **RAPatches** | [RetroAchievements/RAPatches](https://github.com/RetroAchievements/RAPatches) | Clone + `rapatches_catalog_builder` | RA achievement patches (zip/7z); separate from compendium `patch_entries` but useful for mod workflow |
+| Lost Level DAT | RA hash verification project | Manual | Label `lostlevel` in RA docs — supplementary hash sets |
+| Local import | `data/patches/**/*.dat` | `scripts/import_patch_catalog.sh` | Maps libretro DAT basename → `systems.libretro_name` |
+
+**Phase 2 check:** `catalog.patch_sources_nonempty` passes once libretro hacks DATs are imported
+(build pipeline runs import automatically after compendium build).
+
+## Additional hash catalogues (not yet in manifest)
+
 | Source | URL | Notes |
 |--------|-----|-------|
-| No-Intro hacks / translations | [datomatic.no-intro.org](https://datomatic.no-intro.org/) | Non-Redump sections |
-| ROMhacking.net | [romhacking.net](https://www.romhacking.net/) | Project-specific patch releases |
-| Local import path | `data/patches/**/*.dat` | `scripts/import_patch_catalog.sh` (registration stub) |
+| TOSEC | [tosecdev.org](https://www.tosecdev.org/) | Broad coverage; lower libretro precedence; Hasheous indexes TOSEC |
+| libretro homebrew | [metadat/homebrew](https://github.com/libretro/libretro-database/tree/master/metadat/homebrew) | Independent/homebrew titles — candidate for future manifest entries |
+| libretro libretro-dats | [metadat/libretro-dats](https://github.com/libretro/libretro-database/tree/master/metadat/libretro-dats) | Fan translations, FDS extras |
+| MAME Software List | MAME `-listxml` / progettosnaps | RA label `mamesl`; partial MAME coverage already via listxml |
+
+## Art / extended metadata (runtime only today)
+
+| Source | URL | Use |
+|--------|-----|-----|
+| SteamGridDB | [steamgriddb.com](https://www.steamgriddb.com/) | Cover art grids — RomM “Chef's Choice” stack |
+| MobyGames | [mobygames.com](https://www.mobygames.com/) | DOS/PC descriptions — no bulk API in Remus |
+| LaunchBox | Community databases | Box art / metadata — not wired |
+| ScreenScraper | [screenscraper.fr](https://www.screenscraper.fr/) | Rich media + text — runtime provider |
 
 ## Systems with no DAT coverage (expected empty)
 
@@ -70,12 +114,26 @@ may come from IGDB if a platform slug exists and credentials are configured.
 ## Operational checklist after source updates
 
 ```bash
-bash scripts/update_dats.sh --all
+bash scripts/update_dats.sh --all          # includes data/patches/hacks/ sync
 bash scripts/generate_compendium_manifest.sh
-bash scripts/build_compendium_full.sh --skip-update   # or full pipeline
+bash scripts/build_compendium_full.sh --skip-update   # imports patch catalog before validation
+# Or on an existing DB:
+bash scripts/import_patch_catalog.sh data/compendium/remus_compendium.db
 build/remus-cli --enrich-compendium --compendium-output data/compendium/remus_compendium.db
 build/remus-cli --dedup-compendium --compendium-output data/compendium/remus_compendium.db
 bash .github/scripts/validate-compendium-db.sh data/compendium/remus_compendium.db
 bash .github/scripts/validate-compendium-db.sh data/compendium/remus_compendium.db \
   data/compendium/validation/0002_phase2_quality_checks.sql
 ```
+
+## Recommended priority order (gap remediation)
+
+| Priority | Action | Status |
+|----------|--------|--------|
+| P1 | Import libretro hacks patch catalog | `update_dats.sh` + `--import-patch-catalog` |
+| P2 | IGDB pass for missing `release_date` | Included in IGDB gap query |
+| P3 | RA `ra_game_id` counts as enrichment | Fixed in RA bulk pass |
+| P4 | Zero-game systems (Switch, PS4…) | Needs DAT sources + IGDB slug mapping |
+| P5 | Duplicate canonical titles | `--dedup-compendium` on existing DB |
+| P6 | Hasheous bulk gap-fill (future) | Design: unmatched signatures → MetadataProxy |
+| P7 | ScreenScraper / TGDB bulk passes (future) | Reduce IGDB API pressure for art/text |

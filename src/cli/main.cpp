@@ -310,6 +310,8 @@ int main(int argc, char *argv[]) {
         return rc;
     if (int rc = handleDedupCompendiumCommand(ctx))
         return rc;
+    if (int rc = handleImportPatchCatalogCommand(ctx))
+        return rc;
     if (int rc = handleEnrichCompendiumCommand(ctx))
         return rc;
     if (int rc = handleIngestSourceCommand(ctx))

@@ -97,3 +97,5 @@ Repository data directories that feed provider behavior:
 Legacy `LocalDatabaseProvider` code still exists for compatibility and targeted tests, but it is not part of the default CLI orchestrator.
 
 If you need the exact runtime wiring, see the provider construction flow in `src/cli/cli_helpers_providers.cpp`.
+
+For the full matching accuracy audit (dual pipelines, gap register, remediation order), see [docs/reports/ROM-MATCHING-AUDIT.md](../reports/ROM-MATCHING-AUDIT.md).

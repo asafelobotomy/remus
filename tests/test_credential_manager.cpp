@@ -12,10 +12,12 @@
 #include <QSettings>
 #include <QTemporaryDir>
 
+#include "../src/core/constants/settings.h"
 #include "../src/services/credential_manager.h"
 #include "../src/services/secret_store.h"
 
 using namespace Remus;
+using namespace Remus::Constants;
 
 class CredentialManagerTest : public QObject {
     Q_OBJECT
@@ -24,6 +26,10 @@ private slots:
     void testJsonTakesPriorityOverEnvVar();
     void testNonexistentJsonFileFallsThrough();
     void testEnvVarResolvesForMappedKey();
+    void testAllProviderEnvMappingsResolve();
+    void testRaUsernamePrefersRemusRaUsernameOverLegacyAlias();
+    void testRaLegacyEnvAliasResolvesWhenCanonicalUnset();
+    void testEnrichmentJsonKeysResolve();
     void testEmptyReturnedWhenNothingSet();
     void testBackendErrorDoesNotFallThroughToQSettings();
 };
@@ -79,6 +85,91 @@ void CredentialManagerTest::testEnvVarResolvesForMappedKey() {
     qunsetenv("REMUS_TGDB_API_KEY");
 
     QCOMPARE(result, QStringLiteral("tgdb_abc123"));
+}
+
+/// Every provider env mapping in CredentialManager must round-trip through get().
+void CredentialManagerTest::testAllProviderEnvMappingsResolve() {
+    struct Mapping {
+        const char *settingsKey;
+        const char *envVar;
+        const char *value;
+    };
+
+    static constexpr Mapping mappings[] = {
+        { Settings::Providers::SCREENSCRAPER_USERNAME, "REMUS_SS_USER", "ss_user" },
+        { Settings::Providers::SCREENSCRAPER_PASSWORD, "REMUS_SS_PASS", "ss_pass" },
+        { Settings::Providers::SCREENSCRAPER_DEVID, "REMUS_SS_DEVID", "ss_devid" },
+        { Settings::Providers::SCREENSCRAPER_DEVPASSWORD, "REMUS_SS_DEVPASS", "ss_devpass" },
+        { Settings::Providers::THEGAMESDB_API_KEY, "REMUS_TGDB_API_KEY", "tgdb_key" },
+        { Settings::Providers::IGDB_CLIENT_ID, "REMUS_IGDB_CLIENT_ID", "igdb_id" },
+        { Settings::Providers::IGDB_CLIENT_SECRET, "REMUS_IGDB_CLIENT_SECRET", "igdb_secret" },
+        { Settings::Providers::HASHEOUS_CLIENT_API_KEY, "REMUS_HASHEOUS_API_KEY", "hasheous_key" },
+        { Settings::Providers::RETROACHIEVEMENTS_USERNAME, "REMUS_RA_USERNAME", "ra_user" },
+        { Settings::Providers::RETROACHIEVEMENTS_API_KEY, "REMUS_RA_API_KEY", "ra_key" },
+    };
+
+    for (const auto &mapping : mappings) {
+        qputenv(mapping.envVar, mapping.value);
+        const QString result = CredentialManager::get(QString::fromLatin1(mapping.settingsKey));
+        qunsetenv(mapping.envVar);
+        QCOMPARE(result, QString::fromLatin1(mapping.value));
+    }
+}
+
+/// REMUS_RA_USERNAME wins when both legacy REMUS_RA_USER and canonical var are set.
+void CredentialManagerTest::testRaUsernamePrefersRemusRaUsernameOverLegacyAlias() {
+    qputenv("REMUS_RA_USER", "legacy_user");
+    qputenv("REMUS_RA_USERNAME", "canonical_user");
+    const QString result = CredentialManager::get(QString::fromLatin1(Settings::Providers::RETROACHIEVEMENTS_USERNAME));
+    qunsetenv("REMUS_RA_USER");
+    qunsetenv("REMUS_RA_USERNAME");
+
+    QCOMPARE(result, QStringLiteral("canonical_user"));
+}
+
+/// REMUS_RA_USER is accepted when REMUS_RA_USERNAME is unset (.env.local compatibility).
+void CredentialManagerTest::testRaLegacyEnvAliasResolvesWhenCanonicalUnset() {
+    qunsetenv("REMUS_RA_USERNAME");
+    qputenv("REMUS_RA_USER", "legacy_only_user");
+    const QString result = CredentialManager::get(QString::fromLatin1(Settings::Providers::RETROACHIEVEMENTS_USERNAME));
+    qunsetenv("REMUS_RA_USER");
+
+    QCOMPARE(result, QStringLiteral("legacy_only_user"));
+}
+
+/// enrichment-credentials.json keys used by compendium enrichment must resolve.
+void CredentialManagerTest::testEnrichmentJsonKeysResolve() {
+    QTemporaryDir dir;
+    QVERIFY(dir.isValid());
+
+    QJsonObject igdb {
+        { QStringLiteral("client_id"), QStringLiteral("json_igdb_id") },
+        { QStringLiteral("client_secret"), QStringLiteral("json_igdb_secret") },
+    };
+    QJsonObject ra {
+        { QStringLiteral("username"), QStringLiteral("json_ra_user") },
+        { QStringLiteral("api_key"), QStringLiteral("json_ra_key") },
+    };
+    const QJsonObject root {
+        { QStringLiteral("igdb"), igdb },
+        { QStringLiteral("retroachievements"), ra },
+    };
+
+    const QString path = dir.filePath(QStringLiteral("enrichment-credentials.json"));
+    {
+        QFile f(path);
+        QVERIFY(f.open(QIODevice::WriteOnly | QIODevice::Text));
+        f.write(QJsonDocument(root).toJson());
+    }
+
+    QCOMPARE(CredentialManager::get(QStringLiteral("igdb/client_id"), path),
+        QStringLiteral("json_igdb_id"));
+    QCOMPARE(CredentialManager::get(QStringLiteral("igdb/client_secret"), path),
+        QStringLiteral("json_igdb_secret"));
+    QCOMPARE(CredentialManager::get(QStringLiteral("retroachievements/username"), path),
+        QStringLiteral("json_ra_user"));
+    QCOMPARE(CredentialManager::get(QStringLiteral("retroachievements/api_key"), path),
+        QStringLiteral("json_ra_key"));
 }
 
 /// A key absent from every source must produce an empty string, not a crash.

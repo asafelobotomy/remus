@@ -274,13 +274,16 @@ bool enrichFromRetroAchievements(QSqlDatabase &database, const QString &credenti
         };
 
         auto insertFact = [&](const QString &gameId, const QString &field, const QString &value,
-                              const QString &type = QStringLiteral("text")) -> bool {
+                              const QString &type = QStringLiteral("text"), bool *insertedOut = nullptr) -> bool {
             bool inserted = false;
             if (!insertGameFact(delQ, factQ, factSpec, gameId, field, value, type, error,
                     QStringLiteral("retroachievements"), &inserted))
                 return false;
-            if (inserted)
+            if (inserted) {
                 ++factsInserted;
+                if (insertedOut)
+                    *insertedOut = true;
+            }
             return true;
         };
 
@@ -297,11 +300,17 @@ bool enrichFromRetroAchievements(QSqlDatabase &database, const QString &credenti
             }
 
             // Always write ra_game_id and achievement_count from the bulk list.
-            if (!insertFact(gameId, QStringLiteral("ra_game_id"), QString::number(it->raGameId))
+            bool raIdInserted = false;
+            if (!insertFact(gameId, QStringLiteral("ra_game_id"), QString::number(it->raGameId), QStringLiteral("text"),
+                    &raIdInserted)
                 || !insertFact(gameId, QStringLiteral("achievement_count"), QString::number(it->achievementCount),
                     QStringLiteral("integer"))) {
                 database.rollback();
                 return false;
+            }
+            if (raIdInserted) {
+                ++gamesEnriched;
+                ++sysEnriched;
             }
 
             // Write full metadata for games missing any enrichable field.

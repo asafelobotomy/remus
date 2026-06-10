@@ -246,6 +246,14 @@ else
     echo "==> Build completed cleanly (exit code 0)"
 fi
 
+if [[ -x "$ROOT_DIR/build/remus-cli" ]]; then
+    echo "==> Importing patch catalog (libretro hacks DATs)"
+    bash "$ROOT_DIR/scripts/import_patch_catalog.sh" "$OUTPUT_DB" \
+        || echo "warning: patch catalog import failed or skipped (see above)" >&2
+else
+    echo "warning: remus-cli not found — skipping patch catalog import" >&2
+fi
+
 if ! $SKIP_VALIDATION; then
     bash "$ROOT_DIR/.github/scripts/validate-compendium-db.sh" "$OUTPUT_DB"
     if [[ -f "$ROOT_DIR/data/compendium/validation/0002_phase2_quality_checks.sql" ]]; then
