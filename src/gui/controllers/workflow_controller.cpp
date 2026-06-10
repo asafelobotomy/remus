@@ -179,9 +179,24 @@ void WorkflowController::refreshQueueFiles() {
 
     // Columns: 0=id, 1=filename, 2=current_path, 3=md5, 4=base_title, 5=extension,
     //           6=child_exts, 7=has_match (confirmed), 8=has_any_match (any non-rejected),
-    //           9=is_organized, 10=is_converted, 11=is_bundled
-    // Only primary files are shown; secondary files (e.g. .cue linked to .bin) are
-    // surfaced as extension chips via the child_exts subquery.
+    //           9=is_organized, 10=is_converted, 11=is_bundled,
+    //           12=system_name, 13=matched_title, 14=match_confidence, 15=release_date
+    static const QLatin1String kFromJoin(
+        "FROM files f "
+        "LEFT JOIN systems sys ON f.system_id = sys.id ");
+    static const QLatin1String kMatchMeta(
+        "sys.display_name AS system_name, "
+        "(SELECT g.title FROM matches m "
+        " LEFT JOIN games g ON m.game_id = g.id "
+        " WHERE m.file_id = f.id AND m.is_rejected = 0 "
+        " ORDER BY m.is_confirmed DESC, m.confidence DESC LIMIT 1) AS matched_title, "
+        "(SELECT m.confidence FROM matches m "
+        " WHERE m.file_id = f.id AND m.is_rejected = 0 "
+        " ORDER BY m.is_confirmed DESC, m.confidence DESC LIMIT 1) AS match_confidence, "
+        "(SELECT g.release_date FROM matches m "
+        " LEFT JOIN games g ON m.game_id = g.id "
+        " WHERE m.file_id = f.id AND m.is_rejected = 0 "
+        " ORDER BY m.is_confirmed DESC, m.confidence DESC LIMIT 1) AS release_date");
     static const QLatin1String kChildExts(
         "(SELECT GROUP_CONCAT(f2.extension, ',') FROM files f2 "
         " WHERE f2.parent_file_id = f.id) AS child_exts,"
@@ -192,14 +207,15 @@ void WorkflowController::refreshQueueFiles() {
         " EXISTS(SELECT 1 FROM undo_queue u"
         "  WHERE u.file_id = f.id AND u.undone = 0) AS is_organized,"
         " f.is_converted,"
-        " f.is_bundled");
+        " f.is_bundled,"
+        "%1");
 
     QString sql;
     switch (m_queueStage) {
     case Identity:
         sql = QStringLiteral("SELECT f.id, f.filename, f.current_path, f.md5, f.base_title, f.extension, "
                              "%1 "
-                             "FROM files f "
+                             "%2 "
                              "WHERE f.is_primary = 1 "
                              "  AND ((f.md5 IS NULL OR f.md5 = '') "
                              "       OR NOT EXISTS ("
@@ -207,28 +223,28 @@ void WorkflowController::refreshQueueFiles() {
                              "         WHERE m.file_id = f.id "
                              "           AND m.is_confirmed = 1 AND m.is_rejected = 0)) "
                              "ORDER BY COALESCE(f.base_title, f.filename) LIMIT 500")
-                  .arg(kChildExts);
+                  .arg(kChildExts.arg(kMatchMeta), kFromJoin);
         break;
     case Enrich:
     case Done:
         sql = QStringLiteral("SELECT f.id, f.filename, f.current_path, f.md5, f.base_title, f.extension, "
                              "%1 "
-                             "FROM files f "
+                             "%2 "
                              "WHERE f.is_primary = 1 "
                              "  AND EXISTS ("
                              "    SELECT 1 FROM matches m "
                              "    WHERE m.file_id = f.id "
                              "      AND m.is_confirmed = 1 AND m.is_rejected = 0) "
                              "ORDER BY COALESCE(f.base_title, f.filename) LIMIT 500")
-                  .arg(kChildExts);
+                  .arg(kChildExts.arg(kMatchMeta), kFromJoin);
         break;
     default: // AllFiles
         sql = QStringLiteral("SELECT f.id, f.filename, f.current_path, f.md5, f.base_title, f.extension, "
                              "%1 "
-                             "FROM files f "
+                             "%2 "
                              "WHERE f.is_primary = 1 "
                              "ORDER BY COALESCE(f.base_title, f.filename) LIMIT 500")
-                  .arg(kChildExts);
+                  .arg(kChildExts.arg(kMatchMeta), kFromJoin);
         break;
     }
 
@@ -242,7 +258,14 @@ void WorkflowController::refreshQueueFiles() {
         const int id = q.value(0).toInt();
         const bool hasArtwork = artworkExistsForFile(id);
         const QString baseTitle = q.value(4).toString();
-        const QString displayName = baseTitle.isEmpty() ? q.value(1).toString() : baseTitle;
+        const QString matchedTitle = q.value(13).toString();
+        const QString displayName = !matchedTitle.isEmpty() ? matchedTitle
+                                    : baseTitle.isEmpty()     ? q.value(1).toString()
+                                                              : baseTitle;
+        const QString releaseDate = q.value(15).toString();
+        int releaseYear = 0;
+        if (!releaseDate.isEmpty())
+            releaseYear = releaseDate.left(4).toInt();
 
         if (m_queueStage == Enrich && hasArtwork)
             continue;
@@ -252,7 +275,12 @@ void WorkflowController::refreshQueueFiles() {
         QVariantMap item;
         item[QStringLiteral("fileId")] = id;
         item[QStringLiteral("filename")] = displayName;
+        item[QStringLiteral("rawFilename")] = q.value(1).toString();
         item[QStringLiteral("path")] = q.value(2).toString();
+        item[QStringLiteral("systemName")] = q.value(12).toString();
+        item[QStringLiteral("matchedTitle")] = matchedTitle;
+        item[QStringLiteral("confidence")] = q.value(14).toFloat();
+        item[QStringLiteral("releaseYear")] = releaseYear;
         static const QStringList kConvertibleExts
             = { QStringLiteral(".cue"), QStringLiteral(".gdi"), QStringLiteral(".iso"), QStringLiteral(".bin"),
                   QStringLiteral(".img"), QStringLiteral(".mdf"), QStringLiteral(".nrg"), QStringLiteral(".gcm") };

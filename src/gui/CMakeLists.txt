@@ -51,13 +51,16 @@ qt_add_qml_module(remus-gui
     QML_FILES
         qml/Main.qml
         qml/Sidebar.qml
+        qml/components/ActionToolbar.qml
         qml/components/ProgressCard.qml
         qml/components/MetadataEditor.qml
         qml/components/StageCard.qml
         qml/components/QueueSidebar.qml
+        qml/components/RomTable.qml
+        qml/components/StatusIcon.qml
+        qml/components/PipelinePanel.qml
         qml/components/InspectorPanel.qml
-        qml/views/LibraryView.qml
-        qml/views/WorkflowView.qml
+        qml/views/LibraryWorkbench.qml
         qml/views/UtilitiesView.qml
         qml/views/ScanView.qml
         qml/views/HashView.qml

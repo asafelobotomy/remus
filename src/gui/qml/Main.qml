@@ -45,28 +45,53 @@ ApplicationWindow {
             border.color: "#504945"
         }
 
-        RowLayout {
+        ColumnLayout {
             id: topBarLayout
 
             anchors.fill: parent
             anchors.margins: 10
-            spacing: 10
+            spacing: 8
 
-            TextField {
-                id: libraryField
+            RowLayout {
                 Layout.fillWidth: true
-                placeholderText: appController.defaultLibraryPath()
-                text: settingsController.stringValue("gui/default_library_path", appController.defaultLibraryPath())
-                onEditingFinished: settingsController.setValue("gui/default_library_path", text)
-            }
+                spacing: 10
 
-            Button {
-                text: "Open Library"
-                onClicked: {
-                    if (appController.openLibrary(libraryField.text)) {
-                        settingsController.setValue("gui/default_library_path", libraryField.text)
+                TextField {
+                    id: libraryField
+                    Layout.preferredWidth: 320
+                    Layout.fillWidth: true
+                    placeholderText: appController.defaultLibraryPath()
+                    text: settingsController.stringValue("gui/default_library_path", appController.defaultLibraryPath())
+                    onEditingFinished: settingsController.setValue("gui/default_library_path", text)
+                }
+
+                Button {
+                    text: "Open Library"
+                    onClicked: {
+                        if (appController.openLibrary(libraryField.text)) {
+                            settingsController.setValue("gui/default_library_path", libraryField.text)
+                        }
                     }
                 }
+
+                Label {
+                    visible: appController.libraryOpen
+                    text: "Remus"
+                    font.pixelSize: 18
+                    font.bold: true
+                    color: "#fbf1c7"
+                }
+            }
+
+            ActionToolbar {
+                Layout.fillWidth: true
+                visible: appController.libraryOpen
+
+                onPipelineDrawerRequested: libraryWorkbench.openPipelineDrawer()
+                onRunAllRequested:         libraryWorkbench.requestRunAll()
+                onUtilitiesRequested:        appController.currentView = 1
+                onSettingsRequested:         appController.currentView = 2
+                onEditRequested:             libraryWorkbench.openEditDialog()
             }
         }
     }
@@ -101,8 +126,9 @@ ApplicationWindow {
                 anchors.fill: parent
                 currentIndex: appController.currentView
 
-                WorkflowView  {}
-                LibraryView   {}
+                LibraryWorkbench {
+                    id: libraryWorkbench
+                }
                 UtilitiesView {}
                 SettingsView  {}
             }
