@@ -27,8 +27,8 @@ namespace Constants {
         // REMOTE BAND (90-40): online providers — queried only for fields still
         //   missing after all local providers have been exhausted.
         //
-        //   screenscraper  90 — 10/10: all fields including rating & screenshots; requires auth
-        //   hasheous       80 —  1/10 bare / 9/10 with MetadataProxy (IGDB data); hash-only
+        //   hasheous       91 —  1/10 bare / 9/10 with MetadataProxy; multi-hash POST before SS
+        //   screenscraper  89 — 10/10: all fields including rating & screenshots; requires auth
         //   igdb           70 —  8/10: title pub dev genres date desc players rating; requires OAuth
         //   retroachievements 60 — 6/10: title sys pub dev genres date art; MD5 hash-only, free key
         //   thegamesdb     50 —  6/10: title sys pub dev date desc players; simplified genres, no auth
@@ -37,8 +37,8 @@ namespace Constants {
             inline constexpr int COMPENDIUM = 210;
             inline constexpr int LOCAL_DATABASE = 200;
             inline constexpr int GAMETDB = 150;
-            inline constexpr int SCREENSCRAPER = 90;
-            inline constexpr int HASHEOUS = 80;
+            inline constexpr int HASHEOUS = 91;
+            inline constexpr int SCREENSCRAPER = 89;
             inline constexpr int IGDB = 70;
             inline constexpr int RETROACHIEVEMENTS = 60;
             inline constexpr int THEGAMESDB = 50;

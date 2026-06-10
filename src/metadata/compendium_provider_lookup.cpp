@@ -136,6 +136,85 @@ QList<SearchResult> CompendiumProvider::searchByName(
     return results;
 }
 
+namespace {
+
+    QString patchHashColumn(const QString &hashType) {
+        if (hashType == QStringLiteral("crc32"))
+            return QStringLiteral("crc32");
+        if (hashType == QStringLiteral("md5"))
+            return QStringLiteral("md5");
+        if (hashType == QStringLiteral("sha1"))
+            return QStringLiteral("sha1");
+        return { };
+    }
+
+    GameMetadata metadataFromPatchRow(const QSqlQuery &query, const QString &systemName, const QString &hashType,
+        const QString &normalizedHash) {
+        GameMetadata metadata;
+        const QString gameName = query.value(0).toString();
+        const QString baseTitle = query.value(3).toString();
+        const QString patchName = query.value(4).toString();
+        const QString fileType = query.value(5).toString();
+        const QString catalogSystem = query.value(6).toString();
+
+        metadata.id = QStringLiteral("patch:%1:%2:%3").arg(catalogSystem, hashType, normalizedHash);
+        metadata.title = gameName.isEmpty() ? baseTitle : gameName;
+        metadata.system = catalogSystem.isEmpty() ? systemName : catalogSystem;
+        metadata.description = query.value(2).toString();
+        metadata.matchScore = 1.0f;
+        metadata.matchMethod = QString::fromLatin1(Constants::MatchMethods::HASH);
+        metadata.providerId = QStringLiteral("compendium");
+        if (!baseTitle.isEmpty())
+            metadata.externalIds.insert(QStringLiteral("base_title"), baseTitle);
+        if (!patchName.isEmpty())
+            metadata.externalIds.insert(QStringLiteral("patch_name"), patchName);
+        if (!fileType.isEmpty())
+            metadata.externalIds.insert(QStringLiteral("file_type"), fileType);
+        return metadata;
+    }
+
+} // namespace
+
+GameMetadata CompendiumProvider::lookupPatchByHash(const QString &hashType, const QString &normalizedHash,
+    const QString &system, int systemId) const {
+    const QString hashColumn = patchHashColumn(hashType);
+    if (hashColumn.isEmpty()) {
+        return { };
+    }
+
+    QSqlDatabase db = database();
+    if (!db.isOpen()) {
+        return { };
+    }
+
+    const QString patchSystemName = systemId != 0 ? SystemResolver::internalName(systemId) : system.trimmed();
+
+    QSqlQuery query(db);
+    query.prepare(QStringLiteral("SELECT pe.game_name, pe.rom_name, pe.description, pe.base_title, pe.patch_name, "
+                                 "pe.file_type, pcs.system_name "
+                                 "FROM patch_entries pe "
+                                 "JOIN patch_catalog_sources pcs ON pe.source_id = pcs.source_id "
+                                 "WHERE (? = '' OR pcs.system_name = ?) "
+                                 "AND LOWER(pe.%1) = ? "
+                                 "LIMIT 1")
+                      .arg(hashColumn));
+    query.addBindValue(patchSystemName);
+    query.addBindValue(patchSystemName);
+    query.addBindValue(normalizedHash);
+    if (!query.exec()) {
+        // Older compendium builds may not include patch catalog tables yet.
+        if (!query.lastError().text().contains(QStringLiteral("no such table"), Qt::CaseInsensitive)) {
+            qWarning() << "CompendiumProvider::lookupPatchByHash query failed:" << query.lastError().text();
+        }
+        return { };
+    }
+    if (!query.next()) {
+        return { };
+    }
+
+    return metadataFromPatchRow(query, system, hashType, normalizedHash);
+}
+
 GameMetadata CompendiumProvider::getByHash(const QString &hash, const QString &system) {
     QString normalizedHash;
     const QString hashType = detectHashType(hash, normalizedHash);
@@ -166,7 +245,7 @@ GameMetadata CompendiumProvider::getByHash(const QString &hash, const QString &s
         return { };
     }
     if (!query.next()) {
-        return { };
+        return lookupPatchByHash(hashType, normalizedHash, system, systemId);
     }
 
     const QString gameId = query.value(0).toString();

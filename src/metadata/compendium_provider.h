@@ -42,6 +42,8 @@ private:
     void ensureFts5Index();
 
     static QString detectHashType(const QString &hash, QString &normalizedValue);
+    GameMetadata lookupPatchByHash(const QString &hashType, const QString &normalizedHash, const QString &system,
+        int systemId) const;
 
     QString m_connectionName;
     QString m_databasePath;

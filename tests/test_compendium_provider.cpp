@@ -49,7 +49,20 @@ bool createSchema(QSqlDatabase &db) {
         && execSql(db,
             QStringLiteral(
                 "CREATE TABLE canonical_resolution (game_id TEXT NOT NULL, field_name TEXT NOT NULL, selected_fact_id "
-                "INTEGER NOT NULL, resolved_by_rule TEXT NOT NULL, PRIMARY KEY (game_id, field_name))"));
+                "INTEGER NOT NULL, resolved_by_rule TEXT NOT NULL, PRIMARY KEY (game_id, field_name))"))
+        && execSql(db,
+            QStringLiteral("CREATE TABLE patch_catalog_sources ("
+                             "source_id INTEGER PRIMARY KEY AUTOINCREMENT, system_name TEXT NOT NULL, "
+                             "catalog_name TEXT NOT NULL, catalog_version TEXT, catalog_source TEXT, "
+                             "catalog_description TEXT, entry_count INTEGER NOT NULL DEFAULT 0, "
+                             "created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, "
+                             "UNIQUE (system_name, catalog_name))"))
+        && execSql(db,
+            QStringLiteral("CREATE TABLE patch_entries ("
+                             "entry_id INTEGER PRIMARY KEY AUTOINCREMENT, source_id INTEGER NOT NULL, "
+                             "game_name TEXT NOT NULL, rom_name TEXT NOT NULL, rom_size INTEGER, "
+                             "crc32 TEXT, md5 TEXT, sha1 TEXT, description TEXT, status TEXT, "
+                             "base_title TEXT, patch_name TEXT, file_type TEXT)"));
 }
 
 int insertFact(QSqlDatabase &db, const QString &gameId, const QString &fieldName, const QString &fieldValue) {
@@ -188,6 +201,7 @@ class CompendiumProviderTest : public QObject {
 private slots:
     void getByHashReturnsCanonicalMetadata();
     void getByHashSupportsSha256();
+    void getByHashMatchesPatchCatalog();
     void searchByNameUsesAliasAndFilters();
     void searchByNameWithOfficialTitleReturnsSameGame();
     void searchByNameKeepsBestMatchFirst();
@@ -252,6 +266,41 @@ void CompendiumProviderTest::getByHashSupportsSha256() {
 
     QCOMPARE(metadata.id, QStringLiteral("game-2"));
     QCOMPARE(metadata.title, QStringLiteral("Paper Mario"));
+}
+
+void CompendiumProviderTest::getByHashMatchesPatchCatalog() {
+    const QString dbPath = createFixtureDatabase();
+    QVERIFY(!dbPath.isEmpty());
+
+    CompendiumProvider provider;
+    QVERIFY(provider.openDatabase(dbPath));
+
+    {
+        QSqlDatabase db = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), QStringLiteral("patch_seed"));
+        db.setDatabaseName(dbPath);
+        QVERIFY(db.open());
+        QVERIFY(execSql(db,
+            QStringLiteral("INSERT INTO patch_catalog_sources "
+                             "(system_name, catalog_name, catalog_version, catalog_source, entry_count) "
+                             "VALUES ('GameCube', 'hacks', '1', 'libretro-hacks', 1)")));
+        QVERIFY(execSql(db,
+            QStringLiteral("INSERT INTO patch_entries "
+                             "(source_id, game_name, rom_name, md5, base_title, patch_name, file_type) "
+                             "VALUES (1, 'Paper Mario TTYD (English)', 'ttyd-en.iso', "
+                             "'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb', 'Paper Mario: The Thousand-Year Door', "
+                             "'English v1.0', 'translation')")));
+        db.close();
+        QSqlDatabase::removeDatabase(QStringLiteral("patch_seed"));
+    }
+
+    const GameMetadata metadata = provider.getByHash(
+        QStringLiteral("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"), QStringLiteral("GameCube"));
+
+    QCOMPARE(metadata.title, QStringLiteral("Paper Mario TTYD (English)"));
+    QCOMPARE(metadata.externalIds.value(QStringLiteral("patch_name")), QStringLiteral("English v1.0"));
+    QCOMPARE(metadata.externalIds.value(QStringLiteral("file_type")), QStringLiteral("translation"));
+    QCOMPARE(metadata.matchScore, 1.0f);
+    QCOMPARE(metadata.matchMethod, QStringLiteral("hash"));
 }
 
 void CompendiumProviderTest::searchByNameUsesAliasAndFilters() {

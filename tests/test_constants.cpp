@@ -91,14 +91,14 @@ void ConstantsTest::testProviderPriority() {
     // Verify order (highest priority first).
     // Ordered by metadata field-coverage score within each tier:
     //   LOCAL  band: compendium (210), localdatabase (200), gametdb (150)
-    //   REMOTE band: screenscraper (90), hasheous (80), igdb (70),
+    //   REMOTE band: hasheous (91), screenscraper (89), igdb (70),
     //                retroachievements (60), thegamesdb (50), wikidata (40)
     QVERIFY(providers.size() >= 9);
     QCOMPARE(providers[0], QString(Providers::COMPENDIUM)); // Priority 210
     QCOMPARE(providers[1], QString(Providers::LOCAL_DATABASE)); // Priority 200
     QCOMPARE(providers[2], QString(Providers::GAMETDB)); // Priority 150
-    QCOMPARE(providers[3], QString(Providers::SCREENSCRAPER)); // Priority 90
-    QCOMPARE(providers[4], QString(Providers::HASHEOUS)); // Priority 80
+    QCOMPARE(providers[3], QString(Providers::HASHEOUS)); // Priority 91
+    QCOMPARE(providers[4], QString(Providers::SCREENSCRAPER)); // Priority 89
     QCOMPARE(providers[5], QString(Providers::IGDB)); // Priority 70
     QCOMPARE(providers[6], QString(Providers::RETROACHIEVEMENTS)); // Priority 60
     QCOMPARE(providers[7], QString(Providers::THEGAMESDB)); // Priority 50
