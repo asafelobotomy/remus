@@ -117,7 +117,8 @@ int handleMatchCommand(CliContext &ctx) {
             qInfo() << "  Disc serial:" << task.discSerial;
 
         GameMetadata         metadata = orchestrator->searchWithFallback(
-            selectBestHash(file), displayName, systemName, file.crc32, file.md5, file.sha1, task.discSerial, file.fileSize);
+            selectBestHash(file), displayName, systemName, file.crc32, file.md5, file.sha1, task.discSerial,
+            file.fileSize, file.raMd5);
 
         if (!metadata.title.isEmpty()) {
             const int confidence = metadata.matchScore > 0 ? static_cast<int>(metadata.matchScore * 100) : 0;

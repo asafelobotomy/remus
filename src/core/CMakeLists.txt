@@ -22,6 +22,7 @@ add_library(remus-core STATIC
     patched_rom_parser.cpp
     match_utils.cpp
     hasher.cpp
+    ra_hasher.cpp
     database.cpp
     database_files.cpp
     database_file_state.cpp

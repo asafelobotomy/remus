@@ -46,7 +46,8 @@ int handleArtworkCommand(CliContext &ctx) {
         const QString systemName = getProviderLookupSystemName(file);
         qInfo() << "Processing:" << displayName;
         GameMetadata metadata = orchestrator->searchWithFallback(
-            selectBestHash(file), displayName, systemName, file.crc32, file.md5, file.sha1, QString(), file.fileSize, true);
+            selectBestHash(file), displayName, systemName, file.crc32, file.md5, file.sha1, QString(), file.fileSize,
+            file.raMd5, true);
 
         if (metadata.boxArtUrl.isEmpty()) {
             qInfo() << "  ✗ No box art URL";
@@ -198,7 +199,8 @@ int handleBundleCommand(CliContext &ctx) {
 
             const QString displayName = getMatchingDisplayName(file);
             GameMetadata providerMeta = orchestrator->searchWithFallback(
-                selectBestHash(file), displayName, systemName, file.crc32, file.md5, file.sha1, QString(), file.fileSize, true);
+                selectBestHash(file), displayName, systemName, file.crc32, file.md5, file.sha1, QString(), file.fileSize,
+                file.raMd5, true);
 
             if (!providerMeta.boxArtUrl.isEmpty()) {
                 const QUrl boxArtUrl(providerMeta.boxArtUrl);

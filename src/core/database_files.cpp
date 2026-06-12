@@ -14,13 +14,13 @@ namespace {
     // Column order must match kFileSelectColumns below exactly.
     // 0=id, 1=library_id, 2=original_path, 3=current_path, 4=filename, 5=extension,
     // 6=file_size, 7=is_compressed, 8=archive_path, 9=archive_internal_path,
-    // 10=system_id, 11=crc32, 12=md5, 13=sha1, 14=hash_calculated,
-    // 15=is_primary, 16=parent_file_id, 17=base_title, 18=file_type, 19=is_patched,
-    // 20=patch_name, 21=is_processed, 22=processing_status,
-    // 23=last_modified, 24=scanned_at
+    // 10=system_id, 11=crc32, 12=md5, 13=sha1, 14=ra_md5, 15=hash_calculated,
+    // 16=is_primary, 17=parent_file_id, 18=base_title, 19=file_type, 20=is_patched,
+    // 21=patch_name, 22=is_processed, 23=processing_status,
+    // 24=last_modified, 25=scanned_at
     static const char kFileSelectColumns[] = "id, library_id, original_path, current_path, filename, extension, "
                                              "file_size, is_compressed, archive_path, archive_internal_path, "
-                                             "system_id, crc32, md5, sha1, hash_calculated, "
+                                             "system_id, crc32, md5, sha1, ra_md5, hash_calculated, "
                                              "is_primary, parent_file_id, base_title, file_type, is_patched, "
                                              "patch_name, is_processed, processing_status, last_modified, scanned_at";
 
@@ -40,17 +40,18 @@ namespace {
         r.crc32 = q.value(11).toString();
         r.md5 = q.value(12).toString();
         r.sha1 = q.value(13).toString();
-        r.hashCalculated = q.value(14).toBool();
-        r.isPrimary = q.value(15).toBool();
-        r.parentFileId = q.value(16).toInt();
-        r.baseTitle = q.value(17).toString();
-        r.fileType = q.value(18).toString();
-        r.isPatched = q.value(19).toBool();
-        r.patchName = q.value(20).toString();
-        r.isProcessed = q.value(21).toBool();
-        r.processingStatus = q.value(22).toString();
-        r.lastModified = q.value(23).toDateTime();
-        r.scannedAt = q.value(24).toDateTime();
+        r.raMd5 = q.value(14).toString();
+        r.hashCalculated = q.value(15).toBool();
+        r.isPrimary = q.value(16).toBool();
+        r.parentFileId = q.value(17).toInt();
+        r.baseTitle = q.value(18).toString();
+        r.fileType = q.value(19).toString();
+        r.isPatched = q.value(20).toBool();
+        r.patchName = q.value(21).toString();
+        r.isProcessed = q.value(22).toBool();
+        r.processingStatus = q.value(23).toString();
+        r.lastModified = q.value(24).toDateTime();
+        r.scannedAt = q.value(25).toDateTime();
         return r;
     }
 
@@ -142,14 +143,15 @@ int Database::insertFile(const FileRecord &record) {
     return newId;
 }
 
-bool Database::updateFileHashes(int fileId, const QString &crc32, const QString &md5, const QString &sha1) {
+bool Database::updateFileHashes(int fileId, const QString &crc32, const QString &md5, const QString &sha1,
+    const QString &raMd5) {
     QSqlQuery query(m_db);
     const AppliedPatchRecord lineage = findAppliedPatchByOutputHashes(crc32, md5, sha1);
     const bool hasLineage = lineage.id > 0;
 
     QString updateStatement = R"(
         UPDATE files 
-        SET crc32 = ?, md5 = ?, sha1 = ?, hash_calculated = 1
+        SET crc32 = ?, md5 = ?, sha1 = ?, ra_md5 = ?, hash_calculated = 1
     )";
     if (hasLineage) {
         updateStatement += R"(,
@@ -165,6 +167,7 @@ bool Database::updateFileHashes(int fileId, const QString &crc32, const QString 
     query.addBindValue(crc32);
     query.addBindValue(md5);
     query.addBindValue(sha1);
+    query.addBindValue(raMd5.isEmpty() ? QVariant() : raMd5);
     if (hasLineage) {
         query.addBindValue(lineage.baseTitle.isEmpty() ? QVariant() : lineage.baseTitle);
         query.addBindValue(lineage.fileType.isEmpty() ? QVariant() : lineage.fileType);

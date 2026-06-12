@@ -4,6 +4,7 @@
 #include "../core/database.h"
 #include "../core/archive_extractor.h"
 #include "../core/constants/files.h"
+#include "../core/ra_hasher.h"
 
 #include <QDir>
 #include <QFileInfo>
@@ -94,6 +95,15 @@ namespace {
         return matchedByName;
     }
 
+    void attachRaHash(HashResult &result, const QString &hashedPath, const FileRecord &file) {
+        if (!result.success || file.systemId <= 0 || !RaHasher::hasRaMapping(file.systemId))
+            return;
+
+        const RaHasher::Result ra = RaHasher::compute(hashedPath, file.systemId, file.extension);
+        if (ra.success)
+            result.raMd5 = ra.md5;
+    }
+
 } // namespace
 
 HashService::HashService()
@@ -141,7 +151,8 @@ int HashService::hashAll(
             continue;
         }
         if (task.result.success) {
-            if (db->updateFileHashes(task.fileId, task.result.crc32, task.result.md5, task.result.sha1)) {
+            if (db->updateFileHashes(task.fileId, task.result.crc32, task.result.md5, task.result.sha1,
+                    task.result.raMd5)) {
                 hashed++;
             } else {
                 skipped++;
@@ -224,7 +235,7 @@ bool HashService::hashFile(Database *db, int fileId) {
 
     HashResult result = hashRecord(file);
     if (result.success) {
-        db->updateFileHashes(file.id, result.crc32, result.md5, result.sha1);
+        db->updateFileHashes(file.id, result.crc32, result.md5, result.sha1, result.raMd5);
         return true;
     }
     return false;
@@ -247,7 +258,9 @@ HashResult HashService::hashRecord(const FileRecord &file) {
 
     if (!treatAsArchive) {
         int headerSize = Hasher::detectHeaderSize(file.currentPath, file.extension);
-        return m_hasher->calculateHashes(file.currentPath, headerSize > 0, headerSize);
+        HashResult result = m_hasher->calculateHashes(file.currentPath, headerSize > 0, headerSize);
+        attachRaHash(result, file.currentPath, file);
+        return result;
     }
 
     // Archive-aware hashing: extract to temp dir, then hash
@@ -301,12 +314,16 @@ HashResult HashService::hashRecord(const FileRecord &file) {
         }
 
         int headerSize = Hasher::detectHeaderSize(picked, file.extension);
-        return m_hasher->calculateHashes(picked, headerSize > 0, headerSize);
+        result = m_hasher->calculateHashes(picked, headerSize > 0, headerSize);
+        attachRaHash(result, picked, file);
+        return result;
     }
 
     const QString extractedPath = extraction.extractedFiles.first();
     int headerSize = Hasher::detectHeaderSize(extractedPath, file.extension);
-    return m_hasher->calculateHashes(extractedPath, headerSize > 0, headerSize);
+    result = m_hasher->calculateHashes(extractedPath, headerSize > 0, headerSize);
+    attachRaHash(result, extractedPath, file);
+    return result;
 }
 
 } // namespace Remus

@@ -13,6 +13,7 @@ struct HashResult {
     QString crc32;
     QString md5;
     QString sha1;
+    QString raMd5; ///< RetroAchievements RAHasher digest (≠ No-Intro md5 on some systems)
     bool success = false;
     QString error;
 };

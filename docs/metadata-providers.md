@@ -88,7 +88,7 @@ still passes all calculated digests into the cascade.
 - Matching: MD5 hash lookup via RA API (`dorequest.php?r=gameid`)
 - Auth: required username and API key
 - Best use: achievement-linked metadata when the ROM's MD5 is in RA's hash list
-- Notes: RA uses RAHasher MD5 on some platforms (≠ No-Intro); orchestrator passes file MD5, not CRC32/SHA1 from `selectBestHash`
+- Notes: RA uses RAHasher MD5 (stored separately as `ra_md5` on file records). The orchestrator passes `raMd5` to RA, not No-Intro `md5`. When Hasheous/compendium already resolved an RA game ID, the provider uses `getById` instead of hash lookup. Optional external tool: set `REMUS_RAHASHER_PATH` to an RAHasher binary for disc systems (PS1/PS2/NDS/GC/Wii).
 
 ### TheGamesDB
 

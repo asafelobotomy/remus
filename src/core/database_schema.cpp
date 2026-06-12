@@ -67,6 +67,7 @@ bool Database::createSchema() {
             crc32 TEXT,
             md5 TEXT,
             sha1 TEXT,
+            ra_md5 TEXT,
             hash_calculated BOOLEAN DEFAULT 0,
             is_primary BOOLEAN DEFAULT 1,
             parent_file_id INTEGER,

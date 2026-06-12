@@ -77,7 +77,8 @@ public:
      */
     GameMetadata searchWithFallback(const QString &hash, const QString &name, const QString &system,
         const QString &crc32 = QString(), const QString &md5 = QString(), const QString &sha1 = QString(),
-        const QString &serial = QString(), qint64 fileSize = 0, bool requireArtwork = false);
+        const QString &serial = QString(), qint64 fileSize = 0, const QString &raMd5 = QString(),
+        bool requireArtwork = false);
 
     /**
      * @brief Get list of all search results from all providers
@@ -101,7 +102,8 @@ public:
      * @brief Hash lookup on a single provider when supported.
      */
     GameMetadata getHashFromProvider(const QString &providerName, const QString &hash, const QString &system,
-        const QString &crc32 = QString(), const QString &md5 = QString(), const QString &sha1 = QString());
+        const QString &crc32 = QString(), const QString &md5 = QString(), const QString &sha1 = QString(),
+        const QString &raMd5 = QString());
 
     /**
      * @brief Get metadata by hash from all hash-capable providers
@@ -110,7 +112,7 @@ public:
      * @return GameMetadata from first successful hash match
      */
     GameMetadata getByHashWithFallback(const QString &hash, const QString &system, const QString &crc32 = QString(),
-        const QString &md5 = QString(), const QString &sha1 = QString());
+        const QString &md5 = QString(), const QString &sha1 = QString(), const QString &raMd5 = QString());
 
     /**
      * @brief Get artwork with fallback
@@ -136,7 +138,7 @@ public:
     GameMetadata enrichMissingFields(const FieldSet &missing, const GameMetadata &existing, const QString &hash,
         const QString &name, const QString &system, const QString &crc32 = QString(), const QString &md5 = QString(),
         const QString &sha1 = QString(), const QString &serial = QString(),
-        const QSet<QString> &excludeProviders = {});
+        const QSet<QString> &excludeProviders = {}, const QString &raMd5 = QString());
 
     /**
      * @brief Get list of enabled providers
@@ -220,7 +222,7 @@ private:
      */
     void queryProvider(GameMetadata &accumulator, const QString &providerName, const QString &hash, const QString &name,
         const QString &system, const QString &crc32, const QString &md5, const QString &sha1, const QString &serial,
-        qint64 fileSize = 0);
+        qint64 fileSize = 0, const QString &raMd5 = QString());
 
     /**
      * @brief Determine if provider supports hash matching

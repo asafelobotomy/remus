@@ -23,6 +23,7 @@ struct FileRecord {
     QString crc32;
     QString md5;
     QString sha1;
+    QString raMd5;
     bool hashCalculated = false;
     bool isPrimary = true;
     int parentFileId = 0;

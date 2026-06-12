@@ -355,6 +355,11 @@ add_remus_test(test_patch_service PatchServiceTest
     LIBS Qt6::Test remus-services remus-core
 )
 
+add_remus_test(test_ra_hasher RaHasherTest
+    SOURCES test_ra_hasher.cpp
+    LIBS Qt6::Test remus-core
+)
+
 add_remus_test(test_hash_service HashServiceTest
     SOURCES test_hash_service.cpp
     LIBS Qt6::Test Qt6::Sql remus-services remus-core

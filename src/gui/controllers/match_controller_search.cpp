@@ -218,10 +218,10 @@ bool MatchController::prependHashCandidates(ProviderOrchestrator *orchestrator, 
     GameMetadata hashMetadata;
     if (providerFilter.isEmpty()) {
         hashMetadata
-            = orchestrator->getByHashWithFallback(hash, systemName, file.crc32, file.md5, file.sha1);
+            = orchestrator->getByHashWithFallback(hash, systemName, file.crc32, file.md5, file.sha1, file.raMd5);
     } else {
         hashMetadata = orchestrator->getHashFromProvider(
-            providerFilter, hash, systemName, file.crc32, file.md5, file.sha1);
+            providerFilter, hash, systemName, file.crc32, file.md5, file.sha1, file.raMd5);
     }
 
     if (hashMetadata.title.isEmpty())

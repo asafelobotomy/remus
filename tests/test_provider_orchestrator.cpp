@@ -10,6 +10,8 @@
 #include "metadata/metadata_cache.h"
 #include "metadata/hasheous_provider.h"
 #include "core/constants/match_methods.h"
+#include "core/constants/provider_fields.h"
+#include "core/constants/providers.h"
 
 using namespace Remus;
 
@@ -32,15 +34,18 @@ public:
         return m_searchResults;
     }
 
-    GameMetadata getByHash(const QString &, const QString &) override {
+    GameMetadata getByHash(const QString &hash, const QString &) override {
         ++m_hashCallCount;
+        m_lastHashArg = hash;
         return m_hashMetadata;
     }
     GameMetadata getBySerial(const QString &, const QString &) override {
         ++m_serialCallCount;
         return m_serialMetadata;
     }
-    GameMetadata getById(const QString &) override {
+    GameMetadata getById(const QString &id) override {
+        ++m_getByIdCallCount;
+        m_lastGetByIdArg = id;
         return m_idMetadata;
     }
     ArtworkUrls getArtwork(const QString &) override {
@@ -53,8 +58,11 @@ public:
     QList<SearchResult> m_searchResults;
     ArtworkUrls m_artwork;
     QString m_lastSearchName;
+    QString m_lastHashArg;
+    QString m_lastGetByIdArg;
     int m_hashCallCount = 0;
     int m_serialCallCount = 0;
+    int m_getByIdCallCount = 0;
 
 private:
     QString m_id;
@@ -134,6 +142,9 @@ private slots:
     // Cascade: hash miss → serial → name
     void serialCascadeWhenHashMisses();
     void nameCascadeWhenHashAndSerialMiss();
+
+    void retroAchievementsUsesRaMd5NotNoIntroMd5();
+    void retroAchievementsUsesExternalIdBeforeRaHash();
 };
 
 void ProviderOrchestratorTest::hashProviderPriority() {
@@ -296,7 +307,7 @@ void ProviderOrchestratorTest::searchWithFallbackContinuesPastCacheWithoutArtwor
     orchestrator.addProvider("igdb", provider, 40);
 
     GameMetadata found = orchestrator.searchWithFallback(
-        "6291ee08", "Live A Live", "SNES", QString(), QString(), QString(), QString(), 0, true);
+        "6291ee08", "Live A Live", "SNES", QString(), QString(), QString(), QString(), 0, QString(), true);
 
     QCOMPARE(provider->m_lastSearchName, QString("Live A Live"));
     QCOMPARE(found.title, QString("Live A Live"));
@@ -525,7 +536,7 @@ void ProviderOrchestratorTest::hashMatchWithRequireArtworkContinuesForArtwork() 
     orchestrator.addProvider("thegamesdb", second, 50);
 
     const GameMetadata result = orchestrator.searchWithFallback(
-        "CCDDEE11", "Chrono Trigger", "SNES", QString(), QString(), QString(), QString(), 0, true);
+        "CCDDEE11", "Chrono Trigger", "SNES", QString(), QString(), QString(), QString(), 0, QString(), true);
 
     // Title must come from the hash match.
     QCOMPARE(result.title, QStringLiteral("Chrono Trigger"));
@@ -694,6 +705,44 @@ void ProviderOrchestratorTest::nameCascadeWhenHashAndSerialMiss() {
     QCOMPARE(provider->m_hashCallCount, 0);
     QCOMPARE(provider->m_serialCallCount, 0);
     QVERIFY(!result.matchMethod.isEmpty());
+}
+
+void ProviderOrchestratorTest::retroAchievementsUsesRaMd5NotNoIntroMd5() {
+    ProviderOrchestrator orchestrator;
+    auto *ra = new StubProvider(QStringLiteral("retroachievements"));
+    ra->m_hashMetadata.title = QStringLiteral("RA Match");
+    orchestrator.addProvider(QStringLiteral("retroachievements"), ra, Constants::Providers::Priority::RETROACHIEVEMENTS);
+
+    const GameMetadata result = orchestrator.getHashFromProvider(QStringLiteral("retroachievements"), QStringLiteral("abc"),
+        QStringLiteral("NES"), QStringLiteral("crc"), QStringLiteral("nointro-md5"), QStringLiteral("sha1"),
+        QStringLiteral("ra-md5-hash"));
+
+    QCOMPARE(result.title, QStringLiteral("RA Match"));
+    QCOMPARE(ra->m_lastHashArg, QStringLiteral("ra-md5-hash"));
+}
+
+void ProviderOrchestratorTest::retroAchievementsUsesExternalIdBeforeRaHash() {
+    ProviderOrchestrator orchestrator;
+    auto *ra = new StubProvider(QStringLiteral("retroachievements"));
+    ra->m_idMetadata.title = QStringLiteral("RA By ID");
+    ra->m_hashMetadata.title = QStringLiteral("RA By Hash");
+    orchestrator.addProvider(QStringLiteral("retroachievements"), ra, Constants::Providers::Priority::RETROACHIEVEMENTS);
+
+    GameMetadata existing;
+    existing.title = QStringLiteral("Canonical");
+    existing.externalIds[Constants::Providers::ExternalId::RETROACHIEVEMENTS] = QStringLiteral("12345");
+
+    ProviderOrchestrator::FieldSet gap;
+    gap.insert(Constants::ProviderFields::BOX_ART_URL);
+
+    const GameMetadata out = orchestrator.enrichMissingFields(gap, existing, QStringLiteral("hash"),
+        QStringLiteral("Canonical"), QStringLiteral("NES"), QString(), QStringLiteral("nointro-md5"), QString(),
+        QString(), {}, QStringLiteral("ra-md5-hash"));
+
+    QCOMPARE(ra->m_getByIdCallCount, 1);
+    QCOMPARE(ra->m_lastGetByIdArg, QStringLiteral("12345"));
+    QCOMPARE(ra->m_hashCallCount, 0);
+    QCOMPARE(out.title, QStringLiteral("Canonical"));
 }
 
 QTEST_MAIN(ProviderOrchestratorTest)

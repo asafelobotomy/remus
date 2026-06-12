@@ -190,7 +190,7 @@ in `--match` can still show `NotInDat` in verify if no hash is in catalog.
 
 | ID | Issue | Status |
 |----|--------|--------|
-| **G9** | RA hash ≠ No-Intro MD5 on several systems | **Mitigated** — orchestrator passes MD5 explicitly; RAHasher-only titles may still miss |
+| **G9** | RA hash ≠ No-Intro MD5 on several systems | **Fixed** — `RaHasher` computes/stores `ra_md5`; orchestrator uses `raMd5` + `getById` shortcut; optional `REMUS_RAHASHER_PATH` for disc systems |
 | **G10** | No runtime size check after compendium hash hit | **Fixed** — `CompendiumProvider::getByHash(..., fileSize)` rejects catalog size mismatches |
 | **G11** | GameTDB internal index vs multi-hash pass | **Fixed** — `GameTDBProvider::getByHashes` uses verification-aligned cascade |
 

@@ -306,7 +306,7 @@ bool MatchController::matchFileRecord(const FileRecord &file) {
     QString method;
 
     if (!hash.isEmpty()) {
-        metadata = orchestrator->getByHashWithFallback(hash, systemName, file.crc32, file.md5, file.sha1);
+        metadata = orchestrator->getByHashWithFallback(hash, systemName, file.crc32, file.md5, file.sha1, file.raMd5);
         if (!metadata.title.isEmpty()) {
             confidence = 100.0f;
             method = QString::fromLatin1(Constants::MatchMethods::HASH);
@@ -336,7 +336,7 @@ bool MatchController::matchFileRecord(const FileRecord &file) {
 
         const QString displayName = deriveMatchingDisplayName(file);
         metadata = orchestrator->searchWithFallback(
-            hash, displayName, systemName, file.crc32, file.md5, file.sha1, discSerial, file.fileSize);
+            hash, displayName, systemName, file.crc32, file.md5, file.sha1, discSerial, file.fileSize, file.raMd5);
         if (!metadata.title.isEmpty()) {
             if (metadata.matchScore > 0.0f && !metadata.matchMethod.isEmpty()) {
                 confidence = metadata.matchScore * 100.0f;

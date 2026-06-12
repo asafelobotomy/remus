@@ -91,6 +91,7 @@ bool Database::runMigrations() {
     const bool hasIsBundled = fileColumns.contains(Constants::DatabaseSchema::Columns::Files::IS_BUNDLED);
     const bool hasBundleOutputPath
         = fileColumns.contains(Constants::DatabaseSchema::Columns::Files::BUNDLE_OUTPUT_PATH);
+    const bool hasRaMd5 = fileColumns.contains(Constants::DatabaseSchema::Columns::Files::RA_MD5);
 
     // Add is_processed column if missing
     if (!hasIsProcessed) {
@@ -223,6 +224,17 @@ bool Database::runMigrations() {
                     .arg(Constants::DatabaseSchema::Tables::FILES,
                         Constants::DatabaseSchema::Columns::Files::BUNDLE_OUTPUT_PATH),
                 "Migration: Failed to add bundle_output_path column to files table")) {
+            return false;
+        }
+    }
+
+    if (!hasRaMd5) {
+        qInfo() << "Migration: Adding ra_md5 column to files table";
+        if (!execChecked(query,
+                QString("ALTER TABLE %1 ADD COLUMN %2 TEXT")
+                    .arg(Constants::DatabaseSchema::Tables::FILES,
+                        Constants::DatabaseSchema::Columns::Files::RA_MD5),
+                "Migration: Failed to add ra_md5 column to files table")) {
             return false;
         }
     }

@@ -56,7 +56,7 @@ ProviderOrchestrator::FieldSet ProviderOrchestrator::computeFieldGap(const GameM
 
 GameMetadata ProviderOrchestrator::enrichMissingFields(const FieldSet &missing, const GameMetadata &existing,
     const QString &hash, const QString &name, const QString &system, const QString &crc32, const QString &md5,
-    const QString &sha1, const QString &serial, const QSet<QString> &excludeProviders) {
+    const QString &sha1, const QString &serial, const QSet<QString> &excludeProviders, const QString &raMd5) {
     if (missing.isEmpty()) {
         qInfo() << "enrichMissingFields: no gaps — skipping all providers";
         return existing;
@@ -91,7 +91,7 @@ GameMetadata ProviderOrchestrator::enrichMissingFields(const FieldSet &missing, 
                     << "(no capability overlap with gap)";
             continue;
         }
-        queryProvider(accumulator, providerName, hash, name, system, crc32, md5, sha1, serial);
+        queryProvider(accumulator, providerName, hash, name, system, crc32, md5, sha1, serial, 0, raMd5);
         gapSet = computeFieldGap(accumulator);
         if (gapSet.isEmpty()) {
             qInfo() << "enrichMissingFields: all gaps filled after local provider" << providerName;
@@ -112,7 +112,7 @@ GameMetadata ProviderOrchestrator::enrichMissingFields(const FieldSet &missing, 
                         << "(no capability overlap with gap)";
                 continue;
             }
-            queryProvider(accumulator, providerName, hash, name, system, crc32, md5, sha1, serial);
+            queryProvider(accumulator, providerName, hash, name, system, crc32, md5, sha1, serial, 0, raMd5);
             gapSet = computeFieldGap(accumulator);
             if (gapSet.isEmpty()) {
                 qInfo() << "enrichMissingFields: all gaps filled after remote provider" << providerName;
