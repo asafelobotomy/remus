@@ -49,4 +49,4 @@ See [metadata-providers.md](metadata-providers.md) for the current provider inve
 
 ## Package the CLI cleanly
 
-The supported build and release path is the CLI build described in [setup/BUILD.md](setup/BUILD.md). If frontend work resumes later, restore it as a separate delivery track instead of treating archived code as part of the default product.
+The supported build and release path ships both `remus-cli` and `remus-gui` as described in [setup/BUILD.md](setup/BUILD.md). Release packaging includes CLI tarballs and an AppImage with both binaries.

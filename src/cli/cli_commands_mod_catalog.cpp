@@ -4,6 +4,7 @@
 #include "../services/rapatches_catalog_builder.h"
 #include "../services/retroachievements_enricher.h"
 #include "../services/mod_catalog_provider.h"
+#include "../metadata/romhacking_scraper.h"
 
 #include <QDir>
 #include <QFileInfo>
@@ -14,11 +15,52 @@
 int handleModCatalogBuildCommand(CliContext &ctx) {
     const bool hasBuild = ctx.parser.isSet("mod-catalog-build");
     const bool hasEnrich = ctx.parser.isSet("mod-enrich-ra");
+    const bool hasScrape = ctx.parser.isSet("mod-scrape");
 
-    if (!hasBuild && !hasEnrich)
+    if (!hasBuild && !hasEnrich && !hasScrape)
         return 0;
 
     const bool wantsJson = ctx.parser.isSet("json") || ctx.parser.isSet("mod-json");
+
+    if (hasScrape) {
+        Remus::RomhackingScraper scraper;
+        Remus::RomhackingScraper::SearchOptions options;
+        options.query = ctx.parser.value("mod-scrape");
+        options.system = ctx.parser.value("mod-scrape-system");
+
+        QString error;
+        const QList<Remus::ModEntry> mods = scraper.search(options, &error);
+        if (mods.isEmpty()) {
+            qCritical().noquote() << (error.isEmpty() ? QStringLiteral("No mods found") : error);
+            return 1;
+        }
+
+        QString outputPath = ctx.parser.value("mod-catalog-output");
+        if (outputPath.isEmpty())
+            outputPath = QDir::currentPath() + QStringLiteral("/romhacking-catalog.json");
+
+        if (!scraper.writeCatalogJson(mods, outputPath, &error)) {
+            qCritical().noquote() << error;
+            return 1;
+        }
+
+        qInfo().noquote() << QStringLiteral("Scraped %1 mod entries to %2").arg(mods.size()).arg(outputPath);
+        if (wantsJson) {
+            QJsonArray arr;
+            for (const Remus::ModEntry &mod : mods) {
+                QJsonObject obj;
+                obj[QStringLiteral("id")] = mod.id;
+                obj[QStringLiteral("title")] = mod.title;
+                obj[QStringLiteral("type")] = mod.type;
+                obj[QStringLiteral("source_url")] = mod.sourceUrl;
+                arr.append(obj);
+            }
+            QJsonObject root;
+            root[QStringLiteral("mods")] = arr;
+            qInfo().noquote() << QJsonDocument(root).toJson(QJsonDocument::Compact);
+        }
+        return 0;
+    }
 
     // ── Build from RAPatches ──────────────────────────────────────────────
     if (hasBuild) {

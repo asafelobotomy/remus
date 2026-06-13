@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QObject>
+#include <QThread>
 #include <QVariantList>
 #include <memory>
 
@@ -23,6 +24,7 @@ class ModController : public QObject {
 
 public:
     explicit ModController(AppController *appController, QObject *parent = nullptr);
+    ~ModController() override;
 
     bool isLoadingCatalog() const {
         return m_loadingCatalog;
@@ -72,6 +74,7 @@ private:
     ModListModel *m_model = nullptr;
     bool m_loadingCatalog = false;
     bool m_installing = false;
+    QThread *m_catalogLoadThread = nullptr;
     QString m_catalogUrl;
     QString m_lastError;
     QVariantList m_installedMods;

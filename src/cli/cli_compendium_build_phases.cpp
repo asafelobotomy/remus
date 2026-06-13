@@ -145,6 +145,22 @@ bool hasAnyHasheousGaps(QSqlDatabase &db, QString &error) {
         error);
 }
 
+bool hasAnyPlayMatchGaps(QSqlDatabase &db, QString &error) {
+    return queryHasRows(db,
+        QStringLiteral("SELECT 1 FROM games g "
+                       "WHERE EXISTS ("
+                       "  SELECT 1 FROM game_signatures gs "
+                       "  WHERE gs.game_id = g.game_id "
+                       "    AND gs.hash_type IN ('md5', 'sha1', 'crc32')) "
+                       "  AND NOT EXISTS ("
+                       "  SELECT 1 FROM game_facts gf "
+                       "  WHERE gf.game_id = g.game_id "
+                       "    AND gf.field_name = 'igdb_id' "
+                       "    AND gf.source_id = 'playmatch') "
+                       "LIMIT 1"),
+        error);
+}
+
 } // namespace
 
 void insertEnrichmentStatsReportFields(
@@ -179,6 +195,10 @@ void insertEnrichmentStatsReportFields(
     report.insert(QStringLiteral("hasheous_facts_inserted"), stats.hasheousFactsInserted);
     report.insert(QStringLiteral("hasheous_api_calls_needed"), stats.hasheousApiCallsNeeded);
     report.insert(QStringLiteral("hasheous_api_calls_performed"), stats.hasheousApiCallsPerformed);
+    report.insert(QStringLiteral("playmatch_games_enriched"), stats.playmatchGamesEnriched);
+    report.insert(QStringLiteral("playmatch_facts_inserted"), stats.playmatchFactsInserted);
+    report.insert(QStringLiteral("playmatch_api_calls_needed"), stats.playmatchApiCallsNeeded);
+    report.insert(QStringLiteral("playmatch_api_calls_performed"), stats.playmatchApiCallsPerformed);
     report.insert(QStringLiteral("post_enrich_fts_rows_indexed"), stats.ftsRowsIndexed);
 }
 
@@ -299,6 +319,18 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db, const QString &metadataDir,
                 return CompendiumEnrichment::enrichFromHasheous(db, credPath, stats.hasheousGamesEnriched,
                     stats.hasheousFactsInserted, error, &stats.hasheousApiCallsNeeded,
                     &stats.hasheousApiCallsPerformed);
+            },
+        },
+        {
+            QStringLiteral("PlayMatch enrichment"),
+            QStringLiteral("playmatch"),
+            TransactionMode::SelfManaged,
+            [] { return true; },
+            [&] { return hasAnyPlayMatchGaps(db, error); },
+            [&] {
+                return CompendiumEnrichment::enrichFromPlayMatch(db, stats.playmatchGamesEnriched,
+                    stats.playmatchFactsInserted, error, &stats.playmatchApiCallsNeeded,
+                    &stats.playmatchApiCallsPerformed);
             },
         },
         {

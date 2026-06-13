@@ -11,6 +11,17 @@ void registerAllOptions(QCommandLineParser &parser, QSet<QString> &actionOptions
     actionOptions.insert(QStringLiteral("version"));
 
     const auto addOption = [&parser](const QCommandLineOption &option) { parser.addOption(option); };
+    const auto addLegacyOption = [&parser](QCommandLineOption option) {
+        option.setFlags(QCommandLineOption::HiddenFromHelp);
+        parser.addOption(option);
+    };
+    const auto addLegacyActionOption = [&parser, &actionOptions](QCommandLineOption option) {
+        option.setFlags(QCommandLineOption::HiddenFromHelp);
+        parser.addOption(option);
+        for (const auto &name : option.names()) {
+            actionOptions.insert(name);
+        }
+    };
     const auto addActionOption = [&parser, &actionOptions](const QCommandLineOption &option) {
         parser.addOption(option);
         for (const auto &name : option.names()) {
@@ -66,13 +77,13 @@ void registerAllOptions(QCommandLineParser &parser, QSet<QString> &actionOptions
 
     addActionOption(QCommandLineOption("verify", "Verify files against DAT file", "dat-file"));
     addOption(QCommandLineOption("verify-report", "Generate detailed verification report"));
-    addActionOption(QCommandLineOption("patch-dat-import",
+    addLegacyActionOption(QCommandLineOption("patch-dat-import",
         "Deprecated no-op: manual patch catalog import has been replaced by bundled compendium data", "dat-file"));
-    addOption(QCommandLineOption(
+    addLegacyOption(QCommandLineOption(
         "patch-dat-system", "Legacy system name argument for deprecated patch catalog import", "system"));
     addActionOption(
         QCommandLineOption("patch-dat-list", "List patch catalogs available from the bundled compendium when present"));
-    addActionOption(QCommandLineOption(
+    addLegacyActionOption(QCommandLineOption(
         "patch-dat-remove", "Deprecated no-op: manual patch catalog removal is no longer required", "system"));
 
     addActionOption(QCommandLineOption("download-artwork", "Download cover art for matched games"));
@@ -146,6 +157,8 @@ void registerAllOptions(QCommandLineParser &parser, QSet<QString> &actionOptions
         QCommandLineOption("mod-catalog-build", "Build mod catalog JSON from a local RAPatches clone", "repoPath"));
     addOption(QCommandLineOption("mod-catalog-output", "Output path for generated catalog JSON", "path"));
     addActionOption(QCommandLineOption("mod-enrich-ra", "Enrich a catalog with RetroAchievements PatchUrl data"));
+    addActionOption(QCommandLineOption("mod-scrape", "Scrape romhacking.net for mods matching a search query", "query"));
+    addOption(QCommandLineOption("mod-scrape-system", "System name to assign to scraped mod entries", "system"));
 
     addActionOption(QCommandLineOption(
         Constants::Cli::Options::EXPORT, "Export library (retroarch|emustation|launchbox|csv|json)", "format"));
@@ -181,7 +194,7 @@ void registerAllOptions(QCommandLineParser &parser, QSet<QString> &actionOptions
         "enrich-compendium", "Run all enrichment passes against an existing compendium database without rebuilding"));
     addOption(QCommandLineOption("enrich-source",
         "Comma-separated list of enrichment source(s) to run (default: all). Valid keys: libretro, gametdb, openvgdb, "
-        "igdb, ra, mame-catver, mame-listxml, zxinfo",
+        "igdb, ra, hasheous, playmatch, mame-catver, mame-listxml, zxinfo",
         "sources"));
     addActionOption(QCommandLineOption(
         "ingest-source", "Incrementally ingest a single DAT file into an existing compendium database", "dat-file"));
@@ -195,14 +208,14 @@ void registerAllOptions(QCommandLineParser &parser, QSet<QString> &actionOptions
     addOption(QCommandLineOption("compendium-output", "Output SQLite path for compiled compendium", "path",
         "data/compendium/remus_compendium.db"));
 
-    addActionOption(QCommandLineOption(
+    addLegacyActionOption(QCommandLineOption(
         "update-dats", "Deprecated no-op: raw DAT update workflow has been replaced by bundled compendium data"));
-    addOption(QCommandLineOption("update-dats-all", "Legacy no-op flag retained for compatibility with --update-dats"));
-    addActionOption(QCommandLineOption(
+    addLegacyOption(QCommandLineOption("update-dats-all", "Legacy no-op flag retained for compatibility with --update-dats"));
+    addLegacyActionOption(QCommandLineOption(
         "import-dat", "Deprecated no-op: manual DAT import has been replaced by bundled compendium data", "dat-file"));
-    addActionOption(
+    addLegacyActionOption(
         QCommandLineOption("remove-dat", "Deprecated no-op: manual DAT removal is no longer required", "name"));
-    addActionOption(
+    addLegacyActionOption(
         QCommandLineOption("list-dats", "Deprecated no-op: bundled builds do not manage installed raw DAT files"));
     addActionOption(
         QCommandLineOption("dat-coverage", "Report DAT coverage against known systems and list uncovered systems"));

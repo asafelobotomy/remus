@@ -12,9 +12,17 @@ Item {
         spacing: 14
 
         Label {
-            text: "DAT Management"
+            text: "DAT Management (Advanced)"
             font.pixelSize: 26
             font.bold: true
+        }
+
+        Label {
+            Layout.fillWidth: true
+            wrapMode: Text.WordWrap
+            color: "#a89984"
+            text: "Verification catalogs are bundled in the Remus compendium by default. " +
+                  "Manual DAT import is optional for supplemental or custom catalogs only."
         }
 
         RowLayout {

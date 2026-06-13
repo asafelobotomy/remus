@@ -471,9 +471,9 @@ Phase 4 is archived. Phase 5 depends only on Phases 1-3.
 
 ## Success Criteria
 
-- [ ] Phase 1 passing all 11 tests in `test_mod_workflow.cpp`
-- [ ] `--mod-list` shows mods matching a library ROM by hash
-- [ ] `--mod-install` produces a bundled patched ROM with metadata
-- [ ] Original ROM file and DB record are provably unchanged after install
-- [ ] Patched ROM appears in `--list` output with `[patched]` indicator
-- [ ] `--mod-uninstall` cleanly removes the patched ROM and DB records
+- [x] Phase 1 passing all tests in `test_mod_workflow.cpp` (32 cases as of v0.10.1)
+- [x] `--mod-list` shows mods matching a library ROM by hash
+- [x] `--mod-install` produces a bundled patched ROM with metadata
+- [x] Original ROM file and DB record are provably unchanged after install
+- [x] Patched ROM appears in `--list` output with `[patched]` indicator
+- [x] `--mod-uninstall` cleanly removes the patched ROM and DB records

@@ -4,6 +4,7 @@
 #include <QSet>
 
 #include "constants/constants.h"
+#include "matching_engine.h"
 #include "patched_rom_parser.h"
 #include "verification_hash_matcher.h"
 
@@ -46,7 +47,7 @@ QString deriveMatchingDisplayName(const FileRecord &file) {
         const QString containerBase = QFileInfo(file.currentPath).completeBaseName();
         const QString patchedContainerBase = usePatchedBaseTitle(containerBase);
         if (!patchedContainerBase.isEmpty()) {
-            return patchedContainerBase;
+            return MatchingEngine::extractGameTitle(patchedContainerBase);
         }
         if (!containerBase.isEmpty()) {
             return containerBase;
@@ -57,7 +58,7 @@ QString deriveMatchingDisplayName(const FileRecord &file) {
                   .completeBaseName();
         const QString patchedEntryBase = usePatchedBaseTitle(entryBase);
         if (!patchedEntryBase.isEmpty()) {
-            return patchedEntryBase;
+            return MatchingEngine::extractGameTitle(patchedEntryBase);
         }
         if (!entryBase.isEmpty()) {
             return entryBase;
@@ -67,7 +68,7 @@ QString deriveMatchingDisplayName(const FileRecord &file) {
     const QString baseName = QFileInfo(file.filename).completeBaseName();
     const QString patchedBase = usePatchedBaseTitle(baseName);
     if (!patchedBase.isEmpty()) {
-        return patchedBase;
+        return MatchingEngine::extractGameTitle(patchedBase);
     }
     return baseName.isEmpty() ? file.filename : baseName;
 }

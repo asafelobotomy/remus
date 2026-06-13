@@ -14,6 +14,8 @@ class ExportController : public QObject {
     Q_PROPERTY(bool exporting READ isExporting NOTIFY exportingChanged)
     Q_PROPERTY(int bundledFiles READ bundledFiles NOTIFY bundleProgressChanged)
     Q_PROPERTY(int totalBundleFiles READ totalBundleFiles NOTIFY bundleProgressChanged)
+    Q_PROPERTY(int exportProgress READ exportProgress NOTIFY exportProgressChanged)
+    Q_PROPERTY(int exportTotal READ exportTotal NOTIFY exportTotalChanged)
     Q_PROPERTY(QString progressMessage READ progressMessage NOTIFY progressMessageChanged)
     Q_PROPERTY(QString lastOutputPath READ lastOutputPath NOTIFY exportFinished)
     Q_PROPERTY(QString lastMessage READ lastMessage NOTIFY lastMessageChanged)
@@ -30,6 +32,12 @@ public:
     int totalBundleFiles() const {
         return m_totalBundleFiles;
     }
+    int exportProgress() const {
+        return m_exportProgress;
+    }
+    int exportTotal() const {
+        return m_exportTotal;
+    }
     QString progressMessage() const {
         return m_progressMessage;
     }
@@ -44,9 +52,15 @@ public:
     Q_INVOKABLE void bundleAll(const QString &scanDir, const QString &namingTemplate = QString());
     Q_INVOKABLE bool exportM3u(const QString &outputPath);
 
+    Q_INVOKABLE QVariantList availableSystems();
+    Q_INVOKABLE QVariantMap exportPreview(const QString &systemsCsv = QString());
+    Q_INVOKABLE bool exportFrontend(const QString &format, const QString &outputPath, const QString &systemsCsv = QString());
+
 signals:
     void exportingChanged();
     void bundleProgressChanged();
+    void exportProgressChanged();
+    void exportTotalChanged();
     void progressMessageChanged();
     void exportFinished();
     void lastMessageChanged();
@@ -55,12 +69,15 @@ signals:
 private:
     GameMetadata metadataForMatch(const Database::MatchResult &match) const;
     void setLastMessage(const QString &message);
+    QStringList parseSystemsFilter(const QString &systemsCsv) const;
 
     AppController *m_appController;
     std::unique_ptr<RomBundler> m_bundler;
     bool m_exporting = false;
     int m_bundledFiles = 0;
     int m_totalBundleFiles = 0;
+    int m_exportProgress = 0;
+    int m_exportTotal = 0;
     QString m_progressMessage;
     QString m_lastOutputPath;
     QString m_lastMessage;

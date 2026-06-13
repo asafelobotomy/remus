@@ -402,6 +402,7 @@ void CompendiumEnrichmentLocalSmokeTest::knownSourceKeys_containsAllExpectedEnri
         QStringLiteral("igdb"),
         QStringLiteral("ra"),
         QStringLiteral("hasheous"),
+        QStringLiteral("playmatch"),
         QStringLiteral("mame-catver"),
         QStringLiteral("mame-listxml"),
         QStringLiteral("zxinfo"),

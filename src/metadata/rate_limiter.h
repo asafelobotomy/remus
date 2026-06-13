@@ -41,7 +41,7 @@ public:
 
 private:
     QDateTime m_lastRequest;
-    int m_intervalMs = 1000; // Default: 1 second
+    int m_intervalMs = 500; // Matches Constants::Network::DEFAULT_RATE_LIMIT_MS
     mutable QMutex m_mutex;
 };
 

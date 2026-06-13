@@ -146,6 +146,15 @@ bool enrichFromHasheous(QSqlDatabase &database, const QString &credentialsPath, 
     int &factsInserted, QString &error, int *apiCallsNeededOut = nullptr, int *apiCallsPerformedOut = nullptr);
 
 /**
+ * @brief Enrich compendium games with IGDB IDs via PlayMatch hash/filename lookup.
+ *
+ * Uses canonical titles and ROM sizes from source item payloads when available.
+ * Skips games without a resolvable file size because PlayMatch requires it.
+ */
+bool enrichFromPlayMatch(QSqlDatabase &database, int &gamesEnriched, int &factsInserted, QString &error,
+    int *apiCallsNeededOut = nullptr, int *apiCallsPerformedOut = nullptr);
+
+/**
  * @brief Enrich Arcade/MAME games using the MAME catver.ini category database.
  *
  * Reads the `[Category]` section of a local catver.ini file and writes genre

@@ -495,6 +495,32 @@ add_remus_test(test_cache_deserialization CacheDeserializationTest
     LIBS Qt6::Test Qt6::Core Qt6::Sql remus-metadata remus-core
 )
 
+add_remus_test(test_library_exporter LibraryExporterTest
+    SOURCES test_library_exporter.cpp
+    LIBS Qt6::Test Qt6::Core Qt6::Sql remus-core remus-constants
+)
+
+add_remus_test(test_gui_extra_controllers GuiExtraControllersTest
+    SOURCES test_gui_extra_controllers.cpp
+    LIBS Qt6::Test Qt6::Core Qt6::Sql remus-metadata remus-core remus-services remus-gui-controllers
+)
+target_include_directories(test_gui_extra_controllers PRIVATE
+    ${CMAKE_SOURCE_DIR}/src/gui
+)
+target_compile_definitions(test_gui_extra_controllers PRIVATE
+    REMUS_SOURCE_DIR="${CMAKE_SOURCE_DIR}"
+)
+
+add_remus_test(test_romhacking_scraper RomhackingScraperTest
+    SOURCES test_romhacking_scraper.cpp
+    LIBS Qt6::Test Qt6::Core Qt6::Network remus-metadata
+)
+
+add_remus_test(test_match_utils MatchUtilsTest
+    SOURCES test_match_utils.cpp
+    LIBS Qt6::Test Qt6::Core remus-core
+)
+
 add_custom_target(run_tests
     COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure
     DEPENDS ${REMUS_TEST_TARGETS}

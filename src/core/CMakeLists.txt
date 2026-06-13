@@ -65,6 +65,7 @@ add_library(remus-core STATIC
     compendium_manifest_parser.cpp
     patch_engine.cpp
     patch_engine_apply.cpp
+    library_exporter.cpp
     logging_categories.cpp
     system_resolver.cpp
     system_resolver_dat.cpp

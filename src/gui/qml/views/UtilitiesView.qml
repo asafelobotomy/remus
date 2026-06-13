@@ -3,7 +3,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import Remus.Gui
 
-// Utilities workbench: DAT import, verification, patching, and mods.
+// Utilities workbench: DAT import, verification, patching, mods, and frontend export.
 // Opened from Tools menu (P6) — not a primary sidebar destination.
 Item {
     id: root
@@ -27,6 +27,7 @@ Item {
             TabButton { text: "Verify"     }
             TabButton { text: "Patch"      }
             TabButton { text: "Mods"       }
+            TabButton { text: "Export"     }
         }
 
         StackLayout {
@@ -38,6 +39,7 @@ Item {
             VerifyView {}
             PatchView  {}
             ModView    {}
+            ExportView {}
         }
     }
 }

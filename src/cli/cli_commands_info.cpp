@@ -183,6 +183,12 @@ int handleListCommand(CliContext &ctx) {
         return 0;
 
     QMap<QString, int> counts = ctx.db.getFileCountBySystem();
+    const QList<FileRecord> files = ctx.db.getExistingFiles();
+    QMap<QString, QList<FileRecord>> filesBySystem;
+    for (const FileRecord &file : files) {
+        filesBySystem[ctx.db.getSystemDisplayName(file.systemId)].append(file);
+    }
+
     int total = 0;
     for (auto it = counts.constBegin(); it != counts.constEnd(); ++it)
         total += it.value();
@@ -193,6 +199,14 @@ int handleListCommand(CliContext &ctx) {
             QJsonObject obj;
             obj[QStringLiteral("system")] = it.key();
             obj[QStringLiteral("files")] = it.value();
+            QJsonArray entries;
+            for (const FileRecord &file : filesBySystem.value(it.key())) {
+                QJsonObject entry;
+                entry[QStringLiteral("name")] = file.filename;
+                entry[QStringLiteral("patched")] = file.isPatched;
+                entries.append(entry);
+            }
+            obj[QStringLiteral("entries")] = entries;
             arr.append(obj);
         }
         QJsonObject root;
@@ -208,6 +222,13 @@ int handleListCommand(CliContext &ctx) {
     qInfo() << "─────────────────────────────────────";
     for (auto it = counts.constBegin(); it != counts.constEnd(); ++it) {
         qInfo().noquote() << QString("%1: %2 files").arg(it.key()).arg(it.value());
+        for (const FileRecord &file : filesBySystem.value(it.key())) {
+            QString line = QStringLiteral("  %1").arg(file.filename);
+            if (file.isPatched) {
+                line += QStringLiteral("  [patched]");
+            }
+            qInfo().noquote() << line;
+        }
     }
     qInfo() << "─────────────────────────────────────";
     qInfo() << "Total:" << total << "files";

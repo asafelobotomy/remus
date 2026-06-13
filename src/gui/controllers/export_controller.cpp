@@ -15,6 +15,8 @@
 #include "settings_controller.h"
 #include "../../core/archive_creator.h"
 #include "../../core/constants/constants.h"
+#include "../../core/library_exporter.h"
+#include <QSet>
 
 namespace Remus {
 
@@ -393,6 +395,129 @@ void ExportController::setLastMessage(const QString &message) {
 
     m_lastMessage = message;
     emit lastMessageChanged();
+}
+
+QStringList ExportController::parseSystemsFilter(const QString &systemsCsv) const {
+    if (systemsCsv.trimmed().isEmpty())
+        return { };
+    return systemsCsv.split(',', Qt::SkipEmptyParts);
+}
+
+QVariantList ExportController::availableSystems() {
+    QVariantList systems;
+    if (m_appController == nullptr || !m_appController->isLibraryOpen())
+        return systems;
+
+    Database *db = m_appController->database();
+    const QMap<int, Database::MatchResult> matches = db->getAllMatches();
+    QSet<QString> seen;
+    for (auto it = matches.constBegin(); it != matches.constEnd(); ++it) {
+        const FileRecord file = db->getFileById(it.key());
+        if (file.id <= 0)
+            continue;
+        const QString systemName = db->getSystemDisplayName(file.systemId);
+        if (systemName.isEmpty() || seen.contains(systemName))
+            continue;
+        seen.insert(systemName);
+        QVariantMap item;
+        item.insert(QStringLiteral("name"), systemName);
+        item.insert(QStringLiteral("count"), 0);
+        systems.append(item);
+    }
+
+    for (int i = 0; i < systems.size(); ++i) {
+        const QString systemName = systems.at(i).toMap().value(QStringLiteral("name")).toString();
+        int count = 0;
+        for (auto it = matches.constBegin(); it != matches.constEnd(); ++it) {
+            const FileRecord file = db->getFileById(it.key());
+            if (file.id > 0 && db->getSystemDisplayName(file.systemId) == systemName)
+                ++count;
+        }
+        QVariantMap item = systems.at(i).toMap();
+        item.insert(QStringLiteral("count"), count);
+        systems[i] = item;
+    }
+
+    return systems;
+}
+
+QVariantMap ExportController::exportPreview(const QString &systemsCsv) {
+    QVariantMap preview;
+    preview.insert(QStringLiteral("totalGames"), 0);
+    preview.insert(QStringLiteral("systems"), QVariantList());
+
+    if (m_appController == nullptr || !m_appController->isLibraryOpen())
+        return preview;
+
+    const QStringList filters = parseSystemsFilter(systemsCsv);
+    const QList<LibraryExportRow> rows = LibraryExporter::buildRows(*m_appController->database(), filters);
+
+    QMap<QString, int> counts;
+    for (const auto &row : rows) {
+        const QString systemName = m_appController->database()->getSystemDisplayName(row.file.systemId);
+        counts[systemName] = counts.value(systemName) + 1;
+    }
+
+    QVariantList systemRows;
+    for (auto it = counts.constBegin(); it != counts.constEnd(); ++it) {
+        QVariantMap item;
+        item.insert(QStringLiteral("name"), it.key());
+        item.insert(QStringLiteral("count"), it.value());
+        systemRows.append(item);
+    }
+
+    preview.insert(QStringLiteral("totalGames"), rows.size());
+    preview.insert(QStringLiteral("systems"), systemRows);
+    return preview;
+}
+
+bool ExportController::exportFrontend(const QString &format, const QString &outputPath, const QString &systemsCsv) {
+    if (m_appController == nullptr || !m_appController->isLibraryOpen()) {
+        setLastMessage(QStringLiteral("Open a library before exporting."));
+        return false;
+    }
+    if (m_exporting) {
+        setLastMessage(QStringLiteral("Another export is already running."));
+        return false;
+    }
+
+    const QStringList filters = parseSystemsFilter(systemsCsv);
+    const QList<LibraryExportRow> rows = LibraryExporter::buildRows(*m_appController->database(), filters);
+    if (rows.isEmpty()) {
+        setLastMessage(QStringLiteral("No matched files to export."));
+        return false;
+    }
+
+    m_exporting = true;
+    m_exportProgress = 0;
+    m_exportTotal = rows.size();
+    m_progressMessage = QStringLiteral("Exporting %1…").arg(format);
+    emit exportingChanged();
+    emit exportProgressChanged();
+    emit exportTotalChanged();
+    emit progressMessageChanged();
+
+    QString error;
+    const bool ok = LibraryExporter::exportToFile(*m_appController->database(), format, outputPath, filters, &error);
+
+    m_exporting = false;
+    m_exportProgress = m_exportTotal;
+    emit exportingChanged();
+    emit exportProgressChanged();
+
+    if (!ok) {
+        m_progressMessage.clear();
+        emit progressMessageChanged();
+        setLastMessage(error.isEmpty() ? QStringLiteral("Export failed.") : error);
+        return false;
+    }
+
+    m_lastOutputPath = LibraryExporter::resolveOutputPath(format, outputPath);
+    m_progressMessage = QStringLiteral("Export complete: %1").arg(m_lastOutputPath);
+    emit progressMessageChanged();
+    setLastMessage(m_progressMessage);
+    emit exportFinished();
+    return true;
 }
 
 } // namespace Remus

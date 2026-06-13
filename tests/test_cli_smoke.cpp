@@ -1162,6 +1162,76 @@ private slots:
         QVERIFY(dir.isValid());
         runCli({ QStringLiteral("--db"), dir.filePath(QStringLiteral("dat-coverage.db")), QStringLiteral("--dat-coverage") });
     }
+
+    void testLibraryPipelineDryRun() {
+        QTemporaryDir dir;
+        QVERIFY(dir.isValid());
+        const QString romDir = dir.filePath(QStringLiteral("roms"));
+        QVERIFY(QDir().mkpath(romDir));
+        runCli({ QStringLiteral("--library"), romDir, QStringLiteral("--output"), dir.filePath(QStringLiteral("out")), QStringLiteral("--dry-run-all") });
+    }
+
+    void testProcessPresetDryRun() {
+        QTemporaryDir dir;
+        QVERIFY(dir.isValid());
+        const QString romDir = dir.filePath(QStringLiteral("roms"));
+        QVERIFY(QDir().mkpath(romDir));
+        runCli({ QStringLiteral("--process"), romDir, QStringLiteral("--process-preset"), QStringLiteral("es-de"), QStringLiteral("--dry-run-all") });
+    }
+
+    void testRetroArchExportCreatesFile() {
+        QTemporaryDir dir;
+        QVERIFY(dir.isValid());
+        const QString dbPath = dir.filePath(QStringLiteral("test.db"));
+        const QString romDir = dir.filePath(QStringLiteral("roms"));
+        QVERIFY(QDir().mkpath(romDir));
+        {
+            QFile f(romDir + QStringLiteral("/TestGame (USA).nes"));
+            QVERIFY(f.open(QIODevice::WriteOnly));
+            f.write("NESDATA");
+        }
+        runCli({ QStringLiteral("--db"), dbPath, QStringLiteral("--scan"), romDir });
+        {
+            Remus::Database db;
+            QVERIFY(db.initialize(dbPath));
+            const QList<Remus::FileRecord> files = db.getExistingFiles();
+            QVERIFY(!files.isEmpty());
+            const int sysId = db.getSystemId(QStringLiteral("NES"));
+            const int gameId = db.insertGame(QStringLiteral("TestGame"), sysId, QStringLiteral("USA"));
+            QVERIFY(db.insertMatch(files.first().id, gameId, 100.0f, QStringLiteral("test")));
+        }
+        const QString outFile = dir.filePath(QStringLiteral("remus.lpl"));
+        runCli({ QStringLiteral("--db"), dbPath, QStringLiteral("--export"), QStringLiteral("retroarch"), QStringLiteral("--export-path"), outFile });
+        QVERIFY(QFileInfo(outFile).exists());
+    }
+
+    void testLaunchBoxAndJsonExport() {
+        QTemporaryDir dir;
+        QVERIFY(dir.isValid());
+        const QString dbPath = dir.filePath(QStringLiteral("test.db"));
+        const QString romDir = dir.filePath(QStringLiteral("roms"));
+        QVERIFY(QDir().mkpath(romDir));
+        {
+            QFile f(romDir + QStringLiteral("/TestGame (USA).nes"));
+            QVERIFY(f.open(QIODevice::WriteOnly));
+            f.write("NESDATA");
+        }
+        runCli({ QStringLiteral("--db"), dbPath, QStringLiteral("--scan"), romDir });
+        {
+            Remus::Database db;
+            QVERIFY(db.initialize(dbPath));
+            const QList<Remus::FileRecord> files = db.getExistingFiles();
+            const int sysId = db.getSystemId(QStringLiteral("NES"));
+            const int gameId = db.insertGame(QStringLiteral("TestGame"), sysId, QStringLiteral("USA"));
+            QVERIFY(db.insertMatch(files.first().id, gameId, 100.0f, QStringLiteral("test")));
+        }
+        const QString launchbox = dir.filePath(QStringLiteral("launchbox.xml"));
+        const QString json = dir.filePath(QStringLiteral("export.json"));
+        runCli({ QStringLiteral("--db"), dbPath, QStringLiteral("--export"), QStringLiteral("launchbox"), QStringLiteral("--export-path"), launchbox });
+        runCli({ QStringLiteral("--db"), dbPath, QStringLiteral("--export"), QStringLiteral("json"), QStringLiteral("--export-path"), json });
+        QVERIFY(QFileInfo(launchbox).exists());
+        QVERIFY(QFileInfo(json).exists());
+    }
 };
 
 QTEST_MAIN(CliSmokeTest)

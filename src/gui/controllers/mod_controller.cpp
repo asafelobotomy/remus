@@ -1,5 +1,6 @@
 #include "mod_controller.h"
 
+#include <QCoreApplication>
 #include <QPointer>
 #include <QSettings>
 #include <QThread>
@@ -22,6 +23,19 @@ ModController::ModController(AppController *appController, QObject *parent)
     connect(m_appController, &AppController::selectedFileChanged, this, &ModController::loadForSelectedFile);
 }
 
+ModController::~ModController() {
+    if (m_catalogLoadThread != nullptr) {
+        if (m_catalogLoadThread->isRunning()) {
+            m_catalogLoadThread->wait();
+        }
+        if (QCoreApplication::instance() != nullptr) {
+            QCoreApplication::processEvents();
+        }
+        delete m_catalogLoadThread;
+        m_catalogLoadThread = nullptr;
+    }
+}
+
 void ModController::loadCatalog(const QString &url, bool forceRefresh) {
     const QString resolvedUrl = url.trimmed().isEmpty() ? m_catalogUrl : url.trimmed();
     if (resolvedUrl.isEmpty()) {
@@ -29,33 +43,70 @@ void ModController::loadCatalog(const QString &url, bool forceRefresh) {
         return;
     }
 
-    m_loadingCatalog = true;
-    emit loadingCatalogChanged();
+    if (m_catalogLoadThread != nullptr && m_catalogLoadThread->isRunning()) {
+        m_catalogLoadThread->wait();
+    }
 
     const bool isRemote = resolvedUrl.startsWith(QStringLiteral("https://"));
 
-    QThread *thread = QThread::create([this, resolvedUrl, isRemote, forceRefresh]() {
-        const bool loaded
-            = isRemote ? m_provider.loadFromUrl(QUrl(resolvedUrl), forceRefresh) : m_provider.loadFromFile(resolvedUrl);
+    if (!isRemote) {
+        m_loadingCatalog = true;
+        emit loadingCatalogChanged();
+
+        const bool loaded = m_provider.loadFromFile(resolvedUrl);
+
+        m_loadingCatalog = false;
+        emit loadingCatalogChanged();
+        if (!loaded) {
+            setLastError(m_provider.lastError());
+            return;
+        }
+        setCatalogUrl(resolvedUrl);
+        m_workflow->setCatalogIsRemote(false);
+        loadForSelectedFile();
+        return;
+    }
+
+    m_loadingCatalog = true;
+    emit loadingCatalogChanged();
+
+    QPointer<ModController> self(this);
+    m_catalogLoadThread = QThread::create([self, resolvedUrl, forceRefresh]() {
+        if (self.isNull()) {
+            return;
+        }
+
+        ModCatalogProvider provider;
+        const bool loaded = provider.loadFromUrl(QUrl(resolvedUrl), forceRefresh);
 
         QMetaObject::invokeMethod(
-            this,
-            [this, loaded, resolvedUrl, isRemote]() {
-                m_loadingCatalog = false;
-                emit loadingCatalogChanged();
-                if (!loaded) {
-                    setLastError(m_provider.lastError());
+            self.data(),
+            [self, loaded, resolvedUrl, provider = std::move(provider)]() mutable {
+                if (self.isNull()) {
                     return;
                 }
-                setCatalogUrl(resolvedUrl);
-                const bool remote = resolvedUrl.startsWith(QStringLiteral("https://"));
-                m_workflow->setCatalogIsRemote(remote);
-                loadForSelectedFile();
+
+                self->m_loadingCatalog = false;
+                emit self->loadingCatalogChanged();
+                if (!loaded) {
+                    self->setLastError(provider.lastError());
+                    return;
+                }
+
+                self->m_provider = std::move(provider);
+                self->setCatalogUrl(resolvedUrl);
+                self->m_workflow->setCatalogIsRemote(true);
+                self->loadForSelectedFile();
             },
             Qt::QueuedConnection);
     });
-    connect(thread, &QThread::finished, thread, &QThread::deleteLater);
-    thread->start();
+    connect(m_catalogLoadThread, &QThread::finished, this, [this]() {
+        if (m_catalogLoadThread != nullptr) {
+            m_catalogLoadThread->deleteLater();
+            m_catalogLoadThread = nullptr;
+        }
+    });
+    m_catalogLoadThread->start();
 }
 
 void ModController::loadForSelectedFile() {

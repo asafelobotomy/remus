@@ -1,7 +1,9 @@
 #include "igdb_provider.h"
 #include "../core/system_resolver.h"
 #include "../core/constants/providers.h"
+#include "../core/constants/systems.h"
 #include <QNetworkRequest>
+#include <QSet>
 #include <QUrlQuery>
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -170,7 +172,7 @@ GameMetadata IGDBProvider::getById(const QString &id) {
     QString body = QString("fields name,summary,genres.name,first_release_date,"
                            "involved_companies.company.name,involved_companies.developer,"
                            "involved_companies.publisher,aggregated_rating,"
-                           "multiplayer_modes.offlinemax; where id = %1;")
+                           "multiplayer_modes.offlinemax,platforms.slug; where id = %1;")
                        .arg(numericId);
 
     ApiResponse response = makeRequest("/games", body);
@@ -326,6 +328,29 @@ GameMetadata IGDBProvider::parseGameJson(const QJsonObject &game) {
         metadata.players = maxPlayers;
     }
 
+    if (game.contains("platforms")) {
+        QSet<QString> platformSlugs;
+        const QJsonArray platforms = game["platforms"].toArray();
+        for (const QJsonValue &platformVal : platforms) {
+            const QString slug = platformVal.toObject()["slug"].toString().toLower();
+            if (!slug.isEmpty()) {
+                platformSlugs.insert(slug);
+            }
+        }
+
+        if (!platformSlugs.isEmpty()) {
+            for (auto it = Constants::Systems::SYSTEMS.constBegin(); it != Constants::Systems::SYSTEMS.constEnd(); ++it) {
+                const int systemId = it.key();
+                const QString igdbSlug
+                    = SystemResolver::providerName(systemId, Constants::Providers::IGDB).toLower();
+                if (!igdbSlug.isEmpty() && platformSlugs.contains(igdbSlug)) {
+                    metadata.system = SystemResolver::internalName(systemId);
+                    break;
+                }
+            }
+        }
+    }
+
     return metadata;
 }
 
@@ -363,7 +388,8 @@ QList<GameMetadata> IGDBProvider::fetchGamesByPlatformSlug(const QString &platfo
 
     const QString body = QStringLiteral("fields name,summary,genres.name,first_release_date,"
                                         "involved_companies.company.name,involved_companies.developer,"
-                                        "involved_companies.publisher,aggregated_rating,multiplayer_modes.offlinemax; "
+                                        "involved_companies.publisher,aggregated_rating,multiplayer_modes.offlinemax,"
+                                        "platforms.slug; "
                                         "where platforms.slug = \"%1\"; "
                                         "limit %2; offset %3;")
                              .arg(platformSlug)

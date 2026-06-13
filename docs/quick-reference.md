@@ -447,50 +447,40 @@ remus --verify ~/Downloads/No-Intro_NES_2024.dat --verify-report
 
 ```bash
 # Apply BPS patch (recommended, includes checksums)
-remus patch --apply \
-  --base "/path/to/Super Mario Bros. (USA).nes" \
-  --patch ~/Downloads/smb_deluxe.bps \
-  --output "/path/to/Super Mario Bros. (USA) [Deluxe].nes"
+remus-cli --patch-apply "/path/to/Super Mario Bros. (USA).nes" \
+  --patch-patch ~/Downloads/smb_deluxe.bps \
+  --patch-output "/path/to/Super Mario Bros. (USA) [Deluxe].nes"
 
 # Apply IPS patch (legacy format)
-remus patch --apply \
-  --base "/path/to/Final Fantasy VI (USA).sfc" \
-  --patch ~/Downloads/ff6_brave_new_world.ips \
-  --output "/path/to/Final Fantasy VI (USA) [BNW v2.1].sfc"
+remus-cli --patch-apply "/path/to/Final Fantasy VI (USA).sfc" \
+  --patch-patch ~/Downloads/ff6_brave_new_world.ips \
+  --patch-output "/path/to/Final Fantasy VI (USA) [BNW v2.1].sfc"
 
-# Apply XDelta3 patch (disc images)
-remus patch --apply \
-  --base "/path/to/Final Fantasy VII (USA) (Disc 1).bin" \
-  --patch ~/Downloads/ff7_retranslation.xdelta \
-  --output "/path/to/Final Fantasy VII (USA) (Disc 1) [Retranslation].bin"
+# Detect patch format
+remus-cli --patch-info ~/Downloads/smb_deluxe.bps
+
+# List patch tool availability
+remus-cli --patch-tools
 ```
 
-### Patch Discovery
+### Patch Catalogs (Bundled Compendium)
 
 ```bash
-# Discover available patches for games in library
-remus patch --discover
+# List patch catalogs bundled in the compendium
+remus-cli --patch-dat-list
 
-# Discover patches for specific game
-remus patch --discover --game "Final Fantasy VI"
-
-# Download and apply patch by romhacking.net ID
-remus patch --apply-from-web \
-  --romhacking-id 1234 \
-  --base "/path/to/Final Fantasy VI (USA).sfc"
+# Import libretro hacks DATs into the compendium patch catalog
+remus-cli --import-patch-catalog --patch-dir data/patches
 ```
 
 ### Patch Management
 
 ```bash
-# List all applied patches
-remus patch --list-applied
+# Browse mods/patches from a catalog JSON (includes romhacking.net-sourced entries when present)
+remus-cli --mod-catalog tests/fixtures/test_mod_catalog.json --mod-list 1
 
-# Show patch history for a file
-remus patch --history --file "/path/to/Super Mario Bros. (USA) [Deluxe].nes"
-
-# Unapply patch (restore original, delete patched)
-remus patch --unapply --file "/path/to/Super Mario Bros. (USA) [Deluxe].nes"
+# Install a mod/patch against a library ROM
+remus-cli --db library.db --mod-install mod-id --mod-output ~/roms/patched
 ```
 
 ### Supported Patch Formats

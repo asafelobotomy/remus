@@ -146,7 +146,7 @@ make -j$(nproc)
 - **Core:** C++17
 - **Database:** SQLite
 - **Networking:** QtNetwork
-- **Packaging:** CLI tar.gz archives and CLI AppImages (see [docs/setup/BUILD.md](docs/setup/BUILD.md); GUI is built locally but not yet packaged for release)
+- **Packaging:** CLI tar.gz archives and AppImages bundling both `remus-cli` and `remus-gui` (see [docs/setup/BUILD.md](docs/setup/BUILD.md))
 - **CI/CD:** GitHub Actions
 
 ## Building from Source

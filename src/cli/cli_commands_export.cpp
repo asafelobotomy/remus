@@ -8,6 +8,7 @@
 #include "../core/constants/constants.h"
 #include "../core/database.h"
 #include "../core/hasher.h"
+#include "../core/library_exporter.h"
 #include "../core/patch_engine.h"
 #include "../core/patched_rom_parser.h"
 #include "../metadata/filename_normalizer.h"
@@ -15,10 +16,47 @@
 
 // ── Export ────────────────────────────────────────────────────────────────────
 
-struct ExportRow {
-    FileRecord file;
-    Database::MatchResult match;
-};
+int handleExportCommand(CliContext &ctx) {
+    if (!ctx.parser.isSet("export"))
+        return 0;
+
+    const QString format = ctx.parser.value("export").toLower();
+    QString outputPath = ctx.parser.value("export-path");
+    const QString systemsArg = ctx.parser.value("export-systems");
+    const QStringList systemFilters = systemsArg.isEmpty() ? QStringList() : systemsArg.split(',', Qt::SkipEmptyParts);
+
+    if (ctx.dryRunAll) {
+        const QList<LibraryExportRow> rows = LibraryExporter::buildRows(ctx.db, systemFilters);
+        qInfo() << "[DRY-RUN] Would write" << format << "export to"
+                << LibraryExporter::resolveOutputPath(format, outputPath) << "(" << rows.size() << "entries)";
+        return 0;
+    }
+
+    QString error;
+    if (!LibraryExporter::exportToFile(ctx.db, format, outputPath, systemFilters, &error)) {
+        if (error.contains(QStringLiteral("No matched files"))) {
+            qWarning() << error;
+            return 0;
+        }
+        qCritical() << error;
+        return 1;
+    }
+
+    const QString resolvedPath = LibraryExporter::resolveOutputPath(format, outputPath);
+    if (format == Constants::Exports::Formats::RETROARCH)
+        qInfo() << "✓ RetroArch playlist exported to" << resolvedPath;
+    else if (format == Constants::Exports::Formats::EMUSTATION)
+        qInfo() << "✓ EmulationStation gamelist exported to" << resolvedPath;
+    else if (format == Constants::Exports::Formats::LAUNCHBOX)
+        qInfo() << "✓ LaunchBox XML exported to" << resolvedPath;
+    else if (format == Constants::Exports::Formats::CSV)
+        qInfo() << "✓ CSV exported to" << resolvedPath;
+    else
+        qInfo() << "✓ JSON exported to" << resolvedPath;
+    return 0;
+}
+
+// ── Patch ─────────────────────────────────────────────────────────────────────
 
 static bool persistAppliedPatchLineage(Database &db, const QString &basePath, const QString &patchPath,
     const QString &outputPath, const PatchInfo &patchInfo) {
@@ -61,206 +99,6 @@ static bool persistAppliedPatchLineage(Database &db, const QString &basePath, co
     record.outputSha1 = outputHashes.sha1;
     return db.insertAppliedPatch(record);
 }
-
-static QList<ExportRow> buildExportRows(CliContext &ctx, const QString &systemsArg) {
-    const QStringList systemFilters = systemsArg.isEmpty() ? QStringList() : systemsArg.split(',', Qt::SkipEmptyParts);
-
-    QMap<int, Database::MatchResult> matches = ctx.db.getAllMatches();
-    QList<FileRecord> files = ctx.db.getExistingFiles();
-
-    QList<ExportRow> rows;
-    for (const FileRecord &file : files) {
-        if (!matches.contains(file.id))
-            continue;
-        const QString systemName = ctx.db.getSystemDisplayName(file.systemId);
-        if (!systemFilters.isEmpty() && !systemFilters.contains(systemName))
-            continue;
-        ExportRow row { file, matches.value(file.id) };
-        rows.append(row);
-    }
-    return rows;
-}
-
-int handleExportCommand(CliContext &ctx) {
-    if (!ctx.parser.isSet("export"))
-        return 0;
-
-    const QString format = ctx.parser.value("export").toLower();
-    QString outputPath = ctx.parser.value("export-path");
-    const QString systemsArg = ctx.parser.value("export-systems");
-
-    if (ctx.dryRunAll)
-        qInfo() << "[DRY-RUN] Export outputs will not be written";
-
-    auto defaultFilename = [&]() -> QString {
-        if (format == Constants::Exports::Formats::RETROARCH)
-            return Constants::Exports::Files::DEFAULT_RETROARCH_EXPORT;
-        else if (format == Constants::Exports::Formats::EMUSTATION)
-            return Constants::Exports::Files::ES_GAMELIST;
-        else if (format == Constants::Exports::Formats::LAUNCHBOX)
-            return Constants::Exports::Files::DEFAULT_LAUNCHBOX_EXPORT;
-        else if (format == Constants::Exports::Formats::CSV)
-            return Constants::Exports::Files::DEFAULT_CSV_EXPORT;
-        else
-            return Constants::Exports::Files::DEFAULT_JSON_EXPORT;
-    };
-
-    if (outputPath.isEmpty()) {
-        outputPath = defaultFilename();
-    } else if (QFileInfo(outputPath).isDir()) {
-        outputPath = outputPath + "/" + defaultFilename();
-    }
-
-    const QList<ExportRow> rows = buildExportRows(ctx, systemsArg);
-    if (rows.isEmpty()) {
-        qWarning() << "No matched files to export";
-        return 0;
-    }
-
-    auto openFile = [&](QFile &f) -> bool {
-        if (!f.open(QIODevice::WriteOnly | QIODevice::Text)) {
-            qCritical() << "Failed to open" << outputPath;
-            return false;
-        }
-        return true;
-    };
-
-    if (format == Constants::Exports::Formats::RETROARCH) {
-        if (ctx.dryRunAll) {
-            qInfo() << "[DRY-RUN] Would write RetroArch playlist to" << outputPath << "(" << rows.size() << "entries)";
-            return 0;
-        }
-        QFile f(outputPath);
-        if (!openFile(f))
-            return 1;
-        QTextStream out(&f);
-        for (const auto &row : rows) {
-            out << row.file.currentPath << "\n";
-            out << (!row.match.gameTitle.isEmpty() ? row.match.gameTitle : row.file.filename) << "\n";
-            out << "DETECT\nDETECT\n";
-            out << (row.file.crc32.isEmpty() ? "00000000" : row.file.crc32) << "|crc\n";
-            out << ctx.db.getSystemDisplayName(row.file.systemId) << Constants::Exports::Files::PLAYLIST_EXTENSION
-                << "\n";
-        }
-        qInfo() << "✓ RetroArch playlist exported to" << outputPath;
-
-    } else if (format == Constants::Exports::Formats::EMUSTATION) {
-        if (ctx.dryRunAll) {
-            qInfo() << "[DRY-RUN] Would write EmulationStation gamelist to" << outputPath << "(" << rows.size()
-                    << "entries)";
-            return 0;
-        }
-        QFile f(outputPath);
-        if (!openFile(f))
-            return 1;
-        QTextStream out(&f);
-        out << "<gameList>\n";
-        // ES <releasedate> format: YYYYMMDDTXXXXXX
-        const auto esDate = [](const QString &iso) -> QString {
-            // Accept "YYYY-MM-DD", "YYYY-MM", or bare "YYYY"
-            const QString d = iso.trimmed().remove(QLatin1Char('-'));
-            if (d.length() >= 8)
-                return d.left(8) + QStringLiteral("T000000");
-            if (d.length() == 4)
-                return d + QStringLiteral("0101T000000");
-            return QString();
-        };
-        for (const auto &row : rows) {
-            const QString name
-                = (!row.match.gameTitle.isEmpty() ? row.match.gameTitle : row.file.filename).toHtmlEscaped();
-            out << "  <game>\n";
-            out << "    <path>" << row.file.currentPath.toHtmlEscaped() << "</path>\n";
-            out << "    <name>" << name << "</name>\n";
-            out << "    <desc>" << row.match.description.toHtmlEscaped() << "</desc>\n";
-            out << "    <genre>" << row.match.genre.toHtmlEscaped() << "</genre>\n";
-            out << "    <players>" << row.match.players << "</players>\n";
-            out << "    <region>" << row.match.region.toHtmlEscaped() << "</region>\n";
-            if (!row.match.publisher.isEmpty())
-                out << "    <publisher>" << row.match.publisher.toHtmlEscaped() << "</publisher>\n";
-            const QString esd = esDate(row.match.releaseDate);
-            if (!esd.isEmpty())
-                out << "    <releasedate>" << esd << "</releasedate>\n";
-            out << "  </game>\n";
-        }
-        out << "</gameList>\n";
-        qInfo() << "✓ EmulationStation gamelist exported to" << outputPath;
-
-    } else if (format == Constants::Exports::Formats::LAUNCHBOX) {
-        if (ctx.dryRunAll) {
-            qInfo() << "[DRY-RUN] Would write LaunchBox XML to" << outputPath << "(" << rows.size() << "entries)";
-            return 0;
-        }
-        QFile f(outputPath);
-        if (!openFile(f))
-            return 1;
-        QTextStream out(&f);
-        out << "<LaunchBox>\n";
-        for (const auto &row : rows) {
-            const QString title
-                = (!row.match.gameTitle.isEmpty() ? row.match.gameTitle : row.file.filename).toHtmlEscaped();
-            out << "  <Game>\n";
-            out << "    <Title>" << title << "</Title>\n";
-            out << "    <ApplicationPath>" << row.file.currentPath.toHtmlEscaped() << "</ApplicationPath>\n";
-            out << "    <Region>" << row.match.region.toHtmlEscaped() << "</Region>\n";
-            out << "    <Genre>" << row.match.genre.toHtmlEscaped() << "</Genre>\n";
-            out << "  </Game>\n";
-        }
-        out << "</LaunchBox>\n";
-        qInfo() << "✓ LaunchBox XML exported to" << outputPath;
-
-    } else if (format == Constants::Exports::Formats::CSV) {
-        if (ctx.dryRunAll) {
-            qInfo() << "[DRY-RUN] Would write CSV to" << outputPath << "(" << rows.size() << "entries)";
-            return 0;
-        }
-        QFile f(outputPath);
-        if (!openFile(f))
-            return 1;
-        QTextStream out(&f);
-        // RFC 4180: wrap fields containing commas, double-quotes, or newlines in double-quotes;
-        // escape embedded double-quotes by doubling them.
-        const auto csvField = [](const QString &s) -> QString {
-            if (s.contains(QLatin1Char(',')) || s.contains(QLatin1Char('"')) || s.contains(QLatin1Char('\n'))) {
-                return QLatin1Char('"') + QString(s).replace(QLatin1Char('"'), QStringLiteral("\"\""))
-                    + QLatin1Char('"');
-            }
-            return s;
-        };
-        out << "file_id,title,system,path,region,confidence\n";
-        for (const auto &row : rows) {
-            out << row.file.id << ","
-                << csvField(!row.match.gameTitle.isEmpty() ? row.match.gameTitle : row.file.filename) << ","
-                << csvField(ctx.db.getSystemDisplayName(row.file.systemId)) << "," << csvField(row.file.currentPath)
-                << "," << csvField(row.match.region) << "," << row.match.confidence << "\n";
-        }
-        qInfo() << "✓ CSV exported to" << outputPath;
-
-    } else {
-        if (ctx.dryRunAll) {
-            qInfo() << "[DRY-RUN] Would write JSON to" << outputPath << "(" << rows.size() << "entries)";
-            return 0;
-        }
-        QFile f(outputPath);
-        if (!openFile(f))
-            return 1;
-        QJsonArray arr;
-        for (const auto &row : rows) {
-            QJsonObject obj;
-            obj["fileId"] = row.file.id;
-            obj["title"] = row.match.gameTitle;
-            obj["system"] = ctx.db.getSystemDisplayName(row.file.systemId);
-            obj["path"] = row.file.currentPath;
-            obj["region"] = row.match.region;
-            obj["confidence"] = row.match.confidence;
-            arr.append(obj);
-        }
-        f.write(QJsonDocument(arr).toJson());
-        qInfo() << "✓ JSON exported to" << outputPath;
-    }
-    return 0;
-}
-
-// ── Patch ─────────────────────────────────────────────────────────────────────
 
 int handlePatchCommands(CliContext &ctx) {
     if (ctx.parser.isSet("patch-tools")) {

@@ -118,6 +118,10 @@ RowLayout {
                 text: "Mod catalog…"
                 onTriggered: root.utilityToolRequested(3)
             }
+            MenuItem {
+                text: "Export library…"
+                onTriggered: root.utilityToolRequested(4)
+            }
             MenuSeparator {}
             MenuItem {
                 text: "Settings"

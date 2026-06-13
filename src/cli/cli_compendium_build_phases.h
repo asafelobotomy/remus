@@ -54,6 +54,10 @@ struct EnrichmentStats {
     int hasheousFactsInserted = 0;
     int hasheousApiCallsNeeded = 0;
     int hasheousApiCallsPerformed = 0;
+    int playmatchGamesEnriched = 0;
+    int playmatchFactsInserted = 0;
+    int playmatchApiCallsNeeded = 0;
+    int playmatchApiCallsPerformed = 0;
     int ftsRowsIndexed = 0;
 };
 
@@ -127,6 +131,7 @@ inline QStringList knownEnrichmentSourceKeys() {
         QStringLiteral("igdb"),
         QStringLiteral("ra"),
         QStringLiteral("hasheous"),
+        QStringLiteral("playmatch"),
         QStringLiteral("mame-catver"),
         QStringLiteral("mame-listxml"),
         QStringLiteral("zxinfo"),

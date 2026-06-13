@@ -65,14 +65,9 @@ qt_add_qml_module(remus-gui
         qml/dialogs/MatchEnrichDialog.qml
         qml/dialogs/RenameOrganizeDialog.qml
         qml/views/UtilitiesView.qml
-        qml/views/ScanView.qml
-        qml/views/HashView.qml
-        qml/views/MetadataView.qml
-        qml/views/ArtworkView.qml
+        qml/views/ExportView.qml
         qml/views/DatView.qml
         qml/views/VerifyView.qml
-        qml/views/OrganizeView.qml
-        qml/views/ConversionView.qml
         qml/views/PatchView.qml
         qml/views/ModView.qml
         qml/views/SettingsView.qml

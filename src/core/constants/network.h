@@ -66,8 +66,7 @@ namespace Constants {
         inline constexpr int THEGAMESDB_BLOCK_THRESHOLD = 2850; // 95%
 
         /// Hasheous minimum interval between requests (milliseconds)
-        /// Conservative despite fast service
-        inline constexpr int HASHEOUS_RATE_LIMIT_MS = 1000;
+        inline constexpr int HASHEOUS_RATE_LIMIT_MS = 400;
         inline constexpr int PLAYMATCH_RATE_LIMIT_MS = 500;
 
         /// RetroAchievements minimum interval between requests (milliseconds)
@@ -75,7 +74,7 @@ namespace Constants {
         inline constexpr int RA_RATE_LIMIT_MS = 500;
 
         /// Default rate limit for generic requests (milliseconds)
-        inline constexpr int DEFAULT_RATE_LIMIT_MS = 1000;
+        inline constexpr int DEFAULT_RATE_LIMIT_MS = 500;
 
         // ============================================================================
         // Retry Policy

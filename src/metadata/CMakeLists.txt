@@ -39,6 +39,7 @@ add_library(remus-metadata STATIC
     compendium_provider_match.cpp
     compendium_provider_fetch.cpp
     compendium_patch_catalog_importer.cpp
+    romhacking_scraper.cpp
 )
 
 target_link_libraries(remus-metadata PUBLIC
