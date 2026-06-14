@@ -19,9 +19,8 @@ void SystemNameResolutionTest::lookupBySystemIdReturnsInsertedName() {
     QVERIFY(db.initialize(QStringLiteral(":memory:")));
 
     QSqlQuery insert(db.database());
-    insert.prepare(QStringLiteral(
-        "INSERT INTO systems (name, display_name, manufacturer, extensions, preferred_hash) "
-        "VALUES (?, ?, ?, ?, ?)"));
+    insert.prepare(QStringLiteral("INSERT INTO systems (name, display_name, manufacturer, extensions, preferred_hash) "
+                                  "VALUES (?, ?, ?, ?, ?)"));
     insert.addBindValue(QStringLiteral("TEST_NES"));
     insert.addBindValue(QStringLiteral("Test Nintendo Entertainment System"));
     insert.addBindValue(QStringLiteral("Nintendo"));

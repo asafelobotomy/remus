@@ -15,14 +15,13 @@ struct LibraryExportRow {
 
 class LibraryExporter {
 public:
-    static QList<LibraryExportRow> buildRows(Database &db, const QStringList &systemFilters = {});
+    static QList<LibraryExportRow> buildRows(Database &db, const QStringList &systemFilters = { });
 
     static QString defaultFilename(const QString &format);
     static QString resolveOutputPath(const QString &format, const QString &outputPath);
 
-    static bool exportToFile(
-        Database &db, const QString &format, const QString &outputPath, const QStringList &systemFilters = {},
-        QString *error = nullptr);
+    static bool exportToFile(Database &db, const QString &format, const QString &outputPath,
+        const QStringList &systemFilters = { }, QString *error = nullptr);
 };
 
 } // namespace Remus

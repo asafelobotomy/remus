@@ -130,8 +130,8 @@ public:
     /**
      * @brief Update file hashes
      */
-    bool updateFileHashes(int fileId, const QString &crc32, const QString &md5, const QString &sha1,
-        const QString &raMd5 = QString());
+    bool updateFileHashes(
+        int fileId, const QString &crc32, const QString &md5, const QString &sha1, const QString &raMd5 = QString());
 
     /**
      * @brief Get files without calculated hashes

@@ -70,8 +70,8 @@ private:
     QList<int> matchedFileIds(bool selectedOnly) const;
     QMap<int, GameMetadata> metadataForFiles(const QList<int> &fileIds) const;
     void setLastError(const QString &message);
-    void runOrganize(const QString &destinationDir, bool dryRun, bool allBundled = false,
-        const QList<int> &explicitFileIds = { });
+    void runOrganize(
+        const QString &destinationDir, bool dryRun, bool allBundled = false, const QList<int> &explicitFileIds = { });
 
     AppController *m_appController;
     std::unique_ptr<OrganizeEngine> m_engine;

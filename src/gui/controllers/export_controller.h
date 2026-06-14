@@ -54,7 +54,8 @@ public:
 
     Q_INVOKABLE QVariantList availableSystems();
     Q_INVOKABLE QVariantMap exportPreview(const QString &systemsCsv = QString());
-    Q_INVOKABLE bool exportFrontend(const QString &format, const QString &outputPath, const QString &systemsCsv = QString());
+    Q_INVOKABLE bool exportFrontend(
+        const QString &format, const QString &outputPath, const QString &systemsCsv = QString());
 
 signals:
     void exportingChanged();

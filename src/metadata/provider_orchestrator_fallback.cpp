@@ -45,9 +45,9 @@ namespace {
         return QStringLiteral("md5");
     }
 
-    GameMetadata lookupByHashCascade(MetadataProvider *provider, const QString &system, const QString &preferredHashType,
-        const QString &primaryHash, const QString &crc32, const QString &md5, const QString &sha1, qint64 fileSize = 0,
-        const QString &sha256 = QString()) {
+    GameMetadata lookupByHashCascade(MetadataProvider *provider, const QString &system,
+        const QString &preferredHashType, const QString &primaryHash, const QString &crc32, const QString &md5,
+        const QString &sha1, qint64 fileSize = 0, const QString &sha256 = QString()) {
         if (provider == nullptr) {
             return { };
         }
@@ -58,14 +58,12 @@ namespace {
             return gametdb->getByHashes(crc32, md5, sha1, system, preferredHashType);
         }
 
-        const QStringList candidates
-            = orderedMatchHashValues(preferredHashType, crc32, md5, sha1, sha256);
+        const QStringList candidates = orderedMatchHashValues(preferredHashType, crc32, md5, sha1, sha256);
         QSet<QString> tried;
         for (const QString &candidate : candidates) {
             tried.insert(candidate.toLower());
-            const GameMetadata metadata = compendium != nullptr
-                ? compendium->getByHash(candidate, system, fileSize)
-                : provider->getByHash(candidate, system);
+            const GameMetadata metadata = compendium != nullptr ? compendium->getByHash(candidate, system, fileSize)
+                                                                : provider->getByHash(candidate, system);
             if (!metadata.title.isEmpty()) {
                 return metadata;
             }
@@ -96,8 +94,8 @@ namespace {
             fileName, fileSize, crc32, md5, sha1, sha256FromPrimaryHash(primaryHash), system);
     }
 
-    GameMetadata lookupRetroAchievements(MetadataProvider *provider, const GameMetadata &accumulator,
-        const QString &raMd5, const QString &system) {
+    GameMetadata lookupRetroAchievements(
+        MetadataProvider *provider, const GameMetadata &accumulator, const QString &raMd5, const QString &system) {
         if (provider == nullptr)
             return { };
 
@@ -141,14 +139,14 @@ void ProviderOrchestrator::queryProvider(GameMetadata &accumulator, const QStrin
                     result = info.provider->getByHash(hash, system);
                 }
             } else if (providerName.compare(Constants::Providers::PLAYMATCH, Qt::CaseInsensitive) == 0) {
-                result = lookupPlayMatch(qobject_cast<PlayMatchProvider *>(info.provider), name, fileSize, hash, crc32,
-                    md5, sha1, system);
+                result = lookupPlayMatch(
+                    qobject_cast<PlayMatchProvider *>(info.provider), name, fileSize, hash, crc32, md5, sha1, system);
             } else if (providerName.compare(Constants::Providers::RETROACHIEVEMENTS, Qt::CaseInsensitive) == 0) {
                 result = lookupRetroAchievements(info.provider, accumulator, raMd5, system);
             } else if (providerName.compare(Constants::Providers::COMPENDIUM, Qt::CaseInsensitive) == 0
                 || providerName.compare(Constants::Providers::GAMETDB, Qt::CaseInsensitive) == 0) {
-                result = lookupByHashCascade(
-                    info.provider, system, preferredHashType, hash, crc32, md5, sha1, fileSize);
+                result
+                    = lookupByHashCascade(info.provider, system, preferredHashType, hash, crc32, md5, sha1, fileSize);
             } else {
                 result = info.provider->getByHash(hash, system);
             }
@@ -267,9 +265,8 @@ void ProviderOrchestrator::queryProvider(GameMetadata &accumulator, const QStrin
     }
 }
 
-GameMetadata ProviderOrchestrator::getByHashWithFallback(
-    const QString &hash, const QString &system, const QString &crc32, const QString &md5, const QString &sha1,
-    const QString &raMd5) {
+GameMetadata ProviderOrchestrator::getByHashWithFallback(const QString &hash, const QString &system,
+    const QString &crc32, const QString &md5, const QString &sha1, const QString &raMd5) {
     if (hash.isEmpty() && crc32.isEmpty() && md5.isEmpty() && sha1.isEmpty()) {
         qWarning() << "Cannot search by hash: no digests available";
         return GameMetadata();
@@ -319,8 +316,7 @@ GameMetadata ProviderOrchestrator::getByHashWithFallback(
                 }
             } else if (providerName.compare(Constants::Providers::COMPENDIUM, Qt::CaseInsensitive) == 0
                 || providerName.compare(Constants::Providers::GAMETDB, Qt::CaseInsensitive) == 0) {
-                metadata = lookupByHashCascade(
-                    info.provider, system, preferredHashType, hash, crc32, md5, sha1);
+                metadata = lookupByHashCascade(info.provider, system, preferredHashType, hash, crc32, md5, sha1);
             } else {
                 metadata = info.provider->getByHash(hash, system);
             }
@@ -441,8 +437,7 @@ GameMetadata ProviderOrchestrator::fetchProviderMetadata(
 
 GameMetadata ProviderOrchestrator::getHashFromProvider(const QString &providerName, const QString &hash,
     const QString &system, const QString &crc32, const QString &md5, const QString &sha1, const QString &raMd5) {
-    if (providerName.isEmpty()
-        || (hash.isEmpty() && crc32.isEmpty() && md5.isEmpty() && sha1.isEmpty())) {
+    if (providerName.isEmpty() || (hash.isEmpty() && crc32.isEmpty() && md5.isEmpty() && sha1.isEmpty())) {
         return { };
     }
 
@@ -468,8 +463,8 @@ GameMetadata ProviderOrchestrator::getHashFromProvider(const QString &providerNa
         }
     } else if (providerName.compare(Constants::Providers::COMPENDIUM, Qt::CaseInsensitive) == 0
         || providerName.compare(Constants::Providers::GAMETDB, Qt::CaseInsensitive) == 0) {
-        metadata = lookupByHashCascade(info->provider, system, preferredHashTypeForSystem(system), hash, crc32, md5,
-            sha1);
+        metadata
+            = lookupByHashCascade(info->provider, system, preferredHashTypeForSystem(system), hash, crc32, md5, sha1);
     } else if (!hash.isEmpty()) {
         metadata = info->provider->getByHash(hash, system);
     }

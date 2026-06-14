@@ -78,8 +78,7 @@ void CompendiumPrimaryOrchestratorTest::twoPassRouting_CompendiumTitleOnly() {
     localDb->m_hashMetadata.description = QStringLiteral("A classic platformer.");
 
     orchestrator.addProvider(QStringLiteral("compendium"), compendium, Constants::Providers::Priority::COMPENDIUM);
-    orchestrator.addProvider(
-        QStringLiteral("localdatabase"), localDb, Constants::Providers::Priority::LOCAL_DATABASE);
+    orchestrator.addProvider(QStringLiteral("localdatabase"), localDb, Constants::Providers::Priority::LOCAL_DATABASE);
 
     const GameMetadata result = orchestrator.searchWithFallback(
         QStringLiteral("AABBCCDD"), QStringLiteral("rom-filename"), QStringLiteral("Genesis"));
@@ -105,8 +104,7 @@ void CompendiumPrimaryOrchestratorTest::identityLock_CompendiumWins() {
     localDb->m_hashMetadata.publisher = QStringLiteral("Sega");
 
     orchestrator.addProvider(QStringLiteral("compendium"), compendium, Constants::Providers::Priority::COMPENDIUM);
-    orchestrator.addProvider(
-        QStringLiteral("localdatabase"), localDb, Constants::Providers::Priority::LOCAL_DATABASE);
+    orchestrator.addProvider(QStringLiteral("localdatabase"), localDb, Constants::Providers::Priority::LOCAL_DATABASE);
 
     const GameMetadata result = orchestrator.searchWithFallback(
         QStringLiteral("11223344"), QStringLiteral("Sonic (World)"), QStringLiteral("Genesis"));
@@ -165,8 +163,7 @@ void CompendiumPrimaryOrchestratorTest::externalIdGapFill_HasheousMerged() {
     compendium->m_hashMetadata.matchMethod = Constants::MatchMethods::HASH;
 
     auto *hasheous = new StubProvider(QStringLiteral("hasheous"));
-    hasheous->m_hashMetadata.externalIds.insert(
-        QStringLiteral("igdb"), QStringLiteral("98765"));
+    hasheous->m_hashMetadata.externalIds.insert(QStringLiteral("igdb"), QStringLiteral("98765"));
 
     orchestrator.addProvider(QStringLiteral("compendium"), compendium, Constants::Providers::Priority::COMPENDIUM);
     orchestrator.addProvider(QStringLiteral("hasheous"), hasheous, Constants::Providers::Priority::HASHEOUS);
@@ -192,8 +189,7 @@ void CompendiumPrimaryOrchestratorTest::compendiumMiss_FallsThrough() {
     hasheous->m_hashMetadata.title = QStringLiteral("Should Not Be Called");
 
     orchestrator.addProvider(QStringLiteral("compendium"), compendium, Constants::Providers::Priority::COMPENDIUM);
-    orchestrator.addProvider(
-        QStringLiteral("localdatabase"), localDb, Constants::Providers::Priority::LOCAL_DATABASE);
+    orchestrator.addProvider(QStringLiteral("localdatabase"), localDb, Constants::Providers::Priority::LOCAL_DATABASE);
     orchestrator.addProvider(QStringLiteral("hasheous"), hasheous, Constants::Providers::Priority::HASHEOUS);
 
     const GameMetadata result = orchestrator.searchWithFallback(

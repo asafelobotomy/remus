@@ -104,9 +104,9 @@ public:
     Q_INVOKABLE void beginSearch(int fileId);
     Q_INVOKABLE void runSearch(const QString &provider, const QString &query);
     Q_INVOKABLE void selectSearchResult(int index);
-    Q_INVOKABLE bool applySearchMatch(bool confirmMatch, bool downloadArtwork, bool skipOverwrite,
-        bool importTitle, bool importDescription, bool importPublisher, bool importDeveloper, bool importGenre,
-        bool importRelease, bool importRating);
+    Q_INVOKABLE bool applySearchMatch(bool confirmMatch, bool downloadArtwork, bool skipOverwrite, bool importTitle,
+        bool importDescription, bool importPublisher, bool importDeveloper, bool importGenre, bool importRelease,
+        bool importRating);
 
     Q_INVOKABLE void setSearchQuery(const QString &query);
     Q_INVOKABLE void setSearchProvider(const QString &provider);

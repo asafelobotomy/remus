@@ -143,8 +143,8 @@ int Database::insertFile(const FileRecord &record) {
     return newId;
 }
 
-bool Database::updateFileHashes(int fileId, const QString &crc32, const QString &md5, const QString &sha1,
-    const QString &raMd5) {
+bool Database::updateFileHashes(
+    int fileId, const QString &crc32, const QString &md5, const QString &sha1, const QString &raMd5) {
     QSqlQuery query(m_db);
     const AppliedPatchRecord lineage = findAppliedPatchByOutputHashes(crc32, md5, sha1);
     const bool hasLineage = lineage.id > 0;

@@ -186,8 +186,8 @@ bool enrichFromPlayMatch(QSqlDatabase &database, int &gamesEnriched, int &factsI
         if (igdbId.isEmpty())
             continue;
         bool inserted = false;
-        if (!insertGameFact(delQ, factQ, factSpec, it.key(), QStringLiteral("igdb_id"), igdbId,
-                QStringLiteral("text"), error, QStringLiteral("playmatch"), &inserted)) {
+        if (!insertGameFact(delQ, factQ, factSpec, it.key(), QStringLiteral("igdb_id"), igdbId, QStringLiteral("text"),
+                error, QStringLiteral("playmatch"), &inserted)) {
             database.rollback();
             return false;
         }
@@ -197,7 +197,8 @@ bool enrichFromPlayMatch(QSqlDatabase &database, int &gamesEnriched, int &factsI
     }
 
     if (!database.commit()) {
-        error = QStringLiteral("Failed to commit PlayMatch enrichment transaction: %1").arg(database.lastError().text());
+        error
+            = QStringLiteral("Failed to commit PlayMatch enrichment transaction: %1").arg(database.lastError().text());
         database.rollback();
         return false;
     }

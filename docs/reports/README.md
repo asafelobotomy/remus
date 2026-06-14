@@ -4,6 +4,7 @@ Test results, implementation reports, and verification documentation.
 
 ## Active Reports
 
+- **[FULL-AUDIT-2026-06-14.md](FULL-AUDIT-2026-06-14.md)** - Full project audit (build, tests, security, parity, docs)
 - **METADATA-VERIFICATION-REPORT.md** - Metadata verification and validation report
 - **[ROM-MATCHING-AUDIT.md](ROM-MATCHING-AUDIT.md)** - ROM identity matching accuracy order, gaps, and remediation roadmap
 - **[COMPENDIUM-DATA-SOURCES.md](COMPENDIUM-DATA-SOURCES.md)** - External hash/metadata/patch sources for compendium gaps

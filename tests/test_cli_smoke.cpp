@@ -1093,7 +1093,8 @@ private slots:
 
         const QString dbPath = dir.filePath(QStringLiteral("match-empty.db"));
         QString output;
-        runCliCapture({ QStringLiteral("--db"), dbPath, QStringLiteral("--scan"), dir.path(), QStringLiteral("--match") },
+        runCliCapture(
+            { QStringLiteral("--db"), dbPath, QStringLiteral("--scan"), dir.path(), QStringLiteral("--match") },
             output);
         QVERIFY2(output.contains(QStringLiteral("Matching")), qPrintable(output));
         QVERIFY2(output.contains(QStringLiteral("0 files")) || output.contains(QStringLiteral("Matching 0")),
@@ -1160,7 +1161,8 @@ private slots:
     void testDatCoverageExitsZero() {
         QTemporaryDir dir;
         QVERIFY(dir.isValid());
-        runCli({ QStringLiteral("--db"), dir.filePath(QStringLiteral("dat-coverage.db")), QStringLiteral("--dat-coverage") });
+        runCli({ QStringLiteral("--db"), dir.filePath(QStringLiteral("dat-coverage.db")),
+            QStringLiteral("--dat-coverage") });
     }
 
     void testLibraryPipelineDryRun() {
@@ -1168,7 +1170,8 @@ private slots:
         QVERIFY(dir.isValid());
         const QString romDir = dir.filePath(QStringLiteral("roms"));
         QVERIFY(QDir().mkpath(romDir));
-        runCli({ QStringLiteral("--library"), romDir, QStringLiteral("--output"), dir.filePath(QStringLiteral("out")), QStringLiteral("--dry-run-all") });
+        runCli({ QStringLiteral("--library"), romDir, QStringLiteral("--output"), dir.filePath(QStringLiteral("out")),
+            QStringLiteral("--dry-run-all") });
     }
 
     void testProcessPresetDryRun() {
@@ -1176,7 +1179,8 @@ private slots:
         QVERIFY(dir.isValid());
         const QString romDir = dir.filePath(QStringLiteral("roms"));
         QVERIFY(QDir().mkpath(romDir));
-        runCli({ QStringLiteral("--process"), romDir, QStringLiteral("--process-preset"), QStringLiteral("es-de"), QStringLiteral("--dry-run-all") });
+        runCli({ QStringLiteral("--process"), romDir, QStringLiteral("--process-preset"), QStringLiteral("es-de"),
+            QStringLiteral("--dry-run-all") });
     }
 
     void testRetroArchExportCreatesFile() {
@@ -1201,7 +1205,8 @@ private slots:
             QVERIFY(db.insertMatch(files.first().id, gameId, 100.0f, QStringLiteral("test")));
         }
         const QString outFile = dir.filePath(QStringLiteral("remus.lpl"));
-        runCli({ QStringLiteral("--db"), dbPath, QStringLiteral("--export"), QStringLiteral("retroarch"), QStringLiteral("--export-path"), outFile });
+        runCli({ QStringLiteral("--db"), dbPath, QStringLiteral("--export"), QStringLiteral("retroarch"),
+            QStringLiteral("--export-path"), outFile });
         QVERIFY(QFileInfo(outFile).exists());
     }
 
@@ -1227,8 +1232,10 @@ private slots:
         }
         const QString launchbox = dir.filePath(QStringLiteral("launchbox.xml"));
         const QString json = dir.filePath(QStringLiteral("export.json"));
-        runCli({ QStringLiteral("--db"), dbPath, QStringLiteral("--export"), QStringLiteral("launchbox"), QStringLiteral("--export-path"), launchbox });
-        runCli({ QStringLiteral("--db"), dbPath, QStringLiteral("--export"), QStringLiteral("json"), QStringLiteral("--export-path"), json });
+        runCli({ QStringLiteral("--db"), dbPath, QStringLiteral("--export"), QStringLiteral("launchbox"),
+            QStringLiteral("--export-path"), launchbox });
+        runCli({ QStringLiteral("--db"), dbPath, QStringLiteral("--export"), QStringLiteral("json"),
+            QStringLiteral("--export-path"), json });
         QVERIFY(QFileInfo(launchbox).exists());
         QVERIFY(QFileInfo(json).exists());
     }

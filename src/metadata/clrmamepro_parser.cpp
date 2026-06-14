@@ -111,8 +111,7 @@ QList<ClrMameProEntry> ClrMameProParser::parseGameBlocks(const QString &content)
         const QMap<QString, QString> gameData = extractKeyValues(gameMetadata);
         QString patchUrl = gameData.value(QStringLiteral("patch"));
         if (patchUrl.isEmpty()) {
-            static const QRegularExpression patchRegex(
-                QStringLiteral(R"rx((?m)^\s*patch\s+"([^"]+)")rx"));
+            static const QRegularExpression patchRegex(QStringLiteral(R"rx((?m)^\s*patch\s+"([^"]+)")rx"));
             const QRegularExpressionMatch patchMatch = patchRegex.match(gameBlock);
             if (patchMatch.hasMatch())
                 patchUrl = patchMatch.captured(1);

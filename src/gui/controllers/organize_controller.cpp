@@ -158,18 +158,15 @@ void OrganizeController::setLastError(const QString &message) {
     emit lastErrorChanged();
 }
 
-void OrganizeController::runOrganize(const QString &destinationDir,
-    bool dryRun,
-    bool allBundled,
-    const QList<int> &explicitFileIds) {
+void OrganizeController::runOrganize(
+    const QString &destinationDir, bool dryRun, bool allBundled, const QList<int> &explicitFileIds) {
     if (m_appController == nullptr || !m_appController->isLibraryOpen()) {
         setLastError(QStringLiteral("Open a library before organizing files."));
         return;
     }
 
-    const QList<int> fileIds = !explicitFileIds.isEmpty()
-        ? explicitFileIds
-        : (allBundled ? bundledFileIds() : targetFileIds());
+    const QList<int> fileIds
+        = !explicitFileIds.isEmpty() ? explicitFileIds : (allBundled ? bundledFileIds() : targetFileIds());
     if (fileIds.isEmpty()) {
         setLastError(allBundled
                 ? QStringLiteral("No bundled ROMs found. Complete Stage 5 (Bundle & Rename) before organizing.")

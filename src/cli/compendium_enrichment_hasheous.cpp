@@ -87,8 +87,8 @@ namespace {
 
 } // anonymous namespace
 
-bool enrichFromHasheous(QSqlDatabase &database, const QString &credentialsPath, int &gamesEnriched,
-    int &factsInserted, QString &error, int *apiCallsNeededOut, int *apiCallsPerformedOut) {
+bool enrichFromHasheous(QSqlDatabase &database, const QString &credentialsPath, int &gamesEnriched, int &factsInserted,
+    QString &error, int *apiCallsNeededOut, int *apiCallsPerformedOut) {
     gamesEnriched = 0;
     factsInserted = 0;
     int apiCallsNeeded = 0;
@@ -139,8 +139,7 @@ bool enrichFromHasheous(QSqlDatabase &database, const QString &credentialsPath, 
             qInfo().noquote() << QStringLiteral("[Hasheous] lookup %1/%2 ...").arg(callIdx).arg(apiCallsNeeded);
         }
 
-        const GameMetadata metadata
-            = provider.getByHashes(it->crc32, it->md5, it->sha1, QString());
+        const GameMetadata metadata = provider.getByHashes(it->crc32, it->md5, it->sha1, QString());
         if (metadata.externalIds.contains(Constants::Providers::ExternalId::IGDB))
             matchedMetadata.insert(it.key(), metadata);
     }
@@ -208,8 +207,8 @@ bool enrichFromHasheous(QSqlDatabase &database, const QString &credentialsPath, 
     auto insertFact = [&](const QString &gameId, const QString &field, const QString &value,
                           const QString &type = QStringLiteral("text"), bool *insertedOut = nullptr) -> bool {
         bool inserted = false;
-        if (!insertGameFact(delQ, factQ, factSpec, gameId, field, value, type, error, QStringLiteral("hasheous"),
-                &inserted))
+        if (!insertGameFact(
+                delQ, factQ, factSpec, gameId, field, value, type, error, QStringLiteral("hasheous"), &inserted))
             return false;
         if (inserted) {
             ++factsInserted;

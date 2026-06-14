@@ -142,8 +142,8 @@ bool enrichFromRetroAchievements(QSqlDatabase &database, const QString &credenti
  * @param error            [out] Human-readable error message on failure.
  * @return true on success (or when nothing to do), false on error.
  */
-bool enrichFromHasheous(QSqlDatabase &database, const QString &credentialsPath, int &gamesEnriched,
-    int &factsInserted, QString &error, int *apiCallsNeededOut = nullptr, int *apiCallsPerformedOut = nullptr);
+bool enrichFromHasheous(QSqlDatabase &database, const QString &credentialsPath, int &gamesEnriched, int &factsInserted,
+    QString &error, int *apiCallsNeededOut = nullptr, int *apiCallsPerformedOut = nullptr);
 
 /**
  * @brief Enrich compendium games with IGDB IDs via PlayMatch hash/filename lookup.

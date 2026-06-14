@@ -260,7 +260,8 @@ GameMetadata PlayMatchProvider::identifyBySignals(const QString &fileName, qint6
     return metadata;
 }
 
-QList<SearchResult> PlayMatchProvider::searchByName(const QString &title, const QString &system, const QString &region) {
+QList<SearchResult> PlayMatchProvider::searchByName(
+    const QString &title, const QString &system, const QString &region) {
     Q_UNUSED(title);
     Q_UNUSED(system);
     Q_UNUSED(region);

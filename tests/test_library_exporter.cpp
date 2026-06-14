@@ -54,7 +54,7 @@ void LibraryExporterTest::exportCsvAndJson() {
 
     const QString csvPath = tempDir.filePath(QStringLiteral("export.csv"));
     QString error;
-    QVERIFY(LibraryExporter::exportToFile(db, Constants::Exports::Formats::CSV, csvPath, {}, &error));
+    QVERIFY(LibraryExporter::exportToFile(db, Constants::Exports::Formats::CSV, csvPath, { }, &error));
 
     QFile csvFile(csvPath);
     QVERIFY(csvFile.open(QIODevice::ReadOnly));
@@ -63,7 +63,7 @@ void LibraryExporterTest::exportCsvAndJson() {
     QVERIFY(csv.contains(db.getSystemDisplayName(file.systemId)));
 
     const QString jsonPath = tempDir.filePath(QStringLiteral("export.json"));
-    QVERIFY(LibraryExporter::exportToFile(db, Constants::Exports::Formats::JSON, jsonPath, {}, &error));
+    QVERIFY(LibraryExporter::exportToFile(db, Constants::Exports::Formats::JSON, jsonPath, { }, &error));
     QVERIFY(QFileInfo(jsonPath).exists());
 }
 
@@ -97,10 +97,10 @@ void LibraryExporterTest::exportRetroArchAndLaunchBox() {
 
     QString error;
     const QString retroPath = tempDir.filePath(QStringLiteral("remus.lpl"));
-    QVERIFY(LibraryExporter::exportToFile(db, Constants::Exports::Formats::RETROARCH, retroPath, {}, &error));
+    QVERIFY(LibraryExporter::exportToFile(db, Constants::Exports::Formats::RETROARCH, retroPath, { }, &error));
 
     const QString launchboxPath = tempDir.filePath(QStringLiteral("launchbox.xml"));
-    QVERIFY(LibraryExporter::exportToFile(db, Constants::Exports::Formats::LAUNCHBOX, launchboxPath, {}, &error));
+    QVERIFY(LibraryExporter::exportToFile(db, Constants::Exports::Formats::LAUNCHBOX, launchboxPath, { }, &error));
     QFile launchbox(launchboxPath);
     QVERIFY(launchbox.open(QIODevice::ReadOnly));
     QVERIFY(QString::fromUtf8(launchbox.readAll()).contains(QStringLiteral("<LaunchBox>")));

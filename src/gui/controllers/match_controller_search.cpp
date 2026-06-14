@@ -15,12 +15,12 @@ namespace Remus {
 
 namespace {
 
-QString releaseYearFromDate(const QString &releaseDate) {
-    if (releaseDate.isEmpty())
-        return QString();
-    const int year = releaseDate.left(4).toInt();
-    return year > 0 ? QString::number(year) : QString();
-}
+    QString releaseYearFromDate(const QString &releaseDate) {
+        if (releaseDate.isEmpty())
+            return QString();
+        const int year = releaseDate.left(4).toInt();
+        return year > 0 ? QString::number(year) : QString();
+    }
 
 } // namespace
 
@@ -187,9 +187,8 @@ void MatchController::runSearch(const QString &provider, const QString &query) {
             results.append(result);
     }
 
-    std::sort(results.begin(), results.end(), [](const SearchResult &a, const SearchResult &b) {
-        return a.matchScore > b.matchScore;
-    });
+    std::sort(results.begin(), results.end(),
+        [](const SearchResult &a, const SearchResult &b) { return a.matchScore > b.matchScore; });
 
     m_searchResultObjects = results;
     m_searchResults.clear();
@@ -267,9 +266,8 @@ void MatchController::selectSearchResult(int index) {
         metadata.region = result.region;
         metadata.providerId = result.provider;
         metadata.matchScore = result.matchScore;
-        metadata.matchMethod = result.matchScore >= 1.0f
-            ? QString::fromLatin1(Constants::MatchMethods::HASH)
-            : QString::fromLatin1(Constants::MatchMethods::NAME);
+        metadata.matchMethod = result.matchScore >= 1.0f ? QString::fromLatin1(Constants::MatchMethods::HASH)
+                                                         : QString::fromLatin1(Constants::MatchMethods::NAME);
         if (result.releaseYear > 0)
             metadata.releaseDate = QString::number(result.releaseYear);
     }
@@ -279,9 +277,9 @@ void MatchController::selectSearchResult(int index) {
     emit previewMetadataChanged();
 }
 
-bool MatchController::applyMetadataToDatabase(int fileId, int systemId, const GameMetadata &metadata,
-    float confidence, const QString &method, bool skipOverwrite, bool importTitle, bool importDescription,
-    bool importPublisher, bool importDeveloper, bool importGenre, bool importRelease, bool importRating) {
+bool MatchController::applyMetadataToDatabase(int fileId, int systemId, const GameMetadata &metadata, float confidence,
+    const QString &method, bool skipOverwrite, bool importTitle, bool importDescription, bool importPublisher,
+    bool importDeveloper, bool importGenre, bool importRelease, bool importRating) {
     Database *db = m_appController->database();
     if (db == nullptr)
         return false;
@@ -301,9 +299,9 @@ bool MatchController::applyMetadataToDatabase(int fileId, int systemId, const Ga
 
     if (skipOverwrite && hasExistingGame) {
         QSqlQuery gameQ(db->database());
-        gameQ.prepare(QStringLiteral(
-            "SELECT title, region, publisher, developer, release_date, description, genres, rating "
-            "FROM games WHERE id = ?"));
+        gameQ.prepare(
+            QStringLiteral("SELECT title, region, publisher, developer, release_date, description, genres, rating "
+                           "FROM games WHERE id = ?"));
         gameQ.addBindValue(existingMatch.gameId);
         if (gameQ.exec() && gameQ.next()) {
             if (!importTitle || title.isEmpty())
@@ -331,13 +329,13 @@ bool MatchController::applyMetadataToDatabase(int fileId, int systemId, const Ga
     int gameId = 0;
     if (hasExistingGame && skipOverwrite) {
         gameId = existingMatch.gameId;
-        if (!db->updateGame(gameId, publisher, developer, releaseDate, description, genres, players, rating, title,
-                region)) {
+        if (!db->updateGame(
+                gameId, publisher, developer, releaseDate, description, genres, players, rating, title, region)) {
             return false;
         }
     } else {
-        gameId = db->insertGame(title, systemId, region, publisher, developer, releaseDate, description, genres,
-            players, rating);
+        gameId = db->insertGame(
+            title, systemId, region, publisher, developer, releaseDate, description, genres, players, rating);
         if (gameId <= 0)
             return false;
     }

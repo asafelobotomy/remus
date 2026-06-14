@@ -16,38 +16,36 @@ class CompendiumPatchCatalogImporterTest : public QObject {
 private:
     bool createSchema(QSqlDatabase &db) {
         QSqlQuery q(db);
-        return q.exec(QStringLiteral(
-                   "CREATE TABLE systems ("
-                   "  system_id INTEGER PRIMARY KEY,"
-                   "  internal_name TEXT NOT NULL,"
-                   "  libretro_name TEXT NOT NULL"
-                   ")"))
-            && q.exec(QStringLiteral(
-                   "INSERT INTO systems VALUES (1, 'NES', 'Nintendo - Nintendo Entertainment System')"))
-            && q.exec(QStringLiteral(
-                   "CREATE TABLE patch_catalog_sources ("
-                   "  source_id INTEGER PRIMARY KEY AUTOINCREMENT,"
-                   "  system_name TEXT NOT NULL,"
-                   "  catalog_name TEXT NOT NULL,"
-                   "  catalog_version TEXT,"
-                   "  catalog_source TEXT,"
-                   "  catalog_description TEXT,"
-                   "  entry_count INTEGER NOT NULL DEFAULT 0,"
-                   "  created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,"
-                   "  UNIQUE (system_name, catalog_name)"
-                   ")"))
-            && q.exec(QStringLiteral(
-                   "CREATE TABLE patch_entries ("
-                   "  entry_id INTEGER PRIMARY KEY AUTOINCREMENT,"
-                   "  source_id INTEGER NOT NULL,"
-                   "  game_name TEXT NOT NULL,"
-                   "  rom_name TEXT NOT NULL,"
-                   "  rom_size INTEGER,"
-                   "  crc32 TEXT, md5 TEXT, sha1 TEXT,"
-                   "  description TEXT, status TEXT,"
-                   "  base_title TEXT, patch_name TEXT, file_type TEXT,"
-                   "  FOREIGN KEY (source_id) REFERENCES patch_catalog_sources(source_id) ON DELETE CASCADE"
-                   ")"));
+        return q.exec(QStringLiteral("CREATE TABLE systems ("
+                                     "  system_id INTEGER PRIMARY KEY,"
+                                     "  internal_name TEXT NOT NULL,"
+                                     "  libretro_name TEXT NOT NULL"
+                                     ")"))
+            && q.exec(
+                QStringLiteral("INSERT INTO systems VALUES (1, 'NES', 'Nintendo - Nintendo Entertainment System')"))
+            && q.exec(QStringLiteral("CREATE TABLE patch_catalog_sources ("
+                                     "  source_id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                                     "  system_name TEXT NOT NULL,"
+                                     "  catalog_name TEXT NOT NULL,"
+                                     "  catalog_version TEXT,"
+                                     "  catalog_source TEXT,"
+                                     "  catalog_description TEXT,"
+                                     "  entry_count INTEGER NOT NULL DEFAULT 0,"
+                                     "  created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,"
+                                     "  UNIQUE (system_name, catalog_name)"
+                                     ")"))
+            && q.exec(
+                QStringLiteral("CREATE TABLE patch_entries ("
+                               "  entry_id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                               "  source_id INTEGER NOT NULL,"
+                               "  game_name TEXT NOT NULL,"
+                               "  rom_name TEXT NOT NULL,"
+                               "  rom_size INTEGER,"
+                               "  crc32 TEXT, md5 TEXT, sha1 TEXT,"
+                               "  description TEXT, status TEXT,"
+                               "  base_title TEXT, patch_name TEXT, file_type TEXT,"
+                               "  FOREIGN KEY (source_id) REFERENCES patch_catalog_sources(source_id) ON DELETE CASCADE"
+                               ")"));
     }
 
 private slots:
@@ -68,18 +66,16 @@ void CompendiumPatchCatalogImporterTest::importMapsLibretroNameAndPatchUrl() {
         QSqlDatabase::removeDatabase(QStringLiteral("patch_import"));
     }
 
-    const QString datContent = QStringLiteral(
-        "clrmamepro (\n"
-        "    name \"NES hacks\"\n"
-        "    description \"Test hacks\"\n"
-        ")\n"
-        "game (\n"
-        "    name \"Dragon Quest III (English) [T-En by Foo]\"\n"
-        "    rom ( name \"dq3en.nes\" size 262144 crc AABBCCDD )\n"
-        "    patch \"http://www.romhacking.net/translations/1234/\"\n"
-        ")\n");
-    const QString datPath = tempDir.filePath(
-        QStringLiteral("Nintendo - Nintendo Entertainment System.dat"));
+    const QString datContent = QStringLiteral("clrmamepro (\n"
+                                              "    name \"NES hacks\"\n"
+                                              "    description \"Test hacks\"\n"
+                                              ")\n"
+                                              "game (\n"
+                                              "    name \"Dragon Quest III (English) [T-En by Foo]\"\n"
+                                              "    rom ( name \"dq3en.nes\" size 262144 crc AABBCCDD )\n"
+                                              "    patch \"http://www.romhacking.net/translations/1234/\"\n"
+                                              ")\n");
+    const QString datPath = tempDir.filePath(QStringLiteral("Nintendo - Nintendo Entertainment System.dat"));
     {
         QFile datFile(datPath);
         QVERIFY(datFile.open(QIODevice::WriteOnly | QIODevice::Text));
