@@ -39,7 +39,7 @@ class CHDConverter : public DiscConverter {
 
 public:
     explicit CHDConverter(QObject *parent = nullptr);
-    ~CHDConverter() = default;
+    ~CHDConverter() override = default;
 
     bool isChdmanAvailable() const;
     QString getChdmanVersion() const;

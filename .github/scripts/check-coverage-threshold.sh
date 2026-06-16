@@ -10,7 +10,7 @@ if [[ ! -f "$COVERAGE_INFO" ]]; then
     exit 1
 fi
 
-SUMMARY="$(lcov --summary "$COVERAGE_INFO" 2>&1)"
+SUMMARY="$(lcov --summary "$COVERAGE_INFO" --ignore-errors inconsistent 2>&1)"
 LINE="$(printf '%s\n' "$SUMMARY" | grep -E '^[[:space:]]*lines\.*:' | head -1 || true)"
 if [[ -z "$LINE" ]]; then
     echo "Could not parse line coverage from lcov summary:" >&2

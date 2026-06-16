@@ -21,4 +21,5 @@ if [[ "${#sources[@]}" -eq 0 ]]; then
     exit 1
 fi
 
-clang-tidy -p "$BUILD_DIR" "${sources[@]}"
+CLANG_TIDY="${CLANG_TIDY:-clang-tidy}"
+"$CLANG_TIDY" -p "$BUILD_DIR" "${sources[@]}"

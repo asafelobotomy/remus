@@ -61,7 +61,7 @@ class ArchiveExtractor : public QObject {
 
 public:
     explicit ArchiveExtractor(QObject *parent = nullptr);
-    ~ArchiveExtractor() = default;
+    ~ArchiveExtractor() override = default;
 
     /**
      * @brief Check which extraction formats are available (always all supported formats).

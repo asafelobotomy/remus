@@ -3,7 +3,7 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-cd "$ROOT_DIR"
+cd "$ROOT_DIR" || exit 1
 
 if ! command -v qmllint >/dev/null 2>&1; then
     for candidate in /usr/lib/qt6/bin/qmllint /usr/bin/qmllint; do
@@ -30,14 +30,33 @@ fi
 # qmltypes are unavailable. Downgrade categories that depend on those to "info" so
 # the job surfaces issues but only fails on hard syntax errors (non-zero exit other
 # than warning-only 255). See docs/CONTRIBUTING.md (qml-lint is informational).
-qmllint \
-    --unqualified info \
-    --import info \
-    --type info \
-    --property info \
-    --signal info \
-    --required info \
-    --alias info \
-    --deprecated info \
-    --with info \
-    "${qml_files[@]}"
+#
+# Qt 6.7+ renamed several flags; detect version and use the appropriate set.
+QT_MINOR="$(qmllint --version 2>&1 | grep -oP '6\.\K[0-9]+' | head -1)"
+if [[ "${QT_MINOR:-0}" -ge 7 ]]; then
+    # Qt 6.7+ flag names
+    qmllint \
+        --context-properties info \
+        --import info \
+        --missing-type info \
+        --incompatible-type info \
+        --missing-property info \
+        --signal-handler-parameters info \
+        --required info \
+        --alias-cycle info \
+        --deprecated info \
+        "${qml_files[@]}"
+else
+    # Qt ≤ 6.6 flag names (Ubuntu 24.04 CI)
+    qmllint \
+        --unqualified info \
+        --import info \
+        --type info \
+        --property info \
+        --signal info \
+        --required info \
+        --alias info \
+        --deprecated info \
+        --with info \
+        "${qml_files[@]}"
+fi

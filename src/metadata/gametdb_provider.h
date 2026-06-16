@@ -38,7 +38,7 @@ struct GameTDBEntry {
  *
  * Priority: 60 (above TheGamesDB, below ScreenScraper)
  *
- * XML files location: data/gametdb/*.xml
+ * XML files location: `data/gametdb/` (wiitdb.xml, etc.)
  *
  * Features:
  * - Hash-based matching via CRC32/MD5/SHA1 from <rom> elements

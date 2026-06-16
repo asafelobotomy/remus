@@ -42,7 +42,7 @@ namespace {
             const qint64 bytesRead = file.read(chunk.data(), kChunkSize);
             if (bytesRead <= 0)
                 break;
-            hash.addData(chunk.constData(), static_cast<int>(bytesRead));
+            hash.addData(QByteArrayView(chunk.constData(), bytesRead));
         }
         return QString(hash.result().toHex()).toLower();
     }

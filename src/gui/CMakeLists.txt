@@ -53,6 +53,7 @@ qt_add_qml_module(remus-gui
         qml/Main.qml
         qml/Sidebar.qml
         qml/components/ActionToolbar.qml
+        qml/components/TmmToolButton.qml
         qml/components/ProgressCard.qml
         qml/components/MetadataEditor.qml
         qml/components/StageCard.qml

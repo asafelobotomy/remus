@@ -19,7 +19,7 @@ class CSOConverter : public DiscConverter {
 
 public:
     explicit CSOConverter(QObject *parent = nullptr);
-    ~CSOConverter() = default;
+    ~CSOConverter() override = default;
 
     bool isMaxcsoAvailable() const;
     QString getMaxcsoVersion() const;

@@ -483,26 +483,27 @@ remus-cli --verify ~/Downloads/No-Intro_NES_2024.dat --verify-report
 
 ### Patching Commands
 ```bash
-# Apply patch manually
-remus patch --apply \
-  --base "/path/to/Super Mario Bros. (USA).nes" \
-  --patch ~/Downloads/smb_deluxe.bps \
-  --output "/path/to/Super Mario Bros. (USA) [Deluxe].nes"
+# Apply a patch to a base file
+remus-cli --patch-apply "/path/to/Super Mario Bros. (USA).nes" \
+          --patch-patch ~/Downloads/smb_deluxe.bps \
+          --patch-output "/path/to/Super Mario Bros. (USA) [Deluxe].nes"
 
-# Scan for patches on romhacking.net
-remus patch --discover --game "Final Fantasy VI"
+# Apply a patch with auto-generated output path
+remus-cli --patch-apply "/path/to/Final Fantasy VI (USA).sfc" \
+          --patch-patch ~/Downloads/ff6_restoration.bps
 
-# Download and apply patch by ID
-remus patch --apply-from-web \
-  --romhacking-id 1234 \
-  --base "/path/to/Final Fantasy VI (USA).sfc"
+# Create a patch from an original and modified file
+remus-cli --patch-create "/path/to/modified_game.nes" \
+          --patch-original "/path/to/original_game.nes" \
+          --patch-patch "/path/to/my_patch.bps" \
+          --patch-format bps
 
-# List applied patches
-remus patch --list-applied
-
-# Unapply patch (restore original, delete patched)
-remus patch --unapply --file "/path/to/Super Mario Bros. (USA) [Deluxe].nes"
+# Check patch tool availability (flips, xdelta3, etc.)
+remus-cli --patch-tools
 ```
+
+> **Note:** Patch discover, apply-from-web, and unapply are not implemented in the CLI.
+> Use `--mod-install` for downloading and applying patches from a mod catalog instead.
 
 ---
 

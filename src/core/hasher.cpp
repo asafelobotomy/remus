@@ -39,8 +39,8 @@ HashResult Hasher::calculateHashes(const QString &filePath, bool stripHeader, in
         if (bytesRead == 0)
             break;
         crc = crc32(crc, reinterpret_cast<const Bytef *>(chunk.constData()), static_cast<uInt>(bytesRead));
-        md5Hash.addData(chunk.constData(), bytesRead);
-        sha1Hash.addData(chunk.constData(), bytesRead);
+        md5Hash.addData(QByteArrayView(chunk.constData(), bytesRead));
+        sha1Hash.addData(QByteArrayView(chunk.constData(), bytesRead));
     }
 
     result.crc32 = QString("%1").arg(crc, 8, 16, QChar('0')).toLower();

@@ -11,6 +11,13 @@ Frame {
 
     property string searchText: ""
 
+    readonly property string romSourceDirectory: {
+        const fromSettings = settingsController.stringValue("gui/rom_source_directory", "")
+        if (fromSettings.length > 0)
+            return fromSettings
+        return scanController.lastDirectory
+    }
+
     readonly property int colTitleMin: 180
     readonly property int colSystem:  120
     readonly property int colYear:    44
@@ -307,7 +314,9 @@ Frame {
         Label {
             Layout.fillWidth: true
             visible:          appController.libraryOpen && workflowController.queueFiles.length === 0
-            text:             "No ROMs in this filter. Try Update library or change the filter."
+            text:             romSourceDirectory.length === 0
+                                ? "No ROMs yet. Set a ROM source folder in Settings, then click Update library."
+                                : "No ROMs in this filter. Try Update library or change the filter."
             color:            "#a89984"
             wrapMode:         Text.WordWrap
             horizontalAlignment: Text.AlignHCenter
@@ -316,7 +325,7 @@ Frame {
         Label {
             Layout.fillWidth: true
             visible:          !appController.libraryOpen
-            text:             "Open a library to view ROMs."
+            text:             "Open a library database above, then scan your ROM folder with Update library."
             color:            "#a89984"
             wrapMode:         Text.WordWrap
             horizontalAlignment: Text.AlignHCenter

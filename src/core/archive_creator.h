@@ -31,7 +31,7 @@ class ArchiveCreator : public QObject {
 
 public:
     explicit ArchiveCreator(QObject *parent = nullptr);
-    ~ArchiveCreator() = default;
+    ~ArchiveCreator() override = default;
 
     QMap<ArchiveFormat, bool> getAvailableTools() const;
     bool canCompress(ArchiveFormat format) const;

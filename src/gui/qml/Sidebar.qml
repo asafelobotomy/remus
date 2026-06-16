@@ -9,8 +9,8 @@ Frame {
     signal viewRequested(int index)
 
     readonly property var items: [
-        { label: "Library",  index: 0 },
-        { label: "Settings", index: 1 }
+        { label: "Library",  index: 0, icon: "folder-symbolic" },
+        { label: "Settings", index: 1, icon: "preferences-system-symbolic" }
     ]
 
     background: Rectangle {
@@ -41,6 +41,12 @@ Frame {
                 checkable: true
                 checked: sidebar.currentIndex === modelData.index
                 text: modelData.label
+                display: AbstractButton.TextBesideIcon
+                icon.name: modelData.icon
+                icon.width: 18
+                icon.height: 18
+                icon.color: checked ? "#fbf1c7" : "#a89984"
+                opacity: (modelData.index === 1 || appController.libraryOpen) ? 1.0 : 0.38
                 onClicked: sidebar.viewRequested(modelData.index)
             }
         }
@@ -51,7 +57,10 @@ Frame {
             Layout.fillWidth: true
             wrapMode: Text.WordWrap
             color: "#a89984"
-            text: appController.statusMessage.length > 0 ? appController.statusMessage : "Open a library database to begin."
+            font.pixelSize: 11
+            text: appController.libraryOpen
+                  ? appController.statusMessage
+                  : "Open a library database, then set your ROM folder in Settings."
         }
     }
 }

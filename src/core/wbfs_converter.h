@@ -22,7 +22,7 @@ class WBFSConverter : public DiscConverter {
 
 public:
     explicit WBFSConverter(QObject *parent = nullptr);
-    ~WBFSConverter() = default;
+    ~WBFSConverter() override = default;
 
     bool isWitAvailable() const;
     QString getWitVersion() const;

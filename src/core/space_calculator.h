@@ -46,7 +46,7 @@ class SpaceCalculator : public QObject {
 
 public:
     explicit SpaceCalculator(QObject *parent = nullptr);
-    ~SpaceCalculator() = default;
+    ~SpaceCalculator() override = default;
 
     /**
      * @brief Estimate compression for a disc image

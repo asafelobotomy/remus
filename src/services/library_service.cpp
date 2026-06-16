@@ -10,12 +10,15 @@
 #include <QHash>
 #include <QSqlDatabase>
 #include <QSqlDriver>
+#include <QSqlQuery>
 
 #include <algorithm>
 
 namespace Remus {
 
 namespace {
+
+    constexpr int kPersistProgressStep = 50;
 
     QString scanResultIdentifier(const ScanResult &result) {
         if (result.isCompressed && !result.archivePath.isEmpty() && !result.archiveInternalPath.isEmpty()) {
@@ -57,28 +60,22 @@ QList<ScanResult> LibraryService::scanFilesystem(const QString &path, ProgressCa
     if (logCb)
         logCb(QString("Scanning: %1").arg(path));
 
-    // Track how many files have been found; total is unknown until the walk
-    // finishes, so we pass 0 for 'total' during scanning (indeterminate).
     int foundCount = 0;
     int lastTotal = 0;
 
-    QMetaObject::Connection progConn, fileConn;
+    QMetaObject::Connection progConn;
     if (progressCb) {
         progConn = QObject::connect(m_scanner.get(), &Scanner::scanProgress, [&, progressCb](int done, int total) {
             foundCount = done;
             lastTotal = total > 0 ? total : 0;
             progressCb(foundCount, lastTotal, { });
         });
-        fileConn = QObject::connect(m_scanner.get(), &Scanner::fileFound,
-            [&, progressCb](const QString &p) { progressCb(++foundCount, lastTotal, p); });
     }
 
     QList<ScanResult> results = m_scanner->scan(path);
 
     if (progConn)
         QObject::disconnect(progConn);
-    if (fileConn)
-        QObject::disconnect(fileConn);
 
     if (!m_scanner->wasCancelled()) {
         if (progressCb)
@@ -186,10 +183,21 @@ int LibraryService::persistScanResults(
     int inserted = 0;
     QHash<QString, int> insertedIds;
 
-    for (const FileRecord &existing : db->getAllFiles()) {
-        const QString identifier = fileRecordIdentifier(existing);
-        if (!identifier.isEmpty()) {
-            insertedIds.insert(identifier, existing.id);
+    {
+        QSqlQuery existingQuery(db->database());
+        if (existingQuery.exec(QStringLiteral(
+                "SELECT id, original_path, current_path, archive_path, archive_internal_path FROM files"))) {
+            while (existingQuery.next()) {
+                FileRecord existing;
+                existing.id = existingQuery.value(0).toInt();
+                existing.originalPath = existingQuery.value(1).toString();
+                existing.currentPath = existingQuery.value(2).toString();
+                existing.archivePath = existingQuery.value(3).toString();
+                existing.archiveInternalPath = existingQuery.value(4).toString();
+                const QString identifier = fileRecordIdentifier(existing);
+                if (!identifier.isEmpty())
+                    insertedIds.insert(identifier, existing.id);
+            }
         }
     }
 
@@ -248,9 +256,15 @@ int LibraryService::persistScanResults(
             insertedIds.insert(scanResultIdentifier(sr), insertedId);
         }
 
-        if (progressCb)
-            progressCb(inserted, orderedResults.size(), { });
+        if (progressCb) {
+            const bool finished = inserted >= orderedResults.size();
+            if (finished || inserted % kPersistProgressStep == 0)
+                progressCb(inserted, orderedResults.size(), { });
+        }
     }
+
+    if (progressCb && !orderedResults.isEmpty())
+        progressCb(inserted, orderedResults.size(), { });
 
     if (useTransaction) {
         if (!sqlDb.commit()) {

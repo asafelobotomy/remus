@@ -3,7 +3,6 @@
 #include <QCoreApplication>
 #include <QDir>
 #include <QFileInfo>
-#include <QSettings>
 #include <memory>
 
 #include "../metadata/compendium_provider.h"
@@ -20,24 +19,6 @@
 
 using namespace Remus;
 using namespace Remus::Constants;
-
-namespace {
-
-QSettings remusSettings() {
-    return QSettings(
-        QString::fromLatin1(Constants::SETTINGS_ORGANIZATION), QString::fromLatin1(Constants::SETTINGS_APPLICATION));
-}
-
-QString parserOrSetting(const QCommandLineParser &parser, const QString &optionName, const char *settingKey) {
-    if (parser.isSet(optionName)) {
-        return parser.value(optionName).trimmed();
-    }
-
-    QSettings settings = remusSettings();
-    return settings.value(QString::fromLatin1(settingKey)).toString().trimmed();
-}
-
-}
 
 /// Resolve a provider secret: CLI flag → CredentialManager (env var → OS keychain → legacy QSettings).
 /// Emits a security warning when the secret arrives via argv, which is visible

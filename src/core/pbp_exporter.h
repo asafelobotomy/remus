@@ -27,7 +27,7 @@ class PBPExporter : public DiscConverter {
 
 public:
     explicit PBPExporter(QObject *parent = nullptr);
-    ~PBPExporter() = default;
+    ~PBPExporter() override = default;
 
     bool isPSXPackagerAvailable() const;
     QString getPSXPackagerVersion() const;

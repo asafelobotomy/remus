@@ -57,7 +57,7 @@ struct MultiSignalMatch {
  *
  * Priority: 100 (highest - checked first, before online APIs)
  *
- * DAT files location: data/databases/*.dat
+ * DAT files location: `data/databases/` (.dat files)
  *
  * Matching methods:
  * - CRC32 hash (cartridge-based systems)

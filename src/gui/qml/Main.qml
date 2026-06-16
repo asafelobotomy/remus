@@ -56,6 +56,12 @@ ApplicationWindow {
                 Layout.fillWidth: true
                 spacing: 10
 
+                Label {
+                    text: "Database"
+                    font.pixelSize: 11
+                    color: "#928374"
+                }
+
                 TextField {
                     id: libraryField
                     Layout.preferredWidth: 320
@@ -74,20 +80,23 @@ ApplicationWindow {
                     }
                 }
 
+                Item { Layout.fillWidth: true }
+
                 Label {
                     visible: appController.libraryOpen
-                    text: "Remus"
-                    font.pixelSize: 18
-                    font.bold: true
-                    color: "#fbf1c7"
+                    text: appController.statusMessage
+                    color: "#a89984"
+                    font.pixelSize: 11
+                    elide: Text.ElideRight
+                    Layout.maximumWidth: 280
                 }
             }
 
             ActionToolbar {
+                id: actionToolbar
                 Layout.fillWidth: true
-                visible: appController.libraryOpen
 
-                onPipelineDrawerRequested: libraryWorkbench.openPipelineDrawer()
+                onPipelineDrawerRequested: pipelineDrawer.open()
                 onRunAllRequested:         libraryWorkbench.requestRunAll()
                 onSettingsRequested:         appController.currentView = 1
                 onUtilityToolRequested:      function(tab) {
@@ -140,9 +149,55 @@ ApplicationWindow {
     }
 
     Drawer {
+        id: pipelineDrawer
+        parent: Overlay.overlay
+        edge:       Qt.RightEdge
+        width:      Math.min(window.width * 0.55, 640)
+        height:     window.height
+        modal:      true
+        interactive: true
+
+        background: Rectangle {
+            color: "#282828"
+            border.color: "#504945"
+        }
+
+        ColumnLayout {
+            anchors.fill: parent
+            spacing: 0
+
+            ToolBar {
+                Layout.fillWidth: true
+
+                RowLayout {
+                    anchors.fill: parent
+                    anchors.margins: 8
+                    Label {
+                        text: "Pipeline Stages"
+                        font.bold: true
+                        color: "#fbf1c7"
+                    }
+                    Item { Layout.fillWidth: true }
+                    ToolButton {
+                        text: "Close"
+                        onClicked: pipelineDrawer.close()
+                    }
+                }
+            }
+
+            PipelinePanel {
+                Layout.fillWidth:  true
+                Layout.fillHeight: true
+            }
+        }
+    }
+
+    Drawer {
         id: utilitiesDrawer
+        parent: Overlay.overlay
         edge:       Qt.RightEdge
         width:      Math.min(window.width * 0.55, 720)
+        height:     window.height
         modal:      true
         interactive: true
 

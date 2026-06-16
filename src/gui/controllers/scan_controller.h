@@ -3,6 +3,7 @@
 #include <QObject>
 #include <QStringList>
 #include <QThread>
+#include <atomic>
 
 #include "../../services/library_service.h"
 
@@ -48,6 +49,14 @@ public:
 public slots:
     void setLastDirectory(const QString &directory);
 
+private slots:
+    void applyScanProgress(int done, int total, const QString &path);
+    void applyPersistProgress(int done, int total);
+    void finishScanCancelled();
+    void finishScanError(const QString &message);
+    void beginPersistPhase(int total);
+    void finishScanSuccess(int inserted, int total);
+
 signals:
     void scanningChanged();
     void progressChanged();
@@ -63,6 +72,7 @@ private:
 
     AppController *m_appController;
     LibraryService m_libraryService;
+    std::atomic<LibraryService *> m_workerService { nullptr };
     bool m_scanning = false;
     int m_scannedFiles = 0;
     int m_totalFiles = 0;

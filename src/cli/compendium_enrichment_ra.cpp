@@ -360,10 +360,11 @@ bool enrichFromRetroAchievements(QSqlDatabase &database, const QString &credenti
             return false;
         }
 
-        qInfo().noquote() << QStringLiteral("[RA] %1: +%2 metadata updated, %3 hash matches")
+        qInfo().noquote() << QStringLiteral("[RA] %1: +%2 metadata updated, %3 hash matches, %4 skipped (conflicts)")
                                  .arg(sys.name)
                                  .arg(sysEnriched)
-                                 .arg(matches.size());
+                                 .arg(matches.size())
+                                 .arg(sysConflicts);
 
         // Flush all pending deleteLater() calls for this system's QNetworkReply
         // objects before the RetroAchievementsProvider (and its QNAM) goes out of

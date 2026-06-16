@@ -270,9 +270,7 @@ int handleHashAllCommand(CliContext &ctx) {
     HashService svc;
     const QList<HashService::HashBatchResult> taskResults = svc.computeHashes(filesToHash);
 
-    int done = 0;
     for (const HashService::HashBatchResult &task : taskResults) {
-        ++done;
         if (!task.skipped && task.result.success) {
             ctx.db.updateFileHashes(task.fileId, task.result.crc32, task.result.md5, task.result.sha1);
             hashedCount++;

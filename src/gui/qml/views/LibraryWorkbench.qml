@@ -9,7 +9,12 @@ Item {
     Layout.fillWidth:  true
     Layout.fillHeight: true
 
-    property alias pipelineDrawer: pipelineDrawer
+    readonly property string romSourceDirectory: {
+        const fromSettings = settingsController.stringValue("gui/rom_source_directory", "")
+        if (fromSettings.length > 0)
+            return fromSettings
+        return scanController.lastDirectory
+    }
 
     FolderDialog {
         id: runAllOrganizeDialog
@@ -52,7 +57,7 @@ Item {
 
         onAccepted: {
             workflowController.runAll(
-                scanController.lastDirectory,
+                romSourceDirectory,
                 runAllConfirmDialog.destDir.length > 0
                     ? runAllConfirmDialog.destDir + "/Remus Library"
                     : "",
@@ -95,72 +100,107 @@ Item {
         id: renameOrganizeDialog
     }
 
-    SplitView {
+    ColumnLayout {
         anchors.fill: parent
-        orientation:  Qt.Horizontal
+        spacing: 10
 
-        QueueSidebar {
-            SplitView.preferredWidth: 180
-            SplitView.minimumWidth:   140
-            SplitView.maximumWidth:   260
-        }
+        Frame {
+            Layout.fillWidth: true
+            visible: appController.libraryOpen
+            padding: 10
 
-        RomTable {
-            SplitView.fillWidth: true
-        }
+            background: Rectangle {
+                radius: 10
+                color: "#1d2021"
+                border.color: "#504945"
+            }
 
-        InspectorPanel {
-            SplitView.preferredWidth: 280
-            SplitView.minimumWidth:   200
-            SplitView.maximumWidth:   400
-            onMatchSearchRequested: matchEnrichDialog.open()
-        }
-    }
+            RowLayout {
+                width: parent.width
+                spacing: 16
 
-    Drawer {
-        id: pipelineDrawer
-        edge:       Qt.RightEdge
-        width:      Math.min(parent.width * 0.55, 640)
-        modal:      true
-        interactive: true
+                ColumnLayout {
+                    Layout.fillWidth: true
+                    spacing: 2
 
-        background: Rectangle {
-            color: "#282828"
-            border.color: "#504945"
-        }
-
-        ColumnLayout {
-            anchors.fill: parent
-            spacing: 0
-
-            ToolBar {
-                Layout.fillWidth: true
-
-                RowLayout {
-                    anchors.fill: parent
-                    anchors.margins: 8
                     Label {
-                        text: "Pipeline Stages"
+                        text: "ROM source folder"
+                        font.pixelSize: 10
                         font.bold: true
-                        color: "#fbf1c7"
+                        color: "#928374"
                     }
-                    Item { Layout.fillWidth: true }
-                    ToolButton {
-                        text: "Close"
-                        onClicked: pipelineDrawer.close()
+                    Label {
+                        Layout.fillWidth: true
+                        wrapMode: Text.WordWrap
+                        font.pixelSize: 12
+                        color: romSourceDirectory.length > 0 ? "#ebdbb2" : "#fabd2f"
+                        text: romSourceDirectory.length > 0
+                              ? romSourceDirectory
+                              : "Not set — choose a folder in Settings or use Update library"
+                    }
+                }
+
+                ToolSeparator {}
+
+                ColumnLayout {
+                    Layout.fillWidth: true
+                    spacing: 2
+
+                    Label {
+                        text: "Library database"
+                        font.pixelSize: 10
+                        font.bold: true
+                        color: "#928374"
+                    }
+                    Label {
+                        Layout.fillWidth: true
+                        elide: Text.ElideMiddle
+                        font.pixelSize: 12
+                        color: "#ebdbb2"
+                        text: appController.libraryPath
+                    }
+                }
+
+                ColumnLayout {
+                    spacing: 2
+
+                    Label {
+                        text: "In view"
+                        font.pixelSize: 10
+                        font.bold: true
+                        color: "#928374"
+                    }
+                    Label {
+                        font.pixelSize: 12
+                        color: "#ebdbb2"
+                        text: workflowController.queueFiles.length + " titles"
                     }
                 }
             }
+        }
 
-            PipelinePanel {
-                Layout.fillWidth:  true
-                Layout.fillHeight: true
+        SplitView {
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            orientation: Qt.Horizontal
+
+            QueueSidebar {
+                SplitView.preferredWidth: 180
+                SplitView.minimumWidth:   140
+                SplitView.maximumWidth:   260
+            }
+
+            RomTable {
+                SplitView.fillWidth: true
+            }
+
+            InspectorPanel {
+                SplitView.preferredWidth: 280
+                SplitView.minimumWidth:   200
+                SplitView.maximumWidth:   400
+                onMatchSearchRequested: matchEnrichDialog.open()
             }
         }
-    }
-
-    function openPipelineDrawer() {
-        pipelineDrawer.open()
     }
 
     function requestRunAll() {

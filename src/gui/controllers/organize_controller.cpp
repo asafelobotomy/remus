@@ -212,7 +212,6 @@ void OrganizeController::runOrganize(
     QVariantList preview;
     m_lastUndoId = 0;
     int orgSucceeded = 0;
-    int orgFailed = 0;
     for (const OrganizeResult &result : results) {
         QVariantMap item;
         item.insert(QStringLiteral("success"), result.success);
@@ -223,8 +222,6 @@ void OrganizeController::runOrganize(
         m_lastUndoId = qMax(m_lastUndoId, result.undoId);
         if (result.success)
             ++orgSucceeded;
-        else
-            ++orgFailed;
     }
     m_previewEntries = preview;
     emit previewEntriesChanged();

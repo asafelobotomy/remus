@@ -1,6 +1,7 @@
 #include "scan_controller.h"
 
 #include <QCoreApplication>
+#include <QDateTime>
 #include <QDir>
 #include <QFileInfo>
 #include <QMetaObject>
@@ -9,21 +10,95 @@
 
 #include "app_controller.h"
 #include "../../core/constants/constants.h"
+#include "../../core/database.h"
 
 namespace Remus {
+
+namespace {
+
+constexpr int kProgressMinIntervalMs = 200;
+constexpr int kPersistProgressStep = 50;
+
+class ProgressThrottler {
+public:
+    explicit ProgressThrottler(ScanController *controller)
+        : m_controller(controller) { }
+
+    LibraryService::ProgressCallback scanCallback() {
+        return [this](int done, int total, const QString &path) { reportScan(done, total, path); };
+    }
+
+    LibraryService::ProgressCallback persistCallback() {
+        return [this](int done, int total, const QString &) { reportPersist(done, total); };
+    }
+
+    void flushScan(bool force) {
+        const qint64 now = QDateTime::currentMSecsSinceEpoch();
+        const bool finished = m_pendingTotal > 0 && m_pendingDone >= m_pendingTotal;
+        if (!force && !finished && (now - m_lastFlushMs) < kProgressMinIntervalMs)
+            return;
+
+        m_lastFlushMs = now;
+        const int done = m_pendingDone;
+        const int total = m_pendingTotal;
+        const QString path = m_pendingPath;
+        m_pendingPath.clear();
+
+        QMetaObject::invokeMethod(
+            m_controller,
+            "applyScanProgress",
+            Qt::QueuedConnection,
+            Q_ARG(int, done),
+            Q_ARG(int, total),
+            Q_ARG(QString, path));
+    }
+
+private:
+    void reportScan(int done, int total, const QString &path) {
+        m_pendingDone = done;
+        m_pendingTotal = total;
+        if (!path.isEmpty())
+            m_pendingPath = path;
+        flushScan(false);
+    }
+
+    void reportPersist(int done, int total) {
+        const bool finished = total > 0 && done >= total;
+        if (!finished && done % kPersistProgressStep != 0)
+            return;
+
+        QMetaObject::invokeMethod(
+            m_controller, "applyPersistProgress", Qt::QueuedConnection, Q_ARG(int, done), Q_ARG(int, total));
+    }
+
+    ScanController *m_controller;
+    qint64 m_lastFlushMs = 0;
+    int m_pendingDone = 0;
+    int m_pendingTotal = 0;
+    QString m_pendingPath;
+};
+
+} // namespace
 
 ScanController::ScanController(AppController *appController, QObject *parent)
     : QObject(parent)
     , m_appController(appController) {
-    // Restore the last scanned directory across sessions.
     QSettings settings(
         QString::fromLatin1(Constants::SETTINGS_ORGANIZATION), QString::fromLatin1(Constants::SETTINGS_APPLICATION));
-    m_lastDirectory = settings.value(QStringLiteral("scan/last_directory")).toString();
+    QString romSource = settings.value(QStringLiteral("gui/rom_source_directory")).toString().trimmed();
+    if (romSource.isEmpty()) {
+        romSource = settings.value(QStringLiteral("scan/last_directory")).toString().trimmed();
+        if (!romSource.isEmpty()) {
+            settings.setValue(QStringLiteral("gui/rom_source_directory"), romSource);
+            settings.sync();
+        }
+    }
+    m_lastDirectory = QDir::cleanPath(romSource);
 }
 
 ScanController::~ScanController() {
     if (m_thread && m_thread->isRunning()) {
-        m_libraryService.cancelScan();
+        stopScan();
         m_thread->wait();
     }
 }
@@ -57,81 +132,49 @@ void ScanController::startScan(const QString &directory) {
     emit recentLogsChanged();
     emit lastDirectoryChanged();
 
-    // Pre-insert the library entry on the main thread before going async.
     Database *db = m_appController->database();
     const int libraryId = db->insertLibrary(cleanedDirectory, QFileInfo(cleanedDirectory).fileName());
+    const QString dbPath = m_appController->libraryPath();
 
-    // Run the filesystem scan on a worker thread so the event loop stays alive.
-    m_thread = QThread::create([this, cleanedDirectory, db, libraryId]() {
-        const QList<ScanResult> results = m_libraryService.scanFilesystem(
-            cleanedDirectory,
-            [this](int done, int total, const QString &path) {
-                QMetaObject::invokeMethod(
-                    this,
-                    [this, done, total, path]() {
-                        m_scannedFiles = done;
-                        if (total > 0)
-                            m_totalFiles = total;
-                        m_progressMessage = QStringLiteral("Scanning files\u2026 %1 found").arg(done);
-                        emit progressChanged();
-                        emit progressMessageChanged();
-                        if (!path.isEmpty())
-                            appendLog(QFileInfo(path).fileName());
-                    },
-                    Qt::QueuedConnection);
-            },
-            [this](const QString &message) {
-                QMetaObject::invokeMethod(this, [this, message]() { appendLog(message); }, Qt::QueuedConnection);
-            });
+    m_thread = QThread::create([this, cleanedDirectory, dbPath, libraryId]() {
+        LibraryService workerService;
+        m_workerService.store(&workerService);
 
-        // Hand results back to the main thread for database insertion.
+        ProgressThrottler throttler(this);
+        const QList<ScanResult> results
+            = workerService.scanFilesystem(cleanedDirectory, throttler.scanCallback(), nullptr);
+
+        throttler.flushScan(true);
+
+        if (workerService.wasCancelled()) {
+            m_workerService.store(nullptr);
+            QMetaObject::invokeMethod(this, [this]() { finishScanCancelled(); }, Qt::QueuedConnection);
+            return;
+        }
+
+        Database workerDb;
+        const QString connectionName
+            = QStringLiteral("remus-scan-%1").arg(reinterpret_cast<quintptr>(QThread::currentThreadId()));
+        if (!workerDb.initialize(dbPath, connectionName)) {
+            m_workerService.store(nullptr);
+            QMetaObject::invokeMethod(
+                this,
+                [this]() { finishScanError(QStringLiteral("Failed to open database for scan save.")); },
+                Qt::QueuedConnection);
+            return;
+        }
+
+        const int toInsert = results.size();
+        QMetaObject::invokeMethod(this, [this, toInsert]() { beginPersistPhase(toInsert); }, Qt::QueuedConnection);
+
+        const int inserted = workerService.persistScanResults(
+            results, libraryId, &workerDb, throttler.persistCallback());
+
+        workerDb.close();
+        m_workerService.store(nullptr);
+
         QMetaObject::invokeMethod(
-            this,
-            [this, db, libraryId, results]() {
-                if (m_libraryService.wasCancelled()) {
-                    m_scanning = false;
-                    m_progressMessage = { };
-                    emit scanningChanged();
-                    emit progressMessageChanged();
-                    m_appController->setStatusMessage(QStringLiteral("Scan cancelled."));
-                    emit scanError(QStringLiteral("Scan cancelled."));
-                    return;
-                }
-
-                // Transition to Phase 2: saving to library
-                const int toInsert = results.size();
-                m_scannedFiles = 0;
-                m_totalFiles = toInsert;
-                m_progressMessage = QStringLiteral("Saving to library\u2026 0 / %1").arg(toInsert);
-                emit progressChanged();
-                emit progressMessageChanged();
-
-                const int inserted = m_libraryService.persistScanResults(
-                    results, libraryId, db, [this, toInsert](int done, int total, const QString &) {
-                        m_scannedFiles = done;
-                        m_totalFiles = total > 0 ? total : toInsert;
-                        m_progressMessage
-                            = QStringLiteral("Saving to library\u2026 %1 / %2").arg(done).arg(m_totalFiles);
-                        emit progressChanged();
-                        emit progressMessageChanged();
-                        QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
-                    });
-
-                // Phase complete — fill bar to 100 %
-                m_totalFiles = toInsert;
-                m_scannedFiles = m_totalFiles;
-                m_progressMessage = QStringLiteral("Inserted %1 files into database").arg(inserted);
-                emit progressChanged();
-                emit progressMessageChanged();
-
-                m_scanning = false;
-                emit scanningChanged();
-
-                m_appController->setStatusMessage(QStringLiteral("Scan complete: %1 files added.").arg(inserted));
-                emit scanCompleted(inserted);
-                emit libraryChanged();
-            },
-            Qt::QueuedConnection);
+            this, [this, inserted, toInsert]() { finishScanSuccess(inserted, toInsert); }, Qt::QueuedConnection);
     });
 
     connect(
@@ -149,7 +192,10 @@ void ScanController::stopScan() {
         return;
     }
 
-    m_libraryService.cancelScan();
+    if (LibraryService *worker = m_workerService.load())
+        worker->cancelScan();
+    else
+        m_libraryService.cancelScan();
 }
 
 void ScanController::setLastDirectory(const QString &directory) {
@@ -161,10 +207,11 @@ void ScanController::setLastDirectory(const QString &directory) {
     m_lastDirectory = cleaned;
     emit lastDirectoryChanged();
 
-    // Persist across sessions.
     QSettings settings(
         QString::fromLatin1(Constants::SETTINGS_ORGANIZATION), QString::fromLatin1(Constants::SETTINGS_APPLICATION));
+    settings.setValue(QStringLiteral("gui/rom_source_directory"), cleaned);
     settings.setValue(QStringLiteral("scan/last_directory"), cleaned);
+    settings.sync();
 }
 
 void ScanController::appendLog(const QString &message) {
@@ -177,6 +224,65 @@ void ScanController::appendLog(const QString &message) {
         m_recentLogs.removeFirst();
     }
     emit recentLogsChanged();
+}
+
+void ScanController::applyScanProgress(int done, int total, const QString &path) {
+    m_scannedFiles = done;
+    if (total > 0)
+        m_totalFiles = total;
+    m_progressMessage = total > 0 && done >= total ? QStringLiteral("Scan complete: %1 files found").arg(done)
+                                                   : QStringLiteral("Scanning files\u2026 %1 found").arg(done);
+    emit progressChanged();
+    emit progressMessageChanged();
+    if (!path.isEmpty())
+        appendLog(QFileInfo(path).fileName());
+}
+
+void ScanController::applyPersistProgress(int done, int total) {
+    m_scannedFiles = done;
+    m_totalFiles = total > 0 ? total : done;
+    m_progressMessage = QStringLiteral("Saving to library\u2026 %1 / %2").arg(done).arg(m_totalFiles);
+    emit progressChanged();
+    emit progressMessageChanged();
+}
+
+void ScanController::finishScanCancelled() {
+    m_scanning = false;
+    m_progressMessage.clear();
+    emit scanningChanged();
+    emit progressMessageChanged();
+    m_appController->setStatusMessage(QStringLiteral("Scan cancelled."));
+    emit scanError(QStringLiteral("Scan cancelled."));
+}
+
+void ScanController::finishScanError(const QString &message) {
+    m_scanning = false;
+    emit scanningChanged();
+    m_appController->setStatusMessage(message);
+    emit scanError(message);
+}
+
+void ScanController::beginPersistPhase(int total) {
+    m_scannedFiles = 0;
+    m_totalFiles = total;
+    m_progressMessage = QStringLiteral("Saving to library\u2026 0 / %1").arg(total);
+    emit progressChanged();
+    emit progressMessageChanged();
+}
+
+void ScanController::finishScanSuccess(int inserted, int total) {
+    m_totalFiles = total;
+    m_scannedFiles = total;
+    m_progressMessage = QStringLiteral("Inserted %1 files into database").arg(inserted);
+    emit progressChanged();
+    emit progressMessageChanged();
+
+    m_scanning = false;
+    emit scanningChanged();
+
+    m_appController->setStatusMessage(QStringLiteral("Scan complete: %1 files added.").arg(inserted));
+    emit scanCompleted(inserted);
+    emit libraryChanged();
 }
 
 } // namespace Remus

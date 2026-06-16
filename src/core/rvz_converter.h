@@ -20,7 +20,7 @@ class RVZConverter : public DiscConverter {
 
 public:
     explicit RVZConverter(QObject *parent = nullptr);
-    ~RVZConverter() = default;
+    ~RVZConverter() override = default;
 
     bool isDolphinToolAvailable() const;
     QString getDolphinToolVersion() const;

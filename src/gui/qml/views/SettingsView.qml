@@ -38,6 +38,17 @@ ScrollView {
         }
     }
 
+    FolderDialog {
+        id: romSourceFolderDialog
+        title: "Select ROM source folder"
+        onAccepted: {
+            const path = decodeURIComponent(selectedFolder.toString().replace(/^file:\/\//, ""))
+            settingsController.setValue("gui/rom_source_directory", path)
+            if (path.length > 0)
+                scanController.lastDirectory = path
+        }
+    }
+
     // Surface credential-save failures to the user without exposing raw key names.
     Connections {
         target: settingsController
@@ -67,6 +78,91 @@ ScrollView {
             text: "Settings"
             font.pixelSize: 26
             font.bold: true
+        }
+
+        // ── Library ──────────────────────────────────────────────────────────
+        Label { text: "Library"; font.bold: true }
+
+        Label {
+            Layout.fillWidth: true
+            wrapMode: Text.WordWrap
+            font.pixelSize: 11
+            color: "#928374"
+            text: "Configure where your original ROM files live. Update library scans this folder into the open database."
+        }
+
+        RowLayout {
+            Layout.fillWidth: true
+            spacing: 8
+
+            Label {
+                Layout.preferredWidth: 200
+                text: "ROM source folder"
+                font.pixelSize: 12
+            }
+
+            TextField {
+                id: romSourceField
+                Layout.fillWidth: true
+                font.pixelSize: 12
+                placeholderText: "Select the folder containing your ROM collection"
+                text: settingsController.stringValue("gui/rom_source_directory", scanController.lastDirectory)
+                onEditingFinished: {
+                    settingsController.setValue("gui/rom_source_directory", text.trim())
+                    if (text.trim().length > 0)
+                        scanController.lastDirectory = text.trim()
+                }
+
+                Connections {
+                    target: settingsController
+                    function onSettingsChanged() {
+                        romSourceField.text = settingsController.stringValue(
+                            "gui/rom_source_directory", scanController.lastDirectory)
+                    }
+                }
+            }
+
+            Button {
+                text: "Browse"
+                flat: true
+                font.pixelSize: 11
+                padding: 6
+                onClicked: romSourceFolderDialog.open()
+            }
+        }
+
+        RowLayout {
+            Layout.fillWidth: true
+            spacing: 8
+
+            Label {
+                Layout.preferredWidth: 200
+                text: "Default library database"
+                font.pixelSize: 12
+            }
+
+            TextField {
+                id: defaultDbField
+                Layout.fillWidth: true
+                font.pixelSize: 12
+                placeholderText: appController.defaultLibraryPath()
+                text: settingsController.stringValue("gui/default_library_path", appController.defaultLibraryPath())
+                onEditingFinished: settingsController.setValue("gui/default_library_path", text.trim())
+
+                Connections {
+                    target: settingsController
+                    function onSettingsChanged() {
+                        defaultDbField.text = settingsController.stringValue(
+                            "gui/default_library_path", appController.defaultLibraryPath())
+                    }
+                }
+            }
+        }
+
+        Rectangle {
+            Layout.fillWidth: true
+            height: 1
+            color: "#504945"
         }
 
         // ── Metadata Providers ───────────────────────────────────────────────
@@ -293,9 +389,12 @@ ScrollView {
                 onActivated: saveNamingTemplate()
                 onEditTextChanged: {
                     if (editable && activeFocus)
-                        organizeController.namingTemplate = editText
+                        organizeController.namingTemplate = editText.length > 0 ? editText : model[0]
                 }
-                onEditingFinished: saveNamingTemplate()
+                // ComboBox dropped editingFinished in Qt 6.7+; use accepted (Return key)
+                // and focus loss instead.
+                onAccepted: saveNamingTemplate()
+                onActiveFocusChanged: if (!activeFocus) saveNamingTemplate()
 
                 function syncNamingTemplate() {
                     const current = organizeController.namingTemplate

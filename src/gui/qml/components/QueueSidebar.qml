@@ -37,10 +37,10 @@ Frame {
 
             Repeater {
                 model: [
-                    { label: "All",            stage: root.stageAll,      count: -1                                          },
-                    { label: "Needs ID",       stage: root.stageIdentity, count: workflowController.identityCount },
-                    { label: "Needs Artwork",  stage: root.stageEnrich,   count: workflowController.enrichCount   },
-                    { label: "Done",           stage: root.stageDone,     count: workflowController.doneCount     }
+                    { label: "All",            stage: root.stageAll,      count: -1, icon: "view-list-symbolic" },
+                    { label: "Needs ID",       stage: root.stageIdentity, count: workflowController.identityCount, icon: "dialog-question-symbolic" },
+                    { label: "Needs Artwork",  stage: root.stageEnrich,   count: workflowController.enrichCount, icon: "image-x-generic-symbolic" },
+                    { label: "Done",           stage: root.stageDone,     count: workflowController.doneCount, icon: "emblem-ok-symbolic" }
                 ]
 
                 Button {
@@ -52,8 +52,15 @@ Frame {
                     text:             modelData.count >= 0
                                         ? modelData.label + " (" + modelData.count + ")"
                                         : modelData.label
+                    display:          AbstractButton.TextBesideIcon
+                    icon.name:        modelData.icon
+                    icon.width:       14
+                    icon.height:      14
+                    icon.color:       checked ? "#fbf1c7" : "#928374"
                     font.pixelSize:   11
                     padding:          4
+                    opacity:          appController.libraryOpen ? 1.0 : 0.38
+                    enabled:          appController.libraryOpen
                     onClicked:        workflowController.queueStage = modelData.stage
                 }
             }
@@ -80,8 +87,14 @@ Frame {
         Button {
             Layout.fillWidth: true
             flat:             true
-            text:             "↻ Refresh"
+            display:          AbstractButton.TextBesideIcon
+            icon.name:        "view-refresh-symbolic"
+            icon.width:       14
+            icon.height:      14
+            text:             "Refresh"
             font.pixelSize:   11
+            opacity:          appController.libraryOpen ? 1.0 : 0.38
+            enabled:          appController.libraryOpen
             onClicked:        workflowController.refresh()
         }
     }

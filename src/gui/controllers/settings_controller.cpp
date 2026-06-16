@@ -71,7 +71,6 @@ QVariantList SettingsController::toolFields() const {
         { GuiSettings::FLIPS_PATH, "flips Path", true, false },
         { GuiSettings::XDELTA3_PATH, "xdelta3 Path", true, false },
         { GuiSettings::PPF_PATH, "PPF Tool Path", true, false },
-        { GuiSettings::DEFAULT_LIBRARY_PATH, "Default Library Database", true, false },
         { GuiSettings::ARTWORK_CACHE_DIR, "Artwork Cache Directory", true, true },
         { GuiSettings::MOD_CATALOG_URL, "Mod Catalog URL", false, false },
     };
@@ -230,6 +229,7 @@ void SettingsController::resetToDefaults() {
         QString::fromLatin1(GuiSettings::XDELTA3_PATH),
         QString::fromLatin1(GuiSettings::PPF_PATH),
         QString::fromLatin1(GuiSettings::DEFAULT_LIBRARY_PATH),
+        QString::fromLatin1(GuiSettings::ROM_SOURCE_DIRECTORY),
         QString::fromLatin1(GuiSettings::ARTWORK_CACHE_DIR),
         QString::fromLatin1(GuiSettings::MOD_CATALOG_URL),
     });
