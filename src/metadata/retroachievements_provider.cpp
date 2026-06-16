@@ -1,4 +1,5 @@
 #include "retroachievements_provider.h"
+#include "../core/constants/network.h"
 #include <QJsonDocument>
 #include <QJsonArray>
 #include <QJsonObject>
@@ -9,8 +10,7 @@
 namespace Remus {
 
 RetroAchievementsProvider::RetroAchievementsProvider(QObject *parent)
-    : HttpMetadataProvider(250, parent) // 4 req/sec — RA requests ≤1/s but bulk tools safely use 4/s
-{ }
+    : HttpMetadataProvider(QStringLiteral("retroachievements"), Constants::Network::RA_RATE_LIMIT_MS, parent) { }
 
 void RetroAchievementsProvider::setCredentials(const QString &username, const QString &apiKey) {
     m_username = username;

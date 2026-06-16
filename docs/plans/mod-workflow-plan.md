@@ -356,10 +356,9 @@ This tracks when each catalog source was last fetched, enabling smart refresh.
 
 ---
 
-## ~~Phase 4 — GUI and TUI Integration~~ *(Partially archived)*
+## ~~Phase 4 — GUI and TUI Integration~~ *(Updated 2026-06)*
 
-> **Status**: The TUI portion of this phase is **not applicable** — ncurses/TUI code has been archived to `archive/gui-tui/`. The Qt6 GUI (`src/gui/`) is active; GUI integration for mod browsing can be addressed there when the CLI phases (1–3) are complete.
-> CLI mod commands are exposed in Phases 1–3.
+> **Status**: The TUI portion remains archived under `archive/gui-tui/`. The Qt Quick GUI (`src/gui/`) ships an active **Mod** tab (`ModView.qml`, `ModController`) for catalog browsing and installation. CLI mod commands remain the superset for catalog build, scrape, and filter tooling.
 
 ---
 

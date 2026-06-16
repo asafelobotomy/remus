@@ -87,14 +87,15 @@ void CompendiumHasheousEnrichmentTest::noPendingSignatures_returnsEarlyWithNoWri
     db.setDatabaseName(QStringLiteral(":memory:"));
     QVERIFY(db.open());
     QVERIFY(createSchema(db));
-    execSql(db, QStringLiteral("INSERT INTO games (game_id, system_id, canonical_title) "
-                               "VALUES ('g1', 1, 'Test Game')"));
+    execSql(db,
+        QStringLiteral("INSERT INTO games (game_id, system_id, canonical_title) "
+                       "VALUES ('g1', 1, 'Test Game')"));
 
     int games = 0;
     int facts = 0;
     QString error;
-    const bool ok = CompendiumEnrichment::enrichFromHasheous(
-        db, QStringLiteral("/nonexistent/creds.json"), games, facts, error);
+    const bool ok
+        = CompendiumEnrichment::enrichFromHasheous(db, QStringLiteral("/nonexistent/creds.json"), games, facts, error);
 
     QVERIFY2(ok, qPrintable(error));
     QCOMPARE(games, 0);
@@ -110,21 +111,24 @@ void CompendiumHasheousEnrichmentTest::existingIgdbFact_isExcludedFromPendingSet
     db.setDatabaseName(QStringLiteral(":memory:"));
     QVERIFY(db.open());
     QVERIFY(createSchema(db));
-    execSql(db, QStringLiteral("INSERT INTO games (game_id, system_id, canonical_title) "
-                               "VALUES ('g1', 1, 'Test Game')"));
-    execSql(db, QStringLiteral("INSERT INTO game_signatures (game_id, hash_type, hash_value) "
-                               "VALUES ('g1', 'md5', 'aabbccdd001122334455667788990011')"));
-    execSql(db, QStringLiteral("INSERT INTO game_facts (game_id, field_name, field_value, value_type, source_id, "
-                               "snapshot_id, source_priority, confidence) "
-                               "VALUES ('g1', 'igdb_id', '123', 'text', 'hasheous', 'snap', 88, 1.0)"));
+    execSql(db,
+        QStringLiteral("INSERT INTO games (game_id, system_id, canonical_title) "
+                       "VALUES ('g1', 1, 'Test Game')"));
+    execSql(db,
+        QStringLiteral("INSERT INTO game_signatures (game_id, hash_type, hash_value) "
+                       "VALUES ('g1', 'md5', 'aabbccdd001122334455667788990011')"));
+    execSql(db,
+        QStringLiteral("INSERT INTO game_facts (game_id, field_name, field_value, value_type, source_id, "
+                       "snapshot_id, source_priority, confidence) "
+                       "VALUES ('g1', 'igdb_id', '123', 'text', 'hasheous', 'snap', 88, 1.0)"));
 
     int games = 0;
     int facts = 0;
     int apiNeeded = -1;
     int apiPerformed = -1;
     QString error;
-    const bool ok = CompendiumEnrichment::enrichFromHasheous(
-        db, QString(), games, facts, error, &apiNeeded, &apiPerformed);
+    const bool ok
+        = CompendiumEnrichment::enrichFromHasheous(db, QString(), games, facts, error, &apiNeeded, &apiPerformed);
 
     QVERIFY2(ok, qPrintable(error));
     QCOMPARE(games, 0);

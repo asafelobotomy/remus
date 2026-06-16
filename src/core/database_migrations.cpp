@@ -232,8 +232,7 @@ bool Database::runMigrations() {
         qInfo() << "Migration: Adding ra_md5 column to files table";
         if (!execChecked(query,
                 QString("ALTER TABLE %1 ADD COLUMN %2 TEXT")
-                    .arg(Constants::DatabaseSchema::Tables::FILES,
-                        Constants::DatabaseSchema::Columns::Files::RA_MD5),
+                    .arg(Constants::DatabaseSchema::Tables::FILES, Constants::DatabaseSchema::Columns::Files::RA_MD5),
                 "Migration: Failed to add ra_md5 column to files table")) {
             return false;
         }

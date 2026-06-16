@@ -5,6 +5,8 @@
 #include <memory>
 
 #include "../../core/organize_engine.h"
+#include "../../core/constants/folder_naming.h"
+#include "../../core/constants/settings.h"
 
 namespace Remus {
 
@@ -51,6 +53,7 @@ public:
     Q_INVOKABLE void applyOrganize(const QString &destinationDir);
     Q_INVOKABLE void organizeAll(const QString &destinationDir);
     Q_INVOKABLE void undoLast();
+    Q_INVOKABLE QVariantList folderSchemeChoices() const;
 
 public slots:
     void setNamingTemplate(const QString &value);
@@ -70,8 +73,9 @@ private:
     QList<int> matchedFileIds(bool selectedOnly) const;
     QMap<int, GameMetadata> metadataForFiles(const QList<int> &fileIds) const;
     void setLastError(const QString &message);
-    void runOrganize(const QString &destinationDir, bool dryRun, bool allBundled = false,
-        const QList<int> &explicitFileIds = { });
+    void runOrganize(
+        const QString &destinationDir, bool dryRun, bool allBundled = false, const QList<int> &explicitFileIds = { });
+    Constants::FolderNaming::Scheme folderSchemeFromSettings(bool legacyBySystem = true) const;
 
     AppController *m_appController;
     std::unique_ptr<OrganizeEngine> m_engine;

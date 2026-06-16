@@ -170,8 +170,8 @@ namespace {
         return { };
     }
 
-    GameMetadata metadataFromPatchRow(const QSqlQuery &query, const QString &systemName, const QString &hashType,
-        const QString &normalizedHash) {
+    GameMetadata metadataFromPatchRow(
+        const QSqlQuery &query, const QString &systemName, const QString &hashType, const QString &normalizedHash) {
         GameMetadata metadata;
         const QString gameName = query.value(0).toString();
         const QString baseTitle = query.value(3).toString();
@@ -219,7 +219,7 @@ GameMetadata CompendiumProvider::lookupPatchByHash(const QString &hashType, cons
                                  "WHERE (? = '' OR pcs.system_name = ?) "
                                  "AND LOWER(pe.%1) = ? "
                                  "LIMIT 1")
-                      .arg(hashColumn));
+            .arg(hashColumn));
     query.addBindValue(patchSystemName);
     query.addBindValue(patchSystemName);
     query.addBindValue(normalizedHash);

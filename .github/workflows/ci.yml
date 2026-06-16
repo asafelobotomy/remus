@@ -188,3 +188,18 @@ jobs:
 
       - name: Spot-check core sources
         run: bash .github/scripts/run-clang-tidy.sh
+
+  compendium-bootstrap:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install -y sqlite3
+
+      - name: Validate bootstrap compendium schema
+        run: |
+          bash scripts/setup_compendium_db.sh
+          bash .github/scripts/validate-compendium-db.sh data/compendium/remus_compendium.db \
+            data/compendium/validation/0000_bootstrap_checks.sql

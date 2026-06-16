@@ -1,4 +1,5 @@
 #include "http_metadata_provider.h"
+#include "metadata_rate_limits.h"
 #include "../core/constants/constants.h"
 #include <QCoreApplication>
 #include <QEventLoop>
@@ -12,6 +13,9 @@ HttpMetadataProvider::HttpMetadataProvider(int rateLimitMs, QObject *parent)
     , m_rateLimiter(new RateLimiter(this)) {
     m_rateLimiter->setInterval(rateLimitMs);
 }
+
+HttpMetadataProvider::HttpMetadataProvider(const QString &providerSettingsKey, int defaultRateLimitMs, QObject *parent)
+    : HttpMetadataProvider(configuredRateLimitMs(providerSettingsKey, defaultRateLimitMs), parent) { }
 
 void HttpMetadataProvider::processNetworkEvents() {
     QCoreApplication::sendPostedEvents(nullptr, QEvent::DeferredDelete);

@@ -181,9 +181,8 @@ void WorkflowController::refreshQueueFiles() {
     //           6=child_exts, 7=has_match (confirmed), 8=has_any_match (any non-rejected),
     //           9=is_organized, 10=is_converted, 11=is_bundled,
     //           12=system_name, 13=matched_title, 14=match_confidence, 15=release_date
-    static const QLatin1String kFromJoin(
-        "FROM files f "
-        "LEFT JOIN systems sys ON f.system_id = sys.id ");
+    static const QLatin1String kFromJoin("FROM files f "
+                                         "LEFT JOIN systems sys ON f.system_id = sys.id ");
     static const QLatin1String kMatchMeta(
         "sys.display_name AS system_name, "
         "(SELECT g.title FROM matches m "
@@ -260,8 +259,8 @@ void WorkflowController::refreshQueueFiles() {
         const QString baseTitle = q.value(4).toString();
         const QString matchedTitle = q.value(13).toString();
         const QString displayName = !matchedTitle.isEmpty() ? matchedTitle
-                                    : baseTitle.isEmpty()     ? q.value(1).toString()
-                                                              : baseTitle;
+            : baseTitle.isEmpty()                           ? q.value(1).toString()
+                                                            : baseTitle;
         const QString releaseDate = q.value(15).toString();
         int releaseYear = 0;
         if (!releaseDate.isEmpty())

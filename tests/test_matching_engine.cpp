@@ -228,8 +228,7 @@ void MatchingEngineTest::testLevenshteinCaseInsensitive() {
 void MatchingEngineTest::testLevenshteinDistanceDirect() {
     QCOMPARE(MatchingEngine::levenshteinDistance(QStringLiteral("mario"), QStringLiteral("mario")), 0);
     QCOMPARE(MatchingEngine::levenshteinDistance(QStringLiteral("mario"), QStringLiteral("maria")), 1);
-    QCOMPARE(MatchingEngine::levenshteinDistance(QStringLiteral("super mario bros"), QStringLiteral("super mario")),
-        5);
+    QCOMPARE(MatchingEngine::levenshteinDistance(QStringLiteral("super mario bros"), QStringLiteral("super mario")), 5);
 }
 
 // ============================================================================

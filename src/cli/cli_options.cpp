@@ -157,7 +157,8 @@ void registerAllOptions(QCommandLineParser &parser, QSet<QString> &actionOptions
         QCommandLineOption("mod-catalog-build", "Build mod catalog JSON from a local RAPatches clone", "repoPath"));
     addOption(QCommandLineOption("mod-catalog-output", "Output path for generated catalog JSON", "path"));
     addActionOption(QCommandLineOption("mod-enrich-ra", "Enrich a catalog with RetroAchievements PatchUrl data"));
-    addActionOption(QCommandLineOption("mod-scrape", "Scrape romhacking.net for mods matching a search query", "query"));
+    addActionOption(
+        QCommandLineOption("mod-scrape", "Scrape romhacking.net for mods matching a search query", "query"));
     addOption(QCommandLineOption("mod-scrape-system", "System name to assign to scraped mod entries", "system"));
 
     addActionOption(QCommandLineOption(
@@ -210,7 +211,8 @@ void registerAllOptions(QCommandLineParser &parser, QSet<QString> &actionOptions
 
     addLegacyActionOption(QCommandLineOption(
         "update-dats", "Deprecated no-op: raw DAT update workflow has been replaced by bundled compendium data"));
-    addLegacyOption(QCommandLineOption("update-dats-all", "Legacy no-op flag retained for compatibility with --update-dats"));
+    addLegacyOption(
+        QCommandLineOption("update-dats-all", "Legacy no-op flag retained for compatibility with --update-dats"));
     addLegacyActionOption(QCommandLineOption(
         "import-dat", "Deprecated no-op: manual DAT import has been replaced by bundled compendium data", "dat-file"));
     addLegacyActionOption(

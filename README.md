@@ -36,6 +36,8 @@ Current version: 0.10.1
 
 Remus now builds `remus-cli` and `remus-gui` by default from the shared C++17/Qt 6 codebase. The legacy TUI remains preserved under `archive/gui-tui/` as historical reference code.
 
+**Bundled compendium:** the repository ships `data/compendium/remus_compendium.db` as a **bootstrap schema** (systems/regions seeds only). Offline hash matching against game signatures requires building or ingesting a populated catalog via `remus-cli --build-compendium` (see [data/compendium/README.md](data/compendium/README.md)).
+
 Current delivery focus:
 
 - CLI workflow coverage

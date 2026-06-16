@@ -711,11 +711,12 @@ void ProviderOrchestratorTest::retroAchievementsUsesRaMd5NotNoIntroMd5() {
     ProviderOrchestrator orchestrator;
     auto *ra = new StubProvider(QStringLiteral("retroachievements"));
     ra->m_hashMetadata.title = QStringLiteral("RA Match");
-    orchestrator.addProvider(QStringLiteral("retroachievements"), ra, Constants::Providers::Priority::RETROACHIEVEMENTS);
+    orchestrator.addProvider(
+        QStringLiteral("retroachievements"), ra, Constants::Providers::Priority::RETROACHIEVEMENTS);
 
-    const GameMetadata result = orchestrator.getHashFromProvider(QStringLiteral("retroachievements"), QStringLiteral("abc"),
-        QStringLiteral("NES"), QStringLiteral("crc"), QStringLiteral("nointro-md5"), QStringLiteral("sha1"),
-        QStringLiteral("ra-md5-hash"));
+    const GameMetadata result = orchestrator.getHashFromProvider(QStringLiteral("retroachievements"),
+        QStringLiteral("abc"), QStringLiteral("NES"), QStringLiteral("crc"), QStringLiteral("nointro-md5"),
+        QStringLiteral("sha1"), QStringLiteral("ra-md5-hash"));
 
     QCOMPARE(result.title, QStringLiteral("RA Match"));
     QCOMPARE(ra->m_lastHashArg, QStringLiteral("ra-md5-hash"));
@@ -726,7 +727,8 @@ void ProviderOrchestratorTest::retroAchievementsUsesExternalIdBeforeRaHash() {
     auto *ra = new StubProvider(QStringLiteral("retroachievements"));
     ra->m_idMetadata.title = QStringLiteral("RA By ID");
     ra->m_hashMetadata.title = QStringLiteral("RA By Hash");
-    orchestrator.addProvider(QStringLiteral("retroachievements"), ra, Constants::Providers::Priority::RETROACHIEVEMENTS);
+    orchestrator.addProvider(
+        QStringLiteral("retroachievements"), ra, Constants::Providers::Priority::RETROACHIEVEMENTS);
 
     GameMetadata existing;
     existing.title = QStringLiteral("Canonical");
@@ -737,7 +739,7 @@ void ProviderOrchestratorTest::retroAchievementsUsesExternalIdBeforeRaHash() {
 
     const GameMetadata out = orchestrator.enrichMissingFields(gap, existing, QStringLiteral("hash"),
         QStringLiteral("Canonical"), QStringLiteral("NES"), QString(), QStringLiteral("nointro-md5"), QString(),
-        QString(), {}, QStringLiteral("ra-md5-hash"));
+        QString(), { }, QStringLiteral("ra-md5-hash"));
 
     QCOMPARE(ra->m_getByIdCallCount, 1);
     QCOMPARE(ra->m_lastGetByIdArg, QStringLiteral("12345"));

@@ -12,7 +12,7 @@
 namespace Remus {
 
 TheGamesDBProvider::TheGamesDBProvider(QObject *parent)
-    : HttpMetadataProvider(Constants::Network::THEGAMESDB_RATE_LIMIT_MS, parent) {
+    : HttpMetadataProvider(QStringLiteral("thegamesdb"), Constants::Network::THEGAMESDB_RATE_LIMIT_MS, parent) {
     loadRequestCount();
 }
 

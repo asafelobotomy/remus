@@ -44,8 +44,10 @@ QString parserOrSetting(const QCommandLineParser &parser, const QString &optionN
 /// in shell history and process listings.
 QString resolveSecret(const QCommandLineParser &parser, const QString &optionName, const char *settingKey) {
     if (parser.isSet(optionName)) {
-        qWarning().noquote() << QStringLiteral("Security: --%1 passes a secret via argv (visible in process listings). "
-                                               "Use the corresponding env var or the OS keychain instead.")
+        qWarning().noquote() << QStringLiteral(
+            "Security: --%1 passes a secret via argv (visible in process listings and shell history). "
+            "Argv secrets are deprecated and will be removed in a future release — use the matching "
+            "REMUS_* environment variable or the OS keychain instead.")
                                     .arg(optionName);
         return parser.value(optionName).trimmed();
     }

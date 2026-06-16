@@ -146,6 +146,56 @@ ScrollView {
             }
         }
 
+        Label { text: "Metadata rate limits (ms)"; font.bold: true; font.pixelSize: 12 }
+
+        Label {
+            Layout.fillWidth: true
+            wrapMode: Text.WordWrap
+            font.pixelSize: 11
+            color: "#928374"
+            text: "Optional spacing between HTTP metadata requests. Leave blank to use built-in defaults."
+        }
+
+        Repeater {
+            model: [
+                { key: "metadata/rate_limit_ms", label: "Global override" },
+                { key: "metadata/rate_limit/hasheous", label: "Hasheous" },
+                { key: "metadata/rate_limit/screenscraper", label: "ScreenScraper" },
+                { key: "metadata/rate_limit/igdb", label: "IGDB" },
+                { key: "metadata/rate_limit/thegamesdb", label: "TheGamesDB" },
+                { key: "metadata/rate_limit/playmatch", label: "PlayMatch" },
+                { key: "metadata/rate_limit/retroachievements", label: "RetroAchievements" }
+            ]
+
+            delegate: RowLayout {
+                required property var modelData
+                Layout.fillWidth: true
+
+                Label {
+                    Layout.preferredWidth: 200
+                    text: modelData.label
+                    font.pixelSize: 12
+                }
+
+                TextField {
+                    id: rateLimitField
+                    Layout.preferredWidth: 120
+                    font.pixelSize: 12
+                    placeholderText: "default"
+                    text: settingsController.stringValue(modelData.key, "")
+                    inputMethodHints: Qt.ImhDigitsOnly
+                    onEditingFinished: settingsController.setValue(modelData.key, text.trim())
+
+                    Connections {
+                        target: settingsController
+                        function onSettingsChanged() {
+                            rateLimitField.text = settingsController.stringValue(modelData.key, "")
+                        }
+                    }
+                }
+            }
+        }
+
         // ── Tools and Paths ──────────────────────────────────────────────────
         RowLayout {
             Layout.fillWidth: true
@@ -275,6 +325,48 @@ ScrollView {
             font.pixelSize: 11
             color: "#928374"
             text: "Variables: {title}, {region}, {year}, {system}, {publisher}, {ext}, and more."
+        }
+
+        RowLayout {
+            Layout.fillWidth: true
+            spacing: 8
+
+            Label {
+                Layout.preferredWidth: 200
+                text: "Folder naming scheme"
+                font.pixelSize: 12
+            }
+
+            ComboBox {
+                id: folderSchemeCombo
+                Layout.fillWidth: true
+                model: organizeController.folderSchemeChoices()
+                textRole: "label"
+                valueRole: "value"
+                font.pixelSize: 12
+                Component.onCompleted: syncFolderScheme()
+                onActivated: {
+                    if (currentIndex >= 0 && model[currentIndex])
+                        settingsController.setValue("organize/folder_scheme", model[currentIndex].value)
+                }
+
+                function syncFolderScheme() {
+                    const current = settingsController.stringValue("organize/folder_scheme", "default")
+                    let idx = 0
+                    for (let i = 0; i < count; ++i) {
+                        if (model[i] && model[i].value === current) {
+                            idx = i
+                            break
+                        }
+                    }
+                    currentIndex = idx
+                }
+
+                Connections {
+                    target: settingsController
+                    function onSettingsChanged() { folderSchemeCombo.syncFolderScheme() }
+                }
+            }
         }
 
         RowLayout {

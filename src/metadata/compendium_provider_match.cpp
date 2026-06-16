@@ -100,9 +100,8 @@ namespace {
     void applyCorroboration(const ROMSignals &input, const PayloadFields &payload, const QString &entrySerial,
         CompendiumMultiSignalMatch &match) {
         const QString signalBase = QFileInfo(input.filename).completeBaseName().toLower();
-        const QString entryBase = QFileInfo(payload.romName.isEmpty() ? match.romName : payload.romName)
-                                      .completeBaseName()
-                                      .toLower();
+        const QString entryBase
+            = QFileInfo(payload.romName.isEmpty() ? match.romName : payload.romName).completeBaseName().toLower();
         if (!signalBase.isEmpty() && !entryBase.isEmpty() && signalBase == entryBase) {
             match.filenameMatch = true;
             match.confidenceScore += FILENAME_BONUS;
@@ -319,16 +318,16 @@ QList<CompendiumMultiSignalMatch> CompendiumProvider::matchROM(const ROMSignals 
                     if (!serialsMatch(input.serial, entrySerial)) {
                         continue;
                     }
-                    appendSerialMatch(
-                        fuzzySerial.value(0).toString(), fuzzySerial.value(1).toString(), entrySerial);
+                    appendSerialMatch(fuzzySerial.value(0).toString(), fuzzySerial.value(1).toString(), entrySerial);
                 }
             }
         }
     }
 
-    std::sort(matches.begin(), matches.end(), [](const CompendiumMultiSignalMatch &a, const CompendiumMultiSignalMatch &b) {
-        return a.confidenceScore > b.confidenceScore;
-    });
+    std::sort(
+        matches.begin(), matches.end(), [](const CompendiumMultiSignalMatch &a, const CompendiumMultiSignalMatch &b) {
+            return a.confidenceScore > b.confidenceScore;
+        });
 
     if (!matches.isEmpty()) {
         qDebug() << "Compendium matchROM:" << input.filename << "→" << matches.first().gameId << "via" << matchedVia

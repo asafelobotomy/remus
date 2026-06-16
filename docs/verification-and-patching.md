@@ -475,7 +475,7 @@ ALTER TABLE files ADD COLUMN is_patched BOOLEAN DEFAULT 0;
 ### Verification Commands
 ```bash
 # Verify scanned files against a DAT or XML catalog
-remus --verify ~/Downloads/No-Intro_NES_2024.dat --verify-report
+remus-cli --verify ~/Downloads/No-Intro_NES_2024.dat --verify-report
 
 # Supplemental compendium data is attached automatically when
 # data/compendium/remus_compendium.db is available.

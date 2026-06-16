@@ -4,9 +4,9 @@ Command-line interface documentation and implementation details for Remus.
 
 ## Contents
 
-- **ENHANCEMENTS.md** - CLI feature enhancements and improvements
-- **IMPLEMENTATION-SUMMARY.md** - Implementation details and technical summary
-- **TEST-REPORT.md** - CLI testing report and test coverage
+- **[CLI-ENHANCEMENTS.md](CLI-ENHANCEMENTS.md)** - CLI feature enhancements and improvements
+- **[CLI-IMPLEMENTATION-SUMMARY.md](CLI-IMPLEMENTATION-SUMMARY.md)** - Implementation details and technical summary
+- **[CLI-TEST-REPORT.md](CLI-TEST-REPORT.md)** - CLI testing report and test coverage
 
 ## Quick Start
 

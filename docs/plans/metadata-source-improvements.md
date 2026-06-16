@@ -211,7 +211,7 @@ Phases 1–3 are the highest priority — they transform the no-auth experience 
 
 ## Success Criteria
 
-After Phases 1–3, a user with **no API keys configured** running `remus --metadata <rom>` should see:
+After Phases 1–3, a user with **no API keys configured** running `remus-cli --metadata <rom>` should see:
 - Title, region, serial (from DAT hash match)
 - Genre, developer, publisher, players (from metadata DATs)
 - Description (from DAT or Hasheous)

@@ -72,7 +72,8 @@ int handleImportPatchCatalogCommand(CliContext &ctx) {
     database.close();
     QSqlDatabase::removeDatabase(connectionName);
 
-    qInfo().noquote() << QStringLiteral("✓ Patch catalog import complete in %1 ms — %2 source(s), %3 entries, %4 skipped")
+    qInfo().noquote() << QStringLiteral(
+        "✓ Patch catalog import complete in %1 ms — %2 source(s), %3 entries, %4 skipped")
                              .arg(timer.elapsed())
                              .arg(stats.sourcesImported)
                              .arg(stats.entriesImported)

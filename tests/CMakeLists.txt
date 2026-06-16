@@ -511,6 +511,11 @@ target_compile_definitions(test_gui_extra_controllers PRIVATE
     REMUS_SOURCE_DIR="${CMAKE_SOURCE_DIR}"
 )
 
+add_remus_test(test_metadata_rate_limits MetadataRateLimitsTest
+    SOURCES test_metadata_rate_limits.cpp
+    LIBS Qt6::Test Qt6::Core remus-metadata remus-constants
+)
+
 add_remus_test(test_romhacking_scraper RomhackingScraperTest
     SOURCES test_romhacking_scraper.cpp
     LIBS Qt6::Test Qt6::Core Qt6::Network remus-metadata

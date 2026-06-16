@@ -4,6 +4,7 @@
 #include <memory>
 
 #include "../../core/rom_bundler.h"
+#include "../../core/m3u_generator.h"
 
 namespace Remus {
 
@@ -51,10 +52,12 @@ public:
     Q_INVOKABLE void bundleSelected(const QString &scanDir, const QString &namingTemplate = QString());
     Q_INVOKABLE void bundleAll(const QString &scanDir, const QString &namingTemplate = QString());
     Q_INVOKABLE bool exportM3u(const QString &outputPath);
+    Q_INVOKABLE int generateM3uPlaylists(const QString &outputDir, const QString &systemsCsv = QString());
 
     Q_INVOKABLE QVariantList availableSystems();
     Q_INVOKABLE QVariantMap exportPreview(const QString &systemsCsv = QString());
-    Q_INVOKABLE bool exportFrontend(const QString &format, const QString &outputPath, const QString &systemsCsv = QString());
+    Q_INVOKABLE bool exportFrontend(
+        const QString &format, const QString &outputPath, const QString &systemsCsv = QString());
 
 signals:
     void exportingChanged();

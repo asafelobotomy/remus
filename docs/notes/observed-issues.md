@@ -11,4 +11,4 @@ Status notes for metadata enrichment and matching edge cases.
 
 ## Open / partial
 
-- **Rate limiter interval** — Default HTTP spacing reduced from 1000 ms to 500 ms (Hasheous 400 ms). Per-provider tuning and user configuration remain future work if large-library enrichment is still too slow.
+- **Rate limiter interval** — Per-provider and global HTTP spacing is configurable in GUI Settings (`metadata/rate_limit/*` keys) and via QSettings; defaults remain in `src/core/constants/network.h`.

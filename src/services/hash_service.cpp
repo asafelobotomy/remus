@@ -151,8 +151,8 @@ int HashService::hashAll(
             continue;
         }
         if (task.result.success) {
-            if (db->updateFileHashes(task.fileId, task.result.crc32, task.result.md5, task.result.sha1,
-                    task.result.raMd5)) {
+            if (db->updateFileHashes(
+                    task.fileId, task.result.crc32, task.result.md5, task.result.sha1, task.result.raMd5)) {
                 hashed++;
             } else {
                 skipped++;

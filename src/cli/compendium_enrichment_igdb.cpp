@@ -129,9 +129,9 @@ bool enrichFromIGDB(
 
         if (igdbIndex.isEmpty()) {
             ++systemsSkippedEmptyIndex;
-            qWarning().noquote()
-                << QStringLiteral("[IGDB] %1 (slug=%2): API returned no entries — check slug or network")
-                       .arg(sys.name, igdbSlug);
+            qWarning().noquote() << QStringLiteral(
+                "[IGDB] %1 (slug=%2): API returned no entries — check slug or network")
+                                        .arg(sys.name, igdbSlug);
             continue;
         }
         qInfo().noquote()
@@ -286,7 +286,7 @@ bool enrichFromIGDB(
     HttpMetadataProvider::processNetworkEvents();
 
     qInfo().noquote() << QStringLiteral("[IGDB] Complete: %1 games enriched, %2 facts inserted, "
-                                       "%3 systems skipped (no slug), %4 systems skipped (empty API index)")
+                                        "%3 systems skipped (no slug), %4 systems skipped (empty API index)")
                              .arg(gamesEnriched)
                              .arg(factsInserted)
                              .arg(systemsSkippedNoSlug)

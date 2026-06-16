@@ -127,9 +127,8 @@ int handleCoverageReportCommand(CliContext &ctx) {
             "shadowed\n");
         while (q.next()) {
             out << q.value(0).toString() << '\t' << q.value(1).toInt() << '\t' << q.value(2).toInt() << '\t'
-                << q.value(3).toLongLong() << '\t' << q.value(4).toLongLong() << '\t' << q.value(5).toLongLong()
-                << '\t' << q.value(6).toString() << '\t' << q.value(7).toString() << '\t' << q.value(8).toInt()
-                << '\n';
+                << q.value(3).toLongLong() << '\t' << q.value(4).toLongLong() << '\t' << q.value(5).toLongLong() << '\t'
+                << q.value(6).toString() << '\t' << q.value(7).toString() << '\t' << q.value(8).toInt() << '\n';
         }
         out.flush();
     }

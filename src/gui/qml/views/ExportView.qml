@@ -15,7 +15,8 @@ Item {
         { label: "EmulationStation gamelist.xml", value: "emustation", pickFolder: false },
         { label: "LaunchBox XML", value: "launchbox", pickFolder: false },
         { label: "CSV report", value: "csv", pickFolder: false },
-        { label: "JSON export", value: "json", pickFolder: false }
+        { label: "JSON export", value: "json", pickFolder: false },
+        { label: "M3U playlists (multi-disc)", value: "m3u", pickFolder: true }
     ]
 
     property var preview: ({ totalGames: 0, systems: [] })
@@ -53,11 +54,19 @@ Item {
 
     function runExport(path) {
         const format = exportFormats[formatCombo.currentIndex].value
+        if (format === "m3u") {
+            exportController.generateM3uPlaylists(path, systemsField.text)
+            return
+        }
         exportController.exportFrontend(format, path, systemsField.text)
     }
 
     function openExportPicker() {
         const format = exportFormats[formatCombo.currentIndex].value
+        if (format === "m3u") {
+            folderDialog.open()
+            return
+        }
         if (format === "csv") {
             fileDialog.nameFilters = ["CSV files (*.csv)"]
             fileDialog.open()
@@ -88,7 +97,7 @@ Item {
             Layout.fillWidth: true
             wrapMode: Text.WordWrap
             color: "#a89984"
-            text: "Write matched library entries to RetroArch, EmulationStation, LaunchBox, CSV, or JSON."
+            text: "Write matched library entries to RetroArch, EmulationStation, LaunchBox, CSV, JSON, or M3U playlists."
         }
 
         RowLayout {

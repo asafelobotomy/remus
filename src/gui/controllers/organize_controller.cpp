@@ -158,18 +158,15 @@ void OrganizeController::setLastError(const QString &message) {
     emit lastErrorChanged();
 }
 
-void OrganizeController::runOrganize(const QString &destinationDir,
-    bool dryRun,
-    bool allBundled,
-    const QList<int> &explicitFileIds) {
+void OrganizeController::runOrganize(
+    const QString &destinationDir, bool dryRun, bool allBundled, const QList<int> &explicitFileIds) {
     if (m_appController == nullptr || !m_appController->isLibraryOpen()) {
         setLastError(QStringLiteral("Open a library before organizing files."));
         return;
     }
 
-    const QList<int> fileIds = !explicitFileIds.isEmpty()
-        ? explicitFileIds
-        : (allBundled ? bundledFileIds() : targetFileIds());
+    const QList<int> fileIds
+        = !explicitFileIds.isEmpty() ? explicitFileIds : (allBundled ? bundledFileIds() : targetFileIds());
     if (fileIds.isEmpty()) {
         setLastError(allBundled
                 ? QStringLiteral("No bundled ROMs found. Complete Stage 5 (Bundle & Rename) before organizing.")
@@ -207,8 +204,7 @@ void OrganizeController::runOrganize(const QString &destinationDir,
     m_engine->setTemplate(m_namingTemplate);
     m_engine->setCollisionStrategy(CollisionStrategy::Rename);
     m_engine->setDryRun(dryRun);
-    m_engine->setFolderNaming(
-        bySystem ? Constants::FolderNaming::Scheme::Default : Constants::FolderNaming::Scheme::None);
+    m_engine->setFolderNaming(folderSchemeFromSettings(bySystem));
 
     const QList<OrganizeResult> results = m_engine->organizeFiles(
         fileIds, metadata, destinationDir.trimmed(), preserveOriginals ? FileOperation::Copy : FileOperation::Move);
@@ -244,6 +240,31 @@ void OrganizeController::runOrganize(const QString &destinationDir,
     if (!dryRun) {
         emit libraryChanged();
     }
+}
+
+Constants::FolderNaming::Scheme OrganizeController::folderSchemeFromSettings(bool legacyBySystem) const {
+    QSettings settings(
+        QString::fromLatin1(Constants::SETTINGS_ORGANIZATION), QString::fromLatin1(Constants::SETTINGS_APPLICATION));
+    QString schemeName = settings
+                             .value(QString::fromLatin1(Constants::Settings::Organize::FOLDER_SCHEME),
+                                 legacyBySystem ? Constants::Settings::Defaults::FOLDER_SCHEME : QStringLiteral("none"))
+                             .toString();
+    if (!settings.contains(QString::fromLatin1(Constants::Settings::Organize::FOLDER_SCHEME))) {
+        schemeName = legacyBySystem ? Constants::Settings::Defaults::FOLDER_SCHEME : QStringLiteral("none");
+    }
+    return Constants::FolderNaming::schemeFromString(schemeName);
+}
+
+QVariantList OrganizeController::folderSchemeChoices() const {
+    QVariantList choices;
+    for (const QString &name : Constants::FolderNaming::SCHEME_NAMES) {
+        QVariantMap item;
+        item.insert(QStringLiteral("value"), name);
+        item.insert(QStringLiteral("label"),
+            Constants::FolderNaming::schemeDisplayName(Constants::FolderNaming::schemeFromString(name)));
+        choices.append(item);
+    }
+    return choices;
 }
 
 } // namespace Remus

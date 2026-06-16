@@ -36,8 +36,9 @@ void VerificationHashMatcherTest::findHashInDatEntries_fallsBackToMd5WhenPreferr
     DatRomEntry matchedEntry;
     QString matchedHash;
     QString matchedHashType;
-    const bool found = findHashInDatEntries(entries, QStringLiteral("crc32"), QString(), QStringLiteral("811b027eaf99c2def7b933c5208636de"),
-        QString(), QString(), matchedEntry, matchedHash, matchedHashType);
+    const bool found = findHashInDatEntries(entries, QStringLiteral("crc32"), QString(),
+        QStringLiteral("811b027eaf99c2def7b933c5208636de"), QString(), QString(), matchedEntry, matchedHash,
+        matchedHashType);
 
     QVERIFY(found);
     QCOMPARE(matchedHashType, QStringLiteral("md5"));
@@ -59,9 +60,9 @@ void VerificationHashMatcherTest::findHashInDatEntries_patchAndOfficialShareCasc
     QString matchedHash;
     QString matchedHashType;
 
-    const bool officialFound = findHashInDatEntries(official, QStringLiteral("crc32"),
-        QStringLiteral("7b5e9e81"), QStringLiteral("811b027eaf99c2def7b933c5208636de"), QString(), QString(),
-        matchedEntry, matchedHash, matchedHashType);
+    const bool officialFound = findHashInDatEntries(official, QStringLiteral("crc32"), QStringLiteral("7b5e9e81"),
+        QStringLiteral("811b027eaf99c2def7b933c5208636de"), QString(), QString(), matchedEntry, matchedHash,
+        matchedHashType);
     QVERIFY(officialFound);
     QCOMPARE(matchedHashType, QStringLiteral("crc32"));
 

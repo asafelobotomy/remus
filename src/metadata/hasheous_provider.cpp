@@ -33,7 +33,7 @@ namespace {
 }
 
 HasheousProvider::HasheousProvider(QObject *parent)
-    : HttpMetadataProvider(Constants::Network::HASHEOUS_RATE_LIMIT_MS, parent) {
+    : HttpMetadataProvider(QStringLiteral("hasheous"), Constants::Network::HASHEOUS_RATE_LIMIT_MS, parent) {
     qInfo() << "Hasheous provider initialized (hash lookup enabled; MetadataProxy"
             << (metadataProxyEnabled() ? "enabled" : "disabled") << ")";
 }

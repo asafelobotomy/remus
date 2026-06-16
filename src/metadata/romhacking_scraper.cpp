@@ -22,7 +22,8 @@ namespace {
     QByteArray fetchUrl(const QUrl &url, QString *error) {
         QNetworkAccessManager manager;
         QNetworkRequest request(url);
-        request.setHeader(QNetworkRequest::UserAgentHeader, QStringLiteral("Remus/0.10 (+https://github.com/asafelobotomy/remus)"));
+        request.setHeader(
+            QNetworkRequest::UserAgentHeader, QStringLiteral("Remus/0.10 (+https://github.com/asafelobotomy/remus)"));
 
         QNetworkReply *reply = manager.get(request);
         QEventLoop loop;
@@ -77,8 +78,8 @@ QList<ModEntry> RomhackingScraper::search(const SearchOptions &options, QString 
     if (html.isEmpty())
         return mods;
 
-    static const QRegularExpression linkRegex(
-        QStringLiteral("<a\\s+href=\"(/(?:hacks|translations|utilities)/\\d+/)\"" "[^>]*>([^<]+)</a>"),
+    static const QRegularExpression linkRegex(QStringLiteral("<a\\s+href=\"(/(?:hacks|translations|utilities)/\\d+/)\""
+                                                             "[^>]*>([^<]+)</a>"),
         QRegularExpression::CaseInsensitiveOption);
 
     QRegularExpressionMatchIterator it = linkRegex.globalMatch(QString::fromUtf8(html));
@@ -86,7 +87,8 @@ QList<ModEntry> RomhackingScraper::search(const SearchOptions &options, QString 
     while (it.hasNext() && mods.size() < options.maxResults) {
         const QRegularExpressionMatch match = it.next();
         const QString path = match.captured(1);
-        const QString title = match.captured(2).trimmed().replace(QRegularExpression(QStringLiteral("\\s+")), QStringLiteral(" "));
+        const QString title
+            = match.captured(2).trimmed().replace(QRegularExpression(QStringLiteral("\\s+")), QStringLiteral(" "));
         if (title.isEmpty() || seen.contains(path))
             continue;
         seen.insert(path);
@@ -97,7 +99,8 @@ QList<ModEntry> RomhackingScraper::search(const SearchOptions &options, QString 
         entry.type = modTypeFromUrl(path);
         entry.system = options.system;
         entry.sourceUrl = QStringLiteral("https://www.romhacking.net") + path;
-        entry.description = QStringLiteral("Discovered via romhacking.net search for \"%1\"").arg(options.query.trimmed());
+        entry.description
+            = QStringLiteral("Discovered via romhacking.net search for \"%1\"").arg(options.query.trimmed());
         mods.append(entry);
     }
 

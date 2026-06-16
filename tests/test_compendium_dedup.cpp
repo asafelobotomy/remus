@@ -154,12 +154,18 @@ void CompendiumDedupTest::deduplicateGames_mergesSameSerialDifferentTitles() {
     const QString connName = openDedupDb(db);
     QVERIFY(!connName.isEmpty());
 
-    QVERIFY(execSql(db, QStringLiteral("INSERT INTO games VALUES ('serial-a', 16, 'Need for Speed - Shift (USA)', 'USA')")));
-    QVERIFY(execSql(db, QStringLiteral("INSERT INTO games VALUES ('serial-b', 16, 'Need for Speed - Shift (USA) (PSN)', 'USA')")));
-    QVERIFY(execSql(db, QStringLiteral("INSERT INTO game_signatures (game_id, hash_value) VALUES ('serial-a', 'hash-a')")));
-    QVERIFY(execSql(db, QStringLiteral("INSERT INTO game_signatures (game_id, hash_value) VALUES ('serial-b', 'hash-b')")));
-    QVERIFY(execSql(db, QStringLiteral("INSERT INTO game_serials (game_id, serial_value) VALUES ('serial-a', 'ULUS-10462')")));
-    QVERIFY(execSql(db, QStringLiteral("INSERT INTO game_serials (game_id, serial_value) VALUES ('serial-b', 'ULUS-10462')")));
+    QVERIFY(execSql(
+        db, QStringLiteral("INSERT INTO games VALUES ('serial-a', 16, 'Need for Speed - Shift (USA)', 'USA')")));
+    QVERIFY(execSql(
+        db, QStringLiteral("INSERT INTO games VALUES ('serial-b', 16, 'Need for Speed - Shift (USA) (PSN)', 'USA')")));
+    QVERIFY(
+        execSql(db, QStringLiteral("INSERT INTO game_signatures (game_id, hash_value) VALUES ('serial-a', 'hash-a')")));
+    QVERIFY(
+        execSql(db, QStringLiteral("INSERT INTO game_signatures (game_id, hash_value) VALUES ('serial-b', 'hash-b')")));
+    QVERIFY(execSql(
+        db, QStringLiteral("INSERT INTO game_serials (game_id, serial_value) VALUES ('serial-a', 'ULUS-10462')")));
+    QVERIFY(execSql(
+        db, QStringLiteral("INSERT INTO game_serials (game_id, serial_value) VALUES ('serial-b', 'ULUS-10462')")));
 
     QString error;
     const int merged = deduplicateGames(db, error);
@@ -173,7 +179,8 @@ void CompendiumDedupTest::deduplicateGames_mergesSameSerialDifferentTitles() {
     QCOMPARE(countQ.value(0).toInt(), 1);
 
     QSqlQuery serialQ(db);
-    QVERIFY(serialQ.exec(QStringLiteral("SELECT COUNT(DISTINCT game_id) FROM game_serials WHERE serial_value = 'ULUS-10462'")));
+    QVERIFY(serialQ.exec(
+        QStringLiteral("SELECT COUNT(DISTINCT game_id) FROM game_serials WHERE serial_value = 'ULUS-10462'")));
     QVERIFY(serialQ.next());
     QCOMPARE(serialQ.value(0).toInt(), 1);
 

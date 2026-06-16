@@ -1,11 +1,30 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import QtQuick.Dialogs
 import Remus.Gui
 
 Item {
     Layout.fillWidth: true
     Layout.fillHeight: true
+
+    FileDialog {
+        id: modifiedRomDialog
+        title: "Select modified ROM"
+        onAccepted: {
+            modifiedPathField.text = decodeURIComponent(selectedFile.toString().replace(/^file:\/\//, ""))
+        }
+    }
+
+    FileDialog {
+        id: patchOutputDialog
+        title: "Save patch file"
+        fileMode: FileDialog.SaveFile
+        nameFilters: ["Patch files (*.bps *.ips *.ups *.xdelta *.ppf)"]
+        onAccepted: {
+            patchOutputField.text = decodeURIComponent(selectedFile.toString().replace(/^file:\/\//, ""))
+        }
+    }
 
     ColumnLayout {
         anchors.fill: parent
@@ -44,6 +63,54 @@ Item {
             Button {
                 text: "Refresh Tool Status"
                 onClicked: patchController.checkTools()
+            }
+        }
+
+        Label {
+            text: "Create Patch"
+            font.bold: true
+            font.pixelSize: 14
+        }
+
+        TextField {
+            id: modifiedPathField
+            Layout.fillWidth: true
+            placeholderText: "Modified ROM path"
+        }
+
+        TextField {
+            id: patchOutputField
+            Layout.fillWidth: true
+            placeholderText: "Output patch path"
+        }
+
+        RowLayout {
+            Label { text: "Format" }
+            ComboBox {
+                id: patchFormatCombo
+                model: ["bps", "ips", "ups", "xdelta"]
+            }
+            Button {
+                text: "Browse modified…"
+                flat: true
+                onClicked: modifiedRomDialog.open()
+            }
+            Button {
+                text: "Browse output…"
+                flat: true
+                onClicked: patchOutputDialog.open()
+            }
+            Button {
+                text: "Create Patch"
+                enabled: !patchController.patching
+                        && appController.selectedFileData.path
+                        && modifiedPathField.text.length > 0
+                        && patchOutputField.text.length > 0
+                onClicked: patchController.createPatch(
+                    appController.selectedFileData.path,
+                    modifiedPathField.text,
+                    patchOutputField.text,
+                    patchFormatCombo.currentText)
             }
         }
 

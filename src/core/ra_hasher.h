@@ -28,8 +28,8 @@ public:
     static void setExternalSystemPath(const QString &path);
 
     /** @brief Test hook — returns the RA MD5 for raw payload using native rules only. */
-    static QString md5ForPayload(const QByteArray &payload, int remusSystemId, const QString &extension,
-        qint64 originalFileSize = -1);
+    static QString md5ForPayload(
+        const QByteArray &payload, int remusSystemId, const QString &extension, qint64 originalFileSize = -1);
 };
 
 } // namespace Remus

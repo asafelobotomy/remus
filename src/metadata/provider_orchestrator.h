@@ -96,7 +96,8 @@ public:
     /**
      * @brief Fetch full metadata for a provider result id (preview / apply).
      */
-    GameMetadata fetchProviderMetadata(const QString &providerName, const QString &id, const QString &system = QString());
+    GameMetadata fetchProviderMetadata(
+        const QString &providerName, const QString &id, const QString &system = QString());
 
     /**
      * @brief Hash lookup on a single provider when supported.
@@ -137,8 +138,8 @@ public:
      */
     GameMetadata enrichMissingFields(const FieldSet &missing, const GameMetadata &existing, const QString &hash,
         const QString &name, const QString &system, const QString &crc32 = QString(), const QString &md5 = QString(),
-        const QString &sha1 = QString(), const QString &serial = QString(),
-        const QSet<QString> &excludeProviders = {}, const QString &raMd5 = QString());
+        const QString &sha1 = QString(), const QString &serial = QString(), const QSet<QString> &excludeProviders = { },
+        const QString &raMd5 = QString());
 
     /**
      * @brief Get list of enabled providers

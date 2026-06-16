@@ -162,14 +162,11 @@ void CredentialManagerTest::testEnrichmentJsonKeysResolve() {
         f.write(QJsonDocument(root).toJson());
     }
 
-    QCOMPARE(CredentialManager::get(QStringLiteral("igdb/client_id"), path),
-        QStringLiteral("json_igdb_id"));
-    QCOMPARE(CredentialManager::get(QStringLiteral("igdb/client_secret"), path),
-        QStringLiteral("json_igdb_secret"));
-    QCOMPARE(CredentialManager::get(QStringLiteral("retroachievements/username"), path),
-        QStringLiteral("json_ra_user"));
-    QCOMPARE(CredentialManager::get(QStringLiteral("retroachievements/api_key"), path),
-        QStringLiteral("json_ra_key"));
+    QCOMPARE(CredentialManager::get(QStringLiteral("igdb/client_id"), path), QStringLiteral("json_igdb_id"));
+    QCOMPARE(CredentialManager::get(QStringLiteral("igdb/client_secret"), path), QStringLiteral("json_igdb_secret"));
+    QCOMPARE(
+        CredentialManager::get(QStringLiteral("retroachievements/username"), path), QStringLiteral("json_ra_user"));
+    QCOMPARE(CredentialManager::get(QStringLiteral("retroachievements/api_key"), path), QStringLiteral("json_ra_key"));
 }
 
 /// A key absent from every source must produce an empty string, not a crash.

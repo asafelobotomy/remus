@@ -170,11 +170,7 @@ void GuiControllersSmokeTest::scanController_scanDirectoryCompletesWithInsertedF
 
     scan.startScan(scanDir);
 
-    for (int attempt = 0; attempt < 500 && completedSpy.isEmpty(); ++attempt) {
-        QCoreApplication::processEvents(QEventLoop::AllEvents, 20);
-    }
-
-    QCOMPARE(completedSpy.count(), 1);
+    QTRY_COMPARE(completedSpy.count(), 1);
     QVERIFY(completedSpy.at(0).at(0).toInt() >= 1);
     QVERIFY(!scan.isScanning());
 }
@@ -216,9 +212,9 @@ void GuiControllersSmokeTest::matchController_refreshModelReflectsUnconfirmedMat
     QVERIFY(gameId > 0);
 
     QSqlQuery matchQuery(db->database());
-    matchQuery.prepare(QStringLiteral(
-        "INSERT INTO matches (file_id, game_id, confidence, match_method, is_confirmed, is_rejected) "
-        "VALUES (?, ?, ?, 'test', 0, 0)"));
+    matchQuery.prepare(
+        QStringLiteral("INSERT INTO matches (file_id, game_id, confidence, match_method, is_confirmed, is_rejected) "
+                       "VALUES (?, ?, ?, 'test', 0, 0)"));
     matchQuery.addBindValue(fileId);
     matchQuery.addBindValue(gameId);
     matchQuery.addBindValue(0.85);

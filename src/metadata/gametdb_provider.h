@@ -72,8 +72,8 @@ public:
         const QString &title, const QString &system, const QString &region = QString()) override;
 
     GameMetadata getByHash(const QString &hash, const QString &system) override;
-    GameMetadata getByHashes(
-        const QString &crc32, const QString &md5, const QString &sha1, const QString &system, const QString &preferredHashType);
+    GameMetadata getByHashes(const QString &crc32, const QString &md5, const QString &sha1, const QString &system,
+        const QString &preferredHashType);
     GameMetadata getById(const QString &id) override;
     ArtworkUrls getArtwork(const QString &id) override;
 

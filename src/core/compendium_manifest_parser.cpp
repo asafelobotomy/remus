@@ -181,7 +181,7 @@ bool verifyAndNormalizeSourceChecksums(QList<CompendiumSourceDescriptor> &source
         if (source.checksumSha256.isEmpty()) {
             qWarning().noquote() << QStringLiteral("[build-compendium] Source '%1' has no checksum_sha256 in manifest; "
                                                    "using computed digest.")
-                                      .arg(source.sourceId);
+                                        .arg(source.sourceId);
             source.checksumSha256 = actual;
             continue;
         }

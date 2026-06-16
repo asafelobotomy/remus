@@ -201,7 +201,8 @@ namespace {
             }
             const QByteArray data = file.readAll();
             file.close();
-            result.md5 = md5Hex(normalizeN64Payload(data, extension.isEmpty() ? info.suffix().prepend('.') : extension));
+            result.md5
+                = md5Hex(normalizeN64Payload(data, extension.isEmpty() ? info.suffix().prepend('.') : extension));
             break;
         }
         default:
@@ -243,8 +244,8 @@ int RaHasher::raConsoleId(int remusSystemId) {
     return ok ? id : 0;
 }
 
-QString RaHasher::md5ForPayload(const QByteArray &payload, int remusSystemId, const QString &extension,
-    qint64 originalFileSize) {
+QString RaHasher::md5ForPayload(
+    const QByteArray &payload, int remusSystemId, const QString &extension, qint64 originalFileSize) {
     const RaHashMode mode = hashModeForSystem(remusSystemId);
     switch (mode) {
     case RaHashMode::FullFile:

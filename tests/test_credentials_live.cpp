@@ -53,7 +53,8 @@ void CredentialsLiveTest::igdbOAuthFromEnv() {
 }
 
 void CredentialsLiveTest::retroAchievementsApiKeyFromEnv() {
-    const QString username = CredentialManager::get(QString::fromLatin1(Settings::Providers::RETROACHIEVEMENTS_USERNAME));
+    const QString username
+        = CredentialManager::get(QString::fromLatin1(Settings::Providers::RETROACHIEVEMENTS_USERNAME));
     const QString apiKey = CredentialManager::get(QString::fromLatin1(Settings::Providers::RETROACHIEVEMENTS_API_KEY));
     if (username.isEmpty() || apiKey.isEmpty())
         QSKIP("RetroAchievements credentials not configured "

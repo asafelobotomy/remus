@@ -15,7 +15,7 @@
 namespace Remus {
 
 IGDBProvider::IGDBProvider(QObject *parent)
-    : HttpMetadataProvider(Constants::Network::IGDB_RATE_LIMIT_MS, parent) { }
+    : HttpMetadataProvider(QStringLiteral("igdb"), Constants::Network::IGDB_RATE_LIMIT_MS, parent) { }
 
 void IGDBProvider::setCredentials(const QString &clientId, const QString &clientSecret) {
     const QString trimmedClientId = clientId.trimmed();
@@ -339,10 +339,10 @@ GameMetadata IGDBProvider::parseGameJson(const QJsonObject &game) {
         }
 
         if (!platformSlugs.isEmpty()) {
-            for (auto it = Constants::Systems::SYSTEMS.constBegin(); it != Constants::Systems::SYSTEMS.constEnd(); ++it) {
+            for (auto it = Constants::Systems::SYSTEMS.constBegin(); it != Constants::Systems::SYSTEMS.constEnd();
+                ++it) {
                 const int systemId = it.key();
-                const QString igdbSlug
-                    = SystemResolver::providerName(systemId, Constants::Providers::IGDB).toLower();
+                const QString igdbSlug = SystemResolver::providerName(systemId, Constants::Providers::IGDB).toLower();
                 if (!igdbSlug.isEmpty() && platformSlugs.contains(igdbSlug)) {
                     metadata.system = SystemResolver::internalName(systemId);
                     break;

@@ -99,9 +99,8 @@ void PlayMatchParsingTest::identifyBySignalsMergesIgdbMetadata() {
     igdb["rating"] = 80.0;
 
     MockPlayMatchProvider provider { identify, igdb };
-    const GameMetadata metadata = provider.identifyBySignals(
-        QStringLiteral("Super Mario Bros. (World).nes"), 40976, QString(), QStringLiteral("7e5265ff43047da9bab44b39195d2f44"),
-        QString(), QString());
+    const GameMetadata metadata = provider.identifyBySignals(QStringLiteral("Super Mario Bros. (World).nes"), 40976,
+        QString(), QStringLiteral("7e5265ff43047da9bab44b39195d2f44"), QString(), QString());
 
     QCOMPARE(metadata.title, QStringLiteral("Super Mario Bros."));
     QCOMPARE(metadata.matchScore, 0.4f);
