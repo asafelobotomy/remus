@@ -28,6 +28,8 @@ struct FileRecord {
     bool isPrimary = true;
     int parentFileId = 0;
     QString baseTitle;
+    QString discSetKey;
+    int discNumber = 0;
     QString fileType = Constants::FileTypes::OFFICIAL;
     bool isPatched = false;
     QString patchName;

@@ -405,6 +405,16 @@ add_remus_test(test_archive_creator ArchiveCreatorTest
     LIBS Qt6::Test Qt6::Core remus-core
 )
 
+add_remus_test(test_disc_set_utils DiscSetUtilsTest
+    SOURCES test_disc_set_utils.cpp
+    LIBS Qt6::Test Qt6::Core remus-core
+)
+
+add_remus_test(test_database_disc_sets DatabaseDiscSetsTest
+    SOURCES test_database_disc_sets.cpp
+    LIBS Qt6::Test Qt6::Core Qt6::Sql remus-core
+)
+
 add_remus_test(test_m3u_generator M3UGeneratorTest
     SOURCES test_m3u_generator.cpp
     LIBS Qt6::Test Qt6::Core Qt6::Sql remus-core

@@ -92,6 +92,8 @@ bool Database::runMigrations() {
     const bool hasBundleOutputPath
         = fileColumns.contains(Constants::DatabaseSchema::Columns::Files::BUNDLE_OUTPUT_PATH);
     const bool hasRaMd5 = fileColumns.contains(Constants::DatabaseSchema::Columns::Files::RA_MD5);
+    const bool hasDiscSetKey = fileColumns.contains(Constants::DatabaseSchema::Columns::Files::DISC_SET_KEY);
+    const bool hasDiscNumber = fileColumns.contains(Constants::DatabaseSchema::Columns::Files::DISC_NUMBER);
 
     // Add is_processed column if missing
     if (!hasIsProcessed) {
@@ -238,6 +240,28 @@ bool Database::runMigrations() {
         }
     }
 
+    if (!hasDiscSetKey) {
+        qInfo() << "Migration: Adding disc_set_key column to files table";
+        if (!execChecked(query,
+                QString("ALTER TABLE %1 ADD COLUMN %2 TEXT")
+                    .arg(Constants::DatabaseSchema::Tables::FILES,
+                        Constants::DatabaseSchema::Columns::Files::DISC_SET_KEY),
+                "Migration: Failed to add disc_set_key column to files table")) {
+            return false;
+        }
+    }
+
+    if (!hasDiscNumber) {
+        qInfo() << "Migration: Adding disc_number column to files table";
+        if (!execChecked(query,
+                QString("ALTER TABLE %1 ADD COLUMN %2 INTEGER DEFAULT 0")
+                    .arg(Constants::DatabaseSchema::Tables::FILES,
+                        Constants::DatabaseSchema::Columns::Files::DISC_NUMBER),
+                "Migration: Failed to add disc_number column to files table")) {
+            return false;
+        }
+    }
+
     if (!execChecked(query,
             QString(R"(
         CREATE TABLE IF NOT EXISTS %1 (
@@ -362,9 +386,18 @@ bool Database::runMigrations() {
         QStringLiteral("CREATE INDEX IF NOT EXISTS idx_files_hash_primary ON files(hash_calculated, is_primary)"));
     query.exec(
         QStringLiteral("CREATE INDEX IF NOT EXISTS idx_files_primary_processed ON files(is_primary, is_processed)"));
+    query.exec(QStringLiteral(
+        "CREATE INDEX IF NOT EXISTS idx_files_disc_set_key ON files(disc_set_key) WHERE disc_set_key IS NOT NULL"));
     query.exec(QStringLiteral("CREATE INDEX IF NOT EXISTS idx_games_title_system ON games(title, system_id)"));
     query.exec(QStringLiteral(
         "CREATE INDEX IF NOT EXISTS idx_matches_file_status ON matches(file_id, is_confirmed, is_rejected)"));
+
+    if (!hasDiscSetKey || !hasDiscNumber) {
+        qInfo() << "Migration: Backfilling disc set metadata for existing files";
+        if (!rebuildDiscSetsAll()) {
+            return rollbackAndFail("Migration: Failed to backfill disc set metadata");
+        }
+    }
 
     if (useTransaction && !m_db.commit()) {
         logError("Migration: Failed to commit transaction: " + m_db.lastError().text());

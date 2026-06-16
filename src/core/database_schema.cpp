@@ -72,6 +72,8 @@ bool Database::createSchema() {
             is_primary BOOLEAN DEFAULT 1,
             parent_file_id INTEGER,
             base_title TEXT,
+            disc_set_key TEXT,
+            disc_number INTEGER DEFAULT 0,
             file_type TEXT DEFAULT 'official',
             is_patched BOOLEAN DEFAULT 0,
             patch_name TEXT,

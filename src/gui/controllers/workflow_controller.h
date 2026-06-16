@@ -67,6 +67,7 @@ public:
     Q_INVOKABLE void hashAndMatchAll();
     Q_INVOKABLE void hashAndMatchSelected();
     Q_INVOKABLE bool artworkExistsForFile(int fileId) const;
+    Q_INVOKABLE void toggleDiscGroupExpanded(const QString &groupKey);
 
 signals:
     void stageCountsChanged();
@@ -104,6 +105,7 @@ private:
     QString m_scanDir;
     QString m_destDir;
     QString m_namingTemplate;
+    QHash<QString, bool> m_discGroupExpanded;
 };
 
 } // namespace Remus

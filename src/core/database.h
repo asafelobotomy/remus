@@ -185,6 +185,26 @@ public:
     QList<FileRecord> getFilesByParent(int parentId);
 
     /**
+     * @brief Get primary files belonging to a persisted disc set.
+     */
+    QList<FileRecord> getFilesByDiscSetKey(const QString &discSetKey);
+
+    /**
+     * @brief Recompute disc_set_key / disc_number for all files in a library.
+     */
+    bool rebuildDiscSetsForLibrary(int libraryId);
+
+    /**
+     * @brief Recompute disc set metadata for every library in the database.
+     */
+    bool rebuildDiscSetsAll();
+
+    /**
+     * @brief Refresh disc sets after a file match is confirmed.
+     */
+    bool reconcileDiscSetForConfirmedFile(int fileId);
+
+    /**
      * @brief Update file's current path (for organize/rename)
      * @param fileId File ID
      * @param newPath New current path

@@ -15,14 +15,15 @@ namespace {
     // 0=id, 1=library_id, 2=original_path, 3=current_path, 4=filename, 5=extension,
     // 6=file_size, 7=is_compressed, 8=archive_path, 9=archive_internal_path,
     // 10=system_id, 11=crc32, 12=md5, 13=sha1, 14=ra_md5, 15=hash_calculated,
-    // 16=is_primary, 17=parent_file_id, 18=base_title, 19=file_type, 20=is_patched,
-    // 21=patch_name, 22=is_processed, 23=processing_status,
-    // 24=last_modified, 25=scanned_at
+    // 16=is_primary, 17=parent_file_id, 18=base_title, 19=disc_set_key, 20=disc_number,
+    // 21=file_type, 22=is_patched, 23=patch_name, 24=is_processed, 25=processing_status,
+    // 26=last_modified, 27=scanned_at
     static const char kFileSelectColumns[] = "id, library_id, original_path, current_path, filename, extension, "
                                              "file_size, is_compressed, archive_path, archive_internal_path, "
                                              "system_id, crc32, md5, sha1, ra_md5, hash_calculated, "
-                                             "is_primary, parent_file_id, base_title, file_type, is_patched, "
-                                             "patch_name, is_processed, processing_status, last_modified, scanned_at";
+                                             "is_primary, parent_file_id, base_title, disc_set_key, disc_number, "
+                                             "file_type, is_patched, patch_name, is_processed, processing_status, "
+                                             "last_modified, scanned_at";
 
     static FileRecord fileRecordFromRow(const QSqlQuery &q) {
         FileRecord r;
@@ -45,13 +46,15 @@ namespace {
         r.isPrimary = q.value(16).toBool();
         r.parentFileId = q.value(17).toInt();
         r.baseTitle = q.value(18).toString();
-        r.fileType = q.value(19).toString();
-        r.isPatched = q.value(20).toBool();
-        r.patchName = q.value(21).toString();
-        r.isProcessed = q.value(22).toBool();
-        r.processingStatus = q.value(23).toString();
-        r.lastModified = q.value(24).toDateTime();
-        r.scannedAt = q.value(25).toDateTime();
+        r.discSetKey = q.value(19).toString();
+        r.discNumber = q.value(20).toInt();
+        r.fileType = q.value(21).toString();
+        r.isPatched = q.value(22).toBool();
+        r.patchName = q.value(23).toString();
+        r.isProcessed = q.value(24).toBool();
+        r.processingStatus = q.value(25).toString();
+        r.lastModified = q.value(26).toDateTime();
+        r.scannedAt = q.value(27).toDateTime();
         return r;
     }
 
@@ -108,9 +111,9 @@ int Database::insertFile(const FileRecord &record) {
         INSERT INTO files 
         (library_id, original_path, current_path, filename, extension, 
          file_size, is_compressed, archive_path, archive_internal_path, 
-         system_id, is_primary, parent_file_id, base_title, file_type, is_patched,
-         patch_name, last_modified)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+         system_id, is_primary, parent_file_id, base_title, disc_set_key, disc_number,
+         file_type, is_patched, patch_name, last_modified)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     )");
     query.addBindValue(record.libraryId);
     query.addBindValue(record.originalPath);
@@ -125,6 +128,8 @@ int Database::insertFile(const FileRecord &record) {
     query.addBindValue(record.isPrimary);
     query.addBindValue(record.parentFileId > 0 ? record.parentFileId : QVariant());
     query.addBindValue(baseTitle.isEmpty() ? QVariant() : baseTitle);
+    query.addBindValue(record.discSetKey.isEmpty() ? QVariant() : record.discSetKey);
+    query.addBindValue(record.discNumber > 0 ? record.discNumber : 0);
     query.addBindValue(fileType);
     query.addBindValue(isPatched);
     query.addBindValue(patchName.isEmpty() ? QVariant() : patchName);

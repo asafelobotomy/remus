@@ -235,6 +235,7 @@ void MatchController::confirmAll() {
         emit matchError(QStringLiteral("Failed to commit confirmAll transaction."));
         return;
     }
+    m_appController->database()->rebuildDiscSetsAll();
     updateUnconfirmedCount();
     refreshModel();
     emit libraryChanged();

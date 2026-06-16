@@ -9,13 +9,18 @@
 #include "export_controller.h"
 #include "settings_controller.h"
 
+#include "../../core/disc_set_utils.h"
+
 #include <QDir>
 #include <QFileInfo>
+#include <QHash>
+#include <QSet>
 #include <QSettings>
 #include <QSqlDatabase>
 #include <QSqlError>
 #include <QSqlQuery>
 #include <QStandardPaths>
+#include <algorithm>
 
 namespace Remus {
 
@@ -111,6 +116,14 @@ bool WorkflowController::artworkExistsForFile(int fileId) const {
     return false;
 }
 
+void WorkflowController::toggleDiscGroupExpanded(const QString &groupKey) {
+    if (groupKey.isEmpty())
+        return;
+    const bool expanded = m_discGroupExpanded.value(groupKey, true);
+    m_discGroupExpanded.insert(groupKey, !expanded);
+    refreshQueueFiles();
+}
+
 // ── Private helpers ───────────────────────────────────────────────────────────
 
 QString WorkflowController::artworkDirPath() const {
@@ -180,7 +193,8 @@ void WorkflowController::refreshQueueFiles() {
     // Columns: 0=id, 1=filename, 2=current_path, 3=md5, 4=base_title, 5=extension,
     //           6=child_exts, 7=has_match (confirmed), 8=has_any_match (any non-rejected),
     //           9=is_organized, 10=is_converted, 11=is_bundled,
-    //           12=system_name, 13=matched_title, 14=match_confidence, 15=release_date
+    //           12=system_name, 13=matched_title, 14=match_confidence, 15=release_date,
+    //           16=archive_path, 17=archive_internal_path, 18=disc_set_key, 19=disc_number
     static const QLatin1String kFromJoin("FROM files f "
                                          "LEFT JOIN systems sys ON f.system_id = sys.id ");
     static const QLatin1String kMatchMeta(
@@ -213,7 +227,7 @@ void WorkflowController::refreshQueueFiles() {
     switch (m_queueStage) {
     case Identity:
         sql = QStringLiteral("SELECT f.id, f.filename, f.current_path, f.md5, f.base_title, f.extension, "
-                             "%1 "
+                             "%1, f.archive_path, f.archive_internal_path, f.disc_set_key, f.disc_number "
                              "%2 "
                              "WHERE f.is_primary = 1 "
                              "  AND ((f.md5 IS NULL OR f.md5 = '') "
@@ -227,7 +241,7 @@ void WorkflowController::refreshQueueFiles() {
     case Enrich:
     case Done:
         sql = QStringLiteral("SELECT f.id, f.filename, f.current_path, f.md5, f.base_title, f.extension, "
-                             "%1 "
+                             "%1, f.archive_path, f.archive_internal_path, f.disc_set_key, f.disc_number "
                              "%2 "
                              "WHERE f.is_primary = 1 "
                              "  AND EXISTS ("
@@ -239,7 +253,7 @@ void WorkflowController::refreshQueueFiles() {
         break;
     default: // AllFiles
         sql = QStringLiteral("SELECT f.id, f.filename, f.current_path, f.md5, f.base_title, f.extension, "
-                             "%1 "
+                             "%1, f.archive_path, f.archive_internal_path, f.disc_set_key, f.disc_number "
                              "%2 "
                              "WHERE f.is_primary = 1 "
                              "ORDER BY COALESCE(f.base_title, f.filename) LIMIT 500")
@@ -253,13 +267,24 @@ void WorkflowController::refreshQueueFiles() {
         return;
     }
 
+    QList<QVariantMap> flatItems;
+    flatItems.reserve(500);
+
     while (q.next()) {
         const int id = q.value(0).toInt();
         const bool hasArtwork = artworkExistsForFile(id);
         const QString baseTitle = q.value(4).toString();
         const QString matchedTitle = q.value(13).toString();
+        const QString rawFilename = q.value(1).toString();
+        const QString currentPath = q.value(2).toString();
+        const QString archivePath = q.value(16).toString();
+        const QString archiveInternalPath = q.value(17).toString();
+        const QString discSetKey = q.value(18).toString();
+        const int discNumber = q.value(19).toInt();
+        const QString systemName = q.value(12).toString();
+        const QString labelPath = DiscSetUtils::labelPath(currentPath, archivePath, archiveInternalPath, rawFilename);
         const QString displayName = !matchedTitle.isEmpty() ? matchedTitle
-            : baseTitle.isEmpty()                           ? q.value(1).toString()
+            : baseTitle.isEmpty()                           ? rawFilename
                                                             : baseTitle;
         const QString releaseDate = q.value(15).toString();
         int releaseYear = 0;
@@ -272,18 +297,23 @@ void WorkflowController::refreshQueueFiles() {
             continue;
 
         QVariantMap item;
+        item[QStringLiteral("rowType")] = QStringLiteral("file");
         item[QStringLiteral("fileId")] = id;
         item[QStringLiteral("filename")] = displayName;
-        item[QStringLiteral("rawFilename")] = q.value(1).toString();
-        item[QStringLiteral("path")] = q.value(2).toString();
-        item[QStringLiteral("systemName")] = q.value(12).toString();
+        item[QStringLiteral("rawFilename")] = rawFilename;
+        item[QStringLiteral("path")] = currentPath;
+        item[QStringLiteral("labelPath")] = labelPath;
+        item[QStringLiteral("systemName")] = systemName;
         item[QStringLiteral("matchedTitle")] = matchedTitle;
         item[QStringLiteral("confidence")] = q.value(14).toFloat();
         item[QStringLiteral("releaseYear")] = releaseYear;
+        item[QStringLiteral("discNumber")] = discNumber;
+        item[QStringLiteral("discSetKey")] = discSetKey;
+        item[QStringLiteral("groupKey")] = discSetKey;
         static const QStringList kConvertibleExts
             = { QStringLiteral(".cue"), QStringLiteral(".gdi"), QStringLiteral(".iso"), QStringLiteral(".bin"),
                   QStringLiteral(".img"), QStringLiteral(".mdf"), QStringLiteral(".nrg"), QStringLiteral(".gcm") };
-        const QString rawExt = q.value(5).toString().toLower(); // already stored with leading dot
+        const QString rawExt = q.value(5).toString().toLower();
         item[QStringLiteral("hasHash")] = !q.value(3).toString().isEmpty();
         item[QStringLiteral("hasArtwork")] = hasArtwork;
         item[QStringLiteral("extension")] = q.value(5).toString();
@@ -294,7 +324,122 @@ void WorkflowController::refreshQueueFiles() {
         item[QStringLiteral("isConverted")] = q.value(10).toBool();
         item[QStringLiteral("isBundled")] = q.value(11).toBool();
         item[QStringLiteral("isConvertible")] = kConvertibleExts.contains(rawExt);
-        m_queueFiles.append(item);
+        flatItems.append(item);
+    }
+
+    QHash<QString, QList<int>> multiDiscGroups;
+    for (int i = 0; i < flatItems.size(); ++i) {
+        const QString groupKey = flatItems[i].value(QStringLiteral("discSetKey")).toString();
+        if (!groupKey.isEmpty())
+            multiDiscGroups[groupKey].append(i);
+    }
+
+    QSet<QString> emittedGroups;
+    for (int i = 0; i < flatItems.size(); ++i) {
+        const QVariantMap &source = flatItems.at(i);
+        const QString groupKey = source.value(QStringLiteral("discSetKey")).toString();
+        const bool inMultiDiscSet = !groupKey.isEmpty() && multiDiscGroups.value(groupKey).size() >= 2;
+
+        if (inMultiDiscSet) {
+            if (emittedGroups.contains(groupKey))
+                continue;
+            emittedGroups.insert(groupKey);
+
+            QList<int> memberIndices = multiDiscGroups.value(groupKey);
+            std::sort(memberIndices.begin(), memberIndices.end(), [&flatItems](int a, int b) {
+                const int discA = flatItems.at(a).value(QStringLiteral("discNumber")).toInt();
+                const int discB = flatItems.at(b).value(QStringLiteral("discNumber")).toInt();
+                if (discA != discB)
+                    return discA < discB;
+                return flatItems.at(a).value(QStringLiteral("rawFilename")).toString()
+                    < flatItems.at(b).value(QStringLiteral("rawFilename")).toString();
+            });
+
+            const QVariantMap &first = flatItems.at(memberIndices.first());
+            const QString groupTitle = !first.value(QStringLiteral("matchedTitle")).toString().isEmpty()
+                ? first.value(QStringLiteral("matchedTitle")).toString()
+                : !first.value(QStringLiteral("filename")).toString().isEmpty()
+                ? first.value(QStringLiteral("filename")).toString()
+                : first.value(QStringLiteral("rawFilename")).toString();
+            const bool expanded = m_discGroupExpanded.value(groupKey, true);
+
+            int matchedCount = 0;
+            int anyMatchCount = 0;
+            int hashedCount = 0;
+            int artworkCount = 0;
+            int convertedCount = 0;
+            int bundledCount = 0;
+            int organizedCount = 0;
+            for (int memberIndex : memberIndices) {
+                const QVariantMap &member = flatItems.at(memberIndex);
+                if (member.value(QStringLiteral("hasMatch")).toBool())
+                    ++matchedCount;
+                if (member.value(QStringLiteral("hasAnyMatch")).toBool())
+                    ++anyMatchCount;
+                if (member.value(QStringLiteral("hasHash")).toBool())
+                    ++hashedCount;
+                if (member.value(QStringLiteral("hasArtwork")).toBool())
+                    ++artworkCount;
+                if (member.value(QStringLiteral("isConverted")).toBool())
+                    ++convertedCount;
+                if (member.value(QStringLiteral("isBundled")).toBool())
+                    ++bundledCount;
+                if (member.value(QStringLiteral("isOrganized")).toBool())
+                    ++organizedCount;
+            }
+            const int memberTotal = memberIndices.size();
+
+            QVariantMap header;
+            header[QStringLiteral("rowType")] = QStringLiteral("group");
+            header[QStringLiteral("groupKey")] = groupKey;
+            header[QStringLiteral("filename")] = groupTitle;
+            header[QStringLiteral("systemName")] = first.value(QStringLiteral("systemName"));
+            header[QStringLiteral("discCount")] = memberTotal;
+            header[QStringLiteral("expanded")] = expanded;
+            header[QStringLiteral("releaseYear")] = first.value(QStringLiteral("releaseYear"));
+            header[QStringLiteral("hasMatch")] = matchedCount == memberTotal;
+            header[QStringLiteral("hasAnyMatch")] = anyMatchCount > 0;
+            header[QStringLiteral("hasHash")] = hashedCount > 0;
+            header[QStringLiteral("hasArtwork")] = artworkCount == memberTotal;
+            header[QStringLiteral("isConverted")] = convertedCount == memberTotal;
+            header[QStringLiteral("isBundled")] = bundledCount == memberTotal;
+            header[QStringLiteral("isOrganized")] = organizedCount == memberTotal;
+            header[QStringLiteral("isConvertible")] = first.value(QStringLiteral("isConvertible"));
+            header[QStringLiteral("matchProgress")]
+                = QStringLiteral("%1/%2").arg(matchedCount).arg(memberTotal);
+            header[QStringLiteral("artworkProgress")]
+                = QStringLiteral("%1/%2").arg(artworkCount).arg(memberTotal);
+
+            QStringList searchParts;
+            searchParts << header.value(QStringLiteral("filename")).toString();
+            for (int memberIndex : memberIndices) {
+                const QVariantMap &member = flatItems.at(memberIndex);
+                searchParts << member.value(QStringLiteral("rawFilename")).toString();
+                searchParts << member.value(QStringLiteral("path")).toString();
+                searchParts << member.value(QStringLiteral("matchedTitle")).toString();
+                searchParts << DiscSetUtils::discRowLabel(member.value(QStringLiteral("labelPath")).toString(),
+                    member.value(QStringLiteral("discNumber")).toInt());
+            }
+            header[QStringLiteral("memberSearchText")] = searchParts.join(QChar(' '));
+
+            m_queueFiles.append(header);
+
+            if (!expanded)
+                continue;
+
+            for (int memberIndex : memberIndices) {
+                QVariantMap disc = flatItems.at(memberIndex);
+                disc[QStringLiteral("rowType")] = QStringLiteral("disc");
+                const int discNumber = disc.value(QStringLiteral("discNumber")).toInt();
+                disc[QStringLiteral("discLabel")]
+                    = DiscSetUtils::discRowLabel(disc.value(QStringLiteral("labelPath")).toString(), discNumber);
+                disc[QStringLiteral("filename")] = disc.value(QStringLiteral("discLabel"));
+                m_queueFiles.append(disc);
+            }
+            continue;
+        }
+
+        m_queueFiles.append(source);
     }
 
     emit queueFilesChanged();

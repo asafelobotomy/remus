@@ -9,6 +9,7 @@
 
 #include "../../metadata/metadata_cache.h"
 #include "../../metadata/provider_orchestrator.h"
+#include "../../core/disc_set_utils.h"
 
 namespace Remus {
 
@@ -193,6 +194,8 @@ QVariantMap AppController::selectedFile() {
     result.insert(QStringLiteral("sha1"), file.sha1);
     result.insert(QStringLiteral("fileSize"), file.fileSize);
     result.insert(QStringLiteral("baseTitle"), file.baseTitle);
+    result.insert(QStringLiteral("discSetKey"), file.discSetKey);
+    result.insert(QStringLiteral("discNumber"), file.discNumber);
     result.insert(QStringLiteral("archivePath"), file.archivePath);
     result.insert(QStringLiteral("isCompressed"), file.isCompressed);
 
@@ -225,6 +228,29 @@ QVariantMap AppController::selectedFile() {
     result.insert(QStringLiteral("isOrganized"), !organizedPath.isEmpty());
     result.insert(QStringLiteral("organizedPath"), organizedPath);
     result.insert(QStringLiteral("bundleOutputPath"), bundleOutputPath);
+
+    if (!file.discSetKey.isEmpty()) {
+        const QList<FileRecord> discMembers = m_database.getFilesByDiscSetKey(file.discSetKey);
+        QVariantList members;
+        for (const FileRecord &member : discMembers) {
+            QVariantMap memberMap;
+            memberMap.insert(QStringLiteral("fileId"), member.id);
+            memberMap.insert(QStringLiteral("filename"), member.filename);
+            memberMap.insert(QStringLiteral("path"), member.currentPath);
+            memberMap.insert(QStringLiteral("discNumber"), member.discNumber);
+            memberMap.insert(QStringLiteral("discLabel"),
+                DiscSetUtils::discRowLabel(
+                    DiscSetUtils::labelPath(member.currentPath, member.archivePath, member.archiveInternalPath,
+                        member.filename),
+                    member.discNumber));
+            members.append(memberMap);
+        }
+        result.insert(QStringLiteral("discSetMembers"), members);
+        result.insert(QStringLiteral("discSetMemberCount"), members.size());
+    } else {
+        result.insert(QStringLiteral("discSetMembers"), QVariantList());
+        result.insert(QStringLiteral("discSetMemberCount"), 0);
+    }
 
     return result;
 }

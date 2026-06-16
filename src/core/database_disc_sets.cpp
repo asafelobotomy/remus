@@ -1,0 +1,154 @@
+#include "database.h"
+#include "disc_set_utils.h"
+
+#include <QHash>
+#include <QPair>
+#include <QSqlError>
+#include <QSqlQuery>
+#include <utility>
+
+namespace Remus {
+
+namespace {
+
+struct DiscSetMeta {
+    QString discSetKey;
+    int discNumber = 0;
+};
+
+} // namespace
+
+QList<FileRecord> Database::getFilesByDiscSetKey(const QString &discSetKey) {
+    if (discSetKey.isEmpty())
+        return { };
+
+    QSqlQuery query(m_db);
+    query.prepare(QStringLiteral("SELECT id FROM files WHERE disc_set_key = ? AND is_primary = 1 ORDER BY "
+                                 "disc_number, filename"));
+    query.addBindValue(discSetKey);
+    if (!query.exec()) {
+        logError("Failed to query files by disc set key: " + query.lastError().text());
+        return { };
+    }
+
+    QList<FileRecord> files;
+    while (query.next()) {
+        const FileRecord file = getFileById(query.value(0).toInt());
+        if (file.id > 0)
+            files.append(file);
+    }
+    return files;
+}
+
+bool Database::rebuildDiscSetsAll() {
+    QSqlQuery query(m_db);
+    if (!query.exec(QStringLiteral("SELECT DISTINCT library_id FROM files"))) {
+        logError("Failed to enumerate libraries for disc set rebuild: " + query.lastError().text());
+        return false;
+    }
+
+    while (query.next()) {
+        if (!rebuildDiscSetsForLibrary(query.value(0).toInt()))
+            return false;
+    }
+    return true;
+}
+
+bool Database::rebuildDiscSetsForLibrary(int libraryId) {
+    if (libraryId <= 0)
+        return true;
+
+    QSqlQuery query(m_db);
+    query.prepare(QStringLiteral(R"(
+        SELECT f.id, f.library_id, f.original_path, f.current_path, f.filename, f.extension,
+               f.file_size, f.is_compressed, f.archive_path, f.archive_internal_path,
+               f.system_id, f.is_primary, f.base_title,
+               COALESCE(sys.display_name, '') AS system_name,
+               (SELECT m.game_id FROM matches m
+                WHERE m.file_id = f.id AND m.is_confirmed = 1 AND m.is_rejected = 0
+                LIMIT 1) AS confirmed_game_id
+        FROM files f
+        LEFT JOIN systems sys ON f.system_id = sys.id
+        WHERE f.library_id = ? AND f.is_primary = 1
+    )"));
+    query.addBindValue(libraryId);
+    if (!query.exec()) {
+        logError("Failed to load files for disc set rebuild: " + query.lastError().text());
+        return false;
+    }
+
+    QHash<int, DiscSetMeta> metaByFileId;
+    QHash<QPair<int, int>, QList<int>> confirmedGameGroups;
+
+    while (query.next()) {
+        FileRecord file;
+        file.id = query.value(0).toInt();
+        file.libraryId = query.value(1).toInt();
+        file.originalPath = query.value(2).toString();
+        file.currentPath = query.value(3).toString();
+        file.filename = query.value(4).toString();
+        file.extension = query.value(5).toString();
+        file.fileSize = query.value(6).toLongLong();
+        file.isCompressed = query.value(7).toBool();
+        file.archivePath = query.value(8).toString();
+        file.archiveInternalPath = query.value(9).toString();
+        file.systemId = query.value(10).toInt();
+        file.isPrimary = query.value(11).toBool();
+        file.baseTitle = query.value(12).toString();
+
+        const QString systemName = query.value(13).toString();
+        const int confirmedGameId = query.value(14).toInt();
+
+        DiscSetUtils::applyScanDiscMetadata(file, systemName);
+        metaByFileId.insert(file.id, { file.discSetKey, file.discNumber });
+
+        if (confirmedGameId > 0 && file.systemId > 0)
+            confirmedGameGroups[{ confirmedGameId, file.systemId }].append(file.id);
+    }
+
+    for (auto it = confirmedGameGroups.constBegin(); it != confirmedGameGroups.constEnd(); ++it) {
+        if (it.value().size() < 2)
+            continue;
+        const QString gameKey = DiscSetUtils::gameDiscSetKey(it.key().first, it.key().second);
+        for (int fileId : it.value()) {
+            DiscSetMeta &meta = metaByFileId[fileId];
+            meta.discSetKey = gameKey;
+        }
+    }
+
+    QHash<QString, int> keyCounts;
+    for (const DiscSetMeta &meta : metaByFileId) {
+        if (!meta.discSetKey.isEmpty())
+            ++keyCounts[meta.discSetKey];
+    }
+
+    QSqlQuery updateQuery(m_db);
+    updateQuery.prepare(QStringLiteral("UPDATE files SET disc_set_key = ?, disc_number = ? WHERE id = ?"));
+
+    for (auto it = metaByFileId.constBegin(); it != metaByFileId.constEnd(); ++it) {
+        DiscSetMeta meta = it.value();
+        if (meta.discSetKey.isEmpty() || keyCounts.value(meta.discSetKey, 0) < 2) {
+            meta.discSetKey.clear();
+            meta.discNumber = 0;
+        }
+
+        updateQuery.addBindValue(meta.discSetKey.isEmpty() ? QVariant() : meta.discSetKey);
+        updateQuery.addBindValue(meta.discNumber);
+        updateQuery.addBindValue(it.key());
+        if (!updateQuery.exec()) {
+            logError("Failed to update disc set metadata: " + updateQuery.lastError().text());
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool Database::reconcileDiscSetForConfirmedFile(int fileId) {
+    const FileRecord file = getFileById(fileId);
+    if (file.id <= 0)
+        return false;
+    return rebuildDiscSetsForLibrary(file.libraryId);
+}
+
+} // namespace Remus

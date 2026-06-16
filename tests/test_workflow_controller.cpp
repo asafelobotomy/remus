@@ -172,6 +172,44 @@ private slots:
         QCOMPARE(wf.queueFiles().count(), 2);
     }
 
+    void test_queueStage_groupsMultiDiscSet() {
+        AppController app;
+        HashController hash(&app);
+        MatchController match(&app);
+        ArtworkController art(&app);
+        OrganizeController org(&app);
+        WorkflowController wf(&app, &hash, &match, &art, nullptr, &org, nullptr);
+
+        setupTempLibrary(&app);
+        insertFile(&app, QStringLiteral("Final Fantasy VII (Disc 1).7z"));
+        insertFile(&app, QStringLiteral("Final Fantasy VII (Disc 2).7z"));
+        insertFile(&app, QStringLiteral("Final Fantasy VII (Disc 3).7z"));
+        insertFile(&app, QStringLiteral("Chrono Trigger (USA).sfc"));
+        app.database()->rebuildDiscSetsForLibrary(m_libraryId);
+
+        wf.refresh();
+        QCoreApplication::processEvents();
+
+        QCOMPARE(wf.queueFiles().count(), 5);
+
+        int groupIndex = -1;
+        int fileOnlyCount = 0;
+        int discCount = 0;
+        for (int i = 0; i < wf.queueFiles().count(); ++i) {
+            const QString rowType = wf.queueFiles().at(i).toMap().value(QStringLiteral("rowType")).toString();
+            if (rowType == QLatin1String("group"))
+                groupIndex = i;
+            else if (rowType == QLatin1String("disc"))
+                ++discCount;
+            else if (rowType == QLatin1String("file"))
+                ++fileOnlyCount;
+        }
+        QVERIFY(groupIndex >= 0);
+        QCOMPARE(wf.queueFiles().at(groupIndex).toMap().value(QStringLiteral("discCount")).toInt(), 3);
+        QCOMPARE(discCount, 3);
+        QCOMPARE(fileOnlyCount, 1);
+    }
+
     void test_artworkExistsForFile_noFile() {
         AppController app;
         HashController hash(&app);

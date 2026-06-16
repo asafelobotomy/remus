@@ -62,6 +62,19 @@ Frame {
 
                 Label {
                     Layout.fillWidth: true
+                    visible:          (appController.selectedFileData.discSetMemberCount || 0) > 1
+                    text: {
+                        const n = appController.selectedFileData.discNumber || 0
+                        const total = appController.selectedFileData.discSetMemberCount || 0
+                        return n > 0 ? ("Disc " + n + " of " + total) : (total + " discs")
+                    }
+                    font.pixelSize:   11
+                    color:            "#928374"
+                    elide:            Text.ElideRight
+                }
+
+                Label {
+                    Layout.fillWidth: true
                     text:             appController.selectedFileData.systemName || ""
                     font.pixelSize:   11
                     color:            "#928374"
@@ -190,6 +203,30 @@ Frame {
                             color:          "#a89984"
                             font.pixelSize: 10
                             font.bold:      true
+                        }
+
+                        Label {
+                            Layout.fillWidth: true
+                            visible:          (appController.selectedFileData.discSetMemberCount || 0) > 1
+                            text:             "Disc set (" + appController.selectedFileData.discSetMemberCount + " discs)"
+                            color:            "#a89984"
+                            font.pixelSize:   10
+                            font.bold:        true
+                        }
+
+                        Repeater {
+                            model: (appController.selectedFileData.discSetMembers || [])
+                            delegate: MetaField {
+                                Layout.fillWidth: true
+                                visible:          (appController.selectedFileData.discSetMemberCount || 0) > 1
+                                label:            modelData.discLabel || ("Disc " + modelData.discNumber)
+                                value:            modelData.path || ""
+                                mono:             true
+                            }
+                        }
+
+                        SectionDivider {
+                            visible: (appController.selectedFileData.discSetMemberCount || 0) > 1
                         }
 
                         MetaField {

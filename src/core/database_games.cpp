@@ -321,6 +321,8 @@ bool Database::confirmMatch(int fileId) {
         // Non-fatal — match is already confirmed
     }
 
+    reconcileDiscSetForConfirmedFile(fileId);
+
     return true;
 }
 

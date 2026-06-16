@@ -16,6 +16,7 @@
 #include "../../core/archive_creator.h"
 #include "../../core/constants/constants.h"
 #include "../../core/library_exporter.h"
+#include "../../core/m3u_generator.h"
 #include <QSet>
 
 namespace Remus {
@@ -352,6 +353,32 @@ bool ExportController::exportM3u(const QString &outputPath) {
     }
 
     const FileRecord file = m_appController->database()->getFileById(fileId);
+    if (file.id <= 0) {
+        setLastMessage(QStringLiteral("Selected file not found."));
+        return false;
+    }
+
+    Database *db = m_appController->database();
+    if (!file.discSetKey.isEmpty()) {
+        const QList<FileRecord> discSet = db->getFilesByDiscSetKey(file.discSetKey);
+        if (discSet.size() >= 2) {
+            M3UGenerator generator(*db, this);
+            QStringList discPaths;
+            for (const FileRecord &disc : discSet)
+                discPaths.append(disc.currentPath);
+
+            const QString title = !file.baseTitle.isEmpty() ? file.baseTitle : QFileInfo(outputPath).completeBaseName();
+            if (generator.generateM3U(title, discPaths, outputPath)) {
+                m_lastOutputPath = outputPath;
+                setLastMessage(QStringLiteral("Disc set playlist exported: %1").arg(outputPath));
+                emit exportFinished();
+                return true;
+            }
+            setLastMessage(QStringLiteral("Failed to create disc set playlist: %1").arg(outputPath));
+            return false;
+        }
+    }
+
     QFile outFile(outputPath);
     if (!outFile.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate)) {
         setLastMessage(QStringLiteral("Failed to create playlist: %1").arg(outputPath));
@@ -360,7 +387,6 @@ bool ExportController::exportM3u(const QString &outputPath) {
 
     QTextStream stream(&outFile);
     stream << file.currentPath << '\n';
-    // Include child files (multi-disc/multi-track groups)
     const QList<FileRecord> children = m_appController->database()->getFilesByParent(fileId);
     for (const FileRecord &child : children) {
         if (!child.currentPath.isEmpty())

@@ -274,6 +274,9 @@ int LibraryService::persistScanResults(
         }
     }
 
+    if (inserted > 0)
+        db->rebuildDiscSetsForLibrary(libraryId);
+
     return inserted;
 }
 

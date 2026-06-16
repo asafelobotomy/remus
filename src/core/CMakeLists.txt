@@ -25,6 +25,7 @@ add_library(remus-core STATIC
     ra_hasher.cpp
     database.cpp
     database_files.cpp
+    database_disc_sets.cpp
     database_file_state.cpp
     database_games.cpp
     database_migrations.cpp
@@ -40,6 +41,7 @@ add_library(remus-core STATIC
     rom_bundler_bundle_helpers.cpp
     rom_bundler_staged.cpp
     m3u_generator.cpp
+    disc_set_utils.cpp
     chd_converter.cpp
     rvz_converter.cpp
     cso_converter.cpp

@@ -101,6 +101,8 @@ namespace Constants {
                 inline constexpr const char *IS_PRIMARY = "is_primary";
                 inline constexpr const char *PARENT_FILE_ID = "parent_file_id";
                 inline constexpr const char *BASE_TITLE = "base_title";
+                inline constexpr const char *DISC_SET_KEY = "disc_set_key";
+                inline constexpr const char *DISC_NUMBER = "disc_number";
                 inline constexpr const char *FILE_TYPE = "file_type";
                 inline constexpr const char *IS_PATCHED = "is_patched";
                 inline constexpr const char *PATCH_NAME = "patch_name";
@@ -196,6 +198,7 @@ namespace Constants {
             inline constexpr const char *FILES_HASHES = "idx_files_hashes";
             inline constexpr const char *FILES_ORIGINAL_PATH = "idx_files_original_path";
             inline constexpr const char *FILES_PROCESSED = "idx_files_processed";
+            inline constexpr const char *FILES_DISC_SET_KEY = "idx_files_disc_set_key";
             inline constexpr const char *MATCHES_FILE_ID = "idx_matches_file_id";
             inline constexpr const char *MATCHES_GAME_ID = "idx_matches_game_id";
             inline constexpr const char *CACHE_KEY = "idx_cache_key";

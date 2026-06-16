@@ -176,12 +176,21 @@ Frame {
 
                     required property var modelData
 
+                    readonly property string rowType: modelData.rowType || "file"
+                    readonly property bool isGroup: rowType === "group"
+                    readonly property bool isDisc: rowType === "disc"
+
                     property bool filterMatch: {
                         if (root.searchText.length === 0)
                             return true
                         const q = root.searchText.toLowerCase()
+                        if (isGroup) {
+                            const blob = (modelData.filename || "") + " " + (modelData.memberSearchText || "")
+                            return blob.toLowerCase().indexOf(q) >= 0
+                        }
                         const fields = [
                             modelData.filename || "",
+                            modelData.discLabel || "",
                             modelData.matchedTitle || "",
                             modelData.systemName || "",
                             modelData.path || "",
@@ -197,19 +206,40 @@ Frame {
                     visible: filterMatch
                     height:  filterMatch ? implicitHeight : 0
                     width:   romList.width
-                    padding: 4
-                    highlighted: appController.selectedFileId === modelData.fileId
+                    padding: isDisc ? 4 : 4
+                    highlighted: !isGroup && appController.selectedFileId === modelData.fileId
 
                     contentItem: RowLayout {
                         spacing: 0
 
+                        Item {
+                            Layout.preferredWidth: isDisc ? 18 : (isGroup ? 22 : 0)
+                            Layout.alignment: Qt.AlignVCenter
+
+                            Label {
+                                visible: isGroup
+                                anchors.centerIn: parent
+                                text: modelData.expanded ? "▾" : "▸"
+                                font.pixelSize: 11
+                                color: "#a89984"
+                            }
+                        }
+
                         Label {
-                            Layout.minimumWidth: root.colTitleMin
+                            Layout.minimumWidth: root.colTitleMin - (isDisc ? 18 : (isGroup ? 22 : 0))
                             Layout.fillWidth:    true
-                            text:             rowDelegate.modelData.filename
+                            text: {
+                                if (isGroup)
+                                    return modelData.filename + "  (" + modelData.discCount + " discs)"
+                                if (isDisc)
+                                    return modelData.discLabel || modelData.filename
+                                return rowDelegate.modelData.filename
+                            }
                             elide:            Text.ElideRight
-                            font.pixelSize:   12
-                            color:            "#ebdbb2"
+                            font.pixelSize:   isGroup ? 12 : 12
+                            font.bold:        isGroup
+                            color:            isGroup ? "#fbf1c7" : "#ebdbb2"
+                            leftPadding:      isDisc ? 4 : 0
                         }
 
                         Label {
@@ -218,11 +248,13 @@ Frame {
                             elide:            Text.ElideRight
                             font.pixelSize:   11
                             color:            "#a89984"
+                            visible:          !isGroup
                         }
 
                         Label {
                             Layout.preferredWidth: root.colYear
                             horizontalAlignment: Text.AlignHCenter
+                            visible:          !isGroup
                             text: {
                                 const y = rowDelegate.modelData.releaseYear
                                 return (y && y > 0) ? y.toString() : "—"
@@ -235,6 +267,8 @@ Frame {
                             Layout.preferredWidth: root.colMatch
                             horizontalAlignment: Text.AlignRight
                             text: {
+                                if (isGroup)
+                                    return modelData.matchProgress || "—"
                                 const c = rowDelegate.modelData.confidence
                                 if (!rowDelegate.modelData.hasAnyMatch || !c || c <= 0)
                                     return "—"
@@ -242,6 +276,13 @@ Frame {
                             }
                             font.pixelSize: 11
                             color: {
+                                if (isGroup) {
+                                    if (modelData.hasMatch)
+                                        return "#b8bb26"
+                                    if (modelData.hasAnyMatch)
+                                        return "#fabd2f"
+                                    return "#665c54"
+                                }
                                 const c = rowDelegate.modelData.confidence
                                 if (!rowDelegate.modelData.hasMatch)
                                     return rowDelegate.modelData.hasAnyMatch ? "#fabd2f" : "#665c54"
@@ -253,50 +294,88 @@ Frame {
 
                         StatusIcon {
                             Layout.preferredWidth: root.colStatus
-                            state: rowDelegate.modelData.hasMatch     ? StatusIcon.Done
-                                 : rowDelegate.modelData.hasAnyMatch ? StatusIcon.Warn
-                                 : rowDelegate.modelData.hasHash     ? StatusIcon.Fail
-                                 :                                     StatusIcon.Fail
-                            tooltip: rowDelegate.modelData.hasMatch     ? "Match confirmed"
-                                   : rowDelegate.modelData.hasAnyMatch ? "Match needs review"
-                                   : rowDelegate.modelData.hasHash     ? "Hashed, not matched"
-                                   :                                     "Needs hash and match"
+                            state: isGroup
+                                 ? (modelData.hasMatch     ? StatusIcon.Done
+                                   : modelData.hasAnyMatch ? StatusIcon.Warn
+                                   : modelData.hasHash     ? StatusIcon.Fail
+                                   :                         StatusIcon.Fail)
+                                 : (rowDelegate.modelData.hasMatch     ? StatusIcon.Done
+                                   : rowDelegate.modelData.hasAnyMatch ? StatusIcon.Warn
+                                   : rowDelegate.modelData.hasHash     ? StatusIcon.Fail
+                                   :                                     StatusIcon.Fail)
+                            tooltip: isGroup
+                                   ? (modelData.hasMatch     ? "All discs matched"
+                                     : modelData.hasAnyMatch ? "Some discs need match review"
+                                     : modelData.hasHash     ? "Hashed, not matched"
+                                     :                         "Needs hash and match")
+                                   : (rowDelegate.modelData.hasMatch     ? "Match confirmed"
+                                     : rowDelegate.modelData.hasAnyMatch ? "Match needs review"
+                                     : rowDelegate.modelData.hasHash     ? "Hashed, not matched"
+                                     :                                     "Needs hash and match")
                         }
 
                         StatusIcon {
                             Layout.preferredWidth: root.colStatus
-                            state: rowDelegate.modelData.hasArtwork  ? StatusIcon.Done
-                                 : rowDelegate.modelData.hasMatch    ? StatusIcon.Warn
-                                 :                                     StatusIcon.Fail
-                            tooltip: rowDelegate.modelData.hasArtwork  ? "Artwork downloaded"
-                                   : rowDelegate.modelData.hasMatch    ? "Missing artwork"
-                                   :                                     "Match required first"
+                            state: isGroup
+                                 ? (modelData.hasArtwork ? StatusIcon.Done
+                                   : modelData.hasMatch  ? StatusIcon.Warn
+                                   :                       StatusIcon.Fail)
+                                 : (rowDelegate.modelData.hasArtwork  ? StatusIcon.Done
+                                   : rowDelegate.modelData.hasMatch    ? StatusIcon.Warn
+                                   :                                     StatusIcon.Fail)
+                            tooltip: isGroup
+                                   ? (modelData.hasArtwork ? "Artwork complete (" + (modelData.artworkProgress || "") + ")"
+                                     : modelData.hasMatch  ? "Missing artwork"
+                                     :                       "Match required first")
+                                   : (rowDelegate.modelData.hasArtwork  ? "Artwork downloaded"
+                                     : rowDelegate.modelData.hasMatch    ? "Missing artwork"
+                                     :                                     "Match required first")
                         }
 
                         StatusIcon {
                             Layout.preferredWidth: root.colStatus
-                            state: !rowDelegate.modelData.isConvertible ? StatusIcon.Na
-                                 : rowDelegate.modelData.isConverted   ? StatusIcon.Done
-                                 :                                       StatusIcon.Fail
-                            tooltip: !rowDelegate.modelData.isConvertible ? "Conversion not applicable"
-                                   : rowDelegate.modelData.isConverted   ? "Converted"
-                                   :                                       "Not converted"
+                            state: isGroup
+                                 ? (!modelData.isConvertible ? StatusIcon.Na
+                                   : modelData.isConverted   ? StatusIcon.Done
+                                   :                           StatusIcon.Fail)
+                                 : (!rowDelegate.modelData.isConvertible ? StatusIcon.Na
+                                   : rowDelegate.modelData.isConverted   ? StatusIcon.Done
+                                   :                                       StatusIcon.Fail)
+                            tooltip: isGroup
+                                   ? (!modelData.isConvertible ? "Conversion not applicable"
+                                     : modelData.isConverted   ? "All discs converted"
+                                     :                           "Not all discs converted")
+                                   : (!rowDelegate.modelData.isConvertible ? "Conversion not applicable"
+                                     : rowDelegate.modelData.isConverted   ? "Converted"
+                                     :                                       "Not converted")
                         }
 
                         StatusIcon {
                             Layout.preferredWidth: root.colStatus
-                            state: rowDelegate.modelData.isBundled ? StatusIcon.Done : StatusIcon.Fail
-                            tooltip: rowDelegate.modelData.isBundled ? "Bundled and renamed" : "Not bundled"
+                            state: isGroup
+                                 ? (modelData.isBundled ? StatusIcon.Done : StatusIcon.Fail)
+                                 : (rowDelegate.modelData.isBundled ? StatusIcon.Done : StatusIcon.Fail)
+                            tooltip: isGroup
+                                   ? (modelData.isBundled ? "All discs bundled" : "Not all discs bundled")
+                                   : (rowDelegate.modelData.isBundled ? "Bundled and renamed" : "Not bundled")
                         }
 
                         StatusIcon {
                             Layout.preferredWidth: root.colStatus
-                            state: rowDelegate.modelData.isOrganized ? StatusIcon.Done : StatusIcon.Fail
-                            tooltip: rowDelegate.modelData.isOrganized ? "Organized into library" : "Not organized"
+                            state: isGroup
+                                 ? (modelData.isOrganized ? StatusIcon.Done : StatusIcon.Fail)
+                                 : (rowDelegate.modelData.isOrganized ? StatusIcon.Done : StatusIcon.Fail)
+                            tooltip: isGroup
+                                   ? (modelData.isOrganized ? "All discs organized" : "Not all discs organized")
+                                   : (rowDelegate.modelData.isOrganized ? "Organized into library" : "Not organized")
                         }
                     }
 
                     onClicked: {
+                        if (isGroup) {
+                            workflowController.toggleDiscGroupExpanded(modelData.groupKey)
+                            return
+                        }
                         const fid = modelData.fileId
                         Qt.callLater(function() { appController.selectedFileId = fid })
                     }
@@ -304,6 +383,7 @@ Frame {
                     background: Rectangle {
                         color:  parent.highlighted ? "#3f4d4f"
                               : parent.hovered     ? "#383838"
+                              : isGroup              ? "#252525"
                               : "transparent"
                         radius: 4
                     }
