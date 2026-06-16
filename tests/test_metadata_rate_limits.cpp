@@ -21,8 +21,8 @@ void MetadataRateLimitsTest::returnsDefaultWhenUnset() {
 }
 
 void MetadataRateLimitsTest::perProviderOverrideTakesPrecedence() {
-    QSettings settings(QString::fromLatin1(Constants::SETTINGS_ORGANIZATION),
-        QString::fromLatin1(Constants::SETTINGS_APPLICATION));
+    QSettings settings(
+        QString::fromLatin1(Constants::SETTINGS_ORGANIZATION), QString::fromLatin1(Constants::SETTINGS_APPLICATION));
     settings.setValue(QStringLiteral("metadata/rate_limit/hasheous"), 1234);
     settings.sync();
 

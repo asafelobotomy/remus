@@ -247,8 +247,7 @@ Constants::FolderNaming::Scheme OrganizeController::folderSchemeFromSettings(boo
         QString::fromLatin1(Constants::SETTINGS_ORGANIZATION), QString::fromLatin1(Constants::SETTINGS_APPLICATION));
     QString schemeName = settings
                              .value(QString::fromLatin1(Constants::Settings::Organize::FOLDER_SCHEME),
-                                 legacyBySystem ? Constants::Settings::Defaults::FOLDER_SCHEME
-                                                : QStringLiteral("none"))
+                                 legacyBySystem ? Constants::Settings::Defaults::FOLDER_SCHEME : QStringLiteral("none"))
                              .toString();
     if (!settings.contains(QString::fromLatin1(Constants::Settings::Organize::FOLDER_SCHEME))) {
         schemeName = legacyBySystem ? Constants::Settings::Defaults::FOLDER_SCHEME : QStringLiteral("none");
@@ -261,8 +260,8 @@ QVariantList OrganizeController::folderSchemeChoices() const {
     for (const QString &name : Constants::FolderNaming::SCHEME_NAMES) {
         QVariantMap item;
         item.insert(QStringLiteral("value"), name);
-        item.insert(QStringLiteral("label"), Constants::FolderNaming::schemeDisplayName(
-                                                 Constants::FolderNaming::schemeFromString(name)));
+        item.insert(QStringLiteral("label"),
+            Constants::FolderNaming::schemeDisplayName(Constants::FolderNaming::schemeFromString(name)));
         choices.append(item);
     }
     return choices;

@@ -26,7 +26,8 @@ class HttpMetadataProvider : public MetadataProvider {
 
 public:
     explicit HttpMetadataProvider(int rateLimitMs, QObject *parent = nullptr);
-    explicit HttpMetadataProvider(const QString &providerSettingsKey, int defaultRateLimitMs, QObject *parent = nullptr);
+    explicit HttpMetadataProvider(
+        const QString &providerSettingsKey, int defaultRateLimitMs, QObject *parent = nullptr);
 
     /**
      * @brief Flush all pending deferred-delete events from Qt's network layer.

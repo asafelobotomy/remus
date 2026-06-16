@@ -17,8 +17,8 @@ namespace {
 
 SettingsController::SettingsController(QObject *parent)
     : QObject(parent)
-    , m_settings(QString::fromLatin1(Constants::SETTINGS_ORGANIZATION),
-          QString::fromLatin1(Constants::SETTINGS_APPLICATION)) {
+    , m_settings(
+          QString::fromLatin1(Constants::SETTINGS_ORGANIZATION), QString::fromLatin1(Constants::SETTINGS_APPLICATION)) {
     migrateLegacySecrets();
 }
 

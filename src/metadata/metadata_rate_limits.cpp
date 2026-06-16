@@ -7,8 +7,8 @@
 namespace Remus {
 
 int configuredRateLimitMs(const QString &providerKey, int defaultMs) {
-    QSettings settings(QString::fromLatin1(Constants::SETTINGS_ORGANIZATION),
-        QString::fromLatin1(Constants::SETTINGS_APPLICATION));
+    QSettings settings(
+        QString::fromLatin1(Constants::SETTINGS_ORGANIZATION), QString::fromLatin1(Constants::SETTINGS_APPLICATION));
 
     const QString perProviderKey = QStringLiteral("metadata/rate_limit/") + providerKey.trimmed().toLower();
     if (settings.contains(perProviderKey) && !settings.value(perProviderKey).toString().trimmed().isEmpty()) {
