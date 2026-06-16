@@ -16,67 +16,62 @@ namespace Remus {
 
 namespace {
 
-constexpr int kProgressMinIntervalMs = 200;
-constexpr int kPersistProgressStep = 50;
+    constexpr int kProgressMinIntervalMs = 200;
+    constexpr int kPersistProgressStep = 50;
 
-class ProgressThrottler {
-public:
-    explicit ProgressThrottler(ScanController *controller)
-        : m_controller(controller) { }
+    class ProgressThrottler {
+    public:
+        explicit ProgressThrottler(ScanController *controller)
+            : m_controller(controller) { }
 
-    LibraryService::ProgressCallback scanCallback() {
-        return [this](int done, int total, const QString &path) { reportScan(done, total, path); };
-    }
+        LibraryService::ProgressCallback scanCallback() {
+            return [this](int done, int total, const QString &path) { reportScan(done, total, path); };
+        }
 
-    LibraryService::ProgressCallback persistCallback() {
-        return [this](int done, int total, const QString &) { reportPersist(done, total); };
-    }
+        LibraryService::ProgressCallback persistCallback() {
+            return [this](int done, int total, const QString &) { reportPersist(done, total); };
+        }
 
-    void flushScan(bool force) {
-        const qint64 now = QDateTime::currentMSecsSinceEpoch();
-        const bool finished = m_pendingTotal > 0 && m_pendingDone >= m_pendingTotal;
-        if (!force && !finished && (now - m_lastFlushMs) < kProgressMinIntervalMs)
-            return;
+        void flushScan(bool force) {
+            const qint64 now = QDateTime::currentMSecsSinceEpoch();
+            const bool finished = m_pendingTotal > 0 && m_pendingDone >= m_pendingTotal;
+            if (!force && !finished && (now - m_lastFlushMs) < kProgressMinIntervalMs)
+                return;
 
-        m_lastFlushMs = now;
-        const int done = m_pendingDone;
-        const int total = m_pendingTotal;
-        const QString path = m_pendingPath;
-        m_pendingPath.clear();
+            m_lastFlushMs = now;
+            const int done = m_pendingDone;
+            const int total = m_pendingTotal;
+            const QString path = m_pendingPath;
+            m_pendingPath.clear();
 
-        QMetaObject::invokeMethod(
-            m_controller,
-            "applyScanProgress",
-            Qt::QueuedConnection,
-            Q_ARG(int, done),
-            Q_ARG(int, total),
-            Q_ARG(QString, path));
-    }
+            QMetaObject::invokeMethod(m_controller, "applyScanProgress", Qt::QueuedConnection, Q_ARG(int, done),
+                Q_ARG(int, total), Q_ARG(QString, path));
+        }
 
-private:
-    void reportScan(int done, int total, const QString &path) {
-        m_pendingDone = done;
-        m_pendingTotal = total;
-        if (!path.isEmpty())
-            m_pendingPath = path;
-        flushScan(false);
-    }
+    private:
+        void reportScan(int done, int total, const QString &path) {
+            m_pendingDone = done;
+            m_pendingTotal = total;
+            if (!path.isEmpty())
+                m_pendingPath = path;
+            flushScan(false);
+        }
 
-    void reportPersist(int done, int total) {
-        const bool finished = total > 0 && done >= total;
-        if (!finished && done % kPersistProgressStep != 0)
-            return;
+        void reportPersist(int done, int total) {
+            const bool finished = total > 0 && done >= total;
+            if (!finished && done % kPersistProgressStep != 0)
+                return;
 
-        QMetaObject::invokeMethod(
-            m_controller, "applyPersistProgress", Qt::QueuedConnection, Q_ARG(int, done), Q_ARG(int, total));
-    }
+            QMetaObject::invokeMethod(
+                m_controller, "applyPersistProgress", Qt::QueuedConnection, Q_ARG(int, done), Q_ARG(int, total));
+        }
 
-    ScanController *m_controller;
-    qint64 m_lastFlushMs = 0;
-    int m_pendingDone = 0;
-    int m_pendingTotal = 0;
-    QString m_pendingPath;
-};
+        ScanController *m_controller;
+        qint64 m_lastFlushMs = 0;
+        int m_pendingDone = 0;
+        int m_pendingTotal = 0;
+        QString m_pendingPath;
+    };
 
 } // namespace
 
@@ -158,8 +153,7 @@ void ScanController::startScan(const QString &directory) {
         if (!workerDb.initialize(dbPath, connectionName)) {
             m_workerService.store(nullptr);
             QMetaObject::invokeMethod(
-                this,
-                [this]() { finishScanError(QStringLiteral("Failed to open database for scan save.")); },
+                this, [this]() { finishScanError(QStringLiteral("Failed to open database for scan save.")); },
                 Qt::QueuedConnection);
             return;
         }
@@ -167,8 +161,8 @@ void ScanController::startScan(const QString &directory) {
         const int toInsert = results.size();
         QMetaObject::invokeMethod(this, [this, toInsert]() { beginPersistPhase(toInsert); }, Qt::QueuedConnection);
 
-        const int inserted = workerService.persistScanResults(
-            results, libraryId, &workerDb, throttler.persistCallback());
+        const int inserted
+            = workerService.persistScanResults(results, libraryId, &workerDb, throttler.persistCallback());
 
         workerDb.close();
         m_workerService.store(nullptr);

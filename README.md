@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/asafelobotomy/remus/actions/workflows/ci.yml/badge.svg)](https://github.com/asafelobotomy/remus/actions/workflows/ci.yml)
 [![CodeQL](https://github.com/asafelobotomy/remus/actions/workflows/codeql.yml/badge.svg)](https://github.com/asafelobotomy/remus/actions/workflows/codeql.yml)
-[![Version](https://img.shields.io/badge/version-0.10.1-blue.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-0.11.0-blue.svg)](CHANGELOG.md)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 
 A C++17 retro game library manager for scanning, organizing, and managing ROM libraries with automatic metadata fetching, verification, conversion, patching, and mod workflows across both the command line and a Qt Quick desktop GUI.
@@ -32,7 +32,7 @@ The active build now ships a shared CLI and Qt Quick GUI. The legacy TUI remains
 
 ## Project Status
 
-Current version: 0.10.1
+Current version: 0.11.0
 
 Remus now builds `remus-cli` and `remus-gui` by default from the shared C++17/Qt 6 codebase. The legacy TUI remains preserved under `archive/gui-tui/` as historical reference code.
 

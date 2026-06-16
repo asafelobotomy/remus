@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.11.0] - 2026-06-16
+
 ### Added
 
 - MIT `LICENSE` and blocking clang-format CI (`lint` job, pinned clang-format-22)
@@ -37,6 +39,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - AppImage bundles `remus-gui` and `remus-cli`; legacy archive docs and ADR-0001 updated for active GUI-only integration
 - Converted cache/system-name tests to Qt Test; IGDB enrichment skip-path smoke test
 - Compendium build verifies manifest DAT checksums; full-build wrapper fails on exit code 2 and runs phase-1 validation gate by default
+- GitHub Actions bumped to `actions/checkout` v6.0.3 and `actions/attest-build-provenance` v4.1.0
+
+### Fixed
+
+- GUI library scan no longer freezes the UI during database persistence
+- ROM source directory setting with Update library prompt when unset
+- Pipeline stages drawer overlay rendering on the library view
+- TMM-style library toolbar and empty-state UX improvements
+- Verification docs corrected for real `--patch-*` CLI flags (removed fictional `remus patch` subcommands)
+- Compiler warning cleanup and clang-format compliance in scan controller
 
 ### Removed
 
