@@ -374,6 +374,36 @@ bool ExportController::exportM3u(const QString &outputPath) {
     return true;
 }
 
+int ExportController::generateM3uPlaylists(const QString &outputDir, const QString &systemsCsv) {
+    if (m_appController == nullptr || !m_appController->isLibraryOpen()) {
+        setLastMessage(QStringLiteral("Open a library before generating playlists."));
+        return 0;
+    }
+
+    const QString cleanedDir = outputDir.trimmed();
+    if (cleanedDir.isEmpty()) {
+        setLastMessage(QStringLiteral("Choose an output directory for M3U playlists."));
+        return 0;
+    }
+
+    Database *db = m_appController->database();
+    M3UGenerator generator(*db, this);
+    const QStringList systems = parseSystemsFilter(systemsCsv);
+    int generated = 0;
+    if (systems.isEmpty()) {
+        generated = generator.generateAll(QString(), cleanedDir);
+    } else {
+        for (const QString &system : systems) {
+            generated += generator.generateAll(system.trimmed(), cleanedDir);
+        }
+    }
+
+    m_lastOutputPath = cleanedDir;
+    setLastMessage(QStringLiteral("Generated %1 M3U playlist(s) in %2").arg(generated).arg(cleanedDir));
+    emit exportFinished();
+    return generated;
+}
+
 GameMetadata ExportController::metadataForMatch(const Database::MatchResult &match) const {
     GameMetadata metadata;
     metadata.title = match.gameTitle;

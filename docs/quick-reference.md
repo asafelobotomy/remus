@@ -425,7 +425,7 @@ a-z A-Z 0-9 SPACE $ ! # % ' ( ) + , - . ; = @ [ ] ^ _ { } ~
 
 ```bash
 # Verify scanned files against a DAT or XML catalog
-remus --verify ~/Downloads/No-Intro_NES_2024.dat --verify-report
+remus-cli --verify ~/Downloads/No-Intro_NES_2024.dat --verify-report
 
 # The current CLI still takes an explicit DAT file.
 # When a bundled compendium database is present, Remus also attaches it as

@@ -22,7 +22,7 @@
 namespace Remus {
 
 ScreenScraperProvider::ScreenScraperProvider(QObject *parent)
-    : HttpMetadataProvider(Constants::Network::SCREENSCRAPER_RATE_LIMIT_MS, parent) { }
+    : HttpMetadataProvider(QStringLiteral("screenscraper"), Constants::Network::SCREENSCRAPER_RATE_LIMIT_MS, parent) { }
 
 void ScreenScraperProvider::setCredentials(const QString &username, const QString &password) {
     MetadataProvider::setCredentials(username, password);

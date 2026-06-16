@@ -48,6 +48,8 @@ signals:
     void settingsError(const QString &message);
 
 private:
+    void migrateLegacySecrets();
+
     QSettings m_settings;
 };
 

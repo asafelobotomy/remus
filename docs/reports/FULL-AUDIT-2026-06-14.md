@@ -275,5 +275,7 @@ build/remus-cli --metadata 811b027eaf99c2def7b933c5208636de --provider compendiu
 
 | Date | Change |
 |------|--------|
+| 2026-06-14 | Audit remediation P1–P6 implemented (GUI parity, docs, security, compendium CI, rate limits) |
+| 2026-06-14 | CI shellcheck/qmllint fixes; VerifyView delegate qualification |
 | 2026-06-14 | Initial full audit report |
 | 2026-06-14 | clang-format drift fixed across `src/` and `tests/` |

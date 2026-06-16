@@ -11,8 +11,10 @@
 #include "controllers/export_controller.h"
 #include "controllers/metadata_editor_controller.h"
 #include "controllers/mod_controller.h"
+#include "controllers/organize_controller.h"
 #include "controllers/patch_controller.h"
 #include "../src/core/database_types.h"
+#include "../src/core/constants/folder_naming.h"
 
 using namespace Remus;
 
@@ -24,6 +26,8 @@ private slots:
     void metadataEditor_tracksDirtyState();
     void exportController_previewRequiresLibrary();
     void exportController_frontendExportWritesCsv();
+    void exportController_generateM3uRequiresLibrary();
+    void organizeController_exposesFolderSchemes();
     void patchController_checkToolsPopulatesStatus();
     void modController_loadCatalogFromFixture();
 };
@@ -118,6 +122,18 @@ void GuiExtraControllersTest::exportController_frontendExportWritesCsv() {
     const QString csvPath = tempDir.filePath(QStringLiteral("export.csv"));
     QVERIFY(exportCtl.exportFrontend(QStringLiteral("csv"), csvPath));
     QVERIFY(QFileInfo(csvPath).exists());
+}
+
+void GuiExtraControllersTest::exportController_generateM3uRequiresLibrary() {
+    AppController app;
+    ExportController exportCtl(&app);
+    QCOMPARE(exportCtl.generateM3uPlaylists(QStringLiteral("/tmp/out")), 0);
+}
+
+void GuiExtraControllersTest::organizeController_exposesFolderSchemes() {
+    AppController app;
+    OrganizeController organize(&app);
+    QVERIFY(organize.folderSchemeChoices().size() >= static_cast<int>(Constants::FolderNaming::SCHEME_NAMES.size()));
 }
 
 void GuiExtraControllersTest::patchController_checkToolsPopulatesStatus() {

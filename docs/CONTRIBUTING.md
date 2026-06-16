@@ -12,9 +12,14 @@ This guide defines where to place documentation and how to submit code changes.
    cmake --build build -j$(nproc)
    ctest --test-dir build --output-on-failure
    ```
-4. Format C++ changes before opening a pull request (use clang-format version from `.clang-format-version`):
+4. Format C++ changes before opening a pull request (use the pinned clang-format version from `.clang-format-version`):
    ```bash
-   find src tests -type f \( -name '*.cpp' -o -name '*.h' \) -print0 | xargs -0 clang-format -i
+   CLANG_FORMAT_VERSION="$(tr -d '[:space:]' < .clang-format-version)"
+   bash .github/scripts/install-clang-format.sh
+   find src tests -type f \( -name '*.cpp' -o -name '*.h' \) -print0 \
+     | xargs -0 "/usr/bin/clang-format-${CLANG_FORMAT_VERSION}" -i
+   "/usr/bin/clang-format-${CLANG_FORMAT_VERSION}" --dry-run --Werror \
+     $(find src tests -type f \( -name '*.cpp' -o -name '*.h' \) | sort)
    ```
 5. Open a pull request using the template and ensure CI checks pass.
 
@@ -31,6 +36,7 @@ Maintainers should configure [branch protection](https://docs.github.com/en/repo
 | `sanitizer` | CI | ASan + UBSan test pass |
 | `shellcheck` | CI | Shell script lint on `.github/scripts/` and `scripts/` |
 | `qml-lint` | CI | Informational `qmllint` pass on `src/gui/qml` |
+| `compendium-bootstrap` | CI | Bootstrap compendium schema + seed validation |
 | `clang-tidy` | CI | Informational spot-check on `src/core` |
 | `Analyze` | CodeQL | C++ static analysis (job display name: `Analyze (C/C++)`) |
 

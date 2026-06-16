@@ -45,7 +45,18 @@ namespace Constants {
         namespace Organize {
             inline constexpr const char *NAMING_TEMPLATE = "organize/naming_template";
             inline constexpr const char *BY_SYSTEM = "organize/by_system";
+            inline constexpr const char *FOLDER_SCHEME = "organize/folder_scheme";
             inline constexpr const char *PRESERVE_ORIGINALS = "organize/preserve_originals";
+        }
+
+        namespace MetadataRateLimit {
+            inline constexpr const char *GLOBAL_MS = "metadata/rate_limit_ms";
+            inline constexpr const char *HASHEOUS_MS = "metadata/rate_limit/hasheous";
+            inline constexpr const char *SCREENSCRAPER_MS = "metadata/rate_limit/screenscraper";
+            inline constexpr const char *IGDB_MS = "metadata/rate_limit/igdb";
+            inline constexpr const char *THEGAMESDB_MS = "metadata/rate_limit/thegamesdb";
+            inline constexpr const char *PLAYMATCH_MS = "metadata/rate_limit/playmatch";
+            inline constexpr const char *RETROACHIEVEMENTS_MS = "metadata/rate_limit/retroachievements";
         }
 
         namespace Match {
@@ -62,6 +73,7 @@ namespace Constants {
             inline const QString NAMING_TEMPLATE = Templates::DEFAULT_SIMPLE;
             inline const QString HASH_ALGORITHM = QStringLiteral("Auto (System Default)");
             inline const QString ORGANIZE_BY_SYSTEM = QStringLiteral("true");
+            inline const QString FOLDER_SCHEME = QStringLiteral("default");
             inline const QString PRESERVE_ORIGINALS = QStringLiteral("false");
             inline const QString PARALLEL_HASHING = QStringLiteral("true");
             inline const QString CONFIDENCE_THRESHOLD = QStringLiteral("75");

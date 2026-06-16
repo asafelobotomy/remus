@@ -299,8 +299,8 @@ build/remus-cli --metadata <known_md5> --provider compendium
 # Full match pass
 build/remus-cli --match --library /path/to/roms
 
-# Verification + patch catalog
-build/remus-cli --verify --system NES
+# Verification + patch catalog (library against bundled compendium)
+build/remus-cli --verify ~/roms/No-Intro_NES.dat --verify-report
 bash .github/scripts/validate-compendium-db.sh data/compendium/remus_compendium.db \
   data/compendium/validation/0002_phase2_quality_checks.sql
 ```

@@ -18,7 +18,30 @@ namespace {
 SettingsController::SettingsController(QObject *parent)
     : QObject(parent)
     , m_settings(QString::fromLatin1(Constants::SETTINGS_ORGANIZATION),
-          QString::fromLatin1(Constants::SETTINGS_APPLICATION)) { }
+          QString::fromLatin1(Constants::SETTINGS_APPLICATION)) {
+    migrateLegacySecrets();
+}
+
+void SettingsController::migrateLegacySecrets() {
+    bool changed = false;
+    for (const char *rawKey : Constants::Settings::Providers::ALL_SECRET_KEYS) {
+        const QString key = QString::fromLatin1(rawKey);
+        if (!SecretStore::read(key).trimmed().isEmpty())
+            continue;
+
+        const QString legacy = m_settings.value(key).toString().trimmed();
+        if (legacy.isEmpty())
+            continue;
+
+        if (SecretStore::write(key, legacy)) {
+            m_settings.remove(key);
+            changed = true;
+        }
+    }
+
+    if (changed)
+        m_settings.sync();
+}
 
 QVariantList SettingsController::providerFields() const {
     QVariantList fields;
@@ -149,8 +172,7 @@ QString SettingsController::authenticateProvider(const QString &groupKey) {
 QString SettingsController::stringValue(const QString &key, const QString &defaultValue) const {
     if (isSecretKey(key)) {
         const QString secret = SecretStore::read(key);
-        // Fall back to legacy plain-settings value for backward compat
-        return secret.isEmpty() ? m_settings.value(key, defaultValue).toString() : secret;
+        return secret.isEmpty() ? defaultValue : secret;
     }
     return m_settings.value(key, defaultValue).toString();
 }
@@ -166,7 +188,7 @@ bool SettingsController::boolValue(const QString &key, bool defaultValue) const 
 QVariant SettingsController::value(const QString &key, const QVariant &defaultValue) const {
     if (isSecretKey(key)) {
         const QString secret = SecretStore::read(key);
-        return secret.isEmpty() ? m_settings.value(key, defaultValue) : QVariant(secret);
+        return secret.isEmpty() ? defaultValue : QVariant(secret);
     }
     return m_settings.value(key, defaultValue);
 }

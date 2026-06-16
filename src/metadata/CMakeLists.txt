@@ -25,6 +25,7 @@ add_library(remus-metadata STATIC
     provider_orchestrator_fallback.cpp
     metadata_cache.cpp
     rate_limiter.cpp
+    metadata_rate_limits.cpp
     artwork_downloader.cpp
     filename_normalizer.cpp
     # Compendium compiler pipeline

@@ -15,7 +15,7 @@
 namespace Remus {
 
 IGDBProvider::IGDBProvider(QObject *parent)
-    : HttpMetadataProvider(Constants::Network::IGDB_RATE_LIMIT_MS, parent) { }
+    : HttpMetadataProvider(QStringLiteral("igdb"), Constants::Network::IGDB_RATE_LIMIT_MS, parent) { }
 
 void IGDBProvider::setCredentials(const QString &clientId, const QString &clientSecret) {
     const QString trimmedClientId = clientId.trimmed();

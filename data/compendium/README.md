@@ -64,6 +64,13 @@ A fresh bootstrap database contains schema, seeds, and indexes only. The full
 validator is intended for a populated build output, so `content.*` checks will
 remain `FAIL` until you run a compendium build or ingest workflow.
 
+Bootstrap-only CI validation (schema + seeds, no populated content):
+
+```bash
+bash .github/scripts/validate-compendium-db.sh data/compendium/remus_compendium.db \
+  data/compendium/validation/0000_bootstrap_checks.sql
+```
+
 ## Build and inspect compendium catalogs
 
 This repository currently exposes compendium rebuilding as a manifest-driven

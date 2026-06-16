@@ -43,7 +43,7 @@ namespace {
 } // namespace
 
 PlayMatchProvider::PlayMatchProvider(QObject *parent)
-    : HttpMetadataProvider(Constants::Network::PLAYMATCH_RATE_LIMIT_MS, parent) {
+    : HttpMetadataProvider(QStringLiteral("playmatch"), Constants::Network::PLAYMATCH_RATE_LIMIT_MS, parent) {
     qInfo() << "PlayMatch provider initialized";
 }
 
