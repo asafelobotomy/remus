@@ -121,13 +121,7 @@ fi
 
 # ── 5. qmllint ───────────────────────────────────────────────────────────────
 section "5. qmllint"
-mapfile -t qml_files < <(find src/gui/qml -name '*.qml' -type f | sort)
-info "Linting ${#qml_files[@]} QML files"
-if qmllint \
-        --unqualified info --import info --type info --property info \
-        --signal info --required info --alias info --deprecated info \
-        --with info \
-        "${qml_files[@]}" 2>&1; then
+if bash .github/scripts/run-qmllint.sh 2>&1; then
     pass "qmllint: no hard errors"
 else
     fail "qmllint: hard errors found"
