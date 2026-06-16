@@ -75,12 +75,16 @@ Item {
                     width: resultDelegate.availableWidth
                     spacing: 4
 
-                    Label { Layout.fillWidth: true; text: filename; font.bold: true; elide: Text.ElideMiddle }
-                    Label { Layout.fillWidth: true; text: system + " • " + status + " • " + hashType; elide: Text.ElideRight }
+                    Label { Layout.fillWidth: true; text: resultDelegate.filename; font.bold: true; elide: Text.ElideMiddle }
+                    Label {
+                        Layout.fillWidth: true
+                        text: resultDelegate.system + " • " + resultDelegate.status + " • " + resultDelegate.hashType
+                        elide: Text.ElideRight
+                    }
                     Label {
                         Layout.fillWidth: true
                         wrapMode: Text.WordWrap
-                        text: notes
+                        text: resultDelegate.notes
                     }
                 }
             }
