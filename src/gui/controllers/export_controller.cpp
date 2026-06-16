@@ -393,9 +393,13 @@ int ExportController::generateM3uPlaylists(const QString &outputDir, const QStri
     if (systems.isEmpty()) {
         generated = generator.generateAll(QString(), cleanedDir);
     } else {
-        for (const QString &system : systems) {
-            generated += generator.generateAll(system.trimmed(), cleanedDir);
+        const QList<LibraryExportRow> rows = LibraryExporter::buildRows(*db, systems);
+        QSet<int> fileIds;
+        fileIds.reserve(rows.size());
+        for (const LibraryExportRow &row : rows) {
+            fileIds.insert(row.file.id);
         }
+        generated = generator.generateAll(fileIds, cleanedDir);
     }
 
     m_lastOutputPath = cleanedDir;
