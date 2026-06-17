@@ -107,5 +107,9 @@ namespace CredentialManager {
         return fromSettings(key);
     }
 
+    QString getFromFile(const QString &key, const QString &jsonFilePath) {
+        return fromJsonFile(key, jsonFilePath);
+    }
+
 } // namespace CredentialManager
 } // namespace Remus

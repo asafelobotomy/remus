@@ -48,9 +48,15 @@ bool enrichFromIGDB(
     gamesEnriched = 0;
     factsInserted = 0;
 
-    // Load credentials via CredentialManager (JSON file → env var → QSettings → keychain)
-    const QString clientId = CredentialManager::get(QStringLiteral("igdb/client_id"), credentialsPath);
-    const QString clientSecret = CredentialManager::get(QStringLiteral("igdb/client_secret"), credentialsPath);
+    // Load credentials — when a path is supplied, read that file only so callers
+    // can enforce "missing file means skip" without ambient env vars.
+    const auto loadCredential = [&](const char *key) {
+        const QString qkey = QString::fromLatin1(key);
+        return credentialsPath.isEmpty() ? CredentialManager::get(qkey)
+                                         : CredentialManager::getFromFile(qkey, credentialsPath);
+    };
+    const QString clientId = loadCredential("igdb/client_id");
+    const QString clientSecret = loadCredential("igdb/client_secret");
     if (clientId.isEmpty() || clientSecret.isEmpty()) {
         qInfo() << "[IGDB] Credentials not configured — enrichment skipped";
         return true;

@@ -215,6 +215,10 @@ int handleScanCommand(CliContext &ctx) {
     qInfo() << "  - Inserted:" << insertedCount << "files";
     qInfo() << "  - Skipped:" << skippedCount << "files";
 
+    if (!ctx.db.rebuildDiscSetsAll()) {
+        qWarning() << "Failed to rebuild disc set metadata after scan";
+    }
+
     if (ctx.processRequested) {
         if (ctx.processFileScopeIds.isEmpty()) {
             qInfo() << "No new primary files found to process";

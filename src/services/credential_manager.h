@@ -17,5 +17,8 @@ namespace CredentialManager {
     /// Returns an empty string if the key is not found in any source.
     QString get(const QString &key, const QString &jsonFilePath = { });
 
+    /// Read a credential from @p jsonFilePath only (no env/keychain/settings fallback).
+    QString getFromFile(const QString &key, const QString &jsonFilePath);
+
 } // namespace CredentialManager
 } // namespace Remus

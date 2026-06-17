@@ -7,10 +7,13 @@
 #include <QSignalSpy>
 #include <QSqlDatabase>
 #include <QSqlQuery>
+#include <optional>
 #include "../src/cli/cli_helpers.h"
+#include "../src/core/constants/constants.h"
 #include "../src/core/database.h"
 #include "../src/core/hasher.h"
 #include "../src/metadata/metadata_provider.h"
+#include "../src/services/credential_manager.h"
 
 using namespace Remus;
 
@@ -367,6 +370,24 @@ void CliHelpersTest::testGetMatchingDisplayNameForPatchedArchive() {
 }
 
 void CliHelpersTest::testBuildOrchestratorSkipsIgdbWithoutCredentials() {
+    const auto igdbIdGuard = qEnvironmentVariableIsSet("REMUS_IGDB_CLIENT_ID")
+        ? std::optional<QByteArray>(qgetenv("REMUS_IGDB_CLIENT_ID"))
+        : std::nullopt;
+    const auto igdbSecretGuard = qEnvironmentVariableIsSet("REMUS_IGDB_CLIENT_SECRET")
+        ? std::optional<QByteArray>(qgetenv("REMUS_IGDB_CLIENT_SECRET"))
+        : std::nullopt;
+    qunsetenv("REMUS_IGDB_CLIENT_ID");
+    qunsetenv("REMUS_IGDB_CLIENT_SECRET");
+
+    if (!CredentialManager::get(QString::fromLatin1(Constants::Settings::Providers::IGDB_CLIENT_ID)).isEmpty()
+        || !CredentialManager::get(QString::fromLatin1(Constants::Settings::Providers::IGDB_CLIENT_SECRET)).isEmpty()) {
+        if (igdbIdGuard)
+            qputenv("REMUS_IGDB_CLIENT_ID", igdbIdGuard->constData());
+        if (igdbSecretGuard)
+            qputenv("REMUS_IGDB_CLIENT_SECRET", igdbSecretGuard->constData());
+        QSKIP("IGDB credentials configured outside test environment");
+    }
+
     QCommandLineParser parser;
     parser.addOption(QCommandLineOption("ss-user", "", "username"));
     parser.addOption(QCommandLineOption("ss-pass", "", "password"));
@@ -380,6 +401,15 @@ void CliHelpersTest::testBuildOrchestratorSkipsIgdbWithoutCredentials() {
     QVERIFY(providers.contains(QStringLiteral("hasheous")));
     QVERIFY(!providers.contains(QStringLiteral("thegamesdb"))); // gated on API key
     QVERIFY(!providers.contains(QStringLiteral("igdb")));
+
+    if (igdbIdGuard)
+        qputenv("REMUS_IGDB_CLIENT_ID", igdbIdGuard->constData());
+    else
+        qunsetenv("REMUS_IGDB_CLIENT_ID");
+    if (igdbSecretGuard)
+        qputenv("REMUS_IGDB_CLIENT_SECRET", igdbSecretGuard->constData());
+    else
+        qunsetenv("REMUS_IGDB_CLIENT_SECRET");
 }
 
 void CliHelpersTest::testBuildOrchestratorLoadsCompendiumProviderFromDataDir() {

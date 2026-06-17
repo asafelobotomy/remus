@@ -7,11 +7,11 @@ namespace Remus {
 
 namespace {
 
-QString basenameOrEmpty(const QString &path) {
-    if (path.isEmpty())
-        return QString();
-    return QFileInfo(path).fileName();
-}
+    QString basenameOrEmpty(const QString &path) {
+        if (path.isEmpty())
+            return QString();
+        return QFileInfo(path).fileName();
+    }
 
 } // namespace
 
@@ -49,8 +49,7 @@ QString DiscSetUtils::extractBaseTitle(const QString &labelPath) {
     baseTitle = QFileInfo(baseTitle).completeBaseName();
 
     static const QRegularExpression discPattern(
-        QStringLiteral("\\s*\\(?\\s*(Disc|CD|Disk)\\s*\\d+.*?\\)?\\s*"),
-        QRegularExpression::CaseInsensitiveOption);
+        QStringLiteral("\\s*\\(?\\s*(Disc|CD|Disk)\\s*\\d+.*?\\)?\\s*"), QRegularExpression::CaseInsensitiveOption);
     baseTitle.remove(discPattern);
 
     baseTitle = baseTitle.trimmed();
@@ -86,8 +85,8 @@ QString DiscSetUtils::discRowLabel(const QString &labelPath, int discNumber) {
 }
 
 void DiscSetUtils::applyScanDiscMetadata(FileRecord &record, const QString &systemName) {
-    const QString label = labelPath(
-        record.currentPath, record.archivePath, record.archiveInternalPath, record.filename);
+    const QString label
+        = labelPath(record.currentPath, record.archivePath, record.archiveInternalPath, record.filename);
 
     record.discNumber = 0;
     record.discSetKey.clear();

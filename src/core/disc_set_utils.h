@@ -16,8 +16,8 @@ namespace Remus {
 class DiscSetUtils {
 public:
     /** Best label string for disc parsing (archive path, inner path, or filename). */
-    static QString labelPath(const QString &currentPath, const QString &archivePath,
-        const QString &archiveInternalPath, const QString &filename);
+    static QString labelPath(const QString &currentPath, const QString &archivePath, const QString &archiveInternalPath,
+        const QString &filename);
 
     static bool isMultiDisc(const QString &labelPath);
     static QString extractBaseTitle(const QString &labelPath);
