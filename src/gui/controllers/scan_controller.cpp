@@ -119,12 +119,10 @@ void ScanController::startScan(const QString &directory) {
     m_scannedFiles = 0;
     m_totalFiles = 0;
     m_progressMessage = QStringLiteral("Scanning files\u2026");
-    m_recentLogs.clear();
     m_lastDirectory = cleanedDirectory;
     emit scanningChanged();
     emit progressChanged();
     emit progressMessageChanged();
-    emit recentLogsChanged();
     emit lastDirectoryChanged();
 
     Database *db = m_appController->database();
@@ -208,19 +206,7 @@ void ScanController::setLastDirectory(const QString &directory) {
     settings.sync();
 }
 
-void ScanController::appendLog(const QString &message) {
-    if (message.isEmpty()) {
-        return;
-    }
-
-    m_recentLogs.append(message);
-    while (m_recentLogs.size() > 12) {
-        m_recentLogs.removeFirst();
-    }
-    emit recentLogsChanged();
-}
-
-void ScanController::applyScanProgress(int done, int total, const QString &path) {
+void ScanController::applyScanProgress(int done, int total, const QString &) {
     m_scannedFiles = done;
     if (total > 0)
         m_totalFiles = total;
@@ -228,8 +214,6 @@ void ScanController::applyScanProgress(int done, int total, const QString &path)
                                                    : QStringLiteral("Scanning files\u2026 %1 found").arg(done);
     emit progressChanged();
     emit progressMessageChanged();
-    if (!path.isEmpty())
-        appendLog(QFileInfo(path).fileName());
 }
 
 void ScanController::applyPersistProgress(int done, int total) {

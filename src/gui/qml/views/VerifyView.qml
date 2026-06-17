@@ -24,8 +24,9 @@ Item {
 
         Label {
             text: "Verification"
-            font.pixelSize: 26
+            font.pixelSize: Theme.fontHero
             font.bold: true
+            color: Theme.textPrimary
         }
 
         RowLayout {
@@ -63,7 +64,7 @@ Item {
             Label {
                 Layout.fillWidth: true
                 elide: Text.ElideRight
-                color: "#a89984"
+                color: Theme.textMuted
                 text: datManagerController.lastError.length > 0
                       ? datManagerController.lastError
                       : "Adds an external No-Intro/Redump catalog for verification."

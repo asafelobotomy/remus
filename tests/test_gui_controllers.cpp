@@ -13,7 +13,6 @@
 #include "controllers/match_controller.h"
 #include "controllers/scan_controller.h"
 #include "controllers/verification_controller.h"
-#include "models/match_list_model.h"
 #include "models/verification_result_model.h"
 #include "../src/core/database.h"
 #include "../src/core/database_types.h"
@@ -33,7 +32,6 @@ private slots:
     void verificationController_clearResultsResetsSummary();
     void verificationController_verifyAllOnEmptyLibrary();
     void conversionController_defaultTargetFormat();
-    void conversionController_refreshToolStatusPopulatesMap();
     void scanController_scanDirectoryCompletesWithInsertedFiles();
     void matchController_refreshModelReflectsUnconfirmedMatch();
 };
@@ -142,14 +140,6 @@ void GuiControllersSmokeTest::conversionController_defaultTargetFormat() {
     QCOMPARE(conversion.targetFormat(), QStringLiteral("CSO"));
 }
 
-void GuiControllersSmokeTest::conversionController_refreshToolStatusPopulatesMap() {
-    AppController app;
-    ConversionController conversion(&app);
-
-    conversion.refreshToolStatus();
-    QVERIFY(!conversion.toolStatus().isEmpty());
-}
-
 void GuiControllersSmokeTest::scanController_scanDirectoryCompletesWithInsertedFiles() {
     QTemporaryDir tempDir;
     QVERIFY(tempDir.isValid());
@@ -221,11 +211,8 @@ void GuiControllersSmokeTest::matchController_refreshModelReflectsUnconfirmedMat
     QVERIFY2(matchQuery.exec(), qPrintable(matchQuery.lastError().text()));
 
     MatchController match(&app);
-    MatchListModel model;
-    match.setModel(&model);
     match.refreshModel();
 
-    QCOMPARE(model.rowCount(), 1);
     QCOMPARE(match.unconfirmedMatchCount(), 1);
 }
 

@@ -27,13 +27,7 @@ QMap<QString, QList<int>> M3UGenerator::detectMultiDiscGames(const QSet<int> &fi
     if (fileIds.isEmpty())
         return detectMultiDiscGames(QString());
 
-    QList<FileRecord> files;
-    for (int fileId : fileIds) {
-        const FileRecord file = m_database.getFileById(fileId);
-        if (file.id > 0)
-            files.append(file);
-    }
-    return groupByDiscSetKey(files);
+    return groupByDiscSetKey(m_database.getFilesByIds(fileIds));
 }
 
 bool M3UGenerator::generateM3U(const QString &gameTitle, const QStringList &discPaths, const QString &outputPath) {
@@ -170,11 +164,11 @@ QList<FileRecord> M3UGenerator::sortByDiscNumber(const QList<FileRecord> &files)
     QList<FileRecord> sorted = files;
     std::sort(sorted.begin(), sorted.end(), [](const FileRecord &a, const FileRecord &b) {
         const int discA = a.discNumber > 0 ? a.discNumber
-            : DiscSetUtils::extractDiscNumber(
-                  DiscSetUtils::labelPath(a.currentPath, a.archivePath, a.archiveInternalPath, a.filename));
+                                           : DiscSetUtils::extractDiscNumber(DiscSetUtils::labelPath(
+                                                 a.currentPath, a.archivePath, a.archiveInternalPath, a.filename));
         const int discB = b.discNumber > 0 ? b.discNumber
-            : DiscSetUtils::extractDiscNumber(
-                  DiscSetUtils::labelPath(b.currentPath, b.archivePath, b.archiveInternalPath, b.filename));
+                                           : DiscSetUtils::extractDiscNumber(DiscSetUtils::labelPath(
+                                                 b.currentPath, b.archivePath, b.archiveInternalPath, b.filename));
         if (discA != discB)
             return discA < discB;
         return a.filename < b.filename;
@@ -183,15 +177,18 @@ QList<FileRecord> M3UGenerator::sortByDiscNumber(const QList<FileRecord> &files)
 }
 
 QString M3UGenerator::titleForDiscSet(const QList<FileRecord> &files) const {
+    if (files.isEmpty())
+        return QString();
+    const FileRecord &first = files.first();
+    const QString fromLabel = DiscSetUtils::extractBaseTitle(
+        DiscSetUtils::labelPath(first.currentPath, first.archivePath, first.archiveInternalPath, first.filename));
+    if (!fromLabel.isEmpty())
+        return fromLabel;
     for (const FileRecord &file : files) {
         if (!file.baseTitle.isEmpty())
             return file.baseTitle;
     }
-    if (files.isEmpty())
-        return QString();
-    const FileRecord &first = files.first();
-    return DiscSetUtils::extractBaseTitle(
-        DiscSetUtils::labelPath(first.currentPath, first.archivePath, first.archiveInternalPath, first.filename));
+    return QString();
 }
 
 bool M3UGenerator::writeM3UFile(const QString &path, const QStringList &discPaths) {

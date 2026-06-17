@@ -21,10 +21,6 @@ OrganizeController::OrganizeController(AppController *appController, QObject *pa
                            .toString();
 }
 
-void OrganizeController::previewOrganize(const QString &destinationDir) {
-    runOrganize(destinationDir, true);
-}
-
 void OrganizeController::previewRenameOrganize(const QString &destinationDir, bool selectedOnly) {
     runOrganize(destinationDir, true, false, matchedFileIds(selectedOnly));
 }

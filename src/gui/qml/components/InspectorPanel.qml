@@ -14,9 +14,9 @@ Frame {
     property int currentTab: 0
 
     background: Rectangle {
-        color:        "#1d2021"
-        border.color: "#504945"
-        radius:       12
+        color:        Theme.panelBg
+        border.color: Theme.panelBorder
+        radius:       Theme.panelRadius
     }
 
     ColumnLayout {
@@ -30,8 +30,8 @@ Frame {
             Layout.fillHeight:   true
             text:                "Select a ROM from the library to view its details."
             wrapMode:            Text.WordWrap
-            color:               "#a89984"
-            font.pixelSize:      13
+            color:               Theme.textMuted
+            font.pixelSize:      Theme.fontLg
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment:   Text.AlignVCenter
         }
@@ -54,9 +54,9 @@ Frame {
                           || appController.selectedFileData.baseTitle
                           || appController.selectedFileData.filename
                           || "Selected ROM"
-                    font.pixelSize:   15
+                    font.pixelSize:   Theme.fontTitle
                     font.bold:        true
-                    color:            "#fbf1c7"
+                    color:            Theme.textPrimary
                     elide:            Text.ElideRight
                 }
 
@@ -68,16 +68,16 @@ Frame {
                         const total = appController.selectedFileData.discSetMemberCount || 0
                         return n > 0 ? ("Disc " + n + " of " + total) : (total + " discs")
                     }
-                    font.pixelSize:   11
-                    color:            "#928374"
+                    font.pixelSize:   Theme.fontSm
+                    color:            Theme.textDim
                     elide:            Text.ElideRight
                 }
 
                 Label {
                     Layout.fillWidth: true
                     text:             appController.selectedFileData.systemName || ""
-                    font.pixelSize:   11
-                    color:            "#928374"
+                    font.pixelSize:   Theme.fontSm
+                    color:            Theme.textDim
                     elide:            Text.ElideRight
                     visible:          (appController.selectedFileData.systemName || "").length > 0
                 }
@@ -98,7 +98,7 @@ Frame {
             Rectangle {
                 Layout.fillWidth: true
                 height:           1
-                color:            "#504945"
+                color:            Theme.border
             }
 
             StackLayout {
@@ -117,46 +117,46 @@ Frame {
                         Layout.margins:   10
                         spacing:          6
 
-                        MetaField {
+                        LabelField {
                             label: "Title"
                             value: appController.selectedMatchData.title || ""
                             bold:  true
                         }
-                        MetaField {
+                        LabelField {
                             label: "Platform"
                             value: appController.selectedFileData.systemName || ""
                         }
-                        MetaField {
+                        LabelField {
                             label: "Release"
                             value: {
                                 const y = appController.selectedMatchData.releaseYear
                                 return (y && y > 0) ? y.toString() : ""
                             }
                         }
-                        MetaField {
+                        LabelField {
                             label: "Genre"
                             value: appController.selectedMatchData.genre || ""
                         }
-                        MetaField {
+                        LabelField {
                             label: "Publisher"
                             value: appController.selectedMatchData.publisher || ""
                         }
-                        MetaField {
+                        LabelField {
                             label: "Developer"
                             value: appController.selectedMatchData.developer || ""
                         }
-                        MetaField {
+                        LabelField {
                             label: "Rating"
                             value: {
                                 const r = appController.selectedMatchData.rating
                                 return (r && r > 0) ? r.toFixed(1) + " / 10" : ""
                             }
                         }
-                        MetaField {
+                        LabelField {
                             label: "Region"
                             value: appController.selectedMatchData.region || ""
                         }
-                        MetaField {
+                        LabelField {
                             label: "Format"
                             value: appController.selectedFileData.extension || ""
                         }
@@ -169,8 +169,8 @@ Frame {
 
                             Label {
                                 text:           "Description"
-                                color:          "#a89984"
-                                font.pixelSize: 10
+                                color:          Theme.textMuted
+                                font.pixelSize: Theme.fontXs
                                 font.bold:      true
                             }
                             Label {
@@ -178,8 +178,8 @@ Frame {
                                 text:     appController.selectedMatchData.description || ""
                                 wrapMode: Text.WordWrap
                                 color:    appController.selectedMatchData.description
-                                          ? "#ebdbb2" : "#504945"
-                                font.pixelSize: 11
+                                          ? Theme.textBody : Theme.borderSub
+                                font.pixelSize: Theme.fontSm
                             }
                         }
 
@@ -200,8 +200,8 @@ Frame {
 
                         Label {
                             text:           "Paths"
-                            color:          "#a89984"
-                            font.pixelSize: 10
+                            color:          Theme.textMuted
+                            font.pixelSize: Theme.fontXs
                             font.bold:      true
                         }
 
@@ -209,14 +209,14 @@ Frame {
                             Layout.fillWidth: true
                             visible:          (appController.selectedFileData.discSetMemberCount || 0) > 1
                             text:             "Disc set (" + appController.selectedFileData.discSetMemberCount + " discs)"
-                            color:            "#a89984"
-                            font.pixelSize:   10
+                            color:            Theme.textMuted
+                            font.pixelSize:   Theme.fontXs
                             font.bold:        true
                         }
 
                         Repeater {
                             model: (appController.selectedFileData.discSetMembers || [])
-                            delegate: MetaField {
+                            delegate: LabelField {
                                 Layout.fillWidth: true
                                 visible:          (appController.selectedFileData.discSetMemberCount || 0) > 1
                                 label:            modelData.discLabel || ("Disc " + modelData.discNumber)
@@ -229,7 +229,7 @@ Frame {
                             visible: (appController.selectedFileData.discSetMemberCount || 0) > 1
                         }
 
-                        MetaField {
+                        LabelField {
                             property bool   _origExists: appController.selectedFileData.originalExists || false
                             property bool   _currExists: appController.selectedFileData.currentExists  || false
                             property string _orig: appController.selectedFileData.originalPath || ""
@@ -241,7 +241,7 @@ Frame {
                             value:   _origExists ? _orig : _curr
                             mono:    true
                         }
-                        MetaField {
+                        LabelField {
                             property string _curr: appController.selectedFileData.path         || ""
                             property string _orig: appController.selectedFileData.originalPath || ""
 
@@ -253,7 +253,7 @@ Frame {
                             value:   _curr
                             mono:    true
                         }
-                        MetaField {
+                        LabelField {
                             visible: (appController.selectedFileData.isBundled    || false) &&
                                      !(appController.selectedFileData.isOrganized || false) &&
                                      (appController.selectedFileData.bundleOutputPath || "").length > 0
@@ -261,7 +261,7 @@ Frame {
                             value:   appController.selectedFileData.bundleOutputPath || ""
                             mono:    true
                         }
-                        MetaField {
+                        LabelField {
                             visible: (appController.selectedFileData.isOrganized  || false) &&
                                      (appController.selectedFileData.organizedPath || "").length > 0
                             label:   "Organized"
@@ -273,14 +273,14 @@ Frame {
 
                         Label {
                             text:           "Hashes"
-                            color:          "#a89984"
-                            font.pixelSize: 10
+                            color:          Theme.textMuted
+                            font.pixelSize: Theme.fontXs
                             font.bold:      true
                         }
-                        MetaField { label: "MD5";  value: appController.selectedFileData.md5  || ""; mono: true }
-                        MetaField { label: "SHA1"; value: appController.selectedFileData.sha1 || ""; mono: true }
-                        MetaField { label: "CRC";  value: appController.selectedFileData.crc32 || ""; mono: true }
-                        MetaField {
+                        LabelField { label: "MD5";  value: appController.selectedFileData.md5  || ""; mono: true }
+                        LabelField { label: "SHA1"; value: appController.selectedFileData.sha1 || ""; mono: true }
+                        LabelField { label: "CRC";  value: appController.selectedFileData.crc32 || ""; mono: true }
+                        LabelField {
                             label: "Size"
                             value: panel.formatFileSize(appController.selectedFileData.fileSize)
                         }
@@ -307,14 +307,14 @@ Frame {
                             Button {
                                 text:      "Refresh"
                                 flat:      true
-                                font.pixelSize: 11
+                                font.pixelSize: Theme.fontSm
                                 enabled:   appController.selectedFileId > 0
                                 onClicked: artworkController.refreshSelectedArtwork()
                             }
                             Button {
                                 text:      "Download"
                                 flat:      true
-                                font.pixelSize: 11
+                                font.pixelSize: Theme.fontSm
                                 enabled:   appController.selectedFileId > 0 &&
                                            !artworkController.downloading
                                 onClicked: artworkController.downloadSelected()
@@ -338,7 +338,7 @@ Frame {
                         Rectangle {
                             Layout.fillWidth:      true
                             Layout.preferredHeight: 200
-                            color:                 "#282828"
+                            color:                 Theme.surface
                             radius:                8
 
                             Image {
@@ -356,8 +356,8 @@ Frame {
                             Label {
                                 anchors.centerIn: parent
                                 text:             "Box Art"
-                                color:            "#665c54"
-                                font.pixelSize:   12
+                                color:            Theme.textDisabled
+                                font.pixelSize:   Theme.fontMd
                                 visible:          artworkController.previewUrl.toString().length === 0
                             }
                         }
@@ -374,8 +374,8 @@ Frame {
                                 Label {
                                     anchors.centerIn: parent
                                     text:             "Title Screen"
-                                    color:            "#504945"
-                                    font.pixelSize:   10
+                                    color:            Theme.border
+                                    font.pixelSize:   Theme.fontXs
                                 }
                             }
                             Rectangle {
@@ -386,8 +386,8 @@ Frame {
                                 Label {
                                     anchors.centerIn: parent
                                     text:             "Gameplay"
-                                    color:            "#504945"
-                                    font.pixelSize:   10
+                                    color:            Theme.border
+                                    font.pixelSize:   Theme.fontXs
                                 }
                             }
                         }
@@ -395,8 +395,8 @@ Frame {
                         Label {
                             Layout.fillWidth: true
                             wrapMode:         Text.WordWrap
-                            font.pixelSize:   10
-                            color:            "#928374"
+                            font.pixelSize:   Theme.fontXs
+                            color:            Theme.textDim
                             text:             artworkController.previewUrl.toString().length > 0
                                               ? artworkController.previewUrl.toString()
                                               : "No artwork cached. Download after confirming a match."
@@ -426,19 +426,19 @@ Frame {
                                                 ? "Match pending review"
                                                 : "No match yet"
                             font.bold:      true
-                            font.pixelSize: 12
-                            color:          appController.selectedMatchData.confirmed ? "#b8bb26"
-                                            : appController.selectedMatchData.rejected ? "#fb4934"
-                                            : appController.selectedMatchData.matchId ? "#fabd2f"
-                                            : "#a89984"
+                            font.pixelSize: Theme.fontMd
+                            color:          appController.selectedMatchData.confirmed ? Theme.success
+                                            : appController.selectedMatchData.rejected ? Theme.error
+                                            : appController.selectedMatchData.matchId ? Theme.warn
+                                            : Theme.textMuted
                         }
 
-                        MetaField {
+                        LabelField {
                             label: "Method"
                             value: appController.selectedMatchData.method || ""
                             visible: !!appController.selectedMatchData.matchId
                         }
-                        MetaField {
+                        LabelField {
                             label: "Confidence"
                             value: {
                                 const c = appController.selectedMatchData.confidence
@@ -446,7 +446,7 @@ Frame {
                             }
                             visible: !!appController.selectedMatchData.matchId
                         }
-                        MetaField {
+                        LabelField {
                             label: "Matched title"
                             value: appController.selectedMatchData.title || ""
                             visible: !!appController.selectedMatchData.matchId
@@ -459,9 +459,9 @@ Frame {
                             spacing: 6
 
                             Button {
-                                text:      "Search && match…"
+                                text:      "Search && match\u2026"
                                 enabled:   appController.selectedFileId > 0
-                                font.pixelSize: 11
+                                font.pixelSize: Theme.fontSm
                                 highlighted: true
                                 onClicked: panel.matchSearchRequested()
                             }
@@ -470,7 +470,7 @@ Frame {
                                 enabled:   !hashController.hashing &&
                                            !matchController.matching &&
                                            appController.selectedFileId > 0
-                                font.pixelSize: 11
+                                font.pixelSize: Theme.fontSm
                                 onClicked: workflowController.hashAndMatchSelected()
                             }
                         }
@@ -484,7 +484,7 @@ Frame {
                                 enabled:   appController.selectedFileId > 0 &&
                                            !appController.selectedMatchData.confirmed &&
                                            !!appController.selectedMatchData.matchId
-                                font.pixelSize: 11
+                                font.pixelSize: Theme.fontSm
                                 padding:   6
                                 onClicked: matchController.confirmSelected()
                             }
@@ -493,7 +493,7 @@ Frame {
                                 enabled:   appController.selectedFileId > 0 &&
                                            !appController.selectedMatchData.rejected &&
                                            !!appController.selectedMatchData.matchId
-                                font.pixelSize: 11
+                                font.pixelSize: Theme.fontSm
                                 padding:   6
                                 onClicked: matchController.rejectSelected()
                             }
@@ -518,8 +518,8 @@ Frame {
                             Layout.fillWidth: true
                             visible:          matchController.lastMessage.length > 0
                             text:             matchController.lastMessage
-                            color:            "#83a598"
-                            font.pixelSize:   10
+                            color:            Theme.accentAlt
+                            font.pixelSize:   Theme.fontXs
                             wrapMode:         Text.WordWrap
                         }
 
@@ -541,38 +541,10 @@ Frame {
     }
 
     component SectionDivider: Rectangle {
-        Layout.fillWidth: true
-        height:           1
-        color:            "#3c3836"
-        Layout.topMargin: 4
+        Layout.fillWidth:    true
+        height:              1
+        color:               Theme.borderSub
+        Layout.topMargin:    4
         Layout.bottomMargin: 4
-    }
-
-    component MetaField: RowLayout {
-        property string label: ""
-        property string value: ""
-        property bool   bold:  false
-        property bool   mono:  false
-
-        Layout.fillWidth: true
-        spacing:          6
-
-        Label {
-            text:           label + ":"
-            color:          "#a89984"
-            font.pixelSize: 10
-            font.bold:      true
-            Layout.minimumWidth: 72
-        }
-        Label {
-            Layout.fillWidth: true
-            text:             value.length > 0 ? value : "—"
-            color:            value.length > 0 ? "#ebdbb2" : "#504945"
-            font.pixelSize:   11
-            font.bold:        bold
-            font.family:      mono ? "monospace" : font.family
-            elide:            mono ? Text.ElideMiddle : Text.ElideRight
-            wrapMode:         mono ? Text.NoWrap : Text.WordWrap
-        }
     }
 }

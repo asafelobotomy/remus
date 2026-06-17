@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import Remus.Gui
 
 // Collapsible stage section card.
 // Declare child items directly inside StageCard { } — they appear in the
@@ -32,8 +33,8 @@ Frame {
             Label {
                 text:           root.stageTitle
                 font.bold:      true
-                font.pixelSize: 14
-                color:          "#fbf1c7"
+                font.pixelSize: Theme.fontXl
+                color:          Theme.textPrimary
             }
 
             // Count badge
@@ -42,14 +43,14 @@ Frame {
                 width:     badge.implicitWidth + 14
                 height:    20
                 radius:    10
-                color:     "#689d6a"
+                color:     Theme.success
 
                 Label {
                     id:                   badge
                     anchors.centerIn:     parent
                     text:                 root.stageCount
-                    color:                "#1d2021"
-                    font.pixelSize:       11
+                    color:                Theme.background
+                    font.pixelSize:       Theme.fontSm
                     font.bold:            true
                 }
             }
@@ -57,7 +58,7 @@ Frame {
             Item { Layout.fillWidth: true }
 
             Button {
-                text:     root.expanded ? "▲" : "▼"
+                text:     root.expanded ? "\u25B2" : "\u25BC"
                 flat:     true
                 padding:  4
                 onClicked: root.toggleRequested()
@@ -69,7 +70,7 @@ Frame {
             visible:        root.expanded
             Layout.fillWidth: true
             height:         1
-            color:          "#504945"
+            color:          Theme.border
             Layout.topMargin: 6
             Layout.bottomMargin: 6
         }
@@ -84,8 +85,8 @@ Frame {
     }
 
     background: Rectangle {
-        color:        "#282828"
-        border.color: "#504945"
-        radius:       12
+        color:        Theme.surface
+        border.color: Theme.border
+        radius:       Theme.panelRadius
     }
 }

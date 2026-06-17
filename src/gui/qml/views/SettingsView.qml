@@ -3,6 +3,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import QtQuick.Dialogs
 import Remus.Gui
+// Note: Theme singleton is available via Remus.Gui module
 
 ScrollView {
     Layout.fillWidth: true
@@ -76,18 +77,19 @@ ScrollView {
 
         Label {
             text: "Settings"
-            font.pixelSize: 26
+            font.pixelSize: Theme.fontHero
             font.bold: true
+            color: Theme.textPrimary
         }
 
         // ── Library ──────────────────────────────────────────────────────────
-        Label { text: "Library"; font.bold: true }
+        Label { text: "Library"; font.bold: true; color: Theme.textBody }
 
         Label {
             Layout.fillWidth: true
             wrapMode: Text.WordWrap
-            font.pixelSize: 11
-            color: "#928374"
+            font.pixelSize: Theme.fontSm
+            color: Theme.textDim
             text: "Configure where your original ROM files live. Update library scans this folder into the open database."
         }
 
@@ -125,7 +127,7 @@ ScrollView {
             Button {
                 text: "Browse"
                 flat: true
-                font.pixelSize: 11
+                font.pixelSize: Theme.fontSm
                 padding: 6
                 onClicked: romSourceFolderDialog.open()
             }
@@ -162,11 +164,11 @@ ScrollView {
         Rectangle {
             Layout.fillWidth: true
             height: 1
-            color: "#504945"
+            color: Theme.border
         }
 
         // ── Metadata Providers ───────────────────────────────────────────────
-        Label { text: "Metadata Providers"; font.bold: true }
+        Label { text: "Metadata Providers"; font.bold: true; color: Theme.textBody }
 
         Repeater {
             model: settingsController.providerGroups
@@ -180,8 +182,8 @@ ScrollView {
                 Label {
                     text: modelData.groupName
                     font.bold: true
-                    font.pixelSize: 12
-                    color: "#a89984"
+                    font.pixelSize: Theme.fontMd
+                    color: Theme.textMuted
                 }
 
                 // Fields for this provider
@@ -216,19 +218,19 @@ ScrollView {
 
                     Button {
                         text: "Authenticate"
-                        font.pixelSize: 11
+                        font.pixelSize: Theme.fontSm
                         padding: 6
                         onClicked: {
                             const msg = settingsController.authenticateProvider(modelData.groupKey)
                             authResultLabel.text = msg
-                            authResultLabel.color = msg === "Credentials saved." ? "#b8bb26" : "#fb4934"
+                            authResultLabel.color = msg === "Credentials saved." ? Theme.success : Theme.error
                         }
                     }
 
                     Label {
                         id: authResultLabel
-                        font.pixelSize: 11
-                        color: "#a89984"
+                        font.pixelSize: Theme.fontSm
+                        color: Theme.textMuted
                     }
 
                     Item { Layout.fillWidth: true }
@@ -237,18 +239,18 @@ ScrollView {
                 Rectangle {
                     Layout.fillWidth: true
                     height: 1
-                    color: "#3c3836"
+                    color: Theme.borderSub
                 }
             }
         }
 
-        Label { text: "Metadata rate limits (ms)"; font.bold: true; font.pixelSize: 12 }
+        Label { text: "Metadata rate limits (ms)"; font.bold: true; font.pixelSize: Theme.fontMd; color: Theme.textBody }
 
         Label {
             Layout.fillWidth: true
             wrapMode: Text.WordWrap
-            font.pixelSize: 11
-            color: "#928374"
+            font.pixelSize: Theme.fontSm
+            color: Theme.textDim
             text: "Optional spacing between HTTP metadata requests. Leave blank to use built-in defaults."
         }
 
@@ -295,10 +297,10 @@ ScrollView {
         // ── Tools and Paths ──────────────────────────────────────────────────
         RowLayout {
             Layout.fillWidth: true
-            Label { text: "Tools and Paths"; font.bold: true; Layout.fillWidth: true }
+            Label { text: "Tools and Paths"; font.bold: true; Layout.fillWidth: true; color: Theme.textBody }
             Button {
                 text:    "Auto-Detect Tools"
-                font.pixelSize: 11
+                font.pixelSize: Theme.fontSm
                 padding: 6
                 onClicked: settingsController.autoDetectTools()
             }
@@ -336,7 +338,7 @@ ScrollView {
                     visible: modelData.browsable
                     text:    "Browse"
                     flat:    true
-                    font.pixelSize: 11
+                    font.pixelSize: Theme.fontSm
                     padding: 6
                     onClicked: {
                         if (modelData.isDirectory) {
@@ -359,11 +361,11 @@ ScrollView {
         Rectangle {
             Layout.fillWidth: true
             height: 1
-            color: "#504945"
+            color: Theme.border
         }
 
         // ── Rename & Organize ────────────────────────────────────────────────
-        Label { text: "Rename & Organize"; font.bold: true }
+        Label { text: "Rename & Organize"; font.bold: true; color: Theme.textBody }
 
         RowLayout {
             Layout.fillWidth: true
@@ -421,8 +423,8 @@ ScrollView {
         Label {
             Layout.fillWidth: true
             wrapMode: Text.WordWrap
-            font.pixelSize: 11
-            color: "#928374"
+            font.pixelSize: Theme.fontSm
+            color: Theme.textDim
             text: "Variables: {title}, {region}, {year}, {system}, {publisher}, {ext}, and more."
         }
 
@@ -497,7 +499,7 @@ ScrollView {
             Button {
                 text: "Browse"
                 flat: true
-                font.pixelSize: 11
+                font.pixelSize: Theme.fontSm
                 padding: 6
                 onClicked: organizeDestFolderDialog.open()
             }
@@ -506,10 +508,10 @@ ScrollView {
         Label {
             Layout.fillWidth: true
             wrapMode: Text.WordWrap
-            font.pixelSize: 11
-            color: "#928374"
+            font.pixelSize: Theme.fontSm
+            color: Theme.textDim
             leftPadding: 200
-            text: "ROMs are organized into <i>destination/Remus Library/{system}/…</i>"
+            text: "ROMs are organized into <i>destination/Remus Library/{system}/\u2026</i>"
             textFormat: Text.RichText
         }
 
@@ -544,8 +546,8 @@ ScrollView {
             text: chkTrashOriginal.checked
                   ? "After bundling, the original ROM will be sent to the system trash."
                   : "After bundling, the original ROM will be moved to an 'original_roms' folder in the scan directory."
-            font.pixelSize: 11
-            color: "#928374"
+            font.pixelSize: Theme.fontSm
+            color: Theme.textDim
             leftPadding: 28
             Layout.fillWidth: true
             wrapMode: Text.WordWrap
@@ -554,21 +556,21 @@ ScrollView {
         Rectangle {
             Layout.fillWidth: true
             height: 1
-            color: "#504945"
+            color: Theme.border
         }
 
         // ── Danger Zone ──────────────────────────────────────────────────────
         Label {
             text: "Danger Zone"
             font.bold: true
-            color: "#fb4934"
+            color: Theme.error
         }
 
         Label {
             Layout.fillWidth: true
             text: "Erase Library Database removes selected data from the library. Choose what to clear below. ROM files on disk are never affected."
             wrapMode: Text.WordWrap
-            color: "#a89984"
+            color: Theme.textMuted
         }
 
         Button {
@@ -600,7 +602,7 @@ ScrollView {
                 Label {
                     text: "Select what to permanently erase. ROM files on disk will not be deleted."
                     wrapMode: Text.WordWrap
-                    color: "#a89984"
+                    color: Theme.textMuted
                     Layout.fillWidth: true
                 }
 
@@ -619,7 +621,7 @@ ScrollView {
                     }
                 }
 
-                Rectangle { height: 1; color: "#504945"; Layout.fillWidth: true }
+                Rectangle { height: 1; color: Theme.border; Layout.fillWidth: true }
 
                 // ── Individual options ────────────────────────────────────
                 CheckBox {
@@ -634,8 +636,8 @@ ScrollView {
                 }
                 Label {
                     text: "All imported ROMs, hashes, organize history, and patch records."
-                    font.pixelSize: 11
-                    color: "#928374"
+                    font.pixelSize: Theme.fontSm
+                    color: Theme.textDim
                     leftPadding: 28
                     Layout.fillWidth: true
                     wrapMode: Text.WordWrap
@@ -645,13 +647,13 @@ ScrollView {
                     id: chkMatches
                     text: "Match results & game metadata"
                     checked: true
-                    enabled: !chkFiles.checked  // implied when files are erased
+                    enabled: !chkFiles.checked
                     onCheckedChanged: updateOkButton()
                 }
                 Label {
                     text: "Identified game titles, systems, and match confidence scores."
-                    font.pixelSize: 11
-                    color: "#928374"
+                    font.pixelSize: Theme.fontSm
+                    color: Theme.textDim
                     leftPadding: 28
                     Layout.fillWidth: true
                     wrapMode: Text.WordWrap
@@ -665,8 +667,8 @@ ScrollView {
                 }
                 Label {
                     text: "Cached provider responses (GameTDB, ScreenScraper, etc.). Next enrich will re-fetch from the network."
-                    font.pixelSize: 11
-                    color: "#928374"
+                    font.pixelSize: Theme.fontSm
+                    color: Theme.textDim
                     leftPadding: 28
                     Layout.fillWidth: true
                     wrapMode: Text.WordWrap
@@ -680,8 +682,8 @@ ScrollView {
                 }
                 Label {
                     text: "Downloaded box art and cover images on disk. Next artwork step will re-download."
-                    font.pixelSize: 11
-                    color: "#928374"
+                    font.pixelSize: Theme.fontSm
+                    color: Theme.textDim
                     leftPadding: 28
                     Layout.fillWidth: true
                     wrapMode: Text.WordWrap
@@ -689,9 +691,9 @@ ScrollView {
 
                 Label {
                     visible: chkFiles.checked
-                    text: "⚠  File records removal also clears match results."
-                    font.pixelSize: 11
-                    color: "#fabd2f"
+                    text: "\u26A0  File records removal also clears match results."
+                    font.pixelSize: Theme.fontSm
+                    color: Theme.warn
                     Layout.fillWidth: true
                     wrapMode: Text.WordWrap
                 }

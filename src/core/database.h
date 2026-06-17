@@ -153,6 +153,13 @@ public:
     FileRecord getFileById(int fileId);
 
     /**
+     * @brief Fetch multiple files by ID in a single query (avoids N+1)
+     * @param fileIds Set of file IDs to fetch
+     * @return List of file records for all found IDs (order unspecified)
+     */
+    QList<FileRecord> getFilesByIds(const QSet<int> &fileIds);
+
+    /**
      * @brief Get all files from database (includes stale entries with non-existent paths)
      * @return List of all file records
      */
@@ -234,6 +241,14 @@ public:
      * @return True if successful
      */
     bool updateFileSystemId(int fileId, int systemId);
+
+    /**
+     * @brief Set or clear the has_local_artwork flag for a file
+     * @param fileId File ID
+     * @param hasArtwork true to set the flag, false to clear it
+     * @return True if successful
+     */
+    bool updateFileArtworkFlag(int fileId, bool hasArtwork);
 
     /**
      * @brief Get match information for all files (for FileListModel)

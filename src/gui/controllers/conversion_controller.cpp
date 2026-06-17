@@ -163,8 +163,6 @@ void ConversionController::convertSelected(const QString &format, const QString 
             finalOutputPath = destPath;
     }
 
-    m_compressionRatio = result.compressionRatio;
-    m_lastOutputPath = finalOutputPath;
     {
         QFileInfo outInfo(finalOutputPath);
         FileRecord updated = file;
@@ -343,13 +341,6 @@ void ConversionController::convertAll(const QString &format, const QString &outp
 
 void ConversionController::refreshToolStatus() {
     applyToolPaths();
-
-    m_toolStatus.insert(QStringLiteral("chdman"), m_conversionService.isChdmanAvailable());
-    m_toolStatus.insert(QStringLiteral("dolphinTool"), m_conversionService.isDolphinToolAvailable());
-    m_toolStatus.insert(QStringLiteral("maxcso"), m_conversionService.isMaxcsoAvailable());
-    m_toolStatus.insert(QStringLiteral("wit"), m_wbfsConverter.isWitAvailable());
-    m_toolStatus.insert(QStringLiteral("psxpackager"), m_pbpExporter.isPSXPackagerAvailable());
-    emit toolStatusChanged();
 }
 
 void ConversionController::setTargetFormat(const QString &format) {

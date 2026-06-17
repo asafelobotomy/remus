@@ -88,15 +88,15 @@ Item {
 
         Label {
             text: "Export Library"
-            font.pixelSize: 26
+            font.pixelSize: Theme.fontHero
             font.bold: true
-            color: "#fbf1c7"
+            color: Theme.textPrimary
         }
 
         Label {
             Layout.fillWidth: true
             wrapMode: Text.WordWrap
-            color: "#a89984"
+            color: Theme.textMuted
             text: "Write matched library entries to RetroArch, EmulationStation, LaunchBox, CSV, JSON, or M3U playlists."
         }
 
@@ -104,7 +104,7 @@ Item {
             Layout.fillWidth: true
             spacing: 8
 
-            Label { text: "Format"; color: "#ebdbb2" }
+            Label { text: "Format"; color: Theme.textBody }
             ComboBox {
                 id: formatCombo
                 Layout.fillWidth: true
@@ -116,7 +116,7 @@ Item {
             Layout.fillWidth: true
             spacing: 8
 
-            Label { text: "Systems"; color: "#ebdbb2" }
+            Label { text: "Systems"; color: Theme.textBody }
             TextField {
                 id: systemsField
                 Layout.fillWidth: true
@@ -133,6 +133,12 @@ Item {
             Layout.fillWidth: true
             padding: 12
 
+            background: Rectangle {
+                color: Theme.surface
+                border.color: Theme.border
+                radius: Theme.panelRadius
+            }
+
             ColumnLayout {
                 anchors.fill: parent
                 spacing: 6
@@ -140,7 +146,7 @@ Item {
                 Label {
                     text: "Preview: " + root.preview.totalGames + " matched files"
                     font.bold: true
-                    color: "#fbf1c7"
+                    color: Theme.textPrimary
                 }
 
                 Repeater {
@@ -148,7 +154,7 @@ Item {
                     delegate: Label {
                         required property var modelData
                         text: modelData.name + ": " + modelData.count
-                        color: "#a89984"
+                        color: Theme.textMuted
                     }
                 }
             }
@@ -169,7 +175,7 @@ Item {
             Layout.fillWidth: true
             Item { Layout.fillWidth: true }
             Button {
-                text: "Export…"
+                text: "Export\u2026"
                 enabled: appController.libraryOpen && !exportController.exporting && root.preview.totalGames > 0
                 onClicked: openExportPicker()
             }

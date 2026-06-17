@@ -5,8 +5,6 @@
 #include <memory>
 #include <QString>
 #include <QList>
-#include <QVariantMap>
-#include <QVariantList>
 
 namespace Remus {
 
@@ -31,17 +29,6 @@ public:
     ~LibraryService();
 
     /**
-     * @brief Scan a directory, persist results to database
-     * @param path       Directory to scan
-     * @param db         Database to persist into (caller owns)
-     * @param progressCb Progress callback (done, total, currentFile)
-     * @param logCb      Optional log callback
-     * @return Number of files inserted
-     */
-    int scan(const QString &path, Database *db, ProgressCallback progressCb = nullptr, LogCallback logCb = nullptr,
-        int existingLibraryId = 0);
-
-    /**
      * @brief Cancel a running scan
      */
     void cancelScan();
@@ -50,20 +37,6 @@ public:
      * @brief Check if scan was cancelled
      */
     bool wasCancelled() const;
-
-    /**
-     * @brief Get library statistics
-     * @param db Database to query
-     * @return Map with totalFiles, totalSystems, etc.
-     */
-    QVariantMap getStats(Database *db) const;
-
-    /**
-     * @brief Get list of systems found in the library
-     * @param db Database to query
-     * @return List of system info maps
-     */
-    QVariantList getSystems(Database *db) const;
 
     /**
      * @brief Get file path for a given file ID

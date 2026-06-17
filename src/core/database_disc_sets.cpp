@@ -11,10 +11,10 @@ namespace Remus {
 
 namespace {
 
-struct DiscSetMeta {
-    QString discSetKey;
-    int discNumber = 0;
-};
+    struct DiscSetMeta {
+        QString discSetKey;
+        int discNumber = 0;
+    };
 
 } // namespace
 
@@ -23,8 +23,15 @@ QList<FileRecord> Database::getFilesByDiscSetKey(const QString &discSetKey) {
         return { };
 
     QSqlQuery query(m_db);
-    query.prepare(QStringLiteral("SELECT id FROM files WHERE disc_set_key = ? AND is_primary = 1 ORDER BY "
-                                 "disc_number, filename"));
+    query.prepare(QStringLiteral(
+        "SELECT id, library_id, original_path, current_path, filename, extension, "
+        "file_size, is_compressed, archive_path, archive_internal_path, "
+        "system_id, crc32, md5, sha1, ra_md5, hash_calculated, "
+        "is_primary, parent_file_id, base_title, disc_set_key, disc_number, "
+        "file_type, is_patched, patch_name, is_processed, processing_status, "
+        "last_modified, scanned_at "
+        "FROM files WHERE disc_set_key = ? AND is_primary = 1 "
+        "ORDER BY disc_number, filename"));
     query.addBindValue(discSetKey);
     if (!query.exec()) {
         logError("Failed to query files by disc set key: " + query.lastError().text());
@@ -33,9 +40,37 @@ QList<FileRecord> Database::getFilesByDiscSetKey(const QString &discSetKey) {
 
     QList<FileRecord> files;
     while (query.next()) {
-        const FileRecord file = getFileById(query.value(0).toInt());
-        if (file.id > 0)
-            files.append(file);
+        FileRecord r;
+        r.id = query.value(0).toInt();
+        r.libraryId = query.value(1).toInt();
+        r.originalPath = query.value(2).toString();
+        r.currentPath = query.value(3).toString();
+        r.filename = query.value(4).toString();
+        r.extension = query.value(5).toString();
+        r.fileSize = query.value(6).toLongLong();
+        r.isCompressed = query.value(7).toBool();
+        r.archivePath = query.value(8).toString();
+        r.archiveInternalPath = query.value(9).toString();
+        r.systemId = query.value(10).toInt();
+        r.crc32 = query.value(11).toString();
+        r.md5 = query.value(12).toString();
+        r.sha1 = query.value(13).toString();
+        r.raMd5 = query.value(14).toString();
+        r.hashCalculated = query.value(15).toBool();
+        r.isPrimary = query.value(16).toBool();
+        r.parentFileId = query.value(17).toInt();
+        r.baseTitle = query.value(18).toString();
+        r.discSetKey = query.value(19).toString();
+        r.discNumber = query.value(20).toInt();
+        r.fileType = query.value(21).toString();
+        r.isPatched = query.value(22).toBool();
+        r.patchName = query.value(23).toString();
+        r.isProcessed = query.value(24).toBool();
+        r.processingStatus = query.value(25).toString();
+        r.lastModified = query.value(26).toDateTime();
+        r.scannedAt = query.value(27).toDateTime();
+        if (r.id > 0)
+            files.append(r);
     }
     return files;
 }

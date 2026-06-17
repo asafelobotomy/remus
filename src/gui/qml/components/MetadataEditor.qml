@@ -8,8 +8,8 @@ Frame {
 
     background: Rectangle {
         radius: 16
-        color: "#32302f"
-        border.color: "#504945"
+        color: Theme.surfaceAlt
+        border.color: Theme.border
     }
 
     ColumnLayout {
@@ -19,7 +19,8 @@ Frame {
         Label {
             text: metadataEditorController.currentGame.title || "No game selected"
             font.bold: true
-            font.pixelSize: 20
+            font.pixelSize: Theme.fontTitle
+            color: Theme.textPrimary
         }
 
         GridLayout {

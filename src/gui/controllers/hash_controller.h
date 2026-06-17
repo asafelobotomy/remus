@@ -31,8 +31,8 @@ public:
         return m_progressMessage;
     }
 
-    Q_INVOKABLE void startHashAll();
-    Q_INVOKABLE void hashSelected();
+    void startHashAll();
+    void hashSelected();
 
 signals:
     void hashingChanged();

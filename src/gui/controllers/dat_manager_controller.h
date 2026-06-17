@@ -38,7 +38,7 @@ public:
 
     Q_INVOKABLE bool importDat(const QString &path, const QString &systemName);
     Q_INVOKABLE void removeDat(const QString &systemName);
-    Q_INVOKABLE void refresh();
+    void refresh();
 
 signals:
     void importingChanged();

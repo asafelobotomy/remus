@@ -13,36 +13,36 @@ ApplicationWindow {
     visible: true
     title: "Remus"
 
-    color: "#1d2021"
-    palette.window: "#1d2021"
-    palette.windowText: "#ebdbb2"
-    palette.base: "#282828"
-    palette.alternateBase: "#32302f"
-    palette.text: "#ebdbb2"
-    palette.button: "#3c3836"
-    palette.buttonText: "#fbf1c7"
-    palette.brightText: "#fbf1c7"
-    palette.highlight: "#458588"
-    palette.highlightedText: "#fbf1c7"
-    palette.placeholderText: "#a89984"
-    palette.toolTipBase: "#3c3836"
-    palette.toolTipText: "#fbf1c7"
-    palette.link: "#83a598"
-    palette.dark: "#282828"
-    palette.mid: "#504945"
-    palette.midlight: "#665c54"
-    palette.light: "#665c54"
+    color: Theme.background
+    palette.window:           Theme.background
+    palette.windowText:       Theme.textBody
+    palette.base:             Theme.surface
+    palette.alternateBase:    Theme.surfaceAlt
+    palette.text:             Theme.textBody
+    palette.button:           "#3c3836"
+    palette.buttonText:       Theme.textPrimary
+    palette.brightText:       Theme.textPrimary
+    palette.highlight:        Theme.accent
+    palette.highlightedText:  Theme.textPrimary
+    palette.placeholderText:  Theme.textMuted
+    palette.toolTipBase:      "#3c3836"
+    palette.toolTipText:      Theme.textPrimary
+    palette.link:             Theme.accentAlt
+    palette.dark:             Theme.surface
+    palette.mid:              Theme.border
+    palette.midlight:         Theme.textDisabled
+    palette.light:            Theme.textDisabled
 
     background: Rectangle {
-        color: "#1d2021"
+        color: Theme.background
     }
 
     header: ToolBar {
         contentHeight: topBarLayout.implicitHeight + 12
 
         background: Rectangle {
-            color: "#282828"
-            border.color: "#504945"
+            color:        Theme.surface
+            border.color: Theme.border
         }
 
         ColumnLayout {
@@ -58,8 +58,8 @@ ApplicationWindow {
 
                 Label {
                     text: "Database"
-                    font.pixelSize: 11
-                    color: "#928374"
+                    font.pixelSize: Theme.fontSm
+                    color: Theme.textDim
                 }
 
                 TextField {
@@ -85,8 +85,8 @@ ApplicationWindow {
                 Label {
                     visible: appController.libraryOpen
                     text: appController.statusMessage
-                    color: "#a89984"
-                    font.pixelSize: 11
+                    color: Theme.textMuted
+                    font.pixelSize: Theme.fontSm
                     elide: Text.ElideRight
                     Layout.maximumWidth: 280
                 }
@@ -130,10 +130,10 @@ ApplicationWindow {
             background: Rectangle {
                 radius: 24
                 gradient: Gradient {
-                    GradientStop { position: 0.0; color: "#282828" }
-                    GradientStop { position: 1.0; color: "#32302f" }
+                    GradientStop { position: 0.0; color: Theme.surface }
+                    GradientStop { position: 1.0; color: Theme.surfaceAlt }
                 }
-                border.color: "#504945"
+                border.color: Theme.border
             }
 
             StackLayout {
@@ -158,8 +158,8 @@ ApplicationWindow {
         interactive: true
 
         background: Rectangle {
-            color: "#282828"
-            border.color: "#504945"
+            color:        Theme.surface
+            border.color: Theme.border
         }
 
         ColumnLayout {
@@ -175,7 +175,7 @@ ApplicationWindow {
                     Label {
                         text: "Pipeline Stages"
                         font.bold: true
-                        color: "#fbf1c7"
+                        color: Theme.textPrimary
                     }
                     Item { Layout.fillWidth: true }
                     ToolButton {
@@ -202,8 +202,8 @@ ApplicationWindow {
         interactive: true
 
         background: Rectangle {
-            color: "#282828"
-            border.color: "#504945"
+            color:        Theme.surface
+            border.color: Theme.border
         }
 
         ColumnLayout {
@@ -219,7 +219,7 @@ ApplicationWindow {
                     Label {
                         text: "Tools"
                         font.bold: true
-                        color: "#fbf1c7"
+                        color: Theme.textPrimary
                     }
                     Item { Layout.fillWidth: true }
                     ToolButton {

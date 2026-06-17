@@ -124,4 +124,18 @@ QList<FileRecord> Database::getUnprocessedFiles() {
     return queryFiles(QStringLiteral("is_primary = 1 AND is_processed = 0"));
 }
 
+bool Database::updateFileArtworkFlag(int fileId, bool hasArtwork) {
+    QSqlQuery query(m_db);
+    query.prepare("UPDATE files SET has_local_artwork = ? WHERE id = ?");
+    query.addBindValue(hasArtwork ? 1 : 0);
+    query.addBindValue(fileId);
+
+    if (!query.exec()) {
+        logError("Failed to update artwork flag: " + query.lastError().text());
+        return false;
+    }
+
+    return true;
+}
+
 } // namespace Remus

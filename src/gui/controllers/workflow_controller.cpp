@@ -154,27 +154,25 @@ void WorkflowController::refreshCounts() {
         m_identityCount = (ok && q.next()) ? q.value(0).toInt() : 0;
     }
 
-    // Enrich / Done: confirmed files split by artwork presence
-    int enriched = 0;
-    int done = 0;
+    // Enrich / Done: confirmed files split by has_local_artwork flag
     {
         QSqlQuery q(db);
-        const bool ok = q.exec(QStringLiteral("SELECT DISTINCT f.id FROM files f "
-                                              "WHERE EXISTS ("
-                                              "  SELECT 1 FROM matches m "
-                                              "  WHERE m.file_id = f.id "
-                                              "    AND m.is_confirmed = 1 AND m.is_rejected = 0)"));
-        if (ok) {
-            while (q.next()) {
-                if (artworkExistsForFile(q.value(0).toInt()))
-                    ++done;
-                else
-                    ++enriched;
-            }
+        const bool ok = q.exec(QStringLiteral(
+            "SELECT "
+            "  SUM(CASE WHEN f.has_local_artwork = 1 THEN 1 ELSE 0 END), "
+            "  SUM(CASE WHEN f.has_local_artwork = 0 THEN 1 ELSE 0 END) "
+            "FROM files f "
+            "WHERE EXISTS ("
+            "  SELECT 1 FROM matches m "
+            "  WHERE m.file_id = f.id "
+            "    AND m.is_confirmed = 1 AND m.is_rejected = 0)"));
+        if (ok && q.next()) {
+            m_doneCount = q.value(0).toInt();
+            m_enrichCount = q.value(1).toInt();
+        } else {
+            m_enrichCount = m_doneCount = 0;
         }
     }
-    m_enrichCount = enriched;
-    m_doneCount = done;
 
     emit stageCountsChanged();
 }
@@ -194,22 +192,32 @@ void WorkflowController::refreshQueueFiles() {
     //           6=child_exts, 7=has_match (confirmed), 8=has_any_match (any non-rejected),
     //           9=is_organized, 10=is_converted, 11=is_bundled,
     //           12=system_name, 13=matched_title, 14=match_confidence, 15=release_date,
-    //           16=archive_path, 17=archive_internal_path, 18=disc_set_key, 19=disc_number
-    static const QLatin1String kFromJoin("FROM files f "
-                                         "LEFT JOIN systems sys ON f.system_id = sys.id ");
+    //           16=archive_path, 17=archive_internal_path, 18=disc_set_key, 19=disc_number,
+    //           20=has_local_artwork
+    //
+    // Best-match CTE (bm): collapses the old three correlated subqueries into a single
+    // LEFT JOIN so matched_title / match_confidence / release_date are fetched in one pass.
+    static const QLatin1String kFromJoin(
+        "FROM files f "
+        "LEFT JOIN systems sys ON f.system_id = sys.id "
+        "LEFT JOIN ("
+        "  SELECT m.file_id,"
+        "         g.title        AS matched_title,"
+        "         m.confidence   AS match_confidence,"
+        "         g.release_date AS release_date,"
+        "         ROW_NUMBER() OVER ("
+        "           PARTITION BY m.file_id"
+        "           ORDER BY m.is_confirmed DESC, m.confidence DESC"
+        "         ) AS rn"
+        "  FROM matches m"
+        "  LEFT JOIN games g ON m.game_id = g.id"
+        "  WHERE m.is_rejected = 0"
+        ") bm ON bm.file_id = f.id AND bm.rn = 1 ");
     static const QLatin1String kMatchMeta(
         "sys.display_name AS system_name, "
-        "(SELECT g.title FROM matches m "
-        " LEFT JOIN games g ON m.game_id = g.id "
-        " WHERE m.file_id = f.id AND m.is_rejected = 0 "
-        " ORDER BY m.is_confirmed DESC, m.confidence DESC LIMIT 1) AS matched_title, "
-        "(SELECT m.confidence FROM matches m "
-        " WHERE m.file_id = f.id AND m.is_rejected = 0 "
-        " ORDER BY m.is_confirmed DESC, m.confidence DESC LIMIT 1) AS match_confidence, "
-        "(SELECT g.release_date FROM matches m "
-        " LEFT JOIN games g ON m.game_id = g.id "
-        " WHERE m.file_id = f.id AND m.is_rejected = 0 "
-        " ORDER BY m.is_confirmed DESC, m.confidence DESC LIMIT 1) AS release_date");
+        "bm.matched_title, "
+        "bm.match_confidence, "
+        "bm.release_date");
     static const QLatin1String kChildExts(
         "(SELECT GROUP_CONCAT(f2.extension, ',') FROM files f2 "
         " WHERE f2.parent_file_id = f.id) AS child_exts,"
@@ -227,7 +235,8 @@ void WorkflowController::refreshQueueFiles() {
     switch (m_queueStage) {
     case Identity:
         sql = QStringLiteral("SELECT f.id, f.filename, f.current_path, f.md5, f.base_title, f.extension, "
-                             "%1, f.archive_path, f.archive_internal_path, f.disc_set_key, f.disc_number "
+                             "%1, f.archive_path, f.archive_internal_path, f.disc_set_key, f.disc_number, "
+                             "f.has_local_artwork "
                              "%2 "
                              "WHERE f.is_primary = 1 "
                              "  AND ((f.md5 IS NULL OR f.md5 = '') "
@@ -241,7 +250,8 @@ void WorkflowController::refreshQueueFiles() {
     case Enrich:
     case Done:
         sql = QStringLiteral("SELECT f.id, f.filename, f.current_path, f.md5, f.base_title, f.extension, "
-                             "%1, f.archive_path, f.archive_internal_path, f.disc_set_key, f.disc_number "
+                             "%1, f.archive_path, f.archive_internal_path, f.disc_set_key, f.disc_number, "
+                             "f.has_local_artwork "
                              "%2 "
                              "WHERE f.is_primary = 1 "
                              "  AND EXISTS ("
@@ -253,7 +263,8 @@ void WorkflowController::refreshQueueFiles() {
         break;
     default: // AllFiles
         sql = QStringLiteral("SELECT f.id, f.filename, f.current_path, f.md5, f.base_title, f.extension, "
-                             "%1, f.archive_path, f.archive_internal_path, f.disc_set_key, f.disc_number "
+                             "%1, f.archive_path, f.archive_internal_path, f.disc_set_key, f.disc_number, "
+                             "f.has_local_artwork "
                              "%2 "
                              "WHERE f.is_primary = 1 "
                              "ORDER BY COALESCE(f.base_title, f.filename) LIMIT 500")
@@ -272,7 +283,7 @@ void WorkflowController::refreshQueueFiles() {
 
     while (q.next()) {
         const int id = q.value(0).toInt();
-        const bool hasArtwork = artworkExistsForFile(id);
+        const bool hasArtwork = q.value(20).toBool();
         const QString baseTitle = q.value(4).toString();
         const QString matchedTitle = q.value(13).toString();
         const QString rawFilename = q.value(1).toString();
@@ -405,10 +416,8 @@ void WorkflowController::refreshQueueFiles() {
             header[QStringLiteral("isBundled")] = bundledCount == memberTotal;
             header[QStringLiteral("isOrganized")] = organizedCount == memberTotal;
             header[QStringLiteral("isConvertible")] = first.value(QStringLiteral("isConvertible"));
-            header[QStringLiteral("matchProgress")]
-                = QStringLiteral("%1/%2").arg(matchedCount).arg(memberTotal);
-            header[QStringLiteral("artworkProgress")]
-                = QStringLiteral("%1/%2").arg(artworkCount).arg(memberTotal);
+            header[QStringLiteral("matchProgress")] = QStringLiteral("%1/%2").arg(matchedCount).arg(memberTotal);
+            header[QStringLiteral("artworkProgress")] = QStringLiteral("%1/%2").arg(artworkCount).arg(memberTotal);
 
             QStringList searchParts;
             searchParts << header.value(QStringLiteral("filename")).toString();

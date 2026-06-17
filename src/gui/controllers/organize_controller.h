@@ -47,7 +47,6 @@ public:
         return m_lastError;
     }
 
-    Q_INVOKABLE void previewOrganize(const QString &destinationDir);
     Q_INVOKABLE void previewRenameOrganize(const QString &destinationDir, bool selectedOnly);
     Q_INVOKABLE int renameOrganizeFileCount(bool selectedOnly) const;
     Q_INVOKABLE void applyOrganize(const QString &destinationDir);

@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import Remus.Gui
 
 // Stage filter chips for the library queue (file list lives in RomTable).
 Frame {
@@ -9,9 +10,9 @@ Frame {
     Layout.fillHeight: true
 
     background: Rectangle {
-        color:        "#1d2021"
-        border.color: "#504945"
-        radius:       12
+        color:        Theme.panelBg
+        border.color: Theme.panelBorder
+        radius:       Theme.panelRadius
     }
 
     readonly property int stageAll:      0
@@ -27,8 +28,8 @@ Frame {
         Label {
             text:           "Filter"
             font.bold:      true
-            font.pixelSize: 13
-            color:          "#a89984"
+            font.pixelSize: Theme.fontLg
+            color:          Theme.textMuted
         }
 
         ColumnLayout {
@@ -56,8 +57,8 @@ Frame {
                     icon.name:        modelData.icon
                     icon.width:       14
                     icon.height:      14
-                    icon.color:       checked ? "#fbf1c7" : "#928374"
-                    font.pixelSize:   11
+                    icon.color:       checked ? Theme.textPrimary : Theme.textDim
+                    font.pixelSize:   Theme.fontSm
                     padding:          4
                     opacity:          appController.libraryOpen ? 1.0 : 0.38
                     enabled:          appController.libraryOpen
@@ -69,14 +70,14 @@ Frame {
         Rectangle {
             Layout.fillWidth: true
             height:           1
-            color:            "#504945"
+            color:            Theme.border
         }
 
         Label {
             Layout.fillWidth: true
             wrapMode:         Text.WordWrap
-            color:            "#928374"
-            font.pixelSize:   10
+            color:            Theme.textDim
+            font.pixelSize:   Theme.fontXs
             text:             "Needs ID: unhashed or unmatched.\n"
                             + "Needs Artwork: matched, no box art.\n"
                             + "Done: matched with artwork."
@@ -92,7 +93,7 @@ Frame {
             icon.width:       14
             icon.height:      14
             text:             "Refresh"
-            font.pixelSize:   11
+            font.pixelSize:   Theme.fontSm
             opacity:          appController.libraryOpen ? 1.0 : 0.38
             enabled:          appController.libraryOpen
             onClicked:        workflowController.refresh()

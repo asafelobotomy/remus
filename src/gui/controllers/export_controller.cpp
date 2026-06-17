@@ -17,6 +17,7 @@
 #include "../../core/constants/constants.h"
 #include "../../core/library_exporter.h"
 #include "../../core/m3u_generator.h"
+#include <QHash>
 #include <QSet>
 
 namespace Remus {
@@ -245,11 +246,44 @@ void ExportController::bundleAll(const QString &scanDir, const QString &namingTe
         return;
     }
 
+    // Prefetch is_bundled for all file IDs in a single query to avoid N+1.
+    QSet<int> alreadyBundledIds;
+    {
+        QSet<int> allFileIds;
+        for (auto it = allMatches.constBegin(); it != allMatches.constEnd(); ++it)
+            allFileIds.insert(it.key());
+        if (!allFileIds.isEmpty()) {
+            QStringList ph;
+            for (int i = 0; i < allFileIds.size(); ++i)
+                ph.append(QStringLiteral("?"));
+            QSqlQuery checkQ(m_appController->database()->database());
+            checkQ.prepare(QStringLiteral("SELECT id FROM files WHERE is_bundled = 1 AND id IN (%1)")
+                               .arg(ph.join(QStringLiteral(","))));
+            for (int id : allFileIds)
+                checkQ.addBindValue(id);
+            if (checkQ.exec()) {
+                while (checkQ.next())
+                    alreadyBundledIds.insert(checkQ.value(0).toInt());
+            }
+        }
+    }
+
+    // Prefetch all file records in a single batch query.
+    QHash<int, FileRecord> fileRecordCache;
+    {
+        QSet<int> allFileIds;
+        for (auto it = allMatches.constBegin(); it != allMatches.constEnd(); ++it)
+            allFileIds.insert(it.key());
+        const QList<FileRecord> prefetched = m_appController->database()->getFilesByIds(allFileIds);
+        for (const FileRecord &fr : prefetched)
+            fileRecordCache.insert(fr.id, fr);
+    }
+
     int bundled = 0;
     int failed = 0;
 
     for (auto it = allMatches.constBegin(); it != allMatches.constEnd(); ++it) {
-        FileRecord file = m_appController->database()->getFileById(it.key());
+        FileRecord file = fileRecordCache.value(it.key());
         const Database::MatchResult &match = it.value();
         if (match.isRejected || !match.isConfirmed) {
             ++m_bundledFiles;
@@ -258,16 +292,11 @@ void ExportController::bundleAll(const QString &scanDir, const QString &namingTe
             continue;
         }
         // Skip files that were already bundled in a previous run.
-        {
-            QSqlQuery checkQ(m_appController->database()->database());
-            checkQ.prepare(QStringLiteral("SELECT is_bundled FROM files WHERE id = ?"));
-            checkQ.addBindValue(it.key());
-            if (checkQ.exec() && checkQ.next() && checkQ.value(0).toBool()) {
-                ++m_bundledFiles;
-                emit bundleProgressChanged();
-                QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
-                continue;
-            }
+        if (alreadyBundledIds.contains(it.key())) {
+            ++m_bundledFiles;
+            emit bundleProgressChanged();
+            QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
+            continue;
         }
         if (file.id <= 0) {
             ++failed;
@@ -289,7 +318,8 @@ void ExportController::bundleAll(const QString &scanDir, const QString &namingTe
             const QString newPath = moveToOriginalRoms(file.currentPath, baseDir);
             if (!newPath.isEmpty()) {
                 m_appController->database()->updateFilePath(it.key(), newPath);
-                file = m_appController->database()->getFileById(it.key());
+                file.currentPath = newPath;
+                file.filename = QFileInfo(newPath).fileName();
             }
         }
 
@@ -338,66 +368,6 @@ void ExportController::bundleAll(const QString &scanDir, const QString &namingTe
     emit libraryChanged();
     if (bundled > 0)
         emit exportFinished();
-}
-
-bool ExportController::exportM3u(const QString &outputPath) {
-    if (m_appController == nullptr || !m_appController->isLibraryOpen()) {
-        setLastMessage(QStringLiteral("Open a library before exporting playlists."));
-        return false;
-    }
-
-    const int fileId = m_appController->selectedFileId();
-    if (fileId <= 0) {
-        setLastMessage(QStringLiteral("Select a file first."));
-        return false;
-    }
-
-    const FileRecord file = m_appController->database()->getFileById(fileId);
-    if (file.id <= 0) {
-        setLastMessage(QStringLiteral("Selected file not found."));
-        return false;
-    }
-
-    Database *db = m_appController->database();
-    if (!file.discSetKey.isEmpty()) {
-        const QList<FileRecord> discSet = db->getFilesByDiscSetKey(file.discSetKey);
-        if (discSet.size() >= 2) {
-            M3UGenerator generator(*db, this);
-            QStringList discPaths;
-            for (const FileRecord &disc : discSet)
-                discPaths.append(disc.currentPath);
-
-            const QString title = !file.baseTitle.isEmpty() ? file.baseTitle : QFileInfo(outputPath).completeBaseName();
-            if (generator.generateM3U(title, discPaths, outputPath)) {
-                m_lastOutputPath = outputPath;
-                setLastMessage(QStringLiteral("Disc set playlist exported: %1").arg(outputPath));
-                emit exportFinished();
-                return true;
-            }
-            setLastMessage(QStringLiteral("Failed to create disc set playlist: %1").arg(outputPath));
-            return false;
-        }
-    }
-
-    QFile outFile(outputPath);
-    if (!outFile.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate)) {
-        setLastMessage(QStringLiteral("Failed to create playlist: %1").arg(outputPath));
-        return false;
-    }
-
-    QTextStream stream(&outFile);
-    stream << file.currentPath << '\n';
-    const QList<FileRecord> children = m_appController->database()->getFilesByParent(fileId);
-    for (const FileRecord &child : children) {
-        if (!child.currentPath.isEmpty())
-            stream << child.currentPath << '\n';
-    }
-    outFile.close();
-
-    m_lastOutputPath = outputPath;
-    setLastMessage(QStringLiteral("Playlist exported: %1").arg(outputPath));
-    emit exportFinished();
-    return true;
 }
 
 int ExportController::generateM3uPlaylists(const QString &outputDir, const QString &systemsCsv) {
@@ -461,44 +431,6 @@ QStringList ExportController::parseSystemsFilter(const QString &systemsCsv) cons
     if (systemsCsv.trimmed().isEmpty())
         return { };
     return systemsCsv.split(',', Qt::SkipEmptyParts);
-}
-
-QVariantList ExportController::availableSystems() {
-    QVariantList systems;
-    if (m_appController == nullptr || !m_appController->isLibraryOpen())
-        return systems;
-
-    Database *db = m_appController->database();
-    const QMap<int, Database::MatchResult> matches = db->getAllMatches();
-    QSet<QString> seen;
-    for (auto it = matches.constBegin(); it != matches.constEnd(); ++it) {
-        const FileRecord file = db->getFileById(it.key());
-        if (file.id <= 0)
-            continue;
-        const QString systemName = db->getSystemDisplayName(file.systemId);
-        if (systemName.isEmpty() || seen.contains(systemName))
-            continue;
-        seen.insert(systemName);
-        QVariantMap item;
-        item.insert(QStringLiteral("name"), systemName);
-        item.insert(QStringLiteral("count"), 0);
-        systems.append(item);
-    }
-
-    for (int i = 0; i < systems.size(); ++i) {
-        const QString systemName = systems.at(i).toMap().value(QStringLiteral("name")).toString();
-        int count = 0;
-        for (auto it = matches.constBegin(); it != matches.constEnd(); ++it) {
-            const FileRecord file = db->getFileById(it.key());
-            if (file.id > 0 && db->getSystemDisplayName(file.systemId) == systemName)
-                ++count;
-        }
-        QVariantMap item = systems.at(i).toMap();
-        item.insert(QStringLiteral("count"), count);
-        systems[i] = item;
-    }
-
-    return systems;
 }
 
 QVariantMap ExportController::exportPreview(const QString &systemsCsv) {

@@ -13,8 +13,9 @@ Item {
 
         Label {
             text: "Mods"
-            font.pixelSize: 26
+            font.pixelSize: Theme.fontHero
             font.bold: true
+            color: Theme.textPrimary
         }
 
         RowLayout {
@@ -42,7 +43,7 @@ Item {
         }
 
         Label {
-            color: "#fb4934"
+            color: Theme.error
             text: modController.lastError
         }
 

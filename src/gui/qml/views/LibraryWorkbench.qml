@@ -42,7 +42,7 @@ Item {
             Label {
                 Layout.fillWidth: true
                 wrapMode: Text.WordWrap
-                text: "Run scan → hash/match → enrich → convert → bundle → organize on the library."
+                text: "Run hash \u2192 match \u2192 confirm \u2192 artwork \u2192 convert \u2192 bundle \u2192 organize on the library."
             }
             Label {
                 visible: runAllConfirmDialog.destDir.length > 0
@@ -111,8 +111,8 @@ Item {
 
             background: Rectangle {
                 radius: 10
-                color: "#1d2021"
-                border.color: "#504945"
+                color: Theme.panelBg
+                border.color: Theme.panelBorder
             }
 
             RowLayout {
@@ -125,18 +125,18 @@ Item {
 
                     Label {
                         text: "ROM source folder"
-                        font.pixelSize: 10
+                        font.pixelSize: Theme.fontXs
                         font.bold: true
-                        color: "#928374"
+                        color: Theme.textDim
                     }
                     Label {
                         Layout.fillWidth: true
                         wrapMode: Text.WordWrap
-                        font.pixelSize: 12
-                        color: romSourceDirectory.length > 0 ? "#ebdbb2" : "#fabd2f"
+                        font.pixelSize: Theme.fontMd
+                        color: romSourceDirectory.length > 0 ? Theme.textBody : Theme.warn
                         text: romSourceDirectory.length > 0
                               ? romSourceDirectory
-                              : "Not set — choose a folder in Settings or use Update library"
+                              : "Not set \u2014 choose a folder in Settings or use Update library"
                     }
                 }
 
@@ -148,15 +148,15 @@ Item {
 
                     Label {
                         text: "Library database"
-                        font.pixelSize: 10
+                        font.pixelSize: Theme.fontXs
                         font.bold: true
-                        color: "#928374"
+                        color: Theme.textDim
                     }
                     Label {
                         Layout.fillWidth: true
                         elide: Text.ElideMiddle
-                        font.pixelSize: 12
-                        color: "#ebdbb2"
+                        font.pixelSize: Theme.fontMd
+                        color: Theme.textBody
                         text: appController.libraryPath
                     }
                 }
@@ -166,13 +166,13 @@ Item {
 
                     Label {
                         text: "In view"
-                        font.pixelSize: 10
+                        font.pixelSize: Theme.fontXs
                         font.bold: true
-                        color: "#928374"
+                        color: Theme.textDim
                     }
                     Label {
-                        font.pixelSize: 12
-                        color: "#ebdbb2"
+                        font.pixelSize: Theme.fontMd
+                        color: Theme.textBody
                         text: workflowController.queueFiles.length + " titles"
                     }
                 }

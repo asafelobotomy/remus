@@ -13,14 +13,15 @@ Item {
 
         Label {
             text: "DAT Management (Advanced)"
-            font.pixelSize: 26
+            font.pixelSize: Theme.fontHero
             font.bold: true
+            color: Theme.textPrimary
         }
 
         Label {
             Layout.fillWidth: true
             wrapMode: Text.WordWrap
-            color: "#a89984"
+            color: Theme.textMuted
             text: "Verification catalogs are bundled in the Remus compendium by default. " +
                   "Manual DAT import is optional for supplemental or custom catalogs only."
         }

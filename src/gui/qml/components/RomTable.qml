@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import Remus.Gui
 
 // Centre ROM list — TMM-style table with status icon columns.
 Frame {
@@ -27,9 +28,9 @@ Frame {
         colTitleMin + colSystem + colYear + colMatch + (colStatus * 5)
 
     background: Rectangle {
-        color:        "#1d2021"
-        border.color: "#504945"
-        radius:       12
+        color:        Theme.panelBg
+        border.color: Theme.panelBorder
+        radius:       Theme.panelRadius
     }
 
     ColumnLayout {
@@ -44,22 +45,22 @@ Frame {
             Label {
                 text:           "Library"
                 font.bold:      true
-                font.pixelSize: 14
-                color:          "#fbf1c7"
+                font.pixelSize: Theme.fontXl
+                color:          Theme.textPrimary
             }
 
             TextField {
                 id:               searchField
                 Layout.fillWidth: true
-                placeholderText:  "Search title, system, or path…"
-                font.pixelSize:   12
+                placeholderText:  "Search title, system, or path\u2026"
+                font.pixelSize:   Theme.fontMd
                 onTextChanged:    root.searchText = text
             }
 
             Label {
                 text:           workflowController.queueFiles.length + " shown"
-                color:          "#928374"
-                font.pixelSize: 11
+                color:          Theme.textDim
+                font.pixelSize: Theme.fontSm
             }
         }
 
@@ -79,73 +80,73 @@ Frame {
                     Layout.minimumWidth: root.colTitleMin
                     Layout.fillWidth:    true
                     text: "Title"
-                    font.pixelSize: 10
+                    font.pixelSize: Theme.fontXs
                     font.bold:      true
-                    color:          "#a89984"
+                    color:          Theme.textMuted
                 }
                 Label {
                     Layout.preferredWidth: root.colSystem
                     text: "System"
-                    font.pixelSize: 10
+                    font.pixelSize: Theme.fontXs
                     font.bold:      true
-                    color:          "#a89984"
+                    color:          Theme.textMuted
                     elide:          Text.ElideRight
                 }
                 Label {
                     Layout.preferredWidth: root.colYear
                     horizontalAlignment: Text.AlignHCenter
                     text: "Year"
-                    font.pixelSize: 10
+                    font.pixelSize: Theme.fontXs
                     font.bold:      true
-                    color:          "#a89984"
+                    color:          Theme.textMuted
                 }
                 Label {
                     Layout.preferredWidth: root.colMatch
                     horizontalAlignment: Text.AlignRight
                     text: "Match"
-                    font.pixelSize: 10
+                    font.pixelSize: Theme.fontXs
                     font.bold:      true
-                    color:          "#a89984"
+                    color:          Theme.textMuted
                 }
                 Label {
                     Layout.preferredWidth: root.colStatus
                     horizontalAlignment: Text.AlignHCenter
                     text: "ID"
-                    font.pixelSize: 10
+                    font.pixelSize: Theme.fontXs
                     font.bold:      true
-                    color:          "#a89984"
+                    color:          Theme.textMuted
                 }
                 Label {
                     Layout.preferredWidth: root.colStatus
                     horizontalAlignment: Text.AlignHCenter
                     text: "Art"
-                    font.pixelSize: 10
+                    font.pixelSize: Theme.fontXs
                     font.bold:      true
-                    color:          "#a89984"
+                    color:          Theme.textMuted
                 }
                 Label {
                     Layout.preferredWidth: root.colStatus
                     horizontalAlignment: Text.AlignHCenter
                     text: "Conv"
-                    font.pixelSize: 10
+                    font.pixelSize: Theme.fontXs
                     font.bold:      true
-                    color:          "#a89984"
+                    color:          Theme.textMuted
                 }
                 Label {
                     Layout.preferredWidth: root.colStatus
                     horizontalAlignment: Text.AlignHCenter
                     text: "Ren"
-                    font.pixelSize: 10
+                    font.pixelSize: Theme.fontXs
                     font.bold:      true
-                    color:          "#a89984"
+                    color:          Theme.textMuted
                 }
                 Label {
                     Layout.preferredWidth: root.colStatus
                     horizontalAlignment: Text.AlignHCenter
                     text: "Org"
-                    font.pixelSize: 10
+                    font.pixelSize: Theme.fontXs
                     font.bold:      true
-                    color:          "#a89984"
+                    color:          Theme.textMuted
                 }
             }
         }
@@ -153,7 +154,7 @@ Frame {
         Rectangle {
             Layout.fillWidth: true
             height:           1
-            color:            "#504945"
+            color:            Theme.border
         }
 
         ScrollView {
@@ -206,7 +207,7 @@ Frame {
                     visible: filterMatch
                     height:  filterMatch ? implicitHeight : 0
                     width:   romList.width
-                    padding: isDisc ? 4 : 4
+                    padding: 4
                     highlighted: !isGroup && appController.selectedFileId === modelData.fileId
 
                     contentItem: RowLayout {
@@ -219,9 +220,9 @@ Frame {
                             Label {
                                 visible: isGroup
                                 anchors.centerIn: parent
-                                text: modelData.expanded ? "▾" : "▸"
-                                font.pixelSize: 11
-                                color: "#a89984"
+                                text: modelData.expanded ? "\u25BE" : "\u25B8"
+                                font.pixelSize: Theme.fontSm
+                                color: Theme.textMuted
                             }
                         }
 
@@ -236,18 +237,18 @@ Frame {
                                 return rowDelegate.modelData.filename
                             }
                             elide:            Text.ElideRight
-                            font.pixelSize:   isGroup ? 12 : 12
+                            font.pixelSize:   Theme.fontMd
                             font.bold:        isGroup
-                            color:            isGroup ? "#fbf1c7" : "#ebdbb2"
+                            color:            isGroup ? Theme.textPrimary : Theme.textBody
                             leftPadding:      isDisc ? 4 : 0
                         }
 
                         Label {
                             Layout.preferredWidth: root.colSystem
-                            text:             rowDelegate.modelData.systemName || "—"
+                            text:             rowDelegate.modelData.systemName || "\u2014"
                             elide:            Text.ElideRight
-                            font.pixelSize:   11
-                            color:            "#a89984"
+                            font.pixelSize:   Theme.fontSm
+                            color:            Theme.textMuted
                             visible:          !isGroup
                         }
 
@@ -257,10 +258,10 @@ Frame {
                             visible:          !isGroup
                             text: {
                                 const y = rowDelegate.modelData.releaseYear
-                                return (y && y > 0) ? y.toString() : "—"
+                                return (y && y > 0) ? y.toString() : "\u2014"
                             }
-                            font.pixelSize: 11
-                            color:          "#a89984"
+                            font.pixelSize: Theme.fontSm
+                            color:          Theme.textMuted
                         }
 
                         Label {
@@ -268,27 +269,27 @@ Frame {
                             horizontalAlignment: Text.AlignRight
                             text: {
                                 if (isGroup)
-                                    return modelData.matchProgress || "—"
+                                    return modelData.matchProgress || "\u2014"
                                 const c = rowDelegate.modelData.confidence
                                 if (!rowDelegate.modelData.hasAnyMatch || !c || c <= 0)
-                                    return "—"
+                                    return "\u2014"
                                 return Math.round(c) + "%"
                             }
-                            font.pixelSize: 11
+                            font.pixelSize: Theme.fontSm
                             color: {
                                 if (isGroup) {
                                     if (modelData.hasMatch)
-                                        return "#b8bb26"
+                                        return Theme.success
                                     if (modelData.hasAnyMatch)
-                                        return "#fabd2f"
-                                    return "#665c54"
+                                        return Theme.warn
+                                    return Theme.textDisabled
                                 }
                                 const c = rowDelegate.modelData.confidence
                                 if (!rowDelegate.modelData.hasMatch)
-                                    return rowDelegate.modelData.hasAnyMatch ? "#fabd2f" : "#665c54"
-                                if (c >= 90) return "#b8bb26"
-                                if (c >= 60) return "#fabd2f"
-                                return "#fb4934"
+                                    return rowDelegate.modelData.hasAnyMatch ? Theme.warn : Theme.textDisabled
+                                if (c >= 90) return Theme.success
+                                if (c >= 60) return Theme.warn
+                                return Theme.error
                             }
                         }
 
@@ -381,9 +382,9 @@ Frame {
                     }
 
                     background: Rectangle {
-                        color:  parent.highlighted ? "#3f4d4f"
-                              : parent.hovered     ? "#383838"
-                              : isGroup              ? "#252525"
+                        color:  parent.highlighted ? Theme.selected
+                              : parent.hovered     ? Theme.hover
+                              : isGroup              ? Theme.surfaceHigh
                               : "transparent"
                         radius: 4
                     }
@@ -397,7 +398,7 @@ Frame {
             text:             romSourceDirectory.length === 0
                                 ? "No ROMs yet. Set a ROM source folder in Settings, then click Update library."
                                 : "No ROMs in this filter. Try Update library or change the filter."
-            color:            "#a89984"
+            color:            Theme.textMuted
             wrapMode:         Text.WordWrap
             horizontalAlignment: Text.AlignHCenter
         }
@@ -406,7 +407,7 @@ Frame {
             Layout.fillWidth: true
             visible:          !appController.libraryOpen
             text:             "Open a library database above, then scan your ROM folder with Update library."
-            color:            "#a89984"
+            color:            Theme.textMuted
             wrapMode:         Text.WordWrap
             horizontalAlignment: Text.AlignHCenter
         }

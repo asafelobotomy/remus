@@ -11,7 +11,6 @@
 namespace Remus {
 
 class AppController;
-class MatchListModel;
 class ProviderOrchestrator;
 struct FileRecord;
 
@@ -89,13 +88,9 @@ public:
         return m_searchStatus;
     }
 
-    void setModel(MatchListModel *model) {
-        m_model = model;
-    }
-
     Q_INVOKABLE void refreshModel();
-    Q_INVOKABLE void matchSelected();
-    Q_INVOKABLE void matchAll();
+    void matchSelected();
+    void matchAll();
     Q_INVOKABLE void confirmSelected();
     Q_INVOKABLE void confirmAll();
     Q_INVOKABLE void rejectSelected();
@@ -148,7 +143,6 @@ private:
         bool importDeveloper, bool importGenre, bool importRelease, bool importRating);
 
     AppController *m_appController;
-    MatchListModel *m_model = nullptr;
     QPointer<ProviderOrchestrator> m_connectedOrchestrator;
     bool m_matching = false;
     int m_matchedFiles = 0;

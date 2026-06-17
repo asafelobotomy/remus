@@ -32,8 +32,9 @@ Item {
 
         Label {
             text: "Patch Application"
-            font.pixelSize: 26
+            font.pixelSize: Theme.fontHero
             font.bold: true
+            color: Theme.textPrimary
         }
 
         Label {
@@ -69,7 +70,8 @@ Item {
         Label {
             text: "Create Patch"
             font.bold: true
-            font.pixelSize: 14
+            font.pixelSize: Theme.fontXl
+            color: Theme.textBody
         }
 
         TextField {

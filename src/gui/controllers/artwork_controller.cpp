@@ -5,6 +5,7 @@
 #include <QFileInfo>
 #include <QRegularExpression>
 #include <QSettings>
+#include <QSqlQuery>
 #include <QStandardPaths>
 
 #include "app_controller.h"
@@ -128,6 +129,8 @@ bool ArtworkController::downloadSelected() {
     m_progressMessage = QStringLiteral("Artwork saved.");
     emit progressMessageChanged();
     setLastError(QString());
+    if (m_appController && m_appController->database())
+        m_appController->database()->updateFileArtworkFlag(fileId, true);
     emit previewChanged();
     emit artworkDownloaded();
     return true;
@@ -151,15 +154,19 @@ void ArtworkController::downloadAllMatched() {
     int downloadSucceeded = 0;
     int downloadFailed = 0;
     m_batchDownloading = true;
+    Database *db = m_appController->database();
     for (const FileRecord &file : files) {
         m_progressMessage = QStringLiteral("Processing %1 / %2").arg(done + 1).arg(files.size());
         emit progressMessageChanged();
         if (refreshArtworkForFile(file.id, true) && m_previewUrl.isValid() && !m_previewUrl.isLocalFile()) {
             QString savedPath;
-            if (m_downloader.download(m_previewUrl, artworkPathForFile(file.id), &savedPath))
+            if (m_downloader.download(m_previewUrl, artworkPathForFile(file.id), &savedPath)) {
                 ++downloadSucceeded;
-            else
+                if (db)
+                    db->updateFileArtworkFlag(file.id, true);
+            } else {
                 ++downloadFailed;
+            }
         }
         m_downloadProgress = ++done;
         emit progressChanged();
@@ -185,6 +192,10 @@ void ArtworkController::clearArtworkCache() {
         QDir::Files);
     for (const QString &filename : files) {
         QFile::remove(QDir(dir).filePath(filename));
+    }
+    if (m_appController && m_appController->database() && m_appController->isLibraryOpen()) {
+        QSqlQuery q(m_appController->database()->database());
+        q.exec("UPDATE files SET has_local_artwork = 0");
     }
     m_previewUrl = QUrl();
     m_localArtworkPath.clear();

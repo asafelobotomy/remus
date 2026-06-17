@@ -8,7 +8,6 @@
 #include <QVector>
 
 #include "app_controller.h"
-#include "../models/match_list_model.h"
 #include "../../core/constants/confidence.h"
 #include "../../core/constants/match_methods.h"
 #include "../../core/database.h"
@@ -30,37 +29,6 @@ MatchController::MatchController(AppController *appController, QObject *parent)
 }
 
 void MatchController::refreshModel() {
-    if (m_model == nullptr) {
-        return;
-    }
-
-    QList<MatchListEntry> entries;
-    if (m_appController != nullptr && m_appController->isLibraryOpen()) {
-        Database *db = m_appController->database();
-        const QList<FileRecord> files = db->getExistingFiles();
-        const QMap<int, Database::MatchResult> matches = db->getAllMatches();
-        for (const FileRecord &file : files) {
-            const auto matchIt = matches.constFind(file.id);
-            if (matchIt == matches.constEnd()) {
-                continue;
-            }
-
-            MatchListEntry entry;
-            entry.fileId = file.id;
-            entry.gameId = matchIt->gameId;
-            entry.fileName = file.filename;
-            entry.title = matchIt->gameTitle;
-            entry.system = db->getSystemDisplayName(matchIt->systemId);
-            entry.provider = QStringLiteral("matched");
-            entry.method = matchIt->matchMethod;
-            entry.confidence = matchIt->confidence;
-            entry.confirmed = matchIt->isConfirmed;
-            entry.rejected = matchIt->isRejected;
-            entries.append(entry);
-        }
-    }
-
-    m_model->setEntries(entries);
     updateUnconfirmedCount();
 }
 

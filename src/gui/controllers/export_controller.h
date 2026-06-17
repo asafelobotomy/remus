@@ -10,6 +10,20 @@ namespace Remus {
 
 class AppController;
 
+/**
+ * @brief Handles two distinct export responsibilities:
+ *
+ *  1. **Pipeline bundling** (stage 5 of runAll): `bundleSelected` / `bundleAll`
+ *     copy matched files into a structured Remus Library directory tree and
+ *     mark them `is_bundled` in the database.
+ *
+ *  2. **Frontend export** (utilities panel): `exportFrontend` / `exportPreview`
+ *     / `generateM3uPlaylists` produce RetroArch, ES-DE, CSV, or M3U outputs
+ *     from the confirmed library for consumption by external frontends.
+ *
+ * These two pathways share only the `AppController` dependency; all signals,
+ * properties, and methods below belong to exactly one of the two roles.
+ */
 class ExportController : public QObject {
     Q_OBJECT
     Q_PROPERTY(bool exporting READ isExporting NOTIFY exportingChanged)
@@ -51,10 +65,8 @@ public:
 
     Q_INVOKABLE void bundleSelected(const QString &scanDir, const QString &namingTemplate = QString());
     Q_INVOKABLE void bundleAll(const QString &scanDir, const QString &namingTemplate = QString());
-    Q_INVOKABLE bool exportM3u(const QString &outputPath);
     Q_INVOKABLE int generateM3uPlaylists(const QString &outputDir, const QString &systemsCsv = QString());
 
-    Q_INVOKABLE QVariantList availableSystems();
     Q_INVOKABLE QVariantMap exportPreview(const QString &systemsCsv = QString());
     Q_INVOKABLE bool exportFrontend(
         const QString &format, const QString &outputPath, const QString &systemsCsv = QString());

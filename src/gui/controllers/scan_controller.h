@@ -1,7 +1,6 @@
 #pragma once
 
 #include <QObject>
-#include <QStringList>
 #include <QThread>
 #include <atomic>
 
@@ -17,7 +16,6 @@ class ScanController : public QObject {
     Q_PROPERTY(int scannedFiles READ scannedFiles NOTIFY progressChanged)
     Q_PROPERTY(int totalFiles READ totalFiles NOTIFY progressChanged)
     Q_PROPERTY(QString progressMessage READ progressMessage NOTIFY progressMessageChanged)
-    Q_PROPERTY(QStringList recentLogs READ recentLogs NOTIFY recentLogsChanged)
     Q_PROPERTY(QString lastDirectory READ lastDirectory WRITE setLastDirectory NOTIFY lastDirectoryChanged)
 
 public:
@@ -35,9 +33,6 @@ public:
     }
     QString progressMessage() const {
         return m_progressMessage;
-    }
-    QStringList recentLogs() const {
-        return m_recentLogs;
     }
     QString lastDirectory() const {
         return m_lastDirectory;
@@ -61,15 +56,12 @@ signals:
     void scanningChanged();
     void progressChanged();
     void progressMessageChanged();
-    void recentLogsChanged();
     void lastDirectoryChanged();
     void scanCompleted(int insertedFiles);
     void scanError(const QString &message);
     void libraryChanged();
 
 private:
-    void appendLog(const QString &message);
-
     AppController *m_appController;
     LibraryService m_libraryService;
     std::atomic<LibraryService *> m_workerService { nullptr };
@@ -77,7 +69,6 @@ private:
     int m_scannedFiles = 0;
     int m_totalFiles = 0;
     QString m_progressMessage;
-    QStringList m_recentLogs;
     QString m_lastDirectory;
     QThread *m_thread = nullptr;
 };

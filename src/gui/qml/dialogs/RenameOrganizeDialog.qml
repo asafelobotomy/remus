@@ -27,11 +27,11 @@ Dialog {
         Label {
             Layout.fillWidth: true
             wrapMode: Text.WordWrap
-            color: "#928374"
-            font.pixelSize: 11
+            color: Theme.textDim
+            font.pixelSize: Theme.fontSm
             text: selectedOnly
-                  ? "Selected ROM — bundle sidecars, then move into your organized library."
-                  : "All confirmed matches — bundle sidecars, then move into your organized library."
+                  ? "Selected ROM \u2014 bundle sidecars, then move into your organized library."
+                  : "All confirmed matches \u2014 bundle sidecars, then move into your organized library."
         }
 
         GridLayout {
@@ -40,29 +40,29 @@ Dialog {
             columnSpacing: 12
             rowSpacing: 4
 
-            Label { text: "Naming template"; color: "#a89984"; font.pixelSize: 11 }
+            Label { text: "Naming template"; color: Theme.textMuted; font.pixelSize: Theme.fontSm }
             Label {
                 Layout.fillWidth: true
                 elide: Text.ElideMiddle
                 text: organizeController.namingTemplate
-                color: "#ebdbb2"
-                font.pixelSize: 11
+                color: Theme.textBody
+                font.pixelSize: Theme.fontSm
             }
 
-            Label { text: "Organize into"; color: "#a89984"; font.pixelSize: 11 }
+            Label { text: "Organize into"; color: Theme.textMuted; font.pixelSize: Theme.fontSm }
             Label {
                 Layout.fillWidth: true
                 elide: Text.ElideMiddle
-                text: libraryDest.length > 0 ? libraryDest : "Not configured — set in Settings"
-                color: libraryDest.length > 0 ? "#ebdbb2" : "#fb4934"
-                font.pixelSize: 11
+                text: libraryDest.length > 0 ? libraryDest : "Not configured \u2014 set in Settings"
+                color: libraryDest.length > 0 ? Theme.textBody : Theme.error
+                font.pixelSize: Theme.fontSm
             }
 
-            Label { text: "Scope"; color: "#a89984"; font.pixelSize: 11 }
+            Label { text: "Scope"; color: Theme.textMuted; font.pixelSize: Theme.fontSm }
             Label {
                 text: fileCount + " ROM" + (fileCount === 1 ? "" : "s")
-                color: "#ebdbb2"
-                font.pixelSize: 11
+                color: Theme.textBody
+                font.pixelSize: Theme.fontSm
             }
         }
 
@@ -70,8 +70,8 @@ Dialog {
             visible: matchController.unconfirmedMatchCount > 0 && !selectedOnly
             Layout.fillWidth: true
             wrapMode: Text.WordWrap
-            color: "#fabd2f"
-            font.pixelSize: 11
+            color: Theme.warn
+            font.pixelSize: Theme.fontSm
             text: matchController.unconfirmedMatchCount + " pending match(es) will be confirmed before bundling."
         }
 
@@ -79,16 +79,16 @@ Dialog {
             id: statusLabel
             Layout.fillWidth: true
             wrapMode: Text.WordWrap
-            color: "#83a598"
-            font.pixelSize: 11
+            color: Theme.accentAlt
+            font.pixelSize: Theme.fontSm
         }
 
         Label {
             visible: organizeController.lastError.length > 0
             Layout.fillWidth: true
             wrapMode: Text.WordWrap
-            color: "#fb4934"
-            font.pixelSize: 11
+            color: Theme.error
+            font.pixelSize: Theme.fontSm
             text: organizeController.lastError
         }
 
@@ -122,8 +122,8 @@ Dialog {
                 text: exportController.exporting
                       ? exportController.progressMessage
                       : organizeController.progressMessage
-                color: "#928374"
-                font.pixelSize: 11
+                color: Theme.textDim
+                font.pixelSize: Theme.fontSm
                 elide: Text.ElideRight
                 Layout.maximumWidth: 280
             }
@@ -132,14 +132,14 @@ Dialog {
         Rectangle {
             Layout.fillWidth: true
             height: 1
-            color: "#504945"
+            color: Theme.border
         }
 
         Label {
             text: "Preview (organize destinations)"
             font.bold: true
-            font.pixelSize: 12
-            color: "#a89984"
+            font.pixelSize: Theme.fontMd
+            color: Theme.textMuted
         }
 
         ListView {
@@ -156,8 +156,8 @@ Dialog {
                 padding: 10
 
                 background: Rectangle {
-                    color: "#282828"
-                    border.color: modelData.success ? "#504945" : "#cc241d"
+                    color: Theme.surface
+                    border.color: modelData.success ? Theme.border : Theme.error
                     radius: 6
                 }
 
@@ -168,21 +168,21 @@ Dialog {
                     Label {
                         text: modelData.success ? "Ready" : "Failed"
                         font.bold: true
-                        font.pixelSize: 11
-                        color: modelData.success ? "#b8bb26" : "#fb4934"
+                        font.pixelSize: Theme.fontSm
+                        color: modelData.success ? Theme.success : Theme.error
                     }
                     Label {
                         Layout.fillWidth: true
                         text: modelData.oldPath
-                        font.pixelSize: 10
-                        color: "#928374"
+                        font.pixelSize: Theme.fontXs
+                        color: Theme.textDim
                         elide: Text.ElideMiddle
                     }
                     Label {
                         Layout.fillWidth: true
                         text: modelData.newPath
-                        font.pixelSize: 10
-                        color: "#ebdbb2"
+                        font.pixelSize: Theme.fontXs
+                        color: Theme.textBody
                         elide: Text.ElideMiddle
                     }
                     Label {
@@ -190,8 +190,8 @@ Dialog {
                         Layout.fillWidth: true
                         wrapMode: Text.WordWrap
                         text: modelData.error
-                        font.pixelSize: 10
-                        color: "#fb4934"
+                        font.pixelSize: Theme.fontXs
+                        color: Theme.error
                     }
                 }
             }
@@ -200,8 +200,8 @@ Dialog {
                 anchors.centerIn: parent
                 visible: previewList.count === 0
                 text: "Click Preview to see destination paths."
-                color: "#665c54"
-                font.pixelSize: 12
+                color: Theme.textDisabled
+                font.pixelSize: Theme.fontMd
             }
         }
     }

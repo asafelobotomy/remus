@@ -90,33 +90,6 @@ QList<ScanResult> LibraryService::scanFilesystem(const QString &path, ProgressCa
     return results;
 }
 
-int LibraryService::scan(
-    const QString &path, Database *db, ProgressCallback progressCb, LogCallback logCb, int existingLibraryId) {
-    if (!db) {
-        if (logCb)
-            logCb("No database provided");
-        return 0;
-    }
-
-    const QList<ScanResult> results = scanFilesystem(path, progressCb, logCb);
-
-    if (m_scanner->wasCancelled()) {
-        return 0;
-    }
-
-    int libraryId = existingLibraryId > 0 ? existingLibraryId : db->insertLibrary(path);
-    if (libraryId == 0) {
-        if (logCb)
-            logCb("Failed to create library entry");
-        return 0;
-    }
-
-    const int inserted = persistScanResults(results, libraryId, db);
-    if (logCb)
-        logCb(QString("Inserted %1 files into database").arg(inserted));
-    return inserted;
-}
-
 void LibraryService::cancelScan() {
     if (m_scanner)
         m_scanner->requestCancel();
@@ -124,42 +97,6 @@ void LibraryService::cancelScan() {
 
 bool LibraryService::wasCancelled() const {
     return m_scanner && m_scanner->wasCancelled();
-}
-
-QVariantMap LibraryService::getStats(Database *db) const {
-    QVariantMap stats;
-    if (!db)
-        return stats;
-
-    auto files = db->getAllFiles();
-    int hashed = 0;
-    for (const auto &f : files) {
-        if (f.hashCalculated)
-            hashed++;
-    }
-    stats["totalFiles"] = files.size();
-    stats["hashedFiles"] = hashed;
-    return stats;
-}
-
-QVariantList LibraryService::getSystems(Database *db) const {
-    QVariantList list;
-    if (!db)
-        return list;
-
-    // Collect unique system IDs from files
-    auto files = db->getAllFiles();
-    QSet<int> seen;
-    for (const auto &f : files) {
-        if (f.systemId > 0 && !seen.contains(f.systemId)) {
-            seen.insert(f.systemId);
-            QVariantMap m;
-            m["id"] = f.systemId;
-            m["name"] = db->getSystemDisplayName(f.systemId);
-            list.append(m);
-        }
-    }
-    return list;
 }
 
 QString LibraryService::getFilePath(Database *db, int fileId) const {

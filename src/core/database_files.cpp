@@ -261,6 +261,30 @@ FileRecord Database::getFileById(int fileId) {
     return { };
 }
 
+QList<FileRecord> Database::getFilesByIds(const QSet<int> &fileIds) {
+    if (fileIds.isEmpty())
+        return { };
+    QStringList placeholders;
+    placeholders.reserve(fileIds.size());
+    for (int i = 0; i < fileIds.size(); ++i)
+        placeholders.append(QStringLiteral("?"));
+    const QString sql = QString("SELECT %1 FROM files WHERE id IN (%2)")
+                            .arg(QLatin1String(kFileSelectColumns), placeholders.join(QStringLiteral(",")));
+    QSqlQuery query(m_db);
+    query.prepare(sql);
+    for (int id : fileIds)
+        query.addBindValue(id);
+    if (!query.exec()) {
+        logError("getFilesByIds failed: " + query.lastError().text());
+        return { };
+    }
+    QList<FileRecord> files;
+    files.reserve(fileIds.size());
+    while (query.next())
+        files.append(fileRecordFromRow(query));
+    return files;
+}
+
 QList<FileRecord> Database::getAllFiles() {
     return queryFiles();
 }

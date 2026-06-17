@@ -15,37 +15,31 @@ Item {
     property int openStage: 1
 
     // Track the last file ID for which we auto-switched stage.
-    // Auto-switching only happens when a different file is selected, not when
-    // library state changes mid-work (e.g. after conversion completes).
     property int lastAutoStagedFileId: -1
 
     // Derive the active stage from the selected ROM's processing state.
-    // Reading enrichCount/doneCount ensures re-evaluation after artwork downloads.
     readonly property int autoStage: {
-        const _e = workflowController.enrichCount  // dependency tracking
-        const _d = workflowController.doneCount    // dependency tracking
+        const _e = workflowController.enrichCount
+        const _d = workflowController.doneCount
         if (!appController.libraryOpen || appController.selectedFileId <= 0)
-            return 1  // Scan
+            return 1
         const f = appController.selectedFileData
         const m = appController.selectedMatchData
         if (!f["md5"] || f["md5"] === "")
-            return 2  // Hash & Match — needs hashing
+            return 2
         if (!m || !m["confirmed"])
-            return 2  // Hash & Match — needs matching
+            return 2
         if (f["isOrganized"] || false)
-            return 6  // Already organized — show outcome
+            return 6
         if (f["isBundled"] || false)
-            return 6  // Bundled — next step is Organize
+            return 6
         if (!workflowController.artworkExistsForFile(appController.selectedFileId))
-            return 3  // Artwork & Metadata
+            return 3
         if (!(f["isConverted"] || false))
-            return 4  // Convert — needs conversion
-        return 5      // Bundle & Rename
+            return 4
+        return 5
     }
 
-    // Only auto-switch when a different file is selected.  Library data changes
-    // (e.g. counts updating after conversion) must not hijack the open stage.
-    // While Run All Stages is running, stage tracking is driven by the pipeline.
     onAutoStageChanged: {
         if (workflowController.running) return
         if (appController.selectedFileId <= 0) return
@@ -64,8 +58,6 @@ Item {
         }
     }
 
-    // Track Run All Stages pipeline: open the relevant stage card as the
-    // pipeline advances, then collapse everything when done.
     Connections {
         target: workflowController
         function onActiveStageChanged() {
@@ -74,7 +66,7 @@ Item {
         }
         function onRunningChanged() {
             if (!workflowController.running)
-                openStage = 0  // collapse all when pipeline finishes
+                openStage = 0
         }
     }
 
@@ -127,7 +119,7 @@ Item {
             Rectangle {
                 Layout.fillWidth: true
                 height: 1
-                color: "#504945"
+                color: Theme.border
             }
 
             Label {
@@ -136,7 +128,7 @@ Item {
                       " pending Hash & Match result(s)"
                 Layout.fillWidth: true
                 wrapMode: Text.WordWrap
-                color: "#fabd2f"
+                color: Theme.warn
             }
 
             Label {
@@ -161,14 +153,14 @@ Item {
                 text: "\u2022 Organize: skipped (no destination directory set)"
                 Layout.fillWidth: true
                 wrapMode: Text.WordWrap
-                color: "#a89984"
+                color: Theme.textMuted
             }
 
             Label {
                 visible: scanController.lastDirectory.length > 0
                 text: "Scan directory: " + scanController.lastDirectory
-                font.pixelSize: 11
-                color: "#928374"
+                font.pixelSize: Theme.fontSm
+                color: Theme.textDim
                 Layout.fillWidth: true
                 wrapMode: Text.WordWrap
             }
@@ -203,7 +195,7 @@ Item {
                     spacing: 8
 
                     Button {
-                        text:    workflowController.running ? "Cancel" : "▶ Run All Stages"
+                        text:    workflowController.running ? "Cancel" : "\u25B6 Run All Stages"
                         onClicked: {
                             if (workflowController.running) {
                                 workflowController.cancel()
@@ -216,7 +208,7 @@ Item {
                         }
                     }
                     Button {
-                        text:     "↻ Refresh Counts"
+                        text:     "\u21BB Refresh Counts"
                         flat:     true
                         onClicked: workflowController.refresh()
                     }
@@ -225,7 +217,7 @@ Item {
 
                 // ── Stage 1: Scan ────────────────────────────────────────────
                 StageCard {
-                    stageTitle: "1 · Scan"
+                    stageTitle: "1 \u00B7 Scan"
                     expanded:   openStage === 1
                     onToggleRequested: openStage = (openStage === 1 ? 0 : 1)
 
@@ -236,9 +228,9 @@ Item {
                         TextField {
                             id:               scanDirField
                             Layout.fillWidth: true
-                            placeholderText:  "Directory to scan…"
+                            placeholderText:  "Directory to scan\u2026"
                             text:             scanController.lastDirectory
-                            font.pixelSize:   12
+                            font.pixelSize:   Theme.fontMd
                         }
                         Button {
                             text:      "Browse"
@@ -267,12 +259,11 @@ Item {
 
                 // ── Stage 2: Hash & Match ────────────────────────────────────
                 StageCard {
-                    stageTitle: "2 · Hash & Match"
+                    stageTitle: "2 \u00B7 Hash & Match"
                     stageCount: workflowController.identityCount
                     expanded:   openStage === 2
                     onToggleRequested: openStage = (openStage === 2 ? 0 : 2)
 
-                    // Hash & Match buttons
                     RowLayout {
                         Layout.fillWidth: true
                         spacing: 6
@@ -309,9 +300,6 @@ Item {
                         visible:       hashController.hashing || matchController.matching
                     }
 
-                    // ── Confirm All (global) ─────────────────────────────────
-                    // Visible whenever there are unconfirmed matches, regardless
-                    // of whether a specific file is selected.
                     RowLayout {
                         visible:          matchController.unconfirmedMatchCount > 0
                         Layout.fillWidth: true
@@ -320,7 +308,7 @@ Item {
                         Button {
                             text:          "Confirm All (" + matchController.unconfirmedMatchCount + ")"
                             enabled:       !matchController.matching
-                            font.pixelSize: 11
+                            font.pixelSize: Theme.fontSm
                             padding:        6
                             onClicked:      matchController.confirmAll()
                         }
@@ -328,8 +316,6 @@ Item {
                         Item { Layout.fillWidth: true }
                     }
 
-                    // ── Confirm / Reject selected match ──────────────────────
-                    // Only shown once the selected file has been hashed.
                     RowLayout {
                         visible:          (appController.selectedFileData.md5 || "").length > 0
                         Layout.fillWidth: true
@@ -339,24 +325,24 @@ Item {
                             text:           appController.selectedMatchData.confirmed
                                             ? "Matched" : "Match Unconfirmed"
                             font.bold:      true
-                            font.pixelSize: 12
+                            font.pixelSize: Theme.fontMd
                             color:          appController.selectedMatchData.confirmed
-                                            ? "#b8bb26" : "#cc241d"
+                                            ? Theme.success : Theme.error
                         }
 
                         Button {
-                            text:      "✓ Confirm Selected"
+                            text:      "\u2713 Confirm Selected"
                             enabled:   appController.selectedFileId > 0 &&
                                        !appController.selectedMatchData.confirmed
-                            font.pixelSize: 11
+                            font.pixelSize: Theme.fontSm
                             padding:   6
                             onClicked: matchController.confirmSelected()
                         }
                         Button {
-                            text:      "✗ Reject"
+                            text:      "\u2717 Reject"
                             enabled:   appController.selectedFileId > 0 &&
                                        !appController.selectedMatchData.rejected
-                            font.pixelSize: 11
+                            font.pixelSize: Theme.fontSm
                             padding:   6
                             onClicked: matchController.rejectSelected()
                         }
@@ -369,15 +355,15 @@ Item {
                                           matchController.lastMessage.length > 0
                         Layout.fillWidth: true
                         text:             matchController.lastMessage
-                        color:            "#83a598"
-                        font.pixelSize:   10
+                        color:            Theme.accentAlt
+                        font.pixelSize:   Theme.fontXs
                         wrapMode:         Text.WordWrap
                     }
                 }
 
                 // ── Stage 3: Artwork & Metadata ──────────────────────────────
                 StageCard {
-                    stageTitle: "3 · Artwork & Metadata"
+                    stageTitle: "3 \u00B7 Artwork & Metadata"
                     stageCount: workflowController.enrichCount
                     expanded:   openStage === 3
                     onToggleRequested: openStage = (openStage === 3 ? 0 : 3)
@@ -385,7 +371,7 @@ Item {
                     RowLayout {
                         Layout.fillWidth: true
                         spacing: 6
-                        Label { text: "Enrich:"; color: "#a89984"; font.pixelSize: 12 }
+                        Label { text: "Enrich:"; color: Theme.textMuted; font.pixelSize: Theme.fontMd }
                         Button {
                             text:      "Enrich All"
                             enabled:   !artworkController.downloading && appController.libraryOpen
@@ -412,7 +398,7 @@ Item {
 
                 // ── Stage 4: Convert ─────────────────────────────────────────
                 StageCard {
-                    stageTitle: "4 · Convert"
+                    stageTitle: "4 \u00B7 Convert"
                     expanded:   openStage === 4
                     onToggleRequested: openStage = (openStage === 4 ? 0 : 4)
 
@@ -420,11 +406,11 @@ Item {
                         Layout.fillWidth: true
                         spacing: 6
 
-                        Label { text: "Format:"; color: "#a89984"; font.pixelSize: 12 }
+                        Label { text: "Format:"; color: Theme.textMuted; font.pixelSize: Theme.fontMd }
                         ComboBox {
                             id:    convertFormatCombo
                             model: ["Auto", "CHD", "CSO", "RVZ", "WBFS", "PBP"]
-                            font.pixelSize: 12
+                            font.pixelSize: Theme.fontMd
                         }
                         Button {
                             text:      "Convert Selected"
@@ -457,7 +443,7 @@ Item {
 
                 // ── Stage 5: Bundle & Rename ─────────────────────────────────
                 StageCard {
-                    stageTitle: "5 · Bundle & Rename"
+                    stageTitle: "5 \u00B7 Bundle & Rename"
                     expanded:   openStage === 5
                     onToggleRequested: openStage = (openStage === 5 ? 0 : 5)
 
@@ -483,8 +469,8 @@ Item {
                     Label {
                         Layout.fillWidth: true
                         wrapMode: Text.WordWrap
-                        font.pixelSize: 11
-                        color: "#928374"
+                        font.pixelSize: Theme.fontSm
+                        color: Theme.textDim
                         text: "Template: " + root.namingTemplate + "  (edit in Settings)"
                     }
 
@@ -501,7 +487,7 @@ Item {
 
                 // ── Stage 6: Organize ────────────────────────────────────────
                 StageCard {
-                    stageTitle: "6 · Organize"
+                    stageTitle: "6 \u00B7 Organize"
                     stageCount: workflowController.doneCount
                     expanded:   openStage === 6
                     onToggleRequested: openStage = (openStage === 6 ? 0 : 6)
@@ -535,11 +521,11 @@ Item {
                     Label {
                         Layout.fillWidth: true
                         wrapMode: Text.WordWrap
-                        font.pixelSize: 11
-                        color: root.organizeDest.length > 0 ? "#928374" : "#fabd2f"
+                        font.pixelSize: Theme.fontSm
+                        color: root.organizeDest.length > 0 ? Theme.textDim : Theme.warn
                         text: root.organizeDest.length > 0
                               ? "Destination: " + root.organizeLibraryPath + "  (edit in Settings)"
-                              : "No organize destination configured — set in Settings."
+                              : "No organize destination configured \u2014 set in Settings."
                     }
 
                     ProgressCard {
@@ -555,9 +541,9 @@ Item {
                     Label {
                         visible:   organizeController.lastError.length > 0
                         text:      organizeController.lastError
-                        color:     "#fb4934"
+                        color:     Theme.error
                         wrapMode:  Text.WordWrap
-                        font.pixelSize: 11
+                        font.pixelSize: Theme.fontSm
                         Layout.fillWidth: true
                     }
                 }

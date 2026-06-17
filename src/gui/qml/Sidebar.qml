@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import Remus.Gui
 
 Frame {
     id: sidebar
@@ -15,8 +16,8 @@ Frame {
 
     background: Rectangle {
         radius: 20
-        color: "#32302f"
-        border.color: "#504945"
+        color: Theme.surfaceAlt
+        border.color: Theme.border
     }
 
     ColumnLayout {
@@ -26,9 +27,9 @@ Frame {
 
         Label {
             text: "Remus"
-            font.pixelSize: 26
+            font.pixelSize: Theme.fontHero
             font.bold: true
-            color: "#fbf1c7"
+            color: Theme.textPrimary
         }
 
         Repeater {
@@ -45,7 +46,7 @@ Frame {
                 icon.name: modelData.icon
                 icon.width: 18
                 icon.height: 18
-                icon.color: checked ? "#fbf1c7" : "#a89984"
+                icon.color: checked ? Theme.textPrimary : Theme.textMuted
                 opacity: (modelData.index === 1 || appController.libraryOpen) ? 1.0 : 0.38
                 onClicked: sidebar.viewRequested(modelData.index)
             }
@@ -56,8 +57,8 @@ Frame {
         Label {
             Layout.fillWidth: true
             wrapMode: Text.WordWrap
-            color: "#a89984"
-            font.pixelSize: 11
+            color: Theme.textMuted
+            font.pixelSize: Theme.fontSm
             text: appController.libraryOpen
                   ? appController.statusMessage
                   : "Open a library database, then set your ROM folder in Settings."

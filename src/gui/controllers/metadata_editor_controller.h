@@ -23,7 +23,7 @@ public:
     }
 
     Q_INVOKABLE void loadForSelectedFile();
-    Q_INVOKABLE void load(int gameId);
+    void load(int gameId);
     Q_INVOKABLE void setField(const QString &field, const QVariant &value);
     Q_INVOKABLE bool save();
     Q_INVOKABLE void discard();

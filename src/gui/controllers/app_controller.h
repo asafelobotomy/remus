@@ -62,7 +62,7 @@ public:
     }
 
     Q_INVOKABLE bool openLibrary(const QString &dbPath);
-    Q_INVOKABLE void closeLibrary();
+    void closeLibrary();
     Q_INVOKABLE bool eraseLibraryDatabase(
         bool eraseFiles = true, bool eraseMatchData = true, bool eraseApiCache = true, bool eraseArtwork = true);
     Q_INVOKABLE QString defaultLibraryPath() const;
@@ -94,6 +94,8 @@ signals:
 
 private:
     void rebuildOrchestrator();
+    QVariantMap buildSelectedFileData();
+    void invalidateSelectedFileCache();
 
     Database m_database;
     QString m_libraryPath;
@@ -104,6 +106,9 @@ private:
     QString m_statusMessage;
     std::unique_ptr<MetadataCache> m_cache;
     std::unique_ptr<ProviderOrchestrator> m_orchestrator;
+
+    QVariantMap m_cachedSelectedFileData;
+    int m_cachedSelectedFileId = -1;
 };
 
 } // namespace Remus

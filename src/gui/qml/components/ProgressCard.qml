@@ -13,8 +13,8 @@ Frame {
 
     background: Rectangle {
         radius: 16
-        color: "#32302f"
-        border.color: "#504945"
+        color: Theme.surfaceAlt
+        border.color: Theme.border
     }
 
     ColumnLayout {
@@ -24,7 +24,7 @@ Frame {
         Label {
             text: title
             font.bold: true
-            color: "#fbf1c7"
+            color: Theme.textPrimary
         }
 
         // Unified custom bar — consistent across all pipeline stages
@@ -32,7 +32,7 @@ Frame {
             Layout.fillWidth: true
             height:           6
             radius:           3
-            color:            "#3c3836"
+            color:            Theme.borderSub
             clip:             true
 
             // Determinate fill
@@ -41,7 +41,7 @@ Frame {
                 width:   (progressValue / Math.max(1, progressTotal)) * parent.width
                 height:  parent.height
                 radius:  parent.radius
-                color:   "#689d6a"
+                color:   Theme.success
 
                 Behavior on width {
                     NumberAnimation { duration: 150; easing.type: Easing.InOutSine }
@@ -55,7 +55,7 @@ Frame {
                 width:   parent.width * 0.35
                 height:  parent.height
                 radius:  parent.radius
-                color:   "#689d6a"
+                color:   Theme.success
                 x:       -width
 
                 SequentialAnimation on x {
@@ -73,7 +73,7 @@ Frame {
 
         Label {
             Layout.fillWidth: true
-            color: "#a89984"
+            color: Theme.textMuted
             text: message.length > 0 ? message : progressValue + " / " + progressTotal
         }
     }

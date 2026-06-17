@@ -22,8 +22,6 @@ add_library(remus-gui-controllers STATIC
     controllers/settings_controller.cpp
     controllers/workflow_controller.cpp
     controllers/workflow_controller_run.cpp
-    models/file_list_model.cpp
-    models/match_list_model.cpp
     models/verification_result_model.cpp
     models/mod_list_model.cpp
 )
@@ -50,9 +48,11 @@ qt_add_qml_module(remus-gui
     URI Remus.Gui
     VERSION 1.0
     QML_FILES
+        qml/Theme.qml
         qml/Main.qml
         qml/Sidebar.qml
         qml/components/ActionToolbar.qml
+        qml/components/LabelField.qml
         qml/components/TmmToolButton.qml
         qml/components/ProgressCard.qml
         qml/components/MetadataEditor.qml

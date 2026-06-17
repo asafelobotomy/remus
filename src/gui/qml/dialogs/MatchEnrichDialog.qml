@@ -27,8 +27,8 @@ Dialog {
         Label {
             Layout.fillWidth: true
             wrapMode: Text.WordWrap
-            font.pixelSize: 11
-            color: "#928374"
+            font.pixelSize: Theme.fontSm
+            color: Theme.textDim
             text: matchController.searchRomPath.length > 0
                   ? matchController.searchRomPath
                   : "No ROM selected"
@@ -40,14 +40,14 @@ Dialog {
 
             Label {
                 text: "Provider"
-                color: "#a89984"
-                font.pixelSize: 11
+                color: Theme.textMuted
+                font.pixelSize: Theme.fontSm
             }
             ComboBox {
                 id: providerCombo
                 Layout.preferredWidth: 160
                 model: matchController.enabledProviders()
-                font.pixelSize: 12
+                font.pixelSize: Theme.fontMd
                 Component.onCompleted: {
                     const idx = model.indexOf(matchController.searchProvider)
                     if (idx >= 0)
@@ -58,28 +58,28 @@ Dialog {
 
             Label {
                 text: "System"
-                color: "#a89984"
-                font.pixelSize: 11
+                color: Theme.textMuted
+                font.pixelSize: Theme.fontSm
             }
             Label {
                 Layout.preferredWidth: 120
                 elide: Text.ElideRight
-                text: matchController.searchSystem || "—"
-                color: "#ebdbb2"
-                font.pixelSize: 11
+                text: matchController.searchSystem || "\u2014"
+                color: Theme.textBody
+                font.pixelSize: Theme.fontSm
             }
 
             TextField {
                 id: queryField
                 Layout.fillWidth: true
-                placeholderText: "Search query…"
+                placeholderText: "Search query\u2026"
                 text: matchController.searchQuery
-                font.pixelSize: 12
+                font.pixelSize: Theme.fontMd
                 onAccepted: runSearch()
             }
 
             Button {
-                text: matchController.searching ? "Searching…" : "Search"
+                text: matchController.searching ? "Searching\u2026" : "Search"
                 enabled: !matchController.searching && queryField.text.trim().length > 0
                 onClicked: runSearch()
             }
@@ -95,9 +95,9 @@ Dialog {
                 SplitView.minimumWidth:   240
 
                 background: Rectangle {
-                    color: "#282828"
+                    color: Theme.surface
                     radius: 8
-                    border.color: "#504945"
+                    border.color: Theme.border
                 }
 
                 ColumnLayout {
@@ -108,8 +108,8 @@ Dialog {
                     Label {
                         text: "Results"
                         font.bold: true
-                        font.pixelSize: 11
-                        color: "#a89984"
+                        font.pixelSize: Theme.fontSm
+                        color: Theme.textMuted
                     }
 
                     ListView {
@@ -139,26 +139,26 @@ Dialog {
                                     Layout.fillWidth: true
                                     text: modelData.title
                                     elide: Text.ElideRight
-                                    font.pixelSize: 12
-                                    color: "#ebdbb2"
+                                    font.pixelSize: Theme.fontMd
+                                    color: Theme.textBody
                                     font.bold: resultRow.highlighted
                                 }
                                 Label {
-                                    text: modelData.releaseYear > 0 ? modelData.releaseYear : "—"
-                                    font.pixelSize: 10
-                                    color: "#928374"
+                                    text: modelData.releaseYear > 0 ? modelData.releaseYear : "\u2014"
+                                    font.pixelSize: Theme.fontXs
+                                    color: Theme.textDim
                                 }
                                 Label {
-                                    text: modelData.provider || "—"
-                                    font.pixelSize: 10
-                                    color: "#928374"
+                                    text: modelData.provider || "\u2014"
+                                    font.pixelSize: Theme.fontXs
+                                    color: Theme.textDim
                                     elide: Text.ElideRight
                                     Layout.fillWidth: true
                                 }
                                 Label {
-                                    text: modelData.confidence > 0 ? modelData.confidence + "%" : "—"
-                                    font.pixelSize: 10
-                                    color: "#b8bb26"
+                                    text: modelData.confidence > 0 ? modelData.confidence + "%" : "\u2014"
+                                    font.pixelSize: Theme.fontXs
+                                    color: Theme.success
                                     horizontalAlignment: Text.AlignRight
                                     Layout.fillWidth: true
                                 }
@@ -167,8 +167,8 @@ Dialog {
                             onClicked: matchController.selectSearchResult(modelData.index)
 
                             background: Rectangle {
-                                color: parent.highlighted ? "#3f4d4f"
-                                     : parent.hovered     ? "#383838"
+                                color: parent.highlighted ? Theme.selected
+                                     : parent.hovered     ? Theme.hover
                                      : "transparent"
                                 radius: 4
                             }
@@ -178,8 +178,8 @@ Dialog {
                     Label {
                         Layout.fillWidth: true
                         wrapMode: Text.WordWrap
-                        font.pixelSize: 10
-                        color: "#928374"
+                        font.pixelSize: Theme.fontXs
+                        color: Theme.textDim
                         text: matchController.searchStatus
                     }
                 }
@@ -189,9 +189,9 @@ Dialog {
                 SplitView.fillWidth: true
 
                 background: Rectangle {
-                    color: "#282828"
+                    color: Theme.surface
                     radius: 8
-                    border.color: "#504945"
+                    border.color: Theme.border
                 }
 
                 ScrollView {
@@ -208,14 +208,14 @@ Dialog {
                         Label {
                             text: "Preview"
                             font.bold: true
-                            font.pixelSize: 11
-                            color: "#a89984"
+                            font.pixelSize: Theme.fontSm
+                            color: Theme.textMuted
                         }
 
                         Rectangle {
                             Layout.fillWidth: true
                             Layout.preferredHeight: 160
-                            color: "#1d2021"
+                            color: Theme.background
                             radius: 6
 
                             Image {
@@ -230,58 +230,64 @@ Dialog {
                             Label {
                                 anchors.centerIn: parent
                                 text: "No preview artwork"
-                                color: "#665c54"
-                                font.pixelSize: 11
+                                color: Theme.textDisabled
+                                font.pixelSize: Theme.fontSm
                                 visible: (matchController.previewMetadata.boxArtUrl || "").length === 0
                             }
                         }
 
-                        PreviewField {
+                        LabelField {
                             label: "Title"
                             value: matchController.previewMetadata.title || ""
                             bold:  true
+                            minWidth: 68
                         }
-                        PreviewField {
+                        LabelField {
                             label: "Publisher"
                             value: matchController.previewMetadata.publisher || ""
+                            minWidth: 68
                         }
-                        PreviewField {
+                        LabelField {
                             label: "Developer"
                             value: matchController.previewMetadata.developer || ""
+                            minWidth: 68
                         }
-                        PreviewField {
+                        LabelField {
                             label: "Release"
                             value: matchController.previewMetadata.releaseYear
                                    ? matchController.previewMetadata.releaseYear.toString()
                                    : matchController.previewMetadata.releaseDate || ""
+                            minWidth: 68
                         }
-                        PreviewField {
+                        LabelField {
                             label: "Genre"
                             value: matchController.previewMetadata.genre || ""
+                            minWidth: 68
                         }
-                        PreviewField {
+                        LabelField {
                             label: "Rating"
                             value: {
                                 const r = matchController.previewMetadata.rating
                                 return (r && r > 0) ? r.toFixed(1) + " / 10" : ""
                             }
+                            minWidth: 68
                         }
 
                         Label {
                             Layout.fillWidth: true
                             text: "Plot"
-                            color: "#a89984"
-                            font.pixelSize: 10
+                            color: Theme.textMuted
+                            font.pixelSize: Theme.fontXs
                             font.bold: true
                         }
                         Label {
                             Layout.fillWidth: true
                             wrapMode: Text.WordWrap
-                            font.pixelSize: 11
-                            color: "#ebdbb2"
+                            font.pixelSize: Theme.fontSm
+                            color: Theme.textBody
                             maximumLineCount: 8
                             elide: Text.ElideRight
-                            text: matchController.previewMetadata.description || "—"
+                            text: matchController.previewMetadata.description || "\u2014"
                         }
                     }
                 }
@@ -291,28 +297,28 @@ Dialog {
         Label {
             text: "Import fields"
             font.bold: true
-            font.pixelSize: 11
-            color: "#a89984"
+            font.pixelSize: Theme.fontSm
+            color: Theme.textMuted
         }
 
         Flow {
             Layout.fillWidth: true
             spacing: 6
 
-            CheckBox { id: importTitle;       text: "Title";       checked: true;  font.pixelSize: 11 }
-            CheckBox { id: importPlot;        text: "Plot";        checked: true;  font.pixelSize: 11 }
-            CheckBox { id: importPublisher;   text: "Publisher";   checked: true;  font.pixelSize: 11 }
-            CheckBox { id: importDeveloper;   text: "Developer";   checked: true;  font.pixelSize: 11 }
-            CheckBox { id: importGenre;        text: "Genre";       checked: true;  font.pixelSize: 11 }
-            CheckBox { id: importRelease;      text: "Release";     checked: true;  font.pixelSize: 11 }
-            CheckBox { id: importRating;       text: "Rating";      checked: false; font.pixelSize: 11 }
-            CheckBox { id: importArtwork;      text: "Box art";     checked: true;  font.pixelSize: 11 }
+            CheckBox { id: importTitle;       text: "Title";       checked: true;  font.pixelSize: Theme.fontSm }
+            CheckBox { id: importPlot;        text: "Plot";        checked: true;  font.pixelSize: Theme.fontSm }
+            CheckBox { id: importPublisher;   text: "Publisher";   checked: true;  font.pixelSize: Theme.fontSm }
+            CheckBox { id: importDeveloper;   text: "Developer";   checked: true;  font.pixelSize: Theme.fontSm }
+            CheckBox { id: importGenre;        text: "Genre";       checked: true;  font.pixelSize: Theme.fontSm }
+            CheckBox { id: importRelease;      text: "Release";     checked: true;  font.pixelSize: Theme.fontSm }
+            CheckBox { id: importRating;       text: "Rating";      checked: false; font.pixelSize: Theme.fontSm }
+            CheckBox { id: importArtwork;      text: "Box art";     checked: true;  font.pixelSize: Theme.fontSm }
         }
 
         CheckBox {
             id: skipOverwrite
             text: "Do not overwrite existing data"
-            font.pixelSize: 11
+            font.pixelSize: Theme.fontSm
         }
     }
 
@@ -367,30 +373,5 @@ Dialog {
         if (importArtwork.checked)
             artworkController.downloadSelected()
         dialog.close()
-    }
-
-    component PreviewField: RowLayout {
-        property string label: ""
-        property string value: ""
-        property bool bold: false
-
-        Layout.fillWidth: true
-        spacing: 6
-
-        Label {
-            text: label + ":"
-            color: "#a89984"
-            font.pixelSize: 10
-            font.bold: true
-            Layout.minimumWidth: 68
-        }
-        Label {
-            Layout.fillWidth: true
-            text: value.length > 0 ? value : "—"
-            color: value.length > 0 ? "#ebdbb2" : "#504945"
-            font.pixelSize: 11
-            font.bold: bold
-            wrapMode: Text.WordWrap
-        }
     }
 }

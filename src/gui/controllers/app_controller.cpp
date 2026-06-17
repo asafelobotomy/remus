@@ -48,6 +48,7 @@ bool AppController::openLibrary(const QString &dbPath) {
     m_libraryOpen = true;
     m_selectedFileId = 0;
     m_selectedGameId = 0;
+    invalidateSelectedFileCache();
     rebuildOrchestrator();
     setStatusMessage(QStringLiteral("Library ready: %1").arg(QFileInfo(cleanedPath).fileName()));
 
@@ -72,6 +73,7 @@ void AppController::closeLibrary() {
     m_libraryOpen = false;
     m_selectedFileId = 0;
     m_selectedGameId = 0;
+    invalidateSelectedFileCache();
 
     if (wasOpen) {
         emit libraryPathChanged();
@@ -172,6 +174,20 @@ QString AppController::defaultLibraryPath() const {
 }
 
 QVariantMap AppController::selectedFile() {
+    if (m_cachedSelectedFileId == m_selectedFileId && !m_cachedSelectedFileData.isEmpty())
+        return m_cachedSelectedFileData;
+
+    m_cachedSelectedFileData = buildSelectedFileData();
+    m_cachedSelectedFileId = m_selectedFileId;
+    return m_cachedSelectedFileData;
+}
+
+void AppController::invalidateSelectedFileCache() {
+    m_cachedSelectedFileId = -1;
+    m_cachedSelectedFileData.clear();
+}
+
+QVariantMap AppController::buildSelectedFileData() {
     QVariantMap result;
     if (!m_libraryOpen || m_selectedFileId <= 0) {
         return result;
@@ -239,9 +255,8 @@ QVariantMap AppController::selectedFile() {
             memberMap.insert(QStringLiteral("path"), member.currentPath);
             memberMap.insert(QStringLiteral("discNumber"), member.discNumber);
             memberMap.insert(QStringLiteral("discLabel"),
-                DiscSetUtils::discRowLabel(
-                    DiscSetUtils::labelPath(member.currentPath, member.archivePath, member.archiveInternalPath,
-                        member.filename),
+                DiscSetUtils::discRowLabel(DiscSetUtils::labelPath(member.currentPath, member.archivePath,
+                                               member.archiveInternalPath, member.filename),
                     member.discNumber));
             members.append(memberMap);
         }
@@ -312,6 +327,7 @@ void AppController::setSelectedFileId(int fileId) {
     }
 
     m_selectedFileId = fileId;
+    invalidateSelectedFileCache();
     emit selectedFileChanged();
     emit selectedFileDataChanged();
     refreshSelectedMatch();
@@ -342,6 +358,7 @@ void AppController::refreshSelectedMatch() {
 }
 
 void AppController::refreshSelectedFile() {
+    invalidateSelectedFileCache();
     emit selectedFileDataChanged();
 }
 

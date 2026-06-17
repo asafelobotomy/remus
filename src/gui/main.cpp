@@ -21,8 +21,6 @@
 #include "controllers/settings_controller.h"
 #include "controllers/verification_controller.h"
 #include "controllers/workflow_controller.h"
-#include "models/file_list_model.h"
-#include "models/match_list_model.h"
 #include "models/mod_list_model.h"
 #include "models/verification_result_model.h"
 
@@ -44,8 +42,6 @@ int main(int argc, char *argv[]) {
 
     Remus::AppController appController;
     Remus::SettingsController settingsController;
-    Remus::FileListModel fileListModel;
-    Remus::MatchListModel matchListModel;
     Remus::VerificationResultModel verificationResultModel;
     Remus::ModListModel modListModel;
 
@@ -70,13 +66,10 @@ int main(int argc, char *argv[]) {
 
     QQmlApplicationEngine engine;
 
-    fileListModel.setAppController(&appController);
-    matchController.setModel(&matchListModel);
     verificationController.setModel(&verificationResultModel);
     modController.setModel(&modListModel);
 
     const auto refreshLibraryModels = [&]() {
-        fileListModel.refresh();
         matchController.refreshModel();
         appController.setSelectedFileId(appController.selectedFileId());
     };
@@ -85,11 +78,9 @@ int main(int argc, char *argv[]) {
     QObject::connect(&scanController, &Remus::ScanController::libraryChanged, &workflowController,
         [&workflowController]() { workflowController.refresh(); });
     QObject::connect(&hashController, &Remus::HashController::libraryChanged, &app, refreshLibraryModels);
-    QObject::connect(&hashController, &Remus::HashController::libraryChanged, &workflowController,
-        [&workflowController]() { workflowController.refresh(); });
+    // hashController.libraryChanged → workflowController.refresh() already wired in WorkflowController constructor
     QObject::connect(&matchController, &Remus::MatchController::libraryChanged, &app, refreshLibraryModels);
-    QObject::connect(&matchController, &Remus::MatchController::libraryChanged, &workflowController,
-        [&workflowController]() { workflowController.refresh(); });
+    // matchController.libraryChanged → workflowController.refresh() already wired in WorkflowController constructor
     QObject::connect(
         &metadataEditorController, &Remus::MetadataEditorController::libraryChanged, &app, refreshLibraryModels);
     QObject::connect(&organizeController, &Remus::OrganizeController::libraryChanged, &app, refreshLibraryModels);
@@ -100,8 +91,6 @@ int main(int argc, char *argv[]) {
 
     engine.rootContext()->setContextProperty(QStringLiteral("appController"), &appController);
     engine.rootContext()->setContextProperty(QStringLiteral("settingsController"), &settingsController);
-    engine.rootContext()->setContextProperty(QStringLiteral("fileListModel"), &fileListModel);
-    engine.rootContext()->setContextProperty(QStringLiteral("matchListModel"), &matchListModel);
     engine.rootContext()->setContextProperty(QStringLiteral("verificationResultModel"), &verificationResultModel);
     engine.rootContext()->setContextProperty(QStringLiteral("modListModel"), &modListModel);
     engine.rootContext()->setContextProperty(QStringLiteral("scanController"), &scanController);

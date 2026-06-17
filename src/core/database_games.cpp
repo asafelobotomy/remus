@@ -2,7 +2,6 @@
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QVariant>
-#include <QDebug>
 #include <QSet>
 
 namespace Remus {
@@ -90,7 +89,6 @@ QMap<int, Database::MatchResult> Database::getAllMatches() {
         results[result.fileId] = result;
     }
 
-    qDebug() << "Database::getAllMatches() loaded" << results.count() << "matches";
     return results;
 }
 

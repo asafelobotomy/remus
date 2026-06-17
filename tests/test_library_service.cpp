@@ -1,23 +1,36 @@
 /**
  * @file test_library_service.cpp
- * @brief Unit tests for LibraryService (scan, stats, systems)
+ * @brief Unit tests for LibraryService (scanFilesystem + persistScanResults)
  */
 
 #include <QtTest/QtTest>
 #include <QTemporaryDir>
 #include <QFile>
+#include <QSet>
 
 #include "../src/services/library_service.h"
 #include "../src/core/database.h"
 
 using namespace Remus;
 
+namespace {
+int scanAndPersist(LibraryService &svc, const QString &path, Database *db,
+    LibraryService::ProgressCallback progressCb = nullptr, int existingLibraryId = 0) {
+    const auto results = svc.scanFilesystem(path, progressCb);
+    if (svc.wasCancelled())
+        return 0;
+    int libraryId = existingLibraryId > 0 ? existingLibraryId : db->insertLibrary(path);
+    if (libraryId == 0)
+        return 0;
+    return svc.persistScanResults(results, libraryId, db);
+}
+} // namespace
+
 class TestLibraryService : public QObject {
     Q_OBJECT
 
 private:
     void createStubRoms(const QString &dir) {
-        // NES stub with iNES header
         QByteArray nesHeader("NES\x1A");
         nesHeader.append(QByteArray(12, '\x00'));
         nesHeader.append(QByteArray(32, '\xBB'));
@@ -32,7 +45,6 @@ private:
         QVERIFY(f2.write(nesHeader) == nesHeader.size());
         f2.close();
 
-        // Non-ROM file should be ignored
         QFile txt(dir + "/readme.txt");
         QVERIFY(txt.open(QIODevice::WriteOnly));
         QVERIFY(txt.write("this is not a rom") == 17);
@@ -51,7 +63,7 @@ private slots:
         QVERIFY(db.initialize(dbPath));
 
         LibraryService svc;
-        int inserted = svc.scan(tmp.path(), &db);
+        int inserted = scanAndPersist(svc, tmp.path(), &db);
         QVERIFY2(inserted >= 2, qPrintable(QString("Expected ≥2 inserted, got %1").arg(inserted)));
 
         auto files = db.getAllFiles();
@@ -69,7 +81,7 @@ private slots:
 
         int progressCalls = 0;
         LibraryService svc;
-        svc.scan(tmp.path(), &db, [&](int, int, const QString &) { ++progressCalls; });
+        scanAndPersist(svc, tmp.path(), &db, [&](int, int, const QString &) { ++progressCalls; });
         QVERIFY2(progressCalls > 0, "Progress callback was never called");
     }
 
@@ -83,11 +95,10 @@ private slots:
         QVERIFY(db.initialize(dbPath));
 
         LibraryService svc;
-        svc.scan(tmp.path(), &db);
+        scanAndPersist(svc, tmp.path(), &db);
 
-        QVariantMap stats = svc.getStats(&db);
-        QVERIFY(stats.contains("totalFiles"));
-        QVERIFY(stats.value("totalFiles").toInt() >= 2);
+        auto files = db.getAllFiles();
+        QVERIFY(files.size() >= 2);
     }
 
     void testGetSystems() {
@@ -100,10 +111,14 @@ private slots:
         QVERIFY(db.initialize(dbPath));
 
         LibraryService svc;
-        svc.scan(tmp.path(), &db);
+        scanAndPersist(svc, tmp.path(), &db);
 
-        QVariantList systems = svc.getSystems(&db);
-        QVERIFY2(!systems.isEmpty(), "Expected at least one detected system");
+        auto files = db.getAllFiles();
+        QSet<int> systemIds;
+        for (const auto &f : files)
+            if (f.systemId > 0)
+                systemIds.insert(f.systemId);
+        QVERIFY2(!systemIds.isEmpty(), "Expected at least one detected system");
     }
 
     void testScanPreservesCueBinParentLinkage() {
@@ -128,7 +143,7 @@ private slots:
         QVERIFY(db.initialize(dbPath));
 
         LibraryService svc;
-        const int inserted = svc.scan(tmp.path(), &db);
+        const int inserted = scanAndPersist(svc, tmp.path(), &db);
         QVERIFY(inserted >= 2);
 
         FileRecord cueRecord;
@@ -165,7 +180,7 @@ private slots:
         QVERIFY(libraryId > 0);
 
         LibraryService svc;
-        QCOMPARE(svc.scan(tmp.path(), &db, { }, { }, libraryId), 1);
+        QCOMPARE(scanAndPersist(svc, tmp.path(), &db, nullptr, libraryId), 1);
 
         const QString cuePath = tmp.path() + "/disc.cue";
         QFile cue(cuePath);
@@ -173,7 +188,7 @@ private slots:
         QVERIFY(cue.write("FILE \"disc.bin\" BINARY\n  TRACK 01 MODE1/2352\n    INDEX 01 00:00:00\n") > 0);
         cue.close();
 
-        QVERIFY(svc.scan(tmp.path(), &db, { }, { }, libraryId) >= 1);
+        QVERIFY(scanAndPersist(svc, tmp.path(), &db, nullptr, libraryId) >= 1);
 
         FileRecord cueRecord;
         FileRecord binRecord;
@@ -199,14 +214,13 @@ private slots:
     void testScanEmptyDir() {
         QTemporaryDir tmp;
         QVERIFY(tmp.isValid());
-        // No files created — directory is empty
 
         QString dbPath = tmp.path() + "/lib_svc_empty.db";
         Database db;
         QVERIFY(db.initialize(dbPath));
 
         LibraryService svc;
-        int inserted = svc.scan(tmp.path(), &db);
+        int inserted = scanAndPersist(svc, tmp.path(), &db);
         QCOMPARE(inserted, 0);
     }
 
@@ -214,7 +228,6 @@ private slots:
         LibraryService svc;
         QStringList exts = svc.getAllExtensions();
         QVERIFY2(!exts.isEmpty(), "Scanner should recognize at least some extensions");
-        // Spot-check some well-known extensions
         bool hasNes = false;
         for (const auto &e : exts) {
             if (e.contains("nes", Qt::CaseInsensitive))
@@ -233,21 +246,17 @@ private slots:
         QVERIFY(db.initialize(dbPath));
 
         LibraryService svc;
-        int inserted = svc.scan(tmp.path(), &db);
+        int inserted = scanAndPersist(svc, tmp.path(), &db);
         QVERIFY(inserted >= 2);
 
-        // Get library ID (scan creates one automatically)
         auto files = db.getAllFiles();
         QVERIFY(!files.isEmpty());
         int libId = files.first().libraryId;
         QVERIFY(libId > 0);
 
-        // Remove library
         QVERIFY(svc.removeLibrary(&db, libId));
 
-        // Files should be gone
         auto remaining = db.getAllFiles();
-        // After removal, files for that library are deleted
         int remainingForLib = 0;
         for (const auto &f : remaining)
             if (f.libraryId == libId)

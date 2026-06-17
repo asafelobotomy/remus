@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Controls
+import Remus.Gui
 
 // TMM-style pipeline status glyph for table columns.
 Item {
@@ -12,7 +13,7 @@ Item {
         Na   = 3
     }
 
-    property int  state:   StatusIcon.Fail
+    property int    state:   StatusIcon.Fail
     property string tooltip: ""
 
     implicitWidth:  26
@@ -28,18 +29,18 @@ Item {
         hoverEnabled: true
     }
 
-    readonly property var palette: ({
-        [StatusIcon.Done]: { glyph: "\u2713", color: "#689d6a" },
-        [StatusIcon.Warn]: { glyph: "\u25D0", color: "#d79921" },
-        [StatusIcon.Fail]: { glyph: "\u2717", color: "#cc241d" },
-        [StatusIcon.Na]:   { glyph: "\u2014", color: "#665c54" }
+    readonly property var glyphMap: ({
+        [StatusIcon.Done]: { glyph: "\u2713", color: Theme.successIcon },
+        [StatusIcon.Warn]: { glyph: "\u25D0", color: Theme.warnIcon },
+        [StatusIcon.Fail]: { glyph: "\u2717", color: Theme.errorIcon },
+        [StatusIcon.Na]:   { glyph: "\u2014", color: Theme.textDisabled }
     })
 
     Label {
         anchors.centerIn: parent
-        text:       palette[state].glyph
-        color:      palette[state].color
-        font.pixelSize: 13
+        text:       glyphMap[state].glyph
+        color:      glyphMap[state].color
+        font.pixelSize: Theme.fontLg
         font.bold:  state !== StatusIcon.Na
     }
 }
