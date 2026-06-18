@@ -6,11 +6,20 @@
 #include "compendium_types.h"
 #include "clrmamepro_parser.h"
 
-#include <QString>
+#include "../core/disc_title_parser.h"
+
 #include <QList>
+#include <QString>
 
 namespace Remus {
 namespace Compendium {
+
+    /// One DAT @c game ( … ) block before envelope emission.
+    struct DatGameBlock {
+        QString gameName;
+        QList<ClrMameProEntry> tracks;
+        DiscTitleInfo titleInfo;
+    };
 
     class DatExtractor {
     public:
@@ -33,6 +42,12 @@ namespace Compendium {
 
         // Normalize a serial value: uppercase, trimmed.
         static QString normalizeSerial(const QString &raw);
+
+        /// Group parsed DAT entries into one block per @c gameName .
+        static QList<DatGameBlock> groupGameBlocks(const QList<ClrMameProEntry> &entries);
+
+        /// Data tracks for a single DAT game block (skips .cue/.m3u metadata rows).
+        static QList<ClrMameProEntry> dataTracksForBlock(const QList<ClrMameProEntry> &group);
     };
 
 } // namespace Compendium

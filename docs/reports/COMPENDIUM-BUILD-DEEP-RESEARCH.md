@@ -402,7 +402,7 @@ Hasheous offline dumps would complete the same pattern for hash→metadata bridg
 
 | Task | When |
 |------|------|
-| `game_discs` table | Provider APIs need per-disc metadata |
+| `game_discs` table | Provider APIs need per-disc metadata | **Plan:** [COMPENDIUM-DISC-SETS-PLAN.md](COMPENDIUM-DISC-SETS-PLAN.md) |
 | `source_items.resolved_system_id` diagnostic column | Unmapped ingest visibility |
 | Enrichment input versions in `compendium_builds` | Cache invalidation |
 

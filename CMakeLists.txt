@@ -123,6 +123,7 @@ set(REMUS_CLI_SOURCES
     src/cli/cli_commands_compendium_patch.cpp
     src/cli/cli_commands_compendium_enrich.cpp
     src/cli/cli_commands_compendium_ingest.cpp
+    src/cli/cli_commands_compendium_backfill.cpp
     src/cli/cli_commands_compendium_coverage.cpp
     src/cli/compendium_enrichment.cpp
     src/cli/compendium_enrichment_gametdb.cpp

@@ -1,7 +1,9 @@
 #include "compendium_fact_inserter.h"
 
+#include "compendium_disc_set_inserter.h"
 #include "compendium_normalizer.h"
 
+#include <QHash>
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QVariant>
@@ -290,6 +292,11 @@ namespace Compendium {
                 return false;
             }
         }
+
+        if (!DiscSetInserter::insertDiscTopologyForRecords(records, db, stats, error)) {
+            return false;
+        }
+
         return true;
     }
 

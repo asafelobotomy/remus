@@ -37,8 +37,9 @@ private:
     Database &m_database;
 
     QMap<QString, QList<int>> groupByDiscSetKey(const QList<FileRecord> &files) const;
-    QList<FileRecord> sortByDiscNumber(const QList<FileRecord> &files) const;
-    QString titleForDiscSet(const QList<FileRecord> &files) const;
+    QList<FileRecord> sortByDiscNumber(const QList<FileRecord> &files, QSqlDatabase *compendiumDb = nullptr) const;
+    int catalogDiscNumberForFile(const FileRecord &file, QSqlDatabase *compendiumDb) const;
+    QString titleForDiscSet(const QList<FileRecord> &files, QSqlDatabase *compendiumDb = nullptr) const;
     bool writeM3UFile(const QString &path, const QStringList &discPaths);
 };
 

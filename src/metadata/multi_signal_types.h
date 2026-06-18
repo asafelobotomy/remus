@@ -17,6 +17,7 @@ struct ROMSignals {
     QString filename;
     qint64 fileSize = 0;
     QString serial;
+    int discNumber = 0; ///< Parsed or caller-supplied disc index for corroboration
 };
 
 /**
@@ -37,6 +38,11 @@ struct CompendiumMultiSignalMatch {
 
     QString matchedHash;
     int matchSignalCount = 0;
+
+    QString setKey;
+    int catalogDiscNumber = 0;
+    int catalogDiscCount = 0;
+    bool discNumberMatch = false;
 
     int confidencePercent() const {
         return qMin(100, (confidenceScore * 100) / 200);

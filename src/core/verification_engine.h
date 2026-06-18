@@ -7,6 +7,7 @@
 #include <QMap>
 #include "dat_parser.h"
 #include "database.h"
+#include "disc_set_completeness.h"
 
 namespace Remus {
 
@@ -184,6 +185,24 @@ public:
      */
     bool exportReport(
         const QList<VerificationResult> &results, const QString &outputPath, const QString &format = "csv");
+
+    /**
+     * @brief Catalog-backed disc-set completeness for a compendium @c game_id.
+     */
+    QList<DiscSetCompletenessReport> discSetCompleteness(
+        const QString &compendiumGameId, const QList<int> &ownedFileIds) const;
+
+    /**
+     * @brief Catalog-backed disc-set completeness for one canonical @c set_key.
+     */
+    DiscSetCompletenessReport discSetCompletenessBySetKey(
+        const QString &setKey, const QList<int> &ownedFileIds) const;
+
+    /**
+     * @brief Scan library disc sets and return incomplete catalog sets only.
+     */
+    QList<DiscSetCompletenessReport> discSetCompletenessForLibrary(
+        const QString &systemFilter = QString()) const;
 
     /**
      * @brief Check if system has imported DAT

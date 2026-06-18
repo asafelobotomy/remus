@@ -64,6 +64,7 @@ int handleMatchReportCommand(CliContext &ctx);
 // --checksum-verify, --verify, --patch-dat-*
 int handleChecksumVerifyCommand(CliContext &ctx);
 int handleVerifyCommand(CliContext &ctx);
+int handleVerifySetCommand(CliContext &ctx);
 int handlePatchDatCommand(CliContext &ctx);
 
 // ── Organise, bundle & artwork ────────────────────────────────────────────────
@@ -121,7 +122,9 @@ int handleDedupCompendiumCommand(CliContext &ctx);
 int handleImportPatchCatalogCommand(CliContext &ctx);
 int handleEnrichCompendiumCommand(CliContext &ctx);
 int handleIngestSourceCommand(CliContext &ctx);
+int handleBackfillDiscSetsCommand(CliContext &ctx);
 int handleCoverageReportCommand(CliContext &ctx);
+int handleDiscSetCoverageCommand(CliContext &ctx);
 int handleUpdateDatsCommand(CliContext &ctx);
 int handleImportDatCommand(CliContext &ctx);
 int handleRemoveDatCommand(CliContext &ctx);

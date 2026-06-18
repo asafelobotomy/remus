@@ -8,6 +8,7 @@
 #include <QSettings>
 
 #include "../../core/constants/constants.h"
+#include "../../core/compendium_disc_bridge.h"
 #include "../../metadata/compendium_provider.h"
 #include "../../metadata/gametdb_provider.h"
 #include "../../metadata/hasheous_provider.h"
@@ -77,6 +78,7 @@ void AppController::rebuildOrchestrator() {
     if (!compendiumDir.isEmpty()) {
         const QString compendiumPath = QDir(compendiumDir).filePath(QStringLiteral("remus_compendium.db"));
         if (QFileInfo::exists(compendiumPath)) {
+            m_database.setCompendiumDbPath(compendiumPath);
             auto *compendiumProvider = new CompendiumProvider(m_orchestrator.get());
             if (compendiumProvider->openDatabase(compendiumPath)) {
                 m_orchestrator->addProvider(Constants::Providers::COMPENDIUM, compendiumProvider,

@@ -1,8 +1,12 @@
 #include "organize_engine.h"
+#include "compendium_disc_bridge.h"
+#include "disc_set_utils.h"
+#include "disc_title_parser.h"
 #include <QFile>
 #include <QDir>
 #include <QFileInfo>
 #include <QDateTime>
+#include <QSqlDatabase>
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QDebug>
@@ -36,6 +40,48 @@ namespace {
         }
 
         return QFile::rename(backupPath, destinationPath);
+    }
+
+    QString discSetSubfolderName(Database &database, const FileRecord &fileRecord, const GameMetadata &metadata) {
+        if (fileRecord.discSetKey.isEmpty())
+            return { };
+
+        const QList<FileRecord> members = database.getFilesByDiscSetKey(fileRecord.discSetKey);
+        int catalogDiscCount = 0;
+        QString catalogBaseTitle;
+
+        const QString compendiumPath = database.compendiumDbPath();
+        if (!compendiumPath.isEmpty() && QFileInfo::exists(compendiumPath)) {
+            const QString connectionName
+                = QStringLiteral("organize_catalog_%1").arg(QDateTime::currentMSecsSinceEpoch());
+            QSqlDatabase catalogDb = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), connectionName);
+            catalogDb.setDatabaseName(compendiumPath);
+            if (catalogDb.open()) {
+                CatalogDiscSetSummary summary;
+                if (lookupCatalogDiscSetSummary(catalogDb, fileRecord.discSetKey, summary) && summary.found) {
+                    catalogDiscCount = summary.catalogDiscCount;
+                    catalogBaseTitle = summary.baseTitle;
+                }
+                catalogDb.close();
+                QSqlDatabase::removeDatabase(connectionName);
+            }
+        }
+
+        const int effectiveDiscCount = catalogDiscCount >= 2 ? catalogDiscCount : members.size();
+        if (effectiveDiscCount < 2)
+            return { };
+
+        QString folderName = catalogBaseTitle;
+        if (folderName.isEmpty() && !fileRecord.baseTitle.isEmpty())
+            folderName = fileRecord.baseTitle;
+        if (folderName.isEmpty() && !metadata.title.isEmpty())
+            folderName = DiscTitleParser::extractBaseTitle(metadata.title);
+        if (folderName.isEmpty()) {
+            folderName = DiscSetUtils::extractBaseTitle(DiscSetUtils::labelPath(fileRecord.currentPath,
+                fileRecord.archivePath, fileRecord.archiveInternalPath, fileRecord.filename));
+        }
+
+        return DiscSetUtils::sanitizeFolderComponent(folderName);
     }
 
 }
@@ -360,7 +406,7 @@ QString OrganizeEngine::generateDestinationPath(
     filename.replace(QLatin1Char('/'), QLatin1Char('_'));
     filename.replace(QLatin1Char('\\'), QLatin1Char('_'));
 
-    // Build destination: optionally add system subfolder
+    // Build destination: optionally add system subfolder, then multi-disc set folder.
     QDir destDir(destinationDir);
     if (m_folderNaming != Constants::FolderNaming::Scheme::None) {
         QString systemFolder = Constants::FolderNaming::folderNameForSystemId(fileRecord.systemId, m_folderNaming);
@@ -368,6 +414,10 @@ QString OrganizeEngine::generateDestinationPath(
             destDir = QDir(destDir.filePath(systemFolder));
         }
     }
+
+    const QString discSetFolder = discSetSubfolderName(m_database, fileRecord, metadata);
+    if (!discSetFolder.isEmpty())
+        destDir = QDir(destDir.filePath(discSetFolder));
 
     const QString resolved = destDir.absoluteFilePath(filename);
     // Belt-and-suspenders containment check against the caller-supplied root.

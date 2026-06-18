@@ -33,6 +33,7 @@ private slots:
     void testFolderNamingExtendedSystems();
     void testFolderNamingSchemeFromString();
     void testOrganizeFile_traversalTitleContained();
+    void testMultiDiscSetUsesGameSubfolder();
 
 private:
     // Write a small ROM file into dir and register it in db.
@@ -562,6 +563,59 @@ void OrganizeEngineTest::testOrganizeFile_traversalTitleContained() {
         }
         // success==false (unsafe path rejected) is also acceptable
     }
+}
+
+void OrganizeEngineTest::testMultiDiscSetUsesGameSubfolder() {
+    QTemporaryDir srcDir, dstDir;
+    QVERIFY(srcDir.isValid() && dstDir.isValid());
+
+    Database db;
+    QVERIFY(db.initialize(QStringLiteral(":memory:")));
+
+    const int libId = db.insertLibrary(srcDir.path(), QStringLiteral("Test"));
+    const int sysId = db.getSystemId(QStringLiteral("PlayStation"));
+    if (sysId == 0)
+        QSKIP("PlayStation system not in default DB");
+
+    const auto insertDisc = [&](const QString &filename) -> int {
+        const QString path = srcDir.path() + QLatin1Char('/') + filename;
+        QFile file(path);
+        if (!file.open(QIODevice::WriteOnly))
+            return 0;
+        file.write("disc");
+        file.close();
+
+        FileRecord record;
+        record.libraryId = libId;
+        record.filename = filename;
+        record.originalPath = path;
+        record.currentPath = path;
+        record.extension = QStringLiteral(".bin");
+        record.systemId = sysId;
+        record.fileSize = 4;
+        return db.insertFile(record);
+    };
+
+    const int disc1 = insertDisc(QStringLiteral("Final Fantasy VII (USA) (Disc 1).bin"));
+    const int disc2 = insertDisc(QStringLiteral("Final Fantasy VII (USA) (Disc 2).bin"));
+    QVERIFY(disc1 > 0 && disc2 > 0);
+    QVERIFY(db.rebuildDiscSetsForLibrary(libId));
+
+    OrganizeEngine engine(db);
+    engine.setTemplate(QStringLiteral("{title}{ext}"));
+    engine.setDryRun(false);
+    engine.setFolderNaming(Constants::FolderNaming::Scheme::None);
+
+    GameMetadata metadata;
+    metadata.title = QStringLiteral("Final Fantasy VII");
+    metadata.system = QStringLiteral("PlayStation");
+    metadata.region = QStringLiteral("USA");
+
+    const OrganizeResult result = engine.organizeFile(disc1, metadata, dstDir.path(), FileOperation::Copy);
+    QVERIFY(result.success);
+    QVERIFY(result.newPath.contains(QStringLiteral("Final Fantasy VII")));
+    const QFileInfo info(result.newPath);
+    QVERIFY(info.absolutePath().contains(QStringLiteral("Final Fantasy VII")));
 }
 
 QTEST_MAIN(OrganizeEngineTest)

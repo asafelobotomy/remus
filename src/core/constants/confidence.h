@@ -78,6 +78,9 @@ namespace Constants {
             /// Bonus when serial number matches
             inline constexpr int SERIAL_BONUS = 20;
 
+            /// Bonus when caller/file disc index matches catalog disc_number
+            inline constexpr int DISC_NUMBER_BONUS = 15;
+
             /// Base score for a serial-only fallback match (no hash, no filename+size)
             /// A disc serial is a reliable product identifier embedded in the disc header.
             /// 130/200 = 65%, comfortably above the default 60% minimum threshold.

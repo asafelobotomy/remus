@@ -31,6 +31,9 @@ public:
 
     static QString discRowLabel(const QString &labelPath, int discNumber);
 
+    /** Sanitize a title fragment for use as a single path component. */
+    static QString sanitizeFolderComponent(const QString &name);
+
     /** Populate disc_set_key, disc_number, and base_title from paths (scan-time). */
     static void applyScanDiscMetadata(FileRecord &record, const QString &systemName);
 };

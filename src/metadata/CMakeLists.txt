@@ -33,12 +33,15 @@ add_library(remus-metadata STATIC
     compendium_normalizer.cpp
     compendium_identity_linker.cpp
     compendium_fact_inserter.cpp
+    compendium_disc_set_inserter.cpp
+    compendium_disc_set_backfill.cpp
     compendium_merge_resolver.cpp
     compendium_compiler_service.cpp
     compendium_provider.cpp
     compendium_provider_lookup.cpp
     compendium_provider_match.cpp
     compendium_provider_fetch.cpp
+    compendium_provider_disc_sets.cpp
     compendium_patch_catalog_importer.cpp
     romhacking_scraper.cpp
 )

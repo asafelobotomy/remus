@@ -42,6 +42,8 @@ add_library(remus-core STATIC
     rom_bundler_staged.cpp
     m3u_generator.cpp
     disc_set_utils.cpp
+    disc_title_parser.cpp
+    disc_set_key.cpp
     chd_converter.cpp
     chd_header.cpp
     hasheous_config.cpp
@@ -66,6 +68,8 @@ add_library(remus-core STATIC
     verification_storage.cpp
     verification_storage_schema.cpp
     verification_storage_dat.cpp
+    verification_engine_disc_sets.cpp
+    compendium_disc_bridge.cpp
     compendium_manifest_parser.cpp
     patch_engine.cpp
     patch_engine_apply.cpp

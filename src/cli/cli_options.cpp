@@ -83,6 +83,8 @@ void registerAllOptions(QCommandLineParser &parser, QSet<QString> &actionOptions
 
     addActionOption(QCommandLineOption("verify", "Verify files against DAT file", "dat-file"));
     addOption(QCommandLineOption("verify-report", "Generate detailed verification report"));
+    addActionOption(QCommandLineOption("verify-set",
+        "Report incomplete multi-disc sets using catalog topology (requires bundled compendium)"));
     addLegacyActionOption(QCommandLineOption("patch-dat-import",
         "Deprecated no-op: manual patch catalog import has been replaced by bundled compendium data", "dat-file"));
     addLegacyOption(QCommandLineOption(
@@ -205,12 +207,18 @@ void registerAllOptions(QCommandLineParser &parser, QSet<QString> &actionOptions
         "sources"));
     addActionOption(QCommandLineOption(
         "ingest-source", "Incrementally ingest a single DAT file into an existing compendium database", "dat-file"));
+    addActionOption(QCommandLineOption("backfill-disc-sets",
+        "Populate game_disc_sets and game_disc_tracks from existing source_items and signatures"));
+    addActionOption(QCommandLineOption(
+        "force-disc-set-backfill", "Clear existing disc topology before --backfill-disc-sets"));
     addOption(QCommandLineOption(
         "source-id", "Source identifier for --ingest-source (default: derived from filename)", "id"));
     addOption(QCommandLineOption(
         "source-priority", "Source priority for --ingest-source (default: 10; no-intro=20, redump=30)", "n", "10"));
     addActionOption(QCommandLineOption("coverage-report",
         "Emit a per-source signature-yield coverage report for a compendium database (TSV to stdout)"));
+    addActionOption(QCommandLineOption("disc-set-coverage",
+        "Emit disc set topology coverage for disc-based systems in a compendium database (TSV to stdout)"));
     addOption(QCommandLineOption("compendium-manifest", "Path to compendium source manifest JSON", "path"));
     addOption(QCommandLineOption("compendium-output", "Output SQLite path for compiled compendium", "path",
         "data/compendium/remus_compendium.db"));

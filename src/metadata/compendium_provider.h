@@ -2,10 +2,13 @@
 
 #include "metadata_provider.h"
 #include "compendium_normalizer.h"
+#include "compendium_disc_set_types.h"
 #include "multi_signal_types.h"
 
 #include <QSqlDatabase>
+#include <QSqlQuery>
 #include <QString>
+#include <QVariant>
 
 namespace Remus {
 
@@ -40,6 +43,16 @@ public:
      */
     GameMetadata metadataFromMatch(const CompendiumMultiSignalMatch &match, const QString &system) const;
 
+    /**
+     * @brief All disc sets linked to a compendium @c game_id (ordered by set_key, disc_number).
+     */
+    QList<CompendiumDiscSet> getDiscSetsForGame(const QString &gameId) const;
+
+    /**
+     * @brief All disc sets sharing a canonical @c set_key (library bridge).
+     */
+    QList<CompendiumDiscSet> getDiscSetsBySetKey(const QString &setKey) const;
+
     QString name() const override {
         return QStringLiteral("Compendium");
     }
@@ -61,6 +74,10 @@ private:
     static QString detectHashType(const QString &hash, QString &normalizedValue);
     GameMetadata lookupPatchByHash(const QString &hashType, const QString &normalizedHash, const QString &system,
         int systemId, qint64 fileSize = 0) const;
+    void populateDiscContextFromSourceEntry(GameMetadata &metadata, const QString &sourceEntryKey) const;
+    bool lookupDiscSetBySourceEntry(const QString &sourceEntryKey, CompendiumDiscSet &discSet) const;
+    QList<CompendiumDiscSet> queryDiscSets(const QString &whereSql, const QVariantList &bindValues) const;
+    void applyDiscContextToMatch(const ROMSignals &input, CompendiumMultiSignalMatch &match) const;
 
     QString m_connectionName;
     QString m_databasePath;

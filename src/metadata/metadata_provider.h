@@ -41,6 +41,11 @@ struct GameMetadata {
     // Match quality (set when matched via orchestrator)
     float matchScore = 0.0f; // 0.0 to 1.0 (1.0 = perfect hash match)
     QString matchMethod; // Canonicalized via Constants::MatchMethods
+
+    // Compendium disc-set context (populated when catalog topology is known)
+    QString setKey;
+    int matchedDiscNumber = 0;
+    int catalogDiscCount = 0;
 };
 
 /**

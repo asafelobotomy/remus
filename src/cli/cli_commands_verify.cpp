@@ -7,6 +7,7 @@
 #include <QSqlQuery>
 #include "../core/hasher.h"
 #include "../core/verification_engine.h"
+#include "../core/compendium_disc_bridge.h"
 #include "../core/space_calculator.h"
 #include "../core/dat_parser.h"
 #include "../core/system_resolver.h"
@@ -202,6 +203,20 @@ int reportVerificationResults(
         }
     }
 
+    const QString compendiumPath = ctx.db.compendiumDbPath().isEmpty() ? resolveBundledCompendiumDbPath()
+                                                                       : ctx.db.compendiumDbPath();
+    if (generateReport && !compendiumPath.isEmpty()) {
+        verifier.setCompendiumDb(compendiumPath);
+        const QList<DiscSetCompletenessReport> setReports = verifier.discSetCompletenessForLibrary(systemName);
+        if (!setReports.isEmpty()) {
+            qInfo() << "";
+            qInfo() << "Disc set completeness:";
+            for (const DiscSetCompletenessReport &report : setReports) {
+                qWarning() << report.titleDisc << "- missing discs" << report.missingDiscNumbers;
+            }
+        }
+    }
+
     return 0;
 }
 
@@ -312,6 +327,47 @@ int handleVerifyCommand(CliContext &ctx) {
     qInfo() << "";
 
     return reportVerificationResults(ctx, verifier, systemName, generateReport);
+}
+
+int handleVerifySetCommand(CliContext &ctx) {
+    if (!ctx.parser.isSet("verify-set"))
+        return 0;
+
+    qInfo() << "";
+    qInfo() << "=== Disc Set Completeness ===";
+
+    const QString compendiumPath = ctx.db.compendiumDbPath().isEmpty() ? resolveBundledCompendiumDbPath()
+                                                                       : ctx.db.compendiumDbPath();
+    if (compendiumPath.isEmpty()) {
+        qCritical() << "✗ Bundled compendium database not found (data/compendium/remus_compendium.db)";
+        return 1;
+    }
+
+    VerificationEngine verifier(&ctx.db);
+    verifier.setCompendiumDb(compendiumPath);
+
+    const QList<DiscSetCompletenessReport> reports = verifier.discSetCompletenessForLibrary();
+    if (reports.isEmpty()) {
+        qInfo() << "No incomplete catalog disc sets found in the library.";
+        return 0;
+    }
+
+    for (const DiscSetCompletenessReport &report : reports) {
+        qInfo() << "";
+        qInfo() << report.titleDisc;
+        qInfo() << "  set_key:" << report.setKey;
+        qInfo() << "  owned discs:" << report.ownedDiscNumbers;
+        if (!report.missingDiscNumbers.isEmpty()) {
+            qWarning() << "  missing discs:" << report.missingDiscNumbers;
+        }
+        for (const QString &warning : report.warnings)
+            qWarning() << "  warning:" << warning;
+        for (const DiscTrackCompleteness &gap : report.trackGaps) {
+            qWarning() << "  disc" << gap.discNumber << "missing tracks:" << gap.missingRomNames;
+        }
+    }
+
+    return 0;
 }
 
 int handlePatchDatCommand(CliContext &ctx) {

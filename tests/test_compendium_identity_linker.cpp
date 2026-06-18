@@ -5,6 +5,7 @@
 
 #include "../src/metadata/compendium_identity_linker.h"
 #include "../src/metadata/compendium_types.h"
+#include "../src/core/disc_set_key.h"
 
 using namespace Remus::Compendium;
 
@@ -28,6 +29,7 @@ private slots:
     void loadFromDatabase_populatesMapsFromExistingDb();
     void multiDisc_discSuffix_sameGame();
     void multiDisc_cdSuffix_sameGame();
+    void splitPathTitles_doNotShareSetKey();
 };
 
 // Helper to make a minimal envelope
@@ -404,6 +406,38 @@ void CompendiumIdentityLinkerTest::multiDisc_cdSuffix_sameGame() {
     const int created = linker.link(records);
     QCOMPARE(created, 1);
     QCOMPARE(records[0].linkedGameId, records[1].linkedGameId);
+}
+
+void CompendiumIdentityLinkerTest::splitPathTitles_doNotShareSetKey() {
+    // Title merge may still assign distinct game_ids for split-path discs; set_key
+    // must always come from the parser, not from linker title normalization.
+    const QString leonKey = Remus::DiscSetKey::compute(
+        14, QStringLiteral("Resident Evil 2 (USA) (Disc 1) (Leon)"), QStringLiteral("USA"));
+    const QString claireKey = Remus::DiscSetKey::compute(
+        14, QStringLiteral("Resident Evil 2 (USA) (Disc 2) (Claire)"), QStringLiteral("USA"));
+    QVERIFY(leonKey != claireKey);
+
+    IdentityLinker linker;
+    QList<SourceRecordEnvelope> records;
+
+    SourceRecordEnvelope r1;
+    r1.externalKey = QStringLiteral("re2-leon");
+    r1.titleRaw = QStringLiteral("Resident Evil 2 (USA) (Disc 1) (Leon)");
+    r1.resolvedSystemId = 14;
+    r1.resolvedRegionCode = QStringLiteral("USA");
+
+    SourceRecordEnvelope r2;
+    r2.externalKey = QStringLiteral("re2-claire");
+    r2.titleRaw = QStringLiteral("Resident Evil 2 (USA) (Disc 2) (Claire)");
+    r2.resolvedSystemId = 14;
+    r2.resolvedRegionCode = QStringLiteral("USA");
+
+    records.append(r1);
+    records.append(r2);
+
+    const int created = linker.link(records);
+    QCOMPARE(created, 2);
+    QVERIFY(records[0].linkedGameId != records[1].linkedGameId);
 }
 
 #include "test_compendium_identity_linker.moc"

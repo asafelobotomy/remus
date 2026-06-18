@@ -230,8 +230,14 @@ Frame {
                             Layout.minimumWidth: root.colTitleMin - (isDisc ? 18 : (isGroup ? 22 : 0))
                             Layout.fillWidth:    true
                             text: {
-                                if (isGroup)
-                                    return modelData.filename + "  (" + modelData.discCount + " discs)"
+                                if (isGroup) {
+                                    const owned = modelData.discCount || 0
+                                    const catalog = modelData.catalogDiscCount || 0
+                                    const suffix = catalog > 0
+                                        ? ("  [" + (modelData.discProgress || owned) + " discs]")
+                                        : ("  (" + owned + " discs)")
+                                    return modelData.filename + suffix
+                                }
                                 if (isDisc)
                                     return modelData.discLabel || modelData.filename
                                 return rowDelegate.modelData.filename
@@ -239,7 +245,9 @@ Frame {
                             elide:            Text.ElideRight
                             font.pixelSize:   Theme.fontMd
                             font.bold:        isGroup
-                            color:            isGroup ? Theme.textPrimary : Theme.textBody
+                            color:            isGroup
+                                              ? (modelData.discSetComplete === false ? Theme.warn : Theme.textPrimary)
+                                              : Theme.textBody
                             leftPadding:      isDisc ? 4 : 0
                         }
 

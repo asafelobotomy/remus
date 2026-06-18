@@ -21,6 +21,9 @@ sqlite3 data/compendium/remus_compendium.db < data/compendium/seeds/0002_systems
 sqlite3 data/compendium/remus_compendium.db < data/compendium/seeds/0003_merge_policy.sql
 sqlite3 data/compendium/remus_compendium.db < data/compendium/migrations/0003_systems_libretro_name.sql
 sqlite3 data/compendium/remus_compendium.db < data/compendium/migrations/0004_fts5_search_index.sql
+sqlite3 data/compendium/remus_compendium.db < data/compendium/migrations/0005_game_external_ids.sql
+sqlite3 data/compendium/remus_compendium.db < data/compendium/migrations/0006_game_achievement_count.sql
+sqlite3 data/compendium/remus_compendium.db < data/compendium/migrations/0007_disc_sets.sql
 ```
 
 ## Validate phase 1 constraints and collisions
@@ -44,6 +47,23 @@ bash .github/scripts/validate-compendium-db.sh data/compendium/remus_compendium.
   data/compendium/validation/0002_phase2_quality_checks.sql
 bash .github/scripts/validate-compendium-db.sh data/compendium/remus_compendium.db \
   data/compendium/validation/0003_phase2_extended_checks.sql
+bash .github/scripts/validate-compendium-db.sh data/compendium/remus_compendium.db \
+  data/compendium/validation/0004_disc_set_checks.sql
+```
+
+Disc set ingest checks (populated databases; WARN checks are informational unless `--strict`):
+
+```bash
+bash .github/scripts/validate-compendium-db.sh data/compendium/remus_compendium.db \
+  data/compendium/validation/0005_disc_set_ingest_checks.sql --warn-only
+```
+
+Backfill disc topology on an existing database (applies migration 0007 when missing):
+
+```bash
+bash scripts/backfill_disc_sets.sh data/compendium/remus_compendium.db
+# Force rebuild when topology already exists:
+bash scripts/backfill_disc_sets.sh data/compendium/remus_compendium.db --force
 ```
 
 External data source reference: [docs/reports/COMPENDIUM-DATA-SOURCES.md](../../docs/reports/COMPENDIUM-DATA-SOURCES.md)
@@ -95,7 +115,8 @@ Steps performed by `build_compendium_full.sh`:
 3. `remus-cli --build-compendium` — ingest DATs, run enrichment passes, merge, FTS index
 4. `scripts/import_patch_catalog.sh` — import libretro hack/translation DATs into the patch catalog tables
 5. `.github/scripts/validate-compendium-db.sh` — schema and content validation gates
-6. `--coverage-report` — per-source TSV coverage summary
+6. `--coverage-report` — per-source TSV coverage summary (includes disc set coverage in header)
+7. `--disc-set-coverage` — per-system disc set topology coverage for disc-based platforms
 
 Patch catalog import runs **after** the compendium build because it writes to
 `patch_catalog_sources` / `patch_catalog_entries` in the populated database.
@@ -127,5 +148,9 @@ sqlite3 data/compendium/remus_compendium.db "SELECT system_name, catalog_name, e
 - FTS migration: [data/compendium/migrations/0004_fts5_search_index.sql](migrations/0004_fts5_search_index.sql)
 - External ID columns: [data/compendium/migrations/0005_game_external_ids.sql](migrations/0005_game_external_ids.sql)
 - Achievement count column: [data/compendium/migrations/0006_game_achievement_count.sql](migrations/0006_game_achievement_count.sql)
+- Disc sets + tracks: [data/compendium/migrations/0007_disc_sets.sql](migrations/0007_disc_sets.sql)
 - Validator: [data/compendium/validation/0001_phase1_checks.sql](validation/0001_phase1_checks.sql)
+- Disc set validator: [data/compendium/validation/0004_disc_set_checks.sql](validation/0004_disc_set_checks.sql)
+- Disc set ingest validator: [data/compendium/validation/0005_disc_set_ingest_checks.sql](validation/0005_disc_set_ingest_checks.sql)
+- Backfill script: [scripts/backfill_disc_sets.sh](../../scripts/backfill_disc_sets.sh)
 - Runner script: [scripts/setup_compendium_db.sh](../../scripts/setup_compendium_db.sh)

@@ -203,3 +203,5 @@ jobs:
           bash scripts/setup_compendium_db.sh
           bash .github/scripts/validate-compendium-db.sh data/compendium/remus_compendium.db \
             data/compendium/validation/0000_bootstrap_checks.sql
+          bash .github/scripts/validate-compendium-db.sh data/compendium/remus_compendium.db \
+            data/compendium/validation/0004_disc_set_checks.sql

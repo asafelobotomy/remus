@@ -1,8 +1,9 @@
 #include "cli_commands.h"
 #include "cli_helpers.h"
 
+#include "../core/compendium_disc_bridge.h"
+
 #include <QDebug>
-#include <QFile>
 #include <QFileInfo>
 #include <QSqlDatabase>
 #include <QSqlError>
@@ -10,10 +11,150 @@
 #include <QTextStream>
 #include <QUuid>
 
-// ── --coverage-report ──────────────────────────────────────────────────────────
-// Queries an existing compendium database and emits a per-source signature-yield
-// report as TSV to stdout.  A machine-readable summary row at the top lists
-// total game, signature, and system counts.
+namespace {
+
+struct CompendiumCoverageDb {
+    QString connectionName;
+    QSqlDatabase database;
+
+    bool open(const QString &outputPath, QString &error) {
+        const QFileInfo dbInfo(outputPath);
+        if (!dbInfo.exists()) {
+            error = QStringLiteral("Compendium database not found: %1").arg(outputPath);
+            return false;
+        }
+
+        connectionName = QStringLiteral("coverage-") + QUuid::createUuid().toString(QUuid::WithoutBraces);
+        database = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), connectionName);
+        database.setDatabaseName(dbInfo.absoluteFilePath());
+        database.setConnectOptions(QStringLiteral("QSQLITE_OPEN_READONLY"));
+        if (!database.open()) {
+            error = database.lastError().text();
+            database = QSqlDatabase();
+            QSqlDatabase::removeDatabase(connectionName);
+            connectionName.clear();
+            return false;
+        }
+        return true;
+    }
+
+    void close() {
+        if (connectionName.isEmpty())
+            return;
+        if (database.isOpen())
+            database.close();
+        database = QSqlDatabase();
+        QSqlDatabase::removeDatabase(connectionName);
+        connectionName.clear();
+    }
+
+    qint64 scalar(QSqlQuery &q, const QString &sql) const {
+        if (!q.exec(sql) || !q.next())
+            return -1;
+        return q.value(0).toLongLong();
+    }
+};
+
+struct DiscSetCoverageStats {
+    qint64 discBasedGames = 0;
+    qint64 gamesWithDiscSets = 0;
+    double coveragePct = 0.0;
+};
+
+bool queryDiscSetCoverageStats(QSqlDatabase &database, DiscSetCoverageStats &stats, QString &error) {
+    stats = { };
+    if (!compendiumDiscSetsAvailable(database))
+        return true;
+
+    QSqlQuery q(database);
+    stats.discBasedGames = q.exec(QStringLiteral("SELECT COUNT(*) FROM games g "
+                                                 "JOIN systems s ON s.system_id = g.system_id "
+                                                 "WHERE s.is_disc_based = 1"))
+                               && q.next()
+        ? q.value(0).toLongLong()
+        : -1;
+    if (stats.discBasedGames < 0) {
+        error = q.lastError().text();
+        return false;
+    }
+
+    stats.gamesWithDiscSets = q.exec(QStringLiteral("SELECT COUNT(DISTINCT gds.game_id) "
+                                                    "FROM game_disc_sets gds "
+                                                    "JOIN games g ON g.game_id = gds.game_id "
+                                                    "JOIN systems s ON s.system_id = g.system_id "
+                                                    "WHERE s.is_disc_based = 1"))
+                                && q.next()
+        ? q.value(0).toLongLong()
+        : -1;
+    if (stats.gamesWithDiscSets < 0) {
+        error = q.lastError().text();
+        return false;
+    }
+
+    if (stats.discBasedGames > 0)
+        stats.coveragePct = 100.0 * static_cast<double>(stats.gamesWithDiscSets) / static_cast<double>(stats.discBasedGames);
+    return true;
+}
+
+} // namespace
+
+int handleDiscSetCoverageCommand(CliContext &ctx) {
+    if (!ctx.parser.isSet(QStringLiteral("disc-set-coverage")))
+        return 0;
+
+    const QString outputPath = ctx.parser.value(QStringLiteral("compendium-output")).trimmed();
+    if (outputPath.isEmpty()) {
+        qCritical() << "✗ --disc-set-coverage requires --compendium-output <db>";
+        return 1;
+    }
+
+    CompendiumCoverageDb db;
+    QString error;
+    if (!db.open(outputPath, error)) {
+        qCritical() << "✗" << error;
+        return 1;
+    }
+
+    DiscSetCoverageStats stats;
+    if (!queryDiscSetCoverageStats(db.database, stats, error)) {
+        qCritical() << "✗ Failed to query disc set coverage:" << error;
+        db.close();
+        return 1;
+    }
+
+    QTextStream out(stdout);
+    out << QStringLiteral("# disc_based_games=%1 games_with_disc_sets=%2 disc_set_coverage_pct=%3\n")
+               .arg(stats.discBasedGames)
+               .arg(stats.gamesWithDiscSets)
+               .arg(QString::number(stats.coveragePct, 'f', 1));
+    out << QStringLiteral("system_id\tsystem_name\tdisc_based_games\tgames_with_disc_sets\tcoverage_pct\n");
+
+    QSqlQuery q(db.database);
+    if (q.exec(QStringLiteral("SELECT s.system_id, s.display_name, "
+                              "       COUNT(DISTINCT g.game_id) AS disc_based_games, "
+                              "       COUNT(DISTINCT CASE WHEN gds.game_id IS NOT NULL THEN g.game_id END) "
+                              "           AS games_with_disc_sets "
+                              "FROM systems s "
+                              "LEFT JOIN games g ON g.system_id = s.system_id "
+                              "LEFT JOIN game_disc_sets gds ON gds.game_id = g.game_id "
+                              "WHERE s.is_disc_based = 1 "
+                              "GROUP BY s.system_id, s.display_name "
+                              "ORDER BY s.display_name"))) {
+        while (q.next()) {
+            const qint64 discGames = q.value(2).toLongLong();
+            const qint64 withSets = q.value(3).toLongLong();
+            const double pct = discGames > 0 ? 100.0 * static_cast<double>(withSets) / static_cast<double>(discGames)
+                                             : 0.0;
+            out << q.value(0).toInt() << '\t' << q.value(1).toString() << '\t' << discGames << '\t' << withSets << '\t'
+                << QString::number(pct, 'f', 1) << '\n';
+        }
+    }
+    out.flush();
+
+    db.close();
+    return 0;
+}
+
 int handleCoverageReportCommand(CliContext &ctx) {
     if (!ctx.parser.isSet(QStringLiteral("coverage-report")))
         return 0;
@@ -24,36 +165,16 @@ int handleCoverageReportCommand(CliContext &ctx) {
         return 1;
     }
 
-    const QFileInfo dbInfo(outputPath);
-    if (!dbInfo.exists()) {
-        qCritical() << "✗ Compendium database not found:" << outputPath;
+    CompendiumCoverageDb db;
+    QString error;
+    if (!db.open(outputPath, error)) {
+        qCritical() << "✗" << error;
         return 1;
     }
-
-    const QString connectionName = QStringLiteral("coverage-") + QUuid::createUuid().toString(QUuid::WithoutBraces);
-    QSqlDatabase database = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), connectionName);
-    database.setDatabaseName(dbInfo.absoluteFilePath());
-    database.setConnectOptions(QStringLiteral("QSQLITE_OPEN_READONLY"));
-    if (!database.open()) {
-        qCritical() << "✗ Failed to open database:" << database.lastError().text();
-        database = QSqlDatabase();
-        QSqlDatabase::removeDatabase(connectionName);
-        return 1;
-    }
-
-    const auto cleanup = [&]() {
-        database.close();
-        database = QSqlDatabase();
-        QSqlDatabase::removeDatabase(connectionName);
-    };
 
     {
-        QSqlQuery q(database);
-        const auto scalar = [&](const QString &sql) -> qint64 {
-            if (!q.exec(sql) || !q.next())
-                return -1;
-            return q.value(0).toLongLong();
-        };
+        QSqlQuery q(db.database);
+        const auto scalar = [&](const QString &sql) -> qint64 { return db.scalar(q, sql); };
 
         const qint64 totalGames = scalar(QStringLiteral("SELECT COUNT(*) FROM games"));
         const qint64 totalSignatures = scalar(QStringLiteral("SELECT COUNT(*) FROM game_signatures"));
@@ -68,9 +189,16 @@ int handleCoverageReportCommand(CliContext &ctx) {
             "    AND COALESCE((SELECT COUNT(*) FROM game_signatures gs WHERE gs.source_id = si.source_id), 0) = 0"
             ")"));
 
+        DiscSetCoverageStats discSetStats;
+        if (!queryDiscSetCoverageStats(db.database, discSetStats, error)) {
+            qCritical() << "✗ Failed to query disc set coverage:" << error;
+            db.close();
+            return 1;
+        }
+
         if (totalGames < 0) {
             qCritical() << "✗ Failed to query database:" << q.lastError().text();
-            cleanup();
+            db.close();
             return 1;
         }
 
@@ -111,17 +239,21 @@ int handleCoverageReportCommand(CliContext &ctx) {
             "ORDER BY shadowed DESC, sig_yield_pct ASC, coverage_pct ASC, si.source_items DESC"));
         if (!ok) {
             qCritical() << "✗ Failed to query source coverage:" << q.lastError().text();
-            cleanup();
+            db.close();
             return 1;
         }
 
         QTextStream out(stdout);
-        out << QStringLiteral("# games=%1 signatures=%2 systems=%3 active_sources=%4 shadowed_sources=%5\n")
+        out << QStringLiteral("# games=%1 signatures=%2 systems=%3 active_sources=%4 shadowed_sources=%5 "
+                              "disc_based_games=%6 games_with_disc_sets=%7 disc_set_coverage_pct=%8\n")
                    .arg(totalGames)
                    .arg(totalSignatures)
                    .arg(totalSystems)
                    .arg(totalSources)
-                   .arg(shadowedSources);
+                   .arg(shadowedSources)
+                   .arg(discSetStats.discBasedGames)
+                   .arg(discSetStats.gamesWithDiscSets)
+                   .arg(QString::number(discSetStats.coveragePct, 'f', 1));
         out << QStringLiteral(
             "source_id\tenabled\tpriority\tsource_items\tsigs_owned\tgames_covered\tcoverage_pct\tsig_yield_pct\t"
             "shadowed\n");
@@ -133,6 +265,6 @@ int handleCoverageReportCommand(CliContext &ctx) {
         out.flush();
     }
 
-    cleanup();
+    db.close();
     return 0;
 }

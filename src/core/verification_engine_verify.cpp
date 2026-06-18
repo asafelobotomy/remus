@@ -1,5 +1,6 @@
 #include "verification_engine.h"
 #include "verification_hash_matcher.h"
+#include "compendium_disc_bridge.h"
 
 #include "patched_rom_parser.h"
 #include "constants/file_types.h"
@@ -12,6 +13,33 @@
 
 namespace Remus {
 using namespace VerificationHashMatcher;
+
+namespace {
+
+    void appendDiscCatalogNotes(const QString &compendiumConnectionName, VerificationResult &result,
+        const QString &systemName, const QString &crc32, const QString &md5, const QString &sha1,
+        int libraryDiscNumber) {
+        if (compendiumConnectionName.isEmpty())
+            return;
+
+        QSqlDatabase compendiumDb = QSqlDatabase::database(compendiumConnectionName);
+        if (!compendiumDb.isOpen())
+            return;
+
+        CompendiumFileDiscContext ctx;
+        if (!lookupCompendiumDiscContextFromDb(compendiumDb, systemName, crc32, md5, sha1, ctx))
+            return;
+
+        if (libraryDiscNumber > 0 && ctx.discNumber > 0 && libraryDiscNumber != ctx.discNumber) {
+            if (!result.notes.isEmpty())
+                result.notes += QStringLiteral("; ");
+            result.notes += QStringLiteral("Catalog disc %1 but library disc_number is %2")
+                                .arg(ctx.discNumber)
+                                .arg(libraryDiscNumber);
+        }
+    }
+
+} // namespace
 
 QList<VerificationResult> VerificationEngine::verifyLibrary(const QString &systemFilter) {
     QList<VerificationResult> results;
@@ -107,7 +135,7 @@ VerificationResult VerificationEngine::verifyFile(int fileId) {
 
     QSqlQuery query(m_database->database());
     query.prepare(R"(
-        SELECT f.current_path, f.filename, s.name, f.crc32, f.md5, f.sha1, f.hash_calculated
+        SELECT f.current_path, f.filename, s.name, f.crc32, f.md5, f.sha1, f.hash_calculated, f.disc_number
         FROM files f
         LEFT JOIN systems s ON f.system_id = s.id
         WHERE f.id = ?
@@ -127,6 +155,7 @@ VerificationResult VerificationEngine::verifyFile(int fileId) {
     const QString md5 = query.value(4).toString();
     const QString sha1 = query.value(5).toString();
     const bool hashCalculated = query.value(6).toBool();
+    const int libraryDiscNumber = query.value(7).toInt();
 
     if (!hashCalculated) {
         result.status = VerificationStatus::HashMissing;
@@ -157,6 +186,8 @@ VerificationResult VerificationEngine::verifyFile(int fileId) {
             result.fileHash = matchedHash;
             result.datHash = matchedHash;
             result.notes = "Verified against official DAT";
+            appendDiscCatalogNotes(m_compendiumConnectionName, result, result.system, crc32, md5, sha1,
+                libraryDiscNumber);
             return result;
         }
     }
@@ -178,6 +209,8 @@ VerificationResult VerificationEngine::verifyFile(int fileId) {
             ? QStringLiteral("Verified against patch catalog")
             : QStringLiteral("Verified against patch catalog: %1").arg(patchEntry.patchName);
         promotePatchMetadata(fileId, patchEntry);
+        appendDiscCatalogNotes(m_compendiumConnectionName, result, result.system, crc32, md5, sha1,
+            libraryDiscNumber);
     } else {
         result.status = VerificationStatus::NotInDat;
         result.notes = "Hash not found in verification catalogs";

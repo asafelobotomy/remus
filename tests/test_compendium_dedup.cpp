@@ -49,7 +49,19 @@ QString openDedupDb(QSqlDatabase &db) {
             QStringLiteral("CREATE TABLE game_facts ("
                            "fact_id INTEGER PRIMARY KEY AUTOINCREMENT,"
                            " game_id TEXT NOT NULL,"
-                           " field_name TEXT NOT NULL)"));
+                           " field_name TEXT NOT NULL)"))
+        && execSql(db,
+            QStringLiteral("CREATE TABLE game_disc_sets ("
+                           "disc_set_id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                           " game_id TEXT NOT NULL,"
+                           " set_key TEXT NOT NULL,"
+                           " disc_number INTEGER NOT NULL DEFAULT 0,"
+                           " disc_count INTEGER NOT NULL DEFAULT 0,"
+                           " set_variant TEXT NOT NULL DEFAULT '',"
+                           " set_role TEXT NOT NULL DEFAULT 'game',"
+                           " title_disc TEXT NOT NULL,"
+                           " source_id TEXT NOT NULL,"
+                           " snapshot_id TEXT NOT NULL DEFAULT '')"));
 
     return ok ? name : QString { };
 }
@@ -64,6 +76,7 @@ private slots:
     void deduplicateGames_reassignsChildRows();
     void deduplicateGames_noOpWhenNoDuplicates();
     void deduplicateGames_mergesSameSerialDifferentTitles();
+    void deduplicateGames_reassignsDiscSets();
 };
 
 void CompendiumDedupTest::deduplicateGames_mergesDuplicatePair() {
@@ -183,6 +196,33 @@ void CompendiumDedupTest::deduplicateGames_mergesSameSerialDifferentTitles() {
         QStringLiteral("SELECT COUNT(DISTINCT game_id) FROM game_serials WHERE serial_value = 'ULUS-10462'")));
     QVERIFY(serialQ.next());
     QCOMPARE(serialQ.value(0).toInt(), 1);
+
+    db.close();
+    QSqlDatabase::removeDatabase(connName);
+}
+
+void CompendiumDedupTest::deduplicateGames_reassignsDiscSets() {
+    QSqlDatabase db;
+    const QString connName = openDedupDb(db);
+    QVERIFY(!connName.isEmpty());
+
+    QVERIFY(execSql(db, QStringLiteral("INSERT INTO games VALUES ('dup-1', 1, 'Duplicate Game', NULL)")));
+    QVERIFY(execSql(db, QStringLiteral("INSERT INTO games VALUES ('dup-2', 1, 'Duplicate Game', NULL)")));
+    QVERIFY(
+        execSql(db, QStringLiteral("INSERT INTO game_signatures (game_id, hash_value) VALUES ('dup-2', 'abc123')")));
+    QVERIFY(execSql(db, QStringLiteral("INSERT INTO game_disc_sets (game_id, set_key, disc_number, disc_count, "
+                                      "set_variant, set_role, title_disc, source_id, snapshot_id) "
+                                      "VALUES ('dup-1', 'setkey1', 1, 1, '', 'game', 'Duplicate Game', 'redump', "
+                                      "'snap')")));
+
+    QString error;
+    QCOMPARE(deduplicateGames(db, error), 1);
+    QVERIFY(error.isEmpty());
+
+    QSqlQuery q(db);
+    QVERIFY(q.exec(QStringLiteral("SELECT game_id FROM game_disc_sets WHERE set_key = 'setkey1'")));
+    QVERIFY(q.next());
+    QCOMPARE(q.value(0).toString(), QStringLiteral("dup-2"));
 
     db.close();
     QSqlDatabase::removeDatabase(connName);

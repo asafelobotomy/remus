@@ -227,6 +227,20 @@ namespace Constants {
         /// Database query timeout (milliseconds)
         inline constexpr int QUERY_TIMEOUT_MS = 30000;
 
+        // ============================================================================
+        // Compendium database (bundled catalog artifact)
+        // ============================================================================
+
+        namespace Compendium {
+            /// Latest applied SQL migration under data/compendium/migrations/
+            inline constexpr int MIGRATION_VERSION = 7;
+
+            namespace Tables {
+                inline constexpr const char *GAME_DISC_SETS = "game_disc_sets";
+                inline constexpr const char *GAME_DISC_TRACKS = "game_disc_tracks";
+            }
+        } // namespace Compendium
+
     } // namespace DatabaseSchema
 } // namespace Constants
 } // namespace Remus

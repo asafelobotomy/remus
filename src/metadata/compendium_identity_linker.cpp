@@ -1,5 +1,7 @@
 #include "compendium_identity_linker.h"
 
+#include "../core/disc_title_parser.h"
+
 #include <QCryptographicHash>
 #include <QHash>
 #include <QRegularExpression>
@@ -18,31 +20,7 @@ namespace Compendium {
     }
 
     QString IdentityLinker::normalizeTitle(const QString &raw) {
-        // Lowercase, strip leading "the "/"a ", collapse spaces, strip punctuation.
-        QString s = raw.toLower().trimmed();
-
-        static const QRegularExpression rePunct(QStringLiteral("[^a-z0-9 ]"));
-        s.remove(rePunct);
-
-        static const QRegularExpression reSpaces(QStringLiteral(" {2,}"));
-        s.replace(reSpaces, QStringLiteral(" "));
-
-        if (s.startsWith(QStringLiteral("the "))) {
-            s = s.mid(4);
-        }
-        if (s.startsWith(QStringLiteral("a "))) {
-            s = s.mid(2);
-        }
-
-        // Strip trailing disc/disk/cd indicators so multi-disc entries share a
-        // common normalized key (e.g. "final fantasy viii disc 2" → "final fantasy
-        // viii").  The pattern handles "disc N", "disc N of M", "cd N", "cd N of M".
-        static const QRegularExpression reDisc(
-            QStringLiteral("\\b(?:disc|disk)\\s*[a-z0-9]+(?:\\s+of\\s+[a-z0-9]+)?\\s*$"
-                           "|\\bcd\\s*\\d+(?:\\s+of\\s+\\d+)?\\s*$"));
-        s.remove(reDisc);
-
-        return s.trimmed();
+        return DiscTitleParser::normalizeForIdentity(raw);
     }
 
     bool IdentityLinker::loadFromDatabase(QSqlDatabase &db, QString &error) {

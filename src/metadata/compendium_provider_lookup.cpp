@@ -303,6 +303,7 @@ GameMetadata CompendiumProvider::getByHash(const QString &hash, const QString &s
                 metadata.title = romTitle;
             }
         }
+        populateDiscContextFromSourceEntry(metadata, sourceEntryKey);
     }
     return metadata;
 }
@@ -353,6 +354,7 @@ GameMetadata CompendiumProvider::getBySerial(const QString &serial, const QStrin
                 metadata.title = romTitle;
             }
         }
+        populateDiscContextFromSourceEntry(metadata, sourceEntryKey);
     }
     return metadata;
 }

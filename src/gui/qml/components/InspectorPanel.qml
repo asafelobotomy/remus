@@ -63,13 +63,20 @@ Frame {
                 Label {
                     Layout.fillWidth: true
                     visible:          (appController.selectedFileData.discSetMemberCount || 0) > 1
+                                   || (appController.selectedFileData.catalogDiscCount || 0) > 1
                     text: {
                         const n = appController.selectedFileData.discNumber || 0
-                        const total = appController.selectedFileData.discSetMemberCount || 0
-                        return n > 0 ? ("Disc " + n + " of " + total) : (total + " discs")
+                        const owned = appController.selectedFileData.discSetMemberCount || 0
+                        const catalog = appController.selectedFileData.catalogDiscCount || 0
+                        if (catalog > 1) {
+                            const progress = owned + "/" + catalog + " discs"
+                            return n > 0 ? ("Disc " + n + " · " + progress) : progress
+                        }
+                        return n > 0 ? ("Disc " + n + " of " + owned) : (owned + " discs")
                     }
                     font.pixelSize:   Theme.fontSm
-                    color:            Theme.textDim
+                    color:            appController.selectedFileData.discSetComplete === false
+                                      ? Theme.warn : Theme.textDim
                     elide:            Text.ElideRight
                 }
 
@@ -208,8 +215,16 @@ Frame {
                         Label {
                             Layout.fillWidth: true
                             visible:          (appController.selectedFileData.discSetMemberCount || 0) > 1
-                            text:             "Disc set (" + appController.selectedFileData.discSetMemberCount + " discs)"
-                            color:            Theme.textMuted
+                                           || (appController.selectedFileData.catalogDiscCount || 0) > 1
+                            text: {
+                                const owned = appController.selectedFileData.discSetMemberCount || 0
+                                const catalog = appController.selectedFileData.catalogDiscCount || 0
+                                if (catalog > 1)
+                                    return "Disc set (" + owned + "/" + catalog + " catalog discs)"
+                                return "Disc set (" + owned + " discs)"
+                            }
+                            color:            appController.selectedFileData.discSetComplete === false
+                                              ? Theme.warn : Theme.textMuted
                             font.pixelSize:   Theme.fontXs
                             font.bold:        true
                         }

@@ -232,6 +232,14 @@ public:
     bool reconcileDiscSetForConfirmedFile(int fileId);
 
     /**
+     * @brief Optional bundled compendium DB used to apply catalog @c set_key values.
+     */
+    void setCompendiumDbPath(const QString &path);
+    QString compendiumDbPath() const {
+        return m_compendiumDbPath;
+    }
+
+    /**
      * @brief Update file's current path (for organize/rename)
      * @param fileId File ID
      * @param newPath New current path
@@ -446,6 +454,7 @@ private:
     QSqlDatabase m_db;
     QString m_dbPath;
     QString m_connectionName;
+    QString m_compendiumDbPath;
 };
 
 } // namespace Remus

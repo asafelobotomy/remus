@@ -1,7 +1,9 @@
 #include "disc_set_utils.h"
 
+#include "disc_set_key.h"
+#include "disc_title_parser.h"
+
 #include <QFileInfo>
-#include <QRegularExpression>
 
 namespace Remus {
 
@@ -39,37 +41,19 @@ QString DiscSetUtils::labelPath(const QString &currentPath, const QString &archi
 }
 
 bool DiscSetUtils::isMultiDisc(const QString &labelPath) {
-    static const QRegularExpression re(
-        QStringLiteral("\\b(Disc|CD|Disk)\\s*\\d+"), QRegularExpression::CaseInsensitiveOption);
-    return re.match(labelPath).hasMatch();
+    return DiscTitleParser::isMultiDisc(labelPath);
 }
 
 QString DiscSetUtils::extractBaseTitle(const QString &labelPath) {
-    QString baseTitle = labelPath;
-    baseTitle = QFileInfo(baseTitle).completeBaseName();
-
-    static const QRegularExpression discPattern(
-        QStringLiteral("\\s*\\(?\\s*(Disc|CD|Disk)\\s*\\d+.*?\\)?\\s*"), QRegularExpression::CaseInsensitiveOption);
-    baseTitle.remove(discPattern);
-
-    baseTitle = baseTitle.trimmed();
-    baseTitle.replace(QRegularExpression(QStringLiteral("\\s{2,}")), QStringLiteral(" "));
-    baseTitle.replace(QRegularExpression(QStringLiteral("\\(\\s*\\)")), QString());
-
-    return baseTitle;
+    return DiscTitleParser::extractBaseTitle(labelPath);
 }
 
 int DiscSetUtils::extractDiscNumber(const QString &labelPath) {
-    static const QRegularExpression re(
-        QStringLiteral("\\b(Disc|CD|Disk)\\s*(\\d+)"), QRegularExpression::CaseInsensitiveOption);
-    const QRegularExpressionMatch match = re.match(labelPath);
-    if (match.hasMatch())
-        return match.captured(2).toInt();
-    return 0;
+    return DiscTitleParser::extractDiscNumber(labelPath);
 }
 
 QString DiscSetUtils::groupKey(const QString &labelPath, const QString &systemName) {
-    return extractBaseTitle(labelPath) + QChar('|') + systemName.trimmed();
+    return DiscSetKey::legacyLibraryGroupKey(labelPath, systemName);
 }
 
 QString DiscSetUtils::gameDiscSetKey(int gameId, int systemId) {
@@ -84,6 +68,16 @@ QString DiscSetUtils::discRowLabel(const QString &labelPath, int discNumber) {
     return labelPath;
 }
 
+QString DiscSetUtils::sanitizeFolderComponent(const QString &name) {
+    QString cleaned = name.trimmed();
+    cleaned.replace(QLatin1Char('/'), QLatin1Char('_'));
+    cleaned.replace(QLatin1Char('\\'), QLatin1Char('_'));
+    cleaned.replace(QLatin1Char(':'), QLatin1Char('_'));
+    while (cleaned.endsWith(QLatin1Char('.')) || cleaned.endsWith(QLatin1Char(' ')))
+        cleaned.chop(1);
+    return cleaned;
+}
+
 void DiscSetUtils::applyScanDiscMetadata(FileRecord &record, const QString &systemName) {
     const QString label
         = labelPath(record.currentPath, record.archivePath, record.archiveInternalPath, record.filename);
@@ -94,9 +88,10 @@ void DiscSetUtils::applyScanDiscMetadata(FileRecord &record, const QString &syst
     if (!isMultiDisc(label))
         return;
 
-    record.discNumber = extractDiscNumber(label);
+    const DiscTitleInfo parsed = DiscTitleParser::parseTitle(label);
+    record.discNumber = parsed.discNumber;
     if (record.baseTitle.isEmpty())
-        record.baseTitle = extractBaseTitle(label);
+        record.baseTitle = parsed.baseTitle;
     record.discSetKey = groupKey(label, systemName);
 }
 

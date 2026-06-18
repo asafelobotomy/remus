@@ -1,6 +1,9 @@
 #include <QtTest/QtTest>
 
+#include <QCoreApplication>
+#include <QDir>
 #include <QFile>
+#include <QFileInfo>
 #include <QSqlDatabase>
 #include <QSqlQuery>
 #include <QTemporaryDir>
@@ -12,7 +15,82 @@ class CompendiumSqlUtilitiesTest : public QObject {
 
 private slots:
     void executeSqlScript_ignoresSemicolonInsideLineComments();
+    void discSetMigration_appliesOnUpgradedBootstrap();
 };
+
+static QString repoRootPath() {
+#ifdef REMUS_SOURCE_DIR
+    return QStringLiteral(REMUS_SOURCE_DIR);
+#else
+    QDir dir(QCoreApplication::applicationDirPath());
+    for (int i = 0; i < 8; ++i) {
+        if (QFileInfo::exists(dir.filePath(QStringLiteral("data/compendium/migrations/0007_disc_sets.sql")))) {
+            return dir.absolutePath();
+        }
+        if (!dir.cdUp()) {
+            break;
+        }
+    }
+    return QString();
+#endif
+}
+
+static bool tableExists(QSqlDatabase &database, const QString &tableName) {
+    QSqlQuery query(database);
+    query.prepare(QStringLiteral("SELECT COUNT(*) FROM sqlite_master WHERE type = 'table' AND name = ?"));
+    query.addBindValue(tableName);
+    return query.exec() && query.next() && query.value(0).toInt() == 1;
+}
+
+void CompendiumSqlUtilitiesTest::discSetMigration_appliesOnUpgradedBootstrap() {
+    const QString rootPath = repoRootPath();
+    QVERIFY2(!rootPath.isEmpty(), "Could not locate repository root for compendium migrations");
+
+    const QString compendiumDir = rootPath + QStringLiteral("/data/compendium");
+    const QStringList bootstrapScripts = {
+        compendiumDir + QStringLiteral("/migrations/0001_phase1_canonical_schema.sql"),
+        compendiumDir + QStringLiteral("/migrations/0002_patch_catalog.sql"),
+        compendiumDir + QStringLiteral("/seeds/0001_regions.sql"),
+        compendiumDir + QStringLiteral("/seeds/0002_systems.sql"),
+        compendiumDir + QStringLiteral("/seeds/0003_merge_policy.sql"),
+        compendiumDir + QStringLiteral("/migrations/0003_systems_libretro_name.sql"),
+        compendiumDir + QStringLiteral("/migrations/0004_fts5_search_index.sql"),
+        compendiumDir + QStringLiteral("/migrations/0005_game_external_ids.sql"),
+        compendiumDir + QStringLiteral("/migrations/0006_game_achievement_count.sql"),
+    };
+    const QString discSetMigration = compendiumDir + QStringLiteral("/migrations/0007_disc_sets.sql");
+
+    for (const QString &scriptPath : bootstrapScripts) {
+        QVERIFY2(QFileInfo::exists(scriptPath), qPrintable(QStringLiteral("Missing migration: %1").arg(scriptPath)));
+    }
+    QVERIFY(QFileInfo::exists(discSetMigration));
+
+    QTemporaryDir tempDir;
+    QVERIFY(tempDir.isValid());
+
+    const QString dbPath = tempDir.path() + QStringLiteral("/compendium.db");
+    const QString connectionName = QStringLiteral("compendium_disc_set_migration_test");
+    {
+        QSqlDatabase database = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), connectionName);
+        database.setDatabaseName(dbPath);
+        QVERIFY2(database.open(), qPrintable(database.lastError().text()));
+
+        QString error;
+        for (const QString &scriptPath : bootstrapScripts) {
+            QVERIFY2(CompendiumSqlUtilities::executeSqlScript(database, scriptPath, error), qPrintable(error));
+        }
+        QVERIFY(!tableExists(database, QStringLiteral("game_disc_sets")));
+        QVERIFY(!tableExists(database, QStringLiteral("game_disc_tracks")));
+
+        QVERIFY2(CompendiumSqlUtilities::executeSqlScript(database, discSetMigration, error), qPrintable(error));
+        QVERIFY(tableExists(database, QStringLiteral("game_disc_sets")));
+        QVERIFY(tableExists(database, QStringLiteral("game_disc_tracks")));
+
+        database.close();
+    }
+
+    QSqlDatabase::removeDatabase(connectionName);
+}
 
 void CompendiumSqlUtilitiesTest::executeSqlScript_ignoresSemicolonInsideLineComments() {
     QTemporaryDir tempDir;

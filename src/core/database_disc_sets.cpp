@@ -1,6 +1,8 @@
 #include "database.h"
+#include "compendium_disc_bridge.h"
 #include "disc_set_utils.h"
 
+#include <QFileInfo>
 #include <QHash>
 #include <QPair>
 #include <QSqlError>
@@ -14,6 +16,7 @@ namespace {
     struct DiscSetMeta {
         QString discSetKey;
         int discNumber = 0;
+        bool fromCompendium = false;
     };
 
 } // namespace
@@ -95,12 +98,26 @@ bool Database::rebuildDiscSetsForLibrary(int libraryId) {
     if (libraryId <= 0)
         return true;
 
+    QString compendiumConnName;
+    QSqlDatabase compendiumDb;
+    const bool hasCompendium = !m_compendiumDbPath.isEmpty() && QFileInfo::exists(m_compendiumDbPath);
+    if (hasCompendium) {
+        compendiumConnName = QStringLiteral("library_compendium_%1").arg(libraryId);
+        if (QSqlDatabase::contains(compendiumConnName))
+            QSqlDatabase::removeDatabase(compendiumConnName);
+        compendiumDb = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), compendiumConnName);
+        compendiumDb.setDatabaseName(m_compendiumDbPath);
+        if (!compendiumDb.open())
+            compendiumDb = { };
+    }
+
     QSqlQuery query(m_db);
     query.prepare(QStringLiteral(R"(
         SELECT f.id, f.library_id, f.original_path, f.current_path, f.filename, f.extension,
                f.file_size, f.is_compressed, f.archive_path, f.archive_internal_path,
-               f.system_id, f.is_primary, f.base_title,
+               f.system_id, f.is_primary, f.base_title, f.crc32, f.md5, f.sha1,
                COALESCE(sys.display_name, '') AS system_name,
+               COALESCE(sys.name, '') AS system_internal_name,
                (SELECT m.game_id FROM matches m
                 WHERE m.file_id = f.id AND m.is_confirmed = 1 AND m.is_rejected = 0
                 LIMIT 1) AS confirmed_game_id
@@ -109,8 +126,15 @@ bool Database::rebuildDiscSetsForLibrary(int libraryId) {
         WHERE f.library_id = ? AND f.is_primary = 1
     )"));
     query.addBindValue(libraryId);
+    const auto closeCompendium = [&]() {
+        if (compendiumDb.isOpen()) {
+            compendiumDb.close();
+            QSqlDatabase::removeDatabase(compendiumConnName);
+        }
+    };
     if (!query.exec()) {
         logError("Failed to load files for disc set rebuild: " + query.lastError().text());
+        closeCompendium();
         return false;
     }
 
@@ -132,14 +156,45 @@ bool Database::rebuildDiscSetsForLibrary(int libraryId) {
         file.systemId = query.value(10).toInt();
         file.isPrimary = query.value(11).toBool();
         file.baseTitle = query.value(12).toString();
+        file.crc32 = query.value(13).toString();
+        file.md5 = query.value(14).toString();
+        file.sha1 = query.value(15).toString();
 
-        const QString systemName = query.value(13).toString();
-        const int confirmedGameId = query.value(14).toInt();
+        const QString systemName = query.value(16).toString();
+        const QString systemInternalName = query.value(17).toString();
+        const int confirmedGameId = query.value(18).toInt();
 
-        DiscSetUtils::applyScanDiscMetadata(file, systemName);
-        metaByFileId.insert(file.id, { file.discSetKey, file.discNumber });
+        DiscSetMeta meta;
+        if (compendiumDb.isOpen()) {
+            CompendiumFileDiscContext catalog;
+            if (lookupCompendiumDiscContextFromDb(compendiumDb,
+                    systemInternalName.isEmpty() ? systemName : systemInternalName, file.crc32, file.md5, file.sha1,
+                    catalog)
+                && catalog.found) {
+                meta.discSetKey = catalog.setKey;
+                meta.discNumber = catalog.discNumber;
+                meta.fromCompendium = true;
+            }
+        } else if (!m_compendiumDbPath.isEmpty()) {
+            CompendiumFileDiscContext catalog;
+            if (lookupCompendiumDiscContext(m_compendiumDbPath,
+                    systemInternalName.isEmpty() ? systemName : systemInternalName, file.crc32, file.md5, file.sha1,
+                    catalog)
+                && catalog.found) {
+                meta.discSetKey = catalog.setKey;
+                meta.discNumber = catalog.discNumber;
+                meta.fromCompendium = true;
+            }
+        }
 
-        if (confirmedGameId > 0 && file.systemId > 0)
+        if (!meta.fromCompendium) {
+            DiscSetUtils::applyScanDiscMetadata(file, systemName);
+            meta.discSetKey = file.discSetKey;
+            meta.discNumber = file.discNumber;
+        }
+        metaByFileId.insert(file.id, meta);
+
+        if (confirmedGameId > 0 && file.systemId > 0 && !meta.fromCompendium)
             confirmedGameGroups[{ confirmedGameId, file.systemId }].append(file.id);
     }
 
@@ -148,15 +203,16 @@ bool Database::rebuildDiscSetsForLibrary(int libraryId) {
             continue;
         const QString gameKey = DiscSetUtils::gameDiscSetKey(it.key().first, it.key().second);
         for (int fileId : it.value()) {
-            DiscSetMeta &meta = metaByFileId[fileId];
-            meta.discSetKey = gameKey;
+            DiscSetMeta &groupMeta = metaByFileId[fileId];
+            if (!groupMeta.fromCompendium)
+                groupMeta.discSetKey = gameKey;
         }
     }
 
     QHash<QString, int> keyCounts;
-    for (const DiscSetMeta &meta : metaByFileId) {
-        if (!meta.discSetKey.isEmpty())
-            ++keyCounts[meta.discSetKey];
+    for (const DiscSetMeta &entry : metaByFileId) {
+        if (!entry.discSetKey.isEmpty())
+            ++keyCounts[entry.discSetKey];
     }
 
     QSqlQuery updateQuery(m_db);
@@ -164,7 +220,7 @@ bool Database::rebuildDiscSetsForLibrary(int libraryId) {
 
     for (auto it = metaByFileId.constBegin(); it != metaByFileId.constEnd(); ++it) {
         DiscSetMeta meta = it.value();
-        if (meta.discSetKey.isEmpty() || keyCounts.value(meta.discSetKey, 0) < 2) {
+        if (!meta.fromCompendium && (meta.discSetKey.isEmpty() || keyCounts.value(meta.discSetKey, 0) < 2)) {
             meta.discSetKey.clear();
             meta.discNumber = 0;
         }
@@ -174,10 +230,12 @@ bool Database::rebuildDiscSetsForLibrary(int libraryId) {
         updateQuery.addBindValue(it.key());
         if (!updateQuery.exec()) {
             logError("Failed to update disc set metadata: " + updateQuery.lastError().text());
+            closeCompendium();
             return false;
         }
     }
 
+    closeCompendium();
     return true;
 }
 
@@ -186,6 +244,10 @@ bool Database::reconcileDiscSetForConfirmedFile(int fileId) {
     if (file.id <= 0)
         return false;
     return rebuildDiscSetsForLibrary(file.libraryId);
+}
+
+void Database::setCompendiumDbPath(const QString &path) {
+    m_compendiumDbPath = path.trimmed();
 }
 
 } // namespace Remus

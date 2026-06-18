@@ -21,15 +21,17 @@ SQL_STEPS=(
     "$ROOT_DIR/data/compendium/migrations/0004_fts5_search_index.sql"
     "$ROOT_DIR/data/compendium/migrations/0005_game_external_ids.sql"
     "$ROOT_DIR/data/compendium/migrations/0006_game_achievement_count.sql"
+    "$ROOT_DIR/data/compendium/migrations/0007_disc_sets.sql"
 )
 VALIDATION_SQL="$ROOT_DIR/data/compendium/validation/0001_phase1_checks.sql"
+DISC_SET_VALIDATION_SQL="$ROOT_DIR/data/compendium/validation/0004_disc_set_checks.sql"
 
 if ! command -v sqlite3 >/dev/null 2>&1; then
     echo "error: sqlite3 is required but not installed" >&2
     exit 1
 fi
 
-for sql_file in "${SQL_STEPS[@]}" "$VALIDATION_SQL"; do
+for sql_file in "${SQL_STEPS[@]}" "$VALIDATION_SQL" "$DISC_SET_VALIDATION_SQL"; do
     if [[ ! -f "$sql_file" ]]; then
         echo "error: missing SQL file: $sql_file" >&2
         exit 1
@@ -51,6 +53,9 @@ echo "merge_policy_count=$(sqlite3 "$DB_PATH" "SELECT COUNT(*) FROM merge_policy
 
 echo "==> SQLite integrity check"
 sqlite3 "$DB_PATH" "PRAGMA integrity_check;"
+
+echo "==> Disc set schema checks (migration 0007)"
+sqlite3 -header -column "$DB_PATH" < "$DISC_SET_VALIDATION_SQL"
 
 echo "==> Fresh bootstrap notes"
 echo "Run the full validator after ingest/build populates games, signatures, and source items:"

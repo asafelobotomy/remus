@@ -287,7 +287,8 @@ If compendium-native multi-disc queries are needed beyond title merge:
 | `disc_number` on `game_signatures` | Minimal schema change | Harder to query full disc sets |
 | Title merge only (current) | No work | No explicit disc index |
 
-For most Remus use cases, **Tier 2 + title merge** is sufficient before a `game_discs` table.
+For most Remus use cases, **Tier 2 + title merge** was sufficient before explicit disc tables.
+Full implementation plan: [COMPENDIUM-DISC-SETS-PLAN.md](COMPENDIUM-DISC-SETS-PLAN.md).
 
 ### Tier 4 — CHD/RVZ at library scan (defer)
 

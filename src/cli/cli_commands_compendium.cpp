@@ -5,6 +5,7 @@
 
 #include "../core/compendium_manifest_parser.h"
 #include "../metadata/compendium_compiler_service.h"
+#include "../core/constants/constants.h"
 
 #include <QDateTime>
 #include <QDebug>
@@ -151,6 +152,7 @@ int handleBuildCompendiumCommand(CliContext &ctx) {
         QDir(compendiumDir).filePath(QStringLiteral("migrations/0004_fts5_search_index.sql")),
         QDir(compendiumDir).filePath(QStringLiteral("migrations/0005_game_external_ids.sql")),
         QDir(compendiumDir).filePath(QStringLiteral("migrations/0006_game_achievement_count.sql")),
+        QDir(compendiumDir).filePath(QStringLiteral("migrations/0007_disc_sets.sql")),
     };
 
     QString buildId;
@@ -497,12 +499,16 @@ int handleBuildCompendiumCommand(CliContext &ctx) {
     QJsonObject report;
     report.insert(QStringLiteral("build_id"), buildId);
     report.insert(QStringLiteral("schema_version"), schemaVersion);
+    report.insert(QStringLiteral("compendium_migration_version"),
+        Constants::DatabaseSchema::Compendium::MIGRATION_VERSION);
     report.insert(QStringLiteral("input_sources"), sourceObjects);
     report.insert(QStringLiteral("records_ingested"), stats.recordsIngested);
     report.insert(QStringLiteral("games_created"), stats.gamesCreated);
     report.insert(QStringLiteral("games_deduplicated"), stats.deduplicatedGames);
     report.insert(QStringLiteral("signatures_created"), stats.signaturesCreated);
     report.insert(QStringLiteral("serials_created"), stats.serialsCreated);
+    report.insert(QStringLiteral("disc_sets_created"), stats.discSetsCreated);
+    report.insert(QStringLiteral("tracks_created"), stats.tracksCreated);
     report.insert(QStringLiteral("facts_created"), stats.factsCreated);
     report.insert(QStringLiteral("resolved_fields"), stats.resolvedFields);
     report.insert(QStringLiteral("unresolved_conflicts"), conflictsCount);

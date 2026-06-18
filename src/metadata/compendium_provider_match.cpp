@@ -203,6 +203,7 @@ QList<CompendiumMultiSignalMatch> CompendiumProvider::matchROM(const ROMSignals 
                 match.romSize = payload.size;
             }
             applyCorroboration(input, payload, payload.serial, match);
+            applyDiscContextToMatch(input, match);
         }
     }
 
@@ -253,6 +254,7 @@ QList<CompendiumMultiSignalMatch> CompendiumProvider::matchROM(const ROMSignals 
                     match.confidenceScore += SERIAL_BONUS;
                     match.matchSignalCount++;
                 }
+                applyDiscContextToMatch(input, match);
                 matches.append(match);
                 matchedVia = QStringLiteral("filename+size");
                 break;
@@ -288,6 +290,7 @@ QList<CompendiumMultiSignalMatch> CompendiumProvider::matchROM(const ROMSignals 
                 match.romSize = payload.size;
             }
             applyCorroboration(input, payload, entrySerial, match);
+            applyDiscContextToMatch(input, match);
             matches.append(match);
             matchedVia = QStringLiteral("serial");
         };
@@ -377,6 +380,14 @@ GameMetadata CompendiumProvider::metadataFromMatch(
         metadata.matchMethod = match.confidencePercent() >= Constants::Confidence::Thresholds::EXACT_NAME
             ? QString::fromLatin1(Constants::MatchMethods::NAME)
             : QString::fromLatin1(Constants::MatchMethods::FUZZY);
+    }
+
+    if (!match.setKey.isEmpty()) {
+        metadata.setKey = match.setKey;
+        metadata.matchedDiscNumber = match.catalogDiscNumber;
+        metadata.catalogDiscCount = match.catalogDiscCount;
+    } else {
+        populateDiscContextFromSourceEntry(metadata, match.sourceEntryKey);
     }
 
     return metadata;

@@ -1,11 +1,13 @@
 #include "compendium_dat_extractor.h"
 
 #include "../core/dat_parser.h"
+#include "../core/disc_title_parser.h"
 
 #include <QFile>
 #include <QFileInfo>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QMap>
 
 namespace Remus {
 namespace Compendium {
@@ -41,8 +43,8 @@ namespace Compendium {
         return false;
     }
 
-    static SourceRecordEnvelope envelopeFromEntry(
-        const QString &sourceId, const QString &snapshotId, const QString &systemHint, const ClrMameProEntry &entry) {
+    static SourceRecordEnvelope envelopeFromEntry(const QString &sourceId, const QString &snapshotId,
+        const QString &systemHint, const ClrMameProEntry &entry, const DatGameBlock &block, int trackIndex) {
         SourceRecordEnvelope rec;
 
         rec.sourceId = sourceId;
@@ -52,6 +54,20 @@ namespace Compendium {
         rec.systemHint = systemHint;
         rec.titleRaw = entry.gameName;
         rec.regionRaw = entry.region;
+
+        rec.datGameBlockName = block.gameName;
+        rec.datRomName = entry.romName;
+        rec.trackIndex = trackIndex;
+        rec.parsedDiscNumber = block.titleInfo.discNumber;
+        rec.parsedDiscCount = block.titleInfo.discCount;
+        rec.parsedSetVariant = block.titleInfo.setVariant.isNull() ? QStringLiteral("") : block.titleInfo.setVariant;
+        rec.parsedSetRole = block.titleInfo.setRole.isEmpty() ? QStringLiteral("game") : block.titleInfo.setRole;
+
+        const QString lowerRom = entry.romName.toLower();
+        if ((lowerRom.endsWith(QStringLiteral(".chd")) || lowerRom.endsWith(QStringLiteral(".rvz")))
+            && entry.sha1.trimmed().size() == 40) {
+            rec.primaryContentSha1 = entry.sha1.trimmed().toLower();
+        }
 
         rec.hashes.crc32 = DatExtractor::normalizeHash(entry.crc32);
         rec.hashes.md5 = entry.md5.trimmed().toLower();
@@ -91,7 +107,7 @@ namespace Compendium {
     // Given a list of entries that all share the same gameName (i.e., multiple
     // rom-track entries from one game block), return every data-track ROM.
     // Skips .cue/.m3u metadata entries; falls back to the first entry if none remain.
-    static QList<ClrMameProEntry> dataTracksForGame(const QList<ClrMameProEntry> &group) {
+    QList<ClrMameProEntry> DatExtractor::dataTracksForBlock(const QList<ClrMameProEntry> &group) {
         if (group.size() <= 1)
             return group;
 
@@ -104,6 +120,23 @@ namespace Compendium {
         if (tracks.isEmpty())
             tracks.append(group.first());
         return tracks;
+    }
+
+    QList<DatGameBlock> DatExtractor::groupGameBlocks(const QList<ClrMameProEntry> &entries) {
+        QMap<QString, QList<ClrMameProEntry>> groups;
+        for (const ClrMameProEntry &entry : entries)
+            groups[entry.gameName].append(entry);
+
+        QList<DatGameBlock> blocks;
+        blocks.reserve(groups.size());
+        for (auto it = groups.cbegin(), end = groups.cend(); it != end; ++it) {
+            DatGameBlock block;
+            block.gameName = it.key();
+            block.titleInfo = DiscTitleParser::parseTitle(block.gameName);
+            block.tracks = dataTracksForBlock(*it);
+            blocks.append(block);
+        }
+        return blocks;
     }
 
     static ClrMameProEntry datRomEntryToClrMame(const Remus::DatRomEntry &src) {
@@ -210,16 +243,43 @@ namespace Compendium {
 
         // Group by gameName and emit one envelope per data track (Redump multi-track).
         // Meta-only rows (.cue, .m3u, …) are skipped; each disc track keeps its hash.
-        QMap<QString, QList<ClrMameProEntry>> groups;
-        for (const ClrMameProEntry &e : entries)
-            groups[e.gameName].append(e);
+        const QList<DatGameBlock> blocks = groupGameBlocks(entries);
+
+        QMap<QString, int> inferredDiscCountByIdentity;
+        {
+            QMap<QString, int> maxDiscNumberByIdentity;
+            QMap<QString, int> explicitDiscCountByIdentity;
+            for (const DatGameBlock &block : blocks) {
+                const QString identityKey = block.titleInfo.identityBase;
+                maxDiscNumberByIdentity[identityKey]
+                    = qMax(maxDiscNumberByIdentity.value(identityKey, 0), block.titleInfo.discNumber);
+                if (block.titleInfo.discCount > 0) {
+                    explicitDiscCountByIdentity[identityKey]
+                        = qMax(explicitDiscCountByIdentity.value(identityKey, 0), block.titleInfo.discCount);
+                }
+            }
+            for (auto it = maxDiscNumberByIdentity.cbegin(), end = maxDiscNumberByIdentity.cend(); it != end; ++it) {
+                const int explicitCount = explicitDiscCountByIdentity.value(it.key(), 0);
+                int count = explicitCount > 0 ? explicitCount : it.value();
+                if (count <= 0)
+                    count = 1;
+                inferredDiscCountByIdentity.insert(it.key(), count);
+            }
+        }
 
         QList<SourceRecordEnvelope> records;
-        for (auto it = groups.cbegin(), end = groups.cend(); it != end; ++it) {
-            const QList<ClrMameProEntry> tracks = dataTracksForGame(*it);
-            records.reserve(records.size() + tracks.size());
-            for (const ClrMameProEntry &entry : tracks)
-                records.append(envelopeFromEntry(sourceId, snapshotId, systemHint, entry));
+        for (const DatGameBlock &block : blocks) {
+            const int discCount = inferredDiscCountByIdentity.value(block.titleInfo.identityBase, 1);
+            DatGameBlock enriched = block;
+            if (enriched.titleInfo.discCount <= 0)
+                enriched.titleInfo.discCount = discCount;
+
+            records.reserve(records.size() + enriched.tracks.size());
+            int trackIndex = 0;
+            for (const ClrMameProEntry &entry : enriched.tracks) {
+                ++trackIndex;
+                records.append(envelopeFromEntry(sourceId, snapshotId, systemHint, entry, enriched, trackIndex));
+            }
         }
 
         return records;

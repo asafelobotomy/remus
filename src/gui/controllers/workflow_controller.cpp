@@ -10,6 +10,7 @@
 #include "settings_controller.h"
 
 #include "../../core/disc_set_utils.h"
+#include "../../core/compendium_disc_bridge.h"
 
 #include <QDir>
 #include <QFileInfo>
@@ -20,6 +21,7 @@
 #include <QSqlError>
 #include <QSqlQuery>
 #include <QStandardPaths>
+#include <QDateTime>
 #include <algorithm>
 
 namespace Remus {
@@ -186,6 +188,27 @@ void WorkflowController::refreshQueueFiles() {
     }
 
     QSqlDatabase db = m_appController->database()->database();
+    QString catalogConn;
+    QSqlDatabase catalogDb;
+    const QString compendiumPath = m_appController->database()->compendiumDbPath();
+    if (!compendiumPath.isEmpty() && QFileInfo::exists(compendiumPath)) {
+        catalogConn = QStringLiteral("workflow_catalog_%1").arg(QDateTime::currentMSecsSinceEpoch());
+        catalogDb = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), catalogConn);
+        catalogDb.setDatabaseName(compendiumPath);
+        if (!catalogDb.open()) {
+            QSqlDatabase::removeDatabase(catalogConn);
+            catalogConn.clear();
+        }
+    }
+    const auto closeCatalog = [&]() {
+        if (!catalogConn.isEmpty()) {
+            if (catalogDb.isOpen())
+                catalogDb.close();
+            QSqlDatabase::removeDatabase(catalogConn);
+            catalogConn.clear();
+        }
+    };
+
     QSqlQuery q(db);
 
     // Columns: 0=id, 1=filename, 2=current_path, 3=md5, 4=base_title, 5=extension,
@@ -400,12 +423,24 @@ void WorkflowController::refreshQueueFiles() {
             }
             const int memberTotal = memberIndices.size();
 
+            int catalogDiscCount = 0;
+            if (catalogDb.isOpen()) {
+                CatalogDiscSetSummary summary;
+                if (lookupCatalogDiscSetSummary(catalogDb, groupKey, summary) && summary.found)
+                    catalogDiscCount = summary.catalogDiscCount;
+            }
+
             QVariantMap header;
             header[QStringLiteral("rowType")] = QStringLiteral("group");
             header[QStringLiteral("groupKey")] = groupKey;
             header[QStringLiteral("filename")] = groupTitle;
             header[QStringLiteral("systemName")] = first.value(QStringLiteral("systemName"));
             header[QStringLiteral("discCount")] = memberTotal;
+            header[QStringLiteral("catalogDiscCount")] = catalogDiscCount;
+            header[QStringLiteral("discProgress")]
+                = catalogDiscCount > 0 ? QStringLiteral("%1/%2").arg(memberTotal).arg(catalogDiscCount)
+                                     : QStringLiteral("%1").arg(memberTotal);
+            header[QStringLiteral("discSetComplete")] = catalogDiscCount <= 0 || memberTotal >= catalogDiscCount;
             header[QStringLiteral("expanded")] = expanded;
             header[QStringLiteral("releaseYear")] = first.value(QStringLiteral("releaseYear"));
             header[QStringLiteral("hasMatch")] = matchedCount == memberTotal;
@@ -451,6 +486,7 @@ void WorkflowController::refreshQueueFiles() {
         m_queueFiles.append(source);
     }
 
+    closeCatalog();
     emit queueFilesChanged();
 }
 

@@ -153,7 +153,7 @@ Remus must store **SHA1** (header), not Data SHA1, in `files.chd_sha1`. See `CHD
 | `HASHEOUS_BASE_URL` config | **Done** | `REMUS_HASHEOUS_BASE_URL`, settings `hasheous/base_url`, `--hasheous-base-url` |
 | CSO via maxcso | **Done** | `--cso-verify` round-trip decompress check |
 | CHD v5 in-process header read | **Done** | `readChdHeaderDigest()`; backfill/hash without `chdman` for v5 |
-| `game_discs` compendium table | Defer | Title merge + multi-signature sufficient |
+| `game_discs` compendium table | **Plan** | See [COMPENDIUM-DISC-SETS-PLAN.md](COMPENDIUM-DISC-SETS-PLAN.md) — `game_disc_sets` + `game_disc_tracks` |
 
 ---
 

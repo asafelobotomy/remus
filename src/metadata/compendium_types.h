@@ -58,6 +58,16 @@ namespace Compendium {
         // Resolved canonical system/region from normalization pass
         int resolvedSystemId = 0; // 0 = unresolved
         QString resolvedRegionCode; // empty = unresolved
+
+        // Disc set topology (Phase 2 — one DAT game block → one game_disc_sets row)
+        QString datGameBlockName; // DAT @c gameName ; groups multi-track rows
+        QString datRomName; // ROM filename within the block
+        int trackIndex = 0; // 1-based index within the block
+        int parsedDiscNumber = 0;
+        int parsedDiscCount = 0; // 0 when unknown until batch inference
+        QString parsedSetVariant;
+        QString parsedSetRole;
+        QString primaryContentSha1; // CHD/RVZ content digest when known
     };
 
     // ── Compiler run statistics ───────────────────────────────────────────────────
@@ -74,6 +84,8 @@ namespace Compendium {
         int unresolvedConflicts = 0;
         int skippedDisabled = 0;
         int collisionHashSkipped = 0;
+        int discSetsCreated = 0;
+        int tracksCreated = 0;
     };
 
 } // namespace Compendium

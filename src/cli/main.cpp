@@ -13,6 +13,7 @@
 #include "cli_helpers.h"
 #include "cli_options.h"
 #include "../core/constants/constants.h"
+#include "../core/compendium_disc_bridge.h"
 #include "cli_logging.h"
 
 using namespace Remus;
@@ -162,6 +163,10 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
+    const QString compendiumPath = resolveBundledCompendiumDbPath();
+    if (!compendiumPath.isEmpty())
+        db.setCompendiumDbPath(compendiumPath);
+
     SystemDetector detector;
 
     CliContext ctx { parser, db, detector,
@@ -264,6 +269,8 @@ int main(int argc, char *argv[]) {
         return rc;
     if (int rc = handleVerifyCommand(ctx))
         return rc;
+    if (int rc = handleVerifySetCommand(ctx))
+        return rc;
     if (int rc = handlePatchDatCommand(ctx))
         return rc;
     if (int rc = handleArtworkCommand(ctx))
@@ -322,7 +329,11 @@ int main(int argc, char *argv[]) {
         return rc;
     if (int rc = handleIngestSourceCommand(ctx))
         return rc;
+    if (int rc = handleBackfillDiscSetsCommand(ctx))
+        return rc;
     if (int rc = handleCoverageReportCommand(ctx))
+        return rc;
+    if (int rc = handleDiscSetCoverageCommand(ctx))
         return rc;
     if (int rc = handleUpdateDatsCommand(ctx))
         return rc;

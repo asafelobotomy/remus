@@ -1,13 +1,47 @@
 #include "m3u_generator.h"
+#include "compendium_disc_bridge.h"
 #include "constants/files.h"
 #include <QFile>
 #include <QFileInfo>
 #include <QDir>
 #include <QTextStream>
 #include <QDebug>
+#include <QDateTime>
+#include <QSqlQuery>
 #include <algorithm>
 
 namespace Remus {
+
+namespace {
+
+    QSqlDatabase openCatalogDatabase(Database &database, QString &connectionName) {
+        const QString path = database.compendiumDbPath();
+        if (path.isEmpty() || !QFileInfo::exists(path))
+            return { };
+
+        connectionName = QStringLiteral("m3u_catalog_%1").arg(QDateTime::currentMSecsSinceEpoch());
+        QSqlDatabase db = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), connectionName);
+        db.setDatabaseName(path);
+        if (!db.open()) {
+            QSqlDatabase::removeDatabase(connectionName);
+            connectionName.clear();
+            return { };
+        }
+        return db;
+    }
+
+    void closeCatalogDatabase(const QString &connectionName) {
+        if (connectionName.isEmpty())
+            return;
+        if (QSqlDatabase::contains(connectionName)) {
+            QSqlDatabase db = QSqlDatabase::database(connectionName);
+            if (db.isOpen())
+                db.close();
+            QSqlDatabase::removeDatabase(connectionName);
+        }
+    }
+
+} // namespace
 
 M3UGenerator::M3UGenerator(Database &db, QObject *parent)
     : QObject(parent)
@@ -66,6 +100,10 @@ int M3UGenerator::generateAll(const QString &systemName, const QString &outputDi
         return 0;
     }
 
+    QString catalogConn;
+    QSqlDatabase catalogDb = openCatalogDatabase(m_database, catalogConn);
+    QSqlDatabase *catalogPtr = catalogDb.isOpen() ? &catalogDb : nullptr;
+
     int generated = 0;
 
     for (auto it = multiDiscGames.constBegin(); it != multiDiscGames.constEnd(); ++it) {
@@ -75,13 +113,13 @@ int M3UGenerator::generateAll(const QString &systemName, const QString &outputDi
             if (file.id > 0)
                 fileInfos.append(file);
         }
-        fileInfos = sortByDiscNumber(fileInfos);
+        fileInfos = sortByDiscNumber(fileInfos, catalogPtr);
 
         QStringList discPaths;
         for (const FileRecord &file : fileInfos)
             discPaths.append(file.currentPath);
 
-        const QString baseTitle = titleForDiscSet(fileInfos);
+        const QString baseTitle = titleForDiscSet(fileInfos, catalogPtr);
         QString m3uPath;
         if (!outputDir.isEmpty()) {
             m3uPath = QDir(outputDir).filePath(baseTitle + Constants::Files::M3U);
@@ -94,6 +132,7 @@ int M3UGenerator::generateAll(const QString &systemName, const QString &outputDi
             ++generated;
     }
 
+    closeCatalogDatabase(catalogConn);
     qInfo() << "Generated" << generated << "M3U playlists";
     return generated;
 }
@@ -105,6 +144,10 @@ int M3UGenerator::generateAll(const QSet<int> &fileIds, const QString &outputDir
         return 0;
     }
 
+    QString catalogConn;
+    QSqlDatabase catalogDb = openCatalogDatabase(m_database, catalogConn);
+    QSqlDatabase *catalogPtr = catalogDb.isOpen() ? &catalogDb : nullptr;
+
     int generated = 0;
 
     for (auto it = multiDiscGames.constBegin(); it != multiDiscGames.constEnd(); ++it) {
@@ -114,13 +157,13 @@ int M3UGenerator::generateAll(const QSet<int> &fileIds, const QString &outputDir
             if (file.id > 0)
                 fileInfos.append(file);
         }
-        fileInfos = sortByDiscNumber(fileInfos);
+        fileInfos = sortByDiscNumber(fileInfos, catalogPtr);
 
         QStringList discPaths;
         for (const FileRecord &file : fileInfos)
             discPaths.append(file.currentPath);
 
-        const QString baseTitle = titleForDiscSet(fileInfos);
+        const QString baseTitle = titleForDiscSet(fileInfos, catalogPtr);
         QString m3uPath;
         if (!outputDir.isEmpty()) {
             m3uPath = QDir(outputDir).filePath(baseTitle + Constants::Files::M3U);
@@ -133,6 +176,7 @@ int M3UGenerator::generateAll(const QSet<int> &fileIds, const QString &outputDir
             ++generated;
     }
 
+    closeCatalogDatabase(catalogConn);
     qInfo() << "Generated" << generated << "M3U playlists";
     return generated;
 }
@@ -160,15 +204,35 @@ QMap<QString, QList<int>> M3UGenerator::groupByDiscSetKey(const QList<FileRecord
     return groups;
 }
 
-QList<FileRecord> M3UGenerator::sortByDiscNumber(const QList<FileRecord> &files) const {
+int M3UGenerator::catalogDiscNumberForFile(const FileRecord &file, QSqlDatabase *compendiumDb) const {
+    if (file.discNumber > 0)
+        return file.discNumber;
+
+    if (compendiumDb != nullptr && compendiumDb->isOpen()) {
+        QSqlQuery sysQuery(m_database.database());
+        sysQuery.prepare(QStringLiteral("SELECT name FROM systems WHERE id = ? LIMIT 1"));
+        sysQuery.addBindValue(file.systemId);
+        QString systemInternalName;
+        if (sysQuery.exec() && sysQuery.next())
+            systemInternalName = sysQuery.value(0).toString();
+
+        CompendiumFileDiscContext catalog;
+        if (lookupCompendiumDiscContextFromDb(*compendiumDb, systemInternalName, file.crc32, file.md5, file.sha1,
+                catalog)
+            && catalog.found && catalog.discNumber > 0) {
+            return catalog.discNumber;
+        }
+    }
+
+    return DiscSetUtils::extractDiscNumber(
+        DiscSetUtils::labelPath(file.currentPath, file.archivePath, file.archiveInternalPath, file.filename));
+}
+
+QList<FileRecord> M3UGenerator::sortByDiscNumber(const QList<FileRecord> &files, QSqlDatabase *compendiumDb) const {
     QList<FileRecord> sorted = files;
-    std::sort(sorted.begin(), sorted.end(), [](const FileRecord &a, const FileRecord &b) {
-        const int discA = a.discNumber > 0 ? a.discNumber
-                                           : DiscSetUtils::extractDiscNumber(DiscSetUtils::labelPath(
-                                                 a.currentPath, a.archivePath, a.archiveInternalPath, a.filename));
-        const int discB = b.discNumber > 0 ? b.discNumber
-                                           : DiscSetUtils::extractDiscNumber(DiscSetUtils::labelPath(
-                                                 b.currentPath, b.archivePath, b.archiveInternalPath, b.filename));
+    std::sort(sorted.begin(), sorted.end(), [this, compendiumDb](const FileRecord &a, const FileRecord &b) {
+        const int discA = catalogDiscNumberForFile(a, compendiumDb);
+        const int discB = catalogDiscNumberForFile(b, compendiumDb);
         if (discA != discB)
             return discA < discB;
         return a.filename < b.filename;
@@ -176,10 +240,17 @@ QList<FileRecord> M3UGenerator::sortByDiscNumber(const QList<FileRecord> &files)
     return sorted;
 }
 
-QString M3UGenerator::titleForDiscSet(const QList<FileRecord> &files) const {
+QString M3UGenerator::titleForDiscSet(const QList<FileRecord> &files, QSqlDatabase *compendiumDb) const {
     if (files.isEmpty())
         return QString();
+
     const FileRecord &first = files.first();
+    if (compendiumDb != nullptr && compendiumDb->isOpen() && !first.discSetKey.isEmpty()) {
+        CatalogDiscSetSummary summary;
+        if (lookupCatalogDiscSetSummary(*compendiumDb, first.discSetKey, summary) && !summary.baseTitle.isEmpty())
+            return summary.baseTitle;
+    }
+
     const QString fromLabel = DiscSetUtils::extractBaseTitle(
         DiscSetUtils::labelPath(first.currentPath, first.archivePath, first.archiveInternalPath, first.filename));
     if (!fromLabel.isEmpty())

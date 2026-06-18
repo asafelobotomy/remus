@@ -3,13 +3,16 @@
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
+#include <QSqlDatabase>
 #include <QSqlError>
 #include <QSqlQuery>
 #include <QStandardPaths>
+#include <QDateTime>
 
 #include "../../metadata/metadata_cache.h"
 #include "../../metadata/provider_orchestrator.h"
 #include "../../core/disc_set_utils.h"
+#include "../../core/compendium_disc_bridge.h"
 
 namespace Remus {
 
@@ -262,9 +265,29 @@ QVariantMap AppController::buildSelectedFileData() {
         }
         result.insert(QStringLiteral("discSetMembers"), members);
         result.insert(QStringLiteral("discSetMemberCount"), members.size());
+
+        int catalogDiscCount = 0;
+        const QString compendiumPath = m_database.compendiumDbPath();
+        if (!compendiumPath.isEmpty() && QFileInfo::exists(compendiumPath)) {
+            const QString connectionName
+                = QStringLiteral("inspector_catalog_%1").arg(QDateTime::currentMSecsSinceEpoch());
+            QSqlDatabase catalogDb = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), connectionName);
+            catalogDb.setDatabaseName(compendiumPath);
+            if (catalogDb.open()) {
+                CatalogDiscSetSummary summary;
+                if (lookupCatalogDiscSetSummary(catalogDb, file.discSetKey, summary) && summary.found)
+                    catalogDiscCount = summary.catalogDiscCount;
+                catalogDb.close();
+                QSqlDatabase::removeDatabase(connectionName);
+            }
+        }
+        result.insert(QStringLiteral("catalogDiscCount"), catalogDiscCount);
+        result.insert(QStringLiteral("discSetComplete"), catalogDiscCount <= 0 || members.size() >= catalogDiscCount);
     } else {
         result.insert(QStringLiteral("discSetMembers"), QVariantList());
         result.insert(QStringLiteral("discSetMemberCount"), 0);
+        result.insert(QStringLiteral("catalogDiscCount"), 0);
+        result.insert(QStringLiteral("discSetComplete"), true);
     }
 
     return result;

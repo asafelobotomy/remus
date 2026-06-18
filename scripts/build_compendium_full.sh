@@ -277,6 +277,17 @@ if ! $SKIP_VALIDATION; then
             "$OUTPUT_DB" "$ROOT_DIR/data/compendium/validation/0003_phase2_extended_checks.sql" \
             || echo "warning: one or more phase-2 extended checks failed (see above)" >&2
     fi
+    if [[ -f "$ROOT_DIR/data/compendium/validation/0004_disc_set_checks.sql" ]]; then
+        echo "==> Disc set schema checks (migration 0007)"
+        bash "$ROOT_DIR/.github/scripts/validate-compendium-db.sh" \
+            "$OUTPUT_DB" "$ROOT_DIR/data/compendium/validation/0004_disc_set_checks.sql"
+    fi
+    if [[ -f "$ROOT_DIR/data/compendium/validation/0005_disc_set_ingest_checks.sql" ]]; then
+        echo "==> Disc set ingest checks (strict: FAIL only; use --strict to fail on WARN)"
+        bash "$ROOT_DIR/.github/scripts/validate-compendium-db.sh" \
+            "$OUTPUT_DB" "$ROOT_DIR/data/compendium/validation/0005_disc_set_ingest_checks.sql" \
+            --warn-only
+    fi
 fi
 
 # Emit a machine-friendly per-source coverage report via remus-cli --coverage-report.

@@ -8,6 +8,7 @@
 
 #include "../src/metadata/compendium_provider.h"
 #include "../src/core/constants/providers.h"
+#include "../src/core/disc_set_key.h"
 
 using namespace Remus;
 
@@ -63,7 +64,23 @@ bool createSchema(QSqlDatabase &db) {
                            "entry_id INTEGER PRIMARY KEY AUTOINCREMENT, source_id INTEGER NOT NULL, "
                            "game_name TEXT NOT NULL, rom_name TEXT NOT NULL, rom_size INTEGER, "
                            "crc32 TEXT, md5 TEXT, sha1 TEXT, description TEXT, status TEXT, "
-                           "base_title TEXT, patch_name TEXT, file_type TEXT)"));
+                           "base_title TEXT, patch_name TEXT, file_type TEXT)"))
+        && execSql(db,
+            QStringLiteral("CREATE TABLE sources (source_id TEXT PRIMARY KEY, display_name TEXT NOT NULL, "
+                           "source_type TEXT NOT NULL, priority INTEGER NOT NULL DEFAULT 100)"))
+        && execSql(db,
+            QStringLiteral("CREATE TABLE source_snapshots (snapshot_id TEXT PRIMARY KEY, source_id TEXT NOT NULL, "
+                           "snapshot_label TEXT NOT NULL DEFAULT '')"))
+        && execSql(db,
+            QStringLiteral("CREATE TABLE game_disc_sets (disc_set_id INTEGER PRIMARY KEY AUTOINCREMENT, game_id TEXT "
+                           "NOT NULL, set_key TEXT NOT NULL, disc_number INTEGER NOT NULL DEFAULT 0, disc_count INTEGER "
+                           "NOT NULL DEFAULT 0, set_variant TEXT NOT NULL DEFAULT '', set_role TEXT NOT NULL DEFAULT "
+                           "'game', title_disc TEXT NOT NULL, source_id TEXT NOT NULL, snapshot_id TEXT NOT NULL DEFAULT "
+                           "'', source_item_id INTEGER, primary_content_sha1 TEXT)"))
+        && execSql(db,
+            QStringLiteral("CREATE TABLE game_disc_tracks (track_id INTEGER PRIMARY KEY AUTOINCREMENT, disc_set_id "
+                           "INTEGER NOT NULL, track_index INTEGER NOT NULL DEFAULT 1, rom_name TEXT NOT NULL, "
+                           "signature_id INTEGER, source_entry_key TEXT NOT NULL UNIQUE)"));
 }
 
 int insertFact(QSqlDatabase &db, const QString &gameId, const QString &fieldName, const QString &fieldValue) {
@@ -194,6 +211,79 @@ QString createFixtureDatabase() {
     return dbPath;
 }
 
+QString createDiscSetFixtureDatabase() {
+    QTemporaryDir dir;
+    dir.setAutoRemove(false);
+    const QString dbPath = dir.filePath(QStringLiteral("remus_compendium_disc_sets_test.db"));
+
+    const QString connectionName
+        = QStringLiteral("compendium_disc_fixture_%1").arg(QString::number(QDateTime::currentMSecsSinceEpoch()));
+    {
+        QSqlDatabase db = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), connectionName);
+        db.setDatabaseName(dbPath);
+        if (!db.open())
+            return { };
+
+        if (!createSchema(db))
+            return { };
+
+        const QString setKey = DiscSetKey::compute(
+            14, QStringLiteral("Final Fantasy VII (USA) (Disc 1)"), QStringLiteral("USA"));
+        const QString entry1 = QStringLiteral("Sony - PlayStation|Final Fantasy VII (USA) (Disc 1)|FF7 Disc 1.bin");
+        const QString entry2 = QStringLiteral("Sony - PlayStation|Final Fantasy VII (USA) (Disc 2)|FF7 Disc 2.bin");
+        const QString entry3 = QStringLiteral("Sony - PlayStation|Final Fantasy VII (USA) (Disc 3)|FF7 Disc 3.bin");
+
+        const bool seeded = execSql(db,
+                                QStringLiteral("INSERT INTO systems (system_id, internal_name, display_name, "
+                                               "libretro_name) VALUES (14, 'PlayStation', 'Sony PlayStation', "
+                                               "'Sony - PlayStation')"))
+            && execSql(db,
+                QStringLiteral("INSERT INTO sources (source_id, display_name, source_type, priority) "
+                               "VALUES ('redump', 'Redump', 'dat', 10)"))
+            && execSql(db,
+                QStringLiteral("INSERT INTO source_snapshots (snapshot_id, source_id, snapshot_label) "
+                               "VALUES ('snap-1', 'redump', 'test')"))
+            && execSql(db,
+                QStringLiteral("INSERT INTO games (game_id, system_id, canonical_title, primary_region_code, "
+                               "canonical_confidence) VALUES ('ff7', 14, 'Final Fantasy VII', 'USA', 0.99)"))
+            && execSql(db,
+                QStringLiteral("INSERT INTO game_signatures (game_id, hash_type, hash_value, source_entry_key, "
+                               "confidence, is_primary) VALUES "
+                               "('ff7', 'md5', '11111111111111111111111111111111', '%1', 1.0, 1), "
+                               "('ff7', 'md5', '22222222222222222222222222222222', '%2', 1.0, 1), "
+                               "('ff7', 'md5', '33333333333333333333333333333333', '%3', 1.0, 1)")
+                    .arg(entry1, entry2, entry3))
+            && execSql(db,
+                QStringLiteral("INSERT INTO game_disc_sets (game_id, set_key, disc_number, disc_count, set_variant, "
+                               "set_role, title_disc, source_id, snapshot_id) VALUES "
+                               "('ff7', '%1', 1, 3, '', 'game', 'Final Fantasy VII (USA) (Disc 1)', 'redump', "
+                               "'snap-1'), "
+                               "('ff7', '%1', 2, 3, '', 'game', 'Final Fantasy VII (USA) (Disc 2)', 'redump', "
+                               "'snap-1'), "
+                               "('ff7', '%1', 3, 3, '', 'game', 'Final Fantasy VII (USA) (Disc 3)', 'redump', "
+                               "'snap-1')")
+                    .arg(setKey))
+            && execSql(db,
+                QStringLiteral("INSERT INTO game_disc_tracks (disc_set_id, track_index, rom_name, signature_id, "
+                               "source_entry_key) VALUES "
+                               "(1, 1, 'FF7 Disc 1.bin', 1, '%1'), "
+                               "(2, 1, 'FF7 Disc 2.bin', 2, '%2'), "
+                               "(3, 1, 'FF7 Disc 3.bin', 3, '%3')")
+                    .arg(entry1, entry2, entry3));
+
+        if (!seeded) {
+            db.close();
+            QSqlDatabase::removeDatabase(connectionName);
+            return { };
+        }
+
+        db.close();
+    }
+
+    QSqlDatabase::removeDatabase(connectionName);
+    return dbPath;
+}
+
 } // namespace
 
 class CompendiumProviderTest : public QObject {
@@ -215,6 +305,10 @@ private slots:
     void compendiumPriorityExceedsLocalDatabase();
     void searchByName_shortQuery_usesLikeFallback();
     void searchByName_returnsNoDuplicateGameIds();
+    void getDiscSetsForGame_returnsOrderedDiscs();
+    void getDiscSetsBySetKey_returnsAllDiscsInSet();
+    void getByHash_populatesDiscContext();
+    void matchROM_discNumberMatchBoostsConfidence();
 };
 
 void CompendiumProviderTest::getByHashReturnsCanonicalMetadata() {
@@ -514,6 +608,78 @@ void CompendiumProviderTest::searchByName_returnsNoDuplicateGameIds() {
         QVERIFY2(!seen.contains(r.id), qPrintable(QStringLiteral("Duplicate game_id in results: %1").arg(r.id)));
         seen.insert(r.id);
     }
+}
+
+void CompendiumProviderTest::getDiscSetsForGame_returnsOrderedDiscs() {
+    const QString dbPath = createDiscSetFixtureDatabase();
+    QVERIFY(!dbPath.isEmpty());
+
+    CompendiumProvider provider;
+    QVERIFY(provider.openDatabase(dbPath));
+
+    const QList<CompendiumDiscSet> discs = provider.getDiscSetsForGame(QStringLiteral("ff7"));
+    QCOMPARE(discs.size(), 3);
+    QCOMPARE(discs.at(0).discNumber, 1);
+    QCOMPARE(discs.at(1).discNumber, 2);
+    QCOMPARE(discs.at(2).discNumber, 3);
+    QCOMPARE(discs.at(0).discCount, 3);
+    QCOMPARE(discs.at(0).setKey, discs.at(1).setKey);
+    QCOMPARE(discs.at(0).trackCount, 1);
+}
+
+void CompendiumProviderTest::getDiscSetsBySetKey_returnsAllDiscsInSet() {
+    const QString dbPath = createDiscSetFixtureDatabase();
+    QVERIFY(!dbPath.isEmpty());
+
+    CompendiumProvider provider;
+    QVERIFY(provider.openDatabase(dbPath));
+
+    const QList<CompendiumDiscSet> byGame = provider.getDiscSetsForGame(QStringLiteral("ff7"));
+    QVERIFY(!byGame.isEmpty());
+
+    const QList<CompendiumDiscSet> byKey = provider.getDiscSetsBySetKey(byGame.first().setKey);
+    QCOMPARE(byKey.size(), 3);
+    QCOMPARE(byKey.first().gameId, QStringLiteral("ff7"));
+}
+
+void CompendiumProviderTest::getByHash_populatesDiscContext() {
+    const QString dbPath = createDiscSetFixtureDatabase();
+    QVERIFY(!dbPath.isEmpty());
+
+    CompendiumProvider provider;
+    QVERIFY(provider.openDatabase(dbPath));
+
+    const GameMetadata metadata
+        = provider.getByHash(QStringLiteral("22222222222222222222222222222222"), QStringLiteral("PlayStation"));
+    QCOMPARE(metadata.title, QStringLiteral("Final Fantasy VII (USA) (Disc 2)"));
+    QVERIFY(!metadata.setKey.isEmpty());
+    QCOMPARE(metadata.matchedDiscNumber, 2);
+    QCOMPARE(metadata.catalogDiscCount, 3);
+}
+
+void CompendiumProviderTest::matchROM_discNumberMatchBoostsConfidence() {
+    const QString dbPath = createDiscSetFixtureDatabase();
+    QVERIFY(!dbPath.isEmpty());
+
+    CompendiumProvider provider;
+    QVERIFY(provider.openDatabase(dbPath));
+
+    ROMSignals input;
+    input.md5 = QStringLiteral("22222222222222222222222222222222");
+    input.filename = QStringLiteral("Final Fantasy VII (USA) (Disc 2).bin");
+    input.discNumber = 2;
+
+    const QList<CompendiumMultiSignalMatch> matches = provider.matchROM(input, QStringLiteral("PlayStation"));
+    QVERIFY(!matches.isEmpty());
+    const CompendiumMultiSignalMatch &match = matches.first();
+    QVERIFY(match.discNumberMatch);
+    QCOMPARE(match.catalogDiscNumber, 2);
+    QVERIFY(!match.setKey.isEmpty());
+
+    const GameMetadata metadata = provider.metadataFromMatch(match, QStringLiteral("PlayStation"));
+    QCOMPARE(metadata.matchedDiscNumber, 2);
+    QCOMPARE(metadata.catalogDiscCount, 3);
+    QCOMPARE(metadata.setKey, match.setKey);
 }
 
 QTEST_MAIN(CompendiumProviderTest)

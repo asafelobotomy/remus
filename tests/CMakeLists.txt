@@ -216,6 +216,9 @@ add_remus_test(test_compendium_sql_utilities CompendiumSqlUtilitiesTest
     SOURCES test_compendium_sql_utilities.cpp
     LIBS Qt6::Test Qt6::Core Qt6::Sql
 )
+target_compile_definitions(test_compendium_sql_utilities PRIVATE
+    REMUS_SOURCE_DIR="${CMAKE_SOURCE_DIR}"
+)
 
 add_remus_test(test_compendium_enrichment_sql_helpers CompendiumEnrichmentSqlHelpersTest
     SOURCES test_compendium_enrichment_sql_helpers.cpp
@@ -420,8 +423,18 @@ add_remus_test(test_disc_set_utils DiscSetUtilsTest
     LIBS Qt6::Test Qt6::Core remus-core
 )
 
+add_remus_test(test_disc_title_parser DiscTitleParserTest
+    SOURCES test_disc_title_parser.cpp
+    LIBS Qt6::Test Qt6::Core remus-core
+)
+
 add_remus_test(test_database_disc_sets DatabaseDiscSetsTest
     SOURCES test_database_disc_sets.cpp
+    LIBS Qt6::Test Qt6::Core Qt6::Sql remus-core
+)
+
+add_remus_test(test_disc_set_completeness DiscSetCompletenessTest
+    SOURCES test_disc_set_completeness.cpp
     LIBS Qt6::Test Qt6::Core Qt6::Sql remus-core
 )
 
@@ -471,6 +484,22 @@ add_remus_test(test_compendium_merge_resolver CompendiumMergeResolverTest
 add_remus_test(test_compendium_normalizer CompendiumNormalizerTest
     SOURCES test_compendium_normalizer.cpp
     LIBS Qt6::Test Qt6::Core remus-metadata remus-core
+)
+
+add_remus_test(test_compendium_disc_set_inserter CompendiumDiscSetInserterTest
+    SOURCES test_compendium_disc_set_inserter.cpp
+    LIBS Qt6::Test Qt6::Core Qt6::Sql remus-metadata remus-core
+)
+target_compile_definitions(test_compendium_disc_set_inserter PRIVATE
+    REMUS_SOURCE_DIR="${CMAKE_SOURCE_DIR}"
+)
+
+add_remus_test(test_disc_set_validation DiscSetValidationTest
+    SOURCES test_disc_set_validation.cpp
+    LIBS Qt6::Test Qt6::Core Qt6::Sql remus-metadata remus-core
+)
+target_compile_definitions(test_disc_set_validation PRIVATE
+    REMUS_SOURCE_DIR="${CMAKE_SOURCE_DIR}"
 )
 
 add_remus_test(test_compendium_identity_linker CompendiumIdentityLinkerTest
