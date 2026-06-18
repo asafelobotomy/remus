@@ -56,41 +56,81 @@ namespace {
         return true;
     }
 
-    bool loadHashesAndSize(QSqlDatabase &database, PendingPlayMatchGame &game, QString &error) {
-        QSqlQuery hashQuery(database);
-        hashQuery.prepare(QStringLiteral("SELECT hash_type, hash_value FROM game_signatures "
-                                         "WHERE game_id = ? AND hash_type IN ('md5', 'sha1', 'crc32')"));
-        hashQuery.addBindValue(game.gameId);
-        if (!hashQuery.exec()) {
-            error = hashQuery.lastError().text();
-            return false;
-        }
-        while (hashQuery.next()) {
-            const QString type = hashQuery.value(0).toString();
-            const QString value = hashQuery.value(1).toString().trimmed();
-            if (type == QStringLiteral("crc32"))
-                game.crc32 = value;
-            else if (type == QStringLiteral("md5"))
-                game.md5 = value;
-            else if (type == QStringLiteral("sha1"))
-                game.sha1 = value;
-        }
+    bool loadHashesAndSizes(
+        QSqlDatabase &database, QList<PendingPlayMatchGame> &pending, QString &error) {
+        if (pending.isEmpty())
+            return true;
 
-        QSqlQuery payloadQuery(database);
-        payloadQuery.prepare(QStringLiteral("SELECT payload_json FROM source_items WHERE game_id = ? LIMIT 1"));
-        payloadQuery.addBindValue(game.gameId);
-        if (payloadQuery.exec() && payloadQuery.next()) {
-            const QJsonObject payload = QJsonDocument::fromJson(payloadQuery.value(0).toByteArray()).object();
-            const QJsonValue sizeValue = payload.value(QStringLiteral("size"));
-            if (sizeValue.isDouble())
-                game.fileSize = static_cast<qint64>(sizeValue.toDouble());
-            else if (sizeValue.isString()) {
-                bool ok = false;
-                game.fileSize = sizeValue.toString().toLongLong(&ok);
-                if (!ok)
-                    game.fileSize = 0;
+        QStringList gameIds;
+        gameIds.reserve(pending.size());
+        for (const PendingPlayMatchGame &game : pending)
+            gameIds.append(game.gameId);
+
+        QHash<QString, PendingPlayMatchGame *> byId;
+        byId.reserve(pending.size());
+        for (PendingPlayMatchGame &game : pending)
+            byId.insert(game.gameId, &game);
+
+        constexpr int kChunkSize = 500;
+        for (int offset = 0; offset < gameIds.size(); offset += kChunkSize) {
+            const QStringList chunk = gameIds.mid(offset, kChunkSize);
+            QStringList placeholders;
+            placeholders.reserve(chunk.size());
+            for (int i = 0; i < chunk.size(); ++i)
+                placeholders.append(QStringLiteral("?"));
+
+            QSqlQuery hashQuery(database);
+            hashQuery.prepare(QStringLiteral("SELECT game_id, hash_type, hash_value FROM game_signatures "
+                                             "WHERE game_id IN (%1) AND hash_type IN ('md5', 'sha1', 'crc32')")
+                                  .arg(placeholders.join(QLatin1Char(','))));
+            for (const QString &gameId : chunk)
+                hashQuery.addBindValue(gameId);
+            if (!hashQuery.exec()) {
+                error = hashQuery.lastError().text();
+                return false;
+            }
+            while (hashQuery.next()) {
+                PendingPlayMatchGame *game = byId.value(hashQuery.value(0).toString());
+                if (!game)
+                    continue;
+                const QString type = hashQuery.value(1).toString();
+                const QString value = hashQuery.value(2).toString().trimmed();
+                if (type == QStringLiteral("crc32"))
+                    game->crc32 = value;
+                else if (type == QStringLiteral("md5"))
+                    game->md5 = value;
+                else if (type == QStringLiteral("sha1"))
+                    game->sha1 = value;
+            }
+
+            QSqlQuery payloadQuery(database);
+            payloadQuery.prepare(QStringLiteral("SELECT game_id, payload_json FROM source_items "
+                                                "WHERE game_id IN (%1)")
+                                     .arg(placeholders.join(QLatin1Char(','))));
+            for (const QString &gameId : chunk)
+                payloadQuery.addBindValue(gameId);
+            if (!payloadQuery.exec()) {
+                error = payloadQuery.lastError().text();
+                return false;
+            }
+            while (payloadQuery.next()) {
+                PendingPlayMatchGame *game = byId.value(payloadQuery.value(0).toString());
+                if (!game || game->fileSize > 0)
+                    continue;
+                const QJsonObject payload
+                    = QJsonDocument::fromJson(payloadQuery.value(1).toByteArray()).object();
+                const QJsonValue sizeValue = payload.value(QStringLiteral("size"));
+                if (sizeValue.isDouble())
+                    game->fileSize = static_cast<qint64>(sizeValue.toDouble());
+                else if (sizeValue.isString()) {
+                    bool ok = false;
+                    game->fileSize = sizeValue.toString().toLongLong(&ok);
+                    if (!ok)
+                        game->fileSize = 0;
+                }
             }
         }
+
         return true;
     }
 
@@ -117,9 +157,10 @@ bool enrichFromPlayMatch(QSqlDatabase &database, int &gamesEnriched, int &factsI
     PlayMatchProvider provider;
     QHash<QString, GameMetadata> matchedMetadata;
 
-    for (PendingPlayMatchGame &game : pending) {
-        if (!loadHashesAndSize(database, game, error))
-            return false;
+    if (!loadHashesAndSizes(database, pending, error))
+        return false;
+
+    for (const PendingPlayMatchGame &game : pending) {
         if (game.fileSize <= 0 || game.title.trimmed().isEmpty())
             continue;
         ++apiCallsNeeded;

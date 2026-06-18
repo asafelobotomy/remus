@@ -77,11 +77,38 @@ This repository currently exposes compendium rebuilding as a manifest-driven
 developer workflow. Bundled runtime builds consume the resulting
 `remus_compendium.db` automatically when it is present.
 
+### Full pipeline (recommended)
+
+For a complete catalogue refresh (DAT sync, manifest generation, build, patch
+import, validation, and coverage report):
+
+```bash
+bash scripts/build_compendium_full.sh
+```
+
+Steps performed by `build_compendium_full.sh`:
+
+1. `scripts/update_dats.sh --all` — sync libretro, No-Intro, Redump, MAME, metadata, GameTDB, OpenVGDB
+2. `scripts/generate_compendium_manifest.sh` — write `compendium-manifest-full.json`
+3. `remus-cli --build-compendium` — ingest DATs, run enrichment passes, merge, FTS index
+4. `scripts/import_patch_catalog.sh` — import libretro hack/translation DATs into the patch catalog tables
+5. `.github/scripts/validate-compendium-db.sh` — schema and content validation gates
+6. `--coverage-report` — per-source TSV coverage summary
+
+Patch catalog import runs **after** the compendium build because it writes to
+`patch_catalog_sources` / `patch_catalog_entries` in the populated database.
+Hack DATs are fetched by `update_dats.sh` into `data/patches/hacks/`.
+
+### Manual build
+
 ```bash
 # Rebuild a compendium database from a manifest
 remus-cli --build-compendium \
   --compendium-manifest /path/to/manifest.json \
   --compendium-output data/compendium/remus_compendium.db
+
+# Import patch catalog separately (also done automatically by build_compendium_full.sh)
+bash scripts/import_patch_catalog.sh data/compendium/remus_compendium.db
 
 # Inspect patch catalog coverage directly
 sqlite3 data/compendium/remus_compendium.db "SELECT system_name, catalog_name, entry_count FROM patch_catalog_sources ORDER BY system_name;"
@@ -96,5 +123,6 @@ sqlite3 data/compendium/remus_compendium.db "SELECT system_name, catalog_name, e
 - Merge policy seed: [data/compendium/seeds/0003_merge_policy.sql](seeds/0003_merge_policy.sql)
 - Libretro name migration: [data/compendium/migrations/0003_systems_libretro_name.sql](migrations/0003_systems_libretro_name.sql)
 - FTS migration: [data/compendium/migrations/0004_fts5_search_index.sql](migrations/0004_fts5_search_index.sql)
+- External ID columns: [data/compendium/migrations/0005_game_external_ids.sql](migrations/0005_game_external_ids.sql)
 - Validator: [data/compendium/validation/0001_phase1_checks.sql](validation/0001_phase1_checks.sql)
 - Runner script: [scripts/setup_compendium_db.sh](../../scripts/setup_compendium_db.sh)

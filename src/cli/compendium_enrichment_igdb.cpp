@@ -21,6 +21,17 @@ namespace CompendiumEnrichment {
 
 namespace {
 
+    // Metadata gaps that justify a full IGDB platform catalog download (rating-only
+    // gaps are excluded — those are cheaper to fill via Hasheous or left empty).
+    static const char kIgdbBulkGameGapSql[] =
+        "description IS NULL OR TRIM(description) = '' "
+        "   OR genre IS NULL OR TRIM(genre) = '' "
+        "   OR developer IS NULL OR TRIM(developer) = '' "
+        "   OR publisher IS NULL OR TRIM(publisher) = '' "
+        "   OR release_year IS NULL "
+        "   OR release_date IS NULL OR TRIM(release_date) = '' "
+        "   OR players_max IS NULL ";
+
     // Returns the candidate with the greatest number of non-empty enrichable fields.
     // Used to resolve title-collision ties in the IGDB index (multiple entries with
     // the same normalized title, e.g. different regional variants of the same game).
@@ -63,19 +74,13 @@ bool enrichFromIGDB(
     }
     qInfo() << "[IGDB] Credentials loaded — starting bulk platform enrichment";
 
-    // Systems that still have games missing any enrichable field
+    // Systems that still have games missing enrichable fields (excluding rating-only).
     QSqlQuery sysQ(database);
     if (!sysQ.exec(QStringLiteral("SELECT DISTINCT g.system_id, s.display_name FROM games g "
                                   "JOIN systems s ON s.system_id = g.system_id "
-                                  "WHERE g.description IS NULL OR g.description = '' "
-                                  "   OR g.genre IS NULL OR g.genre = '' "
-                                  "   OR g.developer IS NULL OR g.developer = '' "
-                                  "   OR g.publisher IS NULL OR g.publisher = '' "
-                                  "   OR g.release_year IS NULL "
-                                  "   OR g.release_date IS NULL OR g.release_date = '' "
-                                  "   OR g.rating IS NULL "
-                                  "   OR g.players_max IS NULL "
-                                  "ORDER BY s.display_name"))) {
+                                  "WHERE %1 "
+                                  "ORDER BY s.display_name")
+                       .arg(QLatin1String(kIgdbBulkGameGapSql)))) {
         error = QStringLiteral("Query systems: %1").arg(sysQ.lastError().text());
         return false;
     }
@@ -117,6 +122,20 @@ bool enrichFromIGDB(
         if (igdbSlug.isEmpty()) {
             ++systemsSkippedNoSlug;
             continue;
+        }
+
+        // Skip full platform download when this system only has rating gaps.
+        {
+            QSqlQuery bulkGapQ(database);
+            bulkGapQ.prepare(QStringLiteral("SELECT 1 FROM games WHERE system_id = ? AND (%1) LIMIT 1")
+                                 .arg(QLatin1String(kIgdbBulkGameGapSql)));
+            bulkGapQ.addBindValue(sys.id);
+            if (!bulkGapQ.exec()) {
+                error = QStringLiteral("IGDB bulk gap check for %1: %2").arg(sys.name, bulkGapQ.lastError().text());
+                return false;
+            }
+            if (!bulkGapQ.next())
+                continue;
         }
 
         // Bulk-fetch all IGDB games for this platform
@@ -211,13 +230,8 @@ bool enrichFromIGDB(
         QSqlQuery gamesQ(database);
         gamesQ.prepare(QStringLiteral("SELECT game_id, canonical_title FROM games "
                                       "WHERE system_id = ? "
-                                      "  AND (description IS NULL OR description = '' "
-                                      "    OR genre IS NULL OR genre = '' "
-                                      "    OR developer IS NULL OR developer = '' "
-                                      "    OR publisher IS NULL OR publisher = '' "
-                                      "    OR release_year IS NULL "
-                                      "    OR rating IS NULL "
-                                      "    OR players_max IS NULL)"));
+                                      "  AND (%1)")
+                           .arg(QLatin1String(kIgdbBulkGameGapSql)));
         gamesQ.addBindValue(sys.id);
         if (!gamesQ.exec()) {
             database.rollback();
@@ -244,7 +258,9 @@ bool enrichFromIGDB(
             const QString releaseDateStr = (gm.releaseDate.size() >= 10) ? gm.releaseDate.left(10) : QString();
 
             updateQ.bindValue(0, nullableText(gm.description));
-            updateQ.bindValue(1, gm.genres.isEmpty() ? nullableText(QString()) : QVariant(gm.genres.first()));
+            const QString genreStr
+                = gm.genres.isEmpty() ? QString() : gm.genres.join(QStringLiteral(", "));
+            updateQ.bindValue(1, nullableText(genreStr));
             updateQ.bindValue(2, nullableText(gm.developer));
             updateQ.bindValue(3, nullableText(gm.publisher));
             updateQ.bindValue(4, nullableInt(releaseYear));
@@ -261,12 +277,13 @@ bool enrichFromIGDB(
                 ++sysEnriched;
             }
 
-            const QString genreStr = gm.genres.isEmpty() ? QString() : gm.genres.first();
             const QString yearStr = releaseYear > 0 ? QString::number(releaseYear) : QString();
             const QString ratingStr
                 = gm.rating > 0.0f ? QString::number(static_cast<double>(gm.rating), 'f', 2) : QString();
             const QString playersStr = gm.players > 0 ? QString::number(gm.players) : QString();
-            if (!insertFact(gameId, QStringLiteral("description"), gm.description)
+            const QString igdbId = gm.externalIds.value(Constants::Providers::ExternalId::IGDB, gm.id);
+            if (!insertFact(gameId, QStringLiteral("igdb_id"), igdbId)
+                || !insertFact(gameId, QStringLiteral("description"), gm.description)
                 || !insertFact(gameId, QStringLiteral("genre"), genreStr)
                 || !insertFact(gameId, QStringLiteral("developer"), gm.developer)
                 || !insertFact(gameId, QStringLiteral("publisher"), gm.publisher)

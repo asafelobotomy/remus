@@ -272,6 +272,8 @@ GameMetadata IGDBProvider::parseGameJson(const QJsonObject &game) {
     GameMetadata metadata;
 
     metadata.id = QString::number(game["id"].toInt());
+    if (!metadata.id.isEmpty())
+        metadata.externalIds.insert(Constants::Providers::ExternalId::IGDB, metadata.id);
     metadata.providerId = Constants::Providers::IGDB;
     metadata.fetchedAt = QDateTime::currentDateTime();
 

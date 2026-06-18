@@ -148,6 +148,7 @@ int handleBuildCompendiumCommand(CliContext &ctx) {
         QDir(compendiumDir).filePath(QStringLiteral("seeds/0003_merge_policy.sql")),
         QDir(compendiumDir).filePath(QStringLiteral("migrations/0003_systems_libretro_name.sql")),
         QDir(compendiumDir).filePath(QStringLiteral("migrations/0004_fts5_search_index.sql")),
+        QDir(compendiumDir).filePath(QStringLiteral("migrations/0005_game_external_ids.sql")),
     };
 
     QString buildId;

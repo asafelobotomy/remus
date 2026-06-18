@@ -36,7 +36,7 @@ fields). URLs are starting points — verify licensing and freshness before auto
 | **IGDB** | [api-docs.igdb.com](https://api-docs.igdb.com/) | Twitch OAuth | Yes — `enrichFromIGDB` | Yes |
 | **RetroAchievements** | [api.retroachievements.org](https://api.retroachievements.org/) | Username + API key | Yes — hash + metadata | Yes |
 | **Hasheous** | [hasheous.org/swagger](https://hasheous.org/swagger/index.html) | Optional client API key (`REMUS_HASHEOUS_API_KEY`) for MetadataProxy | Yes — `enrichFromHasheous` (`--enrich-source hasheous`) | Yes (priority 91) |
-| **PlayMatch** | [RetroRealm/playmatch](https://github.com/RetroRealm/playmatch) | None on public instance | **No** — runtime hash matcher | Yes (priority 88) |
+| **PlayMatch** | [RetroRealm/playmatch](https://github.com/RetroRealm/playmatch) | None on public instance | Yes — `enrichFromPlayMatch` (`--enrich-source playmatch`) | Yes (priority 88) |
 | **ScreenScraper** | [screenscraper.fr](https://www.screenscraper.fr/) | Dev credentials | **No** | Yes |
 | **TheGamesDB** | [thegamesdb.net](https://thegamesdb.net/) | API key | **No** | Yes |
 
@@ -52,8 +52,8 @@ at runtime (`hasheous_provider.cpp`) with optional MetadataProxy enrichment when
 | Hash lookup (CRC/MD5/SHA1 POST) | Yes — `/api/v1/Lookup/ByHash` | Yes — Rust microservice |
 | IGDB metadata without own Twitch app | Yes — MetadataProxy | No — needs IGDB creds |
 | RA game IDs in lookup response | Sometimes | Via IGDB linkage |
-| Bulk compendium enrichment | Not implemented | Not implemented |
-| **Future use** | Gap-fill pass for unmatched signatures; proxy IGDB for games missing description | Secondary hash matcher for disc systems |
+| Bulk compendium enrichment | Yes — `enrichFromHasheous` | Yes — `enrichFromPlayMatch` |
+| **Future use** | Gap-fill pass for unmatched signatures; proxy IGDB for games missing description | Secondary hash matcher for disc systems; IGDB ID bridge when Hasheous misses |
 
 Reference: [RomM metadata providers](https://docs.romm.app/latest/Getting-Started/Metadata-Providers/),
 [Hasheous repo](https://github.com/gaseous-project/hasheous).
@@ -105,6 +105,19 @@ Common additions for gap systems: `msx`, `msx2`, `3do`, `neogeocd`, `fds`, `atar
 | MobyGames | [mobygames.com](https://www.mobygames.com/) | DOS/PC descriptions — no bulk API in Remus |
 | LaunchBox | Community databases | Box art / metadata — not wired |
 | ScreenScraper | [screenscraper.fr](https://www.screenscraper.fr/) | Rich media + text — runtime provider |
+
+### Deferred bulk passes (ScreenScraper / TheGamesDB)
+
+ScreenScraper and TheGamesDB are integrated at **runtime** via `MetadataProvider` but are **not**
+compendium bulk enrichment passes today. Reasons:
+
+- Both require per-developer API credentials and rate limits unsuitable for full-catalog rebuilds.
+- GameTDB + IGDB + Hasheous already cover most console metadata fields in bulk.
+- ScreenScraper excels at box art and regional media — better suited to on-demand fetch than SQLite bulk ingest.
+
+To add a future bulk pass: implement `enrichFromScreenScraper` / `enrichFromTheGamesDB` in
+`src/cli/`, register in `cli_compendium_build_phases.cpp`, and gate on `--enrich-source` plus
+credential presence (same pattern as IGDB).
 
 ## Systems with no DAT coverage (expected empty)
 

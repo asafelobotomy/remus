@@ -27,46 +27,68 @@ bool queryHasRows(QSqlDatabase &db, const QString &sql, QString &error) {
     return q.next();
 }
 
-// Checks all fields IGDB can fill — the broadest predicate, used only for IGDB.
-bool hasAnyMetadataGaps(QSqlDatabase &db, QString &error) {
+// Shared metadata gap predicate (genre, developer, publisher, year, date, description, players).
+static const char kGeneralMetadataGapSql[] =
+    "genre IS NULL OR TRIM(genre) = '' "
+    "   OR developer IS NULL OR TRIM(developer) = '' "
+    "   OR publisher IS NULL OR TRIM(publisher) = '' "
+    "   OR release_year IS NULL "
+    "   OR release_date IS NULL OR TRIM(release_date) = '' "
+    "   OR description IS NULL OR TRIM(description) = '' "
+    "   OR players_max IS NULL ";
+
+// Libretro matches by CRC32 or serial — only run when hash-linked games still have gaps.
+bool hasLibretroMetadataGaps(QSqlDatabase &db, QString &error) {
+    return queryHasRows(db,
+        QStringLiteral("SELECT 1 FROM games g "
+                       "WHERE (%1) "
+                       "  AND (EXISTS (SELECT 1 FROM game_signatures gs "
+                       "               WHERE gs.game_id = g.game_id AND gs.hash_type = 'crc32') "
+                       "       OR EXISTS (SELECT 1 FROM game_serials s WHERE s.game_id = g.game_id)) "
+                       "LIMIT 1")
+            .arg(QLatin1String(kGeneralMetadataGapSql)),
+        error);
+}
+
+// GameTDB matches by crc32/sha1/md5 — only run when hash-linked games still have gaps.
+bool hasGametdbGaps(QSqlDatabase &db, QString &error) {
+    return queryHasRows(db,
+        QStringLiteral("SELECT 1 FROM games g "
+                       "WHERE (%1) "
+                       "  AND EXISTS (SELECT 1 FROM game_signatures gs "
+                       "              WHERE gs.game_id = g.game_id "
+                       "                AND gs.hash_type IN ('crc32', 'sha1', 'md5')) "
+                       "LIMIT 1")
+            .arg(QLatin1String(kGeneralMetadataGapSql)),
+        error);
+}
+
+// Checks metadata gaps IGDB bulk enrichment can fill (excludes rating-only gaps to
+// avoid re-downloading entire platform catalogs when only ratings are missing).
+bool hasIgdbBulkMetadataGaps(QSqlDatabase &db, QString &error) {
     return queryHasRows(db,
         QStringLiteral("SELECT 1 FROM games "
                        "WHERE genre IS NULL OR TRIM(genre) = '' "
                        "   OR developer IS NULL OR TRIM(developer) = '' "
                        "   OR publisher IS NULL OR TRIM(publisher) = '' "
                        "   OR release_year IS NULL "
+                       "   OR release_date IS NULL OR TRIM(release_date) = '' "
                        "   OR description IS NULL OR TRIM(description) = '' "
                        "   OR players_max IS NULL "
-                       "   OR rating IS NULL "
                        "LIMIT 1"),
         error);
 }
 
-// Fields that general file-based sources (Libretro, GameTDB) can fill.
-// Excludes rating — none of these sources provide it.
-bool hasAnyGeneralGaps(QSqlDatabase &db, QString &error) {
+// OpenVGDB matches by crc32/md5 — only run when hash-linked games still have gaps.
+bool hasOpenVgdbGaps(QSqlDatabase &db, QString &error) {
     return queryHasRows(db,
-        QStringLiteral("SELECT 1 FROM games "
-                       "WHERE genre IS NULL OR TRIM(genre) = '' "
-                       "   OR developer IS NULL OR TRIM(developer) = '' "
-                       "   OR publisher IS NULL OR TRIM(publisher) = '' "
-                       "   OR release_year IS NULL "
-                       "   OR description IS NULL OR TRIM(description) = '' "
-                       "   OR players_max IS NULL "
-                       "LIMIT 1"),
-        error);
-}
-
-// OpenVGDB does not provide players_max or rating.
-bool hasAnyOpenVgdbGaps(QSqlDatabase &db, QString &error) {
-    return queryHasRows(db,
-        QStringLiteral("SELECT 1 FROM games "
-                       "WHERE genre IS NULL OR TRIM(genre) = '' "
-                       "   OR developer IS NULL OR TRIM(developer) = '' "
-                       "   OR publisher IS NULL OR TRIM(publisher) = '' "
-                       "   OR release_year IS NULL "
-                       "   OR description IS NULL OR TRIM(description) = '' "
-                       "LIMIT 1"),
+        QStringLiteral("SELECT 1 FROM games g "
+                       "WHERE (%1) "
+                       "  AND EXISTS (SELECT 1 FROM game_signatures gs "
+                       "              WHERE gs.game_id = g.game_id "
+                       "                AND gs.hash_type IN ('crc32', 'md5')) "
+                       "LIMIT 1")
+            .arg(QLatin1String(kGeneralMetadataGapSql)),
         error);
 }
 
@@ -155,8 +177,7 @@ bool hasAnyPlayMatchGaps(QSqlDatabase &db, QString &error) {
                        "  AND NOT EXISTS ("
                        "  SELECT 1 FROM game_facts gf "
                        "  WHERE gf.game_id = g.game_id "
-                       "    AND gf.field_name = 'igdb_id' "
-                       "    AND gf.source_id = 'playmatch') "
+                       "    AND gf.field_name = 'igdb_id') "
                        "LIMIT 1"),
         error);
 }
@@ -258,7 +279,7 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db, const QString &metadataDir,
             QStringLiteral("libretro"),
             TransactionMode::CallerWrapped,
             [&] { return hasMetadataDir; },
-            [&] { return hasAnyGeneralGaps(db, error); },
+            [&] { return hasLibretroMetadataGaps(db, error); },
             [&] {
                 return CompendiumEnrichment::enrichFromLibretroMetadata(
                     db, metadataDir, stats.metadataGamesEnriched, stats.metadataFactsInserted, error);
@@ -269,7 +290,7 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db, const QString &metadataDir,
             QStringLiteral("gametdb"),
             TransactionMode::CallerWrapped,
             [&] { return hasGametdbDir; },
-            [&] { return hasAnyGeneralGaps(db, error); },
+            [&] { return hasGametdbGaps(db, error); },
             [&] {
                 return CompendiumEnrichment::enrichFromGameTDB(
                     db, gametdbDir, stats.gametdbGamesEnriched, stats.gametdbFactsInserted, error);
@@ -280,7 +301,7 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db, const QString &metadataDir,
             QStringLiteral("openvgdb"),
             TransactionMode::CallerWrapped,
             [&] { return hasOpenvgdbPath; },
-            [&] { return hasAnyOpenVgdbGaps(db, error); },
+            [&] { return hasOpenVgdbGaps(db, error); },
             [&] {
                 return CompendiumEnrichment::enrichFromOpenVGDB(
                     db, openvgdbPath, stats.openvgdbGamesEnriched, stats.openvgdbFactsInserted, error);
@@ -291,7 +312,7 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db, const QString &metadataDir,
             QStringLiteral("igdb"),
             TransactionMode::SelfManaged,
             [&] { return hasCredPath; },
-            [&] { return hasAnyMetadataGaps(db, error); }, // only pass that fills rating
+            [&] { return hasIgdbBulkMetadataGaps(db, error); },
             [&] {
                 return CompendiumEnrichment::enrichFromIGDB(
                     db, credPath, stats.igdbGamesEnriched, stats.igdbFactsInserted, error);
@@ -426,7 +447,8 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db, const QString &metadataDir,
 
     const int factsInsertedTotal = stats.metadataFactsInserted + stats.gametdbFactsInserted
         + stats.openvgdbFactsInserted + stats.igdbFactsInserted + stats.raFactsInserted + stats.mameFactsInserted
-        + stats.mameListXmlFactsInserted + stats.zxinfoFactsInserted;
+        + stats.mameListXmlFactsInserted + stats.zxinfoFactsInserted + stats.hasheousFactsInserted
+        + stats.playmatchFactsInserted;
 
     if (factsInsertedTotal > 0) {
         // Wrap merge resolution in its own transaction so a failure does not leave

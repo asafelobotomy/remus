@@ -644,7 +644,7 @@ fi
 
 # 6. Metadata DATs (genre, developer, publisher, maxusers, releaseyear)
 METADATA_DIR="$PROJECT_ROOT/data/metadata"
-METADAT_TYPES=("genre" "developer" "publisher" "maxusers" "releaseyear")
+METADAT_TYPES=("genre" "developer" "publisher" "maxusers" "releaseyear" "description")
 meta_copied=0
 
 for meta_type in "${METADAT_TYPES[@]}"; do
@@ -752,6 +752,14 @@ if [[ -d "$PATCHES_DIR" ]]; then
 fi
 if [[ -f "$OPENVGDB_DEST" ]]; then
     echo "  OpenVGDB:           $OPENVGDB_DEST"
+fi
+MAME_LISTXML_PATH="$PROJECT_ROOT/data/mame/listxml.xml"
+if [[ ! -f "$MAME_LISTXML_PATH" ]]; then
+    echo ""
+    echo "WARNING: $MAME_LISTXML_PATH is missing."
+    echo "  The MAME listxml enrichment pass will be skipped during compendium builds."
+    echo "  Arcade developer/year/players metadata will not be populated from listxml."
+    echo "  Install MAME (see section 4b above) and re-run this script, or place listxml.xml manually."
 fi
 echo ""
 echo "Next step: run scripts/generate_compendium_manifest.sh to update the manifest."

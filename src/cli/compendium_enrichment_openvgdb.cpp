@@ -4,6 +4,7 @@
 #include <QDate>
 #include <QFile>
 #include <QHash>
+#include <QSet>
 #include <QSqlDatabase>
 #include <QSqlError>
 #include <QSqlQuery>
@@ -181,6 +182,26 @@ bool enrichFromOpenVGDB(
     if (crcIndex.isEmpty() && md5Index.isEmpty() && titleIndex.isEmpty())
         return true;
 
+    // Only enrich games that still have metadata gaps.
+    QSet<QString> gapGameIds;
+    {
+        QSqlQuery q(database);
+        if (!q.exec(QStringLiteral("SELECT game_id FROM games "
+                                   "WHERE genre IS NULL OR TRIM(genre) = '' "
+                                   "   OR developer IS NULL OR TRIM(developer) = '' "
+                                   "   OR publisher IS NULL OR TRIM(publisher) = '' "
+                                   "   OR release_year IS NULL "
+                                   "   OR release_date IS NULL OR TRIM(release_date) = '' "
+                                   "   OR description IS NULL OR TRIM(description) = ''"))) {
+            error = QStringLiteral("Load OpenVGDB gap games: %1").arg(q.lastError().text());
+            return false;
+        }
+        while (q.next())
+            gapGameIds.insert(q.value(0).toString());
+    }
+    if (gapGameIds.isEmpty())
+        return true;
+
     const QString sourceId = QStringLiteral("openvgdb");
     const QString snapshotId = QStringLiteral("openvgdb-v29.0");
 
@@ -313,6 +334,8 @@ bool enrichFromOpenVGDB(
     for (auto it = gameIdByCrc.cbegin(); it != gameIdByCrc.cend(); ++it) {
         const QString &crc32 = it.key();
         const QString &gameId = it.value();
+        if (!gapGameIds.contains(gameId))
+            continue;
 
         auto entryIt = crcIndex.constFind(crc32);
         if (entryIt == crcIndex.cend())
@@ -330,6 +353,8 @@ bool enrichFromOpenVGDB(
     for (auto it = gameIdByMd5.cbegin(); it != gameIdByMd5.cend(); ++it) {
         const QString &md5 = it.key();
         const QString &gameId = it.value();
+        if (!gapGameIds.contains(gameId))
+            continue;
 
         auto entryIt = md5Index.constFind(md5);
         if (entryIt == md5Index.cend())
@@ -366,6 +391,8 @@ bool enrichFromOpenVGDB(
 
         for (auto it = gamesForTitleMatch.cbegin(); it != gamesForTitleMatch.cend(); ++it) {
             const QString &gameId = it.key();
+            if (!gapGameIds.contains(gameId))
+                continue;
             const QString &title = it.value().first;
             const QString &internalName = it.value().second;
 

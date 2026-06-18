@@ -27,18 +27,18 @@ namespace Compendium {
     // Rules implemented per field:
     //   canonical_title   exact_hash_source_priority (confidence DESC) + shortest_stable_title
     //                     [normalized_name_similarity: deferred — requires string distance UDF]
-    //   developer         most_frequent_value via frequency CTE; tiebreak confidence
+    //   developer         exact_hash_source_priority (source_item_id IS NOT NULL);
+    //                     fallback most_frequent_value
     //   publisher         same as developer
     //   release_date      full_date_preferred (LENGTH DESC) + higher_priority_source
     //                     [newer_snapshot: deferred — requires snapshot timestamp join]
     //   release_year      derive_from_release_date (join canonical release_date);
     //                     fallback max_confidence_year
     //   players_max       numeric_valid_range filter (1..16); fallback highest_confidence
-    //   description       longest_non_boilerplate (LENGTH DESC) + higher_priority_source
+    //   description       longest_non_boilerplate (LENGTH DESC), excluding cross-game boilerplate
+    //   genre             normalized_taxonomy_match (de-prioritize generic labels, prefer multi-genre)
     //   all others        highest_priority (source_priority DESC, confidence DESC)
-    //                     covers: genre, rating (normalized_rating_scale approximated
-    //                     by source_priority), primary_region_code (explicit_region_codes
-    //                     approximated by source_priority), and any future fields
+    //                     covers: rating, primary_region_code, igdb_id, ra_game_id, and future fields
 
     bool MergeResolver::resolve(QSqlDatabase &db, CompilerStats &stats, QString &error) const {
         int total = 0;
@@ -69,11 +69,30 @@ namespace Compendium {
             return false;
         total += n;
 
-        // ── 2. developer / publisher (most_frequent_value) ────────────────────────
-        // freq CTE: count how many source facts carry each (game_id, field_value).
-        // ranked CTE: join facts with their frequency; ROW_NUMBER picks the fact
-        // whose value appears most often. Confidence breaks ties within the same
-        // frequency bucket (exact_hash_source_priority as primary rule).
+        // ── 2. developer / publisher — step 1: exact_hash_source_priority ─────────
+        // Facts linked to a DAT source_item (hash-identified ingest) win first.
+        n = runInsert(db,
+            QStringLiteral("INSERT OR REPLACE INTO canonical_resolution "
+                           "    (game_id, field_name, selected_fact_id, resolved_by_rule) "
+                           "SELECT game_id, field_name, fact_id, "
+                           "    CASE WHEN src_cnt = 1 THEN 'single_source' ELSE 'exact_hash_source_priority' END "
+                           "FROM ( "
+                           "    SELECT gf.game_id, gf.field_name, gf.fact_id, "
+                           "           COUNT(*) OVER (PARTITION BY gf.game_id, gf.field_name) AS src_cnt, "
+                           "           ROW_NUMBER() OVER ( "
+                           "               PARTITION BY gf.game_id, gf.field_name "
+                           "               ORDER BY gf.source_priority DESC, gf.confidence DESC, gf.fact_id ASC "
+                           "           ) AS rn "
+                           "    FROM game_facts gf "
+                           "    WHERE gf.field_name IN ('developer', 'publisher') "
+                           "      AND gf.source_item_id IS NOT NULL "
+                           ") WHERE rn = 1"),
+            error);
+        if (n < 0)
+            return false;
+        total += n;
+
+        // ── 2. developer / publisher — step 2: most_frequent_value fallback ───────
         n = runInsert(db,
             QStringLiteral("WITH freq AS ( "
                            "    SELECT game_id, field_name, field_value, COUNT(*) AS cnt "
@@ -94,11 +113,15 @@ namespace Compendium {
                            "                AND f.field_name = gf.field_name "
                            "                AND f.field_value = gf.field_value "
                            ") "
-                           "INSERT OR REPLACE INTO canonical_resolution "
+                           "INSERT OR IGNORE INTO canonical_resolution "
                            "    (game_id, field_name, selected_fact_id, resolved_by_rule) "
                            "SELECT game_id, field_name, fact_id, "
                            "    CASE WHEN src_cnt = 1 THEN 'single_source' ELSE 'most_frequent_value' END "
-                           "FROM ranked WHERE rn = 1"),
+                           "FROM ranked "
+                           "WHERE rn = 1 "
+                           "  AND NOT EXISTS ("
+                           "    SELECT 1 FROM canonical_resolution cr "
+                           "    WHERE cr.game_id = ranked.game_id AND cr.field_name = ranked.field_name)"),
             error);
         if (n < 0)
             return false;
@@ -220,32 +243,67 @@ namespace Compendium {
         total += n;
 
         // ── 6. description (longest_non_boilerplate) ──────────────────────────────
-        // LENGTH DESC picks the most content-rich description.
-        // Source priority breaks ties (higher_priority_source).
+        // Exclude descriptions shared by >30 games (genre-level boilerplate).
         n = runInsert(db,
-            QStringLiteral("INSERT OR REPLACE INTO canonical_resolution "
+            QStringLiteral("WITH boilerplate AS ( "
+                           "    SELECT field_value FROM game_facts "
+                           "    WHERE field_name = 'description' "
+                           "    GROUP BY field_value "
+                           "    HAVING COUNT(DISTINCT game_id) > 30 "
+                           ") "
+                           "INSERT OR REPLACE INTO canonical_resolution "
                            "    (game_id, field_name, selected_fact_id, resolved_by_rule) "
                            "SELECT game_id, field_name, fact_id, "
                            "    CASE WHEN cnt = 1 THEN 'single_source' ELSE 'longest_non_boilerplate' END "
                            "FROM ( "
-                           "    SELECT game_id, field_name, fact_id, "
-                           "           COUNT(*) OVER (PARTITION BY game_id, field_name) AS cnt, "
+                           "    SELECT gf.game_id, gf.field_name, gf.fact_id, "
+                           "           COUNT(*) OVER (PARTITION BY gf.game_id, gf.field_name) AS cnt, "
                            "           ROW_NUMBER() OVER ( "
-                           "               PARTITION BY game_id, field_name "
-                           "               ORDER BY LENGTH(field_value) DESC, source_priority DESC, fact_id ASC "
+                           "               PARTITION BY gf.game_id, gf.field_name "
+                           "               ORDER BY LENGTH(gf.field_value) DESC, gf.source_priority DESC, "
+                           "                        gf.fact_id ASC "
                            "           ) AS rn "
-                           "    FROM game_facts WHERE field_name = 'description' "
+                           "    FROM game_facts gf "
+                           "    WHERE gf.field_name = 'description' "
+                           "      AND NOT EXISTS ("
+                           "          SELECT 1 FROM boilerplate b WHERE b.field_value = gf.field_value) "
                            ") WHERE rn = 1"),
             error);
         if (n < 0)
             return false;
         total += n;
 
-        // ── 7. Generic fields ─────────────────────────────────────────────────────
-        // Covers: genre (higher_priority_source), rating (normalized_rating_scale
-        // approximated by source_priority), primary_region_code
-        // (explicit_region_codes approximated by source_priority), and any future
-        // field not explicitly handled above.
+        // ── 7. genre (normalized_taxonomy_match) ──────────────────────────────────
+        // De-prioritize generic single-word labels; prefer multi-genre strings.
+        n = runInsert(db,
+            QStringLiteral("INSERT OR REPLACE INTO canonical_resolution "
+                           "    (game_id, field_name, selected_fact_id, resolved_by_rule) "
+                           "SELECT game_id, field_name, fact_id, "
+                           "    CASE WHEN cnt = 1 THEN 'single_source' ELSE 'normalized_taxonomy_match' END "
+                           "FROM ( "
+                           "    SELECT game_id, field_name, fact_id, "
+                           "           COUNT(*) OVER (PARTITION BY game_id, field_name) AS cnt, "
+                           "           ROW_NUMBER() OVER ( "
+                           "               PARTITION BY game_id, field_name "
+                           "               ORDER BY "
+                           "                   CASE WHEN LOWER(TRIM(field_value)) IN "
+                           "                       ('other', 'misc', 'n/a', 'unknown', 'various', '') "
+                           "                       THEN 1 ELSE 0 END, "
+                           "                   CASE WHEN INSTR(field_value, ',') > 0 "
+                           "                         OR INSTR(field_value, '/') > 0 THEN 1 ELSE 0 END DESC, "
+                           "                   LENGTH(field_value) DESC, "
+                           "                   source_priority DESC, confidence DESC, fact_id ASC "
+                           "           ) AS rn "
+                           "    FROM game_facts WHERE field_name = 'genre' "
+                           ") WHERE rn = 1"),
+            error);
+        if (n < 0)
+            return false;
+        total += n;
+
+        // ── 8. Generic fields ─────────────────────────────────────────────────────
+        // Covers: rating (normalized_rating_scale approximated by source_priority),
+        // primary_region_code, external IDs, and any future field not handled above.
         n = runInsert(db,
             QStringLiteral("INSERT OR REPLACE INTO canonical_resolution "
                            "    (game_id, field_name, selected_fact_id, resolved_by_rule) "
@@ -261,7 +319,7 @@ namespace Compendium {
                            "    FROM game_facts "
                            "    WHERE field_name NOT IN ( "
                            "        'title', 'canonical_title', 'developer', 'publisher', "
-                           "        'release_date', 'release_year', 'players_max', 'description') "
+                           "        'release_date', 'release_year', 'players_max', 'description', 'genre') "
                            ") WHERE rn = 1"),
             error);
         if (n < 0)
@@ -389,6 +447,8 @@ namespace Compendium {
             { "genre", "genre" },
             { "rating", "rating" },
             { "region", "primary_region_code" },
+            { "igdb_id", "igdb_id" },
+            { "ra_game_id", "ra_game_id" },
         };
 
         for (const auto &f : kFields) {

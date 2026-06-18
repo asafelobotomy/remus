@@ -54,23 +54,34 @@ namespace {
         if (gameIds.isEmpty())
             return true;
 
-        QSqlQuery query(database);
-        query.prepare(QStringLiteral("SELECT game_id, hash_type, hash_value "
-                                     "FROM game_signatures "
-                                     "WHERE game_id = ? "
-                                     "  AND hash_type IN ('md5', 'sha1', 'crc32')"));
+        constexpr int kChunkSize = 500;
+        for (int offset = 0; offset < gameIds.size(); offset += kChunkSize) {
+            const QStringList chunk = gameIds.mid(offset, kChunkSize);
+            QStringList placeholders;
+            placeholders.reserve(chunk.size());
+            for (int i = 0; i < chunk.size(); ++i)
+                placeholders.append(QStringLiteral("?"));
 
-        for (const QString &gameId : gameIds) {
-            query.addBindValue(gameId);
+            QSqlQuery query(database);
+            query.prepare(QStringLiteral("SELECT game_id, hash_type, hash_value "
+                                         "FROM game_signatures "
+                                         "WHERE game_id IN (%1) "
+                                         "  AND hash_type IN ('md5', 'sha1', 'crc32')")
+                              .arg(placeholders.join(QLatin1Char(','))));
+            for (const QString &gameId : chunk)
+                query.addBindValue(gameId);
+
             if (!query.exec()) {
-                error = QStringLiteral("Query hashes for game %1: %2").arg(gameId, query.lastError().text());
+                error = QStringLiteral("Query hashes batch: %1").arg(query.lastError().text());
                 return false;
             }
 
-            GameHashes hashes;
             while (query.next()) {
+                const QString gameId = query.value(0).toString();
                 const QString type = query.value(1).toString();
                 const QString value = query.value(2).toString().trimmed().toLower();
+
+                GameHashes &hashes = hashesByGame[gameId];
                 if (type == QStringLiteral("crc32"))
                     hashes.crc32 = value;
                 else if (type == QStringLiteral("md5"))
@@ -78,8 +89,13 @@ namespace {
                 else if (type == QStringLiteral("sha1"))
                     hashes.sha1 = value;
             }
-            if (!hashes.crc32.isEmpty() || !hashes.md5.isEmpty() || !hashes.sha1.isEmpty())
-                hashesByGame.insert(gameId, hashes);
+        }
+
+        for (auto it = hashesByGame.begin(); it != hashesByGame.end();) {
+            if (it->crc32.isEmpty() && it->md5.isEmpty() && it->sha1.isEmpty())
+                it = hashesByGame.erase(it);
+            else
+                ++it;
         }
 
         return true;
@@ -185,6 +201,7 @@ bool enrichFromHasheous(QSqlDatabase &database, const QString &credentialsPath, 
                                    "developer    = COALESCE(NULLIF(developer, ''), ?), "
                                    "publisher    = COALESCE(NULLIF(publisher, ''), ?), "
                                    "release_year = COALESCE(release_year, ?), "
+                                   "release_date = COALESCE(release_date, ?), "
                                    "rating       = COALESCE(rating, ?) "
                                    "WHERE game_id = ?"));
 
@@ -240,21 +257,41 @@ bool enrichFromHasheous(QSqlDatabase &database, const QString &credentialsPath, 
 
         const QString genre = metadata.genres.isEmpty() ? QString() : metadata.genres.join(QStringLiteral(", "));
         int releaseYear = 0;
+        QString releaseDateStr;
+        if (metadata.releaseDate.size() >= 10)
+            releaseDateStr = metadata.releaseDate.left(10);
         if (metadata.releaseDate.size() >= 4) {
             bool ok = false;
             releaseYear = metadata.releaseDate.left(4).toInt(&ok);
             if (!ok)
                 releaseYear = 0;
+            if (releaseDateStr.isEmpty() && releaseYear > 0)
+                releaseDateStr = QStringLiteral("%1-01-01").arg(releaseYear);
         }
 
-        updateQ.addBindValue(nullableText(metadata.description));
-        updateQ.addBindValue(nullableText(genre));
-        updateQ.addBindValue(nullableText(metadata.developer));
-        updateQ.addBindValue(nullableText(metadata.publisher));
-        updateQ.addBindValue(nullableInt(releaseYear));
-        updateQ.addBindValue(nullableDouble(metadata.rating > 0.0f ? metadata.rating : 0.0));
-        updateQ.addBindValue(gameId);
+        updateQ.bindValue(0, nullableText(metadata.description));
+        updateQ.bindValue(1, nullableText(genre));
+        updateQ.bindValue(2, nullableText(metadata.developer));
+        updateQ.bindValue(3, nullableText(metadata.publisher));
+        updateQ.bindValue(4, nullableInt(releaseYear));
+        updateQ.bindValue(5, nullableText(releaseDateStr));
+        updateQ.bindValue(6, nullableDouble(metadata.rating > 0.0f ? metadata.rating : 0.0));
+        updateQ.bindValue(7, gameId);
         if (!execPrepared(updateQ, error, QStringLiteral("Hasheous metadata update for %1").arg(gameId))) {
+            database.rollback();
+            return false;
+        }
+
+        const QString yearStr = releaseYear > 0 ? QString::number(releaseYear) : QString();
+        const QString ratingStr
+            = metadata.rating > 0.0f ? QString::number(static_cast<double>(metadata.rating), 'f', 2) : QString();
+        if (!insertFact(gameId, QStringLiteral("description"), metadata.description)
+            || !insertFact(gameId, QStringLiteral("genre"), genre)
+            || !insertFact(gameId, QStringLiteral("developer"), metadata.developer)
+            || !insertFact(gameId, QStringLiteral("publisher"), metadata.publisher)
+            || !insertFact(gameId, QStringLiteral("release_year"), yearStr, QStringLiteral("integer"))
+            || !insertFact(gameId, QStringLiteral("release_date"), releaseDateStr)
+            || !insertFact(gameId, QStringLiteral("rating"), ratingStr, QStringLiteral("decimal"))) {
             database.rollback();
             return false;
         }

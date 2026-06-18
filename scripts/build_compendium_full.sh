@@ -291,6 +291,12 @@ awk -F'\t' 'NR>2 && $9==1 {print}' "$COVERAGE_REPORT" | head -15
 
 echo "==> Coverage report written: $COVERAGE_REPORT"
 
+SHADOWED_SUGGESTIONS="${COVERAGE_REPORT%.tsv}.shadowed-suggestions.txt"
+if [[ -x "$ROOT_DIR/scripts/audit_shadowed_manifest_sources.sh" ]]; then
+    bash "$ROOT_DIR/scripts/audit_shadowed_manifest_sources.sh" "$COVERAGE_REPORT" "$SHADOWED_SUGGESTIONS" \
+        || echo "warning: shadowed-source audit failed (see above)" >&2
+fi
+
 # Warn about systems that have no games ingested (coverage gaps).
 empty_systems=$(sqlite3 "$OUTPUT_DB" "
 SELECT display_name FROM systems s

@@ -26,7 +26,8 @@ bool createSchema(QSqlDatabase &db) {
                               "developer TEXT, "
                               "description TEXT, "
                               "publisher TEXT, "
-                              "release_year INTEGER)"))
+                              "release_year INTEGER, "
+                              "release_date TEXT)"))
         && execSql(db,
             QStringLiteral("CREATE TABLE sources ("
                            "source_id TEXT PRIMARY KEY, "
@@ -61,11 +62,11 @@ bool createSchema(QSqlDatabase &db) {
 
 bool seedGame(QSqlDatabase &db, const QString &gameId, int systemId, const QString &title, const QVariant &genre,
     const QVariant &publisher, const QVariant &releaseYear, const QVariant &developer = QVariant(),
-    const QVariant &description = QVariant()) {
+    const QVariant &description = QVariant(), const QVariant &releaseDate = QVariant()) {
     QSqlQuery q(db);
     q.prepare(QStringLiteral("INSERT INTO games (game_id, system_id, canonical_title, genre, publisher, release_year, "
-                             "developer, description) "
-                             "VALUES (?, ?, ?, ?, ?, ?, ?, ?)"));
+                             "developer, description, release_date) "
+                             "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"));
     q.addBindValue(gameId);
     q.addBindValue(systemId);
     q.addBindValue(title);
@@ -74,6 +75,7 @@ bool seedGame(QSqlDatabase &db, const QString &gameId, int systemId, const QStri
     q.addBindValue(releaseYear);
     q.addBindValue(developer);
     q.addBindValue(description);
+    q.addBindValue(releaseDate);
     return q.exec();
 }
 
@@ -132,7 +134,8 @@ void CompendiumZxInfoEnrichmentTest::zxRowsAlreadyComplete_returnsWithoutWrites(
     QVERIFY(
         seedGame(db, QStringLiteral("zx1"), Remus::Constants::Systems::ID_ZX_SPECTRUM, QStringLiteral("Jet Set Willy"),
             QVariant(QStringLiteral("Platform")), QVariant(QStringLiteral("Software Projects")), QVariant(1984),
-            QVariant(QStringLiteral("Software Projects")), QVariant(QStringLiteral("A classic platform game"))));
+            QVariant(QStringLiteral("Software Projects")), QVariant(QStringLiteral("A classic platform game")),
+            QVariant(QStringLiteral("1984-01-01"))));
 
     int games = 0;
     int facts = 0;

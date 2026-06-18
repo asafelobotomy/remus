@@ -30,6 +30,8 @@ bool createSchema(QSqlDatabase &db) {
                               "players_max INTEGER, "
                               "description TEXT, "
                               "rating REAL, "
+                              "igdb_id TEXT, "
+                              "ra_game_id TEXT, "
                               "canonical_confidence REAL NOT NULL DEFAULT 0)"))
         && execSql(db,
             QStringLiteral("CREATE TABLE game_facts ("

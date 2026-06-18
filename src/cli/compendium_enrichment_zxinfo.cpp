@@ -20,11 +20,35 @@ namespace {
 struct ZXMatch {
     QString gameId;
     int releaseYear = 0;
+    QString releaseDate;
     QString publisher;
     QString developer;
     QString genre;
     QString description;
 };
+
+const GameMetadata *pickZXInfoMatch(const QList<GameMetadata> &results, const QString &normQuery) {
+    for (const GameMetadata &gm : results) {
+        if (normalizeMetadataTitle(gm.title) == normQuery)
+            return &gm;
+    }
+    if (results.size() == 1 && !results.first().title.isEmpty())
+        return &results.first();
+    return nullptr;
+}
+
+QString normalizeZXReleaseDate(const QString &releaseDate) {
+    const QString trimmed = releaseDate.trimmed();
+    if (trimmed.isEmpty())
+        return QString();
+    if (trimmed.size() >= 10 && trimmed.at(4) == QLatin1Char('-'))
+        return trimmed.left(10);
+    bool ok = false;
+    const int year = trimmed.toInt(&ok);
+    if (ok && year > 1970 && year < 2030)
+        return QStringLiteral("%1-01-01").arg(year);
+    return QString();
+}
 
 } // namespace
 
@@ -48,6 +72,7 @@ bool enrichFromZXInfo(QSqlDatabase &database, int &gamesEnriched, int &factsInse
                                         "  AND (genre IS NULL OR genre = '' "
                                         "    OR publisher IS NULL OR publisher = '' "
                                         "    OR release_year IS NULL "
+                                        "    OR release_date IS NULL OR release_date = '' "
                                         "    OR developer IS NULL OR developer = '' "
                                         "    OR description IS NULL OR description = '')")
                     .arg(Constants::Systems::ID_ZX_SPECTRUM))) {
@@ -82,24 +107,27 @@ bool enrichFromZXInfo(QSqlDatabase &database, int &gamesEnriched, int &factsInse
         const QList<GameMetadata> results = provider.searchAndFetch(entry.title, 3);
         const QString normQuery = normalizeMetadataTitle(entry.title);
 
-        for (const GameMetadata &gm : results) {
-            if (normalizeMetadataTitle(gm.title) != normQuery)
-                continue;
+        const GameMetadata *gm = pickZXInfoMatch(results, normQuery);
+        if (!gm)
+            continue;
 
-            ZXMatch m;
-            m.gameId = entry.id;
-            m.genre = gm.genres.isEmpty() ? QString() : gm.genres.first();
-            m.publisher = gm.publisher;
-            m.developer = gm.developer;
-            m.description = gm.description;
+        ZXMatch m;
+        m.gameId = entry.id;
+        m.genre = gm->genres.isEmpty() ? QString() : gm->genres.first();
+        m.publisher = gm->publisher;
+        m.developer = gm->developer;
+        m.description = gm->description;
+        m.releaseDate = normalizeZXReleaseDate(gm->releaseDate);
 
-            bool ok = false;
-            const int year = gm.releaseDate.toInt(&ok);
-            m.releaseYear = (ok && year > 1970 && year < 2030) ? year : 0;
-
-            matches.append(m);
-            break; // first exact match wins
+        bool ok = false;
+        const int year = gm->releaseDate.toInt(&ok);
+        m.releaseYear = (ok && year > 1970 && year < 2030) ? year : 0;
+        if (m.releaseYear == 0 && !m.releaseDate.isEmpty()) {
+            const int derivedYear = m.releaseDate.left(4).toInt(&ok);
+            m.releaseYear = (ok && derivedYear > 1970 && derivedYear < 2030) ? derivedYear : 0;
         }
+
+        matches.append(m);
     }
 
     // Flush deleteLater() from network replies before opening a transaction
@@ -139,6 +167,7 @@ bool enrichFromZXInfo(QSqlDatabase &database, int &gamesEnriched, int &factsInse
                                    "developer    = COALESCE(developer, ?), "
                                    "publisher    = COALESCE(publisher, ?), "
                                    "release_year = COALESCE(release_year, ?), "
+                                   "release_date = COALESCE(release_date, ?), "
                                    "description  = COALESCE(description, ?) "
                                    "WHERE game_id = ?"));
 
@@ -180,8 +209,9 @@ bool enrichFromZXInfo(QSqlDatabase &database, int &gamesEnriched, int &factsInse
         updateQ.bindValue(1, nullableText(m.developer));
         updateQ.bindValue(2, nullableText(m.publisher));
         updateQ.bindValue(3, nullableInt(m.releaseYear));
-        updateQ.bindValue(4, nullableText(m.description));
-        updateQ.bindValue(5, m.gameId);
+        updateQ.bindValue(4, nullableText(m.releaseDate));
+        updateQ.bindValue(5, nullableText(m.description));
+        updateQ.bindValue(6, m.gameId);
 
         if (!updateQ.exec()) {
             error = QStringLiteral("Update ZXInfo game %1: %2").arg(m.gameId, updateQ.lastError().text());
@@ -195,6 +225,7 @@ bool enrichFromZXInfo(QSqlDatabase &database, int &gamesEnriched, int &factsInse
             || !insertFact(m.gameId, QStringLiteral("developer"), m.developer, QStringLiteral("text"))
             || !insertFact(m.gameId, QStringLiteral("publisher"), m.publisher, QStringLiteral("text"))
             || !insertFact(m.gameId, QStringLiteral("release_year"), yearStr, QStringLiteral("integer"))
+            || !insertFact(m.gameId, QStringLiteral("release_date"), m.releaseDate, QStringLiteral("text"))
             || !insertFact(m.gameId, QStringLiteral("description"), m.description, QStringLiteral("text"))) {
             if (error.isEmpty()) {
                 error = QStringLiteral("Insert ZXInfo fact for game %1 failed").arg(m.gameId);

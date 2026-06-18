@@ -86,6 +86,7 @@ bool enrichFromLibretroMetadata(
                                        "   OR publisher IS NULL OR TRIM(publisher) = '' "
                                        "   OR players_max IS NULL "
                                        "   OR release_year IS NULL "
+                                       "   OR release_date IS NULL OR TRIM(release_date) = '' "
                                        "   OR description IS NULL OR TRIM(description) = ''"))) {
         error = QStringLiteral("Load games for libretro enrichment: %1").arg(gameQuery.lastError().text());
         return false;
@@ -98,6 +99,7 @@ bool enrichFromLibretroMetadata(
                                        "publisher    = COALESCE(publisher, ?), "
                                        "players_max  = COALESCE(players_max, ?), "
                                        "release_year = COALESCE(release_year, ?), "
+                                       "release_date = COALESCE(release_date, ?), "
                                        "description  = COALESCE(description, ?) "
                                        "WHERE game_id = ?"));
 
@@ -149,13 +151,18 @@ bool enrichFromLibretroMetadata(
         if (!hasData)
             continue;
 
+        const QString releaseDate = meta.releaseYear > 0
+            ? QStringLiteral("%1-01-01").arg(meta.releaseYear)
+            : QString();
+
         updateQuery.bindValue(0, nullableText(meta.genre));
         updateQuery.bindValue(1, nullableText(meta.developer));
         updateQuery.bindValue(2, nullableText(meta.publisher));
         updateQuery.bindValue(3, nullableInt(meta.maxUsers));
         updateQuery.bindValue(4, nullableInt(meta.releaseYear));
-        updateQuery.bindValue(5, nullableText(meta.description));
-        updateQuery.bindValue(6, gameId);
+        updateQuery.bindValue(5, nullableText(releaseDate));
+        updateQuery.bindValue(6, nullableText(meta.description));
+        updateQuery.bindValue(7, gameId);
         if (!execPrepared(updateQuery, error, QStringLiteral("Update game libretro metadata")))
             return false;
         if (updateQuery.numRowsAffected() > 0)
@@ -176,6 +183,9 @@ bool enrichFromLibretroMetadata(
         if (meta.releaseYear > 0
             && !insertFact(
                 gameId, QStringLiteral("release_year"), QString::number(meta.releaseYear), QStringLiteral("int")))
+            return false;
+        if (!releaseDate.isEmpty()
+            && !insertFact(gameId, QStringLiteral("release_date"), releaseDate, QStringLiteral("text")))
             return false;
     }
 

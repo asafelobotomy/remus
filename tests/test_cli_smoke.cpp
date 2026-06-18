@@ -324,6 +324,9 @@ private slots:
         QVERIFY(reportDoc.object().value("facts_created").toInt() > 0);
         QVERIFY(reportDoc.object().value("resolved_fields").toInt() > 0);
         QCOMPARE(reportDoc.object().value("unresolved_conflicts").toInt(), 0);
+        QVERIFY(reportDoc.object().contains(QStringLiteral("enrichment_passes_executed")));
+        QVERIFY(reportDoc.object().contains(QStringLiteral("post_enrich_fts_rows_indexed")));
+        QVERIFY(reportDoc.object().value(QStringLiteral("post_enrich_fts_rows_indexed")).toInt() > 0);
 
         const QString connectionName
             = QStringLiteral("compendium_smoke_%1").arg(QString::number(QDateTime::currentMSecsSinceEpoch()));
@@ -362,6 +365,14 @@ private slots:
             QVERIFY(countsQuery.value(0).toInt() > 0);
 
             QVERIFY2(countsQuery.exec("SELECT COUNT(*) FROM source_items"), qPrintable(countsQuery.lastError().text()));
+            QVERIFY(countsQuery.next());
+            QVERIFY(countsQuery.value(0).toInt() > 0);
+
+            QVERIFY2(countsQuery.exec("SELECT COUNT(*) FROM games_fts"), qPrintable(countsQuery.lastError().text()));
+            QVERIFY(countsQuery.next());
+            QVERIFY(countsQuery.value(0).toInt() > 0);
+
+            QVERIFY2(countsQuery.exec("SELECT COUNT(*) FROM games_search"), qPrintable(countsQuery.lastError().text()));
             QVERIFY(countsQuery.next());
             QVERIFY(countsQuery.value(0).toInt() > 0);
 

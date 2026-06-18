@@ -15,7 +15,7 @@ int LibretroMetadataParser::loadAll(const QString &metadataDir) {
         return 0;
     }
 
-    static const QStringList types = { "genre", "developer", "publisher", "maxusers", "releaseyear" };
+    static const QStringList types = { "genre", "developer", "publisher", "maxusers", "releaseyear", "description" };
 
     int totalParsed = 0;
     for (const QString &type : types) {

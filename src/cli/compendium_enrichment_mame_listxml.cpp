@@ -155,7 +155,12 @@ bool enrichFromMameListXml(
     // still receive updated game_facts (via DELETE+INSERT) for resolver accuracy,
     // but the games table COALESCE update will be a no-op for them.
     QSqlQuery gamesQ(database);
-    gamesQ.prepare(QStringLiteral("SELECT game_id, canonical_title FROM games WHERE system_id = ?"));
+    gamesQ.prepare(QStringLiteral("SELECT game_id, canonical_title FROM games "
+                                   "WHERE system_id = ? "
+                                   "  AND (developer IS NULL OR TRIM(developer) = '' "
+                                   "    OR publisher IS NULL OR TRIM(publisher) = '' "
+                                   "    OR release_year IS NULL "
+                                   "    OR players_max IS NULL)"));
     gamesQ.addBindValue(Constants::Systems::ID_ARCADE);
     if (!gamesQ.exec()) {
         error = QStringLiteral("Query arcade games for MAME listxml: %1").arg(gamesQ.lastError().text());
