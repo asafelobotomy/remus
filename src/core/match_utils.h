@@ -7,6 +7,7 @@
 namespace Remus {
 
 QString selectBestMatchHash(const FileRecord &file);
+QString selectContentSha1(const FileRecord &file);
 QString deriveMatchingDisplayName(const FileRecord &file);
 
 /// All non-empty digests for a ROM, in verification-aligned order (sha256 → preferred → sha1 → md5 → crc32).

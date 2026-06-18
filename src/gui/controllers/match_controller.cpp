@@ -351,7 +351,8 @@ bool MatchController::matchFileRecord(const FileRecord &file) {
 
         const QString displayName = deriveMatchingDisplayName(file);
         metadata = orchestrator->searchWithFallback(
-            hash, displayName, systemName, file.crc32, file.md5, file.sha1, discSerial, file.fileSize, file.raMd5);
+            hash, displayName, systemName, file.crc32, file.md5, file.sha1, discSerial, file.fileSize, file.raMd5,
+            false, selectContentSha1(file));
         if (!metadata.title.isEmpty()) {
             if (metadata.matchScore > 0.0f && !metadata.matchMethod.isEmpty()) {
                 confidence = metadata.matchScore * 100.0f;

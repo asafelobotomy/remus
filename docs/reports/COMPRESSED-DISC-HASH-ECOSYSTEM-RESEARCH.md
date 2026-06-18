@@ -22,11 +22,11 @@ The ecosystem has converged on a **two-layer hash model** for compressed disc im
 | **Container hashes** | CRC/MD5/SHA1 of the `.chd`/`.rvz` file bytes | ScreenScraper KO logging, local audit, negative-cache |
 | **Content/header hashes** | CHD header SHA1 (`chd_sha1`), dolphin-tool ISO hash for RVZ | Hasheous, PlayMatch, MAME Redump DATs, compendium bridges |
 
-Remus now stores layer 2 for CHD. Highest-value next work:
+Remus now stores layer 2 for CHD and RVZ. Completed roadmap (2026-06-18):
 
-1. **P1** — CHD backfill for libraries hashed before `chd_sha1`; confirm we index the same SHA1 Hasheous uses.
-2. **P2** — Ingest MAME Redump CHD DATs; add `dolphin-tool` content hash for RVZ.
-3. **P3** — Self-hosted Hasheous URL; CSO verification via maxcso; CHD v5 native header read. **Done** (2026-06-18).
+1. **P1** — CHD backfill for libraries hashed before `chd_sha1`; confirm we index the same SHA1 Hasheous uses. **Done**
+2. **P2** — Ingest MAME Redump CHD DATs; add `dolphin-tool` content hash for RVZ. **Done**
+3. **P3** — Self-hosted Hasheous URL; CSO verification via maxcso; CHD v5 native header read. **Done**
 
 **Do not wait on Hasheous bulk offline dumps** — the offline path is self-hosted Hasheous + local DAT import, or Remus compendium (Gaseous “LocalOnly” model).
 
@@ -128,14 +128,14 @@ Remus must store **SHA1** (header), not Data SHA1, in `files.chd_sha1`. See `CHD
 
 ## Recommended roadmap
 
-### P1 — CHD backfill + field validation (this sprint)
+### P1 — CHD backfill + field validation
 
-| Task | Notes |
-|------|-------|
-| `--hash-chd-backfill` CLI | Fill `chd_sha1` for `.chd` rows missing it; requires `chdman` only |
-| Persist `chdSha1`/`raMd5` in all `updateFileHashes` call sites | CLI/GUI hash paths were dropping CHD digest |
-| Parse SHA1 vs Data SHA1 explicitly | Tests lock Hasheous field choice |
-| Match uses stored `chd_sha1` | Already via `FileRecord`; no re-hash at match time |
+| Task | Status | Notes |
+|------|--------|-------|
+| `--hash-chd-backfill` CLI | **Done** | Fill `chd_sha1` for `.chd` rows missing it |
+| Persist `chdSha1`/`raMd5` in all `updateFileHashes` call sites | **Done** | CLI/GUI hash paths |
+| Parse SHA1 vs Data SHA1 explicitly | **Done** | Tests lock Hasheous field choice |
+| Match uses stored `chd_sha1` | **Done** | Via `selectContentSha1()` + compendium cascade |
 
 ### P2 — Compressed format coverage
 

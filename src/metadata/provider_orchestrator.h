@@ -79,7 +79,7 @@ public:
     GameMetadata searchWithFallback(const QString &hash, const QString &name, const QString &system,
         const QString &crc32 = QString(), const QString &md5 = QString(), const QString &sha1 = QString(),
         const QString &serial = QString(), qint64 fileSize = 0, const QString &raMd5 = QString(),
-        bool requireArtwork = false);
+        bool requireArtwork = false, const QString &contentSha1 = QString());
 
     /**
      * @brief Get list of all search results from all providers
@@ -233,7 +233,7 @@ private:
      */
     void queryProvider(GameMetadata &accumulator, const QString &providerName, const QString &hash, const QString &name,
         const QString &system, const QString &crc32, const QString &md5, const QString &sha1, const QString &serial,
-        qint64 fileSize = 0, const QString &raMd5 = QString());
+        qint64 fileSize = 0, const QString &raMd5 = QString(), const QString &contentSha1 = QString());
 
     /**
      * @brief Determine if provider supports hash matching

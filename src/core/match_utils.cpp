@@ -32,6 +32,14 @@ QString selectBestMatchHash(const FileRecord &file) {
     return QString();
 }
 
+QString selectContentSha1(const FileRecord &file) {
+    if (!file.chdSha1.isEmpty())
+        return file.chdSha1.trimmed().toLower();
+    if (!file.rvzSha1.isEmpty())
+        return file.rvzSha1.trimmed().toLower();
+    return QString();
+}
+
 QString deriveMatchingDisplayName(const FileRecord &file) {
     if (!file.baseTitle.isEmpty()) {
         return file.baseTitle;
