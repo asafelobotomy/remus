@@ -12,6 +12,8 @@ struct ROMSignals {
     QString crc32;
     QString md5;
     QString sha1;
+    /// CHD header or RVZ/GCZ content SHA1 for compressed-disc compendium lookup.
+    QString contentSha1;
     QString filename;
     qint64 fileSize = 0;
     QString serial;

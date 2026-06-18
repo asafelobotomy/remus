@@ -14,13 +14,13 @@ namespace {
     // Column order must match kFileSelectColumns below exactly.
     // 0=id, 1=library_id, 2=original_path, 3=current_path, 4=filename, 5=extension,
     // 6=file_size, 7=is_compressed, 8=archive_path, 9=archive_internal_path,
-    // 10=system_id, 11=crc32, 12=md5, 13=sha1, 14=ra_md5, 15=chd_sha1, 16=hash_calculated,
-    // 17=is_primary, 18=parent_file_id, 19=base_title, 20=disc_set_key, 21=disc_number,
-    // 22=file_type, 23=is_patched, 24=patch_name, 25=is_processed, 26=processing_status,
-    // 27=last_modified, 28=scanned_at
+    // 10=system_id, 11=crc32, 12=md5, 13=sha1, 14=ra_md5, 15=chd_sha1, 16=rvz_sha1, 17=hash_calculated,
+    // 18=is_primary, 19=parent_file_id, 20=base_title, 21=disc_set_key, 22=disc_number,
+    // 23=file_type, 24=is_patched, 25=patch_name, 26=is_processed, 27=processing_status,
+    // 28=last_modified, 29=scanned_at
     static const char kFileSelectColumns[] = "id, library_id, original_path, current_path, filename, extension, "
                                              "file_size, is_compressed, archive_path, archive_internal_path, "
-                                             "system_id, crc32, md5, sha1, ra_md5, chd_sha1, hash_calculated, "
+                                             "system_id, crc32, md5, sha1, ra_md5, chd_sha1, rvz_sha1, hash_calculated, "
                                              "is_primary, parent_file_id, base_title, disc_set_key, disc_number, "
                                              "file_type, is_patched, patch_name, is_processed, processing_status, "
                                              "last_modified, scanned_at";
@@ -43,19 +43,20 @@ namespace {
         r.sha1 = q.value(13).toString();
         r.raMd5 = q.value(14).toString();
         r.chdSha1 = q.value(15).toString();
-        r.hashCalculated = q.value(16).toBool();
-        r.isPrimary = q.value(17).toBool();
-        r.parentFileId = q.value(18).toInt();
-        r.baseTitle = q.value(19).toString();
-        r.discSetKey = q.value(20).toString();
-        r.discNumber = q.value(21).toInt();
-        r.fileType = q.value(22).toString();
-        r.isPatched = q.value(23).toBool();
-        r.patchName = q.value(24).toString();
-        r.isProcessed = q.value(25).toBool();
-        r.processingStatus = q.value(26).toString();
-        r.lastModified = q.value(27).toDateTime();
-        r.scannedAt = q.value(28).toDateTime();
+        r.rvzSha1 = q.value(16).toString();
+        r.hashCalculated = q.value(17).toBool();
+        r.isPrimary = q.value(18).toBool();
+        r.parentFileId = q.value(19).toInt();
+        r.baseTitle = q.value(20).toString();
+        r.discSetKey = q.value(21).toString();
+        r.discNumber = q.value(22).toInt();
+        r.fileType = q.value(23).toString();
+        r.isPatched = q.value(24).toBool();
+        r.patchName = q.value(25).toString();
+        r.isProcessed = q.value(26).toBool();
+        r.processingStatus = q.value(27).toString();
+        r.lastModified = q.value(28).toDateTime();
+        r.scannedAt = q.value(29).toDateTime();
         return r;
     }
 
@@ -150,14 +151,14 @@ int Database::insertFile(const FileRecord &record) {
 }
 
 bool Database::updateFileHashes(int fileId, const QString &crc32, const QString &md5, const QString &sha1,
-    const QString &raMd5, const QString &chdSha1) {
+    const QString &raMd5, const QString &chdSha1, const QString &rvzSha1) {
     QSqlQuery query(m_db);
     const AppliedPatchRecord lineage = findAppliedPatchByOutputHashes(crc32, md5, sha1);
     const bool hasLineage = lineage.id > 0;
 
     QString updateStatement = R"(
         UPDATE files 
-        SET crc32 = ?, md5 = ?, sha1 = ?, ra_md5 = ?, chd_sha1 = ?, hash_calculated = 1
+        SET crc32 = ?, md5 = ?, sha1 = ?, ra_md5 = ?, chd_sha1 = ?, rvz_sha1 = ?, hash_calculated = 1
     )";
     if (hasLineage) {
         updateStatement += R"(,
@@ -175,6 +176,7 @@ bool Database::updateFileHashes(int fileId, const QString &crc32, const QString 
     query.addBindValue(sha1);
     query.addBindValue(raMd5.isEmpty() ? QVariant() : raMd5);
     query.addBindValue(chdSha1.isEmpty() ? QVariant() : chdSha1);
+    query.addBindValue(rvzSha1.isEmpty() ? QVariant() : rvzSha1);
     if (hasLineage) {
         query.addBindValue(lineage.baseTitle.isEmpty() ? QVariant() : lineage.baseTitle);
         query.addBindValue(lineage.fileType.isEmpty() ? QVariant() : lineage.fileType);
@@ -229,6 +231,76 @@ QList<FileRecord> Database::getFilesWithoutHashes() {
     }
 
     return files;
+}
+
+QList<FileRecord> Database::getFilesNeedingChdSha1() {
+    QList<FileRecord> files;
+
+    QSqlQuery query(m_db);
+    if (!query.exec(QStringLiteral(
+            "SELECT %1 FROM files "
+            "WHERE is_primary = 1 "
+            "  AND LOWER(extension) = '.chd' "
+            "  AND (chd_sha1 IS NULL OR TRIM(chd_sha1) = '')")
+                        .arg(QLatin1String(kFileSelectColumns)))) {
+        logError("Failed to query CHD files needing header SHA1: " + query.lastError().text());
+        return files;
+    }
+
+    while (query.next())
+        files.append(fileRecordFromRow(query));
+
+    return files;
+}
+
+bool Database::updateFileChdSha1(int fileId, const QString &chdSha1) {
+    if (fileId <= 0 || chdSha1.trimmed().isEmpty())
+        return false;
+
+    QSqlQuery query(m_db);
+    query.prepare(QStringLiteral("UPDATE files SET chd_sha1 = ? WHERE id = ?"));
+    query.addBindValue(chdSha1.trimmed().toLower());
+    query.addBindValue(fileId);
+    if (!query.exec()) {
+        logError("Failed to update CHD SHA1: " + query.lastError().text());
+        return false;
+    }
+    return query.numRowsAffected() > 0;
+}
+
+QList<FileRecord> Database::getFilesNeedingRvzSha1() {
+    QList<FileRecord> files;
+
+    QSqlQuery query(m_db);
+    if (!query.exec(QStringLiteral(
+            "SELECT %1 FROM files "
+            "WHERE is_primary = 1 "
+            "  AND LOWER(extension) IN ('.rvz', '.gcz') "
+            "  AND (rvz_sha1 IS NULL OR TRIM(rvz_sha1) = '')")
+                        .arg(QLatin1String(kFileSelectColumns)))) {
+        logError("Failed to query RVZ/GCZ files needing content SHA1: " + query.lastError().text());
+        return files;
+    }
+
+    while (query.next())
+        files.append(fileRecordFromRow(query));
+
+    return files;
+}
+
+bool Database::updateFileRvzSha1(int fileId, const QString &rvzSha1) {
+    if (fileId <= 0 || rvzSha1.trimmed().isEmpty())
+        return false;
+
+    QSqlQuery query(m_db);
+    query.prepare(QStringLiteral("UPDATE files SET rvz_sha1 = ? WHERE id = ?"));
+    query.addBindValue(rvzSha1.trimmed().toLower());
+    query.addBindValue(fileId);
+    if (!query.exec()) {
+        logError("Failed to update RVZ SHA1: " + query.lastError().text());
+        return false;
+    }
+    return query.numRowsAffected() > 0;
 }
 
 QMap<QString, int> Database::getFileCountBySystem() {

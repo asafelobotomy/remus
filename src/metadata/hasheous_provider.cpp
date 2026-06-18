@@ -1,4 +1,5 @@
 #include "hasheous_provider.h"
+#include "../core/hasheous_config.h"
 #include "../core/constants/providers.h"
 #include "../core/constants/settings.h"
 #include "../core/constants/api.h"
@@ -38,8 +39,9 @@ namespace {
 
     QJsonObject hashEntryToPayloadObject(const HasheousHashEntry &entry) {
         QJsonObject obj;
-        if (!entry.chdSha1.isEmpty()) {
-            obj.insert(QStringLiteral("shA1"), normalizedHashValue(entry.chdSha1));
+        const QString discSha1 = !entry.chdSha1.isEmpty() ? entry.chdSha1 : entry.rvzSha1;
+        if (!discSha1.isEmpty()) {
+            obj.insert(QStringLiteral("shA1"), normalizedHashValue(discSha1));
             return obj;
         }
 
@@ -83,8 +85,14 @@ namespace {
 
 HasheousProvider::HasheousProvider(QObject *parent)
     : HttpMetadataProvider(QStringLiteral("hasheous"), Constants::Network::HASHEOUS_RATE_LIMIT_MS, parent) {
-    qInfo() << "Hasheous provider initialized (hash lookup enabled; MetadataProxy"
+    m_baseUrl = resolveHasheousBaseUrl();
+    qInfo() << "Hasheous provider initialized (base URL:" << m_baseUrl << "; hash lookup enabled; MetadataProxy"
             << (metadataProxyEnabled() ? "enabled" : "disabled") << ")";
+}
+
+void HasheousProvider::setBaseUrl(const QString &url) {
+    const QString resolved = resolveHasheousBaseUrl(url);
+    m_baseUrl = resolved.isEmpty() ? QString::fromLatin1(Constants::API::HASHEOUS_BASE_URL) : resolved;
 }
 
 QString HasheousProvider::detectHashType(const QString &hash) const {
@@ -99,7 +107,7 @@ QJsonObject HasheousProvider::makeRequest(const QString &endpoint, const QUrlQue
         return QJsonObject();
     }
 
-    QUrl url(QString(Constants::API::HASHEOUS_BASE_URL) + endpoint);
+    QUrl url(m_baseUrl + endpoint);
     url.setQuery(params);
 
     QNetworkRequest request(url);
@@ -154,7 +162,7 @@ QJsonObject HasheousProvider::makePostRequest(
     const QString &endpoint, const QJsonDocument &bodyDoc, const QUrlQuery &params) {
     m_rateLimiter->waitIfNeeded();
 
-    QUrl url(QString(Constants::API::HASHEOUS_BASE_URL) + endpoint);
+    QUrl url(m_baseUrl + endpoint);
     if (!params.isEmpty()) {
         url.setQuery(params);
     }

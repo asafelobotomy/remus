@@ -44,6 +44,8 @@ int handleInspectCommands(CliContext &ctx); // header-info + show-art
 int handleScanCommand(CliContext &ctx);
 int handleListCommand(CliContext &ctx);
 int handleHashAllCommand(CliContext &ctx);
+int handleChdBackfillCommand(CliContext &ctx);
+int handleRvzBackfillCommand(CliContext &ctx);
 int handleReclassifyIsoCommand(CliContext &ctx);
 int handleCheckToolsCommand(CliContext &ctx);
 
@@ -83,7 +85,7 @@ int handleSpaceReportCommand(CliContext &ctx);
 
 // ── RVZ / CSO / WBFS conversion ───────────────────────────────────────────────
 // --convert-rvz, --rvz-extract, --rvz-verify,
-// --convert-cso, --cso-extract,
+// --convert-cso, --cso-extract, --cso-verify,
 // --convert-wbfs, --wbfs-extract,
 // --export-pbp
 int handleConvertRvzCommand(CliContext &ctx);
@@ -91,6 +93,7 @@ int handleRvzExtractCommand(CliContext &ctx);
 int handleRvzVerifyCommand(CliContext &ctx);
 int handleConvertCsoCommand(CliContext &ctx);
 int handleCsoExtractCommand(CliContext &ctx);
+int handleCsoVerifyCommand(CliContext &ctx);
 int handleConvertWbfsCommand(CliContext &ctx);
 int handleWbfsExtractCommand(CliContext &ctx);
 int handleExportPBPCommand(CliContext &ctx);

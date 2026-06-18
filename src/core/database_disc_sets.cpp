@@ -26,7 +26,7 @@ QList<FileRecord> Database::getFilesByDiscSetKey(const QString &discSetKey) {
     query.prepare(QStringLiteral(
         "SELECT id, library_id, original_path, current_path, filename, extension, "
         "file_size, is_compressed, archive_path, archive_internal_path, "
-        "system_id, crc32, md5, sha1, ra_md5, chd_sha1, hash_calculated, "
+        "system_id, crc32, md5, sha1, ra_md5, chd_sha1, rvz_sha1, hash_calculated, "
         "is_primary, parent_file_id, base_title, disc_set_key, disc_number, "
         "file_type, is_patched, patch_name, is_processed, processing_status, "
         "last_modified, scanned_at "
@@ -57,19 +57,20 @@ QList<FileRecord> Database::getFilesByDiscSetKey(const QString &discSetKey) {
         r.sha1 = query.value(13).toString();
         r.raMd5 = query.value(14).toString();
         r.chdSha1 = query.value(15).toString();
-        r.hashCalculated = query.value(16).toBool();
-        r.isPrimary = query.value(17).toBool();
-        r.parentFileId = query.value(18).toInt();
-        r.baseTitle = query.value(19).toString();
-        r.discSetKey = query.value(20).toString();
-        r.discNumber = query.value(21).toInt();
-        r.fileType = query.value(22).toString();
-        r.isPatched = query.value(23).toBool();
-        r.patchName = query.value(24).toString();
-        r.isProcessed = query.value(25).toBool();
-        r.processingStatus = query.value(26).toString();
-        r.lastModified = query.value(27).toDateTime();
-        r.scannedAt = query.value(28).toDateTime();
+        r.rvzSha1 = query.value(16).toString();
+        r.hashCalculated = query.value(17).toBool();
+        r.isPrimary = query.value(18).toBool();
+        r.parentFileId = query.value(19).toInt();
+        r.baseTitle = query.value(20).toString();
+        r.discSetKey = query.value(21).toString();
+        r.discNumber = query.value(22).toInt();
+        r.fileType = query.value(23).toString();
+        r.isPatched = query.value(24).toBool();
+        r.patchName = query.value(25).toString();
+        r.isProcessed = query.value(26).toBool();
+        r.processingStatus = query.value(27).toString();
+        r.lastModified = query.value(28).toDateTime();
+        r.scannedAt = query.value(29).toDateTime();
         if (r.id > 0)
             files.append(r);
     }

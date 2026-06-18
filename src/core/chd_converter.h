@@ -17,9 +17,17 @@ struct CHDInfo {
     QString compression;
     qint64 logicalSize = 0;
     qint64 physicalSize = 0;
+    /// MAME/header SHA1 from `chdman info` (combined raw+meta). Hasheous + MAME Redump index key.
     QString sha1;
+    /// Uncompressed payload SHA1 from `chdman info` ("Data SHA1"). Verification only — not for bridges.
+    QString dataSha1;
     QString parentSha1;
     int diskType = 0;
+
+    /// SHA1 to send to Hasheous / MAME Redump DAT matching (header index, not Data SHA1).
+    QString hasheousDiscSha1() const {
+        return sha1.trimmed().toLower();
+    }
 };
 
 /**

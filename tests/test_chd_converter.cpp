@@ -57,6 +57,7 @@ private slots:
     void testVerifyCHD();
     void testVerifyCHDUsesGenericErrorWhenStderrMissing();
     void testGetCHDInfo();
+    void testGetCHDInfoParsesHeaderAndDataSha1();
     void testGetCHDInfoSupportsLegacyLabelsAndFailureDefaults();
     void testConvertIso();
     void testConvertCueAndGdiIncludeConfiguredArguments();
@@ -120,6 +121,21 @@ void ChdConverterTest::testGetCHDInfo() {
     QCOMPARE(info.physicalSize, 307388422);
     QCOMPARE(info.sha1, QStringLiteral("abcdef"));
     QCOMPARE(info.compression, QStringLiteral("cdlz (CD LZMA), cdzl (CD Deflate), cdfl (CD FLAC)"));
+}
+
+void ChdConverterTest::testGetCHDInfoParsesHeaderAndDataSha1() {
+    FakeChdConverter converter;
+    converter.nextProcess.started = true;
+    converter.nextProcess.exitCode = 0;
+    converter.nextProcess.stdOutput = "File Version: 5\n"
+                                      "SHA1:         abcdef0123456789abcdef0123456789abcdef\n"
+                                      "Data SHA1:    1111222233334444555566667777888899990000\n";
+
+    const CHDInfo info = converter.getCHDInfo("/tmp/test.chd");
+    QCOMPARE(info.sha1, QStringLiteral("abcdef0123456789abcdef0123456789abcdef"));
+    QCOMPARE(info.dataSha1, QStringLiteral("1111222233334444555566667777888899990000"));
+    QCOMPARE(info.hasheousDiscSha1(), QStringLiteral("abcdef0123456789abcdef0123456789abcdef"));
+    QVERIFY(info.hasheousDiscSha1() != info.dataSha1.trimmed().toLower());
 }
 
 void ChdConverterTest::testGetCHDInfoSupportsLegacyLabelsAndFailureDefaults() {

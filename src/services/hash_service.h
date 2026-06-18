@@ -5,6 +5,7 @@
 #include <memory>
 #include <QString>
 #include <QList>
+#include <QSet>
 
 #include "../core/hasher.h" // HashResult
 
@@ -73,6 +74,27 @@ public:
 
     QList<HashBatchResult> computeHashes(const QList<FileRecord> &files, ProgressCallback progressCb = nullptr,
         const std::atomic<bool> *cancelled = nullptr);
+
+    /**
+     * @brief Fill @c chd_sha1 for .chd files that were hashed before header digest support.
+     *
+     * Uses @c chdman info only (no full container re-read). Skips archive-contained CHDs.
+     * @return Number of files updated
+     */
+    int backfillChdSha1(Database *db, ProgressCallback progressCb = nullptr, LogCallback logCb = nullptr,
+        const std::atomic<bool> *cancelled = nullptr, const QSet<int> *fileScopeIds = nullptr);
+
+    /// Extract Hasheous/MAME header SHA1 for a standalone .chd on disk (empty when unavailable).
+    static QString chdDiscSha1ForPath(const QString &chdPath);
+
+    /**
+     * @brief Fill @c rvz_sha1 for .rvz/.gcz files that were hashed before content digest support.
+     */
+    int backfillRvzSha1(Database *db, ProgressCallback progressCb = nullptr, LogCallback logCb = nullptr,
+        const std::atomic<bool> *cancelled = nullptr, const QSet<int> *fileScopeIds = nullptr);
+
+    /// Extract dolphin-tool disc content SHA1 for RVZ/GCZ on disk (empty when unavailable).
+    static QString rvzDiscContentSha1ForPath(const QString &discPath);
 
 private:
     std::unique_ptr<Hasher> m_hasher;

@@ -43,6 +43,8 @@ add_library(remus-core STATIC
     m3u_generator.cpp
     disc_set_utils.cpp
     chd_converter.cpp
+    chd_header.cpp
+    hasheous_config.cpp
     rvz_converter.cpp
     cso_converter.cpp
     wbfs_converter.cpp

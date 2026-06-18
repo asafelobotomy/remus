@@ -94,6 +94,8 @@ bool Database::runMigrations() {
     const bool hasRaMd5 = fileColumns.contains(Constants::DatabaseSchema::Columns::Files::RA_MD5);
     const bool hasDiscSetKey = fileColumns.contains(Constants::DatabaseSchema::Columns::Files::DISC_SET_KEY);
     const bool hasDiscNumber = fileColumns.contains(Constants::DatabaseSchema::Columns::Files::DISC_NUMBER);
+    const bool hasChdSha1 = fileColumns.contains(Constants::DatabaseSchema::Columns::Files::CHD_SHA1);
+    const bool hasRvzSha1 = fileColumns.contains(Constants::DatabaseSchema::Columns::Files::RVZ_SHA1);
 
     // Add is_processed column if missing
     if (!hasIsProcessed) {
@@ -258,6 +260,28 @@ bool Database::runMigrations() {
                     .arg(Constants::DatabaseSchema::Tables::FILES,
                         Constants::DatabaseSchema::Columns::Files::DISC_NUMBER),
                 "Migration: Failed to add disc_number column to files table")) {
+            return false;
+        }
+    }
+
+    if (!hasChdSha1) {
+        qInfo() << "Migration: Adding chd_sha1 column to files table";
+        if (!execChecked(query,
+                QString("ALTER TABLE %1 ADD COLUMN %2 TEXT")
+                    .arg(Constants::DatabaseSchema::Tables::FILES,
+                        Constants::DatabaseSchema::Columns::Files::CHD_SHA1),
+                "Migration: Failed to add chd_sha1 column to files table")) {
+            return false;
+        }
+    }
+
+    if (!hasRvzSha1) {
+        qInfo() << "Migration: Adding rvz_sha1 column to files table";
+        if (!execChecked(query,
+                QString("ALTER TABLE %1 ADD COLUMN %2 TEXT")
+                    .arg(Constants::DatabaseSchema::Tables::FILES,
+                        Constants::DatabaseSchema::Columns::Files::RVZ_SHA1),
+                "Migration: Failed to add rvz_sha1 column to files table")) {
             return false;
         }
     }

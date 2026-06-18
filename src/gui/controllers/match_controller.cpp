@@ -30,6 +30,7 @@ namespace {
         entry.md5 = file.md5;
         entry.sha1 = file.sha1;
         entry.chdSha1 = file.chdSha1.trimmed().toLower();
+        entry.rvzSha1 = file.rvzSha1.trimmed().toLower();
         const QString primaryHash = selectBestMatchHash(file);
         if (primaryHash.size() == 64)
             entry.sha256 = primaryHash;

@@ -272,7 +272,8 @@ int handleHashAllCommand(CliContext &ctx) {
 
     for (const HashService::HashBatchResult &task : taskResults) {
         if (!task.skipped && task.result.success) {
-            ctx.db.updateFileHashes(task.fileId, task.result.crc32, task.result.md5, task.result.sha1);
+            ctx.db.updateFileHashes(task.fileId, task.result.crc32, task.result.md5, task.result.sha1,
+                task.result.raMd5, task.result.chdSha1, task.result.rvzSha1);
             hashedCount++;
             if (hashedCount % 10 == 0)
                 qInfo() << "  Hashed" << hashedCount << "of" << filesToHash.size() << "files...";
@@ -285,6 +286,48 @@ int handleHashAllCommand(CliContext &ctx) {
         qInfo() << "Hashing complete:" << hashedCount << "hashed," << skippedCount << "skipped";
     else
         qInfo() << "Hashing complete:" << hashedCount << "files hashed";
+    return 0;
+}
+
+int handleChdBackfillCommand(CliContext &ctx) {
+    if (!ctx.parser.isSet("hash-chd-backfill"))
+        return 0;
+
+    qInfo() << "";
+    qInfo() << "Backfilling CHD header SHA1 (Hasheous/MAME index)...";
+
+    const QSet<int> *scope = ctx.processFileScopeIds.isEmpty() ? nullptr : &ctx.processFileScopeIds;
+    const int candidateCount = ctx.db.getFilesNeedingChdSha1().size();
+
+    HashService svc;
+    const int updated = svc.backfillChdSha1(
+        &ctx.db, nullptr, [](const QString &message) { qInfo().noquote() << message; }, nullptr, scope);
+
+    if (updated == 0 && candidateCount == 0)
+        qInfo() << "No .chd files need CHD header SHA1 backfill.";
+    else
+        qInfo() << "CHD header SHA1 backfill finished:" << updated << "file(s) updated.";
+    return 0;
+}
+
+int handleRvzBackfillCommand(CliContext &ctx) {
+    if (!ctx.parser.isSet("hash-rvz-backfill"))
+        return 0;
+
+    qInfo() << "";
+    qInfo() << "Backfilling RVZ/GCZ disc content SHA1 (Hasheous/MAME Redump index)...";
+
+    const QSet<int> *scope = ctx.processFileScopeIds.isEmpty() ? nullptr : &ctx.processFileScopeIds;
+    const int candidateCount = ctx.db.getFilesNeedingRvzSha1().size();
+
+    HashService svc;
+    const int updated = svc.backfillRvzSha1(
+        &ctx.db, nullptr, [](const QString &message) { qInfo().noquote() << message; }, nullptr, scope);
+
+    if (updated == 0 && candidateCount == 0)
+        qInfo() << "No .rvz/.gcz files need content SHA1 backfill.";
+    else
+        qInfo() << "RVZ/GCZ content SHA1 backfill finished:" << updated << "file(s) updated.";
     return 0;
 }
 

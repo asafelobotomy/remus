@@ -188,6 +188,7 @@ mapfile -d '' DAT_FILES < <(find "$DAT_DIR" -maxdepth 1 -type f -name '*.dat' -p
 mapfile -d '' NO_INTRO_FILES < <(find "$DAT_DIR/no-intro" -maxdepth 1 -type f -name '*.dat' -print0 2>/dev/null | sort -z)
 mapfile -d '' REDUMP_FILES < <(find "$DAT_DIR/redump" -maxdepth 1 -type f -name '*.dat' -print0 2>/dev/null | sort -z)
 mapfile -d '' MAME_FILES < <(find "$DAT_DIR/mame" -maxdepth 1 -type f -name '*.dat' -print0 2>/dev/null | sort -z)
+mapfile -d '' MAME_REDUMP_CHD_FILES < <(find "$DAT_DIR/mame-redump-chd" -maxdepth 1 -type f -name '*.dat' -print0 2>/dev/null | sort -z)
 
 ALL_FILES=()
 ALL_PREFIXES=()
@@ -207,6 +208,11 @@ for f in "${MAME_FILES[@]}"; do
     ALL_FILES+=("$f")
     ALL_PREFIXES+=("mame-official")
     ALL_PRIORITIES+=("25")
+done
+for f in "${MAME_REDUMP_CHD_FILES[@]}"; do
+    ALL_FILES+=("$f")
+    ALL_PREFIXES+=("mame-redump-chd")
+    ALL_PRIORITIES+=("35")
 done
 for f in "${REDUMP_FILES[@]}"; do
     ALL_FILES+=("$f")
@@ -265,6 +271,7 @@ slug_is_superseded() {
         printf '      "source_id": "%s",\n' "$(json_escape "$source_id")"
         case "$dat_prefix" in
             mame-official)    display_prefix="MAME DAT" ;;
+            mame-redump-chd)  display_prefix="MAME Redump CHD DAT" ;;
             libretro-redump)  display_prefix="Redump DAT" ;;
             libretro-nointro) display_prefix="No-Intro DAT" ;;
             *)                display_prefix="Libretro DAT" ;;
@@ -301,4 +308,4 @@ slug_is_superseded() {
 } > "$OUTPUT_PATH"
 
 echo "Manifest written: $OUTPUT_PATH"
-echo "Sources: ${#ALL_FILES[@]} total (${#DAT_FILES[@]} curated, ${#NO_INTRO_FILES[@]} no-intro, ${#MAME_FILES[@]} mame, ${#REDUMP_FILES[@]} redump)"
+echo "Sources: ${#ALL_FILES[@]} total (${#DAT_FILES[@]} curated, ${#NO_INTRO_FILES[@]} no-intro, ${#MAME_FILES[@]} mame, ${#MAME_REDUMP_CHD_FILES[@]} mame-redump-chd, ${#REDUMP_FILES[@]} redump)"

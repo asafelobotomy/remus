@@ -20,6 +20,10 @@ private slots:
     void testInitializeRollsBackFailedMigrations();
     void testUpdateFileHashes();
     void testUpdateFileHashesPersistsChdSha1();
+    void testGetFilesNeedingChdSha1();
+    void testUpdateFileChdSha1();
+    void testGetFilesNeedingRvzSha1();
+    void testUpdateFileRvzSha1();
     void testRemoveFile();
     void testInsertAndGetMatch();
     void testConfirmRejectMatch();

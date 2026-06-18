@@ -188,6 +188,10 @@ QList<CompendiumMultiSignalMatch> CompendiumProvider::matchROM(const ROMSignals 
         const QString normalizedSha1 = input.sha1.trimmed().toLower();
         lookupHashCandidates(db, QStringLiteral("sha1"), normalizedSha1, systemId, matches, matchedVia);
     }
+    if (matches.isEmpty() && !input.contentSha1.isEmpty()) {
+        const QString normalizedContentSha1 = input.contentSha1.trimmed().toLower();
+        lookupHashCandidates(db, QStringLiteral("sha1"), normalizedContentSha1, systemId, matches, matchedVia);
+    }
 
     if (!matches.isEmpty()) {
         for (CompendiumMultiSignalMatch &match : matches) {

@@ -25,6 +25,7 @@ struct HasheousHashEntry {
     QString sha1;
     QString sha256;
     QString chdSha1;
+    QString rvzSha1;
 };
 
 /**
@@ -77,8 +78,15 @@ public:
         m_clientApiKey = key.trimmed();
     }
 
+    void setBaseUrl(const QString &url);
+
+    QString baseUrl() const {
+        return m_baseUrl;
+    }
+
 protected:
     QString m_clientApiKey;
+    QString m_baseUrl;
     QMap<int, QString> m_companyCache;
     bool m_metadataProxyDisabled = false;
     int m_igdbSkippedCount = 0;

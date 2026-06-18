@@ -104,6 +104,16 @@ add_remus_test(test_chd_converter ChdConverterTest
     LIBS Qt6::Test Qt6::Core remus-core
 )
 
+add_remus_test(test_chd_header ChdHeaderTest
+    SOURCES test_chd_header.cpp
+    LIBS Qt6::Test Qt6::Core remus-core
+)
+
+add_remus_test(test_hasheous_config HasheousConfigTest
+    SOURCES test_hasheous_config.cpp
+    LIBS Qt6::Test Qt6::Core remus-core
+)
+
 add_remus_test(test_conversion_planner ConversionPlannerTest
     SOURCES test_conversion_planner.cpp
     LIBS Qt6::Test Qt6::Core remus-core

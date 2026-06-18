@@ -131,13 +131,33 @@ public:
      * @brief Update file hashes
      */
     bool updateFileHashes(int fileId, const QString &crc32, const QString &md5, const QString &sha1,
-        const QString &raMd5 = QString(), const QString &chdSha1 = QString());
+        const QString &raMd5 = QString(), const QString &chdSha1 = QString(), const QString &rvzSha1 = QString());
 
     /**
      * @brief Get files without calculated hashes
      * @return List of file records
      */
     QList<FileRecord> getFilesWithoutHashes();
+
+    /**
+     * @brief Primary .chd files that lack a Hasheous/MAME header SHA1 digest.
+     */
+    QList<FileRecord> getFilesNeedingChdSha1();
+
+    /**
+     * @brief Update only the CHD header SHA1 for an already-hashed file.
+     */
+    bool updateFileChdSha1(int fileId, const QString &chdSha1);
+
+    /**
+     * @brief Primary .rvz/.gcz files that lack a dolphin-tool disc content SHA1 digest.
+     */
+    QList<FileRecord> getFilesNeedingRvzSha1();
+
+    /**
+     * @brief Update only the RVZ/GCZ content SHA1 for an already-hashed file.
+     */
+    bool updateFileRvzSha1(int fileId, const QString &rvzSha1);
 
     /**
      * @brief Get file count by system

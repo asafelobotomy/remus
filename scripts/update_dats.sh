@@ -13,6 +13,7 @@ set -euo pipefail
 #   data/databases/no-intro/  ← metadat/no-intro/ (No-Intro full catalogs)
 #   data/databases/redump/    ← metadat/redump/   (Redump full catalogs)
 #   data/databases/mame/      ← MAME ROMs DAT (local binary or mamedev/mame release)
+#   data/databases/mame-redump-chd/ ← MAME Redump CHD DATs (header SHA1 index)
 #
 # Storing the three sources in separate subdirectories avoids filename
 # collisions (e.g. Sega - Saturn.dat exists in both dat/ and redump/)
@@ -27,6 +28,7 @@ TARGET_DIR="$PROJECT_ROOT/data/databases"
 NO_INTRO_DIR="$TARGET_DIR/no-intro"
 REDUMP_DIR="$TARGET_DIR/redump"
 MAME_DIR="$TARGET_DIR/mame"
+MAME_REDUMP_CHD_DIR="$TARGET_DIR/mame-redump-chd"
 UPDATE_DATS_CACHE_DIR="${UPDATE_DATS_CACHE_DIR:-${XDG_CACHE_HOME:-$PROJECT_ROOT/.cache}/remus/update_dats}"
 DOWNLOAD_CACHE_DIR="$UPDATE_DATS_CACHE_DIR/downloads"
 CLONE_DIR="$UPDATE_DATS_CACHE_DIR/libretro-database"
@@ -86,7 +88,7 @@ echo "  no-intro/  → $NO_INTRO_DIR"
 echo "  redump/    → $REDUMP_DIR"
 echo "  cache/     → $UPDATE_DATS_CACHE_DIR"
 
-mkdir -p "$TARGET_DIR" "$NO_INTRO_DIR" "$REDUMP_DIR" "$DOWNLOAD_CACHE_DIR"
+mkdir -p "$TARGET_DIR" "$NO_INTRO_DIR" "$REDUMP_DIR" "$MAME_DIR" "$MAME_REDUMP_CHD_DIR" "$DOWNLOAD_CACHE_DIR"
 
 is_cache_fresh() {
     local file_path="$1"
@@ -648,6 +650,52 @@ else
     fi
 fi
 
+# 4c. MAME Redump CHD DATs — Logiqx XML with <disk sha1="..."> entries for .chd matching.
+#     Source: https://github.com/MetalSlug/MAMERedump (MAME Redump/ folder)
+echo ""
+echo "Downloading MAME Redump CHD DATs..."
+mkdir -p "$MAME_REDUMP_CHD_DIR"
+mame_redump_api_url="https://api.github.com/repos/MetalSlug/MAMERedump/contents/MAME%20Redump?ref=main"
+mame_redump_cache_json="$DOWNLOAD_CACHE_DIR/mame-redump-chd/listing.json"
+mame_redump_downloaded=0
+mame_redump_skipped=0
+
+if download_with_cache "$mame_redump_api_url" "$mame_redump_cache_json" 120 "MAME Redump CHD listing"; then
+    while IFS= read -r dat_name; do
+        [[ -n "$dat_name" ]] || continue
+        dest_path="$MAME_REDUMP_CHD_DIR/$dat_name"
+        download_url="https://raw.githubusercontent.com/MetalSlug/MAMERedump/main/MAME%20Redump/${dat_name// /%20}"
+        cache_path="$DOWNLOAD_CACHE_DIR/mame-redump-chd/$dat_name"
+
+        if [[ -f "$dest_path" ]] && is_cache_fresh "$dest_path"; then
+            mame_redump_skipped=$((mame_redump_skipped + 1))
+            continue
+        fi
+
+        if download_with_cache "$download_url" "$cache_path" 120 "MAME Redump $dat_name"; then
+            cp "$cache_path" "$dest_path"
+            mame_redump_downloaded=$((mame_redump_downloaded + 1))
+        else
+            echo "    Warning: failed to download MAME Redump DAT: $dat_name"
+        fi
+    done < <(python3 - "$mame_redump_cache_json" <<'PYEOF'
+import json
+import sys
+
+with open(sys.argv[1], encoding="utf-8") as fh:
+    items = json.load(fh)
+
+for item in sorted(items, key=lambda entry: entry.get("name", "")):
+    name = item.get("name", "")
+    if name.endswith(".dat"):
+        print(name)
+PYEOF
+)
+    echo "  MAME Redump CHD DATs: $mame_redump_downloaded updated, $mame_redump_skipped unchanged"
+else
+    echo "  Warning: failed to fetch MAME Redump CHD DAT listing from GitHub"
+fi
+
 # 5. metadat/hacks/ — ROM hack / translation patch DATs (libretro curated, romhacking.net URLs)
 PATCHES_DIR="$PROJECT_ROOT/data/patches/hacks"
 hacks_copied=0
@@ -764,6 +812,7 @@ find "$TARGET_DIR" -maxdepth 1 -name '*.dat' 2>/dev/null | wc -l | xargs -I{} ec
 find "$NO_INTRO_DIR" -maxdepth 1 -name '*.dat' 2>/dev/null | wc -l | xargs -I{} echo "  no-intro/:          {} files in $NO_INTRO_DIR"
 find "$REDUMP_DIR" -maxdepth 1 -name '*.dat' 2>/dev/null | wc -l | xargs -I{} echo "  redump/:            {} files in $REDUMP_DIR"
 find "$MAME_DIR" -maxdepth 1 -name '*.dat' 2>/dev/null | wc -l | xargs -I{} echo "  mame/:              {} files in $MAME_DIR"
+find "$MAME_REDUMP_CHD_DIR" -maxdepth 1 -name '*.dat' 2>/dev/null | wc -l | xargs -I{} echo "  mame-redump-chd/:   {} files in $MAME_REDUMP_CHD_DIR"
 if [[ -d "$METADATA_DIR" ]]; then
     find "$METADATA_DIR" -name '*.dat' | wc -l | xargs -I{} echo "  metadata DATs:      {} files"
 fi

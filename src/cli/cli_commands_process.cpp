@@ -280,7 +280,8 @@ int handleScanCommand(CliContext &ctx) {
 
             for (const HashService::HashBatchResult &task : taskResults) {
                 if (!task.skipped && task.result.success) {
-                    ctx.db.updateFileHashes(task.fileId, task.result.crc32, task.result.md5, task.result.sha1);
+                    ctx.db.updateFileHashes(task.fileId, task.result.crc32, task.result.md5, task.result.sha1,
+                        task.result.raMd5, task.result.chdSha1, task.result.rvzSha1);
                     hashedCount++;
                 } else {
                     qWarning() << "  Hash failed for" << task.filename << ":" << task.result.error;
@@ -331,7 +332,8 @@ int handleScanCommand(CliContext &ctx) {
 
         for (const HashService::HashBatchResult &task : taskResults) {
             if (!task.skipped && task.result.success) {
-                ctx.db.updateFileHashes(task.fileId, task.result.crc32, task.result.md5, task.result.sha1);
+                ctx.db.updateFileHashes(task.fileId, task.result.crc32, task.result.md5, task.result.sha1,
+                    task.result.raMd5, task.result.chdSha1, task.result.rvzSha1);
                 hashedCount++;
                 if (hashedCount % 10 == 0) {
                     qInfo() << "  Hashed" << hashedCount << "of" << filesToHash.size() << "files...";

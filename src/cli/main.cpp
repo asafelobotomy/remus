@@ -244,6 +244,10 @@ int main(int argc, char *argv[]) {
         return rc;
     if (int rc = handleHashAllCommand(ctx))
         return rc;
+    if (int rc = handleChdBackfillCommand(ctx))
+        return rc;
+    if (int rc = handleRvzBackfillCommand(ctx))
+        return rc;
     if (int rc = handleReclassifyIsoCommand(ctx))
         return rc;
     if (int rc = handleMetadataCommand(ctx))
@@ -291,6 +295,8 @@ int main(int argc, char *argv[]) {
     if (int rc = handleConvertCsoCommand(ctx))
         return rc;
     if (int rc = handleCsoExtractCommand(ctx))
+        return rc;
+    if (int rc = handleCsoVerifyCommand(ctx))
         return rc;
     if (int rc = handleConvertWbfsCommand(ctx))
         return rc;

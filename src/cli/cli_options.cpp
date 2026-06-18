@@ -34,6 +34,10 @@ void registerAllOptions(QCommandLineParser &parser, QSet<QString> &actionOptions
     addOption({ { "d", "db" }, "Database file path", "database", Constants::DatabaseSchema::DATABASE_FILENAME });
     addActionOption(QCommandLineOption("hash", "Calculate hashes for scanned files"));
     addActionOption(QCommandLineOption("hash-all", "Calculate hashes for all files in database that lack hashes"));
+    addActionOption(QCommandLineOption(
+        "hash-chd-backfill", "Extract CHD header SHA1 (chd_sha1) for .chd files missing it via chdman info"));
+    addActionOption(QCommandLineOption("hash-rvz-backfill",
+        "Extract RVZ/GCZ disc content SHA1 (rvz_sha1) for files missing it via dolphin-tool verify"));
     addActionOption(
         QCommandLineOption("reclassify-iso", "Reclassify ISO file rows using current system detection heuristics"));
     addActionOption({ { "l", "list" }, "List scanned files by system" });
@@ -56,6 +60,8 @@ void registerAllOptions(QCommandLineParser &parser, QSet<QString> &actionOptions
     addOption(QCommandLineOption("tgdb-api-key", "TheGamesDB API key (env: REMUS_TGDB_API_KEY)", "apiKey"));
     addOption(
         QCommandLineOption("hasheous-api-key", "Hasheous client API key (env: REMUS_HASHEOUS_API_KEY)", "apiKey"));
+    addOption(QCommandLineOption("hasheous-base-url",
+        "Hasheous API base URL (env: REMUS_HASHEOUS_BASE_URL; settings: hasheous/base_url)", "url"));
     addOption(QCommandLineOption("ss-user", "ScreenScraper username (env: REMUS_SS_USER)", "username"));
     addOption(QCommandLineOption("ss-pass", "ScreenScraper password (env: REMUS_SS_PASS)", "password"));
     addOption(QCommandLineOption("ss-devid", "ScreenScraper dev ID (env: REMUS_SS_DEVID)", "devid"));
@@ -243,6 +249,7 @@ void registerAllOptions(QCommandLineParser &parser, QSet<QString> &actionOptions
     addActionOption(QCommandLineOption("rvz-verify", "Verify RVZ file integrity", "rvzfile"));
     addActionOption(QCommandLineOption("convert-cso", "Convert PSP ISO to CSO format", "path"));
     addActionOption(QCommandLineOption("cso-extract", "Extract CSO back to ISO", "csofile"));
+    addActionOption(QCommandLineOption("cso-verify", "Verify CSO file integrity (maxcso round-trip)", "csofile"));
     addActionOption(
         QCommandLineOption("convert-wbfs", "Convert GameCube/Wii ISO to WBFS format (requires wit)", "path"));
     addActionOption(QCommandLineOption("wbfs-extract", "Extract WBFS back to ISO (requires wit)", "wbfsfile"));

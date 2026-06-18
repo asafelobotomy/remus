@@ -7,6 +7,7 @@
 
 #include "../metadata/compendium_provider.h"
 #include "../metadata/gametdb_provider.h"
+#include "../core/hasheous_config.h"
 #include "../metadata/hasheous_provider.h"
 #include "../metadata/igdb_provider.h"
 #include "../metadata/metadata_cache.h"
@@ -78,6 +79,10 @@ std::unique_ptr<ProviderOrchestrator> buildOrchestrator(const QCommandLineParser
             = resolveSecret(parser, QStringLiteral("hasheous-api-key"), Settings::Providers::HASHEOUS_CLIENT_API_KEY);
         if (!hasheousKey.isEmpty())
             hasheousProvider->setApiKey(hasheousKey);
+        if (parser.isSet(QStringLiteral("hasheous-base-url"))) {
+            hasheousProvider->setBaseUrl(
+                resolveHasheousBaseUrl(parser.value(QStringLiteral("hasheous-base-url"))));
+        }
     }
     const auto hasheousInfo = Providers::getProviderInfo(Providers::HASHEOUS);
     orchestrator->addProvider(Providers::HASHEOUS, hasheousProvider.get(), hasheousInfo ? hasheousInfo->priority : 80);

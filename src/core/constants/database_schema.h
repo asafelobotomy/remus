@@ -97,6 +97,8 @@ namespace Constants {
                 inline constexpr const char *MD5 = "md5";
                 inline constexpr const char *SHA1 = "sha1";
                 inline constexpr const char *RA_MD5 = "ra_md5";
+                inline constexpr const char *CHD_SHA1 = "chd_sha1";
+                inline constexpr const char *RVZ_SHA1 = "rvz_sha1";
                 inline constexpr const char *HASH_CALCULATED = "hash_calculated";
                 inline constexpr const char *IS_PRIMARY = "is_primary";
                 inline constexpr const char *PARENT_FILE_ID = "parent_file_id";

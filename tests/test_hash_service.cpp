@@ -410,6 +410,28 @@ private slots:
         // Nothing should be counted as hashed when DB writes are rejected.
         QCOMPARE(hashed, 0);
     }
+
+    void testBackfillChdSha1ReturnsZeroWhenNothingPending() {
+        QTemporaryDir tmp;
+        QVERIFY(tmp.isValid());
+
+        Database db;
+        QVERIFY(db.initialize(tmp.path() + "/backfill_empty.db"));
+
+        HashService svc;
+        QCOMPARE(svc.backfillChdSha1(&db), 0);
+    }
+
+    void testBackfillRvzSha1ReturnsZeroWhenNothingPending() {
+        QTemporaryDir tmp;
+        QVERIFY(tmp.isValid());
+
+        Database db;
+        QVERIFY(db.initialize(tmp.path() + "/backfill_rvz_empty.db"));
+
+        HashService svc;
+        QCOMPARE(svc.backfillRvzSha1(&db), 0);
+    }
 };
 
 int main(int argc, char *argv[]) {

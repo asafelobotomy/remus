@@ -3,6 +3,7 @@
 #include <QFileInfo>
 #include <QDir>
 #include <QDebug>
+#include <QRegularExpression>
 
 namespace Remus {
 
@@ -83,6 +84,37 @@ VerifyResult RVZConverter::verifyRVZ(const QString &rvzPath) {
     }
 
     return result;
+}
+
+QString RVZConverter::discContentSha1(const QString &discPath) {
+    if (discPath.trimmed().isEmpty())
+        return QString();
+
+    ProcessResult processResult = runProcess(
+        m_dolphinToolPath, QStringList() << QStringLiteral("verify") << QStringLiteral("-a") << QStringLiteral("sha1")
+                                         << QStringLiteral("--input") << discPath,
+        600000);
+
+    if (processResult.exitCode != 0)
+        return QString();
+
+    const QString digest = processResult.stdOutput.trimmed().toLower();
+    static const QRegularExpression hexRe(QStringLiteral("^[0-9a-f]{40}$"));
+    if (hexRe.match(digest).hasMatch())
+        return digest;
+
+    for (const QString &line : processResult.stdOutput.split(QLatin1Char('\n'))) {
+        const QString trimmed = line.trimmed().toLower();
+        if (trimmed.startsWith(QStringLiteral("sha1:"))) {
+            const QString value = trimmed.mid(5).trimmed();
+            if (hexRe.match(value).hasMatch())
+                return value;
+        }
+        if (hexRe.match(trimmed).hasMatch())
+            return trimmed;
+    }
+
+    return QString();
 }
 
 QList<ConversionResult> RVZConverter::batchConvert(const QStringList &inputPaths, const QString &outputDir) {

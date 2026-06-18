@@ -44,6 +44,7 @@ private slots:
     void extractSelectsDataTrack();
     void extractMultiTrackKeepsAllDataTracks();
     void extractXmlFallback();
+    void extractMameRedumpChdDisk();
 };
 
 void CompendiumDatExtractorTest::extractNormalizesFixtureEnvelope() {
@@ -195,6 +196,34 @@ void CompendiumDatExtractorTest::extractXmlFallback() {
     QCOMPARE(records[0].systemHint, QStringLiteral("PlayStation - XML Test"));
     QCOMPARE(records[0].hashes.crc32, QStringLiteral("12345678"));
     QCOMPARE(records[0].hashes.md5, QStringLiteral("abcdef1234567890abcdef1234567890"));
+}
+
+void CompendiumDatExtractorTest::extractMameRedumpChdDisk() {
+    const QString xmlContent = QStringLiteral("<?xml version=\"1.0\"?>\n"
+                                              "<datafile>\n"
+                                              "  <header>\n"
+                                              "    <name>Arcade - Konami - System GV</name>\n"
+                                              "  </header>\n"
+                                              "  <machine name=\"Susume! Taisen Puzzle-dama (Japan)\">\n"
+                                              "    <disk name=\"Susume! Taisen Puzzle-dama (Japan).chd\""
+                                              " sha1=\"3f2de6e6eed9bd69e6055cf64dd74d8f383b0b1c\" />\n"
+                                              "  </machine>\n"
+                                              "</datafile>\n");
+
+    QTemporaryFile tmp;
+    tmp.setAutoRemove(true);
+    QVERIFY(tmp.open());
+    tmp.write(xmlContent.toUtf8());
+    tmp.close();
+
+    QString error;
+    const QList<Compendium::SourceRecordEnvelope> records = Compendium::DatExtractor::extract(
+        tmp.fileName(), QStringLiteral("mame-redump-chd-src"), QStringLiteral("snap-chd"), error);
+
+    QVERIFY2(error.isEmpty(), qPrintable(error));
+    QCOMPARE(records.size(), 1);
+    QCOMPARE(records[0].titleRaw, QStringLiteral("Susume! Taisen Puzzle-dama (Japan)"));
+    QCOMPARE(records[0].hashes.sha1, QStringLiteral("3f2de6e6eed9bd69e6055cf64dd74d8f383b0b1c"));
 }
 
 QTEST_MAIN(CompendiumDatExtractorTest)

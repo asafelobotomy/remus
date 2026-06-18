@@ -1,4 +1,5 @@
 #include "chd_converter.h"
+#include "chd_header.h"
 #include "constants/files.h"
 #include <QFileInfo>
 #include <QDir>
@@ -98,6 +99,12 @@ CHDInfo CHDConverter::getCHDInfo(const QString &chdPath) {
     info.path = chdPath;
     info.physicalSize = getFileSize(chdPath);
 
+    const ChdHeaderDigest nativeDigest = readChdHeaderDigest(chdPath);
+    if (nativeDigest.valid) {
+        info.sha1 = nativeDigest.sha1;
+        info.version = nativeDigest.version;
+    }
+
     ProcessResult processResult = runProcess(m_chdmanPath, QStringList() << "info" << "-i" << chdPath, 30000);
 
     if (!processResult.started || processResult.exitCode != 0) {
@@ -118,6 +125,7 @@ CHDInfo CHDConverter::getCHDInfo(const QString &chdPath) {
     const QRegularExpression logicalRe(R"(Logical size:\s*([\d,]+))");
     const QRegularExpression physicalRe(R"((?:CHD size|Physical size):\s*([\d,]+))");
     const QRegularExpression sha1Re(R"(^SHA1:\s*([a-fA-F0-9]+))", QRegularExpression::MultilineOption);
+    const QRegularExpression dataSha1Re(R"(^Data SHA1:\s*([a-fA-F0-9]+))", QRegularExpression::MultilineOption);
     const QRegularExpression compressionRe(R"(^Compression:\s*(.+)$)", QRegularExpression::MultilineOption);
 
     QRegularExpressionMatch match = versionRe.match(output);
@@ -138,6 +146,11 @@ CHDInfo CHDConverter::getCHDInfo(const QString &chdPath) {
     match = sha1Re.match(output);
     if (match.hasMatch()) {
         info.sha1 = match.captured(1);
+    }
+
+    match = dataSha1Re.match(output);
+    if (match.hasMatch()) {
+        info.dataSha1 = match.captured(1);
     }
 
     match = compressionRe.match(output);

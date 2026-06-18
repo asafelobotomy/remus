@@ -35,6 +35,9 @@ public:
 
     VerifyResult verifyRVZ(const QString &rvzPath);
 
+    /// Disc image content SHA1 via `dolphin-tool verify -a sha1` (Hasheous/MAME Redump RVZ key).
+    QString discContentSha1(const QString &discPath);
+
     QList<ConversionResult> batchConvert(const QStringList &inputPaths, const QString &outputDir = QString());
 
 private:

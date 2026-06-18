@@ -323,10 +323,98 @@ void DatabaseTest::testUpdateFileHashesPersistsChdSha1() {
     const int fileId = db.insertFile(fr);
 
     QVERIFY(db.updateFileHashes(fileId, QStringLiteral("deadbeef"), QStringLiteral("md5value"),
-        QStringLiteral("sha1value"), QString(), QStringLiteral("6ddb7de1e17e7f6cdb88927bd906352030daa194")));
+        QStringLiteral("sha1value"), QString(), QStringLiteral("6ddb7de1e17e7f6cdb88927bd906352030daa194"),
+        QStringLiteral("f2439bbe1ff64133050fbc00574be8478210a958")));
 
     const FileRecord got = db.getFileById(fileId);
     QCOMPARE(got.chdSha1, QStringLiteral("6ddb7de1e17e7f6cdb88927bd906352030daa194"));
+    QCOMPARE(got.rvzSha1, QStringLiteral("f2439bbe1ff64133050fbc00574be8478210a958"));
+}
+
+void DatabaseTest::testGetFilesNeedingChdSha1() {
+    Database db;
+    QVERIFY(db.initialize(":memory:"));
+
+    const int libId = db.insertLibrary("/roms", "Test");
+    const int sysId = db.getSystemId("PlayStation");
+
+    FileRecord needsBackfill = makeRecord(libId, sysId, "game.chd");
+    needsBackfill.extension = QStringLiteral(".chd");
+    const int chdId = db.insertFile(needsBackfill);
+    QVERIFY(chdId > 0);
+    QVERIFY(db.updateFileHashes(chdId, QStringLiteral("deadbeef"), QStringLiteral("md5"), QStringLiteral("sha1")));
+
+    FileRecord done = makeRecord(libId, sysId, "other.chd");
+    done.extension = QStringLiteral(".chd");
+    const int doneId = db.insertFile(done);
+    QVERIFY(doneId > 0);
+    QVERIFY(db.updateFileHashes(doneId, QStringLiteral("aabbccdd"), QStringLiteral("md5b"), QStringLiteral("sha1b"),
+        QString(), QStringLiteral("abc123")));
+
+    const QList<FileRecord> pending = db.getFilesNeedingChdSha1();
+    QCOMPARE(pending.size(), 1);
+    QCOMPARE(pending.first().id, chdId);
+}
+
+void DatabaseTest::testUpdateFileChdSha1() {
+    Database db;
+    QVERIFY(db.initialize(":memory:"));
+
+    const int libId = db.insertLibrary("/roms", "Test");
+    const int sysId = db.getSystemId("PlayStation");
+    FileRecord fr = makeRecord(libId, sysId, "game.chd");
+    fr.extension = QStringLiteral(".chd");
+    const int fileId = db.insertFile(fr);
+    QVERIFY(db.updateFileHashes(fileId, QStringLiteral("crc"), QStringLiteral("md5"), QStringLiteral("sha1")));
+
+    QVERIFY(db.updateFileChdSha1(fileId, QStringLiteral("ABCDEF0123456789ABCDEF0123456789ABCDEF")));
+
+    const FileRecord got = db.getFileById(fileId);
+    QCOMPARE(got.crc32, QStringLiteral("crc"));
+    QCOMPARE(got.chdSha1, QStringLiteral("abcdef0123456789abcdef0123456789abcdef"));
+}
+
+void DatabaseTest::testGetFilesNeedingRvzSha1() {
+    Database db;
+    QVERIFY(db.initialize(":memory:"));
+
+    const int libId = db.insertLibrary("/roms", "Test");
+    const int sysId = db.getSystemId("GameCube");
+
+    FileRecord needsBackfill = makeRecord(libId, sysId, "game.rvz");
+    needsBackfill.extension = QStringLiteral(".rvz");
+    const int rvzId = db.insertFile(needsBackfill);
+    QVERIFY(rvzId > 0);
+    QVERIFY(db.updateFileHashes(rvzId, QStringLiteral("deadbeef"), QStringLiteral("md5"), QStringLiteral("sha1")));
+
+    FileRecord done = makeRecord(libId, sysId, "other.rvz");
+    done.extension = QStringLiteral(".rvz");
+    const int doneId = db.insertFile(done);
+    QVERIFY(doneId > 0);
+    QVERIFY(db.updateFileHashes(doneId, QStringLiteral("aabbccdd"), QStringLiteral("md5b"), QStringLiteral("sha1b"),
+        QString(), QString(), QStringLiteral("abc123")));
+
+    const QList<FileRecord> pending = db.getFilesNeedingRvzSha1();
+    QCOMPARE(pending.size(), 1);
+    QCOMPARE(pending.first().id, rvzId);
+}
+
+void DatabaseTest::testUpdateFileRvzSha1() {
+    Database db;
+    QVERIFY(db.initialize(":memory:"));
+
+    const int libId = db.insertLibrary("/roms", "Test");
+    const int sysId = db.getSystemId("Wii");
+    FileRecord fr = makeRecord(libId, sysId, "game.rvz");
+    fr.extension = QStringLiteral(".rvz");
+    const int fileId = db.insertFile(fr);
+    QVERIFY(db.updateFileHashes(fileId, QStringLiteral("crc"), QStringLiteral("md5"), QStringLiteral("sha1")));
+
+    QVERIFY(db.updateFileRvzSha1(fileId, QStringLiteral("F2439BBE1FF64133050FBC00574BE8478210A958")));
+
+    const FileRecord got = db.getFileById(fileId);
+    QCOMPARE(got.crc32, QStringLiteral("crc"));
+    QCOMPARE(got.rvzSha1, QStringLiteral("f2439bbe1ff64133050fbc00574be8478210a958"));
 }
 
 void DatabaseTest::testRemoveFile() {

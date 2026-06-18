@@ -4,8 +4,12 @@
 #include "../core/database.h"
 #include "../core/archive_extractor.h"
 #include "../core/chd_converter.h"
+#include "../core/chd_header.h"
 #include "../core/constants/files.h"
 #include "../core/ra_hasher.h"
+#include "../core/rvz_converter.h"
+
+#include <QCryptographicHash>
 
 #include <QDir>
 #include <QFileInfo>
@@ -114,8 +118,55 @@ namespace {
             return;
 
         const CHDInfo info = chd.getCHDInfo(path);
-        if (!info.sha1.isEmpty())
-            result.chdSha1 = info.sha1.trimmed().toLower();
+        const QString discSha1 = info.hasheousDiscSha1();
+        if (!discSha1.isEmpty())
+            result.chdSha1 = discSha1;
+    }
+
+    void attachRvzSha1(HashResult &result, const QString &path, const QString &extension) {
+        const QString ext = extension.trimmed().toLower();
+        if (!result.success || (ext != Constants::Files::RVZ && ext != Constants::Files::GCZ))
+            return;
+
+        RVZConverter rvz;
+        if (!rvz.isDolphinToolAvailable())
+            return;
+
+        const QString contentSha1 = rvz.discContentSha1(path);
+        if (!contentSha1.isEmpty())
+            result.rvzSha1 = contentSha1;
+    }
+
+    bool isArchiveRomMemberPath(const QString &memberPath) {
+        const QString lower = memberPath.trimmed().toLower();
+        if (lower.isEmpty())
+            return false;
+
+        static const QStringList kSkipExtensions = {
+            QStringLiteral(".txt"), QStringLiteral(".nfo"), QStringLiteral(".diz"), QStringLiteral(".xml"),
+            QStringLiteral(".htm"), QStringLiteral(".html"), QStringLiteral(".jpg"), QStringLiteral(".png"),
+            QStringLiteral(".gif"), QStringLiteral(".bmp"), QStringLiteral(".pdf"), QStringLiteral(".exe"),
+            QStringLiteral(".dll"), QStringLiteral(".so"), QStringLiteral(".md"),
+        };
+        for (const QString &ext : kSkipExtensions) {
+            if (lower.endsWith(ext))
+                return false;
+        }
+        return true;
+    }
+
+    QString compositeSha1FromMemberSha1s(const QStringList &sortedMemberSha1s) {
+        QCryptographicHash hasher(QCryptographicHash::Sha1);
+        for (const QString &memberSha1 : sortedMemberSha1s) {
+            hasher.addData(memberSha1.trimmed().toLower().toUtf8());
+        }
+        return QString::fromLatin1(hasher.result().toHex());
+    }
+
+    void applyCompositeArchiveSha1(HashResult &result, const QStringList &sortedMemberSha1s) {
+        if (!result.success || sortedMemberSha1s.size() < 2)
+            return;
+        result.sha1 = compositeSha1FromMemberSha1s(sortedMemberSha1s);
     }
 
 } // namespace
@@ -166,7 +217,7 @@ int HashService::hashAll(
         }
         if (task.result.success) {
             if (db->updateFileHashes(task.fileId, task.result.crc32, task.result.md5, task.result.sha1,
-                    task.result.raMd5, task.result.chdSha1)) {
+                    task.result.raMd5, task.result.chdSha1, task.result.rvzSha1)) {
                 hashed++;
             } else {
                 skipped++;
@@ -249,7 +300,8 @@ bool HashService::hashFile(Database *db, int fileId) {
 
     HashResult result = hashRecord(file);
     if (result.success) {
-        db->updateFileHashes(file.id, result.crc32, result.md5, result.sha1, result.raMd5, result.chdSha1);
+        db->updateFileHashes(file.id, result.crc32, result.md5, result.sha1, result.raMd5, result.chdSha1,
+            result.rvzSha1);
         return true;
     }
     return false;
@@ -275,6 +327,7 @@ HashResult HashService::hashRecord(const FileRecord &file) {
         HashResult result = m_hasher->calculateHashes(file.currentPath, headerSize > 0, headerSize);
         attachRaHash(result, file.currentPath, file);
         attachChdSha1(result, file.currentPath, file.extension);
+        attachRvzSha1(result, file.currentPath, file.extension);
         return result;
     }
 
@@ -307,6 +360,61 @@ HashResult HashService::hashRecord(const FileRecord &file) {
     }
 
     ArchiveExtractor extractor;
+    const ArchiveInfo archiveMeta = extractor.getArchiveInfo(archivePath);
+    QStringList romMembers;
+    romMembers.reserve(archiveMeta.contents.size());
+    for (const QString &member : archiveMeta.contents) {
+        if (isArchiveRomMemberPath(member))
+            romMembers.append(member);
+    }
+    romMembers.sort(Qt::CaseSensitive);
+
+    if (romMembers.size() >= 2 && file.archiveInternalPath.isEmpty()) {
+        ExtractionResult extraction = extractor.extract(archivePath, tempDir.path(), false);
+        if (!extraction.success || extraction.extractedFiles.isEmpty()) {
+            result.error = extraction.error.isEmpty()
+                ? QStringLiteral("Failed to extract archive for composite hashing: %1").arg(archivePath)
+                : extraction.error;
+            return result;
+        }
+
+        QStringList memberSha1s;
+        HashResult largestResult;
+        qint64 largestSize = -1;
+        QString largestPath;
+
+        for (const QString &member : romMembers) {
+            const QString picked
+                = selectExtractedMember(tempDir.path(), extraction.extractedFiles, member, QFileInfo(member).fileName());
+            if (picked.isEmpty())
+                continue;
+
+            const int headerSize = Hasher::detectHeaderSize(picked, QFileInfo(member).suffix());
+            const HashResult memberResult = m_hasher->calculateHashes(picked, headerSize > 0, headerSize);
+            if (!memberResult.success)
+                continue;
+
+            memberSha1s.append(memberResult.sha1);
+            const qint64 memberSize = QFileInfo(picked).size();
+            if (memberSize > largestSize) {
+                largestSize = memberSize;
+                largestResult = memberResult;
+                largestPath = picked;
+            }
+        }
+
+        if (memberSha1s.size() >= 2 && largestResult.success) {
+            result = largestResult;
+            applyCompositeArchiveSha1(result, memberSha1s);
+            if (!largestPath.isEmpty()) {
+                attachRaHash(result, largestPath, file);
+                attachChdSha1(result, largestPath, file.extension);
+                attachRvzSha1(result, largestPath, file.extension);
+            }
+            return result;
+        }
+    }
+
     const QString internalPath = file.archiveInternalPath.isEmpty() ? file.filename : file.archiveInternalPath;
 
     ExtractionResult extraction = extractor.extractFile(archivePath, internalPath, tempDir.path());
@@ -332,6 +440,7 @@ HashResult HashService::hashRecord(const FileRecord &file) {
         result = m_hasher->calculateHashes(picked, headerSize > 0, headerSize);
         attachRaHash(result, picked, file);
         attachChdSha1(result, picked, file.extension);
+        attachRvzSha1(result, picked, file.extension);
         return result;
     }
 
@@ -340,7 +449,172 @@ HashResult HashService::hashRecord(const FileRecord &file) {
     result = m_hasher->calculateHashes(extractedPath, headerSize > 0, headerSize);
     attachRaHash(result, extractedPath, file);
     attachChdSha1(result, extractedPath, file.extension);
+    attachRvzSha1(result, extractedPath, file.extension);
     return result;
+}
+
+QString HashService::chdDiscSha1ForPath(const QString &chdPath) {
+    if (chdPath.trimmed().isEmpty())
+        return QString();
+
+    const ChdHeaderDigest nativeDigest = readChdHeaderDigest(chdPath);
+    if (nativeDigest.valid)
+        return nativeDigest.sha1;
+
+    CHDConverter chd;
+    if (!chd.isChdmanAvailable())
+        return QString();
+
+    return chd.getCHDInfo(chdPath).hasheousDiscSha1();
+}
+
+int HashService::backfillChdSha1(Database *db, ProgressCallback progressCb, LogCallback logCb,
+    const std::atomic<bool> *cancelled, const QSet<int> *fileScopeIds) {
+    if (!db)
+        return 0;
+
+    CHDConverter chd;
+    const bool chdmanAvailable = chd.isChdmanAvailable();
+    if (!chdmanAvailable && logCb) {
+        logCb(QStringLiteral(
+            "CHD backfill: chdman not found; using in-process CHD v5 header reads where possible"));
+    }
+
+    QList<FileRecord> files = db->getFilesNeedingChdSha1();
+    const int total = files.size();
+    if (total == 0) {
+        if (logCb)
+            logCb(QStringLiteral("CHD backfill: no .chd files need header SHA1"));
+        return 0;
+    }
+
+    int updated = 0;
+    int skipped = 0;
+    int done = 0;
+
+    for (const FileRecord &file : files) {
+        if (cancelled && cancelled->load()) {
+            if (logCb)
+                logCb(QStringLiteral("CHD backfill cancelled at %1/%2").arg(done).arg(total));
+            break;
+        }
+
+        if (fileScopeIds != nullptr && !fileScopeIds->isEmpty() && !fileScopeIds->contains(file.id))
+            continue;
+
+        ++done;
+        if (progressCb)
+            progressCb(done, total, file.filename);
+
+        if (file.isCompressed || !file.archivePath.isEmpty()) {
+            ++skipped;
+            if (logCb)
+                logCb(QStringLiteral("Skipped %1: CHD inside archive (extract first)").arg(file.filename));
+            continue;
+        }
+
+        const QString discSha1 = chdDiscSha1ForPath(file.currentPath);
+        if (discSha1.isEmpty()) {
+            ++skipped;
+            if (logCb)
+                logCb(QStringLiteral("Skipped %1: could not read CHD header SHA1").arg(file.filename));
+            continue;
+        }
+
+        if (db->updateFileChdSha1(file.id, discSha1))
+            ++updated;
+        else
+            ++skipped;
+    }
+
+    if (logCb) {
+        if (skipped > 0)
+            logCb(QStringLiteral("CHD backfill complete: %1 updated, %2 skipped").arg(updated).arg(skipped));
+        else
+            logCb(QStringLiteral("CHD backfill complete: %1 updated").arg(updated));
+    }
+
+    return updated;
+}
+
+QString HashService::rvzDiscContentSha1ForPath(const QString &discPath) {
+    if (discPath.trimmed().isEmpty())
+        return QString();
+
+    RVZConverter rvz;
+    if (!rvz.isDolphinToolAvailable())
+        return QString();
+
+    return rvz.discContentSha1(discPath);
+}
+
+int HashService::backfillRvzSha1(Database *db, ProgressCallback progressCb, LogCallback logCb,
+    const std::atomic<bool> *cancelled, const QSet<int> *fileScopeIds) {
+    if (!db)
+        return 0;
+
+    RVZConverter rvz;
+    if (!rvz.isDolphinToolAvailable()) {
+        if (logCb)
+            logCb(QStringLiteral("RVZ backfill skipped: dolphin-tool not found"));
+        return 0;
+    }
+
+    QList<FileRecord> files = db->getFilesNeedingRvzSha1();
+    const int total = files.size();
+    if (total == 0) {
+        if (logCb)
+            logCb(QStringLiteral("RVZ backfill: no .rvz/.gcz files need content SHA1"));
+        return 0;
+    }
+
+    int updated = 0;
+    int skipped = 0;
+    int done = 0;
+
+    for (const FileRecord &file : files) {
+        if (cancelled && cancelled->load()) {
+            if (logCb)
+                logCb(QStringLiteral("RVZ backfill cancelled at %1/%2").arg(done).arg(total));
+            break;
+        }
+
+        if (fileScopeIds != nullptr && !fileScopeIds->isEmpty() && !fileScopeIds->contains(file.id))
+            continue;
+
+        ++done;
+        if (progressCb)
+            progressCb(done, total, file.filename);
+
+        if (file.isCompressed || !file.archivePath.isEmpty()) {
+            ++skipped;
+            if (logCb)
+                logCb(QStringLiteral("Skipped %1: archive-contained RVZ/GCZ not supported for backfill").arg(file.filename));
+            continue;
+        }
+
+        const QString contentSha1 = rvzDiscContentSha1ForPath(file.currentPath);
+        if (contentSha1.isEmpty()) {
+            ++skipped;
+            if (logCb)
+                logCb(QStringLiteral("Skipped %1: dolphin-tool could not read content SHA1").arg(file.filename));
+            continue;
+        }
+
+        if (db->updateFileRvzSha1(file.id, contentSha1))
+            ++updated;
+        else
+            ++skipped;
+    }
+
+    if (logCb) {
+        if (skipped > 0)
+            logCb(QStringLiteral("RVZ backfill complete: %1 updated, %2 skipped").arg(updated).arg(skipped));
+        else
+            logCb(QStringLiteral("RVZ backfill complete: %1 updated").arg(updated));
+    }
+
+    return updated;
 }
 
 } // namespace Remus

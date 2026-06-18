@@ -215,6 +215,34 @@ int handleCsoExtractCommand(CliContext &ctx) {
     return 0;
 }
 
+int handleCsoVerifyCommand(CliContext &ctx) {
+    if (!ctx.parser.isSet("cso-verify"))
+        return 0;
+
+    const QString csoPath = ctx.parser.value("cso-verify");
+    qInfo() << "";
+    qInfo() << "=== Verify CSO Integrity ===";
+    qInfo() << "File:" << csoPath;
+    qInfo() << "";
+
+    CSOConverter converter;
+    if (!converter.isMaxcsoAvailable()) {
+        qCritical() << "✗ maxcso not found";
+        return 1;
+    }
+
+    const CSOVerifyResult result = converter.verifyCSO(csoPath);
+    if (result.valid) {
+        qInfo() << "✓ CSO is valid!";
+        qInfo() << "  Decompressed ISO size:" << result.isoSize << "bytes";
+    } else {
+        qCritical() << "✗ CSO verification failed!";
+        qInfo() << "  Error:" << result.error;
+        return 1;
+    }
+    return 0;
+}
+
 int handleConvertWbfsCommand(CliContext &ctx) {
     if (!ctx.parser.isSet("convert-wbfs"))
         return 0;

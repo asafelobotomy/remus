@@ -8,6 +8,7 @@
 #include "../metadata/screenscraper_provider.h"
 #include "../metadata/thegamesdb_provider.h"
 #include "../metadata/igdb_provider.h"
+#include "../core/hasheous_config.h"
 #include "../metadata/hasheous_provider.h"
 #include "../metadata/compendium_provider.h"
 #include "../metadata/local_database_provider.h"
@@ -54,7 +55,15 @@ static std::unique_ptr<MetadataProvider> buildSingleProvider(const QCommandLineP
         return p;
     }
     if (providerName == Providers::HASHEOUS) {
-        return std::make_unique<HasheousProvider>();
+        auto p = std::make_unique<HasheousProvider>();
+        const QString hasheousKey
+            = resolveSecret(parser, QStringLiteral("hasheous-api-key"), Settings::Providers::HASHEOUS_CLIENT_API_KEY);
+        if (!hasheousKey.isEmpty())
+            p->setApiKey(hasheousKey);
+        if (parser.isSet(QStringLiteral("hasheous-base-url"))) {
+            p->setBaseUrl(resolveHasheousBaseUrl(parser.value(QStringLiteral("hasheous-base-url"))));
+        }
+        return p;
     }
     if (providerName == Providers::COMPENDIUM) {
         auto p = std::make_unique<CompendiumProvider>();
