@@ -312,6 +312,23 @@ void DatabaseTest::testUpdateFileHashes() {
     QVERIFY(got.hashCalculated);
 }
 
+void DatabaseTest::testUpdateFileHashesPersistsChdSha1() {
+    Database db;
+    QVERIFY(db.initialize(":memory:"));
+
+    const int libId = db.insertLibrary("/roms", "Test");
+    const int sysId = db.getSystemId("PlayStation");
+    FileRecord fr = makeRecord(libId, sysId, "game.chd");
+    fr.extension = QStringLiteral(".chd");
+    const int fileId = db.insertFile(fr);
+
+    QVERIFY(db.updateFileHashes(fileId, QStringLiteral("deadbeef"), QStringLiteral("md5value"),
+        QStringLiteral("sha1value"), QString(), QStringLiteral("6ddb7de1e17e7f6cdb88927bd906352030daa194")));
+
+    const FileRecord got = db.getFileById(fileId);
+    QCOMPARE(got.chdSha1, QStringLiteral("6ddb7de1e17e7f6cdb88927bd906352030daa194"));
+}
+
 void DatabaseTest::testRemoveFile() {
     Database db;
     QVERIFY(db.initialize(":memory:"));

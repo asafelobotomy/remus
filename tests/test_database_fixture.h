@@ -19,6 +19,7 @@ private slots:
     void testInitializeRepairsDanglingSystemIds();
     void testInitializeRollsBackFailedMigrations();
     void testUpdateFileHashes();
+    void testUpdateFileHashesPersistsChdSha1();
     void testRemoveFile();
     void testInsertAndGetMatch();
     void testConfirmRejectMatch();

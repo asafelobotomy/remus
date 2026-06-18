@@ -14,6 +14,7 @@ struct HashResult {
     QString md5;
     QString sha1;
     QString raMd5; ///< RetroAchievements RAHasher digest (≠ No-Intro md5 on some systems)
+    QString chdSha1; ///< CHD content SHA1 from chdman info (≠ file SHA1 for .chd containers)
     bool success = false;
     QString error;
 };

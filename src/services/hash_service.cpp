@@ -3,6 +3,7 @@
 #include "../core/hasher.h"
 #include "../core/database.h"
 #include "../core/archive_extractor.h"
+#include "../core/chd_converter.h"
 #include "../core/constants/files.h"
 #include "../core/ra_hasher.h"
 
@@ -104,6 +105,19 @@ namespace {
             result.raMd5 = ra.md5;
     }
 
+    void attachChdSha1(HashResult &result, const QString &path, const QString &extension) {
+        if (!result.success || extension.trimmed().compare(Constants::Files::CHD, Qt::CaseInsensitive) != 0)
+            return;
+
+        CHDConverter chd;
+        if (!chd.isChdmanAvailable())
+            return;
+
+        const CHDInfo info = chd.getCHDInfo(path);
+        if (!info.sha1.isEmpty())
+            result.chdSha1 = info.sha1.trimmed().toLower();
+    }
+
 } // namespace
 
 HashService::HashService()
@@ -151,8 +165,8 @@ int HashService::hashAll(
             continue;
         }
         if (task.result.success) {
-            if (db->updateFileHashes(
-                    task.fileId, task.result.crc32, task.result.md5, task.result.sha1, task.result.raMd5)) {
+            if (db->updateFileHashes(task.fileId, task.result.crc32, task.result.md5, task.result.sha1,
+                    task.result.raMd5, task.result.chdSha1)) {
                 hashed++;
             } else {
                 skipped++;
@@ -235,7 +249,7 @@ bool HashService::hashFile(Database *db, int fileId) {
 
     HashResult result = hashRecord(file);
     if (result.success) {
-        db->updateFileHashes(file.id, result.crc32, result.md5, result.sha1, result.raMd5);
+        db->updateFileHashes(file.id, result.crc32, result.md5, result.sha1, result.raMd5, result.chdSha1);
         return true;
     }
     return false;
@@ -260,6 +274,7 @@ HashResult HashService::hashRecord(const FileRecord &file) {
         int headerSize = Hasher::detectHeaderSize(file.currentPath, file.extension);
         HashResult result = m_hasher->calculateHashes(file.currentPath, headerSize > 0, headerSize);
         attachRaHash(result, file.currentPath, file);
+        attachChdSha1(result, file.currentPath, file.extension);
         return result;
     }
 
@@ -316,6 +331,7 @@ HashResult HashService::hashRecord(const FileRecord &file) {
         int headerSize = Hasher::detectHeaderSize(picked, file.extension);
         result = m_hasher->calculateHashes(picked, headerSize > 0, headerSize);
         attachRaHash(result, picked, file);
+        attachChdSha1(result, picked, file.extension);
         return result;
     }
 
@@ -323,6 +339,7 @@ HashResult HashService::hashRecord(const FileRecord &file) {
     int headerSize = Hasher::detectHeaderSize(extractedPath, file.extension);
     result = m_hasher->calculateHashes(extractedPath, headerSize > 0, headerSize);
     attachRaHash(result, extractedPath, file);
+    attachChdSha1(result, extractedPath, file.extension);
     return result;
 }
 

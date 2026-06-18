@@ -106,6 +106,7 @@ bool Database::createSchema() {
     query.exec("ALTER TABLE files ADD COLUMN is_bundled BOOLEAN DEFAULT 0");
     query.exec("ALTER TABLE files ADD COLUMN bundle_output_path TEXT");
     query.exec("ALTER TABLE files ADD COLUMN has_local_artwork INTEGER DEFAULT 0");
+    query.exec("ALTER TABLE files ADD COLUMN chd_sha1 TEXT");
 
     // Create index for processed status
     query.exec("CREATE INDEX IF NOT EXISTS idx_files_processed ON files(is_processed)");

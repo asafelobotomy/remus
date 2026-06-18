@@ -123,6 +123,8 @@ namespace {
             return { };
         if (usable.size() == 1) {
             const HasheousHashEntry &entry = usable.first();
+            if (!entry.chdSha1.isEmpty())
+                return hasheous->getByHashEntries(usable, system);
             const QString primaryHash = !entry.sha256.isEmpty() ? entry.sha256
                 : !entry.sha1.isEmpty()                       ? entry.sha1
                 : !entry.md5.isEmpty()                        ? entry.md5

@@ -164,6 +164,7 @@ private slots:
     void retroAchievementsUsesRaMd5NotNoIntroMd5();
     void retroAchievementsUsesExternalIdBeforeRaHash();
     void hasheousMultiEntryPayload();
+    void hasheousChdEntryUsesArrayPayload();
 };
 
 void ProviderOrchestratorTest::hashProviderPriority() {
@@ -780,6 +781,23 @@ void ProviderOrchestratorTest::hasheousMultiEntryPayload() {
 
     QCOMPARE(result.title, QStringLiteral("Multi Disc Game"));
     QCOMPARE(hasheous->lastPayloadSize, 2);
+}
+
+void ProviderOrchestratorTest::hasheousChdEntryUsesArrayPayload() {
+    ProviderOrchestrator orchestrator;
+    auto *hasheous = new CapturingHasheousProvider();
+    orchestrator.addProvider(QStringLiteral("hasheous"), hasheous, Constants::Providers::Priority::HASHEOUS);
+
+    HasheousHashEntry entry;
+    entry.crc32 = QStringLiteral("deadbeef");
+    entry.md5 = QStringLiteral("md5container");
+    entry.chdSha1 = QStringLiteral("6DDB7DE1E17E7F6CDB88927BD906352030DAA194");
+
+    const GameMetadata result = orchestrator.getByHashWithFallback(
+        { entry }, QStringLiteral("PlayStation"), QString(), QStringLiteral("md5container"));
+
+    QCOMPARE(result.title, QStringLiteral("Multi Disc Game"));
+    QCOMPARE(hasheous->lastPayloadSize, 1);
 }
 
 QTEST_MAIN(ProviderOrchestratorTest)

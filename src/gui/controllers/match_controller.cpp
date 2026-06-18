@@ -29,6 +29,7 @@ namespace {
         entry.crc32 = file.crc32;
         entry.md5 = file.md5;
         entry.sha1 = file.sha1;
+        entry.chdSha1 = file.chdSha1.trimmed().toLower();
         const QString primaryHash = selectBestMatchHash(file);
         if (primaryHash.size() == 64)
             entry.sha256 = primaryHash;
@@ -258,18 +259,19 @@ GameMetadata MatchController::lookupHashWithFallback(
     if (hash.isEmpty())
         return { };
 
+    QList<HasheousHashEntry> entries;
     if (db != nullptr && !file.discSetKey.isEmpty()) {
         const QList<FileRecord> members = db->getFilesByDiscSetKey(file.discSetKey);
         if (members.size() > 1) {
-            QList<HasheousHashEntry> entries;
             entries.reserve(members.size());
             for (const FileRecord &member : members)
                 entries.append(hasheousEntryFromFile(member));
-            return orchestrator->getByHashWithFallback(entries, systemName, file.raMd5, hash);
         }
     }
+    if (entries.isEmpty())
+        entries.append(hasheousEntryFromFile(file));
 
-    return orchestrator->getByHashWithFallback(hash, systemName, file.crc32, file.md5, file.sha1, file.raMd5);
+    return orchestrator->getByHashWithFallback(entries, systemName, file.raMd5, hash);
 }
 
 void MatchController::connectOrchestratorSignals() {
