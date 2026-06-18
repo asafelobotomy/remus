@@ -26,7 +26,8 @@ bool createSchema(QSqlDatabase &db) {
             QStringLiteral("CREATE TABLE games (game_id TEXT PRIMARY KEY, system_id INTEGER NOT NULL, canonical_title "
                            "TEXT NOT NULL, primary_region_code TEXT, release_date TEXT, release_year INTEGER, "
                            "developer TEXT, publisher TEXT, genre TEXT, players_max INTEGER, description TEXT, rating "
-                           "REAL, canonical_confidence REAL NOT NULL DEFAULT 0)"))
+                           "REAL, igdb_id TEXT, ra_game_id TEXT, achievement_count INTEGER, "
+                           "canonical_confidence REAL NOT NULL DEFAULT 0)"))
         && execSql(db,
             QStringLiteral("CREATE TABLE game_names (game_name_id INTEGER PRIMARY KEY AUTOINCREMENT, game_id TEXT NOT "
                            "NULL, name_text TEXT NOT NULL, alias_type TEXT NOT NULL, locale TEXT NOT NULL DEFAULT '', "
@@ -329,11 +330,23 @@ void CompendiumProviderTest::getByIdReturnsExternalIds() {
     const QString dbPath = createFixtureDatabase();
     QVERIFY(!dbPath.isEmpty());
 
+    {
+        QSqlDatabase db = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), QStringLiteral("ext_id_seed"));
+        db.setDatabaseName(dbPath);
+        QVERIFY(db.open());
+        QVERIFY(execSql(db,
+            QStringLiteral("UPDATE games SET igdb_id = '12345', ra_game_id = '67890' WHERE game_id = 'game-1'")));
+        db.close();
+        QSqlDatabase::removeDatabase(QStringLiteral("ext_id_seed"));
+    }
+
     CompendiumProvider provider;
     QVERIFY(provider.openDatabase(dbPath));
 
     const GameMetadata metadata = provider.getById(QStringLiteral("game-1"));
     QCOMPARE(metadata.id, QStringLiteral("game-1"));
+    QCOMPARE(metadata.externalIds.value(QStringLiteral("igdb")), QStringLiteral("12345"));
+    QCOMPARE(metadata.externalIds.value(QStringLiteral("retroachievements")), QStringLiteral("67890"));
     QCOMPARE(metadata.externalIds.value(QStringLiteral("md5")), QStringLiteral("0123456789abcdef0123456789abcdef"));
     QVERIFY(metadata.serials.contains(QStringLiteral("G8ME01")));
 }

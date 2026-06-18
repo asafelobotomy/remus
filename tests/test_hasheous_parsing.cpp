@@ -46,6 +46,10 @@ private slots:
     void parseIsoDateGenresCompaniesScreenshotsSystem();
     void parseTimestampAndArrayGenres();
     void getByHashesKeepsHashMatchWhenMetadataProxyDisabled();
+    void lookupSendsArrayPayloadWithCamelCaseKeys();
+    void chdHashEntrySendsSha1Only();
+    void emptyHashEntriesSkipLookup();
+    void multipleHashEntriesSendArrayPayload();
 };
 
 void HasheousParsingTest::parseIsoDateGenresCompaniesScreenshotsSystem() {
@@ -121,13 +125,16 @@ namespace {
 class HashLookupHasheousProvider : public HasheousProvider {
 public:
     int fetchCalls = 0;
+    QJsonDocument lastPayload;
 
 protected:
     bool metadataProxyEnabled() const override {
         return false;
     }
 
-    QJsonObject makePostRequest(const QString &, const QJsonObject &, const QUrlQuery &) override {
+    QJsonObject makePostRequest(const QString &, const QJsonDocument &body, const QUrlQuery &) override {
+        lastPayload = body;
+
         QJsonObject metadataEntry;
         metadataEntry["source"] = "IGDB";
         metadataEntry["immutableId"] = "3192";
@@ -156,6 +163,68 @@ void HasheousParsingTest::getByHashesKeepsHashMatchWhenMetadataProxyDisabled() {
     QCOMPARE(md.title, QString("Sonic the Hedgehog"));
     QCOMPARE(md.providerId, QStringLiteral("hasheous"));
     QCOMPARE(provider.fetchCalls, 0);
+    QVERIFY(provider.lastPayload.isArray());
+    QCOMPARE(provider.lastPayload.array().size(), 1);
+}
+
+void HasheousParsingTest::lookupSendsArrayPayloadWithCamelCaseKeys() {
+    HashLookupHasheousProvider provider;
+
+    provider.getByHashes(
+        "F9394E97", "1BC674BE034E43C96B86487AC69D9293", "6DDB7DE1E17E7F6CDB88927BD906352030DAA194", "Genesis",
+        "aabbccdd001122334455667788990011aabbccdd001122334455667788990011");
+
+    QVERIFY(provider.lastPayload.isArray());
+    const QJsonObject entry = provider.lastPayload.array().first().toObject();
+    QCOMPARE(entry.value(QStringLiteral("crc")).toString(), QStringLiteral("f9394e97"));
+    QCOMPARE(entry.value(QStringLiteral("mD5")).toString(), QStringLiteral("1bc674be034e43c96b86487ac69d9293"));
+    QCOMPARE(entry.value(QStringLiteral("shA1")).toString(),
+        QStringLiteral("6ddb7de1e17e7f6cdb88927bd906352030daa194"));
+    QCOMPARE(entry.value(QStringLiteral("sha256")).toString(),
+        QStringLiteral("aabbccdd001122334455667788990011aabbccdd001122334455667788990011"));
+}
+
+void HasheousParsingTest::chdHashEntrySendsSha1Only() {
+    HashLookupHasheousProvider provider;
+
+    HasheousHashEntry entry;
+    entry.crc32 = QStringLiteral("deadbeef");
+    entry.md5 = QStringLiteral("1bc674be034e43c96b86487ac69d9293");
+    entry.chdSha1 = QStringLiteral("6DDB7DE1E17E7F6CDB88927BD906352030DAA194");
+    provider.getByHashEntries({ entry });
+
+    QVERIFY(provider.lastPayload.isArray());
+    const QJsonObject payload = provider.lastPayload.array().first().toObject();
+    QCOMPARE(payload.size(), 1);
+    QCOMPARE(payload.value(QStringLiteral("shA1")).toString(),
+        QStringLiteral("6ddb7de1e17e7f6cdb88927bd906352030daa194"));
+    QVERIFY(!payload.contains(QStringLiteral("mD5")));
+    QVERIFY(!payload.contains(QStringLiteral("crc")));
+}
+
+void HasheousParsingTest::emptyHashEntriesSkipLookup() {
+    HashLookupHasheousProvider provider;
+
+    const GameMetadata md = provider.getByHashEntries({ HasheousHashEntry { } });
+
+    QVERIFY(md.title.isEmpty());
+    QVERIFY(provider.lastPayload.isNull() || provider.lastPayload.isEmpty());
+}
+
+void HasheousParsingTest::multipleHashEntriesSendArrayPayload() {
+    HashLookupHasheousProvider provider;
+
+    HasheousHashEntry crcOnly;
+    crcOnly.crc32 = QStringLiteral("f9394e97");
+    HasheousHashEntry md5Only;
+    md5Only.md5 = QStringLiteral("1bc674be034e43c96b86487ac69d9293");
+
+    provider.getByHashEntries({ crcOnly, md5Only });
+
+    QVERIFY(provider.lastPayload.isArray());
+    QCOMPARE(provider.lastPayload.array().size(), 2);
+    QCOMPARE(provider.lastPayload.array().at(0).toObject().keys().size(), 1);
+    QCOMPARE(provider.lastPayload.array().at(1).toObject().keys().size(), 1);
 }
 
 QTEST_MAIN(HasheousParsingTest)

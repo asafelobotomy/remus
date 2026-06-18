@@ -14,8 +14,28 @@
 #include "../../core/disc_magic_detector.h"
 #include "../../core/match_utils.h"
 #include "../../core/matching_engine.h"
+#include "../../metadata/hasheous_provider.h"
 #include "../../metadata/metadata_provider.h"
 #include "../../metadata/provider_orchestrator.h"
+
+using Remus::FileRecord;
+using Remus::HasheousHashEntry;
+using Remus::selectBestMatchHash;
+
+namespace {
+
+    HasheousHashEntry hasheousEntryFromFile(const Remus::FileRecord &file) {
+        HasheousHashEntry entry;
+        entry.crc32 = file.crc32;
+        entry.md5 = file.md5;
+        entry.sha1 = file.sha1;
+        const QString primaryHash = selectBestMatchHash(file);
+        if (primaryHash.size() == 64)
+            entry.sha256 = primaryHash;
+        return entry;
+    }
+
+} // namespace
 
 namespace Remus {
 
@@ -229,6 +249,29 @@ void MatchController::rejectSelected() {
     emit libraryChanged();
 }
 
+GameMetadata MatchController::lookupHashWithFallback(
+    ProviderOrchestrator *orchestrator, Database *db, const FileRecord &file, const QString &systemName) const {
+    if (orchestrator == nullptr)
+        return { };
+
+    const QString hash = selectBestMatchHash(file);
+    if (hash.isEmpty())
+        return { };
+
+    if (db != nullptr && !file.discSetKey.isEmpty()) {
+        const QList<FileRecord> members = db->getFilesByDiscSetKey(file.discSetKey);
+        if (members.size() > 1) {
+            QList<HasheousHashEntry> entries;
+            entries.reserve(members.size());
+            for (const FileRecord &member : members)
+                entries.append(hasheousEntryFromFile(member));
+            return orchestrator->getByHashWithFallback(entries, systemName, file.raMd5, hash);
+        }
+    }
+
+    return orchestrator->getByHashWithFallback(hash, systemName, file.crc32, file.md5, file.sha1, file.raMd5);
+}
+
 void MatchController::connectOrchestratorSignals() {
     if (m_connectedOrchestrator != nullptr) {
         disconnect(m_connectedOrchestrator, nullptr, this, nullptr);
@@ -275,7 +318,7 @@ bool MatchController::matchFileRecord(const FileRecord &file) {
     QString method;
 
     if (!hash.isEmpty()) {
-        metadata = orchestrator->getByHashWithFallback(hash, systemName, file.crc32, file.md5, file.sha1, file.raMd5);
+        metadata = lookupHashWithFallback(orchestrator, db, file, systemName);
         if (!metadata.title.isEmpty()) {
             confidence = 100.0f;
             method = QString::fromLatin1(Constants::MatchMethods::HASH);

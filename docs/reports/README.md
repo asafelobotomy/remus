@@ -8,6 +8,8 @@ Test results, implementation reports, and verification documentation.
 - **METADATA-VERIFICATION-REPORT.md** - Metadata verification and validation report
 - **[ROM-MATCHING-AUDIT.md](ROM-MATCHING-AUDIT.md)** - ROM identity matching accuracy order, gaps, and remediation roadmap
 - **[COMPENDIUM-DATA-SOURCES.md](COMPENDIUM-DATA-SOURCES.md)** - External hash/metadata/patch sources for compendium gaps
+- **[COMPENDIUM-MULTI-DISC-SHA256-RESEARCH.md](COMPENDIUM-MULTI-DISC-SHA256-RESEARCH.md)** - Deferred multi-disc hash ingest and SHA256 bridge research (2026-06-18)
+- **[COMPENDIUM-BUILD-DEEP-RESEARCH.md](COMPENDIUM-BUILD-DEEP-RESEARCH.md)** - Full compendium build pipeline deep research, gaps, and enhancement roadmap (2026-06-18)
 - **[TMM-UI-ALIGNMENT.md](TMM-UI-ALIGNMENT.md)** - TinyMediaManager UI research and Remus GUI alignment recommendations
 
 ## Archived Reports

@@ -205,6 +205,15 @@ echo "==> Generating manifest"
     --dat-dir "$DAT_DIR" \
     --output "$MANIFEST_PATH"
 
+CRED_EXAMPLE="$ROOT_DIR/data/compendium/enrichment-credentials.json.example"
+CRED_TARGET="$(dirname "$OUTPUT_DB")/enrichment-credentials.json"
+if [[ ! -f "$CRED_TARGET" ]]; then
+    echo "==> Note: $CRED_TARGET not found — IGDB/RA bulk enrichment will use REMUS_* env vars only."
+    if [[ -f "$CRED_EXAMPLE" ]]; then
+        echo "    Copy $CRED_EXAMPLE to $CRED_TARGET to enable file-based API credentials."
+    fi
+fi
+
 echo "==> Building compendium DB"
 build_started_at=$(date +%s)
 set +e
@@ -261,6 +270,12 @@ if ! $SKIP_VALIDATION; then
         bash "$ROOT_DIR/.github/scripts/validate-compendium-db.sh" \
             "$OUTPUT_DB" "$ROOT_DIR/data/compendium/validation/0002_phase2_quality_checks.sql" \
             || echo "warning: one or more phase-2 quality checks failed (see above)" >&2
+    fi
+    if [[ -f "$ROOT_DIR/data/compendium/validation/0003_phase2_extended_checks.sql" ]]; then
+        echo "==> Phase 2 extended checks (informational thresholds)"
+        bash "$ROOT_DIR/.github/scripts/validate-compendium-db.sh" \
+            "$OUTPUT_DB" "$ROOT_DIR/data/compendium/validation/0003_phase2_extended_checks.sql" \
+            || echo "warning: one or more phase-2 extended checks failed (see above)" >&2
     fi
 fi
 

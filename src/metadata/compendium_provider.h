@@ -53,7 +53,8 @@ private:
     int resolveSystemId(const QString &system) const;
     GameMetadata fetchGameMetadata(const QString &gameId) const;
     QMap<QString, QString> loadResolvedFacts(const QString &gameId) const;
-    void populateExternalIds(GameMetadata &metadata, const QString &gameId) const;
+    void populateExternalIds(GameMetadata &metadata, const QString &gameId, const QString &igdbId = QString(),
+        const QString &raGameId = QString()) const;
     void closeConnection();
     void ensureFts5Index();
 

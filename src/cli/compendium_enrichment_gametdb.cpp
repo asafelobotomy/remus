@@ -86,6 +86,7 @@ bool enrichFromGameTDB(
                                        "   OR publisher IS NULL OR TRIM(publisher) = '' "
                                        "   OR players_max IS NULL "
                                        "   OR release_year IS NULL "
+                                       "   OR release_date IS NULL OR TRIM(release_date) = '' "
                                        "   OR description IS NULL OR TRIM(description) = ''"))) {
         error = QStringLiteral("Load games for GameTDB enrichment: %1").arg(gameQuery.lastError().text());
         return false;

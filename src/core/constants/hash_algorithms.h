@@ -29,6 +29,9 @@ namespace Constants {
         /// SHA1 algorithm identifier for APIs (40 character hex)
         static constexpr const char *SHA1 = "sha1";
 
+        /// SHA256 algorithm identifier for APIs (64 character hex)
+        static constexpr const char *SHA256 = "sha256";
+
         // ========================================================================
         // Display Names (uppercase for UI/Database)
         // ========================================================================
@@ -55,6 +58,9 @@ namespace Constants {
         /// SHA1 hash string length (40 hex characters)
         static constexpr int SHA1_LENGTH = 40;
 
+        /// SHA256 hash string length (64 hex characters)
+        static constexpr int SHA256_LENGTH = 64;
+
         // ========================================================================
         // Utility Methods
         // ========================================================================
@@ -77,6 +83,8 @@ namespace Constants {
                 return MD5;
             case SHA1_LENGTH:
                 return SHA1;
+            case SHA256_LENGTH:
+                return SHA256;
             default:
                 return QString();
             }
@@ -99,6 +107,8 @@ namespace Constants {
                 return hash.length() == MD5_LENGTH;
             if (algorithm == SHA1)
                 return hash.length() == SHA1_LENGTH;
+            if (algorithm == SHA256)
+                return hash.length() == SHA256_LENGTH;
             return false;
         }
 
@@ -118,6 +128,8 @@ namespace Constants {
                 return MD5_DISPLAY;
             if (algorithm == SHA1)
                 return SHA1_DISPLAY;
+            if (algorithm == SHA256)
+                return QStringLiteral("SHA256");
             return algorithm.toUpper();
         }
 
@@ -138,6 +150,8 @@ namespace Constants {
                 return MD5;
             if (upper == SHA1_DISPLAY)
                 return SHA1;
+            if (upper == QStringLiteral("SHA256"))
+                return SHA256;
             return displayName.toLower();
         }
 
@@ -147,7 +161,7 @@ namespace Constants {
          * @return True if valid algorithm identifier
          */
         static bool isValidAlgorithm(const QString &algorithm) {
-            return algorithm == CRC32 || algorithm == MD5 || algorithm == SHA1;
+            return algorithm == CRC32 || algorithm == MD5 || algorithm == SHA1 || algorithm == SHA256;
         }
 
         /**
@@ -155,7 +169,7 @@ namespace Constants {
          * @return List of algorithm identifiers ["crc32", "md5", "sha1"]
          */
         static QStringList allAlgorithms() {
-            return { CRC32, MD5, SHA1 };
+            return { CRC32, MD5, SHA1, SHA256 };
         }
     };
 

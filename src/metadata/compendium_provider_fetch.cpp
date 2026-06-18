@@ -76,7 +76,8 @@ GameMetadata CompendiumProvider::fetchGameMetadata(const QString &gameId) const 
     QSqlQuery query(db);
     query.prepare(QStringLiteral(
         "SELECT g.game_id, g.canonical_title, g.primary_region_code, g.release_date, g.release_year, "
-        "       g.developer, g.publisher, g.genre, g.players_max, g.description, g.rating, s.internal_name "
+        "       g.developer, g.publisher, g.genre, g.players_max, g.description, g.rating, "
+        "       g.igdb_id, g.ra_game_id, s.internal_name "
         "FROM games g "
         "JOIN systems s ON s.system_id = g.system_id "
         "WHERE g.game_id = ? LIMIT 1"));
@@ -103,7 +104,7 @@ GameMetadata CompendiumProvider::fetchGameMetadata(const QString &gameId) const 
     metadata.description = resolvedValue(facts, { "description" }, query.value(9).toString());
     metadata.players = resolvedIntValue(facts, { "players_max" }, query.value(8).toInt());
     metadata.rating = resolvedFloatValue(facts, { "rating" }, query.value(10).toFloat());
-    metadata.system = query.value(11).toString();
+    metadata.system = query.value(13).toString();
     metadata.providerId = QString::fromLatin1(Constants::Providers::COMPENDIUM);
     metadata.fetchedAt = QDateTime::currentDateTimeUtc();
 
@@ -115,7 +116,9 @@ GameMetadata CompendiumProvider::fetchGameMetadata(const QString &gameId) const 
         metadata.ratingSource = QStringLiteral("Compendium");
     }
 
-    populateExternalIds(metadata, metadata.id);
+    populateExternalIds(metadata, metadata.id,
+        resolvedValue(facts, { "igdb_id" }, query.value(11).toString()),
+        resolvedValue(facts, { "ra_game_id" }, query.value(12).toString()));
     return metadata;
 }
 
@@ -144,7 +147,13 @@ QMap<QString, QString> CompendiumProvider::loadResolvedFacts(const QString &game
     return facts;
 }
 
-void CompendiumProvider::populateExternalIds(GameMetadata &metadata, const QString &gameId) const {
+void CompendiumProvider::populateExternalIds(
+    GameMetadata &metadata, const QString &gameId, const QString &igdbId, const QString &raGameId) const {
+    if (!igdbId.isEmpty())
+        metadata.externalIds.insert(Constants::Providers::ExternalId::IGDB, igdbId);
+    if (!raGameId.isEmpty())
+        metadata.externalIds.insert(Constants::Providers::ExternalId::RETROACHIEVEMENTS, raGameId);
+
     QSqlDatabase db = database();
     if (!db.isOpen()) {
         return;

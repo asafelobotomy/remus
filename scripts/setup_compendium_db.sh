@@ -20,6 +20,7 @@ SQL_STEPS=(
     "$ROOT_DIR/data/compendium/migrations/0003_systems_libretro_name.sql"
     "$ROOT_DIR/data/compendium/migrations/0004_fts5_search_index.sql"
     "$ROOT_DIR/data/compendium/migrations/0005_game_external_ids.sql"
+    "$ROOT_DIR/data/compendium/migrations/0006_game_achievement_count.sql"
 )
 VALIDATION_SQL="$ROOT_DIR/data/compendium/validation/0001_phase1_checks.sql"
 

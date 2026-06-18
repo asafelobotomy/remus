@@ -52,6 +52,65 @@ namespace {
         return candidates.at(bestIdx);
     }
 
+    bool applyIgdbGameMetadata(QSqlDatabase &database, QSqlQuery &updateQ, QSqlQuery &factQ, QSqlQuery &delQ,
+        const FactInsertSpec &factSpec, const QString &gameId, const GameMetadata &gm, int &gamesEnriched,
+        int &factsInserted, QString &error) {
+        int releaseYear = 0;
+        if (gm.releaseDate.size() >= 4) {
+            bool ok = false;
+            const int y = gm.releaseDate.left(4).toInt(&ok);
+            if (ok && y > 1970 && y < 2030)
+                releaseYear = y;
+        }
+        const QString releaseDateStr = (gm.releaseDate.size() >= 10) ? gm.releaseDate.left(10) : QString();
+        const QString genreStr = gm.genres.isEmpty() ? QString() : gm.genres.join(QStringLiteral(", "));
+
+        updateQ.bindValue(0, nullableText(gm.description));
+        updateQ.bindValue(1, nullableText(genreStr));
+        updateQ.bindValue(2, nullableText(gm.developer));
+        updateQ.bindValue(3, nullableText(gm.publisher));
+        updateQ.bindValue(4, nullableInt(releaseYear));
+        updateQ.bindValue(5, nullableText(releaseDateStr));
+        updateQ.bindValue(6, nullableDouble(static_cast<double>(gm.rating)));
+        updateQ.bindValue(7, nullableInt(gm.players));
+        updateQ.bindValue(8, gameId);
+        if (!execPrepared(updateQ, error, QStringLiteral("Update game igdb"))) {
+            database.rollback();
+            return false;
+        }
+        if (updateQ.numRowsAffected() > 0)
+            ++gamesEnriched;
+
+        const QString yearStr = releaseYear > 0 ? QString::number(releaseYear) : QString();
+        const QString ratingStr
+            = gm.rating > 0.0f ? QString::number(static_cast<double>(gm.rating), 'f', 2) : QString();
+        const QString playersStr = gm.players > 0 ? QString::number(gm.players) : QString();
+        const QString igdbId = gm.externalIds.value(Constants::Providers::ExternalId::IGDB, gm.id);
+
+        auto insertFact = [&](const QString &field, const QString &value, const QString &type = QStringLiteral("text")) {
+            bool inserted = false;
+            if (!insertGameFact(
+                    delQ, factQ, factSpec, gameId, field, value, type, error, QStringLiteral("igdb"), &inserted))
+                return false;
+            if (inserted)
+                ++factsInserted;
+            return true;
+        };
+
+        const bool factsOk = insertFact(QStringLiteral("igdb_id"), igdbId)
+            && insertFact(QStringLiteral("description"), gm.description) && insertFact(QStringLiteral("genre"), genreStr)
+            && insertFact(QStringLiteral("developer"), gm.developer) && insertFact(QStringLiteral("publisher"), gm.publisher)
+            && insertFact(QStringLiteral("release_year"), yearStr, QStringLiteral("integer"))
+            && insertFact(QStringLiteral("release_date"), releaseDateStr)
+            && insertFact(QStringLiteral("rating"), ratingStr, QStringLiteral("decimal"))
+            && insertFact(QStringLiteral("players_max"), playersStr, QStringLiteral("integer"));
+        if (!factsOk) {
+            database.rollback();
+            return false;
+        }
+        return true;
+    }
+
 } // anonymous namespace
 
 bool enrichFromIGDB(
@@ -109,9 +168,127 @@ bool enrichFromIGDB(
     provider.setCredentials(clientId, clientSecret);
 
     const QString snapshotId = QStringLiteral("igdb-bulk");
+    const QString byIdSnapshotId = QStringLiteral("igdb-by-id");
     static const int PAGE_SIZE = 500;
     int systemsSkippedNoSlug = 0;
     int systemsSkippedEmptyIndex = 0;
+    int byIdGamesEnriched = 0;
+
+    // Phase 1: targeted fetch for games that already have igdb_id from hash bridges.
+    {
+        QSqlQuery pendingQ(database);
+        if (!pendingQ.exec(QStringLiteral("SELECT g.game_id, g.igdb_id, "
+                                        "(SELECT gf.field_value FROM game_facts gf "
+                                        " WHERE gf.game_id = g.game_id AND gf.field_name = 'igdb_id' "
+                                        " ORDER BY gf.source_priority DESC, gf.confidence DESC, gf.fact_id DESC "
+                                        " LIMIT 1) AS fact_igdb_id "
+                                        "FROM games g "
+                                        "WHERE (%1) "
+                                        "  AND ((g.igdb_id IS NOT NULL AND TRIM(g.igdb_id) <> '') "
+                                        "    OR EXISTS (SELECT 1 FROM game_facts gf "
+                                        "               WHERE gf.game_id = g.game_id "
+                                        "                 AND gf.field_name = 'igdb_id')) "
+                                        "ORDER BY g.game_id")
+                               .arg(QLatin1String(kIgdbBulkGameGapSql)))) {
+            error = QStringLiteral("Query IGDB per-id candidates: %1").arg(pendingQ.lastError().text());
+            return false;
+        }
+
+        struct PendingIgdbGame {
+            QString gameId;
+            QString igdbId;
+        };
+        QList<PendingIgdbGame> pendingGames;
+        while (pendingQ.next()) {
+            QString igdbId = pendingQ.value(1).toString().trimmed();
+            if (igdbId.isEmpty())
+                igdbId = pendingQ.value(2).toString().trimmed();
+            if (igdbId.isEmpty())
+                continue;
+            pendingGames.append({ pendingQ.value(0).toString(), igdbId });
+        }
+        pendingQ.finish();
+
+        if (!pendingGames.isEmpty()) {
+            qInfo().noquote() << QStringLiteral("[IGDB] Per-id fetch: %1 games with known igdb_id").arg(pendingGames.size());
+
+            if (!database.transaction()) {
+                error = QStringLiteral("Failed to start IGDB per-id transaction: %1").arg(database.lastError().text());
+                return false;
+            }
+
+            if (!upsertEnrichmentSource(database,
+                    SourceSpec {
+                        QStringLiteral("igdb"),
+                        QStringLiteral("IGDB"),
+                        QStringLiteral("online-api"),
+                        QStringLiteral("https://www.igdb.com"),
+                        /*attributionRequired=*/true,
+                        /*priority=*/70,
+                        QString(),
+                    },
+                    SnapshotSpec {
+                        byIdSnapshotId,
+                        QStringLiteral("IGDB per-id enrichment"),
+                    },
+                    error)) {
+                database.rollback();
+                return false;
+            }
+
+            QSqlQuery updateQ(database);
+            updateQ.prepare(QStringLiteral("UPDATE games SET "
+                                           "description  = COALESCE(NULLIF(description, ''), ?), "
+                                           "genre        = COALESCE(NULLIF(genre, ''), ?), "
+                                           "developer    = COALESCE(NULLIF(developer, ''), ?), "
+                                           "publisher    = COALESCE(NULLIF(publisher, ''), ?), "
+                                           "release_year = COALESCE(release_year, ?), "
+                                           "release_date = COALESCE(release_date, ?), "
+                                           "rating       = COALESCE(rating, ?), "
+                                           "players_max  = COALESCE(players_max, ?) "
+                                           "WHERE game_id = ?"));
+
+            QSqlQuery factQ(database);
+            factQ.prepare(QStringLiteral("INSERT INTO game_facts "
+                                         "(game_id, field_name, field_value, value_type, source_id, snapshot_id, "
+                                         "source_priority, confidence) "
+                                         "VALUES (?, ?, ?, ?, ?, ?, ?, ?)"));
+
+            QSqlQuery delQ(database);
+            delQ.prepare(QStringLiteral("DELETE FROM game_facts WHERE game_id = ? AND field_name = ? AND source_id = ?"));
+
+            const FactInsertSpec byIdFactSpec {
+                QStringLiteral("igdb"),
+                byIdSnapshotId,
+                70,
+                0.85,
+            };
+
+            int callIdx = 0;
+            for (const PendingIgdbGame &pending : pendingGames) {
+                ++callIdx;
+                if (callIdx % 20 == 0)
+                    HttpMetadataProvider::processNetworkEvents();
+
+                const GameMetadata gm = provider.getById(pending.igdbId);
+                if (gm.title.isEmpty())
+                    continue;
+
+                if (!applyIgdbGameMetadata(database, updateQ, factQ, delQ, byIdFactSpec, pending.gameId, gm,
+                        byIdGamesEnriched, factsInserted, error)) {
+                    return false;
+                }
+            }
+
+            if (!database.commit()) {
+                error = QStringLiteral("Failed to commit IGDB per-id enrichment: %1").arg(database.lastError().text());
+                return false;
+            }
+
+            gamesEnriched += byIdGamesEnriched;
+            qInfo().noquote() << QStringLiteral("[IGDB] Per-id fetch complete: +%1 games enriched").arg(byIdGamesEnriched);
+        }
+    }
 
     for (const SysInfo &sys : systems) {
         // Flush any deleteLater() events posted by the previous system's network
@@ -135,6 +312,25 @@ bool enrichFromIGDB(
                 return false;
             }
             if (!bulkGapQ.next())
+                continue;
+        }
+
+        // Skip full catalog download when every game with metadata gaps already has an igdb_id.
+        {
+            QSqlQuery idGapQ(database);
+            idGapQ.prepare(QStringLiteral("SELECT 1 FROM games WHERE system_id = ? AND (%1) "
+                                          "AND (igdb_id IS NULL OR TRIM(igdb_id) = '') "
+                                          "AND NOT EXISTS (SELECT 1 FROM game_facts gf "
+                                          "              WHERE gf.game_id = games.game_id "
+                                          "                AND gf.field_name = 'igdb_id') "
+                                          "LIMIT 1")
+                               .arg(QLatin1String(kIgdbBulkGameGapSql)));
+            idGapQ.addBindValue(sys.id);
+            if (!idGapQ.exec()) {
+                error = QStringLiteral("IGDB igdb_id gap check for %1: %2").arg(sys.name, idGapQ.lastError().text());
+                return false;
+            }
+            if (!idGapQ.next())
                 continue;
         }
 
@@ -216,17 +412,6 @@ bool enrichFromIGDB(
             0.80,
         };
 
-        auto insertFact = [&](const QString &gameId, const QString &field, const QString &value,
-                              const QString &type = QStringLiteral("text")) -> bool {
-            bool inserted = false;
-            if (!insertGameFact(
-                    delQ, factQ, factSpec, gameId, field, value, type, error, QStringLiteral("igdb"), &inserted))
-                return false;
-            if (inserted)
-                ++factsInserted;
-            return true;
-        };
-
         QSqlQuery gamesQ(database);
         gamesQ.prepare(QStringLiteral("SELECT game_id, canonical_title FROM games "
                                       "WHERE system_id = ? "
@@ -248,52 +433,12 @@ bool enrichFromIGDB(
                 continue;
             const GameMetadata &gm = bestCandidate(it.value());
 
-            int releaseYear = 0;
-            if (gm.releaseDate.size() >= 4) {
-                bool ok = false;
-                const int y = gm.releaseDate.left(4).toInt(&ok);
-                if (ok && y > 1970 && y < 2030)
-                    releaseYear = y;
-            }
-            const QString releaseDateStr = (gm.releaseDate.size() >= 10) ? gm.releaseDate.left(10) : QString();
-
-            updateQ.bindValue(0, nullableText(gm.description));
-            const QString genreStr
-                = gm.genres.isEmpty() ? QString() : gm.genres.join(QStringLiteral(", "));
-            updateQ.bindValue(1, nullableText(genreStr));
-            updateQ.bindValue(2, nullableText(gm.developer));
-            updateQ.bindValue(3, nullableText(gm.publisher));
-            updateQ.bindValue(4, nullableInt(releaseYear));
-            updateQ.bindValue(5, nullableText(releaseDateStr));
-            updateQ.bindValue(6, nullableDouble(static_cast<double>(gm.rating)));
-            updateQ.bindValue(7, nullableInt(gm.players));
-            updateQ.bindValue(8, gameId);
-            if (!execPrepared(updateQ, error, QStringLiteral("Update game igdb"))) {
-                database.rollback();
+            if (!applyIgdbGameMetadata(database, updateQ, factQ, delQ, factSpec, gameId, gm, gamesEnriched,
+                    factsInserted, error)) {
                 return false;
             }
-            if (updateQ.numRowsAffected() > 0) {
-                ++gamesEnriched;
+            if (updateQ.numRowsAffected() > 0)
                 ++sysEnriched;
-            }
-
-            const QString yearStr = releaseYear > 0 ? QString::number(releaseYear) : QString();
-            const QString ratingStr
-                = gm.rating > 0.0f ? QString::number(static_cast<double>(gm.rating), 'f', 2) : QString();
-            const QString playersStr = gm.players > 0 ? QString::number(gm.players) : QString();
-            const QString igdbId = gm.externalIds.value(Constants::Providers::ExternalId::IGDB, gm.id);
-            if (!insertFact(gameId, QStringLiteral("igdb_id"), igdbId)
-                || !insertFact(gameId, QStringLiteral("description"), gm.description)
-                || !insertFact(gameId, QStringLiteral("genre"), genreStr)
-                || !insertFact(gameId, QStringLiteral("developer"), gm.developer)
-                || !insertFact(gameId, QStringLiteral("publisher"), gm.publisher)
-                || !insertFact(gameId, QStringLiteral("release_year"), yearStr, QStringLiteral("integer"))
-                || !insertFact(gameId, QStringLiteral("release_date"), releaseDateStr)
-                || !insertFact(gameId, QStringLiteral("rating"), ratingStr, QStringLiteral("decimal"))
-                || !insertFact(gameId, QStringLiteral("players_max"), playersStr, QStringLiteral("integer"))) {
-                database.rollback();
-                return false;
-            }
         }
 
         if (!database.commit()) {

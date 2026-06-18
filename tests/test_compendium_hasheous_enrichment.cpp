@@ -31,7 +31,10 @@ bool createSchema(QSqlDatabase &db) {
                        "developer TEXT, "
                        "publisher TEXT, "
                        "release_year INTEGER, "
-                       "rating REAL)"),
+                       "rating REAL, "
+                       "igdb_id TEXT, "
+                       "ra_game_id TEXT, "
+                       "achievement_count INTEGER)"),
         QStringLiteral("CREATE TABLE game_signatures ("
                        "sig_id INTEGER PRIMARY KEY AUTOINCREMENT, "
                        "game_id TEXT NOT NULL, "
@@ -79,6 +82,7 @@ class CompendiumHasheousEnrichmentTest : public QObject {
 private slots:
     void noPendingSignatures_returnsEarlyWithNoWrite();
     void existingIgdbFact_isExcludedFromPendingSet();
+    void igdbFactFromOtherSource_isExcludedFromPendingSet();
 };
 
 void CompendiumHasheousEnrichmentTest::noPendingSignatures_returnsEarlyWithNoWrite() {
@@ -135,6 +139,38 @@ void CompendiumHasheousEnrichmentTest::existingIgdbFact_isExcludedFromPendingSet
     QCOMPARE(facts, 0);
     QCOMPARE(apiNeeded, 0);
     QCOMPARE(apiPerformed, 0);
+
+    db.close();
+    QSqlDatabase::removeDatabase(connName);
+}
+
+void CompendiumHasheousEnrichmentTest::igdbFactFromOtherSource_isExcludedFromPendingSet() {
+    const QString connName = QStringLiteral("hasheous_test_other_source_fact");
+    QSqlDatabase db = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), connName);
+    db.setDatabaseName(QStringLiteral(":memory:"));
+    QVERIFY(db.open());
+    QVERIFY(createSchema(db));
+    execSql(db,
+        QStringLiteral("INSERT INTO games (game_id, system_id, canonical_title) "
+                       "VALUES ('g1', 1, 'Test Game')"));
+    execSql(db,
+        QStringLiteral("INSERT INTO game_signatures (game_id, hash_type, hash_value) "
+                       "VALUES ('g1', 'md5', 'aabbccdd001122334455667788990011')"));
+    execSql(db,
+        QStringLiteral("INSERT INTO game_facts (game_id, field_name, field_value, value_type, source_id, "
+                       "snapshot_id, source_priority, confidence) "
+                       "VALUES ('g1', 'igdb_id', '456', 'text', 'playmatch', 'snap', 91, 1.0)"));
+
+    int games = 0;
+    int facts = 0;
+    int apiNeeded = -1;
+    QString error;
+    const bool ok = CompendiumEnrichment::enrichFromHasheous(db, QString(), games, facts, error, &apiNeeded);
+
+    QVERIFY2(ok, qPrintable(error));
+    QCOMPARE(games, 0);
+    QCOMPARE(facts, 0);
+    QCOMPARE(apiNeeded, 0);
 
     db.close();
     QSqlDatabase::removeDatabase(connName);

@@ -76,7 +76,7 @@ public:
         : HasheousProvider(parent) { }
 
 protected:
-    QJsonObject makePostRequest(const QString &, const QJsonObject &, const QUrlQuery & = QUrlQuery()) override {
+    QJsonObject makePostRequest(const QString &, const QJsonDocument &, const QUrlQuery & = QUrlQuery()) override {
         QJsonObject response;
         response["id"] = 42;
         response["name"] = QStringLiteral("Test Game");
@@ -86,6 +86,24 @@ protected:
         igdbEntry["immutableId"] = QStringLiteral("12345");
         metadata.append(igdbEntry);
         response["metadata"] = metadata;
+        return response;
+    }
+};
+
+class CapturingHasheousProvider : public HasheousProvider {
+    Q_OBJECT
+public:
+    explicit CapturingHasheousProvider(QObject *parent = nullptr)
+        : HasheousProvider(parent) { }
+
+    int lastPayloadSize = 0;
+
+protected:
+    QJsonObject makePostRequest(const QString &, const QJsonDocument &doc, const QUrlQuery & = QUrlQuery()) override {
+        lastPayloadSize = doc.isArray() ? doc.array().size() : 1;
+        QJsonObject response;
+        response["id"] = 99;
+        response["name"] = QStringLiteral("Multi Disc Game");
         return response;
     }
 };
@@ -145,6 +163,7 @@ private slots:
 
     void retroAchievementsUsesRaMd5NotNoIntroMd5();
     void retroAchievementsUsesExternalIdBeforeRaHash();
+    void hasheousMultiEntryPayload();
 };
 
 void ProviderOrchestratorTest::hashProviderPriority() {
@@ -745,6 +764,22 @@ void ProviderOrchestratorTest::retroAchievementsUsesExternalIdBeforeRaHash() {
     QCOMPARE(ra->m_lastGetByIdArg, QStringLiteral("12345"));
     QCOMPARE(ra->m_hashCallCount, 0);
     QCOMPARE(out.title, QStringLiteral("Canonical"));
+}
+
+void ProviderOrchestratorTest::hasheousMultiEntryPayload() {
+    ProviderOrchestrator orchestrator;
+    auto *hasheous = new CapturingHasheousProvider();
+    orchestrator.addProvider(QStringLiteral("hasheous"), hasheous, Constants::Providers::Priority::HASHEOUS);
+
+    QList<HasheousHashEntry> entries;
+    entries.append(HasheousHashEntry { QStringLiteral("aaaaaaaa"), QStringLiteral("md5disc1"), QString(), QString() });
+    entries.append(HasheousHashEntry { QStringLiteral("bbbbbbbb"), QStringLiteral("md5disc2"), QString(), QString() });
+
+    const GameMetadata result = orchestrator.getByHashWithFallback(
+        entries, QStringLiteral("PlayStation"), QString(), QStringLiteral("md5disc1"));
+
+    QCOMPARE(result.title, QStringLiteral("Multi Disc Game"));
+    QCOMPARE(hasheous->lastPayloadSize, 2);
 }
 
 QTEST_MAIN(ProviderOrchestratorTest)

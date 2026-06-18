@@ -449,6 +449,7 @@ namespace Compendium {
             { "region", "primary_region_code" },
             { "igdb_id", "igdb_id" },
             { "ra_game_id", "ra_game_id" },
+            { "achievement_count", "achievement_count" },
         };
 
         for (const auto &f : kFields) {

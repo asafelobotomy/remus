@@ -1,5 +1,6 @@
 #pragma once
 
+#include "hasheous_provider.h"
 #include "metadata_provider.h"
 #include <QObject>
 #include <QList>
@@ -114,6 +115,15 @@ public:
      */
     GameMetadata getByHashWithFallback(const QString &hash, const QString &system, const QString &crc32 = QString(),
         const QString &md5 = QString(), const QString &sha1 = QString(), const QString &raMd5 = QString());
+
+    /**
+     * @brief Hash lookup using a Hasheous array payload (one entry per disc/file).
+     *
+     * When multiple entries are provided, Hasheous receives the full array (RomM #3498).
+     * Other hash providers still use @p primaryHash and the first entry's digests.
+     */
+    GameMetadata getByHashWithFallback(const QList<HasheousHashEntry> &entries, const QString &system,
+        const QString &raMd5 = QString(), const QString &primaryHash = QString());
 
     /**
      * @brief Get artwork with fallback

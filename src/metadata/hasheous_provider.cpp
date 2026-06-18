@@ -27,10 +27,59 @@
 namespace Remus {
 
 namespace {
+
     bool isMetadataProxyEndpoint(const QString &path) {
         return path.contains("/MetadataProxy/", Qt::CaseInsensitive);
     }
-}
+
+    QString normalizedHashValue(const QString &hash) {
+        return hash.trimmed().toLower();
+    }
+
+    QJsonObject hashEntryToPayloadObject(const HasheousHashEntry &entry) {
+        QJsonObject obj;
+        if (!entry.chdSha1.isEmpty()) {
+            obj.insert(QStringLiteral("shA1"), normalizedHashValue(entry.chdSha1));
+            return obj;
+        }
+
+        if (!entry.crc32.isEmpty())
+            obj.insert(QStringLiteral("crc"), normalizedHashValue(entry.crc32));
+        if (!entry.md5.isEmpty())
+            obj.insert(QStringLiteral("mD5"), normalizedHashValue(entry.md5));
+        if (!entry.sha1.isEmpty())
+            obj.insert(QStringLiteral("shA1"), normalizedHashValue(entry.sha1));
+        if (!entry.sha256.isEmpty())
+            obj.insert(QStringLiteral("sha256"), normalizedHashValue(entry.sha256));
+        return obj;
+    }
+
+    QJsonArray buildLookupPayload(const QList<HasheousHashEntry> &entries) {
+        QJsonArray payload;
+        for (const HasheousHashEntry &entry : entries) {
+            const QJsonObject obj = hashEntryToPayloadObject(entry);
+            if (!obj.isEmpty())
+                payload.append(obj);
+        }
+        return payload;
+    }
+
+    QJsonObject responseObjectFromDocument(const QJsonDocument &doc) {
+        if (doc.isObject())
+            return doc.object();
+        if (doc.isArray()) {
+            const QJsonArray arr = doc.array();
+            for (const QJsonValue &value : arr) {
+                if (value.isObject() && !value.toObject().value(QStringLiteral("name")).toString().isEmpty())
+                    return value.toObject();
+            }
+            if (!arr.isEmpty() && arr.first().isObject())
+                return arr.first().toObject();
+        }
+        return { };
+    }
+
+} // namespace
 
 HasheousProvider::HasheousProvider(QObject *parent)
     : HttpMetadataProvider(QStringLiteral("hasheous"), Constants::Network::HASHEOUS_RATE_LIMIT_MS, parent) {
@@ -102,7 +151,7 @@ bool HasheousProvider::metadataProxyEnabled() const {
 }
 
 QJsonObject HasheousProvider::makePostRequest(
-    const QString &endpoint, const QJsonObject &body, const QUrlQuery &params) {
+    const QString &endpoint, const QJsonDocument &bodyDoc, const QUrlQuery &params) {
     m_rateLimiter->waitIfNeeded();
 
     QUrl url(QString(Constants::API::HASHEOUS_BASE_URL) + endpoint);
@@ -114,7 +163,7 @@ QJsonObject HasheousProvider::makePostRequest(
     request.setHeader(QNetworkRequest::UserAgentHeader, Constants::API::USER_AGENT);
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
 
-    QByteArray postData = QJsonDocument(body).toJson(QJsonDocument::Compact);
+    const QByteArray postData = bodyDoc.toJson(QJsonDocument::Compact);
     QNetworkReply *reply = m_networkManager->post(request, postData);
     ApiResponse apiResp = waitForReply(reply, Constants::Network::HASHEOUS_TIMEOUT_MS);
 
@@ -140,10 +189,7 @@ QJsonObject HasheousProvider::makePostRequest(
         return QJsonObject();
     }
 
-    if (doc.isObject()) {
-        return doc.object();
-    }
-    return QJsonObject();
+    return responseObjectFromDocument(doc);
 }
 
 QList<SearchResult> HasheousProvider::searchByName(const QString &title, const QString &system, const QString &region) {
@@ -151,7 +197,6 @@ QList<SearchResult> HasheousProvider::searchByName(const QString &title, const Q
     Q_UNUSED(system);
     Q_UNUSED(region);
 
-    // Hasheous doesn't support name-based search
     qWarning() << "Hasheous does not support name-based search, use hash matching instead";
     emit errorOccurred("Hasheous only supports hash-based matching");
 
@@ -159,50 +204,52 @@ QList<SearchResult> HasheousProvider::searchByName(const QString &title, const Q
 }
 
 GameMetadata HasheousProvider::getByHash(const QString &hash, const QString &system) {
-    Q_UNUSED(system); // Hasheous uses hash only, system is inferred
+    Q_UNUSED(system);
 
     QString hashType = detectHashType(hash);
     if (hashType.isEmpty()) {
-        qWarning() << "Hasheous: Invalid hash length, expected CRC32 (8), MD5 (32), or SHA1 (40), got:"
+        qWarning() << "Hasheous: Invalid hash length, expected CRC32 (8), MD5 (32), SHA1 (40), or SHA256 (64), got:"
                    << hash.length();
         emit errorOccurred("Invalid hash length for Hasheous");
         return GameMetadata();
     }
 
-    // Delegate to multi-hash path (single hash populated)
-    QString crc32 = (hashType == "crc32") ? hash : QString();
-    QString md5 = (hashType == "md5") ? hash : QString();
-    QString sha1 = (hashType == "sha1") ? hash : QString();
-    return getByHashes(crc32, md5, sha1, system);
+    QString crc32 = (hashType == QLatin1String("crc32")) ? hash : QString();
+    QString md5 = (hashType == QLatin1String("md5")) ? hash : QString();
+    QString sha1 = (hashType == QLatin1String("sha1")) ? hash : QString();
+    QString sha256 = (hashType == QLatin1String("sha256")) ? hash : QString();
+    return getByHashes(crc32, md5, sha1, system, sha256);
 }
 
 GameMetadata HasheousProvider::getByHashes(
-    const QString &crc32, const QString &md5, const QString &sha1, const QString &system) {
+    const QString &crc32, const QString &md5, const QString &sha1, const QString &system, const QString &sha256) {
+    HasheousHashEntry entry;
+    entry.crc32 = crc32;
+    entry.md5 = md5;
+    entry.sha1 = sha1;
+    entry.sha256 = sha256;
+    return getByHashEntries({ entry }, system);
+}
+
+GameMetadata HasheousProvider::getByHashEntries(
+    const QList<HasheousHashEntry> &entries, const QString &system) {
     Q_UNUSED(system);
 
-    if (crc32.isEmpty() && md5.isEmpty() && sha1.isEmpty()) {
+    const QJsonArray payload = buildLookupPayload(entries);
+    if (payload.isEmpty()) {
         qWarning() << "Hasheous: No hashes provided";
         emit errorOccurred("No hashes provided for Hasheous");
         return GameMetadata();
     }
 
-    qInfo() << "Hasheous: Looking up hash set"
-            << "crc32=" << (crc32.isEmpty() ? "-" : crc32) << "md5=" << (md5.isEmpty() ? "-" : md5)
-            << "sha1=" << (sha1.isEmpty() ? "-" : sha1);
-
-    QJsonObject body;
-    if (!crc32.isEmpty())
-        body["crc"] = crc32.toLower();
-    if (!md5.isEmpty())
-        body["mD5"] = md5.toLower();
-    if (!sha1.isEmpty())
-        body["shA1"] = sha1.toLower();
+    qInfo() << "Hasheous: Looking up" << payload.size() << "hash set(s) via array payload";
 
     QUrlQuery params;
-    params.addQueryItem("returnAllSources", "true");
-    params.addQueryItem("returnFields", "Signatures,Metadata,Attributes");
+    params.addQueryItem(QStringLiteral("returnAllSources"), QStringLiteral("true"));
+    params.addQueryItem(QStringLiteral("returnFields"), QStringLiteral("Signatures,Metadata,Attributes"));
 
-    QJsonObject response = makePostRequest(Constants::API::HASHEOUS_LOOKUP_ENDPOINT, body, params);
+    const QJsonObject response
+        = makePostRequest(Constants::API::HASHEOUS_LOOKUP_ENDPOINT, QJsonDocument(payload), params);
 
     if (response.isEmpty()) {
         qInfo() << "Hasheous: No match found for provided hashes";
@@ -250,7 +297,6 @@ GameMetadata HasheousProvider::getByHashes(
 GameMetadata HasheousProvider::getById(const QString &id) {
     Q_UNUSED(id);
 
-    // Hasheous doesn't support ID-based lookup (it uses hashes)
     qWarning() << "Hasheous does not support ID-based lookup";
     emit errorOccurred("Hasheous only supports hash-based matching");
 
@@ -259,9 +305,6 @@ GameMetadata HasheousProvider::getById(const QString &id) {
 
 ArtworkUrls HasheousProvider::getArtwork(const QString &id) {
     Q_UNUSED(id);
-    // Hasheous artwork URLs are embedded in hash lookup responses (boxArtUrl).
-    // There is no standalone artwork endpoint; return empty so the artwork
-    // fallback cascade can continue to the next provider.
     return ArtworkUrls();
 }
 

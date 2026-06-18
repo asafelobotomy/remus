@@ -4,11 +4,28 @@
 #include "../core/constants/hash_algorithms.h"
 #include "../core/constants/api.h"
 #include "../core/constants/providers.h"
+#include <QJsonArray>
+#include <QJsonDocument>
 #include <QJsonObject>
-#include <QUrlQuery>
+#include <QList>
 #include <QMap>
+#include <QUrlQuery>
 
 namespace Remus {
+
+/**
+ * @brief One hash set for Hasheous Lookup/ByHash array payloads (RomM #3498).
+ *
+ * When @c chdSha1 is set, only @c shA1 is sent — container MD5/CRC do not match
+ * Hasheous CHD indexes. Otherwise sends mD5/shA1/crc (and sha256 when present).
+ */
+struct HasheousHashEntry {
+    QString crc32;
+    QString md5;
+    QString sha1;
+    QString sha256;
+    QString chdSha1;
+};
 
 /**
  * @brief Hasheous metadata provider
@@ -43,7 +60,12 @@ public:
 
     QList<SearchResult> searchByName(
         const QString &title, const QString &system = QString(), const QString &region = QString()) override;
-    GameMetadata getByHashes(const QString &crc32, const QString &md5, const QString &sha1, const QString &system);
+    GameMetadata getByHashes(const QString &crc32, const QString &md5, const QString &sha1, const QString &system,
+        const QString &sha256 = QString());
+    /**
+     * @brief Lookup using the Hasheous array payload (one object per file/hash set).
+     */
+    GameMetadata getByHashEntries(const QList<HasheousHashEntry> &entries, const QString &system = QString());
     GameMetadata getByHash(const QString &hash, const QString &system) override;
     GameMetadata getById(const QString &id) override;
     ArtworkUrls getArtwork(const QString &id) override;
@@ -64,7 +86,7 @@ protected:
     /**
      * @brief Detect hash type from hash string length
      * @param hash The hash string
-     * @return "md5", "sha1", "crc32", or empty if unknown
+     * @return "md5", "sha1", "crc32", "sha256", or empty if unknown
      */
     QString detectHashType(const QString &hash) const;
 
@@ -84,14 +106,11 @@ protected:
     virtual QJsonObject makeRequest(const QString &endpoint, const QUrlQuery &params);
 
     /**
-     * @brief Make POST request with JSON body to Hasheous API
-     * @param endpoint API endpoint (e.g., "/Lookup/ByHash")
-     * @param body JSON object to send as request body
-     * @param params Optional URL query parameters
-     * @return JSON response object
+     * @brief Make POST request with JSON body to Hasheous API.
+     * @param body JSON object or array (Lookup/ByHash expects an array of hash objects).
      */
     virtual QJsonObject makePostRequest(
-        const QString &endpoint, const QJsonObject &body, const QUrlQuery &params = QUrlQuery());
+        const QString &endpoint, const QJsonDocument &body, const QUrlQuery &params = QUrlQuery());
 
     /**
      * @brief Whether MetadataProxy enrichment is currently available.

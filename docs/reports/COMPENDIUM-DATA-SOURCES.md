@@ -55,6 +55,11 @@ at runtime (`hasheous_provider.cpp`) with optional MetadataProxy enrichment when
 | Bulk compendium enrichment | Yes — `enrichFromHasheous` | Yes — `enrichFromPlayMatch` |
 | **Future use** | Gap-fill pass for unmatched signatures; proxy IGDB for games missing description | Secondary hash matcher for disc systems; IGDB ID bridge when Hasheous misses |
 
+**Deferred gaps (research):** Multi-track DAT ingest (only Track 01 hashed per disc game block) and
+SHA256 in bulk bridge passes — see
+[COMPENDIUM-MULTI-DISC-SHA256-RESEARCH.md](COMPENDIUM-MULTI-DISC-SHA256-RESEARCH.md). Full pipeline
+audit and roadmap: [COMPENDIUM-BUILD-DEEP-RESEARCH.md](COMPENDIUM-BUILD-DEEP-RESEARCH.md).
+
 Reference: [RomM metadata providers](https://docs.romm.app/latest/Getting-Started/Metadata-Providers/),
 [Hasheous repo](https://github.com/gaseous-project/hasheous).
 

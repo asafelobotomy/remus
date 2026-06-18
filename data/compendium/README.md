@@ -42,6 +42,8 @@ Phase 2 quality thresholds (informational, do not block phase 1):
 ```bash
 bash .github/scripts/validate-compendium-db.sh data/compendium/remus_compendium.db \
   data/compendium/validation/0002_phase2_quality_checks.sql
+bash .github/scripts/validate-compendium-db.sh data/compendium/remus_compendium.db \
+  data/compendium/validation/0003_phase2_extended_checks.sql
 ```
 
 External data source reference: [docs/reports/COMPENDIUM-DATA-SOURCES.md](../../docs/reports/COMPENDIUM-DATA-SOURCES.md)
@@ -124,5 +126,6 @@ sqlite3 data/compendium/remus_compendium.db "SELECT system_name, catalog_name, e
 - Libretro name migration: [data/compendium/migrations/0003_systems_libretro_name.sql](migrations/0003_systems_libretro_name.sql)
 - FTS migration: [data/compendium/migrations/0004_fts5_search_index.sql](migrations/0004_fts5_search_index.sql)
 - External ID columns: [data/compendium/migrations/0005_game_external_ids.sql](migrations/0005_game_external_ids.sql)
+- Achievement count column: [data/compendium/migrations/0006_game_achievement_count.sql](migrations/0006_game_achievement_count.sql)
 - Validator: [data/compendium/validation/0001_phase1_checks.sql](validation/0001_phase1_checks.sql)
 - Runner script: [scripts/setup_compendium_db.sh](../../scripts/setup_compendium_db.sh)

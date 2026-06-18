@@ -21,6 +21,7 @@
 #include <QSqlQuery>
 #include <QStringList>
 #include <QUuid>
+#include <algorithm>
 
 using namespace CompendiumSqlUtilities;
 using namespace Remus;
@@ -149,6 +150,7 @@ int handleBuildCompendiumCommand(CliContext &ctx) {
         QDir(compendiumDir).filePath(QStringLiteral("migrations/0003_systems_libretro_name.sql")),
         QDir(compendiumDir).filePath(QStringLiteral("migrations/0004_fts5_search_index.sql")),
         QDir(compendiumDir).filePath(QStringLiteral("migrations/0005_game_external_ids.sql")),
+        QDir(compendiumDir).filePath(QStringLiteral("migrations/0006_game_achievement_count.sql")),
     };
 
     QString buildId;
@@ -167,30 +169,51 @@ int handleBuildCompendiumCommand(CliContext &ctx) {
     }
     const QString normalizedManifestJson = normalizeManifestJson(manifestJson);
 
+    const QString metadataDir = findMetadataDir();
+    const QString gametdbDir = findGameTDBDir();
+    const QString openvgdbPath = findOpenVGDBPath();
+    const QString mameCatverPath = findMameCatverPath();
+    const QString mameListXmlPath = findMameListXmlPath();
+    const QString credPath = outputInfo.dir().filePath(QStringLiteral("enrichment-credentials.json"));
+    const QString enrichmentFingerprint = computeEnrichmentInputsFingerprint(metadataDir, gametdbDir,
+        openvgdbPath, mameCatverPath, mameListXmlPath, credPath, sourceFilter);
+
     // Skip only when the persisted manifest contract exactly matches the current
-    // build request. This catches disabled/removed sources and identity changes.
+    // build request and local enrichment inputs are unchanged. This catches
+    // disabled/removed sources, identity changes, and enrichment-only updates.
     if (QFileInfo::exists(finalOutputPath)) {
         const QString checkConn
             = QStringLiteral("compendium-check-") + QUuid::createUuid().toString(QUuid::WithoutBraces);
         QSqlDatabase checkDb = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), checkConn);
         checkDb.setDatabaseName(finalOutputPath);
         bool manifestMatches = checkDb.open();
+        QString storedFingerprint;
         if (manifestMatches) {
             QSqlQuery q(checkDb);
-            q.prepare(QStringLiteral("SELECT 1 FROM compendium_builds "
+            q.prepare(QStringLiteral("SELECT notes FROM compendium_builds "
                                      "WHERE build_id = ? AND schema_version = ? AND source_manifest_json = ? LIMIT 1"));
             q.addBindValue(buildId);
             q.addBindValue(schemaVersion);
             q.addBindValue(normalizedManifestJson);
             manifestMatches = q.exec() && q.next();
+            if (manifestMatches) {
+                storedFingerprint = enrichmentFingerprintFromBuildNotes(q.value(0).toString());
+            }
             checkDb.close();
         }
         checkDb = QSqlDatabase();
         QSqlDatabase::removeDatabase(checkConn);
-        if (manifestMatches && QFileInfo::exists(finalReportPath)) {
-            qInfo() << "[build-compendium] Existing DB already matches the requested manifest — skipping rebuild.";
-            qInfo() << "[build-compendium] Change the manifest or delete the DB to force a full rebuild.";
+        const bool enrichmentMatches
+            = !storedFingerprint.isEmpty() && storedFingerprint == enrichmentFingerprint;
+        if (manifestMatches && enrichmentMatches && QFileInfo::exists(finalReportPath)) {
+            qInfo() << "[build-compendium] Existing DB already matches the requested manifest and enrichment "
+                       "inputs — skipping rebuild.";
+            qInfo() << "[build-compendium] Change the manifest, enrichment inputs, or delete the DB to force a "
+                       "full rebuild.";
             return 0;
+        }
+        if (manifestMatches && !enrichmentMatches) {
+            qInfo() << "[build-compendium] Enrichment inputs changed since last build — rebuilding.";
         }
     }
 
@@ -331,6 +354,13 @@ int handleBuildCompendiumCommand(CliContext &ctx) {
         buildConfig.sources.append(cfg);
     }
 
+    std::sort(buildConfig.sources.begin(), buildConfig.sources.end(),
+        [](const Remus::Compendium::CompendiumSourceConfig &a, const Remus::Compendium::CompendiumSourceConfig &b) {
+            if (a.priority != b.priority)
+                return a.priority > b.priority;
+            return a.sourceId < b.sourceId;
+        });
+
     if (!database.transaction()) {
         qCritical() << "✗ Failed to start ingestion transaction:" << database.lastError().text();
         database.close();
@@ -420,12 +450,6 @@ int handleBuildCompendiumCommand(CliContext &ctx) {
     // ── Enrichment passes (Libretro, GameTDB, OpenVGDB, IGDB) + merge resolve ──
     EnrichmentStats enrichStats;
     {
-        const QString metadataDir = findDataSubdir(QStringLiteral("metadata"));
-        const QString gametdbDir = findDataSubdir(QStringLiteral("gametdb"));
-        const QString openvgdbPath = findOpenVGDBPath();
-        const QString mameCatverPath = findMameCatverPath();
-        const QString mameListXmlPath = findMameListXmlPath();
-        const QString credPath = outputInfo.dir().filePath(QStringLiteral("enrichment-credentials.json"));
         if (!runCompendiumEnrichmentPasses(database, metadataDir, gametdbDir, openvgdbPath, credPath, mameCatverPath,
                 mameListXmlPath, enrichStats, error, onEnrichProgress, sourceFilter)) {
             qCritical().noquote() << QStringLiteral("✗ %1").arg(error);
@@ -483,6 +507,7 @@ int handleBuildCompendiumCommand(CliContext &ctx) {
     report.insert(QStringLiteral("resolved_fields"), stats.resolvedFields);
     report.insert(QStringLiteral("unresolved_conflicts"), conflictsCount);
     insertEnrichmentStatsReportFields(report, enrichStats, QStringLiteral("post_enrich_resolved_fields"));
+    report.insert(QStringLiteral("enrichment_inputs_fingerprint"), enrichmentFingerprint);
     report.insert(QStringLiteral("duration_ms"), static_cast<qint64>(timer.elapsed()));
 
     if (!writeReport(reportPath, report, error)) {
@@ -503,6 +528,21 @@ int handleBuildCompendiumCommand(CliContext &ctx) {
     qInfo() << "Unresolved conflicts:" << conflictsCount;
 
     writeProgress(QStringLiteral("complete"), totalEnabled, { }, stats, /*overallPct=*/100);
+
+    {
+        const QJsonObject notesObj {
+            { QStringLiteral("description"), QStringLiteral("Phase 1 bootstrap compiler run") },
+            { QStringLiteral("enrichment_inputs_fingerprint"), enrichmentFingerprint },
+        };
+        QSqlQuery notesQuery(database);
+        notesQuery.prepare(QStringLiteral("UPDATE compendium_builds SET notes = ? WHERE build_id = ?"));
+        notesQuery.addBindValue(QString::fromUtf8(QJsonDocument(notesObj).toJson(QJsonDocument::Compact)));
+        notesQuery.addBindValue(buildId);
+        if (!notesQuery.exec()) {
+            qWarning() << "[build-compendium] Failed to persist enrichment fingerprint in build notes:"
+                       << notesQuery.lastError().text();
+        }
+    }
 
     releaseDatabase(database, connectionName);
 

@@ -84,6 +84,54 @@ namespace {
         return QString();
     }
 
+    bool hasHashLookupSignals(
+        const QString &hash, const QString &crc32, const QString &md5, const QString &sha1) {
+        return !hash.isEmpty() || !crc32.isEmpty() || !md5.isEmpty() || !sha1.isEmpty()
+            || !sha256FromPrimaryHash(hash).isEmpty();
+    }
+
+    bool hasheousEntrySignals(const HasheousHashEntry &entry) {
+        return !entry.crc32.isEmpty() || !entry.md5.isEmpty() || !entry.sha1.isEmpty() || !entry.sha256.isEmpty()
+            || !entry.chdSha1.isEmpty();
+    }
+
+    GameMetadata lookupHasheous(HasheousProvider *hasheous, const QString &hash, const QString &crc32,
+        const QString &md5, const QString &sha1, const QString &system) {
+        if (hasheous == nullptr)
+            return { };
+
+        const QString sha256 = sha256FromPrimaryHash(hash);
+        if (!crc32.isEmpty() || !md5.isEmpty() || !sha1.isEmpty() || !sha256.isEmpty())
+            return hasheous->getByHashes(crc32, md5, sha1, system, sha256);
+        if (!hash.isEmpty())
+            return hasheous->getByHash(hash, system);
+        return { };
+    }
+
+    GameMetadata lookupHasheousEntries(
+        HasheousProvider *hasheous, const QList<HasheousHashEntry> &entries, const QString &system) {
+        if (hasheous == nullptr || entries.isEmpty())
+            return { };
+
+        QList<HasheousHashEntry> usable;
+        usable.reserve(entries.size());
+        for (const HasheousHashEntry &entry : entries) {
+            if (hasheousEntrySignals(entry))
+                usable.append(entry);
+        }
+        if (usable.isEmpty())
+            return { };
+        if (usable.size() == 1) {
+            const HasheousHashEntry &entry = usable.first();
+            const QString primaryHash = !entry.sha256.isEmpty() ? entry.sha256
+                : !entry.sha1.isEmpty()                       ? entry.sha1
+                : !entry.md5.isEmpty()                        ? entry.md5
+                                                                : entry.crc32;
+            return lookupHasheous(hasheous, primaryHash, entry.crc32, entry.md5, entry.sha1, system);
+        }
+        return hasheous->getByHashEntries(usable, system);
+    }
+
     GameMetadata lookupPlayMatch(PlayMatchProvider *playmatch, const QString &fileName, qint64 fileSize,
         const QString &primaryHash, const QString &crc32, const QString &md5, const QString &sha1,
         const QString &system) {
@@ -126,18 +174,14 @@ void ProviderOrchestrator::queryProvider(GameMetadata &accumulator, const QStrin
     }
 
     GameMetadata result;
-    const bool hasAnyHash = !hash.isEmpty() || !crc32.isEmpty() || !md5.isEmpty() || !sha1.isEmpty();
+    const bool hasAnyHash = hasHashLookupSignals(hash, crc32, md5, sha1);
     if (hasAnyHash && info.supportsHash) {
         emit tryingProvider(providerName, MatchMethods::HASH);
         try {
             const QString preferredHashType = preferredHashTypeForSystem(system);
             if (providerName.compare(Constants::Providers::HASHEOUS, Qt::CaseInsensitive) == 0) {
                 auto *hasheous = qobject_cast<HasheousProvider *>(info.provider);
-                if (hasheous && (!crc32.isEmpty() || !md5.isEmpty() || !sha1.isEmpty())) {
-                    result = hasheous->getByHashes(crc32, md5, sha1, system);
-                } else {
-                    result = info.provider->getByHash(hash, system);
-                }
+                result = lookupHasheous(hasheous, hash, crc32, md5, sha1, system);
             } else if (providerName.compare(Constants::Providers::PLAYMATCH, Qt::CaseInsensitive) == 0) {
                 result = lookupPlayMatch(
                     qobject_cast<PlayMatchProvider *>(info.provider), name, fileSize, hash, crc32, md5, sha1, system);
@@ -145,8 +189,8 @@ void ProviderOrchestrator::queryProvider(GameMetadata &accumulator, const QStrin
                 result = lookupRetroAchievements(info.provider, accumulator, raMd5, system);
             } else if (providerName.compare(Constants::Providers::COMPENDIUM, Qt::CaseInsensitive) == 0
                 || providerName.compare(Constants::Providers::GAMETDB, Qt::CaseInsensitive) == 0) {
-                result
-                    = lookupByHashCascade(info.provider, system, preferredHashType, hash, crc32, md5, sha1, fileSize);
+                result = lookupByHashCascade(info.provider, system, preferredHashType, hash, crc32, md5, sha1, fileSize,
+                    sha256FromPrimaryHash(hash));
             } else {
                 result = info.provider->getByHash(hash, system);
             }
@@ -267,6 +311,40 @@ void ProviderOrchestrator::queryProvider(GameMetadata &accumulator, const QStrin
 
 GameMetadata ProviderOrchestrator::getByHashWithFallback(const QString &hash, const QString &system,
     const QString &crc32, const QString &md5, const QString &sha1, const QString &raMd5) {
+    HasheousHashEntry entry;
+    entry.crc32 = crc32;
+    entry.md5 = md5;
+    entry.sha1 = sha1;
+    const QString sha256 = sha256FromPrimaryHash(hash);
+    if (!sha256.isEmpty())
+        entry.sha256 = sha256;
+    return getByHashWithFallback({ entry }, system, raMd5, hash);
+}
+
+GameMetadata ProviderOrchestrator::getByHashWithFallback(const QList<HasheousHashEntry> &entries, const QString &system,
+    const QString &raMd5, const QString &primaryHash) {
+    if (entries.isEmpty()) {
+        qWarning() << "Cannot search by hash: no digest entries available";
+        return GameMetadata();
+    }
+
+    const HasheousHashEntry &first = entries.first();
+    QString hash = primaryHash.trimmed();
+    if (hash.isEmpty()) {
+        if (!first.sha256.isEmpty())
+            hash = first.sha256;
+        else if (!first.sha1.isEmpty())
+            hash = first.sha1;
+        else if (!first.md5.isEmpty())
+            hash = first.md5;
+        else
+            hash = first.crc32;
+    }
+
+    const QString crc32 = first.crc32;
+    const QString md5 = first.md5;
+    const QString sha1 = first.sha1;
+
     if (hash.isEmpty() && crc32.isEmpty() && md5.isEmpty() && sha1.isEmpty()) {
         qWarning() << "Cannot search by hash: no digests available";
         return GameMetadata();
@@ -294,6 +372,8 @@ GameMetadata ProviderOrchestrator::getByHashWithFallback(const QString &hash, co
         return GameMetadata();
     }
 
+    const bool multiHasheousPayload = entries.size() > 1;
+
     for (const QString &providerName : hashProviders) {
         const ProviderInfo &info = m_providers[providerName];
         emit tryingProvider(providerName, MatchMethods::HASH);
@@ -302,11 +382,8 @@ GameMetadata ProviderOrchestrator::getByHashWithFallback(const QString &hash, co
             GameMetadata metadata;
             if (providerName.compare(Constants::Providers::HASHEOUS, Qt::CaseInsensitive) == 0) {
                 auto *hasheous = qobject_cast<HasheousProvider *>(info.provider);
-                if (hasheous && (!crc32.isEmpty() || !md5.isEmpty() || !sha1.isEmpty())) {
-                    metadata = hasheous->getByHashes(crc32, md5, sha1, system);
-                } else {
-                    metadata = info.provider->getByHash(hash, system);
-                }
+                metadata = multiHasheousPayload ? lookupHasheousEntries(hasheous, entries, system)
+                                                  : lookupHasheous(hasheous, hash, crc32, md5, sha1, system);
             } else if (providerName.compare(Constants::Providers::PLAYMATCH, Qt::CaseInsensitive) == 0) {
                 emit providerFailed(providerName, QStringLiteral("Skipped (needs fileName and fileSize)"));
                 continue;
@@ -316,7 +393,8 @@ GameMetadata ProviderOrchestrator::getByHashWithFallback(const QString &hash, co
                 }
             } else if (providerName.compare(Constants::Providers::COMPENDIUM, Qt::CaseInsensitive) == 0
                 || providerName.compare(Constants::Providers::GAMETDB, Qt::CaseInsensitive) == 0) {
-                metadata = lookupByHashCascade(info.provider, system, preferredHashType, hash, crc32, md5, sha1);
+                metadata = lookupByHashCascade(info.provider, system, preferredHashType, hash, crc32, md5, sha1, 0,
+                    sha256FromPrimaryHash(hash));
             } else {
                 metadata = info.provider->getByHash(hash, system);
             }
@@ -437,7 +515,7 @@ GameMetadata ProviderOrchestrator::fetchProviderMetadata(
 
 GameMetadata ProviderOrchestrator::getHashFromProvider(const QString &providerName, const QString &hash,
     const QString &system, const QString &crc32, const QString &md5, const QString &sha1, const QString &raMd5) {
-    if (providerName.isEmpty() || (hash.isEmpty() && crc32.isEmpty() && md5.isEmpty() && sha1.isEmpty())) {
+    if (providerName.isEmpty() || !hasHashLookupSignals(hash, crc32, md5, sha1)) {
         return { };
     }
 
@@ -449,11 +527,7 @@ GameMetadata ProviderOrchestrator::getHashFromProvider(const QString &providerNa
     GameMetadata metadata;
     if (providerName.compare(Constants::Providers::HASHEOUS, Qt::CaseInsensitive) == 0) {
         auto *hasheous = qobject_cast<HasheousProvider *>(info->provider);
-        if (hasheous && (!crc32.isEmpty() || !md5.isEmpty() || !sha1.isEmpty())) {
-            metadata = hasheous->getByHashes(crc32, md5, sha1, system);
-        } else if (!hash.isEmpty()) {
-            metadata = info->provider->getByHash(hash, system);
-        }
+        metadata = lookupHasheous(hasheous, hash, crc32, md5, sha1, system);
     } else if (providerName.compare(Constants::Providers::PLAYMATCH, Qt::CaseInsensitive) == 0) {
         emit providerFailed(providerName, QStringLiteral("Requires fileName and fileSize"));
         return { };
@@ -463,8 +537,8 @@ GameMetadata ProviderOrchestrator::getHashFromProvider(const QString &providerNa
         }
     } else if (providerName.compare(Constants::Providers::COMPENDIUM, Qt::CaseInsensitive) == 0
         || providerName.compare(Constants::Providers::GAMETDB, Qt::CaseInsensitive) == 0) {
-        metadata
-            = lookupByHashCascade(info->provider, system, preferredHashTypeForSystem(system), hash, crc32, md5, sha1);
+        metadata = lookupByHashCascade(info->provider, system, preferredHashTypeForSystem(system), hash, crc32, md5, sha1,
+            0, sha256FromPrimaryHash(hash));
     } else if (!hash.isEmpty()) {
         metadata = info->provider->getByHash(hash, system);
     }

@@ -21,7 +21,7 @@ namespace Compendium {
     }
 
     // Returns true for file extensions that are metadata-only tracks (.cue, .m3u,
-    // etc.) — these should not be used as the canonical ROM identity entry.
+    // etc.) — these should not be ingested as hash identity rows.
     static bool isMetaTrack(const QString &romName) {
         static const QStringList kMetaExtensions = {
             QStringLiteral(".cue"),
@@ -41,19 +41,71 @@ namespace Compendium {
         return false;
     }
 
-    // Given a list of entries that all share the same gameName (i.e., multiple
-    // rom-track entries from one game block), select the canonical data-track entry.
-    // Prefers the first non-meta-track; falls back to the first entry overall.
-    static ClrMameProEntry selectDataTrack(const QList<ClrMameProEntry> &group) {
-        for (const ClrMameProEntry &e : group) {
-            if (!isMetaTrack(e.romName))
-                return e;
+    static SourceRecordEnvelope envelopeFromEntry(
+        const QString &sourceId, const QString &snapshotId, const QString &systemHint, const ClrMameProEntry &entry) {
+        SourceRecordEnvelope rec;
+
+        rec.sourceId = sourceId;
+        rec.snapshotId = snapshotId;
+        rec.externalKey = DatExtractor::makeExternalKey(systemHint, entry);
+
+        rec.systemHint = systemHint;
+        rec.titleRaw = entry.gameName;
+        rec.regionRaw = entry.region;
+
+        rec.hashes.crc32 = DatExtractor::normalizeHash(entry.crc32);
+        rec.hashes.md5 = entry.md5.trimmed().toLower();
+        rec.hashes.sha1 = entry.sha1.trimmed().toLower();
+        rec.hashes.sha256 = entry.sha256.trimmed().toLower();
+
+        if (!entry.serial.isEmpty())
+            rec.serials.append(DatExtractor::normalizeSerial(entry.serial));
+
+        if (!entry.gameName.isEmpty())
+            rec.fields.insert(QStringLiteral("title"), entry.gameName);
+        if (!entry.region.isEmpty())
+            rec.fields.insert(QStringLiteral("region"), entry.region);
+        if (!entry.publisher.isEmpty())
+            rec.fields.insert(QStringLiteral("publisher"), entry.publisher);
+        if (!entry.developer.isEmpty())
+            rec.fields.insert(QStringLiteral("developer"), entry.developer);
+        if (entry.releaseYear > 0) {
+            rec.fields.insert(QStringLiteral("release_year"), QString::number(entry.releaseYear));
+            const int month = entry.releaseMonth > 0 ? entry.releaseMonth : 1;
+            const int day = entry.releaseDay > 0 ? entry.releaseDay : 1;
+            rec.fields.insert(QStringLiteral("release_date"),
+                QStringLiteral("%1-%2-%3")
+                    .arg(entry.releaseYear, 4, 10, QChar('0'))
+                    .arg(month, 2, 10, QChar('0'))
+                    .arg(day, 2, 10, QChar('0')));
         }
-        return group.first();
+        if (entry.users > 0)
+            rec.fields.insert(QStringLiteral("players_max"), QString::number(entry.users));
+        if (!entry.description.isEmpty() && entry.description != entry.gameName && entry.description.length() >= 20)
+            rec.fields.insert(QStringLiteral("description"), entry.description);
+
+        rec.payloadJson = DatExtractor::entryToPayloadJson(systemHint, entry);
+        return rec;
     }
 
-    // Convert a Logiqx DatRomEntry to a ClrMameProEntry so XML-format DATs can
-    // feed the same downstream pipeline.
+    // Given a list of entries that all share the same gameName (i.e., multiple
+    // rom-track entries from one game block), return every data-track ROM.
+    // Skips .cue/.m3u metadata entries; falls back to the first entry if none remain.
+    static QList<ClrMameProEntry> dataTracksForGame(const QList<ClrMameProEntry> &group) {
+        if (group.size() <= 1)
+            return group;
+
+        QList<ClrMameProEntry> tracks;
+        tracks.reserve(group.size());
+        for (const ClrMameProEntry &e : group) {
+            if (!isMetaTrack(e.romName))
+                tracks.append(e);
+        }
+        if (tracks.isEmpty())
+            tracks.append(group.first());
+        return tracks;
+    }
+
     static ClrMameProEntry datRomEntryToClrMame(const Remus::DatRomEntry &src) {
         ClrMameProEntry entry;
         entry.gameName = src.gameName;
@@ -156,79 +208,18 @@ namespace Compendium {
             }
         }
 
-        // Group entries by gameName and select the canonical data-track per game.
-        // For single-entry games this is a no-op; for multi-track disc games
-        // (Redump PS1/PS2/Saturn) it discards .cue/.m3u metadata entries.
+        // Group by gameName and emit one envelope per data track (Redump multi-track).
+        // Meta-only rows (.cue, .m3u, …) are skipped; each disc track keeps its hash.
         QMap<QString, QList<ClrMameProEntry>> groups;
         for (const ClrMameProEntry &e : entries)
             groups[e.gameName].append(e);
 
-        QList<ClrMameProEntry> canonical;
-        canonical.reserve(groups.size());
-        for (auto it = groups.cbegin(), end = groups.cend(); it != end; ++it)
-            canonical.append(it->size() == 1 ? it->first() : selectDataTrack(*it));
-
         QList<SourceRecordEnvelope> records;
-        records.reserve(canonical.size());
-
-        for (const ClrMameProEntry &entry : canonical) {
-            SourceRecordEnvelope rec;
-
-            rec.sourceId = sourceId;
-            rec.snapshotId = snapshotId;
-            rec.externalKey = makeExternalKey(systemHint, entry);
-
-            rec.systemHint = systemHint;
-            rec.titleRaw = entry.gameName;
-            rec.regionRaw = entry.region;
-
-            // Normalized hashes
-            rec.hashes.crc32 = normalizeHash(entry.crc32);
-            rec.hashes.md5 = entry.md5.trimmed().toLower();
-            rec.hashes.sha1 = entry.sha1.trimmed().toLower();
-            rec.hashes.sha256 = entry.sha256.trimmed().toLower();
-
-            // Normalized serials
-            if (!entry.serial.isEmpty()) {
-                rec.serials.append(normalizeSerial(entry.serial));
-            }
-
-            // Candidate metadata facts
-            if (!entry.gameName.isEmpty()) {
-                rec.fields.insert(QStringLiteral("title"), entry.gameName);
-            }
-            if (!entry.region.isEmpty()) {
-                rec.fields.insert(QStringLiteral("region"), entry.region);
-            }
-            if (!entry.publisher.isEmpty()) {
-                rec.fields.insert(QStringLiteral("publisher"), entry.publisher);
-            }
-            if (!entry.developer.isEmpty()) {
-                rec.fields.insert(QStringLiteral("developer"), entry.developer);
-            }
-            if (entry.releaseYear > 0) {
-                rec.fields.insert(QStringLiteral("release_year"), QString::number(entry.releaseYear));
-                const int month = entry.releaseMonth > 0 ? entry.releaseMonth : 1;
-                const int day = entry.releaseDay > 0 ? entry.releaseDay : 1;
-                rec.fields.insert(QStringLiteral("release_date"),
-                    QStringLiteral("%1-%2-%3")
-                        .arg(entry.releaseYear, 4, 10, QChar('0'))
-                        .arg(month, 2, 10, QChar('0'))
-                        .arg(day, 2, 10, QChar('0')));
-            }
-            if (entry.users > 0) {
-                rec.fields.insert(QStringLiteral("players_max"), QString::number(entry.users));
-            }
-            // Require a minimum length to filter out machine-type codes (e.g. MAME
-            // driver labels like "PC", "XT") that are too short to be useful descriptions.
-            if (!entry.description.isEmpty() && entry.description != entry.gameName
-                && entry.description.length() >= 20) {
-                rec.fields.insert(QStringLiteral("description"), entry.description);
-            }
-
-            rec.payloadJson = entryToPayloadJson(systemHint, entry);
-
-            records.append(rec);
+        for (auto it = groups.cbegin(), end = groups.cend(); it != end; ++it) {
+            const QList<ClrMameProEntry> tracks = dataTracksForGame(*it);
+            records.reserve(records.size() + tracks.size());
+            for (const ClrMameProEntry &entry : tracks)
+                records.append(envelopeFromEntry(sourceId, snapshotId, systemHint, entry));
         }
 
         return records;

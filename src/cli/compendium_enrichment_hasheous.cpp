@@ -23,6 +23,7 @@ namespace {
         QString crc32;
         QString md5;
         QString sha1;
+        QString sha256;
     };
 
     bool loadPendingGames(QSqlDatabase &database, QStringList &gameIds, QString &error) {
@@ -32,12 +33,12 @@ namespace {
                                        "WHERE EXISTS ("
                                        "  SELECT 1 FROM game_signatures gs "
                                        "  WHERE gs.game_id = g.game_id "
-                                       "    AND gs.hash_type IN ('md5', 'sha1', 'crc32')) "
+                                       "    AND gs.hash_type IN ('md5', 'sha1', 'crc32', 'sha256')) "
+                                       "  AND (g.igdb_id IS NULL OR TRIM(g.igdb_id) = '') "
                                        "  AND NOT EXISTS ("
                                        "  SELECT 1 FROM game_facts gf "
                                        "  WHERE gf.game_id = g.game_id "
-                                       "    AND gf.field_name = 'igdb_id' "
-                                       "    AND gf.source_id = 'hasheous') "
+                                       "    AND gf.field_name = 'igdb_id') "
                                        "ORDER BY g.game_id"))) {
             error = QStringLiteral("Query pending Hasheous games: %1").arg(query.lastError().text());
             return false;
@@ -66,7 +67,7 @@ namespace {
             query.prepare(QStringLiteral("SELECT game_id, hash_type, hash_value "
                                          "FROM game_signatures "
                                          "WHERE game_id IN (%1) "
-                                         "  AND hash_type IN ('md5', 'sha1', 'crc32')")
+                                         "  AND hash_type IN ('md5', 'sha1', 'crc32', 'sha256')")
                               .arg(placeholders.join(QLatin1Char(','))));
             for (const QString &gameId : chunk)
                 query.addBindValue(gameId);
@@ -88,11 +89,13 @@ namespace {
                     hashes.md5 = value;
                 else if (type == QStringLiteral("sha1"))
                     hashes.sha1 = value;
+                else if (type == QStringLiteral("sha256"))
+                    hashes.sha256 = value;
             }
         }
 
         for (auto it = hashesByGame.begin(); it != hashesByGame.end();) {
-            if (it->crc32.isEmpty() && it->md5.isEmpty() && it->sha1.isEmpty())
+            if (it->crc32.isEmpty() && it->md5.isEmpty() && it->sha1.isEmpty() && it->sha256.isEmpty())
                 it = hashesByGame.erase(it);
             else
                 ++it;
@@ -155,7 +158,7 @@ bool enrichFromHasheous(QSqlDatabase &database, const QString &credentialsPath, 
             qInfo().noquote() << QStringLiteral("[Hasheous] lookup %1/%2 ...").arg(callIdx).arg(apiCallsNeeded);
         }
 
-        const GameMetadata metadata = provider.getByHashes(it->crc32, it->md5, it->sha1, QString());
+        const GameMetadata metadata = provider.getByHashes(it->crc32, it->md5, it->sha1, QString(), it->sha256);
         if (metadata.externalIds.contains(Constants::Providers::ExternalId::IGDB))
             matchedMetadata.insert(it.key(), metadata);
     }

@@ -114,6 +114,22 @@ void insertEnrichmentStatsReportFields(
     QJsonObject &report, const EnrichmentStats &stats, const QString &resolvedFieldsKey);
 
 /**
+ * @brief SHA-256 fingerprint of local enrichment inputs (metadata trees, GameTDB,
+ *        OpenVGDB, MAME payloads, credentials, and optional --enrich-source filter).
+ *
+ * Stored in compendium_builds.notes and compared on rebuild skip so enrichment-only
+ * input changes invalidate a manifest-identical cached DB.
+ */
+QString computeEnrichmentInputsFingerprint(const QString &metadataDir, const QString &gametdbDir,
+    const QString &openvgdbPath, const QString &mameCatverPath, const QString &mameListXmlPath,
+    const QString &credPath, const QStringList &sourceFilter = { });
+
+/**
+ * @brief Extract a stored enrichment fingerprint from compendium_builds.notes JSON.
+ */
+QString enrichmentFingerprintFromBuildNotes(const QString &notes);
+
+/**
  * @brief Returns the canonical set of source key strings accepted by the
  *        @c --enrich-source CLI option and the @p sourceFilter parameter of
  *        runCompendiumEnrichmentPasses().

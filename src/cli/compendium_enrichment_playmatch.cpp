@@ -26,6 +26,7 @@ namespace {
         QString crc32;
         QString md5;
         QString sha1;
+        QString sha256;
     };
 
     bool loadPendingGames(QSqlDatabase &database, QList<PendingPlayMatchGame> &pending, QString &error) {
@@ -35,12 +36,11 @@ namespace {
                                        "WHERE EXISTS ("
                                        "  SELECT 1 FROM game_signatures gs "
                                        "  WHERE gs.game_id = g.game_id "
-                                       "    AND gs.hash_type IN ('md5', 'sha1', 'crc32')) "
+                                       "    AND gs.hash_type IN ('md5', 'sha1', 'crc32', 'sha256')) "
                                        "  AND NOT EXISTS ("
                                        "  SELECT 1 FROM game_facts gf "
                                        "  WHERE gf.game_id = g.game_id "
-                                       "    AND gf.field_name = 'igdb_id' "
-                                       "    AND gf.source_id = 'playmatch') "
+                                       "    AND gf.field_name = 'igdb_id') "
                                        "ORDER BY g.game_id"))) {
             error = QStringLiteral("Query pending PlayMatch games: %1").arg(query.lastError().text());
             return false;
@@ -81,7 +81,7 @@ namespace {
 
             QSqlQuery hashQuery(database);
             hashQuery.prepare(QStringLiteral("SELECT game_id, hash_type, hash_value FROM game_signatures "
-                                             "WHERE game_id IN (%1) AND hash_type IN ('md5', 'sha1', 'crc32')")
+                                             "WHERE game_id IN (%1) AND hash_type IN ('md5', 'sha1', 'crc32', 'sha256')")
                                   .arg(placeholders.join(QLatin1Char(','))));
             for (const QString &gameId : chunk)
                 hashQuery.addBindValue(gameId);
@@ -101,11 +101,16 @@ namespace {
                     game->md5 = value;
                 else if (type == QStringLiteral("sha1"))
                     game->sha1 = value;
+                else if (type == QStringLiteral("sha256"))
+                    game->sha256 = value;
             }
 
             QSqlQuery payloadQuery(database);
-            payloadQuery.prepare(QStringLiteral("SELECT game_id, payload_json FROM source_items "
-                                                "WHERE game_id IN (%1)")
+            payloadQuery.prepare(QStringLiteral("SELECT gs.game_id, si.payload_json "
+                                                "FROM game_signatures gs "
+                                                "JOIN source_items si ON si.source_id = gs.source_id "
+                                                "  AND si.external_key = gs.source_entry_key "
+                                                "WHERE gs.game_id IN (%1)")
                                      .arg(placeholders.join(QLatin1Char(','))));
             for (const QString &gameId : chunk)
                 payloadQuery.addBindValue(gameId);
@@ -169,7 +174,7 @@ bool enrichFromPlayMatch(QSqlDatabase &database, int &gamesEnriched, int &factsI
             HttpMetadataProvider::processNetworkEvents();
 
         const GameMetadata metadata = provider.identifyBySignals(
-            game.title, game.fileSize, game.crc32, game.md5, game.sha1, QString(), QString());
+            game.title, game.fileSize, game.crc32, game.md5, game.sha1, game.sha256, QString());
         if (metadata.externalIds.contains(Constants::Providers::ExternalId::IGDB))
             matchedMetadata.insert(game.gameId, metadata);
     }
@@ -207,6 +212,17 @@ bool enrichFromPlayMatch(QSqlDatabase &database, int &gamesEnriched, int &factsI
         return false;
     }
 
+    QSqlQuery updateQ(database);
+    updateQ.prepare(QStringLiteral("UPDATE games SET "
+                                   "description  = COALESCE(NULLIF(description, ''), ?), "
+                                   "genre        = COALESCE(NULLIF(genre, ''), ?), "
+                                   "developer    = COALESCE(NULLIF(developer, ''), ?), "
+                                   "publisher    = COALESCE(NULLIF(publisher, ''), ?), "
+                                   "release_year = COALESCE(release_year, ?), "
+                                   "release_date = COALESCE(release_date, ?), "
+                                   "rating       = COALESCE(rating, ?) "
+                                   "WHERE game_id = ?"));
+
     QSqlQuery factQ(database);
     factQ.prepare(QStringLiteral("INSERT INTO game_facts "
                                  "(game_id, field_name, field_value, value_type, source_id, snapshot_id, "
@@ -222,18 +238,76 @@ bool enrichFromPlayMatch(QSqlDatabase &database, int &gamesEnriched, int &factsI
         0.85,
     };
 
-    for (auto it = matchedMetadata.constBegin(); it != matchedMetadata.constEnd(); ++it) {
-        const QString igdbId = it.value().externalIds.value(Constants::Providers::ExternalId::IGDB);
-        if (igdbId.isEmpty())
-            continue;
+    auto insertFact = [&](const QString &gameId, const QString &field, const QString &value,
+                          const QString &type = QStringLiteral("text")) -> bool {
         bool inserted = false;
-        if (!insertGameFact(delQ, factQ, factSpec, it.key(), QStringLiteral("igdb_id"), igdbId, QStringLiteral("text"),
-                error, QStringLiteral("playmatch"), &inserted)) {
-            database.rollback();
+        if (!insertGameFact(delQ, factQ, factSpec, gameId, field, value, type, error, QStringLiteral("playmatch"),
+                &inserted)) {
             return false;
         }
         if (inserted)
             ++factsInserted;
+        return true;
+    };
+
+    for (auto it = matchedMetadata.constBegin(); it != matchedMetadata.constEnd(); ++it) {
+        const QString &gameId = it.key();
+        const GameMetadata &metadata = it.value();
+        const QString igdbId = metadata.externalIds.value(Constants::Providers::ExternalId::IGDB);
+        if (igdbId.isEmpty())
+            continue;
+
+        if (!insertFact(gameId, QStringLiteral("igdb_id"), igdbId)) {
+            database.rollback();
+            return false;
+        }
+
+        const QString genre
+            = metadata.genres.isEmpty() ? QString() : metadata.genres.join(QStringLiteral(", "));
+        int releaseYear = 0;
+        QString releaseDateStr;
+        if (metadata.releaseDate.size() >= 10)
+            releaseDateStr = metadata.releaseDate.left(10);
+        if (metadata.releaseDate.size() >= 4) {
+            bool ok = false;
+            releaseYear = metadata.releaseDate.left(4).toInt(&ok);
+            if (!ok)
+                releaseYear = 0;
+            if (releaseDateStr.isEmpty() && releaseYear > 0)
+                releaseDateStr = QStringLiteral("%1-01-01").arg(releaseYear);
+        }
+
+        const bool hasMetadata = !metadata.description.isEmpty() || !genre.isEmpty() || !metadata.developer.isEmpty()
+            || !metadata.publisher.isEmpty() || !releaseDateStr.isEmpty() || metadata.rating > 0.0f;
+        if (hasMetadata) {
+            updateQ.bindValue(0, nullableText(metadata.description));
+            updateQ.bindValue(1, nullableText(genre));
+            updateQ.bindValue(2, nullableText(metadata.developer));
+            updateQ.bindValue(3, nullableText(metadata.publisher));
+            updateQ.bindValue(4, nullableInt(releaseYear));
+            updateQ.bindValue(5, nullableText(releaseDateStr));
+            updateQ.bindValue(6, nullableDouble(metadata.rating > 0.0f ? metadata.rating : 0.0));
+            updateQ.bindValue(7, gameId);
+            if (!execPrepared(updateQ, error, QStringLiteral("PlayMatch metadata update for %1").arg(gameId))) {
+                database.rollback();
+                return false;
+            }
+
+            const QString yearStr = releaseYear > 0 ? QString::number(releaseYear) : QString();
+            const QString ratingStr
+                = metadata.rating > 0.0f ? QString::number(static_cast<double>(metadata.rating), 'f', 2) : QString();
+            if (!insertFact(gameId, QStringLiteral("description"), metadata.description)
+                || !insertFact(gameId, QStringLiteral("genre"), genre)
+                || !insertFact(gameId, QStringLiteral("developer"), metadata.developer)
+                || !insertFact(gameId, QStringLiteral("publisher"), metadata.publisher)
+                || !insertFact(gameId, QStringLiteral("release_year"), yearStr, QStringLiteral("integer"))
+                || !insertFact(gameId, QStringLiteral("release_date"), releaseDateStr)
+                || !insertFact(gameId, QStringLiteral("rating"), ratingStr, QStringLiteral("decimal"))) {
+                database.rollback();
+                return false;
+            }
+        }
+
         ++gamesEnriched;
     }
 

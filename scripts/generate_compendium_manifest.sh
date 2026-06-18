@@ -223,6 +223,24 @@ mkdir -p "$(dirname "$OUTPUT_PATH")"
 OUTPUT_DIR="$(cd "$(dirname "$OUTPUT_PATH")" && pwd)"
 OUTPUT_PATH="$OUTPUT_DIR/$(basename "$OUTPUT_PATH")"
 
+# Slugs covered by No-Intro or Redump — libretro-dat entries with the same slug are
+# disabled to avoid shadowed ingest (signatures owned by lower-priority curated DATs).
+SUPERSEDING_SLUGS=()
+for f in "${NO_INTRO_FILES[@]}" "${REDUMP_FILES[@]}"; do
+    [[ -f "$f" ]] || continue
+    dat_name="$(basename "$f")"
+    dat_stem="${dat_name%.dat}"
+    SUPERSEDING_SLUGS+=("$(slugify "$dat_stem")")
+done
+
+slug_is_superseded() {
+    local slug="$1"
+    for s in "${SUPERSEDING_SLUGS[@]}"; do
+        [[ "$slug" == "$s" ]] && return 0
+    done
+    return 1
+}
+
 {
     printf '{\n'
     printf '  "build_id": "%s",\n' "$(json_escape "$BUILD_ID")"
@@ -262,6 +280,8 @@ OUTPUT_PATH="$OUTPUT_DIR/$(basename "$OUTPUT_PATH")"
         printf '      "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",\n'
         printf '      "fetched_at": "%s",\n' "$(json_escape "$FETCHED_AT")"
         if is_excluded "$source_id"; then
+            printf '      "enabled": false,\n'
+        elif [[ "$dat_prefix" == "libretro-dat" ]] && slug_is_superseded "$slug"; then
             printf '      "enabled": false,\n'
         else
             printf '      "enabled": true,\n'

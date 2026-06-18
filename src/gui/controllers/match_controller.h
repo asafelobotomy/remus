@@ -11,6 +11,7 @@
 namespace Remus {
 
 class AppController;
+class Database;
 class ProviderOrchestrator;
 struct FileRecord;
 
@@ -138,6 +139,8 @@ private:
     QVariantMap searchResultToVariantMap(const SearchResult &result, int index) const;
     bool prependHashCandidates(ProviderOrchestrator *orchestrator, const FileRecord &file, const QString &systemName,
         const QString &providerFilter, QList<SearchResult> &results) const;
+    GameMetadata lookupHashWithFallback(
+        ProviderOrchestrator *orchestrator, Database *db, const FileRecord &file, const QString &systemName) const;
     bool applyMetadataToDatabase(int fileId, int systemId, const GameMetadata &metadata, float confidence,
         const QString &method, bool skipOverwrite, bool importTitle, bool importDescription, bool importPublisher,
         bool importDeveloper, bool importGenre, bool importRelease, bool importRating);

@@ -611,6 +611,17 @@ PYEOF
     if cp "$mame_xml_tmp" "$mame_listxml_dest" 2>/dev/null; then
         echo "  MAME listxml: $mame_listxml_dest ($(du -sh "$mame_listxml_dest" | cut -f1))"
     fi
+    # catver.ini — progetto-SNAPS category database for MAME arcade genre enrichment.
+    mame_catver_dest="$PROJECT_ROOT/data/mame/catver.ini"
+    mame_catver_url="https://raw.githubusercontent.com/AntoPISA/MAME_SupportFiles/main/catver.ini/catver.ini"
+    mame_catver_cache="$DOWNLOAD_CACHE_DIR/mame/catver.ini"
+    echo "  Updating MAME catver.ini..."
+    if download_with_cache "$mame_catver_url" "$mame_catver_cache" 120 "MAME catver.ini"; then
+        cp "$mame_catver_cache" "$mame_catver_dest"
+        echo "  MAME catver: $mame_catver_dest ($(du -sh "$mame_catver_dest" | cut -f1))"
+    else
+        echo "  Warning: failed to download catver.ini from $mame_catver_url"
+    fi
     rm -f "$mame_xml_tmp"
     mame_xml_tmp=""
     if [[ -n "$mame_bin_tmp" ]]; then
@@ -623,6 +634,18 @@ else
     echo "    1. Install MAME and re-run:  pacman -S mame       (Arch/Manjaro)"
     echo "                                 apt install mame     (Debian/Ubuntu)"
     echo "    2. Place a merged MAME .dat file manually in: $MAME_DIR/"
+    # catver.ini can still be fetched without a local MAME binary.
+    mame_catver_dest="$PROJECT_ROOT/data/mame/catver.ini"
+    mame_catver_url="https://raw.githubusercontent.com/AntoPISA/MAME_SupportFiles/main/catver.ini/catver.ini"
+    mame_catver_cache="$DOWNLOAD_CACHE_DIR/mame/catver.ini"
+    echo ""
+    echo "Updating MAME catver.ini..."
+    if download_with_cache "$mame_catver_url" "$mame_catver_cache" 120 "MAME catver.ini"; then
+        cp "$mame_catver_cache" "$mame_catver_dest"
+        echo "  MAME catver: $mame_catver_dest ($(du -sh "$mame_catver_dest" | cut -f1))"
+    else
+        echo "  Warning: failed to download catver.ini from $mame_catver_url"
+    fi
 fi
 
 # 5. metadat/hacks/ — ROM hack / translation patch DATs (libretro curated, romhacking.net URLs)
@@ -754,12 +777,20 @@ if [[ -f "$OPENVGDB_DEST" ]]; then
     echo "  OpenVGDB:           $OPENVGDB_DEST"
 fi
 MAME_LISTXML_PATH="$PROJECT_ROOT/data/mame/listxml.xml"
+MAME_CATVER_PATH="$PROJECT_ROOT/data/mame/catver.ini"
 if [[ ! -f "$MAME_LISTXML_PATH" ]]; then
     echo ""
     echo "WARNING: $MAME_LISTXML_PATH is missing."
     echo "  The MAME listxml enrichment pass will be skipped during compendium builds."
     echo "  Arcade developer/year/players metadata will not be populated from listxml."
     echo "  Install MAME (see section 4b above) and re-run this script, or place listxml.xml manually."
+fi
+if [[ ! -f "$MAME_CATVER_PATH" ]]; then
+    echo ""
+    echo "WARNING: $MAME_CATVER_PATH is missing."
+    echo "  The MAME catver enrichment pass will be skipped during compendium builds."
+    echo "  Arcade genre metadata will not be populated from catver.ini."
+    echo "  Re-run this script when network access is available, or place catver.ini manually."
 fi
 echo ""
 echo "Next step: run scripts/generate_compendium_manifest.sh to update the manifest."

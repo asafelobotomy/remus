@@ -1,14 +1,21 @@
 #include "cli_compendium_build_phases.h"
 
 #include "compendium_enrichment.h"
+#include "../core/compendium_manifest_parser.h"
+#include "../core/constants/settings.h"
 #include "../core/constants/system_ids.h"
 #include "../metadata/compendium_merge_resolver.h"
 #include "../metadata/compendium_types.h"
+#include "../services/credential_manager.h"
 
 #include <QDebug>
+#include <QDir>
+#include <QDirIterator>
 #include <QFile>
+#include <QJsonDocument>
 #include <QJsonObject>
 #include <QList>
+#include <QCryptographicHash>
 #include <QSqlDatabase>
 #include <QSqlError>
 #include <QSqlQuery>
@@ -16,7 +23,27 @@
 
 #include <functional>
 
+using namespace Remus;
+
 namespace {
+
+bool hasIgdbCredentials(const QString &credPath) {
+    const auto load = [&](const char *key) {
+        const QString qkey = QString::fromLatin1(key);
+        return credPath.isEmpty() ? CredentialManager::get(qkey) : CredentialManager::get(qkey, credPath);
+    };
+    using namespace Constants::Settings::Providers;
+    return !load(IGDB_CLIENT_ID).isEmpty() && !load(IGDB_CLIENT_SECRET).isEmpty();
+}
+
+bool hasRaCredentials(const QString &credPath) {
+    const auto load = [&](const char *key) {
+        const QString qkey = QString::fromLatin1(key);
+        return credPath.isEmpty() ? CredentialManager::get(qkey) : CredentialManager::get(qkey, credPath);
+    };
+    using namespace Constants::Settings::Providers;
+    return !load(RETROACHIEVEMENTS_USERNAME).isEmpty() && !load(RETROACHIEVEMENTS_API_KEY).isEmpty();
+}
 
 bool queryHasRows(QSqlDatabase &db, const QString &sql, QString &error) {
     QSqlQuery q(db);
@@ -68,16 +95,29 @@ bool hasGametdbGaps(QSqlDatabase &db, QString &error) {
 bool hasIgdbBulkMetadataGaps(QSqlDatabase &db, QString &error) {
     return queryHasRows(db,
         QStringLiteral("SELECT 1 FROM games "
-                       "WHERE genre IS NULL OR TRIM(genre) = '' "
+                       "WHERE (genre IS NULL OR TRIM(genre) = '' "
                        "   OR developer IS NULL OR TRIM(developer) = '' "
                        "   OR publisher IS NULL OR TRIM(publisher) = '' "
                        "   OR release_year IS NULL "
                        "   OR release_date IS NULL OR TRIM(release_date) = '' "
                        "   OR description IS NULL OR TRIM(description) = '' "
-                       "   OR players_max IS NULL "
+                       "   OR players_max IS NULL) "
+                       "  AND (igdb_id IS NULL OR TRIM(igdb_id) = '') "
+                       "  AND NOT EXISTS (SELECT 1 FROM game_facts gf "
+                       "                  WHERE gf.game_id = games.game_id "
+                       "                    AND gf.field_name = 'igdb_id') "
                        "LIMIT 1"),
         error);
 }
+
+// OpenVGDB does not provide players_max or rating.
+static const char kOpenVgdbMetadataGapSql[] =
+    "genre IS NULL OR TRIM(genre) = '' "
+    "   OR developer IS NULL OR TRIM(developer) = '' "
+    "   OR publisher IS NULL OR TRIM(publisher) = '' "
+    "   OR release_year IS NULL "
+    "   OR release_date IS NULL OR TRIM(release_date) = '' "
+    "   OR description IS NULL OR TRIM(description) = '' ";
 
 // OpenVGDB matches by crc32/md5 — only run when hash-linked games still have gaps.
 bool hasOpenVgdbGaps(QSqlDatabase &db, QString &error) {
@@ -88,7 +128,7 @@ bool hasOpenVgdbGaps(QSqlDatabase &db, QString &error) {
                        "              WHERE gs.game_id = g.game_id "
                        "                AND gs.hash_type IN ('crc32', 'md5')) "
                        "LIMIT 1")
-            .arg(QLatin1String(kGeneralMetadataGapSql)),
+            .arg(QLatin1String(kOpenVgdbMetadataGapSql)),
         error);
 }
 
@@ -146,7 +186,9 @@ bool hasAnyRaGaps(QSqlDatabase &db, QString &error) {
                        "WHERE (g.genre IS NULL OR TRIM(g.genre) = '' "
                        "    OR g.developer IS NULL OR TRIM(g.developer) = '' "
                        "    OR g.publisher IS NULL OR TRIM(g.publisher) = '' "
-                       "    OR g.release_year IS NULL) "
+                       "    OR g.release_year IS NULL "
+                       "    OR g.release_date IS NULL OR TRIM(g.release_date) = '' "
+                       "    OR g.description IS NULL OR TRIM(g.description) = '') "
                        "LIMIT 1"),
         error);
 }
@@ -157,12 +199,11 @@ bool hasAnyHasheousGaps(QSqlDatabase &db, QString &error) {
                        "WHERE EXISTS ("
                        "  SELECT 1 FROM game_signatures gs "
                        "  WHERE gs.game_id = g.game_id "
-                       "    AND gs.hash_type IN ('md5', 'sha1', 'crc32')) "
+                       "    AND gs.hash_type IN ('md5', 'sha1', 'crc32', 'sha256')) "
                        "  AND NOT EXISTS ("
                        "  SELECT 1 FROM game_facts gf "
                        "  WHERE gf.game_id = g.game_id "
-                       "    AND gf.field_name = 'igdb_id' "
-                       "    AND gf.source_id = 'hasheous') "
+                       "    AND gf.field_name = 'igdb_id') "
                        "LIMIT 1"),
         error);
 }
@@ -173,7 +214,7 @@ bool hasAnyPlayMatchGaps(QSqlDatabase &db, QString &error) {
                        "WHERE EXISTS ("
                        "  SELECT 1 FROM game_signatures gs "
                        "  WHERE gs.game_id = g.game_id "
-                       "    AND gs.hash_type IN ('md5', 'sha1', 'crc32')) "
+                       "    AND gs.hash_type IN ('md5', 'sha1', 'crc32', 'sha256')) "
                        "  AND NOT EXISTS ("
                        "  SELECT 1 FROM game_facts gf "
                        "  WHERE gf.game_id = g.game_id "
@@ -183,6 +224,78 @@ bool hasAnyPlayMatchGaps(QSqlDatabase &db, QString &error) {
 }
 
 } // namespace
+
+static void addTreeToEnrichmentFingerprint(QCryptographicHash &hash, const QString &rootPath) {
+    QFileInfo fi(rootPath);
+    if (!fi.exists()) {
+        hash.addData("missing:");
+        hash.addData(QDir::toNativeSeparators(rootPath).toUtf8());
+        hash.addData("\n");
+        return;
+    }
+    if (fi.isFile()) {
+        const QString digest = fileSha256Hex(rootPath);
+        hash.addData(QDir::toNativeSeparators(rootPath).toUtf8());
+        hash.addData(":");
+        hash.addData(digest.toUtf8());
+        hash.addData("\n");
+        return;
+    }
+
+    QStringList paths;
+    QDirIterator it(rootPath, QDir::Files, QDirIterator::Subdirectories);
+    while (it.hasNext()) {
+        paths.append(it.next());
+    }
+    paths.sort(Qt::CaseInsensitive);
+    for (const QString &path : paths) {
+        const QString digest = fileSha256Hex(path);
+        hash.addData(QDir::toNativeSeparators(path).toUtf8());
+        hash.addData(":");
+        hash.addData(digest.toUtf8());
+        hash.addData("\n");
+    }
+}
+
+QString computeEnrichmentInputsFingerprint(const QString &metadataDir, const QString &gametdbDir,
+    const QString &openvgdbPath, const QString &mameCatverPath, const QString &mameListXmlPath,
+    const QString &credPath, const QStringList &sourceFilter) {
+    QCryptographicHash hash(QCryptographicHash::Sha256);
+
+    auto addLabeledTree = [&](const char *label, const QString &path) {
+        hash.addData(label);
+        hash.addData("\n");
+        if (path.isEmpty()) {
+            hash.addData("empty\n");
+        } else {
+            addTreeToEnrichmentFingerprint(hash, path);
+        }
+    };
+
+    addLabeledTree("metadata", metadataDir);
+    addLabeledTree("gametdb", gametdbDir);
+    addLabeledTree("openvgdb", openvgdbPath);
+    addLabeledTree("mame_catver", mameCatverPath);
+    addLabeledTree("mame_listxml", mameListXmlPath);
+    addLabeledTree("credentials", credPath);
+
+    QStringList sortedFilter = sourceFilter;
+    sortedFilter.sort(Qt::CaseInsensitive);
+    hash.addData("enrich_source:");
+    hash.addData(sortedFilter.join(QLatin1Char(',')).toUtf8());
+    hash.addData("\n");
+
+    return QString::fromLatin1(hash.result().toHex());
+}
+
+QString enrichmentFingerprintFromBuildNotes(const QString &notes) {
+    QJsonParseError parseError;
+    const QJsonDocument document = QJsonDocument::fromJson(notes.toUtf8(), &parseError);
+    if (parseError.error != QJsonParseError::NoError || !document.isObject()) {
+        return { };
+    }
+    return document.object().value(QStringLiteral("enrichment_inputs_fingerprint")).toString();
+}
 
 void insertEnrichmentStatsReportFields(
     QJsonObject &report, const EnrichmentStats &stats, const QString &resolvedFieldsKey) {
@@ -208,6 +321,7 @@ void insertEnrichmentStatsReportFields(
     report.insert(QStringLiteral("enrichment_passes_skipped_no_input"), stats.passesSkippedNoInput);
     report.insert(QStringLiteral("enrichment_passes_skipped_no_gaps"), stats.passesSkippedNoGaps);
     report.insert(QStringLiteral("enrichment_passes_skipped_filtered"), stats.passesSkippedFiltered);
+    report.insert(QStringLiteral("enrichment_passes_failed_with_error"), stats.passesFailedWithError);
     report.insert(QStringLiteral("post_enrich_merge_runs"), stats.mergeRuns);
     report.insert(QStringLiteral("ra_api_calls_needed"), stats.raApiCallsNeeded);
     report.insert(QStringLiteral("ra_api_calls_performed"), stats.raApiCallsPerformed);
@@ -269,7 +383,8 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db, const QString &metadataDir,
     const bool hasMetadataDir = !metadataDir.isEmpty();
     const bool hasGametdbDir = !gametdbDir.isEmpty();
     const bool hasOpenvgdbPath = !openvgdbPath.isEmpty() && QFile::exists(openvgdbPath);
-    const bool hasCredPath = !credPath.isEmpty() && QFile::exists(credPath);
+    const bool hasIgdbCreds = hasIgdbCredentials(credPath);
+    const bool hasRaCreds = hasRaCredentials(credPath);
     const bool hasMameCatverPath = !mameCatverPath.isEmpty() && QFile::exists(mameCatverPath);
     const bool hasMameListXmlPath = !mameListXmlPath.isEmpty() && QFile::exists(mameListXmlPath);
 
@@ -308,29 +423,6 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db, const QString &metadataDir,
             },
         },
         {
-            QStringLiteral("IGDB enrichment"),
-            QStringLiteral("igdb"),
-            TransactionMode::SelfManaged,
-            [&] { return hasCredPath; },
-            [&] { return hasIgdbBulkMetadataGaps(db, error); },
-            [&] {
-                return CompendiumEnrichment::enrichFromIGDB(
-                    db, credPath, stats.igdbGamesEnriched, stats.igdbFactsInserted, error);
-            },
-        },
-        {
-            QStringLiteral("RetroAchievements enrichment"),
-            QStringLiteral("ra"),
-            TransactionMode::SelfManaged,
-            [&] { return hasCredPath; },
-            [&] { return hasAnyRaGaps(db, error); },
-            [&] {
-                return CompendiumEnrichment::enrichFromRetroAchievements(db, credPath, stats.raGamesEnriched,
-                    stats.raFactsInserted, error, &stats.raApiCallsNeeded, &stats.raApiCallsPerformed,
-                    &stats.raApiCallsSuppressed);
-            },
-        },
-        {
             QStringLiteral("Hasheous enrichment"),
             QStringLiteral("hasheous"),
             TransactionMode::SelfManaged,
@@ -352,6 +444,29 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db, const QString &metadataDir,
                 return CompendiumEnrichment::enrichFromPlayMatch(db, stats.playmatchGamesEnriched,
                     stats.playmatchFactsInserted, error, &stats.playmatchApiCallsNeeded,
                     &stats.playmatchApiCallsPerformed);
+            },
+        },
+        {
+            QStringLiteral("IGDB enrichment"),
+            QStringLiteral("igdb"),
+            TransactionMode::SelfManaged,
+            [&] { return hasIgdbCreds; },
+            [&] { return hasIgdbBulkMetadataGaps(db, error); },
+            [&] {
+                return CompendiumEnrichment::enrichFromIGDB(
+                    db, credPath, stats.igdbGamesEnriched, stats.igdbFactsInserted, error);
+            },
+        },
+        {
+            QStringLiteral("RetroAchievements enrichment"),
+            QStringLiteral("ra"),
+            TransactionMode::SelfManaged,
+            [&] { return hasRaCreds; },
+            [&] { return hasAnyRaGaps(db, error); },
+            [&] {
+                return CompendiumEnrichment::enrichFromRetroAchievements(db, credPath, stats.raGamesEnriched,
+                    stats.raFactsInserted, error, &stats.raApiCallsNeeded, &stats.raApiCallsPerformed,
+                    &stats.raApiCallsSuppressed);
             },
         },
         {
@@ -445,12 +560,7 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db, const QString &metadataDir,
         ++stats.passesExecuted;
     }
 
-    const int factsInsertedTotal = stats.metadataFactsInserted + stats.gametdbFactsInserted
-        + stats.openvgdbFactsInserted + stats.igdbFactsInserted + stats.raFactsInserted + stats.mameFactsInserted
-        + stats.mameListXmlFactsInserted + stats.zxinfoFactsInserted + stats.hasheousFactsInserted
-        + stats.playmatchFactsInserted;
-
-    if (factsInsertedTotal > 0) {
+    if (stats.passesExecuted > 0) {
         // Wrap merge resolution in its own transaction so a failure does not leave
         // the games table stale against already-committed enrichment facts.
         if (!db.transaction()) {

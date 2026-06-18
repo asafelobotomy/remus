@@ -40,7 +40,7 @@ bool enrichFromRetroAchievements(QSqlDatabase &database, const QString &credenti
     if (!sysQ.exec(QStringLiteral("SELECT DISTINCT g.system_id, s.display_name FROM games g "
                                   "JOIN systems s ON s.system_id = g.system_id "
                                   "JOIN game_signatures gs ON gs.game_id = g.game_id "
-                                  "WHERE gs.hash_type = 'md5' "
+                                  "WHERE gs.hash_type IN ('md5', 'sha1', 'crc32', 'sha256') "
                                   "ORDER BY s.display_name"))) {
         error = QStringLiteral("Query systems with MD5 signatures: %1").arg(sysQ.lastError().text());
         return false;
@@ -128,7 +128,7 @@ bool enrichFromRetroAchievements(QSqlDatabase &database, const QString &credenti
         // Capture all enrichable fields to gate the per-game metadata API call.
         QSqlQuery hashQ(database);
         hashQ.prepare(QStringLiteral("SELECT gs.hash_value, gs.game_id, g.genre, g.developer, g.publisher, "
-                                     "       g.release_year, "
+                                     "       g.release_year, g.release_date, g.description, "
                                      "       EXISTS(SELECT 1 FROM game_facts gf "
                                      "              WHERE gf.game_id = g.game_id "
                                      "                AND gf.source_id = 'retroachievements' "
@@ -152,13 +152,15 @@ bool enrichFromRetroAchievements(QSqlDatabase &database, const QString &credenti
         while (hashQ.next()) {
             const QString hash = hashQ.value(0).toString().toLower();
             const QString gameId = hashQ.value(1).toString();
-            const bool alreadyProcessed = hashQ.value(6).toInt() != 0;
+            const bool alreadyProcessed = hashQ.value(8).toInt() != 0;
             // Fetch full metadata if any enrichable field is absent.
             auto isBlank = [&](int col) { return hashQ.value(col).isNull() || hashQ.value(col).toString().isEmpty(); };
             bool metaMissing = isBlank(2) // genre
                 || isBlank(3) // developer
                 || isBlank(4) // publisher
-                || hashQ.value(5).isNull(); // release_year
+                || hashQ.value(5).isNull() // release_year
+                || isBlank(6) // release_date
+                || isBlank(7); // description
             // Do NOT suppress retries for already-processed games: ra_game_id may have
             // been written while the metadata API call failed, leaving enrichable fields
             // blank.  Let metaMissing stand so the API call is attempted again.
@@ -327,7 +329,9 @@ bool enrichFromRetroAchievements(QSqlDatabase &database, const QString &credenti
                 }
 
                 updateQ.bindValue(0, nullableText(gm.description));
-                updateQ.bindValue(1, gm.genres.isEmpty() ? nullableText(QString()) : QVariant(gm.genres.first()));
+                const QString genreStr
+                    = gm.genres.isEmpty() ? QString() : gm.genres.join(QStringLiteral(", "));
+                updateQ.bindValue(1, nullableText(genreStr));
                 updateQ.bindValue(2, nullableText(gm.developer));
                 updateQ.bindValue(3, nullableText(gm.publisher));
                 updateQ.bindValue(4, nullableInt(releaseYear));
@@ -341,7 +345,6 @@ bool enrichFromRetroAchievements(QSqlDatabase &database, const QString &credenti
                     ++sysEnriched;
                 }
 
-                const QString genreStr = gm.genres.isEmpty() ? QString() : gm.genres.first();
                 const QString yearFactStr = releaseYear > 0 ? QString::number(releaseYear) : QString();
                 if (!insertFact(gameId, QStringLiteral("description"), gm.description)
                     || !insertFact(gameId, QStringLiteral("genre"), genreStr)
