@@ -70,7 +70,7 @@ bool queryDiscSetCoverageStats(QSqlDatabase &database, DiscSetCoverageStats &sta
     stats.discBasedGames = q.exec(QStringLiteral("SELECT COUNT(*) FROM games g "
                                                  "JOIN systems s ON s.system_id = g.system_id "
                                                  "WHERE s.is_disc_based = 1"))
-                               && q.next()
+            && q.next()
         ? q.value(0).toLongLong()
         : -1;
     if (stats.discBasedGames < 0) {
@@ -83,7 +83,7 @@ bool queryDiscSetCoverageStats(QSqlDatabase &database, DiscSetCoverageStats &sta
                                                     "JOIN games g ON g.game_id = gds.game_id "
                                                     "JOIN systems s ON s.system_id = g.system_id "
                                                     "WHERE s.is_disc_based = 1"))
-                                && q.next()
+            && q.next()
         ? q.value(0).toLongLong()
         : -1;
     if (stats.gamesWithDiscSets < 0) {
@@ -92,7 +92,8 @@ bool queryDiscSetCoverageStats(QSqlDatabase &database, DiscSetCoverageStats &sta
     }
 
     if (stats.discBasedGames > 0)
-        stats.coveragePct = 100.0 * static_cast<double>(stats.gamesWithDiscSets) / static_cast<double>(stats.discBasedGames);
+        stats.coveragePct
+            = 100.0 * static_cast<double>(stats.gamesWithDiscSets) / static_cast<double>(stats.discBasedGames);
     return true;
 }
 
@@ -143,8 +144,8 @@ int handleDiscSetCoverageCommand(CliContext &ctx) {
         while (q.next()) {
             const qint64 discGames = q.value(2).toLongLong();
             const qint64 withSets = q.value(3).toLongLong();
-            const double pct = discGames > 0 ? 100.0 * static_cast<double>(withSets) / static_cast<double>(discGames)
-                                             : 0.0;
+            const double pct
+                = discGames > 0 ? 100.0 * static_cast<double>(withSets) / static_cast<double>(discGames) : 0.0;
             out << q.value(0).toInt() << '\t' << q.value(1).toString() << '\t' << discGames << '\t' << withSets << '\t'
                 << QString::number(pct, 'f', 1) << '\n';
         }

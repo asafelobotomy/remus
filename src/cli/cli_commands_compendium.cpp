@@ -177,8 +177,8 @@ int handleBuildCompendiumCommand(CliContext &ctx) {
     const QString mameCatverPath = findMameCatverPath();
     const QString mameListXmlPath = findMameListXmlPath();
     const QString credPath = outputInfo.dir().filePath(QStringLiteral("enrichment-credentials.json"));
-    const QString enrichmentFingerprint = computeEnrichmentInputsFingerprint(metadataDir, gametdbDir,
-        openvgdbPath, mameCatverPath, mameListXmlPath, credPath, sourceFilter);
+    const QString enrichmentFingerprint = computeEnrichmentInputsFingerprint(
+        metadataDir, gametdbDir, openvgdbPath, mameCatverPath, mameListXmlPath, credPath, sourceFilter);
 
     // Skip only when the persisted manifest contract exactly matches the current
     // build request and local enrichment inputs are unchanged. This catches
@@ -205,8 +205,7 @@ int handleBuildCompendiumCommand(CliContext &ctx) {
         }
         checkDb = QSqlDatabase();
         QSqlDatabase::removeDatabase(checkConn);
-        const bool enrichmentMatches
-            = !storedFingerprint.isEmpty() && storedFingerprint == enrichmentFingerprint;
+        const bool enrichmentMatches = !storedFingerprint.isEmpty() && storedFingerprint == enrichmentFingerprint;
         if (manifestMatches && enrichmentMatches && QFileInfo::exists(finalReportPath)) {
             qInfo() << "[build-compendium] Existing DB already matches the requested manifest and enrichment "
                        "inputs — skipping rebuild.";
@@ -499,8 +498,8 @@ int handleBuildCompendiumCommand(CliContext &ctx) {
     QJsonObject report;
     report.insert(QStringLiteral("build_id"), buildId);
     report.insert(QStringLiteral("schema_version"), schemaVersion);
-    report.insert(QStringLiteral("compendium_migration_version"),
-        Constants::DatabaseSchema::Compendium::MIGRATION_VERSION);
+    report.insert(
+        QStringLiteral("compendium_migration_version"), Constants::DatabaseSchema::Compendium::MIGRATION_VERSION);
     report.insert(QStringLiteral("input_sources"), sourceObjects);
     report.insert(QStringLiteral("records_ingested"), stats.recordsIngested);
     report.insert(QStringLiteral("games_created"), stats.gamesCreated);

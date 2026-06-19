@@ -54,12 +54,13 @@ QList<CompendiumDiscSet> CompendiumProvider::queryDiscSets(
         return results;
 
     QSqlQuery query(db);
-    const QString sql = QStringLiteral("SELECT ds.disc_set_id, ds.game_id, ds.set_key, ds.disc_number, ds.disc_count, "
-                                       "ds.set_variant, ds.set_role, ds.title_disc, ds.primary_content_sha1, "
-                                       "(SELECT COUNT(*) FROM game_disc_tracks dt WHERE dt.disc_set_id = ds.disc_set_id) "
-                                       "FROM game_disc_sets ds WHERE %1 "
-                                       "ORDER BY ds.set_key, ds.disc_number, ds.set_variant")
-                            .arg(whereSql);
+    const QString sql
+        = QStringLiteral("SELECT ds.disc_set_id, ds.game_id, ds.set_key, ds.disc_number, ds.disc_count, "
+                         "ds.set_variant, ds.set_role, ds.title_disc, ds.primary_content_sha1, "
+                         "(SELECT COUNT(*) FROM game_disc_tracks dt WHERE dt.disc_set_id = ds.disc_set_id) "
+                         "FROM game_disc_sets ds WHERE %1 "
+                         "ORDER BY ds.set_key, ds.disc_number, ds.set_variant")
+              .arg(whereSql);
     query.prepare(sql);
     for (const QVariant &value : bindValues)
         query.addBindValue(value);
@@ -85,12 +86,12 @@ bool CompendiumProvider::lookupDiscSetBySourceEntry(const QString &sourceEntryKe
 
     QSqlQuery query(db);
     query.prepare(QStringLiteral("SELECT ds.disc_set_id, ds.game_id, ds.set_key, ds.disc_number, ds.disc_count, "
-                                   "ds.set_variant, ds.set_role, ds.title_disc, ds.primary_content_sha1, "
-                                   "(SELECT COUNT(*) FROM game_disc_tracks dt2 WHERE dt2.disc_set_id = ds.disc_set_id) "
-                                   "FROM game_disc_tracks dt "
-                                   "JOIN game_disc_sets ds ON ds.disc_set_id = dt.disc_set_id "
-                                   "WHERE dt.source_entry_key = ? "
-                                   "LIMIT 1"));
+                                 "ds.set_variant, ds.set_role, ds.title_disc, ds.primary_content_sha1, "
+                                 "(SELECT COUNT(*) FROM game_disc_tracks dt2 WHERE dt2.disc_set_id = ds.disc_set_id) "
+                                 "FROM game_disc_tracks dt "
+                                 "JOIN game_disc_sets ds ON ds.disc_set_id = dt.disc_set_id "
+                                 "WHERE dt.source_entry_key = ? "
+                                 "LIMIT 1"));
     query.addBindValue(sourceEntryKey);
     if (!query.exec()) {
         qWarning() << "CompendiumProvider::lookupDiscSetBySourceEntry failed:" << query.lastError().text();

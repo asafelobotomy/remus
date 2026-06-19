@@ -77,8 +77,8 @@ namespace {
         if (folderName.isEmpty() && !metadata.title.isEmpty())
             folderName = DiscTitleParser::extractBaseTitle(metadata.title);
         if (folderName.isEmpty()) {
-            folderName = DiscSetUtils::extractBaseTitle(DiscSetUtils::labelPath(fileRecord.currentPath,
-                fileRecord.archivePath, fileRecord.archiveInternalPath, fileRecord.filename));
+            folderName = DiscSetUtils::extractBaseTitle(DiscSetUtils::labelPath(
+                fileRecord.currentPath, fileRecord.archivePath, fileRecord.archiveInternalPath, fileRecord.filename));
         }
 
         return DiscSetUtils::sanitizeFolderComponent(folderName);

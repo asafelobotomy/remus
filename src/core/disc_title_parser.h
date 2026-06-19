@@ -18,9 +18,9 @@ struct DiscTitleInfo {
     QString identityBase;
     int discNumber = 0;
     int discCount = 0; ///< 0 when unknown
-    QString setVariant;  ///< Pressing / ring code / edition suffix (e.g. @c 1S )
+    QString setVariant; ///< Pressing / ring code / edition suffix (e.g. @c 1S )
     QString pathSubtitle; ///< Split-path label (e.g. @c Leon ) when distinct from variant
-    QString setRole;     ///< @c game , @c audio , @c bonus , @c data
+    QString setRole; ///< @c game , @c audio , @c bonus , @c data
     bool isMultiDisc = false;
 };
 

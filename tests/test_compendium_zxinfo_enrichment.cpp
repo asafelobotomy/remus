@@ -131,11 +131,10 @@ void CompendiumZxInfoEnrichmentTest::zxRowsAlreadyComplete_returnsWithoutWrites(
     QVERIFY(createSchema(db));
 
     // ZX row exists but all enrichable fields are already filled.
-    QVERIFY(
-        seedGame(db, QStringLiteral("zx1"), Remus::Constants::Systems::ID_ZX_SPECTRUM, QStringLiteral("Jet Set Willy"),
-            QVariant(QStringLiteral("Platform")), QVariant(QStringLiteral("Software Projects")), QVariant(1984),
-            QVariant(QStringLiteral("Software Projects")), QVariant(QStringLiteral("A classic platform game")),
-            QVariant(QStringLiteral("1984-01-01"))));
+    QVERIFY(seedGame(db, QStringLiteral("zx1"), Remus::Constants::Systems::ID_ZX_SPECTRUM,
+        QStringLiteral("Jet Set Willy"), QVariant(QStringLiteral("Platform")),
+        QVariant(QStringLiteral("Software Projects")), QVariant(1984), QVariant(QStringLiteral("Software Projects")),
+        QVariant(QStringLiteral("A classic platform game")), QVariant(QStringLiteral("1984-01-01"))));
 
     int games = 0;
     int facts = 0;

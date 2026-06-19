@@ -23,14 +23,13 @@ namespace {
 
     // Metadata gaps that justify a full IGDB platform catalog download (rating-only
     // gaps are excluded — those are cheaper to fill via Hasheous or left empty).
-    static const char kIgdbBulkGameGapSql[] =
-        "description IS NULL OR TRIM(description) = '' "
-        "   OR genre IS NULL OR TRIM(genre) = '' "
-        "   OR developer IS NULL OR TRIM(developer) = '' "
-        "   OR publisher IS NULL OR TRIM(publisher) = '' "
-        "   OR release_year IS NULL "
-        "   OR release_date IS NULL OR TRIM(release_date) = '' "
-        "   OR players_max IS NULL ";
+    static const char kIgdbBulkGameGapSql[] = "description IS NULL OR TRIM(description) = '' "
+                                              "   OR genre IS NULL OR TRIM(genre) = '' "
+                                              "   OR developer IS NULL OR TRIM(developer) = '' "
+                                              "   OR publisher IS NULL OR TRIM(publisher) = '' "
+                                              "   OR release_year IS NULL "
+                                              "   OR release_date IS NULL OR TRIM(release_date) = '' "
+                                              "   OR players_max IS NULL ";
 
     // Returns the candidate with the greatest number of non-empty enrichable fields.
     // Used to resolve title-collision ties in the IGDB index (multiple entries with
@@ -87,19 +86,21 @@ namespace {
         const QString playersStr = gm.players > 0 ? QString::number(gm.players) : QString();
         const QString igdbId = gm.externalIds.value(Constants::Providers::ExternalId::IGDB, gm.id);
 
-        auto insertFact = [&](const QString &field, const QString &value, const QString &type = QStringLiteral("text")) {
-            bool inserted = false;
-            if (!insertGameFact(
-                    delQ, factQ, factSpec, gameId, field, value, type, error, QStringLiteral("igdb"), &inserted))
-                return false;
-            if (inserted)
-                ++factsInserted;
-            return true;
-        };
+        auto insertFact
+            = [&](const QString &field, const QString &value, const QString &type = QStringLiteral("text")) {
+                  bool inserted = false;
+                  if (!insertGameFact(
+                          delQ, factQ, factSpec, gameId, field, value, type, error, QStringLiteral("igdb"), &inserted))
+                      return false;
+                  if (inserted)
+                      ++factsInserted;
+                  return true;
+              };
 
         const bool factsOk = insertFact(QStringLiteral("igdb_id"), igdbId)
-            && insertFact(QStringLiteral("description"), gm.description) && insertFact(QStringLiteral("genre"), genreStr)
-            && insertFact(QStringLiteral("developer"), gm.developer) && insertFact(QStringLiteral("publisher"), gm.publisher)
+            && insertFact(QStringLiteral("description"), gm.description)
+            && insertFact(QStringLiteral("genre"), genreStr) && insertFact(QStringLiteral("developer"), gm.developer)
+            && insertFact(QStringLiteral("publisher"), gm.publisher)
             && insertFact(QStringLiteral("release_year"), yearStr, QStringLiteral("integer"))
             && insertFact(QStringLiteral("release_date"), releaseDateStr)
             && insertFact(QStringLiteral("rating"), ratingStr, QStringLiteral("decimal"))
@@ -139,7 +140,7 @@ bool enrichFromIGDB(
                                   "JOIN systems s ON s.system_id = g.system_id "
                                   "WHERE %1 "
                                   "ORDER BY s.display_name")
-                       .arg(QLatin1String(kIgdbBulkGameGapSql)))) {
+                .arg(QLatin1String(kIgdbBulkGameGapSql)))) {
         error = QStringLiteral("Query systems: %1").arg(sysQ.lastError().text());
         return false;
     }
@@ -178,18 +179,18 @@ bool enrichFromIGDB(
     {
         QSqlQuery pendingQ(database);
         if (!pendingQ.exec(QStringLiteral("SELECT g.game_id, g.igdb_id, "
-                                        "(SELECT gf.field_value FROM game_facts gf "
-                                        " WHERE gf.game_id = g.game_id AND gf.field_name = 'igdb_id' "
-                                        " ORDER BY gf.source_priority DESC, gf.confidence DESC, gf.fact_id DESC "
-                                        " LIMIT 1) AS fact_igdb_id "
-                                        "FROM games g "
-                                        "WHERE (%1) "
-                                        "  AND ((g.igdb_id IS NOT NULL AND TRIM(g.igdb_id) <> '') "
-                                        "    OR EXISTS (SELECT 1 FROM game_facts gf "
-                                        "               WHERE gf.game_id = g.game_id "
-                                        "                 AND gf.field_name = 'igdb_id')) "
-                                        "ORDER BY g.game_id")
-                               .arg(QLatin1String(kIgdbBulkGameGapSql)))) {
+                                          "(SELECT gf.field_value FROM game_facts gf "
+                                          " WHERE gf.game_id = g.game_id AND gf.field_name = 'igdb_id' "
+                                          " ORDER BY gf.source_priority DESC, gf.confidence DESC, gf.fact_id DESC "
+                                          " LIMIT 1) AS fact_igdb_id "
+                                          "FROM games g "
+                                          "WHERE (%1) "
+                                          "  AND ((g.igdb_id IS NOT NULL AND TRIM(g.igdb_id) <> '') "
+                                          "    OR EXISTS (SELECT 1 FROM game_facts gf "
+                                          "               WHERE gf.game_id = g.game_id "
+                                          "                 AND gf.field_name = 'igdb_id')) "
+                                          "ORDER BY g.game_id")
+                    .arg(QLatin1String(kIgdbBulkGameGapSql)))) {
             error = QStringLiteral("Query IGDB per-id candidates: %1").arg(pendingQ.lastError().text());
             return false;
         }
@@ -210,7 +211,8 @@ bool enrichFromIGDB(
         pendingQ.finish();
 
         if (!pendingGames.isEmpty()) {
-            qInfo().noquote() << QStringLiteral("[IGDB] Per-id fetch: %1 games with known igdb_id").arg(pendingGames.size());
+            qInfo().noquote()
+                << QStringLiteral("[IGDB] Per-id fetch: %1 games with known igdb_id").arg(pendingGames.size());
 
             if (!database.transaction()) {
                 error = QStringLiteral("Failed to start IGDB per-id transaction: %1").arg(database.lastError().text());
@@ -255,7 +257,8 @@ bool enrichFromIGDB(
                                          "VALUES (?, ?, ?, ?, ?, ?, ?, ?)"));
 
             QSqlQuery delQ(database);
-            delQ.prepare(QStringLiteral("DELETE FROM game_facts WHERE game_id = ? AND field_name = ? AND source_id = ?"));
+            delQ.prepare(
+                QStringLiteral("DELETE FROM game_facts WHERE game_id = ? AND field_name = ? AND source_id = ?"));
 
             const FactInsertSpec byIdFactSpec {
                 QStringLiteral("igdb"),
@@ -286,7 +289,8 @@ bool enrichFromIGDB(
             }
 
             gamesEnriched += byIdGamesEnriched;
-            qInfo().noquote() << QStringLiteral("[IGDB] Per-id fetch complete: +%1 games enriched").arg(byIdGamesEnriched);
+            qInfo().noquote()
+                << QStringLiteral("[IGDB] Per-id fetch complete: +%1 games enriched").arg(byIdGamesEnriched);
         }
     }
 
@@ -305,7 +309,7 @@ bool enrichFromIGDB(
         {
             QSqlQuery bulkGapQ(database);
             bulkGapQ.prepare(QStringLiteral("SELECT 1 FROM games WHERE system_id = ? AND (%1) LIMIT 1")
-                                 .arg(QLatin1String(kIgdbBulkGameGapSql)));
+                    .arg(QLatin1String(kIgdbBulkGameGapSql)));
             bulkGapQ.addBindValue(sys.id);
             if (!bulkGapQ.exec()) {
                 error = QStringLiteral("IGDB bulk gap check for %1: %2").arg(sys.name, bulkGapQ.lastError().text());
@@ -324,7 +328,7 @@ bool enrichFromIGDB(
                                           "              WHERE gf.game_id = games.game_id "
                                           "                AND gf.field_name = 'igdb_id') "
                                           "LIMIT 1")
-                               .arg(QLatin1String(kIgdbBulkGameGapSql)));
+                    .arg(QLatin1String(kIgdbBulkGameGapSql)));
             idGapQ.addBindValue(sys.id);
             if (!idGapQ.exec()) {
                 error = QStringLiteral("IGDB igdb_id gap check for %1: %2").arg(sys.name, idGapQ.lastError().text());
@@ -416,7 +420,7 @@ bool enrichFromIGDB(
         gamesQ.prepare(QStringLiteral("SELECT game_id, canonical_title FROM games "
                                       "WHERE system_id = ? "
                                       "  AND (%1)")
-                           .arg(QLatin1String(kIgdbBulkGameGapSql)));
+                .arg(QLatin1String(kIgdbBulkGameGapSql)));
         gamesQ.addBindValue(sys.id);
         if (!gamesQ.exec()) {
             database.rollback();
@@ -433,8 +437,8 @@ bool enrichFromIGDB(
                 continue;
             const GameMetadata &gm = bestCandidate(it.value());
 
-            if (!applyIgdbGameMetadata(database, updateQ, factQ, delQ, factSpec, gameId, gm, gamesEnriched,
-                    factsInserted, error)) {
+            if (!applyIgdbGameMetadata(
+                    database, updateQ, factQ, delQ, factSpec, gameId, gm, gamesEnriched, factsInserted, error)) {
                 return false;
             }
             if (updateQ.numRowsAffected() > 0)

@@ -18,12 +18,13 @@ namespace {
     // 18=is_primary, 19=parent_file_id, 20=base_title, 21=disc_set_key, 22=disc_number,
     // 23=file_type, 24=is_patched, 25=patch_name, 26=is_processed, 27=processing_status,
     // 28=last_modified, 29=scanned_at
-    static const char kFileSelectColumns[] = "id, library_id, original_path, current_path, filename, extension, "
-                                             "file_size, is_compressed, archive_path, archive_internal_path, "
-                                             "system_id, crc32, md5, sha1, ra_md5, chd_sha1, rvz_sha1, hash_calculated, "
-                                             "is_primary, parent_file_id, base_title, disc_set_key, disc_number, "
-                                             "file_type, is_patched, patch_name, is_processed, processing_status, "
-                                             "last_modified, scanned_at";
+    static const char kFileSelectColumns[]
+        = "id, library_id, original_path, current_path, filename, extension, "
+          "file_size, is_compressed, archive_path, archive_internal_path, "
+          "system_id, crc32, md5, sha1, ra_md5, chd_sha1, rvz_sha1, hash_calculated, "
+          "is_primary, parent_file_id, base_title, disc_set_key, disc_number, "
+          "file_type, is_patched, patch_name, is_processed, processing_status, "
+          "last_modified, scanned_at";
 
     static FileRecord fileRecordFromRow(const QSqlQuery &q) {
         FileRecord r;
@@ -237,12 +238,11 @@ QList<FileRecord> Database::getFilesNeedingChdSha1() {
     QList<FileRecord> files;
 
     QSqlQuery query(m_db);
-    if (!query.exec(QStringLiteral(
-            "SELECT %1 FROM files "
-            "WHERE is_primary = 1 "
-            "  AND LOWER(extension) = '.chd' "
-            "  AND (chd_sha1 IS NULL OR TRIM(chd_sha1) = '')")
-                        .arg(QLatin1String(kFileSelectColumns)))) {
+    if (!query.exec(QStringLiteral("SELECT %1 FROM files "
+                                   "WHERE is_primary = 1 "
+                                   "  AND LOWER(extension) = '.chd' "
+                                   "  AND (chd_sha1 IS NULL OR TRIM(chd_sha1) = '')")
+                .arg(QLatin1String(kFileSelectColumns)))) {
         logError("Failed to query CHD files needing header SHA1: " + query.lastError().text());
         return files;
     }
@@ -272,12 +272,11 @@ QList<FileRecord> Database::getFilesNeedingRvzSha1() {
     QList<FileRecord> files;
 
     QSqlQuery query(m_db);
-    if (!query.exec(QStringLiteral(
-            "SELECT %1 FROM files "
-            "WHERE is_primary = 1 "
-            "  AND LOWER(extension) IN ('.rvz', '.gcz') "
-            "  AND (rvz_sha1 IS NULL OR TRIM(rvz_sha1) = '')")
-                        .arg(QLatin1String(kFileSelectColumns)))) {
+    if (!query.exec(QStringLiteral("SELECT %1 FROM files "
+                                   "WHERE is_primary = 1 "
+                                   "  AND LOWER(extension) IN ('.rvz', '.gcz') "
+                                   "  AND (rvz_sha1 IS NULL OR TRIM(rvz_sha1) = '')")
+                .arg(QLatin1String(kFileSelectColumns)))) {
         logError("Failed to query RVZ/GCZ files needing content SHA1: " + query.lastError().text());
         return files;
     }

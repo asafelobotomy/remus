@@ -9,8 +9,7 @@ namespace Remus {
 QString DiscSetKey::computeFromParsed(int systemId, const QString &identityBase, const QString &regionCode) {
     const QString base = identityBase.trimmed().toLower();
     const QString region = regionCode.trimmed().toLower();
-    const QString seed
-        = QString::number(systemId) + QLatin1Char('|') + base + QLatin1Char('|') + region;
+    const QString seed = QString::number(systemId) + QLatin1Char('|') + base + QLatin1Char('|') + region;
     return QString::fromLatin1(QCryptographicHash::hash(seed.toUtf8(), QCryptographicHash::Sha1).toHex().left(16));
 }
 

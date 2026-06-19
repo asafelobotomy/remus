@@ -203,8 +203,8 @@ int reportVerificationResults(
         }
     }
 
-    const QString compendiumPath = ctx.db.compendiumDbPath().isEmpty() ? resolveBundledCompendiumDbPath()
-                                                                       : ctx.db.compendiumDbPath();
+    const QString compendiumPath
+        = ctx.db.compendiumDbPath().isEmpty() ? resolveBundledCompendiumDbPath() : ctx.db.compendiumDbPath();
     if (generateReport && !compendiumPath.isEmpty()) {
         verifier.setCompendiumDb(compendiumPath);
         const QList<DiscSetCompletenessReport> setReports = verifier.discSetCompletenessForLibrary(systemName);
@@ -336,8 +336,8 @@ int handleVerifySetCommand(CliContext &ctx) {
     qInfo() << "";
     qInfo() << "=== Disc Set Completeness ===";
 
-    const QString compendiumPath = ctx.db.compendiumDbPath().isEmpty() ? resolveBundledCompendiumDbPath()
-                                                                       : ctx.db.compendiumDbPath();
+    const QString compendiumPath
+        = ctx.db.compendiumDbPath().isEmpty() ? resolveBundledCompendiumDbPath() : ctx.db.compendiumDbPath();
     if (compendiumPath.isEmpty()) {
         qCritical() << "✗ Bundled compendium database not found (data/compendium/remus_compendium.db)";
         return 1;

@@ -258,7 +258,7 @@ void ExportController::bundleAll(const QString &scanDir, const QString &namingTe
                 ph.append(QStringLiteral("?"));
             QSqlQuery checkQ(m_appController->database()->database());
             checkQ.prepare(QStringLiteral("SELECT id FROM files WHERE is_bundled = 1 AND id IN (%1)")
-                               .arg(ph.join(QStringLiteral(","))));
+                    .arg(ph.join(QStringLiteral(","))));
             for (int id : allFileIds)
                 checkQ.addBindValue(id);
             if (checkQ.exec()) {

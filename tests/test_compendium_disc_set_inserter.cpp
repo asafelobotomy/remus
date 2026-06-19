@@ -57,15 +57,19 @@ private:
         if (!CompendiumSqlUtilities::executeSqlScript(db, migration0007, error))
             return false;
 
-        return execSql(db, QStringLiteral("INSERT INTO sources (source_id, display_name, source_type, priority) "
-                                          "VALUES ('redump', 'Redump', 'dat', 10)"))
-            && execSql(db, QStringLiteral("INSERT INTO source_snapshots (snapshot_id, source_id, snapshot_label) "
-                                          "VALUES ('snap-ff7', 'redump', 'test'), ('snap-chd', 'redump', 'test-chd')"))
-            && execSql(db, QStringLiteral("INSERT INTO systems (system_id, internal_name, display_name, "
-                                          "preferred_hash, is_disc_based) "
-                                          "VALUES (14, 'PlayStation', 'Sony PlayStation', 'MD5', 1)"))
-            && execSql(db, QStringLiteral("INSERT INTO regions (region_code, display_name, group_code) "
-                                          "VALUES ('USA', 'USA', 'USA')"));
+        return execSql(db,
+                   QStringLiteral("INSERT INTO sources (source_id, display_name, source_type, priority) "
+                                  "VALUES ('redump', 'Redump', 'dat', 10)"))
+            && execSql(db,
+                QStringLiteral("INSERT INTO source_snapshots (snapshot_id, source_id, snapshot_label) "
+                               "VALUES ('snap-ff7', 'redump', 'test'), ('snap-chd', 'redump', 'test-chd')"))
+            && execSql(db,
+                QStringLiteral("INSERT INTO systems (system_id, internal_name, display_name, "
+                               "preferred_hash, is_disc_based) "
+                               "VALUES (14, 'PlayStation', 'Sony PlayStation', 'MD5', 1)"))
+            && execSql(db,
+                QStringLiteral("INSERT INTO regions (region_code, display_name, group_code) "
+                               "VALUES ('USA', 'USA', 'USA')"));
     }
 
 private slots:
@@ -76,21 +80,22 @@ private slots:
 };
 
 void CompendiumDiscSetInserterTest::ff7MultiDisc_createsSharedSetKeyAndTracks() {
-    const QString datContent = QStringLiteral("clrmamepro (\n"
-                                              "    name \"Sony - PlayStation\"\n"
-                                              ")\n"
-                                              "game (\n"
-                                              "    name \"Final Fantasy VII (USA) (Disc 1)\"\n"
-                                              "    rom ( name \"Final Fantasy VII (USA) (Disc 1).bin\" size 100 crc AAAAAAAA )\n"
-                                              ")\n"
-                                              "game (\n"
-                                              "    name \"Final Fantasy VII (USA) (Disc 2)\"\n"
-                                              "    rom ( name \"Final Fantasy VII (USA) (Disc 2).bin\" size 100 crc BBBBBBBB )\n"
-                                              ")\n"
-                                              "game (\n"
-                                              "    name \"Final Fantasy VII (USA) (Disc 3)\"\n"
-                                              "    rom ( name \"Final Fantasy VII (USA) (Disc 3).bin\" size 100 crc CCCCCCCC )\n"
-                                              ")\n");
+    const QString datContent
+        = QStringLiteral("clrmamepro (\n"
+                         "    name \"Sony - PlayStation\"\n"
+                         ")\n"
+                         "game (\n"
+                         "    name \"Final Fantasy VII (USA) (Disc 1)\"\n"
+                         "    rom ( name \"Final Fantasy VII (USA) (Disc 1).bin\" size 100 crc AAAAAAAA )\n"
+                         ")\n"
+                         "game (\n"
+                         "    name \"Final Fantasy VII (USA) (Disc 2)\"\n"
+                         "    rom ( name \"Final Fantasy VII (USA) (Disc 2).bin\" size 100 crc BBBBBBBB )\n"
+                         ")\n"
+                         "game (\n"
+                         "    name \"Final Fantasy VII (USA) (Disc 3)\"\n"
+                         "    rom ( name \"Final Fantasy VII (USA) (Disc 3).bin\" size 100 crc CCCCCCCC )\n"
+                         ")\n");
 
     QTemporaryFile datFile;
     datFile.setAutoRemove(true);
@@ -123,7 +128,8 @@ void CompendiumDiscSetInserterTest::ff7MultiDisc_createsSharedSetKeyAndTracks() 
     QCOMPARE(records[2].linkedGameId, gameId);
     QVERIFY(!records[0].datGameBlockName.isEmpty());
 
-    const QString expectedSetKey = DiscSetKey::compute(14, QStringLiteral("Final Fantasy VII (USA) (Disc 1)"), QStringLiteral("USA"));
+    const QString expectedSetKey
+        = DiscSetKey::compute(14, QStringLiteral("Final Fantasy VII (USA) (Disc 1)"), QStringLiteral("USA"));
     QCOMPARE(DiscSetKey::compute(14, records[1].datGameBlockName, QStringLiteral("USA")), expectedSetKey);
 
     QTemporaryDir tempDir;
@@ -144,12 +150,13 @@ void CompendiumDiscSetInserterTest::ff7MultiDisc_createsSharedSetKeyAndTracks() 
     QCOMPARE(stats.tracksCreated, 3);
 
     QSqlQuery query(db);
-    QVERIFY(query.exec(QStringLiteral("SELECT COUNT(*) FROM game_disc_sets WHERE game_id = '") + gameId + QLatin1Char('\'')));
+    QVERIFY(query.exec(
+        QStringLiteral("SELECT COUNT(*) FROM game_disc_sets WHERE game_id = '") + gameId + QLatin1Char('\'')));
     QVERIFY(query.next());
     QCOMPARE(query.value(0).toInt(), 3);
 
-    QVERIFY(query.exec(QStringLiteral("SELECT DISTINCT set_key FROM game_disc_sets WHERE game_id = '") + gameId
-                       + QLatin1Char('\'')));
+    QVERIFY(query.exec(
+        QStringLiteral("SELECT DISTINCT set_key FROM game_disc_sets WHERE game_id = '") + gameId + QLatin1Char('\'')));
     QVERIFY(query.next());
     QCOMPARE(query.value(0).toString(), expectedSetKey);
     QVERIFY(!query.next());
@@ -217,17 +224,18 @@ void CompendiumDiscSetInserterTest::chdDisk_setsPrimaryContentSha1() {
 }
 
 void CompendiumDiscSetInserterTest::shenmueVariants_sameSetKeyDifferentVariant() {
-    const QString datContent = QStringLiteral("clrmamepro (\n"
-                                              "    name \"Sony - PlayStation\"\n"
-                                              ")\n"
-                                              "game (\n"
-                                              "    name \"Shenmue (USA) (Disc 3) [!][1S]\"\n"
-                                              "    rom ( name \"Shenmue (USA) (Disc 3) [!][1S].bin\" size 100 crc AAAAAAAA )\n"
-                                              ")\n"
-                                              "game (\n"
-                                              "    name \"Shenmue (USA) (Disc 3) [!][2S]\"\n"
-                                              "    rom ( name \"Shenmue (USA) (Disc 3) [!][2S].bin\" size 100 crc BBBBBBBB )\n"
-                                              ")\n");
+    const QString datContent
+        = QStringLiteral("clrmamepro (\n"
+                         "    name \"Sony - PlayStation\"\n"
+                         ")\n"
+                         "game (\n"
+                         "    name \"Shenmue (USA) (Disc 3) [!][1S]\"\n"
+                         "    rom ( name \"Shenmue (USA) (Disc 3) [!][1S].bin\" size 100 crc AAAAAAAA )\n"
+                         ")\n"
+                         "game (\n"
+                         "    name \"Shenmue (USA) (Disc 3) [!][2S]\"\n"
+                         "    rom ( name \"Shenmue (USA) (Disc 3) [!][2S].bin\" size 100 crc BBBBBBBB )\n"
+                         ")\n");
 
     QTemporaryFile datFile;
     datFile.setAutoRemove(true);
@@ -236,8 +244,8 @@ void CompendiumDiscSetInserterTest::shenmueVariants_sameSetKeyDifferentVariant()
     datFile.close();
 
     QString extractError;
-    QList<SourceRecordEnvelope> records = DatExtractor::extract(
-        datFile.fileName(), QStringLiteral("redump"), QStringLiteral("snap-ff7"), extractError);
+    QList<SourceRecordEnvelope> records
+        = DatExtractor::extract(datFile.fileName(), QStringLiteral("redump"), QStringLiteral("snap-ff7"), extractError);
     QVERIFY2(extractError.isEmpty(), qPrintable(extractError));
     QCOMPARE(records.size(), 2);
     QVERIFY(records[0].parsedSetVariant.contains(QStringLiteral("1S")));
@@ -285,17 +293,18 @@ void CompendiumDiscSetInserterTest::shenmueVariants_sameSetKeyDifferentVariant()
 }
 
 void CompendiumDiscSetInserterTest::residentEvilSplitPath_differentSetKeys() {
-    const QString datContent = QStringLiteral("clrmamepro (\n"
-                                              "    name \"Sony - PlayStation\"\n"
-                                              ")\n"
-                                              "game (\n"
-                                              "    name \"Resident Evil 2 (USA) (Disc 1) (Leon)\"\n"
-                                              "    rom ( name \"Resident Evil 2 (USA) (Disc 1) (Leon).bin\" size 100 crc AAAAAAAA )\n"
-                                              ")\n"
-                                              "game (\n"
-                                              "    name \"Resident Evil 2 (USA) (Disc 2) (Claire)\"\n"
-                                              "    rom ( name \"Resident Evil 2 (USA) (Disc 2) (Claire).bin\" size 100 crc BBBBBBBB )\n"
-                                              ")\n");
+    const QString datContent
+        = QStringLiteral("clrmamepro (\n"
+                         "    name \"Sony - PlayStation\"\n"
+                         ")\n"
+                         "game (\n"
+                         "    name \"Resident Evil 2 (USA) (Disc 1) (Leon)\"\n"
+                         "    rom ( name \"Resident Evil 2 (USA) (Disc 1) (Leon).bin\" size 100 crc AAAAAAAA )\n"
+                         ")\n"
+                         "game (\n"
+                         "    name \"Resident Evil 2 (USA) (Disc 2) (Claire)\"\n"
+                         "    rom ( name \"Resident Evil 2 (USA) (Disc 2) (Claire).bin\" size 100 crc BBBBBBBB )\n"
+                         ")\n");
 
     QTemporaryFile datFile;
     datFile.setAutoRemove(true);
@@ -304,8 +313,8 @@ void CompendiumDiscSetInserterTest::residentEvilSplitPath_differentSetKeys() {
     datFile.close();
 
     QString extractError;
-    QList<SourceRecordEnvelope> records = DatExtractor::extract(
-        datFile.fileName(), QStringLiteral("redump"), QStringLiteral("snap-ff7"), extractError);
+    QList<SourceRecordEnvelope> records
+        = DatExtractor::extract(datFile.fileName(), QStringLiteral("redump"), QStringLiteral("snap-ff7"), extractError);
     QVERIFY2(extractError.isEmpty(), qPrintable(extractError));
     QCOMPARE(records.size(), 2);
 

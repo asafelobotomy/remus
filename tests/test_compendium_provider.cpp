@@ -72,11 +72,12 @@ bool createSchema(QSqlDatabase &db) {
             QStringLiteral("CREATE TABLE source_snapshots (snapshot_id TEXT PRIMARY KEY, source_id TEXT NOT NULL, "
                            "snapshot_label TEXT NOT NULL DEFAULT '')"))
         && execSql(db,
-            QStringLiteral("CREATE TABLE game_disc_sets (disc_set_id INTEGER PRIMARY KEY AUTOINCREMENT, game_id TEXT "
-                           "NOT NULL, set_key TEXT NOT NULL, disc_number INTEGER NOT NULL DEFAULT 0, disc_count INTEGER "
-                           "NOT NULL DEFAULT 0, set_variant TEXT NOT NULL DEFAULT '', set_role TEXT NOT NULL DEFAULT "
-                           "'game', title_disc TEXT NOT NULL, source_id TEXT NOT NULL, snapshot_id TEXT NOT NULL DEFAULT "
-                           "'', source_item_id INTEGER, primary_content_sha1 TEXT)"))
+            QStringLiteral(
+                "CREATE TABLE game_disc_sets (disc_set_id INTEGER PRIMARY KEY AUTOINCREMENT, game_id TEXT "
+                "NOT NULL, set_key TEXT NOT NULL, disc_number INTEGER NOT NULL DEFAULT 0, disc_count INTEGER "
+                "NOT NULL DEFAULT 0, set_variant TEXT NOT NULL DEFAULT '', set_role TEXT NOT NULL DEFAULT "
+                "'game', title_disc TEXT NOT NULL, source_id TEXT NOT NULL, snapshot_id TEXT NOT NULL DEFAULT "
+                "'', source_item_id INTEGER, primary_content_sha1 TEXT)"))
         && execSql(db,
             QStringLiteral("CREATE TABLE game_disc_tracks (track_id INTEGER PRIMARY KEY AUTOINCREMENT, disc_set_id "
                            "INTEGER NOT NULL, track_index INTEGER NOT NULL DEFAULT 1, rom_name TEXT NOT NULL, "
@@ -227,8 +228,8 @@ QString createDiscSetFixtureDatabase() {
         if (!createSchema(db))
             return { };
 
-        const QString setKey = DiscSetKey::compute(
-            14, QStringLiteral("Final Fantasy VII (USA) (Disc 1)"), QStringLiteral("USA"));
+        const QString setKey
+            = DiscSetKey::compute(14, QStringLiteral("Final Fantasy VII (USA) (Disc 1)"), QStringLiteral("USA"));
         const QString entry1 = QStringLiteral("Sony - PlayStation|Final Fantasy VII (USA) (Disc 1)|FF7 Disc 1.bin");
         const QString entry2 = QStringLiteral("Sony - PlayStation|Final Fantasy VII (USA) (Disc 2)|FF7 Disc 2.bin");
         const QString entry3 = QStringLiteral("Sony - PlayStation|Final Fantasy VII (USA) (Disc 3)|FF7 Disc 3.bin");
@@ -428,8 +429,8 @@ void CompendiumProviderTest::getByIdReturnsExternalIds() {
         QSqlDatabase db = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), QStringLiteral("ext_id_seed"));
         db.setDatabaseName(dbPath);
         QVERIFY(db.open());
-        QVERIFY(execSql(db,
-            QStringLiteral("UPDATE games SET igdb_id = '12345', ra_game_id = '67890' WHERE game_id = 'game-1'")));
+        QVERIFY(execSql(
+            db, QStringLiteral("UPDATE games SET igdb_id = '12345', ra_game_id = '67890' WHERE game_id = 'game-1'")));
         db.close();
         QSqlDatabase::removeDatabase(QStringLiteral("ext_id_seed"));
     }

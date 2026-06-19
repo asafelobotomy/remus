@@ -83,8 +83,8 @@ void registerAllOptions(QCommandLineParser &parser, QSet<QString> &actionOptions
 
     addActionOption(QCommandLineOption("verify", "Verify files against DAT file", "dat-file"));
     addOption(QCommandLineOption("verify-report", "Generate detailed verification report"));
-    addActionOption(QCommandLineOption("verify-set",
-        "Report incomplete multi-disc sets using catalog topology (requires bundled compendium)"));
+    addActionOption(QCommandLineOption(
+        "verify-set", "Report incomplete multi-disc sets using catalog topology (requires bundled compendium)"));
     addLegacyActionOption(QCommandLineOption("patch-dat-import",
         "Deprecated no-op: manual patch catalog import has been replaced by bundled compendium data", "dat-file"));
     addLegacyOption(QCommandLineOption(
@@ -209,8 +209,8 @@ void registerAllOptions(QCommandLineParser &parser, QSet<QString> &actionOptions
         "ingest-source", "Incrementally ingest a single DAT file into an existing compendium database", "dat-file"));
     addActionOption(QCommandLineOption("backfill-disc-sets",
         "Populate game_disc_sets and game_disc_tracks from existing source_items and signatures"));
-    addActionOption(QCommandLineOption(
-        "force-disc-set-backfill", "Clear existing disc topology before --backfill-disc-sets"));
+    addActionOption(
+        QCommandLineOption("force-disc-set-backfill", "Clear existing disc topology before --backfill-disc-sets"));
     addOption(QCommandLineOption(
         "source-id", "Source identifier for --ingest-source (default: derived from filename)", "id"));
     addOption(QCommandLineOption(

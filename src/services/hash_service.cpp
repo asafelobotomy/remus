@@ -143,10 +143,21 @@ namespace {
             return false;
 
         static const QStringList kSkipExtensions = {
-            QStringLiteral(".txt"), QStringLiteral(".nfo"), QStringLiteral(".diz"), QStringLiteral(".xml"),
-            QStringLiteral(".htm"), QStringLiteral(".html"), QStringLiteral(".jpg"), QStringLiteral(".png"),
-            QStringLiteral(".gif"), QStringLiteral(".bmp"), QStringLiteral(".pdf"), QStringLiteral(".exe"),
-            QStringLiteral(".dll"), QStringLiteral(".so"), QStringLiteral(".md"),
+            QStringLiteral(".txt"),
+            QStringLiteral(".nfo"),
+            QStringLiteral(".diz"),
+            QStringLiteral(".xml"),
+            QStringLiteral(".htm"),
+            QStringLiteral(".html"),
+            QStringLiteral(".jpg"),
+            QStringLiteral(".png"),
+            QStringLiteral(".gif"),
+            QStringLiteral(".bmp"),
+            QStringLiteral(".pdf"),
+            QStringLiteral(".exe"),
+            QStringLiteral(".dll"),
+            QStringLiteral(".so"),
+            QStringLiteral(".md"),
         };
         for (const QString &ext : kSkipExtensions) {
             if (lower.endsWith(ext))
@@ -300,8 +311,8 @@ bool HashService::hashFile(Database *db, int fileId) {
 
     HashResult result = hashRecord(file);
     if (result.success) {
-        db->updateFileHashes(file.id, result.crc32, result.md5, result.sha1, result.raMd5, result.chdSha1,
-            result.rvzSha1);
+        db->updateFileHashes(
+            file.id, result.crc32, result.md5, result.sha1, result.raMd5, result.chdSha1, result.rvzSha1);
         return true;
     }
     return false;
@@ -384,8 +395,8 @@ HashResult HashService::hashRecord(const FileRecord &file) {
         QString largestPath;
 
         for (const QString &member : romMembers) {
-            const QString picked
-                = selectExtractedMember(tempDir.path(), extraction.extractedFiles, member, QFileInfo(member).fileName());
+            const QString picked = selectExtractedMember(
+                tempDir.path(), extraction.extractedFiles, member, QFileInfo(member).fileName());
             if (picked.isEmpty())
                 continue;
 
@@ -476,8 +487,7 @@ int HashService::backfillChdSha1(Database *db, ProgressCallback progressCb, LogC
     CHDConverter chd;
     const bool chdmanAvailable = chd.isChdmanAvailable();
     if (!chdmanAvailable && logCb) {
-        logCb(QStringLiteral(
-            "CHD backfill: chdman not found; using in-process CHD v5 header reads where possible"));
+        logCb(QStringLiteral("CHD backfill: chdman not found; using in-process CHD v5 header reads where possible"));
     }
 
     QList<FileRecord> files = db->getFilesNeedingChdSha1();
@@ -589,7 +599,8 @@ int HashService::backfillRvzSha1(Database *db, ProgressCallback progressCb, LogC
         if (file.isCompressed || !file.archivePath.isEmpty()) {
             ++skipped;
             if (logCb)
-                logCb(QStringLiteral("Skipped %1: archive-contained RVZ/GCZ not supported for backfill").arg(file.filename));
+                logCb(QStringLiteral("Skipped %1: archive-contained RVZ/GCZ not supported for backfill")
+                        .arg(file.filename));
             continue;
         }
 

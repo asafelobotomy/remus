@@ -16,13 +16,13 @@ namespace {
                 + Constants::Files::M3U_SOURCE_EXTENSIONS + Constants::Files::PBP_SOURCE_EXTENSIONS
                 + Constants::Files::RVZ_SOURCE_EXTENSIONS + Constants::Files::CSO_SOURCE_EXTENSIONS
                 + Constants::Files::WBFS_SOURCE_EXTENSIONS
-                + QStringList{ Constants::Files::PBP, Constants::Files::GCM, Constants::Files::GCZ,
-                    Constants::Files::WAD, Constants::Files::CCD, Constants::Files::MDS, Constants::Files::CDI,
-                    Constants::Files::RAW, Constants::Files::SUB, Constants::Files::ECM, Constants::Files::ISZ,
-                    Constants::Files::DOL, Constants::Files::DAT, Constants::Files::LST, Constants::Files::ELF,
-                    QStringLiteral(".sfc"), QStringLiteral(".smc"), QStringLiteral(".nes"), QStringLiteral(".md"),
-                    QStringLiteral(".gen"), QStringLiteral(".gb"), QStringLiteral(".gbc"), QStringLiteral(".gba"),
-                    QStringLiteral(".nds"), QStringLiteral(".n64"), QStringLiteral(".z64"), QStringLiteral(".v64") };
+                + QStringList { Constants::Files::PBP, Constants::Files::GCM, Constants::Files::GCZ,
+                      Constants::Files::WAD, Constants::Files::CCD, Constants::Files::MDS, Constants::Files::CDI,
+                      Constants::Files::RAW, Constants::Files::SUB, Constants::Files::ECM, Constants::Files::ISZ,
+                      Constants::Files::DOL, Constants::Files::DAT, Constants::Files::LST, Constants::Files::ELF,
+                      QStringLiteral(".sfc"), QStringLiteral(".smc"), QStringLiteral(".nes"), QStringLiteral(".md"),
+                      QStringLiteral(".gen"), QStringLiteral(".gb"), QStringLiteral(".gbc"), QStringLiteral(".gba"),
+                      QStringLiteral(".nds"), QStringLiteral(".n64"), QStringLiteral(".z64"), QStringLiteral(".v64") };
             for (QString &ext : exts)
                 ext = ext.trimmed().toLower();
             return exts;
@@ -89,8 +89,7 @@ namespace {
 
     QString detectSetRole(const QString &titleLower) {
         if (titleLower.contains(QStringLiteral("cd-audio")) || titleLower.contains(QStringLiteral("the music"))
-            || titleLower.contains(QStringLiteral("soundtrack"))
-            || titleLower.contains(QStringLiteral("audio disc"))) {
+            || titleLower.contains(QStringLiteral("soundtrack")) || titleLower.contains(QStringLiteral("audio disc"))) {
             return QStringLiteral("audio");
         }
         if (titleLower.contains(QStringLiteral("making disc")) || titleLower.contains(QStringLiteral("bonus disc"))
@@ -263,12 +262,12 @@ QString DiscTitleParser::normalizeForIdentity(const QString &raw) {
     if (s.startsWith(QStringLiteral("a ")))
         s = s.mid(2);
 
-    static const QRegularExpression reDisc(
-        QStringLiteral("\\b(?:disc|disk)\\s*[a-z0-9]+(?:\\s+of\\s+[a-z0-9]+)?\\s*$"
-                       "|\\bcd\\s*\\d+(?:\\s+of\\s+\\d+)?\\s*$"));
+    static const QRegularExpression reDisc(QStringLiteral("\\b(?:disc|disk)\\s*[a-z0-9]+(?:\\s+of\\s+[a-z0-9]+)?\\s*$"
+                                                          "|\\bcd\\s*\\d+(?:\\s+of\\s+\\d+)?\\s*$"));
     s.remove(reDisc);
 
-    static const QRegularExpression trailingRegion(QStringLiteral("\\s*\\((usa|eu|europe|japan|world|pal|ntsc)\\)\\s*$"));
+    static const QRegularExpression trailingRegion(
+        QStringLiteral("\\s*\\((usa|eu|europe|japan|world|pal|ntsc)\\)\\s*$"));
     s.remove(trailingRegion);
 
     return s.trimmed();

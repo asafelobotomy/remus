@@ -35,8 +35,7 @@ void DiscTitleParserTest::redumpMultiDisc() {
 }
 
 void DiscTitleParserTest::redumpDiscCount() {
-    const DiscTitleInfo info
-        = DiscTitleParser::parseTitle(QStringLiteral("Panzer Dragoon Saga (PAL) (Disc 3 of 4)"));
+    const DiscTitleInfo info = DiscTitleParser::parseTitle(QStringLiteral("Panzer Dragoon Saga (PAL) (Disc 3 of 4)"));
     QCOMPARE(info.discNumber, 3);
     QCOMPARE(info.discCount, 4);
 }
@@ -52,26 +51,21 @@ void DiscTitleParserTest::twinSnakesMergedStyle() {
 }
 
 void DiscTitleParserTest::shenmueVariantTags() {
-    const DiscTitleInfo info
-        = DiscTitleParser::parseTitle(QStringLiteral("Shenmue (USA) (Disc 3) [!][1S]"));
+    const DiscTitleInfo info = DiscTitleParser::parseTitle(QStringLiteral("Shenmue (USA) (Disc 3) [!][1S]"));
     QCOMPARE(info.discNumber, 3);
     QVERIFY(info.setVariant.contains(QStringLiteral("1S")));
 }
 
 void DiscTitleParserTest::shenmueVariants_shareIdentityBase() {
-    const DiscTitleInfo oneS
-        = DiscTitleParser::parseTitle(QStringLiteral("Shenmue (USA) (Disc 3) [!][1S]"));
-    const DiscTitleInfo twoS
-        = DiscTitleParser::parseTitle(QStringLiteral("Shenmue (USA) (Disc 3) [!][2S]"));
+    const DiscTitleInfo oneS = DiscTitleParser::parseTitle(QStringLiteral("Shenmue (USA) (Disc 3) [!][1S]"));
+    const DiscTitleInfo twoS = DiscTitleParser::parseTitle(QStringLiteral("Shenmue (USA) (Disc 3) [!][2S]"));
     QCOMPARE(oneS.identityBase, twoS.identityBase);
     QVERIFY(oneS.setVariant != twoS.setVariant);
 }
 
 void DiscTitleParserTest::residentEvilSplitPath() {
-    const DiscTitleInfo leon
-        = DiscTitleParser::parseTitle(QStringLiteral("Resident Evil 2 (USA) (Disc 1) (Leon)"));
-    const DiscTitleInfo claire
-        = DiscTitleParser::parseTitle(QStringLiteral("Resident Evil 2 (USA) (Disc 2) (Claire)"));
+    const DiscTitleInfo leon = DiscTitleParser::parseTitle(QStringLiteral("Resident Evil 2 (USA) (Disc 1) (Leon)"));
+    const DiscTitleInfo claire = DiscTitleParser::parseTitle(QStringLiteral("Resident Evil 2 (USA) (Disc 2) (Claire)"));
     QCOMPARE(leon.pathSubtitle, QStringLiteral("Leon"));
     QCOMPARE(claire.pathSubtitle, QStringLiteral("Claire"));
     QVERIFY(leon.identityBase != claire.identityBase);
@@ -85,14 +79,15 @@ void DiscTitleParserTest::singleDiscUnchanged() {
 }
 
 void DiscTitleParserTest::normalizeForIdentityStripsDiscTag() {
-    const QString normalized
-        = DiscTitleParser::normalizeForIdentity(QStringLiteral("Final Fantasy VIII (Disc 2)"));
+    const QString normalized = DiscTitleParser::normalizeForIdentity(QStringLiteral("Final Fantasy VIII (Disc 2)"));
     QCOMPARE(normalized, QStringLiteral("final fantasy viii"));
 }
 
 void DiscTitleParserTest::discSetKey_isStable() {
-    const QString keyA = DiscSetKey::compute(12, QStringLiteral("Final Fantasy VII (USA) (Disc 1)"), QStringLiteral("usa"));
-    const QString keyB = DiscSetKey::compute(12, QStringLiteral("Final Fantasy VII (USA) (Disc 2)"), QStringLiteral("usa"));
+    const QString keyA
+        = DiscSetKey::compute(12, QStringLiteral("Final Fantasy VII (USA) (Disc 1)"), QStringLiteral("usa"));
+    const QString keyB
+        = DiscSetKey::compute(12, QStringLiteral("Final Fantasy VII (USA) (Disc 2)"), QStringLiteral("usa"));
     QCOMPARE(keyA, keyB);
     QCOMPARE(keyA.size(), 16);
 }
@@ -104,18 +99,18 @@ void DiscTitleParserTest::discSetKey_differsByRegion() {
 }
 
 void DiscTitleParserTest::discSetKey_splitPathDiffers() {
-    const QString leon = DiscSetKey::compute(
-        14, QStringLiteral("Resident Evil 2 (USA) (Disc 1) (Leon)"), QStringLiteral("usa"));
-    const QString claire = DiscSetKey::compute(
-        14, QStringLiteral("Resident Evil 2 (USA) (Disc 2) (Claire)"), QStringLiteral("usa"));
+    const QString leon
+        = DiscSetKey::compute(14, QStringLiteral("Resident Evil 2 (USA) (Disc 1) (Leon)"), QStringLiteral("usa"));
+    const QString claire
+        = DiscSetKey::compute(14, QStringLiteral("Resident Evil 2 (USA) (Disc 2) (Claire)"), QStringLiteral("usa"));
     QVERIFY(leon != claire);
 }
 
 void DiscTitleParserTest::discSetKey_variantPressingsShareKey() {
-    const QString oneS = DiscSetKey::compute(
-        14, QStringLiteral("Shenmue (USA) (Disc 3) [!][1S]"), QStringLiteral("usa"));
-    const QString twoS = DiscSetKey::compute(
-        14, QStringLiteral("Shenmue (USA) (Disc 3) [!][2S]"), QStringLiteral("usa"));
+    const QString oneS
+        = DiscSetKey::compute(14, QStringLiteral("Shenmue (USA) (Disc 3) [!][1S]"), QStringLiteral("usa"));
+    const QString twoS
+        = DiscSetKey::compute(14, QStringLiteral("Shenmue (USA) (Disc 3) [!][2S]"), QStringLiteral("usa"));
     QCOMPARE(oneS, twoS);
 }
 
@@ -126,8 +121,8 @@ void DiscTitleParserTest::legacyLibraryKey_matchesDiscSetUtils() {
 }
 
 void DiscTitleParserTest::tosecDiscOfTotal() {
-    const DiscTitleInfo info = DiscTitleParser::parseTitle(
-        QStringLiteral("Skies of Arcadia v1.002 (2000)(Sega)(US)(Disc 2 of 2)[!]"));
+    const DiscTitleInfo info
+        = DiscTitleParser::parseTitle(QStringLiteral("Skies of Arcadia v1.002 (2000)(Sega)(US)(Disc 2 of 2)[!]"));
     QCOMPARE(info.discNumber, 2);
     QCOMPARE(info.discCount, 2);
     QVERIFY(info.isMultiDisc);

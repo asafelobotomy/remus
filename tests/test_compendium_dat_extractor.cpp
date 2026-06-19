@@ -49,21 +49,22 @@ private slots:
 };
 
 void CompendiumDatExtractorTest::extractMultiDiscFf7InfersDiscCount() {
-    const QString content = QStringLiteral("clrmamepro (\n"
-                                           "    name \"Sony - PlayStation\"\n"
-                                           ")\n"
-                                           "game (\n"
-                                           "    name \"Final Fantasy VII (USA) (Disc 1)\"\n"
-                                           "    rom ( name \"Final Fantasy VII (USA) (Disc 1).bin\" size 100 crc AAAAAAAA )\n"
-                                           ")\n"
-                                           "game (\n"
-                                           "    name \"Final Fantasy VII (USA) (Disc 2)\"\n"
-                                           "    rom ( name \"Final Fantasy VII (USA) (Disc 2).bin\" size 100 crc BBBBBBBB )\n"
-                                           ")\n"
-                                           "game (\n"
-                                           "    name \"Final Fantasy VII (USA) (Disc 3)\"\n"
-                                           "    rom ( name \"Final Fantasy VII (USA) (Disc 3).bin\" size 100 crc CCCCCCCC )\n"
-                                           ")\n");
+    const QString content
+        = QStringLiteral("clrmamepro (\n"
+                         "    name \"Sony - PlayStation\"\n"
+                         ")\n"
+                         "game (\n"
+                         "    name \"Final Fantasy VII (USA) (Disc 1)\"\n"
+                         "    rom ( name \"Final Fantasy VII (USA) (Disc 1).bin\" size 100 crc AAAAAAAA )\n"
+                         ")\n"
+                         "game (\n"
+                         "    name \"Final Fantasy VII (USA) (Disc 2)\"\n"
+                         "    rom ( name \"Final Fantasy VII (USA) (Disc 2).bin\" size 100 crc BBBBBBBB )\n"
+                         ")\n"
+                         "game (\n"
+                         "    name \"Final Fantasy VII (USA) (Disc 3)\"\n"
+                         "    rom ( name \"Final Fantasy VII (USA) (Disc 3).bin\" size 100 crc CCCCCCCC )\n"
+                         ")\n");
 
     QTemporaryFile tmp;
     tmp.setAutoRemove(true);
@@ -72,8 +73,8 @@ void CompendiumDatExtractorTest::extractMultiDiscFf7InfersDiscCount() {
     tmp.close();
 
     QString error;
-    const QList<Compendium::SourceRecordEnvelope> records
-        = Compendium::DatExtractor::extract(tmp.fileName(), QStringLiteral("redump"), QStringLiteral("snap-ff7"), error);
+    const QList<Compendium::SourceRecordEnvelope> records = Compendium::DatExtractor::extract(
+        tmp.fileName(), QStringLiteral("redump"), QStringLiteral("snap-ff7"), error);
 
     QVERIFY2(error.isEmpty(), qPrintable(error));
     QCOMPARE(records.size(), 3);

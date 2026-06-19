@@ -781,7 +781,7 @@ private slots:
         runCli({ "--db", dbPath, "--scan", libraryA });
         runCli({ "--db", dbPath, "--scan", libraryB, "--generate-m3u", "--m3u-dir", outputDir });
 
-        QVERIFY(QFile::exists(outputDir + "/Metal Gear Solid (USA).m3u"));
+        QVERIFY(QFile::exists(outputDir + "/Metal Gear Solid.m3u"));
     }
 
     void testVerifyXmlDatUsesHeaderSystemName() {

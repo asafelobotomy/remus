@@ -217,8 +217,8 @@ int M3UGenerator::catalogDiscNumberForFile(const FileRecord &file, QSqlDatabase 
             systemInternalName = sysQuery.value(0).toString();
 
         CompendiumFileDiscContext catalog;
-        if (lookupCompendiumDiscContextFromDb(*compendiumDb, systemInternalName, file.crc32, file.md5, file.sha1,
-                catalog)
+        if (lookupCompendiumDiscContextFromDb(
+                *compendiumDb, systemInternalName, file.crc32, file.md5, file.sha1, catalog)
             && catalog.found && catalog.discNumber > 0) {
             return catalog.discNumber;
         }

@@ -68,7 +68,7 @@ namespace {
                                          "FROM game_signatures "
                                          "WHERE game_id IN (%1) "
                                          "  AND hash_type IN ('md5', 'sha1', 'crc32', 'sha256')")
-                              .arg(placeholders.join(QLatin1Char(','))));
+                    .arg(placeholders.join(QLatin1Char(','))));
             for (const QString &gameId : chunk)
                 query.addBindValue(gameId);
 

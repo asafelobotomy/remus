@@ -58,15 +58,19 @@ private:
         if (!CompendiumSqlUtilities::executeSqlScript(db, migration0007, error))
             return false;
 
-        return execSql(db, QStringLiteral("INSERT INTO sources (source_id, display_name, source_type, priority) "
-                                          "VALUES ('redump', 'Redump', 'dat', 10)"))
-            && execSql(db, QStringLiteral("INSERT INTO source_snapshots (snapshot_id, source_id, snapshot_label) "
-                                          "VALUES ('snap-ff7', 'redump', 'test')"))
-            && execSql(db, QStringLiteral("INSERT INTO systems (system_id, internal_name, display_name, "
-                                          "preferred_hash, is_disc_based) "
-                                          "VALUES (14, 'PlayStation', 'Sony PlayStation', 'MD5', 1)"))
-            && execSql(db, QStringLiteral("INSERT INTO regions (region_code, display_name, group_code) "
-                                          "VALUES ('USA', 'USA', 'USA')"));
+        return execSql(db,
+                   QStringLiteral("INSERT INTO sources (source_id, display_name, source_type, priority) "
+                                  "VALUES ('redump', 'Redump', 'dat', 10)"))
+            && execSql(db,
+                QStringLiteral("INSERT INTO source_snapshots (snapshot_id, source_id, snapshot_label) "
+                               "VALUES ('snap-ff7', 'redump', 'test')"))
+            && execSql(db,
+                QStringLiteral("INSERT INTO systems (system_id, internal_name, display_name, "
+                               "preferred_hash, is_disc_based) "
+                               "VALUES (14, 'PlayStation', 'Sony PlayStation', 'MD5', 1)"))
+            && execSql(db,
+                QStringLiteral("INSERT INTO regions (region_code, display_name, group_code) "
+                               "VALUES ('USA', 'USA', 'USA')"));
     }
 
     static int countValidationStatus(QSqlDatabase &db, const QString &sqlPath, const QString &status) {
@@ -97,21 +101,22 @@ private:
     }
 
     static bool ingestFf7Fixture(QSqlDatabase &db, QString &gameId, QString &error) {
-        const QString datContent = QStringLiteral("clrmamepro (\n"
-                                                  "    name \"Sony - PlayStation\"\n"
-                                                  ")\n"
-                                                  "game (\n"
-                                                  "    name \"Final Fantasy VII (USA) (Disc 1)\"\n"
-                                                  "    rom ( name \"Final Fantasy VII (USA) (Disc 1).bin\" size 100 crc AAAAAAAA )\n"
-                                                  ")\n"
-                                                  "game (\n"
-                                                  "    name \"Final Fantasy VII (USA) (Disc 2)\"\n"
-                                                  "    rom ( name \"Final Fantasy VII (USA) (Disc 2).bin\" size 100 crc BBBBBBBB )\n"
-                                                  ")\n"
-                                                  "game (\n"
-                                                  "    name \"Final Fantasy VII (USA) (Disc 3)\"\n"
-                                                  "    rom ( name \"Final Fantasy VII (USA) (Disc 3).bin\" size 100 crc CCCCCCCC )\n"
-                                                  ")\n");
+        const QString datContent
+            = QStringLiteral("clrmamepro (\n"
+                             "    name \"Sony - PlayStation\"\n"
+                             ")\n"
+                             "game (\n"
+                             "    name \"Final Fantasy VII (USA) (Disc 1)\"\n"
+                             "    rom ( name \"Final Fantasy VII (USA) (Disc 1).bin\" size 100 crc AAAAAAAA )\n"
+                             ")\n"
+                             "game (\n"
+                             "    name \"Final Fantasy VII (USA) (Disc 2)\"\n"
+                             "    rom ( name \"Final Fantasy VII (USA) (Disc 2).bin\" size 100 crc BBBBBBBB )\n"
+                             ")\n"
+                             "game (\n"
+                             "    name \"Final Fantasy VII (USA) (Disc 3)\"\n"
+                             "    rom ( name \"Final Fantasy VII (USA) (Disc 3).bin\" size 100 crc CCCCCCCC )\n"
+                             ")\n");
 
         QTemporaryFile datFile;
         datFile.setAutoRemove(true);
@@ -227,7 +232,8 @@ void DiscSetValidationTest::backfill_restoresTopologyAfterClear() {
     QCOMPARE(stats.tracksCreated, 3);
 
     QSqlQuery query(db);
-    QVERIFY(query.exec(QStringLiteral("SELECT COUNT(*) FROM game_disc_sets WHERE game_id = '") + gameId + QLatin1Char('\'')));
+    QVERIFY(query.exec(
+        QStringLiteral("SELECT COUNT(*) FROM game_disc_sets WHERE game_id = '") + gameId + QLatin1Char('\'')));
     QVERIFY(query.next());
     QCOMPARE(query.value(0).toInt(), 3);
 

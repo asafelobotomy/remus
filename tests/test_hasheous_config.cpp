@@ -39,21 +39,20 @@ void HasheousConfigTest::cleanup() {
 }
 
 void HasheousConfigTest::testNormalizeBaseUrl() {
-    QCOMPARE(normalizeHasheousBaseUrl(QStringLiteral("https://example.com///")),
-        QStringLiteral("https://example.com"));
+    QCOMPARE(normalizeHasheousBaseUrl(QStringLiteral("https://example.com///")), QStringLiteral("https://example.com"));
 }
 
 void HasheousConfigTest::testResolveOverrideBeatsEnv() {
     qputenv("REMUS_HASHEOUS_BASE_URL", "https://env.example");
-    QCOMPARE(resolveHasheousBaseUrl(QStringLiteral("https://cli.example/")),
-        QStringLiteral("https://cli.example"));
+    QCOMPARE(resolveHasheousBaseUrl(QStringLiteral("https://cli.example/")), QStringLiteral("https://cli.example"));
 }
 
 void HasheousConfigTest::testResolveEnvBeatsSettings() {
     qputenv("REMUS_HASHEOUS_BASE_URL", "https://env.example");
 
     QSettings settings(QString::fromLatin1(SETTINGS_ORGANIZATION), QString::fromLatin1(SETTINGS_APPLICATION));
-    settings.setValue(QString::fromLatin1(Settings::Providers::HASHEOUS_BASE_URL), QStringLiteral("https://settings.example"));
+    settings.setValue(
+        QString::fromLatin1(Settings::Providers::HASHEOUS_BASE_URL), QStringLiteral("https://settings.example"));
 
     QCOMPARE(resolveHasheousBaseUrl(), QStringLiteral("https://env.example"));
 }

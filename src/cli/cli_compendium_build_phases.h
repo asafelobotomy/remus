@@ -121,8 +121,8 @@ void insertEnrichmentStatsReportFields(
  * input changes invalidate a manifest-identical cached DB.
  */
 QString computeEnrichmentInputsFingerprint(const QString &metadataDir, const QString &gametdbDir,
-    const QString &openvgdbPath, const QString &mameCatverPath, const QString &mameListXmlPath,
-    const QString &credPath, const QStringList &sourceFilter = { });
+    const QString &openvgdbPath, const QString &mameCatverPath, const QString &mameListXmlPath, const QString &credPath,
+    const QStringList &sourceFilter = { });
 
 /**
  * @brief Extract a stored enrichment fingerprint from compendium_builds.notes JSON.

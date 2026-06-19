@@ -52,8 +52,7 @@ DiscSetCompletenessReport VerificationEngine::discSetCompletenessBySetKey(
     return computeDiscSetCompletenessBySetKey(compendiumDb, m_database->database(), setKey, ownedFileIds);
 }
 
-QList<DiscSetCompletenessReport> VerificationEngine::discSetCompletenessForLibrary(
-    const QString &systemFilter) const {
+QList<DiscSetCompletenessReport> VerificationEngine::discSetCompletenessForLibrary(const QString &systemFilter) const {
     QList<DiscSetCompletenessReport> reports;
     QSqlDatabase compendiumDb = compendiumDatabase(m_compendiumConnectionName);
     if (!compendiumDb.isOpen() || !compendiumDiscSetsAvailable(compendiumDb))

@@ -42,8 +42,8 @@ int handleBackfillDiscSetsCommand(CliContext &ctx) {
 
     if (!force) {
         QSqlQuery existing(database);
-        if (existing.exec(QStringLiteral("SELECT COUNT(*) FROM game_disc_sets"))
-            && existing.next() && existing.value(0).toLongLong() > 0) {
+        if (existing.exec(QStringLiteral("SELECT COUNT(*) FROM game_disc_sets")) && existing.next()
+            && existing.value(0).toLongLong() > 0) {
             qInfo() << "[backfill-disc-sets] Disc topology already present — use --force-disc-set-backfill to rebuild.";
             database.close();
             QSqlDatabase::removeDatabase(connectionName);

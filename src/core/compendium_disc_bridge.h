@@ -42,7 +42,7 @@ bool lookupCatalogDiscSetSummary(QSqlDatabase &compendiumDb, const QString &setK
 QList<DiscSetCompletenessReport> computeDiscSetCompleteness(QSqlDatabase &compendiumDb, QSqlDatabase &libraryDb,
     const QString &compendiumGameId, const QList<int> &ownedFileIds);
 
-DiscSetCompletenessReport computeDiscSetCompletenessBySetKey(QSqlDatabase &compendiumDb, QSqlDatabase &libraryDb,
-    const QString &setKey, const QList<int> &ownedFileIds);
+DiscSetCompletenessReport computeDiscSetCompletenessBySetKey(
+    QSqlDatabase &compendiumDb, QSqlDatabase &libraryDb, const QString &setKey, const QList<int> &ownedFileIds);
 
 } // namespace Remus

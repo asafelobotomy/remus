@@ -186,8 +186,8 @@ VerificationResult VerificationEngine::verifyFile(int fileId) {
             result.fileHash = matchedHash;
             result.datHash = matchedHash;
             result.notes = "Verified against official DAT";
-            appendDiscCatalogNotes(m_compendiumConnectionName, result, result.system, crc32, md5, sha1,
-                libraryDiscNumber);
+            appendDiscCatalogNotes(
+                m_compendiumConnectionName, result, result.system, crc32, md5, sha1, libraryDiscNumber);
             return result;
         }
     }
@@ -209,8 +209,7 @@ VerificationResult VerificationEngine::verifyFile(int fileId) {
             ? QStringLiteral("Verified against patch catalog")
             : QStringLiteral("Verified against patch catalog: %1").arg(patchEntry.patchName);
         promotePatchMetadata(fileId, patchEntry);
-        appendDiscCatalogNotes(m_compendiumConnectionName, result, result.system, crc32, md5, sha1,
-            libraryDiscNumber);
+        appendDiscCatalogNotes(m_compendiumConnectionName, result, result.system, crc32, md5, sha1, libraryDiscNumber);
     } else {
         result.status = VerificationStatus::NotInDat;
         result.notes = "Hash not found in verification catalogs";

@@ -30,7 +30,8 @@ QString createCompendiumFixture() {
     if (!db.open())
         return { };
 
-    const QString setKey = DiscSetKey::compute(14, QStringLiteral("Final Fantasy VII (USA) (Disc 1)"), QStringLiteral("USA"));
+    const QString setKey
+        = DiscSetKey::compute(14, QStringLiteral("Final Fantasy VII (USA) (Disc 1)"), QStringLiteral("USA"));
     const QString entry1 = QStringLiteral("Sony - PlayStation|Final Fantasy VII (USA) (Disc 1)|FF7 Disc 1.bin");
     const QString entry2 = QStringLiteral("Sony - PlayStation|Final Fantasy VII (USA) (Disc 2)|FF7 Disc 2.bin");
     const QString entry3 = QStringLiteral("Sony - PlayStation|Final Fantasy VII (USA) (Disc 3)|FF7 Disc 3.bin");
@@ -53,8 +54,7 @@ QString createCompendiumFixture() {
             QStringLiteral("CREATE TABLE game_disc_tracks (track_id INTEGER PRIMARY KEY AUTOINCREMENT, disc_set_id "
                            "INTEGER NOT NULL, track_index INTEGER NOT NULL, rom_name TEXT NOT NULL, signature_id "
                            "INTEGER, source_entry_key TEXT NOT NULL UNIQUE)"))
-        && execSql(db,
-            QStringLiteral("INSERT INTO systems VALUES (14, 'PlayStation', 'Sony PlayStation')"))
+        && execSql(db, QStringLiteral("INSERT INTO systems VALUES (14, 'PlayStation', 'Sony PlayStation')"))
         && execSql(db, QStringLiteral("INSERT INTO games VALUES ('ff7', 14, 'Final Fantasy VII')"))
         && execSql(db,
             QStringLiteral("INSERT INTO game_signatures (game_id, hash_type, hash_value, source_entry_key) VALUES "
@@ -128,8 +128,7 @@ void DiscSetCompletenessTest::ff7Disc2Only_reportsMissingDiscs() {
     VerificationEngine engine(&db);
     engine.setCompendiumDb(compendiumPath);
 
-    const DiscSetCompletenessReport report
-        = engine.discSetCompletenessBySetKey(updated.discSetKey, { fileId });
+    const DiscSetCompletenessReport report = engine.discSetCompletenessBySetKey(updated.discSetKey, { fileId });
     QCOMPARE(report.discCount, 3);
     QCOMPARE(report.ownedDiscNumbers, QList<int>({ 2 }));
     QCOMPARE(report.missingDiscNumbers, QList<int>({ 1, 3 }));
@@ -163,8 +162,8 @@ void DiscSetCompletenessTest::rebuildDiscSets_usesCompendiumSetKey() {
     QVERIFY(db.updateFileHashes(fileId, QString(), disc2.md5, QString()));
     QVERIFY(db.rebuildDiscSetsForLibrary(libId));
 
-    const QString expectedKey = DiscSetKey::compute(
-        14, QStringLiteral("Final Fantasy VII (USA) (Disc 1)"), QStringLiteral("USA"));
+    const QString expectedKey
+        = DiscSetKey::compute(14, QStringLiteral("Final Fantasy VII (USA) (Disc 1)"), QStringLiteral("USA"));
     QCOMPARE(db.getFileById(fileId).discSetKey, expectedKey);
 }
 

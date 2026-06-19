@@ -216,8 +216,8 @@ bool MatchController::prependHashCandidates(ProviderOrchestrator *orchestrator, 
 
     GameMetadata hashMetadata;
     if (providerFilter.isEmpty()) {
-        hashMetadata = lookupHashWithFallback(orchestrator, m_appController ? m_appController->database() : nullptr,
-            file, systemName);
+        hashMetadata = lookupHashWithFallback(
+            orchestrator, m_appController ? m_appController->database() : nullptr, file, systemName);
     } else {
         hashMetadata = orchestrator->getHashFromProvider(
             providerFilter, hash, systemName, file.crc32, file.md5, file.sha1, file.raMd5);

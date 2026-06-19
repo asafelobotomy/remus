@@ -204,14 +204,14 @@ bool testConfidenceScoring(LocalDatabaseProvider &provider) {
         int expectedMax;
     };
 
-    QList<TestCase> cases = { { "Perfect Match (All 4 signals)",
-                                  { "f9394e97", "1bc674be034e43c96b86487ac69d9293",
-                                      "6ddb7de1e17e7f6cdb88927bd906352030daa194", QString(),
-                                      "Sonic The Hedgehog (USA, Europe).md", 524288, "00001009-00" },
-                                  150, 200 },
-        { "Hash Only", { "f9394e97", "", "", QString(), "WrongName.md", 999999, "" }, 100, 100 },
-        { "Filename + Size (No Hash)", { "", "", "", QString(), "Sonic The Hedgehog (USA, Europe).md", 524288, "" },
-            80, 80 } };
+    QList<TestCase> cases
+        = { { "Perfect Match (All 4 signals)",
+                { "f9394e97", "1bc674be034e43c96b86487ac69d9293", "6ddb7de1e17e7f6cdb88927bd906352030daa194", QString(),
+                    "Sonic The Hedgehog (USA, Europe).md", 524288, "00001009-00" },
+                150, 200 },
+              { "Hash Only", { "f9394e97", "", "", QString(), "WrongName.md", 999999, "" }, 100, 100 },
+              { "Filename + Size (No Hash)",
+                  { "", "", "", QString(), "Sonic The Hedgehog (USA, Europe).md", 524288, "" }, 80, 80 } };
 
     bool allPassed = true;
 

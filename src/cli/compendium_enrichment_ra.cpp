@@ -329,8 +329,7 @@ bool enrichFromRetroAchievements(QSqlDatabase &database, const QString &credenti
                 }
 
                 updateQ.bindValue(0, nullableText(gm.description));
-                const QString genreStr
-                    = gm.genres.isEmpty() ? QString() : gm.genres.join(QStringLiteral(", "));
+                const QString genreStr = gm.genres.isEmpty() ? QString() : gm.genres.join(QStringLiteral(", "));
                 updateQ.bindValue(1, nullableText(genreStr));
                 updateQ.bindValue(2, nullableText(gm.developer));
                 updateQ.bindValue(3, nullableText(gm.publisher));

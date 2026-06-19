@@ -268,8 +268,7 @@ bool Database::runMigrations() {
         qInfo() << "Migration: Adding chd_sha1 column to files table";
         if (!execChecked(query,
                 QString("ALTER TABLE %1 ADD COLUMN %2 TEXT")
-                    .arg(Constants::DatabaseSchema::Tables::FILES,
-                        Constants::DatabaseSchema::Columns::Files::CHD_SHA1),
+                    .arg(Constants::DatabaseSchema::Tables::FILES, Constants::DatabaseSchema::Columns::Files::CHD_SHA1),
                 "Migration: Failed to add chd_sha1 column to files table")) {
             return false;
         }
@@ -279,8 +278,7 @@ bool Database::runMigrations() {
         qInfo() << "Migration: Adding rvz_sha1 column to files table";
         if (!execChecked(query,
                 QString("ALTER TABLE %1 ADD COLUMN %2 TEXT")
-                    .arg(Constants::DatabaseSchema::Tables::FILES,
-                        Constants::DatabaseSchema::Columns::Files::RVZ_SHA1),
+                    .arg(Constants::DatabaseSchema::Tables::FILES, Constants::DatabaseSchema::Columns::Files::RVZ_SHA1),
                 "Migration: Failed to add rvz_sha1 column to files table")) {
             return false;
         }

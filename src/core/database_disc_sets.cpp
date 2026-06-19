@@ -26,15 +26,14 @@ QList<FileRecord> Database::getFilesByDiscSetKey(const QString &discSetKey) {
         return { };
 
     QSqlQuery query(m_db);
-    query.prepare(QStringLiteral(
-        "SELECT id, library_id, original_path, current_path, filename, extension, "
-        "file_size, is_compressed, archive_path, archive_internal_path, "
-        "system_id, crc32, md5, sha1, ra_md5, chd_sha1, rvz_sha1, hash_calculated, "
-        "is_primary, parent_file_id, base_title, disc_set_key, disc_number, "
-        "file_type, is_patched, patch_name, is_processed, processing_status, "
-        "last_modified, scanned_at "
-        "FROM files WHERE disc_set_key = ? AND is_primary = 1 "
-        "ORDER BY disc_number, filename"));
+    query.prepare(QStringLiteral("SELECT id, library_id, original_path, current_path, filename, extension, "
+                                 "file_size, is_compressed, archive_path, archive_internal_path, "
+                                 "system_id, crc32, md5, sha1, ra_md5, chd_sha1, rvz_sha1, hash_calculated, "
+                                 "is_primary, parent_file_id, base_title, disc_set_key, disc_number, "
+                                 "file_type, is_patched, patch_name, is_processed, processing_status, "
+                                 "last_modified, scanned_at "
+                                 "FROM files WHERE disc_set_key = ? AND is_primary = 1 "
+                                 "ORDER BY disc_number, filename"));
     query.addBindValue(discSetKey);
     if (!query.exec()) {
         logError("Failed to query files by disc set key: " + query.lastError().text());

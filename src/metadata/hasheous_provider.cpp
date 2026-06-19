@@ -239,8 +239,7 @@ GameMetadata HasheousProvider::getByHashes(
     return getByHashEntries({ entry }, system);
 }
 
-GameMetadata HasheousProvider::getByHashEntries(
-    const QList<HasheousHashEntry> &entries, const QString &system) {
+GameMetadata HasheousProvider::getByHashEntries(const QList<HasheousHashEntry> &entries, const QString &system) {
     Q_UNUSED(system);
 
     const QJsonArray payload = buildLookupPayload(entries);

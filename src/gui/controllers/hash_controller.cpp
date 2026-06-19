@@ -68,9 +68,8 @@ void HashController::startHashAll() {
         Database *db = m_appController->database();
         for (const BatchResult &r : results) {
             if (!r.skipped && r.result.success) {
-                db->updateFileHashes(
-                    r.fileId, r.result.crc32, r.result.md5, r.result.sha1, r.result.raMd5, r.result.chdSha1,
-                    r.result.rvzSha1);
+                db->updateFileHashes(r.fileId, r.result.crc32, r.result.md5, r.result.sha1, r.result.raMd5,
+                    r.result.chdSha1, r.result.rvzSha1);
                 ++hashed;
             }
         }

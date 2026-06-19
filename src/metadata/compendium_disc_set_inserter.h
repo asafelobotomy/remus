@@ -20,8 +20,7 @@ namespace Compendium {
             qint64 sourceItemId, QSqlDatabase &db, CompilerStats &stats, QString &error);
 
         /// Resolve the primary signature row for a persisted track envelope.
-        static qint64 lookupPrimarySignatureId(
-            const SourceRecordEnvelope &rec, QSqlDatabase &db, QString &error);
+        static qint64 lookupPrimarySignatureId(const SourceRecordEnvelope &rec, QSqlDatabase &db, QString &error);
 
         /// Insert one @c game_disc_tracks row linked to @p discSetId .
         static bool insertTrack(const SourceRecordEnvelope &rec, qint64 discSetId, qint64 signatureId, QSqlQuery &q,

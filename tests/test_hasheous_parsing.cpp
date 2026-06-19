@@ -170,16 +170,15 @@ void HasheousParsingTest::getByHashesKeepsHashMatchWhenMetadataProxyDisabled() {
 void HasheousParsingTest::lookupSendsArrayPayloadWithCamelCaseKeys() {
     HashLookupHasheousProvider provider;
 
-    provider.getByHashes(
-        "F9394E97", "1BC674BE034E43C96B86487AC69D9293", "6DDB7DE1E17E7F6CDB88927BD906352030DAA194", "Genesis",
-        "aabbccdd001122334455667788990011aabbccdd001122334455667788990011");
+    provider.getByHashes("F9394E97", "1BC674BE034E43C96B86487AC69D9293", "6DDB7DE1E17E7F6CDB88927BD906352030DAA194",
+        "Genesis", "aabbccdd001122334455667788990011aabbccdd001122334455667788990011");
 
     QVERIFY(provider.lastPayload.isArray());
     const QJsonObject entry = provider.lastPayload.array().first().toObject();
     QCOMPARE(entry.value(QStringLiteral("crc")).toString(), QStringLiteral("f9394e97"));
     QCOMPARE(entry.value(QStringLiteral("mD5")).toString(), QStringLiteral("1bc674be034e43c96b86487ac69d9293"));
-    QCOMPARE(entry.value(QStringLiteral("shA1")).toString(),
-        QStringLiteral("6ddb7de1e17e7f6cdb88927bd906352030daa194"));
+    QCOMPARE(
+        entry.value(QStringLiteral("shA1")).toString(), QStringLiteral("6ddb7de1e17e7f6cdb88927bd906352030daa194"));
     QCOMPARE(entry.value(QStringLiteral("sha256")).toString(),
         QStringLiteral("aabbccdd001122334455667788990011aabbccdd001122334455667788990011"));
 }
@@ -196,8 +195,8 @@ void HasheousParsingTest::chdHashEntrySendsSha1Only() {
     QVERIFY(provider.lastPayload.isArray());
     const QJsonObject payload = provider.lastPayload.array().first().toObject();
     QCOMPARE(payload.size(), 1);
-    QCOMPARE(payload.value(QStringLiteral("shA1")).toString(),
-        QStringLiteral("6ddb7de1e17e7f6cdb88927bd906352030daa194"));
+    QCOMPARE(
+        payload.value(QStringLiteral("shA1")).toString(), QStringLiteral("6ddb7de1e17e7f6cdb88927bd906352030daa194"));
     QVERIFY(!payload.contains(QStringLiteral("mD5")));
     QVERIFY(!payload.contains(QStringLiteral("crc")));
 }

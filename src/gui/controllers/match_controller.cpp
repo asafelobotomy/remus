@@ -24,18 +24,18 @@ using Remus::selectBestMatchHash;
 
 namespace {
 
-    HasheousHashEntry hasheousEntryFromFile(const Remus::FileRecord &file) {
-        HasheousHashEntry entry;
-        entry.crc32 = file.crc32;
-        entry.md5 = file.md5;
-        entry.sha1 = file.sha1;
-        entry.chdSha1 = file.chdSha1.trimmed().toLower();
-        entry.rvzSha1 = file.rvzSha1.trimmed().toLower();
-        const QString primaryHash = selectBestMatchHash(file);
-        if (primaryHash.size() == 64)
-            entry.sha256 = primaryHash;
-        return entry;
-    }
+HasheousHashEntry hasheousEntryFromFile(const Remus::FileRecord &file) {
+    HasheousHashEntry entry;
+    entry.crc32 = file.crc32;
+    entry.md5 = file.md5;
+    entry.sha1 = file.sha1;
+    entry.chdSha1 = file.chdSha1.trimmed().toLower();
+    entry.rvzSha1 = file.rvzSha1.trimmed().toLower();
+    const QString primaryHash = selectBestMatchHash(file);
+    if (primaryHash.size() == 64)
+        entry.sha256 = primaryHash;
+    return entry;
+}
 
 } // namespace
 
@@ -350,9 +350,8 @@ bool MatchController::matchFileRecord(const FileRecord &file) {
         }
 
         const QString displayName = deriveMatchingDisplayName(file);
-        metadata = orchestrator->searchWithFallback(
-            hash, displayName, systemName, file.crc32, file.md5, file.sha1, discSerial, file.fileSize, file.raMd5,
-            false, selectContentSha1(file));
+        metadata = orchestrator->searchWithFallback(hash, displayName, systemName, file.crc32, file.md5, file.sha1,
+            discSerial, file.fileSize, file.raMd5, false, selectContentSha1(file));
         if (!metadata.title.isEmpty()) {
             if (metadata.matchScore > 0.0f && !metadata.matchMethod.isEmpty()) {
                 confidence = metadata.matchScore * 100.0f;

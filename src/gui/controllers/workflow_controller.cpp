@@ -159,15 +159,14 @@ void WorkflowController::refreshCounts() {
     // Enrich / Done: confirmed files split by has_local_artwork flag
     {
         QSqlQuery q(db);
-        const bool ok = q.exec(QStringLiteral(
-            "SELECT "
-            "  SUM(CASE WHEN f.has_local_artwork = 1 THEN 1 ELSE 0 END), "
-            "  SUM(CASE WHEN f.has_local_artwork = 0 THEN 1 ELSE 0 END) "
-            "FROM files f "
-            "WHERE EXISTS ("
-            "  SELECT 1 FROM matches m "
-            "  WHERE m.file_id = f.id "
-            "    AND m.is_confirmed = 1 AND m.is_rejected = 0)"));
+        const bool ok = q.exec(QStringLiteral("SELECT "
+                                              "  SUM(CASE WHEN f.has_local_artwork = 1 THEN 1 ELSE 0 END), "
+                                              "  SUM(CASE WHEN f.has_local_artwork = 0 THEN 1 ELSE 0 END) "
+                                              "FROM files f "
+                                              "WHERE EXISTS ("
+                                              "  SELECT 1 FROM matches m "
+                                              "  WHERE m.file_id = f.id "
+                                              "    AND m.is_confirmed = 1 AND m.is_rejected = 0)"));
         if (ok && q.next()) {
             m_doneCount = q.value(0).toInt();
             m_enrichCount = q.value(1).toInt();
@@ -220,27 +219,25 @@ void WorkflowController::refreshQueueFiles() {
     //
     // Best-match CTE (bm): collapses the old three correlated subqueries into a single
     // LEFT JOIN so matched_title / match_confidence / release_date are fetched in one pass.
-    static const QLatin1String kFromJoin(
-        "FROM files f "
-        "LEFT JOIN systems sys ON f.system_id = sys.id "
-        "LEFT JOIN ("
-        "  SELECT m.file_id,"
-        "         g.title        AS matched_title,"
-        "         m.confidence   AS match_confidence,"
-        "         g.release_date AS release_date,"
-        "         ROW_NUMBER() OVER ("
-        "           PARTITION BY m.file_id"
-        "           ORDER BY m.is_confirmed DESC, m.confidence DESC"
-        "         ) AS rn"
-        "  FROM matches m"
-        "  LEFT JOIN games g ON m.game_id = g.id"
-        "  WHERE m.is_rejected = 0"
-        ") bm ON bm.file_id = f.id AND bm.rn = 1 ");
-    static const QLatin1String kMatchMeta(
-        "sys.display_name AS system_name, "
-        "bm.matched_title, "
-        "bm.match_confidence, "
-        "bm.release_date");
+    static const QLatin1String kFromJoin("FROM files f "
+                                         "LEFT JOIN systems sys ON f.system_id = sys.id "
+                                         "LEFT JOIN ("
+                                         "  SELECT m.file_id,"
+                                         "         g.title        AS matched_title,"
+                                         "         m.confidence   AS match_confidence,"
+                                         "         g.release_date AS release_date,"
+                                         "         ROW_NUMBER() OVER ("
+                                         "           PARTITION BY m.file_id"
+                                         "           ORDER BY m.is_confirmed DESC, m.confidence DESC"
+                                         "         ) AS rn"
+                                         "  FROM matches m"
+                                         "  LEFT JOIN games g ON m.game_id = g.id"
+                                         "  WHERE m.is_rejected = 0"
+                                         ") bm ON bm.file_id = f.id AND bm.rn = 1 ");
+    static const QLatin1String kMatchMeta("sys.display_name AS system_name, "
+                                          "bm.matched_title, "
+                                          "bm.match_confidence, "
+                                          "bm.release_date");
     static const QLatin1String kChildExts(
         "(SELECT GROUP_CONCAT(f2.extension, ',') FROM files f2 "
         " WHERE f2.parent_file_id = f.id) AS child_exts,"
@@ -437,9 +434,9 @@ void WorkflowController::refreshQueueFiles() {
             header[QStringLiteral("systemName")] = first.value(QStringLiteral("systemName"));
             header[QStringLiteral("discCount")] = memberTotal;
             header[QStringLiteral("catalogDiscCount")] = catalogDiscCount;
-            header[QStringLiteral("discProgress")]
-                = catalogDiscCount > 0 ? QStringLiteral("%1/%2").arg(memberTotal).arg(catalogDiscCount)
-                                     : QStringLiteral("%1").arg(memberTotal);
+            header[QStringLiteral("discProgress")] = catalogDiscCount > 0
+                ? QStringLiteral("%1/%2").arg(memberTotal).arg(catalogDiscCount)
+                : QStringLiteral("%1").arg(memberTotal);
             header[QStringLiteral("discSetComplete")] = catalogDiscCount <= 0 || memberTotal >= catalogDiscCount;
             header[QStringLiteral("expanded")] = expanded;
             header[QStringLiteral("releaseYear")] = first.value(QStringLiteral("releaseYear"));

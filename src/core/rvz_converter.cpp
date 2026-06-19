@@ -90,9 +90,9 @@ QString RVZConverter::discContentSha1(const QString &discPath) {
     if (discPath.trimmed().isEmpty())
         return QString();
 
-    ProcessResult processResult = runProcess(
-        m_dolphinToolPath, QStringList() << QStringLiteral("verify") << QStringLiteral("-a") << QStringLiteral("sha1")
-                                         << QStringLiteral("--input") << discPath,
+    ProcessResult processResult = runProcess(m_dolphinToolPath,
+        QStringList() << QStringLiteral("verify") << QStringLiteral("-a") << QStringLiteral("sha1")
+                      << QStringLiteral("--input") << discPath,
         600000);
 
     if (processResult.exitCode != 0)

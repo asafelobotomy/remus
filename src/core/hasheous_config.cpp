@@ -23,8 +23,8 @@ QString resolveHasheousBaseUrl(const QString &overrideUrl) {
     if (!env.isEmpty())
         return normalizeHasheousBaseUrl(QString::fromUtf8(env));
 
-    QSettings settings(QString::fromLatin1(Constants::SETTINGS_ORGANIZATION),
-        QString::fromLatin1(Constants::SETTINGS_APPLICATION));
+    QSettings settings(
+        QString::fromLatin1(Constants::SETTINGS_ORGANIZATION), QString::fromLatin1(Constants::SETTINGS_APPLICATION));
     const QString configured
         = settings.value(QString::fromLatin1(Constants::Settings::Providers::HASHEOUS_BASE_URL)).toString().trimmed();
     if (!configured.isEmpty())

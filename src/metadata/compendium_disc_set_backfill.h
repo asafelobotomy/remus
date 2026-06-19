@@ -12,8 +12,7 @@ namespace Compendium {
     public:
         /// Rebuild disc topology from persisted @c source_items + @c game_signatures rows.
         /// Idempotent when topology already exists unless @p clearExisting is true.
-        static bool backfillDiscSets(
-            QSqlDatabase &db, bool clearExisting, CompilerStats &stats, QString &error);
+        static bool backfillDiscSets(QSqlDatabase &db, bool clearExisting, CompilerStats &stats, QString &error);
     };
 
 } // namespace Compendium

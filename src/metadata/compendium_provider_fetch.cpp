@@ -74,13 +74,13 @@ GameMetadata CompendiumProvider::fetchGameMetadata(const QString &gameId) const 
     }
 
     QSqlQuery query(db);
-    query.prepare(QStringLiteral(
-        "SELECT g.game_id, g.canonical_title, g.primary_region_code, g.release_date, g.release_year, "
-        "       g.developer, g.publisher, g.genre, g.players_max, g.description, g.rating, "
-        "       g.igdb_id, g.ra_game_id, s.internal_name "
-        "FROM games g "
-        "JOIN systems s ON s.system_id = g.system_id "
-        "WHERE g.game_id = ? LIMIT 1"));
+    query.prepare(
+        QStringLiteral("SELECT g.game_id, g.canonical_title, g.primary_region_code, g.release_date, g.release_year, "
+                       "       g.developer, g.publisher, g.genre, g.players_max, g.description, g.rating, "
+                       "       g.igdb_id, g.ra_game_id, s.internal_name "
+                       "FROM games g "
+                       "JOIN systems s ON s.system_id = g.system_id "
+                       "WHERE g.game_id = ? LIMIT 1"));
     query.addBindValue(gameId);
     if (!query.exec() || !query.next()) {
         return { };
@@ -116,8 +116,7 @@ GameMetadata CompendiumProvider::fetchGameMetadata(const QString &gameId) const 
         metadata.ratingSource = QStringLiteral("Compendium");
     }
 
-    populateExternalIds(metadata, metadata.id,
-        resolvedValue(facts, { "igdb_id" }, query.value(11).toString()),
+    populateExternalIds(metadata, metadata.id, resolvedValue(facts, { "igdb_id" }, query.value(11).toString()),
         resolvedValue(facts, { "ra_game_id" }, query.value(12).toString()));
     return metadata;
 }

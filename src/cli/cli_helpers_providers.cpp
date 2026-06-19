@@ -80,8 +80,7 @@ std::unique_ptr<ProviderOrchestrator> buildOrchestrator(const QCommandLineParser
         if (!hasheousKey.isEmpty())
             hasheousProvider->setApiKey(hasheousKey);
         if (parser.isSet(QStringLiteral("hasheous-base-url"))) {
-            hasheousProvider->setBaseUrl(
-                resolveHasheousBaseUrl(parser.value(QStringLiteral("hasheous-base-url"))));
+            hasheousProvider->setBaseUrl(resolveHasheousBaseUrl(parser.value(QStringLiteral("hasheous-base-url"))));
         }
     }
     const auto hasheousInfo = Providers::getProviderInfo(Providers::HASHEOUS);

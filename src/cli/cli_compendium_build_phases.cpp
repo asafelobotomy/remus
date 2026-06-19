@@ -55,14 +55,13 @@ bool queryHasRows(QSqlDatabase &db, const QString &sql, QString &error) {
 }
 
 // Shared metadata gap predicate (genre, developer, publisher, year, date, description, players).
-static const char kGeneralMetadataGapSql[] =
-    "genre IS NULL OR TRIM(genre) = '' "
-    "   OR developer IS NULL OR TRIM(developer) = '' "
-    "   OR publisher IS NULL OR TRIM(publisher) = '' "
-    "   OR release_year IS NULL "
-    "   OR release_date IS NULL OR TRIM(release_date) = '' "
-    "   OR description IS NULL OR TRIM(description) = '' "
-    "   OR players_max IS NULL ";
+static const char kGeneralMetadataGapSql[] = "genre IS NULL OR TRIM(genre) = '' "
+                                             "   OR developer IS NULL OR TRIM(developer) = '' "
+                                             "   OR publisher IS NULL OR TRIM(publisher) = '' "
+                                             "   OR release_year IS NULL "
+                                             "   OR release_date IS NULL OR TRIM(release_date) = '' "
+                                             "   OR description IS NULL OR TRIM(description) = '' "
+                                             "   OR players_max IS NULL ";
 
 // Libretro matches by CRC32 or serial — only run when hash-linked games still have gaps.
 bool hasLibretroMetadataGaps(QSqlDatabase &db, QString &error) {
@@ -111,13 +110,12 @@ bool hasIgdbBulkMetadataGaps(QSqlDatabase &db, QString &error) {
 }
 
 // OpenVGDB does not provide players_max or rating.
-static const char kOpenVgdbMetadataGapSql[] =
-    "genre IS NULL OR TRIM(genre) = '' "
-    "   OR developer IS NULL OR TRIM(developer) = '' "
-    "   OR publisher IS NULL OR TRIM(publisher) = '' "
-    "   OR release_year IS NULL "
-    "   OR release_date IS NULL OR TRIM(release_date) = '' "
-    "   OR description IS NULL OR TRIM(description) = '' ";
+static const char kOpenVgdbMetadataGapSql[] = "genre IS NULL OR TRIM(genre) = '' "
+                                              "   OR developer IS NULL OR TRIM(developer) = '' "
+                                              "   OR publisher IS NULL OR TRIM(publisher) = '' "
+                                              "   OR release_year IS NULL "
+                                              "   OR release_date IS NULL OR TRIM(release_date) = '' "
+                                              "   OR description IS NULL OR TRIM(description) = '' ";
 
 // OpenVGDB matches by crc32/md5 — only run when hash-linked games still have gaps.
 bool hasOpenVgdbGaps(QSqlDatabase &db, QString &error) {
@@ -258,8 +256,8 @@ static void addTreeToEnrichmentFingerprint(QCryptographicHash &hash, const QStri
 }
 
 QString computeEnrichmentInputsFingerprint(const QString &metadataDir, const QString &gametdbDir,
-    const QString &openvgdbPath, const QString &mameCatverPath, const QString &mameListXmlPath,
-    const QString &credPath, const QStringList &sourceFilter) {
+    const QString &openvgdbPath, const QString &mameCatverPath, const QString &mameListXmlPath, const QString &credPath,
+    const QStringList &sourceFilter) {
     QCryptographicHash hash(QCryptographicHash::Sha256);
 
     auto addLabeledTree = [&](const char *label, const QString &path) {

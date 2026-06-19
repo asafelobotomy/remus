@@ -129,7 +129,7 @@ namespace {
 
         QSqlQuery query(libraryDb);
         query.prepare(QStringLiteral("SELECT crc32, md5, sha1 FROM files WHERE id IN (%1) AND hash_calculated = 1")
-                         .arg(placeholders.join(QLatin1Char(','))));
+                .arg(placeholders.join(QLatin1Char(','))));
         for (int fileId : ownedFileIds)
             query.addBindValue(fileId);
 
@@ -150,8 +150,8 @@ namespace {
         return hashes;
     }
 
-    DiscTrackCompleteness trackGapForDiscSet(QSqlDatabase &compendiumDb, qint64 discSetId, int discNumber,
-        const QSet<QString> &ownedHashes) {
+    DiscTrackCompleteness trackGapForDiscSet(
+        QSqlDatabase &compendiumDb, qint64 discSetId, int discNumber, const QSet<QString> &ownedHashes) {
         DiscTrackCompleteness gap;
         gap.discNumber = discNumber;
 
@@ -187,8 +187,8 @@ namespace {
         return gap;
     }
 
-    DiscSetCompletenessReport buildReportForSetKey(QSqlDatabase &compendiumDb, QSqlDatabase &libraryDb,
-        const QString &setKey, const QList<int> &ownedFileIds) {
+    DiscSetCompletenessReport buildReportForSetKey(
+        QSqlDatabase &compendiumDb, QSqlDatabase &libraryDb, const QString &setKey, const QList<int> &ownedFileIds) {
         DiscSetCompletenessReport report;
         report.setKey = setKey;
         if (setKey.isEmpty() || !compendiumDiscSetsAvailable(compendiumDb))
@@ -231,9 +231,9 @@ namespace {
                 const int libraryDiscNumber = fileDiscQuery.value(0).toInt();
                 if (libraryDiscNumber > 0 && ctx.discNumber > 0 && libraryDiscNumber != ctx.discNumber) {
                     report.warnings.append(QStringLiteral("File %1: library disc %2, catalog disc %3")
-                                               .arg(fileId)
-                                               .arg(libraryDiscNumber)
-                                               .arg(ctx.discNumber));
+                            .arg(fileId)
+                            .arg(libraryDiscNumber)
+                            .arg(ctx.discNumber));
                 }
             }
         }
@@ -362,8 +362,8 @@ QList<DiscSetCompletenessReport> computeDiscSetCompleteness(QSqlDatabase &compen
     return reports;
 }
 
-DiscSetCompletenessReport computeDiscSetCompletenessBySetKey(QSqlDatabase &compendiumDb, QSqlDatabase &libraryDb,
-    const QString &setKey, const QList<int> &ownedFileIds) {
+DiscSetCompletenessReport computeDiscSetCompletenessBySetKey(
+    QSqlDatabase &compendiumDb, QSqlDatabase &libraryDb, const QString &setKey, const QList<int> &ownedFileIds) {
     return buildReportForSetKey(compendiumDb, libraryDb, setKey, ownedFileIds);
 }
 

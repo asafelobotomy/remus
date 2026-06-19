@@ -46,9 +46,10 @@ namespace Compendium {
                 QStringLiteral("UPDATE OR IGNORE game_facts"
                                " SET game_id = (SELECT winner_id FROM _dedup_map WHERE loser_id = game_facts.game_id)"
                                " WHERE game_id IN (SELECT loser_id FROM _dedup_map)"),
-                QStringLiteral("UPDATE OR IGNORE game_disc_sets"
-                               " SET game_id = (SELECT winner_id FROM _dedup_map WHERE loser_id = game_disc_sets.game_id)"
-                               " WHERE game_id IN (SELECT loser_id FROM _dedup_map)"),
+                QStringLiteral(
+                    "UPDATE OR IGNORE game_disc_sets"
+                    " SET game_id = (SELECT winner_id FROM _dedup_map WHERE loser_id = game_disc_sets.game_id)"
+                    " WHERE game_id IN (SELECT loser_id FROM _dedup_map)"),
             };
             for (const QString &sql : updates) {
                 if (!q.exec(sql)) {

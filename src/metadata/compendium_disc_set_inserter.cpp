@@ -10,19 +10,19 @@
 namespace Remus {
 namespace Compendium {
 
-namespace {
+    namespace {
 
-    QString blockKeyForRecord(const SourceRecordEnvelope &rec) {
-        const QString blockName = rec.datGameBlockName.isEmpty() ? rec.titleRaw : rec.datGameBlockName;
-        return rec.sourceId + QLatin1Char('|') + rec.snapshotId + QLatin1Char('|') + blockName;
-    }
+        QString blockKeyForRecord(const SourceRecordEnvelope &rec) {
+            const QString blockName = rec.datGameBlockName.isEmpty() ? rec.titleRaw : rec.datGameBlockName;
+            return rec.sourceId + QLatin1Char('|') + rec.snapshotId + QLatin1Char('|') + blockName;
+        }
 
-    QString setKeyForRecord(const SourceRecordEnvelope &rec) {
-        const QString title = rec.datGameBlockName.isEmpty() ? rec.titleRaw : rec.datGameBlockName;
-        return DiscSetKey::compute(rec.resolvedSystemId, title, rec.resolvedRegionCode);
-    }
+        QString setKeyForRecord(const SourceRecordEnvelope &rec) {
+            const QString title = rec.datGameBlockName.isEmpty() ? rec.titleRaw : rec.datGameBlockName;
+            return DiscSetKey::compute(rec.resolvedSystemId, title, rec.resolvedRegionCode);
+        }
 
-} // namespace
+    } // namespace
 
     QHash<QString, int> DiscSetInserter::effectiveDiscCounts(const QList<SourceRecordEnvelope> &records) {
         QHash<QString, int> explicitCount;
@@ -71,11 +71,12 @@ namespace {
 
         const QString setKey = setKeyForRecord(blockRepresentative);
         const int discNumber = blockRepresentative.parsedDiscNumber;
-        const int discCount = effectiveDiscCount > 0 ? effectiveDiscCount : qMax(blockRepresentative.parsedDiscCount, 1);
+        const int discCount
+            = effectiveDiscCount > 0 ? effectiveDiscCount : qMax(blockRepresentative.parsedDiscCount, 1);
         const QString setVariant
             = blockRepresentative.parsedSetVariant.isNull() ? QStringLiteral("") : blockRepresentative.parsedSetVariant;
-        const QString setRole = blockRepresentative.parsedSetRole.isEmpty() ? QStringLiteral("game")
-                                                                            : blockRepresentative.parsedSetRole;
+        const QString setRole
+            = blockRepresentative.parsedSetRole.isEmpty() ? QStringLiteral("game") : blockRepresentative.parsedSetRole;
 
         QSqlQuery qInsert(db);
         qInsert.prepare(QStringLiteral("INSERT OR IGNORE INTO game_disc_sets "
@@ -92,8 +93,8 @@ namespace {
         qInsert.addBindValue(blockRepresentative.sourceId);
         qInsert.addBindValue(blockRepresentative.snapshotId);
         qInsert.addBindValue(sourceItemId > 0 ? QVariant(sourceItemId) : QVariant());
-        qInsert.addBindValue(blockRepresentative.primaryContentSha1.isEmpty() ? QVariant()
-                                                                              : blockRepresentative.primaryContentSha1);
+        qInsert.addBindValue(
+            blockRepresentative.primaryContentSha1.isEmpty() ? QVariant() : blockRepresentative.primaryContentSha1);
 
         if (!qInsert.exec()) {
             error = QStringLiteral("disc set insert failed: %1").arg(qInsert.lastError().text());
@@ -214,8 +215,7 @@ namespace {
 
                 const QString setKey = setKeyForRecord(rec);
                 const int effectiveDiscCount = discCounts.value(setKey, qMax(rec.parsedDiscCount, 1));
-                discSetId = DiscSetInserter::ensureDiscSet(
-                    rec, effectiveDiscCount, sourceItemId, db, stats, error);
+                discSetId = DiscSetInserter::ensureDiscSet(rec, effectiveDiscCount, sourceItemId, db, stats, error);
                 if (discSetId < 0) {
                     if (error.isEmpty())
                         error = QStringLiteral("failed to upsert disc set for block %1").arg(blockKey);

@@ -151,9 +151,7 @@ bool enrichFromLibretroMetadata(
         if (!hasData)
             continue;
 
-        const QString releaseDate = meta.releaseYear > 0
-            ? QStringLiteral("%1-01-01").arg(meta.releaseYear)
-            : QString();
+        const QString releaseDate = meta.releaseYear > 0 ? QStringLiteral("%1-01-01").arg(meta.releaseYear) : QString();
 
         updateQuery.bindValue(0, nullableText(meta.genre));
         updateQuery.bindValue(1, nullableText(meta.developer));

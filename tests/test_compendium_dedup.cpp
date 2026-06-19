@@ -210,10 +210,11 @@ void CompendiumDedupTest::deduplicateGames_reassignsDiscSets() {
     QVERIFY(execSql(db, QStringLiteral("INSERT INTO games VALUES ('dup-2', 1, 'Duplicate Game', NULL)")));
     QVERIFY(
         execSql(db, QStringLiteral("INSERT INTO game_signatures (game_id, hash_value) VALUES ('dup-2', 'abc123')")));
-    QVERIFY(execSql(db, QStringLiteral("INSERT INTO game_disc_sets (game_id, set_key, disc_number, disc_count, "
-                                      "set_variant, set_role, title_disc, source_id, snapshot_id) "
-                                      "VALUES ('dup-1', 'setkey1', 1, 1, '', 'game', 'Duplicate Game', 'redump', "
-                                      "'snap')")));
+    QVERIFY(execSql(db,
+        QStringLiteral("INSERT INTO game_disc_sets (game_id, set_key, disc_number, disc_count, "
+                       "set_variant, set_role, title_disc, source_id, snapshot_id) "
+                       "VALUES ('dup-1', 'setkey1', 1, 1, '', 'game', 'Duplicate Game', 'redump', "
+                       "'snap')")));
 
     QString error;
     QCOMPARE(deduplicateGames(db, error), 1);

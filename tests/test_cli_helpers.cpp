@@ -123,7 +123,8 @@ static bool seedCompendiumDatabase(const QString &rootPath) {
                 QStringLiteral("CREATE TABLE games (game_id TEXT PRIMARY KEY, system_id INTEGER NOT NULL, "
                                "canonical_title TEXT NOT NULL, primary_region_code TEXT, release_date TEXT, "
                                "release_year INTEGER, developer TEXT, publisher TEXT, genre TEXT, players_max INTEGER, "
-                               "description TEXT, rating REAL, canonical_confidence REAL NOT NULL DEFAULT 0)"))
+                               "description TEXT, rating REAL, igdb_id TEXT, ra_game_id TEXT, "
+                               "canonical_confidence REAL NOT NULL DEFAULT 0)"))
             && execSql(db,
                 QStringLiteral("CREATE TABLE game_signatures (signature_id INTEGER PRIMARY KEY AUTOINCREMENT, game_id "
                                "TEXT NOT NULL, hash_type TEXT NOT NULL, hash_value TEXT NOT NULL, source_id TEXT NOT "
