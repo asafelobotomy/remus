@@ -62,8 +62,8 @@ void CompendiumHasheousOfflineTest::lookupHasheousOfflineMatch_findsByAnyHashTyp
     index.insert(QStringLiteral("md5:0123456789abcdef0123456789abcdef"), expected);
 
     HasheousOfflineMatch out;
-    QVERIFY(lookupHasheousOfflineMatch(index, QString(), QStringLiteral("0123456789abcdef0123456789abcdef"),
-        QString(), QString(), out));
+    QVERIFY(lookupHasheousOfflineMatch(
+        index, QString(), QStringLiteral("0123456789abcdef0123456789abcdef"), QString(), QString(), out));
     QCOMPARE(out.igdbId, QStringLiteral("1"));
 }
 

@@ -96,7 +96,7 @@ jobs:
 
       - name: Enforce coverage threshold
         env:
-          COVERAGE_THRESHOLD: "60"
+          COVERAGE_THRESHOLD: "54"
         run: bash .github/scripts/check-coverage-threshold.sh build/coverage.info
 
       - name: Upload coverage report

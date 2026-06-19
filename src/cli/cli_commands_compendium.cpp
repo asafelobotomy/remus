@@ -189,8 +189,8 @@ int handleBuildCompendiumCommand(CliContext &ctx) {
     if (buildPlan.mode == CompendiumBuildMode::Skip) {
         bool manifestDrift = false;
         {
-            const QString connectionName = QStringLiteral("compendium-manifest-drift-")
-                + QUuid::createUuid().toString(QUuid::WithoutBraces);
+            const QString connectionName
+                = QStringLiteral("compendium-manifest-drift-") + QUuid::createUuid().toString(QUuid::WithoutBraces);
             QSqlDatabase database = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), connectionName);
             database.setDatabaseName(finalOutputPath);
             if (database.open()) {
@@ -198,8 +198,7 @@ int handleBuildCompendiumCommand(CliContext &ctx) {
                 if (query.exec(QStringLiteral("SELECT source_manifest_json FROM compendium_builds "
                                               "ORDER BY built_at DESC LIMIT 1"))
                     && query.next()) {
-                    manifestDrift
-                        = normalizeManifestJson(query.value(0).toString()) != normalizedManifestJson;
+                    manifestDrift = normalizeManifestJson(query.value(0).toString()) != normalizedManifestJson;
                 }
                 releaseDatabase(database, connectionName);
             } else {
@@ -209,8 +208,8 @@ int handleBuildCompendiumCommand(CliContext &ctx) {
 
         if (manifestDrift) {
             qInfo() << "[build-compendium] Source checksums unchanged — syncing manifest metadata.";
-            const QString connectionName = QStringLiteral("compendium-manifest-sync-")
-                + QUuid::createUuid().toString(QUuid::WithoutBraces);
+            const QString connectionName
+                = QStringLiteral("compendium-manifest-sync-") + QUuid::createUuid().toString(QUuid::WithoutBraces);
             QSqlDatabase database = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), connectionName);
             database.setDatabaseName(finalOutputPath);
             if (!database.open()) {
@@ -271,7 +270,8 @@ int handleBuildCompendiumCommand(CliContext &ctx) {
             qCritical() << "✗ Failed to start enrichment metadata transaction:" << database.lastError().text();
             return 1;
         }
-        if (!syncManifestSourcesToDatabase(database, sources, { }, buildId, schemaVersion, normalizedManifestJson, error)) {
+        if (!syncManifestSourcesToDatabase(
+                database, sources, { }, buildId, schemaVersion, normalizedManifestJson, error)) {
             database.rollback();
             qCritical().noquote() << QStringLiteral("✗ %1").arg(error);
             releaseDatabase(database, connectionName);
@@ -323,8 +323,8 @@ int handleBuildCompendiumCommand(CliContext &ctx) {
         report.insert(QStringLiteral("schema_version"), schemaVersion);
         report.insert(QStringLiteral("duration_ms"), static_cast<qint64>(timer.elapsed()));
 
-        int conflictsCount = scalarCount(
-            database, QStringLiteral("SELECT COUNT(*) FROM merge_conflicts WHERE resolution_status = 'unresolved'"), error);
+        int conflictsCount = scalarCount(database,
+            QStringLiteral("SELECT COUNT(*) FROM merge_conflicts WHERE resolution_status = 'unresolved'"), error);
         if (conflictsCount < 0) {
             qCritical().noquote() << QStringLiteral("✗ Failed to count unresolved conflicts: %1").arg(error);
             releaseDatabase(database, connectionName);
@@ -377,9 +377,7 @@ int handleBuildCompendiumCommand(CliContext &ctx) {
         return 1;
     }
 
-    {
-        applyCompendiumBuildPragmas(database);
-    }
+    { applyCompendiumBuildPragmas(database); }
 
     if (!incrementalIngest) {
         for (const QString &scriptPath : sqlScripts) {
@@ -438,9 +436,10 @@ int handleBuildCompendiumCommand(CliContext &ctx) {
             }
 
             QSqlQuery snapshotQuery(database);
-            snapshotQuery.prepare(QStringLiteral("INSERT INTO source_snapshots (snapshot_id, source_id, snapshot_label, "
-                                                 "snapshot_ref, fetched_at, checksum_sha256) "
-                                                 "VALUES (?, ?, ?, ?, ?, ?)"));
+            snapshotQuery.prepare(
+                QStringLiteral("INSERT INTO source_snapshots (snapshot_id, source_id, snapshot_label, "
+                               "snapshot_ref, fetched_at, checksum_sha256) "
+                               "VALUES (?, ?, ?, ?, ?, ?)"));
             snapshotQuery.addBindValue(source.snapshotId);
             snapshotQuery.addBindValue(source.sourceId);
             snapshotQuery.addBindValue(source.snapshotLabel);
@@ -468,8 +467,8 @@ int handleBuildCompendiumCommand(CliContext &ctx) {
             releaseDatabase(database, connectionName);
             return 1;
         }
-        if (!syncManifestSourcesToDatabase(database, sources, buildPlan.sourcesToIngest, buildId, schemaVersion,
-                normalizedManifestJson, error)) {
+        if (!syncManifestSourcesToDatabase(
+                database, sources, buildPlan.sourcesToIngest, buildId, schemaVersion, normalizedManifestJson, error)) {
             database.rollback();
             qCritical().noquote() << QStringLiteral("✗ %1").arg(error);
             releaseDatabase(database, connectionName);
@@ -563,8 +562,7 @@ int handleBuildCompendiumCommand(CliContext &ctx) {
         runOptions.preloadIdentityLinker = true;
     }
 
-    const Remus::Compendium::CompilerStats stats
-        = service.run(buildConfig, database, error, onProgress, runOptions);
+    const Remus::Compendium::CompilerStats stats = service.run(buildConfig, database, error, onProgress, runOptions);
     if (!error.isEmpty()) {
         database.rollback();
         qCritical().noquote() << QStringLiteral("✗ Compiler service failed: %1").arg(error);
@@ -672,8 +670,8 @@ int handleBuildCompendiumCommand(CliContext &ctx) {
     insertEnrichmentStatsReportFields(report, enrichStats, QStringLiteral("post_enrich_resolved_fields"));
     report.insert(QStringLiteral("enrichment_inputs_fingerprint"), enrichmentFingerprint);
     report.insert(QStringLiteral("duration_ms"), static_cast<qint64>(timer.elapsed()));
-    report.insert(QStringLiteral("build_mode"), incrementalIngest ? QStringLiteral("incremental_ingest")
-                                                                    : QStringLiteral("full_rebuild"));
+    report.insert(QStringLiteral("build_mode"),
+        incrementalIngest ? QStringLiteral("incremental_ingest") : QStringLiteral("full_rebuild"));
 
     if (!writeReport(reportPath, report, error)) {
         qCritical().noquote() << QStringLiteral("✗ %1").arg(error);

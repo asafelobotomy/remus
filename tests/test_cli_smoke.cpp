@@ -553,8 +553,7 @@ private slots:
         runCliCapture(
             { "--build-compendium", "--compendium-manifest", manifestPath, "--compendium-output", outputDbPath },
             secondOutput);
-        QVERIFY2(
-            secondOutput.contains("skipping rebuild", Qt::CaseInsensitive), qPrintable(secondOutput));
+        QVERIFY2(secondOutput.contains("skipping rebuild", Qt::CaseInsensitive), qPrintable(secondOutput));
 
         writeManifest(false);
 
@@ -1005,7 +1004,7 @@ private slots:
 
         QString secondOutput;
         runCliCapture({ QStringLiteral("--build-compendium"), QStringLiteral("--compendium-manifest"), manifestPath,
-                           QStringLiteral("--compendium-output"), outputDbPath },
+                          QStringLiteral("--compendium-output"), outputDbPath },
             secondOutput);
         QVERIFY2(secondOutput.contains(QStringLiteral("enrichment-only refresh"), Qt::CaseInsensitive),
             qPrintable(secondOutput));
@@ -1080,10 +1079,10 @@ private slots:
 
         QString secondOutput;
         runCliCapture({ QStringLiteral("--build-compendium"), QStringLiteral("--compendium-manifest"), manifestPath,
-                           QStringLiteral("--compendium-output"), outputDbPath },
+                          QStringLiteral("--compendium-output"), outputDbPath },
             secondOutput);
-        QVERIFY2(secondOutput.contains(QStringLiteral("Incremental ingest"), Qt::CaseInsensitive),
-            qPrintable(secondOutput));
+        QVERIFY2(
+            secondOutput.contains(QStringLiteral("Incremental ingest"), Qt::CaseInsensitive), qPrintable(secondOutput));
 
         QFile reportFile(dir.filePath(QStringLiteral("remus_compendium_incremental.report.json")));
         QVERIFY(reportFile.open(QIODevice::ReadOnly | QIODevice::Text));

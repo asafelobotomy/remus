@@ -8,8 +8,8 @@ namespace Compendium {
 
     namespace {
 
-        bool execBoundDelete(QSqlDatabase &db, const QString &sql, const QString &sourceId, QString &error,
-            const char *label) {
+        bool execBoundDelete(
+            QSqlDatabase &db, const QString &sql, const QString &sourceId, QString &error, const char *label) {
             QSqlQuery q(db);
             if (!q.prepare(sql)) {
                 error = QStringLiteral("%1 prepare: %2").arg(QLatin1String(label), q.lastError().text());
@@ -33,7 +33,7 @@ namespace Compendium {
 
         if (!execBoundDelete(db,
                 QStringLiteral("DELETE FROM game_disc_tracks WHERE disc_set_id IN "
-                                 "(SELECT disc_set_id FROM game_disc_sets WHERE source_id = ?)"),
+                               "(SELECT disc_set_id FROM game_disc_sets WHERE source_id = ?)"),
                 sourceId, error, "purge disc tracks")) {
             return false;
         }
@@ -45,14 +45,14 @@ namespace Compendium {
 
         if (!execBoundDelete(db,
                 QStringLiteral("DELETE FROM game_disc_tracks WHERE signature_id IN "
-                                 "(SELECT signature_id FROM game_signatures WHERE source_id = ?)"),
+                               "(SELECT signature_id FROM game_signatures WHERE source_id = ?)"),
                 sourceId, error, "purge disc tracks by signature")) {
             return false;
         }
 
         if (!execBoundDelete(db,
                 QStringLiteral("DELETE FROM canonical_resolution WHERE selected_fact_id IN "
-                                 "(SELECT fact_id FROM game_facts WHERE source_id = ?)"),
+                               "(SELECT fact_id FROM game_facts WHERE source_id = ?)"),
                 sourceId, error, "purge canonical resolution rows")) {
             return false;
         }

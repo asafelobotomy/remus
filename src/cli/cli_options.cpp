@@ -194,8 +194,8 @@ void registerAllOptions(QCommandLineParser &parser, QSet<QString> &actionOptions
         "preset"));
 
     addActionOption(QCommandLineOption("build-compendium", "Build a canonical compendium database from a manifest"));
-    addActionOption(QCommandLineOption(
-        "force-full-rebuild", "Force a full compendium rebuild even when incremental or enrichment-only refresh is possible"));
+    addActionOption(QCommandLineOption("force-full-rebuild",
+        "Force a full compendium rebuild even when incremental or enrichment-only refresh is possible"));
     addActionOption(QCommandLineOption(
         "dedup-compendium", "Prune bad serial rows and merge duplicate games in an existing compendium database"));
     addActionOption(QCommandLineOption(

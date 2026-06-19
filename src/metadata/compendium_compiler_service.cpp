@@ -240,8 +240,8 @@ namespace Compendium {
         const int totalEnabled = toProcess.size();
         int processed = 0;
 
-        const int parallelism = options.extractParallelism <= 0 ? qMax(1, QThread::idealThreadCount())
-                                                                : options.extractParallelism;
+        const int parallelism
+            = options.extractParallelism <= 0 ? qMax(1, QThread::idealThreadCount()) : options.extractParallelism;
 
         const auto extractSource = [&](const CompendiumSourceConfig &src) -> SourceExtractBatch {
             SourceExtractBatch batch;
@@ -270,7 +270,8 @@ namespace Compendium {
                 batches.append(extractSource(src));
             }
         } else {
-            qInfo().noquote() << QStringLiteral("[CompendiumCompilerService] Parallel DAT extraction (%1 workers, %2 sources)")
+            qInfo().noquote() << QStringLiteral(
+                "[CompendiumCompilerService] Parallel DAT extraction (%1 workers, %2 sources)")
                                      .arg(parallelism)
                                      .arg(toProcess.size());
             batches = QtConcurrent::blockingMapped(toProcess, extractSource);

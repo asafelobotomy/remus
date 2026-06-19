@@ -758,8 +758,7 @@ bool planCompendiumBuild(const QString &dbPath, int schemaVersion, const QList<C
         }
         const QString storedChecksum = latestChecksumForSource(db, source.sourceId);
         const QString manifestChecksum = source.checksumSha256.trimmed();
-        if (storedChecksum.isEmpty()
-            || manifestChecksum.compare(storedChecksum, Qt::CaseInsensitive) != 0) {
+        if (storedChecksum.isEmpty() || manifestChecksum.compare(storedChecksum, Qt::CaseInsensitive) != 0) {
             plan.sourcesToIngest.insert(source.sourceId);
         }
     }
@@ -794,12 +793,13 @@ bool syncManifestSourcesToDatabase(QSqlDatabase &db, const QList<CompendiumSourc
     const QSet<QString> &changedSourceIds, const QString &buildId, int schemaVersion,
     const QString &normalizedManifestJson, QString &error) {
     QSqlQuery buildQuery(db);
-    buildQuery.prepare(QStringLiteral("INSERT INTO compendium_builds (build_id, schema_version, built_at, source_manifest_json, notes) "
-                                     "VALUES (?, ?, ?, ?, ?) "
-                                     "ON CONFLICT(build_id) DO UPDATE SET "
-                                     "schema_version = excluded.schema_version, "
-                                     "built_at = excluded.built_at, "
-                                     "source_manifest_json = excluded.source_manifest_json"));
+    buildQuery.prepare(QStringLiteral(
+        "INSERT INTO compendium_builds (build_id, schema_version, built_at, source_manifest_json, notes) "
+        "VALUES (?, ?, ?, ?, ?) "
+        "ON CONFLICT(build_id) DO UPDATE SET "
+        "schema_version = excluded.schema_version, "
+        "built_at = excluded.built_at, "
+        "source_manifest_json = excluded.source_manifest_json"));
     buildQuery.addBindValue(buildId);
     buildQuery.addBindValue(schemaVersion);
     buildQuery.addBindValue(QDateTime::currentDateTimeUtc().toString(Qt::ISODate));

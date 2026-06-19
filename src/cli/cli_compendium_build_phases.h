@@ -179,9 +179,9 @@ struct CompendiumBuildPlan {
  * Compares per-source @c checksum_sha256 values against @c source_snapshots rather than
  * requiring an exact manifest JSON match (daily @c build_id churn is ignored).
  */
-bool planCompendiumBuild(const QString &dbPath, int schemaVersion, const QList<Remus::CompendiumSourceDescriptor> &sources,
-    const QString &enrichmentFingerprint, bool forceFullRebuild, bool reportExists, CompendiumBuildPlan &plan,
-    QString &error);
+bool planCompendiumBuild(const QString &dbPath, int schemaVersion,
+    const QList<Remus::CompendiumSourceDescriptor> &sources, const QString &enrichmentFingerprint,
+    bool forceFullRebuild, bool reportExists, CompendiumBuildPlan &plan, QString &error);
 
 /// Upsert manifest source metadata and insert snapshot rows for changed sources.
 bool syncManifestSourcesToDatabase(QSqlDatabase &db, const QList<Remus::CompendiumSourceDescriptor> &sources,

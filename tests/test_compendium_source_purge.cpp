@@ -22,8 +22,7 @@ QString openPurgeDb(QSqlDatabase &db) {
     if (!db.open())
         return { };
 
-    const bool ok = execSql(db,
-                        QStringLiteral("CREATE TABLE games (game_id TEXT PRIMARY KEY)"))
+    const bool ok = execSql(db, QStringLiteral("CREATE TABLE games (game_id TEXT PRIMARY KEY)"))
         && execSql(db,
             QStringLiteral("CREATE TABLE source_items ("
                            "source_item_id INTEGER PRIMARY KEY AUTOINCREMENT,"
@@ -102,21 +101,27 @@ void CompendiumSourcePurgeTest::purgeSourceIngestData_removesIngestRowsButKeepsG
     const QString purgeSource = QStringLiteral("purge-source");
 
     QVERIFY(execSql(db, QStringLiteral("INSERT INTO games VALUES ('game-1')")));
-    QVERIFY(execSql(db, QStringLiteral("INSERT INTO source_items (source_id) VALUES ('%1'), ('%2')")
-                .arg(keepSource, purgeSource)));
-    QVERIFY(execSql(db, QStringLiteral("INSERT INTO game_signatures (game_id, source_id) VALUES ('game-1', '%1'), ('game-1', '%2')")
-                .arg(keepSource, purgeSource)));
-    QVERIFY(execSql(db, QStringLiteral("INSERT INTO game_serials (game_id, source_id) VALUES ('game-1', '%1'), ('game-1', '%2')")
-                .arg(keepSource, purgeSource)));
-    QVERIFY(execSql(db, QStringLiteral("INSERT INTO game_names (game_id, source_id) VALUES ('game-1', '%1'), ('game-1', '%2')")
-                .arg(keepSource, purgeSource)));
-    QVERIFY(execSql(db, QStringLiteral("INSERT INTO game_facts (game_id, source_id) VALUES ('game-1', '%1'), ('game-1', '%2')")
-                .arg(keepSource, purgeSource)));
-    QVERIFY(execSql(db, QStringLiteral("INSERT INTO game_disc_sets (game_id, source_id) VALUES ('game-1', '%1'), ('game-1', '%2')")
-                .arg(keepSource, purgeSource)));
+    QVERIFY(execSql(
+        db, QStringLiteral("INSERT INTO source_items (source_id) VALUES ('%1'), ('%2')").arg(keepSource, purgeSource)));
+    QVERIFY(execSql(db,
+        QStringLiteral("INSERT INTO game_signatures (game_id, source_id) VALUES ('game-1', '%1'), ('game-1', '%2')")
+            .arg(keepSource, purgeSource)));
+    QVERIFY(execSql(db,
+        QStringLiteral("INSERT INTO game_serials (game_id, source_id) VALUES ('game-1', '%1'), ('game-1', '%2')")
+            .arg(keepSource, purgeSource)));
+    QVERIFY(execSql(db,
+        QStringLiteral("INSERT INTO game_names (game_id, source_id) VALUES ('game-1', '%1'), ('game-1', '%2')")
+            .arg(keepSource, purgeSource)));
+    QVERIFY(execSql(db,
+        QStringLiteral("INSERT INTO game_facts (game_id, source_id) VALUES ('game-1', '%1'), ('game-1', '%2')")
+            .arg(keepSource, purgeSource)));
+    QVERIFY(execSql(db,
+        QStringLiteral("INSERT INTO game_disc_sets (game_id, source_id) VALUES ('game-1', '%1'), ('game-1', '%2')")
+            .arg(keepSource, purgeSource)));
 
     QSqlQuery discSetQ(db);
-    QVERIFY(discSetQ.exec(QStringLiteral("SELECT disc_set_id FROM game_disc_sets WHERE source_id = '%1'").arg(purgeSource)));
+    QVERIFY(discSetQ.exec(
+        QStringLiteral("SELECT disc_set_id FROM game_disc_sets WHERE source_id = '%1'").arg(purgeSource)));
     QVERIFY(discSetQ.next());
     const int purgeDiscSetId = discSetQ.value(0).toInt();
     QVERIFY(execSql(db, QStringLiteral("INSERT INTO game_disc_tracks (disc_set_id) VALUES (%1)").arg(purgeDiscSetId)));

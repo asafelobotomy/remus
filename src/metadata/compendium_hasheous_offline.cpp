@@ -68,7 +68,8 @@ namespace Compendium {
             return { };
         }
 
-        void indexRomHashes(const QJsonArray &roms, const HasheousOfflineMatch &match, QHash<QString, HasheousOfflineMatch> &index) {
+        void indexRomHashes(
+            const QJsonArray &roms, const HasheousOfflineMatch &match, QHash<QString, HasheousOfflineMatch> &index) {
             for (const QJsonValue &romValue : roms) {
                 if (!romValue.isObject())
                     continue;
@@ -83,7 +84,8 @@ namespace Compendium {
                     { "Sha256", "sha256" },
                 };
                 for (const auto &hk : hashKeys) {
-                    const QString key = normalizedHashKey(QString::fromLatin1(hk.type), rom.value(QString::fromLatin1(hk.jsonKey)).toString());
+                    const QString key = normalizedHashKey(
+                        QString::fromLatin1(hk.type), rom.value(QString::fromLatin1(hk.jsonKey)).toString());
                     if (!key.isEmpty())
                         index.insert(key, match);
                 }
@@ -111,7 +113,8 @@ namespace Compendium {
                     match.raGameId = id;
             }
 
-            if (match.igdbId.isEmpty() && match.description.isEmpty() && match.genre.isEmpty() && match.raGameId.isEmpty())
+            if (match.igdbId.isEmpty() && match.description.isEmpty() && match.genre.isEmpty()
+                && match.raGameId.isEmpty())
                 return;
 
             const QJsonArray roms = root.value(QStringLiteral("ROMs")).toArray();
@@ -135,8 +138,8 @@ namespace Compendium {
                     { "Sha256", "sha256" },
                 };
                 for (const auto &hk : hashKeys) {
-                    const QString key
-                        = normalizedHashKey(QString::fromLatin1(hk.type), sig.value(QString::fromLatin1(hk.jsonKey)).toString());
+                    const QString key = normalizedHashKey(
+                        QString::fromLatin1(hk.type), sig.value(QString::fromLatin1(hk.jsonKey)).toString());
                     if (!key.isEmpty())
                         index.insert(key, match);
                 }
@@ -166,8 +169,8 @@ namespace Compendium {
             return QString::fromLatin1(hash.result().toHex());
         }
 
-        bool loadIndexFromCache(
-            const QString &cachePath, const QString &fingerprint, QHash<QString, HasheousOfflineMatch> &index, QString &error) {
+        bool loadIndexFromCache(const QString &cachePath, const QString &fingerprint,
+            QHash<QString, HasheousOfflineMatch> &index, QString &error) {
             if (!QFileInfo::exists(cachePath))
                 return false;
 
@@ -188,7 +191,8 @@ namespace Compendium {
             }
 
             QSqlQuery q(db);
-            if (!q.exec(QStringLiteral("SELECT hash_key, igdb_id, description, genre, ra_game_id FROM offline_hash_lookup"))) {
+            if (!q.exec(QStringLiteral(
+                    "SELECT hash_key, igdb_id, description, genre, ra_game_id FROM offline_hash_lookup"))) {
                 error = q.lastError().text();
                 db.close();
                 QSqlDatabase::removeDatabase(conn);
@@ -209,8 +213,8 @@ namespace Compendium {
             return !index.isEmpty();
         }
 
-        bool saveIndexToCache(
-            const QString &cachePath, const QString &fingerprint, const QHash<QString, HasheousOfflineMatch> &index, QString &error) {
+        bool saveIndexToCache(const QString &cachePath, const QString &fingerprint,
+            const QHash<QString, HasheousOfflineMatch> &index, QString &error) {
             if (QFileInfo::exists(cachePath))
                 QFile::remove(cachePath);
 
@@ -225,8 +229,9 @@ namespace Compendium {
             QSqlQuery q(db);
             const QStringList ddl = {
                 QStringLiteral("CREATE TABLE cache_meta (key TEXT PRIMARY KEY, value TEXT NOT NULL)"),
-                QStringLiteral("CREATE TABLE offline_hash_lookup ("
-                               "hash_key TEXT PRIMARY KEY, igdb_id TEXT, description TEXT, genre TEXT, ra_game_id TEXT)"),
+                QStringLiteral(
+                    "CREATE TABLE offline_hash_lookup ("
+                    "hash_key TEXT PRIMARY KEY, igdb_id TEXT, description TEXT, genre TEXT, ra_game_id TEXT)"),
             };
             for (const QString &sql : ddl) {
                 if (!q.exec(sql)) {
@@ -284,7 +289,8 @@ namespace Compendium {
             return true;
         }
 
-        bool buildIndexFromDumpDir(const QString &dumpDir, QHash<QString, HasheousOfflineMatch> &index, QString &error) {
+        bool buildIndexFromDumpDir(
+            const QString &dumpDir, QHash<QString, HasheousOfflineMatch> &index, QString &error) {
             index.clear();
             int parsedFiles = 0;
             QDirIterator it(dumpDir, { QStringLiteral("*.json") }, QDir::Files, QDirIterator::Subdirectories);
@@ -340,7 +346,8 @@ namespace Compendium {
 
         QString cacheError;
         if (!saveIndexToCache(cachePath, fingerprint, indexByHash, cacheError))
-            qWarning().noquote() << QStringLiteral("[Hasheous offline] Cache write failed (non-fatal): %1").arg(cacheError);
+            qWarning().noquote()
+                << QStringLiteral("[Hasheous offline] Cache write failed (non-fatal): %1").arg(cacheError);
         return true;
     }
 

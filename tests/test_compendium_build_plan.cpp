@@ -27,8 +27,7 @@ QString notesWithFingerprint(const QString &fingerprint) {
     return QString::fromUtf8(QJsonDocument(notes).toJson(QJsonDocument::Compact));
 }
 
-CompendiumSourceDescriptor makeDatSource(
-    const QString &sourceId, const QString &checksum, bool enabled = true) {
+CompendiumSourceDescriptor makeDatSource(const QString &sourceId, const QString &checksum, bool enabled = true) {
     CompendiumSourceDescriptor source;
     source.sourceId = sourceId;
     source.displayName = sourceId;
@@ -42,8 +41,8 @@ CompendiumSourceDescriptor makeDatSource(
     return source;
 }
 
-bool seedPlanDatabase(const QString &dbPath, const QString &storedFingerprint, const QString &storedChecksum,
-    int schemaVersion = 1) {
+bool seedPlanDatabase(
+    const QString &dbPath, const QString &storedFingerprint, const QString &storedChecksum, int schemaVersion = 1) {
     if (QFile::exists(dbPath))
         QFile::remove(dbPath);
 
@@ -54,12 +53,12 @@ bool seedPlanDatabase(const QString &dbPath, const QString &storedFingerprint, c
         return false;
 
     bool ok = execSql(db,
-                   QStringLiteral("CREATE TABLE compendium_builds ("
-                                  "build_id TEXT PRIMARY KEY,"
-                                  " schema_version INTEGER NOT NULL,"
-                                  " built_at TEXT NOT NULL,"
-                                  " source_manifest_json TEXT NOT NULL,"
-                                  " notes TEXT)"))
+                  QStringLiteral("CREATE TABLE compendium_builds ("
+                                 "build_id TEXT PRIMARY KEY,"
+                                 " schema_version INTEGER NOT NULL,"
+                                 " built_at TEXT NOT NULL,"
+                                 " source_manifest_json TEXT NOT NULL,"
+                                 " notes TEXT)"))
         && execSql(db,
             QStringLiteral("CREATE TABLE sources ("
                            "source_id TEXT PRIMARY KEY,"
@@ -145,8 +144,8 @@ void CompendiumBuildPlanTest::plan_skipsWhenChecksumAndFingerprintMatch() {
     CompendiumBuildPlan plan;
     QString error;
     const QList<CompendiumSourceDescriptor> sources = { makeDatSource(QStringLiteral("src-a"), checksum) };
-    QVERIFY(planCompendiumBuild(dbPath, 1, sources, fingerprint, /*forceFullRebuild=*/false, /*reportExists=*/true,
-        plan, error));
+    QVERIFY(planCompendiumBuild(
+        dbPath, 1, sources, fingerprint, /*forceFullRebuild=*/false, /*reportExists=*/true, plan, error));
     QVERIFY2(error.isEmpty(), qPrintable(error));
     QCOMPARE(plan.mode, CompendiumBuildMode::Skip);
     QVERIFY(plan.sourcesToIngest.isEmpty());
@@ -251,7 +250,8 @@ void CompendiumBuildPlanTest::plan_fullWhenForceRebuild() {
     CompendiumBuildPlan plan;
     QString error;
     const QList<CompendiumSourceDescriptor> sources = { makeDatSource(QStringLiteral("src-a"), checksum) };
-    QVERIFY(planCompendiumBuild(dbPath, 1, sources, QStringLiteral("fp"), /*forceFullRebuild=*/true, true, plan, error));
+    QVERIFY(
+        planCompendiumBuild(dbPath, 1, sources, QStringLiteral("fp"), /*forceFullRebuild=*/true, true, plan, error));
     QVERIFY2(error.isEmpty(), qPrintable(error));
     QCOMPARE(plan.mode, CompendiumBuildMode::Full);
     QVERIFY(plan.sourcesToIngest.contains(QStringLiteral("src-a")));
@@ -273,8 +273,8 @@ void CompendiumBuildPlanTest::syncManifestSourcesToDatabase_upsertsSourceMetadat
     source.displayName = QStringLiteral("Renamed Source");
 
     QString error;
-    QVERIFY(syncManifestSourcesToDatabase(db, { source }, { }, QStringLiteral("build-2"), 1,
-        QStringLiteral("{\"build_id\":\"build-2\"}"), error));
+    QVERIFY(syncManifestSourcesToDatabase(
+        db, { source }, { }, QStringLiteral("build-2"), 1, QStringLiteral("{\"build_id\":\"build-2\"}"), error));
     QVERIFY2(error.isEmpty(), qPrintable(error));
 
     QSqlQuery q(db);

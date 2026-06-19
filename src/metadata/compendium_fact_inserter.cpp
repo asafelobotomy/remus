@@ -294,8 +294,8 @@ namespace Compendium {
             }
 
             if ((stats.recordsIngested % 2000) == 0 && stats.recordsIngested > 0) {
-                qInfo().noquote() << QStringLiteral("[FactInserter] Persisted %1 source items...")
-                                         .arg(stats.recordsIngested);
+                qInfo().noquote()
+                    << QStringLiteral("[FactInserter] Persisted %1 source items...").arg(stats.recordsIngested);
             }
         }
 
