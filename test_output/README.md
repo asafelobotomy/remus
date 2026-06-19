@@ -47,6 +47,8 @@ The script automatically prunes test runs older than the 5 most recent.
 For ad-hoc cleanup after one-off validation runs, use:
 
 ```bash
+./scripts/clean-workspace.sh          # remove audit build trees + local DBs
+./scripts/clean-workspace.sh --dry-run
 ./scripts/prune_test_output.sh --dry-run
 ./scripts/prune_test_output.sh --apply
 ```

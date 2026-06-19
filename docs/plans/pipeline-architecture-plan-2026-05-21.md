@@ -219,7 +219,7 @@ the total file count.
 
 ---
 
-## E2E Findings (from `E2E-CLI-PIPELINE-REPORT-2026-05-20.md`)
+## E2E Findings (from `docs/archive/reports/E2E-CLI-PIPELINE-REPORT-2026-05-20.md`)
 
 These items are retained from the 2026-05-20 E2E run. They are sequenced after A0–A2 because
 the stage-separation refactor touches some of the same call paths.
@@ -399,5 +399,5 @@ diagnose.
 
 ---
 
-*Source documents: `docs/reports/E2E-CLI-PIPELINE-REPORT-2026-05-20.md`,
+*Source documents: `docs/archive/reports/E2E-CLI-PIPELINE-REPORT-2026-05-20.md`,
 `docs/plans/improvement-plan-2026-05-20.md`.*

@@ -20,8 +20,8 @@ Do not open public issues for unpatched vulnerabilities.
 
 | Version | Supported |
 |---------|-----------|
-| 0.11.0 (latest on `main`) | Yes |
-| 0.10.1 | Best-effort |
+| 0.12.0 (latest on `main`) | Yes |
+| 0.11.0 | Best-effort |
 
 Security fixes are released for the latest version on `main` and backported only when practical.
 

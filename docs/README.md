@@ -6,6 +6,7 @@ Documentation index for Remus.
 
 - [../README.md](../README.md) - Project overview
 - [setup/BUILD.md](setup/BUILD.md) - Build and run instructions
+- [../scripts/README.md](../scripts/README.md) - Shell script index (compendium, audit, packaging)
 - [quick-reference.md](quick-reference.md) - CLI quick reference
 
 ## User Guides

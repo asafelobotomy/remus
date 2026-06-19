@@ -17,7 +17,7 @@ namespace Constants {
      * Single source of truth for the version number.
      * Format: MAJOR.MINOR.PATCH — updated per milestone completions.
      */
-    inline constexpr const char *APP_VERSION = "0.11.0";
+    inline constexpr const char *APP_VERSION = "0.12.0";
 
     /**
      * @brief Milestone tracking

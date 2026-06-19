@@ -57,6 +57,23 @@
         "CMAKE_CXX_FLAGS": "-fsanitize=address,undefined -fno-omit-frame-pointer",
         "CMAKE_EXE_LINKER_FLAGS": "-fsanitize=address,undefined"
       }
+    },
+    {
+      "name": "coverage",
+      "displayName": "Coverage",
+      "description": "Debug build with gcov/lcov flags for local and CI coverage runs.",
+      "generator": "Unix Makefiles",
+      "binaryDir": "${sourceDir}/build-coverage",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "BUILD_TESTING": "ON",
+        "REMUS_ENABLE_CXX20": "OFF",
+        "REMUS_ENABLE_CCACHE": "ON",
+        "REMUS_ENABLE_UNITY_BUILD": "OFF",
+        "REMUS_ENABLE_PCH": "OFF",
+        "ENABLE_COVERAGE": "ON",
+        "REMUS_ENABLE_WARNINGS": "ON"
+      }
     }
   ],
   "buildPresets": [
@@ -74,6 +91,11 @@
       "name": "asan",
       "displayName": "AddressSanitizer",
       "configurePreset": "asan"
+    },
+    {
+      "name": "coverage",
+      "displayName": "Coverage",
+      "configurePreset": "coverage"
     }
   ],
   "testPresets": [
@@ -97,6 +119,14 @@
       "name": "asan",
       "displayName": "AddressSanitizer",
       "configurePreset": "asan",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "coverage",
+      "displayName": "Coverage",
+      "configurePreset": "coverage",
       "output": {
         "outputOnFailure": true
       }

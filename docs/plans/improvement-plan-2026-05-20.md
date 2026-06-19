@@ -576,4 +576,4 @@ extraction to temp storage if H2 is about to replace it.
 ---
 
 *Generated from the 2026-05-20 E2E CLI pipeline run findings. Source-of-truth E2E report:
-`docs/reports/E2E-CLI-PIPELINE-REPORT-2026-05-20.md`.*
+`docs/archive/reports/E2E-CLI-PIPELINE-REPORT-2026-05-20.md`.*

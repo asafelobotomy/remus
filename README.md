@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/asafelobotomy/remus/actions/workflows/ci.yml/badge.svg)](https://github.com/asafelobotomy/remus/actions/workflows/ci.yml)
 [![CodeQL](https://github.com/asafelobotomy/remus/actions/workflows/codeql.yml/badge.svg)](https://github.com/asafelobotomy/remus/actions/workflows/codeql.yml)
-[![Version](https://img.shields.io/badge/version-0.11.0-blue.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-0.12.0-blue.svg)](CHANGELOG.md)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 
 A C++17 retro game library manager for scanning, organizing, and managing ROM libraries with automatic metadata fetching, verification, conversion, patching, and mod workflows across both the command line and a Qt Quick desktop GUI.
@@ -14,29 +14,31 @@ The active build now ships a shared CLI and Qt Quick GUI. The legacy TUI remains
 ### Implemented in the active build
 
 - Support for 100+ retro gaming systems across cartridge, optical-disc, and archive workflows.
-- Hash-first scanning and matching with CRC32, MD5, and SHA1.
+- Hash-first scanning and matching with CRC32, MD5, and SHA1 (plus CHD/RVZ content SHA1 for compressed discs).
+- Compendium-backed multi-disc set topology: ingest, catalog disc order, completeness verification (`--verify-set`), and GUI owned/catalog disc badges.
 - Provider orchestration with offline and online fallback:
-  - Bundled compendium database
+  - Compendium (local bootstrap + full build)
   - Hasheous
+  - PlayMatch
   - ScreenScraper
   - GameTDB
   - TheGamesDB
   - IGDB
   - RetroAchievements
   - Wikidata
-- Template-driven organization with dry-run support and collision handling.
+- Template-driven organization with dry-run support, collision handling, and multi-disc set subfolders.
 - Archive extraction for ZIP, 7z, and RAR inputs.
-- CHD conversion, M3U generation, verification, and patching workflows.
+- CHD/RVZ/CSO conversion, catalog-ordered M3U generation, verification, and patching workflows.
 - Artwork download and local bundle generation.
 - SQLite-backed metadata and cache storage.
 
 ## Project Status
 
-Current version: 0.11.0
+Current version: 0.12.0
 
 Remus now builds `remus-cli` and `remus-gui` by default from the shared C++17/Qt 6 codebase. The legacy TUI remains preserved under `archive/gui-tui/` as historical reference code.
 
-**Bundled compendium:** the repository ships `data/compendium/remus_compendium.db` as a **bootstrap schema** (systems/regions seeds only). Offline hash matching against game signatures requires building or ingesting a populated catalog via `remus-cli --build-compendium` (see [data/compendium/README.md](data/compendium/README.md)).
+**Bundled compendium:** SQL migrations, seeds, and validation live under `data/compendium/`. The bootstrap SQLite file (`remus_compendium.db`) is **generated locally** (gitignored) via `scripts/setup_compendium_db.sh` — it contains systems/regions seeds only, not game signatures. Offline hash matching requires building or ingesting a populated catalog via `remus-cli --build-compendium` (see [data/compendium/README.md](data/compendium/README.md)).
 
 Current delivery focus:
 
@@ -70,6 +72,7 @@ Historical milestone reports remain in [docs/archive/milestones/](docs/archive/m
 ### Development
 
 - **[Contributing Guide](docs/CONTRIBUTING.md)** - Workflow, formatting, and PR expectations
+- **[Scripts index](scripts/README.md)** - Compendium, audit, packaging, and workspace cleanup
 - **[Architecture Docs](docs/architecture/)** - Design documents and implementation plans
 - **[Milestone Reports](docs/archive/milestones/)** - Detailed completion reports and phase summaries
 
@@ -89,50 +92,54 @@ Repository-local path policy:
 mkdir build && cd build
 cmake ..
 make -j$(nproc)
+cd ..
+
+# Bootstrap compendium schema (once per clone; output is gitignored)
+bash scripts/setup_compendium_db.sh
 
 # Launch the desktop GUI
-./src/gui/remus-gui
+./build/src/gui/remus-gui
 
 # Scan and hash ROMs
-./remus-cli --scan ../roms/NES --hash
+./build/remus-cli --scan roms/NES --hash
 
 # Match with intelligent provider fallback
-./remus-cli --match --min-confidence 70
+./build/remus-cli --match --min-confidence 70
 
 # Use Hasheous (FREE, no auth!)
-./remus-cli --metadata 811b027eaf99c2def7b933c5208636de --provider hasheous
+./build/remus-cli --metadata 811b027eaf99c2def7b933c5208636de --provider hasheous
 
 # List results
-./remus-cli --list
+./build/remus-cli --list
 
 # Organize files with No-Intro naming
-./remus-cli --organize ~/roms/organized --template "{title} ({region}){ext}"
+./build/remus-cli --organize ~/roms/organized --template "{title} ({region}){ext}"
 
 # Preview changes without modifying files
-./remus-cli --organize ~/roms/organized --dry-run
+./build/remus-cli --organize ~/roms/organized --dry-run
 
 # Generate M3U playlists for multi-disc games
-./remus-cli --generate-m3u --m3u-dir ~/roms/playlists
+./build/remus-cli --generate-m3u --m3u-dir ~/roms/playlists
 
 # Use custom Redump template
-./remus-cli --organize ~/roms/psx --template "{title} ({region}) (Disc {disc}){ext}"
+./build/remus-cli --organize ~/roms/psx --template "{title} ({region}) (Disc {disc}){ext}"
 
 # Build self-contained bundles with metadata, box art, and a .remus.md marker
-./remus-cli --bundle ~/roms/bundles --bundle-format zip
+./build/remus-cli --bundle ~/roms/bundles --bundle-format zip
 
 # Reuse previously-downloaded artwork instead of downloading it again
-./remus-cli --bundle ~/roms/bundles --bundle-art-dir ~/roms/art-cache
+./build/remus-cli --bundle ~/roms/bundles --bundle-art-dir ~/roms/art-cache
 
 # Browse mod catalogs without a frontend
-./remus-cli --mod-catalog tests/fixtures/test_mod_catalog.json --mod-systems
-./remus-cli --mod-catalog tests/fixtures/test_mod_catalog.json --mod-author "Test"
-./remus-cli --mod-catalog tests/fixtures/test_mod_catalog.json --mod-type translation --mod-min-rating 3.5
-./remus-cli --mod-catalog tests/fixtures/test_mod_catalog.json --mod-format ips --mod-min-downloads 800
-./remus-cli --mod-catalog tests/fixtures/test_mod_catalog.json --mod-source-url example --json
-./remus-cli --mod-catalog tests/fixtures/test_mod_catalog.json --mod-system "Super Nintendo" --mod-sort downloads
+./build/remus-cli --mod-catalog tests/fixtures/test_mod_catalog.json --mod-systems
+./build/remus-cli --mod-catalog tests/fixtures/test_mod_catalog.json --mod-author "Test"
+./build/remus-cli --mod-catalog tests/fixtures/test_mod_catalog.json --mod-type translation --mod-min-rating 3.5
+./build/remus-cli --mod-catalog tests/fixtures/test_mod_catalog.json --mod-format ips --mod-min-downloads 800
+./build/remus-cli --mod-catalog tests/fixtures/test_mod_catalog.json --mod-source-url example --json
+./build/remus-cli --mod-catalog tests/fixtures/test_mod_catalog.json --mod-system "Super Nintendo" --mod-sort downloads
 
 # Require exact ROM matches instead of system-level fallback
-./remus-cli --mod-catalog tests/fixtures/test_mod_catalog.json --mod-list 42 --mod-no-system-fallback
+./build/remus-cli --mod-catalog tests/fixtures/test_mod_catalog.json --mod-list 42 --mod-no-system-fallback
 ```
 
 **Requirements:** Qt 6 base development files, CMake 3.16+, C++17 compiler (optional C++20 mode supported), zlib, libarchive

@@ -1,0 +1,58 @@
+# Scripts
+
+Shell helpers for build, compendium, packaging, testing, and workspace hygiene. All paths are relative to the repository root unless noted.
+
+## Workspace & quality
+
+| Script | Purpose |
+|--------|---------|
+| [`clean-workspace.sh`](clean-workspace.sh) | Remove audit build trees (`build-coverage`, `build-asan`, `build-tidy`), local `*.db` files, and prune `test_output/` |
+| [`run-local-audit.sh`](run-local-audit.sh) | Full local CI mirror: Release build, tests, clang-format, shellcheck, qmllint, compendium bootstrap, coverage, clang-tidy spot-check, ASan tests |
+| [`prune_test_output.sh`](prune_test_output.sh) | Drop transient files under `test_output/` (keeps `README.md` and `attention.log` by default) |
+| [`verify_credentials.sh`](verify_credentials.sh) | Check that `.env.local` provider credentials are loadable |
+
+## Compendium
+
+| Script | Purpose |
+|--------|---------|
+| [`setup_compendium_db.sh`](setup_compendium_db.sh) | **Run once per clone** — create bootstrap `data/compendium/remus_compendium.db` (schema + seeds; gitignored) |
+| [`build_compendium_full.sh`](build_compendium_full.sh) | Full pipeline: refresh DATs, generate manifest, build populated DB, validate, coverage TSV |
+| [`generate_compendium_manifest.sh`](generate_compendium_manifest.sh) | Build `compendium-manifest-full.json` from DAT files |
+| [`backfill_disc_sets.sh`](backfill_disc_sets.sh) | One-time backfill of `game_disc_sets` / tracks on an existing compendium DB |
+| [`import_patch_catalog.sh`](import_patch_catalog.sh) | Import libretro patch DATs into compendium patch catalog tables |
+| [`audit_shadowed_manifest_sources.sh`](audit_shadowed_manifest_sources.sh) | List manifest sources that ingest items but own zero signatures |
+
+## Data refresh
+
+| Script | Purpose |
+|--------|---------|
+| [`update_dats.sh`](update_dats.sh) | Download/update No-Intro/Redump DAT files under `data/databases/` |
+| [`update_mame_listxml.sh`](update_mame_listxml.sh) | Fetch MAME `listxml.xml` for compendium enrichment |
+
+## Testing
+
+| Script | Purpose |
+|--------|---------|
+| [`run_pipeline_test.sh`](run_pipeline_test.sh) | Timestamped scan→match→report runs under `test_output/` (auto-prunes old runs) |
+| [`test_enricher.sh`](test_enricher.sh) | Smoke-test compendium enrichment sources |
+
+## Packaging
+
+| Script | Purpose |
+|--------|---------|
+| [`package_cli_archive.sh`](package_cli_archive.sh) | Build versioned `remus-cli-*.tar.gz` (+ compendium bootstrap if present) |
+| [`package_appimage.sh`](package_appimage.sh) | Build AppImage bundling CLI + GUI (+ compendium bootstrap if present) |
+
+## CMake presets (aligned build dirs)
+
+Use presets from [`CMakePresets.json`](../CMakePresets.json) for non-default builds:
+
+```bash
+cmake --preset default && cmake --build build -j$(nproc)   # Release → build/
+cmake --preset debug   && cmake --build build-debug -j$(nproc)
+cmake --preset asan    && cmake --build build-asan -j$(nproc)
+cmake --preset coverage && cmake --build build-coverage -j$(nproc)
+ctest --test-dir build-asan --output-on-failure
+```
+
+See also [`.github/scripts/`](../.github/scripts/) for CI-only helpers (clang-format install, coverage threshold, compendium validation).

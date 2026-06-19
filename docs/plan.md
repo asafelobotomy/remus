@@ -19,9 +19,10 @@ The active build includes `remus-cli` and `remus-gui`. The legacy TUI remains ar
 
 Delivered capabilities in the active codebase:
 - Recursive scanning with system inference and hash generation.
-- Offline-first metadata matching through the bundled compendium database.
-- Online metadata fallback through Hasheous, ScreenScraper, TheGamesDB, IGDB, RetroAchievements, GameTDB, and Wikidata when configured or available.
-- Template-based organization, M3U generation, and archive-aware workflows.
+- Offline-first metadata matching through a generated bootstrap compendium DB (`scripts/setup_compendium_db.sh`) and optional full catalog build.
+- Compendium multi-disc set topology: ingest, verification (`--verify-set`), catalog-ordered M3U, and GUI completeness badges.
+- Online metadata fallback through Hasheous, PlayMatch, ScreenScraper, TheGamesDB, IGDB, RetroAchievements, GameTDB, and Wikidata when configured or available.
+- Template-based organization (including multi-disc set subfolders), M3U generation, and archive-aware workflows.
 - CHD conversion, verification, patch application, and mod installation flows.
 - Artwork download, local cache reuse, and bundle generation.
 
@@ -39,11 +40,12 @@ Near-term priorities:
 
 The active provider strategy is:
 
-1. Compendium when `data/compendium/remus_compendium.db` is present.
-2. Hasheous for no-auth hash matching.
-3. ScreenScraper for authenticated hash or name matching.
-4. GameTDB and TheGamesDB for system-specific and general name fallback.
-5. IGDB, RetroAchievements, and Wikidata when configured and applicable.
+1. Bootstrap compendium schema via `scripts/setup_compendium_db.sh` (required once per clone).
+2. Compendium hash matching when a populated `remus_compendium.db` is present.
+3. Hasheous for no-auth hash matching.
+4. PlayMatch and ScreenScraper for hash/name corroboration.
+5. GameTDB and TheGamesDB for system-specific and general name fallback.
+6. IGDB, RetroAchievements, and Wikidata when configured and applicable.
 
 See [metadata-providers.md](metadata-providers.md) for the current provider inventory.
 

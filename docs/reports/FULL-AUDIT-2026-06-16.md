@@ -1,8 +1,10 @@
 # Remus Full Audit — 2026-06-16
 
+> **Note (2026-06-19):** The test suite has grown to **99 tests** as of v0.12.0. Metrics below reflect the audit date unless noted.
+
 **Auditor**: Cursor Agent (Sonnet 4.6)  
 **Environment**: CachyOS Linux (kernel 7.0.12), GCC 16.1.1, Qt 6.11.1, cmake 4.3.3  
-**Baseline**: [`FULL-AUDIT-2026-06-14.md`](FULL-AUDIT-2026-06-14.md)  
+**Baseline**: [`FULL-AUDIT-2026-06-14.md`](../archive/reports/FULL-AUDIT-2026-06-14.md)  
 **Codebase**: 307 source/header files, ~39 900 lines of production code
 
 ---

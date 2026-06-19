@@ -7,6 +7,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.12.0] - 2026-06-19
+
+### Added
+
+- Compendium multi-disc topology: migration `0007_disc_sets.sql`, ingest grouping, `game_disc_sets` / `game_disc_tracks` tables, and `DiscTitleParser` / `DiscSetKey` shared keys
+- CompendiumProvider disc-set API, verification bridge (`--verify-set`), and library `disc_set_key` / `disc_number` persistence
+- GUI disc-set completeness badges (owned vs catalog disc counts) in workflow and inspector views
+- Catalog-ordered M3U generation and organize subfolders per multi-disc set base title
+- CLI `--disc-set-coverage`, `--backfill-disc-sets`, and compendium validation gates (`0004` / `0005`) wired into CI and `build_compendium_full.sh`
+- `scripts/backfill_disc_sets.sh`, `scripts/clean-workspace.sh`, and `scripts/README.md` (script index)
+- `archive/README.md` clarifying code archive vs `docs/archive/`
+
+### Changed
+
+- README and BUILD docs: bootstrap `remus_compendium.db` is generated locally (gitignored), not committed
+- `CMakePresets.json`: added `coverage` preset (`build-coverage`); local audit uses `build-asan` for sanitizer runs (aligned with `asan` preset)
+- Provider orchestrator: fall back to generic `getByHash()` when Hasheous provider is a non-network stub (fixes external-ID gap-fill in tests)
+- Archived superseded reports (`FULL-AUDIT-2026-06-14`, `E2E-CLI-PIPELINE-REPORT-2026-05-20`) under `docs/archive/reports/`
+
+### Fixed
+
+- clang-format drift across `src/` and `tests/` (CI lint gate)
+- `CliSmokeTest` M3U whole-database smoke (base title without region suffix)
+- `CliHelpersTest` compendium fixture schema (`igdb_id`, `ra_game_id` columns)
+- `CompendiumPrimaryOrchestratorTest` Hasheous external-ID enrichment merge
+
 ## [0.11.0] - 2026-06-16
 
 ### Added

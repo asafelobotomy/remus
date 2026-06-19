@@ -44,16 +44,34 @@ sudo pacman -S cmake qt6-base qt6-declarative zlib libarchive qt6-keychain gcc
 cd ~/Documents/remus
 ```
 
-### 2. Create build directory
+### 2. Bootstrap compendium schema (once per clone)
+
+```bash
+bash scripts/setup_compendium_db.sh
+```
+
+Creates `data/compendium/remus_compendium.db` (gitignored; systems/regions seeds only).
+
+### 3. Create build directory
 ```bash
 mkdir -p build
 cd build
 ```
 
-### 3. Configure with CMake
+### 4. Configure with CMake
 ```bash
 cmake -S .. -B .
 ```
+
+Or use [`CMakePresets.json`](../../CMakePresets.json) from the repository root:
+
+```bash
+cd ..
+cmake --preset default
+cmake --build build -j$(nproc)
+```
+
+Presets: `default` → `build/`, `debug` → `build-debug/`, `asan` → `build-asan/`, `coverage` → `build-coverage/`. See [scripts/README.md](../../scripts/README.md).
 
 The default configure builds both `remus-cli` and `remus-gui`. The legacy TUI remains archived under `archive/gui-tui/` and is not part of the active build.
 
@@ -111,35 +129,35 @@ Enable compiler warnings during development:
 cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DREMUS_ENABLE_WARNINGS=ON
 ```
 
-### 4. Build
+### 5. Build
 ```bash
 cmake --build . -j$(nproc)
 ```
 
-### 5. Verify build
+### 6. Verify build
 
 ```bash
 ./remus-cli --version
 ./src/gui/remus-gui
 ```
 
-Expected output:
+Expected output includes the current `APP_VERSION` from `src/core/constants/api.h` (see root `VERSION` file).
 
 ```text
-remus-cli 0.10.1
+remus-cli 0.12.0
 ```
 
 The GUI launches the Qt Quick shell with views for library browsing, scan/hash workflows, metadata matching, artwork, DAT management, verification, organization, conversion, patching, mods, and settings.
 
-### 6. Run tests
+### 7. Run tests
 
 ```bash
 ctest --test-dir build --output-on-failure
 ```
 
-### 7. Build the compendium database
+### 8. Build the compendium database
 
-Remus ships a bundled `remus_compendium.db` for hash-first matching. Rebuild it locally when DAT sources or enrichment inputs change.
+Remus uses a **generated** bootstrap `remus_compendium.db` (schema + seeds only; not committed — create with `scripts/setup_compendium_db.sh`). Populate it for hash-first matching via `remus-cli --build-compendium` when DAT sources or enrichment inputs change.
 
 **One-command full refresh** (download DATs, generate manifest, build, validate, coverage report):
 
@@ -183,7 +201,7 @@ Optional enrichment inputs (skipped quietly when missing — see `.report.json`)
 
 See [data/compendium/README.md](../../data/compendium/README.md) for schema migrations, incremental `--ingest-source`, and `--enrich-compendium`.
 
-### 8. Package release artifacts
+### 9. Package release artifacts
 
 Create distributable CLI archives from the current build:
 

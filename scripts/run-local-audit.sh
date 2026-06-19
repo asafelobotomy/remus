@@ -144,11 +144,7 @@ fi
 # ── 7. Coverage build ────────────────────────────────────────────────────────
 section "7. Coverage"
 BUILD_COV="build-coverage"
-if cmake -S . -B "$BUILD_COV" \
-        -DCMAKE_BUILD_TYPE=Debug \
-        -DENABLE_COVERAGE=ON \
-        -DREMUS_ENABLE_WARNINGS=ON \
-        -Wno-dev 2>&1 \
+if cmake --preset coverage -Wno-dev 2>&1 \
    && cmake --build "$BUILD_COV" -j"$(nproc)" 2>&1 \
    && ctest --test-dir "$BUILD_COV" --output-on-failure 2>&1; then
     lcov --capture --directory "$BUILD_COV" \
@@ -179,14 +175,8 @@ fi
 
 # ── 9. Sanitizer build ───────────────────────────────────────────────────────
 section "9. Sanitizer build (ASan + UBSan)"
-BUILD_SAN="build-sanitizer"
-ASAN_FLAGS="-fsanitize=address,undefined -fno-omit-frame-pointer"
-if cmake -S . -B "$BUILD_SAN" \
-        -DCMAKE_BUILD_TYPE=Debug \
-        -DREMUS_ENABLE_WARNINGS=ON \
-        "-DCMAKE_CXX_FLAGS=$ASAN_FLAGS" \
-        "-DCMAKE_EXE_LINKER_FLAGS=$ASAN_FLAGS" \
-        -Wno-dev 2>&1 \
+BUILD_SAN="build-asan"
+if cmake --preset asan -Wno-dev 2>&1 \
    && cmake --build "$BUILD_SAN" -j"$(nproc)" 2>&1; then
     if ASAN_OPTIONS=detect_leaks=0 ctest --test-dir "$BUILD_SAN" --output-on-failure 2>&1; then
         pass "Sanitizer build + tests"
