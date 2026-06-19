@@ -1,5 +1,7 @@
 #include "compendium_enrichment.h"
 #include "compendium_enrichment_sql.h"
+#include "../core/compendium_manifest_parser.h"
+#include "../metadata/compendium_hasheous_offline.h"
 #include "../metadata/hasheous_provider.h"
 #include "../metadata/http_metadata_provider.h"
 #include "../core/constants/providers.h"
@@ -13,6 +15,7 @@
 #include <QSqlQuery>
 
 using namespace Remus;
+using namespace Remus::Compendium;
 using namespace CompendiumEnrichmentSql;
 
 namespace CompendiumEnrichment {
@@ -142,8 +145,19 @@ bool enrichFromHasheous(QSqlDatabase &database, const QString &credentialsPath, 
     if (!clientApiKey.isEmpty())
         provider.setApiKey(clientApiKey);
 
+    QHash<QString, HasheousOfflineMatch> offlineIndex;
+    const QString dumpDir = findHasheousDumpDir();
+    const bool offlineReady = !dumpDir.isEmpty() && loadHasheousOfflineIndex(dumpDir, offlineIndex, error);
+    if (!dumpDir.isEmpty() && !offlineReady) {
+        qWarning().noquote() << QStringLiteral("[Hasheous] Offline dump index unavailable: %1").arg(error);
+        error.clear();
+    }
+
     apiCallsNeeded = hashesByGame.size();
-    qInfo().noquote() << QStringLiteral("[Hasheous] %1 games pending igdb_id enrichment (%2 API calls)")
+    if (offlineReady)
+        qInfo().noquote() << QStringLiteral("[Hasheous] Offline dump index loaded (%1 keys) — API used only for misses")
+                                 .arg(offlineIndex.size());
+    qInfo().noquote() << QStringLiteral("[Hasheous] %1 games pending igdb_id enrichment (up to %2 API calls)")
                              .arg(hashesByGame.size())
                              .arg(apiCallsNeeded);
 
@@ -151,6 +165,21 @@ bool enrichFromHasheous(QSqlDatabase &database, const QString &credentialsPath, 
     int callIdx = 0;
     for (auto it = hashesByGame.constBegin(); it != hashesByGame.constEnd(); ++it) {
         ++callIdx;
+        HasheousOfflineMatch offlineMatch;
+        if (offlineReady
+            && lookupHasheousOfflineMatch(offlineIndex, it->crc32, it->md5, it->sha1, it->sha256, offlineMatch)
+            && !offlineMatch.igdbId.isEmpty()) {
+            GameMetadata metadata;
+            metadata.externalIds.insert(Constants::Providers::ExternalId::IGDB, offlineMatch.igdbId);
+            metadata.description = offlineMatch.description;
+            if (!offlineMatch.genre.isEmpty())
+                metadata.genres = QStringList { offlineMatch.genre };
+            if (!offlineMatch.raGameId.isEmpty())
+                metadata.externalIds.insert(Constants::Providers::ExternalId::RETROACHIEVEMENTS, offlineMatch.raGameId);
+            matchedMetadata.insert(it.key(), metadata);
+            continue;
+        }
+
         ++apiCallsPerformed;
         if (callIdx % 50 == 0)
             HttpMetadataProvider::processNetworkEvents();
@@ -165,7 +194,7 @@ bool enrichFromHasheous(QSqlDatabase &database, const QString &credentialsPath, 
 
     if (matchedMetadata.isEmpty()) {
         if (apiCallsNeededOut)
-            *apiCallsNeededOut = apiCallsNeeded;
+            *apiCallsNeededOut = apiCallsPerformed;
         if (apiCallsPerformedOut)
             *apiCallsPerformedOut = apiCallsPerformed;
         qInfo() << "[Hasheous] No IGDB IDs resolved for pending games";
@@ -309,7 +338,7 @@ bool enrichFromHasheous(QSqlDatabase &database, const QString &credentialsPath, 
     }
 
     if (apiCallsNeededOut)
-        *apiCallsNeededOut = apiCallsNeeded;
+        *apiCallsNeededOut = apiCallsPerformed;
     if (apiCallsPerformedOut)
         *apiCallsPerformedOut = apiCallsPerformed;
 

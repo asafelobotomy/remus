@@ -512,6 +512,39 @@ add_remus_test(test_compendium_dedup CompendiumDedupTest
     LIBS Qt6::Test Qt6::Core Qt6::Sql remus-metadata
 )
 
+add_remus_test(test_compendium_build_plan CompendiumBuildPlanTest
+    SOURCES test_compendium_build_plan.cpp
+            ../src/cli/cli_compendium_build_phases.cpp
+            ../src/cli/compendium_enrichment.cpp
+            ../src/cli/compendium_enrichment_gametdb.cpp
+            ../src/cli/compendium_enrichment_mame.cpp
+            ../src/cli/compendium_enrichment_mame_listxml.cpp
+            ../src/cli/compendium_enrichment_openvgdb.cpp
+            ../src/cli/compendium_enrichment_igdb.cpp
+            ../src/cli/compendium_enrichment_ra.cpp
+            ../src/cli/compendium_enrichment_hasheous.cpp
+            ../src/cli/compendium_enrichment_playmatch.cpp
+            ../src/cli/compendium_enrichment_zxinfo.cpp
+            ../src/cli/compendium_enrichment_sql.cpp
+    LIBS Qt6::Test Qt6::Core Qt6::Sql Qt6::Network remus-metadata remus-core remus-services
+)
+target_compile_definitions(test_compendium_build_plan PRIVATE
+    REMUS_SOURCE_DIR="${CMAKE_SOURCE_DIR}"
+)
+
+add_remus_test(test_compendium_source_purge CompendiumSourcePurgeTest
+    SOURCES test_compendium_source_purge.cpp
+    LIBS Qt6::Test Qt6::Core Qt6::Sql remus-metadata
+)
+
+add_remus_test(test_compendium_hasheous_offline CompendiumHasheousOfflineTest
+    SOURCES test_compendium_hasheous_offline.cpp
+    LIBS Qt6::Test Qt6::Core Qt6::Sql remus-metadata
+)
+target_compile_definitions(test_compendium_hasheous_offline PRIVATE
+    REMUS_SOURCE_DIR="${CMAKE_SOURCE_DIR}"
+)
+
 add_remus_test(test_compendium_ra_enrichment CompendiumRaEnrichmentTest
     SOURCES test_compendium_ra_enrichment.cpp
             ../src/cli/compendium_enrichment_ra.cpp

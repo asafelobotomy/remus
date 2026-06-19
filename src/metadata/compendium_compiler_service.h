@@ -5,6 +5,7 @@
 
 #include "compendium_types.h"
 
+#include <QSet>
 #include <QSqlDatabase>
 #include <QString>
 #include <QStringList>
@@ -41,6 +42,17 @@ namespace Compendium {
     using ProgressCallback
         = std::function<void(int current, int total, const QString &sourceId, const CompilerStats &stats)>;
 
+    struct CompilerRunOptions {
+        /// When non-empty, only these enabled @c source_id values are ingested.
+        QSet<QString> ingestSourceIds;
+        /// Purge prior ingest rows before re-inserting (incremental DAT refresh).
+        bool purgeChangedSources = false;
+        /// Load identity maps from the DB before linking (incremental builds).
+        bool preloadIdentityLinker = false;
+        /// Parallel DAT extraction workers (0 = @c QThread::idealThreadCount(), 1 = serial).
+        int extractParallelism = 0;
+    };
+
     class CompendiumCompilerService {
     public:
         // Run a full compendium build.  The database must already have the schema
@@ -50,7 +62,7 @@ namespace Compendium {
         // Returns populated stats on success; sets error and returns {} on failure.
         // onProgress (optional) is called after each enabled source is processed.
         CompilerStats run(const CompendiumBuildConfig &config, QSqlDatabase &db, QString &error,
-            ProgressCallback onProgress = nullptr);
+            ProgressCallback onProgress = nullptr, const CompilerRunOptions &options = { });
     };
 
     // Merge game rows that share the same (system_id, canonical_title) or the same

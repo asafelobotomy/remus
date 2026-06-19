@@ -8,10 +8,12 @@
 #include "../metadata/compendium_types.h"
 #include "../services/credential_manager.h"
 
+#include <QDateTime>
 #include <QDebug>
 #include <QDir>
 #include <QDirIterator>
 #include <QFile>
+#include <QFileInfo>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QList>
@@ -659,4 +661,261 @@ bool populateCompendiumFtsIndex(QSqlDatabase &db, int &rowsIndexed, QString &err
     }
     qInfo() << "[buildCompendium] FTS index rebuilt and optimized.";
     return true;
+}
+
+namespace {
+
+QString latestChecksumForSource(QSqlDatabase &db, const QString &sourceId) {
+    QSqlQuery q(db);
+    q.prepare(QStringLiteral("SELECT checksum_sha256 FROM source_snapshots "
+                             "WHERE source_id = ? AND checksum_sha256 IS NOT NULL AND TRIM(checksum_sha256) != '' "
+                             "ORDER BY fetched_at DESC, snapshot_id DESC LIMIT 1"));
+    q.addBindValue(sourceId);
+    if (!q.exec() || !q.next()) {
+        return { };
+    }
+    return q.value(0).toString().trimmed();
+}
+
+bool sourceRowExists(QSqlDatabase &db, const QString &sourceId) {
+    QSqlQuery q(db);
+    q.prepare(QStringLiteral("SELECT 1 FROM sources WHERE source_id = ? LIMIT 1"));
+    q.addBindValue(sourceId);
+    return q.exec() && q.next();
+}
+
+QString readStoredEnrichmentFingerprint(QSqlDatabase &db) {
+    QSqlQuery q(db);
+    if (!q.exec(QStringLiteral("SELECT notes FROM compendium_builds ORDER BY built_at DESC LIMIT 1")) || !q.next()) {
+        return { };
+    }
+    return enrichmentFingerprintFromBuildNotes(q.value(0).toString());
+}
+
+bool databaseHasPopulatedContent(QSqlDatabase &db) {
+    QSqlQuery q(db);
+    return q.exec(QStringLiteral("SELECT 1 FROM games LIMIT 1")) && q.next();
+}
+
+} // namespace
+
+bool planCompendiumBuild(const QString &dbPath, int schemaVersion, const QList<CompendiumSourceDescriptor> &sources,
+    const QString &enrichmentFingerprint, bool forceFullRebuild, bool reportExists, CompendiumBuildPlan &plan,
+    QString &error) {
+    plan = CompendiumBuildPlan { };
+    plan.mode = CompendiumBuildMode::Full;
+
+    if (forceFullRebuild || !QFileInfo::exists(dbPath)) {
+        for (const CompendiumSourceDescriptor &source : sources) {
+            if (source.enabled && source.sourceType == QStringLiteral("dat")) {
+                plan.sourcesToIngest.insert(source.sourceId);
+            }
+        }
+        return true;
+    }
+
+    QSqlDatabase db = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), QStringLiteral("compendium-plan"));
+    db.setDatabaseName(dbPath);
+    if (!db.open()) {
+        error = db.lastError().text();
+        return false;
+    }
+
+    if (!databaseHasPopulatedContent(db)) {
+        db.close();
+        QSqlDatabase::removeDatabase(QStringLiteral("compendium-plan"));
+        for (const CompendiumSourceDescriptor &source : sources) {
+            if (source.enabled && source.sourceType == QStringLiteral("dat")) {
+                plan.sourcesToIngest.insert(source.sourceId);
+            }
+        }
+        return true;
+    }
+
+    QSqlQuery schemaQ(db);
+    schemaQ.prepare(QStringLiteral("SELECT 1 FROM compendium_builds WHERE schema_version = ? LIMIT 1"));
+    schemaQ.addBindValue(schemaVersion);
+    if (!schemaQ.exec() || !schemaQ.next()) {
+        db.close();
+        QSqlDatabase::removeDatabase(QStringLiteral("compendium-plan"));
+        for (const CompendiumSourceDescriptor &source : sources) {
+            if (source.enabled && source.sourceType == QStringLiteral("dat")) {
+                plan.sourcesToIngest.insert(source.sourceId);
+            }
+        }
+        return true;
+    }
+
+    plan.storedEnrichmentFingerprint = readStoredEnrichmentFingerprint(db);
+
+    for (const CompendiumSourceDescriptor &source : sources) {
+        if (!source.enabled || source.sourceType != QStringLiteral("dat")) {
+            continue;
+        }
+        if (!sourceRowExists(db, source.sourceId)) {
+            plan.sourcesToIngest.insert(source.sourceId);
+            continue;
+        }
+        const QString storedChecksum = latestChecksumForSource(db, source.sourceId);
+        const QString manifestChecksum = source.checksumSha256.trimmed();
+        if (storedChecksum.isEmpty()
+            || manifestChecksum.compare(storedChecksum, Qt::CaseInsensitive) != 0) {
+            plan.sourcesToIngest.insert(source.sourceId);
+        }
+    }
+
+    db.close();
+    QSqlDatabase::removeDatabase(QStringLiteral("compendium-plan"));
+
+    const bool enrichmentMatches
+        = !plan.storedEnrichmentFingerprint.isEmpty() && plan.storedEnrichmentFingerprint == enrichmentFingerprint;
+
+    if (plan.sourcesToIngest.isEmpty()) {
+        if (enrichmentMatches && reportExists) {
+            plan.mode = CompendiumBuildMode::Skip;
+        } else if (enrichmentMatches) {
+            plan.mode = CompendiumBuildMode::Full;
+            for (const CompendiumSourceDescriptor &source : sources) {
+                if (source.enabled && source.sourceType == QStringLiteral("dat")) {
+                    plan.sourcesToIngest.insert(source.sourceId);
+                }
+            }
+        } else {
+            plan.mode = CompendiumBuildMode::EnrichmentOnly;
+        }
+    } else {
+        plan.mode = CompendiumBuildMode::IncrementalIngest;
+    }
+
+    return true;
+}
+
+bool syncManifestSourcesToDatabase(QSqlDatabase &db, const QList<CompendiumSourceDescriptor> &sources,
+    const QSet<QString> &changedSourceIds, const QString &buildId, int schemaVersion,
+    const QString &normalizedManifestJson, QString &error) {
+    QSqlQuery buildQuery(db);
+    buildQuery.prepare(QStringLiteral("INSERT INTO compendium_builds (build_id, schema_version, built_at, source_manifest_json, notes) "
+                                     "VALUES (?, ?, ?, ?, ?) "
+                                     "ON CONFLICT(build_id) DO UPDATE SET "
+                                     "schema_version = excluded.schema_version, "
+                                     "built_at = excluded.built_at, "
+                                     "source_manifest_json = excluded.source_manifest_json"));
+    buildQuery.addBindValue(buildId);
+    buildQuery.addBindValue(schemaVersion);
+    buildQuery.addBindValue(QDateTime::currentDateTimeUtc().toString(Qt::ISODate));
+    buildQuery.addBindValue(normalizedManifestJson);
+    buildQuery.addBindValue(QStringLiteral("Phase 1 bootstrap compiler run"));
+    if (!buildQuery.exec()) {
+        error = buildQuery.lastError().text();
+        return false;
+    }
+
+    for (const CompendiumSourceDescriptor &source : sources) {
+        QSqlQuery sourceQuery(db);
+        sourceQuery.prepare(QStringLiteral("INSERT INTO sources (source_id, display_name, source_type, license_id, "
+                                           "license_url, attribution_required, priority, enabled) "
+                                           "VALUES (?, ?, ?, ?, ?, ?, ?, ?) "
+                                           "ON CONFLICT(source_id) DO UPDATE SET "
+                                           "display_name = excluded.display_name, "
+                                           "source_type = excluded.source_type, "
+                                           "license_id = excluded.license_id, "
+                                           "license_url = excluded.license_url, "
+                                           "attribution_required = excluded.attribution_required, "
+                                           "priority = excluded.priority, "
+                                           "enabled = excluded.enabled"));
+        sourceQuery.addBindValue(source.sourceId);
+        sourceQuery.addBindValue(source.displayName);
+        sourceQuery.addBindValue(source.sourceType);
+        sourceQuery.addBindValue(source.licenseId.isEmpty() ? QVariant() : QVariant(source.licenseId));
+        sourceQuery.addBindValue(source.licenseUrl.isEmpty() ? QVariant() : QVariant(source.licenseUrl));
+        sourceQuery.addBindValue(source.attributionRequired ? 1 : 0);
+        sourceQuery.addBindValue(source.priority);
+        sourceQuery.addBindValue(source.enabled ? 1 : 0);
+        if (!sourceQuery.exec()) {
+            error = sourceQuery.lastError().text();
+            return false;
+        }
+
+        if (!changedSourceIds.contains(source.sourceId)) {
+            continue;
+        }
+
+        QSqlQuery snapshotQuery(db);
+        snapshotQuery.prepare(QStringLiteral("INSERT INTO source_snapshots (snapshot_id, source_id, snapshot_label, "
+                                             "snapshot_ref, fetched_at, checksum_sha256) "
+                                             "VALUES (?, ?, ?, ?, ?, ?) "
+                                             "ON CONFLICT(snapshot_id) DO UPDATE SET "
+                                             "source_id = excluded.source_id, "
+                                             "snapshot_label = excluded.snapshot_label, "
+                                             "snapshot_ref = excluded.snapshot_ref, "
+                                             "fetched_at = excluded.fetched_at, "
+                                             "checksum_sha256 = excluded.checksum_sha256"));
+        snapshotQuery.addBindValue(source.snapshotId);
+        snapshotQuery.addBindValue(source.sourceId);
+        snapshotQuery.addBindValue(source.snapshotLabel);
+        snapshotQuery.addBindValue(source.snapshotRef.isEmpty() ? QVariant() : QVariant(source.snapshotRef));
+        snapshotQuery.addBindValue(source.fetchedAt.isEmpty() ? QVariant() : QVariant(source.fetchedAt));
+        snapshotQuery.addBindValue(source.checksumSha256.isEmpty() ? QVariant() : QVariant(source.checksumSha256));
+        if (!snapshotQuery.exec()) {
+            error = snapshotQuery.lastError().text();
+            return false;
+        }
+    }
+
+    return true;
+}
+
+void applyCompendiumBuildPragmas(QSqlDatabase &database) {
+    QSqlQuery pragmaQuery(database);
+    pragmaQuery.exec(QStringLiteral("PRAGMA foreign_keys = ON"));
+    const QStringList buildPragmas = {
+        QStringLiteral("PRAGMA journal_mode = WAL"),
+        QStringLiteral("PRAGMA synchronous = OFF"),
+        QStringLiteral("PRAGMA temp_store = MEMORY"),
+        QStringLiteral("PRAGMA cache_size = -131072"),
+        QStringLiteral("PRAGMA mmap_size = 268435456"),
+    };
+    for (const QString &pragma : buildPragmas) {
+        if (!pragmaQuery.exec(pragma)) {
+            qWarning() << "[buildCompendium] PRAGMA hint failed (non-fatal):" << pragma
+                       << pragmaQuery.lastError().text();
+        }
+    }
+}
+
+int runCompendiumEnrichmentOnlyRefresh(QSqlDatabase &database, const QString &buildId, const QString &reportPath,
+    const QJsonObject &existingReportBase, const QString &enrichmentFingerprint, const QString &metadataDir,
+    const QString &gametdbDir, const QString &openvgdbPath, const QString &credPath, const QString &mameCatverPath,
+    const QString &mameListXmlPath, const QStringList &sourceFilter, EnrichmentProgressCallback onProgress,
+    QJsonObject &reportOut, QString &error) {
+    EnrichmentStats enrichStats;
+    if (!runCompendiumEnrichmentPasses(database, metadataDir, gametdbDir, openvgdbPath, credPath, mameCatverPath,
+            mameListXmlPath, enrichStats, error, onProgress, sourceFilter)) {
+        return 1;
+    }
+
+    if (!populateCompendiumFtsIndex(database, enrichStats.ftsRowsIndexed, error)) {
+        return 1;
+    }
+
+    reportOut = existingReportBase;
+    insertEnrichmentStatsReportFields(reportOut, enrichStats, QStringLiteral("post_enrich_resolved_fields"));
+    reportOut.insert(QStringLiteral("enrichment_inputs_fingerprint"), enrichmentFingerprint);
+    reportOut.insert(QStringLiteral("build_mode"), QStringLiteral("enrichment_only"));
+
+    const QJsonObject notesObj {
+        { QStringLiteral("description"), QStringLiteral("Enrichment-only refresh") },
+        { QStringLiteral("enrichment_inputs_fingerprint"), enrichmentFingerprint },
+    };
+    QSqlQuery notesQuery(database);
+    notesQuery.prepare(QStringLiteral("UPDATE compendium_builds SET notes = ?, built_at = ? WHERE build_id = ?"));
+    notesQuery.addBindValue(QString::fromUtf8(QJsonDocument(notesObj).toJson(QJsonDocument::Compact)));
+    notesQuery.addBindValue(QDateTime::currentDateTimeUtc().toString(Qt::ISODate));
+    notesQuery.addBindValue(buildId);
+    if (!notesQuery.exec()) {
+        qWarning() << "[build-compendium] Failed to persist enrichment fingerprint:" << notesQuery.lastError().text();
+    }
+
+    Q_UNUSED(reportPath);
+    return 0;
 }

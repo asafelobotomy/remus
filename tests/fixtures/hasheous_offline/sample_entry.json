@@ -1,0 +1,22 @@
+{
+  "Attributes": {
+    "AIDescription": "Fixture game for offline Hasheous index tests",
+    "Tags": {
+      "GameGenre": [
+        { "Text": "Platform" }
+      ]
+    }
+  },
+  "Metadata": [
+    { "Source": "IGDB", "Id": 424242 },
+    { "Source": "RetroAchievements", "Id": 9999 }
+  ],
+  "ROMs": [
+    {
+      "Crc": "DEADBEEF",
+      "Md5": "0123456789abcdef0123456789abcdef",
+      "Sha1": "0000000000000000000000000000000000000001",
+      "Sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    }
+  ]
+}

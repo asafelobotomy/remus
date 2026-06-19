@@ -1,8 +1,14 @@
 #pragma once
 
+#include <QSet>
 #include <QString>
 #include <QStringList>
 #include <functional>
+
+#include "../core/compendium_manifest_parser.h"
+
+class QJsonArray;
+class QJsonObject;
 
 class QSqlDatabase;
 class QJsonObject;
@@ -153,3 +159,41 @@ inline QStringList knownEnrichmentSourceKeys() {
         QStringLiteral("zxinfo"),
     };
 }
+
+enum class CompendiumBuildMode {
+    Skip,
+    EnrichmentOnly,
+    IncrementalIngest,
+    Full,
+};
+
+struct CompendiumBuildPlan {
+    CompendiumBuildMode mode = CompendiumBuildMode::Full;
+    QSet<QString> sourcesToIngest;
+    QString storedEnrichmentFingerprint;
+};
+
+/**
+ * @brief Decide whether to skip, enrich-only refresh, incrementally ingest, or fully rebuild.
+ *
+ * Compares per-source @c checksum_sha256 values against @c source_snapshots rather than
+ * requiring an exact manifest JSON match (daily @c build_id churn is ignored).
+ */
+bool planCompendiumBuild(const QString &dbPath, int schemaVersion, const QList<Remus::CompendiumSourceDescriptor> &sources,
+    const QString &enrichmentFingerprint, bool forceFullRebuild, bool reportExists, CompendiumBuildPlan &plan,
+    QString &error);
+
+/// Upsert manifest source metadata and insert snapshot rows for changed sources.
+bool syncManifestSourcesToDatabase(QSqlDatabase &db, const QList<Remus::CompendiumSourceDescriptor> &sources,
+    const QSet<QString> &changedSourceIds, const QString &buildId, int schemaVersion,
+    const QString &normalizedManifestJson, QString &error);
+
+/// Apply build pragmas used during compendium builds.
+void applyCompendiumBuildPragmas(QSqlDatabase &database);
+
+/// Run enrichment + FTS on an existing DB, update build notes/report fingerprint.
+int runCompendiumEnrichmentOnlyRefresh(QSqlDatabase &database, const QString &buildId, const QString &reportPath,
+    const QJsonObject &existingReportBase, const QString &enrichmentFingerprint, const QString &metadataDir,
+    const QString &gametdbDir, const QString &openvgdbPath, const QString &credPath, const QString &mameCatverPath,
+    const QString &mameListXmlPath, const QStringList &sourceFilter, EnrichmentProgressCallback onProgress,
+    QJsonObject &reportOut, QString &error);

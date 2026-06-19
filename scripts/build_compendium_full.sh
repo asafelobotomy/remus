@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 # purpose: run the full compendium pipeline (update DATs, generate manifest, build DB, emit coverage report).
 # when: use for full-catalogue refreshes; avoid for quick single-manifest experiments.
-# inputs: --skip-update, --dat-dir <path>, --manifest <path>, --output-db <path>, --coverage-report <path>
-# outputs: refreshed compendium DB, manifest JSON, and TSV coverage report by source.
+# inputs: --skip-update, --dat-dir <path>, --manifest <path>, --output-db <path>,
+#         --coverage-report <path>, --disc-set-coverage-report <path>
+# outputs: refreshed compendium DB, manifest JSON, per-source TSV coverage, and per-system disc-set TSV.
 # risk: safe
 # source: original
 
@@ -18,6 +19,7 @@ MANIFEST_PATH="$ROOT_DIR/data/compendium/compendium-manifest-full.json"
 OUTPUT_DB="$ROOT_DIR/data/compendium/remus_compendium.db"
 PROGRESS_FILE="${OUTPUT_DB}.progress.json"
 COVERAGE_REPORT="$ROOT_DIR/data/compendium/remus_compendium.coverage.tsv"
+DISC_SET_COVERAGE_REPORT="$ROOT_DIR/data/compendium/remus_compendium.disc-set-coverage.tsv"
 BUILD_LOG="${TMPDIR:-/tmp}/remus_compendium_full_build.log"
 LOCK_PATH="$ROOT_DIR/data/compendium/remus_compendium_full.lock"
 HEARTBEAT_SECONDS=600
@@ -95,7 +97,9 @@ Options:
   --dat-dir <path>          DAT directory for manifest generation
   --manifest <path>         Manifest output/input path
   --output-db <path>        Compendium SQLite output path
-  --coverage-report <path>  TSV coverage report path
+  --coverage-report <path>  Per-source TSV coverage report path
+  --disc-set-coverage-report <path>
+                            Per-system disc set topology TSV (from --disc-set-coverage)
   --heartbeat-seconds <n>   Wrapper progress heartbeat interval in seconds (default: 600)
   -h, --help                Show this help
 USAGE
@@ -129,6 +133,10 @@ while [[ $# -gt 0 ]]; do
             ;;
         --coverage-report)
             COVERAGE_REPORT="$2"
+            shift 2
+            ;;
+        --disc-set-coverage-report)
+            DISC_SET_COVERAGE_REPORT="$2"
             shift 2
             ;;
         --heartbeat-seconds)
@@ -176,6 +184,7 @@ fi
 mkdir -p "$(dirname "$MANIFEST_PATH")"
 mkdir -p "$(dirname "$OUTPUT_DB")"
 mkdir -p "$(dirname "$COVERAGE_REPORT")"
+mkdir -p "$(dirname "$DISC_SET_COVERAGE_REPORT")"
 
 exec 9>"$LOCK_PATH"
 if ! flock -n 9; then
@@ -190,6 +199,7 @@ echo "    dat_dir=$DAT_DIR"
 echo "    manifest=$MANIFEST_PATH"
 echo "    output_db=$OUTPUT_DB"
 echo "    coverage_report=$COVERAGE_REPORT"
+echo "    disc_set_coverage_report=$DISC_SET_COVERAGE_REPORT"
 echo "    lock=$LOCK_PATH"
 echo "    heartbeat_seconds=$HEARTBEAT_SECONDS"
 
@@ -295,6 +305,11 @@ fi
 # sigs_owned    – signature rows attributed to this source (0 for shadowed sources)
 # games_covered – games from this source that have any signature (honest ingest coverage)
 "$ROOT_DIR/build/remus-cli" --coverage-report --compendium-output "$OUTPUT_DB" > "$COVERAGE_REPORT"
+
+echo "==> Disc set coverage (per-system topology)"
+"$ROOT_DIR/build/remus-cli" --disc-set-coverage --compendium-output "$OUTPUT_DB" > "$DISC_SET_COVERAGE_REPORT"
+echo "==> Disc set coverage report written: $DISC_SET_COVERAGE_REPORT"
+head -12 "$DISC_SET_COVERAGE_REPORT"
 
 summary_query="
 SELECT 'games', COUNT(*) FROM games

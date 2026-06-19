@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# Fail when line coverage in an lcov .info file falls below COVERAGE_THRESHOLD (default 50).
+# Fail when line coverage in an lcov .info file falls below COVERAGE_THRESHOLD (default 60).
 set -euo pipefail
 
 COVERAGE_INFO="${1:-build/coverage.info}"
-THRESHOLD="${COVERAGE_THRESHOLD:-50}"
+THRESHOLD="${COVERAGE_THRESHOLD:-60}"
 
 if [[ ! -f "$COVERAGE_INFO" ]]; then
     echo "Coverage file not found: $COVERAGE_INFO" >&2

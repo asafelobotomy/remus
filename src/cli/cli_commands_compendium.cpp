@@ -133,8 +133,6 @@ int handleBuildCompendiumCommand(CliContext &ctx) {
     const QString stagedOutputPath = makeStagedSiblingPath(finalOutputPath);
     const QString finalReportPath = reportPathForDatabase(finalOutputPath);
     const QString stagedReportPath = reportPathForDatabase(stagedOutputPath);
-    QFile::remove(stagedOutputPath);
-    QFile::remove(stagedReportPath);
 
     const QString compendiumDir = findDataSubdir(QStringLiteral("compendium"));
     if (compendiumDir.isEmpty()) {
@@ -180,48 +178,195 @@ int handleBuildCompendiumCommand(CliContext &ctx) {
     const QString enrichmentFingerprint = computeEnrichmentInputsFingerprint(
         metadataDir, gametdbDir, openvgdbPath, mameCatverPath, mameListXmlPath, credPath, sourceFilter);
 
-    // Skip only when the persisted manifest contract exactly matches the current
-    // build request and local enrichment inputs are unchanged. This catches
-    // disabled/removed sources, identity changes, and enrichment-only updates.
-    if (QFileInfo::exists(finalOutputPath)) {
-        const QString checkConn
-            = QStringLiteral("compendium-check-") + QUuid::createUuid().toString(QUuid::WithoutBraces);
-        QSqlDatabase checkDb = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), checkConn);
-        checkDb.setDatabaseName(finalOutputPath);
-        bool manifestMatches = checkDb.open();
-        QString storedFingerprint;
-        if (manifestMatches) {
-            QSqlQuery q(checkDb);
-            q.prepare(QStringLiteral("SELECT notes FROM compendium_builds "
-                                     "WHERE build_id = ? AND schema_version = ? AND source_manifest_json = ? LIMIT 1"));
-            q.addBindValue(buildId);
-            q.addBindValue(schemaVersion);
-            q.addBindValue(normalizedManifestJson);
-            manifestMatches = q.exec() && q.next();
-            if (manifestMatches) {
-                storedFingerprint = enrichmentFingerprintFromBuildNotes(q.value(0).toString());
-            }
-            checkDb.close();
-        }
-        checkDb = QSqlDatabase();
-        QSqlDatabase::removeDatabase(checkConn);
-        const bool enrichmentMatches = !storedFingerprint.isEmpty() && storedFingerprint == enrichmentFingerprint;
-        if (manifestMatches && enrichmentMatches && QFileInfo::exists(finalReportPath)) {
-            qInfo() << "[build-compendium] Existing DB already matches the requested manifest and enrichment "
-                       "inputs — skipping rebuild.";
-            qInfo() << "[build-compendium] Change the manifest, enrichment inputs, or delete the DB to force a "
-                       "full rebuild.";
-            return 0;
-        }
-        if (manifestMatches && !enrichmentMatches) {
-            qInfo() << "[build-compendium] Enrichment inputs changed since last build — rebuilding.";
-        }
+    const bool forceFullRebuild = ctx.parser.isSet(QStringLiteral("force-full-rebuild"));
+    CompendiumBuildPlan buildPlan;
+    if (!planCompendiumBuild(finalOutputPath, schemaVersion, sources, enrichmentFingerprint, forceFullRebuild,
+            QFileInfo::exists(finalReportPath), buildPlan, error)) {
+        qCritical().noquote() << QStringLiteral("✗ %1").arg(error);
+        return 1;
     }
 
-    const QString connectionName = QStringLiteral("compendium-") + QUuid::createUuid().toString(QUuid::WithoutBraces);
+    if (buildPlan.mode == CompendiumBuildMode::Skip) {
+        bool manifestDrift = false;
+        {
+            const QString connectionName = QStringLiteral("compendium-manifest-drift-")
+                + QUuid::createUuid().toString(QUuid::WithoutBraces);
+            QSqlDatabase database = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), connectionName);
+            database.setDatabaseName(finalOutputPath);
+            if (database.open()) {
+                QSqlQuery query(database);
+                if (query.exec(QStringLiteral("SELECT source_manifest_json FROM compendium_builds "
+                                              "ORDER BY built_at DESC LIMIT 1"))
+                    && query.next()) {
+                    manifestDrift
+                        = normalizeManifestJson(query.value(0).toString()) != normalizedManifestJson;
+                }
+                releaseDatabase(database, connectionName);
+            } else {
+                QSqlDatabase::removeDatabase(connectionName);
+            }
+        }
+
+        if (manifestDrift) {
+            qInfo() << "[build-compendium] Source checksums unchanged — syncing manifest metadata.";
+            const QString connectionName = QStringLiteral("compendium-manifest-sync-")
+                + QUuid::createUuid().toString(QUuid::WithoutBraces);
+            QSqlDatabase database = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), connectionName);
+            database.setDatabaseName(finalOutputPath);
+            if (!database.open()) {
+                qCritical() << "✗ Failed to open database for manifest sync:" << database.lastError().text();
+                return 1;
+            }
+            applyCompendiumBuildPragmas(database);
+            if (!database.transaction()) {
+                qCritical() << "✗ Failed to start manifest sync transaction:" << database.lastError().text();
+                releaseDatabase(database, connectionName);
+                return 1;
+            }
+            if (!syncManifestSourcesToDatabase(
+                    database, sources, { }, buildId, schemaVersion, normalizedManifestJson, error)) {
+                database.rollback();
+                qCritical().noquote() << QStringLiteral("✗ %1").arg(error);
+                releaseDatabase(database, connectionName);
+                return 1;
+            }
+            if (!database.commit()) {
+                qCritical() << "✗ Failed to commit manifest sync transaction:" << database.lastError().text();
+                releaseDatabase(database, connectionName);
+                return 1;
+            }
+            releaseDatabase(database, connectionName);
+            return 0;
+        }
+
+        qInfo() << "[build-compendium] Existing DB already matches manifest source checksums and enrichment "
+                   "inputs — skipping rebuild.";
+        qInfo() << "[build-compendium] Use --force-full-rebuild or delete the DB to force a full rebuild.";
+        return 0;
+    }
+
     const QDateTime startedAt = QDateTime::currentDateTimeUtc();
     QElapsedTimer timer;
     timer.start();
+    const QString progressPath = finalOutputPath + QStringLiteral(".progress.json");
+
+    if (buildPlan.mode == CompendiumBuildMode::EnrichmentOnly) {
+        qInfo() << "[build-compendium] Source checksums unchanged — running enrichment-only refresh.";
+        if (!QFile::copy(finalOutputPath, stagedOutputPath)) {
+            qCritical() << "✗ Failed to stage existing database for enrichment refresh:" << finalOutputPath;
+            return 1;
+        }
+
+        const QString connectionName
+            = QStringLiteral("compendium-enrich-refresh-") + QUuid::createUuid().toString(QUuid::WithoutBraces);
+        QSqlDatabase database = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), connectionName);
+        database.setDatabaseName(stagedOutputPath);
+        if (!database.open()) {
+            qCritical() << "✗ Failed to open staged database:" << database.lastError().text();
+            return 1;
+        }
+        applyCompendiumBuildPragmas(database);
+
+        if (!database.transaction()) {
+            qCritical() << "✗ Failed to start enrichment metadata transaction:" << database.lastError().text();
+            return 1;
+        }
+        if (!syncManifestSourcesToDatabase(database, sources, { }, buildId, schemaVersion, normalizedManifestJson, error)) {
+            database.rollback();
+            qCritical().noquote() << QStringLiteral("✗ %1").arg(error);
+            releaseDatabase(database, connectionName);
+            QFile::remove(stagedOutputPath);
+            return 1;
+        }
+        if (!database.commit()) {
+            qCritical() << "✗ Failed to commit enrichment metadata transaction:" << database.lastError().text();
+            releaseDatabase(database, connectionName);
+            QFile::remove(stagedOutputPath);
+            return 1;
+        }
+
+        QJsonObject existingReport;
+        QFile existingReportFile(finalReportPath);
+        if (existingReportFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+            const QJsonDocument doc = QJsonDocument::fromJson(existingReportFile.readAll());
+            if (doc.isObject())
+                existingReport = doc.object();
+        }
+
+        EnrichmentProgressCallback onEnrichProgress = [&](int passIdx, int totalPasses, const QString &passName) {
+            const int pct = 10 + (passIdx - 1) * 85 / (totalPasses > 0 ? totalPasses : 1);
+            const QJsonObject obj {
+                { QStringLiteral("status"), QStringLiteral("enriching") },
+                { QStringLiteral("enrichment_pass_current"), passIdx },
+                { QStringLiteral("enrichment_pass_total"), totalPasses },
+                { QStringLiteral("enrichment_pass_name"), passName },
+                { QStringLiteral("overall_pct"), pct },
+                { QStringLiteral("elapsed_ms"), static_cast<qint64>(timer.elapsed()) },
+            };
+            QFile pf(progressPath);
+            if (pf.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text))
+                pf.write(QJsonDocument(obj).toJson());
+        };
+
+        QJsonObject report;
+        if (runCompendiumEnrichmentOnlyRefresh(database, buildId, finalReportPath, existingReport,
+                enrichmentFingerprint, metadataDir, gametdbDir, openvgdbPath, credPath, mameCatverPath, mameListXmlPath,
+                sourceFilter, onEnrichProgress, report, error)
+            != 0) {
+            qCritical().noquote() << QStringLiteral("✗ %1").arg(error);
+            releaseDatabase(database, connectionName);
+            QFile::remove(stagedOutputPath);
+            return 1;
+        }
+
+        report.insert(QStringLiteral("build_id"), buildId);
+        report.insert(QStringLiteral("schema_version"), schemaVersion);
+        report.insert(QStringLiteral("duration_ms"), static_cast<qint64>(timer.elapsed()));
+
+        int conflictsCount = scalarCount(
+            database, QStringLiteral("SELECT COUNT(*) FROM merge_conflicts WHERE resolution_status = 'unresolved'"), error);
+        if (conflictsCount < 0) {
+            qCritical().noquote() << QStringLiteral("✗ Failed to count unresolved conflicts: %1").arg(error);
+            releaseDatabase(database, connectionName);
+            QFile::remove(stagedOutputPath);
+            return 1;
+        }
+        report.insert(QStringLiteral("unresolved_conflicts"), conflictsCount);
+
+        if (!writeReport(stagedReportPath, report, error)) {
+            qCritical().noquote() << QStringLiteral("✗ %1").arg(error);
+            releaseDatabase(database, connectionName);
+            QFile::remove(stagedOutputPath);
+            return 1;
+        }
+
+        releaseDatabase(database, connectionName);
+        if (!promoteStagedFile(stagedOutputPath, finalOutputPath, error)) {
+            qCritical().noquote() << QStringLiteral("✗ %1").arg(error);
+            return 1;
+        }
+        if (!promoteStagedFile(stagedReportPath, finalReportPath, error)) {
+            qCritical().noquote() << QStringLiteral("✗ %1").arg(error);
+            return 1;
+        }
+        return conflictsCount > 0 ? 2 : 0;
+    }
+
+    const bool incrementalIngest = buildPlan.mode == CompendiumBuildMode::IncrementalIngest;
+    if (incrementalIngest) {
+        qInfo().noquote() << QStringLiteral("[build-compendium] Incremental ingest for %1 changed source(s).")
+                                 .arg(buildPlan.sourcesToIngest.size());
+        if (!QFile::copy(finalOutputPath, stagedOutputPath)) {
+            qCritical() << "✗ Failed to copy existing database for incremental ingest:" << finalOutputPath;
+            return 1;
+        }
+    } else {
+        qInfo() << "[build-compendium] Running full compendium rebuild.";
+        QFile::remove(stagedOutputPath);
+        QFile::remove(stagedReportPath);
+    }
+
+    const QString connectionName = QStringLiteral("compendium-") + QUuid::createUuid().toString(QUuid::WithoutBraces);
 
     QSqlDatabase database = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), connectionName);
     database.setDatabaseName(stagedOutputPath);
@@ -233,106 +378,108 @@ int handleBuildCompendiumCommand(CliContext &ctx) {
     }
 
     {
-        QSqlQuery pragmaQuery(database);
-        if (!pragmaQuery.exec(QStringLiteral("PRAGMA foreign_keys = ON"))) {
-            qCritical() << "✗ Failed to enable foreign keys:" << pragmaQuery.lastError().text();
-            releaseDatabase(database, connectionName);
-            return 1;
-        }
+        applyCompendiumBuildPragmas(database);
+    }
 
-        const QStringList buildPragmas = {
-            QStringLiteral("PRAGMA journal_mode = WAL"),
-            QStringLiteral("PRAGMA synchronous = OFF"),
-            QStringLiteral("PRAGMA temp_store = MEMORY"),
-            QStringLiteral("PRAGMA cache_size = -131072"),
-        };
-        for (const QString &pragma : buildPragmas) {
-            if (!pragmaQuery.exec(pragma)) {
-                qWarning() << "[buildCompendium] PRAGMA hint failed (non-fatal):" << pragma
-                           << pragmaQuery.lastError().text();
+    if (!incrementalIngest) {
+        for (const QString &scriptPath : sqlScripts) {
+            if (!executeSqlScript(database, scriptPath, error)) {
+                qCritical().noquote() << QStringLiteral("✗ %1").arg(error);
+                database.close();
+                QSqlDatabase::removeDatabase(connectionName);
+                return 1;
             }
         }
-    }
 
-    for (const QString &scriptPath : sqlScripts) {
-        if (!executeSqlScript(database, scriptPath, error)) {
-            qCritical().noquote() << QStringLiteral("✗ %1").arg(error);
+        if (!database.transaction()) {
+            qCritical() << "✗ Failed to start transaction:" << database.lastError().text();
             database.close();
             QSqlDatabase::removeDatabase(connectionName);
             return 1;
         }
-    }
 
-    if (!database.transaction()) {
-        qCritical() << "✗ Failed to start transaction:" << database.lastError().text();
-        database.close();
-        QSqlDatabase::removeDatabase(connectionName);
-        return 1;
-    }
+        {
+            QSqlQuery buildQuery(database);
+            buildQuery.prepare(QStringLiteral(
+                "INSERT INTO compendium_builds (build_id, schema_version, built_at, source_manifest_json, notes) "
+                "VALUES (?, ?, ?, ?, ?)"));
+            buildQuery.addBindValue(buildId);
+            buildQuery.addBindValue(schemaVersion);
+            buildQuery.addBindValue(QDateTime::currentDateTimeUtc().toString(Qt::ISODate));
+            buildQuery.addBindValue(normalizedManifestJson);
+            buildQuery.addBindValue(QStringLiteral("Phase 1 bootstrap compiler run"));
+            if (!execPrepared(buildQuery, error, QStringLiteral("Insert compendium build"))) {
+                database.rollback();
+                qCritical().noquote() << QStringLiteral("✗ %1").arg(error);
+                releaseDatabase(database, connectionName);
+                return 1;
+            }
+        }
 
-    {
-        QSqlQuery buildQuery(database);
-        buildQuery.prepare(QStringLiteral(
-            "INSERT INTO compendium_builds (build_id, schema_version, built_at, source_manifest_json, notes) "
-            "VALUES (?, ?, ?, ?, ?)"));
-        buildQuery.addBindValue(buildId);
-        buildQuery.addBindValue(schemaVersion);
-        buildQuery.addBindValue(QDateTime::currentDateTimeUtc().toString(Qt::ISODate));
-        buildQuery.addBindValue(normalizedManifestJson);
-        buildQuery.addBindValue(QStringLiteral("Phase 1 bootstrap compiler run"));
-        if (!execPrepared(buildQuery, error, QStringLiteral("Insert compendium build"))) {
+        for (const CompendiumSourceDescriptor &source : sources) {
+            QSqlQuery sourceQuery(database);
+            sourceQuery.prepare(QStringLiteral("INSERT INTO sources (source_id, display_name, source_type, license_id, "
+                                               "license_url, attribution_required, priority, enabled) "
+                                               "VALUES (?, ?, ?, ?, ?, ?, ?, ?)"));
+            sourceQuery.addBindValue(source.sourceId);
+            sourceQuery.addBindValue(source.displayName);
+            sourceQuery.addBindValue(source.sourceType);
+            sourceQuery.addBindValue(source.licenseId.isEmpty() ? QVariant() : QVariant(source.licenseId));
+            sourceQuery.addBindValue(source.licenseUrl.isEmpty() ? QVariant() : QVariant(source.licenseUrl));
+            sourceQuery.addBindValue(source.attributionRequired ? 1 : 0);
+            sourceQuery.addBindValue(source.priority);
+            sourceQuery.addBindValue(source.enabled ? 1 : 0);
+            if (!execPrepared(sourceQuery, error, QStringLiteral("Insert source %1").arg(source.sourceId))) {
+                database.rollback();
+                qCritical().noquote() << QStringLiteral("✗ %1").arg(error);
+                database.close();
+                QSqlDatabase::removeDatabase(connectionName);
+                return 1;
+            }
+
+            QSqlQuery snapshotQuery(database);
+            snapshotQuery.prepare(QStringLiteral("INSERT INTO source_snapshots (snapshot_id, source_id, snapshot_label, "
+                                                 "snapshot_ref, fetched_at, checksum_sha256) "
+                                                 "VALUES (?, ?, ?, ?, ?, ?)"));
+            snapshotQuery.addBindValue(source.snapshotId);
+            snapshotQuery.addBindValue(source.sourceId);
+            snapshotQuery.addBindValue(source.snapshotLabel);
+            snapshotQuery.addBindValue(source.snapshotRef.isEmpty() ? QVariant() : QVariant(source.snapshotRef));
+            snapshotQuery.addBindValue(source.fetchedAt.isEmpty() ? QVariant() : QVariant(source.fetchedAt));
+            snapshotQuery.addBindValue(source.checksumSha256.isEmpty() ? QVariant() : QVariant(source.checksumSha256));
+            if (!execPrepared(snapshotQuery, error, QStringLiteral("Insert snapshot %1").arg(source.snapshotId))) {
+                database.rollback();
+                qCritical().noquote() << QStringLiteral("✗ %1").arg(error);
+                database.close();
+                QSqlDatabase::removeDatabase(connectionName);
+                return 1;
+            }
+        }
+
+        if (!database.commit()) {
+            qCritical() << "✗ Failed to commit compendium metadata:" << database.lastError().text();
+            database.close();
+            QSqlDatabase::removeDatabase(connectionName);
+            return 1;
+        }
+    } else {
+        if (!database.transaction()) {
+            qCritical() << "✗ Failed to start incremental metadata transaction:" << database.lastError().text();
+            releaseDatabase(database, connectionName);
+            return 1;
+        }
+        if (!syncManifestSourcesToDatabase(database, sources, buildPlan.sourcesToIngest, buildId, schemaVersion,
+                normalizedManifestJson, error)) {
             database.rollback();
             qCritical().noquote() << QStringLiteral("✗ %1").arg(error);
             releaseDatabase(database, connectionName);
             return 1;
         }
-    }
-
-    for (const CompendiumSourceDescriptor &source : sources) {
-        QSqlQuery sourceQuery(database);
-        sourceQuery.prepare(QStringLiteral("INSERT INTO sources (source_id, display_name, source_type, license_id, "
-                                           "license_url, attribution_required, priority, enabled) "
-                                           "VALUES (?, ?, ?, ?, ?, ?, ?, ?)"));
-        sourceQuery.addBindValue(source.sourceId);
-        sourceQuery.addBindValue(source.displayName);
-        sourceQuery.addBindValue(source.sourceType);
-        sourceQuery.addBindValue(source.licenseId.isEmpty() ? QVariant() : QVariant(source.licenseId));
-        sourceQuery.addBindValue(source.licenseUrl.isEmpty() ? QVariant() : QVariant(source.licenseUrl));
-        sourceQuery.addBindValue(source.attributionRequired ? 1 : 0);
-        sourceQuery.addBindValue(source.priority);
-        sourceQuery.addBindValue(source.enabled ? 1 : 0);
-        if (!execPrepared(sourceQuery, error, QStringLiteral("Insert source %1").arg(source.sourceId))) {
-            database.rollback();
-            qCritical().noquote() << QStringLiteral("✗ %1").arg(error);
-            database.close();
-            QSqlDatabase::removeDatabase(connectionName);
+        if (!database.commit()) {
+            qCritical() << "✗ Failed to commit incremental metadata:" << database.lastError().text();
+            releaseDatabase(database, connectionName);
             return 1;
         }
-
-        QSqlQuery snapshotQuery(database);
-        snapshotQuery.prepare(QStringLiteral("INSERT INTO source_snapshots (snapshot_id, source_id, snapshot_label, "
-                                             "snapshot_ref, fetched_at, checksum_sha256) "
-                                             "VALUES (?, ?, ?, ?, ?, ?)"));
-        snapshotQuery.addBindValue(source.snapshotId);
-        snapshotQuery.addBindValue(source.sourceId);
-        snapshotQuery.addBindValue(source.snapshotLabel);
-        snapshotQuery.addBindValue(source.snapshotRef.isEmpty() ? QVariant() : QVariant(source.snapshotRef));
-        snapshotQuery.addBindValue(source.fetchedAt.isEmpty() ? QVariant() : QVariant(source.fetchedAt));
-        snapshotQuery.addBindValue(source.checksumSha256.isEmpty() ? QVariant() : QVariant(source.checksumSha256));
-        if (!execPrepared(snapshotQuery, error, QStringLiteral("Insert snapshot %1").arg(source.snapshotId))) {
-            database.rollback();
-            qCritical().noquote() << QStringLiteral("✗ %1").arg(error);
-            database.close();
-            QSqlDatabase::removeDatabase(connectionName);
-            return 1;
-        }
-    }
-
-    if (!database.commit()) {
-        qCritical() << "✗ Failed to commit compendium metadata:" << database.lastError().text();
-        database.close();
-        QSqlDatabase::removeDatabase(connectionName);
-        return 1;
     }
 
     // ── Run compiler service (extraction → linking → persistence → merge) ──────
@@ -372,11 +519,14 @@ int handleBuildCompendiumCommand(CliContext &ctx) {
     Remus::Compendium::CompendiumCompilerService service;
 
     // ── Progress tracking: <output>.progress.json — query with cat or jq ─────
-    const QString progressPath = finalOutputPath + QStringLiteral(".progress.json");
     int totalEnabled = 0;
     for (const auto &s : std::as_const(buildConfig.sources)) {
-        if (s.enabled)
+        if (s.enabled) {
+            if (incrementalIngest && !buildPlan.sourcesToIngest.contains(s.sourceId)) {
+                continue;
+            }
             ++totalEnabled;
+        }
     }
 
     auto writeProgress = [&](const QString &status, int current, const QString &srcId,
@@ -406,7 +556,15 @@ int handleBuildCompendiumCommand(CliContext &ctx) {
           };
     writeProgress(QStringLiteral("in_progress"), 0, { }, { });
 
-    const Remus::Compendium::CompilerStats stats = service.run(buildConfig, database, error, onProgress);
+    Remus::Compendium::CompilerRunOptions runOptions;
+    if (incrementalIngest) {
+        runOptions.ingestSourceIds = buildPlan.sourcesToIngest;
+        runOptions.purgeChangedSources = true;
+        runOptions.preloadIdentityLinker = true;
+    }
+
+    const Remus::Compendium::CompilerStats stats
+        = service.run(buildConfig, database, error, onProgress, runOptions);
     if (!error.isEmpty()) {
         database.rollback();
         qCritical().noquote() << QStringLiteral("✗ Compiler service failed: %1").arg(error);
@@ -514,6 +672,8 @@ int handleBuildCompendiumCommand(CliContext &ctx) {
     insertEnrichmentStatsReportFields(report, enrichStats, QStringLiteral("post_enrich_resolved_fields"));
     report.insert(QStringLiteral("enrichment_inputs_fingerprint"), enrichmentFingerprint);
     report.insert(QStringLiteral("duration_ms"), static_cast<qint64>(timer.elapsed()));
+    report.insert(QStringLiteral("build_mode"), incrementalIngest ? QStringLiteral("incremental_ingest")
+                                                                    : QStringLiteral("full_rebuild"));
 
     if (!writeReport(reportPath, report, error)) {
         qCritical().noquote() << QStringLiteral("✗ %1").arg(error);

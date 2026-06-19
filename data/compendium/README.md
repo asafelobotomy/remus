@@ -115,8 +115,8 @@ Steps performed by `build_compendium_full.sh`:
 3. `remus-cli --build-compendium` — ingest DATs, run enrichment passes, merge, FTS index
 4. `scripts/import_patch_catalog.sh` — import libretro hack/translation DATs into the patch catalog tables
 5. `.github/scripts/validate-compendium-db.sh` — schema and content validation gates
-6. `--coverage-report` — per-source TSV coverage summary (includes disc set coverage in header)
-7. `--disc-set-coverage` — per-system disc set topology coverage for disc-based platforms
+6. `--coverage-report` — per-source TSV coverage summary (aggregate disc-set stats in header)
+7. `--disc-set-coverage` — per-system disc set topology coverage for disc-based platforms (written to `remus_compendium.disc-set-coverage.tsv` by default)
 
 Patch catalog import runs **after** the compendium build because it writes to
 `patch_catalog_sources` / `patch_catalog_entries` in the populated database.
@@ -136,6 +136,30 @@ bash scripts/import_patch_catalog.sh data/compendium/remus_compendium.db
 # Inspect patch catalog coverage directly
 sqlite3 data/compendium/remus_compendium.db "SELECT system_name, catalog_name, entry_count FROM patch_catalog_sources ORDER BY system_name;"
 ```
+
+### Incremental build modes
+
+`--build-compendium` compares each enabled DAT source's `checksum_sha256` against the
+latest row in `source_snapshots` (daily manifest `build_id` churn is ignored). Depending
+on what changed, it chooses one of:
+
+| Mode | When | Work performed |
+|------|------|----------------|
+| **Skip** | All checksums match, enrichment fingerprint matches, report exists | No-op |
+| **Enrichment-only** | Checksums match, enrichment inputs changed | Re-run enrichment passes + FTS on existing DB |
+| **Incremental ingest** | One or more DAT checksums changed | Purge/re-ingest changed sources only, then dedup/merge/enrichment |
+| **Full** | No DB, schema mismatch, `--force-full-rebuild`, or missing report with matching inputs | Drop schema, ingest all DATs |
+
+Use `--force-full-rebuild` to bypass incremental planning and always drop schema + re-ingest
+every enabled DAT.
+
+For offline Hasheous enrichment during builds, download platform dumps once:
+
+```bash
+scripts/update_hasheous_dumps.sh --all-core
+```
+
+(`scripts/update_dats.sh --all` optionally syncs these at the end when the script is present.)
 
 ## Files
 

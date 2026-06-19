@@ -16,7 +16,8 @@ Shell helpers for build, compendium, packaging, testing, and workspace hygiene. 
 | Script | Purpose |
 |--------|---------|
 | [`setup_compendium_db.sh`](setup_compendium_db.sh) | **Run once per clone** — create bootstrap `data/compendium/remus_compendium.db` (schema + seeds; gitignored) |
-| [`build_compendium_full.sh`](build_compendium_full.sh) | Full pipeline: refresh DATs, generate manifest, build populated DB, validate, coverage TSV |
+| [`build_compendium_full.sh`](build_compendium_full.sh) | Full pipeline: refresh DATs, generate manifest, build populated DB, validate, per-source + disc-set coverage TSV |
+| [`ci_compendium_fixture_build.sh`](ci_compendium_fixture_build.sh) | CI smoke: fixture DAT ingest + disc-set validation gates |
 | [`generate_compendium_manifest.sh`](generate_compendium_manifest.sh) | Build `compendium-manifest-full.json` from DAT files |
 | [`backfill_disc_sets.sh`](backfill_disc_sets.sh) | One-time backfill of `game_disc_sets` / tracks on an existing compendium DB |
 | [`import_patch_catalog.sh`](import_patch_catalog.sh) | Import libretro patch DATs into compendium patch catalog tables |
@@ -26,7 +27,8 @@ Shell helpers for build, compendium, packaging, testing, and workspace hygiene. 
 
 | Script | Purpose |
 |--------|---------|
-| [`update_dats.sh`](update_dats.sh) | Download/update No-Intro/Redump DAT files under `data/databases/` |
+| [`update_dats.sh`](update_dats.sh) | Download/update No-Intro/Redump DAT files under `data/databases/` (skips unchanged libretro copies by SHA256) |
+| [`update_hasheous_dumps.sh`](update_hasheous_dumps.sh) | Download Hasheous offline platform dump ZIPs to `data/hasheous/dumps/` for offline hash enrichment |
 | [`update_mame_listxml.sh`](update_mame_listxml.sh) | Fetch MAME `listxml.xml` for compendium enrichment |
 
 ## Testing

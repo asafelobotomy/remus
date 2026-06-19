@@ -188,18 +188,41 @@ fi
 copied=0
 skipped=0
 
-# Helper: copy a DAT file to a target directory
+sha256_of() {
+    local file="$1"
+    if command -v sha256sum >/dev/null 2>&1; then
+        sha256sum "$file" | awk '{print $1}'
+    elif command -v shasum >/dev/null 2>&1; then
+        shasum -a 256 "$file" | awk '{print $1}'
+    else
+        echo "error: no sha256 utility (sha256sum or shasum) found" >&2
+        return 1
+    fi
+}
+
+# Helper: copy a DAT file to a target directory (skip when content unchanged)
 copy_dat() {
     local src="$1"
     local dest_dir="$2"
     local basename
     basename="$(basename "$src")"
+    local dest_path="$dest_dir/$basename"
 
     if [[ ! -f "$src" ]]; then
         return
     fi
 
-    cp "$src" "$dest_dir/$basename"
+    if [[ -f "$dest_path" ]]; then
+        local src_hash dest_hash
+        src_hash="$(sha256_of "$src")"
+        dest_hash="$(sha256_of "$dest_path")"
+        if [[ "$src_hash" == "$dest_hash" ]]; then
+            skipped=$((skipped + 1))
+            return
+        fi
+    fi
+
+    cp "$src" "$dest_path"
     copied=$((copied + 1))
 }
 
@@ -778,6 +801,13 @@ done
 
 echo ""
 echo "Done: $copied DATs copied, $skipped skipped, $meta_copied metadata DATs copied, $gametdb_copied GameTDB databases downloaded"
+
+if [[ -x "$PROJECT_ROOT/scripts/update_hasheous_dumps.sh" ]]; then
+    echo ""
+    echo "==> Hasheous offline dump sync (optional enrichment cache)"
+    bash "$PROJECT_ROOT/scripts/update_hasheous_dumps.sh" --all-core \
+        || echo "  warning: Hasheous dump sync failed or skipped (see above)" >&2
+fi
 
 # ── OpenVGDB SQLite ────────────────────────────────────────────────────────────
 # OpenVGDB v29.0 (MIT licence) — CRC/SHA1/MD5 ROM metadata with descriptions,

@@ -132,8 +132,11 @@ section "6. Compendium bootstrap"
 if bash scripts/setup_compendium_db.sh 2>&1; then
     if bash .github/scripts/validate-compendium-db.sh \
             data/compendium/remus_compendium.db \
-            data/compendium/validation/0000_bootstrap_checks.sql 2>&1; then
-        pass "Compendium bootstrap validation"
+            data/compendium/validation/0000_bootstrap_checks.sql 2>&1 \
+       && bash .github/scripts/validate-compendium-db.sh \
+            data/compendium/remus_compendium.db \
+            data/compendium/validation/0004_disc_set_checks.sql 2>&1; then
+        pass "Compendium bootstrap validation (0000 + 0004)"
     else
         fail "Compendium bootstrap validation"
     fi
@@ -152,8 +155,8 @@ if cmake --preset coverage -Wno-dev 2>&1 \
          --rc lcov_branch_coverage=0 2>&1
     lcov --remove "$BUILD_COV/coverage.info" '/usr/*' '*/tests/*' \
          --output-file "$BUILD_COV/coverage.info" 2>&1
-    COVERAGE_THRESHOLD=50 bash .github/scripts/check-coverage-threshold.sh \
-        "$BUILD_COV/coverage.info" 2>&1 && pass "Coverage ≥ 50%" || fail "Coverage below threshold"
+    COVERAGE_THRESHOLD=60 bash .github/scripts/check-coverage-threshold.sh \
+        "$BUILD_COV/coverage.info" 2>&1 && pass "Coverage ≥ 60%" || fail "Coverage below threshold"
     genhtml "$BUILD_COV/coverage.info" \
             --output-directory "$BUILD_COV/coverage-html" 2>&1 | tail -3
     info "HTML report: $ROOT_DIR/$BUILD_COV/coverage-html/index.html"

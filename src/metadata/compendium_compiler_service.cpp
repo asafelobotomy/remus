@@ -5,18 +5,26 @@
 #include "compendium_identity_linker.h"
 #include "compendium_fact_inserter.h"
 #include "compendium_merge_resolver.h"
+#include "compendium_source_purge.h"
 
 #include <QDebug>
 #include <QSqlDatabase>
 #include <QSqlError>
 #include <QSqlQuery>
+#include <QThread>
+#include <QtConcurrent>
 
 namespace Remus {
 namespace Compendium {
 
     namespace {
 
-        // Reassign child rows to winners and delete loser game rows.
+        struct SourceExtractBatch {
+            CompendiumSourceConfig source;
+            QList<SourceRecordEnvelope> records;
+            QString error;
+        };
+
         int applyDedupMap(QSqlDatabase &db, QString &error) {
             QSqlQuery q(db);
 
@@ -81,8 +89,6 @@ namespace Compendium {
 
     } // namespace
 
-    // Remove Sony-style serial rows whose product-code prefix disagrees with the
-    // game's primary region (e.g. ULUS on an ASIA game from a bad upstream DAT).
     int pruneRegionMismatchedSerials(QSqlDatabase &db, QString &error) {
         QSqlQuery q(db);
         if (!q.exec(QStringLiteral(R"(
@@ -111,8 +117,6 @@ namespace Compendium {
         return q.numRowsAffected();
     }
 
-    // ── Post-ingest dedup ─────────────────────────────────────────────────────────
-    // See header for full documentation.
     int deduplicateGames(QSqlDatabase &db, QString &error) {
         const int pruned = pruneRegionMismatchedSerials(db, error);
         if (pruned < 0) {
@@ -201,69 +205,102 @@ namespace Compendium {
         return totalMerged;
     }
 
-    // ── Compiler service ──────────────────────────────────────────────────────────
-
-    CompilerStats CompendiumCompilerService::run(
-        const CompendiumBuildConfig &config, QSqlDatabase &db, QString &error, ProgressCallback onProgress) {
+    CompilerStats CompendiumCompilerService::run(const CompendiumBuildConfig &config, QSqlDatabase &db, QString &error,
+        ProgressCallback onProgress, const CompilerRunOptions &options) {
         CompilerStats stats;
         const CompendiumNormalizer normalizer;
-        IdentityLinker linker; // stateful: accumulates maps across sources
+        IdentityLinker linker;
         const FactInserter inserter;
         const MergeResolver resolver;
 
-        // Count enabled sources once for accurate progress reporting.
-        int totalEnabled = 0;
-        for (const auto &s : config.sources) {
-            if (s.enabled)
-                ++totalEnabled;
+        if (options.preloadIdentityLinker) {
+            if (!linker.loadFromDatabase(db, error)) {
+                error = QStringLiteral("Failed to preload identity linker: %1").arg(error);
+                return stats;
+            }
         }
-        int processed = 0;
 
+        QList<CompendiumSourceConfig> toProcess;
         for (const CompendiumSourceConfig &src : config.sources) {
             if (!src.enabled) {
                 ++stats.skippedDisabled;
                 continue;
             }
-
+            if (!options.ingestSourceIds.isEmpty() && !options.ingestSourceIds.contains(src.sourceId)) {
+                continue;
+            }
             if (src.sourceType != QStringLiteral("dat")) {
                 error = QStringLiteral("Source '%1' has unsupported source_type '%2' — only 'dat' is supported")
                             .arg(src.sourceId, src.sourceType);
                 return stats;
             }
+            toProcess.append(src);
+        }
 
-            // ── Extract ───────────────────────────────────────────────────────────
+        const int totalEnabled = toProcess.size();
+        int processed = 0;
+
+        const int parallelism = options.extractParallelism <= 0 ? qMax(1, QThread::idealThreadCount())
+                                                                : options.extractParallelism;
+
+        const auto extractSource = [&](const CompendiumSourceConfig &src) -> SourceExtractBatch {
+            SourceExtractBatch batch;
+            batch.source = src;
             QString extractError;
-            QList<SourceRecordEnvelope> records
-                = DatExtractor::extract(src.filePath, src.sourceId, src.snapshotId, extractError);
-
-            if (records.isEmpty()) {
+            batch.records = DatExtractor::extract(src.filePath, src.sourceId, src.snapshotId, extractError);
+            if (batch.records.isEmpty()) {
                 if (!extractError.isEmpty()) {
-                    qWarning() << "[CompendiumCompilerService] Extraction failed for" << src.sourceId << ":"
-                               << extractError;
+                    batch.error = QStringLiteral("Source '%1': extraction failed: %2").arg(src.sourceId, extractError);
+                } else {
+                    batch.error = QStringLiteral("Source '%1': DAT produced zero ingestible records: %2")
+                                      .arg(src.sourceId, src.filePath);
                 }
-                continue;
+                return batch;
             }
-
-            // ── Normalize ─────────────────────────────────────────────────────────
-            for (SourceRecordEnvelope &rec : records) {
+            for (SourceRecordEnvelope &rec : batch.records) {
                 normalizer.normalize(rec);
             }
+            return batch;
+        };
 
-            // ── Link identities (stateful: cross-source maps persist) ─────────────
-            linker.link(records);
+        QList<SourceExtractBatch> batches;
+        if (parallelism <= 1 || toProcess.size() <= 1) {
+            batches.reserve(toProcess.size());
+            for (const CompendiumSourceConfig &src : toProcess) {
+                batches.append(extractSource(src));
+            }
+        } else {
+            qInfo().noquote() << QStringLiteral("[CompendiumCompilerService] Parallel DAT extraction (%1 workers, %2 sources)")
+                                     .arg(parallelism)
+                                     .arg(toProcess.size());
+            batches = QtConcurrent::blockingMapped(toProcess, extractSource);
+        }
 
-            // ── Persist ───────────────────────────────────────────────────────────
-            if (!inserter.insert(records, db, stats, error)) {
-                return stats; // error is set
+        for (SourceExtractBatch &batch : batches) {
+            if (!batch.error.isEmpty()) {
+                error = batch.error;
+                return stats;
+            }
+
+            if (options.purgeChangedSources) {
+                if (!purgeSourceIngestData(db, batch.source.sourceId, error)) {
+                    error = QStringLiteral("Failed to purge source '%1': %2").arg(batch.source.sourceId, error);
+                    return stats;
+                }
+            }
+
+            linker.link(batch.records);
+
+            if (!inserter.insert(batch.records, db, stats, error)) {
+                return stats;
             }
 
             ++processed;
             if (onProgress) {
-                onProgress(processed, totalEnabled, src.sourceId, stats);
+                onProgress(processed, totalEnabled, batch.source.sourceId, stats);
             }
         }
 
-        // ── Post-ingest dedup: merge duplicate titles and shared serials ─────────
         {
             QString dedupError;
             const int merged = deduplicateGames(db, dedupError);
@@ -277,7 +314,6 @@ namespace Compendium {
             }
         }
 
-        // ── Merge resolution (single pass over all accumulated facts) ─────────────
         if (!resolver.resolve(db, stats, error)) {
             return stats;
         }

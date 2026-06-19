@@ -37,6 +37,8 @@ add_library(remus-metadata STATIC
     compendium_disc_set_backfill.cpp
     compendium_merge_resolver.cpp
     compendium_compiler_service.cpp
+    compendium_source_purge.cpp
+    compendium_hasheous_offline.cpp
     compendium_provider.cpp
     compendium_provider_lookup.cpp
     compendium_provider_match.cpp
@@ -48,6 +50,7 @@ add_library(remus-metadata STATIC
 
 target_link_libraries(remus-metadata PUBLIC
     Qt6::Core
+    Qt6::Concurrent
     Qt6::Network
     Qt6::Sql
     Qt6::Gui

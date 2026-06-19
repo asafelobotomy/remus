@@ -113,8 +113,6 @@ fi
 
 DAT_DIR="$(cd "$DAT_DIR" && pwd)"
 
-DAT_DIR="$(cd "$DAT_DIR" && pwd)"
-
 # Source IDs that produce zero signatures because the system has no compendium
 # mapping (engine-based platforms, scripting environments, ROM hacks, etc.).
 # Disabled rather than removed so they still appear in the manifest for auditing.
@@ -247,6 +245,31 @@ slug_is_superseded() {
     return 1
 }
 
+declare -A CHECKSUM_BY_FILE=()
+if command -v python3 >/dev/null 2>&1; then
+    while IFS=$'\t' read -r dat_path digest; do
+        [[ -n "$dat_path" && -n "$digest" ]] || continue
+        CHECKSUM_BY_FILE["$dat_path"]="$digest"
+    done < <(python3 - "${ALL_FILES[@]}" <<'PY'
+import hashlib
+import sys
+from concurrent.futures import ThreadPoolExecutor
+
+def digest(path: str) -> tuple[str, str]:
+    h = hashlib.sha256()
+    with open(path, "rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            h.update(chunk)
+    return path, h.hexdigest()
+
+files = sys.argv[1:]
+with ThreadPoolExecutor() as pool:
+    for path, value in pool.map(digest, files):
+        print(f"{path}\t{value}")
+PY
+)
+fi
+
 {
     printf '{\n'
     printf '  "build_id": "%s",\n' "$(json_escape "$BUILD_ID")"
@@ -263,7 +286,10 @@ slug_is_superseded() {
 
         source_id="${dat_prefix}-${slug}"
         snapshot_id="${source_id}-${DATE_STAMP}"
-        checksum_sha256="$(sha256_of "$dat_file")"
+        checksum_sha256="${CHECKSUM_BY_FILE[$dat_file]:-}"
+        if [[ -z "$checksum_sha256" ]]; then
+            checksum_sha256="$(sha256_of "$dat_file")"
+        fi
 
         rel_path="$(compute_relative_path "$dat_file" "$OUTPUT_DIR")"
 

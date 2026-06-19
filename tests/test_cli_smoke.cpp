@@ -554,7 +554,7 @@ private slots:
             { "--build-compendium", "--compendium-manifest", manifestPath, "--compendium-output", outputDbPath },
             secondOutput);
         QVERIFY2(
-            secondOutput.contains("matches the requested manifest", Qt::CaseInsensitive), qPrintable(secondOutput));
+            secondOutput.contains("skipping rebuild", Qt::CaseInsensitive), qPrintable(secondOutput));
 
         writeManifest(false);
 
@@ -562,7 +562,8 @@ private slots:
         runCliCapture(
             { "--build-compendium", "--compendium-manifest", manifestPath, "--compendium-output", outputDbPath },
             thirdOutput);
-        QVERIFY2(!thirdOutput.contains("matches the requested manifest", Qt::CaseInsensitive), qPrintable(thirdOutput));
+        QVERIFY2(thirdOutput.contains("syncing manifest metadata", Qt::CaseInsensitive), qPrintable(thirdOutput));
+        QVERIFY2(!thirdOutput.contains("skipping rebuild", Qt::CaseInsensitive), qPrintable(thirdOutput));
 
         const QString verifyConnectionName = uniqueConnectionName(QStringLiteral("compendium_skip_verify_"));
         {
@@ -875,7 +876,7 @@ private slots:
         runCliCapture(
             { "--build-compendium", "--compendium-manifest", manifestPath, "--compendium-output", outputDbPath },
             secondOutput);
-        QVERIFY2(!secondOutput.contains("matches the requested manifest", Qt::CaseInsensitive),
+        QVERIFY2(!secondOutput.contains("skipping rebuild", Qt::CaseInsensitive),
             qPrintable(QStringLiteral("Expected rebuild but got skip: %1").arg(secondOutput)));
         QVERIFY2(QFile::exists(reportPath), qPrintable(QStringLiteral("Report not regenerated: %1").arg(secondOutput)));
     }
@@ -913,6 +914,181 @@ private slots:
         // Parser must reject the unrecognised source_type before any DB is created.
         runCli({ "--build-compendium", "--compendium-manifest", manifestPath, "--compendium-output", outputDbPath }, 1);
         QVERIFY2(!QFile::exists(outputDbPath), "DB should not be created when source_type is invalid");
+    }
+
+    void testBuildCompendiumRejectsEmptyEnabledSource() {
+        QTemporaryDir dir;
+        QVERIFY(dir.isValid());
+
+        const QString emptyDatPath = dir.filePath("empty.dat");
+        {
+            QFile emptyDat(emptyDatPath);
+            QVERIFY(emptyDat.open(QIODevice::WriteOnly | QIODevice::Text));
+            QVERIFY(emptyDat.write("clrmamepro (\n    name \"Empty\"\n)\n") > 0);
+        }
+
+        const QString manifestPath = dir.filePath("manifest_empty_source.json");
+        {
+            QFile manifestFile(manifestPath);
+            QVERIFY(manifestFile.open(QIODevice::WriteOnly | QIODevice::Text));
+
+            QJsonObject sourceObject;
+            sourceObject.insert("source_id", "empty-source");
+            sourceObject.insert("display_name", "Empty Source");
+            sourceObject.insert("source_type", "dat");
+            sourceObject.insert("snapshot_id", "snapshot-empty");
+            sourceObject.insert("snapshot_label", "Empty");
+            sourceObject.insert("path", emptyDatPath);
+            sourceObject.insert("checksum_sha256", Remus::fileSha256Hex(emptyDatPath));
+            sourceObject.insert("enabled", true);
+            sourceObject.insert("priority", 10);
+
+            QJsonObject manifestObject;
+            manifestObject.insert("build_id", "test-empty-source");
+            manifestObject.insert("schema_version", 1);
+            manifestObject.insert("sources", QJsonArray { sourceObject });
+
+            const QByteArray manifestJson = QJsonDocument(manifestObject).toJson(QJsonDocument::Indented);
+            QVERIFY(manifestFile.write(manifestJson) == manifestJson.size());
+        }
+
+        const QString outputDbPath = dir.filePath("remus_compendium_empty.db");
+        runCli({ "--build-compendium", "--compendium-manifest", manifestPath, "--compendium-output", outputDbPath }, 1);
+        QVERIFY2(!QFile::exists(outputDbPath), "DB should not be promoted when an enabled source yields zero records");
+    }
+
+    void testBuildCompendium_enrichmentOnlyWhenFingerprintChanges() {
+        QTemporaryDir dir;
+        QVERIFY(dir.isValid());
+
+        const QString sourcePath = fixturePath(QStringLiteral("test_compendium_source.dat"));
+        QVERIFY2(!sourcePath.isEmpty(), "Fixture test_compendium_source.dat not found");
+
+        const QString manifestPath = dir.filePath(QStringLiteral("manifest_enrich_only.json"));
+        const QString outputDbPath = dir.filePath(QStringLiteral("remus_compendium_enrich_only.db"));
+        const QString reportPath = dir.filePath(QStringLiteral("remus_compendium_enrich_only.report.json"));
+
+        {
+            QFile manifestFile(manifestPath);
+            QVERIFY(manifestFile.open(QIODevice::WriteOnly | QIODevice::Text));
+            QJsonObject sourceObject;
+            sourceObject.insert(QStringLiteral("source_id"), QStringLiteral("test-source"));
+            sourceObject.insert(QStringLiteral("display_name"), QStringLiteral("Test Source"));
+            sourceObject.insert(QStringLiteral("source_type"), QStringLiteral("dat"));
+            sourceObject.insert(QStringLiteral("snapshot_id"), QStringLiteral("snapshot-001"));
+            sourceObject.insert(QStringLiteral("snapshot_label"), QStringLiteral("Snapshot 001"));
+            sourceObject.insert(QStringLiteral("snapshot_ref"), QStringLiteral("test-ref"));
+            sourceObject.insert(QStringLiteral("path"), sourcePath);
+            sourceObject.insert(QStringLiteral("checksum_sha256"), fixtureDatChecksum());
+            sourceObject.insert(QStringLiteral("enabled"), true);
+            sourceObject.insert(QStringLiteral("priority"), 10);
+
+            QJsonObject manifestObject;
+            manifestObject.insert(QStringLiteral("build_id"), QStringLiteral("test-enrich-only"));
+            manifestObject.insert(QStringLiteral("schema_version"), 1);
+            manifestObject.insert(QStringLiteral("sources"), QJsonArray { sourceObject });
+            const QByteArray manifestJson = QJsonDocument(manifestObject).toJson(QJsonDocument::Indented);
+            QVERIFY(manifestFile.write(manifestJson) == manifestJson.size());
+        }
+
+        runCli({ QStringLiteral("--build-compendium"), QStringLiteral("--compendium-manifest"), manifestPath,
+            QStringLiteral("--compendium-output"), outputDbPath });
+        QVERIFY2(QFile::exists(outputDbPath), "Initial build failed");
+        QVERIFY2(QFile::exists(reportPath), "Initial report missing");
+
+        const QString credPath = dir.filePath(QStringLiteral("enrichment-credentials.json"));
+        {
+            QFile credFile(credPath);
+            QVERIFY(credFile.open(QIODevice::WriteOnly | QIODevice::Text));
+            credFile.write("{\"providers\":{\"hasheous\":{\"client_api_key\":\"test-key\"}}}\n");
+        }
+
+        QString secondOutput;
+        runCliCapture({ QStringLiteral("--build-compendium"), QStringLiteral("--compendium-manifest"), manifestPath,
+                           QStringLiteral("--compendium-output"), outputDbPath },
+            secondOutput);
+        QVERIFY2(secondOutput.contains(QStringLiteral("enrichment-only refresh"), Qt::CaseInsensitive),
+            qPrintable(secondOutput));
+        QVERIFY2(!secondOutput.contains(QStringLiteral("Incremental ingest"), Qt::CaseInsensitive),
+            qPrintable(secondOutput));
+
+        QFile reportFile(reportPath);
+        QVERIFY(reportFile.open(QIODevice::ReadOnly | QIODevice::Text));
+        const QJsonObject report = QJsonDocument::fromJson(reportFile.readAll()).object();
+        QCOMPARE(report.value(QStringLiteral("build_mode")).toString(), QStringLiteral("enrichment_only"));
+    }
+
+    void testBuildCompendium_incrementalIngestOnChecksumChange() {
+        QTemporaryDir dir;
+        QVERIFY(dir.isValid());
+
+        const QString sourcePath = dir.filePath(QStringLiteral("test_source_v1.dat"));
+        {
+            QFile src(fixturePath(QStringLiteral("test_compendium_source.dat")));
+            QVERIFY(src.open(QIODevice::ReadOnly));
+            const QByteArray bytes = src.readAll();
+            src.close();
+            QFile dest(sourcePath);
+            QVERIFY(dest.open(QIODevice::WriteOnly));
+            QVERIFY(dest.write(bytes) == bytes.size());
+        }
+
+        const QString manifestPath = dir.filePath(QStringLiteral("manifest_incremental.json"));
+        const QString outputDbPath = dir.filePath(QStringLiteral("remus_compendium_incremental.db"));
+
+        const auto writeManifest = [&](const QString &datPath, const QString &snapshotId) {
+            QFile manifestFile(manifestPath);
+            QVERIFY(manifestFile.open(QIODevice::WriteOnly | QIODevice::Text));
+            QJsonObject sourceObject;
+            sourceObject.insert(QStringLiteral("source_id"), QStringLiteral("test-source"));
+            sourceObject.insert(QStringLiteral("display_name"), QStringLiteral("Test Source"));
+            sourceObject.insert(QStringLiteral("source_type"), QStringLiteral("dat"));
+            sourceObject.insert(QStringLiteral("snapshot_id"), snapshotId);
+            sourceObject.insert(QStringLiteral("snapshot_label"), QStringLiteral("Snapshot 001"));
+            sourceObject.insert(QStringLiteral("snapshot_ref"), QStringLiteral("test-ref"));
+            sourceObject.insert(QStringLiteral("path"), datPath);
+            sourceObject.insert(QStringLiteral("checksum_sha256"), Remus::fileSha256Hex(datPath));
+            sourceObject.insert(QStringLiteral("enabled"), true);
+            sourceObject.insert(QStringLiteral("priority"), 10);
+
+            QJsonObject manifestObject;
+            manifestObject.insert(QStringLiteral("build_id"), QStringLiteral("test-incremental"));
+            manifestObject.insert(QStringLiteral("schema_version"), 1);
+            manifestObject.insert(QStringLiteral("sources"), QJsonArray { sourceObject });
+            const QByteArray manifestJson = QJsonDocument(manifestObject).toJson(QJsonDocument::Indented);
+            QVERIFY(manifestFile.write(manifestJson) == manifestJson.size());
+        };
+
+        writeManifest(sourcePath, QStringLiteral("snapshot-001"));
+        runCli({ QStringLiteral("--build-compendium"), QStringLiteral("--compendium-manifest"), manifestPath,
+            QStringLiteral("--compendium-output"), outputDbPath });
+        QVERIFY2(QFile::exists(outputDbPath), "Initial build failed");
+
+        const QString changedDatPath = dir.filePath(QStringLiteral("test_source_v2.dat"));
+        {
+            QFile src(sourcePath);
+            QVERIFY(src.open(QIODevice::ReadOnly));
+            QByteArray bytes = src.readAll();
+            src.close();
+            bytes.append("\n// incremental-ingest checksum bump\n");
+            QFile dest(changedDatPath);
+            QVERIFY(dest.open(QIODevice::WriteOnly));
+            QVERIFY(dest.write(bytes) == bytes.size());
+        }
+
+        writeManifest(changedDatPath, QStringLiteral("snapshot-002"));
+
+        QString secondOutput;
+        runCliCapture({ QStringLiteral("--build-compendium"), QStringLiteral("--compendium-manifest"), manifestPath,
+                           QStringLiteral("--compendium-output"), outputDbPath },
+            secondOutput);
+        QVERIFY2(secondOutput.contains(QStringLiteral("Incremental ingest"), Qt::CaseInsensitive),
+            qPrintable(secondOutput));
+
+        QFile reportFile(dir.filePath(QStringLiteral("remus_compendium_incremental.report.json")));
+        QVERIFY(reportFile.open(QIODevice::ReadOnly | QIODevice::Text));
+        const QJsonObject report = QJsonDocument::fromJson(reportFile.readAll()).object();
+        QCOMPARE(report.value(QStringLiteral("build_mode")).toString(), QStringLiteral("incremental_ingest"));
     }
 
     // X1: passing a directory to --export-path must create a file inside it

@@ -96,7 +96,7 @@ jobs:
 
       - name: Enforce coverage threshold
         env:
-          COVERAGE_THRESHOLD: "50"
+          COVERAGE_THRESHOLD: "60"
         run: bash .github/scripts/check-coverage-threshold.sh build/coverage.info
 
       - name: Upload coverage report
@@ -205,3 +205,20 @@ jobs:
             data/compendium/validation/0000_bootstrap_checks.sql
           bash .github/scripts/validate-compendium-db.sh data/compendium/remus_compendium.db \
             data/compendium/validation/0004_disc_set_checks.sql
+
+  compendium-fixture-build:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+
+      - name: Install dependencies
+        run: bash .github/scripts/install-build-deps.sh
+
+      - name: Build remus-cli
+        run: |
+          cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DREMUS_ENABLE_WARNINGS=ON
+          cmake --build build -j$(nproc) --target remus-cli
+
+      - name: Fixture compendium ingest + disc-set validation
+        run: bash scripts/ci_compendium_fixture_build.sh

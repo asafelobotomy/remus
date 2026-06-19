@@ -3,6 +3,7 @@
 #include "compendium_disc_set_inserter.h"
 #include "compendium_normalizer.h"
 
+#include <QDebug>
 #include <QHash>
 #include <QSqlQuery>
 #include <QSqlError>
@@ -290,6 +291,11 @@ namespace Compendium {
             }
             if (!insertFacts(rec, qFact, stats, error, sourcePriority, sourceItemId)) {
                 return false;
+            }
+
+            if ((stats.recordsIngested % 2000) == 0 && stats.recordsIngested > 0) {
+                qInfo().noquote() << QStringLiteral("[FactInserter] Persisted %1 source items...")
+                                         .arg(stats.recordsIngested);
             }
         }
 
