@@ -19,6 +19,8 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+# shellcheck source=gh_git_env.sh
+source "${SCRIPT_DIR}/gh_git_env.sh"
 MAME_DATA_DIR="$PROJECT_ROOT/data/mame"
 OUT_FILE="$MAME_DATA_DIR/listxml.xml"
 CACHE_DIR="${XDG_CACHE_HOME:-$PROJECT_ROOT/.cache}/remus/mame"
@@ -100,7 +102,7 @@ print(url)
     else
         echo "Error: could not resolve mamedev/mame release URL via GitHub API." >&2
         echo "  Install MAME locally (e.g. 'apt install mame' / 'pacman -S mame')" >&2
-        echo "  or set GITHUB_TOKEN to avoid rate-limiting and re-run." >&2
+        echo "  or run 'gh auth login' (or set GITHUB_TOKEN) to avoid rate-limiting and re-run." >&2
         exit 1
     fi
 fi

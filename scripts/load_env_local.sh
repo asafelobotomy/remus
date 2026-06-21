@@ -12,3 +12,7 @@ if [[ -f "${ENV_FILE}" ]]; then
     source "${ENV_FILE}"
     set +a
 fi
+
+# GitHub API token from `gh` when logged in (update_dats, MAME listxml).
+# shellcheck source=gh_git_env.sh
+source "$(dirname "${BASH_SOURCE[0]}")/gh_git_env.sh"

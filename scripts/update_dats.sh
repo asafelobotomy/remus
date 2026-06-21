@@ -24,6 +24,8 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+# shellcheck source=gh_git_env.sh
+source "${SCRIPT_DIR}/gh_git_env.sh"
 TARGET_DIR="$PROJECT_ROOT/data/databases"
 NO_INTRO_DIR="$TARGET_DIR/no-intro"
 REDUMP_DIR="$TARGET_DIR/redump"
