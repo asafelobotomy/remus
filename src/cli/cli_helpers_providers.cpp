@@ -14,6 +14,7 @@
 #include "../metadata/playmatch_provider.h"
 #include "../metadata/retroachievements_provider.h"
 #include "../metadata/screenscraper_provider.h"
+#include "../metadata/steamgriddb_provider.h"
 #include "../metadata/thegamesdb_provider.h"
 #include "../metadata/wikidata_provider.h"
 #include "../services/credential_manager.h"
@@ -146,6 +147,19 @@ std::unique_ptr<ProviderOrchestrator> buildOrchestrator(const QCommandLineParser
         const auto igdbInfo = Providers::getProviderInfo(Providers::IGDB);
         orchestrator->addProvider(Providers::IGDB, igdbProvider.get(), igdbInfo ? igdbInfo->priority : 70);
         igdbProvider.release();
+    }
+
+    const QString sgdbApiKey
+        = resolveSecret(parser, QStringLiteral("sgdb-api-key"), Settings::Providers::STEAMGRIDDB_API_KEY);
+    if (!sgdbApiKey.isEmpty()) {
+        auto sgdbProvider = std::make_unique<SteamGridDBProvider>();
+        sgdbProvider->setApiKey(sgdbApiKey);
+        const auto sgdbInfo = Providers::getProviderInfo(Providers::STEAMGRIDDB);
+        orchestrator->addProvider(Providers::STEAMGRIDDB, sgdbProvider.get(),
+            sgdbInfo ? sgdbInfo->priority : Constants::Providers::Priority::STEAMGRIDDB);
+        sgdbProvider.release();
+    } else {
+        qInfo() << "SteamGridDB: skipped (no API key configured)";
     }
 
     const QString raUsername

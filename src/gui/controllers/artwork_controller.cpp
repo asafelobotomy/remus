@@ -293,7 +293,8 @@ bool ArtworkController::refreshArtworkForFile(int fileId, bool requireDownloadab
     // This ensures description/rating/release are populated on every Enrich click
     // until the DB record is fully filled, not just on the first one.
     const GameMetadata enriched = orchestrator->enrichMissingFields(missing, existing, selectBestMatchHash(file),
-        deriveMatchingDisplayName(file), systemName, file.crc32, file.md5, file.sha1, QString(), { }, file.raMd5);
+        deriveMatchingDisplayName(file), systemName, file.crc32, file.md5, file.sha1, QString(), { }, file.raMd5,
+        file.fileSize, selectContentSha1(file));
 
     // Persist newly enriched fields to the stored game record.
     if (matchResult.gameId > 0 && !enriched.title.isEmpty()) {

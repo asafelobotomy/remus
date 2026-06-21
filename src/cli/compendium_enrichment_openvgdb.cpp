@@ -27,7 +27,8 @@ struct OpenVGDBEntry {
 namespace CompendiumEnrichment {
 
 bool enrichFromOpenVGDB(
-    QSqlDatabase &database, const QString &openvgdbPath, int &gamesEnriched, int &factsInserted, QString &error) {
+    QSqlDatabase &database, const QString &openvgdbPath, const QString &gametdbDir, int &gamesEnriched,
+    int &factsInserted, QString &error) {
     gamesEnriched = 0;
     factsInserted = 0;
 
@@ -182,17 +183,29 @@ bool enrichFromOpenVGDB(
     if (crcIndex.isEmpty() && md5Index.isEmpty() && titleIndex.isEmpty())
         return true;
 
-    // Only enrich games that still have metadata gaps.
+    // Only enrich games that still have metadata gaps, excluding systems where
+    // GameTDB XML is the preferred source (Nintendo/PS3 family).
     QSet<QString> gapGameIds;
     {
+        const QSet<int> gametdbSystems = gametdbCoveredSystemIds(gametdbDir);
+        QString excludeSystemsSql;
+        if (!gametdbSystems.isEmpty()) {
+            QStringList systemIdLiterals;
+            for (const int systemId : gametdbSystems)
+                systemIdLiterals.append(QString::number(systemId));
+            excludeSystemsSql
+                = QStringLiteral(" AND system_id NOT IN (%1)").arg(systemIdLiterals.join(QLatin1Char(',')));
+        }
+
         QSqlQuery q(database);
         if (!q.exec(QStringLiteral("SELECT game_id FROM games "
-                                   "WHERE genre IS NULL OR TRIM(genre) = '' "
+                                   "WHERE (genre IS NULL OR TRIM(genre) = '' "
                                    "   OR developer IS NULL OR TRIM(developer) = '' "
                                    "   OR publisher IS NULL OR TRIM(publisher) = '' "
                                    "   OR release_year IS NULL "
                                    "   OR release_date IS NULL OR TRIM(release_date) = '' "
-                                   "   OR description IS NULL OR TRIM(description) = ''"))) {
+                                   "   OR description IS NULL OR TRIM(description) = '')%1")
+                        .arg(excludeSystemsSql))) {
             error = QStringLiteral("Load OpenVGDB gap games: %1").arg(q.lastError().text());
             return false;
         }

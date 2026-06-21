@@ -1,5 +1,6 @@
 #include "provider_orchestrator.h"
 
+#include "hasheous_provider.h"
 #include "metadata_cache.h"
 
 #include <QDebug>
@@ -56,11 +57,25 @@ ProviderOrchestrator::FieldSet ProviderOrchestrator::computeFieldGap(const GameM
 
 GameMetadata ProviderOrchestrator::enrichMissingFields(const FieldSet &missing, const GameMetadata &existing,
     const QString &hash, const QString &name, const QString &system, const QString &crc32, const QString &md5,
-    const QString &sha1, const QString &serial, const QSet<QString> &excludeProviders, const QString &raMd5) {
+    const QString &sha1, const QString &serial, const QSet<QString> &excludeProviders, const QString &raMd5,
+    qint64 fileSize, const QString &contentSha1) {
     if (missing.isEmpty()) {
         qInfo() << "enrichMissingFields: no gaps — skipping all providers";
         return existing;
     }
+
+    auto providerCapabilities = [&](const QString &providerName) -> QSet<QString> {
+        QSet<QString> caps = Constants::ProviderFields::CAPABILITIES.value(providerName.toLower());
+        if (providerName.compare(Constants::Providers::HASHEOUS, Qt::CaseInsensitive) == 0) {
+            if (const MetadataProvider *provider = getProvider(providerName)) {
+                if (const auto *hasheous = qobject_cast<const HasheousProvider *>(provider)) {
+                    if (hasheous->metadataProxyEnabled())
+                        caps.unite(Constants::ProviderFields::HASHEOUS_PROXY_FIELDS);
+                }
+            }
+        }
+        return caps;
+    };
 
     // Check cache first — a cached record may already fill all gaps.
     if (!hash.isEmpty() && m_cache) {
@@ -85,13 +100,17 @@ GameMetadata ProviderOrchestrator::enrichMissingFields(const FieldSet &missing, 
         if (excludeProviders.contains(providerName)) {
             continue;
         }
-        const QSet<QString> &caps = Constants::ProviderFields::CAPABILITIES.value(providerName.toLower());
+        if (!Constants::ProviderFields::providerSupportsMetadataLookup(providerName)) {
+            continue;
+        }
+        const QSet<QString> caps = providerCapabilities(providerName);
         if (!caps.intersects(gapSet)) {
             qInfo() << "enrichMissingFields: skipping local provider" << providerName
                     << "(no capability overlap with gap)";
             continue;
         }
-        queryProvider(accumulator, providerName, hash, name, system, crc32, md5, sha1, serial, 0, raMd5);
+        queryProvider(accumulator, providerName, hash, name, system, crc32, md5, sha1, serial, fileSize, raMd5,
+            contentSha1);
         gapSet = computeFieldGap(accumulator);
         if (gapSet.isEmpty()) {
             qInfo() << "enrichMissingFields: all gaps filled after local provider" << providerName;
@@ -106,13 +125,17 @@ GameMetadata ProviderOrchestrator::enrichMissingFields(const FieldSet &missing, 
             if (excludeProviders.contains(providerName)) {
                 continue;
             }
-            const QSet<QString> &caps = Constants::ProviderFields::CAPABILITIES.value(providerName.toLower());
+            if (!Constants::ProviderFields::providerSupportsMetadataLookup(providerName)) {
+                continue;
+            }
+            const QSet<QString> caps = providerCapabilities(providerName);
             if (!caps.intersects(gapSet)) {
                 qInfo() << "enrichMissingFields: skipping remote provider" << providerName
                         << "(no capability overlap with gap)";
                 continue;
             }
-            queryProvider(accumulator, providerName, hash, name, system, crc32, md5, sha1, serial, 0, raMd5);
+            queryProvider(accumulator, providerName, hash, name, system, crc32, md5, sha1, serial, fileSize, raMd5,
+                contentSha1);
             gapSet = computeFieldGap(accumulator);
             if (gapSet.isEmpty()) {
                 qInfo() << "enrichMissingFields: all gaps filled after remote provider" << providerName;

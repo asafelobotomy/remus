@@ -16,6 +16,9 @@ namespace Compendium {
     /// Resolve path to Hasheous offline dump root (@c data/hasheous/dumps), or empty if absent.
     QString findHasheousDumpDir();
 
+    /// True when @p dumpDir (or the default dump root) contains at least one JSON dump file.
+    bool hasHasheousOfflineDumpFiles(const QString &dumpDir = { });
+
     /// Load or rebuild a hash→metadata index from offline dump JSON files.
     /// Uses a sidecar SQLite cache keyed by dump directory mtime.
     bool loadHasheousOfflineIndex(

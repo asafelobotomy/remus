@@ -5,6 +5,7 @@
 #include "../core/constants/settings.h"
 #include "../core/constants/system_ids.h"
 #include "../metadata/compendium_merge_resolver.h"
+#include "../metadata/compendium_hasheous_offline.h"
 #include "../metadata/compendium_types.h"
 #include "../services/credential_manager.h"
 
@@ -119,16 +120,26 @@ static const char kOpenVgdbMetadataGapSql[] = "genre IS NULL OR TRIM(genre) = ''
                                               "   OR release_date IS NULL OR TRIM(release_date) = '' "
                                               "   OR description IS NULL OR TRIM(description) = '' ";
 
-// OpenVGDB matches by crc32/md5 — only run when hash-linked games still have gaps.
-bool hasOpenVgdbGaps(QSqlDatabase &db, QString &error) {
+// OpenVGDB matches by crc32/md5 — only run when hash-linked games still have gaps
+// on systems not covered by GameTDB XML.
+bool hasOpenVgdbGaps(QSqlDatabase &db, QString &error, const QString &gametdbDir) {
+    QString excludeSystemsSql;
+    const QSet<int> gametdbSystems = CompendiumEnrichment::gametdbCoveredSystemIds(gametdbDir);
+    if (!gametdbSystems.isEmpty()) {
+        QStringList systemIdLiterals;
+        for (const int systemId : gametdbSystems)
+            systemIdLiterals.append(QString::number(systemId));
+        excludeSystemsSql = QStringLiteral(" AND g.system_id NOT IN (%1)").arg(systemIdLiterals.join(QLatin1Char(',')));
+    }
+
     return queryHasRows(db,
         QStringLiteral("SELECT 1 FROM games g "
-                       "WHERE (%1) "
+                       "WHERE (%1)%2 "
                        "  AND EXISTS (SELECT 1 FROM game_signatures gs "
                        "              WHERE gs.game_id = g.game_id "
                        "                AND gs.hash_type IN ('crc32', 'md5')) "
                        "LIMIT 1")
-            .arg(QLatin1String(kOpenVgdbMetadataGapSql)),
+            .arg(QLatin1String(kOpenVgdbMetadataGapSql), excludeSystemsSql),
         error);
 }
 
@@ -259,7 +270,7 @@ static void addTreeToEnrichmentFingerprint(QCryptographicHash &hash, const QStri
 
 QString computeEnrichmentInputsFingerprint(const QString &metadataDir, const QString &gametdbDir,
     const QString &openvgdbPath, const QString &mameCatverPath, const QString &mameListXmlPath, const QString &credPath,
-    const QStringList &sourceFilter) {
+    const QStringList &sourceFilter, bool offlineOnlyEnrichment, bool onlineEnrichmentAll) {
     QCryptographicHash hash(QCryptographicHash::Sha256);
 
     auto addLabeledTree = [&](const char *label, const QString &path) {
@@ -283,6 +294,12 @@ QString computeEnrichmentInputsFingerprint(const QString &metadataDir, const QSt
     sortedFilter.sort(Qt::CaseInsensitive);
     hash.addData("enrich_source:");
     hash.addData(sortedFilter.join(QLatin1Char(',')).toUtf8());
+    hash.addData("\n");
+    hash.addData("offline_only:");
+    hash.addData(offlineOnlyEnrichment ? "1" : "0");
+    hash.addData("\n");
+    hash.addData("online_enrichment_all:");
+    hash.addData(onlineEnrichmentAll ? "1" : "0");
     hash.addData("\n");
 
     return QString::fromLatin1(hash.result().toHex());
@@ -321,6 +338,7 @@ void insertEnrichmentStatsReportFields(
     report.insert(QStringLiteral("enrichment_passes_skipped_no_input"), stats.passesSkippedNoInput);
     report.insert(QStringLiteral("enrichment_passes_skipped_no_gaps"), stats.passesSkippedNoGaps);
     report.insert(QStringLiteral("enrichment_passes_skipped_filtered"), stats.passesSkippedFiltered);
+    report.insert(QStringLiteral("enrichment_passes_skipped_offline_only"), stats.passesSkippedOfflineOnly);
     report.insert(QStringLiteral("enrichment_passes_failed_with_error"), stats.passesFailedWithError);
     report.insert(QStringLiteral("post_enrich_merge_runs"), stats.mergeRuns);
     report.insert(QStringLiteral("ra_api_calls_needed"), stats.raApiCallsNeeded);
@@ -339,7 +357,8 @@ void insertEnrichmentStatsReportFields(
 
 bool runCompendiumEnrichmentPasses(QSqlDatabase &db, const QString &metadataDir, const QString &gametdbDir,
     const QString &openvgdbPath, const QString &credPath, const QString &mameCatverPath, const QString &mameListXmlPath,
-    EnrichmentStats &stats, QString &error, EnrichmentProgressCallback onProgress, QStringList sourceFilter) {
+    EnrichmentStats &stats, QString &error, EnrichmentProgressCallback onProgress, QStringList sourceFilter,
+    bool offlineOnlyEnrichment, bool onlineEnrichmentAll) {
     auto runTransactionalPass = [&](const QString &passName, auto &&passFn) -> bool {
         if (!db.transaction()) {
             error = QStringLiteral("Failed to start %1 transaction: %2").arg(passName, db.lastError().text());
@@ -388,6 +407,9 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db, const QString &metadataDir,
     const bool hasMameCatverPath = !mameCatverPath.isEmpty() && QFile::exists(mameCatverPath);
     const bool hasMameListXmlPath = !mameListXmlPath.isEmpty() && QFile::exists(mameListXmlPath);
 
+    const bool hasHasheousOfflineDumps = Remus::Compendium::hasHasheousOfflineDumpFiles();
+    const bool hasheousOfflineOnly = offlineOnlyEnrichment || !onlineEnrichmentAll;
+
     const QList<EnrichmentPassSpec> passes {
         {
             QStringLiteral("Libretro metadata enrichment"),
@@ -416,22 +438,22 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db, const QString &metadataDir,
             QStringLiteral("openvgdb"),
             TransactionMode::CallerWrapped,
             [&] { return hasOpenvgdbPath; },
-            [&] { return hasOpenVgdbGaps(db, error); },
+            [&] { return hasOpenVgdbGaps(db, error, gametdbDir); },
             [&] {
                 return CompendiumEnrichment::enrichFromOpenVGDB(
-                    db, openvgdbPath, stats.openvgdbGamesEnriched, stats.openvgdbFactsInserted, error);
+                    db, openvgdbPath, gametdbDir, stats.openvgdbGamesEnriched, stats.openvgdbFactsInserted, error);
             },
         },
         {
             QStringLiteral("Hasheous enrichment"),
             QStringLiteral("hasheous"),
             TransactionMode::SelfManaged,
-            [] { return true; },
+            [&] { return hasheousOfflineOnly ? hasHasheousOfflineDumps : true; },
             [&] { return hasAnyHasheousGaps(db, error); },
             [&] {
                 return CompendiumEnrichment::enrichFromHasheous(db, credPath, stats.hasheousGamesEnriched,
-                    stats.hasheousFactsInserted, error, &stats.hasheousApiCallsNeeded,
-                    &stats.hasheousApiCallsPerformed);
+                    stats.hasheousFactsInserted, error, &stats.hasheousApiCallsNeeded, &stats.hasheousApiCallsPerformed,
+                    hasheousOfflineOnly);
             },
         },
         {
@@ -508,6 +530,16 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db, const QString &metadataDir,
     const int totalPasses = passes.size();
     for (const EnrichmentPassSpec &pass : passes) {
         ++passIdx;
+        if (offlineOnlyEnrichment && onlineEnrichmentSourceKeys().contains(pass.sourceKey)
+            && pass.sourceKey != QStringLiteral("hasheous")) {
+            qInfo().noquote() << QStringLiteral(
+                "[ENRICH] Pass %1/%2: %3 — skipped (offline-only build; use --online-enrichment to enable)")
+                                     .arg(passIdx)
+                                     .arg(totalPasses)
+                                     .arg(pass.name);
+            ++stats.passesSkippedOfflineOnly;
+            continue;
+        }
         if (!sourceFilter.isEmpty() && !sourceFilter.contains(pass.sourceKey)) {
             qInfo().noquote() << QStringLiteral("[ENRICH] Pass %1/%2: %3 — skipped (source filter)")
                                      .arg(passIdx)
@@ -887,10 +919,11 @@ int runCompendiumEnrichmentOnlyRefresh(QSqlDatabase &database, const QString &bu
     const QJsonObject &existingReportBase, const QString &enrichmentFingerprint, const QString &metadataDir,
     const QString &gametdbDir, const QString &openvgdbPath, const QString &credPath, const QString &mameCatverPath,
     const QString &mameListXmlPath, const QStringList &sourceFilter, EnrichmentProgressCallback onProgress,
-    QJsonObject &reportOut, QString &error) {
+    QJsonObject &reportOut, QString &error, bool offlineOnlyEnrichment, bool onlineEnrichmentAll) {
     EnrichmentStats enrichStats;
     if (!runCompendiumEnrichmentPasses(database, metadataDir, gametdbDir, openvgdbPath, credPath, mameCatverPath,
-            mameListXmlPath, enrichStats, error, onProgress, sourceFilter)) {
+            mameListXmlPath, enrichStats, error, onProgress, sourceFilter, offlineOnlyEnrichment,
+            onlineEnrichmentAll)) {
         return 1;
     }
 

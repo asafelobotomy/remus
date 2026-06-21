@@ -104,12 +104,30 @@ int handleEnrichCompendiumCommand(CliContext &ctx) {
 
     qInfo() << "Running enrichment on" << outputInfo.absoluteFilePath();
 
+    const bool onlineEnrichmentAll = ctx.parser.isSet(QStringLiteral("online-enrichment-all"));
+    const bool onlineEnrichment
+        = onlineEnrichmentAll || ctx.parser.isSet(QStringLiteral("online-enrichment"));
+    const bool offlineOnlyEnrichment = !onlineEnrichment;
+    QStringList effectiveSourceFilter = sourceFilter;
+    if (onlineEnrichment && effectiveSourceFilter.isEmpty() && !onlineEnrichmentAll) {
+        effectiveSourceFilter = defaultBulkOnlineEnrichmentSourceKeys();
+        qInfo().noquote() << QStringLiteral(
+            "[enrich] Bulk online enrichment (local passes + Hasheous offline dumps + IGDB + RA). "
+            "Pass --online-enrichment-all for Hasheous/PlayMatch/ZXInfo API bridges.");
+    } else if (offlineOnlyEnrichment && effectiveSourceFilter.isEmpty()) {
+        qInfo() << "[enrich] Offline-only enrichment (local DAT/metadata). "
+                << "Pass --online-enrichment for IGDB/RA bulk passes (requires REMUS_* credentials).";
+    } else if (onlineEnrichmentAll) {
+        qInfo() << "[enrich] Full online enrichment enabled (includes per-game bridge APIs).";
+    }
+
     // ── Run all enrichment passes and merge resolution ───────────────────────
     EnrichmentStats stats;
     {
         QString enrichError;
         if (!runCompendiumEnrichmentPasses(database, metadataDir, gametdbDir, openvgdbPath, credPath, mameCatverPath,
-                mameListXmlPath, stats, enrichError, nullptr, sourceFilter)) {
+                mameListXmlPath, stats, enrichError, nullptr, effectiveSourceFilter, offlineOnlyEnrichment,
+                onlineEnrichmentAll)) {
             qCritical().noquote() << QStringLiteral("✗ %1").arg(enrichError);
             database.close();
             database = QSqlDatabase();

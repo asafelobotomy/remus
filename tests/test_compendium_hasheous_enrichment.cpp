@@ -83,6 +83,7 @@ private slots:
     void noPendingSignatures_returnsEarlyWithNoWrite();
     void existingIgdbFact_isExcludedFromPendingSet();
     void igdbFactFromOtherSource_isExcludedFromPendingSet();
+    void offlineOnlyMode_skipsApiWithoutLocalDumps();
 };
 
 void CompendiumHasheousEnrichmentTest::noPendingSignatures_returnsEarlyWithNoWrite() {
@@ -171,6 +172,37 @@ void CompendiumHasheousEnrichmentTest::igdbFactFromOtherSource_isExcludedFromPen
     QCOMPARE(games, 0);
     QCOMPARE(facts, 0);
     QCOMPARE(apiNeeded, 0);
+
+    db.close();
+    QSqlDatabase::removeDatabase(connName);
+}
+
+void CompendiumHasheousEnrichmentTest::offlineOnlyMode_skipsApiWithoutLocalDumps() {
+    const QString connName = QStringLiteral("hasheous_test_offline_only");
+    QSqlDatabase db = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), connName);
+    db.setDatabaseName(QStringLiteral(":memory:"));
+    QVERIFY(db.open());
+    QVERIFY(createSchema(db));
+    execSql(db,
+        QStringLiteral("INSERT INTO games (game_id, system_id, canonical_title) "
+                       "VALUES ('g1', 1, 'Test Game')"));
+    execSql(db,
+        QStringLiteral("INSERT INTO game_signatures (game_id, hash_type, hash_value) "
+                       "VALUES ('g1', 'md5', 'aabbccdd001122334455667788990011')"));
+
+    int games = 0;
+    int facts = 0;
+    int apiNeeded = -1;
+    int apiPerformed = -1;
+    QString error;
+    const bool ok = CompendiumEnrichment::enrichFromHasheous(
+        db, QString(), games, facts, error, &apiNeeded, &apiPerformed, /*offlineOnly=*/true);
+
+    QVERIFY2(ok, qPrintable(error));
+    QCOMPARE(games, 0);
+    QCOMPARE(facts, 0);
+    QCOMPARE(apiNeeded, 0);
+    QCOMPARE(apiPerformed, 0);
 
     db.close();
     QSqlDatabase::removeDatabase(connName);

@@ -106,6 +106,7 @@ void CredentialManagerTest::testAllProviderEnvMappingsResolve() {
         { Settings::Providers::HASHEOUS_CLIENT_API_KEY, "REMUS_HASHEOUS_API_KEY", "hasheous_key" },
         { Settings::Providers::RETROACHIEVEMENTS_USERNAME, "REMUS_RA_USERNAME", "ra_user" },
         { Settings::Providers::RETROACHIEVEMENTS_API_KEY, "REMUS_RA_API_KEY", "ra_key" },
+        { Settings::Providers::STEAMGRIDDB_API_KEY, "REMUS_SGDB_API_KEY", "sgdb_key" },
     };
 
     for (const auto &mapping : mappings) {

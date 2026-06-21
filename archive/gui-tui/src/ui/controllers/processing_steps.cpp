@@ -188,7 +188,8 @@ void ProcessingController::stepMatch()
             ArtworkUrls artwork;
             if (!metadata.providerId.isEmpty() && !metadata.id.isEmpty()) {
                 try {
-                    artwork = m_orchestrator->getArtworkWithFallback(metadata.id, systemName, metadata.providerId);
+                    artwork = m_orchestrator->getArtworkWithFallback(
+                        metadata.id, systemName, metadata.providerId, metadata.externalIds);
                 } catch (const std::exception &exception) {
                     qWarning() << "Failed to fetch artwork URLs for provider" << metadata.providerId
                                << "game" << metadata.id << "file" << m_currentFilename

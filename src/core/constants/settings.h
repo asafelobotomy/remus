@@ -20,10 +20,11 @@ namespace Constants {
             inline constexpr const char *HASHEOUS_BASE_URL = "hasheous/base_url";
             inline constexpr const char *RETROACHIEVEMENTS_USERNAME = "retroachievements/username";
             inline constexpr const char *RETROACHIEVEMENTS_API_KEY = "retroachievements/api_key";
+            inline constexpr const char *STEAMGRIDDB_API_KEY = "steamgriddb/api_key";
 
             /// Authoritative list of every secret-bearing settings key.
             /// Use this for reset, export redaction, and migration paths so no key is silently omitted.
-            inline constexpr std::array<const char *, 10> ALL_SECRET_KEYS = { {
+            inline constexpr std::array<const char *, 11> ALL_SECRET_KEYS = { {
                 SCREENSCRAPER_USERNAME,
                 SCREENSCRAPER_PASSWORD,
                 SCREENSCRAPER_DEVID,
@@ -34,6 +35,7 @@ namespace Constants {
                 HASHEOUS_CLIENT_API_KEY,
                 RETROACHIEVEMENTS_USERNAME,
                 RETROACHIEVEMENTS_API_KEY,
+                STEAMGRIDDB_API_KEY,
             } };
         }
 
@@ -58,6 +60,7 @@ namespace Constants {
             inline constexpr const char *THEGAMESDB_MS = "metadata/rate_limit/thegamesdb";
             inline constexpr const char *PLAYMATCH_MS = "metadata/rate_limit/playmatch";
             inline constexpr const char *RETROACHIEVEMENTS_MS = "metadata/rate_limit/retroachievements";
+            inline constexpr const char *STEAMGRIDDB_MS = "metadata/rate_limit/steamgriddb";
         }
 
         namespace Match {
@@ -99,9 +102,9 @@ namespace Constants {
     // ============================================================================
 
     /**
-     * @brief All 8 provider settings keys in one array
+     * @brief All provider settings keys in one array
      */
-    inline constexpr std::array<const char *, 8> ALL_PROVIDER_KEYS = {
+    inline constexpr std::array<const char *, 9> ALL_PROVIDER_KEYS = {
         Settings::Providers::SCREENSCRAPER_USERNAME,
         Settings::Providers::SCREENSCRAPER_PASSWORD,
         Settings::Providers::SCREENSCRAPER_DEVID,
@@ -110,6 +113,7 @@ namespace Constants {
         Settings::Providers::IGDB_CLIENT_ID,
         Settings::Providers::IGDB_CLIENT_SECRET,
         Settings::Providers::HASHEOUS_CLIENT_API_KEY,
+        Settings::Providers::STEAMGRIDDB_API_KEY,
     };
 
     /**
@@ -127,13 +131,14 @@ namespace Constants {
      * Excludes developer-only keys (DEVID, DEVPASSWORD).
      * UI code can iterate this instead of hardcoding each field.
      */
-    inline constexpr std::array<ProviderSettingField, 8> ALL_PROVIDER_FIELDS = { {
+    inline constexpr std::array<ProviderSettingField, 9> ALL_PROVIDER_FIELDS = { {
         { Settings::Providers::SCREENSCRAPER_USERNAME, "ScreenScraper Username", false },
         { Settings::Providers::SCREENSCRAPER_PASSWORD, "ScreenScraper Password", true },
         { Settings::Providers::THEGAMESDB_API_KEY, "TheGamesDB API Key", false },
         { Settings::Providers::IGDB_CLIENT_ID, "IGDB Client ID", false },
         { Settings::Providers::IGDB_CLIENT_SECRET, "IGDB Client Secret", true },
         { Settings::Providers::HASHEOUS_CLIENT_API_KEY, "Hasheous API Key", false },
+        { Settings::Providers::STEAMGRIDDB_API_KEY, "SteamGridDB API Key", false },
         { Settings::Providers::RETROACHIEVEMENTS_USERNAME, "RetroAchievements Username", false },
         { Settings::Providers::RETROACHIEVEMENTS_API_KEY, "RetroAchievements API Key", true },
     } };

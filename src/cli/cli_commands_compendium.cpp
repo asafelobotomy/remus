@@ -175,8 +175,26 @@ int handleBuildCompendiumCommand(CliContext &ctx) {
     const QString mameCatverPath = findMameCatverPath();
     const QString mameListXmlPath = findMameListXmlPath();
     const QString credPath = outputInfo.dir().filePath(QStringLiteral("enrichment-credentials.json"));
+    const bool onlineEnrichmentAll = ctx.parser.isSet(QStringLiteral("online-enrichment-all"));
+    const bool onlineEnrichment
+        = onlineEnrichmentAll || ctx.parser.isSet(QStringLiteral("online-enrichment"));
+    const bool offlineOnlyEnrichment = !onlineEnrichment;
+    QStringList effectiveSourceFilter = sourceFilter;
+    if (onlineEnrichment && effectiveSourceFilter.isEmpty() && !onlineEnrichmentAll) {
+        effectiveSourceFilter = defaultBulkOnlineEnrichmentSourceKeys();
+        qInfo().noquote() << QStringLiteral(
+            "[build-compendium] Bulk online enrichment (local passes + Hasheous offline dumps + IGDB + RA). "
+            "Pass --online-enrichment-all to include Hasheous/PlayMatch/ZXInfo API bridges.");
+    }
     const QString enrichmentFingerprint = computeEnrichmentInputsFingerprint(
-        metadataDir, gametdbDir, openvgdbPath, mameCatverPath, mameListXmlPath, credPath, sourceFilter);
+        metadataDir, gametdbDir, openvgdbPath, mameCatverPath, mameListXmlPath, credPath, effectiveSourceFilter,
+        offlineOnlyEnrichment, onlineEnrichmentAll);
+    if (offlineOnlyEnrichment) {
+        qInfo() << "[build-compendium] Offline-only enrichment (local DAT/metadata). "
+                << "Pass --online-enrichment for IGDB/RA bulk passes (requires REMUS_* credentials).";
+    } else if (onlineEnrichmentAll) {
+        qInfo() << "[build-compendium] Full online enrichment enabled (includes per-game bridge APIs).";
+    }
 
     const bool forceFullRebuild = ctx.parser.isSet(QStringLiteral("force-full-rebuild"));
     CompendiumBuildPlan buildPlan;
@@ -311,7 +329,7 @@ int handleBuildCompendiumCommand(CliContext &ctx) {
         QJsonObject report;
         if (runCompendiumEnrichmentOnlyRefresh(database, buildId, finalReportPath, existingReport,
                 enrichmentFingerprint, metadataDir, gametdbDir, openvgdbPath, credPath, mameCatverPath, mameListXmlPath,
-                sourceFilter, onEnrichProgress, report, error)
+                effectiveSourceFilter, onEnrichProgress, report, error, offlineOnlyEnrichment, onlineEnrichmentAll)
             != 0) {
             qCritical().noquote() << QStringLiteral("✗ %1").arg(error);
             releaseDatabase(database, connectionName);
@@ -608,7 +626,8 @@ int handleBuildCompendiumCommand(CliContext &ctx) {
     EnrichmentStats enrichStats;
     {
         if (!runCompendiumEnrichmentPasses(database, metadataDir, gametdbDir, openvgdbPath, credPath, mameCatverPath,
-                mameListXmlPath, enrichStats, error, onEnrichProgress, sourceFilter)) {
+                mameListXmlPath, enrichStats, error, onEnrichProgress, effectiveSourceFilter, offlineOnlyEnrichment,
+                onlineEnrichmentAll)) {
             qCritical().noquote() << QStringLiteral("✗ %1").arg(error);
             database.close();
             QSqlDatabase::removeDatabase(connectionName);

@@ -42,6 +42,7 @@ namespace Constants {
             inline constexpr int SCREENSCRAPER = 89;
             inline constexpr int PLAYMATCH = 88;
             inline constexpr int IGDB = 70;
+            inline constexpr int STEAMGRIDDB = 75;
             inline constexpr int RETROACHIEVEMENTS = 60;
             inline constexpr int THEGAMESDB = 50;
             inline constexpr int WIKIDATA = 40;
@@ -61,6 +62,9 @@ namespace Constants {
 
         /// Metadata provider: IGDB (requires API key)
         inline constexpr const char *IGDB = "igdb";
+
+        /// Metadata provider: SteamGridDB (artwork only, requires API key)
+        inline constexpr const char *STEAMGRIDDB = "steamgriddb";
 
         /// Metadata provider: Local DAT database (offline, no auth)
         inline constexpr const char *LOCAL_DATABASE = "localdatabase";
@@ -95,6 +99,9 @@ namespace Constants {
 
         /// Human-readable name for IGDB
         inline const QString DISPLAY_IGDB = QStringLiteral("IGDB");
+
+        /// Human-readable name for SteamGridDB
+        inline const QString DISPLAY_STEAMGRIDDB = QStringLiteral("SteamGridDB");
 
         /// Human-readable name for Local Database
         inline const QString DISPLAY_LOCAL_DATABASE = QStringLiteral("Local Database");
@@ -133,6 +140,12 @@ namespace Constants {
 
             /// Key for Wikidata entity IDs in the externalIds map
             inline constexpr const char *WIKIDATA = "wikidata";
+
+            /// Key for Steam app IDs in the externalIds map
+            inline constexpr const char *STEAM = "steam";
+
+            /// Key for SteamGridDB game IDs in the externalIds map
+            inline constexpr const char *STEAMGRIDDB = "steamgriddb";
         } // ExternalId
 
         // ============================================================================
@@ -266,6 +279,18 @@ namespace Constants {
                     true, // Requires API key
                     QStringLiteral("https://api.igdb.com"), Priority::IGDB,
                     false // Requires subscription
+                } },
+
+            // Priority 75: Artwork-only fallback — grids/heroes/logos; requires free API key
+            { STEAMGRIDDB,
+                {
+                    STEAMGRIDDB, DISPLAY_STEAMGRIDDB,
+                    QStringLiteral("Community game artwork (grids, heroes, logos; requires free API key)"),
+                    false, // No hash matching
+                    false, // No text metadata search
+                    true, // Requires API key
+                    QStringLiteral("https://www.steamgriddb.com"), Priority::STEAMGRIDDB,
+                    true // Free service
                 } },
 
             // Priority 40: Community-sourced supplementary data — 6/10 fields, no auth

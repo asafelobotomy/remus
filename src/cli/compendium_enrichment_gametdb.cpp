@@ -2,9 +2,13 @@
 #include "compendium_enrichment_sql.h"
 
 #include "../metadata/gametdb_provider.h"
+#include "../core/system_resolver.h"
 
 #include <QDate>
+#include <QDir>
+#include <QFileInfo>
 #include <QHash>
+#include <QSet>
 #include <QSqlError>
 #include <QSqlQuery>
 
@@ -219,6 +223,43 @@ bool enrichFromGameTDB(
     }
 
     return true;
+}
+
+QSet<int> gametdbCoveredSystemIds(const QString &gametdbDir) {
+    QSet<int> systemIds;
+    if (gametdbDir.isEmpty())
+        return systemIds;
+
+    const QDir dir(gametdbDir);
+    if (!dir.exists())
+        return systemIds;
+
+    struct PrefixMapping {
+        const char *prefix;
+        const char *typeName;
+    };
+    static constexpr PrefixMapping kMappings[] = {
+        { "wiitdb", "Wii" },
+        { "dstdb", "DS" },
+        { "3dstdb", "3DS" },
+        { "wiiutdb", "WiiU" },
+        { "switchtdb", "Switch" },
+        { "ps3tdb", "PS3" },
+    };
+
+    const QStringList xmlFiles = dir.entryList({ QStringLiteral("*.xml") }, QDir::Files);
+    for (const QString &fileName : xmlFiles) {
+        const QString baseName = QFileInfo(fileName).baseName().toLower();
+        for (const PrefixMapping &mapping : kMappings) {
+            if (!baseName.startsWith(QLatin1String(mapping.prefix)))
+                continue;
+            const int systemId = Remus::SystemResolver::systemIdByName(QString::fromLatin1(mapping.typeName));
+            if (systemId > 0)
+                systemIds.insert(systemId);
+        }
+    }
+
+    return systemIds;
 }
 
 } // namespace CompendiumEnrichment

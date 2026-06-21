@@ -132,8 +132,8 @@ public:
      * @param providerName Preferred provider name
      * @return ArtworkUrls from successful provider
      */
-    ArtworkUrls getArtworkWithFallback(
-        const QString &id, const QString &system, const QString &providerName = QString());
+    ArtworkUrls getArtworkWithFallback(const QString &id, const QString &system, const QString &providerName = QString(),
+        const QMap<QString, QString> &externalIds = { });
 
     /**
      * @brief Compute which metadata fields are still empty in @p m.
@@ -149,7 +149,7 @@ public:
     GameMetadata enrichMissingFields(const FieldSet &missing, const GameMetadata &existing, const QString &hash,
         const QString &name, const QString &system, const QString &crc32 = QString(), const QString &md5 = QString(),
         const QString &sha1 = QString(), const QString &serial = QString(), const QSet<QString> &excludeProviders = { },
-        const QString &raMd5 = QString());
+        const QString &raMd5 = QString(), qint64 fileSize = 0, const QString &contentSha1 = QString());
 
     /**
      * @brief Get list of enabled providers

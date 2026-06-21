@@ -31,6 +31,7 @@ namespace CredentialManager {
             { "hasheous/client_api_key", "REMUS_HASHEOUS_API_KEY" },
             { "retroachievements/username", "REMUS_RA_USERNAME" },
             { "retroachievements/api_key", "REMUS_RA_API_KEY" },
+            { "steamgriddb/api_key", "REMUS_SGDB_API_KEY" },
         };
 
         static QString fromJsonFile(const QString &key, const QString &jsonFilePath) {

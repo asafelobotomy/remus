@@ -1,5 +1,6 @@
 #pragma once
 
+#include <QSet>
 #include <QSqlDatabase>
 #include <QString>
 
@@ -50,6 +51,13 @@ bool enrichFromGameTDB(
     QSqlDatabase &database, const QString &gametdbDir, int &gamesEnriched, int &factsInserted, QString &error);
 
 /**
+ * @brief System IDs covered by GameTDB XML files present in @p gametdbDir.
+ *
+ * Used to skip OpenVGDB enrichment where GameTDB is the higher-quality source.
+ */
+QSet<int> gametdbCoveredSystemIds(const QString &gametdbDir);
+
+/**
  * @brief Enrich games with the OpenVGDB SQLite database.
  *
  * Matches compendium games by CRC32 hash against the OpenVGDB ROM index and
@@ -63,8 +71,8 @@ bool enrichFromGameTDB(
  * @param error         [out] Human-readable error message on failure.
  * @return true on success, false on error.
  */
-bool enrichFromOpenVGDB(
-    QSqlDatabase &database, const QString &openvgdbPath, int &gamesEnriched, int &factsInserted, QString &error);
+bool enrichFromOpenVGDB(QSqlDatabase &database, const QString &openvgdbPath, const QString &gametdbDir,
+    int &gamesEnriched, int &factsInserted, QString &error);
 
 /**
  * @brief Enrich games using the IGDB online API (bulk platform-slug fetch).
@@ -143,7 +151,8 @@ bool enrichFromRetroAchievements(QSqlDatabase &database, const QString &credenti
  * @return true on success (or when nothing to do), false on error.
  */
 bool enrichFromHasheous(QSqlDatabase &database, const QString &credentialsPath, int &gamesEnriched, int &factsInserted,
-    QString &error, int *apiCallsNeededOut = nullptr, int *apiCallsPerformedOut = nullptr);
+    QString &error, int *apiCallsNeededOut = nullptr, int *apiCallsPerformedOut = nullptr,
+    bool offlineOnly = false);
 
 /**
  * @brief Enrich compendium games with IGDB IDs via PlayMatch hash/filename lookup.

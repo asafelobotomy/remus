@@ -34,6 +34,9 @@ namespace Constants {
         /// TheGamesDB timeout (10 seconds)
         inline constexpr int THEGAMESDB_TIMEOUT_MS = 10000;
 
+        /// SteamGridDB API timeout (10 seconds)
+        inline constexpr int STEAMGRIDDB_TIMEOUT_MS = 10000;
+
         /// Hasheous API timeout (5 seconds, fast service)
         inline constexpr int HASHEOUS_TIMEOUT_MS = 5000;
         inline constexpr int PLAYMATCH_TIMEOUT_MS = 5000;
@@ -59,6 +62,9 @@ namespace Constants {
 
         /// TheGamesDB minimum interval between requests (milliseconds)
         inline constexpr int THEGAMESDB_RATE_LIMIT_MS = 1000;
+
+        /// SteamGridDB minimum interval between requests (milliseconds)
+        inline constexpr int STEAMGRIDDB_RATE_LIMIT_MS = 500;
 
         /// TheGamesDB monthly request limits
         inline constexpr int THEGAMESDB_MONTHLY_LIMIT = 3000;

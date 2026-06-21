@@ -84,6 +84,14 @@ public:
         return m_baseUrl;
     }
 
+    /**
+     * @brief Whether MetadataProxy enrichment is currently available.
+     *
+     * MetadataProxy requires an explicit client API key and may be disabled at
+     * runtime if the server returns an authorization failure.
+     */
+    virtual bool metadataProxyEnabled() const;
+
 protected:
     QString m_clientApiKey;
     QString m_baseUrl;
@@ -119,14 +127,6 @@ protected:
      */
     virtual QJsonObject makePostRequest(
         const QString &endpoint, const QJsonDocument &body, const QUrlQuery &params = QUrlQuery());
-
-    /**
-     * @brief Whether MetadataProxy enrichment is currently available.
-     *
-     * MetadataProxy requires an explicit client API key and may be disabled at
-     * runtime if the server returns an authorization failure.
-     */
-    virtual bool metadataProxyEnabled() const;
 
     /**
      * @brief Fetch full IGDB metadata via Hasheous MetadataProxy

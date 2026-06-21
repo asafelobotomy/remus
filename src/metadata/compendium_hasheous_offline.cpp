@@ -330,6 +330,14 @@ namespace Compendium {
         return it.hasNext() ? dir : QString();
     }
 
+    bool hasHasheousOfflineDumpFiles(const QString &dumpDir) {
+        const QString root = dumpDir.isEmpty() ? findHasheousDumpDir() : dumpDir;
+        if (root.isEmpty())
+            return false;
+        QDirIterator it(root, { QStringLiteral("*.json") }, QDir::Files, QDirIterator::Subdirectories);
+        return it.hasNext();
+    }
+
     bool loadHasheousOfflineIndex(
         const QString &dumpDir, QHash<QString, HasheousOfflineMatch> &indexByHash, QString &error) {
         indexByHash.clear();

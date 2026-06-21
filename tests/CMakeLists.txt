@@ -313,6 +313,11 @@ add_remus_test(test_providers_minimal ProvidersMinimalTest
     LIBS Qt6::Test Qt6::Core remus-metadata remus-core remus-services
 )
 
+add_remus_test(test_steamgriddb_provider SteamGridDBProviderTest
+    SOURCES test_steamgriddb_provider.cpp
+    LIBS Qt6::Test Qt6::Core remus-metadata remus-core remus-constants
+)
+
 add_remus_test(test_igdb_provider_http IGDBProviderHttpTest
     SOURCES test_igdb_provider_http.cpp
     LIBS Qt6::Test Qt6::Core Qt6::Network remus-metadata remus-core

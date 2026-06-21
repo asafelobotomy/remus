@@ -110,7 +110,7 @@ namespace {
 } // anonymous namespace
 
 bool enrichFromHasheous(QSqlDatabase &database, const QString &credentialsPath, int &gamesEnriched, int &factsInserted,
-    QString &error, int *apiCallsNeededOut, int *apiCallsPerformedOut) {
+    QString &error, int *apiCallsNeededOut, int *apiCallsPerformedOut, bool offlineOnly) {
     gamesEnriched = 0;
     factsInserted = 0;
     int apiCallsNeeded = 0;
@@ -153,16 +153,34 @@ bool enrichFromHasheous(QSqlDatabase &database, const QString &credentialsPath, 
         error.clear();
     }
 
-    apiCallsNeeded = hashesByGame.size();
+    if (offlineOnly && !offlineReady) {
+        qInfo() << "[Hasheous] Offline-only mode — no local dump index; skipping Hasheous enrichment";
+        if (apiCallsNeededOut)
+            *apiCallsNeededOut = 0;
+        if (apiCallsPerformedOut)
+            *apiCallsPerformedOut = 0;
+        return true;
+    }
+
+    apiCallsNeeded = offlineOnly ? 0 : hashesByGame.size();
     if (offlineReady)
-        qInfo().noquote() << QStringLiteral("[Hasheous] Offline dump index loaded (%1 keys) — API used only for misses")
-                                 .arg(offlineIndex.size());
-    qInfo().noquote() << QStringLiteral("[Hasheous] %1 games pending igdb_id enrichment (up to %2 API calls)")
-                             .arg(hashesByGame.size())
-                             .arg(apiCallsNeeded);
+        qInfo().noquote() << QStringLiteral("[Hasheous] Offline dump index loaded (%1 keys)%2")
+                                 .arg(offlineIndex.size())
+                                 .arg(offlineOnly ? QStringLiteral(" — offline-only mode (no API lookups)")
+                                                  : QStringLiteral(" — API used only for misses"));
+    if (!offlineOnly) {
+        qInfo().noquote() << QStringLiteral("[Hasheous] %1 games pending igdb_id enrichment (up to %2 API calls)")
+                                 .arg(hashesByGame.size())
+                                 .arg(apiCallsNeeded);
+    } else {
+        qInfo().noquote() << QStringLiteral("[Hasheous] %1 games pending igdb_id enrichment (offline dump lookup only)")
+                                 .arg(hashesByGame.size());
+    }
 
     QHash<QString, GameMetadata> matchedMetadata;
     int callIdx = 0;
+    int offlineHits = 0;
+    int onlineSkipped = 0;
     for (auto it = hashesByGame.constBegin(); it != hashesByGame.constEnd(); ++it) {
         ++callIdx;
         HasheousOfflineMatch offlineMatch;
@@ -177,6 +195,12 @@ bool enrichFromHasheous(QSqlDatabase &database, const QString &credentialsPath, 
             if (!offlineMatch.raGameId.isEmpty())
                 metadata.externalIds.insert(Constants::Providers::ExternalId::RETROACHIEVEMENTS, offlineMatch.raGameId);
             matchedMetadata.insert(it.key(), metadata);
+            ++offlineHits;
+            continue;
+        }
+
+        if (offlineOnly) {
+            ++onlineSkipped;
             continue;
         }
 
@@ -184,12 +208,18 @@ bool enrichFromHasheous(QSqlDatabase &database, const QString &credentialsPath, 
         if (callIdx % 50 == 0)
             HttpMetadataProvider::processNetworkEvents();
         if (callIdx % 100 == 0) {
-            qInfo().noquote() << QStringLiteral("[Hasheous] lookup %1/%2 ...").arg(callIdx).arg(apiCallsNeeded);
+            qInfo().noquote() << QStringLiteral("[Hasheous] lookup %1/%2 ...").arg(callIdx).arg(hashesByGame.size());
         }
 
         const GameMetadata metadata = provider.getByHashes(it->crc32, it->md5, it->sha1, QString(), it->sha256);
         if (metadata.externalIds.contains(Constants::Providers::ExternalId::IGDB))
             matchedMetadata.insert(it.key(), metadata);
+    }
+
+    if (offlineOnly && onlineSkipped > 0) {
+        qInfo().noquote() << QStringLiteral("[Hasheous] Offline-only: resolved %1 via dump index, skipped %2 API lookups")
+                                 .arg(offlineHits)
+                                 .arg(onlineSkipped);
     }
 
     if (matchedMetadata.isEmpty()) {

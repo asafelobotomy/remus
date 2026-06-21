@@ -5,6 +5,7 @@ add_library(remus-metadata STATIC
     screenscraper_provider.cpp
     screenscraper_provider_parse.cpp
     thegamesdb_provider.cpp
+    steamgriddb_provider.cpp
     igdb_provider.cpp
     zxinfo_provider.cpp
     hasheous_provider.cpp

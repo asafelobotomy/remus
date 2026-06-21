@@ -58,6 +58,7 @@ void registerAllOptions(QCommandLineParser &parser, QSet<QString> &actionOptions
     addOption(QCommandLineOption(
         Constants::Cli::Options::PROVIDER, providerHelp, "provider", Constants::Cli::Defaults::PROVIDER));
     addOption(QCommandLineOption("tgdb-api-key", "TheGamesDB API key (env: REMUS_TGDB_API_KEY)", "apiKey"));
+    addOption(QCommandLineOption("sgdb-api-key", "SteamGridDB API key (env: REMUS_SGDB_API_KEY)", "apiKey"));
     addOption(
         QCommandLineOption("hasheous-api-key", "Hasheous client API key (env: REMUS_HASHEOUS_API_KEY)", "apiKey"));
     addOption(QCommandLineOption("hasheous-base-url",
@@ -196,13 +197,21 @@ void registerAllOptions(QCommandLineParser &parser, QSet<QString> &actionOptions
     addActionOption(QCommandLineOption("build-compendium", "Build a canonical compendium database from a manifest"));
     addActionOption(QCommandLineOption("force-full-rebuild",
         "Force a full compendium rebuild even when incremental or enrichment-only refresh is possible"));
+    addActionOption(QCommandLineOption("online-enrichment",
+        "Enable bulk online enrichment during --build-compendium or --enrich-compendium "
+        "(Hasheous offline dumps + IGDB + RetroAchievements). "
+        "Local offline passes always run. Per-game Hasheous/PlayMatch/ZXInfo APIs are excluded unless "
+        "--online-enrichment-all is set."));
+    addActionOption(QCommandLineOption("online-enrichment-all",
+        "Enable all online enrichment passes including Hasheous, PlayMatch, and ZXInfo APIs "
+        "(can take days on full catalogues — use only for targeted rebuilds). Applies to "
+        "--build-compendium and --enrich-compendium."));
     addActionOption(QCommandLineOption(
         "dedup-compendium", "Prune bad serial rows and merge duplicate games in an existing compendium database"));
     addActionOption(QCommandLineOption(
         "import-patch-catalog", "Import patch/hack DAT files from data/patches into the compendium patch catalog"));
     addOption(QCommandLineOption("patch-dir", "Directory containing patch DAT files (default: data/patches)", "path"));
-    addActionOption(QCommandLineOption(
-        "enrich-compendium", "Run all enrichment passes against an existing compendium database without rebuilding"));
+    addActionOption(QCommandLineOption("enrich-compendium", "Run enrichment passes against an existing compendium database without rebuilding"));
     addOption(QCommandLineOption("enrich-source",
         "Comma-separated list of enrichment source(s) to run (default: all). Valid keys: libretro, gametdb, openvgdb, "
         "igdb, ra, hasheous, playmatch, mame-catver, mame-listxml, zxinfo",

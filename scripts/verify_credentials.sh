@@ -183,11 +183,33 @@ probe_hasheous() {
     pass "Hasheous (present, unchecked)"
 }
 
+probe_sgdb() {
+    want_provider sgdb || return 0
+    [[ -n "${REMUS_SGDB_API_KEY:-}" ]] || return 0
+    configured=$((configured + 1))
+
+    local http_code
+    http_code="$(curl -sS --max-time 20 -o /dev/null -w '%{http_code}' \
+        -H "Authorization: Bearer ${REMUS_SGDB_API_KEY}" \
+        "https://www.steamgriddb.com/api/v2/grids/steam/220?limit=1" \
+        2>/dev/null || echo 000)"
+    if [[ "${http_code}" == "200" ]]; then
+        pass "SteamGridDB"
+    elif [[ "${http_code}" == "401" ]]; then
+        fail "SteamGridDB (invalid API key)"
+        failures=$((failures + 1))
+    else
+        fail "SteamGridDB (HTTP ${http_code})"
+        failures=$((failures + 1))
+    fi
+}
+
 probe_igdb
 probe_ra
 probe_screenscraper
 probe_tgdb
 probe_hasheous
+probe_sgdb
 
 if [[ ${configured} -eq 0 ]]; then
     log "No provider credentials configured in environment."

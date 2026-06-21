@@ -172,7 +172,8 @@ GameMetadata IGDBProvider::getById(const QString &id) {
     QString body = QString("fields name,summary,genres.name,first_release_date,"
                            "involved_companies.company.name,involved_companies.developer,"
                            "involved_companies.publisher,aggregated_rating,"
-                           "multiplayer_modes.offlinemax,platforms.slug; where id = %1;")
+                           "multiplayer_modes.offlinemax,platforms.slug,"
+                           "external_games.category,external_games.uid; where id = %1;")
                        .arg(numericId);
 
     ApiResponse response = makeRequest("/games", body);
@@ -349,6 +350,22 @@ GameMetadata IGDBProvider::parseGameJson(const QJsonObject &game) {
                     metadata.system = SystemResolver::internalName(systemId);
                     break;
                 }
+            }
+        }
+    }
+
+    if (game.contains("external_games")) {
+        const QJsonArray externalGames = game["external_games"].toArray();
+        for (const QJsonValue &externalVal : externalGames) {
+            const QJsonObject external = externalVal.toObject();
+            const int category = external.value(QStringLiteral("category")).toInt(-1);
+            const QString uid = external.value(QStringLiteral("uid")).toString().trimmed();
+            if (uid.isEmpty())
+                continue;
+            // IGDB external game category 1 = Steam
+            if (category == 1) {
+                metadata.externalIds.insert(Constants::Providers::ExternalId::STEAM, uid);
+                break;
             }
         }
     }

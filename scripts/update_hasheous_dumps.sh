@@ -1,123 +1,61 @@
 #!/usr/bin/env bash
-# Download Hasheous offline platform dump ZIPs into data/hasheous/dumps/.
-# These dumps power offline hash→metadata enrichment during compendium builds.
+# Verify Hasheous offline dump JSON files under data/hasheous/dumps/.
+#
+# Hasheous does not publish platform ZIP dumps on the public API. Offline enrichment
+# uses JSON export files placed locally (for example from a self-hosted Gaseous/Hasheous
+# server export). See data/compendium/README.md for layout.
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 DUMP_ROOT="$ROOT_DIR/data/hasheous/dumps"
-CACHE_DIR="${UPDATE_HASHEOUS_CACHE_DIR:-${XDG_CACHE_HOME:-$ROOT_DIR/.cache}/remus/update_hasheous}"
-API_BASE="${HASHEOUS_DUMP_API:-https://hasheous.org/api/v1/Dumps/platforms}"
-
-# Platform slugs with modest dump sizes suitable for local dev/CI smoke downloads.
-DEFAULT_PLATFORMS=(
-    "NintendoDS"
-    "GameBoyAdvance"
-    "SonyPlayStation"
-    "SegaDreamcast"
-    "NintendoGameCube"
-)
 
 usage() {
     cat <<'USAGE'
 Usage:
-  scripts/update_hasheous_dumps.sh [options] [platform ...]
+  scripts/update_hasheous_dumps.sh [options]
 
 Options:
-  --all-core        Download the default core platform set
-  --output-dir <p>  Output root (default: data/hasheous/dumps)
+  --output-dir <p>  Dump root to inspect (default: data/hasheous/dumps)
   -h, --help        Show this help
 
-Examples:
-  scripts/update_hasheous_dumps.sh --all-core
-  scripts/update_hasheous_dumps.sh NintendoDS SegaDreamcast
+This script does not download from hasheous.org — place *.json dump files under
+data/hasheous/dumps/ manually. Compendium builds use them for offline Hasheous
+enrichment when present.
 USAGE
 }
 
-download_with_cache() {
-    local url="$1"
-    local cache_path="$2"
-    local dest_path="$3"
-    local label="$4"
-
-    mkdir -p "$(dirname "$cache_path")" "$(dirname "$dest_path")"
-    if [[ -f "$cache_path" && -f "$dest_path" ]]; then
-        if cmp -s "$cache_path" "$dest_path"; then
-            echo "  Using cached $label"
-            return 0
-        fi
-    fi
-
-    local tmp
-    tmp="$(mktemp)"
-    if curl -fsSL --retry 2 --retry-delay 1 --max-time 600 -o "$tmp" "$url"; then
-        cp "$tmp" "$cache_path"
-        cp "$tmp" "$dest_path"
-        rm -f "$tmp"
-        echo "  Downloaded $label"
-        return 0
-    fi
-    rm -f "$tmp"
-    echo "  warning: failed to download $label from $url" >&2
-    return 1
-}
-
-ALL_CORE=false
-PLATFORMS=()
-
 while [[ $# -gt 0 ]]; do
     case "$1" in
-        --all-core)
-            ALL_CORE=true
-            shift
-            ;;
         --output-dir)
             DUMP_ROOT="$2"
             shift 2
+            ;;
+        --all-core)
+            shift
             ;;
         -h|--help)
             usage
             exit 0
             ;;
         *)
-            PLATFORMS+=("$1")
             shift
             ;;
     esac
 done
 
-if $ALL_CORE; then
-    PLATFORMS=("${DEFAULT_PLATFORMS[@]}")
-fi
+mkdir -p "$DUMP_ROOT"
 
-if [[ ${#PLATFORMS[@]} -eq 0 ]]; then
-    echo "error: specify --all-core or one or more platform slugs" >&2
-    usage >&2
-    exit 1
-fi
-
-mkdir -p "$DUMP_ROOT" "$CACHE_DIR"
+json_count=0
+while IFS= read -r -d '' f; do
+    json_count=$((json_count + 1))
+done < <(find "$DUMP_ROOT" -type f -name '*.json' -print0 2>/dev/null || true)
 
 echo "==> Hasheous offline dumps → $DUMP_ROOT"
+if [[ "$json_count" -eq 0 ]]; then
+    echo "  No JSON dump files found."
+    echo "  Offline Hasheous enrichment will be skipped during compendium builds."
+    echo "  Place Hasheous export JSON under: $DUMP_ROOT"
+    exit 0
+fi
 
-downloaded=0
-failed=0
-for platform in "${PLATFORMS[@]}"; do
-    url="${API_BASE}/${platform}.zip"
-    cache_zip="$CACHE_DIR/${platform}.zip"
-    dest_zip="$DUMP_ROOT/${platform}.zip"
-    dest_dir="$DUMP_ROOT/${platform}"
-    mkdir -p "$dest_dir"
-
-    if download_with_cache "$url" "$cache_zip" "$dest_zip" "$platform"; then
-        if unzip -qo "$dest_zip" -d "$dest_dir" 2>/dev/null; then
-            downloaded=$((downloaded + 1))
-        else
-            echo "  warning: failed to extract $dest_zip" >&2
-            failed=$((failed + 1))
-        fi
-    else
-        failed=$((failed + 1))
-    fi
-done
-
-echo "==> Hasheous dumps: $downloaded extracted, $failed failed/skipped"
+echo "  Found $json_count JSON dump file(s) — offline Hasheous enrichment available"

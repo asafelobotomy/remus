@@ -106,10 +106,38 @@ Common additions for gap systems: `msx`, `msx2`, `3do`, `neogeocd`, `fds`, `atar
 
 | Source | URL | Use |
 |--------|-----|-----|
-| SteamGridDB | [steamgriddb.com](https://www.steamgriddb.com/) | Cover art grids — RomM “Chef's Choice” stack |
+| SteamGridDB | [steamgriddb.com](https://www.steamgriddb.com/) | Art-only runtime provider (grids/heroes/logos); bridges via Steam app id from IGDB |
 | MobyGames | [mobygames.com](https://www.mobygames.com/) | DOS/PC descriptions — no bulk API in Remus |
 | LaunchBox | Community databases | Box art / metadata — not wired |
 | ScreenScraper | [screenscraper.fr](https://www.screenscraper.fr/) | Rich media + text — runtime provider |
+
+## Source quality tiers (build + runtime)
+
+Remus assigns each source a **narrow role** so providers are not queried for fields they
+cannot supply reliably:
+
+| Tier | Sources | Role |
+|------|---------|------|
+| Identity | No-Intro, Redump, libretro DATs, compendium | Hashes, title, region, serial |
+| Offline metadata | Libretro metadata, GameTDB, OpenVGDB*, MAME catver/listxml | Text fields via COALESCE |
+| Offline bridges | Hasheous offline dumps | `igdb_id` + sparse metadata (no API) |
+| Bulk online | IGDB, RetroAchievements | Platform bulk + per-id IGDB; RA hash metadata (**not** descriptions) |
+| Per-game online | Hasheous API, PlayMatch, ZXInfo | `--online-enrichment-all` only |
+| Runtime text | Compendium → SS → Hasheous/PlayMatch → IGDB → TGDB → Wikidata | Name/hash waterfall (capability-gated) |
+| Runtime art | SS → GameTDB → SteamGridDB → IGDB → RA → Wikidata | `getArtworkWithFallback` only |
+
+\*OpenVGDB skips systems covered by GameTDB XML (Nintendo/PS3 family) to avoid boilerplate descriptions.
+
+### Build profiles
+
+| Profile | Command | Online API use |
+|---------|---------|----------------|
+| Offline (~90 min) | `build_compendium_full.sh --skip-update` | None |
+| Recommended | `+ --online-enrichment` | Hasheous **offline dumps** + IGDB + RA bulk |
+| Full bridges (days) | `+ --online-enrichment-all` | + Hasheous/PlayMatch/ZXInfo per-game APIs |
+
+`--enrich-compendium` defaults to **offline-only** (same flags as `--build-compendium`).
+Pass `--online-enrichment` for IGDB/RA on an existing DB without accidental bridge API storms.
 
 ### Deferred bulk passes (ScreenScraper / TheGamesDB)
 
@@ -138,6 +166,8 @@ bash scripts/build_compendium_full.sh --skip-update   # imports patch catalog be
 # Or on an existing DB:
 bash scripts/import_patch_catalog.sh data/compendium/remus_compendium.db
 build/remus-cli --enrich-compendium --compendium-output data/compendium/remus_compendium.db
+# With online bulk passes (IGDB + RA + Hasheous offline dumps):
+build/remus-cli --enrich-compendium --online-enrichment --compendium-output data/compendium/remus_compendium.db
 build/remus-cli --dedup-compendium --compendium-output data/compendium/remus_compendium.db
 bash .github/scripts/validate-compendium-db.sh data/compendium/remus_compendium.db
 bash .github/scripts/validate-compendium-db.sh data/compendium/remus_compendium.db \

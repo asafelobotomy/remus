@@ -18,6 +18,7 @@
 #include "../../metadata/provider_orchestrator.h"
 #include "../../metadata/retroachievements_provider.h"
 #include "../../metadata/screenscraper_provider.h"
+#include "../../metadata/steamgriddb_provider.h"
 #include "../../metadata/thegamesdb_provider.h"
 #include "../../metadata/wikidata_provider.h"
 
@@ -165,6 +166,17 @@ void AppController::rebuildOrchestrator() {
         igdbProvider->setCredentials(igdbClientId, igdbClientSecret);
         m_orchestrator->addProvider(Constants::Providers::IGDB, igdbProvider,
             providerPriorityOrDefault(Constants::Providers::IGDB, Constants::Providers::Priority::IGDB));
+    }
+
+    const QString sgdbApiKey = secretValue(Constants::Settings::Providers::STEAMGRIDDB_API_KEY);
+    if (!sgdbApiKey.isEmpty()) {
+        auto *sgdbProvider = new SteamGridDBProvider(m_orchestrator.get());
+        sgdbProvider->setApiKey(sgdbApiKey);
+        m_orchestrator->addProvider(Constants::Providers::STEAMGRIDDB, sgdbProvider,
+            providerPriorityOrDefault(
+                Constants::Providers::STEAMGRIDDB, Constants::Providers::Priority::STEAMGRIDDB));
+    } else {
+        qInfo() << "SteamGridDB: skipped (no API key configured)";
     }
 
     const QString raUser = secretValue(Constants::Settings::Providers::RETROACHIEVEMENTS_USERNAME);

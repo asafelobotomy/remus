@@ -6,10 +6,12 @@
 #include "hasheous_provider.h"
 #include "metadata_cache.h"
 #include "playmatch_provider.h"
+#include "steamgriddb_provider.h"
 
 #include <QDebug>
 
 #include "../core/constants/constants.h"
+#include "../core/constants/provider_fields.h"
 #include "../core/constants/match_methods.h"
 #include "../core/logging_categories.h"
 #include "../core/match_utils.h"
@@ -237,7 +239,8 @@ void ProviderOrchestrator::queryProvider(GameMetadata &accumulator, const QStrin
         }
     }
 
-    if (result.title.isEmpty() && !serial.isEmpty()) {
+    if (result.title.isEmpty() && !serial.isEmpty()
+        && Constants::ProviderFields::providerSupportsSerialLookup(providerName)) {
         emit tryingProvider(providerName, QStringLiteral("serial"));
         try {
             const GameMetadata serialResult = info.provider->getBySerial(serial, system);
@@ -298,7 +301,7 @@ void ProviderOrchestrator::queryProvider(GameMetadata &accumulator, const QStrin
         // name-only providers like TheGamesDB can match against their own titles.
         const QString rawTerm = accumulator.title.isEmpty() ? name : accumulator.title;
         const QString searchTerm = Metadata::FilenameNormalizer::normalize(rawTerm);
-        if (!searchTerm.isEmpty()) {
+        if (!searchTerm.isEmpty() && Constants::ProviderFields::providerSupportsNameLookup(providerName)) {
             emit tryingProvider(providerName, MatchMethods::NAME);
             try {
                 const QList<SearchResult> results = info.provider->searchByName(searchTerm, system);
@@ -636,8 +639,8 @@ GameMetadata ProviderOrchestrator::searchWithFallback(const QString &hash, const
             const FieldSet gaps = computeFieldGap(accumulator);
             if (!gaps.isEmpty()) {
                 const QSet<QString> exclude = { compendiumId };
-                accumulator = enrichMissingFields(
-                    gaps, accumulator, hash, accumulator.title, system, crc32, md5, sha1, serial, exclude, raMd5);
+                accumulator = enrichMissingFields(gaps, accumulator, hash, accumulator.title, system, crc32, md5, sha1,
+                    serial, exclude, raMd5, fileSize, contentSha1);
             }
             if (!cacheKey.isEmpty() && m_cache) {
                 m_cache->store(accumulator, cacheKey, system);
@@ -650,6 +653,8 @@ GameMetadata ProviderOrchestrator::searchWithFallback(const QString &hash, const
     QStringList localProviders = getSortedLocalProviders();
     localProviders.removeAll(compendiumId);
     for (const QString &providerName : localProviders) {
+        if (!Constants::ProviderFields::providerSupportsMetadataLookup(providerName))
+            continue;
         queryProvider(
             accumulator, providerName, hash, name, system, crc32, md5, sha1, serial, fileSize, raMd5, contentSha1);
         if (isSufficientlyEnriched(accumulator, requireArtwork)) {
@@ -665,6 +670,8 @@ GameMetadata ProviderOrchestrator::searchWithFallback(const QString &hash, const
     if (!isSufficientlyEnriched(accumulator, requireArtwork) && !identityResolved(accumulator)) {
         const QStringList remoteProviders = getSortedRemoteProviders();
         for (const QString &providerName : remoteProviders) {
+            if (!Constants::ProviderFields::providerSupportsMetadataLookup(providerName))
+                continue;
             queryProvider(
                 accumulator, providerName, hash, name, system, crc32, md5, sha1, serial, fileSize, raMd5, contentSha1);
             if (isSufficientlyEnriched(accumulator, requireArtwork)) {
@@ -692,8 +699,8 @@ GameMetadata ProviderOrchestrator::searchWithFallback(const QString &hash, const
     return accumulator;
 }
 
-ArtworkUrls ProviderOrchestrator::getArtworkWithFallback(
-    const QString &id, const QString &system, const QString &providerName) {
+ArtworkUrls ProviderOrchestrator::getArtworkWithFallback(const QString &id, const QString &system,
+    const QString &providerName, const QMap<QString, QString> &externalIds) {
     Q_UNUSED(system);
 
     if (m_cache) {
@@ -704,11 +711,17 @@ ArtworkUrls ProviderOrchestrator::getArtworkWithFallback(
         }
     }
 
+    auto artworkLookupId = [&](const QString &providerKey, const QString &baseId) -> QString {
+        if (providerKey == Constants::Providers::STEAMGRIDDB)
+            return SteamGridDBProvider::resolveArtworkLookupId(baseId, externalIds);
+        return baseId;
+    };
+
     if (!providerName.isEmpty() && m_providers.contains(providerName)) {
         const ProviderInfo &info = m_providers[providerName];
         if (info.enabled) {
             qInfo() << "Fetching artwork from preferred provider:" << providerName;
-            const ArtworkUrls artwork = info.provider->getArtwork(id);
+            const ArtworkUrls artwork = info.provider->getArtwork(artworkLookupId(providerName, id));
             if (!artwork.boxFront.isEmpty() && m_cache) {
                 m_cache->storeArtwork(id, artwork);
             }
@@ -721,8 +734,10 @@ ArtworkUrls ProviderOrchestrator::getArtworkWithFallback(
         const ProviderInfo &info = m_providers[name];
         if (!info.enabled)
             continue;
+        if (!Constants::ProviderFields::providerSupportsArtworkLookup(name))
+            continue;
         qInfo() << "Trying artwork from:" << name;
-        const ArtworkUrls artwork = info.provider->getArtwork(id);
+        const ArtworkUrls artwork = info.provider->getArtwork(artworkLookupId(name, id));
         if (!artwork.boxFront.isEmpty()) {
             qInfo() << "✓ Got artwork from:" << name;
             if (m_cache) {

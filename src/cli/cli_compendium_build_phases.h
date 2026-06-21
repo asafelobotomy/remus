@@ -51,6 +51,7 @@ struct EnrichmentStats {
     int passesSkippedNoInput = 0;
     int passesSkippedNoGaps = 0;
     int passesSkippedFiltered = 0; // passes skipped by --enrich-source filter
+    int passesSkippedOfflineOnly = 0; // online passes skipped in offline-only build mode
     int passesFailedWithError = 0; // non-fatal pass failures; pipeline continues
     int mergeRuns = 0;
     int raApiCallsNeeded = 0;
@@ -89,12 +90,67 @@ struct EnrichmentStats {
  * @param sourceFilter   Optional list of source keys; only matching passes run.
  *                       Empty list (default) means run all passes.
  *                       Valid keys: see knownEnrichmentSourceKeys().
+ * @param offlineOnlyEnrichment When true, skip online API passes (Hasheous API, PlayMatch,
+ *                       ZXInfo, IGDB, RA). Hasheous runs only against local dump JSON when present.
+ * @param onlineEnrichmentAll When true, Hasheous/PlayMatch/ZXInfo may call per-game APIs.
+ *                       When false with bulk online enrichment, Hasheous uses offline dumps only.
  * @return true on success, false on error.
  */
 bool runCompendiumEnrichmentPasses(QSqlDatabase &db, const QString &metadataDir, const QString &gametdbDir,
     const QString &openvgdbPath, const QString &credPath, const QString &mameCatverPath, const QString &mameListXmlPath,
     EnrichmentStats &stats, QString &error, EnrichmentProgressCallback onProgress = nullptr,
-    QStringList sourceFilter = { });
+    QStringList sourceFilter = { }, bool offlineOnlyEnrichment = false, bool onlineEnrichmentAll = false);
+
+/**
+ * @brief Source keys that require live network access during enrichment.
+ */
+inline QStringList onlineEnrichmentSourceKeys() {
+    return {
+        QStringLiteral("hasheous"),
+        QStringLiteral("playmatch"),
+        QStringLiteral("zxinfo"),
+        QStringLiteral("igdb"),
+        QStringLiteral("ra"),
+    };
+}
+
+/**
+ * @brief Source keys that use only local files or SQLite databases.
+ */
+inline QStringList offlineEnrichmentSourceKeys() {
+    return {
+        QStringLiteral("libretro"),
+        QStringLiteral("gametdb"),
+        QStringLiteral("openvgdb"),
+        QStringLiteral("mame-catver"),
+        QStringLiteral("mame-listxml"),
+    };
+}
+
+/**
+ * @brief Recommended online passes for full builds: bulk platform/system fetches (IGDB, RA).
+ * Excludes per-game bridge APIs (Hasheous, PlayMatch) and ZXInfo.
+ */
+inline QStringList defaultBulkOnlineEnrichmentSourceKeys() {
+    QStringList keys = offlineEnrichmentSourceKeys();
+    keys.append({
+        QStringLiteral("hasheous"), // offline dump JSON only unless --online-enrichment-all
+        QStringLiteral("igdb"),
+        QStringLiteral("ra"),
+    });
+    return keys;
+}
+
+/**
+ * @brief Per-game online bridge passes — very slow on full catalogues (100k+ API calls).
+ */
+inline QStringList perGameOnlineEnrichmentSourceKeys() {
+    return {
+        QStringLiteral("hasheous"),
+        QStringLiteral("playmatch"),
+        QStringLiteral("zxinfo"),
+    };
+}
 
 /**
  * @brief Populate the FTS search index tables from the games/game_names rows.
@@ -128,7 +184,7 @@ void insertEnrichmentStatsReportFields(
  */
 QString computeEnrichmentInputsFingerprint(const QString &metadataDir, const QString &gametdbDir,
     const QString &openvgdbPath, const QString &mameCatverPath, const QString &mameListXmlPath, const QString &credPath,
-    const QStringList &sourceFilter = { });
+    const QStringList &sourceFilter = { }, bool offlineOnlyEnrichment = false, bool onlineEnrichmentAll = false);
 
 /**
  * @brief Extract a stored enrichment fingerprint from compendium_builds.notes JSON.
@@ -196,4 +252,4 @@ int runCompendiumEnrichmentOnlyRefresh(QSqlDatabase &database, const QString &bu
     const QJsonObject &existingReportBase, const QString &enrichmentFingerprint, const QString &metadataDir,
     const QString &gametdbDir, const QString &openvgdbPath, const QString &credPath, const QString &mameCatverPath,
     const QString &mameListXmlPath, const QStringList &sourceFilter, EnrichmentProgressCallback onProgress,
-    QJsonObject &reportOut, QString &error);
+    QJsonObject &reportOut, QString &error, bool offlineOnlyEnrichment = false, bool onlineEnrichmentAll = false);

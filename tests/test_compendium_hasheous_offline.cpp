@@ -29,6 +29,7 @@ private:
 private slots:
     void loadHasheousOfflineIndex_buildsLookupFromFixtureDump();
     void lookupHasheousOfflineMatch_findsByAnyHashType();
+    void hasHasheousOfflineDumpFiles_detectsJsonUnderRoot();
 };
 
 void CompendiumHasheousOfflineTest::loadHasheousOfflineIndex_buildsLookupFromFixtureDump() {
@@ -65,6 +66,20 @@ void CompendiumHasheousOfflineTest::lookupHasheousOfflineMatch_findsByAnyHashTyp
     QVERIFY(lookupHasheousOfflineMatch(
         index, QString(), QStringLiteral("0123456789abcdef0123456789abcdef"), QString(), QString(), out));
     QCOMPARE(out.igdbId, QStringLiteral("1"));
+}
+
+void CompendiumHasheousOfflineTest::hasHasheousOfflineDumpFiles_detectsJsonUnderRoot() {
+    QTemporaryDir emptyDir;
+    QVERIFY(emptyDir.isValid());
+    QVERIFY(!hasHasheousOfflineDumpFiles(emptyDir.path()));
+
+    QTemporaryDir dumpDir;
+    QVERIFY(dumpDir.isValid());
+    QFile json(dumpDir.filePath(QStringLiteral("sample.json")));
+    QVERIFY(json.open(QIODevice::WriteOnly));
+    json.write("{}");
+    json.close();
+    QVERIFY(hasHasheousOfflineDumpFiles(dumpDir.path()));
 }
 
 QTEST_MAIN(CompendiumHasheousOfflineTest)

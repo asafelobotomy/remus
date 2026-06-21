@@ -11,9 +11,15 @@ set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
+# Load provider credentials for compendium enrichment (REMUS_* → CredentialManager).
+# shellcheck disable=SC1091
+source "$ROOT_DIR/scripts/load_env_local.sh"
+
 SKIP_UPDATE=false
 ALLOW_UNRESOLVED_CONFLICTS=false
 SKIP_VALIDATION=false
+ONLINE_ENRICHMENT=false
+ONLINE_ENRICHMENT_ALL=false
 DAT_DIR="$ROOT_DIR/data/databases"
 MANIFEST_PATH="$ROOT_DIR/data/compendium/compendium-manifest-full.json"
 OUTPUT_DB="$ROOT_DIR/data/compendium/remus_compendium.db"
@@ -94,6 +100,9 @@ Options:
   --allow-unresolved-conflicts
                             Treat exit code 2 (unresolved merge conflicts) as success
   --skip-validation         Skip post-build phase-1 validation SQL
+  --online-enrichment         Enable bulk online enrichment (IGDB + RA; uses .env.local credentials)
+  --online-enrichment-all     Also run Hasheous/PlayMatch/ZXInfo (very slow on full catalogues)
+                              Default: offline-only local DAT/metadata (~90 min builds).
   --dat-dir <path>          DAT directory for manifest generation
   --manifest <path>         Manifest output/input path
   --output-db <path>        Compendium SQLite output path
@@ -117,6 +126,15 @@ while [[ $# -gt 0 ]]; do
             ;;
         --skip-validation)
             SKIP_VALIDATION=true
+            shift
+            ;;
+        --online-enrichment)
+            ONLINE_ENRICHMENT=true
+            shift
+            ;;
+        --online-enrichment-all)
+            ONLINE_ENRICHMENT=true
+            ONLINE_ENRICHMENT_ALL=true
             shift
             ;;
         --dat-dir)
@@ -225,12 +243,27 @@ if [[ ! -f "$CRED_TARGET" ]]; then
 fi
 
 echo "==> Building compendium DB"
+if $ONLINE_ENRICHMENT_ALL; then
+    echo "    enrichment=online-all (includes Hasheous/PlayMatch/ZXInfo — may take days)"
+elif $ONLINE_ENRICHMENT; then
+    echo "    enrichment=offline + bulk online (IGDB + RA from .env.local)"
+else
+    echo "    enrichment=offline-only (local DAT/metadata; add --online-enrichment for IGDB/RA)"
+fi
 build_started_at=$(date +%s)
 set +e
+build_cli_args=(
+    --build-compendium
+    --compendium-manifest "$MANIFEST_PATH"
+    --compendium-output "$OUTPUT_DB"
+)
+if $ONLINE_ENRICHMENT_ALL; then
+    build_cli_args+=(--online-enrichment-all)
+elif $ONLINE_ENRICHMENT; then
+    build_cli_args+=(--online-enrichment)
+fi
 "$ROOT_DIR/build/remus-cli" \
-    --build-compendium \
-    --compendium-manifest "$MANIFEST_PATH" \
-    --compendium-output "$OUTPUT_DB" \
+    "${build_cli_args[@]}" \
     >"$BUILD_LOG" 2>&1 &
 build_pid=$!
 

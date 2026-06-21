@@ -130,6 +130,10 @@ void MetadataFieldGapTest::capabilities_intersect_detectsSkipCandidate() {
     const QSet<QString> &raCaps = CAPABILITIES.value(QStringLiteral("retroachievements"));
     QVERIFY(!raCaps.intersects(gap)); // should be skipped
 
+    // hasheous bare hash hits do NOT supply description — only MetadataProxy does at runtime.
+    const QSet<QString> &hasheousCaps = CAPABILITIES.value(QStringLiteral("hasheous"));
+    QVERIFY(!hasheousCaps.intersects(gap));
+
     // screenscraper DOES supply description.
     const QSet<QString> &ssCaps = CAPABILITIES.value(QStringLiteral("screenscraper"));
     QVERIFY(ssCaps.intersects(gap)); // should NOT be skipped

@@ -35,12 +35,12 @@ bool enrichFromRetroAchievements(QSqlDatabase &database, const QString &credenti
         return true;
     }
 
-    // Query all systems that have games with at least one MD5 signature
+    // Query systems that have games with at least one MD5 signature (RA hash matching uses RA MD5).
     QSqlQuery sysQ(database);
     if (!sysQ.exec(QStringLiteral("SELECT DISTINCT g.system_id, s.display_name FROM games g "
                                   "JOIN systems s ON s.system_id = g.system_id "
                                   "JOIN game_signatures gs ON gs.game_id = g.game_id "
-                                  "WHERE gs.hash_type IN ('md5', 'sha1', 'crc32', 'sha256') "
+                                  "WHERE gs.hash_type = 'md5' "
                                   "ORDER BY s.display_name"))) {
         error = QStringLiteral("Query systems with MD5 signatures: %1").arg(sysQ.lastError().text());
         return false;
@@ -159,8 +159,7 @@ bool enrichFromRetroAchievements(QSqlDatabase &database, const QString &credenti
                 || isBlank(3) // developer
                 || isBlank(4) // publisher
                 || hashQ.value(5).isNull() // release_year
-                || isBlank(6) // release_date
-                || isBlank(7); // description
+                || isBlank(6); // release_date — RA does not return narrative descriptions
             // Do NOT suppress retries for already-processed games: ra_game_id may have
             // been written while the metadata API call failed, leaving enrichable fields
             // blank.  Let metaMissing stand so the API call is attempted again.

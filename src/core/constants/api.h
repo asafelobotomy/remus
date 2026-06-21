@@ -154,6 +154,13 @@ namespace Constants {
         inline constexpr const char *PLAYMATCH_IGDB_GAME_ENDPOINT = "/api/igdb/game";
 
         // ============================================================================
+        // SteamGridDB API (artwork only)
+        // ============================================================================
+
+        /// Base URL for SteamGridDB API v2
+        inline constexpr const char *STEAMGRIDDB_BASE_URL = "https://www.steamgriddb.com/api/v2";
+
+        // ============================================================================
         // RetroAchievements Patch API
         // ============================================================================
 

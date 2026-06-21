@@ -166,7 +166,7 @@ void CompendiumEnrichmentLocalSmokeTest::openvgdbMissingFile_skipsWithoutWrites(
         int facts = 0;
         QString error;
         const bool ok = CompendiumEnrichment::enrichFromOpenVGDB(
-            db, QStringLiteral("/nonexistent/remus-openvgdb.sqlite"), games, facts, error);
+            db, QStringLiteral("/nonexistent/remus-openvgdb.sqlite"), QString(), games, facts, error);
         QVERIFY2(ok, qPrintable(error));
         QVERIFY(db.commit());
 

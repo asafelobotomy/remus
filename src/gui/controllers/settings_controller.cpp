@@ -103,8 +103,9 @@ QVariantList SettingsController::providerGroups() const {
     //  3 IGDB_CLIENT_ID
     //  4 IGDB_CLIENT_SECRET
     //  5 HASHEOUS_CLIENT_API_KEY
-    //  6 RETROACHIEVEMENTS_USERNAME
-    //  7 RETROACHIEVEMENTS_API_KEY
+    //  6 STEAMGRIDDB_API_KEY
+    //  7 RETROACHIEVEMENTS_USERNAME
+    //  8 RETROACHIEVEMENTS_API_KEY
     const struct {
         const char *groupKey;
         const char *groupName;
@@ -115,7 +116,8 @@ QVariantList SettingsController::providerGroups() const {
         { "thegamesdb", "TheGamesDB", 2, 2 },
         { "igdb", "IGDB", 3, 4 },
         { "hasheous", "Hasheous", 5, 5 },
-        { "retroachievements", "RetroAchievements", 6, 7 },
+        { "steamgriddb", "SteamGridDB", 6, 6 },
+        { "retroachievements", "RetroAchievements", 7, 8 },
     };
 
     QVariantList result;
