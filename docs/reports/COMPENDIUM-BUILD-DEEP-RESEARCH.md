@@ -1,6 +1,6 @@
 # Compendium Build — Deep Research & Enhancement Roadmap
 
-**Date:** 2026-06-18  
+**Date:** 2026-06-18
 **Scope:** Full pipeline review — scripts, ingest, enrichment, merge, validation, ops — plus
 industry context and complementary tasks beyond the deferred multi-disc / SHA256 items.
 
@@ -8,7 +8,7 @@ industry context and complementary tasks beyond the deferred multi-disc / SHA256
 
 - [COMPENDIUM-MULTI-DISC-SHA256-RESEARCH.md](COMPENDIUM-MULTI-DISC-SHA256-RESEARCH.md) — focused analysis of deferred hash gaps
 - [COMPENDIUM-DATA-SOURCES.md](COMPENDIUM-DATA-SOURCES.md) — source inventory
-- [compendium-completeness-plan-2026-05-26.md](../plans/compendium-completeness-plan-2026-05-26.md) — Hasheous offline dump plan (not yet implemented)
+- [compendium-completeness-plan-2026-05-26.md](../plans/compendium-completeness-plan-2026-05-26.md) — G6–G9 bulk enrichers (implemented)
 
 ---
 
@@ -152,7 +152,7 @@ can slip through until manual exclusion.
 #### Silent empty DAT ingest
 
 `compendium_compiler_service.cpp` — enabled source with parse failure or zero entries: warning
-+ `continue`, build does not fail. Surfaces late in coverage/shadow audit.
+- `continue`, build does not fail. Surfaces late in coverage/shadow audit.
 
 **Complementary:** Fail build (or phase-1 gate) when any **enabled** manifest source produces
 zero `source_items`.
@@ -219,24 +219,15 @@ not implemented. Title conflicts use length/priority heuristics only.
 
 ### 2.4 P1 — Data acquisition gaps
 
-#### `catver.ini` not fetched
+#### `catver.ini` fetch
 
-`scripts/update_dats.sh` has **no** catver step. MAME catver pass expects
-`data/mame/catver.ini` manually. Phase-2 `enrichment.arcade_missing_developer` fails without it.
+`scripts/update_dats.sh` downloads catver.ini from progetto-SNAPS when network is available.
+MAME catver enrichment expects `data/mame/catver.ini`.
 
-**Complementary:** Add download from MAME/progetto release assets in `update_dats.sh` §MAME.
+#### Hasheous offline dumps
 
-#### Hasheous offline dumps — planned, not built
-
-`compendium-completeness-plan-2026-05-26.md` describes weekly ZIP dumps from
-`hasheous.org/api/v1/Dumps/platforms/{platform}.zip` for **offline** enrichment without
-per-game API calls. Current implementation uses **live API only**
-(`compendium_enrichment_hasheous.cpp`).
-
-**Benefit:** Faster full builds, no rate limits, covers obscure systems (C64, Amiga, etc.)
-without IGDB credentials.
-
-**Complementary:** `scripts/update_hasheous_dumps.sh` + offline enricher mode (hash index walk).
+`scripts/update_hasheous_dumps.sh` downloads platform ZIPs; `compendium_enrichment_hasheous.cpp`
+uses the offline index when `--online-enrichment` is set without `--online-enrichment-all`.
 
 #### Wii U digital No-Intro
 
@@ -414,7 +405,7 @@ Hasheous offline dumps would complete the same pattern for hash→metadata bridg
 | This deep research doc | Done |
 | COMPENDIUM-DATA-SOURCES deferred cross-link | Done |
 | Manifest skip invalidation rules | **Todo** |
-| Hasheous offline dump runbook | **Todo** (when implemented) |
+| Hasheous offline dump runbook | Done — see `data/compendium/README.md` |
 
 ---
 
@@ -429,28 +420,28 @@ Hasheous offline dumps would complete the same pattern for hash→metadata bridg
 
 ### P1 — Quality & cost (high ROI)
 
-5. **IGDB gap predicate** — respect existing `igdb_id` from bridges
-6. **`catver.ini` in `update_dats.sh`**
-7. **Export `passesFailedWithError`** in build report; optional fail when >0
-8. **Enrichment-input-aware rebuild skip**
-9. **Phase-2 extended validation** (unmapped items, sha256 baseline, igdb_id %)
-10. **Hasheous offline dump enricher** (from completeness plan)
+1. **IGDB gap predicate** — respect existing `igdb_id` from bridges
+2. **`catver.ini` in `update_dats.sh`**
+3. **Export `passesFailedWithError`** in build report; optional fail when >0
+4. **Enrichment-input-aware rebuild skip**
+5. **Phase-2 extended validation** (unmapped items, sha256 baseline, igdb_id %)
+6. **Hasheous offline dump enricher** (from completeness plan)
 
 ### P2 — Efficiency & ops
 
-11. Content-hash DAT sync in `update_dats.sh`
-12. Hasheous array API migration
-13. Shadowed-source audit → manifest PR workflow
-14. Align Hasheous `igdb_id` skip with PlayMatch (any source)
-15. Implement or remove deferred merge policies in seeds
+1. Content-hash DAT sync in `update_dats.sh`
+2. Hasheous array API migration
+3. Shadowed-source audit → manifest PR workflow
+4. Align Hasheous `igdb_id` skip with PlayMatch (any source)
+5. Implement or remove deferred merge policies in seeds
 
 ### P3 — Expansion
 
-16. `game_discs` compendium model
-17. Homebrew / TOSEC manifest sources
-18. CHD header hashing at library scan (links to compendium via bridges)
-19. ScreenScraper / TheGamesDB bulk passes
-20. Parallel DAT ingest / incremental FTS
+1. `game_discs` compendium model
+2. Homebrew / TOSEC manifest sources
+3. CHD header hashing at library scan (links to compendium via bridges)
+4. ScreenScraper / TheGamesDB bulk passes
+5. Parallel DAT ingest / incremental FTS
 
 ---
 

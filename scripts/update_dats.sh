@@ -738,6 +738,33 @@ else
     echo "  Skipping hacks (metadat/hacks not found in libretro-database clone)"
 fi
 
+# 5b. Supplemental DAT sets — homebrew, libretro-dats (libretro curated); TOSEC is manual drop-in
+SUPPLEMENTAL_DIR="$PROJECT_ROOT/data/databases/supplemental"
+supplemental_copied=0
+for supplemental_type in homebrew libretro-dats; do
+    src_supplemental="$CLONE_DIR/metadat/$supplemental_type"
+    dest_supplemental="$SUPPLEMENTAL_DIR/$supplemental_type"
+    if [[ ! -d "$src_supplemental" ]]; then
+        echo "  Skipping supplemental/$supplemental_type (not found in repo)"
+        continue
+    fi
+    mkdir -p "$dest_supplemental"
+    type_count=0
+    for dat in "$src_supplemental/"*.dat; do
+        [[ -f "$dat" ]] || continue
+        if should_include "$dat"; then
+            cp "$dat" "$dest_supplemental/$(basename "$dat")"
+            supplemental_copied=$((supplemental_copied + 1))
+            type_count=$((type_count + 1))
+        fi
+    done
+    echo "  Supplemental/$supplemental_type: $type_count files"
+done
+if [[ -d "$SUPPLEMENTAL_DIR/tosec" ]]; then
+    tosec_count=$(find "$SUPPLEMENTAL_DIR/tosec" -maxdepth 1 -type f -name '*.dat' 2>/dev/null | wc -l)
+    echo "  Supplemental/tosec:     $tosec_count files (manual drop-in)"
+fi
+
 # 6. Metadata DATs (genre, developer, publisher, maxusers, releaseyear)
 METADATA_DIR="$PROJECT_ROOT/data/metadata"
 METADAT_TYPES=("genre" "developer" "publisher" "maxusers" "releaseyear" "description")
@@ -861,10 +888,16 @@ MAME_LISTXML_PATH="$PROJECT_ROOT/data/mame/listxml.xml"
 MAME_CATVER_PATH="$PROJECT_ROOT/data/mame/catver.ini"
 if [[ ! -f "$MAME_LISTXML_PATH" ]]; then
     echo ""
-    echo "WARNING: $MAME_LISTXML_PATH is missing."
-    echo "  The MAME listxml enrichment pass will be skipped during compendium builds."
-    echo "  Arcade developer/year/players metadata will not be populated from listxml."
-    echo "  Install MAME (see section 4b above) and re-run this script, or place listxml.xml manually."
+    echo "==> MAME listxml missing — trying scripts/update_mame_listxml.sh fallback..."
+    if bash "$PROJECT_ROOT/scripts/update_mame_listxml.sh"; then
+        echo "  MAME listxml fallback succeeded: $MAME_LISTXML_PATH"
+    else
+        echo ""
+        echo "WARNING: $MAME_LISTXML_PATH is missing."
+        echo "  The MAME listxml enrichment pass will be skipped during compendium builds."
+        echo "  Arcade developer/year/players metadata will not be populated from listxml."
+        echo "  Install MAME (see section 4b above) and re-run this script, or place listxml.xml manually."
+    fi
 fi
 if [[ ! -f "$MAME_CATVER_PATH" ]]; then
     echo ""

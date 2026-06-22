@@ -36,14 +36,23 @@ public:
     GameMetadata getById(const QString &id) override;
     ArtworkUrls getArtwork(const QString &id) override;
 
+    /**
+     * @brief Bulk-fetch Wikidata video games whose platform label matches @p systemDisplayName.
+     *
+     * Paginates with @p limit and @p offset. Returns an empty list at end-of-data or on error.
+     */
+    QList<GameMetadata> fetchGamesForPlatform(const QString &systemDisplayName, int limit = 500, int offset = 0);
+
 private:
     static constexpr const char *SPARQL_ENDPOINT = "https://query.wikidata.org/sparql";
     static constexpr int REQUEST_TIMEOUT_MS = 15000;
 
     QJsonObject executeSparql(const QString &query);
     QString buildSearchQuery(const QString &title, const QString &system) const;
+    QString buildPlatformBulkQuery(const QString &system, int limit, int offset) const;
     QString buildDetailQuery(const QString &entityId) const;
     GameMetadata parseDetailBindings(const QJsonArray &bindings, const QString &entityId) const;
+    QString platformFilterClause(const QString &system) const;
 };
 
 } // namespace Remus

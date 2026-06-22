@@ -57,6 +57,7 @@ int handleEnrichCompendiumCommand(CliContext &ctx) {
     const QString openvgdbPath = findOpenVGDBPath();
     const QString mameCatverPath = findMameCatverPath();
     const QString mameListXmlPath = findMameListXmlPath();
+    const QString launchboxMetadataPath = findLaunchBoxMetadataPath();
     const QString credPath = outputInfo.dir().filePath(QStringLiteral("enrichment-credentials.json"));
 
     if (metadataDir.isEmpty())
@@ -71,6 +72,8 @@ int handleEnrichCompendiumCommand(CliContext &ctx) {
         qInfo() << "[enrich] data/mame/catver.ini not found — MAME catver pass skipped";
     if (mameListXmlPath.isEmpty())
         qInfo() << "[enrich] data/mame/listxml.xml not found — MAME listxml pass skipped";
+    if (launchboxMetadataPath.isEmpty())
+        qInfo() << "[enrich] data/launchbox/Metadata.xml not found — LaunchBox pass skipped";
 
     const QString connectionName
         = QStringLiteral("compendium-enrich-") + QUuid::createUuid().toString(QUuid::WithoutBraces);
@@ -113,7 +116,8 @@ int handleEnrichCompendiumCommand(CliContext &ctx) {
         effectiveSourceFilter = defaultBulkOnlineEnrichmentSourceKeys();
         qInfo().noquote() << QStringLiteral(
             "[enrich] Bulk online enrichment (local passes + Hasheous offline dumps + IGDB + RA). "
-            "Pass --online-enrichment-all for Hasheous/PlayMatch/ZXInfo API bridges.");
+            "Pass --online-enrichment-all for per-game APIs: %1.")
+                                 .arg(perGameOnlineEnrichmentSourceKeys().join(QStringLiteral(", ")));
     } else if (offlineOnlyEnrichment && effectiveSourceFilter.isEmpty()) {
         qInfo() << "[enrich] Offline-only enrichment (local DAT/metadata). "
                 << "Pass --online-enrichment for IGDB/RA bulk passes (requires REMUS_* credentials).";
@@ -126,9 +130,21 @@ int handleEnrichCompendiumCommand(CliContext &ctx) {
     {
         QString enrichError;
         if (!runCompendiumEnrichmentPasses(database, metadataDir, gametdbDir, openvgdbPath, credPath, mameCatverPath,
-                mameListXmlPath, stats, enrichError, nullptr, effectiveSourceFilter, offlineOnlyEnrichment,
-                onlineEnrichmentAll)) {
+                mameListXmlPath, launchboxMetadataPath, stats, enrichError, nullptr, effectiveSourceFilter,
+                offlineOnlyEnrichment, onlineEnrichmentAll)) {
             qCritical().noquote() << QStringLiteral("✗ %1").arg(enrichError);
+            database.close();
+            database = QSqlDatabase();
+            QSqlDatabase::removeDatabase(connectionName);
+            return 1;
+        }
+        if (ctx.parser.isSet(QStringLiteral("fail-on-enrichment-errors")) && stats.passesFailedWithError > 0) {
+            qCritical().noquote()
+                << QStringLiteral("✗ %1 enrichment pass(es) failed with errors (--fail-on-enrichment-errors)")
+                       .arg(stats.passesFailedWithError);
+            for (const EnrichmentStats::PassError &pe : stats.passErrors) {
+                qCritical().noquote() << QStringLiteral("  - [%1] %2: %3").arg(pe.sourceKey, pe.passName, pe.message);
+            }
             database.close();
             database = QSqlDatabase();
             QSqlDatabase::removeDatabase(connectionName);

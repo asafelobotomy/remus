@@ -35,12 +35,12 @@ bool enrichFromRetroAchievements(QSqlDatabase &database, const QString &credenti
         return true;
     }
 
-    // Query systems that have games with at least one MD5 signature (RA hash matching uses RA MD5).
+    // Query systems that have games with hash signatures (RA bulk list uses MD5; match all hash types).
     QSqlQuery sysQ(database);
     if (!sysQ.exec(QStringLiteral("SELECT DISTINCT g.system_id, s.display_name FROM games g "
                                   "JOIN systems s ON s.system_id = g.system_id "
                                   "JOIN game_signatures gs ON gs.game_id = g.game_id "
-                                  "WHERE gs.hash_type = 'md5' "
+                                  "WHERE gs.hash_type IN ('md5', 'sha1', 'crc32', 'sha256') "
                                   "ORDER BY s.display_name"))) {
         error = QStringLiteral("Query systems with MD5 signatures: %1").arg(sysQ.lastError().text());
         return false;
@@ -60,6 +60,8 @@ bool enrichFromRetroAchievements(QSqlDatabase &database, const QString &credenti
         return true;
 
     const QString snapshotId = QStringLiteral("retroachievements-bulk");
+    const QString sourceId = QStringLiteral("retroachievements");
+    bool bulkCleared = false;
 
     for (const SysInfo &sys : systems) {
         // Fresh provider (and therefore fresh QNetworkAccessManager) per system.
@@ -127,7 +129,7 @@ bool enrichFromRetroAchievements(QSqlDatabase &database, const QString &credenti
         // Find compendium games for this system that have MD5 signatures.
         // Capture all enrichable fields to gate the per-game metadata API call.
         QSqlQuery hashQ(database);
-        hashQ.prepare(QStringLiteral("SELECT gs.hash_value, gs.game_id, g.genre, g.developer, g.publisher, "
+        hashQ.prepare(QStringLiteral("SELECT gs.hash_type, gs.hash_value, gs.game_id, g.genre, g.developer, g.publisher, "
                                      "       g.release_year, g.release_date, g.description, "
                                      "       EXISTS(SELECT 1 FROM game_facts gf "
                                      "              WHERE gf.game_id = g.game_id "
@@ -135,7 +137,7 @@ bool enrichFromRetroAchievements(QSqlDatabase &database, const QString &credenti
                                      "                AND gf.field_name = 'ra_game_id') "
                                      "FROM game_signatures gs "
                                      "JOIN games g ON g.game_id = gs.game_id "
-                                     "WHERE gs.hash_type = 'md5' AND g.system_id = ?"));
+                                     "WHERE gs.hash_type IN ('md5', 'sha1', 'crc32', 'sha256') AND g.system_id = ?"));
         hashQ.addBindValue(sys.id);
         if (!hashQ.exec()) {
             error = QStringLiteral("Query MD5 hashes for system %1: %2").arg(sys.name, hashQ.lastError().text());
@@ -150,21 +152,26 @@ bool enrichFromRetroAchievements(QSqlDatabase &database, const QString &credenti
         };
         QHash<QString, MatchInfo> matches; // compendiumGameId → MatchInfo
         while (hashQ.next()) {
-            const QString hash = hashQ.value(0).toString().toLower();
-            const QString gameId = hashQ.value(1).toString();
-            const bool alreadyProcessed = hashQ.value(8).toInt() != 0;
+            const QString hashType = hashQ.value(0).toString();
+            const QString hash = hashQ.value(1).toString().toLower();
+            const QString gameId = hashQ.value(2).toString();
+            const bool alreadyProcessed = hashQ.value(9).toInt() != 0;
             // Fetch full metadata if any enrichable field is absent.
             auto isBlank = [&](int col) { return hashQ.value(col).isNull() || hashQ.value(col).toString().isEmpty(); };
-            bool metaMissing = isBlank(2) // genre
-                || isBlank(3) // developer
-                || isBlank(4) // publisher
-                || hashQ.value(5).isNull() // release_year
-                || isBlank(6); // release_date — RA does not return narrative descriptions
+            bool metaMissing = isBlank(3) // genre
+                || isBlank(4) // developer
+                || isBlank(5) // publisher
+                || hashQ.value(6).isNull() // release_year
+                || isBlank(7); // release_date — RA does not return narrative descriptions
             // Do NOT suppress retries for already-processed games: ra_game_id may have
             // been written while the metadata API call failed, leaving enrichable fields
             // blank.  Let metaMissing stand so the API call is attempted again.
             if (alreadyProcessed && !metaMissing)
                 ++totalApiCallsSuppressed;
+
+            // RA bulk hash lists are MD5-only today; other hash types are reserved for future API support.
+            if (hashType != QLatin1String("md5"))
+                continue;
 
             const auto it = md5Map.constFind(hash);
             if (it == md5Map.cend())
@@ -223,16 +230,16 @@ bool enrichFromRetroAchievements(QSqlDatabase &database, const QString &credenti
                 fullMetadata.insert(it.key(), gm);
         }
 
-        // ── Per-system transaction ────────────────────────────────────────────
-        if (!database.transaction()) {
-            error = QStringLiteral("Failed to start transaction for system %1: %2")
-                        .arg(sys.name, database.lastError().text());
-            return false;
+        // ── Per-system batched writes ───────────────────────────────────────
+        if (!bulkCleared) {
+            if (!bulkClearSourceFactBlockers(database, sourceId, error))
+                return false;
+            bulkCleared = true;
         }
 
         if (!upsertEnrichmentSource(database,
                 SourceSpec {
-                    QStringLiteral("retroachievements"),
+                    sourceId,
                     QStringLiteral("RetroAchievements"),
                     QStringLiteral("online-api"),
                     QStringLiteral("https://retroachievements.org"),
@@ -268,12 +275,13 @@ bool enrichFromRetroAchievements(QSqlDatabase &database, const QString &credenti
         delQ.prepare(QStringLiteral("DELETE FROM game_facts WHERE game_id = ? AND field_name = ? AND source_id = ?"));
 
         const FactInsertSpec factSpec {
-            QStringLiteral("retroachievements"),
+            sourceId,
             snapshotId,
             45,
             0.75,
         };
         FactReplaceQueries replaceQueries(database);
+        EnrichmentBatchWriter batchWriter(database);
 
         auto insertFact = [&](const QString &gameId, const QString &field, const QString &value,
                               const QString &type = QStringLiteral("text"), bool *insertedOut = nullptr) -> bool {
@@ -298,6 +306,8 @@ bool enrichFromRetroAchievements(QSqlDatabase &database, const QString &credenti
                 ++sysConflicts;
                 qWarning().noquote()
                     << QStringLiteral("[RA] %1: skipping game %2 — conflicting RA hash matches").arg(sys.name, gameId);
+                if (!batchWriter.onGameProcessed(error))
+                    return false;
                 continue;
             }
 
@@ -306,10 +316,8 @@ bool enrichFromRetroAchievements(QSqlDatabase &database, const QString &credenti
             if (!insertFact(gameId, QStringLiteral("ra_game_id"), QString::number(it->raGameId), QStringLiteral("text"),
                     &raIdInserted)
                 || !insertFact(gameId, QStringLiteral("achievement_count"), QString::number(it->achievementCount),
-                    QStringLiteral("integer"))) {
-                database.rollback();
+                    QStringLiteral("integer")))
                 return false;
-            }
             if (raIdInserted) {
                 ++gamesEnriched;
                 ++sysEnriched;
@@ -335,10 +343,8 @@ bool enrichFromRetroAchievements(QSqlDatabase &database, const QString &credenti
                 updateQ.bindValue(3, nullableText(gm.publisher));
                 updateQ.bindValue(4, nullableInt(releaseYear));
                 updateQ.bindValue(5, gameId);
-                if (!execPrepared(updateQ, error, QStringLiteral("Update game RA"))) {
-                    database.rollback();
+                if (!execPrepared(updateQ, error, QStringLiteral("Update game RA")))
                     return false;
-                }
                 if (updateQ.numRowsAffected() > 0) {
                     ++gamesEnriched;
                     ++sysEnriched;
@@ -349,18 +355,16 @@ bool enrichFromRetroAchievements(QSqlDatabase &database, const QString &credenti
                     || !insertFact(gameId, QStringLiteral("genre"), genreStr)
                     || !insertFact(gameId, QStringLiteral("developer"), gm.developer)
                     || !insertFact(gameId, QStringLiteral("publisher"), gm.publisher)
-                    || !insertFact(gameId, QStringLiteral("release_year"), yearFactStr, QStringLiteral("integer"))) {
-                    database.rollback();
+                    || !insertFact(gameId, QStringLiteral("release_year"), yearFactStr, QStringLiteral("integer")))
                     return false;
-                }
             }
+
+            if (!batchWriter.onGameProcessed(error))
+                return false;
         }
 
-        if (!database.commit()) {
-            error = QStringLiteral("Failed to commit RA enrichment for %1: %2")
-                        .arg(sys.name, database.lastError().text());
+        if (!batchWriter.finish(error))
             return false;
-        }
 
         qInfo().noquote() << QStringLiteral("[RA] %1: +%2 metadata updated, %3 hash matches, %4 skipped (conflicts)")
                                  .arg(sys.name)

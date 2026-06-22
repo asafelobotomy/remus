@@ -173,6 +173,8 @@ GameMetadata IGDBProvider::getById(const QString &id) {
                            "involved_companies.company.name,involved_companies.developer,"
                            "involved_companies.publisher,aggregated_rating,"
                            "multiplayer_modes.offlinemax,platforms.slug,"
+                           "cover.url,franchises.name,age_ratings.organization.name,"
+                           "age_ratings.rating_category.name,alternative_names.name,"
                            "external_games.category,external_games.uid; where id = %1;")
                        .arg(numericId);
 
@@ -370,6 +372,42 @@ GameMetadata IGDBProvider::parseGameJson(const QJsonObject &game) {
         }
     }
 
+    if (game.contains("cover")) {
+        QString coverUrl = game["cover"].toObject()["url"].toString();
+        if (!coverUrl.isEmpty()) {
+            metadata.boxArtUrl = QStringLiteral("https:")
+                + coverUrl.replace(Constants::API::IGDB_IMG_THUMB, Constants::API::IGDB_IMG_COVER_BIG);
+        }
+    }
+
+    if (game.contains("franchises")) {
+        const QJsonArray franchises = game["franchises"].toArray();
+        if (!franchises.isEmpty())
+            metadata.series = franchises.first().toObject()["name"].toString();
+    }
+
+    if (game.contains("age_ratings")) {
+        const QJsonArray ratings = game["age_ratings"].toArray();
+        if (!ratings.isEmpty()) {
+            const QJsonObject rating = ratings.first().toObject();
+            const QString org = rating["organization"].toObject()["name"].toString();
+            const QString category = rating["rating_category"].toObject()["name"].toString();
+            if (!org.isEmpty() && !category.isEmpty())
+                metadata.ageRating = org + QLatin1Char(' ') + category;
+            else if (!category.isEmpty())
+                metadata.ageRating = category;
+        }
+    }
+
+    if (game.contains("alternative_names")) {
+        const QJsonArray altNames = game["alternative_names"].toArray();
+        for (const QJsonValue &altVal : altNames) {
+            const QString altName = altVal.toObject()["name"].toString().trimmed();
+            if (!altName.isEmpty() && !metadata.alternateTitles.contains(altName))
+                metadata.alternateTitles.append(altName);
+        }
+    }
+
     return metadata;
 }
 
@@ -408,7 +446,8 @@ QList<GameMetadata> IGDBProvider::fetchGamesByPlatformSlug(const QString &platfo
     const QString body = QStringLiteral("fields name,summary,genres.name,first_release_date,"
                                         "involved_companies.company.name,involved_companies.developer,"
                                         "involved_companies.publisher,aggregated_rating,multiplayer_modes.offlinemax,"
-                                        "platforms.slug; "
+                                        "platforms.slug,cover.url,franchises.name,age_ratings.organization.name,"
+                                        "age_ratings.rating_category.name,alternative_names.name; "
                                         "where platforms.slug = \"%1\"; "
                                         "limit %2; offset %3;")
                              .arg(platformSlug)

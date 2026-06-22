@@ -32,7 +32,10 @@
     "--header-insertion=iwyu"
   ],
   // ── Formatting (.clang-format: WebKit, 4-space indent, 120 cols) ────────────
-  "clang-format.executable": "${workspaceFolder}/.github/scripts/clang-format-bin.sh",
+  // Linux: use clang-format on PATH (Arch/CachyOS: /usr/bin/clang-format v22).
+  // Do not use ${workspaceFolder} here — xaver.clang-format resolves it only when
+  // a tab is focused. CI/tasks use .github/scripts/clang-format-bin.sh instead.
+  "clang-format.executable.linux": "clang-format",
   "clang-format.fallbackStyle": "WebKit",
   "editor.formatOnSave": true,
   "editor.rulers": [

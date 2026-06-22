@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LaunchBox>
+  <Game>
+    <Title>Jet Set Willy</Title>
+    <ApplicationPath>.\Jet Set Willy (1984)(Software Projects).tzx</ApplicationPath>
+    <Platform>ZX Spectrum</Platform>
+    <Developer>Software Projects</Developer>
+    <Publisher>Software Projects</Publisher>
+    <ReleaseDate>1984-01-01</ReleaseDate>
+    <Overview>A classic platform adventure across Willy's mansion.</Overview>
+    <Genre>Platform</Genre>
+    <MaxPlayers>1</MaxPlayers>
+    <ESRB>Not Rated</ESRB>
+  </Game>
+</LaunchBox>

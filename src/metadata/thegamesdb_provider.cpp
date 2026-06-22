@@ -155,6 +155,42 @@ GameMetadata TheGamesDBProvider::getById(const QString &id) {
     return metadata;
 }
 
+QList<GameMetadata> TheGamesDBProvider::fetchGamesByPlatformId(const QString &platformId, int page) {
+    QList<GameMetadata> results;
+    if (platformId.trimmed().isEmpty() || page < 1 || !isAvailable())
+        return results;
+
+    m_rateLimiter->waitIfNeeded();
+
+    QUrl url(QString(Constants::API::THEGAMESDB_BASE_URL) + Constants::API::THEGAMESDB_BY_PLATFORM_ENDPOINT);
+    QUrlQuery query;
+    if (!m_apiKey.isEmpty())
+        query.addQueryItem(QStringLiteral("apikey"), m_apiKey);
+    query.addQueryItem(QStringLiteral("id"), platformId);
+    query.addQueryItem(QStringLiteral("page"), QString::number(page));
+    url.setQuery(query);
+
+    const ApiResponse response = makeRequest(url);
+    if (!response.success)
+        return results;
+
+    QJsonParseError parseError;
+    const QJsonDocument doc = QJsonDocument::fromJson(response.data, &parseError);
+    if (parseError.error != QJsonParseError::NoError)
+        return results;
+
+    const QJsonObject root = doc.object();
+    const QJsonObject data = root.value(QStringLiteral("data")).toObject();
+    const QJsonArray games = data.value(QStringLiteral("games")).toArray();
+    results.reserve(games.size());
+    for (const QJsonValue &gameVal : games) {
+        const GameMetadata metadata = parseGameJson(gameVal.toObject());
+        if (!metadata.title.isEmpty())
+            results.append(metadata);
+    }
+    return results;
+}
+
 ArtworkUrls TheGamesDBProvider::getArtwork(const QString &id) {
     ArtworkUrls artwork;
 

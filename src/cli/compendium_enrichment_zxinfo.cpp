@@ -135,16 +135,16 @@ bool enrichFromZXInfo(QSqlDatabase &database, int &gamesEnriched, int &factsInse
 
     qInfo().noquote() << QStringLiteral("[ZXInfo] %1 matches found; writing to database …").arg(matches.size());
 
-    // --- Phase 3: single write transaction --------------------------------------
-    if (!database.transaction()) {
-        error = QStringLiteral("Begin ZXInfo transaction: %1").arg(database.lastError().text());
-        return false;
-    }
-
+    // --- Phase 3: batched writes ----------------------------------------------
     const QString snapshotId = QStringLiteral("zxinfo-bulk");
+    const QString sourceId = QStringLiteral("zxinfo");
+
+    if (!bulkClearSourceFactBlockers(database, sourceId, error))
+        return false;
+
     if (!upsertEnrichmentSource(database,
             SourceSpec {
-                QStringLiteral("zxinfo"),
+                sourceId,
                 QStringLiteral("ZXInfo / ZXDB"),
                 QStringLiteral("online-api"),
                 QStringLiteral("https://api.zxinfo.dk/v3/"),
@@ -184,12 +184,13 @@ bool enrichFromZXInfo(QSqlDatabase &database, int &gamesEnriched, int &factsInse
     static constexpr int PRIORITY = 65;
 
     const FactInsertSpec factSpec {
-        QStringLiteral("zxinfo"),
+        sourceId,
         snapshotId,
         PRIORITY,
         CONFIDENCE,
     };
     FactReplaceQueries replaceQueries(database);
+    EnrichmentBatchWriter batchWriter(database);
 
     auto insertFact
         = [&](const QString &gameId, const QString &field, const QString &value, const QString &type) -> bool {
@@ -216,7 +217,6 @@ bool enrichFromZXInfo(QSqlDatabase &database, int &gamesEnriched, int &factsInse
 
         if (!updateQ.exec()) {
             error = QStringLiteral("Update ZXInfo game %1: %2").arg(m.gameId, updateQ.lastError().text());
-            database.rollback();
             return false;
         }
         if (updateQ.numRowsAffected() > 0)
@@ -231,16 +231,15 @@ bool enrichFromZXInfo(QSqlDatabase &database, int &gamesEnriched, int &factsInse
             if (error.isEmpty()) {
                 error = QStringLiteral("Insert ZXInfo fact for game %1 failed").arg(m.gameId);
             }
-            database.rollback();
             return false;
         }
+
+        if (!batchWriter.onGameProcessed(error))
+            return false;
     }
 
-    if (!database.commit()) {
-        error = QStringLiteral("Commit ZXInfo transaction: %1").arg(database.lastError().text());
-        database.rollback();
+    if (!batchWriter.finish(error))
         return false;
-    }
 
     qInfo().noquote() << QStringLiteral("[ZXInfo] +%1 games enriched, +%2 facts").arg(gamesEnriched).arg(factsInserted);
     return true;

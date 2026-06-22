@@ -231,15 +231,14 @@ bool enrichFromHasheous(QSqlDatabase &database, const QString &credentialsPath, 
         return true;
     }
 
-    if (!database.transaction()) {
-        error = QStringLiteral("Failed to start Hasheous enrichment transaction: %1").arg(database.lastError().text());
-        return false;
-    }
-
     const QString snapshotId = QStringLiteral("hasheous-bulk");
+    const QString sourceId = QStringLiteral("hasheous");
+
+    if (!bulkClearSourceFactBlockers(database, sourceId, error))
+        return false;
     if (!upsertEnrichmentSource(database,
             SourceSpec {
-                QStringLiteral("hasheous"),
+                sourceId,
                 QStringLiteral("Hasheous"),
                 QStringLiteral("online-api"),
                 QStringLiteral("https://hasheous.org"),
@@ -277,12 +276,13 @@ bool enrichFromHasheous(QSqlDatabase &database, const QString &credentialsPath, 
     delQ.prepare(QStringLiteral("DELETE FROM game_facts WHERE game_id = ? AND field_name = ? AND source_id = ?"));
 
     const FactInsertSpec factSpec {
-        QStringLiteral("hasheous"),
+        sourceId,
         snapshotId,
         88,
         0.85,
     };
     FactReplaceQueries replaceQueries(database);
+    EnrichmentBatchWriter batchWriter(database);
 
     auto insertFact = [&](const QString &gameId, const QString &field, const QString &value,
                           const QString &type = QStringLiteral("text"), bool *insertedOut = nullptr) -> bool {
@@ -305,16 +305,16 @@ bool enrichFromHasheous(QSqlDatabase &database, const QString &credentialsPath, 
         if (igdbId.isEmpty())
             continue;
 
-        if (!insertFact(gameId, QStringLiteral("igdb_id"), igdbId)) {
-            database.rollback();
+        if (!insertFact(gameId, QStringLiteral("igdb_id"), igdbId))
             return false;
-        }
 
         const bool hasMetadataGap = !metadata.description.isEmpty() || !metadata.genres.isEmpty()
             || !metadata.developer.isEmpty() || !metadata.publisher.isEmpty() || !metadata.releaseDate.isEmpty()
             || metadata.rating > 0.0f;
         if (!hasMetadataGap) {
             ++gamesEnriched;
+            if (!batchWriter.onGameProcessed(error))
+                return false;
             continue;
         }
 
@@ -340,10 +340,8 @@ bool enrichFromHasheous(QSqlDatabase &database, const QString &credentialsPath, 
         updateQ.bindValue(5, nullableText(releaseDateStr));
         updateQ.bindValue(6, nullableDouble(metadata.rating > 0.0f ? metadata.rating : 0.0));
         updateQ.bindValue(7, gameId);
-        if (!execPrepared(updateQ, error, QStringLiteral("Hasheous metadata update for %1").arg(gameId))) {
-            database.rollback();
+        if (!execPrepared(updateQ, error, QStringLiteral("Hasheous metadata update for %1").arg(gameId)))
             return false;
-        }
 
         const QString yearStr = releaseYear > 0 ? QString::number(releaseYear) : QString();
         const QString ratingStr
@@ -354,19 +352,16 @@ bool enrichFromHasheous(QSqlDatabase &database, const QString &credentialsPath, 
             || !insertFact(gameId, QStringLiteral("publisher"), metadata.publisher)
             || !insertFact(gameId, QStringLiteral("release_year"), yearStr, QStringLiteral("integer"))
             || !insertFact(gameId, QStringLiteral("release_date"), releaseDateStr)
-            || !insertFact(gameId, QStringLiteral("rating"), ratingStr, QStringLiteral("decimal"))) {
-            database.rollback();
+            || !insertFact(gameId, QStringLiteral("rating"), ratingStr, QStringLiteral("decimal")))
             return false;
-        }
 
         ++gamesEnriched;
+        if (!batchWriter.onGameProcessed(error))
+            return false;
     }
 
-    if (!database.commit()) {
-        error = QStringLiteral("Failed to commit Hasheous enrichment transaction: %1").arg(database.lastError().text());
-        database.rollback();
+    if (!batchWriter.finish(error))
         return false;
-    }
 
     if (apiCallsNeededOut)
         *apiCallsNeededOut = apiCallsPerformed;

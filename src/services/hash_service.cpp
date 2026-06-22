@@ -288,6 +288,10 @@ QList<HashService::HashBatchResult> HashService::computeHashes(
             } else {
                 HashService worker;
                 task.result = worker.hashRecord(file);
+                if (!task.result.success) {
+                    task.skipped = true;
+                    task.skipReason = task.result.error.isEmpty() ? QStringLiteral("hash failed") : task.result.error;
+                }
             }
 
             if (cbCopy) {

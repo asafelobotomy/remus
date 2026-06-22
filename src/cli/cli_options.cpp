@@ -206,15 +206,20 @@ void registerAllOptions(QCommandLineParser &parser, QSet<QString> &actionOptions
         "Enable all online enrichment passes including Hasheous, PlayMatch, and ZXInfo APIs "
         "(can take days on full catalogues — use only for targeted rebuilds). Applies to "
         "--build-compendium and --enrich-compendium."));
+    addActionOption(QCommandLineOption("fail-on-enrichment-errors",
+        "Exit with failure when any enrichment pass reports a non-fatal error during --build-compendium or "
+        "--enrich-compendium"));
     addActionOption(QCommandLineOption(
         "dedup-compendium", "Prune bad serial rows and merge duplicate games in an existing compendium database"));
     addActionOption(QCommandLineOption(
         "import-patch-catalog", "Import patch/hack DAT files from data/patches into the compendium patch catalog"));
     addOption(QCommandLineOption("patch-dir", "Directory containing patch DAT files (default: data/patches)", "path"));
-    addActionOption(QCommandLineOption("enrich-compendium", "Run enrichment passes against an existing compendium database without rebuilding"));
+    addActionOption(QCommandLineOption(
+        "enrich-compendium", "Run enrichment passes against an existing compendium database without rebuilding"));
     addOption(QCommandLineOption("enrich-source",
         "Comma-separated list of enrichment source(s) to run (default: all). Valid keys: libretro, gametdb, openvgdb, "
-        "igdb, ra, hasheous, playmatch, mame-catver, mame-listxml, zxinfo",
+        "launchbox, wikidata, thegamesdb, igdb, ra, hasheous, playmatch, screenscraper, mame-catver, mame-listxml, "
+        "zxinfo",
         "sources"));
     addActionOption(QCommandLineOption(
         "ingest-source", "Incrementally ingest a single DAT file into an existing compendium database", "dat-file"));

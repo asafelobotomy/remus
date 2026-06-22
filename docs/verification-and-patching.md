@@ -16,33 +16,35 @@ Remus includes two powerful features for ROM integrity and enhancement:
 ROM verification validates your files against reference databases (DAT files) maintained by preservation communities:
 
 #### Primary Verification Databases
+
 - **No-Intro**: Cartridge-based systems (NES, SNES, Genesis, GBA, etc.)
-  - URL: https://datomatic.no-intro.org/
+  - URL: <https://datomatic.no-intro.org/>
   - Formats: XML DAT files
   - Hashes: CRC32, MD5, SHA1
   - Coverage: 70+ cartridge systems
-  
+
 - **Redump**: Disc-based systems (PlayStation, Saturn, Dreamcast, etc.)
-  - URL: http://redump.org/
+  - URL: <http://redump.org/>
   - Formats: XML DAT files
   - Hashes: MD5, SHA1 (per-track for multi-track discs)
   - Coverage: CD-ROM, DVD, Blu-ray systems
 
 #### Additional Hash Databases
+
 - **TOSEC** (The Old School Emulation Center): Both disc and cartridge systems
-  - URL: https://www.tosecdev.org/
+  - URL: <https://www.tosecdev.org/>
   - Broader scope including demos, educational software
-  
+
 - **Renascene**: PSP games and UMD images
   - Specialized for PSP verification
-  
+
 - **GameTDB**: GameCube, Wii, Wii U
-  - URL: https://www.gametdb.com/
+  - URL: <https://www.gametdb.com/>
   - Hash database for Nintendo disc systems
-  
+
 - **gc-forever**: GameCube and Wii preservation
   - Community-driven GameCube/Wii hash database
-  
+
 - **PS3 IRD Database**: PlayStation 3 game verification
   - IRD (ISO Rebuild Data) files for PS3 disc verification
 
@@ -128,12 +130,14 @@ Remus automatically detects and strips headers when verifying these systems.
 ### Multi-Track Disc Verification
 
 For multi-track CD-ROM games (common on PlayStation and Saturn):
+
 - Each track must be hashed separately
 - Compare per-track hashes against Redump DAT entries
 - Use tools like IsoBuster (Windows) or cdirip (Linux) to extract tracks
 - `.cue` files define track layout
 
 **Example**: PlayStation game with audio tracks
+
 ```
 Track 01 (Data): SHA1 hash of .bin file
 Track 02 (Audio): SHA1 hash of audio .bin
@@ -147,6 +151,7 @@ Remus will verify each track individually when using Redump DAT files.
 **Database Schema**: See `verification_dats` and `verification_results` tables in [data-model.md](data-model.md)
 
 **Hash Priority**:
+
 1. SHA256 (Pass 0, highest priority — implemented 2026-05-21)
 2. SHA1 (strongest legacy hash, preferred for disc systems)
 3. MD5 (fallback for disc systems)
@@ -161,6 +166,7 @@ Remus will verify each track individually when using Redump DAT files.
 ### What is ROM Patching?
 
 ROM patching applies binary difference files to transform a base ROM:
+
 - **Translations**: Japanese games → English
 - **ROM Hacks**: Gameplay mods, level edits, graphic changes
 - **Fixes**: Bug patches, enhancement patches
@@ -183,13 +189,15 @@ ROM patching applies binary difference files to transform a base ROM:
 Remus will bundle/integrate these open-source patching tools:
 
 #### Flips (Floating IPS)
+
 - **License**: GPL
 - **Platforms**: Linux, Windows, macOS
 - **Formats**: IPS, BPS
 - **CLI**: `flips --apply patch.bps base.rom output.rom`
-- **Source**: https://github.com/Alcaro/Flips
+- **Source**: <https://github.com/Alcaro/Flips>
 
 #### xdelta3
+
 - **License**: GPL
 - **Platforms**: Linux, Windows, macOS
 - **Formats**: XDelta3
@@ -197,6 +205,7 @@ Remus will bundle/integrate these open-source patching tools:
 - **Use**: Large disc-based games
 
 #### Additional Tools (Future Consider)
+
 - **beat**: BPS reference implementation (no longer maintained)
 - **PPF-O-Matic**: PlayStation PPF patches
 - **UniPatcher libs**: Android multi-format support (could port)
@@ -204,6 +213,7 @@ Remus will bundle/integrate these open-source patching tools:
 ### romhacking.net Integration
 
 #### Current State (2026)
+
 - **No Public API**: romhacking.net does not offer an official API
 - **Web Scraping Required**: Must parse HTML or use RSS feeds
 - **Legal Considerations**: Respect robots.txt and rate limiting
@@ -212,6 +222,7 @@ Remus will bundle/integrate these open-source patching tools:
 #### Integration Strategy
 
 **Phase 1: Manual Patch Application (M8)**
+
 ```
 1. User downloads patch from romhacking.net manually
 2. Remus → Tools → Apply Patch
@@ -221,6 +232,7 @@ Remus will bundle/integrate these open-source patching tools:
 ```
 
 **Phase 2: Semi-Automatic (Future)**
+
 ```
 1. User provides romhacking.net URL for patch
 2. Remus scrapes patch details (title, system, format)
@@ -231,6 +243,7 @@ Remus will bundle/integrate these open-source patching tools:
 ```
 
 **Phase 3: Fully Automatic (Future - Advanced)**
+
 ```
 1. During library scan, detect potential hack candidates:
    - Unknown ROMs (not in No-Intro/Redump)
@@ -245,7 +258,7 @@ Remus will bundle/integrate these open-source patching tools:
 
 #### Web Scraping Considerations
 
-**robots.txt Compliance**: Check https://www.romhacking.net/robots.txt before implementing
+**robots.txt Compliance**: Check <https://www.romhacking.net/robots.txt> before implementing
 **Rate Limiting**: Max 1 request per 2 seconds, implement exponential backoff
 **Caching**: Store patch metadata locally (refreshed monthly)
 **Error Handling**: Graceful fallback if site structure changes
@@ -273,6 +286,7 @@ Remus will bundle/integrate these open-source patching tools:
 ### Automatic Patching Workflow (Future)
 
 #### Discovery Mode
+
 ```
 1. User: "Library → Discover Patches"
 2. Remus analyzes library:
@@ -289,6 +303,7 @@ Remus will bundle/integrate these open-source patching tools:
 ```
 
 #### Example UI Flow
+
 ```
 ╔═══════════════════════════════════════════════════════════╗
 ║ Patch Suggestions for: Super Mario Bros. (USA)           ║
@@ -317,6 +332,7 @@ Remus organizes patched ROMs alongside originals:
 ```
 
 **Metadata Tracking**:
+
 - Link patched ROM to source ROM
 - Store patch file hash
 - Store patch source URL
@@ -352,6 +368,7 @@ Some emulators support "soft patching" - applying patches at runtime without cre
 ### Distinguishing Hacks from Official Releases
 
 When scanning library:
+
 1. Calculate hash of ROM
 2. Check against No-Intro/Redump DAT (verification)
 3. If **not found** in DAT:
@@ -364,11 +381,13 @@ When scanning library:
 ### Metadata Provider Priority
 
 For verified ROMs:
+
 1. ScreenScraper (uses No-Intro/Redump naming)
 2. TheGamesDB
 3. IGDB
 
 For hacks/translations:
+
 1. romhacking.net metadata (if available)
 2. Fallback to base game metadata (e.g., "Super Mario Bros." metadata for "Super Mario Bros. [Kaizo]")
 3. Manual entry
@@ -380,6 +399,7 @@ For hacks/translations:
 ### New Tables
 
 #### `verification_dats`
+
 Stores imported DAT files
 
 | Column | Type | Description |
@@ -395,6 +415,7 @@ Stores imported DAT files
 | entry_count | INTEGER | Number of ROM entries |
 
 #### `verification_results`
+
 Stores per-file verification outcomes
 
 | Column | Type | Description |
@@ -415,6 +436,7 @@ Stores per-file verification outcomes
 | notes | TEXT | Error details if failed |
 
 #### `patches`
+
 Stores patch file information
 
 | Column | Type | Description |
@@ -441,6 +463,7 @@ Stores patch file information
 | updated_at | DATETIME | Last metadata refresh |
 
 #### `patch_applications`
+
 Tracks applied patches (links patched ROM to source ROM + patch)
 
 | Column | Type | Description |
@@ -457,6 +480,7 @@ Tracks applied patches (links patched ROM to source ROM + patch)
 ### Modified Tables
 
 #### `files` (add column)
+
 ```sql
 ALTER TABLE files ADD COLUMN verification_status TEXT DEFAULT 'unknown';
 -- Values: 'verified', 'failed', 'unknown', 'not_checked'
@@ -473,6 +497,7 @@ ALTER TABLE files ADD COLUMN is_patched BOOLEAN DEFAULT 0;
 ## 5. CLI Examples
 
 ### Verification Commands
+
 ```bash
 # Verify scanned files against a DAT or XML catalog
 remus-cli --verify ~/Downloads/No-Intro_NES_2024.dat --verify-report
@@ -482,6 +507,7 @@ remus-cli --verify ~/Downloads/No-Intro_NES_2024.dat --verify-report
 ```
 
 ### Patching Commands
+
 ```bash
 # Apply a patch to a base file
 remus-cli --patch-apply "/path/to/Super Mario Bros. (USA).nes" \
@@ -502,14 +528,16 @@ remus-cli --patch-create "/path/to/modified_game.nes" \
 remus-cli --patch-tools
 ```
 
-> **Note:** Patch discover, apply-from-web, and unapply are not implemented in the CLI.
-> Use `--mod-install` for downloading and applying patches from a mod catalog instead.
+> **Note:** Patch discover, apply-from-web, and unapply remain out of scope for the CLI.
+> The supported workflow is `--mod-install` with a local or remote mod catalog (`--mod-catalog`,
+> `--mod-catalog-url`, `--mod-scrape`). PPF patches require an external `applyppf`/`ppf3` binary.
 
 ---
 
 ## 6. UI Wireframes (M9 UI)
 
 ### Verification Tab
+
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │ 📊 Verification Status                                      │
@@ -535,6 +563,7 @@ remus-cli --patch-tools
 ```
 
 ### Patching Tab
+
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │ 🔧 ROM Patching                                             │
@@ -578,6 +607,7 @@ remus-cli --patch-tools
 - [ ] Verification status UI in library view
 
 ### M8.2: Manual Patching (Week 15)
+
 - [ ] Integrate Flips binary (Linux)
 - [ ] Integrate xdelta3 binary
 - [ ] Patch format detection
@@ -586,6 +616,7 @@ remus-cli --patch-tools
 - [ ] UI: Manual patch application dialog
 
 ### M9: romhacking.net Integration (Week 16-17)
+
 - [ ] Web scraper for romhacking.net
 - [ ] Patch metadata cache
 - [ ] Semi-automatic patch discovery
@@ -594,6 +625,7 @@ remus-cli --patch-tools
 - [ ] Download and apply workflow
 
 ### M10: Advanced Patching (Future)
+
 - [ ] Automatic hack detection during scan
 - [ ] Soft patching support (emulator integration)
 - [ ] Batch patch application
@@ -605,24 +637,28 @@ remus-cli --patch-tools
 ## 8. Technical Considerations
 
 ### Security
+
 - **Checksums**: Always verify patch checksums before applying
 - **Sandboxing**: Run patching tools in restricted environment
 - **Malware Scanning**: Optional ClamAV integration for downloaded patches
 - **HTTPS Only**: Enforce encrypted downloads from romhacking.net
 
 ### Performance
+
 - **Parallel Verification**: Multi-threaded hash calculation (4-8 workers)
 - **Incremental Verification**: Only verify new/modified files
 - **DAT Caching**: Index DAT files in SQLite for fast lookups
 - **Patch Metadata Cache**: Refresh once per week, not per query
 
 ### Error Handling
+
 - **Corrupt Patches**: Detect truncated downloads, verify integrity
 - **Wrong Base ROM**: BPS format includes checksums to prevent mismatch
 - **Missing Tools**: Graceful fallback if Flips/xdelta3 not found
 - **Network Failures**: Retry logic with exponential backoff
 
 ### Legal Compliance
+
 - **No ROM Distribution**: Never host or redistribute ROM files
 - **Patch Distribution OK**: Patches are legal (contain only differences)
 - **Copyright Notices**: Display romhacking.net attribution
@@ -633,9 +669,11 @@ remus-cli --patch-tools
 ## 9. User Stories
 
 ### Story 1: Verify Collection Authenticity
+>
 > "As a collector, I want to verify my 500 NES ROMs against No-Intro to identify bad dumps."
 
 **Flow**:
+
 1. User imports No-Intro NES DAT file
 2. Clicks "Verify All" for NES system
 3. Remus calculates hashes (with header stripping)
@@ -644,9 +682,11 @@ remus-cli --patch-tools
 6. User re-downloads corrupted ROMs
 
 ### Story 2: Apply English Translation
+>
 > "As a player, I want to patch my Japanese Fire Emblem ROM with the English fan translation."
 
 **Flow**:
+
 1. User has: "Fire Emblem (Japan).gba" in library
 2. Downloads "fire_emblem_eng_v1.0.bps" from romhacking.net
 3. Tools → Apply Patch
@@ -657,9 +697,11 @@ remus-cli --patch-tools
 8. User launches in emulator
 
 ### Story 3: Discover Available Hacks
+>
 > "As an enthusiast, I want Remus to suggest popular ROM hacks for games I own."
 
 **Flow**:
+
 1. User: Library → Discover Patches
 2. Remus queries romhacking.net cache
 3. Finds 8 patches for owned games
@@ -685,13 +727,13 @@ remus-cli --patch-tools
 
 ## References
 
-- **No-Intro**: https://no-intro.org/ (DAT files for cartridge systems)
-- **Redump**: http://redump.org/ (DAT files for disc systems)
-- **romhacking.net**: https://www.romhacking.net/ (patch database)
-- **Flips (Floating IPS)**: https://github.com/Alcaro/Flips (IPS/BPS patcher)
-- **xdelta3**: https://github.com/jmacd/xdelta (delta compression)
-- **BPS Specification**: https://zerosoft.zophar.net/ips.php
-- **DAT Format**: http://www.logiqx.com/DatFAQs/
+- **No-Intro**: <https://no-intro.org/> (DAT files for cartridge systems)
+- **Redump**: <http://redump.org/> (DAT files for disc systems)
+- **romhacking.net**: <https://www.romhacking.net/> (patch database)
+- **Flips (Floating IPS)**: <https://github.com/Alcaro/Flips> (IPS/BPS patcher)
+- **xdelta3**: <https://github.com/jmacd/xdelta> (delta compression)
+- **BPS Specification**: <https://zerosoft.zophar.net/ips.php>
+- **DAT Format**: <http://www.logiqx.com/DatFAQs/>
 
 ---
 

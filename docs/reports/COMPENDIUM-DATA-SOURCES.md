@@ -93,23 +93,29 @@ Common additions for gap systems: `msx`, `msx2`, `3do`, `neogeocd`, `fds`, `atar
 **Phase 2 check:** `catalog.patch_sources_nonempty` passes once libretro hacks DATs are imported
 (build pipeline runs import automatically after compendium build).
 
-## Additional hash catalogues (not yet in manifest)
+## Supplemental hash catalogues
 
-| Source | URL | Notes |
-|--------|-----|-------|
-| TOSEC | [tosecdev.org](https://www.tosecdev.org/) | Broad coverage; lower libretro precedence; Hasheous indexes TOSEC |
-| libretro homebrew | [metadat/homebrew](https://github.com/libretro/libretro-database/tree/master/metadat/homebrew) | Independent/homebrew titles — candidate for future manifest entries |
-| libretro libretro-dats | [metadat/libretro-dats](https://github.com/libretro/libretro-database/tree/master/metadat/libretro-dats) | Fan translations, FDS extras |
-| MAME Software List | MAME `-listxml` / progettosnaps | RA label `mamesl`; partial MAME coverage already via listxml |
+Synced by `scripts/update_dats.sh` into `data/databases/supplemental/` and included in
+`scripts/generate_compendium_manifest.sh` when present:
+
+| Source | Path | Priority | Notes |
+|--------|------|----------|-------|
+| libretro homebrew | `supplemental/homebrew/` | 8 | From libretro `metadat/homebrew/` |
+| libretro-dats | `supplemental/libretro-dats/` | 8 | Fan translations, FDS extras |
+| TOSEC (manual) | `supplemental/tosec/` | 5 | Drop DATs locally; not auto-downloaded |
+
+TOSEC DATs are not redistributed. Place exports from [tosecdev.org](https://www.tosecdev.org/)
+under `data/databases/supplemental/tosec/` and regenerate the manifest, or ingest individual
+DATs with `--ingest-source`.
 
 ## Art / extended metadata (runtime only today)
 
 | Source | URL | Use |
 |--------|-----|-----|
 | SteamGridDB | [steamgriddb.com](https://www.steamgriddb.com/) | Art-only runtime provider (grids/heroes/logos); bridges via Steam app id from IGDB |
-| MobyGames | [mobygames.com](https://www.mobygames.com/) | DOS/PC descriptions — no bulk API in Remus |
-| LaunchBox | Community databases | Box art / metadata — not wired |
-| ScreenScraper | [screenscraper.fr](https://www.screenscraper.fr/) | Rich media + text — runtime provider |
+| MobyGames | [mobygames.com](https://www.mobygames.com/) | DOS/PC descriptions — runtime provider only |
+| LaunchBox | Community databases | Bulk enricher via local `Metadata.xml` (`--enrich-source launchbox`) |
+| ScreenScraper | [screenscraper.fr](https://www.screenscraper.fr/) | Bulk + runtime; credentials required |
 
 ## Source quality tiers (build + runtime)
 
@@ -119,9 +125,9 @@ cannot supply reliably:
 | Tier | Sources | Role |
 |------|---------|------|
 | Identity | No-Intro, Redump, libretro DATs, compendium | Hashes, title, region, serial |
-| Offline metadata | Libretro metadata, GameTDB, OpenVGDB*, MAME catver/listxml | Text fields via COALESCE |
+| Offline metadata | Libretro metadata, GameTDB, OpenVGDB*, MAME catver/listxml, LaunchBox XML | Text fields via COALESCE |
 | Offline bridges | Hasheous offline dumps | `igdb_id` + sparse metadata (no API) |
-| Bulk online | IGDB, RetroAchievements | Platform bulk + per-id IGDB; RA hash metadata (**not** descriptions) |
+| Bulk online | IGDB, RetroAchievements, Wikidata, TheGamesDB, ScreenScraper | Platform/title bulk or hash lookup |
 | Per-game online | Hasheous API, PlayMatch, ZXInfo | `--online-enrichment-all` only |
 | Runtime text | Compendium → SS → Hasheous/PlayMatch → IGDB → TGDB → Wikidata | Name/hash waterfall (capability-gated) |
 | Runtime art | SS → GameTDB → SteamGridDB → IGDB → RA → Wikidata | `getArtworkWithFallback` only |
@@ -133,24 +139,27 @@ cannot supply reliably:
 | Profile | Command | Online API use |
 |---------|---------|----------------|
 | Offline (~90 min) | `build_compendium_full.sh --skip-update` | None |
-| Recommended | `+ --online-enrichment` | Hasheous **offline dumps** + IGDB + RA bulk |
+| Recommended | `+ --online-enrichment` | Hasheous **offline dumps** + IGDB + RA + Wikidata + TGDB + ScreenScraper bulk |
 | Full bridges (days) | `+ --online-enrichment-all` | + Hasheous/PlayMatch/ZXInfo per-game APIs |
 
 `--enrich-compendium` defaults to **offline-only** (same flags as `--build-compendium`).
 Pass `--online-enrichment` for IGDB/RA on an existing DB without accidental bridge API storms.
 
-### Deferred bulk passes (ScreenScraper / TheGamesDB)
+### Bulk enrichment passes
 
-ScreenScraper and TheGamesDB are integrated at **runtime** via `MetadataProvider` but are **not**
-compendium bulk enrichment passes today. Reasons:
+| Source | CLI key | Credentials | Notes |
+|--------|---------|-------------|-------|
+| ScreenScraper | `screenscraper` | User + dev API | Hash lookup bulk pass |
+| Wikidata | `wikidata` | None | SPARQL platform bulk; ~1 req/sec |
+| TheGamesDB | `thegamesdb` | Optional API key | Platform bulk; 3000 req/month cap |
+| LaunchBox | `launchbox` | Local `Metadata.xml` | Filename match; offline |
 
-- Both require per-developer API credentials and rate limits unsuitable for full-catalog rebuilds.
-- GameTDB + IGDB + Hasheous already cover most console metadata fields in bulk.
-- ScreenScraper excels at box art and regional media — better suited to on-demand fetch than SQLite bulk ingest.
-
-To add a future bulk pass: implement `enrichFromScreenScraper` / `enrichFromTheGamesDB` in
-`src/cli/`, register in `cli_compendium_build_phases.cpp`, and gate on `--enrich-source` plus
-credential presence (same pattern as IGDB).
+```bash
+build/remus-cli --enrich-compendium --online-enrichment \
+  --enrich-source wikidata,thegamesdb,screenscraper --compendium-output data/compendium/remus_compendium.db
+scripts/update_launchbox_metadata.sh --source /path/to/Metadata.xml
+build/remus-cli --enrich-compendium --enrich-source launchbox --compendium-output data/compendium/remus_compendium.db
+```
 
 ## Systems with no DAT coverage (expected empty)
 
@@ -183,5 +192,5 @@ bash .github/scripts/validate-compendium-db.sh data/compendium/remus_compendium.
 | P3 | RA `ra_game_id` counts as enrichment | Fixed in RA bulk pass |
 | P4 | Zero-game systems (Switch, PS4…) | Needs DAT sources + IGDB slug mapping |
 | P5 | Duplicate canonical titles | `--dedup-compendium` on existing DB |
-| P6 | Hasheous bulk gap-fill (future) | Design: unmatched signatures → MetadataProxy |
-| P7 | ScreenScraper / TGDB bulk passes (future) | Reduce IGDB API pressure for art/text |
+| P6 | Hasheous bulk gap-fill | Offline dumps + optional MetadataProxy |
+| P7 | ScreenScraper / TGDB bulk | Implemented; respect API/monthly limits |

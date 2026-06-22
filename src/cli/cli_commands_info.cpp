@@ -279,7 +279,8 @@ int handleHashAllCommand(CliContext &ctx) {
                 qInfo() << "  Hashed" << hashedCount << "of" << filesToHash.size() << "files...";
         } else {
             skippedCount++;
-            qWarning() << "  Skipped" << task.filename << ":" << task.result.error;
+            const QString reason = task.skipReason.isEmpty() ? task.result.error : task.skipReason;
+            qWarning() << "  Skipped" << task.filename << ":" << reason;
         }
     }
     if (skippedCount > 0)

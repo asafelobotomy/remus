@@ -74,19 +74,9 @@ Genre is already 100% from catver.ini.
 
 ---
 
-### G2 — IBM PC has no IGDB slug (15,921 games, 2% genre/description)
+### G2 — IBM PC IGDB slug **(fixed)**
 
-`system_resolver_provider_mappings.cpp` has no entry for `ID_IBM_PC` for any provider.
-IGDB uses the slug `"pc_dos"` for DOS games and `"win"` for Windows — both are large
-catalogs. The IGDB enricher skips IBM PC entirely because
-`SystemResolver::providerName(ID_IBM_PC, IGDB)` returns empty.
-
-**Fix**: Add `ID_IBM_PC` to the provider mapping table with `{IGDB, "pc_dos"}`.
-Optionally also add `{SCREENSCRAPER, "135"}` (SS system ID for DOS) and
-`{THEGAMESDB, "1"}` (TGDB PC platform ID).
-
-**Expected gain**: ~14,500 IBM PC games gain genre, description, developer, publisher
-(IGDB has strong DOS/PC coverage).
+`system_resolver_provider_mappings.cpp` maps `ID_IBM_PC` to IGDB slug `pc_dos`.
 
 ---
 
@@ -104,50 +94,21 @@ response fields are being read and which are silently dropped. The API response 
 
 ---
 
-### G4 — `release_date` never written (0% across all 180,716 games)
+### G4 — `release_date` **(fixed)**
 
-The `games.release_date` column exists in the schema. GameTDB, IGDB, and OpenVGDB all
-provide full ISO-8601 dates that the enrichers already parse (they extract the year but
-discard the rest). The field is never written anywhere in the pipeline.
-
-**Fix**: In each enricher that already parses a full date string
-(`compendium_enrichment_gametdb.cpp`, `compendium_enrichment_igdb.cpp`,
-`compendium_enrichment_openvgdb.cpp`), write the full date string into `games.release_date`
-alongside the existing `release_year` write.
-
-**Expected gain**: ~93,000 games (those with release_year populated) gain a full release date.
+Enrichers now write `games.release_date` alongside `release_year`.
 
 ---
 
-### G5 — OpenVGDB title fallback too narrow
+### G5 — OpenVGDB title fallback **(fixed)**
 
-`compendium_enrichment_openvgdb.cpp` runs the title-based match only when
-`games.description IS NULL`. Games that have a description from another source but are
-missing developer/publisher/year are never reached by the title fallback.
-
-**Fix**: Change the OpenVGDB title-fallback query condition from `description IS NULL` to
-`(developer IS NULL OR publisher IS NULL OR release_year IS NULL)` so it activates whenever
-any enrichable field is missing.
-
-**Expected gain**: Unknown but non-trivial — all games enriched by GameTDB/ZXInfo with a
-description but no developer would become eligible for OpenVGDB title matching.
+Title-fallback uses the same broad gap predicate as the hash path.
 
 ---
 
-### G6 — No ScreenScraper compendium enricher
+### G6 — ScreenScraper compendium enricher **(implemented)**
 
-`ScreenScraperProvider` exists and is used in the runtime GUI/CLI metadata flow, but there
-is no `compendium_enrichment_screenscraper.cpp` pass in the compendium build pipeline.
-ScreenScraper is the deepest hash-to-metadata source available (~650K hashes), with strong
-coverage of Amiga, CPC, C64, ZX Spectrum, and all obscure systems that IGDB/OpenVGDB miss.
-Credentials are already stored in `.env.local` (`REMUS_SS_USER`, `REMUS_SS_PASS`).
-
-**Fix**: Implement a ScreenScraper compendium enrichment pass analogous to the RA pass
-(hash-based, batch-friendly). Use `ScreenScraperProvider::lookupByHash()` for each game
-with an unresolved CRC32/MD5/SHA1. Rate-limit to respect SS API quotas.
-
-**Expected gain**: Primary fix for Amiga (5,417), C64 (3,329), CPC (3,011) and the
-14 zero-enrichment system families. ScreenScraper covers all of them.
+See `src/cli/compendium_enrichment_screenscraper.cpp` (runs with `--online-enrichment`).
 
 ---
 
@@ -158,6 +119,7 @@ or alternate titles. These fields are available from IGDB (series, age_ratings, 
 GameTDB (cover art download URLs), and ScreenScraper (media/screenshot/video URLs).
 
 **Fix**: Schema migration adding:
+
 - `cover_url TEXT` — primary box art URL or local path
 - `series TEXT` — franchise/series name (IGDB)
 - `age_rating TEXT` — e.g. "PEGI 12", "ESRB E" (IGDB)
@@ -167,45 +129,15 @@ This is a **schema change** requiring a migration file under `data/compendium/mi
 
 ---
 
-### G8 — LaunchBox Games Database (XML, filename-based)
+### G8 — LaunchBox Games Database (XML, filename-based) **(implemented)**
 
-The [LaunchBox Games Database](https://gamesdb.launchbox-app.com/) is a community-driven
-database covering 250+ platforms — including virtually every obscure system in Remus's
-compendium (Acorn Archimedes, Amstrad CPC, BBC Micro, Dragon 32/64, Camputers Lynx,
-Entex Adventure Vision, and more). The entire database is distributed as a downloadable
-XML file; RomM downloads it locally and matches by exact filename.
-
-Matching strategy for Remus: the XML contains `<ApplicationPath>` (filename) alongside
-`<Title>`, `<Developer>`, `<Publisher>`, `<ReleaseDate>`, `<Overview>` (description),
-`<Genre>`, `<MaxPlayers>`, `<ESRB>`. A compendium enricher would need to build an index
-by stripped filename token and join against `games.filename`. This is lower precision than
-hash-based matching but higher platform breadth than any other free source.
-
-**ToS note**: LaunchBox's Terms of Service permit personal use. Remus ships the *scripts*
-that build the compendium locally, not a pre-built database, so using LaunchBox as an
-enrichment source is acceptable.
-
-**Expected gain**: First meaningful enrichment for the 14 zero-enrichment system families
-and Amstrad CPC (3,011), BBC Micro, Acorn Archimedes (78) — systems ScreenScraper also
-covers, so treat as complementary.
+See `src/cli/compendium_enrichment_launchbox.cpp` and `scripts/update_launchbox_metadata.sh`.
 
 ---
 
-### G9 — Wikidata SPARQL (all platforms, no auth, WikidataProvider already implemented)
+### G9 — Wikidata SPARQL **(implemented)**
 
-`WikidataProvider` is fully implemented in `src/metadata/wikidata_provider.h/.cpp` and
-registered in the GUI orchestrator at priority 1100 (~1 req/sec throttle, proper
-User-Agent, SPARQL search + detail + artwork). It is **not** wired into the compendium
-batch enrichment pipeline — the same gap as G6 (ScreenScraper).
-
-Wikidata is the strongest free HTTP source for European home computers: Amstrad CPC,
-Commodore Amiga, BBC Micro, Atari ST, MSX — exactly the systems where IGDB coverage is
-weakest. Matching is title-based (no hashes), but the platform breadth is uniquely wide.
-
-**Fix**: Implement `src/cli/compendium_enrichment_wikidata.cpp` following the same
-title-indexed batch pattern as the IGDB enricher — build a per-system title index from
-Wikidata SPARQL `?gameLabel`, then match against compendium games with incomplete fields.
-No credentials or rate-limit configuration needed.
+See `src/cli/compendium_enrichment_wikidata.cpp` (runs with `--online-enrichment`).
 
 **Note on web scraping**: Community databases that would fill the remaining gaps
 (Lemon64 for C64, Hall of Light for Amiga) both actively block automated HTTP access —

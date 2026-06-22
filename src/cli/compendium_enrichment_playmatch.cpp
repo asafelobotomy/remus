@@ -186,15 +186,15 @@ bool enrichFromPlayMatch(QSqlDatabase &database, int &gamesEnriched, int &factsI
         return true;
     }
 
-    if (!database.transaction()) {
-        error = QStringLiteral("Failed to start PlayMatch enrichment transaction: %1").arg(database.lastError().text());
-        return false;
-    }
-
     const QString snapshotId = QStringLiteral("playmatch-bulk");
+    const QString sourceId = QStringLiteral("playmatch");
+
+    if (!bulkClearSourceFactBlockers(database, sourceId, error))
+        return false;
+
     if (!upsertEnrichmentSource(database,
             SourceSpec {
-                QStringLiteral("playmatch"),
+                sourceId,
                 QStringLiteral("PlayMatch"),
                 QStringLiteral("online-api"),
                 QStringLiteral("https://playmatch.retrorealm.dev"),
@@ -231,12 +231,13 @@ bool enrichFromPlayMatch(QSqlDatabase &database, int &gamesEnriched, int &factsI
     delQ.prepare(QStringLiteral("DELETE FROM game_facts WHERE game_id = ? AND field_name = ? AND source_id = ?"));
 
     const FactInsertSpec factSpec {
-        QStringLiteral("playmatch"),
+        sourceId,
         snapshotId,
         88,
         0.85,
     };
     FactReplaceQueries replaceQueries(database);
+    EnrichmentBatchWriter batchWriter(database);
 
     auto insertFact = [&](const QString &gameId, const QString &field, const QString &value,
                           const QString &type = QStringLiteral("text")) -> bool {
@@ -257,10 +258,8 @@ bool enrichFromPlayMatch(QSqlDatabase &database, int &gamesEnriched, int &factsI
         if (igdbId.isEmpty())
             continue;
 
-        if (!insertFact(gameId, QStringLiteral("igdb_id"), igdbId)) {
-            database.rollback();
+        if (!insertFact(gameId, QStringLiteral("igdb_id"), igdbId))
             return false;
-        }
 
         const QString genre = metadata.genres.isEmpty() ? QString() : metadata.genres.join(QStringLiteral(", "));
         int releaseYear = 0;
@@ -287,10 +286,8 @@ bool enrichFromPlayMatch(QSqlDatabase &database, int &gamesEnriched, int &factsI
             updateQ.bindValue(5, nullableText(releaseDateStr));
             updateQ.bindValue(6, nullableDouble(metadata.rating > 0.0f ? metadata.rating : 0.0));
             updateQ.bindValue(7, gameId);
-            if (!execPrepared(updateQ, error, QStringLiteral("PlayMatch metadata update for %1").arg(gameId))) {
-                database.rollback();
+            if (!execPrepared(updateQ, error, QStringLiteral("PlayMatch metadata update for %1").arg(gameId)))
                 return false;
-            }
 
             const QString yearStr = releaseYear > 0 ? QString::number(releaseYear) : QString();
             const QString ratingStr
@@ -301,21 +298,17 @@ bool enrichFromPlayMatch(QSqlDatabase &database, int &gamesEnriched, int &factsI
                 || !insertFact(gameId, QStringLiteral("publisher"), metadata.publisher)
                 || !insertFact(gameId, QStringLiteral("release_year"), yearStr, QStringLiteral("integer"))
                 || !insertFact(gameId, QStringLiteral("release_date"), releaseDateStr)
-                || !insertFact(gameId, QStringLiteral("rating"), ratingStr, QStringLiteral("decimal"))) {
-                database.rollback();
+                || !insertFact(gameId, QStringLiteral("rating"), ratingStr, QStringLiteral("decimal")))
                 return false;
-            }
         }
 
         ++gamesEnriched;
+        if (!batchWriter.onGameProcessed(error))
+            return false;
     }
 
-    if (!database.commit()) {
-        error
-            = QStringLiteral("Failed to commit PlayMatch enrichment transaction: %1").arg(database.lastError().text());
-        database.rollback();
+    if (!batchWriter.finish(error))
         return false;
-    }
 
     if (apiCallsNeededOut)
         *apiCallsNeededOut = apiCallsNeeded;

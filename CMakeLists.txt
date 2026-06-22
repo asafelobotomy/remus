@@ -136,6 +136,10 @@ set(REMUS_CLI_SOURCES
     src/cli/compendium_enrichment_mame_listxml.cpp
     src/cli/compendium_enrichment_sql.cpp
     src/cli/compendium_enrichment_zxinfo.cpp
+    src/cli/compendium_enrichment_screenscraper.cpp
+    src/cli/compendium_enrichment_wikidata.cpp
+    src/cli/compendium_enrichment_launchbox.cpp
+    src/cli/compendium_enrichment_thegamesdb.cpp
 )
 
 add_executable(remus-cli ${REMUS_CLI_SOURCES})

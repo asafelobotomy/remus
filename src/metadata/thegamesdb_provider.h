@@ -36,6 +36,13 @@ public:
     ArtworkUrls getArtwork(const QString &id) override;
 
     /**
+     * @brief Bulk-fetch games for a TheGamesDB platform ID (paginated).
+     *
+     * Returns an empty list at end-of-data, on error, or when the monthly request budget is exhausted.
+     */
+    QList<GameMetadata> fetchGamesByPlatformId(const QString &platformId, int page = 1);
+
+    /**
      * @brief Set API key (optional but recommended)
      */
     void setApiKey(const QString &apiKey);

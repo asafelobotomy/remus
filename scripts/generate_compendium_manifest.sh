@@ -187,6 +187,9 @@ mapfile -d '' NO_INTRO_FILES < <(find "$DAT_DIR/no-intro" -maxdepth 1 -type f -n
 mapfile -d '' REDUMP_FILES < <(find "$DAT_DIR/redump" -maxdepth 1 -type f -name '*.dat' -print0 2>/dev/null | sort -z)
 mapfile -d '' MAME_FILES < <(find "$DAT_DIR/mame" -maxdepth 1 -type f -name '*.dat' -print0 2>/dev/null | sort -z)
 mapfile -d '' MAME_REDUMP_CHD_FILES < <(find "$DAT_DIR/mame-redump-chd" -maxdepth 1 -type f -name '*.dat' -print0 2>/dev/null | sort -z)
+mapfile -d '' HOMEBREW_FILES < <(find "$DAT_DIR/supplemental/homebrew" -maxdepth 1 -type f -name '*.dat' -print0 2>/dev/null | sort -z)
+mapfile -d '' LIBRETRO_DATS_FILES < <(find "$DAT_DIR/supplemental/libretro-dats" -maxdepth 1 -type f -name '*.dat' -print0 2>/dev/null | sort -z)
+mapfile -d '' TOSEC_FILES < <(find "$DAT_DIR/supplemental/tosec" -maxdepth 1 -type f -name '*.dat' -print0 2>/dev/null | sort -z)
 
 ALL_FILES=()
 ALL_PREFIXES=()
@@ -216,6 +219,21 @@ for f in "${REDUMP_FILES[@]}"; do
     ALL_FILES+=("$f")
     ALL_PREFIXES+=("libretro-redump")
     ALL_PRIORITIES+=("30")
+done
+for f in "${HOMEBREW_FILES[@]}"; do
+    ALL_FILES+=("$f")
+    ALL_PREFIXES+=("libretro-homebrew")
+    ALL_PRIORITIES+=("8")
+done
+for f in "${LIBRETRO_DATS_FILES[@]}"; do
+    ALL_FILES+=("$f")
+    ALL_PREFIXES+=("libretro-dats")
+    ALL_PRIORITIES+=("8")
+done
+for f in "${TOSEC_FILES[@]}"; do
+    ALL_FILES+=("$f")
+    ALL_PREFIXES+=("tosec")
+    ALL_PRIORITIES+=("5")
 done
 
 if [[ ${#ALL_FILES[@]} -eq 0 ]]; then
@@ -300,6 +318,9 @@ fi
             mame-redump-chd)  display_prefix="MAME Redump CHD DAT" ;;
             libretro-redump)  display_prefix="Redump DAT" ;;
             libretro-nointro) display_prefix="No-Intro DAT" ;;
+            libretro-homebrew) display_prefix="Libretro Homebrew DAT" ;;
+            libretro-dats)  display_prefix="Libretro DAT (supplemental)" ;;
+            tosec)          display_prefix="TOSEC DAT" ;;
             *)                display_prefix="Libretro DAT" ;;
         esac
         printf '      "display_name": "%s",\n' "$(json_escape "$display_prefix: $dat_stem")"
@@ -334,4 +355,4 @@ fi
 } > "$OUTPUT_PATH"
 
 echo "Manifest written: $OUTPUT_PATH"
-echo "Sources: ${#ALL_FILES[@]} total (${#DAT_FILES[@]} curated, ${#NO_INTRO_FILES[@]} no-intro, ${#MAME_FILES[@]} mame, ${#MAME_REDUMP_CHD_FILES[@]} mame-redump-chd, ${#REDUMP_FILES[@]} redump)"
+echo "Sources: ${#ALL_FILES[@]} total (${#DAT_FILES[@]} curated, ${#NO_INTRO_FILES[@]} no-intro, ${#MAME_FILES[@]} mame, ${#MAME_REDUMP_CHD_FILES[@]} mame-redump-chd, ${#REDUMP_FILES[@]} redump, ${#HOMEBREW_FILES[@]} homebrew, ${#LIBRETRO_DATS_FILES[@]} libretro-dats, ${#TOSEC_FILES[@]} tosec)"

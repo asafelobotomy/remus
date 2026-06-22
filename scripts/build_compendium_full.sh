@@ -329,6 +329,10 @@ if ! $SKIP_VALIDATION; then
         run_validate "$OUTPUT_DB" "$ROOT_DIR/data/compendium/validation/0003_phase2_extended_checks.sql" \
             || echo "warning: one or more phase-2 extended checks failed (see above)" >&2
     fi
+    if [[ -f "$ROOT_DIR/data/compendium/validation/0006_enabled_source_gate.sql" ]]; then
+        echo "==> Enabled ingest sources with zero items (strict)"
+        run_validate "$OUTPUT_DB" "$ROOT_DIR/data/compendium/validation/0006_enabled_source_gate.sql"
+    fi
     if [[ -f "$ROOT_DIR/data/compendium/validation/0004_disc_set_checks.sql" ]]; then
         echo "==> Disc set schema checks (migration 0007)"
         run_validate "$OUTPUT_DB" "$ROOT_DIR/data/compendium/validation/0004_disc_set_checks.sql"

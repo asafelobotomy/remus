@@ -407,10 +407,11 @@ bool enrichFromOpenVGDB(
             if (!q.exec(QStringLiteral("SELECT g.game_id, g.canonical_title, sys.internal_name "
                                        "FROM games g "
                                        "JOIN systems sys ON sys.system_id = g.system_id "
-                                       "WHERE g.description IS NULL OR g.description = '' "
-                                       "   OR g.developer IS NULL OR g.developer = '' "
-                                       "   OR g.publisher IS NULL OR g.publisher = '' "
-                                       "   OR g.release_year IS NULL"))) {
+                                       "WHERE (g.description IS NULL OR TRIM(g.description) = '' "
+                                       "   OR g.developer IS NULL OR TRIM(g.developer) = '' "
+                                       "   OR g.publisher IS NULL OR TRIM(g.publisher) = '' "
+                                       "   OR g.release_year IS NULL "
+                                       "   OR g.release_date IS NULL OR TRIM(g.release_date) = '')"))) {
                 error = QStringLiteral("Load games for title match: %1").arg(q.lastError().text());
                 return false;
             }

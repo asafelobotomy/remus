@@ -68,6 +68,13 @@ bash "$VALIDATE" "$OUTPUT_DB" "$ROOT_DIR/data/compendium/validation/0004_disc_se
 echo "==> Disc set ingest validation (0005, WARN allowed)"
 bash "$VALIDATE" "$OUTPUT_DB" "$ROOT_DIR/data/compendium/validation/0005_disc_set_ingest_checks.sql" --warn-only
 
+echo "==> Quick quality validation (0002, warn-only on fixture)"
+bash "$ROOT_DIR/scripts/apply_compendium_migrations.sh" "$OUTPUT_DB"
+bash "$VALIDATE" "$OUTPUT_DB" "$ROOT_DIR/data/compendium/validation/0002_phase2_quality_checks.sql" --warn-only
+
+echo "==> Extended validation (0003, warn-only on fixture)"
+bash "$VALIDATE" "$OUTPUT_DB" "$ROOT_DIR/data/compendium/validation/0003_phase2_extended_checks.sql" --warn-only
+
 echo "==> Per-system disc set coverage smoke"
 "$CLI" --disc-set-coverage --compendium-output "$OUTPUT_DB" | head -5
 

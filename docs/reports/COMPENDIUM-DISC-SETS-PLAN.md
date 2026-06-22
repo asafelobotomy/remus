@@ -1,7 +1,7 @@
 # Compendium Disc Sets — Audited Plan & Best Approach
 
-**Date:** 2026-06-18  
-**Status:** Approved plan (not yet implemented)  
+**Date:** 2026-06-18
+**Status:** Implemented (migration 0007, inserter, backfill, M3U export, validation 0004/0005)
 **Scope:** Forward-looking design for compendium-native multi-disc topology so Remus can
 match, verify, enrich, and organize **without re-parsing DAT titles at runtime**.
 

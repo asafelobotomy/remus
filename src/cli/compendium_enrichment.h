@@ -151,8 +151,7 @@ bool enrichFromRetroAchievements(QSqlDatabase &database, const QString &credenti
  * @return true on success (or when nothing to do), false on error.
  */
 bool enrichFromHasheous(QSqlDatabase &database, const QString &credentialsPath, int &gamesEnriched, int &factsInserted,
-    QString &error, int *apiCallsNeededOut = nullptr, int *apiCallsPerformedOut = nullptr,
-    bool offlineOnly = false);
+    QString &error, int *apiCallsNeededOut = nullptr, int *apiCallsPerformedOut = nullptr, bool offlineOnly = false);
 
 /**
  * @brief Enrich compendium games with IGDB IDs via PlayMatch hash/filename lookup.
@@ -223,5 +222,38 @@ bool enrichFromMameListXml(
  * @return true on success, false on error.
  */
 bool enrichFromZXInfo(QSqlDatabase &database, int &gamesEnriched, int &factsInserted, QString &error);
+
+/**
+ * @brief Enrich games with metadata from ScreenScraper hash lookups.
+ *
+ * Requires ScreenScraper user/password and developer credentials in @p credentialsPath.
+ * Skipped silently when credentials are absent.
+ */
+bool enrichFromScreenScraper(QSqlDatabase &database, const QString &credentialsPath, int &gamesEnriched,
+    int &factsInserted, QString &error, int *apiCallsNeededOut = nullptr, int *apiCallsPerformedOut = nullptr);
+
+/**
+ * @brief Enrich games using Wikidata SPARQL bulk platform queries (title matching).
+ *
+ * No credentials required. Manages its own transactions internally.
+ */
+bool enrichFromWikidata(QSqlDatabase &database, int &gamesEnriched, int &factsInserted, QString &error);
+
+/**
+ * @brief Enrich games from a local LaunchBox Games Database Metadata.xml export.
+ *
+ * Matches by platform + ROM filename from source_items.payload_json.rom_name.
+ * Skipped silently when @p metadataXmlPath is absent.
+ */
+bool enrichFromLaunchBox(
+    QSqlDatabase &database, const QString &metadataXmlPath, int &gamesEnriched, int &factsInserted, QString &error);
+
+/**
+ * @brief Enrich games using TheGamesDB platform bulk API (title matching).
+ *
+ * Optional `thegamesdb/api_key` in credentials JSON. Respects the provider monthly request cap (3000).
+ */
+bool enrichFromTheGamesDB(
+    QSqlDatabase &database, const QString &credentialsPath, int &gamesEnriched, int &factsInserted, QString &error);
 
 } // namespace CompendiumEnrichment

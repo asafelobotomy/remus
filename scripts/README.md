@@ -22,7 +22,7 @@ Shell helpers for build, compendium, packaging, testing, and workspace hygiene. 
 | [`validate_compendium_extended.sh`](validate_compendium_extended.sh) | Extended checks (0003) after migrations (~30s) |
 | [`build_compendium_full.sh`](build_compendium_full.sh) | Full pipeline: refresh DATs, generate manifest, build populated DB, validate, per-source + disc-set coverage TSV |
 | [`ci_compendium_fixture_build.sh`](ci_compendium_fixture_build.sh) | CI smoke: fixture DAT ingest + disc-set validation gates |
-| [`generate_compendium_manifest.sh`](generate_compendium_manifest.sh) | Build `compendium-manifest-full.json` from DAT files |
+| [`generate_compendium_manifest.sh`](generate_compendium_manifest.sh) | Build `compendium-manifest-full.json` from DAT files (includes `supplemental/homebrew`, `supplemental/libretro-dats`, optional `supplemental/tosec`) |
 | [`backfill_disc_sets.sh`](backfill_disc_sets.sh) | One-time backfill of `game_disc_sets` / tracks on an existing compendium DB |
 | [`import_patch_catalog.sh`](import_patch_catalog.sh) | Import libretro patch DATs into compendium patch catalog tables |
 | [`audit_shadowed_manifest_sources.sh`](audit_shadowed_manifest_sources.sh) | List manifest sources that ingest items but own zero signatures |
@@ -43,7 +43,7 @@ Long jobs: always use `--log-file` and `tail` the log for progress. See [docs/se
 
 | Script | Purpose |
 |--------|---------|
-| [`update_dats.sh`](update_dats.sh) | Download/update No-Intro/Redump DAT files under `data/databases/` (skips unchanged libretro copies by SHA256) |
+| [`update_dats.sh`](update_dats.sh) | Download/update No-Intro/Redump DAT files under `data/databases/`; sync libretro homebrew + libretro-dats into `data/databases/supplemental/` (TOSEC: manual drop-in at `supplemental/tosec/`) |
 | [`update_hasheous_dumps.sh`](update_hasheous_dumps.sh) | Download Hasheous offline platform dump ZIPs to `data/hasheous/dumps/` for offline hash enrichment |
 | [`update_mame_listxml.sh`](update_mame_listxml.sh) | Fetch MAME `listxml.xml` for compendium enrichment |
 

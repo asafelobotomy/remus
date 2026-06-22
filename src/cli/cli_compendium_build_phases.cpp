@@ -48,6 +48,16 @@ bool hasRaCredentials(const QString &credPath) {
     return !load(RETROACHIEVEMENTS_USERNAME).isEmpty() && !load(RETROACHIEVEMENTS_API_KEY).isEmpty();
 }
 
+bool hasScreenScraperCredentials(const QString &credPath) {
+    const auto load = [&](const char *key) {
+        const QString qkey = QString::fromLatin1(key);
+        return credPath.isEmpty() ? CredentialManager::get(qkey) : CredentialManager::get(qkey, credPath);
+    };
+    using namespace Constants::Settings::Providers;
+    return !load(SCREENSCRAPER_USERNAME).isEmpty() && !load(SCREENSCRAPER_PASSWORD).isEmpty()
+        && !load(SCREENSCRAPER_DEVID).isEmpty() && !load(SCREENSCRAPER_DEVPASSWORD).isEmpty();
+}
+
 bool queryHasRows(QSqlDatabase &db, const QString &sql, QString &error) {
     QSqlQuery q(db);
     if (!q.exec(sql)) {
@@ -143,6 +153,31 @@ bool hasOpenVgdbGaps(QSqlDatabase &db, QString &error, const QString &gametdbDir
         error);
 }
 
+bool hasLaunchBoxGaps(QSqlDatabase &db, QString &error) {
+    return queryHasRows(db,
+        QStringLiteral("SELECT 1 FROM games g "
+                       "WHERE (%1) "
+                       "  AND EXISTS ("
+                       "      SELECT 1 FROM game_signatures gs "
+                       "      JOIN source_items si ON si.external_key = gs.source_entry_key "
+                       "      WHERE gs.game_id = g.game_id "
+                       "        AND json_extract(si.payload_json, '$.rom_name') IS NOT NULL "
+                       "        AND TRIM(json_extract(si.payload_json, '$.rom_name')) <> ''"
+                       "  ) "
+                       "LIMIT 1")
+            .arg(QLatin1String(kGeneralMetadataGapSql)),
+        error);
+}
+
+bool hasWikidataGaps(QSqlDatabase &db, QString &error) {
+    return queryHasRows(
+        db, QStringLiteral("SELECT 1 FROM games WHERE (%1) LIMIT 1").arg(QLatin1String(kGeneralMetadataGapSql)), error);
+}
+
+bool hasTheGamesDBGaps(QSqlDatabase &db, QString &error) {
+    return hasWikidataGaps(db, error);
+}
+
 // MAME catver only provides genre, and only for arcade machines.
 bool hasArcadeCatverGaps(QSqlDatabase &db, QString &error) {
     return queryHasRows(db,
@@ -193,12 +228,29 @@ bool hasAnyRaGaps(QSqlDatabase &db, QString &error) {
     // is idempotent (INSERT OR IGNORE / COALESCE), so re-running is always safe.
     return queryHasRows(db,
         QStringLiteral("SELECT 1 FROM games g "
-                       "JOIN game_signatures gs ON gs.game_id = g.game_id AND gs.hash_type = 'md5' "
+                       "JOIN game_signatures gs ON gs.game_id = g.game_id "
+                       "  AND gs.hash_type IN ('md5', 'sha1', 'crc32', 'sha256') "
                        "WHERE (g.genre IS NULL OR TRIM(g.genre) = '' "
                        "    OR g.developer IS NULL OR TRIM(g.developer) = '' "
                        "    OR g.publisher IS NULL OR TRIM(g.publisher) = '' "
                        "    OR g.release_year IS NULL "
                        "    OR g.release_date IS NULL OR TRIM(g.release_date) = '' "
+                       "    OR g.description IS NULL OR TRIM(g.description) = '') "
+                       "LIMIT 1"),
+        error);
+}
+
+bool hasAnyScreenScraperGaps(QSqlDatabase &db, QString &error) {
+    return queryHasRows(db,
+        QStringLiteral("SELECT 1 FROM games g "
+                       "WHERE EXISTS ("
+                       "  SELECT 1 FROM game_signatures gs "
+                       "  WHERE gs.game_id = g.game_id "
+                       "    AND gs.hash_type IN ('md5', 'sha1', 'crc32', 'sha256')) "
+                       "  AND (g.genre IS NULL OR TRIM(g.genre) = '' "
+                       "    OR g.developer IS NULL OR TRIM(g.developer) = '' "
+                       "    OR g.publisher IS NULL OR TRIM(g.publisher) = '' "
+                       "    OR g.release_year IS NULL "
                        "    OR g.description IS NULL OR TRIM(g.description) = '') "
                        "LIMIT 1"),
         error);
@@ -230,6 +282,13 @@ bool hasAnyPlayMatchGaps(QSqlDatabase &db, QString &error) {
                        "  SELECT 1 FROM game_facts gf "
                        "  WHERE gf.game_id = g.game_id "
                        "    AND gf.field_name = 'igdb_id') "
+                       "  AND EXISTS ("
+                       "  SELECT 1 FROM game_signatures gs2 "
+                       "  JOIN source_items si ON si.source_id = gs2.source_id "
+                       "    AND si.external_key = gs2.source_entry_key "
+                       "  WHERE gs2.game_id = g.game_id "
+                       "    AND json_extract(si.payload_json, '$.size') IS NOT NULL "
+                       "    AND CAST(json_extract(si.payload_json, '$.size') AS INTEGER) > 0) "
                        "LIMIT 1"),
         error);
 }
@@ -269,8 +328,9 @@ static void addTreeToEnrichmentFingerprint(QCryptographicHash &hash, const QStri
 }
 
 QString computeEnrichmentInputsFingerprint(const QString &metadataDir, const QString &gametdbDir,
-    const QString &openvgdbPath, const QString &mameCatverPath, const QString &mameListXmlPath, const QString &credPath,
-    const QStringList &sourceFilter, bool offlineOnlyEnrichment, bool onlineEnrichmentAll) {
+    const QString &openvgdbPath, const QString &mameCatverPath, const QString &mameListXmlPath,
+    const QString &launchboxMetadataPath, const QString &credPath, const QStringList &sourceFilter,
+    bool offlineOnlyEnrichment, bool onlineEnrichmentAll) {
     QCryptographicHash hash(QCryptographicHash::Sha256);
 
     auto addLabeledTree = [&](const char *label, const QString &path) {
@@ -288,6 +348,7 @@ QString computeEnrichmentInputsFingerprint(const QString &metadataDir, const QSt
     addLabeledTree("openvgdb", openvgdbPath);
     addLabeledTree("mame_catver", mameCatverPath);
     addLabeledTree("mame_listxml", mameListXmlPath);
+    addLabeledTree("launchbox_metadata", launchboxMetadataPath);
     addLabeledTree("credentials", credPath);
     addLabeledTree("hasheous_dumps", Remus::Compendium::findHasheousDumpDir());
 
@@ -366,30 +427,23 @@ void insertEnrichmentStatsReportFields(
     report.insert(QStringLiteral("playmatch_facts_inserted"), stats.playmatchFactsInserted);
     report.insert(QStringLiteral("playmatch_api_calls_needed"), stats.playmatchApiCallsNeeded);
     report.insert(QStringLiteral("playmatch_api_calls_performed"), stats.playmatchApiCallsPerformed);
+    report.insert(QStringLiteral("screenscraper_games_enriched"), stats.screenscraperGamesEnriched);
+    report.insert(QStringLiteral("screenscraper_facts_inserted"), stats.screenscraperFactsInserted);
+    report.insert(QStringLiteral("screenscraper_api_calls_needed"), stats.screenscraperApiCallsNeeded);
+    report.insert(QStringLiteral("screenscraper_api_calls_performed"), stats.screenscraperApiCallsPerformed);
+    report.insert(QStringLiteral("wikidata_games_enriched"), stats.wikidataGamesEnriched);
+    report.insert(QStringLiteral("wikidata_facts_inserted"), stats.wikidataFactsInserted);
+    report.insert(QStringLiteral("launchbox_games_enriched"), stats.launchboxGamesEnriched);
+    report.insert(QStringLiteral("launchbox_facts_inserted"), stats.launchboxFactsInserted);
+    report.insert(QStringLiteral("thegamesdb_games_enriched"), stats.thegamesdbGamesEnriched);
+    report.insert(QStringLiteral("thegamesdb_facts_inserted"), stats.thegamesdbFactsInserted);
     report.insert(QStringLiteral("post_enrich_fts_rows_indexed"), stats.ftsRowsIndexed);
 }
 
 bool runCompendiumEnrichmentPasses(QSqlDatabase &db, const QString &metadataDir, const QString &gametdbDir,
     const QString &openvgdbPath, const QString &credPath, const QString &mameCatverPath, const QString &mameListXmlPath,
-    EnrichmentStats &stats, QString &error, EnrichmentProgressCallback onProgress, QStringList sourceFilter,
-    bool offlineOnlyEnrichment, bool onlineEnrichmentAll) {
-    auto runTransactionalPass = [&](const QString &passName, auto &&passFn) -> bool {
-        if (!db.transaction()) {
-            error = QStringLiteral("Failed to start %1 transaction: %2").arg(passName, db.lastError().text());
-            return false;
-        }
-        if (!passFn()) {
-            db.rollback();
-            error = QStringLiteral("%1 failed: %2").arg(passName, error);
-            return false;
-        }
-        if (!db.commit()) {
-            error = QStringLiteral("Failed to commit %1 transaction: %2").arg(passName, db.lastError().text());
-            return false;
-        }
-        return true;
-    };
-
+    const QString &launchboxMetadataPath, EnrichmentStats &stats, QString &error, EnrichmentProgressCallback onProgress,
+    QStringList sourceFilter, bool offlineOnlyEnrichment, bool onlineEnrichmentAll) {
     auto runSelfManagedPass = [&](const QString &passName, auto &&passFn) -> bool {
         if (!passFn()) {
             error = QStringLiteral("%1 failed: %2").arg(passName, error);
@@ -398,19 +452,12 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db, const QString &metadataDir,
         return true;
     };
 
-    enum class TransactionMode {
-        CallerWrapped,
-        SelfManaged,
-    };
-
     struct EnrichmentPassSpec {
         QString name;
         QString sourceKey; // key used for --enrich-source filtering (e.g. "gametdb", "mame-listxml")
-        TransactionMode mode;
         std::function<bool()> isEnabled;
         std::function<bool()> hasWork;
         std::function<bool()> run;
-        bool critical = false; // if true, a failure aborts the pipeline; otherwise log and continue
     };
 
     const bool hasMetadataDir = !metadataDir.isEmpty();
@@ -418,8 +465,10 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db, const QString &metadataDir,
     const bool hasOpenvgdbPath = !openvgdbPath.isEmpty() && QFile::exists(openvgdbPath);
     const bool hasIgdbCreds = hasIgdbCredentials(credPath);
     const bool hasRaCreds = hasRaCredentials(credPath);
+    const bool hasScreenScraperCreds = hasScreenScraperCredentials(credPath);
     const bool hasMameCatverPath = !mameCatverPath.isEmpty() && QFile::exists(mameCatverPath);
     const bool hasMameListXmlPath = !mameListXmlPath.isEmpty() && QFile::exists(mameListXmlPath);
+    const bool hasLaunchBoxMetadataPath = !launchboxMetadataPath.isEmpty() && QFile::exists(launchboxMetadataPath);
 
     const bool hasHasheousOfflineDumps = Remus::Compendium::hasHasheousOfflineDumpFiles();
     // --online-enrichment: offline dumps only. Per-game Hasheous API requires --online-enrichment-all.
@@ -429,7 +478,6 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db, const QString &metadataDir,
         {
             QStringLiteral("Libretro metadata enrichment"),
             QStringLiteral("libretro"),
-            TransactionMode::SelfManaged,
             [&] { return hasMetadataDir; },
             [&] { return hasLibretroMetadataGaps(db, error); },
             [&] {
@@ -440,7 +488,6 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db, const QString &metadataDir,
         {
             QStringLiteral("GameTDB enrichment"),
             QStringLiteral("gametdb"),
-            TransactionMode::SelfManaged,
             [&] { return hasGametdbDir; },
             [&] { return hasGametdbGaps(db, error); },
             [&] {
@@ -451,7 +498,6 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db, const QString &metadataDir,
         {
             QStringLiteral("OpenVGDB enrichment"),
             QStringLiteral("openvgdb"),
-            TransactionMode::SelfManaged,
             [&] { return hasOpenvgdbPath; },
             [&] { return hasOpenVgdbGaps(db, error, gametdbDir); },
             [&] {
@@ -460,9 +506,49 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db, const QString &metadataDir,
             },
         },
         {
+            QStringLiteral("LaunchBox enrichment"),
+            QStringLiteral("launchbox"),
+            [&] { return hasLaunchBoxMetadataPath; },
+            [&] { return hasLaunchBoxGaps(db, error); },
+            [&] {
+                return CompendiumEnrichment::enrichFromLaunchBox(
+                    db, launchboxMetadataPath, stats.launchboxGamesEnriched, stats.launchboxFactsInserted, error);
+            },
+        },
+        {
+            QStringLiteral("Wikidata enrichment"),
+            QStringLiteral("wikidata"),
+            [] { return true; },
+            [&] { return hasWikidataGaps(db, error); },
+            [&] {
+                return CompendiumEnrichment::enrichFromWikidata(
+                    db, stats.wikidataGamesEnriched, stats.wikidataFactsInserted, error);
+            },
+        },
+        {
+            QStringLiteral("TheGamesDB enrichment"),
+            QStringLiteral("thegamesdb"),
+            [] { return true; },
+            [&] { return hasTheGamesDBGaps(db, error); },
+            [&] {
+                return CompendiumEnrichment::enrichFromTheGamesDB(
+                    db, credPath, stats.thegamesdbGamesEnriched, stats.thegamesdbFactsInserted, error);
+            },
+        },
+        {
+            QStringLiteral("ScreenScraper enrichment"),
+            QStringLiteral("screenscraper"),
+            [&] { return hasScreenScraperCreds && !offlineOnlyEnrichment; },
+            [&] { return hasAnyScreenScraperGaps(db, error); },
+            [&] {
+                return CompendiumEnrichment::enrichFromScreenScraper(db, credPath, stats.screenscraperGamesEnriched,
+                    stats.screenscraperFactsInserted, error, &stats.screenscraperApiCallsNeeded,
+                    &stats.screenscraperApiCallsPerformed);
+            },
+        },
+        {
             QStringLiteral("Hasheous enrichment"),
             QStringLiteral("hasheous"),
-            TransactionMode::SelfManaged,
             [&] { return hasheousOfflineOnly ? hasHasheousOfflineDumps : true; },
             [&] { return hasAnyHasheousGaps(db, error); },
             [&] {
@@ -474,7 +560,6 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db, const QString &metadataDir,
         {
             QStringLiteral("PlayMatch enrichment"),
             QStringLiteral("playmatch"),
-            TransactionMode::SelfManaged,
             [] { return true; },
             [&] { return hasAnyPlayMatchGaps(db, error); },
             [&] {
@@ -486,7 +571,6 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db, const QString &metadataDir,
         {
             QStringLiteral("IGDB enrichment"),
             QStringLiteral("igdb"),
-            TransactionMode::SelfManaged,
             [&] { return hasIgdbCreds; },
             [&] { return hasIgdbBulkMetadataGaps(db, error); },
             [&] {
@@ -497,7 +581,6 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db, const QString &metadataDir,
         {
             QStringLiteral("RetroAchievements enrichment"),
             QStringLiteral("ra"),
-            TransactionMode::SelfManaged,
             [&] { return hasRaCreds; },
             [&] { return hasAnyRaGaps(db, error); },
             [&] {
@@ -509,7 +592,6 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db, const QString &metadataDir,
         {
             QStringLiteral("MAME catver enrichment"),
             QStringLiteral("mame-catver"),
-            TransactionMode::SelfManaged,
             [&] { return hasMameCatverPath; },
             [&] { return hasArcadeCatverGaps(db, error); },
             [&] {
@@ -520,7 +602,6 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db, const QString &metadataDir,
         {
             QStringLiteral("MAME listxml enrichment"),
             QStringLiteral("mame-listxml"),
-            TransactionMode::SelfManaged,
             [&] { return hasMameListXmlPath; },
             [&] { return hasArcadeListxmlGaps(db, error); },
             [&] {
@@ -531,7 +612,6 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db, const QString &metadataDir,
         {
             QStringLiteral("ZXInfo enrichment"),
             QStringLiteral("zxinfo"),
-            TransactionMode::SelfManaged,
             [] { return true; },
             [&] { return hasZxSpectrumGaps(db, error); },
             [&] {
@@ -590,12 +670,8 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db, const QString &metadataDir,
             continue;
         }
 
-        const bool ok = pass.mode == TransactionMode::CallerWrapped ? runTransactionalPass(pass.name, pass.run)
-                                                                    : runSelfManagedPass(pass.name, pass.run);
+        const bool ok = runSelfManagedPass(pass.name, pass.run);
         if (!ok) {
-            if (pass.critical) {
-                return false;
-            }
             qWarning().noquote() << QStringLiteral("[ENRICH] Pass %1/%2: %3 failed (non-fatal): %4")
                                         .arg(passIdx)
                                         .arg(totalPasses)
@@ -934,11 +1010,12 @@ void applyCompendiumBuildPragmas(QSqlDatabase &database) {
 int runCompendiumEnrichmentOnlyRefresh(QSqlDatabase &database, const QString &buildId, const QString &reportPath,
     const QJsonObject &existingReportBase, const QString &enrichmentFingerprint, const QString &metadataDir,
     const QString &gametdbDir, const QString &openvgdbPath, const QString &credPath, const QString &mameCatverPath,
-    const QString &mameListXmlPath, const QStringList &sourceFilter, EnrichmentProgressCallback onProgress,
-    QJsonObject &reportOut, QString &error, bool offlineOnlyEnrichment, bool onlineEnrichmentAll) {
+    const QString &mameListXmlPath, const QString &launchboxMetadataPath, const QStringList &sourceFilter,
+    EnrichmentProgressCallback onProgress, QJsonObject &reportOut, QString &error, bool offlineOnlyEnrichment,
+    bool onlineEnrichmentAll) {
     EnrichmentStats enrichStats;
     if (!runCompendiumEnrichmentPasses(database, metadataDir, gametdbDir, openvgdbPath, credPath, mameCatverPath,
-            mameListXmlPath, enrichStats, error, onProgress, sourceFilter, offlineOnlyEnrichment,
+            mameListXmlPath, launchboxMetadataPath, enrichStats, error, onProgress, sourceFilter, offlineOnlyEnrichment,
             onlineEnrichmentAll)) {
         return 1;
     }

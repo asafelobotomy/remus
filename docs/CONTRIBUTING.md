@@ -7,12 +7,15 @@ This guide defines where to place documentation and how to submit code changes.
 1. Fork the repository and create a feature branch from `main`.
 2. Install build dependencies from [docs/setup/BUILD.md](setup/BUILD.md).
 3. Build and test locally:
+
    ```bash
    cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DREMUS_ENABLE_WARNINGS=ON
    cmake --build build -j$(nproc)
    ctest --test-dir build --output-on-failure
    ```
+
 4. Format C++ changes before opening a pull request (use the pinned clang-format version from `.clang-format-version`):
+
    ```bash
    CLANG_FORMAT_VERSION="$(tr -d '[:space:]' < .clang-format-version)"
    bash .github/scripts/install-clang-format.sh
@@ -21,6 +24,13 @@ This guide defines where to place documentation and how to submit code changes.
    "/usr/bin/clang-format-${CLANG_FORMAT_VERSION}" --dry-run --Werror \
      $(find src tests -type f \( -name '*.cpp' -o -name '*.h' \) | sort)
    ```
+
+   **Editor (xaver.clang-format):** workspace settings use `clang-format` on Linux PATH (Arch/CachyOS ship v22 as `/usr/bin/clang-format`). On Debian/Ubuntu after `install-clang-format.sh`, add a user-level override if format-on-save fails:
+
+   ```json
+   "clang-format.executable.linux": "/usr/bin/clang-format-22"
+   ```
+
 5. Open a pull request using the template and ensure CI checks pass.
 
 ### Required CI checks

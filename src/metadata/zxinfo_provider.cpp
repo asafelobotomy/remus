@@ -147,8 +147,16 @@ GameMetadata ZXInfoProvider::parseEntry(const QJsonObject &source) const {
             m.developer = name;
     }
 
-    // Description: the remarks field (may be absent or null for many entries)
-    m.description = source.value(QStringLiteral("remarks")).toString().trimmed();
+    // Description: remarks, synopsis, or story fields from ZXDB.
+    const QString remarks = source.value(QStringLiteral("remarks")).toString().trimmed();
+    const QString synopsis = source.value(QStringLiteral("synopsis")).toString().trimmed();
+    const QString story = source.value(QStringLiteral("story")).toString().trimmed();
+    if (!remarks.isEmpty())
+        m.description = remarks;
+    else if (!synopsis.isEmpty())
+        m.description = synopsis;
+    else if (!story.isEmpty())
+        m.description = story;
 
     return m;
 }

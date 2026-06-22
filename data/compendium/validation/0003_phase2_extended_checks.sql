@@ -160,18 +160,27 @@ SELECT 'merge.unresolved_conflicts' AS check_name,
   0 AS expected
 FROM merge_conflicts
 WHERE resolution_status = 'unresolved';
--- Bulk enrichment snapshots present after a full enrichment build.
+-- Bulk enrichment snapshots present after a build (offline or online profile).
+-- Offline builds pass with >=2 local bulk snapshots; online builds typically have more.
 SELECT 'enrichment.snapshot_presence' AS check_name,
   CASE
-    WHEN COUNT(*) >= 3 THEN 'PASS'
+    WHEN COUNT(*) >= 2 THEN 'PASS'
     ELSE 'FAIL'
   END AS status,
   COUNT(*) AS observed,
-  3 AS expected
+  2 AS expected
 FROM source_snapshots
 WHERE snapshot_id IN (
+    'libretro-metadata-bulk',
+    'gametdb-bulk',
+    'openvgdb-v29.0',
+    'mame-catver-bulk',
+    'mame-listxml-bulk',
     'hasheous-bulk',
     'playmatch-bulk',
     'igdb-bulk',
-    'igdb-by-id'
+    'igdb-by-id',
+    'retroachievements-bulk',
+    'screenscraper-bulk',
+    'zxinfo-bulk'
   );

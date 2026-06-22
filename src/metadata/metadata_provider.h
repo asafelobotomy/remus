@@ -30,6 +30,10 @@ struct GameMetadata {
     QString boxArtUrl; // Box art URL
     QStringList screenshotUrls; // Additional screenshot URLs (gameplay, title, etc.)
 
+    QString series; // Franchise / series name
+    QString ageRating; // e.g. "ESRB E", "PEGI 12"
+    QStringList alternateTitles; // Regional or alias titles
+
     // External IDs for cross-referencing
     QMap<QString, QString> externalIds; // e.g., {"igdb": "1234", "retroachievements": "5678"}
     QStringList serials; // All disc/cartridge serials for this game

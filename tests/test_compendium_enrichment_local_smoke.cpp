@@ -94,6 +94,8 @@ private slots:
     void mameCatverParsedWithoutArcadeRows_upsertsSourceOnly();
     void mameListXmlParsedWithoutArcadeRows_upsertsSourceOnly();
     void igdbMissingCredentials_skipsWithoutWrites();
+    void launchBoxMissingFile_skipsWithoutWrites();
+    void theGamesDbMissingBudget_skipsWithoutWrites();
     void gametdbTitleStripMatches_enrichesGame();
     void knownSourceKeys_noBlankNoDuplicates();
     void knownSourceKeys_containsAllExpectedEnrichers();
@@ -304,6 +306,50 @@ void CompendiumEnrichmentLocalSmokeTest::igdbMissingCredentials_skipsWithoutWrit
     QSqlDatabase::removeDatabase(connectionName);
 }
 
+void CompendiumEnrichmentLocalSmokeTest::launchBoxMissingFile_skipsWithoutWrites() {
+    const QString connectionName = QStringLiteral("compendium_local_smoke_launchbox");
+    {
+        QSqlDatabase db = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), connectionName);
+        db.setDatabaseName(QStringLiteral(":memory:"));
+        QVERIFY2(db.open(), qPrintable(db.lastError().text()));
+        QVERIFY(createSchema(db));
+
+        int games = 0;
+        int facts = 0;
+        QString error;
+        const bool ok = CompendiumEnrichment::enrichFromLaunchBox(
+            db, QStringLiteral("/nonexistent/Metadata.xml"), games, facts, error);
+        QVERIFY2(ok, qPrintable(error));
+        QCOMPARE(games, 0);
+        QCOMPARE(facts, 0);
+
+        db.close();
+    }
+    QSqlDatabase::removeDatabase(connectionName);
+}
+
+void CompendiumEnrichmentLocalSmokeTest::theGamesDbMissingBudget_skipsWithoutWrites() {
+    const QString connectionName = QStringLiteral("compendium_local_smoke_thegamesdb");
+    {
+        QSqlDatabase db = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), connectionName);
+        db.setDatabaseName(QStringLiteral(":memory:"));
+        QVERIFY2(db.open(), qPrintable(db.lastError().text()));
+        QVERIFY(createSchema(db));
+
+        int games = 0;
+        int facts = 0;
+        QString error;
+        const bool ok = CompendiumEnrichment::enrichFromTheGamesDB(
+            db, QStringLiteral("/nonexistent/thegamesdb-credentials.json"), games, facts, error);
+        QVERIFY2(ok, qPrintable(error));
+        QCOMPARE(games, 0);
+        QCOMPARE(facts, 0);
+
+        db.close();
+    }
+    QSqlDatabase::removeDatabase(connectionName);
+}
+
 // Verify that the GameTDB enricher's title fallback strips trailing parenthetical
 // groups so that a DAT title like "Foo Game (Europe) (En,Fr) (Rev 1)" matches
 // the GameTDB entry whose stored title is just "Foo Game".
@@ -399,6 +445,10 @@ void CompendiumEnrichmentLocalSmokeTest::knownSourceKeys_containsAllExpectedEnri
         QStringLiteral("libretro"),
         QStringLiteral("gametdb"),
         QStringLiteral("openvgdb"),
+        QStringLiteral("launchbox"),
+        QStringLiteral("wikidata"),
+        QStringLiteral("thegamesdb"),
+        QStringLiteral("screenscraper"),
         QStringLiteral("igdb"),
         QStringLiteral("ra"),
         QStringLiteral("hasheous"),

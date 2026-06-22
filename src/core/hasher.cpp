@@ -51,18 +51,16 @@ HashResult Hasher::calculateHashes(const QString &filePath, bool stripHeader, in
 }
 
 QString Hasher::calculateHash(const QString &filePath, const QString &algorithm, bool stripHeader, int headerSize) {
-    QByteArray data = readFileData(filePath, stripHeader, headerSize);
-    if (data.isEmpty()) {
+    const HashResult all = calculateHashes(filePath, stripHeader, headerSize);
+    if (!all.success)
         return QString();
-    }
 
-    if (algorithm == "CRC32") {
-        return calculateCRC32(data);
-    } else if (algorithm == "MD5") {
-        return calculateMD5(data);
-    } else if (algorithm == "SHA1") {
-        return calculateSHA1(data);
-    }
+    if (algorithm == QStringLiteral("CRC32"))
+        return all.crc32;
+    if (algorithm == QStringLiteral("MD5"))
+        return all.md5;
+    if (algorithm == QStringLiteral("SHA1"))
+        return all.sha1;
 
     return QString();
 }

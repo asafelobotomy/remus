@@ -71,6 +71,16 @@ struct EnrichmentStats {
     int playmatchFactsInserted = 0;
     int playmatchApiCallsNeeded = 0;
     int playmatchApiCallsPerformed = 0;
+    int screenscraperGamesEnriched = 0;
+    int screenscraperFactsInserted = 0;
+    int screenscraperApiCallsNeeded = 0;
+    int screenscraperApiCallsPerformed = 0;
+    int wikidataGamesEnriched = 0;
+    int wikidataFactsInserted = 0;
+    int launchboxGamesEnriched = 0;
+    int launchboxFactsInserted = 0;
+    int thegamesdbGamesEnriched = 0;
+    int thegamesdbFactsInserted = 0;
     int ftsRowsIndexed = 0;
 };
 
@@ -104,14 +114,18 @@ struct EnrichmentStats {
  */
 bool runCompendiumEnrichmentPasses(QSqlDatabase &db, const QString &metadataDir, const QString &gametdbDir,
     const QString &openvgdbPath, const QString &credPath, const QString &mameCatverPath, const QString &mameListXmlPath,
-    EnrichmentStats &stats, QString &error, EnrichmentProgressCallback onProgress = nullptr,
-    QStringList sourceFilter = { }, bool offlineOnlyEnrichment = false, bool onlineEnrichmentAll = false);
+    const QString &launchboxMetadataPath, EnrichmentStats &stats, QString &error,
+    EnrichmentProgressCallback onProgress = nullptr, QStringList sourceFilter = { }, bool offlineOnlyEnrichment = false,
+    bool onlineEnrichmentAll = false);
 
 /**
  * @brief Source keys that require live network access during enrichment.
  */
 inline QStringList onlineEnrichmentSourceKeys() {
     return {
+        QStringLiteral("screenscraper"),
+        QStringLiteral("wikidata"),
+        QStringLiteral("thegamesdb"),
         QStringLiteral("hasheous"),
         QStringLiteral("playmatch"),
         QStringLiteral("zxinfo"),
@@ -128,6 +142,7 @@ inline QStringList offlineEnrichmentSourceKeys() {
         QStringLiteral("libretro"),
         QStringLiteral("gametdb"),
         QStringLiteral("openvgdb"),
+        QStringLiteral("launchbox"),
         QStringLiteral("mame-catver"),
         QStringLiteral("mame-listxml"),
     };
@@ -140,6 +155,8 @@ inline QStringList offlineEnrichmentSourceKeys() {
 inline QStringList defaultBulkOnlineEnrichmentSourceKeys() {
     QStringList keys = offlineEnrichmentSourceKeys();
     keys.append({
+        QStringLiteral("screenscraper"),
+        QStringLiteral("wikidata"),
         QStringLiteral("hasheous"), // offline dump JSON only unless --online-enrichment-all
         QStringLiteral("igdb"),
         QStringLiteral("ra"),
@@ -189,8 +206,9 @@ void insertEnrichmentStatsReportFields(
  * input changes invalidate a manifest-identical cached DB.
  */
 QString computeEnrichmentInputsFingerprint(const QString &metadataDir, const QString &gametdbDir,
-    const QString &openvgdbPath, const QString &mameCatverPath, const QString &mameListXmlPath, const QString &credPath,
-    const QStringList &sourceFilter = { }, bool offlineOnlyEnrichment = false, bool onlineEnrichmentAll = false);
+    const QString &openvgdbPath, const QString &mameCatverPath, const QString &mameListXmlPath,
+    const QString &launchboxMetadataPath, const QString &credPath, const QStringList &sourceFilter = { },
+    bool offlineOnlyEnrichment = false, bool onlineEnrichmentAll = false);
 
 /**
  * @brief Extract a stored enrichment fingerprint from compendium_builds.notes JSON.
@@ -212,6 +230,10 @@ inline QStringList knownEnrichmentSourceKeys() {
         QStringLiteral("libretro"),
         QStringLiteral("gametdb"),
         QStringLiteral("openvgdb"),
+        QStringLiteral("launchbox"),
+        QStringLiteral("wikidata"),
+        QStringLiteral("thegamesdb"),
+        QStringLiteral("screenscraper"),
         QStringLiteral("igdb"),
         QStringLiteral("ra"),
         QStringLiteral("hasheous"),
@@ -257,5 +279,6 @@ void applyCompendiumBuildPragmas(QSqlDatabase &database);
 int runCompendiumEnrichmentOnlyRefresh(QSqlDatabase &database, const QString &buildId, const QString &reportPath,
     const QJsonObject &existingReportBase, const QString &enrichmentFingerprint, const QString &metadataDir,
     const QString &gametdbDir, const QString &openvgdbPath, const QString &credPath, const QString &mameCatverPath,
-    const QString &mameListXmlPath, const QStringList &sourceFilter, EnrichmentProgressCallback onProgress,
-    QJsonObject &reportOut, QString &error, bool offlineOnlyEnrichment = false, bool onlineEnrichmentAll = false);
+    const QString &mameListXmlPath, const QString &launchboxMetadataPath, const QStringList &sourceFilter,
+    EnrichmentProgressCallback onProgress, QJsonObject &reportOut, QString &error, bool offlineOnlyEnrichment = false,
+    bool onlineEnrichmentAll = false);

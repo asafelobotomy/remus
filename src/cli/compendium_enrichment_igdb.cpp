@@ -10,6 +10,8 @@
 #include <QDateTime>
 #include <QDebug>
 #include <QHash>
+#include <QJsonArray>
+#include <QJsonDocument>
 #include <QSqlDatabase>
 #include <QSqlError>
 #include <QSqlQuery>
@@ -20,6 +22,15 @@ using namespace CompendiumEnrichmentSql;
 namespace CompendiumEnrichment {
 
 namespace {
+
+    QString alternateTitlesJson(const QStringList &titles) {
+        if (titles.isEmpty())
+            return QString();
+        QJsonArray arr;
+        for (const QString &title : titles)
+            arr.append(title);
+        return QString::fromUtf8(QJsonDocument(arr).toJson(QJsonDocument::Compact));
+    }
 
     static QString igdbBulkGameGapSql(const QString &colPrefix = QString()) {
         return QStringLiteral("%1description IS NULL OR TRIM(%1description) = '' "
@@ -73,11 +84,13 @@ namespace {
         updateQ.bindValue(5, nullableText(releaseDateStr));
         updateQ.bindValue(6, nullableDouble(static_cast<double>(gm.rating)));
         updateQ.bindValue(7, nullableInt(gm.players));
-        updateQ.bindValue(8, gameId);
-        if (!execPrepared(updateQ, error, QStringLiteral("Update game igdb"))) {
-            database.rollback();
+        updateQ.bindValue(8, nullableText(gm.boxArtUrl));
+        updateQ.bindValue(9, nullableText(gm.series));
+        updateQ.bindValue(10, nullableText(gm.ageRating));
+        updateQ.bindValue(11, nullableText(alternateTitlesJson(gm.alternateTitles)));
+        updateQ.bindValue(12, gameId);
+        if (!execPrepared(updateQ, error, QStringLiteral("Update game igdb")))
             return false;
-        }
         if (updateQ.numRowsAffected() > 0)
             ++gamesEnriched;
 
@@ -105,12 +118,12 @@ namespace {
             && insertFact(QStringLiteral("release_year"), yearStr, QStringLiteral("integer"))
             && insertFact(QStringLiteral("release_date"), releaseDateStr)
             && insertFact(QStringLiteral("rating"), ratingStr, QStringLiteral("decimal"))
-            && insertFact(QStringLiteral("players_max"), playersStr, QStringLiteral("integer"));
-        if (!factsOk) {
-            database.rollback();
-            return false;
-        }
-        return true;
+            && insertFact(QStringLiteral("players_max"), playersStr, QStringLiteral("integer"))
+            && insertFact(QStringLiteral("cover_url"), gm.boxArtUrl)
+            && insertFact(QStringLiteral("series"), gm.series)
+            && insertFact(QStringLiteral("age_rating"), gm.ageRating)
+            && insertFact(QStringLiteral("alternate_titles"), alternateTitlesJson(gm.alternateTitles));
+        return factsOk;
     }
 
 } // anonymous namespace
@@ -168,10 +181,12 @@ bool enrichFromIGDB(
 
     const QString snapshotId = QStringLiteral("igdb-bulk");
     const QString byIdSnapshotId = QStringLiteral("igdb-by-id");
+    const QString sourceId = QStringLiteral("igdb");
     static const int PAGE_SIZE = 500;
     int systemsSkippedNoSlug = 0;
     int systemsSkippedEmptyIndex = 0;
     int byIdGamesEnriched = 0;
+    bool bulkCleared = false;
 
     // Phase 1: targeted fetch for games that already have igdb_id from hash bridges.
     {
@@ -212,14 +227,15 @@ bool enrichFromIGDB(
             qInfo().noquote()
                 << QStringLiteral("[IGDB] Per-id fetch: %1 games with known igdb_id").arg(pendingGames.size());
 
-            if (!database.transaction()) {
-                error = QStringLiteral("Failed to start IGDB per-id transaction: %1").arg(database.lastError().text());
-                return false;
+            if (!bulkCleared) {
+                if (!bulkClearSourceFactBlockers(database, sourceId, error))
+                    return false;
+                bulkCleared = true;
             }
 
             if (!upsertEnrichmentSource(database,
                     SourceSpec {
-                        QStringLiteral("igdb"),
+                        sourceId,
                         QStringLiteral("IGDB"),
                         QStringLiteral("online-api"),
                         QStringLiteral("https://www.igdb.com"),
@@ -232,7 +248,6 @@ bool enrichFromIGDB(
                         QStringLiteral("IGDB per-id enrichment"),
                     },
                     error)) {
-                database.rollback();
                 return false;
             }
 
@@ -245,7 +260,11 @@ bool enrichFromIGDB(
                                            "release_year = COALESCE(release_year, ?), "
                                            "release_date = COALESCE(release_date, ?), "
                                            "rating       = COALESCE(rating, ?), "
-                                           "players_max  = COALESCE(players_max, ?) "
+                                           "players_max  = COALESCE(players_max, ?), "
+                                           "cover_url    = COALESCE(NULLIF(cover_url, ''), ?), "
+                                           "series       = COALESCE(NULLIF(series, ''), ?), "
+                                           "age_rating   = COALESCE(NULLIF(age_rating, ''), ?), "
+                                           "alternate_titles = COALESCE(NULLIF(alternate_titles, ''), ?) "
                                            "WHERE game_id = ?"));
 
             QSqlQuery factQ(database);
@@ -259,12 +278,13 @@ bool enrichFromIGDB(
                 QStringLiteral("DELETE FROM game_facts WHERE game_id = ? AND field_name = ? AND source_id = ?"));
 
             const FactInsertSpec byIdFactSpec {
-                QStringLiteral("igdb"),
+                sourceId,
                 byIdSnapshotId,
                 70,
                 0.85,
             };
             FactReplaceQueries replaceQueries(database);
+            EnrichmentBatchWriter batchWriter(database);
 
             int callIdx = 0;
             for (const PendingIgdbGame &pending : pendingGames) {
@@ -273,19 +293,22 @@ bool enrichFromIGDB(
                     HttpMetadataProvider::processNetworkEvents();
 
                 const GameMetadata gm = provider.getById(pending.igdbId);
-                if (gm.title.isEmpty())
+                if (gm.title.isEmpty()) {
+                    if (!batchWriter.onGameProcessed(error))
+                        return false;
                     continue;
+                }
 
                 if (!applyIgdbGameMetadata(database, replaceQueries, updateQ, factQ, delQ, byIdFactSpec, pending.gameId, gm,
                         byIdGamesEnriched, factsInserted, error)) {
                     return false;
                 }
+                if (!batchWriter.onGameProcessed(error))
+                    return false;
             }
 
-            if (!database.commit()) {
-                error = QStringLiteral("Failed to commit IGDB per-id enrichment: %1").arg(database.lastError().text());
+            if (!batchWriter.finish(error))
                 return false;
-            }
 
             gamesEnriched += byIdGamesEnriched;
             qInfo().noquote()
@@ -361,16 +384,15 @@ bool enrichFromIGDB(
         qInfo().noquote()
             << QStringLiteral("[IGDB] %1 (%2): %3 entries indexed").arg(sys.name, igdbSlug).arg(igdbIndex.size());
 
-        // Per-system transaction — keeps lock duration short relative to network time
-        if (!database.transaction()) {
-            error = QStringLiteral("Failed to start transaction for system %1: %2")
-                        .arg(sys.name, database.lastError().text());
-            return false;
+        if (!bulkCleared) {
+            if (!bulkClearSourceFactBlockers(database, sourceId, error))
+                return false;
+            bulkCleared = true;
         }
 
         if (!upsertEnrichmentSource(database,
                 SourceSpec {
-                    QStringLiteral("igdb"),
+                    sourceId,
                     QStringLiteral("IGDB"),
                     QStringLiteral("online-api"),
                     QStringLiteral("https://www.igdb.com"),
@@ -383,7 +405,6 @@ bool enrichFromIGDB(
                     QStringLiteral("IGDB bulk enrichment"),
                 },
                 error)) {
-            database.rollback();
             return false;
         }
 
@@ -396,7 +417,11 @@ bool enrichFromIGDB(
                                        "release_year = COALESCE(release_year, ?), "
                                        "release_date = COALESCE(release_date, ?), "
                                        "rating       = COALESCE(rating, ?), "
-                                       "players_max  = COALESCE(players_max, ?) "
+                                       "players_max  = COALESCE(players_max, ?), "
+                                       "cover_url    = COALESCE(NULLIF(cover_url, ''), ?), "
+                                       "series       = COALESCE(NULLIF(series, ''), ?), "
+                                       "age_rating   = COALESCE(NULLIF(age_rating, ''), ?), "
+                                       "alternate_titles = COALESCE(NULLIF(alternate_titles, ''), ?) "
                                        "WHERE game_id = ?"));
 
         QSqlQuery factQ(database);
@@ -409,12 +434,13 @@ bool enrichFromIGDB(
         delQ.prepare(QStringLiteral("DELETE FROM game_facts WHERE game_id = ? AND field_name = ? AND source_id = ?"));
 
         const FactInsertSpec factSpec {
-            QStringLiteral("igdb"),
+            sourceId,
             snapshotId,
             70,
             0.80,
         };
         FactReplaceQueries replaceQueries(database);
+        EnrichmentBatchWriter batchWriter(database);
 
         QSqlQuery gamesQ(database);
         gamesQ.prepare(QStringLiteral("SELECT game_id, canonical_title FROM games "
@@ -423,7 +449,6 @@ bool enrichFromIGDB(
                 .arg(igdbBulkGameGapSql()));
         gamesQ.addBindValue(sys.id);
         if (!gamesQ.exec()) {
-            database.rollback();
             error = QStringLiteral("Query games for system %1: %2").arg(sys.name, gamesQ.lastError().text());
             return false;
         }
@@ -433,8 +458,11 @@ bool enrichFromIGDB(
             const QString gameId = gamesQ.value(0).toString();
             const QString norm = normalizeMetadataTitle(gamesQ.value(1).toString());
             const auto it = igdbIndex.constFind(norm);
-            if (it == igdbIndex.cend())
+            if (it == igdbIndex.cend()) {
+                if (!batchWriter.onGameProcessed(error))
+                    return false;
                 continue;
+            }
             const GameMetadata &gm = bestCandidate(it.value());
 
             if (!applyIgdbGameMetadata(
@@ -443,12 +471,12 @@ bool enrichFromIGDB(
             }
             if (updateQ.numRowsAffected() > 0)
                 ++sysEnriched;
+            if (!batchWriter.onGameProcessed(error))
+                return false;
         }
 
-        if (!database.commit()) {
-            error = QStringLiteral("Failed to commit enrichment for %1: %2").arg(sys.name, database.lastError().text());
+        if (!batchWriter.finish(error))
             return false;
-        }
 
         qInfo().noquote() << QStringLiteral("[IGDB] %1: +%2 games enriched").arg(sys.name).arg(sysEnriched);
     }

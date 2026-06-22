@@ -9,6 +9,7 @@ DB_PATH="${1:-$ROOT_DIR/data/compendium/remus_compendium.db}"
 MIGRATIONS=(
     "$ROOT_DIR/data/compendium/migrations/0008_game_facts_lookup_index.sql"
     "$ROOT_DIR/data/compendium/migrations/0009_game_signatures_source_entry_key.sql"
+    "$ROOT_DIR/data/compendium/migrations/0010_game_extended_metadata.sql"
 )
 
 if ! command -v sqlite3 >/dev/null 2>&1; then

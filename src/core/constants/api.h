@@ -68,6 +68,8 @@ namespace Constants {
         /// TheGamesDB games endpoint (search)
         inline constexpr const char *THEGAMESDB_GAMES_ENDPOINT = "/Games/ByGameName";
 
+        inline constexpr const char *THEGAMESDB_BY_PLATFORM_ENDPOINT = "/Games/ByPlatformID";
+
         /// TheGamesDB platforms endpoint (system info)
         inline constexpr const char *THEGAMESDB_PLATFORMS_ENDPOINT = "/Platforms";
 

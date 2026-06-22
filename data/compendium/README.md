@@ -47,9 +47,11 @@ sqlite3 -header -column data/compendium/remus_compendium.db < data/compendium/va
 Phase 2 quality thresholds (informational, do not block phase 1):
 
 ```bash
-./scripts/validate_compendium_quick.sh
-./scripts/validate_compendium_extended.sh   # applies migrations 0008/0009 first (~30s)
+./scripts/validate_compendium_quick.sh          # applies migrations 0008/0009, runs 0002 (~1 min)
+./scripts/validate_compendium_extended.sh       # applies migrations 0008/0009, runs 0003 (~30s)
 ```
+
+Full builds also run strict gate `0006_enabled_source_gate.sql` (enabled sources with zero items).
 
 Disc set ingest checks (populated databases; WARN checks are informational unless `--strict`):
 
@@ -162,6 +164,17 @@ scripts/update_hasheous_dumps.sh --all-core   # curated platforms (~25 ZIPs from
 
 (`scripts/update_dats.sh --all` runs `--all-core` at the end when the script is present.)
 
+LaunchBox bulk enrichment (local XML, not redistributed):
+
+```bash
+scripts/update_launchbox_metadata.sh --source /path/to/Metadata.xml
+build/remus-cli --enrich-compendium --enrich-source launchbox
+```
+
+Supplemental DAT sets (homebrew, libretro-dats, optional TOSEC drop-in) sync to
+`data/databases/supplemental/` via `update_dats.sh` and appear in the full manifest when
+regenerated with `scripts/generate_compendium_manifest.sh`.
+
 ## Files
 
 - Migration: [data/compendium/migrations/0001_phase1_canonical_schema.sql](migrations/0001_phase1_canonical_schema.sql)
@@ -176,6 +189,7 @@ scripts/update_hasheous_dumps.sh --all-core   # curated platforms (~25 ZIPs from
 - Disc sets + tracks: [data/compendium/migrations/0007_disc_sets.sql](migrations/0007_disc_sets.sql)
 - Game facts lookup index: [data/compendium/migrations/0008_game_facts_lookup_index.sql](migrations/0008_game_facts_lookup_index.sql)
 - Signature source-entry bridge index: [data/compendium/migrations/0009_game_signatures_source_entry_key.sql](migrations/0009_game_signatures_source_entry_key.sql)
+- Extended metadata columns: [data/compendium/migrations/0010_game_extended_metadata.sql](migrations/0010_game_extended_metadata.sql)
 - Validator: [data/compendium/validation/0001_phase1_checks.sql](validation/0001_phase1_checks.sql)
 - Disc set validator: [data/compendium/validation/0004_disc_set_checks.sql](validation/0004_disc_set_checks.sql)
 - Disc set ingest validator: [data/compendium/validation/0005_disc_set_ingest_checks.sql](validation/0005_disc_set_ingest_checks.sql)

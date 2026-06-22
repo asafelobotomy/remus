@@ -450,6 +450,10 @@ namespace Compendium {
             { "igdb_id", "igdb_id" },
             { "ra_game_id", "ra_game_id" },
             { "achievement_count", "achievement_count" },
+            { "cover_url", "cover_url" },
+            { "series", "series" },
+            { "age_rating", "age_rating" },
+            { "alternate_titles", "alternate_titles" },
         };
 
         for (const auto &f : kFields) {
